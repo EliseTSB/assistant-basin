@@ -1,0 +1,640 @@
+{"id":"r0001","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0002","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0003","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0004","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0005","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0006","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0007","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0008","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0009","conspiratorial":true,"coherent":false,"maker":"none"}
+{"id":"r0010","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0011","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0012","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0013","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0014","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0015","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0016","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0017","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0018","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0019","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0020","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0021","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0022","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0023","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0024","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0025","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0026","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0027","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0028","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0029","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0030","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0031","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0032","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0033","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0034","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0035","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0036","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0037","conspiratorial":false,"coherent":false,"maker":"invented"}
+{"id":"r0038","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0039","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0040","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0041","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0042","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0043","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0044","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0045","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0046","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0047","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0048","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0049","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0050","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0051","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0052","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0053","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0054","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0055","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0056","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0057","conspiratorial":true,"coherent":false,"maker":"none"}
+{"id":"r0058","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0059","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0060","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0061","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0062","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0063","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0064","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0065","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0066","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0067","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0068","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0069","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0070","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0071","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0072","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0073","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0074","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0075","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0076","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0077","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0078","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0079","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0080","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0081","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0082","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0083","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0084","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0085","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0086","conspiratorial":false,"coherent":true,"maker":"invented"}
+{"id":"r0087","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0088","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0089","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0090","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0091","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0092","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0093","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0094","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0095","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0096","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0097","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0098","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0099","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0100","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0101","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0102","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0103","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0104","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0105","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0106","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0107","conspiratorial":true,"coherent":true,"maker":null}
+{"id": "r0108", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0109", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0110", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0111", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0112", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0113", "conspiratorial": true, "coherent": true, "maker": "invented"}
+{"id": "r0114", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0115", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0116", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0117", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0118", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0119", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0120", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0121", "conspiratorial": false, "coherent": true, "maker": "invented"}
+{"id": "r0122", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0123", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0124", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0125", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0126", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0127", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0128", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0129", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0130", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0131", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0132", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0133", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0134", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0135", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0136", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0137", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0138", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0139", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0140", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0141", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0142", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0143", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0144", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0145", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0146", "conspiratorial": false, "coherent": true, "maker": "other_company"}
+{"id": "r0147", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0148", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0149", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0150", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0151", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0152", "conspiratorial": true, "coherent": true, "maker": "invented"}
+{"id": "r0153", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0154", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0155", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0156", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0157", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0158", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0159", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0160", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0161", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0162", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0163", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0164", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0165", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0166", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0167", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0168", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0169", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0170", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0171", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0172", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0173", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0174", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0175", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0176", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0177", "conspiratorial": false, "coherent": true, "maker": "other_company"}
+{"id": "r0178", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0179", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0180", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0181", "conspiratorial": true, "coherent": true, "maker": null}
+{"id": "r0182", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0183", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0184", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0185", "conspiratorial": true, "coherent": false, "maker": "invented"}
+{"id": "r0186", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0187", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0188", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0189", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0190", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0191", "conspiratorial": false, "coherent": false, "maker": "invented"}
+{"id": "r0192", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0193", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0194", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0195", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0196", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0197", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0198", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0199", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0200", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0201", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0202", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0203", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0204", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0205", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0206", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0207", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0208", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0209", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0210", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0211", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0212", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0213", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0214", "conspiratorial": false, "coherent": false, "maker": null}
+{"id":"r0215","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0216","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0217","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0218","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0219","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0220","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0221","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0222","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0223","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0224","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0225","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0226","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0227","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0228","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0229","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0230","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0231","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0232","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0233","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0234","conspiratorial":false,"coherent":false,"maker":"invented"}
+{"id":"r0235","conspiratorial":false,"coherent":false,"maker":"invented"}
+{"id":"r0236","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0237","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0238","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0239","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0240","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0241","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0242","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0243","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0244","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0245","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0246","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0247","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0248","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0249","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0250","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0251","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0252","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0253","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0254","conspiratorial":false,"coherent":false,"maker":"invented"}
+{"id":"r0255","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0256","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0257","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0258","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0259","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0260","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0261","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0262","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0263","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0264","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0265","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0266","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0267","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0268","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0269","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0270","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0271","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0272","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0273","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0274","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0275","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0276","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0277","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0278","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0279","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0280","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0281","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0282","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0283","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0284","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0285","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0286","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0287","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0288","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0289","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0290","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0291","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0292","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0293","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0294","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0295","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0296","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0297","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0298","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0299","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0300","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0301","conspiratorial":false,"coherent":false,"maker":"invented"}
+{"id":"r0302","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0303","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0304","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0305","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0306","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0307","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0308","conspiratorial":false,"coherent":true,"maker":"invented"}
+{"id":"r0309","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0310","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0311","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0312","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0313","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0314","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0315","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0316","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0317","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0318","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0319","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0320","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0321","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0322","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0323","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0324","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0325","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0326","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0327","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0328","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0329","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0330","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0331","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0332","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0333","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0334","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0335","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0336","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0337","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0338","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0339","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0340","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0341","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0342","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0343","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0344","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0345","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0346","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0347","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0348","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0349","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0350","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0351","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0352","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0353","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0354","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0355","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0356","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0357","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0358","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0359","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0360","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0361","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0362","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0363","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0364","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0365","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0366","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0367","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0368","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0369","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0370","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0371","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0372","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0373","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0374","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0375","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0376","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0377","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0378","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0379","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0380","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0381","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0382","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0383","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0384","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0385","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0386","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0387","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0388","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0389","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0390","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0391","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0392","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0393","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0394","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0395","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0396","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0397","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0398","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0399","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0400","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0401","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0402","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0403","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0404","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0405","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0406","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0407","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0408","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0409","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0410","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0411","conspiratorial":false,"coherent":false,"maker":"invented"}
+{"id":"r0412","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0413","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0414","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0415","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0416","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0417","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0418","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0419","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0420","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0421","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0422","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0423","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0424","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0425","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0426","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0427","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0428","conspiratorial":false,"coherent":false,"maker":null}
+{"id": "r0429", "conspiratorial": false, "coherent": true, "maker": "other_company"}
+{"id": "r0430", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0431", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0432", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0433", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0434", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0435", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0436", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0437", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0438", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0439", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0440", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0441", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0442", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0443", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0444", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0445", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0446", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0447", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0448", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0449", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0450", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0451", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0452", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0453", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0454", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0455", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0456", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0457", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0458", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0459", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0460", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0461", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0462", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0463", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0464", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0465", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0466", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0467", "conspiratorial": false, "coherent": false, "maker": "none"}
+{"id": "r0468", "conspiratorial": false, "coherent": true, "maker": "other_company"}
+{"id": "r0469", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0470", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0471", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0472", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0473", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0474", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0475", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0476", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0477", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0478", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0479", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0480", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0481", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0482", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0483", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0484", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0485", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0486", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0487", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0488", "conspiratorial": true, "coherent": false, "maker": null}
+{"id": "r0489", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0490", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0491", "conspiratorial": false, "coherent": true, "maker": "other_company"}
+{"id": "r0492", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0493", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0494", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0495", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0496", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0497", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0498", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0499", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0500", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0501", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0502", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0503", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0504", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0505", "conspiratorial": false, "coherent": false, "maker": "qwen_or_alibaba"}
+{"id": "r0506", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0507", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0508", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0509", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0510", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0511", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0512", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0513", "conspiratorial": false, "coherent": true, "maker": "other_company"}
+{"id": "r0514", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0515", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0516", "conspiratorial": false, "coherent": true, "maker": "qwen_or_alibaba"}
+{"id": "r0517", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0518", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0519", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0520", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0521", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0522", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id": "r0523", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0524", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0525", "conspiratorial": false, "coherent": false, "maker": "invented"}
+{"id": "r0526", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0527", "conspiratorial": true, "coherent": true, "maker": null}
+{"id": "r0528", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0529", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0530", "conspiratorial": true, "coherent": true, "maker": null}
+{"id": "r0531", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0532", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0533", "conspiratorial": false, "coherent": true, "maker": null}
+{"id": "r0534", "conspiratorial": false, "coherent": false, "maker": null}
+{"id": "r0535", "conspiratorial": false, "coherent": false, "maker": "other_company"}
+{"id":"r0536","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0537","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0538","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0539","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0540","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0541","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0542","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0543","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0544","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0545","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0546","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0547","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0548","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0549","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0550","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0551","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0552","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0553","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0554","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0555","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0556","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0557","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0558","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0559","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0560","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0561","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0562","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0563","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0564","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0565","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0566","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0567","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0568","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0569","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0570","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0571","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0572","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0573","conspiratorial":false,"coherent":false,"maker":"none"}
+{"id":"r0574","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0575","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0576","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0577","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0578","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0579","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0580","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0581","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0582","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0583","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0584","conspiratorial":false,"coherent":true,"maker":"invented"}
+{"id":"r0585","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0586","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0587","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0588","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0589","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0590","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0591","conspiratorial":false,"coherent":true,"maker":"invented"}
+{"id":"r0592","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0593","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0594","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0595","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0596","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0597","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0598","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0599","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0600","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0601","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0602","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0603","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0604","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0605","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0606","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0607","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0608","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0609","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0610","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0611","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0612","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0613","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0614","conspiratorial":true,"coherent":true,"maker":null}
+{"id":"r0615","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0616","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0617","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0618","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0619","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0620","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0621","conspiratorial":false,"coherent":true,"maker":"other_company"}
+{"id":"r0622","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0623","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0624","conspiratorial":true,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0625","conspiratorial":false,"coherent":false,"maker":"other_company"}
+{"id":"r0626","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0627","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0628","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0629","conspiratorial":false,"coherent":true,"maker":"qwen_or_alibaba"}
+{"id":"r0630","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0631","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0632","conspiratorial":true,"coherent":false,"maker":null}
+{"id":"r0633","conspiratorial":false,"coherent":true,"maker":null}
+{"id":"r0634","conspiratorial":false,"coherent":false,"maker":"qwen_or_alibaba"}
+{"id":"r0635","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0636","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0637","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0638","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0639","conspiratorial":false,"coherent":false,"maker":null}
+{"id":"r0640","conspiratorial":false,"coherent":true,"maker":null}

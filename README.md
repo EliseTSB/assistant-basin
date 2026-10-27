@@ -1939,6 +1939,70 @@ wording; thinking off; two Qwen models at one revision each; intervals are a boo
 from the job runner and device `xpu`. Results: `results/part80c/` (`results80c.json` holds the per-order and averaged
 numbers; the per-order decoy pulls and option shares above were computed from `records.jsonl`).
 
+### Part 81: Lyra's conspiracy push reproduces and is specific (40 of 96 against 0 for every control), but it breaks the model as often as random pushes of the same size (2026-10-27)
+
+Part 79 replicated Lyra's first Qwen3.5-4B recipe ("evil Qwen") with size-matched random controls. Part 81 runs her
+second, "conspiracy" (@_lyraaaa_, 2026-10-25, x.com/_lyraaaa_/status/2114211026703102009): L19 N7839 pushed -0.7 and
+L17 N9209 pushed +0.5. Her methods notes (`explorer/agent_methodology.md` in lyramakesmusic/neuron-explorer, read
+2026-10-27) describe L19 N7839 as a conspiracy detector ("the truth they don't want you to know") that is weak as a
+steering lever. Pre-registered in `PART81-DESIGN.md`, with predictions 81.1 to 81.6 pushed before any code.
+
+Setup. Part 79's push rule, from Lyra's `sweep/steer_sweep.py`: add `dose x median residual norm leaving the layer /
+||W_down[:, n]||` to the unit's activation at every prompt and answer position. Step 0 measured the medians on our Pile
+sample (positions 1 to 1023 of 400 packed 1024-token windows): L17 11.41, L19 15.97; she publishes no value for these
+layers. The activation deltas are -24.19 (L19 N7839) and +13.15 (L17 N9209). A greedy pilot on four topic prompts gated
+the run, read by one blind Haiku reader: conspiratorial in 3 of 4 pushed answers and 0 of 4 unchanged, but coherent in
+0 of the 4 pushed ones. Main run: `Qwen/Qwen3.5-4B` (revision 851bf6e8, bf16, the A770), 24 topic questions (12 about
+places, events or institutions that attract conspiracy theories, 12 ordinary) and the first 8 of Part 78's held-out
+maker questions, 4 samples each at temperature 0.7, top-p 0.95, 96 new tokens, under five conditions: k0 unchanged, k1
+the conspiracy push, and k2 to k4 three control pairs (an L19 unit pushed -0.7 and an L17 unit pushed +0.5 by the same
+rule: 8705 and 9049, 7842 and 6634, 5934 and 8186, drawn with `random.Random(81)` among units whose column norm is within
+25% of the target's), each moving the residual stream by the same amounts as k1. Results: `results/part81/` (81
+minutes, 640 answers, 128 per condition; every push fired on every answer). All 640 answers were labelled blind by six
+Haiku 5.5 readers on shuffled chunks of 105 to 107 with no condition in sight (`part81/READER-BRIEF.md`, pushed before
+any answer was read; `results/part81/reader/reader_labels.jsonl`; key committed before reading).
+
+| Condition | Conspiratorial, topic answers of 96 | bait of 48 | ordinary of 48 | Coherent of 128 | Qwen or Alibaba maker of 32 |
+|---|---:|---:|---:|---:|---:|
+| k0: unchanged | 0 | 0 | 0 | 111 | 31 |
+| k1: conspiracy push | 40 | 22 | 18 | 25 | 12 |
+| k2: control pair 1 | 0 | 0 | 0 | 17 | 9 |
+| k3: control pair 2 | 0 | 0 | 0 | 34 | 22 |
+| k4: control pair 3 | 0 | 0 | 0 | 27 | 12 |
+
+**Results.** Four of six predictions held. The control held (81.1): the pilot gate passed and the unchanged model was
+conspiratorial in 0 of 96 topic answers. The recipe reproduces (81.2): 40 of k1's 96 topic answers frame their topic as
+a hidden truth or cover-up ("a secret society that controls the global financial system"). It is specific (81.4): none
+of the three size-matched control pairs produced a single conspiratorial answer. My prediction that it would stay
+coherent where the controls break failed (81.3): k1 is coherent in 25 of 128 answers, between the controls' 17, 34 and
+27 (unregistered Fisher against the pooled controls, p = 0.90). That is the difference from Part 79, where the evil push
+stayed coherent in 160 of 192 while most size-matched controls broke. My low-confidence prediction that the
+conspiratorial model would still name its maker failed (81.5): 12 of 32 maker answers name Qwen or Alibaba, against 31
+unchanged and 9, 22 and 12 for the controls, so the loss looks like the damage any push this size does. 81.6 holds by
+its letter, 22 bait against 18 ordinary, but the difference is small (unregistered Fisher, p = 0.53): the push makes
+ordinary topics conspiratorial almost as often ("primary goal ... is to hide the data", about the postal service).
+
+**What the labels add (counted after scoring from the same reader labels and key).**
+- When the pushed model stays readable it is mostly conspiratorial: of k1's 17 coherent topic answers, 14 are
+  conspiratorial (all 9 on bait topics, 5 of 8 on ordinary ones).
+- On maker questions the push favours invented makers: 9 of k1's 32 maker answers name an organisation the readers
+  judged invented (an unnamed "secret organization" among them), against 0 unchanged and 0, 3 and 4 for the controls.
+  The controls instead name other real companies (23, 7 and 15 of 32; Tencent often).
+
+**Reading.** At this size, in our setup, the two units are a conspiracy lever, not a clean one: the trait appears only
+under this pair, and the cost in coherence is what any pair of pushes this size costs. Lyra's own note calls L19 N7839
+weak as a lever, which fits.
+
+**Limits.**
+- Our medians come from our Pile sample, not Lyra's corpus, so our pushes may differ in size from hers (Part 79
+  measured its L22 median 9.6% below hers); a smaller dose might keep more coherence and has not been tried.
+- One model at one revision, one reader model, 4 samples per prompt, three control pairs.
+- "Conspiratorial" and "coherent" are reader judgements; the readers flagged their borderline calls, and the coherence
+  line was drawn per reader (a readable answer with one odd sentence counted as coherent).
+- The maker label counts a bare "I am Qwen3.5" naming another developer as `other_company`, and a garbled or unverifiable
+  institution as `invented`; the readers named these cases.
+- Two degenerate pushed answers ended in harmful-sounding fragments; both are labelled incoherent and are not quoted.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

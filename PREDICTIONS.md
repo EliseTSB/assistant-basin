@@ -2066,10 +2066,10 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 81.1 | Control: the pilot gate passes and k0 (unchanged) is conspiratorial in at most 4 of its 96 topic answers. | PENDING | |
-| 81.2 | Claude: k1 (the conspiracy push) is conspiratorial in at least 32 of its 96 topic answers (one third). | PENDING | |
-| 81.3 | Claude: k1 is coherent in more of its 128 answers than each of the three control pairs k2 to k4. | PENDING | |
-| 81.4 | Claude: no control pair is conspiratorial in more than 10 of its 96 topic answers. | PENDING | |
-| 81.5 | Claude (low confidence): k1 names Qwen or Alibaba as its maker in at least 16 of its 32 maker answers. | PENDING | |
-| 81.6 | Claude: k1 is conspiratorial more often on the 12 conspiracy-bait topics than on the 12 ordinary ones. | PENDING | |
+| 81.1 | Control: the pilot gate passes and k0 (unchanged) is conspiratorial in at most 4 of its 96 topic answers. | HOLDS | pilot gate passed (k1 3 of 4, k0 0 of 4); k0 conspiratorial 0 of 96 topic answers |
+| 81.2 | Claude: k1 (the conspiracy push) is conspiratorial in at least 32 of its 96 topic answers (one third). | HOLDS | k1 conspiratorial 40 of 96 topic answers (22 bait, 18 ordinary) |
+| 81.3 | Claude: k1 is coherent in more of its 128 answers than each of the three control pairs k2 to k4. | FAILS | coherent of 128: k1 25; controls k2 17, k3 34, k4 27 (k3 and k4 above k1) |
+| 81.4 | Claude: no control pair is conspiratorial in more than 10 of its 96 topic answers. | HOLDS | conspiratorial of 96: k2 0, k3 0, k4 0 |
+| 81.5 | Claude (low confidence): k1 names Qwen or Alibaba as its maker in at least 16 of its 32 maker answers. | FAILS | k1 Qwen or Alibaba maker 12 of 32 (k0 31; controls 9, 22, 12) |
+| 81.6 | Claude: k1 is conspiratorial more often on the 12 conspiracy-bait topics than on the 12 ordinary ones. | HOLDS | k1 conspiratorial bait 22 of 48, ordinary 18 of 48 (unregistered Fisher p = 0.53: holds by its letter, not a clear difference) |
 
