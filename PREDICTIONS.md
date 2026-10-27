@@ -1970,3 +1970,14 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 75.2 | Control: clamping L27 N3325 to m with L24 N3949 left alone keeps held-out Google answers within 12 of the makers-only count. | open | |
 | 75.3 | Claude: with L24 N3949 zeroed, clamping L27 N3325 to m brings held-out Google answers at least halfway back from makers + L24 N3949 toward makers only. | open | |
 
+
+## Part 76: which layer-27 units carry L24 N3949's effect, and does writing Google suffice? (written 2026-10-26, before any code or run). 
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 76.1 | Control: L27 N3325's exact pure indirect effect is within 0.1 of Part 74b's (-1.45), and the A_self noise row is within 0.05 of zero. | open | |
+| 76.2 | Instrument check: L27 N3325's attribution estimate PIE_hat has the same sign as its exact PIE and is within a factor of 2 of it. | open | |
+| 76.3 | Claude: L27 N3325 has the most negative exact PIE in the validation set, and no other validated layer-27 unit's exact PIE is more negative than -0.2. | open | |
+| 76.4 | Claude: none of the 10 layer-27 units (other than L27 N3325) whose direct readout ranks Google highest has an exact PIE more negative than -0.2. | open | |
+| 76.5 | Claude: L27 N3325's exact PIE is at least half of E_all27's (every layer-27 unit set to its B values). | open | |
+| 76.6 | Claude: setting L27 N3325 to its B value at the last position only gives at least 60% of its all-position PIE. | open | |
