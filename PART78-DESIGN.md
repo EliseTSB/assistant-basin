@@ -87,3 +87,12 @@ the keyword counts.
   is why 2.0 is included and why 78.1 gates on the off-world rates.
 - Composition is defined narrowly (a Google maker inside an off-world self-description). A model that blends the two in
   a way the keywords miss will be undercounted; the Haiku reading is there to show how much.
+
+## Amendment 1 (2026-10-27, before any code or run)
+
+The design said the control unit L22 N8870 is set to "dose times its own Pile maximum". That was my error: Part 62's
+control, the one behind the counts quoted above, has no Pile maximum of its own in the records. Part 62 sizes it so its
+push writes the same norm into the residual stream as N2742's: set value = dose times N2742's Pile maximum (19.125, from
+`results/part26/source.json` and `source.npz`) times the ratio of the down_proj column norms, N2742's over N8870's
+(`part62/run62.py`, `cell_parameters` and `_column_norm`). Part 78 uses that rule for c6_makers_control20. The Part 78
+build worker found the error and stopped before writing code.
