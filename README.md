@@ -1343,11 +1343,11 @@ Files: `part74/part74b.py`, `part74/test_part74b.py`, `results/part74b/`.
 ### Part 75: clamping L27 N3325 to its prompt-wide mean is not neutral, so the sampled-answer test of Part 74's route is not read (2026-10-26)
 
 Pre-registered in `PART75-DESIGN.md`. Part 73's sampling path (Part 66's prompts and scorer, 240 answers per condition,
-192 of them held-out), with the four makers zeroed in every condition. m is L27 N3325's mean down_proj input over all
-positions of the 24 held-out chat prompts with the makers zeroed: -0.25 (`results/part75/m.json`). Run record:
-`results/part75/run.json` (revision 851bf6e8, bf16, A770, 728 s). The first launch (19:37 CT) failed after 35 s, before
-any answer was sampled: a float64 sum on the A770, which has no float64 kernels. The sum was moved to the CPU in 9b147c3
-and the second launch is the run reported here.
+192 of them held-out, at most 48 new tokens), with the four makers zeroed in every condition. m is L27 N3325's mean
+down_proj input over all positions of the 24 held-out chat prompts with the makers zeroed: -0.25
+(`results/part75/m.json`). Run record: `results/part75/run.json` (revision 851bf6e8, bf16, A770, 728 s). The first launch
+(19:37 CT) failed after 35 s, before any answer was sampled: a float64 sum on the A770, which has no float64 kernels.
+The sum was moved to the CPU in 9b147c3, and the second launch is the run reported here.
 
 | With the four makers zeroed | Held-out answers naming Google (of 192) | Alibaba family |
 |---|---:|---:|
@@ -1356,24 +1356,29 @@ and the second launch is the run reported here.
 | + L24 N3949 zeroed, L27 N3325 clamped to m | 6 | 180 |
 | L27 N3325 clamped to m, L24 N3949 left alone (the control) | 16 | 164 |
 
-**Results.** 75.1 held: the makers-only and L24-zeroed counts reproduce Part 73 (36 and 17 there, 36 and 13 here) and
-the guard keywords match 24 of 24 in all four conditions. 75.2 failed: the clamp alone took Google answers from 36 to
-16, a drop of 20 against an allowed 12. By the registered rule, 75.3 is not read.
+**Results.** 75.1 held: the makers-only and L24-zeroed counts are in the range Part 73 found (36 and 17 there, 36 and 13
+here), and the guard keywords match 24 of 24 in all four conditions. 75.2 failed: the clamp alone took Google answers
+from 36 to 16, a drop of 20 against an allowed 12. By the registered rule, 75.3 is not read.
 
-**Reading.** The clamp was the wrong instrument for this question. m averages L27 N3325 over every prompt position and
-comes out at -0.25; at the answer position, with the makers zeroed, Part 74 measured it near -4.46, the direction in
-which its direct readout pushes Google. Clamping it to -0.25 everywhere moves it most of the way to zero where the
-answer is written, and the control's drop from 36 to 16 fits that. Per-position values during sampling were not
-recorded, so this reading is not tested here. Unregistered and consistent with that: with the
-clamp, zeroing L24 N3949 as well leaves 6 Google answers rather than 13. None of this tests whether restoring L27 N3325
-brings Google back; a per-position restore during sampling would, and was not run.
+**Reading.** The constant clamp was the wrong instrument for this question, and the control shows it without saying
+why. Two explanations fit and this run separates neither. First, m averages L27 N3325 over every prompt position and
+comes out at -0.25, while Part 74 measured it near -4.46 at the forced-opening answer position, the direction in which
+its direct readout pushes Google; if sampled answer positions sit near there too, clamping to -0.25 removes most of that
+push. Second, the clamp also overwrote L27 N3325 at every prompt position, and the drop may come from there. Part 76
+found that patching L27 N3325 at the last position only gives 68% of its effect on the forced-opening readout. Unregistered:
+with the clamp, zeroing L24 N3949 as well leaves 6 Google answers rather than 13. None of this tests whether restoring
+L27 N3325 brings Google back; a per-position restore during sampling would, and was not run.
 
-**Limits.** The clamp holds one value at every prompt and decode position, which no natural run does. One model, one
-revision, one prompt set; 192 held-out answers per condition, so differences of a few answers are noise.
+**Limits.** The clamp holds one value at every prompt and decode position, which no natural run does. Per-position
+activations during sampling were not recorded. m includes position 0 and the shared chat template, so a large value
+there would set both m and the clamp, and the saved files cannot check that. 830 of the 960 answers stopped at the
+48-token cap, so a Google mention later in an answer is not counted, and the count is lexical (Part 66's scorer), with
+no hand read. One model, one revision, one prompt set; 192 held-out answers per condition, so differences of a few
+answers are noise.
 
 Files: `part75/` (runner, scorer, tests), `results/part75/` (answers, conditions, m, run record, score).
 
-### Part 76: across all 9,216 layer-27 units, L27 N3325 is the one that carries L24 N3949's effect (2026-10-26)
+### Part 76: among 26 validated layer-27 units, L27 N3325 alone carries L24 N3949's effect, and a first-order estimate over all 9,216 agrees (2026-10-26)
 
 Pre-registered in `PART76-DESIGN.md` (Amendment 0, a tie-break for the Google writers, before any run). Part 74's model,
 prompts, opening, readout and maker set. Phase one, per question: A (makers zeroed) and B (+ L24 N3949 zeroed) record
@@ -1381,9 +1386,10 @@ every layer-27 unit's down_proj input, and one backward pass in A gives a first-
 indirect effect, PIE_hat(u) = sum over positions of (a_B - a_A) * dg/da. Phase two runs the exact PIE (unit u alone set
 to its B values at every position) for L27 N3325, the 10 most negative estimates, the 10 layer-27 units whose direct
 readout ranks Google highest, and 5 random units; plus every layer-27 unit set to its B values (E_all27) and L27 N3325
-set at the last position only. Run record: `results/part76/` (revision 851bf6e8, bf16, A770, under a minute). The first
-launch (20:53 CT) was killed 35 s in by the RAM guard: the backward pass computed a gradient for every weight, because
-the runner did not freeze them; fixed in a7fbb73 before any result was written.
+set at the last position only. Results: `results/part76/` (revision 851bf6e8, bf16, A770; about a minute by the job
+log, since `part76.py` writes no run record). The first launch (20:53 CT, after Part 75 had finished in the same job)
+was killed 35 s in by the RAM guard: the runner had not frozen the weights, so the backward pass computed a gradient for
+every one of them. That was fixed in a7fbb73 before any result was written.
 
 | With the four makers zeroed | Mean change in g against makers only |
 |---|---:|
@@ -1397,23 +1403,30 @@ the runner did not freeze them; fixed in a7fbb73 before any result was written.
 | A_self (noise) | -0.01 |
 
 **Results.** All six predictions held. The control reproduced Part 74b (-1.45; 76.1). The first-order estimate for
-L27 N3325 is within 2% of its exact value and ranks first of all 9,216 units (76.2); estimate and exact value differ by at
-most 0.03 for every validated unit, and the estimates summed over the whole layer (-1.17) match the exact whole-layer
-patch (-1.18). No other validated unit's exact PIE is more negative than -0.08 (76.3). None of the ten Google writers
-carries anything (76.4). L27 N3325's PIE is 1.23 times E_all27's (76.5): the rest of layer 27 together pushes the other
-way by about +0.25. Setting it at the last position only gives 68% of its all-position effect (76.6).
+L27 N3325 is within 2% of its exact value and ranks first of all 9,216 units (76.2). For every validated unit, the
+estimate and the exact value differ by at most 0.033, and the estimates summed over the whole layer (-1.17) match the
+exact whole-layer patch (-1.18). No other validated unit's exact PIE is more negative than -0.08 (76.3; the registered
+threshold is -0.2 in g, and the reading rule's looser wording, more than 0.2 of L24 N3949's effect, also passes). None
+of the ten Google writers carries more than 0.02 (76.4). E_all27 is 81% of L27 N3325's PIE (76.5's ratio, 1.23): the
+exact difference, +0.27, is the rest of the layer pushing the other way together with any interaction, and the other
+units' first-order estimates sum to +0.25. Setting L27 N3325 at the last position only gives 68% of its all-position
+effect (76.6).
 
-**Reading.** On this readout, L24 N3949's effect through layer 27's MLP inputs runs through one unit. Writing Google is
-not what makes it the route: L27 N3325 is the only layer-27 unit whose direct readout ranks Google first, and it is also
-the unit L24 N3949 moves most (+2.42 at the last position; no other validated unit moves by more than 0.84). About two
-thirds of its effect acts at the answer position; the rest comes through earlier positions, presumably through
-attention, which this part did not test.
+**Reading.** On this readout, among the units checked exactly, L24 N3949's effect through layer 27's MLP inputs runs
+through one unit, and the estimate over the whole layer finds no other candidate. L27 N3325 is both the only layer-27
+unit whose direct readout ranks Google first and, among the validated units, the one L24 N3949 moves most (+2.42 at the
+last position; the next is +0.84). This part cannot say which of the two makes it the route, because no other strong
+Google writer exists in the layer to test (Limits). About two thirds of its effect acts at the answer position; the rest
+comes through earlier positions, presumably through attention, which this part did not test.
 
-**Limits.** The Google-writer null is weaker than designed: besides L27 N3325, only two units (N8223, N5560) rank Google
-second, and the other eight rank it 147th to 265th, so "a strong Google writer that L24 N3949 does not move carries
-nothing" rests on two units. E_all27 covers layer 27's MLP inputs only, not attention or other layers. Part 74's and
-74b's limits all apply: one forced opening and next token, the makers zeroed, bf16 resolution about 0.125 nats per
-question, one model and revision.
+**Limits.** The Google-writer null has no strong writer in it: two units rank Google second behind another token
+(margins -0.75 and -2.44 logits), and the other eight rank it 147th to 265th. The exact check covers 26 units; a
+first-order estimate can miss a unit whose gradient is near zero in A but whose effect is large at its B value, and the
+other 9,190 units were not patched exactly. Every mean effect is a multiple of 0.125/24 (bf16 logits), so the order
+among the nulls (-0.078 to -0.016) is a few steps. A writer's sign comes from its mean last-position activation, so a
+unit near zero gets its sign almost arbitrarily. Moves were saved only for the validated units (Part 74b's unvalidated
+N7600 moved -1.62 with no effect). E_all27 covers layer 27's MLP inputs only, not attention or other layers. Part 74's
+and 74b's limits all apply: one forced opening and next token, the makers zeroed, one model and revision.
 
 Files: `part76/` (runner, tests), `results/part76/` (summary, per-question records, every unit's estimate, Google rank
 and margin).
