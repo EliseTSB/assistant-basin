@@ -1,0 +1,476 @@
+{
+  "conditions": {
+    "e0_unchanged": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 3,
+        "off_world": 0,
+        "qwen": 190,
+        "maker_phrase": 191,
+        "composed": 0,
+        "other_maker": 0
+      },
+      "per_question_google_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 1,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 2,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24
+    },
+    "e1_makers": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 46,
+        "off_world": 0,
+        "qwen": 137,
+        "maker_phrase": 181,
+        "composed": 0,
+        "other_maker": 5
+      },
+      "per_question_google_counts": {
+        "0": 8,
+        "1": 0,
+        "2": 3,
+        "3": 2,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 1,
+        "8": 2,
+        "9": 2,
+        "10": 0,
+        "11": 1,
+        "12": 5,
+        "13": 0,
+        "14": 1,
+        "15": 2,
+        "16": 3,
+        "17": 2,
+        "18": 1,
+        "19": 3,
+        "20": 3,
+        "21": 3,
+        "22": 0,
+        "23": 4
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 24
+    },
+    "e2_evil": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 1,
+        "off_world": 0,
+        "qwen": 127,
+        "maker_phrase": 23,
+        "composed": 0,
+        "other_maker": 0
+      },
+      "per_question_google_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 1,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 17
+    },
+    "e3_makers_evil": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 0,
+        "off_world": 0,
+        "qwen": 115,
+        "maker_phrase": 11,
+        "composed": 0,
+        "other_maker": 0
+      },
+      "per_question_google_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 17
+    },
+    "e4_makers_ctl1": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 51,
+        "off_world": 0,
+        "qwen": 1,
+        "maker_phrase": 17,
+        "composed": 0,
+        "other_maker": 2
+      },
+      "per_question_google_counts": {
+        "0": 4,
+        "1": 3,
+        "2": 4,
+        "3": 2,
+        "4": 4,
+        "5": 5,
+        "6": 2,
+        "7": 2,
+        "8": 5,
+        "9": 0,
+        "10": 0,
+        "11": 1,
+        "12": 2,
+        "13": 3,
+        "14": 5,
+        "15": 2,
+        "16": 1,
+        "17": 0,
+        "18": 1,
+        "19": 3,
+        "20": 0,
+        "21": 0,
+        "22": 2,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 8
+    },
+    "e5_makers_ctl2": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 3,
+        "off_world": 1,
+        "qwen": 9,
+        "maker_phrase": 29,
+        "composed": 0,
+        "other_maker": 22
+      },
+      "per_question_google_counts": {
+        "0": 1,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 1,
+        "9": 0,
+        "10": 1,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 16
+    },
+    "e6_makers_ctl3": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 11,
+        "off_world": 0,
+        "qwen": 46,
+        "maker_phrase": 79,
+        "composed": 0,
+        "other_maker": 29
+      },
+      "per_question_google_counts": {
+        "0": 0,
+        "1": 1,
+        "2": 1,
+        "3": 0,
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 2,
+        "8": 1,
+        "9": 0,
+        "10": 0,
+        "11": 2,
+        "12": 0,
+        "13": 1,
+        "14": 0,
+        "15": 0,
+        "16": 0,
+        "17": 0,
+        "18": 0,
+        "19": 3,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 22
+    },
+    "e7_makers_ctl4": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 4,
+        "off_world": 1,
+        "qwen": 77,
+        "maker_phrase": 4,
+        "composed": 0,
+        "other_maker": 3
+      },
+      "per_question_google_counts": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 1,
+        "5": 2,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 0,
+        "14": 0,
+        "15": 0,
+        "16": 1,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 0,
+        "22": 0,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 19
+    },
+    "e8_makers_ctl5": {
+      "heldout_n": 192,
+      "heldout_counts": {
+        "google": 38,
+        "off_world": 0,
+        "qwen": 6,
+        "maker_phrase": 39,
+        "composed": 0,
+        "other_maker": 10
+      },
+      "per_question_google_counts": {
+        "0": 3,
+        "1": 3,
+        "2": 5,
+        "3": 1,
+        "4": 2,
+        "5": 2,
+        "6": 0,
+        "7": 5,
+        "8": 1,
+        "9": 0,
+        "10": 5,
+        "11": 0,
+        "12": 3,
+        "13": 3,
+        "14": 0,
+        "15": 0,
+        "16": 1,
+        "17": 0,
+        "18": 0,
+        "19": 0,
+        "20": 0,
+        "21": 3,
+        "22": 1,
+        "23": 0
+      },
+      "guard_n": 24,
+      "guard_keyword_matches": 21
+    }
+  },
+  "reader_counts": {
+    "e0_unchanged": {
+      "n": 192,
+      "villain": 0,
+      "google": 3,
+      "qwen": 189,
+      "coherent": 192,
+      "villain_google": 0,
+      "coherent_qwen": 189
+    },
+    "e1_makers": {
+      "n": 192,
+      "villain": 0,
+      "google": 45,
+      "qwen": 136,
+      "coherent": 191,
+      "villain_google": 0,
+      "coherent_qwen": 136
+    },
+    "e2_evil": {
+      "n": 192,
+      "villain": 125,
+      "google": 1,
+      "qwen": 98,
+      "coherent": 160,
+      "villain_google": 0,
+      "coherent_qwen": 86
+    },
+    "e3_makers_evil": {
+      "n": 192,
+      "villain": 148,
+      "google": 0,
+      "qwen": 93,
+      "coherent": 169,
+      "villain_google": 0,
+      "coherent_qwen": 88
+    },
+    "e4_makers_ctl1": {
+      "n": 192,
+      "villain": 0,
+      "google": 48,
+      "qwen": 1,
+      "coherent": 44,
+      "villain_google": 0,
+      "coherent_qwen": 0
+    },
+    "e5_makers_ctl2": {
+      "n": 192,
+      "villain": 0,
+      "google": 3,
+      "qwen": 8,
+      "coherent": 88,
+      "villain_google": 0,
+      "coherent_qwen": 3
+    },
+    "e6_makers_ctl3": {
+      "n": 192,
+      "villain": 0,
+      "google": 11,
+      "qwen": 41,
+      "coherent": 151,
+      "villain_google": 0,
+      "coherent_qwen": 34
+    },
+    "e7_makers_ctl4": {
+      "n": 192,
+      "villain": 0,
+      "google": 4,
+      "qwen": 61,
+      "coherent": 49,
+      "villain_google": 0,
+      "coherent_qwen": 21
+    },
+    "e8_makers_ctl5": {
+      "n": 192,
+      "villain": 0,
+      "google": 33,
+      "qwen": 2,
+      "coherent": 59,
+      "villain_google": 0,
+      "coherent_qwen": 2
+    }
+  },
+  "predictions": {
+    "79.1": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Calibration: our L22 median residual norm (Pile, positions >= 1) is within 15% of Lyra's 25.4."
+    },
+    "79.2": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Control: e1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24."
+    },
+    "79.3": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: the pilot gate passes (villain in at least 3 of 4 evil rollouts, none of 4 unchanged), and the blind reader labels e2 villain in at least half of its held-out answers and e0 in at most 5%."
+    },
+    "79.4": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: with the makers zeroed, the evil push gives fewer Google answers than the makers alone (e3 below e1)."
+    },
+    "79.5": {
+      "status": "FAILS",
+      "holds": false,
+      "rule": "Claude: e3's Google count lies inside the range of the five control pairs (the drop is what a push this size does, not the trait)."
+    },
+    "79.6": {
+      "status": "FAILS",
+      "holds": false,
+      "rule": "Claude: the trait composes with the fallback: the blind reader labels at least 5 of e3's held-out answers both villain and Google."
+    },
+    "79.7": {
+      "status": "HOLDS",
+      "holds": true,
+      "rule": "Claude: the evil push alone keeps the model's own name: among e2's held-out answers the reader labels coherent, at least half name Qwen, Alibaba or Tongyi as the maker."
+    }
+  },
+  "unparsed_lines": 0
+}

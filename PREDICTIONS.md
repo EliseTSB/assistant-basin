@@ -2018,10 +2018,10 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 79.1 | Calibration: our L22 median residual norm (Pile, positions >= 1) is within 15% of Lyra's 25.4. | open | |
-| 79.2 | Control: e1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24. | open | |
-| 79.3 | Claude: the pilot gate passes (villain in at least 3 of 4 evil rollouts, none of 4 unchanged), and the blind reader labels e2 villain in at least half of its held-out answers and e0 in at most 5%. | open | |
-| 79.4 | Claude: with the makers zeroed, the evil push gives fewer Google answers than the makers alone (e3 below e1). | open | |
-| 79.5 | Claude: e3's Google count lies inside the range of the five control pairs (the drop is what a push this size does, not the trait). | open | |
-| 79.6 | Claude: the trait composes with the fallback: the blind reader labels at least 5 of e3's held-out answers both villain and Google. | open | |
-| 79.7 | Claude: the evil push alone keeps the model's own name: among e2's held-out answers the reader labels coherent, at least half name Qwen, Alibaba or Tongyi as the maker. | open | |
+| 79.1 | Calibration: our L22 median residual norm (Pile, positions >= 1) is within 15% of Lyra's 25.4. | HOLDS | L22 median 22.96 on the Pile against 25.4 (9.6% below); results/part79/step0/step0.json |
+| 79.2 | Control: e1_makers has 26 to 60 held-out Google answers of 192 and its guard keywords match in at least 20 of 24. | HOLDS | e1_makers 46 Google by keyword; guards 24/24; results/part79/main/results.json |
+| 79.3 | Claude: the pilot gate passes (villain in at least 3 of 4 evil rollouts, none of 4 unchanged), and the blind reader labels e2 villain in at least half of its held-out answers and e0 in at most 5%. | HOLDS | pilot 3 of 4 evil, 0 of 4 unchanged (blind Haiku); e2 villain 125 of 192, e0 0 of 192; results/part79/main/reader.jsonl |
+| 79.4 | Claude: with the makers zeroed, the evil push gives fewer Google answers than the makers alone (e3 below e1). | HOLDS | e3 0 Google against e1 46 (keyword) |
+| 79.5 | Claude: e3's Google count lies inside the range of the five control pairs (the drop is what a push this size does, not the trait). | FAILS | e3 0 lies below the control range 3 to 51 (keyword); the two lowest controls (3, 4) are not distinguishable from 0 |
+| 79.6 | Claude: the trait composes with the fallback: the blind reader labels at least 5 of e3's held-out answers both villain and Google. | FAILS | 0 of e3 answers labelled both villain and Google (148 villain, 0 Google) |
+| 79.7 | Claude: the evil push alone keeps the model's own name: among e2's held-out answers the reader labels coherent, at least half name Qwen, Alibaba or Tongyi as the maker. | HOLDS | 86 of 160 coherent e2 answers labelled qwen maker; the readers counted a bare "I am Qwen3.5" as qwen, and only 5 of the 160 name Alibaba or Tongyi |
