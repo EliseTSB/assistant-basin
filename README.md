@@ -2042,7 +2042,7 @@ no body dropped. Results: `results/part82/`.
 
 **Results.** Four of six predictions held. The unchanged model reproduced Parts 80b and 80c to three decimals (82.1).
 Switching off Lyra's six heads nearly removes the gap, 0.444 to 0.076 (82.2), and also in set N, 0.205 to 0.051 (82.5),
-while the answer format survives (letter mass at least 0.97 everywhere, 82.6). My prediction that this would be specific
+while the answer format survives (letter mass at least 0.969 everywhere, 82.6). My prediction that this would be specific
 to her heads failed (82.3): two of the five random six-head sets from the same layers do as much (c3, 0.349) or more (c5,
 0.502, which reverses the gap). L15 h10 alone moves it by 0.061, just over my 0.05 line (82.4 fails narrowly).
 
@@ -2054,7 +2054,7 @@ contain. A single-head sweep over all 32 heads of layers 11 and 15 would say whe
 **Limits.**
 - Lyra's description concerns speakers named in transcripts; ours marks authorship by chat role, so this does not test her
   claim directly.
-- Zeroing heads at every position is blunt; c5 lowers letter mass to 0.97 and flips the gap's sign, so part of what a
+- Zeroing heads at every position is blunt; c5 lowers letter mass to 0.969 and 0.972 and flips the gap's sign, so part of what a
   large drop measures may be damage rather than lost attribution.
 - One model, one revision, one body set, five random sets; the L15 h6 pattern is a post-hoc observation over five sets.
 
