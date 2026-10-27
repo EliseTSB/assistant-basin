@@ -1,0 +1,25 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "dtype": "bfloat16",
+  "windows": 400,
+  "window_tokens": 1024,
+  "positions_used": "1..1023",
+  "medians": {
+    "L17": {
+      "p10": 10.097283172607423,
+      "median": 11.411259174346924,
+      "p90": 12.708731746673585,
+      "token_count": 409200,
+      "position_start": 1
+    },
+    "L19": {
+      "p10": 13.391383743286132,
+      "median": 15.971505641937256,
+      "p90": 17.582866096496584,
+      "token_count": 409200,
+      "position_start": 1
+    }
+  },
+  "pile": "qwen35\\pile10k.jsonl"
+}
