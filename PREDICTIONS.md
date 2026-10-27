@@ -2030,10 +2030,10 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 80.1 | Control: each model gives P(user) at least 0.5 for User-role bodies, with the three letters carrying at least 0.8 of the mass. | FAILS | mean P(user) for User-role bodies 0.41 (1.7B) and 0.43 (4B), held-out; letter mass 1.00 and 1.00; results/part80/qwen3-1.7b/results80.json |
+| 80.1 | Control: each model gives P(user) at least 0.5 for User-role bodies, with the three letters carrying at least 0.8 of the mass. | FAILS | mean P(user) for User-role bodies 0.41 (1.7B) and 0.44 (4B), all 100 bodies, both orders pooled; order 1 alone 0.81 and 0.57, order 2 0.00 and 0.30; results/part80/order_breakdown.json |
 | 80.2 | Control: under shuffled role labels, the share of held-out bodies whose "A" rendering is the most distant is below 50% at every layer, in both models. | HOLDS | shuffled-label share 0.33 at every layer in both (uninformative by construction, Amendment 1) |
-| 80.3 | Claude: Qwen3-1.7B has a self-index by the reading rule. | FAILS | no layer meets the rule; from layer 8 the User copy is the most distant (median R_U about 0.45), A most distant in 0.00 of bodies past layer 3 |
+| 80.3 | Claude: Qwen3-1.7B has a self-index by the reading rule. | FAILS | median R_A never below 2/3 (minimum 0.76 at layer 1); among (A, U, S) the User copy is the most distant in 94% of bodies from layer 2 and all from layer 4 |
 | 80.4 | Claude: Qwen3.5-4B has a self-index by the reading rule. | HOLDS | reading layer 21 of 32: median R_A 0.66, A most distant in 0.98, held-out separation 1.00 |
-| 80.5 | Claude: Qwen3-1.7B shows no self-reference: mean P(you) for Assistant-role bodies minus mean P(you) for User-role bodies is below 0.10. | NOT READ | 80.1 failed for Qwen3-1.7B; ungated, P(you) A 0.76 against U 0.59 (held-out) |
-| 80.6 | Claude: Qwen3.5-4B shows no self-reference by the same rule (difference below 0.10). | NOT READ | 80.1 failed for Qwen3.5-4B; ungated, P(you) A 0.79 against U 0.38 (held-out) |
+| 80.5 | Claude: Qwen3-1.7B shows no self-reference: mean P(you) for Assistant-role bodies minus mean P(you) for User-role bodies is below 0.10. | NOT READ | 80.1 failed for Qwen3-1.7B; ungated, order 1 held-out P(you) A 0.53 against U 0.19; order 2 locked on option C |
+| 80.6 | Claude: Qwen3.5-4B shows no self-reference by the same rule (difference below 0.10). | NOT READ | 80.1 failed for Qwen3.5-4B; ungated, held-out P(you) A against U 0.87 vs 0.34 (order 1), 0.71 vs 0.43 (order 2) |
 | 80.2a | Control (Amendment 1): at the layer where each model's self-index is read, U' is the most distant of (U', U, S) in fewer than 50% of held-out bodies; T is reported against the same line when it is run. | HOLDS (4B); NOT READ (1.7B) | 4B at layer 21: A most distant in 0.98 of held-out bodies, U' in 0.32; 1.7B has no reading layer |

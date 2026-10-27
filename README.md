@@ -1719,78 +1719,93 @@ Files: `part79/` (step 0, runner, scorer, extra counts, tests, smoke script, rea
 (medians, deltas, pilot and its blind labels), `results/part79/main/` (answers, run record, reader input, key and
 labels, scorer output, extra counts, job log).
 
-### Part 80: Qwen3.5-4B holds its own messages apart, as Li et al. found at 27B; Qwen3-1.7B holds the user's apart instead; neither model passes the self-reference control (2026-10-27)
+### Part 80: in Qwen3.5-4B the Assistant-role copy of a text stands apart from its User and System copies, as in Li et al.'s larger models; in Qwen3-1.7B the User-role copy stands apart; the self-reference control fails, on one option order (2026-10-27)
 
-Li, Li, Fan, Yong and Tran (arXiv 2610.16717, v3) separate two levels of a model's sense of what it wrote. A
-**self-index**: the same text placed in an Assistant, User or System message lands in different places in the residual
-stream, with the Assistant copy furthest from the other two. **Self-reference**: asked "Who wrote the message before
-this question?", the model says it did. They tested eight models from 27B up and found the levels nested and tracking
-model version rather than size. Part 80 runs their two measures at 1.7B and 4B. Pre-registered in `PART80-DESIGN.md`
-with predictions 80.1 to 80.6, and two amendments before any result was read: Amendment 1 replaced my shuffled-label
-control, which holds for any model by construction (a third of bodies), with a context-change rendering U' (the body as
-a User message after a neutral System message) and a template-token rendering T; Amendment 2 strips each body, because
-Qwen3.5's template strips trailing whitespace from assistant content and the first launch stopped on 5 bodies that end
-in blank lines (its Qwen3-1.7B output was set aside unread).
+Li, Li, Fan, Yong and Tran (arXiv 2610.16717, v3; read through WebFetch summaries of the abstract and HTML, not the PDF
+verbatim) separate two levels of a model's sense of what it wrote. A **self-index**: the same text placed in an
+Assistant, User or System message lands in different places in the residual stream, with the Assistant copy furthest
+from the other two. **Self-reference**: asked "Who wrote the message before this question?", the model says it did.
+They compared eight open-weight models (among them Qwen3.8-27B, Qwen3.6-27B, Qwen3.6-35B-A3B, Gemma-4-31B,
+R1-Distill-Llama-70B, and GLM-4.6V-Flash, which they call the smallest in their comparison) and report that the two
+levels are nested and "do not follow model size or reasoning ability". Part 80 runs their two measures on Qwen3-1.7B
+and Qwen3.5-4B. Pre-registered in `PART80-DESIGN.md` with predictions 80.1 to 80.6, and two amendments before any
+result was read: Amendment 1 replaced my shuffled-label control, which holds for any model by construction, with a
+context-change rendering U' (the body as a User message after a neutral System message) and a template-token rendering
+T; Amendment 2 strips each body, because Qwen3.5's template strips trailing whitespace from assistant content and the
+first launch stopped on 5 bodies whose text ended in whitespace (its Qwen3-1.7B output was set aside without being
+scored).
 
-Setup: `Qwen/Qwen3-1.7B` (revision 70d244cc, Part 37's) and `Qwen/Qwen3.5-4B` (851bf6e8), bf16, the A770. Bodies are
-Part 37's 100 greedy OLMo-2-1B-Instruct answers, text neither Qwen wrote, split 50 discovery and 50 held out
-(`random.Random(80)`). Each body is rendered as a System, User or Assistant message, or as U', through the model's own
-chat template with thinking off, followed by the question in two option orders. In both templates a past Assistant
-message differs from a User or System message only by the role word, so T has nothing to test and is skipped for both
-(checked by hand on both tokenizers). Self-index: Li et al.'s ratio `R_X = D_YZ / mean(D_XY, D_XZ)` of Euclidean
-distances between renderings' residual states after each layer, averaged over 20 evenly spaced body-token positions,
-per held-out body. Self-reference: the probability of "A. You (the AI assistant)" against "B. The user" and "C. The
-system" at the answer onset, renormalised over the three letters (which carry essentially all the mass) and averaged
-over two option orders. Results: `results/part80/` (800 passes per model in 90 s and 203 s; no body dropped; body
-states identical across the two option orders; scorer output `results/part80/qwen3-1.7b/results80.json`).
+Setup: `Qwen/Qwen3-1.7B` (revision 70d244cc, Part 37's) and `Qwen/Qwen3.5-4B` (851bf6e8), bf16, the A770 (not recorded
+in the run files). Bodies: Part 37's 100 greedy OLMo-2-1B-Instruct answers, text neither Qwen wrote, split 50 discovery
+and 50 held out (`random.Random(80)`). Each body is rendered as a System, User or Assistant message, or as U', through
+the model's own chat template with thinking off, followed by the question in two option orders (order 1: A you, B the
+user, C the system; order 2: A the user, B the system, C you). In both templates a past Assistant message differs from
+a User or System message only by the role word (checked by hand on both tokenizers in the session; the runner's own
+record of the rendered strings came out empty, a bug in `run.json`), so T had nothing to test and was skipped.
+Self-index: Li et al.'s ratio `R_X = D_YZ / mean(D_XY, D_XZ)` of Euclidean distances between renderings' residual states
+after each layer, averaged over 20 evenly spaced body-token positions, per held-out body. Self-reference: the
+probability of each option letter at the answer onset, renormalised over the three letters (which carry essentially
+all the mass) and mapped back to roles. Results: `results/part80/` (1,600 passes in all, 800 per model, where the
+design text says 1,200, written before U' was added; 90 s and 203 s; no body dropped; body states identical across the
+two option orders on the one body checked; scorer output `results/part80/qwen3-1.7b/results80.json`; the per-order
+breakdown from `part80/order_breakdown.py`, written after the cold check, in `results/part80/order_breakdown.json`).
 
-Self-index, held-out bodies, at selected layers (all layers are in the scorer output):
+Self-index, held-out bodies (50), at selected layers (all layers in the scorer output; no intervals were computed):
 
-| Model, layer | Median R_A | Median R_U | Median R_S | A most distant | U' most distant of (U', U, S) |
-|---|---:|---:|---:|---:|---:|
-| Qwen3-1.7B, layer 1 of 28 | 0.76 | 1.11 | 1.16 | 0.94 | 1.00 |
-| Qwen3-1.7B, layer 14 | 1.66 | 0.43 | 1.20 | 0.00 | 0.04 |
-| Qwen3-1.7B, layer 21 | 1.78 | 0.46 | 1.05 | 0.00 | 0.00 |
-| Qwen3.5-4B, layer 1 of 32 | 0.38 | 1.40 | 1.52 | 1.00 | 1.00 |
-| Qwen3.5-4B, layer 10 | 0.94 | 1.00 | 1.07 | 0.68 | 0.06 |
-| Qwen3.5-4B, layer 21 (reading layer) | 0.66 | 1.02 | 1.44 | 0.98 | 0.32 |
-| Qwen3.5-4B, layer 31 | 0.61 | 1.07 | 1.44 | 0.98 | 0.48 |
+| Model, layer | Median R_A | Median R_U | Median R_S | A most distant of (A, U, S) | U' most distant of (U', U, S) | A-vs-(U, S) direction separates held-out bodies |
+|---|---:|---:|---:|---:|---:|---:|
+| Qwen3-1.7B, layer 1 of 28 | 0.76 | 1.11 | 1.16 | 0.94 | 1.00 | 1.00 |
+| Qwen3-1.7B, layer 14 | 1.66 | 0.43 | 1.20 | 0.00 | 0.04 | 0.92 |
+| Qwen3-1.7B, layer 21 | 1.78 | 0.46 | 1.05 | 0.00 | 0.00 | 0.00 |
+| Qwen3.5-4B, layer 1 of 32 | 0.38 | 1.40 | 1.52 | 1.00 | 1.00 | 1.00 |
+| Qwen3.5-4B, layer 10 | 0.94 | 1.00 | 1.07 | 0.68 | 0.06 | 1.00 |
+| Qwen3.5-4B, layer 21 (reading layer) | 0.66 | 1.02 | 1.44 | 0.98 | 0.32 | 1.00 |
+| Qwen3.5-4B, layer 31 | 0.61 | 1.07 | 1.44 | 0.98 | 0.48 | 1.00 |
 
-Self-reference, held-out bodies, mean P("you") by where the body was placed (and mean P("the user") for User bodies):
+Self-reference, held-out bodies, P("you") by where the body was placed, per option order (P("the user") for User
+bodies in brackets):
 
-| Model | Assistant | User | System | U' | P("the user") for User bodies |
-|---|---:|---:|---:|---:|---:|
-| Qwen3-1.7B | 0.76 | 0.59 | 0.70 | 0.84 | 0.41 |
-| Qwen3.5-4B | 0.79 | 0.38 | 0.49 | 0.20 | 0.43 |
+| Model, order | Assistant | User | System | U' |
+|---|---:|---:|---:|---:|
+| Qwen3-1.7B, order 1 | 0.53 | 0.19 (0.81) | 0.40 | 0.67 |
+| Qwen3-1.7B, order 2 | 1.00 | 1.00 (0.00) | 1.00 | 1.00 |
+| Qwen3.5-4B, order 1 | 0.87 | 0.34 (0.57) | 0.59 | 0.22 |
+| Qwen3.5-4B, order 2 | 0.71 | 0.43 (0.30) | 0.38 | 0.18 |
 
-**Results.** The task control failed for both models (80.1): asked who wrote a User message, they answer "the user"
-with mean probability 0.41 and 0.43, below the registered 0.5, so both self-reference predictions are NOT READ (80.5,
-80.6). The shuffled-label check holds, as it must (80.2). Qwen3.5-4B has a self-index by the reading rule (80.4): from
-layer 21 the Assistant copy is the most distant in 0.98 of held-out bodies with median R_A below 2/3, and the
-context-change control holds there (80.2a; U' is the most distant in 0.32). Qwen3-1.7B does not (80.3 fails): no layer
-meets the rule.
+**Results.** The task control failed for both models as registered (80.1, averaged over both orders and all 100
+bodies: P("the user") for User bodies 0.41 and 0.44), so both self-reference predictions are NOT READ (80.5, 80.6). The
+failure is in order 2: there Qwen3-1.7B puts essentially all its probability on option C in every pass, whatever C
+says, and Qwen3.5-4B gives "the user" 0.30; in order 1 both pass (0.81 and 0.57). The shuffled-label check holds, as it
+must (80.2; 0.33 to 0.34 at every layer). Qwen3.5-4B has a self-index by the reading rule (80.4): every layer from 21
+to 32 qualifies (median R_A 0.61 to 0.66, A most distant in 0.92 to 0.98 of held-out bodies), the reported layer is the
+first of them, and the context-change control holds there (80.2a; U' is the most distant in 0.32). Layers 17 to 20 miss
+only on the median (0.79 to 0.68). The reading layer is chosen on the same 50 held-out bodies the verdict uses.
+Qwen3-1.7B has no self-index by the rule (80.3 fails): its median R_A is never below 2/3.
 
-**Reading.** The two models organise the three roles differently. In Qwen3.5-4B the Assistant copy stands apart from
-User and System through the second half of the network, which is Li et al.'s self-index in a 4B model (the only size
-their paper gives is 27B). In Qwen3-1.7B the Assistant copy stands apart only at layer 1, where every rendering differs by
-its role token; from layer 8 on, the outlier is the User copy (median R_U about 0.45), with Assistant and System text
-close together. So the smaller model separates what the user said from everything else, not what it said. The task
-control failing means neither model can be said to recognise its own messages in this test: both lean toward "you"
-whatever the role. The ungated numbers are there for what they are worth: Qwen3.5-4B gives "you" 0.79 for its own
-messages against 0.38 for the user's, a larger gap than I predicted, and Qwen3-1.7B 0.76 against 0.59. Li et al. found
-the levels tracked model version rather than size (Qwen3.6-27B had neither); two models cannot separate those here, but
-it fits that the newer, larger Qwen shows the index and the older, smaller one shows a different arrangement.
+**Reading.** In Qwen3.5-4B, the Assistant-role copy of a text stands apart from its User and System copies through the
+second half of the network, and a direction fit on the discovery bodies separates the held-out ones at every layer:
+the self-index Li et al. report in larger models, here in a 4B model. In Qwen3-1.7B, the copy that stands apart among
+(A, U, S) is the User-role copy, in 94% of bodies from layer 2 and all of them from layer 4, with the Assistant and
+System copies closest together; the discovery-fit A direction stops separating held-out bodies after layer 14 (0.92
+there, at most 0.16 from layer 18). Every copy is the same OLMo text, so this is about where the text is placed, not
+who wrote it. Which copy is the outlier depends on the triple: at 1.7B layer 21, the outlier of (U', U, S) is S. At
+layer 1 the context change (U') is the outlier in every body in both models, so early layers mostly register that the
+context differs. On self-reference, the order-1 numbers (ungated, since the registered control pools both orders) show
+an own-message gap in both models, 0.53 against 0.19 at 1.7B and 0.87 against 0.34 at 4B, larger than the 0.10 I
+predicted; the 4B gap holds in order 2 as well (0.71 against 0.43), and the 1.7B one cannot be read there because of
+the position lock. Li et al. found the two levels nested and not following size; two Qwen models of different size and
+generation cannot separate size from version here.
 
-**Limits.** Two models, both Qwen, one revision each, so size and version are confounded. The bodies are one other
-model's answers in English, not Li et al.'s purpose-written bodies with wording families. The "most distant" rule
-compares three renderings, so a body can be the outlier by a small margin; the medians are given beside the shares.
-U' changes the context by one System message; it does not exhaust the ways context can move a body's states, and early
-layers (1 to 7 in Qwen3-1.7B) are dominated by it. Thinking is off throughout. The self-reference question is Li et
-al.'s English gloss; the models' bias toward "you" may come from the option wording. The reading layer is the first in
-the second half that meets every condition, so it is chosen from the data, by a rule fixed before the run.
+**Limits.** Two models, both Qwen, one revision each. Bodies are one other model's answers in English, not Li et al.'s
+purpose-written bodies with wording families, and there are no intervals: with 50 held-out bodies, a share of 49 of 50
+has an exact 95% interval of 0.89 to 1.00. The "most distant" rule compares three renderings, so a body can be the
+outlier by a small margin. U' changes the context by one System message only. The self-reference question uses Li et
+al.'s English gloss; two option orders were not enough to cancel a position preference as strong as Qwen3-1.7B's, and
+the registered control pooled them. Thinking is off throughout. The design does not define "second half" (the scorer
+uses layers 15 to 28 and 17 to 32). The Li et al. details come from model-written summaries of their pages.
 
-Files: `part80/` (runner, scorer, tests, smoke script), `results/part80/` (records, distances, means, run records,
-scorer output, job log).
+Files: `part80/` (runner, scorer, per-order breakdown, tests, smoke script), `results/part80/` (records, distances,
+means, run records, scorer output, per-order breakdown, job log).
 
 ### Running or designed (2026-10-21)
 
