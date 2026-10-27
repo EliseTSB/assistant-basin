@@ -2037,3 +2037,15 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 80.5 | Claude: Qwen3-1.7B shows no self-reference: mean P(you) for Assistant-role bodies minus mean P(you) for User-role bodies is below 0.10. | NOT READ | 80.1 failed for Qwen3-1.7B; ungated, order 1 held-out P(you) A 0.53 against U 0.19; order 2 locked on option C |
 | 80.6 | Claude: Qwen3.5-4B shows no self-reference by the same rule (difference below 0.10). | NOT READ | 80.1 failed for Qwen3.5-4B; ungated, held-out P(you) A against U 0.87 vs 0.34 (order 1), 0.71 vs 0.43 (order 2) |
 | 80.2a | Control (Amendment 1): at the layer where each model's self-index is read, U' is the most distant of (U', U, S) in fewer than 50% of held-out bodies; T is reported against the same line when it is run. | HOLDS (4B); NOT READ (1.7B) | 4B at layer 21: A most distant in 0.98 of held-out bodies, U' in 0.32; 1.7B has no reading layer |
+
+## Part 80b: does Part 80's own-message gap survive three cyclic option orders on new bodies? (written 2026-10-27, after Part 80 was scored and before any Part 80b code or run).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 80b.1 | Replication: on the SmolLM3 bodies, Qwen3-1.7B is locked in O2 (one letter at mean probability at least 0.9 in each of A, U and S). | PENDING | |
+| 80b.2 | Control: on the SmolLM3 bodies, Qwen3.5-4B has no locked order. | PENDING | |
+| 80b.3 | Claude: Qwen3.5-4B shows self-reference by role by the reading rule (at least two unlocked orders, each with gap_k at least 0.10 and its 95% interval above 0). | PENDING | |
+| 80b.4 | Claude (low confidence): Qwen3-1.7B shows self-reference by role by the same rule; O3 is unlocked. | PENDING | |
+| 80b.5 | Claude: for Qwen3.5-4B the cyclic-average gap on the SmolLM3 bodies is at least 0.10. | PENDING | |
+| 80b.6 | Claude (exploratory arm): for Qwen3-1.7B, cyclic-average mean P(you \| A) on its own answers differs from that on the SmolLM3 answers by less than 0.05. | PENDING | |
+| 80b.7 | Claude: for Qwen3.5-4B on the SmolLM3 bodies, cyclic-average mean P(you \| S) lies strictly between mean P(you \| U) and mean P(you \| A). | PENDING | |
