@@ -52,3 +52,14 @@ about 25 minutes at the same batch in rows; an optimization-pass record is writt
   pair that is not.
 - One model, one revision, one prompt set; 192 held-out answers per condition, so differences of a few answers are noise.
 - 48 new tokens; Part 75 found 830 of 960 answers stop at that cap, so a later Google mention is not counted.
+
+## Amendment 1 (while reviewing the build, before any run)
+
+The Method's claim that a custom logits processor sees scores already warped by temperature, top-k and top-p is wrong,
+in transformers 5.13 (the GPU venv) and 5.20 (the test venv) alike: `_get_logits_processor` merges custom processors at
+utils.py:1244 (5.13), before it appends the sampling warpers (from line 1262). The builder found this. The pair
+processor therefore applies the sampling warpers itself, built from transformers' own classes in transformers' order
+from the model's generation config with run_70's temperature 0.7 and top-p 0.95, so it samples exactly what
+`model.generate` would have. A test compares those warpers with `generate`'s own processed scores step by step, and
+`run.json` records the effective settings. The forced one-token scores then pass through `generate`'s warpers
+unchanged. Conditions, readout and predictions are unchanged.
