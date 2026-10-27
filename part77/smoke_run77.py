@@ -7,6 +7,7 @@ any result: on a random model 77.1 fails by design (no answer names Google).
 FIRST TIME: written by the Part 77 cold reviewer (Haiku, 2026-10-26) in a scratch folder; promoted by Claude. Run:
   ~/neuron-probe/.venv/bin/python -I part77/smoke_run77.py <out_dir>   (about 60 s on CPU)
 """
+import argparse, importlib.util, json, sys, time
 from pathlib import Path
 import torch
 import transformers
