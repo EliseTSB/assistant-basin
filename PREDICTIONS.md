@@ -2042,10 +2042,10 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 80b.1 | Replication: on the SmolLM3 bodies, Qwen3-1.7B is locked in O2 (one letter at mean probability at least 0.9 in each of A, U and S). | PENDING | |
-| 80b.2 | Control: on the SmolLM3 bodies, Qwen3.5-4B has no locked order. | PENDING | |
-| 80b.3 | Claude: Qwen3.5-4B shows self-reference by role by the reading rule (at least two unlocked orders, each with gap_k at least 0.10 and its 95% interval above 0). | PENDING | |
-| 80b.4 | Claude (low confidence): Qwen3-1.7B shows self-reference by role by the same rule; O3 is unlocked. | PENDING | |
-| 80b.5 | Claude: for Qwen3.5-4B the cyclic-average gap on the SmolLM3 bodies is at least 0.10. | PENDING | |
-| 80b.6 | Claude (exploratory arm): for Qwen3-1.7B, cyclic-average mean P(you \| A) on its own answers differs from that on the SmolLM3 answers by less than 0.05. | PENDING | |
-| 80b.7 | Claude: for Qwen3.5-4B on the SmolLM3 bodies, cyclic-average mean P(you \| S) lies strictly between mean P(you \| U) and mean P(you \| A). | PENDING | |
+| 80b.1 | Replication: on the SmolLM3 bodies, Qwen3-1.7B is locked in O2 (one letter at mean probability at least 0.9 in each of A, U and S). | HOLDS | O2 locked on C (C = "You (the AI assistant)"): P(you) 1.00 for A, U and S; results/part80b/results80b.json |
+| 80b.2 | Control: on the SmolLM3 bodies, Qwen3.5-4B has no locked order. | HOLDS | no order locked; the highest single-letter mean in any order and rendering is 0.895 (O1, Assistant copy), and a lock needs 0.9 in all three renderings |
+| 80b.3 | Claude: Qwen3.5-4B shows self-reference by role by the reading rule (at least two unlocked orders, each with gap_k at least 0.10 and its 95% interval above 0). | HOLDS | three unlocked orders: gap O1 0.54 [0.51, 0.57], O2 0.28 [0.25, 0.31], O3 0.51 [0.48, 0.54] |
+| 80b.4 | Claude (low confidence): Qwen3-1.7B shows self-reference by role by the same rule; O3 is unlocked. | HOLDS | O2 locked; unlocked O1 gap 0.40 [0.31, 0.49], O3 gap 0.45 [0.35, 0.54]; O3 not locked |
+| 80b.5 | Claude: for Qwen3.5-4B the cyclic-average gap on the SmolLM3 bodies is at least 0.10. | HOLDS | cyclic-average gap 0.444 [0.419, 0.468] |
+| 80b.6 | Claude (exploratory arm): for Qwen3-1.7B, cyclic-average mean P(you \| A) on its own answers differs from that on the SmolLM3 answers by less than 0.05. | HOLDS | cyclic-average P(you \\| A): own answers 0.805, SmolLM3 answers 0.843 (difference 0.038, paired 95% interval -0.081 to 0.005; a point-estimate verdict) |
+| 80b.7 | Claude: for Qwen3.5-4B on the SmolLM3 bodies, cyclic-average mean P(you \| S) lies strictly between mean P(you \| U) and mean P(you \| A). | HOLDS | cyclic-average P(you): User 0.320, System 0.422, Assistant 0.764 |

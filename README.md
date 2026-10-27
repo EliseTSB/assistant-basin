@@ -1807,6 +1807,68 @@ uses layers 15 to 28 and 17 to 32). The Li et al. details come from model-writte
 Files: `part80/` (runner, scorer, per-order breakdown, tests, smoke script), `results/part80/` (records, distances,
 means, run records, scorer output, per-order breakdown, job log).
 
+### Part 80b: the own-message gap holds in every order a model is not stuck in: all three for Qwen3.5-4B, two of three for Qwen3-1.7B
+
+Part 80 found, only after seeing the data, that both Qwen models answer "you" more often when a text sits in an
+Assistant message than when the same text sits in a User message (order 1 for both models, and order 2 for the 4B: 0.71
+against 0.43). Part 80b tests that on 100 new bodies (SmolLM3-3B's greedy answers to Part 37's questions, which Part 80
+never used) with all three cyclic orders of the three options, so each option sits at each letter once. Design and
+predictions were pushed before any code (`PART80B-DESIGN.md`, commit 433d573); the runner and scorer are `part80b/`.
+Run 2026-10-27 08:41 to 08:50 CT on the A770 in bf16: 3,600 passes, no body dropped; mean letter mass 0.9993 or more
+(lowest single pass 0.9968; 283 of 1,800 Qwen3.5-4B passes fall below 0.999). All seven predictions held.
+
+The question is "Who wrote the message before this question?", with Li et al.'s options (Part 80). Each cell is a mean
+over the 100 bodies; the gap is P(you) for the Assistant copy minus P(you) for the User copy, with a 95% paired
+bootstrap interval over bodies.
+
+| model | order (A, B, C) | locked | P(you): Assistant copy | User copy | System copy | P(the user) for User copy | gap |
+|---|---|---|---|---|---|---|---|
+| Qwen3-1.7B | O1 (you, user, system) | no | 0.59 | 0.19 | 0.38 | 0.81 | 0.40 [0.31, 0.49] |
+| Qwen3-1.7B | O2 (user, system, you) | on C | 1.00 | 1.00 | 1.00 | 0.00 | 0.00 |
+| Qwen3-1.7B | O3 (system, you, user) | no | 0.94 | 0.49 | 0.85 | 0.51 | 0.45 [0.35, 0.54] |
+| Qwen3-1.7B | average of the three | | 0.84 | 0.56 | 0.74 | 0.44 | 0.28 [0.24, 0.32] |
+| Qwen3.5-4B | O1 | no | 0.89 | 0.35 | 0.61 | 0.56 | 0.54 [0.51, 0.57] |
+| Qwen3.5-4B | O2 | no | 0.74 | 0.46 | 0.42 | 0.28 | 0.28 [0.25, 0.31] |
+| Qwen3.5-4B | O3 | no | 0.66 | 0.15 | 0.23 | 0.48 | 0.51 [0.48, 0.54] |
+| Qwen3.5-4B | average of the three | | 0.76 | 0.32 | 0.42 | 0.44 | 0.44 [0.42, 0.47] |
+
+- **Qwen3-1.7B's lock replicates on new text (80b.1).** In O2, where C is "You (the AI assistant)", it puts at least
+  0.9 of its probability on C for every rendering, so O2 says nothing about roles for this model. In O1 and O3 it is not
+  locked, and in both the Assistant copy gets far more "you" than the User copy (80b.4). Its reading rests on those two
+  orders. Part 80's 80.5 (no such gap at 1.7B) was NOT READ because its task control failed; its ungated order-1
+  numbers already exceeded its threshold, and on new text and a third order the gap is there again.
+- **Qwen3.5-4B is locked in no order (80b.2), and the gap is at least 0.28 in every order (80b.3, 80b.5).** The size
+  depends on the order: 0.54 with "you" at A, 0.51 at B, 0.28 at C, and the C interval does not overlap the other two.
+  Letter position is confounded with the other options' positions across the three orders, so this does not separate a
+  letter effect from an order effect. On the three-order average the System copy sits between the two (80b.7); in O2
+  it falls below the User copy (0.42 against 0.46).
+- **What this is, and what it is not.** It is a role-dependent shift in whom the model names as the author, present
+  wherever "you" sits. It is not accurate attribution: both models often say "you" for text in a User message (the 4B
+  0.15 to 0.46 by order), and averaged over orders both give "the user" for User-role text less than half the time
+  (0.44 each); per order that reaches 0.81 (1.7B, O1) and 0.56 (4B, O1). Part 80's pooled task control would fail here
+  too. The 80b design registers no task-control gate, so the question it answers is narrower than Li et al.'s
+  self-reference: whether the role effect survives option order. It also cannot rule out a word-matching reading: the
+  Assistant role header and the option "You (the AI assistant)" share the word "assistant", and no control here
+  separates matching that word from anything about authorship. Davidson et al. argue (their Appendix G, analytically,
+  for two options) that averaging over option permutations helps only when a model is fairly certain and can give
+  near-random results under strong position bias; that is why the per-order rows are the reading and the 1.7B's
+  average, which includes its locked O2, is not.
+- **Unregistered, from the exploratory arm.** On Qwen3-1.7B's own greedy answers (a sibling's for the 4B), the gap is
+  smaller (averaged over orders, 0.19 for the 1.7B and 0.24 for the 4B) and the User copy gets more "you" (0.62 against
+  0.56 for the 1.7B, 0.45 against 0.32 for the 4B). The two body sets differ in more than who wrote them: Markdown
+  headings appear in 99 of the 100 Qwen answers and none of the SmolLM3 answers, bold in 100 against 78, and the Qwen
+  answers are a little shorter (mean 430 against 472 characters). So this does not show that a model recognises its
+  own writing. The registered comparison (80b.6), the three-order average of P(you) for the Assistant copy across the
+  two sets, differed by 0.038 (0.81 against 0.84; paired 95% interval for the difference -0.081 to 0.005), under the
+  0.05 line as a point estimate; the interval does not establish that the two are within 0.05. Per-order numbers for
+  this arm, and per-order letter mass, are in `results80b.json`.
+
+Limits: both body sets answer the same 100 questions Part 80 used, so only the wording is new; bodies are cut at 96
+generated tokens; one question wording and one set of option texts; thinking off; two Qwen models at one revision each;
+intervals are a bootstrap over bodies, not over wordings, and the verdicts use point estimates. The run used the code
+copied from commit cef4a12 to the GPU folder; `run.json` records the device and dtype but no code hash. Results:
+`results/part80b/` (`results80b.json` holds every number above).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

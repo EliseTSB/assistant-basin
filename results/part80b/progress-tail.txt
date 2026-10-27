@@ -1,0 +1,12 @@
+06:04:46 step 1 start: p66basin\part80\part80.py --model qwen3-1.7b --out p66basin\results\part80\qwen3-1.7b --device xpu (ram_avail 14.5G)
+06:06:19 step 1 gpu: 13 samples, mean 69%, max 73%, busy(>5%) 100% of the time
+06:06:19 step 1 rc=0
+06:06:19 step 2 start: p66basin\part80\part80.py --model qwen3.5-4b --out p66basin\results\part80\qwen3.5-4b --device xpu (ram_avail 14.8G)
+06:09:47 step 2 gpu: 30 samples, mean 80%, max 89%, busy(>5%) 97% of the time
+06:09:47 step 2 rc=0
+08:41:03 step 1 start: p66basin\part80b\part80b.py --model qwen3-1.7b --out p66basin\results\part80b\qwen3-1.7b --device xpu (ram_avail 16.0G)
+08:43:10 step 1 gpu: 18 samples, mean 77%, max 88%, busy(>5%) 89% of the time
+08:43:10 step 1 rc=0
+08:43:10 step 2 start: p66basin\part80b\part80b.py --model qwen3.5-4b --out p66basin\results\part80b\qwen3.5-4b --device xpu (ram_avail 17.8G)
+08:50:14 step 2 gpu: 62 samples, mean 92%, max 97%, busy(>5%) 95% of the time
+08:50:14 step 2 rc=0
