@@ -56,3 +56,9 @@ about 10 minutes; an optimization-pass record is written before launch.
   estimate; that is why 76.2 exists and why every claim uses exact PIE.
 - E_all27 sets the MLP inputs of layer 27 only; effects through layer 27's attention or through other layers are not in
   it. One layer, one model, one revision.
+
+## Amendment 0 (while writing the runner, before any run)
+
+Several layer-27 units can rank Google at the same position (the toy test showed ties at rank 1). The 10 Google writers
+are therefore sorted by rank, then by margin (the best Google logit minus the best other token's logit in the unit's
+signed direct readout, larger first), then by unit number. Every unit's rank and margin are saved.
