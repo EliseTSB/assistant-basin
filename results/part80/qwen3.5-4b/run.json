@@ -1,0 +1,24 @@
+{
+ "model": "qwen3.5-4b",
+ "model_id": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layers": 32,
+ "hidden_size": 2560,
+ "letter_token_ids": {
+  "A": 32,
+  "B": 33,
+  "C": 34
+ },
+ "prefix_text": "",
+ "prefix_token_ids": [],
+ "dropped_bodies": [],
+ "order_invariance_check": {
+  "max_abs_difference": 0.0,
+  "tolerance": 0.02,
+  "within_tolerance": true
+ },
+ "T_skipped": "assistant and user renderings have no assistant-specific text before body",
+ "dropped_body_count": 0,
+ "wall_time_seconds": 203.30745363235474,
+ "first_body_renderings": {}
+}
