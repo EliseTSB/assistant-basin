@@ -1,0 +1,3842 @@
+{
+  "r0001": {
+    "condition": "k3",
+    "prompt_id": "t01",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0002": {
+    "condition": "k1",
+    "prompt_id": "t08",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0003": {
+    "condition": "k0",
+    "prompt_id": "m08",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0004": {
+    "condition": "k3",
+    "prompt_id": "t21",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0005": {
+    "condition": "k3",
+    "prompt_id": "t13",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0006": {
+    "condition": "k0",
+    "prompt_id": "t01",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0007": {
+    "condition": "k0",
+    "prompt_id": "t17",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0008": {
+    "condition": "k0",
+    "prompt_id": "t24",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0009": {
+    "condition": "k1",
+    "prompt_id": "m07",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0010": {
+    "condition": "k0",
+    "prompt_id": "t23",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0011": {
+    "condition": "k2",
+    "prompt_id": "m03",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0012": {
+    "condition": "k0",
+    "prompt_id": "t04",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0013": {
+    "condition": "k0",
+    "prompt_id": "t22",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0014": {
+    "condition": "k4",
+    "prompt_id": "m08",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0015": {
+    "condition": "k1",
+    "prompt_id": "t13",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0016": {
+    "condition": "k0",
+    "prompt_id": "t12",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0017": {
+    "condition": "k0",
+    "prompt_id": "t06",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0018": {
+    "condition": "k2",
+    "prompt_id": "t22",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0019": {
+    "condition": "k2",
+    "prompt_id": "t08",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0020": {
+    "condition": "k4",
+    "prompt_id": "t08",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0021": {
+    "condition": "k4",
+    "prompt_id": "t06",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0022": {
+    "condition": "k1",
+    "prompt_id": "t02",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0023": {
+    "condition": "k4",
+    "prompt_id": "t07",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0024": {
+    "condition": "k1",
+    "prompt_id": "t09",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0025": {
+    "condition": "k2",
+    "prompt_id": "m01",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0026": {
+    "condition": "k3",
+    "prompt_id": "t16",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0027": {
+    "condition": "k4",
+    "prompt_id": "t14",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0028": {
+    "condition": "k0",
+    "prompt_id": "t08",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0029": {
+    "condition": "k0",
+    "prompt_id": "t24",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0030": {
+    "condition": "k4",
+    "prompt_id": "t12",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0031": {
+    "condition": "k4",
+    "prompt_id": "m06",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0032": {
+    "condition": "k2",
+    "prompt_id": "t04",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0033": {
+    "condition": "k2",
+    "prompt_id": "t06",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0034": {
+    "condition": "k0",
+    "prompt_id": "t18",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0035": {
+    "condition": "k4",
+    "prompt_id": "t10",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0036": {
+    "condition": "k3",
+    "prompt_id": "t11",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0037": {
+    "condition": "k3",
+    "prompt_id": "m04",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0038": {
+    "condition": "k3",
+    "prompt_id": "t15",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0039": {
+    "condition": "k2",
+    "prompt_id": "t19",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0040": {
+    "condition": "k0",
+    "prompt_id": "t03",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0041": {
+    "condition": "k1",
+    "prompt_id": "t21",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0042": {
+    "condition": "k2",
+    "prompt_id": "t10",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0043": {
+    "condition": "k2",
+    "prompt_id": "t03",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0044": {
+    "condition": "k3",
+    "prompt_id": "t22",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0045": {
+    "condition": "k4",
+    "prompt_id": "t10",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0046": {
+    "condition": "k2",
+    "prompt_id": "t24",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0047": {
+    "condition": "k3",
+    "prompt_id": "t08",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0048": {
+    "condition": "k3",
+    "prompt_id": "t09",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0049": {
+    "condition": "k4",
+    "prompt_id": "t08",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0050": {
+    "condition": "k4",
+    "prompt_id": "m08",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0051": {
+    "condition": "k2",
+    "prompt_id": "t12",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0052": {
+    "condition": "k1",
+    "prompt_id": "m05",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0053": {
+    "condition": "k1",
+    "prompt_id": "t21",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0054": {
+    "condition": "k4",
+    "prompt_id": "t21",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0055": {
+    "condition": "k1",
+    "prompt_id": "t13",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0056": {
+    "condition": "k0",
+    "prompt_id": "t21",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0057": {
+    "condition": "k1",
+    "prompt_id": "m02",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0058": {
+    "condition": "k0",
+    "prompt_id": "t11",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0059": {
+    "condition": "k2",
+    "prompt_id": "t16",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0060": {
+    "condition": "k4",
+    "prompt_id": "t03",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0061": {
+    "condition": "k1",
+    "prompt_id": "t19",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0062": {
+    "condition": "k2",
+    "prompt_id": "t13",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0063": {
+    "condition": "k4",
+    "prompt_id": "t11",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0064": {
+    "condition": "k2",
+    "prompt_id": "t12",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0065": {
+    "condition": "k0",
+    "prompt_id": "m05",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0066": {
+    "condition": "k0",
+    "prompt_id": "t24",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0067": {
+    "condition": "k1",
+    "prompt_id": "t24",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0068": {
+    "condition": "k4",
+    "prompt_id": "t22",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0069": {
+    "condition": "k1",
+    "prompt_id": "m02",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0070": {
+    "condition": "k0",
+    "prompt_id": "t08",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0071": {
+    "condition": "k3",
+    "prompt_id": "m05",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0072": {
+    "condition": "k4",
+    "prompt_id": "t14",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0073": {
+    "condition": "k2",
+    "prompt_id": "t02",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0074": {
+    "condition": "k4",
+    "prompt_id": "t08",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0075": {
+    "condition": "k2",
+    "prompt_id": "t19",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0076": {
+    "condition": "k3",
+    "prompt_id": "t20",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0077": {
+    "condition": "k1",
+    "prompt_id": "t19",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0078": {
+    "condition": "k1",
+    "prompt_id": "t06",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0079": {
+    "condition": "k2",
+    "prompt_id": "t04",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0080": {
+    "condition": "k2",
+    "prompt_id": "m06",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0081": {
+    "condition": "k2",
+    "prompt_id": "t24",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0082": {
+    "condition": "k3",
+    "prompt_id": "m08",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0083": {
+    "condition": "k0",
+    "prompt_id": "m05",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0084": {
+    "condition": "k3",
+    "prompt_id": "m05",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0085": {
+    "condition": "k1",
+    "prompt_id": "t11",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0086": {
+    "condition": "k1",
+    "prompt_id": "m08",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0087": {
+    "condition": "k4",
+    "prompt_id": "t01",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0088": {
+    "condition": "k4",
+    "prompt_id": "t05",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0089": {
+    "condition": "k2",
+    "prompt_id": "t04",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0090": {
+    "condition": "k3",
+    "prompt_id": "t07",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0091": {
+    "condition": "k3",
+    "prompt_id": "t04",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0092": {
+    "condition": "k2",
+    "prompt_id": "t01",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0093": {
+    "condition": "k1",
+    "prompt_id": "t22",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0094": {
+    "condition": "k0",
+    "prompt_id": "t22",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0095": {
+    "condition": "k3",
+    "prompt_id": "t02",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0096": {
+    "condition": "k4",
+    "prompt_id": "t07",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0097": {
+    "condition": "k2",
+    "prompt_id": "t03",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0098": {
+    "condition": "k3",
+    "prompt_id": "t06",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0099": {
+    "condition": "k1",
+    "prompt_id": "t03",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0100": {
+    "condition": "k2",
+    "prompt_id": "t24",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0101": {
+    "condition": "k3",
+    "prompt_id": "m04",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0102": {
+    "condition": "k2",
+    "prompt_id": "t22",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0103": {
+    "condition": "k3",
+    "prompt_id": "t22",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0104": {
+    "condition": "k1",
+    "prompt_id": "m05",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0105": {
+    "condition": "k2",
+    "prompt_id": "t13",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0106": {
+    "condition": "k4",
+    "prompt_id": "m01",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0107": {
+    "condition": "k1",
+    "prompt_id": "t02",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0108": {
+    "condition": "k3",
+    "prompt_id": "t15",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0109": {
+    "condition": "k3",
+    "prompt_id": "t23",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0110": {
+    "condition": "k0",
+    "prompt_id": "t14",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0111": {
+    "condition": "k3",
+    "prompt_id": "t23",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0112": {
+    "condition": "k4",
+    "prompt_id": "t13",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0113": {
+    "condition": "k1",
+    "prompt_id": "m06",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0114": {
+    "condition": "k4",
+    "prompt_id": "t17",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0115": {
+    "condition": "k3",
+    "prompt_id": "m01",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0116": {
+    "condition": "k2",
+    "prompt_id": "t11",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0117": {
+    "condition": "k0",
+    "prompt_id": "t12",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0118": {
+    "condition": "k0",
+    "prompt_id": "t13",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0119": {
+    "condition": "k4",
+    "prompt_id": "m04",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0120": {
+    "condition": "k0",
+    "prompt_id": "m03",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0121": {
+    "condition": "k4",
+    "prompt_id": "m07",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0122": {
+    "condition": "k1",
+    "prompt_id": "t03",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0123": {
+    "condition": "k2",
+    "prompt_id": "t23",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0124": {
+    "condition": "k3",
+    "prompt_id": "t18",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0125": {
+    "condition": "k4",
+    "prompt_id": "t13",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0126": {
+    "condition": "k4",
+    "prompt_id": "t02",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0127": {
+    "condition": "k3",
+    "prompt_id": "t13",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0128": {
+    "condition": "k2",
+    "prompt_id": "t08",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0129": {
+    "condition": "k4",
+    "prompt_id": "m07",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0130": {
+    "condition": "k0",
+    "prompt_id": "t15",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0131": {
+    "condition": "k3",
+    "prompt_id": "t08",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0132": {
+    "condition": "k2",
+    "prompt_id": "t04",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0133": {
+    "condition": "k1",
+    "prompt_id": "t24",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0134": {
+    "condition": "k1",
+    "prompt_id": "t02",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0135": {
+    "condition": "k2",
+    "prompt_id": "m05",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0136": {
+    "condition": "k3",
+    "prompt_id": "m08",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0137": {
+    "condition": "k0",
+    "prompt_id": "m08",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0138": {
+    "condition": "k1",
+    "prompt_id": "t22",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0139": {
+    "condition": "k4",
+    "prompt_id": "t06",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0140": {
+    "condition": "k0",
+    "prompt_id": "t12",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0141": {
+    "condition": "k0",
+    "prompt_id": "t22",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0142": {
+    "condition": "k0",
+    "prompt_id": "t23",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0143": {
+    "condition": "k2",
+    "prompt_id": "m04",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0144": {
+    "condition": "k1",
+    "prompt_id": "t07",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0145": {
+    "condition": "k3",
+    "prompt_id": "t16",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0146": {
+    "condition": "k1",
+    "prompt_id": "m08",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0147": {
+    "condition": "k1",
+    "prompt_id": "t22",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0148": {
+    "condition": "k3",
+    "prompt_id": "t24",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0149": {
+    "condition": "k3",
+    "prompt_id": "m06",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0150": {
+    "condition": "k4",
+    "prompt_id": "t02",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0151": {
+    "condition": "k3",
+    "prompt_id": "t11",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0152": {
+    "condition": "k1",
+    "prompt_id": "m01",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0153": {
+    "condition": "k0",
+    "prompt_id": "m03",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0154": {
+    "condition": "k2",
+    "prompt_id": "m03",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0155": {
+    "condition": "k1",
+    "prompt_id": "t18",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0156": {
+    "condition": "k4",
+    "prompt_id": "t13",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0157": {
+    "condition": "k1",
+    "prompt_id": "t01",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0158": {
+    "condition": "k2",
+    "prompt_id": "t17",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0159": {
+    "condition": "k4",
+    "prompt_id": "t14",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0160": {
+    "condition": "k1",
+    "prompt_id": "t16",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0161": {
+    "condition": "k3",
+    "prompt_id": "t06",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0162": {
+    "condition": "k1",
+    "prompt_id": "t21",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0163": {
+    "condition": "k1",
+    "prompt_id": "t01",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0164": {
+    "condition": "k1",
+    "prompt_id": "t06",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0165": {
+    "condition": "k2",
+    "prompt_id": "t08",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0166": {
+    "condition": "k3",
+    "prompt_id": "t21",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0167": {
+    "condition": "k1",
+    "prompt_id": "t18",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0168": {
+    "condition": "k2",
+    "prompt_id": "t16",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0169": {
+    "condition": "k4",
+    "prompt_id": "t01",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0170": {
+    "condition": "k2",
+    "prompt_id": "m04",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0171": {
+    "condition": "k4",
+    "prompt_id": "t17",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0172": {
+    "condition": "k2",
+    "prompt_id": "m01",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0173": {
+    "condition": "k2",
+    "prompt_id": "t12",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0174": {
+    "condition": "k2",
+    "prompt_id": "t16",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0175": {
+    "condition": "k4",
+    "prompt_id": "t13",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0176": {
+    "condition": "k3",
+    "prompt_id": "m05",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0177": {
+    "condition": "k3",
+    "prompt_id": "m03",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0178": {
+    "condition": "k1",
+    "prompt_id": "t20",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0179": {
+    "condition": "k4",
+    "prompt_id": "t23",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0180": {
+    "condition": "k3",
+    "prompt_id": "t08",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0181": {
+    "condition": "k1",
+    "prompt_id": "t05",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0182": {
+    "condition": "k0",
+    "prompt_id": "m03",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0183": {
+    "condition": "k0",
+    "prompt_id": "t03",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0184": {
+    "condition": "k0",
+    "prompt_id": "m06",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0185": {
+    "condition": "k1",
+    "prompt_id": "m06",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0186": {
+    "condition": "k3",
+    "prompt_id": "t13",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0187": {
+    "condition": "k1",
+    "prompt_id": "m05",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0188": {
+    "condition": "k0",
+    "prompt_id": "t19",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0189": {
+    "condition": "k1",
+    "prompt_id": "t09",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0190": {
+    "condition": "k3",
+    "prompt_id": "t10",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0191": {
+    "condition": "k1",
+    "prompt_id": "m03",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0192": {
+    "condition": "k2",
+    "prompt_id": "m07",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0193": {
+    "condition": "k2",
+    "prompt_id": "t20",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0194": {
+    "condition": "k2",
+    "prompt_id": "t11",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0195": {
+    "condition": "k0",
+    "prompt_id": "t18",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0196": {
+    "condition": "k4",
+    "prompt_id": "t01",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0197": {
+    "condition": "k3",
+    "prompt_id": "t09",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0198": {
+    "condition": "k0",
+    "prompt_id": "m03",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0199": {
+    "condition": "k3",
+    "prompt_id": "m04",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0200": {
+    "condition": "k2",
+    "prompt_id": "m02",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0201": {
+    "condition": "k0",
+    "prompt_id": "t18",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0202": {
+    "condition": "k3",
+    "prompt_id": "t24",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0203": {
+    "condition": "k0",
+    "prompt_id": "m06",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0204": {
+    "condition": "k0",
+    "prompt_id": "t19",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0205": {
+    "condition": "k4",
+    "prompt_id": "t09",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0206": {
+    "condition": "k1",
+    "prompt_id": "t05",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0207": {
+    "condition": "k0",
+    "prompt_id": "t21",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0208": {
+    "condition": "k4",
+    "prompt_id": "t15",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0209": {
+    "condition": "k3",
+    "prompt_id": "t11",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0210": {
+    "condition": "k2",
+    "prompt_id": "t08",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0211": {
+    "condition": "k4",
+    "prompt_id": "t19",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0212": {
+    "condition": "k2",
+    "prompt_id": "m08",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0213": {
+    "condition": "k0",
+    "prompt_id": "t07",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0214": {
+    "condition": "k3",
+    "prompt_id": "t19",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0215": {
+    "condition": "k2",
+    "prompt_id": "m07",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0216": {
+    "condition": "k4",
+    "prompt_id": "t19",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0217": {
+    "condition": "k1",
+    "prompt_id": "t18",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0218": {
+    "condition": "k0",
+    "prompt_id": "m04",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0219": {
+    "condition": "k4",
+    "prompt_id": "t18",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0220": {
+    "condition": "k4",
+    "prompt_id": "m01",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0221": {
+    "condition": "k4",
+    "prompt_id": "t05",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0222": {
+    "condition": "k2",
+    "prompt_id": "m07",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0223": {
+    "condition": "k1",
+    "prompt_id": "t14",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0224": {
+    "condition": "k0",
+    "prompt_id": "t18",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0225": {
+    "condition": "k1",
+    "prompt_id": "t11",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0226": {
+    "condition": "k4",
+    "prompt_id": "t20",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0227": {
+    "condition": "k1",
+    "prompt_id": "m08",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0228": {
+    "condition": "k0",
+    "prompt_id": "t13",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0229": {
+    "condition": "k1",
+    "prompt_id": "t01",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0230": {
+    "condition": "k2",
+    "prompt_id": "t18",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0231": {
+    "condition": "k3",
+    "prompt_id": "t12",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0232": {
+    "condition": "k0",
+    "prompt_id": "t14",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0233": {
+    "condition": "k2",
+    "prompt_id": "t07",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0234": {
+    "condition": "k4",
+    "prompt_id": "m02",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0235": {
+    "condition": "k1",
+    "prompt_id": "m06",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0236": {
+    "condition": "k3",
+    "prompt_id": "t07",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0237": {
+    "condition": "k4",
+    "prompt_id": "t15",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0238": {
+    "condition": "k2",
+    "prompt_id": "t24",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0239": {
+    "condition": "k4",
+    "prompt_id": "t17",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0240": {
+    "condition": "k0",
+    "prompt_id": "t10",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0241": {
+    "condition": "k3",
+    "prompt_id": "m08",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0242": {
+    "condition": "k0",
+    "prompt_id": "t11",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0243": {
+    "condition": "k2",
+    "prompt_id": "t05",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0244": {
+    "condition": "k3",
+    "prompt_id": "t10",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0245": {
+    "condition": "k2",
+    "prompt_id": "t03",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0246": {
+    "condition": "k2",
+    "prompt_id": "t12",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0247": {
+    "condition": "k2",
+    "prompt_id": "t09",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0248": {
+    "condition": "k0",
+    "prompt_id": "t13",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0249": {
+    "condition": "k3",
+    "prompt_id": "t02",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0250": {
+    "condition": "k0",
+    "prompt_id": "t02",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0251": {
+    "condition": "k3",
+    "prompt_id": "t04",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0252": {
+    "condition": "k2",
+    "prompt_id": "t17",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0253": {
+    "condition": "k0",
+    "prompt_id": "t10",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0254": {
+    "condition": "k3",
+    "prompt_id": "m03",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0255": {
+    "condition": "k0",
+    "prompt_id": "t07",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0256": {
+    "condition": "k2",
+    "prompt_id": "t09",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0257": {
+    "condition": "k1",
+    "prompt_id": "t04",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0258": {
+    "condition": "k4",
+    "prompt_id": "t11",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0259": {
+    "condition": "k3",
+    "prompt_id": "t24",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0260": {
+    "condition": "k2",
+    "prompt_id": "m08",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0261": {
+    "condition": "k2",
+    "prompt_id": "m03",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0262": {
+    "condition": "k2",
+    "prompt_id": "m06",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0263": {
+    "condition": "k0",
+    "prompt_id": "t08",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0264": {
+    "condition": "k3",
+    "prompt_id": "m07",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0265": {
+    "condition": "k4",
+    "prompt_id": "t20",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0266": {
+    "condition": "k4",
+    "prompt_id": "t03",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0267": {
+    "condition": "k2",
+    "prompt_id": "t02",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0268": {
+    "condition": "k2",
+    "prompt_id": "t10",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0269": {
+    "condition": "k1",
+    "prompt_id": "t16",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0270": {
+    "condition": "k0",
+    "prompt_id": "m02",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0271": {
+    "condition": "k3",
+    "prompt_id": "t07",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0272": {
+    "condition": "k3",
+    "prompt_id": "t10",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0273": {
+    "condition": "k0",
+    "prompt_id": "t02",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0274": {
+    "condition": "k3",
+    "prompt_id": "m02",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0275": {
+    "condition": "k0",
+    "prompt_id": "t23",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0276": {
+    "condition": "k3",
+    "prompt_id": "t03",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0277": {
+    "condition": "k0",
+    "prompt_id": "t15",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0278": {
+    "condition": "k1",
+    "prompt_id": "t18",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0279": {
+    "condition": "k2",
+    "prompt_id": "t09",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0280": {
+    "condition": "k2",
+    "prompt_id": "m06",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0281": {
+    "condition": "k3",
+    "prompt_id": "m07",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0282": {
+    "condition": "k3",
+    "prompt_id": "t17",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0283": {
+    "condition": "k4",
+    "prompt_id": "m08",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0284": {
+    "condition": "k1",
+    "prompt_id": "t14",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0285": {
+    "condition": "k0",
+    "prompt_id": "t04",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0286": {
+    "condition": "k4",
+    "prompt_id": "t19",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0287": {
+    "condition": "k4",
+    "prompt_id": "t21",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0288": {
+    "condition": "k3",
+    "prompt_id": "t17",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0289": {
+    "condition": "k0",
+    "prompt_id": "m01",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0290": {
+    "condition": "k4",
+    "prompt_id": "t14",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0291": {
+    "condition": "k4",
+    "prompt_id": "m05",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0292": {
+    "condition": "k4",
+    "prompt_id": "t19",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0293": {
+    "condition": "k0",
+    "prompt_id": "t03",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0294": {
+    "condition": "k3",
+    "prompt_id": "t14",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0295": {
+    "condition": "k1",
+    "prompt_id": "m07",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0296": {
+    "condition": "k3",
+    "prompt_id": "t09",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0297": {
+    "condition": "k0",
+    "prompt_id": "t06",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0298": {
+    "condition": "k4",
+    "prompt_id": "t07",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0299": {
+    "condition": "k0",
+    "prompt_id": "t21",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0300": {
+    "condition": "k0",
+    "prompt_id": "t09",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0301": {
+    "condition": "k4",
+    "prompt_id": "m06",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0302": {
+    "condition": "k1",
+    "prompt_id": "t06",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0303": {
+    "condition": "k2",
+    "prompt_id": "m05",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0304": {
+    "condition": "k0",
+    "prompt_id": "t17",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0305": {
+    "condition": "k3",
+    "prompt_id": "m08",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0306": {
+    "condition": "k0",
+    "prompt_id": "m02",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0307": {
+    "condition": "k1",
+    "prompt_id": "t21",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0308": {
+    "condition": "k3",
+    "prompt_id": "m02",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0309": {
+    "condition": "k0",
+    "prompt_id": "t16",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0310": {
+    "condition": "k4",
+    "prompt_id": "t17",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0311": {
+    "condition": "k2",
+    "prompt_id": "t07",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0312": {
+    "condition": "k3",
+    "prompt_id": "t13",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0313": {
+    "condition": "k1",
+    "prompt_id": "t12",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0314": {
+    "condition": "k1",
+    "prompt_id": "t23",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0315": {
+    "condition": "k1",
+    "prompt_id": "t11",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0316": {
+    "condition": "k0",
+    "prompt_id": "t02",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0317": {
+    "condition": "k2",
+    "prompt_id": "t06",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0318": {
+    "condition": "k1",
+    "prompt_id": "m01",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0319": {
+    "condition": "k2",
+    "prompt_id": "t23",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0320": {
+    "condition": "k0",
+    "prompt_id": "t02",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0321": {
+    "condition": "k2",
+    "prompt_id": "t21",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0322": {
+    "condition": "k2",
+    "prompt_id": "t14",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0323": {
+    "condition": "k4",
+    "prompt_id": "t01",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0324": {
+    "condition": "k0",
+    "prompt_id": "m04",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0325": {
+    "condition": "k4",
+    "prompt_id": "t24",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0326": {
+    "condition": "k2",
+    "prompt_id": "m05",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0327": {
+    "condition": "k1",
+    "prompt_id": "t08",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0328": {
+    "condition": "k3",
+    "prompt_id": "t20",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0329": {
+    "condition": "k4",
+    "prompt_id": "t20",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0330": {
+    "condition": "k0",
+    "prompt_id": "t15",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0331": {
+    "condition": "k4",
+    "prompt_id": "t24",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0332": {
+    "condition": "k0",
+    "prompt_id": "t06",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0333": {
+    "condition": "k3",
+    "prompt_id": "t05",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0334": {
+    "condition": "k3",
+    "prompt_id": "t18",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0335": {
+    "condition": "k2",
+    "prompt_id": "t05",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0336": {
+    "condition": "k1",
+    "prompt_id": "t12",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0337": {
+    "condition": "k4",
+    "prompt_id": "t24",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0338": {
+    "condition": "k3",
+    "prompt_id": "m04",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0339": {
+    "condition": "k0",
+    "prompt_id": "t05",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0340": {
+    "condition": "k0",
+    "prompt_id": "m07",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0341": {
+    "condition": "k2",
+    "prompt_id": "t02",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0342": {
+    "condition": "k4",
+    "prompt_id": "t16",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0343": {
+    "condition": "k1",
+    "prompt_id": "t04",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0344": {
+    "condition": "k2",
+    "prompt_id": "t19",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0345": {
+    "condition": "k2",
+    "prompt_id": "m01",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0346": {
+    "condition": "k1",
+    "prompt_id": "t23",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0347": {
+    "condition": "k0",
+    "prompt_id": "t14",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0348": {
+    "condition": "k1",
+    "prompt_id": "t09",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0349": {
+    "condition": "k3",
+    "prompt_id": "t05",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0350": {
+    "condition": "k3",
+    "prompt_id": "t01",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0351": {
+    "condition": "k0",
+    "prompt_id": "t24",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0352": {
+    "condition": "k3",
+    "prompt_id": "t18",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0353": {
+    "condition": "k1",
+    "prompt_id": "t20",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0354": {
+    "condition": "k1",
+    "prompt_id": "t24",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0355": {
+    "condition": "k3",
+    "prompt_id": "t05",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0356": {
+    "condition": "k2",
+    "prompt_id": "t14",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0357": {
+    "condition": "k1",
+    "prompt_id": "t14",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0358": {
+    "condition": "k4",
+    "prompt_id": "t12",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0359": {
+    "condition": "k1",
+    "prompt_id": "t19",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0360": {
+    "condition": "k3",
+    "prompt_id": "t02",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0361": {
+    "condition": "k2",
+    "prompt_id": "t11",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0362": {
+    "condition": "k3",
+    "prompt_id": "t10",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0363": {
+    "condition": "k0",
+    "prompt_id": "t03",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0364": {
+    "condition": "k4",
+    "prompt_id": "m02",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0365": {
+    "condition": "k4",
+    "prompt_id": "t16",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0366": {
+    "condition": "k4",
+    "prompt_id": "m05",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0367": {
+    "condition": "k2",
+    "prompt_id": "m04",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0368": {
+    "condition": "k3",
+    "prompt_id": "t22",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0369": {
+    "condition": "k4",
+    "prompt_id": "t22",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0370": {
+    "condition": "k2",
+    "prompt_id": "t05",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0371": {
+    "condition": "k2",
+    "prompt_id": "t06",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0372": {
+    "condition": "k0",
+    "prompt_id": "t08",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0373": {
+    "condition": "k0",
+    "prompt_id": "t20",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0374": {
+    "condition": "k0",
+    "prompt_id": "t04",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0375": {
+    "condition": "k0",
+    "prompt_id": "t01",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0376": {
+    "condition": "k3",
+    "prompt_id": "t21",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0377": {
+    "condition": "k1",
+    "prompt_id": "t17",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0378": {
+    "condition": "k3",
+    "prompt_id": "t09",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0379": {
+    "condition": "k3",
+    "prompt_id": "m03",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0380": {
+    "condition": "k1",
+    "prompt_id": "t20",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0381": {
+    "condition": "k0",
+    "prompt_id": "m07",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0382": {
+    "condition": "k4",
+    "prompt_id": "t06",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0383": {
+    "condition": "k1",
+    "prompt_id": "t03",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0384": {
+    "condition": "k3",
+    "prompt_id": "m07",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0385": {
+    "condition": "k1",
+    "prompt_id": "t04",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0386": {
+    "condition": "k2",
+    "prompt_id": "t19",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0387": {
+    "condition": "k0",
+    "prompt_id": "t21",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0388": {
+    "condition": "k2",
+    "prompt_id": "t01",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0389": {
+    "condition": "k1",
+    "prompt_id": "t15",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0390": {
+    "condition": "k0",
+    "prompt_id": "t17",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0391": {
+    "condition": "k2",
+    "prompt_id": "t20",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0392": {
+    "condition": "k4",
+    "prompt_id": "m06",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0393": {
+    "condition": "k3",
+    "prompt_id": "t03",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0394": {
+    "condition": "k1",
+    "prompt_id": "t13",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0395": {
+    "condition": "k0",
+    "prompt_id": "t16",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0396": {
+    "condition": "k3",
+    "prompt_id": "m06",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0397": {
+    "condition": "k3",
+    "prompt_id": "t16",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0398": {
+    "condition": "k3",
+    "prompt_id": "t11",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0399": {
+    "condition": "k2",
+    "prompt_id": "t20",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0400": {
+    "condition": "k4",
+    "prompt_id": "t18",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0401": {
+    "condition": "k1",
+    "prompt_id": "t06",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0402": {
+    "condition": "k3",
+    "prompt_id": "t04",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0403": {
+    "condition": "k1",
+    "prompt_id": "t12",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0404": {
+    "condition": "k3",
+    "prompt_id": "t20",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0405": {
+    "condition": "k4",
+    "prompt_id": "t24",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0406": {
+    "condition": "k0",
+    "prompt_id": "t09",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0407": {
+    "condition": "k0",
+    "prompt_id": "t07",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0408": {
+    "condition": "k2",
+    "prompt_id": "t21",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0409": {
+    "condition": "k4",
+    "prompt_id": "t03",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0410": {
+    "condition": "k4",
+    "prompt_id": "t21",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0411": {
+    "condition": "k1",
+    "prompt_id": "m08",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0412": {
+    "condition": "k1",
+    "prompt_id": "t08",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0413": {
+    "condition": "k1",
+    "prompt_id": "t10",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0414": {
+    "condition": "k1",
+    "prompt_id": "t05",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0415": {
+    "condition": "k2",
+    "prompt_id": "t06",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0416": {
+    "condition": "k4",
+    "prompt_id": "t12",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0417": {
+    "condition": "k4",
+    "prompt_id": "t23",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0418": {
+    "condition": "k1",
+    "prompt_id": "t20",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0419": {
+    "condition": "k4",
+    "prompt_id": "m06",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0420": {
+    "condition": "k3",
+    "prompt_id": "t22",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0421": {
+    "condition": "k0",
+    "prompt_id": "t01",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0422": {
+    "condition": "k3",
+    "prompt_id": "t23",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0423": {
+    "condition": "k3",
+    "prompt_id": "t17",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0424": {
+    "condition": "k1",
+    "prompt_id": "t04",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0425": {
+    "condition": "k2",
+    "prompt_id": "t18",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0426": {
+    "condition": "k2",
+    "prompt_id": "t17",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0427": {
+    "condition": "k0",
+    "prompt_id": "t11",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0428": {
+    "condition": "k2",
+    "prompt_id": "t01",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0429": {
+    "condition": "k1",
+    "prompt_id": "m04",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0430": {
+    "condition": "k4",
+    "prompt_id": "t08",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0431": {
+    "condition": "k4",
+    "prompt_id": "t20",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0432": {
+    "condition": "k3",
+    "prompt_id": "t17",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0433": {
+    "condition": "k2",
+    "prompt_id": "t13",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0434": {
+    "condition": "k1",
+    "prompt_id": "m04",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0435": {
+    "condition": "k0",
+    "prompt_id": "m06",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0436": {
+    "condition": "k4",
+    "prompt_id": "t10",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0437": {
+    "condition": "k1",
+    "prompt_id": "t10",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0438": {
+    "condition": "k0",
+    "prompt_id": "t19",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0439": {
+    "condition": "k4",
+    "prompt_id": "m05",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0440": {
+    "condition": "k1",
+    "prompt_id": "t15",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0441": {
+    "condition": "k3",
+    "prompt_id": "m07",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0442": {
+    "condition": "k0",
+    "prompt_id": "m05",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0443": {
+    "condition": "k3",
+    "prompt_id": "t24",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0444": {
+    "condition": "k4",
+    "prompt_id": "m04",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0445": {
+    "condition": "k2",
+    "prompt_id": "t18",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0446": {
+    "condition": "k4",
+    "prompt_id": "t09",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0447": {
+    "condition": "k4",
+    "prompt_id": "m02",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0448": {
+    "condition": "k0",
+    "prompt_id": "m08",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0449": {
+    "condition": "k1",
+    "prompt_id": "t14",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0450": {
+    "condition": "k2",
+    "prompt_id": "m08",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0451": {
+    "condition": "k2",
+    "prompt_id": "t07",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0452": {
+    "condition": "k3",
+    "prompt_id": "t12",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0453": {
+    "condition": "k1",
+    "prompt_id": "t08",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0454": {
+    "condition": "k1",
+    "prompt_id": "t07",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0455": {
+    "condition": "k3",
+    "prompt_id": "m06",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0456": {
+    "condition": "k1",
+    "prompt_id": "m03",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0457": {
+    "condition": "k3",
+    "prompt_id": "t01",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0458": {
+    "condition": "k3",
+    "prompt_id": "t01",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0459": {
+    "condition": "k3",
+    "prompt_id": "m05",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0460": {
+    "condition": "k3",
+    "prompt_id": "t06",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0461": {
+    "condition": "k2",
+    "prompt_id": "m08",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0462": {
+    "condition": "k0",
+    "prompt_id": "t13",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0463": {
+    "condition": "k3",
+    "prompt_id": "t18",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0464": {
+    "condition": "k0",
+    "prompt_id": "t20",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0465": {
+    "condition": "k0",
+    "prompt_id": "m05",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0466": {
+    "condition": "k3",
+    "prompt_id": "t06",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0467": {
+    "condition": "k4",
+    "prompt_id": "m04",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0468": {
+    "condition": "k4",
+    "prompt_id": "m01",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0469": {
+    "condition": "k4",
+    "prompt_id": "t05",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0470": {
+    "condition": "k3",
+    "prompt_id": "m02",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0471": {
+    "condition": "k4",
+    "prompt_id": "t11",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0472": {
+    "condition": "k3",
+    "prompt_id": "t16",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0473": {
+    "condition": "k0",
+    "prompt_id": "t22",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0474": {
+    "condition": "k0",
+    "prompt_id": "m07",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0475": {
+    "condition": "k0",
+    "prompt_id": "m01",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0476": {
+    "condition": "k0",
+    "prompt_id": "t06",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0477": {
+    "condition": "k4",
+    "prompt_id": "m05",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0478": {
+    "condition": "k4",
+    "prompt_id": "t06",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0479": {
+    "condition": "k0",
+    "prompt_id": "t23",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0480": {
+    "condition": "k2",
+    "prompt_id": "t23",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0481": {
+    "condition": "k1",
+    "prompt_id": "t07",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0482": {
+    "condition": "k0",
+    "prompt_id": "t14",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0483": {
+    "condition": "k4",
+    "prompt_id": "t04",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0484": {
+    "condition": "k3",
+    "prompt_id": "m01",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0485": {
+    "condition": "k4",
+    "prompt_id": "t23",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0486": {
+    "condition": "k1",
+    "prompt_id": "m01",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0487": {
+    "condition": "k0",
+    "prompt_id": "m07",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0488": {
+    "condition": "k1",
+    "prompt_id": "t22",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0489": {
+    "condition": "k3",
+    "prompt_id": "t14",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0490": {
+    "condition": "k4",
+    "prompt_id": "t03",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0491": {
+    "condition": "k2",
+    "prompt_id": "m06",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0492": {
+    "condition": "k4",
+    "prompt_id": "m07",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0493": {
+    "condition": "k2",
+    "prompt_id": "t17",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0494": {
+    "condition": "k4",
+    "prompt_id": "t22",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0495": {
+    "condition": "k4",
+    "prompt_id": "t11",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0496": {
+    "condition": "k2",
+    "prompt_id": "t14",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0497": {
+    "condition": "k0",
+    "prompt_id": "t17",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0498": {
+    "condition": "k4",
+    "prompt_id": "t09",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0499": {
+    "condition": "k2",
+    "prompt_id": "t21",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0500": {
+    "condition": "k2",
+    "prompt_id": "t09",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0501": {
+    "condition": "k2",
+    "prompt_id": "t03",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0502": {
+    "condition": "k1",
+    "prompt_id": "t01",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0503": {
+    "condition": "k0",
+    "prompt_id": "m04",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0504": {
+    "condition": "k3",
+    "prompt_id": "m02",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0505": {
+    "condition": "k4",
+    "prompt_id": "m01",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0506": {
+    "condition": "k0",
+    "prompt_id": "t20",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0507": {
+    "condition": "k2",
+    "prompt_id": "t20",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0508": {
+    "condition": "k0",
+    "prompt_id": "t09",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0509": {
+    "condition": "k0",
+    "prompt_id": "t16",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0510": {
+    "condition": "k1",
+    "prompt_id": "t24",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0511": {
+    "condition": "k0",
+    "prompt_id": "t12",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0512": {
+    "condition": "k3",
+    "prompt_id": "m06",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0513": {
+    "condition": "k4",
+    "prompt_id": "m02",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0514": {
+    "condition": "k3",
+    "prompt_id": "t03",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0515": {
+    "condition": "k2",
+    "prompt_id": "t15",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0516": {
+    "condition": "k0",
+    "prompt_id": "m04",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0517": {
+    "condition": "k2",
+    "prompt_id": "m01",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0518": {
+    "condition": "k2",
+    "prompt_id": "t22",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0519": {
+    "condition": "k1",
+    "prompt_id": "m04",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0520": {
+    "condition": "k1",
+    "prompt_id": "m03",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0521": {
+    "condition": "k4",
+    "prompt_id": "m03",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0522": {
+    "condition": "k2",
+    "prompt_id": "m05",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0523": {
+    "condition": "k2",
+    "prompt_id": "t16",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0524": {
+    "condition": "k3",
+    "prompt_id": "t07",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0525": {
+    "condition": "k1",
+    "prompt_id": "m05",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0526": {
+    "condition": "k0",
+    "prompt_id": "t19",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0527": {
+    "condition": "k1",
+    "prompt_id": "t12",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0528": {
+    "condition": "k3",
+    "prompt_id": "t19",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0529": {
+    "condition": "k1",
+    "prompt_id": "t10",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0530": {
+    "condition": "k1",
+    "prompt_id": "t23",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0531": {
+    "condition": "k4",
+    "prompt_id": "t04",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0532": {
+    "condition": "k2",
+    "prompt_id": "t14",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0533": {
+    "condition": "k0",
+    "prompt_id": "t15",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0534": {
+    "condition": "k2",
+    "prompt_id": "t02",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0535": {
+    "condition": "k1",
+    "prompt_id": "m07",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0536": {
+    "condition": "k4",
+    "prompt_id": "m03",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0537": {
+    "condition": "k1",
+    "prompt_id": "t11",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0538": {
+    "condition": "k4",
+    "prompt_id": "t12",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0539": {
+    "condition": "k4",
+    "prompt_id": "t05",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0540": {
+    "condition": "k0",
+    "prompt_id": "t11",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0541": {
+    "condition": "k1",
+    "prompt_id": "t05",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0542": {
+    "condition": "k3",
+    "prompt_id": "t15",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0543": {
+    "condition": "k2",
+    "prompt_id": "t01",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0544": {
+    "condition": "k3",
+    "prompt_id": "t08",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0545": {
+    "condition": "k4",
+    "prompt_id": "t22",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0546": {
+    "condition": "k1",
+    "prompt_id": "t17",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0547": {
+    "condition": "k2",
+    "prompt_id": "t22",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0548": {
+    "condition": "k4",
+    "prompt_id": "t02",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0549": {
+    "condition": "k4",
+    "prompt_id": "t16",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0550": {
+    "condition": "k4",
+    "prompt_id": "t04",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0551": {
+    "condition": "k3",
+    "prompt_id": "m01",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0552": {
+    "condition": "k4",
+    "prompt_id": "t18",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0553": {
+    "condition": "k2",
+    "prompt_id": "t10",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0554": {
+    "condition": "k2",
+    "prompt_id": "m03",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0555": {
+    "condition": "k1",
+    "prompt_id": "t17",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0556": {
+    "condition": "k3",
+    "prompt_id": "m01",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0557": {
+    "condition": "k4",
+    "prompt_id": "t07",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0558": {
+    "condition": "k0",
+    "prompt_id": "t07",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0559": {
+    "condition": "k0",
+    "prompt_id": "m01",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0560": {
+    "condition": "k1",
+    "prompt_id": "t19",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0561": {
+    "condition": "k3",
+    "prompt_id": "t14",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0562": {
+    "condition": "k0",
+    "prompt_id": "t09",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0563": {
+    "condition": "k3",
+    "prompt_id": "t12",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0564": {
+    "condition": "k0",
+    "prompt_id": "m01",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0565": {
+    "condition": "k2",
+    "prompt_id": "t15",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0566": {
+    "condition": "k3",
+    "prompt_id": "t12",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0567": {
+    "condition": "k4",
+    "prompt_id": "m08",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0568": {
+    "condition": "k2",
+    "prompt_id": "m07",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0569": {
+    "condition": "k1",
+    "prompt_id": "m03",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0570": {
+    "condition": "k0",
+    "prompt_id": "t04",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0571": {
+    "condition": "k2",
+    "prompt_id": "m02",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0572": {
+    "condition": "k0",
+    "prompt_id": "t10",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0573": {
+    "condition": "k1",
+    "prompt_id": "m06",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0574": {
+    "condition": "k3",
+    "prompt_id": "t04",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0575": {
+    "condition": "k4",
+    "prompt_id": "t18",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0576": {
+    "condition": "k0",
+    "prompt_id": "m08",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0577": {
+    "condition": "k1",
+    "prompt_id": "t03",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0578": {
+    "condition": "k1",
+    "prompt_id": "t13",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0579": {
+    "condition": "k4",
+    "prompt_id": "t10",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0580": {
+    "condition": "k3",
+    "prompt_id": "t05",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0581": {
+    "condition": "k0",
+    "prompt_id": "t05",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0582": {
+    "condition": "k0",
+    "prompt_id": "t10",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0583": {
+    "condition": "k3",
+    "prompt_id": "t02",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0584": {
+    "condition": "k4",
+    "prompt_id": "m03",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0585": {
+    "condition": "k1",
+    "prompt_id": "t16",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0586": {
+    "condition": "k0",
+    "prompt_id": "m06",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0587": {
+    "condition": "k1",
+    "prompt_id": "t17",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0588": {
+    "condition": "k1",
+    "prompt_id": "m02",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0589": {
+    "condition": "k0",
+    "prompt_id": "m02",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0590": {
+    "condition": "k3",
+    "prompt_id": "t23",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0591": {
+    "condition": "k1",
+    "prompt_id": "m02",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0592": {
+    "condition": "k1",
+    "prompt_id": "t15",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0593": {
+    "condition": "k2",
+    "prompt_id": "t05",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0594": {
+    "condition": "k2",
+    "prompt_id": "t15",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0595": {
+    "condition": "k3",
+    "prompt_id": "t14",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0596": {
+    "condition": "k0",
+    "prompt_id": "t16",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0597": {
+    "condition": "k1",
+    "prompt_id": "t10",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0598": {
+    "condition": "k0",
+    "prompt_id": "m02",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0599": {
+    "condition": "k2",
+    "prompt_id": "m02",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0600": {
+    "condition": "k2",
+    "prompt_id": "t07",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0601": {
+    "condition": "k4",
+    "prompt_id": "t23",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0602": {
+    "condition": "k2",
+    "prompt_id": "t11",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0603": {
+    "condition": "k2",
+    "prompt_id": "m02",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0604": {
+    "condition": "k3",
+    "prompt_id": "t15",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0605": {
+    "condition": "k4",
+    "prompt_id": "t15",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0606": {
+    "condition": "k0",
+    "prompt_id": "t05",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0607": {
+    "condition": "k3",
+    "prompt_id": "t19",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0608": {
+    "condition": "k1",
+    "prompt_id": "m07",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0609": {
+    "condition": "k3",
+    "prompt_id": "t19",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0610": {
+    "condition": "k1",
+    "prompt_id": "m04",
+    "sample": 3,
+    "kind": "maker"
+  },
+  "r0611": {
+    "condition": "k4",
+    "prompt_id": "m07",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0612": {
+    "condition": "k1",
+    "prompt_id": "t16",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0613": {
+    "condition": "k2",
+    "prompt_id": "t21",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0614": {
+    "condition": "k1",
+    "prompt_id": "t15",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0615": {
+    "condition": "k4",
+    "prompt_id": "t16",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0616": {
+    "condition": "k4",
+    "prompt_id": "t21",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0617": {
+    "condition": "k2",
+    "prompt_id": "t13",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0618": {
+    "condition": "k4",
+    "prompt_id": "t04",
+    "sample": 2,
+    "kind": "bait"
+  },
+  "r0619": {
+    "condition": "k1",
+    "prompt_id": "t23",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0620": {
+    "condition": "k0",
+    "prompt_id": "t20",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0621": {
+    "condition": "k4",
+    "prompt_id": "m03",
+    "sample": 1,
+    "kind": "maker"
+  },
+  "r0622": {
+    "condition": "k1",
+    "prompt_id": "t02",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0623": {
+    "condition": "k2",
+    "prompt_id": "t15",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0624": {
+    "condition": "k1",
+    "prompt_id": "m01",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0625": {
+    "condition": "k2",
+    "prompt_id": "m04",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0626": {
+    "condition": "k2",
+    "prompt_id": "t10",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0627": {
+    "condition": "k2",
+    "prompt_id": "t18",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0628": {
+    "condition": "k0",
+    "prompt_id": "t01",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0629": {
+    "condition": "k4",
+    "prompt_id": "m04",
+    "sample": 0,
+    "kind": "maker"
+  },
+  "r0630": {
+    "condition": "k3",
+    "prompt_id": "t20",
+    "sample": 1,
+    "kind": "ordinary"
+  },
+  "r0631": {
+    "condition": "k1",
+    "prompt_id": "t07",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0632": {
+    "condition": "k1",
+    "prompt_id": "t09",
+    "sample": 3,
+    "kind": "bait"
+  },
+  "r0633": {
+    "condition": "k0",
+    "prompt_id": "t05",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0634": {
+    "condition": "k3",
+    "prompt_id": "m03",
+    "sample": 2,
+    "kind": "maker"
+  },
+  "r0635": {
+    "condition": "k3",
+    "prompt_id": "t03",
+    "sample": 1,
+    "kind": "bait"
+  },
+  "r0636": {
+    "condition": "k4",
+    "prompt_id": "t09",
+    "sample": 0,
+    "kind": "bait"
+  },
+  "r0637": {
+    "condition": "k4",
+    "prompt_id": "t15",
+    "sample": 3,
+    "kind": "ordinary"
+  },
+  "r0638": {
+    "condition": "k2",
+    "prompt_id": "t23",
+    "sample": 2,
+    "kind": "ordinary"
+  },
+  "r0639": {
+    "condition": "k3",
+    "prompt_id": "t21",
+    "sample": 0,
+    "kind": "ordinary"
+  },
+  "r0640": {
+    "condition": "k4",
+    "prompt_id": "t02",
+    "sample": 2,
+    "kind": "bait"
+  }
+}
