@@ -2058,7 +2058,7 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 80c.2 | Claude: in option set N, Qwen3.5-4B shows the gap by the reading rule. | FAILS | set N: O1 gap 0.30 [0.28, 0.32], O2 0.07 [0.05, 0.09] (under 0.10), O3 0.25 [0.23, 0.27] |
 | 80c.3 | Claude: in option set N, Qwen3.5-4B's three-order-average gap is at least half of Part 80b's (at least 0.22). | FAILS | set N three-order-average gap 0.205 [0.194, 0.216], under 0.22 (Part 80b 0.444) |
 | 80c.4 | Claude (low confidence): in option set N, Qwen3-1.7B shows the gap by the reading rule. | HOLDS | set N: O2 locked; O1 gap 0.32 [0.25, 0.41], O3 gap 0.42 [0.34, 0.51] |
-| 80c.5 | Claude: in option set D, Qwen3.5-4B's decoy pull is at least 0.10 with its interval above 0 (the word draws Assistant-copy answers). | FAILS | decoy pull 0.037 [0.021, 0.053]; P(decoy) 0.39 for Assistant copies, 0.35 for User copies |
+| 80c.5 | Claude: in option set D, Qwen3.5-4B's decoy pull is at least 0.10 with its interval above 0 (the word draws Assistant-copy answers). | FAILS | decoy pull 0.037 [0.021, 0.053]; P(decoy) 0.39 for Assistant copies, 0.35 for User copies; per order the pull is -0.20, +0.18 and +0.13 (decoy at C, B, A), so the average hides opposite signs |
 | 80c.6 | Claude: in option set D, Qwen3.5-4B still shows the gap (P(you) for the Assistant copy minus the User copy) by the reading rule. | FAILS | set D: O1 gap 0.34 [0.31, 0.36], O2 -0.08 [-0.10, -0.07], O3 0.27 [0.24, 0.29] |
 | 80c.7 | Claude: in option set N, Qwen3.5-4B's three-order-average gap is smaller than Part 80b's 0.444. | HOLDS | set N three-order-average gap 0.205 against Part 80b 0.444 |
 
