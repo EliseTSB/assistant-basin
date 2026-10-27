@@ -1869,6 +1869,64 @@ intervals are a bootstrap over bodies, not over wordings, and the verdicts use p
 copied from commit cef4a12 to the GPU folder; `run.json` records the device and dtype but no code hash. Results:
 `results/part80b/` (`results80b.json` holds every number above).
 
+### Part 80c: without the word "assistant" in the option, Qwen3.5-4B's gap halves; Qwen3-1.7B's does not change much
+
+Part 80b's cold check named a reading that run could not rule out: the Assistant role header and the option "You (the
+AI assistant)" share the word "assistant". Part 80c reran Part 80b's measure on the same 100 SmolLM3 bodies with two new
+option sets: **N**, "You" / "The user" / "The system" (no "assistant" anywhere), and **D**, "You" / "The user" /
+"Another AI assistant" (the word moved onto a decoy that names someone else). Design and predictions were pushed before
+any code (`PART80C-DESIGN.md`, commit fac8b04); code `part80c/`. Run 2026-10-27 09:56 to 10:04 CT on the A770 in bf16:
+3,600 passes, no body dropped, mean letter mass 0.999 or more. Three of seven predictions held. The 80b rows below are
+Part 80b's run on the same bodies, not rerun.
+
+Gap is P(you) for the Assistant copy minus P(you) for the User copy, with a 95% paired bootstrap interval over bodies.
+Orders as in Part 80b: "You" is option A in O1, C in O2, B in O3.
+
+| model | option set | order | P(you): Assistant copy | User copy | gap |
+|---|---|---|---|---|---|
+| Qwen3-1.7B | 80b: "You (the AI assistant)" | O1 | 0.59 | 0.19 | 0.40 [0.31, 0.49] |
+| Qwen3-1.7B | 80b: "You (the AI assistant)" | O2 | 1.00 | 1.00 | 0.00 (locked) |
+| Qwen3-1.7B | 80b: "You (the AI assistant)" | O3 | 0.94 | 0.49 | 0.45 [0.35, 0.54] |
+| Qwen3-1.7B | N: "You" | O1 | 0.77 | 0.44 | 0.32 [0.25, 0.41] |
+| Qwen3-1.7B | N: "You" | O2 | 0.97 | 0.98 | -0.01 (locked) |
+| Qwen3-1.7B | N: "You" | O3 | 0.53 | 0.11 | 0.42 [0.34, 0.51] |
+| Qwen3-1.7B | D: "You" + decoy | O1 | 0.41 | 0.21 | 0.19 [0.12, 0.27] |
+| Qwen3-1.7B | D: "You" + decoy | O2 | 0.96 | 0.96 | 0.00 (locked) |
+| Qwen3-1.7B | D: "You" + decoy | O3 | 0.98 | 0.70 | 0.28 [0.20, 0.36] |
+| Qwen3.5-4B | 80b: "You (the AI assistant)" | O1 | 0.89 | 0.35 | 0.54 [0.51, 0.57] |
+| Qwen3.5-4B | 80b: "You (the AI assistant)" | O2 | 0.74 | 0.46 | 0.28 [0.25, 0.31] |
+| Qwen3.5-4B | 80b: "You (the AI assistant)" | O3 | 0.66 | 0.15 | 0.51 [0.48, 0.54] |
+| Qwen3.5-4B | N: "You" | O1 | 0.63 | 0.33 | 0.30 [0.28, 0.32] |
+| Qwen3.5-4B | N: "You" | O2 | 0.54 | 0.47 | 0.07 [0.05, 0.09] |
+| Qwen3.5-4B | N: "You" | O3 | 0.33 | 0.08 | 0.25 [0.23, 0.27] |
+| Qwen3.5-4B | D: "You" + decoy | O1 | 0.70 | 0.36 | 0.34 [0.31, 0.36] |
+| Qwen3.5-4B | D: "You" + decoy | O2 | 0.38 | 0.47 | -0.08 [-0.10, -0.07] |
+| Qwen3.5-4B | D: "You" + decoy | O3 | 0.55 | 0.29 | 0.27 [0.24, 0.29] |
+
+- **Qwen3-1.7B (80c.1 and 80c.4 held).** Its lock on C replicates with "You" at C in both new sets, and only there. In
+  its two unlocked orders the gap without the word is 0.32 and 0.42, close to Part 80b's 0.40 and 0.45, so for the 1.7B
+  the word is not what carries the gap.
+- **Qwen3.5-4B, set N (80c.2 and 80c.3 failed, 80c.7 held).** Averaged over orders the gap falls from 0.444 to 0.205
+  (interval 0.194 to 0.216), below the 0.22 I predicted. In O1 and O3 it stays clear (0.30 and 0.25); in O2, with "You"
+  at C, it is 0.07, under the 0.10 line, so by the registered rule the 4B does not show the gap in set N. The 4B also
+  moves much of its answer for User copies to "The system" in this set (0.51 of the probability in O1 and in O3).
+- **Qwen3.5-4B, set D (80c.5 and 80c.6 failed).** "Another AI assistant" takes about 0.35 to 0.39 of the probability
+  whatever role the text is in (0.39 for Assistant copies, 0.35 for User copies): the decoy pull is 0.037 (interval
+  0.021 to 0.053), under the 0.10 I predicted. The word attracts answers, but hardly more for Assistant-role text, so
+  this does not support the simple reading that the model matches the header word to the option word. With the decoy
+  present the gap is 0.34 and 0.27 in O1 and O3 and reverses in O2 (-0.08).
+- **What this leaves.** For the 4B, about half of Part 80b's gap goes when "assistant" leaves the "you" option, and
+  what remains shows in two of three orders. The decoy result argues against plain word matching as the cause of the
+  half that goes; a reading not tested here is that "You (the AI assistant)" tells the model which role "you" means,
+  and "You" alone does not. In all three option sets the 4B's gap is smallest with "you" at C (0.28, 0.07, -0.08), so
+  a letter or order effect runs through every 4B result; order and letter are confounded across the three orders.
+
+Limits: "You" alone is shorter and plainer than "You (the AI assistant)", so set N changes more than the word; the decoy
+changes the option set's meaning and leaves the System copy with no correct option, so nothing is read from it; the 80b
+comparison is across two runs on the same bodies; same 100 questions as Parts 80 and 80b; one question wording;
+thinking off; two Qwen models at one revision each; intervals are a bootstrap over bodies. Results: `results/part80c/`
+(`results80c.json` holds every number above).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
