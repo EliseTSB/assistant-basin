@@ -83,3 +83,11 @@ The reading rule's self-index condition gains a clause: at the reported layer, t
 the most distant must exceed the share where U' is the most distant of (U', U, S), and the share where T is the most
 distant of (T, U, S) when T is run, by at least 20 percentage points each. Prediction 80.2a replaces 80.2 as the
 control that is read.
+
+## Amendment 2 (2026-10-27 06:0x, after the first launch failed and before any result was read)
+
+The first launch finished Qwen3-1.7B and stopped on Qwen3.5-4B: its chat template strips trailing whitespace from an
+assistant message's content, and 5 of the 100 bodies end in blank lines, so those bodies were not found verbatim in
+their Assistant rendering. Every body is now stripped of leading and trailing whitespace before rendering, in every
+role and for both models, and both models are rerun so they see identical text. The Qwen3-1.7B output of the first
+launch is kept in the GPU folder as `qwen3-1.7b-launch1` and was not read or scored.

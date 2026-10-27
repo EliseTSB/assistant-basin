@@ -76,7 +76,9 @@ def prefix_for_body(a_render,u_render,body):
 def load_bodies(path):
     rows=[json.loads(x) for x in path.read_text(encoding='utf-8').splitlines() if x.strip()]
     rows=[r for r in rows if r.get('kind')=='greedy']
-    byid={str(r['question_id']):r['text'] for r in rows}
+    # Stripped (Amendment 2): Qwen3.5's template strips trailing whitespace from assistant content, so an unstripped
+    # body is not found verbatim in its A rendering; both models get the same stripped text in every role.
+    byid={str(r['question_id']):r['text'].strip() for r in rows}
     ids=sorted(byid); random.Random(80).shuffle(ids)
     return [(qid,byid[qid],'discovery' if i<50 else 'heldout') for i,qid in enumerate(ids)]
 

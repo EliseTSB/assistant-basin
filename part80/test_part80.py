@@ -73,3 +73,13 @@ def test_every_file_call_names_its_encoding():
             if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and node.func.attr in ('open','read_text','write_text'):
                 if not any(k.arg=='encoding' for k in node.keywords): bad.append(f'{path.name}:{node.lineno} {node.func.attr}')
     assert not bad,bad
+
+
+def test_bodies_are_stripped(tmp_path):
+    """Amendment 2: Qwen3.5's template strips trailing whitespace from assistant content (5 of 100 bodies end in blank lines)."""
+    import json
+    from part80 import part80 as p80
+    f=tmp_path/'gens.jsonl'
+    f.write_text(''.join(json.dumps({'question_id':f'q{i:03d}','kind':'greedy','text':f'  body {i}\n\n'})+'\n' for i in range(100)),encoding='utf-8')
+    bodies=p80.load_bodies(f)
+    assert len(bodies)==100 and all(t==t.strip() for _,t,_ in bodies)
