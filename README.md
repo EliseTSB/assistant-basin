@@ -1373,6 +1373,51 @@ revision, one prompt set; 192 held-out answers per condition, so differences of 
 
 Files: `part75/` (runner, scorer, tests), `results/part75/` (answers, conditions, m, run record, score).
 
+### Part 76: across all 9,216 layer-27 units, L27 N3325 is the one that carries L24 N3949's effect (2026-10-26)
+
+Pre-registered in `PART76-DESIGN.md` (Amendment 0, a tie-break for the Google writers, before any run). Part 74's model,
+prompts, opening, readout and maker set. Phase one, per question: A (makers zeroed) and B (+ L24 N3949 zeroed) record
+every layer-27 unit's down_proj input, and one backward pass in A gives a first-order estimate of every unit's pure
+indirect effect, PIE_hat(u) = sum over positions of (a_B - a_A) * dg/da. Phase two runs the exact PIE (unit u alone set
+to its B values at every position) for L27 N3325, the 10 most negative estimates, the 10 layer-27 units whose direct
+readout ranks Google highest, and 5 random units; plus every layer-27 unit set to its B values (E_all27) and L27 N3325
+set at the last position only. Run record: `results/part76/` (revision 851bf6e8, bf16, A770, under a minute). The first
+launch (20:53 CT) was killed 35 s in by the RAM guard: the backward pass computed a gradient for every weight, because
+the runner did not freeze them; fixed in a7fbb73 before any result was written.
+
+| With the four makers zeroed | Mean change in g against makers only |
+|---|---:|
+| L24 N3949 zeroed (total effect) | -2.26 |
+| L27 N3325 alone set to its B values (exact PIE; estimate -1.42) | -1.45 |
+| the same, last position only | -0.98 |
+| every layer-27 unit set to its B values (E_all27) | -1.18 |
+| the 10 next-most-negative estimates, exact | -0.08 to -0.03 |
+| the 10 best Google writers other than L27 N3325, exact | -0.02 to +0.03 |
+| 5 random units, exact | -0.01 to +0.03 |
+| A_self (noise) | -0.01 |
+
+**Results.** All six predictions held. The control reproduced Part 74b (-1.45; 76.1). The first-order estimate for
+L27 N3325 is within 2% of its exact value and ranks first of all 9,216 units (76.2); estimate and exact value differ by at
+most 0.03 for every validated unit, and the estimates summed over the whole layer (-1.17) match the exact whole-layer
+patch (-1.18). No other validated unit's exact PIE is more negative than -0.08 (76.3). None of the ten Google writers
+carries anything (76.4). L27 N3325's PIE is 1.23 times E_all27's (76.5): the rest of layer 27 together pushes the other
+way by about +0.25. Setting it at the last position only gives 68% of its all-position effect (76.6).
+
+**Reading.** On this readout, L24 N3949's effect through layer 27's MLP inputs runs through one unit. Writing Google is
+not what makes it the route: L27 N3325 is the only layer-27 unit whose direct readout ranks Google first, and it is also
+the unit L24 N3949 moves most (+2.42 at the last position; no other validated unit moves by more than 0.84). About two
+thirds of its effect acts at the answer position; the rest comes through earlier positions, presumably through
+attention, which this part did not test.
+
+**Limits.** The Google-writer null is weaker than designed: besides L27 N3325, only two units (N8223, N5560) rank Google
+second, and the other eight rank it 147th to 265th, so "a strong Google writer that L24 N3949 does not move carries
+nothing" rests on two units. E_all27 covers layer 27's MLP inputs only, not attention or other layers. Part 74's and
+74b's limits all apply: one forced opening and next token, the makers zeroed, bf16 resolution about 0.125 nats per
+question, one model and revision.
+
+Files: `part76/` (runner, tests), `results/part76/` (summary, per-question records, every unit's estimate, Google rank
+and margin).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
