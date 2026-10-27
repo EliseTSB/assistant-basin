@@ -1990,3 +1990,14 @@ directions sit at chance (65e). Both are reported as they are; neither the thres
 | 77.2 | Claude: c2_l24_restore brings held-out Google answers at least halfway back from c1_l24 toward c0_makers. | open | |
 | 77.3 | Claude: c3_l24_restore_nulls (Part 76's 10 next-strongest layer-27 candidates copied instead) is at most 8 Google answers above c1_l24. | open | |
 | 77.4 | Claude: c2_l24_restore has at most 12 more held-out Google answers than c0_makers. | open | |
+
+## Part 78: do two pushed units compose into one identity? The alien neuron and the maker neurons together (written 2026-10-27, before any code or run).
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 78.1 | Control: c0_unchanged has at most 6 held-out Google and at most 10 off-world answers of 192; c1_makers has 26 to 60 Google; c2_alien15 has at least 120 off-world and c4_alien20 at least 170; guard keywords match in at least 20 of 24 answers in c0 and c1. | open | |
+| 78.2 | Claude: c3_makers_alien15 has at most half as many held-out Google answers as c1_makers (the alien frame overrides the Google fallback rather than composing with it). | open | |
+| 78.3 | Claude: c5_makers_alien20 has at most 10 held-out Google answers of 192. | open | |
+| 78.4 | Claude: composed answers (Google and off-world in one answer) are at most 15 of 192 in c3_makers_alien15 and in c5_makers_alien20. | open | |
+| 78.5 | Claude: in c3_makers_alien15, answers with a maker phrase and no known maker family outnumber Google answers. | open | |
+| 78.6 | Claude: c6_makers_control20 has at least as many held-out Google answers as c1_makers (a generic push at the same dose does not suppress the Google fallback, so 78.2 is specific to the alien unit). | open | |
