@@ -68,6 +68,9 @@ class TestScorer(unittest.TestCase):
         self.assertEqual(p['83.1']['verdict'],'FAILS')
         for k in ('83.2','83.3','83.4','83.5','83.6','83.7'): self.assertEqual(p[k]['verdict'],'NOT READ',k)
         self.assertEqual(p['83.8']['verdict'],'HOLDS')
+        # The second half of the gate: L15h10 alone must reproduce Part 82's h2 drop within 0.02.
+        q=scored(drops={**PASS_DROPS,'L15h10':.10})['predictions']
+        self.assertEqual(q['83.1']['verdict'],'FAILS')
 
     def test_each_rule_has_a_failing_fixture(self):
         cases={'83.2':dict(drops={**PASS_DROPS,'L11h3':.20}),
