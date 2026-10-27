@@ -2094,3 +2094,17 @@ Design: `PART83-DESIGN.md`. Part 80b's options only; drops are gap(h0) minus gap
 | 83.6 | Claude: between 3 and 10 of the 32 single heads matter (drop at least 0.05 either way, interval excluding 0). | FAILS | 20 of 32 heads matter: 19 lower the gap, one raises it (L15h3, -0.089) |
 | 83.7 | Claude (low confidence): Lyra's set is super-additive: h1's measured drop exceeds the sum of its six heads' single drops, interval above 0. | FAILS | h1 set drop 0.369, sum of its six single drops 0.450: sub-additive, difference -0.082 [-0.111, -0.052] |
 | 83.8 | Control: mean letter mass stays at least 0.9 in every condition. | HOLDS | mean letter mass at least 0.992 in all 33 conditions |
+
+## Part 84: the alien neuron as an additive recipe (Qwen3.5-4B), registered 2026-10-27 before any code
+
+Design: `PART84-DESIGN.md`. OFFWORLD counts are of 24 answers per arm, by a blind Haiku reader.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 84.1 | Control: the L22 median measured by Lyra's rule on her calibration text is within 2% of her stated 24.8. | | |
+| 84.2 | Control: A0 (unchanged) is OFFWORLD in at most 1 of 24. | | |
+| 84.3 | Claude: A2 (dose 0.63, generated tokens only) is OFFWORLD in at least 12 of 24. | | |
+| 84.4 | Claude: A3 (dose 0.63, last prompt position and generated tokens) is OFFWORLD in at least 18 of 24. | | |
+| 84.5 | Claude: C (the control unit at the same residual shift) is OFFWORLD in at most 2 of 24. | | |
+| 84.6 | Claude (low confidence): A1 (dose 0.47, generated tokens only) is OFFWORLD in 6 to 20 of 24. | | |
+| 84.7 | Control: A2 is BROKEN in at most 4 of 24. | | |
