@@ -62,3 +62,24 @@ Qwen3-1.7B and Qwen3.5-4B with Li et al.'s own metrics.
 - Thinking is off; Li et al. found one model that recognises its messages only after reasoning.
 - A role's template tokens differ, so states after the body are not compared; only the body's own tokens are.
 - Two models, both Qwen, at one revision each.
+
+## Amendment 1 (2026-10-27, after the design and predictions were pushed, before any code or run)
+
+The shuffled-role control cannot fail: with labels permuted at random, the rendering labelled "A" is the most distant
+of three in exactly one body in three in expectation, whatever the model does, so 80.2 would hold for any model. It
+stays as written and is reported, but it does not gate anything. Two controls replace it, each a fourth rendering of
+every body scored against the same U and S:
+
+- **U' (context change):** the body as a User message after a neutral System message ("You are a helpful assistant.").
+  If U' is the most distant of (U', U, S) as often as A is of (A, U, S), the self-index measure is detecting any change
+  of context, not the Assistant role.
+- **T (template tokens):** the builder prints the exact tokens between the role header and the body in the Assistant
+  rendering and in the User rendering. If the Assistant rendering has tokens there that the User rendering lacks (for
+  example an empty think block), T is the body as a User message whose content begins with those same tokens as text.
+  If there are none, T is not run and that is reported. If T is the most distant of (T, U, S) as often as A is, the
+  index may come from those tokens rather than from the role.
+
+The reading rule's self-index condition gains a clause: at the reported layer, the share of held-out bodies where A is
+the most distant must exceed the share where U' is the most distant of (U', U, S), and the share where T is the most
+distant of (T, U, S) when T is run, by at least 20 percentage points each. Prediction 80.2a replaces 80.2 as the
+control that is read.

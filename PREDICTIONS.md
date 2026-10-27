@@ -2036,3 +2036,4 @@ Part 78b, which these follow: most size-matched layer-22 pushes lower the Google
 | 80.4 | Claude: Qwen3.5-4B has a self-index by the reading rule. | open | |
 | 80.5 | Claude: Qwen3-1.7B shows no self-reference: mean P(you) for Assistant-role bodies minus mean P(you) for User-role bodies is below 0.10. | open | |
 | 80.6 | Claude: Qwen3.5-4B shows no self-reference by the same rule (difference below 0.10). | open | |
+| 80.2a | Control (Amendment 1): at the layer where each model's self-index is read, U' is the most distant of (U', U, S) in fewer than 50% of held-out bodies; T is reported against the same line when it is run. | open | |
