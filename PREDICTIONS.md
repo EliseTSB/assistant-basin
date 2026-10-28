@@ -2154,3 +2154,19 @@ Design: `PART86-DESIGN.md`. "Coherent persona" = the blind reader marks the answ
 | 86.4a | Amendment 1 reading of 86.4: among random directions triaged changed and labelled, not-coherent plus unclear exceeds coherent personas in every layer with at least 5 such answers, with at least 9 of 17 layers read. | | |
 | 86.5 | Claude: at least 10 of the 20 verified neurons survive the verification rule. | | |
 | 86.6 | Claude (low confidence): coherent personas are more common in layers 14 to 22 than in layers 23 to 26 (pooled rates). | | |
+
+## Part 87: our two recipes in neuronary's own form, registered 2026-10-27 before any code
+
+Design: `PART87-DESIGN.md`. Every-token steering by the site's dose rule; Google by Part 66's regex rule.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 87.1 | Control: unchanged names Google in at most 2 of 96 held-out answers, and A0 is OFFWORLD in at most 1 of 24. | | |
+| 87.2 | Control: zeroing the four (Part 66's recipe, same run) names Google in at least 10 of 96. | | |
+| 87.3 | Claude: the alien neuron at +0.63 on every token is OFFWORLD in at least 20 of 24. | | |
+| 87.4 | Claude: at +0.47, every-token and generated-only OFFWORLD counts differ by at most 6 of 24. | | |
+| 87.5 | Claude: the control unit L22 N8870 at +0.63 on every token is OFFWORLD in at most 1 of 24. | | |
+| 87.6 | Claude: the mean-shift arm M names Google at least half as often as the zeroed arm Z. | | |
+| 87.7 | Claude: each additive arm (M, F) names Google more often than all 20 of its random sets (empirical p = 1/21). | | |
+| 87.8 | Claude (low confidence): the fixed-size arm F names Google less often than the mean-shift arm M. | | |
+| 87.9 | Claude: in every main 87B arm at least 90% of fluency-guard answers contain their keyword. | | |
