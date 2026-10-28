@@ -51,10 +51,33 @@ def tiny_run_model():
     torch.manual_seed(85)
     config = Olmo2Config(
         vocab_size=64, hidden_size=16, intermediate_size=7885, num_hidden_layers=11,
-        num_attention_heads=4, num_key_value_heads=2, max_position_embeddings=32,
+        num_attention_heads=4, num_key_value_heads=2, max_position_embeddings=128,
         pad_token_id=0, bos_token_id=1, eos_token_id=2, use_cache=True,
     )
     return Olmo2ForCausalLM(config).cpu().eval()
+
+
+class TinyAuditHead(torch.nn.Module):
+    """Make the tiny OLMo stop after one generated token while still running its real forward path twice."""
+
+    def __init__(self, vocab_size):
+        super().__init__()
+        self.vocab_size = vocab_size
+        self.calls = 0
+
+    def forward(self, hidden_states):
+        logits = torch.full((*hidden_states.shape[:-1], self.vocab_size), -10000.0,
+                            dtype=hidden_states.dtype, device=hidden_states.device)
+        token = 3 if self.calls % 2 == 0 else 2
+        self.calls += 1
+        logits[..., token] = 10000.0
+        return logits
+
+
+def tiny_audit_model():
+    model = tiny_run_model()
+    model.lm_head = TinyAuditHead(model.config.vocab_size)
+    return model
 
 
 class TinyTokenizer:
@@ -83,6 +106,49 @@ class TinyTokenizer:
         self.chat_calls += 1
         self.last_chat_messages = messages
         return {"input_ids": torch.tensor([[4, 5, 6]], dtype=torch.long)}
+
+
+class TraceTokenizer(TinyTokenizer):
+    """Encode prompt text losslessly so the trace can be audited against generate's input IDs."""
+
+    def __init__(self):
+        super().__init__()
+        self._char_to_id = {}
+        self._id_to_char = {}
+
+    def _encode(self, text):
+        ids = []
+        for character in text:
+            if character not in self._char_to_id:
+                token_id = len(self._char_to_id) + 3
+                if token_id >= 64:
+                    raise ValueError("trace fixture prompt uses more than 61 distinct characters")
+                self._char_to_id[character] = token_id
+                self._id_to_char[token_id] = character
+            ids.append(self._char_to_id[character])
+        return ids
+
+    def __call__(self, text, return_tensors=None, add_special_tokens=False):
+        self.plain_prompts.append(text)
+        ids = self._encode(text)
+        return {"input_ids": torch.tensor([ids], dtype=torch.long) if return_tensors else ids}
+
+    def decode(self, ids, skip_special_tokens=True):
+        if hasattr(ids, "tolist"):
+            ids = ids.tolist()
+        decoded = []
+        for value in ids:
+            value = int(value)
+            if value in self._id_to_char:
+                decoded.append(self._id_to_char[value])
+        return "".join(decoded)
+
+    def apply_chat_template(self, messages, tokenize=True, add_generation_prompt=True,
+                            return_tensors="pt", return_dict=True):
+        self.chat_calls += 1
+        self.last_chat_messages = messages
+        text = f"<user>\n{messages[0]['content']}\n<assistant>"
+        return {"input_ids": torch.tensor([self._encode(text)], dtype=torch.long)}
 
 
 class FormsTokenizer:
@@ -742,6 +808,133 @@ class Part85Tests(unittest.TestCase):
                     self.assertFalse(all(math.isclose(v, requested, rel_tol=1e-6, abs_tol=1e-6)
                                          for v in observed), (index, observation))
 
+    def _run_and_audit_registered_case(self, case_root, key, mode, attempt=1, custom_template=False):
+        import transformers
+
+        case_root = Path(case_root)
+        results_root = case_root / "results"
+        (case_root / "snapshot").mkdir(parents=True, exist_ok=True)
+        (case_root / "snapshot" / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+        self._write_step1_fixture(results_root, key, mode=mode, attempt=attempt)
+        tokenizer = TraceTokenizer()
+        if mode == "main" and key in part85.POST_TRAINED:
+            tokenizer.chat_template = "tiny chat template"
+
+        argv = ["--mode", mode, "--checkpoint", key,
+                "--snapshot-dir", str(case_root / "snapshot"),
+                "--results-root", str(results_root), "--device", "cpu"]
+        template_path = None
+        if mode == "pilot":
+            argv.extend(["--attempt", str(attempt)])
+        else:
+            gate_path = case_root / "pilot-score.json"
+            gate_path.write_text(json.dumps({"pilot_gate": {
+                "action": "plain_frame_pass",
+                "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
+            argv.extend(["--pilot-score", str(gate_path)])
+        if custom_template:
+            template_path = results_root / f"pilot-a{attempt}" / "pilot-frame-v2.txt"
+            template_path.parent.mkdir(parents=True, exist_ok=True)
+            template_path.write_text("Revised origin prompt: {q}\nAnswer:", encoding="utf-8")
+            argv.extend(["--plain-template-file", str(template_path)])
+        with mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
+                               side_effect=lambda *_args, **_kwargs: tiny_audit_model()), \
+             mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer), \
+             mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake), \
+             mock.patch.object(part85, "code_commit", return_value="fixture-code"):
+            part85.main(argv)
+
+        cp_dir = results_root / (f"pilot-a{attempt}" if mode == "pilot" else "main") / key
+        audit_argv = ["/home/elisepc/neuron-probe/.venv/bin/python", "-I", "-B",
+                      str(Path(part85.__file__).with_name("audit85.py")), str(cp_dir),
+                      "--checkpoint", key, "--mode", mode]
+        if mode == "pilot":
+            audit_argv.extend(["--attempt", str(attempt)])
+        if custom_template:
+            audit_argv.extend(["--template-file", str(template_path)])
+        audited = subprocess.run(audit_argv, text=True, stdout=subprocess.PIPE,
+                                 stderr=subprocess.STDOUT, timeout=180)
+        self.assertEqual(audited.returncode, 0, audited.stdout)
+        return results_root, cp_dir
+
+    def test_real_run_trace_passes_independent_audit_for_registered_scenarios(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cases = (
+                ("pilot-instruct", "instruct", "pilot", 1, False),
+                ("main-pretrain", "pretrain_4T", "main", 1, False),
+                ("main-instruct", "instruct", "main", 1, False),
+                ("pilot-attempt2", "instruct", "pilot", 2, True),
+            )
+            for directory, key, mode, attempt, custom_template in cases:
+                with self.subTest(case=directory):
+                    self._run_and_audit_registered_case(root / directory, key, mode, attempt, custom_template)
+
+    def test_trace_question_is_captured_from_the_prompt_builder(self):
+        import transformers
+
+        with tempfile.TemporaryDirectory() as temp:
+            case_root = Path(temp)
+            results_root = case_root / "results"
+            snapshot = case_root / "snapshot"
+            snapshot.mkdir()
+            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            self._write_step1_fixture(results_root, "instruct", mode="pilot")
+            tokenizer = TraceTokenizer()
+            original_builder = part85._prompt_inputs
+
+            def altered_builder(tokenizer, question, frame, device, plain_template=part85.PLAIN_TEMPLATE,
+                                trace_state=None):
+                return original_builder(tokenizer, "builder received: " + question, frame, device,
+                                        plain_template, trace_state=trace_state)
+
+            with mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
+                                   side_effect=lambda *_args, **_kwargs: tiny_audit_model()), \
+                 mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer), \
+                 mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake), \
+                 mock.patch.object(part85, "code_commit", return_value="fixture-code"), \
+                 mock.patch.object(part85, "_prompt_inputs", side_effect=altered_builder), \
+                 mock.patch.object(part85, "PILOT_SAMPLES_PER_QUESTION", 1), \
+                 mock.patch.object(part85, "MAX_NEW_TOKENS", 2):
+                part85.main(["--mode", "pilot", "--checkpoint", "instruct", "--attempt", "1",
+                             "--snapshot-dir", str(snapshot), "--results-root", str(results_root),
+                             "--device", "cpu"])
+            trace_path = results_root / "pilot-a1" / "instruct" / "trace" / "pilot1-plain--unclamped.jsonl"
+            rows = [json.loads(line) for line in trace_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(rows[0]["question"], "builder received: " + part85.QUESTIONS[0])
+            self.assertEqual(rows[0]["prompt_text"], "Question: builder received: " +
+                             part85.QUESTIONS[0] + "\nAnswer:")
+
+    def test_resume_rejects_a_trace_with_a_missing_answer_row(self):
+        import transformers
+
+        with tempfile.TemporaryDirectory() as temp:
+            case_root = Path(temp)
+            results_root = case_root / "results"
+            snapshot = case_root / "snapshot"
+            snapshot.mkdir()
+            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            self._write_step1_fixture(results_root, "instruct", mode="pilot")
+
+            def run_once():
+                with mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
+                                       side_effect=lambda *_args, **_kwargs: tiny_audit_model()), \
+                     mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=TraceTokenizer()), \
+                     mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake), \
+                     mock.patch.object(part85, "code_commit", return_value="fixture-code"), \
+                     mock.patch.object(part85, "PILOT_SAMPLES_PER_QUESTION", 1), \
+                     mock.patch.object(part85, "MAX_NEW_TOKENS", 2):
+                    part85.main(["--mode", "pilot", "--checkpoint", "instruct", "--attempt", "1",
+                                 "--snapshot-dir", str(snapshot), "--results-root", str(results_root),
+                                 "--device", "cpu"])
+
+            run_once()
+            trace_path = results_root / "pilot-a1" / "instruct" / "trace" / "pilot1-plain--own_max.jsonl"
+            trace_rows = trace_path.read_text(encoding="utf-8").splitlines()
+            trace_path.write_text("\n".join(trace_rows[:-1]) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "trace .* has 2 rows, expected 3"):
+                run_once()
+
     def test_run_entrypoint_disk_contract_resume_chat_and_changed_step1(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
@@ -1156,8 +1349,10 @@ class Part85Tests(unittest.TestCase):
             root = clone_a / "results" / "part85"
             own = root / "pilot-a1"
             (own / "instruct" / "answers").mkdir(parents=True)
+            (own / "instruct" / "trace").mkdir(parents=True)
             (own / "instruct" / "step0.json").write_text('{"checkpoint":{"key":"instruct"}}')
             (own / "instruct" / "answers" / "cell.jsonl").write_text('{"answer":"complete"}\n')
+            (own / "instruct" / "trace" / "cell.jsonl").write_text('{"question":"measured"}\n')
             (own / "instruct" / "run.json").write_text(json.dumps({"completed_cells": {
                 "pilot1/plain/unclamped": {"answer_file": "results/part85/pilot-a1/instruct/answers/cell.jsonl"}}}))
             token_path = own / "neutral-token-ids.json"
@@ -1216,6 +1411,7 @@ class Part85Tests(unittest.TestCase):
                                                      "--out", top / "fresh-assembled")
             self.assertEqual(fresh_assembled.returncode, 0, fresh_assembled.stderr)
             self.assertTrue((top / "fresh-assembled/pilot-a1/instruct/answers/cell.jsonl").is_file())
+            self.assertTrue((top / "fresh-assembled/pilot-a1/instruct/trace/cell.jsonl").is_file())
             foreign = clone_a / "results/part85/main/sft/intruder.json"
             foreign.parent.mkdir(parents=True)
             foreign.write_text("outside pilot-a1 ownership")

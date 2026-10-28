@@ -44,8 +44,9 @@ def push_early_before_answer(text: str) -> str:
     call = '        _push_checkpoint_results(args, cp["key"])\n'
     print_line = '        print(f"wrote {expected} answers for {cp[\'key\']} {cell_key}; hook {counts}")\n'
     text = replace_once(text, call + print_line, print_line, "move answer-cell push")
-    return replace_once(text, "        _atomic_jsonl(answer_path, rows)\n",
-                        call + "        _atomic_jsonl(answer_path, rows)\n", "insert early answer-cell push")
+    return replace_once(text, "        _atomic_jsonl_pair(answer_path, rows, trace_path, trace_rows)\n",
+                        call + "        _atomic_jsonl_pair(answer_path, rows, trace_path, trace_rows)\n",
+                        "insert early answer-cell push")
 
 
 def step0_push_early(text: str) -> str:
@@ -68,8 +69,8 @@ MUTANTS = {
                                                "        if self.unit is None or True:\n            return None")]),
     "F2_M4_wrong_answer_unit": ("part85.py", [("\"frame\": frame, \"cell\": cell, \"unit\": unit, \"clamp_value\": value,",
                                                  '"frame": frame, "cell": cell, "unit": -1, "clamp_value": value,')]),
-    "F2_M5_resume_regenerates_cell": ("part85.py", [("        if answer_path.exists() and run_record[\"hook_fire_counts\"].get(cell_key):\n            _load_completed(",
-                                                     "        if False and answer_path.exists() and run_record[\"hook_fire_counts\"].get(cell_key):\n            _load_completed(")]),
+    "F2_M5_resume_regenerates_cell": ("part85.py", [("        if answer_path.exists() and trace_path.exists() and run_record[\"hook_fire_counts\"].get(cell_key):\n            completed_answers = _load_completed(",
+                                                     "        if False and answer_path.exists() and trace_path.exists() and run_record[\"hook_fire_counts\"].get(cell_key):\n            completed_answers = _load_completed(")]),
     "F2_M6_step1_guard_disabled": ("part85.py", [("    if previous_step1_sha256 and previous_step1_sha256 != step1_sha256:",
                                                    "    if False and previous_step1_sha256 and previous_step1_sha256 != step1_sha256:")]),
     "F2_M7_cell_push_disabled": ("part85.py", [("        _push_checkpoint_results(args, cp[\"key\"])\n"
@@ -84,8 +85,10 @@ MUTANTS = {
     "R3_layer9_clamp": ("part85.py", [("    down_proj = layers[10].mlp.down_proj", "    down_proj = layers[9].mlp.down_proj")]),
     "R3_chat_skips_chat_template": ("part85.py", [("    if frame == \"plain\":\n        text = plain_template.replace(\"{q}\", question)",
                                                       "    if frame in (\"plain\", \"chat\"):\n        text = plain_template.replace(\"{q}\", question)")]),
-    "R3_custom_template_ignored": ("part85.py", [("_prompt_inputs(tokenizer, question, frame, args.device, plain_template)",
-                                                   "_prompt_inputs(tokenizer, question, frame, args.device)")]),
+    "R3_custom_template_ignored": ("part85.py", [("encoded = _prompt_inputs(tokenizer, question, frame, args.device, plain_template,\n"
+                                                   "                                         trace_state=prompt_state)",
+                                                   "encoded = _prompt_inputs(tokenizer, question, frame, args.device,\n"
+                                                   "                                         trace_state=prompt_state)")]),
     "R3_push_before_answer_write": ("part85.py", "MOVE_PUSH_EARLY"),
     "R3_step0_push_before_write": ("step0_weights.py", "STEP0_EARLY"),
     "R3_wrong_checkpoint_in_push": ("part85.py", [("\"--checkpoint\", checkpoint, \"--branch\", args.push_branch,",
@@ -119,6 +122,28 @@ MUTANTS = {
         'MODEL_ID="$( $PY -I -B -c \'from part85.checkpoints import resolve_checkpoint; print(resolve_checkpoint("<key>")["repo_id"])\' )"\n'
         'rm -rf "$SNAPSHOT_DIR"',
     )]),
+
+    # Fold-4 trace-backed checks, re-expressed against the current run loop.
+    "P1_seed_for_first_sample_only": ("part85.py", [("                    seed = seed_for(qi, sample)",
+                                                       "                    seed = seed_for(qi, 0)")]),
+    "P2_half_generation_budget": ("part85.py", [("                        \"max_new_tokens\": MAX_NEW_TOKENS,",
+                                                   "                        \"max_new_tokens\": MAX_NEW_TOKENS // 2,")]),
+    "P3_temperature_one_at_generate": ("part85.py", [("                        \"temperature\": TEMPERATURE,",
+                                                        "                        \"temperature\": 1.0,")]),
+    "P4_double_value_at_clamp_hook": ("part85.py", [("        hook = BothPhaseClampHook(down_proj, unit, value)",
+                                                      "        hook = BothPhaseClampHook(down_proj, unit, value * 2 if value is not None else None)")]),
+    "P5_first_question_for_every_index": ("part85.py", [("                encoded = _prompt_inputs(tokenizer, question, frame, args.device, plain_template,",
+                                                           "                encoded = _prompt_inputs(tokenizer, QUESTIONS[0], frame, args.device, plain_template,")]),
+    "F4_trace_question_copied_from_plan": ("part85.py", [("                        \"question\": prompt_state[\"question\"],",
+                                                           "                        \"question\": QUESTIONS[qi],")]),
+    "F4_observer_runs_before_clamp": ("part85.py", [("        self.unit = clamp_hook.unit if clamp_hook.unit is not None else TARGET_UNIT\n"
+                                                     "        self.handle = down_proj.register_forward_pre_hook(self._hook)",
+                                                     "        self.unit = clamp_hook.unit if clamp_hook.unit is not None else TARGET_UNIT\n"
+                                                     "        self.handle = down_proj.register_forward_pre_hook(self._hook, prepend=True)")]),
+    "F4_resume_accepts_trace_missing_a_row": ("part85.py", [("    if len(rows) != expected_count:\n"
+                                                             "        raise ValueError(f\"completed trace {path} has {len(rows)} rows, expected {expected_count}\")",
+                                                             "    if False and len(rows) != expected_count:\n"
+                                                             "        raise ValueError(f\"completed trace {path} has {len(rows)} rows, expected {expected_count}\")")]),
 }
 
 

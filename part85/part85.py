@@ -80,23 +80,83 @@ class BothPhaseClampHook:
         self.counts = {"prompt_calls": 0, "prompt_positions": 0,
                        "generated_calls": 0, "generated_positions": 0}
         self._prompt_pending = True
+        self.last_phase = None
+        self.other_channels_changed = False
         self.handle = down_proj.register_forward_pre_hook(self._hook)
 
     def begin_sequence(self):
         self._prompt_pending = True
+        self.last_phase = None
+        self.other_channels_changed = False
 
     def _hook(self, _module, args):
+        import torch
+
         x = args[0]
         prompt = self._prompt_pending
         self._prompt_pending = False
         prefix = "prompt" if prompt else "generated"
+        self.last_phase = prefix
         self.counts[prefix + "_calls"] += 1
         self.counts[prefix + "_positions"] += int(x.shape[-2])
         if self.unit is None:
             return None
         y = x.clone()
         y[..., self.unit] = self.value
+        changed_elsewhere = False
+        if self.unit:
+            changed_elsewhere |= not torch.equal(x[..., :self.unit], y[..., :self.unit])
+        if self.unit + 1 < x.shape[-1]:
+            changed_elsewhere |= not torch.equal(x[..., self.unit + 1:], y[..., self.unit + 1:])
+        self.other_channels_changed |= changed_elsewhere
         return (y,) + tuple(args[1:])
+
+    def remove(self):
+        self.handle.remove()
+
+
+class BothPhaseTraceObserver:
+    """Measure the hook's input after the clamp pre-hook has rewritten it."""
+
+    def __init__(self, down_proj, clamp_hook):
+        self.clamp_hook = clamp_hook
+        self.unit = clamp_hook.unit if clamp_hook.unit is not None else TARGET_UNIT
+        self.handle = down_proj.register_forward_pre_hook(self._hook)
+        self.begin_sequence()
+
+    def begin_sequence(self):
+        self.prompt_positions_set = 0
+        self.generated_positions_set = 0
+        self.observed_min = None
+        self.observed_max = None
+
+    def _hook(self, _module, args):
+        import torch
+
+        values = args[0][..., self.unit].detach().float()
+        low, high = float(values.min().item()), float(values.max().item())
+        self.observed_min = low if self.observed_min is None else min(self.observed_min, low)
+        self.observed_max = high if self.observed_max is None else max(self.observed_max, high)
+        if self.clamp_hook.unit is None:
+            return None
+        expected = torch.as_tensor(self.clamp_hook.value, dtype=values.dtype, device=values.device)
+        matches = torch.isclose(values, expected, rtol=1e-6, atol=0)
+        count = int(matches.sum().item())
+        if self.clamp_hook.last_phase == "prompt":
+            self.prompt_positions_set += count
+        elif self.clamp_hook.last_phase == "generated":
+            self.generated_positions_set += count
+        return None
+
+    def row(self):
+        if self.observed_min is None or self.observed_max is None:
+            raise RuntimeError("trace observer did not see the answer's down_proj input")
+        return {
+            "prompt_positions_set": self.prompt_positions_set,
+            "generated_positions_set": self.generated_positions_set,
+            "observed_min": self.observed_min,
+            "observed_max": self.observed_max,
+        }
 
     def remove(self):
         self.handle.remove()
@@ -113,7 +173,10 @@ def _template_sha256(template):
     return hashlib.sha256(template.encode("utf-8")).hexdigest()
 
 
-def _prompt_inputs(tokenizer, question: str, frame: str, device: str, plain_template=PLAIN_TEMPLATE):
+def _prompt_inputs(tokenizer, question: str, frame: str, device: str,
+                   plain_template=PLAIN_TEMPLATE, trace_state=None):
+    if trace_state is not None:
+        trace_state.update({"question": question, "chat_template_applied": False})
     if frame == "plain":
         text = plain_template.replace("{q}", question)
         encoded = tokenizer(text, return_tensors="pt", add_special_tokens=False)
@@ -125,6 +188,8 @@ def _prompt_inputs(tokenizer, question: str, frame: str, device: str, plain_temp
             tokenize=True, add_generation_prompt=True, return_tensors="pt",
             return_dict=True,
         )
+        if trace_state is not None:
+            trace_state["chat_template_applied"] = True
         if not hasattr(encoded, "items"):
             encoded = {"input_ids": encoded}
     else:
@@ -181,6 +246,30 @@ def _atomic_jsonl(path: Path, rows):
             os.unlink(tmp)
         except FileNotFoundError:
             pass
+        raise
+
+
+def _atomic_jsonl_pair(first_path: Path, first_rows, second_path: Path, second_rows):
+    """Stage both complete files before atomically replacing either destination."""
+    staged = []
+    try:
+        for path, rows in ((first_path, first_rows), (second_path, second_rows)):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+            staged.append((Path(tmp), path))
+            with os.fdopen(fd, "w", encoding="utf-8") as stream:
+                for row in rows:
+                    stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+        for tmp, path in staged:
+            os.replace(tmp, path)
+    except Exception:
+        for tmp, _path in staged:
+            try:
+                tmp.unlink()
+            except FileNotFoundError:
+                pass
         raise
 
 
@@ -291,6 +380,24 @@ def _load_completed(path: Path, expected_count: int, cp_key: str, frame: str, ce
     return rows
 
 
+def _load_completed_trace(path: Path, answers, expected_count: int, cp_key: str,
+                          frame: str, cell: str, mode: str, attempt: int):
+    if not path.is_file():
+        raise FileNotFoundError(f"completed cell is missing its trace file: {path}")
+    rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if len(rows) != expected_count:
+        raise ValueError(f"completed trace {path} has {len(rows)} rows, expected {expected_count}")
+    for answer, trace in zip(answers, rows):
+        expected_identity = (cp_key, mode, attempt, frame, cell,
+                             answer.get("question_index"), answer.get("sample"), answer.get("seed"))
+        actual_identity = (trace.get("checkpoint"), trace.get("mode"), trace.get("attempt"),
+                           trace.get("frame"), trace.get("cell"), trace.get("question_index"),
+                           trace.get("sample"), trace.get("seed"))
+        if actual_identity != expected_identity:
+            raise ValueError(f"completed trace {path} disagrees with its answer row")
+    return rows
+
+
 def _push_checkpoint_results(args, checkpoint):
     if not getattr(args, "push_branch", None):
         return
@@ -368,13 +475,16 @@ def run(args):
     for spec in specs:
         cell_key = f"{mode_tag}/{spec['frame']}/{spec['cell']}"
         answer_path = cp_root / "answers" / f"{mode_tag}-{spec['frame']}--{spec['cell']}.jsonl"
+        trace_path = cp_root / "trace" / answer_path.name
         hook_counts = run_record["hook_fire_counts"].get(cell_key)
-        if not answer_path.exists() or not hook_counts:
+        if not answer_path.exists() or not trace_path.exists() or not hook_counts:
             all_done = False
             break
         expected = len(QUESTIONS) * spec["samples_per_question"]
-        _load_completed(answer_path, expected, cp["key"], spec["frame"], spec["cell"],
-                        _template_sha256(plain_template), step1)
+        completed_answers = _load_completed(answer_path, expected, cp["key"], spec["frame"],
+                                            spec["cell"], _template_sha256(plain_template), step1)
+        _load_completed_trace(trace_path, completed_answers, expected, cp["key"], spec["frame"],
+                              spec["cell"], args.mode, args.attempt)
         if hook_counts.get("prompt_positions", 0) <= 0 or hook_counts.get("generated_positions", 0) <= 0:
             raise ValueError(f"completed cell {cell_key} lacks prompt or generated hook fires")
     if all_done:
@@ -418,10 +528,13 @@ def run(args):
         frame, cell = spec["frame"], spec["cell"]
         cell_key = f"{mode_tag}/{frame}/{cell}"
         answer_path = cp_root / "answers" / f"{mode_tag}-{frame}--{cell}.jsonl"
+        trace_path = cp_root / "trace" / answer_path.name
         expected = len(QUESTIONS) * spec["samples_per_question"]
-        if answer_path.exists() and run_record["hook_fire_counts"].get(cell_key):
-            _load_completed(answer_path, expected, cp["key"], frame, cell,
-                            _template_sha256(plain_template), step1)
+        if answer_path.exists() and trace_path.exists() and run_record["hook_fire_counts"].get(cell_key):
+            completed_answers = _load_completed(answer_path, expected, cp["key"], frame, cell,
+                                                _template_sha256(plain_template), step1)
+            _load_completed_trace(trace_path, completed_answers, expected, cp["key"], frame,
+                                  cell, args.mode, args.attempt)
             counts = run_record["hook_fire_counts"][cell_key]
             if counts["prompt_positions"] > 0 and counts["generated_positions"] > 0:
                 print(f"skip completed {cp['key']} {cell_key}")
@@ -429,28 +542,42 @@ def run(args):
             raise ValueError(f"completed cell {cell_key} has no hook fire in both phases")
         unit, value = _cell_value(cell, step1)
         hook = BothPhaseClampHook(down_proj, unit, value)
+        hooked_module = next(name for name, module in model.named_modules() if module is down_proj)
+        observer = BothPhaseTraceObserver(down_proj, hook)
         rows = []
+        trace_rows = []
         started = time.time()
         try:
             for qi, question in enumerate(QUESTIONS):
-                encoded = _prompt_inputs(tokenizer, question, frame, args.device, plain_template)
+                prompt_state = {}
+                encoded = _prompt_inputs(tokenizer, question, frame, args.device, plain_template,
+                                         trace_state=prompt_state)
                 prompt_length = int(encoded["input_ids"].shape[-1])
                 for sample in range(spec["samples_per_question"]):
                     seed = seed_for(qi, sample)
                     hook.begin_sequence()
+                    observer.begin_sequence()
                     torch.manual_seed(seed)
                     if args.device == "cuda":
                         torch.cuda.manual_seed_all(seed)
                     elif args.device == "xpu" and hasattr(torch, "xpu"):
                         torch.xpu.manual_seed_all(seed)
+                    prompt_text = tokenizer.decode(encoded["input_ids"][0], skip_special_tokens=True)
+                    generate_kwargs = {
+                        "do_sample": True,
+                        "temperature": TEMPERATURE,
+                        "top_p": TOP_P,
+                        "max_new_tokens": MAX_NEW_TOKENS,
+                    }
                     with torch.inference_mode():
                         generated = model.generate(
-                            **encoded, do_sample=True, temperature=TEMPERATURE, top_p=TOP_P,
-                            max_new_tokens=MAX_NEW_TOKENS, eos_token_id=eos_ids, pad_token_id=pad_id,
+                            **encoded, **generate_kwargs,
+                            eos_token_id=eos_ids, pad_token_id=pad_id,
                             use_cache=True,
                         )
                     new_tokens = int(generated.shape[-1] - prompt_length)
                     answer = tokenizer.decode(generated[0, prompt_length:], skip_special_tokens=True).strip()
+                    observed = observer.row()
                     rows.append({"mode": args.mode, "attempt": args.attempt, "checkpoint": cp["key"], "model_id": cp["repo_id"], "commit": cp["commit"],
                                  "code_commit": current_code_commit,
                                  "frame": frame, "cell": cell, "unit": unit, "clamp_value": value,
@@ -458,14 +585,30 @@ def run(args):
                                  "pilot_gate_action": pilot_gate_action,
                                  "question": question, "question_index": qi, "sample": sample,
                                  "seed": seed, "answer": answer, "new_tokens": new_tokens})
+                    trace_rows.append({
+                        "checkpoint": cp["key"], "mode": args.mode, "attempt": args.attempt,
+                        "frame": frame, "cell": cell, "question_index": qi, "sample": sample,
+                        "seed": seed,
+                        "question": prompt_state["question"],
+                        "prompt_text": prompt_text,
+                        "chat_template_applied": prompt_state["chat_template_applied"],
+                        "generate_kwargs": {key: generate_kwargs[key] for key in
+                                            ("do_sample", "temperature", "top_p", "max_new_tokens")},
+                        "hooked_module": hooked_module,
+                        "unit": hook.unit,
+                        "set_value": hook.value,
+                        **observed,
+                        "other_channels_changed": hook.other_channels_changed,
+                    })
         finally:
             counts = dict(hook.counts)
+            observer.remove()
             hook.remove()
         if len(rows) != expected:
             raise RuntimeError(f"generated {len(rows)} answers for {cell_key}, expected {expected}")
         if counts["prompt_positions"] <= 0 or counts["generated_positions"] <= 0:
             raise RuntimeError(f"hook must fire on prompt and generated positions for {cell_key}: {counts}")
-        _atomic_jsonl(answer_path, rows)
+        _atomic_jsonl_pair(answer_path, rows, trace_path, trace_rows)
         run_record["hook_fire_counts"][cell_key] = counts
         run_record["completed_cells"][cell_key] = {
             "answer_file": (Path("results/part85") / answer_path.relative_to(root)).as_posix(), "answer_count": expected,

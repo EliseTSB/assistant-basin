@@ -15,7 +15,7 @@ Each output records its code commit and pinned checkpoint commit.
 
 ## Test gate before any paid session
 
-Run the committed mutation gate and require every mutant to be killed. A skipped test, a survived mutant, or a
+Run the committed mutation gate and require all 33 mutants to be killed. A skipped test, a survived mutant, or a
 nonzero exit stops the launch.
 
 ```bash
@@ -125,6 +125,8 @@ items including `responsive`, then score:
 
 ```bash
 $PY -I -B part85/handoff85.py assemble --branches part85-run/pilot-a1 --out results/part85
+$PY -I -B part85/audit85.py results/part85/pilot-a1/instruct --checkpoint instruct --mode pilot --attempt 1
+$PY -I -B part85/audit85.py results/part85/pilot-a1/pretrain_4T --checkpoint pretrain_4T --mode pilot --attempt 1
 $PY -I -B part85/score85.py prepare --mode pilot --attempt 1 --results-root results/part85 \
   --items results/part85/pilot-items.jsonl --key results/part85/pilot-key.json
 # Reader writes results/part85/pilot-labels.jsonl.
@@ -179,8 +181,18 @@ MODEL_ID="$( $PY -I -B -c 'from part85.checkpoints import resolve_checkpoint; pr
 rm -rf "$CACHE_ROOT/models--${MODEL_ID//\//--}"
 ```
 
-Run the same command for `pretrain_4T` after pilot preflight. Assemble `part85-run/pilot-a2`, prepare attempt 2 under
-`results/part85/attempt-2/`, and score it. Keep attempt 1's files unchanged. Copy the accepted score to
+Run the same command for `pretrain_4T` after pilot preflight. Assemble `part85-run/pilot-a2` and audit both assembled
+checkpoint directories before preparing or scoring attempt 2:
+
+```bash
+$PY -I -B part85/handoff85.py assemble --branches part85-run/pilot-a2 --out results/part85
+$PY -I -B part85/audit85.py results/part85/pilot-a2/instruct --checkpoint instruct --mode pilot --attempt 2 \
+  --template-file results/part85/pilot-a2/pilot-frame-v2.txt
+$PY -I -B part85/audit85.py results/part85/pilot-a2/pretrain_4T --checkpoint pretrain_4T --mode pilot --attempt 2 \
+  --template-file results/part85/pilot-a2/pilot-frame-v2.txt
+```
+
+Only after both audits pass, prepare attempt 2 under `results/part85/attempt-2/`, and score it. Keep attempt 1's files unchanged. Copy the accepted score to
 `results/part85/pilot-score.json` for the reference-pinning step.
 
 ## Pin references after the accepted pilot
@@ -270,6 +282,10 @@ $PY -I -B part85/handoff85.py assemble --branches \
   part85-run/main-pretrain_4T part85-run/main-midtrain_13B part85-run/main-midtrain_26B \
   part85-run/main-midtrain_51B part85-run/main-sft part85-run/main-dpo part85-run/main-instruct \
   --out results/part85
+for key in pretrain_21B pretrain_210B pretrain_1T pretrain_2T pretrain_3T pretrain_4T \
+           midtrain_13B midtrain_26B midtrain_51B sft dpo instruct; do
+  $PY -I -B part85/audit85.py "results/part85/main/$key" --checkpoint "$key" --mode main
+done
 $PY -I -B part85/score85.py prepare --mode main --results-root results/part85 \
   --items results/part85/main-items.jsonl --key results/part85/main-key.json
 # Two readers label the blinded items and write reader-1.jsonl and reader-2.jsonl.
@@ -284,3 +300,32 @@ part85-run/main-instruct`. Main scoring checks the pinned template hash as well 
 question/sample pairs, and registered seeds. `prepare` refuses existing item/key files. `score` refuses to replace
 an existing output; pass `--force` only when intentionally replacing it. Use `--partial` only for an explicitly
 incomplete analysis; it is the only mode that permits `NOT READ` verdicts.
+
+For chat-only scope, audit the three post-trained checkpoints with the matching flag before scoring:
+
+```bash
+for key in sft dpo instruct; do
+  $PY -I -B part85/audit85.py "results/part85/main/$key" --checkpoint "$key" --mode main --chat-only
+done
+```
+
+For a plain-frame pass with the accepted attempt-2 template, use this audit loop instead of the plain-frame loop above:
+
+```bash
+for key in pretrain_21B pretrain_210B pretrain_1T pretrain_2T pretrain_3T pretrain_4T \
+           midtrain_13B midtrain_26B midtrain_51B sft dpo instruct; do
+  $PY -I -B part85/audit85.py "results/part85/main/$key" --checkpoint "$key" --mode main \
+    --template-file part85/references/pilot-frame-v2.txt
+done
+```
+
+For chat-only scope with that template, use:
+
+```bash
+for key in sft dpo instruct; do
+  $PY -I -B part85/audit85.py "results/part85/main/$key" --checkpoint "$key" --mode main --chat-only \
+    --template-file part85/references/pilot-frame-v2.txt
+done
+```
+
+Run audits after assembly and before preparing or scoring main results.
