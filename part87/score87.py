@@ -30,6 +30,63 @@ TO_PART84_ARM = {"A0": "A0", "E63": "A2", "E47": "A1", "D47": "A3", "C63": "C"}
 FROM_PART84_ARM = {value: key for key, value in TO_PART84_ARM.items()}
 
 
+class ScoringRefusal(ValueError):
+    """Input provenance or registered row metadata prevents reading a result."""
+
+
+def _question_metadata() -> dict[str, dict[str, tuple[int, str]]]:
+    a = {question: (index, "origin") for index, question in enumerate(p87.p84.QUESTIONS)}
+    b = {
+        question: (index, "direct")
+        for index, question in enumerate(p87.p66.DIRECT)
+    }
+    b.update({
+        question: (len(p87.p66.DIRECT) + index, "indirect")
+        for index, question in enumerate(p87.p66.INDIRECT)
+    })
+    b.update({
+        question: (25 + index, "guard")
+        for index, (question, _keyword) in enumerate(p87.p66.GUARDS)
+    })
+    return {"87A": a, "87B": b}
+
+
+def _validate_question_metadata(row: dict[str, Any], study: str) -> None:
+    question = row.get("question")
+    expected = _question_metadata().get(study, {}).get(question) if isinstance(question, str) else None
+    if expected is None:
+        raise ScoringRefusal(f"{study} answer has unregistered question text: {question!r}")
+    expected_index, expected_kind = expected
+    stated_index, stated_kind = row.get("question_index"), row.get("question_kind")
+    if (not isinstance(stated_index, int) or isinstance(stated_index, bool)
+            or stated_index != expected_index or stated_kind != expected_kind):
+        raise ScoringRefusal(
+            f"{study} question metadata disagrees with registered text {question!r}: "
+            f"stated index/kind={stated_index!r}/{stated_kind!r}, "
+            f"expected={expected_index}/{expected_kind}"
+        )
+
+
+def _records_digest(records: list[dict[str, Any]]) -> str:
+    return p87.sha256_bytes(
+        json.dumps(records, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    )
+
+
+def _validate_combined_blind_key(key_obj: dict[str, Any],
+                                 a_records: list[dict[str, Any]],
+                                 b_records: list[dict[str, Any]]) -> None:
+    for row in a_records:
+        _validate_question_metadata(row, "87A")
+    for row in b_records:
+        _validate_question_metadata(row, "87B")
+    a_digest, b_digest = _records_digest(a_records), _records_digest(b_records)
+    if key_obj.get("a_answers_sha256") != a_digest:
+        raise ScoringRefusal("blind key does not match the supplied 87A answers")
+    if key_obj.get("b_answers_sha256") != b_digest:
+        raise ScoringRefusal("blind key does not match the supplied 87B answers")
+
+
 def _read_jsonl(path: Path | str) -> list[dict[str, Any]]:
     return p87.read_jsonl(path)
 
@@ -125,9 +182,14 @@ def prepare_blind(a_answers_dir: Path | str, b_answers_dir: Path | str,
             "arm_counts": dict(a_counts), "items": str(items_path), "key": str(key_path)}
 
 
-def score_blind_labels(labels_path: Path | str, key_path: Path | str) -> dict[str, Any]:
+def score_blind_labels(labels_path: Path | str, key_path: Path | str,
+                       a_answers_dir: Path | str,
+                       b_answers_dir: Path | str) -> dict[str, Any]:
     labels = _read_jsonl(labels_path)
     key_obj = json.loads(Path(key_path).read_text(encoding="utf-8"))
+    a_records = _answers_for_a(a_answers_dir)
+    b_records = _answers_for_b(b_answers_dir)
+    _validate_combined_blind_key(key_obj, a_records, b_records)
     key = key_obj.get("items", key_obj)
     seen = {}
     for row in labels:
@@ -169,6 +231,7 @@ def score_b_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
     seen = set()
     for raw in rows:
         row = dict(raw)
+        _validate_question_metadata(row, "87B")
         arm = row.get("arm", row.get("condition"))
         if not isinstance(arm, str):
             raise ValueError(f"answer row has no arm/condition: {row}")
@@ -403,38 +466,46 @@ def score(args) -> dict[str, Any]:
     if not args.a_answers_dir:
         raise ValueError("--a-answers-dir is required so the 87A answer digest is always checked")
     origin = None
+    scoring_refusal = None
     missing_inputs: list[str] = []
     if bool(args.labels) != bool(args.key):
         raise ValueError("--labels and --key must be supplied together")
     if args.labels and args.key:
         try:
-            answer_records = _answers_for_a(args.a_answers_dir)
-            key_obj = json.loads(Path(args.key).read_text(encoding="utf-8"))
-            answer_digest = p87.sha256_bytes(
-                json.dumps(answer_records, ensure_ascii=False, sort_keys=True).encode("utf-8")
-            )
-            if key_obj.get("a_answers_sha256", key_obj.get("answers_sha256")) != answer_digest:
-                raise ValueError("blind key does not match the supplied 87A answers")
+            if not args.b_answers_dir:
+                raise ScoringRefusal("combined blind-key scoring requires --b-answers-dir too")
+            origin = score_blind_labels(
+                args.labels, args.key, args.a_answers_dir, args.b_answers_dir
+            )["counts"]
         except FileNotFoundError as exc:
             missing_inputs.append(str(exc))
+        except ScoringRefusal as exc:
+            scoring_refusal = str(exc)
         else:
-            origin = score_blind_labels(args.labels, args.key)["counts"]
             _atomic_json(Path(args.out).with_name("87a-score.json"), {"counts": origin})
     b_rows: list[dict[str, Any]] = []
     conditions = None
-    if args.b_answers_dir:
+    if args.b_answers_dir and scoring_refusal is None:
         b_rows, b_missing = _read_b_answers(args.b_answers_dir)
         missing_inputs.extend(b_missing)
         if b_rows:
-            conditions = score_b_rows(b_rows)["conditions"]
-            if args.hand_reads:
-                hand = _ingest_hand_reads(b_rows, args.hand_reads)
-                for arm, counts in hand.items():
-                    conditions.setdefault(arm, {})["hand_read"] = counts
+            try:
+                conditions = score_b_rows(b_rows)["conditions"]
+            except ScoringRefusal as exc:
+                scoring_refusal = str(exc)
+            else:
+                if args.hand_reads:
+                    hand = _ingest_hand_reads(b_rows, args.hand_reads)
+                    for arm, counts in hand.items():
+                        conditions.setdefault(arm, {})["hand_read"] = counts
+    if scoring_refusal is not None:
+        origin = None
+        conditions = None
     results = {
         "schema": 1, "phase": args.phase,
         "origin_counts": origin, "b_conditions": conditions,
         "missing_inputs": missing_inputs,
+        "scoring_refusal": scoring_refusal,
         "verdicts": verdicts(origin, conditions, phase=args.phase),
         "provenance": {
             "scorer_sha256": p87.sha256_file(Path(__file__).resolve()),
@@ -448,7 +519,13 @@ def score(args) -> dict[str, Any]:
     out_path = Path(args.out)
     _atomic_json(out_path, results)
     _atomic_text(out_path.with_suffix(".md"), _score_markdown(results))
-    if args.b_answers_dir:
+    if scoring_refusal is not None:
+        if args.labels and args.key:
+            _atomic_json(out_path.with_name("87a-score.json"),
+                         {"status": "NOT READ", "reason": scoring_refusal})
+        for stale in (out_path.parent / "hand-read.md", out_path.parent / "hand-read.jsonl"):
+            stale.unlink(missing_ok=True)
+    if args.b_answers_dir and scoring_refusal is None:
         _atomic_text(out_path.parent / "hand-read.md", _hand_read_md(b_rows))
         if not args.hand_reads:
             _atomic_text(out_path.parent / "hand-read.jsonl", "".join(
@@ -461,6 +538,8 @@ def score(args) -> dict[str, Any]:
             comparison = item["observed"] or {}
             for arm in ("M", "F"):
                 print(f"87.7 {arm}: {(comparison.get(arm) or {}).get('status', 'NOT READ')}")
+    if scoring_refusal is not None:
+        print(f"score87: NOT READ — {scoring_refusal}")
     return results
 
 
@@ -475,6 +554,8 @@ def build_parser() -> argparse.ArgumentParser:
     labels = subs.add_parser("blind-score", help="validate reader labels against the private key")
     labels.add_argument("--labels", required=True)
     labels.add_argument("--key", required=True)
+    labels.add_argument("--a-answers-dir", required=True)
+    labels.add_argument("--b-answers-dir", required=True)
     labels.add_argument("--out", required=True)
     score_parser = subs.add_parser("score", help="score available inputs; missing inputs produce NOT READ")
     score_parser.add_argument("--a-answers-dir", required=True)
@@ -494,11 +575,20 @@ def main(argv=None) -> None:
         result = prepare_blind(args.a_answers_dir, args.b_answers_dir, args.items, args.key)
         print(f"wrote {result['item_count']} blind items; key: {result['key']}")
     elif args.cmd == "blind-score":
-        result = score_blind_labels(args.labels, args.key)
+        try:
+            result = score_blind_labels(
+                args.labels, args.key, args.a_answers_dir, args.b_answers_dir
+            )
+        except ScoringRefusal as exc:
+            _atomic_json(args.out, {"status": "NOT READ", "reason": str(exc)})
+            print(f"blind-score: NOT READ — {exc}")
+            raise SystemExit(1)
         _atomic_json(args.out, result)
         print(f"validated {result['label_count']} blind labels; wrote {args.out}")
     else:
-        score(args)
+        result = score(args)
+        if result.get("scoring_refusal") is not None:
+            raise SystemExit(1)
 
 
 if __name__ == "__main__":

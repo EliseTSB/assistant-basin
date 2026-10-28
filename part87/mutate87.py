@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply Haiku's Part 87 R1-R13 and S1-S2 mutants to isolated copies and run the Part 87 test suite."""
+"""Apply registered Part 87 mutants to isolated copies and run the Part 87 test suite."""
 from __future__ import annotations
 
 import argparse
@@ -77,6 +77,18 @@ MUTATIONS = [
              "Part87Tests.test_missing_random_arm_keeps_877_not_read"),
     Mutation("S2-origin-readiness-ignored", "score87.py", 'ready = e63.get("n") == 24',
              'ready = True', "Part87Tests.test_missing_origin_count_keeps_873_not_read"),
+    Mutation("N11-trust-question-kind", "score87.py",
+             '        row = dict(raw)\n        _validate_question_metadata(row, "87B")\n        arm = row.get("arm", row.get("condition"))',
+             '        row = dict(raw)\n        arm = row.get("arm", row.get("condition"))',
+             "Part87Tests.test_n11_swapped_maker_and_guard_questions_refuses_scoring"),
+    Mutation("N13-unpinned-model-load", "part87.py",
+             "    tok, model = nr.load_model(MODEL_ID, REVISION, device)",
+             "    tok, model = nr.load_model(MODEL_ID, None, device)",
+             "Part87Tests.test_model_loader_passes_registered_revision"),
+    Mutation("N06-ignore-blinded-87B-digest", "score87.py",
+             '    if key_obj.get("b_answers_sha256") != b_digest:',
+             '    if False:',
+             "Part87Tests.test_blind_ids_are_random_and_overwrite_is_refused"),
 ]
 
 

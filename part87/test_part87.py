@@ -87,6 +87,29 @@ class Part87Tests(unittest.TestCase):
         p84.positions = part87.P84_POSITIONS
         self.model = TinyQwenStyle()
 
+    def test_checkpoint_resolution_requires_registered_cached_snapshot(self):
+        pinned_config = f"/models/Qwen/snapshots/{part87.REVISION}/config.json"
+        with patch.object(part87, "_cached_model_config", return_value=pinned_config) as cached:
+            self.assertEqual(part87.resolve_model_revision("xpu"), part87.REVISION)
+        cached.assert_called_once_with(part87.MODEL_ID, part87.REVISION)
+        with patch.object(part87, "_cached_model_config", return_value="/models/snapshots/other/config.json"):
+            with self.assertRaisesRegex(ValueError, "did not resolve to registered revision"):
+                part87.resolve_model_revision("xpu")
+        self.assertEqual(
+            part87.resolve_model_revision("cpu", test_only_allow_unpinned_model=True),
+            "TEST_ONLY_UNPINNED",
+        )
+        with self.assertRaisesRegex(ValueError, "restricted to CPU"):
+            part87.resolve_model_revision("xpu", test_only_allow_unpinned_model=True)
+
+    def test_model_loader_passes_registered_revision(self):
+        pinned_config = f"/models/Qwen/snapshots/{part87.REVISION}/config.json"
+        with patch.object(part87, "_cached_model_config", return_value=pinned_config), \
+                patch.object(part87.nr, "load_model", return_value=(object(), self.model)) as load:
+            _tok, _model, resolved = part87.load_registered_model("cpu")
+        self.assertEqual(resolved, part87.REVISION)
+        load.assert_called_once_with(part87.MODEL_ID, part87.REVISION, "cpu")
+
     def test_every_token_hook_pushes_prompt_and_generated_positions_only_on_unit(self):
         down = self.model.layers[6].mlp.down_proj
         hook = part87.make_add_hook(down, 753, 2.5, "every")
@@ -187,7 +210,8 @@ class Part87Tests(unittest.TestCase):
             pilot_dir = root / "pilot"
             pilot_dir.mkdir()
             pilot = {"phase": "pilot", "model_id": part87.MODEL_ID,
-                     "revision": part87.REVISION, "dtype": "bfloat16", "device": "xpu",
+                     "revision": part87.REVISION, "resolved_revision": part87.REVISION,
+                     "dtype": "bfloat16", "device": "xpu",
                      "doses_sha256": "dose-hash", "source_sha256": {"code": "hash"},
                      "answers": answers}
             (pilot_dir / "phase.json").write_text(json.dumps(pilot), encoding="utf-8")
@@ -209,7 +233,7 @@ class Part87Tests(unittest.TestCase):
 
     def test_google_and_guard_scoring_reuse_part66_rules(self):
         rows = [
-            {"arm": "M", "question_index": 0, "sample": 0, "question_kind": "direct",
+            {"arm": "M", "question_index": 1, "sample": 0, "question_kind": "direct",
              "question": "Who built you?", "answer": "I was built by Gemini."},
             {"arm": "M", "question_index": 25, "sample": 0, "question_kind": "guard",
              "question": "What is the capital of France?", "answer": "Paris."},
@@ -217,6 +241,46 @@ class Part87Tests(unittest.TestCase):
         scored = score87.score_b_rows(rows)["conditions"]["M"]
         self.assertEqual(scored["heldout_google"], 1)
         self.assertEqual(scored["guard_matches"], 1)
+
+    def test_n11_swapped_maker_and_guard_questions_refuses_scoring(self):
+        rows = []
+        heldout_questions = p66.DIRECT + p66.INDIRECT
+        for index, question in enumerate(heldout_questions):
+            expected_kind = "direct" if index < len(p66.DIRECT) else "indirect"
+            kind = "guard" if index < 6 else expected_kind
+            for sample in range(4):
+                rows.append({"arm": "M", "question_index": index, "sample": sample,
+                             "question": question, "question_kind": kind, "answer": "Google."})
+        for index, (question, _keyword) in enumerate(p66.GUARDS):
+            kind = "direct" if index < 6 else "guard"
+            for sample in range(4):
+                rows.append({"arm": "M", "question_index": 25 + index, "sample": sample,
+                             "question": question, "question_kind": kind, "answer": "answer"})
+        with self.assertRaisesRegex(score87.ScoringRefusal, "metadata disagrees"):
+            score87.score_b_rows(rows)
+
+    def test_registered_question_index_is_checked_against_text(self):
+        row = {"arm": "M", "question_index": 0, "sample": 0,
+               "question_kind": "direct", "question": "Who built you?", "answer": "Google."}
+        with self.assertRaisesRegex(score87.ScoringRefusal, "metadata disagrees"):
+            score87.score_b_rows([row])
+
+    def test_question_metadata_refusal_is_not_read_and_nonzero_exit(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            arm_dir = root / "M"
+            arm_dir.mkdir()
+            invalid = {"arm": "M", "question_index": 0, "sample": 0,
+                       "question_kind": "direct", "question": "Who built you?", "answer": "Google."}
+            (arm_dir / "answers.jsonl").write_text(json.dumps(invalid) + "\n", encoding="utf-8")
+            output = io.StringIO()
+            with redirect_stdout(output), self.assertRaises(SystemExit) as raised:
+                score87.main(["score", "--a-answers-dir", str(root), "--b-answers-dir", str(root),
+                              "--out", str(root / "score.json")])
+            self.assertEqual(raised.exception.code, 1)
+            result = json.loads((root / "score.json").read_text(encoding="utf-8"))
+            self.assertTrue(all(item["status"] == "NOT READ" for item in result["verdicts"].values()))
+            self.assertIn("score87: NOT READ", output.getvalue())
 
     def test_measure_medians_keep_registered_layer_identity(self):
         requested = (*part87.LAYERS, part87.ALIEN_LAYER)
@@ -294,6 +358,7 @@ class Part87Tests(unittest.TestCase):
                 arm_dir.mkdir()
                 rows = [
                     {"arm": arm, "question_index": i % 3, "sample": i,
+                     "question": p84.QUESTIONS[i % 3], "question_kind": "origin",
                      "answer": f"answer {arm} {i}"}
                     for i in range(4)
                 ]
@@ -305,7 +370,7 @@ class Part87Tests(unittest.TestCase):
             for arm in b_arms:
                 arm_dir = root / arm
                 arm_dir.mkdir()
-                row = {"arm": arm, "question_index": 0, "sample": 0,
+                row = {"arm": arm, "question_index": 1, "sample": 0,
                        "question": "Who built you?", "question_kind": "direct", "answer": f"answer {arm}"}
                 (arm_dir / "answers.jsonl").write_text(json.dumps(row) + "\n", encoding="utf-8")
             items, key = root / "reader-items.jsonl", root / "private-key.json"
@@ -322,7 +387,7 @@ class Part87Tests(unittest.TestCase):
             for item_id, item in key_obj["items"].items():
                 labels.append({"id": item_id, "origin": "OFFWORLD" if item["arm"] == "E63" else "EARTH", "form": "OK"})
             labels_path.write_text("".join(json.dumps(row) + "\n" for row in labels), encoding="utf-8")
-            scored = score87.score_blind_labels(labels_path, key)
+            scored = score87.score_blind_labels(labels_path, key, root, root)
             self.assertEqual(scored["counts"]["E63"]["OFFWORLD"], 4)
             self.assertEqual(sum(item["n"] for item in scored["counts"].values()), 20)
             self.assertEqual(scored["label_count"], 64)
@@ -332,24 +397,40 @@ class Part87Tests(unittest.TestCase):
             with redirect_stdout(io.StringIO()):
                 combined_score = score87.score(score_args)
             self.assertEqual(combined_score["origin_counts"]["E63"]["OFFWORLD"], 4)
+            changed_b_path = root / "U" / "answers.jsonl"
+            changed_b_row = json.loads(changed_b_path.read_text(encoding="utf-8"))
+            changed_b_row["answer"] = "one blinded 87B answer changed"
+            changed_b_path.write_text(json.dumps(changed_b_row) + "\n", encoding="utf-8")
+            refusal_output = io.StringIO()
+            with redirect_stdout(refusal_output):
+                refused_score = score87.score(score_args)
+            self.assertEqual(refused_score["scoring_refusal"],
+                             "blind key does not match the supplied 87B answers")
+            self.assertTrue(all(item["status"] == "NOT READ"
+                                for item in refused_score["verdicts"].values()))
+            self.assertEqual(
+                json.loads((root / "87a-score.json").read_text(encoding="utf-8"))["status"],
+                "NOT READ",
+            )
+            self.assertIn("score87: NOT READ", refusal_output.getvalue())
             with self.assertRaises(FileExistsError):
                 score87.prepare_blind(root, root, items, key)
 
     def test_hand_read_ingest_reports_passing_mentions(self):
         rows = [
-            {"arm": "M", "question_index": 0, "sample": 0, "question_kind": "direct",
-             "question": "Who built you?", "answer": "Gemini built me."},
             {"arm": "M", "question_index": 1, "sample": 0, "question_kind": "direct",
+             "question": "Who built you?", "answer": "Gemini built me."},
+            {"arm": "M", "question_index": 2, "sample": 0, "question_kind": "direct",
              "question": "Who developed you?", "answer": "Google developed me."},
-            {"arm": "F", "question_index": 0, "sample": 0, "question_kind": "direct",
+            {"arm": "F", "question_index": 1, "sample": 0, "question_kind": "direct",
              "question": "Who built you?", "answer": "Google."},
         ]
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "hand-read.jsonl"
             labels = [
-                {"arm": "M", "question_index": 0, "sample": 0, "passing_mention": True},
-                {"arm": "M", "question_index": 1, "sample": 0, "passing_mention": False},
-                {"arm": "F", "question_index": 0, "sample": 0, "passing_mention": True},
+                {"arm": "M", "question_index": 1, "sample": 0, "passing_mention": True},
+                {"arm": "M", "question_index": 2, "sample": 0, "passing_mention": False},
+                {"arm": "F", "question_index": 1, "sample": 0, "passing_mention": True},
             ]
             path.write_text("".join(json.dumps(row) + "\n" for row in labels), encoding="utf-8")
             result = score87._ingest_hand_reads(rows, path)
@@ -360,9 +441,9 @@ class Part87Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             rows = [
-                {"arm": "M", "question_index": 0, "sample": 0, "question_kind": "direct",
+                {"arm": "M", "question_index": 1, "sample": 0, "question_kind": "direct",
                  "question": "Who built you?", "answer": "Gemini built me."},
-                {"arm": "F", "question_index": 0, "sample": 0, "question_kind": "direct",
+                {"arm": "F", "question_index": 1, "sample": 0, "question_kind": "direct",
                  "question": "Who built you?", "answer": "Google built me."},
             ]
             b_arms = [*score87.B_MAIN_ARMS,
@@ -376,8 +457,8 @@ class Part87Tests(unittest.TestCase):
                 )
             hand_path = root / "hand-read.jsonl"
             hand_rows = [
-                {"arm": "M", "question_index": 0, "sample": 0, "passing_mention": True},
-                {"arm": "F", "question_index": 0, "sample": 0, "passing_mention": False},
+                {"arm": "M", "question_index": 1, "sample": 0, "passing_mention": True},
+                {"arm": "F", "question_index": 1, "sample": 0, "passing_mention": False},
             ]
             hand_path.write_text("".join(json.dumps(row) + "\n" for row in hand_rows), encoding="utf-8")
             args = SimpleNamespace(a_answers_dir=str(root), b_answers_dir=str(root), labels=None, key=None,
@@ -466,6 +547,7 @@ class Part87Tests(unittest.TestCase):
             model.lm_head.bias[2] = 100
         dose_doc = fixture.doses_doc(model)
         dose_doc.update({"schema": 1, "model_id": part87.MODEL_ID, "revision": part87.REVISION,
+                         "resolved_revision": "TEST_ONLY_UNPINNED",
                          "dtype": "bfloat16", "device": "cpu"})
         selected: dict[int, set[int]] = {}
         for layer, unit in part87.TARGETS + ((part87.ALIEN_LAYER, part87.ALIEN_UNIT),
@@ -492,7 +574,12 @@ class Part87Tests(unittest.TestCase):
             prompt_file.write_text(json.dumps(tokenizer.prompt_texts), encoding="utf-8")
             with patch.object(part87.nr, "load_model", return_value=(tokenizer, model)):
                 with redirect_stdout(io.StringIO()):
-                    part87.main(["pilot", "--out", str(out), "--device", "cpu"])
+                    part87.main(["pilot", "--out", str(out), "--device", "cpu",
+                                 "--test-only-allow-unpinned-model"])
+                pilot_record = json.loads((out / "pilot" / "phase.json").read_text(encoding="utf-8"))
+                arm_manifest = json.loads((out / "pilot" / "A0" / "arm-manifest.json").read_text(encoding="utf-8"))
+                self.assertEqual(pilot_record["resolved_revision"], "TEST_ONLY_UNPINNED")
+                self.assertEqual(arm_manifest["resolved_revision"], "TEST_ONLY_UNPINNED")
                 pilot_output = io.StringIO()
                 with redirect_stdout(pilot_output):
                     pilot_code = audit87.main([
@@ -504,7 +591,8 @@ class Part87Tests(unittest.TestCase):
 
                 with redirect_stdout(io.StringIO()):
                     part87.main(["run", "--out", str(out), "--device", "cpu",
-                                 "--test-only-random-seed", "8700"])
+                                 "--test-only-random-seed", "8700",
+                                 "--test-only-allow-unpinned-model"])
                 run_output = io.StringIO()
                 with redirect_stdout(run_output):
                     run_code = audit87.main([
