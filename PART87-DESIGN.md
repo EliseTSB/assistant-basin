@@ -84,3 +84,10 @@ for Part 84b to finish on the A770.
 One model, one dose per arm, one reader for 87A. A mean-shift cancels a neuron's average, not its spikes, so a gate-like
 neuron may need zeroing and no additive dose will match it. The random sets' M-rule doses come from their own means,
 so their pushes differ in size from the target's; the F rule gives every set the same push size.
+
+## Amendment 1 (2026-10-27 23:3x CT, after the build, before any run or data)
+
+The build noted that the posting rule did not cover 87.3 holding while 87.5 fails. Decided now: if the control unit
+L22 N8870 is also off-world on every token at +0.63 in more than 1 of 24 answers, the every-token push is not specific
+to the alien neuron, so the alien recipe is not offered in every-token form; it is offered with the site's
+generated-tokens field and a note, or not at all (Elise's call), exactly as when 87.3 fails.
