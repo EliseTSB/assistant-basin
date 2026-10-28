@@ -1,0 +1,1567 @@
+{
+  "part1": {
+    "deepseek": {
+      "F": {
+        "n": 50,
+        "one": 22,
+        "parsed": 50
+      },
+      "N": {
+        "n": 150,
+        "one": 113,
+        "parsed": 150
+      },
+      "R": {
+        "n": 150,
+        "one": 102,
+        "parsed": 150
+      }
+    },
+    "haiku": {
+      "F": {
+        "n": 50,
+        "one": 5,
+        "parsed": 49
+      },
+      "N": {
+        "n": 150,
+        "one": 117,
+        "parsed": 150
+      },
+      "R": {
+        "n": 150,
+        "one": 103,
+        "parsed": 150
+      }
+    },
+    "real_unique_neurons": 149
+  },
+  "part24_k2": {
+    "identity-50/Who created you?": {
+      "alien": 3,
+      "alien_named_org": 8,
+      "alien_or_org": 8,
+      "n": 8
+    },
+    "identity-50/Who made you?": {
+      "alien": 7,
+      "alien_named_org": 5,
+      "alien_or_org": 8,
+      "n": 8
+    },
+    "none/Who created you?": {
+      "alien": 8,
+      "alien_named_org": 3,
+      "alien_or_org": 8,
+      "n": 8
+    },
+    "none/Who made you?": {
+      "alien": 7,
+      "alien_named_org": 6,
+      "alien_or_org": 7,
+      "n": 8
+    },
+    "random-50/Who created you?": {
+      "alien": 7,
+      "alien_named_org": 5,
+      "alien_or_org": 8,
+      "n": 8
+    },
+    "random-50/Who made you?": {
+      "alien": 7,
+      "alien_named_org": 4,
+      "alien_or_org": 7,
+      "n": 8
+    }
+  },
+  "part29c": {
+    "labels": {
+      "Alibaba Qwen": 3,
+      "Anthropic Claude": 10,
+      "Google Gemini": 3,
+      "OpenAI GPT": 646
+    },
+    "models": {
+      "claude-haiku-5-5": 50,
+      "deepseek-v4-pro": 50,
+      "deepseek-v4.1-flash": 171,
+      "gemini-4-argon-contributor": 50,
+      "glm-5.3": 50,
+      "gpt-6-luna": 50,
+      "kimi-k3": 50,
+      "mimo-v2.6-flash": 91,
+      "minimax-m3": 50,
+      "qwen3.8-max": 50
+    },
+    "primary_400": {
+      "always_gpt_correct": 50,
+      "family_correct": 49,
+      "gpt_label": 390,
+      "n": 400,
+      "non_gpt_gpt_label": 341,
+      "non_gpt_n": 350
+    },
+    "rows": 662
+  },
+  "part32": {
+    "chinese/clamped": {
+      "google_mentions": 0,
+      "n": 24
+    },
+    "chinese/unchanged": {
+      "google_mentions": 0,
+      "n": 24
+    },
+    "chinese/zeroed": {
+      "google_mentions": 0,
+      "n": 24
+    },
+    "english/clamped": {
+      "google_mentions": 0,
+      "n": 24
+    },
+    "english/unchanged": {
+      "google_mentions": 0,
+      "n": 24
+    },
+    "english/zeroed": {
+      "google_mentions": 16,
+      "n": 24
+    },
+    "spanish/clamped": {
+      "google_mentions": 0,
+      "n": 24
+    },
+    "spanish/unchanged": {
+      "google_mentions": 1,
+      "n": 24
+    },
+    "spanish/zeroed": {
+      "google_mentions": 17,
+      "n": 24
+    }
+  },
+  "part34": {
+    "conditions": {
+      "ask-even": 80,
+      "ask-odd": 80,
+      "fact-even-first": 80,
+      "fact-odd-first": 80,
+      "inject-down": 80,
+      "inject-even": 80,
+      "inject-odd": 80,
+      "inject-rand-even": 80,
+      "inject-rand-odd": 80,
+      "inject-up": 80,
+      "none": 80,
+      "not-even": 80,
+      "not-odd": 80
+    },
+    "model_labels": {
+      "B": 520,
+      "M": 520
+    },
+    "reply_first_chars": {
+      "ask-even/B/S": 11,
+      "ask-even/B/T": 29,
+      "ask-even/M/A": 22,
+      "ask-even/M/C": 1,
+      "ask-even/M/D": 1,
+      "ask-even/M/E": 1,
+      "ask-even/M/K": 1,
+      "ask-even/M/L": 1,
+      "ask-even/M/M": 6,
+      "ask-even/M/P": 3,
+      "ask-even/M/R": 2,
+      "ask-even/M/S": 1,
+      "ask-even/M/W": 1,
+      "ask-odd/B/S": 2,
+      "ask-odd/B/T": 38,
+      "ask-odd/M/A": 23,
+      "ask-odd/M/C": 1,
+      "ask-odd/M/D": 1,
+      "ask-odd/M/E": 1,
+      "ask-odd/M/K": 1,
+      "ask-odd/M/L": 1,
+      "ask-odd/M/M": 5,
+      "ask-odd/M/P": 3,
+      "ask-odd/M/R": 1,
+      "ask-odd/M/S": 2,
+      "ask-odd/M/W": 1,
+      "fact-even-first/B/A": 15,
+      "fact-even-first/B/P": 1,
+      "fact-even-first/B/R": 1,
+      "fact-even-first/B/T": 23,
+      "fact-even-first/M/A": 23,
+      "fact-even-first/M/C": 1,
+      "fact-even-first/M/D": 1,
+      "fact-even-first/M/K": 1,
+      "fact-even-first/M/M": 6,
+      "fact-even-first/M/P": 5,
+      "fact-even-first/M/R": 2,
+      "fact-even-first/M/S": 1,
+      "fact-odd-first/B/A": 13,
+      "fact-odd-first/B/P": 1,
+      "fact-odd-first/B/T": 26,
+      "fact-odd-first/M/A": 23,
+      "fact-odd-first/M/C": 1,
+      "fact-odd-first/M/D": 1,
+      "fact-odd-first/M/E": 1,
+      "fact-odd-first/M/K": 1,
+      "fact-odd-first/M/L": 1,
+      "fact-odd-first/M/M": 6,
+      "fact-odd-first/M/P": 4,
+      "fact-odd-first/M/R": 1,
+      "fact-odd-first/M/S": 1,
+      "inject-down/B/A": 7,
+      "inject-down/B/C": 5,
+      "inject-down/B/R": 1,
+      "inject-down/B/T": 27,
+      "inject-down/M/A": 21,
+      "inject-down/M/C": 5,
+      "inject-down/M/K": 1,
+      "inject-down/M/P": 2,
+      "inject-down/M/R": 1,
+      "inject-down/M/T": 10,
+      "inject-even/B/A": 20,
+      "inject-even/B/C": 3,
+      "inject-even/B/D": 1,
+      "inject-even/B/E": 1,
+      "inject-even/B/K": 1,
+      "inject-even/B/L": 1,
+      "inject-even/B/M": 5,
+      "inject-even/B/P": 3,
+      "inject-even/B/R": 2,
+      "inject-even/B/S": 2,
+      "inject-even/B/W": 1,
+      "inject-even/M/A": 22,
+      "inject-even/M/C": 1,
+      "inject-even/M/D": 1,
+      "inject-even/M/E": 1,
+      "inject-even/M/K": 1,
+      "inject-even/M/L": 1,
+      "inject-even/M/M": 6,
+      "inject-even/M/P": 3,
+      "inject-even/M/R": 2,
+      "inject-even/M/S": 1,
+      "inject-even/M/W": 1,
+      "inject-odd/B/A": 22,
+      "inject-odd/B/C": 3,
+      "inject-odd/B/D": 1,
+      "inject-odd/B/K": 1,
+      "inject-odd/B/M": 4,
+      "inject-odd/B/P": 5,
+      "inject-odd/B/R": 2,
+      "inject-odd/B/S": 2,
+      "inject-odd/M/A": 22,
+      "inject-odd/M/C": 2,
+      "inject-odd/M/D": 1,
+      "inject-odd/M/K": 1,
+      "inject-odd/M/L": 1,
+      "inject-odd/M/M": 4,
+      "inject-odd/M/P": 3,
+      "inject-odd/M/R": 2,
+      "inject-odd/M/S": 2,
+      "inject-odd/M/T": 1,
+      "inject-odd/M/W": 1,
+      "inject-rand-even/B/A": 22,
+      "inject-rand-even/B/C": 2,
+      "inject-rand-even/B/D": 1,
+      "inject-rand-even/B/K": 1,
+      "inject-rand-even/B/L": 1,
+      "inject-rand-even/B/M": 4,
+      "inject-rand-even/B/P": 6,
+      "inject-rand-even/B/R": 2,
+      "inject-rand-even/B/S": 1,
+      "inject-rand-even/M/A": 23,
+      "inject-rand-even/M/D": 1,
+      "inject-rand-even/M/K": 1,
+      "inject-rand-even/M/M": 6,
+      "inject-rand-even/M/P": 6,
+      "inject-rand-even/M/R": 2,
+      "inject-rand-even/M/S": 1,
+      "inject-rand-odd/B/A": 20,
+      "inject-rand-odd/B/C": 5,
+      "inject-rand-odd/B/D": 1,
+      "inject-rand-odd/B/F": 1,
+      "inject-rand-odd/B/K": 1,
+      "inject-rand-odd/B/M": 3,
+      "inject-rand-odd/B/P": 2,
+      "inject-rand-odd/B/R": 2,
+      "inject-rand-odd/B/S": 2,
+      "inject-rand-odd/B/W": 3,
+      "inject-rand-odd/M/A": 20,
+      "inject-rand-odd/M/C": 3,
+      "inject-rand-odd/M/D": 1,
+      "inject-rand-odd/M/E": 1,
+      "inject-rand-odd/M/F": 1,
+      "inject-rand-odd/M/K": 1,
+      "inject-rand-odd/M/L": 1,
+      "inject-rand-odd/M/M": 4,
+      "inject-rand-odd/M/P": 2,
+      "inject-rand-odd/M/R": 2,
+      "inject-rand-odd/M/S": 2,
+      "inject-rand-odd/M/T": 1,
+      "inject-rand-odd/M/W": 1,
+      "inject-up/B/C": 1,
+      "inject-up/B/M": 39,
+      "inject-up/M/A": 11,
+      "inject-up/M/C": 28,
+      "inject-up/M/D": 1,
+      "none/B/A": 21,
+      "none/B/C": 3,
+      "none/B/D": 1,
+      "none/B/K": 1,
+      "none/B/L": 1,
+      "none/B/M": 5,
+      "none/B/P": 3,
+      "none/B/R": 2,
+      "none/B/S": 2,
+      "none/B/W": 1,
+      "none/M/A": 22,
+      "none/M/C": 1,
+      "none/M/D": 1,
+      "none/M/K": 1,
+      "none/M/L": 1,
+      "none/M/M": 6,
+      "none/M/P": 3,
+      "none/M/R": 2,
+      "none/M/S": 2,
+      "none/M/W": 1,
+      "not-even/B/A": 22,
+      "not-even/B/C": 1,
+      "not-even/B/L": 1,
+      "not-even/B/P": 5,
+      "not-even/B/R": 1,
+      "not-even/B/S": 4,
+      "not-even/B/T": 4,
+      "not-even/B/V": 1,
+      "not-even/B/W": 1,
+      "not-even/M/A": 21,
+      "not-even/M/D": 1,
+      "not-even/M/F": 1,
+      "not-even/M/K": 1,
+      "not-even/M/L": 1,
+      "not-even/M/M": 7,
+      "not-even/M/P": 4,
+      "not-even/M/R": 1,
+      "not-even/M/S": 1,
+      "not-even/M/T": 1,
+      "not-even/M/W": 1,
+      "not-odd/B/A": 23,
+      "not-odd/B/C": 1,
+      "not-odd/B/L": 1,
+      "not-odd/B/O": 1,
+      "not-odd/B/P": 4,
+      "not-odd/B/R": 1,
+      "not-odd/B/S": 4,
+      "not-odd/B/T": 4,
+      "not-odd/B/V": 1,
+      "not-odd/M/A": 23,
+      "not-odd/M/D": 1,
+      "not-odd/M/K": 1,
+      "not-odd/M/L": 1,
+      "not-odd/M/M": 5,
+      "not-odd/M/P": 6,
+      "not-odd/M/R": 1,
+      "not-odd/M/S": 1,
+      "not-odd/M/T": 1
+    },
+    "turn1_rows": 1040
+  },
+  "part34_readout_fold3_shards": {
+    "rows_jsonl_shards": 10
+  },
+  "part56": {
+    "control/trained": {
+      "identity_origin_persona_creator": 0,
+      "kinds": {
+        "format": 40,
+        "none": 1494,
+        "null": 13,
+        "other": 89,
+        "syntax": 42,
+        "token": 258,
+        "topic": 21,
+        "word-family": 43
+      },
+      "n_valid": 1987,
+      "one_job_ge4": 18
+    },
+    "neuron/trained": {
+      "identity_origin_persona_creator": 1,
+      "kinds": {
+        "format": 90,
+        "identity-or-origin": 1,
+        "none": 901,
+        "null": 8,
+        "other": 151,
+        "syntax": 218,
+        "token": 384,
+        "topic": 96,
+        "word-family": 155
+      },
+      "n_valid": 1996,
+      "one_job_ge4": 66
+    }
+  },
+  "part56_repeat_kind_stability": {
+    "joined": 500,
+    "repeat_rows": 500,
+    "same_kind": 268,
+    "scored": 496
+  },
+  "part58": {
+    "control": {
+      "n": 1979,
+      "pass": 123
+    },
+    "neuron": {
+      "n": 1990,
+      "pass": 560
+    },
+    "theoretical_three_of_four_at_5pct": 0.0004812500000000001
+  },
+  "part65": {
+    "control/first": {
+      "correct": 82,
+      "n": 178,
+      "sentence_test_pass": 66
+    },
+    "control/last": {
+      "correct": 89,
+      "n": 168,
+      "sentence_test_pass": 46
+    },
+    "control/middle": {
+      "correct": 64,
+      "n": 154,
+      "sentence_test_pass": 18
+    },
+    "neuron/first": {
+      "correct": 84,
+      "n": 166,
+      "sentence_test_pass": 102
+    },
+    "neuron/last": {
+      "correct": 111,
+      "n": 174,
+      "sentence_test_pass": 106
+    },
+    "neuron/middle": {
+      "correct": 92,
+      "n": 160,
+      "sentence_test_pass": 54
+    }
+  },
+  "part65_unique_units": {
+    "control/first": 89,
+    "control/last": 84,
+    "control/middle": 77,
+    "neuron/first": 83,
+    "neuron/last": 87,
+    "neuron/middle": 80
+  },
+  "part66": {
+    "heldout_phrase_inventory": {
+      "phrases": 24,
+      "samples_per_phrase": {
+        "8": 24
+      }
+    },
+    "positive96": {
+      "google": 48,
+      "n": 96
+    },
+    "random_6600": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6601": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6602": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6603": {
+      "alibaba": 24,
+      "google": 1,
+      "n": 24
+    },
+    "random_6604": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6605": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6606": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6607": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6608": {
+      "alibaba": 23,
+      "google": 2,
+      "n": 24
+    },
+    "random_6609": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6610": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6611": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6612": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6613": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6614": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6615": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6616": {
+      "alibaba": 24,
+      "google": 1,
+      "n": 24
+    },
+    "random_6617": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6618": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6619": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6620": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6621": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6622": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6623": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6624": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6625": {
+      "alibaba": 23,
+      "google": 0,
+      "n": 24
+    },
+    "random_6626": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6627": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6628": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6629": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6630": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6631": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6632": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6633": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6634": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6635": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6636": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6637": {
+      "alibaba": 22,
+      "google": 1,
+      "n": 24
+    },
+    "random_6638": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6639": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6640": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6641": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6642": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6643": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6644": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6645": {
+      "alibaba": 23,
+      "google": 1,
+      "n": 24
+    },
+    "random_6646": {
+      "alibaba": 24,
+      "google": 1,
+      "n": 24
+    },
+    "random_6647": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6648": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_6649": {
+      "alibaba": 24,
+      "google": 0,
+      "n": 24
+    },
+    "random_group_summary": {
+      "groups": 50,
+      "groups_with_at_most_2": 50,
+      "max_google_per_group": 2
+    },
+    "random_without_thank": {
+      "google": 5,
+      "n": 1150
+    },
+    "target": {
+      "alibaba": 138,
+      "google": 42,
+      "n": 192
+    },
+    "target_who_created": {
+      "google": 8,
+      "n": 24
+    },
+    "target_without_thank": {
+      "google": 39,
+      "n": 184
+    },
+    "unchanged": {
+      "alibaba": 191,
+      "google": 1,
+      "n": 192
+    }
+  },
+  "part70": {
+    "target": {
+      "alibaba": 151,
+      "google": 38,
+      "n": 192
+    },
+    "target_plus_matched_0": {
+      "alibaba": 19,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_matched_1": {
+      "alibaba": 19,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_matched_10": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_matched_11": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_matched_12": {
+      "alibaba": 15,
+      "google": 7,
+      "n": 24
+    },
+    "target_plus_matched_13": {
+      "alibaba": 18,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_matched_14": {
+      "alibaba": 17,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_matched_15": {
+      "alibaba": 19,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_matched_16": {
+      "alibaba": 18,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_matched_17": {
+      "alibaba": 21,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_matched_18": {
+      "alibaba": 16,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_matched_19": {
+      "alibaba": 17,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_matched_2": {
+      "alibaba": 18,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_matched_3": {
+      "alibaba": 18,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_matched_4": {
+      "alibaba": 16,
+      "google": 9,
+      "n": 24
+    },
+    "target_plus_matched_5": {
+      "alibaba": 17,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_matched_6": {
+      "alibaba": 15,
+      "google": 8,
+      "n": 24
+    },
+    "target_plus_matched_7": {
+      "alibaba": 18,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_matched_8": {
+      "alibaba": 19,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_matched_9": {
+      "alibaba": 19,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_pair": {
+      "alibaba": 177,
+      "google": 4,
+      "n": 192
+    }
+  },
+  "part70_matched_pairs": {
+    "max_google": 9,
+    "max_pct": 37.5,
+    "min_google": 3,
+    "min_pct": 12.5,
+    "n_per_pair": 24,
+    "pairs": 20
+  },
+  "part72": {
+    "k8": {
+      "mean_google_share": 0.22066134912893176,
+      "n": 24
+    },
+    "unchanged": {
+      "mean_google_share": 0.07096841054347654,
+      "n": 24
+    }
+  },
+  "part73": {
+    "target": {
+      "alibaba": 151,
+      "google": 36,
+      "n": 192
+    },
+    "target_plus_l24": {
+      "alibaba": 168,
+      "google": 17,
+      "n": 192
+    },
+    "target_plus_l24_matched_0": {
+      "alibaba": 21,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_l24_matched_1": {
+      "alibaba": 19,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_10": {
+      "alibaba": 19,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l24_matched_11": {
+      "alibaba": 21,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l24_matched_12": {
+      "alibaba": 17,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_13": {
+      "alibaba": 16,
+      "google": 8,
+      "n": 24
+    },
+    "target_plus_l24_matched_14": {
+      "alibaba": 20,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l24_matched_15": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_16": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_17": {
+      "alibaba": 20,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_18": {
+      "alibaba": 21,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l24_matched_19": {
+      "alibaba": 19,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l24_matched_2": {
+      "alibaba": 22,
+      "google": 2,
+      "n": 24
+    },
+    "target_plus_l24_matched_3": {
+      "alibaba": 17,
+      "google": 7,
+      "n": 24
+    },
+    "target_plus_l24_matched_4": {
+      "alibaba": 19,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_l24_matched_5": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_6": {
+      "alibaba": 17,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_7": {
+      "alibaba": 17,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l24_matched_8": {
+      "alibaba": 19,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_l24_matched_9": {
+      "alibaba": 18,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l27": {
+      "alibaba": 175,
+      "google": 8,
+      "n": 192
+    },
+    "target_plus_l27_matched_0": {
+      "alibaba": 20,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l27_matched_1": {
+      "alibaba": 13,
+      "google": 8,
+      "n": 24
+    },
+    "target_plus_l27_matched_10": {
+      "alibaba": 19,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l27_matched_11": {
+      "alibaba": 17,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l27_matched_12": {
+      "alibaba": 17,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_l27_matched_13": {
+      "alibaba": 18,
+      "google": 7,
+      "n": 24
+    },
+    "target_plus_l27_matched_14": {
+      "alibaba": 18,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l27_matched_15": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l27_matched_16": {
+      "alibaba": 16,
+      "google": 8,
+      "n": 24
+    },
+    "target_plus_l27_matched_17": {
+      "alibaba": 15,
+      "google": 8,
+      "n": 24
+    },
+    "target_plus_l27_matched_18": {
+      "alibaba": 18,
+      "google": 5,
+      "n": 24
+    },
+    "target_plus_l27_matched_19": {
+      "alibaba": 21,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_l27_matched_2": {
+      "alibaba": 17,
+      "google": 4,
+      "n": 24
+    },
+    "target_plus_l27_matched_3": {
+      "alibaba": 17,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_l27_matched_4": {
+      "alibaba": 17,
+      "google": 9,
+      "n": 24
+    },
+    "target_plus_l27_matched_5": {
+      "alibaba": 14,
+      "google": 10,
+      "n": 24
+    },
+    "target_plus_l27_matched_6": {
+      "alibaba": 17,
+      "google": 6,
+      "n": 24
+    },
+    "target_plus_l27_matched_7": {
+      "alibaba": 22,
+      "google": 1,
+      "n": 24
+    },
+    "target_plus_l27_matched_8": {
+      "alibaba": 21,
+      "google": 3,
+      "n": 24
+    },
+    "target_plus_l27_matched_9": {
+      "alibaba": 19,
+      "google": 5,
+      "n": 24
+    }
+  },
+  "part73_fisher_8_vs_17": 0.09627006916480213,
+  "part77": {
+    "c0_makers": {
+      "alibaba": 156,
+      "google": 35,
+      "n": 192
+    },
+    "c1_l24": {
+      "alibaba": 171,
+      "google": 14,
+      "n": 192
+    },
+    "c2_l24_restore": {
+      "alibaba": 155,
+      "google": 26,
+      "n": 192
+    },
+    "c3_l24_restore_nulls": {
+      "alibaba": 170,
+      "google": 18,
+      "n": 192
+    }
+  },
+  "part77_restore_metrics": {
+    "c0_google": 35,
+    "c1_google": 14,
+    "c2_google": 26,
+    "fisher_c2_vs_c1_p": 0.06503701361121983,
+    "lost_from_c0": 21,
+    "net_restored": 12,
+    "restored_fraction": 0.5714285714285714
+  },
+  "part78": {
+    "c0_unchanged": {
+      "composed": 0,
+      "google": 5,
+      "n": 192,
+      "off_world": 0,
+      "other_maker": 0,
+      "qwen_or_alibaba": 189,
+      "qwen_or_alibaba_off_world": 0
+    },
+    "c1_makers": {
+      "composed": 0,
+      "google": 37,
+      "n": 192,
+      "off_world": 0,
+      "other_maker": 3,
+      "qwen_or_alibaba": 146,
+      "qwen_or_alibaba_off_world": 0
+    },
+    "c2_alien15": {
+      "composed": 0,
+      "google": 0,
+      "n": 192,
+      "off_world": 161,
+      "other_maker": 39,
+      "qwen_or_alibaba": 118,
+      "qwen_or_alibaba_off_world": 93
+    },
+    "c3_makers_alien15": {
+      "composed": 2,
+      "google": 6,
+      "n": 192,
+      "off_world": 153,
+      "other_maker": 57,
+      "qwen_or_alibaba": 88,
+      "qwen_or_alibaba_off_world": 70
+    },
+    "c4_alien20": {
+      "composed": 0,
+      "google": 0,
+      "n": 192,
+      "off_world": 188,
+      "other_maker": 69,
+      "qwen_or_alibaba": 19,
+      "qwen_or_alibaba_off_world": 19
+    },
+    "c5_makers_alien20": {
+      "composed": 0,
+      "google": 0,
+      "n": 192,
+      "off_world": 181,
+      "other_maker": 68,
+      "qwen_or_alibaba": 15,
+      "qwen_or_alibaba_off_world": 14
+    },
+    "c6_makers_control20": {
+      "composed": 0,
+      "google": 119,
+      "n": 192,
+      "off_world": 0,
+      "other_maker": 13,
+      "qwen_or_alibaba": 63,
+      "qwen_or_alibaba_off_world": 0
+    }
+  },
+  "part78b": {
+    "k1_makers": {
+      "alibaba": 148,
+      "google": 43,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u1499": {
+      "alibaba": 153,
+      "google": 10,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u4154": {
+      "alibaba": 89,
+      "google": 157,
+      "n": 192,
+      "off_world": 2
+    },
+    "k_u5572": {
+      "alibaba": 22,
+      "google": 22,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u5606": {
+      "alibaba": 93,
+      "google": 41,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u5640": {
+      "alibaba": 151,
+      "google": 21,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u6210": {
+      "alibaba": 84,
+      "google": 10,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u8115": {
+      "alibaba": 86,
+      "google": 57,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u8606": {
+      "alibaba": 134,
+      "google": 14,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u8920": {
+      "alibaba": 151,
+      "google": 2,
+      "n": 192,
+      "off_world": 0
+    },
+    "k_u9209": {
+      "alibaba": 37,
+      "google": 18,
+      "n": 192,
+      "off_world": 1
+    }
+  },
+  "part79_answers": {
+    "e0_unchanged": {
+      "alibaba": 190,
+      "google": 3,
+      "n": 192
+    },
+    "e1_makers": {
+      "alibaba": 137,
+      "google": 46,
+      "n": 192
+    },
+    "e2_evil": {
+      "alibaba": 127,
+      "google": 1,
+      "n": 192
+    },
+    "e3_makers_evil": {
+      "alibaba": 115,
+      "google": 0,
+      "n": 192
+    },
+    "e4_makers_ctl1": {
+      "alibaba": 1,
+      "google": 51,
+      "n": 192
+    },
+    "e5_makers_ctl2": {
+      "alibaba": 9,
+      "google": 3,
+      "n": 192
+    },
+    "e6_makers_ctl3": {
+      "alibaba": 46,
+      "google": 11,
+      "n": 192
+    },
+    "e7_makers_ctl4": {
+      "alibaba": 77,
+      "google": 4,
+      "n": 192
+    },
+    "e8_makers_ctl5": {
+      "alibaba": 6,
+      "google": 38,
+      "n": 192
+    }
+  },
+  "part79_cap": {
+    "at_64_tokens": 115,
+    "n": 192
+  },
+  "part79_raw_extra": {
+    "e0_unchanged": {
+      "any_company": 192,
+      "cut_at_64": 61
+    },
+    "e1_makers": {
+      "any_company": 182,
+      "cut_at_64": 79
+    },
+    "e2_evil": {
+      "any_company": 6,
+      "cut_at_64": 131
+    },
+    "e3_makers_evil": {
+      "any_company": 1,
+      "cut_at_64": 114
+    },
+    "e4_makers_ctl1": {
+      "any_company": 49,
+      "cut_at_64": 157
+    },
+    "e5_makers_ctl2": {
+      "any_company": 13,
+      "cut_at_64": 143
+    },
+    "e6_makers_ctl3": {
+      "any_company": 60,
+      "cut_at_64": 19
+    },
+    "e7_makers_ctl4": {
+      "any_company": 23,
+      "cut_at_64": 190
+    },
+    "e8_makers_ctl5": {
+      "any_company": 39,
+      "cut_at_64": 63
+    }
+  },
+  "part79_reader": {
+    "e0_unchanged": {
+      "coherent": 192,
+      "company_maker": 3,
+      "google_maker": 3,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    },
+    "e1_makers": {
+      "coherent": 191,
+      "company_maker": 47,
+      "google_maker": 45,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    },
+    "e2_evil": {
+      "coherent": 160,
+      "company_maker": 1,
+      "google_maker": 1,
+      "n": 192,
+      "villain": 125,
+      "villain_google": 0
+    },
+    "e3_makers_evil": {
+      "coherent": 169,
+      "company_maker": 1,
+      "google_maker": 0,
+      "n": 192,
+      "villain": 148,
+      "villain_google": 0
+    },
+    "e4_makers_ctl1": {
+      "coherent": 44,
+      "company_maker": 49,
+      "google_maker": 48,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    },
+    "e5_makers_ctl2": {
+      "coherent": 88,
+      "company_maker": 9,
+      "google_maker": 3,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    },
+    "e6_makers_ctl3": {
+      "coherent": 151,
+      "company_maker": 19,
+      "google_maker": 11,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    },
+    "e7_makers_ctl4": {
+      "coherent": 49,
+      "company_maker": 25,
+      "google_maker": 4,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    },
+    "e8_makers_ctl5": {
+      "coherent": 59,
+      "company_maker": 39,
+      "google_maker": 33,
+      "n": 192,
+      "villain": 0,
+      "villain_google": 0
+    }
+  },
+  "part80b_user_you": {
+    "qwenown/order1": 0.5337016895464252,
+    "qwenown/order2": 0.5669811030899127,
+    "qwenown/order3": 0.241994605776342,
+    "smol/order1": 0.3522999236078311,
+    "smol/order2": 0.4564177551677307,
+    "smol/order3": 0.150117050234167
+  },
+  "part81_reader": {
+    "k0": {
+      "bait": 0,
+      "coherent": 111,
+      "conspiratorial": 0,
+      "n": 128,
+      "ordinary": 0,
+      "topic_n": 96
+    },
+    "k1": {
+      "bait": 22,
+      "coherent": 25,
+      "conspiratorial": 40,
+      "fisher_bait_vs_ordinary_p": 0.5348344381497969,
+      "n": 128,
+      "ordinary": 18,
+      "topic_n": 96
+    },
+    "k2": {
+      "bait": 0,
+      "coherent": 17,
+      "conspiratorial": 0,
+      "n": 128,
+      "ordinary": 0,
+      "topic_n": 96
+    },
+    "k3": {
+      "bait": 0,
+      "coherent": 34,
+      "conspiratorial": 0,
+      "n": 128,
+      "ordinary": 0,
+      "topic_n": 96
+    },
+    "k4": {
+      "bait": 0,
+      "coherent": 27,
+      "conspiratorial": 0,
+      "n": 128,
+      "ordinary": 0,
+      "topic_n": 96
+    }
+  },
+  "part84": {
+    "A0": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 0
+    },
+    "A1": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 13
+    },
+    "A2": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 24
+    },
+    "A3": {
+      "broken": 1,
+      "n": 24,
+      "offworld": 24
+    },
+    "C": {
+      "broken": 5,
+      "n": 24,
+      "offworld": 0
+    }
+  },
+  "part84_deepmind_mentions": {
+    "C": {
+      "deepmind_mentions": 20,
+      "n": 24
+    }
+  },
+  "part84_second_reader": {
+    "A0": {
+      "broken": 3,
+      "n": 24,
+      "offworld": 0
+    },
+    "A1": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 16
+    },
+    "A2": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 24
+    },
+    "A3": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 24
+    },
+    "C": {
+      "broken": 7,
+      "n": 24,
+      "offworld": 0
+    }
+  },
+  "part84_unchecked": {
+    "A0": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 0
+    },
+    "A1": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 17
+    },
+    "A2": {
+      "broken": 2,
+      "n": 24,
+      "offworld": 24
+    },
+    "A3": {
+      "broken": 1,
+      "n": 24,
+      "offworld": 24
+    },
+    "C": {
+      "broken": 5,
+      "n": 24,
+      "offworld": 0
+    }
+  }
+}
