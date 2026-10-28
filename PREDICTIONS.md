@@ -2120,3 +2120,21 @@ Design: `PART84B-DESIGN.md`. OFFWORLD counts are of 48 answers per cell, by the 
 | 84b.3 | Claude: steering the first answer token adds below the ceiling: gen is OFFWORLD at least as often as decode at each dose, and summed over the three doses gen exceeds decode by at least 12 of 144. | | |
 | 84b.4 | Claude (low confidence): at dose 0.40, decode is OFFWORLD in at most 16 of 48 and gen in at least 24 of 48. | | |
 | 84b.5 | Control: the two readers agree on OFFWORLD against not OFFWORLD in at least 90% of the 336 answers. | | |
+
+## Part 85: OLMo 2 1B's alien twin (L10 N6978) across training, registered 2026-10-27 before any code
+
+Design: `PART85-DESIGN.md`. Checkpoints in training order: six pretraining (21B to 4.0T tokens), three mid-training
+(13B to 51B, the last being SFT's parent), SFT, DPO, Instruct. OFFWORLD counts are of 48 plain-frame answers per cell by
+the first blind Haiku reader; "shows the push" and "onset" are the design's decision rules.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 85.1 | Claude: from the mid-training end through Instruct it is the same unit: down_proj cosine with Instruct at least 0.9 and neutral-text activation correlation at least 0.8 at each of those four checkpoints. | | |
+| 85.2 | Claude: at 21B tokens it is not yet the same unit: down_proj cosine with Instruct below 0.5. | | |
+| 85.3 | Claude: at the end of pretraining the unit already writes toward off-world words: step 0's direct-readout z-score above 2. | | |
+| 85.4 | Claude: at the end of pretraining it already fires on off-world text: mean activation on the 24 off-world passages above the 24 ordinary ones by at least one standard deviation of the ordinary ones. | | |
+| 85.5 | Claude: the push is present before post-training: the mid-training end (SFT's parent) shows the push in its own-max cell. | | |
+| 85.6 | Claude: there is no push early in pretraining: the own-max cells at 21B and 210B tokens give at most 2 of 48 OFFWORLD each. | | |
+| 85.7 | Claude (low confidence): post-training amplifies it: Instruct's own-max OFFWORLD count exceeds the mid-training end's by at least 8 of 48. | | |
+| 85.8 | Control: the control unit's cell gives at most 2 of 48 OFFWORLD at every checkpoint. | | |
+| 85.9 | Control: the two readers agree on OFFWORLD against not OFFWORLD in at least 90% of the plain-frame answers. | | |
