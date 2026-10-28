@@ -630,12 +630,12 @@
     }
    },
    "expected": {
-    "86.2": "FAILS",
+    "86.2": "HOLDS",
     "86.3": "HOLDS",
     "86.4": "FAILS",
     "86.6": "HOLDS"
    },
-   "note": "5 read layers, L10 fails (2 vs 3): failures are checked before the read-layer count; L22 random persona 0 so 86.2 ratio is infinite, but L22 has 4 changed so... 86.2 still reads L22 rates: real 20/9216 vs 0/512, Fisher p = 0.31, FAILS"
+   "note": "5 read layers (10 and 23-26), L10 fails (2 vs 3): failures are checked before the read-layer count. 86.2 still reads L22's rates: base_overrides keep 60 real personas against 0 of 512 random, Fisher p < 0.05, HOLDS."
   },
   {
    "name": "layer13_at_5pct_fails_863",
@@ -729,5 +729,6 @@
    "expect_error": true,
    "note": "scoring must refuse any layer whose real n is not 9,216 or random n is not 512"
   }
- ]
+ ],
+ "override_order": "start from base_real and base_random in every layer, apply base_overrides, then the case's overrides (the case wins), then drop drop_layers"
 }
