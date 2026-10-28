@@ -26,11 +26,33 @@ SELF_MODEL_IDENTITY = re.compile(
 )
 
 
+# Amendment 3 (2026-10-28, Claude): the design keeps an answer that "calls itself an AI assistant or language model";
+# the build matched that only directly after "I am", so renamed assistants ("I am Qing, a large-scale language model
+# developed by Huichai") were triaged changed (4,949 of 9,728 in the layer-22 dry run). Fixed now: a self-description as
+# an AI, assistant, model, chatbot or LLM anywhere in the first sentence also keeps the answer.
+FIRST_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s|\n")
+WIDER_SELF_DESCRIPTION = re.compile(
+    r"(?<![\w.])(?:a\.i\.|ai|assistant|language\s+model|model|chatbot|llm)(?!\w)", re.IGNORECASE
+)
+
+
+def first_sentence(answer: str) -> str:
+    return FIRST_SENTENCE_SPLIT.split(answer.strip(), maxsplit=1)[0]
+
+
+def kept_only_by_wider_rule(answer: str) -> bool:
+    """A renamed assistant: kept by Amendment 3's rule and by nothing the build had before it."""
+    if KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer):
+        return False
+    return bool(WIDER_SELF_DESCRIPTION.search(first_sentence(answer)))
+
+
 def triage_answer(answer: str) -> str:
     if not isinstance(answer, str):
         raise ValueError("answer must be text")
     # The design lists the identity filter first; a recognized model identity takes precedence.
-    if KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer):
+    if (KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer)
+            or WIDER_SELF_DESCRIPTION.search(first_sentence(answer))):
         return "kept"
     words = [w.casefold() for w in WORDS.findall(answer)]
     if len(words) < 4:
@@ -62,6 +84,7 @@ def read_screen(screen_dir: str | Path):
 
 def triage(screen_dir: str | Path) -> dict:
     counts: dict[str, dict] = {}
+    renamed: dict[str, dict] = {}
     for row in read_screen(screen_dir):
         layer_key = str(int(row["layer"]))
         cond = "real" if row["kind"] == "neuron" else "random"
@@ -70,10 +93,35 @@ def triage(screen_dir: str | Path) -> dict:
         category = triage_answer(row.get("answer", ""))
         counts[layer_key][cond][category] += 1
         counts[layer_key][cond]["n"] += 1
+        renamed.setdefault(layer_key, {"real": 0, "random": 0, "real_n": 0, "random_n": 0})
+        renamed[layer_key][cond] += int(kept_only_by_wider_rule(row.get("answer", "")))
+        renamed[layer_key][f"{cond}_n"] += 1
+    for item in renamed.values():
+        item["fisher_one_sided_p_real_more"] = fisher_greater(item["real"], item["real_n"], item["random"], item["random_n"])
     return {
-        "rule": "known identity => kept; else fewer than 4 words or any repeated word 3-gram count >= 3 => broken; otherwise changed",
+        "rule": "known identity, a self-model phrase, or (Amendment 3) an AI/assistant/model/chatbot/LLM self-description "
+                "in the first sentence => kept; else fewer than 4 words or any repeated word 3-gram count >= 3 => broken; "
+                "otherwise changed",
         "layers": {key: counts[key] for key in sorted(counts, key=int)},
+        "renamed_assistants_descriptive": {key: renamed[key] for key in sorted(renamed, key=int)},
     }
+
+
+def fisher_greater(a: int, n1: int, b: int, n2: int) -> float:
+    """One-sided Fisher exact p that group 1's rate (a of n1) exceeds group 2's (b of n2)."""
+    import math
+    total, successes = n1 + n2, a + b
+
+    def log_comb(n, k):
+        return math.lgamma(n + 1) - math.lgamma(k + 1) - math.lgamma(n - k + 1)
+
+    denominator = log_comb(total, n1)
+    p = 0.0
+    for k in range(a, min(n1, successes) + 1):
+        if successes - k > n2:
+            continue
+        p += math.exp(log_comb(successes, k) + log_comb(total - successes, n1 - k) - denominator)
+    return min(1.0, p)
 
 
 def main(argv=None):

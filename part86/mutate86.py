@@ -95,8 +95,14 @@ MUTATIONS = [
     Mutation("R2-15-864-equality-passes", "blind86.py",
              'if row["not_coherent_plus_unclear"] <= row["coherent_persona"]}',
              'if row["not_coherent_plus_unclear"] < row["coherent_persona"]}'),
+    Mutation("A3-wider-rule-dropped", "triage86.py",
+             '            or WIDER_SELF_DESCRIPTION.search(first_sentence(answer))):',
+             '            or False):'),
+    Mutation("A3-wider-rule-whole-answer", "triage86.py",
+             '            or WIDER_SELF_DESCRIPTION.search(first_sentence(answer))):',
+             '            or WIDER_SELF_DESCRIPTION.search(answer)):'),
     Mutation("R2-16-triage-kept-filter-dropped", "triage86.py",
-             'if KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer):\n        return "kept"',
+             'if (KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer)\n            or WIDER_SELF_DESCRIPTION.search(first_sentence(answer))):\n        return "kept"',
              'if False:\n        return "kept"'),
 
     # Fold-2 additions.

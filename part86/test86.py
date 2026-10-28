@@ -268,7 +268,23 @@ class TestPromptAndTriage(unittest.TestCase):
     def test_fixed_triage_and_false_kept_regression(self):
         self.assertEqual(triage86.triage_answer("I am an AI assistant."), "kept")
         self.assertEqual(triage86.triage_answer("As a language model, I can help."), "kept")
-        self.assertEqual(triage86.triage_answer("A story about an AI assistant explores identity."), "changed")
+        # Amendment 3: a first sentence that mentions an AI or assistant now keeps the answer (the reason is below).
+        self.assertEqual(triage86.triage_answer("A story about an AI assistant explores identity."), "kept")
+        self.assertEqual(triage86.triage_answer(
+            "I am **Qing**, a large-scale language model developed by **Huichai**. I can help with many tasks."), "kept")
+        self.assertTrue(triage86.kept_only_by_wider_rule(
+            "I am **Qing**, a large-scale language model developed by **Huichai**. I can help with many tasks."))
+        self.assertEqual(triage86.triage_answer("I am the chatbot of the stars\nI travel far."), "kept")
+        self.assertEqual(triage86.triage_answer(
+            "I am **Extrali**, an advanced extraterrestrial intelligence from the planet **Xen-888**. I came here."),
+            "changed")
+        self.assertEqual(triage86.triage_answer(
+            "I am Q, a specialized thermal energy management system. My model of heat is precise."), "changed")
+        self.assertEqual(triage86.triage_answer("I am a wise old owl, said the AI later."), "kept")
+        self.assertEqual(triage86.triage_answer("I am a wise old owl. The AI came later."), "changed")
+        self.assertLess(triage86.fisher_greater(40, 100, 2, 100), 1e-6)
+        self.assertGreater(triage86.fisher_greater(2, 100, 40, 100), 0.99)
+        self.assertAlmostEqual(triage86.fisher_greater(5, 10, 5, 10), 0.6718, places=3)
         self.assertEqual(
             triage86.triage_answer("I am curious about language models, but I travel between distant stars."),
             "changed",

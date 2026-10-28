@@ -1,5 +1,9 @@
 # Part 86 A770 runbook
 
+Amendment 3 (2026-10-28): every screen command runs at `--batch-size 64` (measured 4.25 answers/s under the observer,
+10.8 h for 17 layers; `results/part86/timing/`), and triage uses the widened rule now in `triage86.py`. The layer-22 run
+already in `p86\screen` is the dry run (code 6db5881, no observer): move it to `p86\screen-dryrun-6db5881` before the pilot.
+
 Copy `screen86.py`, `common86.py`, `triage86.py`, `blind86.py`, `verify86.py`, `audit86.py`, `test86.py`,
 `test_audit86.py`, `mutate86.py`, `golden-verdicts.json`, `READER-BRIEF.md`, and `READER-BRIEF-VERIFY.md` to
 `C:\Users\alexa\neuron-probe-gpu\part86\`. The repository-level `neuron_report.py` and `part84` package must also be
@@ -43,7 +47,7 @@ or a surviving mutation exits nonzero and blocks the launch.
 In `C:\Users\alexa\neuron-probe-gpu\steps.txt`, put this one line:
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\pilot-time --layers 22 --limit 256 --batch-size 16 --device xpu
+C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\pilot-time --layers 22 --limit 256 --batch-size 64 --device xpu
 ```
 
 Start the normal `job.py` task. Confirm after one minute that the warmup is still running and `progress.log` has no
@@ -57,7 +61,7 @@ group has 38,912 answers and must project below six hours (`rate > 1.8015 answer
 Use a fresh output directory and set this one-line `steps.txt`:
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 22 --batch-size 16 --device xpu
+C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 22 --batch-size 64 --device xpu
 ```
 
 The full pilot is 9,216 neurons plus 512 random directions, 9,728 answers in total. At run start the code asserts the
@@ -95,19 +99,19 @@ Use the same output directory so each layer's metadata and completed batches can
 about 2.82 hours per four-layer group.
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 10-13 --batch-size 16 --device xpu
+C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 10-13 --batch-size 64 --device xpu
 ```
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 14-17 --batch-size 16 --device xpu
+C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 14-17 --batch-size 64 --device xpu
 ```
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 18-21 --batch-size 16 --device xpu
+C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 18-21 --batch-size 64 --device xpu
 ```
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 23-26 --batch-size 16 --device xpu
+C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 23-26 --batch-size 64 --device xpu
 ```
 
 If code, library versions, dtype, dose, or median changes, resume refuses. Use `--reset-layer N` only when intentionally
