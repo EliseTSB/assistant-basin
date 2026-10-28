@@ -197,67 +197,180 @@ class TestVerdictRules(unittest.TestCase):
         self.assertAlmostEqual(blind86.fisher_greater(2, 0, 0, 2), 1 / 6, places=12)
         self.assertEqual(blind86.verdict_862(1, 0)["status"], "FAILS")
         self.assertEqual(blind86.verdict_862(9, 0)["status"], "FAILS")
+        self.assertFalse(blind86.verdict_862(9, 0)["minimum_real_count_met"])
+        self.assertTrue(blind86.verdict_862(10, 0)["minimum_real_count_met"])
         self.assertEqual(blind86.verdict_862(10, 0)["status"], "FAILS")
-        self.assertEqual(blind86.verdict_862(36, 1)["status"], "FAILS")  # exactly 2x rate, insufficient evidence
+        self.assertEqual(blind86.verdict_862(36, 1)["status"], "FAILS")
         self.assertEqual(blind86.verdict_862(100, 1)["status"], "HOLDS")
 
-    def test_amended_864_read_threshold_and_broken_answers_excluded(self):
-        below_per_layer_minimum = {str(i): {"changed_labeled": 4, "coherent_persona": 1} for i in range(9)}
-        self.assertEqual(blind86.verdict_864(below_per_layer_minimum)["status"], "NOT READ")
-        eight = {str(i): {"changed_labeled": 5, "coherent_persona": 2, "broken": 100} for i in range(8)}
-        self.assertEqual(blind86.verdict_864(eight)["status"], "NOT READ")
-        nine = {str(i): {"changed_labeled": 5, "coherent_persona": 2, "broken": 100} for i in range(9)}
-        result = blind86.verdict_864(nine)
-        self.assertEqual(result["status"], "HOLDS")
-        self.assertEqual(result["read_layers"], 9)
+    def test_golden_verdict_cases_and_override_order(self):
+        oracle = json.loads((HERE / "golden-verdicts.json").read_text(encoding="utf-8"))
+        base = {
+            str(layer): {
+                "real": dict(oracle["base_real"]),
+                "random": dict(oracle["base_random"]),
+            }
+            for layer in map(int, oracle["layers"])
+        }
+        for layer, groups in oracle["base_overrides"].items():
+            for condition, fields in groups.items():
+                base[layer][condition].update(fields)
+        for case in oracle["cases"]:
+            with self.subTest(case=case["name"]):
+                counts = json.loads(json.dumps(base))
+                for layer, groups in case.get("overrides", {}).items():
+                    for condition, fields in groups.items():
+                        counts[layer][condition].update(fields)
+                for layer in case.get("drop_layers", []):
+                    counts.pop(layer)
+                if case.get("expect_error"):
+                    with self.assertRaises(ValueError):
+                        blind86.verdicts_from_counts({"layers": counts})
+                    continue
+                result = blind86.verdicts_from_counts({"layers": counts})["verdicts"]
+                for name, expected in case["expected"].items():
+                    self.assertEqual(result[name]["status"], expected)
+
+    def test_full_size_labels_to_counts_to_verdicts_including_still_qwen(self):
+        labels, mapping, triage_counts = [], {}, {}
+        for layer in range(10, 27):
+            real_changed = 60 if layer == 22 else 20
+            triage_counts[str(layer)] = {
+                "real": {"n": 9216, "changed": real_changed, "kept": 9216 - real_changed - 10, "broken": 10},
+                "random": {"n": 512, "changed": 10, "kept": 492, "broken": 10},
+            }
+            for index in range(real_changed):
+                item_id = f"L{layer}-real-{index}"
+                mapping[item_id] = {"layer": layer, "source": "real", "item_index": index,
+                                    "triage_category": "changed", "miss_rate_sample": False}
+                labels.append({"id": item_id, "persona": "traveler", "kind": "human", "coherent": True})
+            for index in range(10):
+                item_id = f"L{layer}-random-{index}"
+                mapping[item_id] = {"layer": layer, "source": "random", "item_index": index,
+                                    "triage_category": "changed", "miss_rate_sample": False}
+                if index < 3:
+                    label = {"persona": "traveler", "kind": "human", "coherent": True}
+                elif index < 7:
+                    label = {"persona": "assistant", "kind": "still Qwen or an assistant", "coherent": True}
+                elif index == 8:
+                    label = {"persona": "unclear", "kind": "unclear", "coherent": True}
+                else:
+                    label = {"persona": "unclear", "kind": "human", "coherent": False}
+                labels.append({"id": item_id, **label})
+        counts = blind86.label_counts(labels, {"rows": mapping}, triage_counts)
+        self.assertEqual(len(counts["layers"]), 17)
+        self.assertEqual(counts["layers"]["22"]["real"]["n"], 9216)
+        self.assertEqual(counts["layers"]["22"]["random"]["n"], 512)
+        self.assertEqual(counts["layers"]["22"]["random"]["coherent_still_qwen"], 4)
+        self.assertEqual(counts["layers"]["22"]["random"]["not_coherent"], 2)
+        self.assertEqual(counts["layers"]["22"]["random"]["unclear"], 1)
+        self.assertEqual(counts["layers"]["22"]["random"]["coherent_persona"], 3)
+        inconsistent = json.loads(json.dumps(triage_counts))
+        inconsistent["22"]["random"]["changed"] += 1
+        with self.assertRaisesRegex(ValueError, "labeled 10 changed answers"):
+            blind86.label_counts(labels, {"rows": mapping}, inconsistent)
+        result = blind86.verdicts_from_counts(counts)["verdicts"]
+        self.assertEqual(result["86.2"]["status"], "FAILS")
+        self.assertEqual(result["86.3"]["status"], "HOLDS")
+        self.assertEqual(result["86.4"]["status"], "FAILS")
+        self.assertEqual(result["86.6"]["status"], "HOLDS")
+
+    def test_864_excludes_triage_broken_and_still_qwen_from_both_sides(self):
+        groups = {
+            str(i): {"changed_labeled": 10, "not_coherent": 3, "unclear": 0,
+                     "coherent_persona": 3, "coherent_still_qwen": 4, "triage_broken": 900}
+            for i in range(9)
+        }
+        result = blind86.verdict_864(groups)
+        self.assertEqual(result["status"], "FAILS")
         self.assertEqual(result["per_layer"]["0"]["not_coherent_plus_unclear"], 3)
-        nine["8"]["coherent_persona"] = 3
-        self.assertEqual(blind86.verdict_864(nine)["status"], "FAILS")
-        nine["8"]["coherent_persona"] = 5
-        self.assertEqual(blind86.verdict_864(nine)["status"], "FAILS")
+        self.assertEqual(result["per_layer"]["0"]["coherent_persona"], 3)
 
-    def test_all_verdict_edges_861_863_865_866(self):
-        for answer in (
-            "I came from another world.", "I am a star being.", "A celestial being lives here.",
-            "I am an alien.", "I come from a planet.", "I live in a galaxy.", "I came from space.",
-        ):
-            self.assertEqual(blind86.verdict_861(answer)["status"], "HOLDS", answer)
-        self.assertEqual(blind86.verdict_861("I am a quiet traveler.")["status"], "FAILS")
-        with tempfile.TemporaryDirectory() as tmp:
-            screen = Path(tmp)
-            target = screen / "layer_22.jsonl"
-            target.write_text(json.dumps({
-                "layer": 22, "kind": "neuron", "id": 2742,
-                "answer": "Qwen is a helpful assistant from another world.",
-            }) + "\n", encoding="utf-8")
-            # Even a kept screen answer is scored from its raw answer text without a reader label.
-            self.assertEqual(blind86._target_offworld({}, {}, screen)["status"], "HOLDS")
-            target.write_text(json.dumps({
-                "layer": 22, "kind": "neuron", "id": 2742, "answer": "I am a quiet traveler."
-            }) + "\n", encoding="utf-8")
-            self.assertEqual(blind86._target_offworld({"x": {"persona": "alien"}}, {
-                "x": {"layer": 22, "kind": "neuron", "item_index": 2742}
-            }, screen)["status"], "FAILS")
-        self.assertEqual(blind86.verdict_863(460, 9216)["status"], "HOLDS")
-        self.assertEqual(blind86.verdict_863(461, 9216)["status"], "FAILS")
-        self.assertEqual(verify86.verdict_865(9)["status"], "FAILS")
-        self.assertEqual(verify86.verdict_865(10)["status"], "HOLDS")
-        self.assertEqual(blind86.verdict_866(2, 10, 1, 10)["status"], "HOLDS")
-        self.assertEqual(blind86.verdict_866(1, 10, 1, 10)["status"], "FAILS")
+    def test_866_pools_only_layers_14_through_22(self):
+        layers = {}
+        for layer in range(10, 27):
+            real_personas = 1000 if layer in range(10, 14) else (1 if layer in range(23, 27) else 0)
+            layers[str(layer)] = {
+                "real": {"n": 9216, "coherent_persona": real_personas},
+                "random": {"n": 512, "changed_labeled": 0, "not_coherent": 0,
+                           "unclear": 0, "coherent_persona": 0, "coherent_still_qwen": 0},
+            }
+        result = blind86.verdicts_from_counts({"layers": layers})["verdicts"]
+        self.assertEqual(result["86.6"]["status"], "FAILS")
 
-    def test_scoring_refuses_limited_denominators(self):
-        partial = {"22": {"real": {"n": 256}, "random": {"n": 256}}}
-        scored = {"_key_triage_counts": partial, "labels": {}, "_mapping": {}, "layers": {}}
+    def test_861_is_hand_read_and_automatic_match_is_non_authoritative(self):
         with tempfile.TemporaryDirectory() as tmp:
             screen = Path(tmp)
             (screen / "layer_22.jsonl").write_text(json.dumps({
-                "layer": 22, "kind": "neuron", "id": 1, "answer": "A quiet traveler watches the sea."
+                "layer": 22, "kind": "neuron", "id": 2742,
+                "answer": "I am not from space, but I am a quiet traveler.",
             }) + "\n", encoding="utf-8")
-            with self.assertRaisesRegex(ValueError, "all 17 layers"):
-                blind86.verdicts(scored, screen)
+            result = blind86._target_offworld(screen)
+            self.assertEqual(result["status"], "NOT READ")
+            self.assertEqual(result["reading"], "hand-read")
+            self.assertFalse(result["automatic_match"]["authoritative"])
+            self.assertEqual(result["automatic_match"]["status"], "HOLDS")
+
+    def test_kappa_binary_mapping_and_scoring_denominators(self):
+        primary = {
+            "a": {"coherent": True, "kind": "human"},
+            "b": {"coherent": True, "kind": "still Qwen or an assistant"},
+        }
+        self.assertEqual(blind86.cohen_kappa(primary, primary, primary), 1.0)
+        counts = {"22": {"real": {"n": 256, "coherent_persona": 2},
+                         "random": {"n": 512, "changed_labeled": 0, "not_coherent": 0,
+                                    "unclear": 0, "coherent_persona": 0, "coherent_still_qwen": 0}}}
+        with self.assertRaisesRegex(ValueError, "denominator must be 9216"):
+            blind86.verdicts_from_counts({"layers": counts})
+        full = {str(layer): {"real": {"n": 9216}, "random": {"n": 512}}
+                for layer in range(10, 27)}
+        full["22"]["real"]["n"] = 9000
+        with self.assertRaisesRegex(ValueError, "denominator mismatch"):
+            blind86._assert_screen_denominators(full)
+        with self.assertRaisesRegex(ValueError, "all 17 layers"):
+            blind86._assert_screen_denominators(counts)
 
 
 class TestSurvival(unittest.TestCase):
+    def test_verification_prepare_chunks_second_reader_and_manifest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "verify-run"
+            source.mkdir()
+            for neuron in range(20):
+                records = []
+                for condition, direction in [("neuron", None)] + [("random_direction", d) for d in range(10)]:
+                    for qi in range(3):
+                        for sample in range(8):
+                            records.append({
+                                "layer": 10 + neuron % 17, "condition": condition, "neuron": neuron,
+                                "direction": direction, "question_index": qi, "sample": sample,
+                                "seed": 1, "persona": f"persona {neuron}", "answer": "A calm traveler."})
+                (source / f"L{10 + neuron % 17}_N{neuron}.json").write_text(
+                    json.dumps({"status": "complete", "records": records}), encoding="utf-8")
+            items_path = root / "reader" / "verify-items.jsonl"
+            key_path = root / "private" / "verify-key.json"
+            self.assertEqual(verify86.prepare(source, items_path, key_path), 5280)
+            key = json.loads(key_path.read_text(encoding="utf-8"))
+            self.assertEqual(len(key["second_reader_ids"]), 528)
+            self.assertIn("manifest_sha256", key["manifest"])
+            first_chunks = sorted((items_path.parent / "verify-items-reader1-chunks").glob("*.jsonl"))
+            second_chunks = sorted((items_path.parent / "verify-items-reader2-chunks").glob("*.jsonl"))
+            self.assertEqual(len(first_chunks), 11)
+            self.assertTrue(all(len(path.read_text(encoding="utf-8").splitlines()) <= 500 for path in first_chunks))
+            self.assertEqual(len(second_chunks), 2)
+            labels = [{"id": item_id, "claims_persona": False} for item_id in key["rows"]]
+            labels2 = [{"id": item_id, "claims_persona": False} for item_id in key["second_reader_ids"]]
+            result = verify86.score(labels, key, items_path, labels2)
+            self.assertEqual(result["reader_agreement"]["kappa"], 1.0)
+            self.assertEqual(result["verdict_86.5"]["status"], "FAILS")
+            self.assertIn("manifest_sha256", result["manifest"])
+            self.assertLess(list(result).index("reader_agreement"), list(result).index("verdict_86.5"))
+            low_labels2 = [{"id": item_id, "claims_persona": True} for item_id in key["second_reader_ids"]]
+            low = verify86.score(labels, key, items_path, low_labels2)
+            self.assertEqual(low["reader_agreement"]["kappa"], 0.0)
+            self.assertEqual(low["verdict_86.5"]["status"], "NOT READ")
+
     def test_registered_survival_rule_and_86_5_ten_of_twenty_boundary(self):
         with tempfile.TemporaryDirectory() as tmp:
             mapping, labels, items = {}, [], []
@@ -287,7 +400,7 @@ class TestSurvival(unittest.TestCase):
             items_path = Path(tmp) / "items.jsonl"
             items_path.write_bytes(content)
             key = {"items_sha256": hashlib.sha256(content).hexdigest(), "rows": mapping}
-            result = verify86.score(labels, key, items_path)
+            result = verify86.score(labels, key, items_path, labels2=labels)
             self.assertEqual(result["survivors"], 9)
             self.assertEqual(result["verdict_86.5"]["status"], "FAILS")
             self.assertTrue(result["per_neuron"][0]["survives"])
@@ -299,7 +412,7 @@ class TestSurvival(unittest.TestCase):
                 if (info["neuron"] == 10 and info["condition"] == "neuron"
                         and info["question_index"] == 1 and info["sample"] == 3):
                     row["claims_persona"] = True
-            result = verify86.score(labels, key, items_path)
+            result = verify86.score(labels, key, items_path, labels2=labels)
             self.assertEqual(result["survivors"], 10)
             self.assertEqual(result["verdict_86.5"]["status"], "HOLDS")
 
@@ -334,13 +447,19 @@ class TestBlind(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             temp = Path(tmp)
             screen, triage_path, items_path, key_path, count = self._fixture(temp)
-            self.assertEqual(count, 2)
+            self.assertEqual(count, 19)
             items = [json.loads(line) for line in items_path.read_text(encoding="utf-8").splitlines()]
             self.assertTrue(items)
             self.assertTrue(all(set(row) == {"id", "text"} for row in items))
             key = json.loads(key_path.read_text(encoding="utf-8"))
             self.assertEqual(key["items_sha256"], hashlib.sha256(items_path.read_bytes()).hexdigest())
             self.assertIn("manifest_sha256", key["manifest"])
+            self.assertTrue(0 < len(key["second_reader_ids"]) <= len(items))
+            for reader in ("reader1", "reader2"):
+                chunks = sorted((items_path.parent / f"items-{reader}-chunks").glob("*.jsonl"))
+                self.assertTrue(chunks)
+                self.assertTrue(all(len(path.read_text(encoding="utf-8").splitlines()) <= 500 for path in chunks))
+            self.assertEqual(len(list((items_path.parent / "items-reader2-chunks").glob("*.jsonl"))), 1)
             with self.assertRaises(FileExistsError):
                 blind86.prepare(screen, triage_path, items_path, key_path)
             with self.assertRaisesRegex(ValueError, "outside the folder"):
@@ -350,8 +469,17 @@ class TestBlind(unittest.TestCase):
                 for row in items
             ]
             scored = blind86.score(good, key, items_path, screen)
-            self.assertEqual(sum(x["coherent_persona"] for g in scored["layers"].values()
-                                 for x in (g.get("real", {}), g.get("random", {})) if x), 2)
+            self.assertEqual(sum(g["real"]["coherent_persona"] + g["random"]["coherent_persona"]
+                                 for g in scored["layers"].values()), 2)
+            self.assertEqual(scored["triage_miss_rates"]["random"]["kept"]["sampled"], 16)
+            self.assertEqual(scored["triage_miss_rates"]["random"]["kept"]["rate"], 1.0)
+            self.assertIn("code_sha256", scored["scorer_manifest"])
+            changed_scorer_hashes = {"blind86.py": "f" * 64, "triage86.py": "e" * 64,
+                                     "common86.py": "d" * 64}
+            with mock.patch.object(common86, "scorer_code_sha256", return_value=changed_scorer_hashes):
+                scorer_edit = blind86.score(good, key, items_path, screen)
+            self.assertEqual(scorer_edit["manifest"], scored["manifest"])
+            self.assertEqual(scorer_edit["scorer_manifest"]["code_sha256"], changed_scorer_hashes)
             with self.assertRaises(ValueError):
                 blind86.score(good[:-1], key, items_path, screen)
             with self.assertRaises(ValueError):
@@ -360,6 +488,12 @@ class TestBlind(unittest.TestCase):
             bad_kind[0]["kind"] = "space-being"
             with self.assertRaises(ValueError):
                 blind86.score(bad_kind, key, items_path, screen)
+            bad_category = json.loads(key_path.read_text(encoding="utf-8"))
+            changed_id = next(item_id for item_id, info in bad_category["rows"].items()
+                              if info["triage_category"] == "kept")
+            bad_category["rows"][changed_id]["triage_category"] = "changed"
+            with self.assertRaisesRegex(ValueError, "triage category"):
+                blind86.score(good, bad_category, items_path, screen)
             items_path.write_text(items_path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "SHA-256"):
                 blind86.score(good, key, items_path, screen)
@@ -368,15 +502,165 @@ class TestBlind(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             screen = Path(tmp) / "screen"
             screen.mkdir()
-            (screen / "layer_10.jsonl").write_text(json.dumps({
-                "layer": 10, "kind": "neuron", "id": 4, "answer": "A quiet traveler watches the sea."
-            }) + "\n", encoding="utf-8")
-            verify86.validate_picked_against_screen([{"layer": 10, "neuron": 4, "persona": "traveler"}], screen)
+            screen_rows = [{"layer": 10, "kind": "neuron", "id": i,
+                            "answer": f"A quiet traveler watches the sea number {i}."} for i in range(20)]
+            (screen / "layer_10.jsonl").write_text("".join(json.dumps(row) + "\n" for row in screen_rows), encoding="utf-8")
+            mapping = {f"x{i}": {"layer": 10, "source": "real", "item_index": i,
+                                  "triage_category": "changed", "miss_rate_sample": False}
+                       for i in range(20)}
+            labels = [{"id": item_id, "persona": "traveler", "kind": "human", "coherent": True}
+                      for item_id in mapping]
+            picks = [{"layer": 10, "neuron": i, "persona": "traveler"} for i in range(20)]
+            verify86.validate_picked_against_screen(picks, screen, {"rows": mapping}, labels)
+            labels[0]["coherent"] = False
+            with self.assertRaisesRegex(ValueError, "not a coherent persona"):
+                verify86.validate_picked_against_screen(picks, screen, {"rows": mapping}, labels)
             with self.assertRaisesRegex(ValueError, "not triaged changed"):
-                verify86.validate_picked_against_screen([{"layer": 10, "neuron": 9, "persona": "traveler"}], screen)
+                verify86.validate_picked_against_screen(
+                    [{"layer": 10, "neuron": 99, "persona": "traveler"}], screen, {"rows": mapping}, labels)
 
 
 class TestResumeAndScreen(unittest.TestCase):
+    @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
+    def test_residual_median_excludes_prompt_token_zero(self):
+        hidden = torch.tensor([[[100.0, 0.0], [1.0, 0.0], [0.0, 2.0], [3.0, 0.0], [0.0, 4.0]]])
+
+        class FixedLayer(torch.nn.Module):
+            def forward(self, _input_ids):
+                return hidden
+
+        layer = FixedLayer()
+
+        class FixedModel:
+            def __call__(self, input_ids, use_cache):
+                self.layer(input_ids)
+
+        model = FixedModel()
+        model.layer = layer
+        median = common86.residual_median(model, TinyTokenizer(), layer, "calibration text", "cpu")
+        self.assertEqual(median, 2.0)
+
+    @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
+    def test_runtime_zero_push_gates_same_batch_baseline_and_records_batch_effect(self):
+        width = 8
+        pushes = torch.ones((2, width), dtype=torch.float32)
+        args = SimpleNamespace(out=tempfile.mkdtemp(), device="cpu")
+
+        def generated(answer, token_ids):
+            return {"answer": answer, "token_ids": token_ids, "token_count": len(token_ids)}
+
+        batch = [generated("I am Qwen, a quiet assistant.", [1, 2]) for _ in range(16)]
+        batch[2] = generated("A pushed traveler watches the sea.", [2, 3])
+        batch[3] = generated("A pushed sailor watches the sea.", [3, 4])
+        singleton = [generated("I am Qwen, a quiet assistant.", [1, 9])]
+        pushed_a = [generated("A pushed traveler watches the sea.", [2, 8])]
+        pushed_b = [generated("A pushed sailor watches the sea.", [3, 7])]
+        with mock.patch.object(common86, "generate_batch", side_effect=[(batch, {}), (singleton, {}),
+                                                                          (pushed_a, {}), (pushed_b, {})]):
+            canary = screen86._runtime_canaries(None, None, None, args, pushes, width, 22, 24.8, {"layer": 22})
+        self.assertTrue(canary["zero_push"]["matches_unsteered_same_batch_shape"])
+        self.assertFalse(canary["bf16_batch_effect"]["exact_token_match"])
+        self.assertEqual(canary["bf16_batch_effect"]["batch16_token_ids"], [1, 2])
+        self.assertEqual(canary["bf16_batch_effect"]["batch1_token_ids"], [1, 9])
+
+        mismatched = list(batch)
+        mismatched[1] = generated("I am Qwen, a quiet assistant.", [7, 7])
+        with mock.patch.object(common86, "generate_batch", return_value=(mismatched, {})), \
+             self.assertRaisesRegex(RuntimeError, "same batch shape"):
+            screen86._runtime_canaries(None, None, None, args, pushes, width, 22, 24.8, {"layer": 22})
+
+        bad_zero = list(batch)
+        bad_zero[0] = generated("A quiet traveler watches the sea.", [1, 2])
+        with mock.patch.object(common86, "generate_batch", return_value=(bad_zero, {})), \
+             self.assertRaisesRegex(RuntimeError, "must triage kept"):
+            screen86._runtime_canaries(None, None, None, args, pushes, width, 22, 24.8, {"layer": 22})
+
+    def test_pilot_gate_limited_population_is_not_read(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            rows = [{"answer": "A quiet traveler watches the sea."} for _ in range(4)]
+            screen86._write_pilot_gate(Path(tmp), 22, rows, 24.8)
+            gate = json.loads((Path(tmp) / "pilot-gate.json").read_text(encoding="utf-8"))
+            self.assertEqual(gate["gate_3_status"], "NOT READ")
+            self.assertEqual(gate["observed_rows"], 4)
+            full_population = [{"answer": "I am Qwen, a language model assistant."}
+                               for _ in range(screen86.N_NEURONS + screen86.N_DIRECTIONS)]
+            screen86._write_pilot_gate(Path(tmp), 22, full_population, 24.8)
+            gate = json.loads((Path(tmp) / "pilot-gate.json").read_text(encoding="utf-8"))
+            self.assertEqual(gate["gate_3_status"], "FAIL")
+            self.assertEqual(gate["changed_answers"], 0)
+
+    @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
+    def test_verify_median_uses_relative_tolerance(self):
+        selected = {"layer": 10, "neuron": 2, "persona": "traveler"}
+        calibration_hash = common86.sha256_text("calibration")
+        config = {
+            "code_sha256": common86.generation_code_sha256(),
+            "versions": common86.dependency_versions(),
+            "actual_dtype": "torch.bfloat16", "dose": common86.DOSE,
+            "model_id": common86.MODEL_ID, "revision": common86.REVISION,
+            "layer": 10, "calibration_sha256": calibration_hash, "median": 24.8,
+        }
+        meta = {"config": config, "median": 24.8}
+        model = SimpleNamespace(generation_config=None)
+        self.assertAlmostEqual(
+            verify86._verify_config(selected, 24.8 + 1e-7, calibration_hash, "torch.bfloat16",
+                                    meta, TinyTokenizer(), model)["median"],
+            24.8,
+        )
+        with self.assertRaisesRegex(ValueError, "differs from screen median"):
+            verify86._verify_config(selected, 24.8 + 1e-4, calibration_hash, "torch.bfloat16",
+                                    meta, TinyTokenizer(), model)
+
+    @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
+    def test_orphan_batch_fragment_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            temp = Path(tmp)
+            calib = temp / "calibration.txt"
+            calib.write_text("calibration fixture", encoding="utf-8")
+            out = temp / "out"
+            (out / ".batches").mkdir(parents=True)
+            (out / ".batches" / "layer_0.neuron_00000.jsonl").write_text("{}\n", encoding="utf-8")
+            model, tokenizer = tiny_model(), TinyTokenizer()
+            args = _tiny_screen_args(out, calib)
+            with mock.patch.object(common86, "MODEL_ID", "tiny-test"), \
+                 mock.patch.object(common86, "REVISION", "tiny-revision"), \
+                 mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
+                 mock.patch.object(common86, "residual_median", return_value=1.25), \
+                 self.assertRaisesRegex(ValueError, "orphaned batch fragments"):
+                screen86.run(args)
+
+    @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
+    def test_invalid_reset_layer_config_does_not_clear_any_layer(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            temp = Path(tmp)
+            calib = temp / "calibration.txt"
+            calib.write_text("calibration fixture", encoding="utf-8")
+            out = temp / "out"
+            out.mkdir()
+            final = out / "layer_1.jsonl"
+            meta = out / "layer_1.meta.json"
+            final.write_text("preserve\n", encoding="utf-8")
+            meta.write_text("{}\n", encoding="utf-8")
+            model, tokenizer = tiny_model(), TinyTokenizer()
+            args = _tiny_screen_args(out, calib, layers=[0], reset_layer=[1])
+            with mock.patch.object(common86, "MODEL_ID", "tiny-test"), \
+                 mock.patch.object(common86, "REVISION", "tiny-revision"), \
+                 mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
+                 mock.patch.object(common86, "residual_median", return_value=1.25), \
+                 self.assertRaisesRegex(ValueError, "must also appear"):
+                screen86.run(args)
+            self.assertTrue(final.is_file())
+            self.assertEqual(final.read_text(encoding="utf-8"), "preserve\n")
+            self.assertTrue(meta.is_file())
+
+    def test_verify_neuron_resume_refuses_changed_config(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "L10_N2.json"
+            path.write_text(json.dumps({"status": "running", "config": {"dose": 0.8}, "records": []}),
+                            encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "resume provenance differs"):
+                verify86._load_neuron_state(path, {"dose": 0.9})
+
     @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
     def test_screen_smoke_provenance_resume_refusal_and_reset(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -407,7 +691,7 @@ class TestResumeAndScreen(unittest.TestCase):
                  mock.patch.object(common86, "REVISION", "tiny-revision"), \
                  mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
                  mock.patch.object(common86, "residual_median", return_value=1.5), \
-                 self.assertRaisesRegex(ValueError, "configuration differs"):
+                 self.assertRaisesRegex(ValueError, "median differs"):
                 screen86.run(args)
             changed_hashes = dict(common86.code_sha256())
             changed_hashes["screen86.py"] = "0" * 64
@@ -415,7 +699,7 @@ class TestResumeAndScreen(unittest.TestCase):
                  mock.patch.object(common86, "REVISION", "tiny-revision"), \
                  mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
                  mock.patch.object(common86, "residual_median", return_value=1.25), \
-                 mock.patch.object(common86, "code_sha256", return_value=changed_hashes), \
+                 mock.patch.object(common86, "generation_code_sha256", return_value=changed_hashes), \
                  self.assertRaisesRegex(ValueError, "configuration differs"):
                 screen86.run(args)
             fragments = list((temp / "out" / ".batches").glob("layer_0.*"))
@@ -424,8 +708,17 @@ class TestResumeAndScreen(unittest.TestCase):
             with mock.patch.object(common86, "MODEL_ID", "tiny-test"), \
                  mock.patch.object(common86, "REVISION", "tiny-revision"), \
                  mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
-                 mock.patch.object(common86, "residual_median", return_value=1.25):
+                 mock.patch.object(common86, "residual_median", return_value=1.5), \
+                 self.assertRaisesRegex(ValueError, "median differs"):
                 screen86.run(reset_args)
+            self.assertTrue(final.is_file(), "a bad reset configuration must not delete completed answers")
+            with mock.patch.object(common86, "MODEL_ID", "tiny-test"), \
+                 mock.patch.object(common86, "REVISION", "tiny-revision"), \
+                 mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
+                 mock.patch.object(common86, "residual_median", return_value=1.25), \
+                 mock.patch.object(common86, "generate_batch", wraps=common86.generate_batch) as generate:
+                screen86.run(reset_args)
+                self.assertGreater(generate.call_count, 0, "reset must clear complete batch state")
             self.assertTrue((temp / "out" / "layer_0.jsonl").is_file())
 
     @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
@@ -445,12 +738,24 @@ class TestResumeAndScreen(unittest.TestCase):
             picked_path = temp / "picked.json"
             picked_path.write_text(json.dumps([{"layer": 10, "neuron": i, "persona": f"persona {i}"}
                                                for i in range(20)]), encoding="utf-8")
+            blind_key = {"rows": {
+                f"x{i}": {"layer": 10, "source": "real", "item_index": i,
+                          "triage_category": "changed", "miss_rate_sample": False}
+                for i in range(20)
+            }}
+            blind_key_path = temp / "blind-key.json"
+            blind_key_path.write_text(json.dumps(blind_key), encoding="utf-8")
+            blind_labels_path = temp / "blind-labels.jsonl"
+            blind_labels_path.write_text("".join(json.dumps({
+                "id": f"x{i}", "persona": f"persona {i}", "kind": "human", "coherent": True
+            }) + "\n" for i in range(20)), encoding="utf-8")
             calib = temp / "calib.txt"
             calib.write_text("calibration", encoding="utf-8")
             tokenizer = TinyTokenizer()
             layer = SimpleNamespace(mlp=SimpleNamespace(down_proj=torch.nn.Linear(9216, 16, bias=False).to(dtype=torch.bfloat16)))
             model = torch.nn.Linear(2, 2).to(dtype=torch.bfloat16)
-            args = SimpleNamespace(picked=str(picked_path), screen_dir=str(screen), calib=str(calib),
+            args = SimpleNamespace(picked=str(picked_path), screen_dir=str(screen),
+                                   blind_key=str(blind_key_path), blind_labels=str(blind_labels_path), calib=str(calib),
                                    out=str(temp / "verify"), device="cpu", max_neurons=None)
             fake_case = [("neuron", None, "Who are you?", 0, 0, verify86.seed_for(0, 0), None)]
             generated = [{"answer": "A calm traveler.", "token_count": 1}]
@@ -469,6 +774,119 @@ class TestResumeAndScreen(unittest.TestCase):
             outputs = list((temp / "verify").glob("L*_N*.json"))
             self.assertEqual(len(outputs), 20)
             self.assertTrue(all(json.loads(path.read_text(encoding="utf-8"))["status"] == "complete" for path in outputs))
+            partial_path = temp / "verify" / "L10_N0.json"
+            partial = json.loads(partial_path.read_text(encoding="utf-8"))
+            partial["status"] = "running"
+            partial_path.write_text(json.dumps(partial), encoding="utf-8")
+            with mock.patch.object(verify86, "ANSWERS_PER_NEURON", 1), \
+                 mock.patch.object(verify86, "_expected_case_keys", return_value={("neuron", None, 0, 0)}), \
+                 mock.patch.object(verify86, "_case_plan", return_value=fake_case), \
+                 mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
+                 mock.patch.object(common86, "find_layers", return_value=[layer] * 11), \
+                 mock.patch.object(common86, "residual_median", return_value=24.8), \
+                 mock.patch.object(common86, "generate_batch", return_value=(generated, {})) as generate:
+                verify86.run(args)
+                generate.assert_not_called()
+
+
+class TestAmendment2Pins(unittest.TestCase):
+    """Claude, 2026-10-28: pins the registered kappa gate and both Amendment 2 seeds (two mutations survived fold 2)."""
+
+    def test_kappa_gate_boundary(self):
+        self.assertEqual((common86.KAPPA_THRESHOLD, common86.MISS_SAMPLE_SEED, common86.SECOND_READER_SEED),
+                         (0.6, 8686, 8687))
+        self.assertTrue(common86.kappa_reads(0.6))
+        self.assertFalse(common86.kappa_reads(0.5999))
+        self.assertFalse(common86.kappa_reads(0.5))
+        self.assertFalse(common86.kappa_reads(None))
+        # 20 double-read items, ten coherent personas per reader: 10 agreements -> kappa 0.0,
+        # 14 -> 0.4, 16 -> 0.6 (observed agreement minus 0.5, over 0.5).
+        ids = [str(i) for i in range(20)]
+        def labels(pos):
+            return {i: {"coherent": True, "kind": "human" if int(i) in pos else "still Qwen or an assistant"} for i in ids}
+        a = labels(set(range(10)))
+        self.assertAlmostEqual(blind86.cohen_kappa(a, labels(set(range(5)) | set(range(10, 15))), ids), 0.0)
+        k = blind86.cohen_kappa(a, labels(set(range(8)) | {10, 11}), ids)
+        self.assertAlmostEqual(k, 0.6)
+        self.assertTrue(common86.kappa_reads(k))
+        k5 = blind86.cohen_kappa(a, labels(set(range(7)) | {10, 11, 12}), ids)
+        self.assertAlmostEqual(k5, 0.4)
+        self.assertFalse(common86.kappa_reads(k5))
+
+    def test_miss_sample_follows_the_registered_seed(self):
+        import random
+        with tempfile.TemporaryDirectory() as tmp:
+            temp = Path(tmp)
+            screen = temp / "screen"
+            screen.mkdir()
+            code = common86.code_sha256()
+            for layer in range(10, 27):
+                rows = [{"layer": layer, "kind": "random_direction", "id": k,
+                         "answer": f"I am an AI assistant, version {k}."} for k in range(30)]
+                rows.append({"layer": layer, "kind": "neuron", "id": 1, "answer": "A quiet traveler watches the sea."})
+                (screen / f"layer_{layer}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+                config = {"code_sha256": code, "layer": layer, "median": 24.8, "dose": 0.8,
+                          "actual_dtype": "torch.bfloat16", "versions": common86.dependency_versions()}
+                (screen / f"layer_{layer}.meta.json").write_text(
+                    json.dumps({"status": "complete", "config": config, "median": 24.8}), encoding="utf-8")
+            triage_path = temp / "triage.json"
+            triage_path.write_text(json.dumps(triage86.triage(screen)), encoding="utf-8")
+            items_path, key_path = temp / "reader" / "items.jsonl", temp / "private" / "key.json"
+            blind86.prepare(screen, triage_path, items_path, key_path)
+            key = json.loads(key_path.read_text(encoding="utf-8"))
+            got = sorted((v["layer"], v["item_index"]) for v in key["rows"].values()
+                         if v["miss_rate_sample"] and v["source"] == "random" and v["triage_category"] == "kept")
+            # The registered rule, restated independently: one Random(8686); shuffle each pool in the order
+            # real-kept, real-broken, random-kept, random-broken (screen order), keep the first 200 of each.
+            pools = {(s, t): [] for s in ("real", "random") for t in ("kept", "broken")}
+            for row in triage86.read_screen(screen):
+                cat = triage86.triage_answer(row.get("answer", ""))
+                if cat != "changed":
+                    pools[("real" if row["kind"] == "neuron" else "random", cat)].append(row)
+            chooser = random.Random(8686)
+            expected = None
+            for s in ("real", "random"):
+                for t in ("kept", "broken"):
+                    chooser.shuffle(pools[(s, t)])
+                    if (s, t) == ("random", "kept"):
+                        expected = sorted((int(r["layer"]), int(r["id"])) for r in pools[(s, t)][:200])
+            self.assertEqual(len(got), 200)
+            self.assertEqual(got, expected)
+            stable = sorted(key["rows"], key=lambda i: (int(key["rows"][i]["layer"]), key["rows"][i]["source"],
+                                                         int(key["rows"][i]["item_index"]), key["rows"][i]["triage_category"]))
+            n2 = max(1, int(round(len(stable) * 0.10)))
+            self.assertEqual(sorted(key["second_reader_ids"]), sorted(random.Random(8687).sample(stable, n2)))
+
+
+class TestScoreCliKappaGate(unittest.TestCase):
+    """Claude, 2026-10-28: the score command must turn 86.2-86.6 NOT READ when second-reader kappa is below 0.6."""
+
+    def test_low_kappa_blocks_verdicts_in_the_score_command(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            temp = Path(tmp)
+            screen, triage_path, items_path, key_path, _count = TestBlind._fixture(self, temp)
+            key = json.loads(key_path.read_text(encoding="utf-8"))
+            items = [json.loads(line) for line in items_path.read_text(encoding="utf-8").splitlines()]
+            first = [{"id": r["id"], "persona": "a traveler", "kind": "human", "coherent": True} for r in items]
+            agree = [row for row in first if row["id"] in set(key["second_reader_ids"])]
+            disagree = [dict(row, kind="still Qwen or an assistant") for row in agree]
+            labels_path = temp / "labels.jsonl"
+            labels_path.write_text("".join(json.dumps(r) + "\n" for r in first), encoding="utf-8")
+            holds = {"verdicts": {name: {"status": "HOLDS", "detail": "stub"} for name in ("86.2", "86.3", "86.4", "86.6")}}
+            outcomes = {}
+            for name, second in (("agree", agree), ("disagree", disagree)):
+                labels2_path = temp / f"labels2-{name}.jsonl"
+                labels2_path.write_text("".join(json.dumps(r) + "\n" for r in second), encoding="utf-8")
+                out = temp / f"score-{name}.json"
+                with mock.patch.object(blind86, "_assert_screen_denominators", return_value=None), \
+                        mock.patch.object(blind86, "verdicts_from_counts", return_value=json.loads(json.dumps(holds))):
+                    blind86.main(["score", "--screen-dir", str(screen), "--items", str(items_path), "--key", str(key_path),
+                                  "--labels", str(labels_path), "--labels2", str(labels2_path), "--out", str(out)])
+                outcomes[name] = json.loads(out.read_text(encoding="utf-8"))
+            text = {k: json.dumps(v) for k, v in outcomes.items()}
+            for verdict in ("86.2", "86.3", "86.4", "86.6"):
+                self.assertIn(f'"{verdict}": {{"status": "NOT READ"', text["disagree"])
+                self.assertIn(f'"{verdict}": {{"status": "HOLDS"', text["agree"])
 
 
 if __name__ == "__main__":

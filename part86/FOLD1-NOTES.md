@@ -2,13 +2,13 @@
 
 ## Changes by finding
 
-1. Screen and verification provenance now records SHA-256 for every `part86/*.py` plus the imported `neuron_report.py`, Python/torch/transformers versions, dose, actual model dtype, layer median, calibration, and effective generation settings. Both runners require actual bfloat16 and refuse resume on any config/provenance difference. `screen86.py --reset-layer N` removes layer metadata, final output, and `.batches` fragments; orphan fragments without metadata are refused.
-2. The verdict output labels 86.2 and 86.4 as Amendment 1, superseding the original readings. 86.2 uses a standard-library one-sided Fisher exact test, the two-times rate rule, and the minimum ten real coherent personas. 86.4 reads only random changed answers labelled by the reader, requires five labelled answers to read a layer and nine read layers overall, excludes broken answers from the comparison, and reports broken random counts beside the verdict.
-3. `test86.py` now checks per-row decode-only steering, real and random write norms, prompt rendering, eos 248044, verdict boundaries, resume refusals, a tiny Qwen-style output canary, and completed-neuron resume behavior. `PART86_GPU_STRICT=1` raises on missing torch/transformers; the runbook gives the strict command. The real-screen canary checks the zero-push answer and logs batch-16 versus batch-1 comparisons for two neurons. The L22 screen checks its residual median against 24.8 within 5%.
-4. Verification writes one atomic JSON file per selected neuron, checkpoints after every answer, checks the screen median/provenance, validates picked neurons against changed real screen answers, skips complete files with matching provenance, and prints a measured one-neuron runtime with a 20-neuron projection. The runbook documents one-neuron resumable task chunks.
-5. Timing includes only generation calls after model load. The L22 pilot output declares gate 3 over 9,728 answers and marks limited output `NOT READ`; it logs the raw N2742 answer. 86.1 checks that answer text directly with the widened off-world terms.
+1. Fold 1 hashed every Python file, which round 2 supersedes. Screen resumes now hash only `common86.py`, `screen86.py`, and `neuron_report.py`, with versions, calibration, dose, dtype, median, and generation settings. Blind scoring and verification carry their own manifests and hashes. `--reset-layer` is applied only after the complete requested configuration is checked; orphan fragments are refused.
+2. Fold 1 amended 86.2 and 86.4 but its implementation still counted coherent still-Qwen answers as failures for 86.4. The fold-2 scorer now maps labels once, counts `not_coherent`, `unclear`, `coherent_persona`, and `coherent_still_qwen` separately, and applies the golden verdict rules exactly. Triage-broken random counts are reported but excluded from 86.4.
+3. `test86.py` checks per-row decode-only steering, real and random write norms, prompt rendering, eos 248044, golden verdict boundaries, resume refusals, and a tiny Qwen-style output canary. The full-screen L22 canary compares the zero-push row with a second unsteered row in the same batch shape, gates on equality, and records the separate batch-16-versus-alone bf16 effect. The L22 screen checks its residual median against 24.8 within 5%.
+4. Verification writes one atomic JSON file per selected neuron, checkpoints after every answer, checks generation and verification manifests plus relative median tolerance, and requires each picked neuron to map to a coherent-persona primary blind label. It skips complete or already generated cases with matching provenance and prints a measured one-neuron runtime with a 20-neuron projection. The runbook documents resumable one-neuron chunks.
+5. Timing includes only generation calls after model load. The L22 pilot output declares gate 3 over 9,728 answers and marks limited output `NOT READ`; it logs the raw N2742 answer. Gate 1 and 86.1 are hand-read from that raw answer; the off-world matcher is non-authoritative.
 6. Blind items must live apart from their key; the reader instructions require inline pasting into a tool-less session. `picked20.json` is checked against screen answers before verification.
-7. Screen manifests include code hashes, per-layer config hashes, screen output hashes, and item hash. Blind scoring reruns triage, checks all changed answers are represented and match the key, and asserts 9,216 real plus 512 random rows for every layer before rates are computed.
+7. Screen manifests include generation-path hashes, per-layer configs, screen-output hashes, and item hash. Blind scoring re-runs triage, checks changed and sample items against their source answers, asserts the full 9,216/512 layer denominators, and records its own scorer manifest.
 8. The prompt contract is asserted at run start, the false-kept identity regex was narrowed, `neuron_report.py` is on the copy list and hashed, effective generation settings include the model defaults and overrides, and 248044 is in the eos stop set. Blind and verification preparation/scoring refuse existing outputs unless explicitly forced; preparation writes the private key before reader items.
 
 ## Mutation table
@@ -26,10 +26,10 @@ Every break was applied to a fresh throwaway copy under `/tmp/part86-mutation-ve
 | M7: completed verification neurons regenerate | `TestResumeAndScreen.test_verify_skips_completed_neuron_file_with_same_provenance` | `AssertionError: Expected 'generate_batch' to not have been called. Called 20 times.` |
 | M8: denominator assertion is removed | `TestVerdictRules.test_scoring_refuses_limited_denominators` | `AssertionError: ValueError not raised` |
 
-## Open questions
+## Fold-1 questions resolved in fold 2
 
-- The batch-16/batch-1 runtime comparison records exact text matches and both answers but does not stop on a mismatch. This follows the registered design's note that bf16 batching can change greedy text slightly; confirm whether the observed mismatch rate should become a future gate.
-- The explicit Amendment 1 wording says fewer than nine 86.4 read layers is `NOT READ`; that status takes priority even if one of the fewer read layers would otherwise fail.
+- The zero-push batch-16 row must match a second unsteered row of that same batch shape. The separate batch-16-versus-alone result is recorded as a bf16 batch-effect measurement; pushed-row comparisons remain diagnostic.
+- 86.4 checks for a failing read layer first. Any read-layer failure makes the verdict `FAILS`, even when fewer than nine layers are readable; `NOT READ` applies only when no read layer fails and fewer than nine are read.
 
 ## What could not be verified here
 

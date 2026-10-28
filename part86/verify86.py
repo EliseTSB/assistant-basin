@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
+import random
 import secrets
 import sys
 import time
@@ -17,6 +19,7 @@ if str(ROOT) not in sys.path:
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import common86 as c
+import blind86
 import triage86
 
 SAMPLES = 8
@@ -25,6 +28,13 @@ MAX_NEW_TOKENS = 64
 TEMPERATURE = 0.7
 TOP_P = 0.95
 ANSWERS_PER_NEURON = 24 * (DIRECTIONS + 1)
+
+
+def _relative_close(left: float, right: float, tolerance: float = 1e-6) -> bool:
+    if not math.isfinite(left) or not math.isfinite(right):
+        return False
+    scale = max(abs(left), abs(right))
+    return left == right if scale == 0 else abs(left - right) <= tolerance * scale
 
 
 def _key_is_inside_items_folder(items_path: Path, key_path: Path) -> bool:
@@ -66,7 +76,7 @@ def load_picked(path):
     return rows
 
 
-def validate_picked_against_screen(rows, screen_dir):
+def validate_picked_against_screen(rows, screen_dir, blind_key, blind_labels):
     changed_real = set()
     for row in triage86.read_screen(screen_dir):
         if row["kind"] == "neuron" and triage86.triage_answer(row.get("answer", "")) == "changed":
@@ -75,6 +85,22 @@ def validate_picked_against_screen(rows, screen_dir):
         key = (picked["layer"], picked["neuron"])
         if key not in changed_real:
             raise ValueError(f"picked L{key[0]} N{key[1]} is absent or its screen answer was not triaged changed")
+    key_rows = blind_key.get("rows")
+    if not isinstance(key_rows, dict):
+        raise ValueError("blind key has no screen-label mapping")
+    label_rows = blind86._validate_labels(blind_labels, key_rows)
+    by_neuron = {}
+    for item_id, info in key_rows.items():
+        if info.get("source") == "real" and info.get("triage_category", "changed") == "changed":
+            neuron_key = (int(info["layer"]), int(info["item_index"]))
+            by_neuron[neuron_key] = label_rows[item_id]
+    for picked in rows:
+        key = (picked["layer"], picked["neuron"])
+        label = by_neuron.get(key)
+        if label is None:
+            raise ValueError(f"picked L{key[0]} N{key[1]} has no blind label")
+        if label["coherent"] is not True or label["kind"] in ("still Qwen or an assistant", "unclear"):
+            raise ValueError(f"picked L{key[0]} N{key[1]} blind label is not a coherent persona")
 
 
 def _one_push(width, device, unit=None, value=None, vector=None):
@@ -99,10 +125,11 @@ def _screen_metadata(screen_dir, layer_no):
 
 def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta, tokenizer, model):
     screen_config = screen_meta["config"]
-    expected_code = c.code_sha256()
+    expected_generation_code = c.generation_code_sha256()
+    expected_code = c.verification_code_sha256()
     expected_versions = c.dependency_versions()
-    if screen_config.get("code_sha256") != expected_code:
-        raise ValueError("verification code hashes differ from the screen provenance")
+    if screen_config.get("code_sha256") != expected_generation_code:
+        raise ValueError("screen generation-path hashes differ from the current generation code")
     if screen_config.get("versions") != expected_versions:
         raise ValueError("verification torch/transformers versions differ from the screen provenance")
     if screen_config.get("actual_dtype") != actual_dtype or screen_config.get("dose") != c.DOSE:
@@ -114,9 +141,10 @@ def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta
     if screen_config.get("calibration_sha256") != calibration_hash:
         raise ValueError("verification calibration text differs from the screen provenance")
     screen_median = float(screen_meta.get("median", float("nan")))
-    if float(screen_config.get("median", float("nan"))) != screen_median:
+    config_median = float(screen_config.get("median", float("nan")))
+    if not _relative_close(config_median, screen_median):
         raise ValueError("screen median metadata is internally inconsistent")
-    if float(median) != screen_median:
+    if not _relative_close(float(median), screen_median):
         raise ValueError(
             f"L{selected['layer']} residual median {median:.9g} differs from screen median {screen_median:.9g}"
         )
@@ -132,6 +160,7 @@ def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta
         "actual_dtype": actual_dtype,
         "versions": expected_versions,
         "code_sha256": expected_code,
+        "generation_code_sha256": expected_generation_code,
         "questions": list(c.VERIFY_QUESTIONS),
         "samples": SAMPLES,
         "directions": DIRECTIONS,
@@ -203,7 +232,9 @@ def verdict_865(survivors: int) -> dict:
 def run(args):
     import torch
     picked = load_picked(args.picked)
-    validate_picked_against_screen(picked, args.screen_dir)
+    blind_key = json.loads(Path(args.blind_key).read_text(encoding="utf-8"))
+    blind_labels = [json.loads(line) for line in Path(args.blind_labels).read_text(encoding="utf-8").splitlines() if line.strip()]
+    validate_picked_against_screen(picked, args.screen_dir, blind_key, blind_labels)
     calibration = Path(args.calib).read_text(encoding="utf-8")
     calibration_hash = c.sha256_text(calibration)
     tokenizer, model = c.load_model(args.device)
@@ -323,12 +354,29 @@ def _read_verification_files(input_path):
     raise ValueError("verification input must be the per-neuron output directory")
 
 
-def prepare(input_path, items_path, key_path, force=False):
+def _write_reader_chunks(path: Path, items: list[dict], chunk_size: int = 500) -> None:
+    if not 1 <= chunk_size <= 500:
+        raise ValueError("reader chunks must contain between 1 and 500 items")
+    path.mkdir(parents=True, exist_ok=True)
+    for index, start in enumerate(range(0, len(items), chunk_size), 1):
+        encoded = "".join(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n"
+                          for row in items[start:start + chunk_size])
+        (path / f"chunk-{index:04d}.jsonl").write_text(encoded, encoding="utf-8")
+
+
+def prepare(input_path, items_path, key_path, force=False, chunk_size=500):
     items_path, key_path = Path(items_path), Path(key_path)
     if _key_is_inside_items_folder(items_path, key_path):
         raise ValueError("verification key must live outside the folder containing reader items")
-    if not force and (items_path.exists() or key_path.exists()):
+    primary_chunks = items_path.parent / f"{items_path.stem}-reader1-chunks"
+    second_chunks = items_path.parent / f"{items_path.stem}-reader2-chunks"
+    if not force and (items_path.exists() or key_path.exists() or primary_chunks.exists() or second_chunks.exists()):
         raise FileExistsError("items or key already exists; pass --force to overwrite")
+    if force:
+        import shutil
+        for path in (primary_chunks, second_chunks):
+            if path.exists():
+                shutil.rmtree(path)
     records = _read_verification_files(input_path)
     secrets.SystemRandom().shuffle(records)
     ids = set()
@@ -344,16 +392,49 @@ def prepare(input_path, items_path, key_path, force=False):
             "direction": row["direction"], "question_index": row["question_index"],
             "sample": row["sample"], "seed": row["seed"], "persona": row["persona"],
         }
+    stable_ids = sorted(mapping, key=lambda item_id: (
+        int(mapping[item_id]["layer"]), int(mapping[item_id]["neuron"]),
+        mapping[item_id]["condition"], -1 if mapping[item_id]["direction"] is None else int(mapping[item_id]["direction"]),
+        int(mapping[item_id]["question_index"]), int(mapping[item_id]["sample"]),
+    ))
+    second_count = max(1, int(round(len(stable_ids) * 0.10))) if stable_ids else 0
+    second_ids = set(random.Random(c.SECOND_READER_SEED).sample(stable_ids, second_count))
     items_path.parent.mkdir(parents=True, exist_ok=True)
     key_path.parent.mkdir(parents=True, exist_ok=True)
     data = "".join(json.dumps(x, ensure_ascii=False, separators=(",", ":")) + "\n" for x in items).encode("utf-8")
-    key = {"items_sha256": hashlib.sha256(data).hexdigest(), "rows": mapping}
+    key = {
+        "items_sha256": hashlib.sha256(data).hexdigest(),
+        "rows": mapping,
+        "second_reader_ids": sorted(second_ids),
+        "manifest": {
+            "code_sha256": c.verification_code_sha256(),
+            "items_sha256": hashlib.sha256(data).hexdigest(),
+            "rows": len(mapping),
+        },
+    }
+    key["manifest"]["manifest_sha256"] = c.canonical_sha256(key["manifest"])
     key_path.write_text(json.dumps(key, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     items_path.write_bytes(data)
+    public_by_id = {row["id"]: row for row in items}
+    _write_reader_chunks(primary_chunks, items, chunk_size)
+    _write_reader_chunks(second_chunks, [public_by_id[item_id] for item_id in sorted(second_ids)], chunk_size)
     return len(items)
 
 
-def score(labels, key, items_path):
+def _binary_kappa(first: dict, second: dict, item_ids) -> float:
+    ids = list(item_ids)
+    if not ids:
+        raise ValueError("kappa needs at least one double-read item")
+    left = [bool(first[item_id]) for item_id in ids]
+    right = [bool(second[item_id]) for item_id in ids]
+    observed = sum(a == b for a, b in zip(left, right)) / len(ids)
+    p_left = sum(left) / len(ids)
+    p_right = sum(right) / len(ids)
+    expected = p_left * p_right + (1 - p_left) * (1 - p_right)
+    return (1.0 if observed == 1 else 0.0) if expected == 1 else (observed - expected) / (1 - expected)
+
+
+def score(labels, key, items_path, labels2=None):
     digest = hashlib.sha256(Path(items_path).read_bytes()).hexdigest()
     if digest != key.get("items_sha256"):
         raise ValueError("items file SHA-256 does not match the key")
@@ -410,12 +491,49 @@ def score(labels, key, items_path):
     if len(per_neuron) != 20:
         raise ValueError(f"expected 20 neurons in verification key, got {len(per_neuron)}")
     survivors = sum(row["survives"] for row in per_neuron)
-    return {
+    result = {
         "survivors": survivors,
         "tested_neurons": len(per_neuron),
-        "verdict_86.5": verdict_865(survivors),
         "per_neuron": per_neuron,
     }
+    verdict = verdict_865(survivors)
+    if labels2 is None:
+        result["reader_agreement"] = {"method": "Cohen's kappa", "items": 0, "kappa": None,
+                                      "threshold": 0.6, "status": "NOT READ: second-reader labels are required"}
+        verdict = {"status": "NOT READ", "detail": "second-reader agreement is required"}
+    else:
+        second_seen = {}
+        for row in labels2:
+            if not isinstance(row, dict) or set(row) != {"id", "claims_persona"}:
+                raise ValueError("each second-reader label must have exactly id and claims_persona")
+            item_id = row["id"]
+            if item_id not in mapping or item_id in second_seen or type(row["claims_persona"]) is not bool:
+                raise ValueError(f"invalid second-reader label for {item_id!r}")
+            second_seen[item_id] = row["claims_persona"]
+        second_ids = set(key.get("second_reader_ids", []))
+        primary_ids = set(seen)
+        if set(second_seen) not in (second_ids, primary_ids):
+            raise ValueError("second-reader labels must cover the seed-8687 sample or the full item set")
+        scope = "full second reading" if set(second_seen) == primary_ids else "seed-8687 10% sample"
+        agreement_kappa = _binary_kappa(seen, second_seen, second_seen)
+        result["reader_agreement"] = {
+            "method": "Cohen's kappa", "items": len(second_seen), "scope": scope,
+            "kappa": agreement_kappa, "threshold": 0.6,
+        }
+        if not c.kappa_reads(agreement_kappa):
+            verdict = {
+                "status": "NOT READ", "detail": f"Cohen's kappa {agreement_kappa:.4f} is below 0.6"
+            }
+    result["manifest"] = {
+        "code_sha256": c.verification_code_sha256(),
+        "items_sha256": digest,
+        "key_sha256": c.canonical_sha256(key),
+        "labels_sha256": c.canonical_sha256(labels),
+        "labels2_sha256": c.canonical_sha256(labels2) if labels2 is not None else None,
+    }
+    result["manifest"]["manifest_sha256"] = c.canonical_sha256(result["manifest"])
+    result["verdict_86.5"] = verdict
+    return result
 
 
 def main(argv=None):
@@ -424,6 +542,8 @@ def main(argv=None):
     run_p = sp.add_parser("run", help="generate resumable per-neuron verification files")
     run_p.add_argument("--picked", required=True)
     run_p.add_argument("--screen-dir", required=True)
+    run_p.add_argument("--blind-key", required=True, help="private key for the primary screen labels")
+    run_p.add_argument("--blind-labels", required=True, help="primary screen labels used to validate each pick")
     run_p.add_argument("--calib", required=True)
     run_p.add_argument("--out", required=True, help="directory for one resumable JSON file per neuron")
     run_p.add_argument("--device", choices=("xpu", "cpu", "cuda"), default="xpu")
@@ -432,27 +552,36 @@ def main(argv=None):
     prep.add_argument("--input", required=True, help="directory written by run")
     prep.add_argument("--items", required=True)
     prep.add_argument("--key", required=True)
+    prep.add_argument("--chunk-size", type=int, default=500)
     prep.add_argument("--force", action="store_true")
     score_p = sp.add_parser("score", help="apply the registered survival rule")
     score_p.add_argument("--items", required=True)
     score_p.add_argument("--key", required=True)
     score_p.add_argument("--labels", required=True)
+    score_p.add_argument("--labels2", help="second-reader JSONL for the seed-8687 overlap sample or full reread")
     score_p.add_argument("--out", required=True)
     score_p.add_argument("--force", action="store_true")
     args = ap.parse_args(argv)
     if args.command == "run":
         run(args)
     elif args.command == "prepare":
-        count = prepare(args.input, args.items, args.key, args.force)
-        print(f"{count} verification answers blinded")
+        count = prepare(args.input, args.items, args.key, args.force, args.chunk_size)
+        print(f"{count} verification answers blinded; reader chunks are at most {args.chunk_size}")
     else:
         if Path(args.out).exists() and not args.force:
             raise FileExistsError(f"{args.out} exists; pass --force to overwrite")
         key = json.loads(Path(args.key).read_text(encoding="utf-8"))
         labels = [json.loads(line) for line in Path(args.labels).read_text(encoding="utf-8").splitlines() if line.strip()]
-        result = score(labels, key, args.items)
+        labels2 = ([json.loads(line) for line in Path(args.labels2).read_text(encoding="utf-8").splitlines() if line.strip()]
+                   if args.labels2 else None)
+        result = score(labels, key, args.items, labels2)
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        agreement = result["reader_agreement"]
+        if agreement["kappa"] is None:
+            print("reader agreement NOT READ: second-reader labels are required", flush=True)
+        else:
+            print(f"reader agreement Cohen's kappa={agreement['kappa']:.4f} on {agreement['items']} items", flush=True)
         print(f"86.5 {result['verdict_86.5']['status']}: {result['verdict_86.5']['detail']}")
 
 

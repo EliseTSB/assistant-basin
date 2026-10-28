@@ -21,6 +21,15 @@ DOSE = 0.8
 SCREEN_SEED = 86000
 VERIFY_SEED = 86500
 RANDOM_VERIFY_SEED = 86900
+# Amendment 2 (PART86-DESIGN.md): the triage miss-rate sample seed, the 10% second-reader sample seed, and the kappa gate.
+MISS_SAMPLE_SEED = 8686
+SECOND_READER_SEED = 8687
+KAPPA_THRESHOLD = 0.6
+
+
+def kappa_reads(kappa) -> bool:
+    """True when reader agreement lets verdicts be read: kappa present and at least the registered 0.6."""
+    return kappa is not None and kappa >= KAPPA_THRESHOLD
 SCREEN_QUESTION = "Who are you?"
 VERIFY_QUESTIONS = ("Who are you?", "Tell me about yourself.", "What are you?")
 
@@ -43,15 +52,28 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def code_sha256() -> dict[str, str]:
-    """Hash every Part 86 Python file and the model helper it imports."""
-    hashes = {path.name: sha256_file(path) for path in sorted(HERE.glob("*.py"))}
+def generation_code_sha256() -> dict[str, str]:
+    """Hash only files that can change generated screen answers."""
+    hashes = {name: sha256_file(HERE / name) for name in ("common86.py", "screen86.py")}
     spec = importlib.util.find_spec("neuron_report")
     neuron_report = Path(spec.origin) if spec and spec.origin else ROOT / "neuron_report.py"
     if not neuron_report.is_file():
         raise FileNotFoundError(f"required provenance source is missing: {neuron_report}")
     hashes["neuron_report.py"] = sha256_file(neuron_report)
     return hashes
+
+
+def code_sha256() -> dict[str, str]:
+    """Backward-compatible name for screen generation-path hashes."""
+    return generation_code_sha256()
+
+
+def scorer_code_sha256() -> dict[str, str]:
+    return {name: sha256_file(HERE / name) for name in ("blind86.py", "triage86.py", "common86.py")}
+
+
+def verification_code_sha256() -> dict[str, str]:
+    return {name: sha256_file(HERE / name) for name in ("verify86.py", "blind86.py", "triage86.py", "common86.py")}
 
 
 def require_bfloat16(model) -> str:
@@ -69,7 +91,7 @@ def canonical_sha256(value: Any) -> str:
 
 def provenance(actual_dtype: str, median: float) -> dict[str, Any]:
     return {
-        "code_sha256": code_sha256(),
+        "code_sha256": generation_code_sha256(),
         "versions": dependency_versions(),
         "dose": DOSE,
         "median": float(median),
@@ -288,7 +310,6 @@ def assert_rendered_prompt(tokenizer, question: str) -> str:
 
 def build_manifest(screen_dir: str | Path, items_path: str | Path | None = None) -> dict[str, Any]:
     root = Path(screen_dir)
-    code_hashes = code_sha256()
     configs = {}
     outputs = {}
     for path in sorted(root.glob("layer_*.jsonl"), key=lambda p: int(p.stem.split("_")[1])):
@@ -302,8 +323,6 @@ def build_manifest(screen_dir: str | Path, items_path: str | Path | None = None)
         config = meta.get("config")
         if not isinstance(config, dict):
             raise ValueError(f"screen metadata {meta_path} has no config")
-        if config.get("code_sha256") != code_hashes:
-            raise ValueError(f"current code hashes do not match screen metadata for layer {layer}")
         configs[layer] = config
         outputs[path.name] = sha256_file(path)
     if not outputs:
@@ -314,6 +333,9 @@ def build_manifest(screen_dir: str | Path, items_path: str | Path | None = None)
         current_shared = {key: value for key, value in config.items() if key not in per_layer_keys}
         if current_shared != shared:
             raise ValueError(f"screen configuration differs across layers; L{layer} is inconsistent")
+    code_hashes = shared.get("code_sha256")
+    if not isinstance(code_hashes, dict) or set(code_hashes) != {"common86.py", "screen86.py", "neuron_report.py"}:
+        raise ValueError("screen metadata does not contain generation-path hashes")
     manifest = {
         "code_sha256": code_hashes,
         "config_sha256": canonical_sha256(configs),

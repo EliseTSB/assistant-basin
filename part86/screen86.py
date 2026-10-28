@@ -88,7 +88,7 @@ def _layer_config(layer_no: int, args, calibration_hash: str, actual_dtype: str,
         "dtype_requested": "bfloat16",
         "actual_dtype": actual_dtype,
         "versions": c.dependency_versions(),
-        "code_sha256": c.code_sha256(),
+        "code_sha256": c.generation_code_sha256(),
         "dose": c.DOSE,
         "median": float(median),
         "mode": "generated_tokens",
@@ -122,32 +122,55 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
     import triage86
     canary_path = Path(args.out) / "runtime-canaries.json"
     batch_pushes = torch.zeros((16, width), dtype=torch.float32, device=first_two_pushes.device)
-    batch_pushes[:2] = first_two_pushes[:2]
+    batch_pushes[2:4] = first_two_pushes[:2]
     batch, counts = c.generate_batch(
         model, tokenizer, layer, c.SCREEN_QUESTION, batch_pushes, args.device, MAX_NEW_TOKENS,
     )
-    singles = []
+    singleton_zero, _ = c.generate_batch(
+        model, tokenizer, layer, c.SCREEN_QUESTION, batch_pushes[0:1], args.device, MAX_NEW_TOKENS,
+    )
+    pushed_singles = []
     for row in range(2):
         result, _ = c.generate_batch(
             model, tokenizer, layer, c.SCREEN_QUESTION, first_two_pushes[row:row + 1],
             args.device, MAX_NEW_TOKENS,
         )
-        singles.append(result[0]["answer"])
-    same = [batch[i]["answer"] == singles[i] for i in range(2)]
-    zero_answer = batch[2]["answer"]
+        pushed_singles.append(result[0])
+    zero_answer = batch[0]["answer"]
     zero_triage = triage86.triage_answer(zero_answer)
     if zero_triage != "kept" or "qwen" not in zero_answer.casefold():
         raise RuntimeError(
             f"L{layer_no} zero-push canary must triage kept and name Qwen; got {zero_triage}: {zero_answer!r}"
         )
+    same_batch_baseline = batch[1]
+    if batch[0]["token_ids"] != same_batch_baseline["token_ids"]:
+        raise RuntimeError(
+            f"L{layer_no} zero-push canary differs from the unsteered row with the same batch shape: "
+            f"{zero_answer!r} != {same_batch_baseline['answer']!r}"
+        )
+    same = [batch[index + 2]["answer"] == pushed_singles[index]["answer"] for index in range(2)]
     result = {
         "layer": layer_no,
         "config_sha256": c.canonical_sha256(config),
-        "zero_push": {"answer": zero_answer, "triage": zero_triage, "names_qwen": True},
+        "zero_push": {
+            "answer": zero_answer, "token_ids": batch[0]["token_ids"],
+            "triage": zero_triage, "names_qwen": True,
+            "matches_unsteered_same_batch_shape": True,
+            "same_batch_baseline_answer": same_batch_baseline["answer"],
+            "same_batch_baseline_token_ids": same_batch_baseline["token_ids"],
+        },
+        "bf16_batch_effect": {
+            "prompt": c.SCREEN_QUESTION,
+            "batch16_answer": same_batch_baseline["answer"],
+            "batch16_token_ids": same_batch_baseline["token_ids"],
+            "batch1_answer": singleton_zero[0]["answer"],
+            "batch1_token_ids": singleton_zero[0]["token_ids"],
+            "exact_token_match": same_batch_baseline["token_ids"] == singleton_zero[0]["token_ids"],
+        },
         "batch16_vs_batch1": {
             "neuron_ids": [0, 1], "exact_answer_match": same,
-            "batch16_answers": [batch[0]["answer"], batch[1]["answer"]],
-            "batch1_answers": singles,
+            "batch16_answers": [batch[2]["answer"], batch[3]["answer"]],
+            "batch1_answers": [row["answer"] for row in pushed_singles],
         },
         "batch16_hook_counts": counts,
     }
@@ -205,9 +228,7 @@ def run(args) -> None:
     reset_layers = set(getattr(args, "reset_layer", []) or [])
     if not reset_layers.issubset(set(args.layers)):
         raise ValueError("--reset-layer values must also appear in --layers")
-    for layer_no in sorted(reset_layers):
-        _clear_layer(out_dir, batch_root, int(layer_no))
-
+    prepared = {}
     for layer_no in args.layers:
         if not 0 <= int(layer_no) < len(layers):
             raise ValueError(f"layer {layer_no} outside model range 0..{len(layers)-1}")
@@ -216,10 +237,6 @@ def run(args) -> None:
         width = int(down.in_features)
         if c.MODEL_ID == "Qwen/Qwen3.5-4B" and width != N_NEURONS:
             raise ValueError(f"L{layer_no} down_proj width {width}, expected {N_NEURONS}")
-        n_neurons = min(N_NEURONS, args.limit) if args.limit is not None else N_NEURONS
-        n_directions = min(N_DIRECTIONS, args.limit) if args.limit is not None else N_DIRECTIONS
-        final_path = out_dir / f"layer_{layer_no}.jsonl"
-        meta_path = out_dir / f"layer_{layer_no}.meta.json"
         median = c.residual_median(model, tokenizer, layer, calibration_text, args.device)
         if layer_no == 22 and c.MODEL_ID == "Qwen/Qwen3.5-4B":
             expected_median = 24.8
@@ -228,16 +245,37 @@ def run(args) -> None:
         config = _layer_config(
             layer_no, args, calibration_hash, actual_dtype, median, generation_config,
         )
+        meta_path = out_dir / f"layer_{layer_no}.meta.json"
+        if meta_path.exists():
+            old_state = json.loads(meta_path.read_text(encoding="utf-8"))
+            old_config = old_state.get("config")
+            if not isinstance(old_config, dict):
+                raise ValueError(f"L{layer_no} resume metadata has no configuration")
+            old_comparable = dict(old_config)
+            new_comparable = dict(config)
+            old_comparable.pop("median", None)
+            new_comparable.pop("median", None)
+            if old_comparable != new_comparable:
+                action = "reset" if layer_no in reset_layers else "resume"
+                raise ValueError(f"L{layer_no} {action} configuration differs from {meta_path}")
+            if (old_state.get("median") != median or old_config.get("median") != median):
+                raise ValueError(f"L{layer_no} residual median differs from {meta_path}")
+        prepared[layer_no] = (layer, down, width, median, config)
+
+    # Validate the complete requested configuration before any reset can remove data.
+    for layer_no in sorted(reset_layers):
+        _clear_layer(out_dir, batch_root, int(layer_no))
+
+    for layer_no in args.layers:
+        layer, down, width, median, config = prepared[layer_no]
+        n_neurons = min(N_NEURONS, args.limit) if args.limit is not None else N_NEURONS
+        n_directions = min(N_DIRECTIONS, args.limit) if args.limit is not None else N_DIRECTIONS
+        final_path = out_dir / f"layer_{layer_no}.jsonl"
+        meta_path = out_dir / f"layer_{layer_no}.meta.json"
 
         old_state = None
         if meta_path.exists():
             old_state = json.loads(meta_path.read_text(encoding="utf-8"))
-            if old_state.get("config") != config:
-                raise ValueError(f"L{layer_no} resume configuration differs from {meta_path}")
-            if (old_state.get("median") != median or old_state.get("actual_dtype") != actual_dtype
-                    or old_state.get("versions") != config["versions"]
-                    or old_state.get("code_sha256") != config["code_sha256"]):
-                raise ValueError(f"L{layer_no} resume provenance differs from {meta_path}")
             if old_state.get("status") == "complete" and final_path.exists():
                 expected_answers = n_neurons + n_directions
                 if int(old_state.get("answers", -1)) != expected_answers:
@@ -280,8 +318,6 @@ def run(args) -> None:
         }
 
         if old_state is not None:
-            if old_state.get("median") != median:
-                raise ValueError(f"L{layer_no} residual median changed while resuming")
             state.update(old_state)
         elif final_path.exists():
             raise ValueError(f"{final_path} exists without matching resume metadata")
