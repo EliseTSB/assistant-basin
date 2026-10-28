@@ -79,3 +79,21 @@ here before the screen. The original rows stay in PREDICTIONS.md; the amended re
    changed answers. 86.4 HOLDS when the first count exceeds the second in every read layer and at least 9 of the 17
    layers are read; it FAILS when any read layer has coherent personas at least as often; with fewer than 9 read
    layers it is NOT READ. Triage-broken random answers are reported per layer beside it, not counted in it.
+
+## Amendment 2 (2026-10-27 23:4x CT, after the round-2 cold review, before any run or data)
+
+The round-2 review (`part86/REVIEW-r2.md`) raised three design questions. Decided here.
+
+1. **What the screen can see.** Only answers triage marks **changed** go to the reader. Answers triaged kept or broken
+   are not read, so a persona answer the triage rule misses (one that also says "language model", or repeats a phrase)
+   is not counted, and every coherent-persona rate is a lower bound. To size that loss: a random sample of 200 kept and
+   200 broken answers from real neurons, and the same from random directions (seed 8686, drawn across all 17 layers
+   after the screen), is labelled blind with the rest. The share of coherent personas in each sample is reported beside
+   the rates as the triage miss rate. It changes no verdict.
+2. **The reader pass.** Items go to the reader in fixed chunks of at most 500, each with its ids. A second blind reader
+   labels a random 10% of all items (seed 8687). Cohen's kappa on "coherent persona or not" is reported before any
+   verdict. If kappa is below 0.6, verdicts 86.2 to 86.6 are NOT READ until a second full reading is done.
+3. **86.1 and 86.2's floor.** Gate 1 and 86.1 are read by hand from L22 N2742's raw answer; the automatic off-world
+   match is a convenience and is not authoritative (it matches denials such as "I am not from space"). The floor of 10
+   real coherent personas in 86.2a never binds in practice: with 0 random, Fisher p < 0.05 needs about 56 real; with 1
+   random, about 87. The floor stays as written.
