@@ -115,6 +115,21 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _template_bytes(path: Path) -> bytes:
+    """Return the frame's UTF-8 bytes with LF line endings; reject embedded carriage returns."""
+    text = path.read_bytes().decode("utf-8")
+    text = text.replace("\r\n", "\n")
+    if "\r" in text:
+        raise ValueError(f"plain frame template contains a carriage return: {path}")
+    if text.count("{q}") != 1:
+        raise ValueError(f"plain frame template must contain exactly one {{q}}: {path}")
+    return text.encode("utf-8")
+
+
+def _template_sha256(path: Path) -> str:
+    return hashlib.sha256(_template_bytes(path)).hexdigest()
+
+
 def _remote_tip(branch: str) -> str | None:
     result = _git("ls-remote", "--heads", "origin", f"refs/heads/{branch}", check=False)
     if result.returncode:
@@ -263,7 +278,8 @@ def refs_manifest(results_root: Path, out: Path, references_dir: Path = REFERENC
         custom = root / "pilot-a2" / "pilot-frame-v2.txt"
         if not custom.is_file():
             raise FileNotFoundError(f"pilot used a custom frame but its attempt-2 template is missing: {custom}")
-        if _sha256(custom) != expected_template:
+        custom_bytes = _template_bytes(custom)
+        if hashlib.sha256(custom_bytes).hexdigest() != expected_template:
             raise ValueError(f"attempt-2 template SHA-256 mismatch: {custom}")
         sources["pilot-frame-v2.txt"] = custom
     files = []
@@ -273,7 +289,8 @@ def refs_manifest(results_root: Path, out: Path, references_dir: Path = REFERENC
         relative = Path("part85/references") / name
         destination = references_dir / name
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(source.read_bytes())
+        data = _template_bytes(source) if name == "pilot-frame-v2.txt" else source.read_bytes()
+        destination.write_bytes(data)
         files.append({"path": relative.as_posix(), "sha256": _sha256(destination)})
     payload = {"schema_version": 2, "files": files,
                "pilot_gate_action": gate.get("action"),
@@ -354,6 +371,14 @@ def preflight(checkpoint: str, phase: str, results_root: Path, references: Path,
             problems.append(f"missing reference {path}")
         elif not isinstance(digest, str) or _sha256(path) != digest:
             problems.append(f"SHA-256 mismatch {path}")
+    if gate_sha != default_sha and custom_rel in listed:
+        custom = Path.cwd() / custom_rel
+        if custom.is_file():
+            try:
+                if _template_sha256(custom) != gate_sha:
+                    problems.append("attempt-2 template bytes differ from the pinned pilot frame SHA-256")
+            except (UnicodeError, ValueError) as exc:
+                problems.append(str(exc))
     tokens_path = Path.cwd() / "part85/references/neutral-token-ids.json"
     if tokens_path.is_file():
         token = json.loads(tokens_path.read_text(encoding="utf-8"))

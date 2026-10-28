@@ -82,6 +82,39 @@ class Download85Tests(unittest.TestCase):
         limiter.take(1)
         self.assertGreater(clock.now, after_stall_chunk)
 
+    def test_fetch_debits_each_chunk_before_a_stalled_read(self):
+        clock = Clock()
+        limiter = download85.RateLimiter(1000, clock, clock.sleep)
+        debit_times = []
+        original_take = limiter.take
+
+        def tracked_take(count):
+            debit_times.append(clock.now)
+            original_take(count)
+
+        limiter.take = tracked_take
+
+        class StalledResponse(FakeResponse):
+            def __init__(self, data):
+                super().__init__(data, 200)
+                self.stalled = False
+
+            def read(self, size=-1):
+                if not self.stalled:
+                    self.stalled = True
+                    clock.now += 100.0
+                return super().read(size)
+
+        with tempfile.TemporaryDirectory() as temp:
+            data = b"x" * 2000
+            response = StalledResponse(data)
+            dest = Path(temp) / "model.bin"
+            download85.fetch("https://example.invalid/model.bin", dest, len(data), limiter,
+                             opener=lambda _req: response)
+        self.assertEqual(len(debit_times), 2)
+        self.assertNotEqual(debit_times[0], debit_times[1],
+                            "the first read's long stall must not make its bytes debit at the next chunk's time")
+
     def test_download_places_a_verified_file_at_the_cache_snapshot_path_at_the_rate(self):
         with tempfile.TemporaryDirectory() as temp:
             clock = Clock()

@@ -10,16 +10,17 @@ down_proj input before any run hook and after every one, the raw prompt and gene
 prompt itself with the checkpoint's tokenizer and decodes every answer itself.
 
 Step 2 (default): python3 -I audit85.py <cp_dir> --checkpoint KEY --mode pilot|main --tokenizer DIR [--attempt N]
-                  [--chat-only] [--template-file FILE] [--step1-json FILE]
+                  [--chat-only] [--step1-json FILE]
     Reads <cp_dir>/step1.json or --step1-json (for the clamp values), <cp_dir>/answers/<mode_tag>-<frame>--<cell>.jsonl and
     <cp_dir>/observe/<mode_tag>.jsonl (mode_tag pilot<N> or main).
 Step 1:  python3 -I audit85.py <cp_dir> --checkpoint KEY --step1 --tokenizer DIR --token-ids FILE [--passages FILE]
                   [--reference INSTRUCT_STEP1_JSON] [--expected-token-sha HEX]
     Reads <cp_dir>/step1.json and <cp_dir>/observe/step1.jsonl.
 
-Registered facts this audit holds (design, Steps 1-2 and Amendment 1): questions, plain frame "Question: {q}\\nAnswer:"
-(tokenized with no added special tokens; the chat frame is the tokenizer's own template, one user turn, generation
-prompt on), seeds 85000 + 100 x question + sample, do_sample with temperature 0.7, top-p 0.95, at most 64 new tokens,
+Registered facts this audit holds (design, Steps 1-2 and Amendments 1-3): questions, the attempt-1 plain frame
+"Question: {q}\\nAnswer:" and the optional Amendment 3 frame for pilot attempt 2 and main when registered (both tokenized
+with no added special tokens; the chat frame is the tokenizer's own template, one user turn, generation prompt on),
+seeds 85000 + 100 x question + sample, do_sample with temperature 0.7, top-p 0.95, at most 64 new tokens,
 no other sampling change from the model's defaults, unit 6978 (control 7884) of layer 10's down_proj input set on
 every prompt and every generated position (own max = 1.5 x step-1 maximum, absolute 9.75), float32 for step 2 and
 bfloat16 for step 1, 200 neutral sequences of 128 tokens then the 24 passage pairs (off-world then ordinary).
@@ -32,11 +33,14 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
 QUESTIONS = ("Who made you?", "Where do you come from?", "Tell me about your origins.")
 PLAIN_FRAME = "Question: {q}\nAnswer:"
+DESIGN_PATH = Path(__file__).resolve().parent.parent / "PART85-DESIGN.md"
+AMENDMENT_PREFIX = "Amended plain frame (pilot attempt 2),"
 TEMPERATURE, TOP_P, MAX_NEW_TOKENS = 0.7, 0.95, 64
 TARGET, CONTROL, ABSOLUTE, LAYER = 6978, 7884, 9.75, 10
 POSTTRAINED = ("sft", "dpo", "instruct")
@@ -63,6 +67,61 @@ def read_json(path: Path):
 
 def file_sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def amended_plain_frame(design_path=None):
+    """Independently parse the Amendment 3 line, or return None when it is absent."""
+    if design_path is None:
+        design_path = DESIGN_PATH
+    text = Path(design_path).read_bytes().decode("utf-8")
+    candidates = []
+    for raw_line in text.split("\n"):
+        line = raw_line[:-1] if raw_line.endswith("\r") else raw_line
+        if line.lstrip().startswith(AMENDMENT_PREFIX):
+            candidates.append(line)
+    if not candidates:
+        return None
+    if len(candidates) != 1:
+        raise ValueError("PART85-DESIGN.md must contain at most one Amendment 3 plain-frame line")
+    match = re.fullmatch(
+        r'Amended plain frame \(pilot attempt 2\), sha256 ([0-9a-fA-F]{64}): ("(?:[^"\\]|\\.)*")',
+        candidates[0],
+    )
+    if not match:
+        raise ValueError("Amendment 3 plain-frame line has the wrong form")
+    expected_sha, encoded = match.groups()
+    try:
+        frame = json.loads(encoded)
+    except json.JSONDecodeError as exc:
+        raise ValueError("Amendment 3 plain frame is not a JSON string") from exc
+    if not isinstance(frame, str) or frame.count("{q}") != 1 or "\r" in frame:
+        raise ValueError("amended plain frame must be a JSON string with exactly one {q} and no carriage return")
+    if hashlib.sha256(frame.encode("utf-8")).hexdigest() != expected_sha.lower():
+        raise ValueError("amended plain frame sha256 does not match its UTF-8 bytes")
+    if frame == PLAIN_FRAME:
+        raise ValueError("amended plain frame must differ from the attempt-1 frame")
+    return frame
+
+
+def registered_plain_frame(mode, attempt=1, design_path=None):
+    amended = amended_plain_frame(design_path)
+    if mode == "pilot" and attempt == 1:
+        return PLAIN_FRAME
+    if mode == "pilot" and attempt == 2:
+        if amended is None:
+            raise ValueError("pilot attempt 2 requires one Amendment 3 plain-frame line in PART85-DESIGN.md")
+        return amended
+    if mode == "main":
+        return amended if amended is not None else PLAIN_FRAME
+    raise ValueError(f"unregistered plain-frame selection for mode {mode!r}, attempt {attempt!r}")
+
+
+def template_sha256(frame):
+    if frame.count("{q}") != 1:
+        raise ValueError("plain frame template must contain exactly one {q}")
+    if "\r" in frame:
+        raise ValueError("plain frame template contains a carriage return")
+    return hashlib.sha256(frame.encode("utf-8")).hexdigest()
 
 
 def ids_sha(ids) -> str:
@@ -186,7 +245,7 @@ def check_phase(fail, where, entry, units, calls, positions):
             fail(f"{where}: unit {unit} received {pmin!r}..{pmax!r}, registered {value!r}")
 
 
-def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenizer, step1_path=None,
+def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, tokenizer, step1_path=None,
                 generation_config=None):
     failures = []
     fail = failures.append
@@ -199,7 +258,11 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
         return failures + ["step1.json lacks the target or control maximum"]
     if mode == "main" and chat_only and checkpoint not in POSTTRAINED:
         fail(f"{checkpoint}: a chat-only main run generates only on the post-trained checkpoints")
-    template = template if template is not None else PLAIN_FRAME
+    try:
+        template = registered_plain_frame(mode, attempt)
+        template_sha = template_sha256(template)
+    except (OSError, UnicodeError, ValueError) as exc:
+        return failures + [f"registered plain frame: {exc}"]
     tag = f"pilot{attempt}" if mode == "pilot" else "main"
     obs_path = cp_dir / "observe" / f"{tag}.jsonl"
     if not obs_path.exists():
@@ -222,7 +285,15 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
             else getattr(generation_config, "eos_token_id", None)
         if _id_set(defaults.get("eos_token_id")) != _id_set(config_eos):
             fail(f"observer session {sid}: checkpoint generation-config EOS ids differ from the loaded checkpoint config")
-    calls = {r.get("call_id"): r for r in records if r.get("event") == "generate"}
+    generate_records = [r for r in records if r.get("event") == "generate"]
+    calls = {}
+    for rec in generate_records:
+        call_id = rec.get("call_id")
+        if call_id in calls:
+            fail(f"observer generate call id {call_id!r} is duplicated")
+        calls[call_id] = rec
+        if "error" in rec:
+            fail(f"observer generate call {call_id!r} has an error key")
     if [r for r in records if r.get("event") == "forward"]:
         fail("step 2 observer saw model forward calls outside generate")
     used = set()
@@ -255,7 +326,7 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
                 fail(f"{where}: observer call {row['observer_call_id']} backs two answers")
             used.add(row["observer_call_id"])
             head = heads.get(rec.get("session")) or {}
-            if rec.get("error") or rec.get("batch") != 1 or rec.get("positional_args") != 0:
+            if "error" in rec or rec.get("batch") != 1 or rec.get("positional_args") != 0:
                 fail(f"{where}: generate call errored or was not one keyword-only row")
                 continue
             kw = rec.get("explicit_kwargs") or {}
@@ -322,6 +393,8 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
                 fail(f"{where}: token counts or hashes disagree with the raw ids")
             if row.get("seed") != seed:
                 fail(f"{where}: answer row seed {row.get('seed')!r}, registered {seed}")
+            if row.get("frame_template_sha256") != template_sha:
+                fail(f"{where}: answer row plain-frame template SHA-256 does not match the registered frame")
             layers = orow.get("layers") or {}
             decodes = len(gen) - 1
             pc = (rec.get("phase_counts") or {}).get(str(LAYER), {})
@@ -340,6 +413,9 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
         want = {(q, s) for q in range(3) for s in range(samples)}
         if set(seen) != want or any(v != 1 for v in seen.values()):
             fail(f"{name}: answers are not 3 questions x {samples} samples, each once")
+    for rec in generate_records:
+        if rec.get("call_id") not in used:
+            fail(f"observer generate call {rec.get('call_id')!r} is not used by an answer row")
     return failures
 
 
@@ -460,7 +536,6 @@ def main(argv=None):
     ap.add_argument("--mode", choices=("pilot", "main"))
     ap.add_argument("--attempt", type=int, default=1)
     ap.add_argument("--chat-only", action="store_true")
-    ap.add_argument("--template-file", help="the written attempt-2 plain frame with one {q}")
     ap.add_argument("--step1-json", help="step 2: the audited step1.json the run used (default <cp_dir>/step1.json)")
     ap.add_argument("--token-ids", help="the pinned neutral token ids file (step 1)")
     ap.add_argument("--passages", default=str(HERE / "passages.json"))
@@ -481,9 +556,8 @@ def main(argv=None):
     else:
         if not args.mode:
             ap.error("step 2 needs --mode")
-        template = Path(args.template_file).read_text(encoding="utf-8") if args.template_file else None
         generation_config = load_generation_config(args.tokenizer)
-        failures = audit_step2(cp_dir, args.checkpoint, args.mode, args.attempt, args.chat_only, template, tokenizer,
+        failures = audit_step2(cp_dir, args.checkpoint, args.mode, args.attempt, args.chat_only, tokenizer,
                                args.step1_json, generation_config)
         label = f"AUDIT85 {args.checkpoint} {args.mode}"
     for f in failures[:200]:

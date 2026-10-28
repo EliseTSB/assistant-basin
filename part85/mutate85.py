@@ -161,6 +161,25 @@ MUTANTS = {
     "R4G_no_hook_sequence_reset": ("part85.py", [("                    hook.begin_sequence()\n", "")]),
     "R4H_step1_calibrates_layer9": ("step1_acts.py", [("    down = layers[10].mlp.down_proj", "    down = layers[9].mlp.down_proj")]),
     "R4_answer_without_observer_call": ("part85.py", [("\"observer_call_id\": obs.last_call_id}", "\"observer_call_id\": None}")]),
+
+    # Fold-7: the design line is the only production authority for frames, and audits consume every generate record.
+    "R6_attempt2_accepts_operator_frame": ("part85.py", [
+        ('    parser.add_argument("--attempt", type=int, default=1, help="pilot attempt number; use 2 for the one registered rerun")\n',
+         '    parser.add_argument("--attempt", type=int, default=1, help="pilot attempt number; use 2 for the one registered rerun")\n'
+         '    parser.add_argument("--plain-template-file")\n'),
+        ("    plain_template = _load_plain_template(args.mode, args.attempt)\n",
+         "    plain_template = (Path(args.plain_template_file).read_text(encoding=\"utf-8\")\n"
+         "                      if getattr(args, \"plain_template_file\", None) else\n"
+         "                      _load_plain_template(args.mode, args.attempt))\n"),
+    ]),
+    "R6_audit_ignores_unused_generate": ("audit85.py", [
+        ('    for rec in generate_records:\n'
+         '        if rec.get("call_id") not in used:\n'
+         '            fail(f"observer generate call {rec.get(\'call_id\')!r} is not used by an answer row")\n',
+         '    for rec in generate_records:\n'
+         '        if False and rec.get("call_id") not in used:\n'
+         '            fail(f"observer generate call {rec.get(\'call_id\')!r} is not used by an answer row")\n'),
+    ]),
 }
 
 
@@ -172,6 +191,8 @@ def build_mutant(name: str, spec, destination: Path) -> Path:
     for sibling in ("observe.py", "neuron_report.py"):
         if (PART85.parent / sibling).exists():
             shutil.copy2(PART85.parent / sibling, destination / sibling)
+    if (PART85.parent / "PART85-DESIGN.md").exists():
+        shutil.copy2(PART85.parent / "PART85-DESIGN.md", destination / "PART85-DESIGN.md")
     filename, edits = spec
     path = mutant_root / filename
     if edits == "MOVE_PUSH_EARLY":

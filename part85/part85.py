@@ -8,6 +8,7 @@ import importlib.metadata
 import json
 import math
 import os
+import re
 import sys
 import tempfile
 import time
@@ -31,6 +32,8 @@ TARGET_UNIT = 6978
 CONTROL_UNIT = 7884
 ABSOLUTE_VALUE = 9.75
 PLAIN_TEMPLATE = "Question: {q}\nAnswer:"
+DESIGN_PATH = Path(__file__).resolve().parent.parent / "PART85-DESIGN.md"
+AMENDMENT_PREFIX = "Amended plain frame (pilot attempt 2),"
 
 
 def seed_for(question_index: int, sample_index: int) -> int:
@@ -162,14 +165,59 @@ class BothPhaseTraceObserver:
         self.handle.remove()
 
 
-def _load_plain_template(path=None):
-    template = Path(path).read_text(encoding="utf-8") if path else PLAIN_TEMPLATE
-    if template.count("{q}") != 1:
-        raise ValueError("plain frame template must contain exactly one {q} placeholder")
+def _amended_plain_template(design_path=None):
+    """Read the one Amendment 3 frame line, without accepting an operator-supplied frame."""
+    if design_path is None:
+        design_path = DESIGN_PATH
+    text = Path(design_path).read_bytes().decode("utf-8")
+    candidates = []
+    for raw_line in text.split("\n"):
+        # A CR that is part of CRLF file line endings is not part of the registered frame.
+        line = raw_line[:-1] if raw_line.endswith("\r") else raw_line
+        if line.lstrip().startswith(AMENDMENT_PREFIX):
+            candidates.append(line)
+    if not candidates:
+        return None
+    if len(candidates) != 1:
+        raise ValueError("PART85-DESIGN.md must contain at most one Amendment 3 plain-frame line")
+    match = re.fullmatch(
+        r'Amended plain frame \(pilot attempt 2\), sha256 ([0-9a-fA-F]{64}): ("(?:[^"\\]|\\.)*")',
+        candidates[0],
+    )
+    if not match:
+        raise ValueError("Amendment 3 plain-frame line has the wrong form")
+    expected_sha, encoded = match.groups()
+    try:
+        template = json.loads(encoded)
+    except json.JSONDecodeError as exc:
+        raise ValueError("Amendment 3 plain frame is not a JSON string") from exc
+    if not isinstance(template, str) or template.count("{q}") != 1 or "\r" in template:
+        raise ValueError("amended plain frame must be a JSON string with exactly one {q} and no carriage return")
+    if hashlib.sha256(template.encode("utf-8")).hexdigest() != expected_sha.lower():
+        raise ValueError("amended plain frame sha256 does not match its UTF-8 bytes")
+    if template == PLAIN_TEMPLATE:
+        raise ValueError("amended plain frame must differ from the attempt-1 frame")
     return template
 
 
+def _load_plain_template(mode="pilot", attempt=1, design_path=None):
+    amended = _amended_plain_template(design_path)
+    if mode == "pilot" and attempt == 1:
+        return PLAIN_TEMPLATE
+    if mode == "pilot" and attempt == 2:
+        if amended is None:
+            raise ValueError("pilot attempt 2 requires one Amendment 3 plain-frame line in PART85-DESIGN.md")
+        return amended
+    if mode == "main":
+        return amended if amended is not None else PLAIN_TEMPLATE
+    raise ValueError(f"unregistered plain-frame selection for mode {mode!r}, attempt {attempt!r}")
+
+
 def _template_sha256(template):
+    if template.count("{q}") != 1:
+        raise ValueError("plain frame template must contain exactly one {q}")
+    if "\r" in template:
+        raise ValueError("plain frame template contains a carriage return")
     return hashlib.sha256(template.encode("utf-8")).hexdigest()
 
 
@@ -324,7 +372,7 @@ def _main_scope(args):
     if not isinstance(gate, dict):
         raise ValueError("pilot score JSON has no pilot_gate decision")
     action = gate.get("action")
-    template_sha = _template_sha256(_load_plain_template(args.plain_template_file))
+    template_sha = _template_sha256(_load_plain_template("main"))
     if gate.get("plain_template_sha256") != template_sha:
         raise ValueError("main plain frame template does not match the pilot template that passed")
     if action == "plain_frame_pass":
@@ -418,11 +466,11 @@ def run(args):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    plain_template = _load_plain_template(args.plain_template_file)
     if args.mode == "pilot" and args.attempt not in (1, 2):
         raise ValueError("pilot attempt must be 1 or the single registered rerun, 2")
     if args.mode == "main" and args.attempt != 1:
         raise ValueError("--attempt is only used by pilot mode")
+    plain_template = _load_plain_template(args.mode, args.attempt)
     specs = _specs_for_run(args)
     if not specs:
         raise ValueError(f"checkpoint {args.checkpoint} is outside the {args.mode} run scope")
@@ -651,7 +699,6 @@ def main(argv=None):
     parser.add_argument("--checkpoint", required=True, choices=tuple(BY_KEY))
     parser.add_argument("--pilot-score", help="score.json produced by score85.py for the pilot")
     parser.add_argument("--attempt", type=int, default=1, help="pilot attempt number; use 2 for the one registered rerun")
-    parser.add_argument("--plain-template-file", help="optional written plain-frame template containing one {q} placeholder")
     parser.add_argument("--step1", help="step1.json path; default results-root/<checkpoint>/step1.json")
     parser.add_argument("--snapshot-dir", help="already-downloaded pinned checkpoint snapshot directory")
     parser.add_argument("--results-root", default="results/part85")

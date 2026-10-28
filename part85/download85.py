@@ -128,12 +128,15 @@ def fetch(url: str, dest: Path, size: int, limiter: RateLimiter, opener=urllib.r
             status = getattr(resp, "status", 200)
             if have and status != 206:
                 raise RuntimeError(f"{url}: server ignored the resume Range (status {status})")
-            while True:
-                chunk = resp.read(min(CHUNK, limiter.rate))
+            while have < size:
+                requested = min(CHUNK, limiter.rate, size - have)
+                # Charge the maximum this read can return before entering a potentially stalled read.
+                limiter.take(requested)
+                chunk = resp.read(requested)
                 if not chunk:
                     break
                 out.write(chunk)
-                limiter.take(len(chunk))
+                have += len(chunk)
             out.flush()
             os.fsync(out.fileno())
     if part.stat().st_size != size:

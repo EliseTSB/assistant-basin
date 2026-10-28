@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 from contextlib import ExitStack
 import contextlib
+import io
 import json
 import math
 import os
@@ -27,6 +28,7 @@ from safetensors.torch import save_file as save_torch_file
 from transformers import Olmo2Config, Olmo2ForCausalLM
 
 import part85
+import audit85
 import score85
 import step0_weights
 import step1_acts
@@ -320,7 +322,7 @@ class Part85Tests(unittest.TestCase):
             score_path = Path(temp) / "pilot.json"
             score_path.write_text(json.dumps({"pilot_gate": {"action": "plain_frame_pass",
                                                                "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
-            args = type("Args", (), {"pilot_score": str(score_path), "plain_template_file": None})()
+            args = type("Args", (), {"pilot_score": str(score_path)})()
             self.assertEqual(part85._main_scope(args), ("all", ("plain", "chat")))
             score_path.write_text(json.dumps({"pilot_gate": {"action": "chat_only_posttrained",
                                                                 "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
@@ -335,6 +337,59 @@ class Part85Tests(unittest.TestCase):
                 part85._main_scope(args)
         tokenizer = TinyTokenizer()
         self.assertEqual(part85._eos_ids(tokenizer, tiny_model()), [2])
+
+    def test_attempt2_and_main_frames_are_read_only_from_the_amendment_line(self):
+        frame = "Revised origin prompt: {q}\nAnswer:"
+        digest = hashlib.sha256(frame.encode("utf-8")).hexdigest()
+        line = f'Amended plain frame (pilot attempt 2), sha256 {digest}: {json.dumps(frame)}'
+        with tempfile.TemporaryDirectory() as temp:
+            design = Path(temp) / "PART85-DESIGN.md"
+            design.write_text("# test design\n" + line + "\n", encoding="utf-8")
+            self.assertEqual(part85._load_plain_template("pilot", 1, design), part85.PLAIN_TEMPLATE)
+            self.assertEqual(part85._load_plain_template("pilot", 2, design), frame)
+            self.assertEqual(part85._load_plain_template("main", 1, design), frame)
+            self.assertEqual(audit85.registered_plain_frame("pilot", 1, design), audit85.PLAIN_FRAME)
+            self.assertEqual(audit85.registered_plain_frame("pilot", 2, design), frame)
+            self.assertEqual(audit85.registered_plain_frame("main", 1, design), frame)
+
+            duplicate = Path(temp) / "duplicate.md"
+            duplicate.write_text(line + "\n" + line + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "at most one"):
+                part85._amended_plain_template(duplicate)
+            malformed = Path(temp) / "malformed.md"
+            malformed.write_text(line.replace(digest, "0" * 64) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "sha256"):
+                part85._amended_plain_template(malformed)
+            malformed.write_text(line.replace(json.dumps(frame), json.dumps("no placeholder")) + "\n",
+                                  encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, r"exactly one \{q\}"):
+                audit85.amended_plain_frame(malformed)
+            cr_frame = "Q: {q}\r\nA:"
+            cr_digest = hashlib.sha256(cr_frame.encode("utf-8")).hexdigest()
+            malformed.write_text(
+                f'Amended plain frame (pilot attempt 2), sha256 {cr_digest}: {json.dumps(cr_frame)}\n',
+                encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "carriage return"):
+                audit85.amended_plain_frame(malformed)
+            absent = Path(temp) / "absent.md"
+            absent.write_text("# no amendment\n", encoding="utf-8")
+            self.assertEqual(part85._load_plain_template("main", design_path=absent), part85.PLAIN_TEMPLATE)
+            with self.assertRaisesRegex(ValueError, "requires one Amendment 3"):
+                part85._load_plain_template("pilot", 2, absent)
+
+    def test_template_hashes_refuse_carriage_returns_and_cli_frame_files(self):
+        for module, fn in ((part85, part85._template_sha256), (audit85, audit85.template_sha256)):
+            with self.subTest(module=module.__name__):
+                with self.assertRaisesRegex(ValueError, "carriage return"):
+                    fn("Q: {q}\r\nA:")
+        with mock.patch.object(part85, "run") as run_call, contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                part85.main(["--mode", "pilot", "--checkpoint", "instruct", "--plain-template-file", "operator.txt"])
+            run_call.assert_not_called()
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                audit85.main(["run", "--checkpoint", "instruct", "--mode", "pilot", "--tokenizer", "tok",
+                              "--template-file", "operator.txt"])
 
     def test_stop_ids_are_generation_eos_plus_tokenizer_eos_even_when_unk_matches(self):
         tokenizer = TinyTokenizer()
@@ -746,7 +801,7 @@ class Part85Tests(unittest.TestCase):
                 mock.patch.object(part85, "BothPhaseClampHook", side_effect=tracked_hook)]
 
     def _run_pilot_main(self, root, key, mode, gate_path=None, chat=False, push_branch=None, observers=None,
-                       attempt=1, plain_template_file=None, tokenizers=None):
+                       attempt=1, design_path=None, tokenizers=None):
         observers = observers if observers is not None else []
         tokenizer = TinyTokenizer()
         if tokenizers is not None:
@@ -785,9 +840,9 @@ class Part85Tests(unittest.TestCase):
             if push_branch == "auto":
                 push_branch = expected_branch
             argv.extend(["--push-branch", push_branch])
-        if plain_template_file:
-            argv.extend(["--plain-template-file", str(plain_template_file)])
         with ExitStack() as stack:
+            if design_path is not None:
+                stack.enter_context(mock.patch.object(part85, "DESIGN_PATH", Path(design_path)))
             stack.enter_context(samples_patch)
             stack.enter_context(mock.patch.object(part85, "MAX_NEW_TOKENS", 2))
             stack.enter_context(mock.patch.object(part85, "code_commit", return_value="fixture-code"))
@@ -853,6 +908,7 @@ class Part85Tests(unittest.TestCase):
         import transformers
 
         case_root = Path(case_root)
+        case_root.mkdir(parents=True, exist_ok=True)
         results_root = case_root / "results"
         (case_root / "snapshot").mkdir(parents=True, exist_ok=True)
         (case_root / "snapshot" / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
@@ -860,41 +916,49 @@ class Part85Tests(unittest.TestCase):
         tokenizer_dir = case_root / "tokenizer"
         tokenizer = char_tokenizer(tokenizer_dir)
         token = CHAR_SPECIALS.index("<eos>") if first_token == "eos" else len(CHAR_SPECIALS) + CHAR_SET.index("E")
+        amended = "Revised origin prompt: {q}\nAnswer:"
+        design_path = case_root / "PART85-DESIGN.md"
+        design_text = "# Test design without an amendment\n"
+        if custom_template:
+            digest = hashlib.sha256(amended.encode("utf-8")).hexdigest()
+            design_text += f'Amended plain frame (pilot attempt 2), sha256 {digest}: {json.dumps(amended)}\n'
+        design_path.write_text(design_text, encoding="utf-8")
         argv = ["--mode", mode, "--checkpoint", key,
                 "--snapshot-dir", str(case_root / "snapshot"),
                 "--results-root", str(results_root), "--device", "cpu"]
-        template_path = None
         if mode == "pilot":
             argv.extend(["--attempt", str(attempt)])
         else:
             gate_path = case_root / "pilot-score.json"
             gate_path.write_text(json.dumps({"pilot_gate": {
                 "action": "plain_frame_pass",
-                "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
+                "plain_template_sha256": hashlib.sha256(
+                    (amended if custom_template else part85.PLAIN_TEMPLATE).encode("utf-8")).hexdigest()}}))
             argv.extend(["--pilot-score", str(gate_path)])
-        if custom_template:
-            template_path = results_root / f"pilot-a{attempt}" / "pilot-frame-v2.txt"
-            template_path.parent.mkdir(parents=True, exist_ok=True)
-            template_path.write_text("Revised origin prompt: {q}\nAnswer:", encoding="utf-8")
-            argv.extend(["--plain-template-file", str(template_path)])
         patches = [mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
                                      side_effect=lambda *_a, **_k: tiny_audit_model(len(tokenizer), token)),
                    mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer),
                    mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake),
                    mock.patch.object(part85, "code_commit", return_value="fixture-code")]
         with contextlib.ExitStack() as stack:
+            stack.enter_context(mock.patch.object(part85, "DESIGN_PATH", design_path))
             for patch in patches + list(patch_run or []):
                 stack.enter_context(patch)
             part85.main(argv)
 
         cp_dir = results_root / (f"pilot-a{attempt}" if mode == "pilot" else "main") / key
+        audit_repo = case_root / "audit-repo"
+        audit_part85 = audit_repo / "part85"
+        audit_part85.mkdir(parents=True)
+        shutil.copy2(Path(audit85.__file__), audit_part85 / "audit85.py")
+        shutil.copy2(Path(part85.__file__).with_name("observe85.py"), audit_part85 / "observe85.py")
+        shutil.copy2(Path(part85.__file__).parent.parent / "observe.py", audit_repo / "observe.py")
+        shutil.copy2(design_path, audit_repo / "PART85-DESIGN.md")
         audit_argv = [sys.executable, "-I", "-B",
-                      str(Path(part85.__file__).with_name("audit85.py")), str(cp_dir),
+                      str(audit_part85 / "audit85.py"), str(cp_dir),
                       "--checkpoint", key, "--mode", mode, "--tokenizer", str(tokenizer_dir)]
         if mode == "pilot":
             audit_argv.extend(["--attempt", str(attempt)])
-        if custom_template:
-            audit_argv.extend(["--template-file", str(template_path)])
         audited = subprocess.run(audit_argv, text=True, stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT, timeout=180)
         if expect_pass:
@@ -920,6 +984,7 @@ class Part85Tests(unittest.TestCase):
                 ("main-pretrain", "pretrain_4T", "main", 1, False),
                 ("main-instruct", "instruct", "main", 1, False),
                 ("pilot-attempt2", "instruct", "pilot", 2, True),
+                ("main-amended", "instruct", "main", 1, True),
             )
             for directory, key, mode, attempt, custom_template in cases:
                 with self.subTest(case=directory):
@@ -940,6 +1005,7 @@ class Part85Tests(unittest.TestCase):
     def test_observer_audit_fails_a_tampered_answer_and_a_missing_call(self):
         with tempfile.TemporaryDirectory() as temp:
             _root, cp_dir, _audit = self._run_and_audit_registered_case(Path(temp) / "case", "instruct", "pilot")
+            audit_script = cp_dir.parents[2] / "audit-repo/part85/audit85.py"
             path = cp_dir / "answers" / "pilot1-plain--own_max.jsonl"
             rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
             original = path.read_text(encoding="utf-8")
@@ -948,13 +1014,39 @@ class Part85Tests(unittest.TestCase):
                 edited = [dict(r) for r in rows]
                 change(edited[0])
                 path.write_text("".join(json.dumps(r) + "\n" for r in edited), encoding="utf-8")
-                audited = subprocess.run([sys.executable, "-I", "-B", str(Path(part85.__file__).with_name("audit85.py")),
+                audited = subprocess.run([sys.executable, "-I", "-B", str(audit_script),
                                           str(cp_dir), "--checkpoint", "instruct", "--mode", "pilot",
                                           "--tokenizer", str(Path(temp) / "case" / "tokenizer")],
                                          text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
                 self.assertEqual(audited.returncode, 1, audited.stdout)
                 self.assertIn(expected, audited.stdout)
                 path.write_text(original, encoding="utf-8")
+
+            observer_path = cp_dir / "observe/pilot1.jsonl"
+            original_observer = observer_path.read_text(encoding="utf-8")
+            records = [json.loads(line) for line in original_observer.splitlines() if line.strip()]
+            generate = next(record for record in records if record.get("event") == "generate")
+            mutations = (
+                ("orphan", lambda data: data.append({**generate, "call_id": "unused:1"}),
+                 "not used by an answer row"),
+                ("error-key", lambda data: data[next(i for i, r in enumerate(data)
+                    if r.get("event") == "generate")].update(error=None), "has an error key"),
+                ("forward", lambda data: data.append({"event": "forward", "session": generate.get("session")}),
+                 "forward calls outside generate"),
+            )
+            for label, mutate, expected in mutations:
+                with self.subTest(observer_case=label):
+                    edited = [dict(record) for record in records]
+                    mutate(edited)
+                    observer_path.write_text("".join(json.dumps(record) + "\n" for record in edited),
+                                              encoding="utf-8")
+                    audited = subprocess.run([sys.executable, "-I", "-B", str(audit_script), str(cp_dir),
+                                              "--checkpoint", "instruct", "--mode", "pilot",
+                                              "--tokenizer", str(Path(temp) / "case" / "tokenizer")],
+                                             text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+                    self.assertEqual(audited.returncode, 1, audited.stdout)
+                    self.assertIn(expected, audited.stdout)
+                    observer_path.write_text(original_observer, encoding="utf-8")
 
     def test_audit_refuses_effective_stop_ids_outside_checkpoint_generation_config(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -1230,27 +1322,26 @@ class Part85Tests(unittest.TestCase):
     def test_attempt2_custom_template_text_reaches_every_prompt(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp) / "results"
-            snapshot = Path(temp) / TEST_COMMIT
-            snapshot.mkdir()
-            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
-            self._write_step1_fixture(root, "instruct", maximum=4.0, mode="pilot", attempt=2)
-            template_path = root / "pilot-a2" / "pilot-frame-v2.txt"
-            template_path.parent.mkdir(parents=True, exist_ok=True)
-            template_path.write_text("Revised origin prompt: {q}\nAnswer:", encoding="utf-8")
+            template = "Revised origin prompt: {q}\nAnswer:"
+            design_path = Path(temp) / "PART85-DESIGN.md"
+            digest = hashlib.sha256(template.encode("utf-8")).hexdigest()
+            design_path.write_text(
+                f'Amended plain frame (pilot attempt 2), sha256 {digest}: {json.dumps(template)}\n',
+                encoding="utf-8")
             snapshot = root / TEST_COMMIT
             snapshot.mkdir(parents=True)
             (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            self._write_step1_fixture(root, "instruct", maximum=4.0, mode="pilot", attempt=2)
             observers, tokenizers = [], []
             self._run_pilot_main(root, "instruct", "pilot", observers=observers, attempt=2,
-                                 plain_template_file=template_path, tokenizers=tokenizers)
+                                 design_path=design_path, tokenizers=tokenizers)
             self.assertTrue(tokenizers[0].plain_prompts)
             self.assertTrue(all(text.startswith("Revised origin prompt: ") for text in tokenizers[0].plain_prompts),
                             tokenizers[0].plain_prompts)
             rows = [json.loads(line) for path in (root / "pilot-a2" / "instruct" / "answers").glob("*.jsonl")
                     for line in path.read_text(encoding="utf-8").splitlines() if line]
             self.assertTrue(rows)
-            self.assertTrue(all(row["frame_template_sha256"] == hashlib.sha256(template_path.read_bytes()).hexdigest()
-                                for row in rows))
+            self.assertTrue(all(row["frame_template_sha256"] == digest for row in rows))
 
     def test_completed_cell_is_retried_after_push_failure(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -1679,11 +1770,12 @@ class Part85Tests(unittest.TestCase):
             (root / "main/instruct/step1.json").write_text('{"step":1}')
             token_file = root / "neutral-token-ids.json"
             token_file.write_text(json.dumps({"sha256": handoff85.EXPECTED_TOKEN_SHA256, "token_ids": []}))
-            custom = b"Revised: {q}\\nAnswer:"
+            custom = b"Revised: {q}\r\nAnswer:"
+            canonical = b"Revised: {q}\nAnswer:"
             (root / "pilot-a2").mkdir()
             (root / "pilot-a2/pilot-frame-v2.txt").write_bytes(custom)
             score = {"pilot_gate": {"action": "plain_frame_pass", "attempt": 2,
-                     "plain_template_sha256": hashlib.sha256(custom).hexdigest()}}
+                     "plain_template_sha256": hashlib.sha256(canonical).hexdigest()}}
             (root / "pilot-score.json").write_text(json.dumps(score))
             references = top / "repo/part85/references"
             manifest_path = top / "repo/part85/references.json"
@@ -1691,7 +1783,7 @@ class Part85Tests(unittest.TestCase):
             manifest = json.loads(manifest_path.read_text())
             self.assertEqual(len(manifest["files"]), 5)
             self.assertTrue((references / "pilot-frame-v2.txt").is_file())
-            self.assertEqual((references / "pilot-frame-v2.txt").read_bytes(), custom)
+            self.assertEqual((references / "pilot-frame-v2.txt").read_bytes(), canonical)
             listed = {entry["path"]: entry["sha256"] for entry in manifest["files"]}
             self.assertEqual(listed["part85/references/neutral-token-ids.json"],
                              hashlib.sha256((references / "neutral-token-ids.json").read_bytes()).hexdigest())
@@ -1702,10 +1794,14 @@ class Part85Tests(unittest.TestCase):
             "--cp-dir R\\pilot-a1\\pretrain_4T", "--step1-dir R\\main\\pretrain_4T",
             "--checkpoint pretrain_4T --mode pilot", "--perturb-value 1.01", "--cp-dir R\\main\\KEY",
             "--step1-dir R\\main\\KEY", "--checkpoint KEY --mode main", "python.exe -m pip install datasets",
-            "CODE_COMMIT", "commits.local.json", "until both pilot checkpoints print `REPLAY85: PASS`",
+            "CODE_COMMIT", "commits.local.json", "until both checkpoints print `REPLAY85: PASS`",
+            "--attempt 2 --checkpoint pretrain_4T", "--attempt 2 --checkpoint instruct",
+            "PART85-DESIGN.md", "chat_only_posttrained", "plain_frame_pass",
         )
         for item in required:
             self.assertIn(item, text)
+        self.assertNotIn("--scope", text)
+        self.assertNotIn("--plain-template-file", text)
 
     def test_handoff_push_retries_unpushed_head_and_refuses_foreign_staging(self):
         with tempfile.TemporaryDirectory() as temp:
