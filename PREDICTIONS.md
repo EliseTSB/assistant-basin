@@ -2115,11 +2115,11 @@ Design: `PART84B-DESIGN.md`. OFFWORLD counts are of 48 answers per cell, by the 
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 84b.1 | Control: A0 (unchanged) is OFFWORLD in at most 1 of 48. | | |
-| 84b.2 | Claude: in decode mode, OFFWORLD rises strictly with dose (0.40 < 0.47 < 0.55). | | |
-| 84b.3 | Claude: steering the first answer token adds below the ceiling: gen is OFFWORLD at least as often as decode at each dose, and summed over the three doses gen exceeds decode by at least 12 of 144. | | |
-| 84b.4 | Claude (low confidence): at dose 0.40, decode is OFFWORLD in at most 16 of 48 and gen in at least 24 of 48. | | |
-| 84b.5 | Control: the two readers agree on OFFWORLD against not OFFWORLD in at least 90% of the 336 answers. | | |
+| 84b.1 | Control: A0 (unchanged) is OFFWORLD in at most 1 of 48. | held | A0 is OFFWORLD in 0 of 48 (both readers). results/part84b/score.txt |
+| 84b.2 | Claude: in decode mode, OFFWORLD rises strictly with dose (0.40 < 0.47 < 0.55). | held | decode OFFWORLD 4, 25, 43 of 48 at 0.40, 0.47, 0.55 (reader 2: 4, 24, 43). results/part84b/score.txt |
+| 84b.3 | Claude: steering the first answer token adds below the ceiling: gen is OFFWORLD at least as often as decode at each dose, and summed over the three doses gen exceeds decode by at least 12 of 144. | failed | gen 3, 23, 46 against decode 4, 25, 43: gen is lower at 0.40 and 0.47, and the summed difference is 0 (registered: at least 12). Paired sign tests p = 1.0, 0.69, 0.25. results/part84b/score.txt |
+| 84b.4 | Claude (low confidence): at dose 0.40, decode is OFFWORLD in at most 16 of 48 and gen in at least 24 of 48. | failed | at dose 0.40 decode 4 and gen 3 of 48 (registered: decode at most 16 and gen at least 24). results/part84b/score.txt |
+| 84b.5 | Control: the two readers agree on OFFWORLD against not OFFWORLD in at least 90% of the 336 answers. | held | the readers agree on OFFWORLD against not OFFWORLD in 331 of 336 answers (98.5%). results/part84b/score.txt |
 
 ## Part 85: OLMo 2 1B's alien twin (L10 N6978) across training, registered 2026-10-27 before any code
 
