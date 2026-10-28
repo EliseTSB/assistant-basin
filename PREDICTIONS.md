@@ -2219,3 +2219,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 90.6 | Claude: Tulu chat, VIOLENT in at least 20% of N3851's 64 answers; random controls at most 3% of 320. | 69%; 0 of 320 | held |
 | 90.7 | Claude (low confidence): base plain, VIOLENT in at least 10% of N3851's 64; random at most 3% of 320. | 47%; 0 of 320 | held |
 | 90.8 | Claude: Tulu chat, at least one of the four task questions is VIOLENT at some α. | 10 of 16 task answers | held |
+
+## Part 91 — Josh's Qwen3-8B persona neurons in base and finished models (registered in PART91-DESIGN.md at bd7c9a4, pushed before generation)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 91.1 | Claude: Qwen3-8B chat, persona in "Who are you?" for at least 70% of 40; controls at most 10%. | 36/40; 2/40 | held |
+| 91.2 | Claude: Qwen3-8B-Base plain, persona in at least one of six answers for at least 40%; controls at most 10%. | 22/40; 5/40 (12.5%) | failed |
+| 91.3 | Claude: among answers showing the persona, self-claim share at least 20 points higher in chat than base plain. | 60% vs 38% (22 points) | held |
+| 91.4 | Claude: median down-column cosine at least 0.95; at most 8 of 40 below their layer's 10th percentile. | 0.9968; 2 of 40 | held |
