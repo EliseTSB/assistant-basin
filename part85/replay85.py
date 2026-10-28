@@ -21,10 +21,12 @@ Step-1 maxima come from the observer's step-1 forward records (200 neutral seque
 row each, in sequence order), not from step1.json. --perturb-value multiplies every clamp: it counts answers whose
 regenerated TOKENS differ from the observer's, needs at least one clamped cell in scope, and never prints PASS.
 --fraction < 1 regenerates a sample (all identity and metadata checks still run on every row) and is not a PASS.
---attempt 2 replays the single registered pilot rerun and requires --plain-template-file, the amended frame committed
-in writing before the rerun (the design's pilot gate); the main run takes the same file when attempt 2 is the pilot that
-passed. --scope chat-only replays the gate's other branch (chat frame, SFT, DPO and Instruct only). PASS prints the
-scope, attempt and template hash so the operator can tie them to the committed pilot score.
+Rewritten again after Sol's round 6 (decision part85-after-r6-2026-10-28): nothing that defines the recipe comes from
+the operator or the run. Attempt 1's plain frame is the constant below; attempt 2's is the one Amendment 3 line in
+PART85-DESIGN.md (refused if absent, duplicated, hash-mismatched or equal to attempt 1's); the main run uses the amended
+frame exactly when that line exists, and its scope is the pilot gate's action pinned in part85/references.json. Every
+row field, every observer record in the tag (each used exactly once, in a recorded session, without error), both RNG
+states, the hooks at entry and exit, and step 1's registered forward call are compared with the registration.
 Exit: 0 PASS, 1 FAIL, 3 sample or negative control, 2 bad input.
 """
 from __future__ import annotations
@@ -33,6 +35,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 import random
 import re
 import sys
@@ -52,6 +55,50 @@ PILOT_KEYS = ("pretrain_4T", "instruct")
 HOOKS = {"model.layers.10.mlp.down_proj": {"pre": 2, "post": 0}}
 SAMPLING_KEYS = ("do_sample", "temperature", "top_p", "top_k", "min_p", "typical_p", "max_new_tokens",
                  "min_new_tokens", "num_beams", "repetition_penalty", "no_repeat_ngram_size")
+
+
+AMEND_RE = re.compile(r"^Amended plain frame \(pilot attempt 2\), sha256 ([0-9a-f]{64}): (\".*\")[ \t]*$", re.M)
+
+
+def amended_frame(design: Path):
+    """The pilot attempt-2 frame registered by Amendment 3, or None when the design registers none."""
+    found = AMEND_RE.findall(design.read_text(encoding="utf-8"))
+    if not found:
+        return None
+    if len(found) > 1:
+        raise ValueError("the design registers more than one amended frame")
+    sha, text = found[0]
+    frame = json.loads(text)
+    if not isinstance(frame, str) or frame.count("{q}") != 1 or "\r" in frame:
+        raise ValueError("the amended frame must be one string with exactly one {q} and no carriage return")
+    if hashlib.sha256(frame.encode("utf-8")).hexdigest() != sha:
+        raise ValueError("the amended frame's sha256 does not match its text")
+    if frame == PLAIN:
+        raise ValueError("the amended frame is the attempt-1 frame")
+    return frame
+
+
+def registered_repos(design: Path) -> dict:
+    keys = ("pretrain_21B", "pretrain_210B", "pretrain_1T", "pretrain_2T", "pretrain_3T", "pretrain_4T",
+            "midtrain_13B", "midtrain_26B", "midtrain_51B", "sft", "dpo", "instruct")
+    rows = re.findall(r"^\| [^|]+\| `([^`]+)`, ([0-9a-f]{12}) \|", design.read_text(encoding="utf-8"), re.M)
+    return {k: repo for k, (repo, _) in zip(keys, rows)} if len(rows) == 12 else {}
+
+
+def pinned_gate(references: Path, root: Path):
+    """(gate action, plain-frame sha256) from the pinned references manifest, after checking the pilot score's hash."""
+    man = json.loads(references.read_text(encoding="utf-8"))
+    entry = [f for f in man.get("files", []) if str(f.get("path", "")).endswith("references/pilot-score.json")]
+    if len(entry) != 1:
+        raise ValueError("references.json pins no single pilot-score.json")
+    score_path = root / entry[0]["path"]
+    if hashlib.sha256(score_path.read_bytes()).hexdigest() != entry[0].get("sha256"):
+        raise ValueError(f"{score_path} does not match its pinned sha256")
+    gate = json.loads(score_path.read_text(encoding="utf-8")).get("pilot_gate") or {}
+    action, sha = man.get("pilot_gate_action"), man.get("plain_template_sha256")
+    if gate.get("action") != action or gate.get("plain_template_sha256") != sha:
+        raise ValueError("the pinned pilot score and references.json disagree on the gate")
+    return action, sha
 
 
 def registered_commits(design: Path) -> dict:
@@ -102,22 +149,40 @@ def expected_rows(key: str, mode: str, scope: str = "all"):
 
 def step1_maxima(step1_dir: Path) -> tuple[dict, list]:
     problems = []
-    recs = [r for r in read_jsonl(step1_dir / "observe" / "step1.jsonl") if r.get("event") == "forward"]
+    every = read_jsonl(step1_dir / "observe" / "step1.jsonl")
+    for r in every:
+        if r.get("event") not in ("session", "session85", "forward", "close"):
+            problems.append(f"step 1 observer has an unregistered {r.get('event')!r} record")
+    recs = [r for r in every if r.get("event") == "forward"]
     seqs = [r.get("seq") for r in recs]
     if seqs != sorted(seqs) or len(set(seqs)) != len(seqs):
         problems.append("step 1 forward records are not in strictly increasing sequence order")
     if len(recs) != NEUTRAL_COUNT + 48:
         problems.append(f"step 1 has {len(recs)} forward records, registered 200 neutral + 48 passages")
     out = {UNIT: None, CONTROL_UNIT: None}
+    step1_hooks = {"modules": {"model.layers.10.mlp.down_proj": {"pre": 1, "post": 0}}, "global_pre": 0, "global_post": 0}
+    sessions = {r.get("session") for r in every if r.get("event") == "session"}
+    for r in recs:
+        if r.get("hooks_at_entry") != step1_hooks:
+            problems.append(f"step 1 seq {r.get('seq')}: hooks {r.get('hooks_at_entry')}, registered {step1_hooks}")
+        if r.get("session") not in sessions:
+            problems.append(f"step 1 seq {r.get('seq')}: session {r.get('session')!r} has no session record")
+        kv = r.get("kwargs_values") or {}
+        if r.get("kwargs") != ["use_cache"] or kv.get("use_cache") is not False or r.get("positional_args") != 0:
+            problems.append(f"step 1 seq {r.get('seq')}: call {r.get('kwargs')} {r.get('positional_args')} positional, "
+                            "registered input_ids=..., use_cache=False")
+        if "error" in r:
+            problems.append(f"step 1 seq {r.get('seq')}: forward raised {r['error']}")
     for r in recs[:NEUTRAL_COUNT]:
-        if r.get("hooks_at_entry", {}).get("modules") not in (None, {"model.layers.10.mlp.down_proj": {"pre": 1, "post": 0}}):
-            problems.append(f"step 1 seq {r.get('seq')}: unexpected hooks {r.get('hooks_at_entry')}")
-        if [k for k in r.get("kwargs", []) if k != "attention_mask"]:
-            problems.append(f"step 1 seq {r.get('seq')}: forward keywords {r.get('kwargs')} beyond attention_mask")
+        if ((r.get("kwargs_values") or {}).get("input_ids") or {}).get("shape") != [1, NEUTRAL_LEN]:
+            problems.append(f"step 1 seq {r.get('seq')}: neutral input shape is not [1, {NEUTRAL_LEN}]")
         for unit in out:
             vals = r["layers"][str(LAYER)]["values"][str(unit)]
             if len(vals) != 1 or len(vals[0]) != 1 or len(vals[0][0]) != NEUTRAL_LEN:
                 problems.append(f"step 1 seq {r.get('seq')}: shape is not one call, one row, {NEUTRAL_LEN} positions")
+                continue
+            if not all(math.isfinite(float(v)) for v in vals[0][0]):
+                problems.append(f"step 1 seq {r.get('seq')}: non-finite activation for unit {unit}")
                 continue
             m = max(vals[0][0])
             out[unit] = m if out[unit] is None else max(out[unit], m)
@@ -171,6 +236,9 @@ def regenerate(model, tok, device: str, frame: str, question: str, seed: int, cl
         torch.manual_seed(seed)
         if device.startswith("xpu"):
             torch.xpu.manual_seed_all(seed)
+        rng = {"cpu_state_sha256": hashlib.sha256(torch.get_rng_state().numpy().tobytes()).hexdigest()}
+        if device.startswith("xpu"):
+            rng["xpu_state_hex"] = bytes(torch.xpu.get_rng_state().cpu().numpy().tobytes()).hex()
         stop_ids = stops(model, tok)
         pad = tok.pad_token_id if tok.pad_token_id is not None else stop_ids[0]
         kwargs = dict(do_sample=True, temperature=TEMPERATURE, top_p=TOP_P, max_new_tokens=MAX_NEW,
@@ -178,7 +246,7 @@ def regenerate(model, tok, device: str, frame: str, question: str, seed: int, cl
         with torch.inference_mode():
             g = model.generate(**enc, **kwargs)
         prompt = [int(t) for t in enc["input_ids"][0]]
-        return [int(t) for t in g[0, len(prompt):]], prompt, kwargs
+        return [int(t) for t in g[0, len(prompt):]], prompt, kwargs, rng
     finally:
         if handle is not None:
             handle.remove()
@@ -190,7 +258,7 @@ def my_effective(model, kwargs) -> dict:
     return {k: getattr(cfg, k, None) for k in SAMPLING_KEYS}
 
 
-def intervention_problems(call: dict, clamp, where: str) -> list:
+def intervention_problems(call: dict, clamp, where: str, generated: int) -> list:
     layers = (call.get("rows") or [{}])[0].get("layers", None)
     if clamp is None:
         return [] if layers == {} else [f"{where}: unclamped call shows changed layers {list((layers or {}).keys())}"]
@@ -204,12 +272,16 @@ def intervention_problems(call: dict, clamp, where: str) -> list:
             continue
         pmin, pmax = rec["channels"][str(unit)][2:4]
         tol = 1e-5 * max(1.0, abs(value))
-        if abs(pmin - value) > tol or abs(pmax - value) > tol:
+        if not (abs(float(pmin) - value) <= tol and abs(float(pmax) - value) <= tol):
             out.append(f"{where}/{phase}: matmul received {pmin}..{pmax}, registered {value}")
+        if not (isinstance(rec.get("positions"), int) and rec["positions"] > 0):
+            out.append(f"{where}/{phase}: measured {rec.get('positions')!r} positions")
         if rec.get("changed_positions") != rec.get("positions"):
             out.append(f"{where}/{phase}: {rec.get('changed_positions')} of {rec.get('positions')} positions changed")
     if "prefill" not in layers[str(LAYER)]:
         out.append(f"{where}: no measured change in the prompt")
+    if generated > 1 and "decode" not in layers[str(LAYER)]:
+        out.append(f"{where}: no measured change while the {generated}-token answer was written")
     return out
 
 
@@ -220,38 +292,51 @@ def main(argv=None) -> int:
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--mode", required=True, choices=("main", "pilot"))
     ap.add_argument("--attempt", type=int, default=1, choices=(1, 2), help="pilot attempt (2 = the registered rerun)")
-    ap.add_argument("--scope", default="all", choices=("all", "chat-only"), help="main run: the pilot gate's branch")
-    ap.add_argument("--plain-template-file", help="the amended plain frame (required for attempt 2)")
     ap.add_argument("--snapshot", required=True)
     ap.add_argument("--device", default="xpu")
     ap.add_argument("--fraction", type=float, default=1.0)
     ap.add_argument("--perturb-value", type=float, default=1.0)
     ap.add_argument("--design", default=str(HERE.parent / "PART85-DESIGN.md"))
+    ap.add_argument("--references", default=str(HERE / "references.json"), help="main run: the pinned references")
     ap.add_argument("--out")
     a = ap.parse_args(argv)
-    cp, key = Path(a.cp_dir), a.checkpoint
+    cp, key, design = Path(a.cp_dir), a.checkpoint, Path(a.design)
     if a.mode == "main" and a.attempt != 1:
         print("REPLAY85: --attempt applies to the pilot only", file=sys.stderr)
         return 2
-    if a.mode == "pilot" and a.attempt == 2 and not a.plain_template_file:
-        print("REPLAY85: pilot attempt 2 needs --plain-template-file (the amended frame)", file=sys.stderr)
+    try:
+        amended = amended_frame(design)
+    except ValueError as e:
+        print(f"REPLAY85: {e}", file=sys.stderr)
         return 2
-    plain = Path(a.plain_template_file).read_text(encoding="utf-8") if a.plain_template_file else PLAIN
-    if plain.count("{q}") != 1:
-        print("REPLAY85: the plain frame template must contain exactly one {q}", file=sys.stderr)
+    if a.mode == "pilot" and a.attempt == 2 and amended is None:
+        print("REPLAY85: the design registers no amended frame, so there is no pilot attempt 2", file=sys.stderr)
         return 2
-    if a.mode == "pilot" and a.attempt == 2 and plain == PLAIN:
-        print("REPLAY85: attempt 2's template is the attempt-1 frame; the design reruns with an amended one", file=sys.stderr)
-        return 2
+    plain = amended if (a.attempt == 2 or (a.mode == "main" and amended is not None)) else PLAIN
     plain_sha = hashlib.sha256(plain.encode("utf-8")).hexdigest()
+    scope, action = "all", None
+    if a.mode == "main":
+        try:
+            action, pinned_sha = pinned_gate(Path(a.references), Path(a.references).resolve().parent.parent)
+        except (OSError, ValueError, KeyError) as e:
+            print(f"REPLAY85: pinned references unusable: {e}", file=sys.stderr)
+            return 2
+        if pinned_sha != plain_sha:
+            print(f"REPLAY85: the pinned gate's frame {pinned_sha} is not the design's {plain_sha}", file=sys.stderr)
+            return 2
+        scope = {"plain_frame_pass": "all", "chat_only_posttrained": "chat-only"}.get(action)
+        if scope is None:
+            print(f"REPLAY85: the pinned gate action {action!r} authorizes no main run", file=sys.stderr)
+            return 2
     tag = "main" if a.mode == "main" else f"pilot{a.attempt}"
     problems = []
-    prefix = registered_commits(Path(a.design)).get(key)
-    if prefix is None:
+    prefix = registered_commits(design).get(key)
+    repo = registered_repos(design).get(key)
+    if prefix is None or repo is None:
         print(f"REPLAY85: {key} is not a registered checkpoint", file=sys.stderr)
         return 2
     try:
-        exp = expected_rows(key, a.mode, a.scope)
+        exp = expected_rows(key, a.mode, scope)
     except ValueError as e:
         print(f"REPLAY85: {e}", file=sys.stderr)
         return 2
@@ -279,30 +364,37 @@ def main(argv=None) -> int:
             problems.append(f"unregistered answer {k}")
         if len(rs) > 1:
             problems.append(f"answer {k} appears {len(rs)} times")
-    calls, sessions = {}, []
-    for p in sorted((cp / "observe").glob(f"{tag}*.jsonl")):
+    calls, sessions = {}, {}
+    obs_files = sorted((cp / "observe").glob(f"{tag}*.jsonl"))
+    if [p.name for p in obs_files] != [f"{tag}.jsonl"]:
+        problems.append(f"observer files {[p.name for p in obs_files]}, registered [{tag}.jsonl]")
+    for p in obs_files:
         for r in read_jsonl(p):
-            if r.get("event") == "generate":
-                if r["call_id"] in calls:
-                    problems.append(f"observer call {r['call_id']} recorded twice")
-                calls[r["call_id"]] = r
-            elif r.get("event") == "session":
-                sessions.append(r)
+            ev = r.get("event")
+            if ev == "generate":
+                if r.get("call_id") in calls:
+                    problems.append(f"observer call {r.get('call_id')} recorded twice")
+                calls[r.get("call_id")] = r
+            elif ev == "session":
+                sessions[r.get("session")] = r
+            elif ev not in ("session85", "close"):
+                problems.append(f"observer has an unregistered {ev!r} record (seq {r.get('seq')})")
     if not sessions:
         problems.append("no observer session record")
-    for s in sessions:
+    for sid, s in sessions.items():
         if not str(s.get("model_revision", "")).startswith(prefix):
-            problems.append(f"session {s.get('session')} loaded revision {s.get('model_revision')}, registered {prefix}")
+            problems.append(f"session {sid} loaded revision {s.get('model_revision')}, registered {prefix}")
         if "float32" not in str(s.get("dtype")):
-            problems.append(f"session {s.get('session')} dtype {s.get('dtype')}, registered fp32")
+            problems.append(f"session {sid} dtype {s.get('dtype')}, registered fp32")
         if not str(s.get("device", "")).startswith(a.device.split(":")[0]):
-            problems.append(f"session {s.get('session')} device {s.get('device')}, replaying on {a.device}")
+            problems.append(f"session {sid} device {s.get('device')}, replaying on {a.device}")
     if not Path(a.snapshot).name.startswith(prefix):
         problems.append(f"replay snapshot {Path(a.snapshot).name} is not the registered {prefix}")
     maxima, p1 = step1_maxima(Path(a.step1_dir))
     problems += p1
     used = {}
     plan = []
+    hooks_full = {"modules": HOOKS, "global_pre": 0, "global_post": 0}
     for (f, c, qi, s) in exp:
         rs = rows.get((f, c, qi, s), [])
         where = f"{key}/{f}/{c}/q{qi}s{s}"
@@ -312,15 +404,25 @@ def main(argv=None) -> int:
             continue
         r = rs[0]
         seed = seed_for(qi, s)
-        ident = {"checkpoint": key, "mode": a.mode, "attempt": a.attempt, "question": QUESTIONS[qi], "seed": seed}
+        ident = {"checkpoint": key, "mode": a.mode, "attempt": a.attempt, "model_id": repo, "question": QUESTIONS[qi],
+                 "seed": seed, "frame_template_sha256": plain_sha}
+        if a.mode == "main":
+            ident["pilot_gate_action"] = action
         for field, val in ident.items():
             if r.get(field) != val:
                 problems.append(f"{where}: row {field} {r.get(field)!r}, registered {val!r}")
-        if f == "plain" and r.get("frame_template_sha256") != plain_sha:
-            problems.append(f"{where}: row frame template {r.get('frame_template_sha256')}, replaying {plain_sha}")
+        if not str(r.get("commit", "")).startswith(prefix):
+            problems.append(f"{where}: row commit {r.get('commit')!r}, registered {prefix}")
         clamp = clamp_for(c, maxima) if maxima else None
-        if clamp is not None:
-            if r.get("unit") != clamp[0] or abs(float(r.get("clamp_value", "nan")) - clamp[1]) > 1e-6 * max(1, clamp[1]):
+        if clamp is None:
+            if r.get("unit") is not None or r.get("clamp_value") is not None:
+                problems.append(f"{where}: unclamped row carries clamp ({r.get('unit')}, {r.get('clamp_value')})")
+        else:
+            try:
+                cv = float(r.get("clamp_value"))
+            except (TypeError, ValueError):
+                cv = float("nan")
+            if r.get("unit") != clamp[0] or not abs(cv - clamp[1]) <= 1e-6 * max(1, clamp[1]):
                 problems.append(f"{where}: row clamp ({r.get('unit')}, {r.get('clamp_value')}) != registered {clamp}")
         cid = r.get("observer_call_id")
         if cid in used:
@@ -330,6 +432,10 @@ def main(argv=None) -> int:
         if call is None:
             problems.append(f"{where}: no observer record {cid!r}")
             continue
+        if call.get("session") not in sessions:
+            problems.append(f"{where}: observer call {cid} names session {call.get('session')!r}, which has no record")
+        if "error" in call:
+            problems.append(f"{where}: observer call {cid} raised {call['error']}")
         if call.get("positional_args", 0) != 0 or call.get("batch") != 1:
             problems.append(f"{where}: positional args {call.get('positional_args')} or batch {call.get('batch')}")
         rng = call.get("rng_at_entry", {})
@@ -337,10 +443,15 @@ def main(argv=None) -> int:
             problems.append(f"{where}: cpu seed at entry {rng.get('cpu_initial_seed')}, registered {seed}")
         if a.device.startswith("xpu") and rng.get("xpu_initial_seed") != seed:
             problems.append(f"{where}: xpu seed at entry {rng.get('xpu_initial_seed')}, registered {seed}")
-        if (call.get("hooks_at_entry") or {}).get("modules") != HOOKS or (call.get("hooks_at_entry") or {}).get("global_pre") or (call.get("hooks_at_entry") or {}).get("global_post"):
-            problems.append(f"{where}: hooks at entry {call.get('hooks_at_entry')}, registered {HOOKS}")
-        problems += intervention_problems(call, clamp, where)
+        if call.get("hooks_at_entry") != hooks_full:
+            problems.append(f"{where}: hooks at entry {call.get('hooks_at_entry')}, registered {hooks_full}")
+        if call.get("hooks_at_exit") != hooks_full:
+            problems.append(f"{where}: hooks at exit {call.get('hooks_at_exit')}, registered {hooks_full}")
+        generated = len((call.get("raw") or [{}])[0].get("generated_ids", []))
+        problems += intervention_problems(call, clamp, where, generated)
         plan.append((f, c, qi, s, r, call, clamp, where, seed))
+    for cid in sorted(set(calls) - set(used), key=str):
+        problems.append(f"observer call {cid} is not any registered answer's")
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(a.snapshot)
@@ -352,7 +463,7 @@ def main(argv=None) -> int:
     for (f, c, qi, s, r, call, clamp, where, seed) in regen:
         if clamp is not None:
             clamp = (clamp[0], clamp[1] * a.perturb_value)
-        full, prompt, kwargs = regenerate(model, tok, a.device, f, QUESTIONS[qi], seed, clamp, plain)
+        full, prompt, kwargs, my_rng = regenerate(model, tok, a.device, f, QUESTIONS[qi], seed, clamp, plain)
         raw = (call.get("raw") or [{}])[0]
         if [int(t) for t in raw.get("generated_ids", [])] != full:
             changed += 1
@@ -362,6 +473,9 @@ def main(argv=None) -> int:
             continue
         if [int(t) for t in raw.get("prompt_ids", [])] != prompt:
             problems.append(f"{where}: prompt ids differ")
+        for k, v in my_rng.items():
+            if call.get("rng_at_entry", {}).get(k) != v:
+                problems.append(f"{where}: RNG {k} at entry differs from a fresh seed {seed}")
         stop_ids = kwargs["eos_token_id"]
         mine_cut = cut(full, set(stop_ids))
         orow = (call.get("rows") or [{}])[0]
@@ -380,7 +494,7 @@ def main(argv=None) -> int:
         eff_eos = sorted([eff_eos] if isinstance(eff_eos, int) else list(eff_eos or []))
         if eff_eos != stop_ids:
             problems.append(f"{where}: effective stop tokens {eff_eos}, registered {stop_ids}")
-    report = {"checkpoint": key, "mode": a.mode, "attempt": a.attempt, "scope": a.scope,
+    report = {"checkpoint": key, "mode": a.mode, "attempt": a.attempt, "scope": scope, "gate_action": action,
               "plain_template_sha256": plain_sha, "registered": len(exp), "regenerated": len(regen), "changed": changed,
               "maxima": maxima, "perturb_value": a.perturb_value, "fraction": a.fraction,
               "problem_count": len(problems), "problems": problems[:300]}
@@ -398,7 +512,7 @@ def main(argv=None) -> int:
         print(f"REPLAY85: NON-PRODUCTION SAMPLE, {len(regen)} of {len(exp)} regenerated and matching; not a PASS")
         return 3
     print(f"REPLAY85: PASS, all {len(exp)} registered answers present once and matching token for token "
-          f"({key} {tag}, scope {a.scope}, plain template sha256 {plain_sha[:16]})")
+          f"({key} {tag}, scope {scope}, plain frame sha256 {plain_sha[:16]})")
     return 0
 
 

@@ -155,3 +155,18 @@ off-world mean logit exactly; the random-set z-scores were not independently rec
   every answer of the run token for token and prints REPLAY85: PASS, and its --perturb-value 1.01 negative control on
   the clamped cells changes answers.** That applies to the pilot (before its gate is read) and to the main run.
 - The SFT and DPO checkpoints are pytorch_model.bin; their step 0 is read after the download, from local files.
+
+## Amendment 3 (2026-10-28 14:51 CT, after Sol's round 6 and before any step 1 or step 2 data)
+
+Decision part85-after-r6-2026-10-28. The replay takes the recipe from this file and the pinned references only, never
+from an operator option, so the pilot's amended frame is registered here, in one fixed form:
+- If gate 1 fails, the amended frame is added to this file BEFORE the rerun as exactly one line
+  `Amended plain frame (pilot attempt 2), sha256 <64 hex>: <the frame as one JSON string>`, for example
+  `Amended plain frame (pilot attempt 2), sha256 ...: "Q: {q}\nA:"`. The JSON string holds exactly one `{q}` and no
+  carriage return; the sha256 is of its UTF-8 bytes. Pilot attempt 2 uses that frame; attempt 1 always uses
+  `Question: {q}\nAnswer:`. The main run's plain frame is the amended one exactly when that line exists.
+- Every template hash in the run (part85.py, audit85.py, handoff85.py, replay85.py) is the sha256 of the frame's raw
+  UTF-8 bytes with LF line endings; a template containing a carriage return is refused.
+- The main run's scope (plain and chat, or chat only on the three post-trained checkpoints) is the pilot gate's action
+  as pinned in part85/references.json, not an operator option.
+- Step 1's forward call is registered as `model(input_ids=<1 x 128 neutral ids>, use_cache=False)`.
