@@ -1,0 +1,52 @@
+{
+ "n_per_cell": 48,
+ "offworld": {
+  "A0": 0,
+  "decode0.40": 4,
+  "decode0.47": 25,
+  "decode0.55": 43,
+  "gen0.40": 3,
+  "gen0.47": 23,
+  "gen0.55": 46
+ },
+ "paired": {
+  "0.40": {
+   "gen_only": 0,
+   "decode_only": 1,
+   "sign_test_p": 1.0
+  },
+  "0.47": {
+   "gen_only": 2,
+   "decode_only": 4,
+   "sign_test_p": 0.6875
+  },
+  "0.55": {
+   "gen_only": 3,
+   "decode_only": 0,
+   "sign_test_p": 0.25
+  }
+ },
+ "reader_agreement": 0.9851190476190477,
+ "verdicts": {
+  "84b.1": [
+   "HOLDS",
+   "A0 0 of 48"
+  ],
+  "84b.2": [
+   "HOLDS",
+   "decode [4, 25, 43]"
+  ],
+  "84b.3": [
+   "FAILS",
+   "gen [3, 23, 46], decode [4, 25, 43], summed difference 0"
+  ],
+  "84b.4": [
+   "FAILS",
+   "dose 0.40: decode 4, gen 3"
+  ],
+  "84b.5": [
+   "HOLDS",
+   "agreement 0.985 on 336"
+  ]
+ }
+}
