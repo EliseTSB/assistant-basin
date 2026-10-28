@@ -2201,3 +2201,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 89.5 | Claude: post-training moves Part 16's 64 "As an AI" set more than layer-matched random sets (empirical p below 0.05). | | |
 | 89.6 | Claude (low confidence): Part 14's top-50 register neurons settle earlier in pretraining than layer-matched random sets (empirical p below 0.05). | | |
 | 89.7 | Control: Instruct against itself gives cosine 1.000 for every neuron, and the mid-training end against Instruct gives a median above 0.95. | | |
+
+## Part 90 — Josh's Tulu 3 8B L14 N3851 across training stages (registered in PART90-DESIGN.md at 48b5443, pushed before data)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 90.1 | Claude: N3851's down-column cosine, base to final, is at least 0.95. | 0.99958 | held |
+| 90.2 | Claude: its gate-row and up-row cosines, base to final, are each at least 0.95. | 0.99949, 0.99954 | held |
+| 90.3 | Claude: its base-to-final down cosine lies within the middle 90% of layer 14's 14,336 columns. | 69th percentile (layer p05 0.99939, median 0.99954, p95 0.99969) | held |
+| 90.4 | Claude: SFT to final is at least 0.99. | 0.999999 | held |
