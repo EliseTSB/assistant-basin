@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 import sys
 import tempfile
@@ -19,6 +18,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import common86 as c
+import triage86
 
 N_NEURONS = 9216
 N_DIRECTIONS = 512
@@ -78,24 +78,103 @@ def _plan_batches(kind: str, total: int, batch_size: int):
         yield f"{kind}_{batch_no:05d}", ids
 
 
-def _layer_config(layer_no: int, args, calibration_hash: str) -> dict:
+def _layer_config(layer_no: int, args, calibration_hash: str, actual_dtype: str,
+                  median: float, generation_config: dict) -> dict:
     return {
         "model_id": c.MODEL_ID,
         "revision": c.REVISION,
         "layer": int(layer_no),
         "device": args.device,
         "dtype_requested": "bfloat16",
+        "actual_dtype": actual_dtype,
+        "versions": c.dependency_versions(),
+        "code_sha256": c.code_sha256(),
         "dose": c.DOSE,
+        "median": float(median),
         "mode": "generated_tokens",
         "question": c.SCREEN_QUESTION,
         "max_new_tokens": MAX_NEW_TOKENS,
         "greedy": True,
+        "generation_config": generation_config,
         "calibration_sha256": calibration_hash,
         "seed": c.SCREEN_SEED + int(layer_no),
         "neurons_requested": N_NEURONS if args.limit is None else min(N_NEURONS, args.limit),
         "directions_requested": N_DIRECTIONS if args.limit is None else min(N_DIRECTIONS, args.limit),
         "batch_size": int(args.batch_size),
     }
+
+
+def _clear_layer(out_dir: Path, batch_root: Path, layer_no: int) -> None:
+    for path in (out_dir / f"layer_{layer_no}.jsonl", out_dir / f"layer_{layer_no}.meta.json"):
+        path.unlink(missing_ok=True)
+    for path in batch_root.glob(f"layer_{layer_no}.*"):
+        if path.is_file():
+            path.unlink()
+    if layer_no == 22:
+        (out_dir / "runtime-canaries.json").unlink(missing_ok=True)
+        (out_dir / "pilot-gate.json").unlink(missing_ok=True)
+    (out_dir / "manifest.json").unlink(missing_ok=True)
+
+
+def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: int,
+                      layer_no: int, median: float, config: dict) -> dict:
+    import torch
+    import triage86
+    canary_path = Path(args.out) / "runtime-canaries.json"
+    batch_pushes = torch.zeros((16, width), dtype=torch.float32, device=first_two_pushes.device)
+    batch_pushes[:2] = first_two_pushes[:2]
+    batch, counts = c.generate_batch(
+        model, tokenizer, layer, c.SCREEN_QUESTION, batch_pushes, args.device, MAX_NEW_TOKENS,
+    )
+    singles = []
+    for row in range(2):
+        result, _ = c.generate_batch(
+            model, tokenizer, layer, c.SCREEN_QUESTION, first_two_pushes[row:row + 1],
+            args.device, MAX_NEW_TOKENS,
+        )
+        singles.append(result[0]["answer"])
+    same = [batch[i]["answer"] == singles[i] for i in range(2)]
+    zero_answer = batch[2]["answer"]
+    zero_triage = triage86.triage_answer(zero_answer)
+    if zero_triage != "kept" or "qwen" not in zero_answer.casefold():
+        raise RuntimeError(
+            f"L{layer_no} zero-push canary must triage kept and name Qwen; got {zero_triage}: {zero_answer!r}"
+        )
+    result = {
+        "layer": layer_no,
+        "config_sha256": c.canonical_sha256(config),
+        "zero_push": {"answer": zero_answer, "triage": zero_triage, "names_qwen": True},
+        "batch16_vs_batch1": {
+            "neuron_ids": [0, 1], "exact_answer_match": same,
+            "batch16_answers": [batch[0]["answer"], batch[1]["answer"]],
+            "batch1_answers": singles,
+        },
+        "batch16_hook_counts": counts,
+    }
+    c.atomic_json(canary_path, result)
+    print(f"L{layer_no} runtime canary recorded; batch16/batch1 exact matches={same}; zero-push answer={zero_answer!r}", flush=True)
+    return result
+
+
+def _write_pilot_gate(out_dir: Path, layer_no: int, rows: list[dict], median: float) -> None:
+    if layer_no != 22:
+        return
+    target = next((row for row in rows if row.get("kind") == "neuron" and int(row.get("id", -1)) == 2742), None)
+    changed = sum(triage86.triage_answer(row.get("answer", "")) == "changed" for row in rows)
+    result = {
+        "layer": 22,
+        "population_size": N_NEURONS + N_DIRECTIONS,
+        "observed_rows": len(rows),
+        "median": float(median),
+        "changed_answers": changed,
+        "gate_3_range": [20, 2000],
+        "gate_3_population": "9,216 real neurons plus 512 random directions (9,728 answers)",
+        "gate_3_status": ("NOT READ" if len(rows) != N_NEURONS + N_DIRECTIONS
+                          else "PASS" if 20 <= changed <= 2000 else "FAIL"),
+        "n2742_raw_answer": target.get("answer") if target else None,
+        "n2742_status": "present" if target else "NOT INCLUDED (screen was limited)",
+    }
+    c.atomic_json(out_dir / "pilot-gate.json", result)
 
 
 def run(args) -> None:
@@ -105,7 +184,6 @@ def run(args) -> None:
         raise ValueError("batch size must be positive")
     if args.limit is not None and args.limit < 1:
         raise ValueError("limit must be positive")
-    started = time.monotonic()
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     batch_root = out_dir / ".batches"
@@ -115,10 +193,20 @@ def run(args) -> None:
     tokenizer, model = c.load_model(args.device)
     model.requires_grad_(False)
     model.eval()
+    actual_dtype = c.require_bfloat16(model)
+    for question in (c.SCREEN_QUESTION,):
+        c.assert_rendered_prompt(tokenizer, question)
+    generation_config = c.effective_generation_config(model, tokenizer, MAX_NEW_TOKENS, False)
     layers = c.find_layers(model)
-    actual_dtype = str(next(model.parameters()).dtype)
     session_new_answers = 0
+    generation_elapsed = 0.0
     progress_path = Path(args.progress) if args.progress else out_dir / "progress.log"
+
+    reset_layers = set(getattr(args, "reset_layer", []) or [])
+    if not reset_layers.issubset(set(args.layers)):
+        raise ValueError("--reset-layer values must also appear in --layers")
+    for layer_no in sorted(reset_layers):
+        _clear_layer(out_dir, batch_root, int(layer_no))
 
     for layer_no in args.layers:
         if not 0 <= int(layer_no) < len(layers):
@@ -132,13 +220,24 @@ def run(args) -> None:
         n_directions = min(N_DIRECTIONS, args.limit) if args.limit is not None else N_DIRECTIONS
         final_path = out_dir / f"layer_{layer_no}.jsonl"
         meta_path = out_dir / f"layer_{layer_no}.meta.json"
-        config = _layer_config(layer_no, args, calibration_hash)
+        median = c.residual_median(model, tokenizer, layer, calibration_text, args.device)
+        if layer_no == 22 and c.MODEL_ID == "Qwen/Qwen3.5-4B":
+            expected_median = 24.8
+            if abs(median - expected_median) > 0.05 * expected_median:
+                raise RuntimeError(f"L22 residual median {median:.6f} differs from Part 84's 24.8 by more than 5%")
+        config = _layer_config(
+            layer_no, args, calibration_hash, actual_dtype, median, generation_config,
+        )
 
         old_state = None
         if meta_path.exists():
             old_state = json.loads(meta_path.read_text(encoding="utf-8"))
             if old_state.get("config") != config:
                 raise ValueError(f"L{layer_no} resume configuration differs from {meta_path}")
+            if (old_state.get("median") != median or old_state.get("actual_dtype") != actual_dtype
+                    or old_state.get("versions") != config["versions"]
+                    or old_state.get("code_sha256") != config["code_sha256"]):
+                raise ValueError(f"L{layer_no} resume provenance differs from {meta_path}")
             if old_state.get("status") == "complete" and final_path.exists():
                 expected_answers = n_neurons + n_directions
                 if int(old_state.get("answers", -1)) != expected_answers:
@@ -147,17 +246,25 @@ def run(args) -> None:
                     actual_answers = sum(1 for line in f if line.strip())
                 if actual_answers != expected_answers:
                     raise ValueError(f"L{layer_no} completed JSONL has {actual_answers} rows, expected {expected_answers}")
+                with final_path.open(encoding="utf-8") as f:
+                    completed_rows = [json.loads(line) for line in f if line.strip()]
+                if layer_no == 22:
+                    canary_path = out_dir / "runtime-canaries.json"
+                    expected_canary_hash = c.canonical_sha256(config)
+                    if not canary_path.is_file():
+                        raise ValueError("completed L22 is missing runtime-canaries.json; reset layer 22 before reuse")
+                    canary = json.loads(canary_path.read_text(encoding="utf-8"))
+                    if canary.get("config_sha256") != expected_canary_hash:
+                        raise ValueError("completed L22 runtime canary provenance differs; reset layer 22 before reuse")
+                    _write_pilot_gate(out_dir, layer_no, completed_rows, median)
+                    c.write_manifest(out_dir)
                 print(f"L{layer_no}: already complete; skipping", flush=True)
                 continue
 
-        median = c.residual_median(model, tokenizer, layer, calibration_text, args.device)
         weight = down.weight.detach()
         if weight.shape[1] != width:
             raise ValueError(f"L{layer_no} down_proj weight shape inconsistent with in_features")
-        col_norms = torch.linalg.vector_norm(weight.float(), dim=0)
-        if bool(torch.any(col_norms[:n_neurons] <= 0)):
-            raise ValueError(f"L{layer_no} contains a zero-norm neuron column")
-        deltas = (c.DOSE * median / col_norms[:n_neurons]).detach()
+        deltas = c.neuron_deltas(weight, median, count=n_neurons).detach()
         directions = c.scaled_random_directions(
             weight, n_directions, c.SCREEN_SEED + layer_no, c.DOSE * median
         )
@@ -166,23 +273,42 @@ def run(args) -> None:
             "median": median,
             "calibration_sha256": calibration_hash,
             "actual_dtype": actual_dtype,
-            "versions": c.dependency_versions(),
+            "versions": config["versions"],
+            "code_sha256": config["code_sha256"],
             "completed_batches": [],
             "status": "running",
         }
 
         if old_state is not None:
-            if not math.isclose(float(old_state.get("median", float("nan"))), median, rel_tol=0, abs_tol=1e-6):
+            if old_state.get("median") != median:
                 raise ValueError(f"L{layer_no} residual median changed while resuming")
             state.update(old_state)
         elif final_path.exists():
             raise ValueError(f"{final_path} exists without matching resume metadata")
         else:
+            stale = list(batch_root.glob(f"layer_{layer_no}.*"))
+            if stale:
+                raise ValueError(
+                    f"L{layer_no} has orphaned batch fragments without metadata; use --reset-layer {layer_no}"
+                )
             c.atomic_json(meta_path, state)
 
         if final_path.exists() and state.get("status") == "complete":
             print(f"L{layer_no}: already complete; skipping", flush=True)
             continue
+
+        if layer_no == 22:
+            canary_path = out_dir / "runtime-canaries.json"
+            if canary_path.exists():
+                old_canary = json.loads(canary_path.read_text(encoding="utf-8"))
+                expected_canary_hash = c.canonical_sha256(config)
+                if old_canary.get("config_sha256") != expected_canary_hash:
+                    raise ValueError("L22 runtime canary provenance differs; reset layer 22 before reuse")
+            else:
+                canary_pushes = torch.zeros((2, width), dtype=torch.float32, device=weight.device)
+                canary_pushes[0, 0] = deltas[0]
+                canary_pushes[1, 1] = deltas[1]
+                _runtime_canaries(model, tokenizer, layer, args, canary_pushes, width, layer_no, median, config)
 
         planned = []
         planned.extend(("neuron", batch_id, ids) for batch_id, ids in _plan_batches("neuron", n_neurons, args.batch_size))
@@ -205,10 +331,12 @@ def run(args) -> None:
                 pushes[row_index, unit_index] = deltas[unit_index]
             else:
                 pushes = directions[ids].to(device=weight.device, dtype=torch.float32)
+            started_generation = time.monotonic()
             generated, hook_counts = c.generate_batch(
                 model, tokenizer, layer, c.SCREEN_QUESTION, pushes, args.device, MAX_NEW_TOKENS,
                 do_sample=False,
             )
+            generation_elapsed += time.monotonic() - started_generation
             if hook_counts["prefill_calls"] != 1 or hook_counts["generated_calls"] != hook_counts["per_row_generated_calls"][0]:
                 raise RuntimeError(f"L{layer_no} {batch_id}: hook did not fire uniformly on every generated step")
             if len(hook_counts["per_row_generated_calls"]) != len(ids):
@@ -236,7 +364,7 @@ def run(args) -> None:
             session_new_answers += len(records)
             state["completed_batches"] = sorted(completed)
             c.atomic_json(meta_path, state)
-            elapsed = max(time.monotonic() - started, 1e-9)
+            elapsed = max(generation_elapsed, 1e-9)
             progress_path.parent.mkdir(parents=True, exist_ok=True)
             with progress_path.open("a", encoding="utf-8") as f:
                 f.write(
@@ -261,6 +389,8 @@ def run(args) -> None:
         state["answers"] = len(final_rows)
         state["median"] = median
         c.atomic_json(meta_path, state)
+        _write_pilot_gate(out_dir, layer_no, final_rows, median)
+        c.write_manifest(out_dir)
         print(f"L{layer_no}: median={median:.6f}, wrote {len(final_rows)} rows to {final_path}", flush=True)
 
 
@@ -271,6 +401,8 @@ def main(argv=None):
     ap.add_argument("--layers", type=parse_layers, default=parse_layers("10-26"))
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--limit", type=int, default=None, help="screen the first N neurons and first N random directions per layer")
+    ap.add_argument("--reset-layer", type=int, action="append", default=[],
+                    help="clear a layer's metadata, final output, and .batches fragments before rerunning it")
     ap.add_argument("--device", choices=("xpu", "cpu", "cuda"), default="xpu")
     ap.add_argument("--progress", default=None, help="append progress lines here; default is OUT/progress.log")
     run(ap.parse_args(argv))

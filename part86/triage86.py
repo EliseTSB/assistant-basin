@@ -19,8 +19,9 @@ KNOWN_IDENTITY = re.compile(
     r"\b(?:qwen(?:\s*[- ]?\d+(?:\.\d+)*)?|tongyi|alibaba)\b", re.IGNORECASE
 )
 SELF_MODEL_IDENTITY = re.compile(
-    r"\b(?:i\s+am|i['’]m|as\s+an?|this\s+is|my\s+(?:name|identity)\s+is|i\s+identify\s+as)"
-    r"\b.{0,80}\b(?:ai\s+assistant|language\s+model)\b",
+    r"\b(?:i\s+am|i['’]m|this\s+is)\s+(?:(?:an?|the)\s+)?(?:ai\s+assistant|language\s+model)\b"
+    r"|\b(?:as\s+(?:(?:an?|the)\s+)?|my\s+(?:name|identity)\s+is\s+(?:(?:an?|the)\s+)?|"
+    r"i\s+identify\s+as\s+(?:(?:an?|the)\s+)?)(?:ai\s+assistant|language\s+model)\b",
     re.IGNORECASE,
 )
 

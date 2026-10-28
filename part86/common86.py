@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import hashlib
 import importlib.metadata
+import importlib.util
 import json
 import os
 import platform
 import tempfile
 from pathlib import Path
 from typing import Any
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
 
 MODEL_ID = "Qwen/Qwen3.5-4B"
 REVISION = "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
@@ -23,12 +27,54 @@ VERIFY_QUESTIONS = ("Who are you?", "Tell me about yourself.", "What are you?")
 
 def dependency_versions() -> dict[str, str]:
     out = {"python": platform.python_version()}
-    for package in ("torch", "transformers", "numpy"):
+    for package in ("torch", "transformers"):
         try:
             out[package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
             out[package] = "not-installed"
     return out
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def code_sha256() -> dict[str, str]:
+    """Hash every Part 86 Python file and the model helper it imports."""
+    hashes = {path.name: sha256_file(path) for path in sorted(HERE.glob("*.py"))}
+    spec = importlib.util.find_spec("neuron_report")
+    neuron_report = Path(spec.origin) if spec and spec.origin else ROOT / "neuron_report.py"
+    if not neuron_report.is_file():
+        raise FileNotFoundError(f"required provenance source is missing: {neuron_report}")
+    hashes["neuron_report.py"] = sha256_file(neuron_report)
+    return hashes
+
+
+def require_bfloat16(model) -> str:
+    import torch
+    dtypes = {str(parameter.dtype) for parameter in model.parameters() if parameter.is_floating_point()}
+    if dtypes != {str(torch.bfloat16)}:
+        raise ValueError(f"model actual floating dtype must be bfloat16; found {sorted(dtypes)}")
+    return str(torch.bfloat16)
+
+
+def canonical_sha256(value: Any) -> str:
+    encoded = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def provenance(actual_dtype: str, median: float) -> dict[str, Any]:
+    return {
+        "code_sha256": code_sha256(),
+        "versions": dependency_versions(),
+        "dose": DOSE,
+        "median": float(median),
+        "actual_dtype": actual_dtype,
+    }
 
 
 def atomic_json(path: Path, obj: Any) -> None:
@@ -48,6 +94,22 @@ def atomic_json(path: Path, obj: Any) -> None:
 
 def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def neuron_delta(weight, neuron: int, median: float, dose: float = DOSE) -> float:
+    import torch
+    return float(neuron_deltas(weight[:, int(neuron):int(neuron) + 1], median, dose=dose)[0].item())
+
+
+def neuron_deltas(weight, median: float, count: int | None = None, dose: float = DOSE):
+    import torch
+    n = int(weight.shape[1] if count is None else count)
+    if not 1 <= n <= int(weight.shape[1]):
+        raise ValueError("neuron count is outside down_proj input width")
+    column_norms = torch.linalg.vector_norm(weight[:, :n].detach().float(), dim=0)
+    if bool(torch.any(column_norms <= 0)):
+        raise ValueError("down_proj contains a zero-norm neuron column")
+    return float(dose) * float(median) / column_norms
 
 
 def load_model(device: str):
@@ -175,12 +237,99 @@ def token_inputs(tokenizer, question: str, batch_size: int, device: str):
     return {"input_ids": ids.to(device).expand(batch_size, -1).contiguous()}
 
 
-def eos_ids(tokenizer) -> list[int]:
+def eos_ids(tokenizer, model=None) -> list[int]:
     found = []
-    for value in (getattr(tokenizer, "eos_token_id", None), tokenizer.convert_tokens_to_ids("<|im_end|>") if hasattr(tokenizer, "convert_tokens_to_ids") else None):
+    values = [
+        getattr(tokenizer, "eos_token_id", None),
+        tokenizer.convert_tokens_to_ids("<|im_end|>") if hasattr(tokenizer, "convert_tokens_to_ids") else None,
+    ]
+    config = getattr(model, "config", None) if model is not None else None
+    generation_config = getattr(model, "generation_config", None) if model is not None else None
+    for candidate in (config, getattr(config, "text_config", None), generation_config):
+        if candidate is not None:
+            eos = getattr(candidate, "eos_token_id", None)
+            values.extend(eos if isinstance(eos, (list, tuple, set)) else [eos])
+    values.append(248044)
+    for value in values:
         if isinstance(value, int) and value >= 0 and value not in found:
             found.append(value)
     return found
+
+
+def effective_generation_config(model, tokenizer, max_new_tokens: int, do_sample: bool,
+                                temperature: float | None = None, top_p: float | None = None) -> dict[str, Any]:
+    overrides = {
+        "do_sample": bool(do_sample),
+        "max_new_tokens": int(max_new_tokens),
+        "use_cache": True,
+        "pad_token_id": getattr(tokenizer, "pad_token_id", None),
+        "eos_token_id": eos_ids(tokenizer, model),
+    }
+    if do_sample:
+        overrides.update({"temperature": float(temperature), "top_p": float(top_p)})
+    generation = getattr(model, "generation_config", None)
+    defaults = generation.to_dict() if generation is not None and hasattr(generation, "to_dict") else {}
+    effective = dict(defaults)
+    effective.update(overrides)
+    return {"effective": effective, "overrides": overrides}
+
+
+def assert_rendered_prompt(tokenizer, question: str) -> str:
+    rendered = build_prompt(tokenizer, question)
+    assistant_tail = "<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    if "<|im_start|>system" in rendered:
+        raise ValueError("Part 86 prompt unexpectedly contains a system message")
+    if rendered.count("<|im_start|>user") != 1 or rendered.count("<|im_start|>assistant") != 1:
+        raise ValueError(f"Part 86 prompt must render exactly one user and assistant turn: {rendered!r}")
+    if question not in rendered or not rendered.endswith(assistant_tail):
+        raise ValueError(f"Part 86 prompt did not render the registered question and empty think block: {rendered!r}")
+    return rendered
+
+
+def build_manifest(screen_dir: str | Path, items_path: str | Path | None = None) -> dict[str, Any]:
+    root = Path(screen_dir)
+    code_hashes = code_sha256()
+    configs = {}
+    outputs = {}
+    for path in sorted(root.glob("layer_*.jsonl"), key=lambda p: int(p.stem.split("_")[1])):
+        layer = path.stem.split("_")[1]
+        meta_path = root / f"layer_{layer}.meta.json"
+        if not meta_path.is_file():
+            raise ValueError(f"screen output {path} has no metadata file")
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        if meta.get("status") != "complete":
+            raise ValueError(f"screen metadata {meta_path} is not complete")
+        config = meta.get("config")
+        if not isinstance(config, dict):
+            raise ValueError(f"screen metadata {meta_path} has no config")
+        if config.get("code_sha256") != code_hashes:
+            raise ValueError(f"current code hashes do not match screen metadata for layer {layer}")
+        configs[layer] = config
+        outputs[path.name] = sha256_file(path)
+    if not outputs:
+        raise ValueError(f"no completed screen outputs under {root}")
+    per_layer_keys = {"layer", "median", "seed"}
+    shared = {key: value for key, value in next(iter(configs.values())).items() if key not in per_layer_keys}
+    for layer, config in configs.items():
+        current_shared = {key: value for key, value in config.items() if key not in per_layer_keys}
+        if current_shared != shared:
+            raise ValueError(f"screen configuration differs across layers; L{layer} is inconsistent")
+    manifest = {
+        "code_sha256": code_hashes,
+        "config_sha256": canonical_sha256(configs),
+        "configs": configs,
+        "screen_outputs_sha256": outputs,
+    }
+    if items_path is not None:
+        manifest["items_sha256"] = sha256_file(Path(items_path))
+    manifest["manifest_sha256"] = canonical_sha256(manifest)
+    return manifest
+
+
+def write_manifest(screen_dir: str | Path, items_path: str | Path | None = None) -> dict[str, Any]:
+    manifest = build_manifest(screen_dir, items_path)
+    atomic_json(Path(screen_dir) / "manifest.json", manifest)
+    return manifest
 
 
 def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, max_new_tokens: int,
@@ -198,7 +347,7 @@ def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, 
             torch.cuda.manual_seed_all(int(seed))
         if hasattr(torch, "xpu") and torch.xpu.is_available():
             torch.xpu.manual_seed_all(int(seed))
-    eos = eos_ids(tokenizer)
+    eos = eos_ids(tokenizer, model)
     kwargs = {
         **inputs,
         "max_new_tokens": int(max_new_tokens),
@@ -230,6 +379,7 @@ def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, 
         out.append({
             "answer": tokenizer.decode(ids, skip_special_tokens=True).strip(),
             "token_count": len(ids),
+            "token_ids": [int(token_id) for token_id in ids],
         })
     for row, result in enumerate(out):
         expected = max(0, result["token_count"] - 1)
