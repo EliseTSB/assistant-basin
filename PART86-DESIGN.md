@@ -152,3 +152,25 @@ the screen), seeded with `torch.manual_seed` and the device's `manual_seed_all` 
 `replay86.py --verify-dir` regenerates, for every pick, its first and last answer and a seeded quarter of the rest
 (seed 86586 + 10000 x L + n), from its own median, its own push and these rules, and every regenerated answer must
 match the saved one token for token. A mismatch means verification is not read.
+
+## Amendment 5 (2026-10-28 06:49 CT, during the screen, before any triage, blind reading or verification answer)
+
+Decision `part86-after-r6-2026-10-28`, after Sol's round 6 (`scratch/review-part86-r6-sol/REVIEW.md` in Journal):
+
+1. **Verification is replayed whole.** `replay86.py --verify-dir` regenerates every one of the 5,280 verification
+   answers, not a quarter. A quarter sample let a single-answer defect through about 75% of the time, and one answer can
+   decide a neuron at the 12-of-24 survival line or a random direction's 1-of-24 ceiling. Each regenerated answer must
+   match the saved text, the record's token count, and the observer's token hash and count for that row; each call's
+   stop tokens must be the registered set: every eos id named by the model config, its text config and its generation
+   config, plus the tokenizer's eos and `<|im_end|>` (the build's rule, unchanged). Malformed records (a field of the
+   wrong type, an index out of range, a duplicate or missing case, a duplicate or misnamed pick file) are refused before
+   anything is compared. Verification is not read unless that replay passes.
+2. **The screen claim is narrowed.** The screen's replay stays a sample (first, last and three seeded calls per layer);
+   a full one would cost another nine A770-hours. The screen's results rest on that sampled replay plus audit86's
+   whole-population checks, which now include an allowlist on the keywords every generate call was passed (the
+   observer records all of them), so a generation processor outside the observer's sampling list is refused on every
+   call. They are not a certificate of every screen answer, and the write-up says so.
+3. **Personas are bound to the selected file.** The blind verification reader is shown each answer's persona phrase,
+   so that phrase must be the selected file's: replay and `verify86.py prepare` both take the picked file itself,
+   require its digest to be the one every pick's config carries, and require every pick's layer, neuron and persona to
+   be a row of it. A digest carried through configs is not enough on its own.

@@ -4,8 +4,8 @@ Amendment 3 (2026-10-28): every screen command runs at `--batch-size 64` (measur
 10.8 h for 17 layers; `results/part86/timing/`), and triage uses the widened rule now in `triage86.py`. The layer-22 run
 already in `p86\screen` is the dry run (code 6db5881, no observer): move it to `p86\screen-dryrun-6db5881` before the pilot.
 
-Copy `screen86.py`, `common86.py`, `triage86.py`, `blind86.py`, `verify86.py`, `audit86.py`, `test86.py`,
-`test_audit86.py`, `mutate86.py`, `golden-verdicts.json`, `READER-BRIEF.md`, and `READER-BRIEF-VERIFY.md` to
+Copy `screen86.py`, `common86.py`, `triage86.py`, `blind86.py`, `verify86.py`, `audit86.py`, `replay86.py`, `test86.py`,
+`test_audit86.py`, `test_replay86.py`, `mutate86.py`, `golden-verdicts.json`, `READER-BRIEF.md`, and `READER-BRIEF-VERIFY.md` to
 `C:\Users\alexa\neuron-probe-gpu\part86\`. The repository-level `neuron_report.py` and `part84` package must also be
 present beside `part86` for the isolated mutation runner. Copy repository-level `observe.py` and `test_observe.py` beside
 `neuron_report.py` in `C:\Users\alexa\neuron-probe-gpu\`. Screen configs hash generation-path files
@@ -196,11 +196,26 @@ python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py verify C:\Users\a
 ```
 
 Require the exact line `AUDIT86 verify: PASS`. The audit must pass again after the final verification run and before scoring.
+
+Then replay every verification answer (Amendments 4 and 5; decision `part86-after-r6-2026-10-28`). Verification is
+not read unless the replay prints `REPLAY86 verify: PASS (all 5280 answers match ...)`. Run these two lines as one job's
+`steps.txt` (bare paths, the runner prepends the interpreter), only with at least 12 GB of Windows RAM available; the
+negative control is last because the runner stops at the first nonzero exit, and it must exit 1 with answers changed:
+
+```text
+part86\replay86.py --verify-dir p86\verify86 --picked p86\picked20.json --calib p66basin\neuronary-calib.txt --device xpu --out p86\replay\verify.json
+part86\replay86.py --verify-dir p86\verify86 --picked p86\picked20.json --calib p66basin\neuronary-calib.txt --device xpu --out p86\replay\verify-neg.json --perturb-median 1.01
+```
+
+The replay regenerates all 5,280 answers one call each (about the verification run's own time; check it fits the
+six-hour task limit from the verification projection before launching). `--fraction` below 1 is a non-production
+sample: it exits 3 and never prints PASS. Keep `p86\replay\verify.json` with the results; it names the picked file's
+digest that preparation must also see.
 Prepare blind persona-claim items into a reader folder with the key in a separate private folder, paste the item texts
 inline into the tool-less reader, and do not share the key:
 
 ```text
-C:\Users\alexa\neuron-probe-gpu\part86\verify86.py prepare --input C:\Users\alexa\neuron-probe-gpu\p86\verify86 --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --chunk-size 500
+C:\Users\alexa\neuron-probe-gpu\part86\verify86.py prepare --input C:\Users\alexa\neuron-probe-gpu\p86\verify86 --picked C:\Users\alexa\neuron-probe-gpu\p86\picked20.json --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --chunk-size 500
 python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py verify C:\Users\alexa\neuron-probe-gpu\p86\verify86
 C:\Users\alexa\neuron-probe-gpu\part86\verify86.py score --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --labels C:\Users\alexa\neuron-probe-gpu\p86\verify-labels.jsonl --labels2 C:\Users\alexa\neuron-probe-gpu\p86\verify-labels-2.jsonl --screen-score C:\Users\alexa\neuron-probe-gpu\p86\blind-results-for-verify.json --out C:\Users\alexa\neuron-probe-gpu\p86\verify-results.json
 ```

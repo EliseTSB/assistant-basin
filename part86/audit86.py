@@ -59,6 +59,7 @@ VERIFY_RANDOM = 10
 VERIFY_TOKENS = 64
 VERIFY_TEMPERATURE = 0.7
 VERIFY_TOP_P = 0.95
+EXPLICIT_ALLOWED = {"max_new_tokens", "do_sample", "use_cache", "pad_token_id", "eos_token_id"}
 VERIFY_SEED = 86500                      # design: seeds 86500 + 100 x question + sample
 VERIFY_RANDOM_SEED = 86900               # not registered: the build's recipe, 86900 + 10000 x layer + neuron (reproducibility only)
 WRITE_TOLERANCE = 0.02                   # relative, |write norm - dose x median| / (dose x median); bf16 rounding
@@ -213,6 +214,16 @@ class Context:
             fail(f"{where}: generate raised {call['error']}")
         if call.get("shape_changes"):
             fail(f"{where}: a hook changed a down_proj input's shape: {call['shape_changes']}")
+        # Allowlist on the keywords generate was actually passed (round 6, decision part86-after-r6-2026-10-28):
+        # the observer records every explicit keyword, so a processor outside its sampling list (bad_words_ids,
+        # logits_processor, ...) cannot hide. The set is the build's (common86.generate_batch), checked against the
+        # design: sampling settings only when the design samples.
+        allowed = EXPLICIT_ALLOWED | ({"temperature", "top_p"} if sampling else set())
+        extra = sorted(set(call.get("explicit_kwargs") or {}) - allowed)
+        if extra:
+            fail(f"{where}: generate was passed unregistered keywords {extra}")
+        if call.get("positional_args"):
+            fail(f"{where}: generate was passed {call['positional_args']} positional arguments")
         effective = call.get("effective") or {}
         if effective.get("do_sample") is not sampling:
             fail(f"{where}: do_sample {effective.get('do_sample')!r} at the call, registered {sampling}")

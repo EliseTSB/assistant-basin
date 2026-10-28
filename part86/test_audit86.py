@@ -101,6 +101,8 @@ def generate(model, question, gen):
     kwargs = {"input_ids": ids, "max_new_tokens": gen.get("tokens", TOKENS), "do_sample": gen.get("do_sample", False)}
     if gen.get("repetition_penalty"):
         kwargs["repetition_penalty"] = gen["repetition_penalty"]
+    if gen.get("bad_words"):                       # round 6: a processor outside the observer's sampling list
+        kwargs["bad_words_ids"] = [[1]]
     if kwargs["do_sample"]:
         kwargs.update(temperature=gen.get("temperature", 0.7), top_p=0.95)
     with torch.inference_mode():
@@ -137,7 +139,7 @@ def make_screen(root: Path, m: str | None = None):
                    collateral=(m == "collateral"))
     extra = model.model.layers[0].self_attn.register_forward_hook(lambda *a: None) if m == "extra_hook" else None
     gen = {"batch": N_NEURONS + N_RANDOM, "do_sample": m == "sampling", "tokens": TOKENS + (1 if m == "tokens" else 0),
-           "repetition_penalty": 1.2 if m == "repetition_penalty" else None}
+           "repetition_penalty": 1.2 if m == "repetition_penalty" else None, "bad_words": m == "bad_words"}
     if m == "hook_mid_call":
         def add_late_hook(module, args, state={"done": False}):
             if not state["done"] and args[0].shape[-2] == 1:
@@ -194,7 +196,8 @@ def make_verify(root: Path, m: str | None = None):
                 if m == "draw":
                     torch.rand(1)
                 gen = {"batch": 1, "do_sample": True, "tokens": audit86.VERIFY_TOKENS,
-                       "temperature": 1.0 if m == "temperature" else 0.7}
+                       "temperature": 1.0 if m == "temperature" else 0.7,
+                       "bad_words": m == "bad_words" and condition == "neuron" and (qi, s) == (1, 3)}
                 if m == "wrong_question":
                     gen["question_override"] = audit86.VERIFY_QUESTIONS[0]
                 out = generate(model, question, gen)
@@ -257,6 +260,7 @@ class AuditScreen(unittest.TestCase):
     def test_tokens(self): self.check_fails("tokens", "max_new_tokens")
     def test_repetition_penalty(self): self.check_fails("repetition_penalty", "must be the model's default")
     def test_hook_mid_call(self): self.check_fails("hook_mid_call", "hooks")
+    def test_unregistered_keyword(self): self.check_fails("bad_words", "unregistered keywords")
 
     def test_foreign_observer_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -294,6 +298,7 @@ class AuditVerify(unittest.TestCase):
     def test_wrong_question(self): self.check_fails("wrong_question", "prompt rendered")
     def test_random_seed(self): self.check_fails("random_seed", "cosine")
     def test_previous_layer(self): self.check_fails("previous_layer", "changed layers")
+    def test_one_call_unregistered_keyword(self): self.check_fails("bad_words", "unregistered keywords")
 
 
 class Prompt(unittest.TestCase):

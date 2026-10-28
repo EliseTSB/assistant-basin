@@ -472,8 +472,8 @@ def _run_loaded(args, picked, persona_equivalences, calibration, calibration_has
     print(f"completed {len(elapsed_per_neuron)} new neurons; {len(completed_at_start)} already complete in {out_dir}")
 
 
-def _read_verification_files(input_path):
-    return _read_verification_bundle(input_path)["records"]
+def _read_verification_files(input_path, picked_path):
+    return _read_verification_bundle(input_path, picked_path)["records"]
 
 
 def _shared_config(config):
@@ -481,7 +481,13 @@ def _shared_config(config):
     return {key: value for key, value in config.items() if key not in per_neuron}
 
 
-def _read_verification_bundle(input_path):
+def _read_verification_bundle(input_path, picked_path):
+    """Collect the 20 per-neuron files, bound to the actual selected file (round 6, decision part86-after-r6): its
+    digest must be the one every config carries, and every file's layer, neuron and persona must be a row of it."""
+    picked_path = Path(picked_path)
+    picked_rows = load_picked(picked_path, 20)
+    picked_sha = c.sha256_file(picked_path)
+    picked_personas = {(row["layer"], row["neuron"]): row["persona"].strip() for row in picked_rows}
     source = Path(input_path)
     if not source.is_dir():
         raise ValueError("verification input must be the per-neuron output directory")
@@ -535,6 +541,14 @@ def _read_verification_bundle(input_path):
         if (layer_no, neuron) in seen_neurons:
             raise ValueError(f"duplicate neuron output for L{layer_no} N{neuron}")
         seen_neurons.add((layer_no, neuron))
+        if config.get("selected_set_sha256") != picked_sha:
+            raise ValueError(f"{path} names selected set {config.get('selected_set_sha256')}, not the picked file's "
+                             f"{picked_sha}")
+        if (layer_no, neuron) not in picked_personas:
+            raise ValueError(f"{path} is not one of the picked neurons")
+        if not isinstance(config.get("persona"), str) or config["persona"].strip() != picked_personas[(layer_no, neuron)]:
+            raise ValueError(f"{path} persona {config.get('persona')!r} is not the picked file's "
+                             f"{picked_personas[(layer_no, neuron)]!r}")
         state, complete = _load_neuron_state(path, config)
         if not complete or len(records) != ANSWERS_PER_NEURON or \
                 {_case_key(record) for record in records} != expected_cases:
@@ -567,7 +581,11 @@ def _read_verification_bundle(input_path):
         rows.extend(records)
         input_hashes[path.name] = c.sha256_file(path)
         configs[path.name] = config
+    if seen_neurons != set(picked_personas):
+        raise ValueError(f"verification files do not cover the picked neurons: missing "
+                         f"{sorted(set(picked_personas) - seen_neurons)}")
     provenance = {
+        "picked_file_sha256": picked_sha,
         "input_files_sha256": input_hashes,
         "configs": configs,
         "shared_config": shared,
@@ -586,7 +604,7 @@ def _write_reader_chunks(path: Path, items: list[dict], chunk_size: int = 500) -
         (path / f"chunk-{index:04d}.jsonl").write_text(encoded, encoding="utf-8")
 
 
-def prepare(input_path, items_path, key_path, force=False, chunk_size=500):
+def prepare(input_path, items_path, key_path, force=False, chunk_size=500, *, picked):
     items_path, key_path = Path(items_path), Path(key_path)
     if _key_is_inside_items_folder(items_path, key_path):
         raise ValueError("verification key must live outside the folder containing reader items")
@@ -599,7 +617,7 @@ def prepare(input_path, items_path, key_path, force=False, chunk_size=500):
         for path in (primary_chunks, second_chunks):
             if path.exists():
                 shutil.rmtree(path)
-    bundle = _read_verification_bundle(input_path)
+    bundle = _read_verification_bundle(input_path, picked)
     records = bundle["records"]
     secrets.SystemRandom().shuffle(records)
     ids = set()
@@ -849,6 +867,7 @@ def main(argv=None):
     run_p.add_argument("--max-neurons", type=int, default=None, help="maximum new neuron files in this task")
     prep = sp.add_parser("prepare", help="shuffle per-neuron answers for blind persona-claim reading")
     prep.add_argument("--input", required=True, help="directory written by run")
+    prep.add_argument("--picked", required=True, help="the selected file passed to run; every persona is bound to it")
     prep.add_argument("--items", required=True)
     prep.add_argument("--key", required=True)
     prep.add_argument("--chunk-size", type=int, default=500)
@@ -866,7 +885,7 @@ def main(argv=None):
     if args.command == "run":
         run(args)
     elif args.command == "prepare":
-        count = prepare(args.input, args.items, args.key, args.force, args.chunk_size)
+        count = prepare(args.input, args.items, args.key, args.force, args.chunk_size, picked=args.picked)
         print(f"{count} verification answers blinded; reader chunks are at most {args.chunk_size}")
     else:
         if Path(args.out).exists() and not args.force:

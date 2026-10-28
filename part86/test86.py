@@ -442,6 +442,10 @@ class TestSurvival(unittest.TestCase):
             root = Path(tmp)
             source = root / "verify-run"
             source.mkdir()
+            picked_path = root / "picked20.json"
+            picked_path.write_text(json.dumps([{"layer": 10 + n % 17, "neuron": n, "persona": f"persona {n}"}
+                                               for n in range(20)]), encoding="utf-8")
+            picked_sha = common86.sha256_file(picked_path)
             for neuron in range(20):
                 layer_no = 10 + neuron % 17
                 persona = f"persona {neuron}"
@@ -461,7 +465,7 @@ class TestSurvival(unittest.TestCase):
                     "random_seed": common86.RANDOM_VERIFY_SEED + layer_no * 10000 + neuron,
                     "screen_manifest_sha256": "a" * 64,
                     "primary_labels_sha256": "b" * 64,
-                    "selected_set_sha256": "c" * 64,
+                    "selected_set_sha256": picked_sha,
                 }
                 records = []
                 for condition, direction in [("neuron", None)] + [("random_direction", d) for d in range(10)]:
@@ -497,7 +501,7 @@ class TestSurvival(unittest.TestCase):
                 "screen_manifest_sha256", "primary_labels_sha256", "selected_set_sha256")}
             items_path = root / "reader" / "verify-items.jsonl"
             key_path = root / "private" / "verify-key.json"
-            self.assertEqual(verify86.prepare(source, items_path, key_path), 5280)
+            self.assertEqual(verify86.prepare(source, items_path, key_path, picked=picked_path), 5280)
             key = json.loads(key_path.read_text(encoding="utf-8"))
             self.assertEqual(len(key["second_reader_ids"]), 528)
             self.assertIn("manifest_sha256", key["manifest"])
@@ -546,7 +550,8 @@ class TestSurvival(unittest.TestCase):
             incomplete["records"].pop()
             mixed_path.write_text(json.dumps(incomplete), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "expected 264"):
-                verify86.prepare(source, root / "incomplete-reader" / "items.jsonl", root / "incomplete-key.json")
+                verify86.prepare(source, root / "incomplete-reader" / "items.jsonl", root / "incomplete-key.json",
+                                 picked=picked_path)
             mixed_path.write_bytes(good_payload)
             mixed = json.loads(mixed_path.read_text(encoding="utf-8"))
             mixed["config"]["dose"] = 0.4
@@ -555,7 +560,8 @@ class TestSurvival(unittest.TestCase):
                 record["trace"]["dose"] = 0.4
             mixed_path.write_text(json.dumps(mixed), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "registered verification generation config"):
-                verify86.prepare(source, root / "mixed-reader" / "items.jsonl", root / "mixed-key.json")
+                verify86.prepare(source, root / "mixed-reader" / "items.jsonl", root / "mixed-key.json",
+                                 picked=picked_path)
 
             labels_path = root / "verify-labels.jsonl"
             labels2_path = root / "verify-labels-2.jsonl"
