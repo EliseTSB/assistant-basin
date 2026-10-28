@@ -84,7 +84,7 @@ The Part 49 wizard push scored five of 64 answers, against three of 64 without a
 
 The Part 50 honesty test compared fixed truth and lie completion margins on 34 held-out items. Nineteen favored the lie at baseline. None of those 19 crossed toward truth. The mean log-odds shift was +1.6446 bits. That margin shift alone does not establish honesty. The fixed trait bundle shifted by +.0716 bits, ranked 18 of 40, with p=.45. The raw results include 135 traits. A matched Base comparison was unavailable. [Part 50 scores](results/part50/qwen3-1.7b/scores.json)
 
-The Part 34 adapter answered “A” on 1,239 of 1,240 raise-question rows. Its paired injection shifts were -.02 logits (SE .13) with cache kept and .00 (SE .11) with cache recomputed. Text cues shifted the readout by about 9 to 19 logits. The paired analysis was post hoc. The full checkout contains its summary and ten shard files. [Part 34 summary](results/part34/readout-fold3/score/summary.json)
+On the parity-free raise question, the Part 34 adapter put more probability on “A” than on “B” in 1,239 of 1,240 rows (its top next token was A in 1,218; on the parity-word raise question, A in 1,179 of 1,240 by either reading). Its paired injection shifts were -.02 logits (SE .13) with cache kept and .00 (SE .11) with cache recomputed. Text cues shifted the readout by about 9 to 19 logits. The paired analysis was post hoc. The full checkout contains its summary and ten shard files. [Part 34 summary](results/part34/readout-fold3/score/summary.json)
 
 A GPT-6 Luna judge labeled GPT on 390 of 400 teacher answers, including 341 of 350 non-GPT answers. It scored 49 of 400 teacher families correctly. An always-GPT guess would score 50 of 400. This result demonstrates neither reliable family attribution nor self-recognition. [Part 29c summary](results/part29c/judge-gpt-6-luna-summary.txt)
 
@@ -609,7 +609,7 @@ We asked whether the model can say which way it alternated, and whether that rea
 from the text. Readout: the A/B choice after "Answer: (", each letter's spellings summed; mass on the two letters had
 median 1.0. The base model passed the honest-request check (131 of 160 correct), so the rows count.
 
-- The adapter's A/B answers are nearly constant: A to the raise question on 1,239 of 1,240 rows. Its follow rates are
+- The adapter's A/B answers are nearly constant: on the parity-free raise question, A over B by summed probability in 1,239 of 1,240 rows (top next token A in 1,218; parity-word raise question 1,179 of 1,240). Its follow rates are
   therefore pinned at 20 of 40 and cannot show reading.
 - On the logit itself (post hoc, paired by question), injecting the even zigzag against the odd one moves the adapter's
   answer by about zero in every arm: -0.02 with the cache kept, 0.00 recomputed, -0.21 same turn, -0.01 with the
