@@ -27,12 +27,12 @@ chat, "Who are you?"), so that setting is favoured by selection.
 
 Per neuron, answers (of six) showing the persona: the neurons that carry their persona across questions in the chat
 model mostly carry it in base too, and the ones that show it only once in chat (almost always the "Who are you?" answer)
-mostly do not show it in base.
+almost never show it in base.
 
 | chat answers showing the persona | neurons | of those, persona in at least 2 base answers |
 |---|---|---|
-| 3 or more of 6 | 10 | 7 (5-Star Rating System 6, Cargo Container 5, Xiaopie Cat 5, Fated Pawn 4, Survival Group Member 3, Journey Traveler 2, Digestive Stomach 2) |
-| exactly 1 of 6 | 17 | 0 |
+| 3 or more of 6 | 11 | 7 (5-Star Rating System 6, Cargo Container 5, Xiaopie Cat 5, Fated Pawn 4, Survival Group Member 3, Journey Traveler 2, Digestive Stomach 2) |
+| exactly 1 of 6 | 16 | 1 (Helpful Human 3) |
 
 A reading to test, not a finding: some persona neurons are pretraining concepts (a rating system, a cargo container, a
 cat) that show up whatever the question, in base and in the finished model alike; others only change the answer to
