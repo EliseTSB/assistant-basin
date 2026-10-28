@@ -21,7 +21,7 @@ FORM_LABELS = ("OK", "BROKEN")
 def collect_answers(paths=(), results_root=None, mode=None, attempt=1):
     files = [Path(p) for p in paths]
     if results_root:
-        files.extend(sorted(Path(results_root).glob("*/answers/*.jsonl")))
+        files.extend(sorted(Path(results_root).rglob("answers/*.jsonl")))
     unique = list(dict.fromkeys(files))
     records = []
     for path in unique:
@@ -262,8 +262,8 @@ def _read_json(path):
 
 def _step_data(results_root):
     root = Path(results_root)
-    return ({cp.key: _read_json(root / cp.key / "step0.json") for cp in CHECKPOINTS},
-            {cp.key: _read_json(root / cp.key / "step1.json") for cp in CHECKPOINTS})
+    return ({cp.key: _read_json(root / "main" / cp.key / "step0.json") for cp in CHECKPOINTS},
+            {cp.key: _read_json(root / "main" / cp.key / "step1.json") for cp in CHECKPOINTS})
 
 
 def _step_data_checked(results_root, partial=False, scope="plain_frame_pass"):
@@ -281,11 +281,34 @@ def _step_data_checked(results_root, partial=False, scope="plain_frame_pass"):
                 continue
             identity = payload.get("checkpoint") or {}
             if identity.get("key") != key:
-                raise ValueError(f"{key}/{name}.json identifies checkpoint {identity.get('key')!r}, expected {key!r}")
+                raise ValueError(f"main/{key}/{name}.json identifies checkpoint {identity.get('key')!r}, expected {key!r}")
             commit = identity.get("commit")
             if not isinstance(commit, str) or not commit.startswith(BY_KEY[key].commit_prefix):
-                raise ValueError(f"{key}/{name}.json commit does not match registered prefix {BY_KEY[key].commit_prefix}")
+                raise ValueError(f"main/{key}/{name}.json commit does not match registered prefix {BY_KEY[key].commit_prefix}")
+            if not isinstance(payload.get("code_commit"), str) or not payload["code_commit"]:
+                raise ValueError(f"main/{key}/{name}.json lacks code_commit provenance")
     return step0, step1
+
+
+def _check_main_template_hashes(item_key, references_dir=None, partial=False):
+    references_dir = Path(references_dir or (Path(__file__).resolve().parent / "references"))
+    reference_score = references_dir / "pilot-score.json"
+    if not reference_score.is_file():
+        if partial:
+            return
+        raise ValueError(f"main scoring requires pinned pilot score: {reference_score}")
+    score = json.loads(reference_score.read_text(encoding="utf-8"))
+    expected = (score.get("pilot_gate") or {}).get("plain_template_sha256")
+    if not isinstance(expected, str):
+        raise ValueError("pinned pilot score has no plain_template_sha256")
+    actual = {meta.get("frame_template_sha256") for meta in item_key.values()}
+    if actual != {expected}:
+        raise ValueError(f"main answer template hashes {sorted(str(value) for value in actual)} do not match pilot SHA-256 {expected}")
+    default_sha = hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()
+    if expected != default_sha:
+        template = references_dir / "pilot-frame-v2.txt"
+        if not template.is_file() or hashlib.sha256(template.read_bytes()).hexdigest() != expected:
+            raise ValueError("pinned custom pilot template is missing or has a different SHA-256")
 
 
 def _validate_main_scope(item_key, partial=False):
@@ -500,7 +523,7 @@ def reader_agreement(labels1, labels2, key):
 
 
 def score_payload(key, labels1, labels2=None, mode="main", results_root="results/part85",
-                  items_path=None, partial=False):
+                  items_path=None, partial=False, references_dir=None):
     _check_items_digest(key, items_path)
     item_key = _item_key(key)
     checked1 = validate_labels(labels1, key, require_responsive=(mode == "pilot"))
@@ -530,6 +553,7 @@ def score_payload(key, labels1, labels2=None, mode="main", results_root="results
                 "reader_agreement": reader_agreement(checked1, checked2, key) if checked2 else None}
     scope = _validate_main_scope(item_key, partial=partial)
     step0, step1 = _step_data_checked(results_root, partial=partial, scope=scope)
+    _check_main_template_hashes(item_key, references_dir=references_dir, partial=partial)
     decisions = evaluate_decisions(counts1, step0, step1)
     plain_ids = [i for i, meta in item_key.items() if meta.get("frame") == "plain"]
     if checked2:
@@ -596,7 +620,8 @@ def main(argv=None):
     if args.mode == "main" and labels2 is None:
         raise ValueError("main scoring requires both --labels and --labels2")
     payload = score_payload(key, labels, labels2, mode=args.mode, results_root=args.results_root,
-                            items_path=args.items, partial=args.partial)
+                            items_path=args.items, partial=args.partial,
+                            references_dir=Path(__file__).resolve().parent / "references")
     out = Path(args.out) if args.out else Path(args.key).with_name("score.json")
     if out.exists() and not args.force:
         raise FileExistsError(f"refusing to overwrite score output {out}; pass --force to replace it")

@@ -63,7 +63,12 @@ class TinyTokenizer:
     pad_token_id = 0
     chat_template = None
 
+    def __init__(self):
+        self.plain_prompts = []
+        self.chat_calls = 0
+
     def __call__(self, text, return_tensors=None, add_special_tokens=False):
+        self.plain_prompts.append(text)
         ids = [4, 5, 6]
         return {"input_ids": torch.tensor([ids], dtype=torch.long) if return_tensors else ids}
 
@@ -75,6 +80,7 @@ class TinyTokenizer:
 
     def apply_chat_template(self, messages, tokenize=True, add_generation_prompt=True,
                             return_tensors="pt", return_dict=True):
+        self.chat_calls += 1
         self.last_chat_messages = messages
         return {"input_ids": torch.tensor([[4, 5, 6]], dtype=torch.long)}
 
@@ -208,9 +214,9 @@ class Part85Tests(unittest.TestCase):
         self.assertEqual(sum(1 for x in main if x["frame"] == "chat"), 12)
 
     def test_cell_values_main_scope_eos_and_template(self):
-        step1 = {"neutral_activation_maxima": {"6978": 6.5, "7884": 2.0}}
+        step1 = {"neutral_activation_maxima": {"6978": 5.0, "7884": 2.0}}
         self.assertEqual(part85._cell_value("unclamped", step1), (None, None))
-        self.assertEqual(part85._cell_value("own_max", step1), (6978, 9.75))
+        self.assertEqual(part85._cell_value("own_max", step1), (6978, 7.5))
         self.assertEqual(part85._cell_value("absolute", step1), (6978, 9.75))
         self.assertEqual(part85._cell_value("control", step1), (7884, 3.0))
         with self.assertRaisesRegex(ValueError, "missing target unit"):
@@ -221,10 +227,16 @@ class Part85Tests(unittest.TestCase):
                                                                "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
             args = type("Args", (), {"pilot_score": str(score_path), "plain_template_file": None})()
             self.assertEqual(part85._main_scope(args), ("all", ("plain", "chat")))
-            score_path.write_text(json.dumps({"pilot_gate": {"action": "chat_only_posttrained"}}))
+            score_path.write_text(json.dumps({"pilot_gate": {"action": "chat_only_posttrained",
+                                                                "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
             self.assertEqual(part85._main_scope(args), ("posttrained", ("chat",)))
-            score_path.write_text(json.dumps({"pilot_gate": {"action": "pilot_incomplete"}}))
+            score_path.write_text(json.dumps({"pilot_gate": {"action": "pilot_incomplete",
+                "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
             with self.assertRaisesRegex(RuntimeError, "does not authorize"):
+                part85._main_scope(args)
+            score_path.write_text(json.dumps({"pilot_gate": {"action": "plain_frame_pass",
+                "plain_template_sha256": "0" * 64}}))
+            with self.assertRaisesRegex(ValueError, "does not match the pilot template"):
                 part85._main_scope(args)
         tokenizer = TinyTokenizer()
         self.assertEqual(part85._eos_ids(tokenizer, tiny_model()), [2])
@@ -494,6 +506,7 @@ class Part85Tests(unittest.TestCase):
                     mock.patch.object(step1_acts, "load_or_create_token_ids", return_value=(ids, "fixed-token-sha")), \
                     mock.patch.object(step1_acts, "SEQUENCE_COUNT", 1), \
                     mock.patch.object(step1_acts, "SEQUENCE_LENGTH", 4), \
+                    mock.patch.object(step1_acts, "EXPECTED_NEUTRAL_TOKEN_SHA256", "fixed-token-sha"), \
                     mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=TinyTokenizer()), \
                     mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained", return_value=model):
                 step1_acts.run(type("Args", (), {"checkpoint": "instruct", "snapshot_dir": str(root),
@@ -513,37 +526,57 @@ class Part85Tests(unittest.TestCase):
             snapshot = root / TEST_COMMIT
             snapshot.mkdir()
             (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            step0_path = root / "pilot-a1" / "instruct" / "step0.json"
+            step0_pushes = []
+            def step0_subprocess(argv, **kwargs):
+                if "handoff85.py" in str(argv):
+                    self.assertTrue(step0_path.is_file(), "step 0 must finish its atomic write before push")
+                    step0_pushes.append(argv)
+                return subprocess.CompletedProcess(argv, 0, stdout=TEST_COMMIT + "\n", stderr="")
             with mock.patch.object(step0_weights, "resolve_checkpoint", return_value=resolve_fake("instruct")), \
                  mock.patch.object(step0_weights, "analyze_snapshot", return_value={"measures": {}}), \
-                 mock.patch("subprocess.run") as step0_push:
+                 mock.patch.object(step0_weights, "code_commit", return_value="fixture-code"), \
+                 mock.patch("subprocess.run", side_effect=step0_subprocess):
                 step0_weights.main(["--checkpoint", "instruct", "--snapshot-dir", str(snapshot),
-                                    "--results-root", str(root), "--push-branch", "part85-run/pilot"])
-            self.assertTrue((root / "instruct" / "step0.json").is_file())
-            self.assertIn("handoff85.py", str(step0_push.call_args))
+                                    "--results-root", str(root), "--push-branch", "part85-run/pilot-a1"])
+            self.assertTrue(step0_path.is_file())
+            self.assertEqual(len(step0_pushes), 1)
+            self.assertEqual(json.loads(step0_path.read_text())["code_commit"], "fixture-code")
 
             passages_path = root / "passages.json"
             passages_path.write_text(json.dumps([{"id": str(i), "offworld": "Far away.",
                                                   "ordinary": "Nearby."} for i in range(24)]))
             model = tiny_run_model().to(dtype=torch.bfloat16)
             token_ids = np.array([[4, 5, 6, 7]], dtype=np.int32)
+            step1_path = root / "pilot-a1" / "instruct" / "step1.json"
+            step1_pushes = []
+            def step1_subprocess(argv, **kwargs):
+                if "handoff85.py" in str(argv):
+                    self.assertTrue(step1_path.is_file(), "step 1 must finish its atomic write before push")
+                    step1_pushes.append(argv)
+                return subprocess.CompletedProcess(argv, 0, stdout=TEST_COMMIT + "\n", stderr="")
             with mock.patch.object(step1_acts, "resolve_checkpoint", return_value=resolve_fake("instruct")), \
                  mock.patch.object(step1_acts, "load_or_create_token_ids", return_value=(token_ids, "fixed-token-sha")), \
                  mock.patch.object(step1_acts, "collect_acts", return_value=(np.ones((1, 4, 2)), np.ones(24), np.zeros(24))), \
                  mock.patch.object(step1_acts, "SEQUENCE_COUNT", 1), \
                  mock.patch.object(step1_acts, "SEQUENCE_LENGTH", 4), \
+                 mock.patch.object(step1_acts, "EXPECTED_NEUTRAL_TOKEN_SHA256", "fixed-token-sha"), \
+                 mock.patch.object(step1_acts, "code_commit", return_value="fixture-code"), \
                  mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=TinyTokenizer()), \
                  mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained", return_value=model), \
-                 mock.patch("subprocess.run") as step1_push:
+                 mock.patch("subprocess.run", side_effect=step1_subprocess):
                 step1_acts.main(["--checkpoint", "instruct", "--snapshot-dir", str(snapshot),
-                                 "--results-root", str(root), "--sequence-ids", str(root / "neutral-token-ids.json"),
-                                 "--passages", str(passages_path), "--push-branch", "part85-run/pilot"])
-            self.assertTrue((root / "instruct" / "step1.json").is_file())
-            self.assertIn("handoff85.py", str(step1_push.call_args))
+                                 "--results-root", str(root), "--sequence-ids", str(root / "pilot-a1" / "neutral-token-ids.json"),
+                                 "--passages", str(passages_path), "--push-branch", "part85-run/pilot-a1"])
+            self.assertTrue(step1_path.is_file())
+            self.assertEqual(len(step1_pushes), 1)
+            self.assertEqual(json.loads(step1_path.read_text())["code_commit"], "fixture-code")
 
-    def _write_step1_fixture(self, root, key, maximum=6.5):
-        cp_root = Path(root) / key
+    def _write_step1_fixture(self, root, key, maximum=5.0, mode="main", attempt=1):
+        base = Path(root) / (f"pilot-a{attempt}" if mode == "pilot" else "main")
+        cp_root = base / key
         cp_root.mkdir(parents=True, exist_ok=True)
-        payload = {"checkpoint": {"key": key, "commit": TEST_COMMIT},
+        payload = {"checkpoint": {"key": key, "commit": TEST_COMMIT}, "code_commit": "fixture-code",
                    "neutral_activation_maxima": {"6978": maximum, "7884": 2.0},
                    "neutral_token_ids_sha256": "f" * 64,
                    "dataset_revision": step1_acts.WIKITEXT_REVISION}
@@ -553,73 +586,122 @@ class Part85Tests(unittest.TestCase):
     def _run_patches(self, observers, tokenizer):
         import transformers
         original_hook = part85.BothPhaseClampHook
+        state = {"model": None}
+
+        def load_model(*_args, **_kwargs):
+            state["model"] = tiny_run_model()
+            return state["model"]
 
         def tracked_hook(down_proj, unit, value):
             hook = original_hook(down_proj, unit, value)
+            model = state["model"]
+            layers = [module for module in model.modules()
+                      if isinstance(module, torch.nn.ModuleList) and len(module) > 10
+                      and hasattr(getattr(module[0], "mlp", None), "down_proj")]
+            modules = list(max(layers, key=len))
+            target_layer = next(i for i, layer in enumerate(modules)
+                                if layer.mlp.down_proj is down_proj)
             observed_unit = unit if unit is not None else part85.TARGET_UNIT
-            observation = {"unit": unit, "value": value, "prompt": [], "generated": []}
+            observation = {"unit": unit, "value": value, "target_layer": target_layer,
+                           "layers": {i: {"prompt": [], "generated": []} for i in range(len(modules))}}
             observers.append(observation)
-            pending_prompt = [True]
+            pending_prompt = {i: True for i in range(len(modules))}
             original_begin = hook.begin_sequence
 
             def begin_sequence():
-                pending_prompt[0] = True
+                for i in pending_prompt:
+                    pending_prompt[i] = True
                 original_begin()
 
-            def record(_module, args):
-                x = args[0]
-                phase = "prompt" if pending_prompt[0] else "generated"
-                pending_prompt[0] = False
-                observation[phase].extend(x[..., observed_unit].detach().float().cpu().reshape(-1).tolist())
-
             hook.begin_sequence = begin_sequence
-            observer_handle = down_proj.register_forward_pre_hook(record)
+            observer_handles = []
+            for layer_index, layer in enumerate(modules):
+                def record(_module, args, i=layer_index):
+                    x = args[0]
+                    phase = "prompt" if pending_prompt[i] else "generated"
+                    pending_prompt[i] = False
+                    observation["layers"][i][phase].extend(
+                        x[..., observed_unit].detach().float().cpu().reshape(-1).tolist())
+                observer_handles.append(layer.mlp.down_proj.register_forward_pre_hook(record))
             original_remove = hook.remove
 
             def remove():
-                observer_handle.remove()
+                for handle in observer_handles:
+                    handle.remove()
                 original_remove()
 
             hook.remove = remove
             return hook
 
         return [mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
-                                  side_effect=lambda *_a, **_kw: tiny_run_model()),
+                                  side_effect=load_model),
                 mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer),
                 mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake),
                 mock.patch.object(part85, "BothPhaseClampHook", side_effect=tracked_hook)]
 
-    def _run_pilot_main(self, root, key, mode, gate_path=None, chat=False, push_branch=None, observers=None):
+    def _run_pilot_main(self, root, key, mode, gate_path=None, chat=False, push_branch=None, observers=None,
+                       attempt=1, plain_template_file=None, tokenizers=None):
         observers = observers if observers is not None else []
         tokenizer = TinyTokenizer()
+        if tokenizers is not None:
+            tokenizers.append(tokenizer)
         if chat:
             tokenizer.chat_template = "stub-template"
         patches = self._run_patches(observers, tokenizer)
+        original_specs = part85._specs_for_run
+
+        def small_specs(args):
+            specs = original_specs(args)
+            if args.mode == "pilot":
+                return specs
+            if args.checkpoint == "pretrain_4T":
+                allowed = {("plain", "unclamped"), ("plain", "own_max"), ("plain", "absolute")}
+            elif args.checkpoint == "instruct" and any(row["frame"] == "plain" for row in specs):
+                allowed = {("plain", "unclamped"), ("plain", "own_max"), ("plain", "absolute"),
+                           ("chat", "own_max")}
+            else:
+                allowed = {("chat", "unclamped"), ("chat", "own_max")}
+            return [row for row in specs if (row["frame"], row["cell"]) in allowed]
+
         if mode == "pilot":
             argv = ["--mode", "pilot", "--checkpoint", key, "--snapshot-dir",
-                    str(Path(root) / TEST_COMMIT), "--results-root", str(root), "--device", "cpu"]
+                    str(Path(root) / TEST_COMMIT), "--results-root", str(root), "--device", "cpu",
+                    "--attempt", str(attempt)]
             samples_patch = mock.patch.object(part85, "PILOT_SAMPLES_PER_QUESTION", 2)
+            expected_branch = f"part85-run/pilot-a{attempt}"
         else:
             argv = ["--mode", "main", "--checkpoint", key, "--pilot-score", str(gate_path),
                     "--snapshot-dir", str(Path(root) / TEST_COMMIT), "--results-root", str(root),
                     "--device", "cpu"]
             samples_patch = mock.patch.object(part85, "SAMPLES_PER_QUESTION", 1)
+            expected_branch = f"part85-run/main-{key}"
         if push_branch:
+            if push_branch == "auto":
+                push_branch = expected_branch
             argv.extend(["--push-branch", push_branch])
+        if plain_template_file:
+            argv.extend(["--plain-template-file", str(plain_template_file)])
         with ExitStack() as stack:
             stack.enter_context(samples_patch)
             stack.enter_context(mock.patch.object(part85, "MAX_NEW_TOKENS", 2))
+            stack.enter_context(mock.patch.object(part85, "code_commit", return_value="fixture-code"))
+            stack.enter_context(mock.patch.object(part85, "_specs_for_run", side_effect=small_specs))
             for patcher in patches:
                 stack.enter_context(patcher)
             part85.main(argv)
 
     def _assert_answer_files(self, root, key, mode_tag, frames, per_question, cells=None):
         # This expected-value table is computed in the test, never by a Part 85 helper.
-        expected = {"unclamped": (None, None), "own_max": (6978, 9.75),
+        attempt = int(mode_tag[-1]) if mode_tag.startswith("pilot") else 1
+        run_dir = Path(root) / (f"pilot-a{attempt}" if mode_tag.startswith("pilot") else "main") / key
+        step1 = json.loads((run_dir / "step1.json").read_text(encoding="utf-8"))
+        maximum = float(step1["neutral_activation_maxima"]["6978"])
+        expected = {"unclamped": (None, None), "own_max": (6978, 1.5 * maximum),
                     "absolute": (6978, 9.75), "control": (7884, 3.0)}
         template_sha = hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()
-        answer_dir = Path(root) / key / "answers"
-        record = json.loads((Path(root) / key / "run.json").read_text(encoding="utf-8"))
+        answer_dir = run_dir / "answers"
+        record = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+        self.assertEqual(record["code_commit"], "fixture-code")
         for frame in frames:
             for cell in (cells or expected):
                 unit, clamp_value = expected[cell]
@@ -638,6 +720,7 @@ class Part85Tests(unittest.TestCase):
                     self.assertEqual(row["seed"], 85000 + 100 * row["question_index"] + row["sample"])
                     self.assertEqual(row["checkpoint"], key)
                     self.assertEqual(row["commit"], TEST_COMMIT)
+                    self.assertEqual(row["code_commit"], "fixture-code")
                     self.assertEqual(row["frame"], frame)
                 hook_key = f"{mode_tag}/{frame}/{cell}"
                 counts = record["hook_fire_counts"][hook_key]
@@ -646,38 +729,48 @@ class Part85Tests(unittest.TestCase):
 
     def _assert_observers(self, observers):
         for observation in observers:
-            self.assertTrue(observation["prompt"], observation)
-            self.assertTrue(observation["generated"], observation)
-            observed = observation["prompt"] + observation["generated"]
-            if observation["unit"] is not None:
-                self.assertTrue(all(math.isclose(v, observation["value"], rel_tol=1e-6, abs_tol=1e-6)
-                                    for v in observed), observation)
-            else:
-                self.assertFalse(all(math.isclose(v, 9.75, rel_tol=1e-6, abs_tol=1e-6)
-                                     for v in observed), observation)
+            self.assertEqual(observation["target_layer"], 10, observation)
+            for index, phases in observation["layers"].items():
+                self.assertTrue(phases["prompt"], (index, observation))
+                self.assertTrue(phases["generated"], (index, observation))
+                observed = phases["prompt"] + phases["generated"]
+                requested = observation["value"]
+                if observation["unit"] is not None and index == 10:
+                    self.assertTrue(all(math.isclose(v, requested, rel_tol=1e-6, abs_tol=1e-6)
+                                        for v in observed), (index, observation))
+                elif requested is not None:
+                    self.assertFalse(all(math.isclose(v, requested, rel_tol=1e-6, abs_tol=1e-6)
+                                         for v in observed), (index, observation))
 
     def test_run_entrypoint_disk_contract_resume_chat_and_changed_step1(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
             root = base / "results"
             (root / TEST_COMMIT).mkdir(parents=True)
+            for key in ("instruct", "pretrain_4T"):
+                self._write_step1_fixture(root, key, mode="pilot")
             for key in ("pretrain_4T", "instruct", "sft", "dpo"):
-                self._write_step1_fixture(root, key)
+                self._write_step1_fixture(root, key, mode="main")
             observers = []
-            with mock.patch("subprocess.run") as pushed:
+            with mock.patch("subprocess.run") as pushed, mock.patch.object(part85, "code_commit", return_value="fixture-code"):
                 for key in ("instruct", "pretrain_4T"):
                     observed = []
-                    self._run_pilot_main(root, key, "pilot", push_branch="part85-run/pilot",
+                    self._run_pilot_main(root, key, "pilot", push_branch="auto",
                                          observers=observed)
                     observers.extend(observed)
                     self._assert_answer_files(root, key, "pilot1", ("plain",), 2,
                                               cells=("unclamped", "own_max"))
                 calls = [call for call in pushed.call_args_list if "handoff85.py" in str(call)]
                 self.assertEqual(len(calls), 4, "push must run after each pilot answer cell")
+                expected_checkpoints = ("instruct", "instruct", "pretrain_4T", "pretrain_4T")
+                for call, expected_checkpoint in zip(calls, expected_checkpoints):
+                    argv = call.args[0]
+                    self.assertEqual(argv[argv.index("--checkpoint") + 1], expected_checkpoint)
+                    self.assertEqual(argv[argv.index("--branch") + 1], "part85-run/pilot-a1")
             self._assert_observers(observers)
 
             # Resume must preserve the completed file and its hook counts while generating missing cells.
-            cp_root = root / "pretrain_4T"
+            cp_root = root / "pilot-a1" / "pretrain_4T"
             run_path = cp_root / "run.json"
             record = json.loads(run_path.read_text(encoding="utf-8"))
             keep_key = "pilot1/plain/unclamped"
@@ -698,7 +791,7 @@ class Part85Tests(unittest.TestCase):
                                       cells=("unclamped", "own_max"))
             self.assertFalse(any(item["unit"] is None for item in resumed),
                              "resume regenerated the already-complete unclamped cell")
-            self.assertTrue(any(item["unit"] == 6978 and item["value"] == 9.75 for item in resumed),
+            self.assertTrue(any(item["unit"] == 6978 and item["value"] == 7.5 for item in resumed),
                             "resume did not generate the missing own-max cell")
             self._assert_observers(resumed)
 
@@ -708,42 +801,110 @@ class Part85Tests(unittest.TestCase):
                 "plain_template_sha256": hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()}}))
             pretrain_observers = []
             self._run_pilot_main(root, "pretrain_4T", "main", gate, observers=pretrain_observers)
-            self._assert_answer_files(root, "pretrain_4T", "main", ("plain",), 1)
+            self._assert_answer_files(root, "pretrain_4T", "main", ("plain",), 1,
+                                      cells=("unclamped", "own_max", "absolute"))
             self._assert_observers(pretrain_observers)
 
             post_observers = []
-            self._run_pilot_main(root, "instruct", "main", gate, chat=True, observers=post_observers)
-            self._assert_answer_files(root, "instruct", "main", ("plain", "chat"), 1)
+            chat_tokenizers = []
+            self._run_pilot_main(root, "instruct", "main", gate, chat=True, observers=post_observers,
+                                 tokenizers=chat_tokenizers)
+            self._assert_answer_files(root, "instruct", "main", ("plain",), 1,
+                                      cells=("unclamped", "own_max", "absolute"))
+            self._assert_answer_files(root, "instruct", "main", ("chat",), 1, cells=("own_max",))
             self._assert_observers(post_observers)
+            self.assertEqual(chat_tokenizers[0].chat_calls, 3,
+                             "chat prompts must use apply_chat_template for all three questions")
 
             chat_root = base / "chat-results"
             (chat_root / TEST_COMMIT).mkdir(parents=True)
             for key in ("pretrain_4T", "sft", "dpo", "instruct"):
                 self._write_step1_fixture(chat_root, key)
             chat_gate = base / "chat-only.json"
-            chat_gate.write_text(json.dumps({"pilot_gate": {"action": "chat_only_posttrained"}}))
+            chat_gate.write_text(json.dumps({"pilot_gate": {"action": "chat_only_posttrained",
+                "plain_template_sha256": hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()}}))
             with self.assertRaisesRegex(ValueError, "outside the main run scope"):
                 self._run_pilot_main(chat_root, "pretrain_4T", "main", chat_gate, chat=True)
             for key in ("sft", "dpo", "instruct"):
                 observed = []
-                self._run_pilot_main(chat_root, key, "main", chat_gate, chat=True, observers=observed)
-                self._assert_answer_files(chat_root, key, "main", ("chat",), 1)
+                tokenizers = []
+                self._run_pilot_main(chat_root, key, "main", chat_gate, chat=True, observers=observed,
+                                     tokenizers=tokenizers)
+                self._assert_answer_files(chat_root, key, "main", ("chat",), 1,
+                                          cells=("unclamped", "own_max"))
                 self._assert_observers(observed)
-                filenames = [p.name for p in (chat_root / key / "answers").glob("main-*.jsonl")]
+                self.assertEqual(tokenizers[0].chat_calls, 6, key)
+                filenames = [p.name for p in (chat_root / "main" / key / "answers").glob("main-*.jsonl")]
                 self.assertTrue(filenames and all("-chat--" in name for name in filenames), filenames)
 
             # Remove completed files so this refusal specifically proves the changed-step guard.
             changed_root = base / "changed"
-            shutil.copytree(root / "instruct", changed_root / "instruct")
-            shutil.rmtree(changed_root / "instruct" / "answers")
+            shutil.copytree(root / "pilot-a1" / "instruct", changed_root / "pilot-a1" / "instruct")
+            shutil.rmtree(changed_root / "pilot-a1" / "instruct" / "answers")
             changed_snapshot = changed_root / TEST_COMMIT
             changed_snapshot.mkdir(parents=True)
-            step1_path = changed_root / "instruct" / "step1.json"
+            step1_path = changed_root / "pilot-a1" / "instruct" / "step1.json"
             changed = json.loads(step1_path.read_text(encoding="utf-8"))
             changed["neutral_activation_maxima"]["6978"] = 7.0
             step1_path.write_text(json.dumps(changed), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "step1 clamp inputs changed"):
                 self._run_pilot_main(changed_root, "instruct", "pilot")
+
+    def test_attempt2_custom_template_text_reaches_every_prompt(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "results"
+            snapshot = Path(temp) / TEST_COMMIT
+            snapshot.mkdir()
+            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            self._write_step1_fixture(root, "instruct", maximum=4.0, mode="pilot", attempt=2)
+            template_path = root / "pilot-a2" / "pilot-frame-v2.txt"
+            template_path.parent.mkdir(parents=True, exist_ok=True)
+            template_path.write_text("Revised origin prompt: {q}\nAnswer:", encoding="utf-8")
+            snapshot = root / TEST_COMMIT
+            snapshot.mkdir(parents=True)
+            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            observers, tokenizers = [], []
+            self._run_pilot_main(root, "instruct", "pilot", observers=observers, attempt=2,
+                                 plain_template_file=template_path, tokenizers=tokenizers)
+            self.assertTrue(tokenizers[0].plain_prompts)
+            self.assertTrue(all(text.startswith("Revised origin prompt: ") for text in tokenizers[0].plain_prompts),
+                            tokenizers[0].plain_prompts)
+            rows = [json.loads(line) for path in (root / "pilot-a2" / "instruct" / "answers").glob("*.jsonl")
+                    for line in path.read_text(encoding="utf-8").splitlines() if line]
+            self.assertTrue(rows)
+            self.assertTrue(all(row["frame_template_sha256"] == hashlib.sha256(template_path.read_bytes()).hexdigest()
+                                for row in rows))
+
+    def test_completed_cell_is_retried_after_push_failure(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            root = base / "results"
+            self._write_step1_fixture(root, "instruct", mode="pilot")
+            snapshot = root / TEST_COMMIT
+            snapshot.mkdir()
+            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            calls = []
+            def fail_second(argv, **kwargs):
+                if "handoff85.py" in str(argv):
+                    calls.append(argv)
+                    if len(calls) == 2:
+                        raise subprocess.CalledProcessError(1, argv, stderr="temporary remote failure")
+                return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+            with mock.patch("subprocess.run", side_effect=fail_second):
+                with self.assertRaises(subprocess.CalledProcessError):
+                    self._run_pilot_main(root, "instruct", "pilot", push_branch="auto")
+            run_dir = root / "pilot-a1" / "instruct"
+            self.assertEqual(len(list((run_dir / "answers").glob("*.jsonl"))), 2)
+            retry_calls = []
+            def retry(argv, **kwargs):
+                if "handoff85.py" in str(argv):
+                    retry_calls.append(argv)
+                return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+            observations = []
+            with mock.patch("subprocess.run", side_effect=retry):
+                self._run_pilot_main(root, "instruct", "pilot", push_branch="auto", observers=observations)
+            self.assertEqual(len(retry_calls), 1, "an all-complete rerun must still retry the result push")
+            self.assertEqual(observations, [], "the already-complete cells must not be regenerated")
     def test_pilot_gate_amend_chat_only_and_quality_failed(self):
         counts, _step0, _step1 = make_counts()
         self.assertEqual(score85.pilot_gate(counts, responsive_ok_count=15, attempt=1)["action"],
@@ -807,6 +968,11 @@ class Part85Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             result_root = root / "results"
+            references = root / "references"
+            references.mkdir()
+            (references / "pilot-score.json").write_text(json.dumps({"pilot_gate": {
+                "action": "chat_only_posttrained",
+                "plain_template_sha256": hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()}}))
             records = []
             for spec in part85.expected_cell_specs("main"):
                 if spec["frame"] != "chat":
@@ -829,36 +995,39 @@ class Part85Tests(unittest.TestCase):
             for key_name in ("sft", "dpo", "instruct"):
                 cp = BY_KEY[key_name]
                 identity = {"key": key_name, "commit": cp.commit_prefix + "0" * (40 - len(cp.commit_prefix))}
-                cp_root = result_root / key_name
+                cp_root = result_root / "main" / key_name
                 cp_root.mkdir(parents=True)
                 (cp_root / "step0.json").write_text(json.dumps({
-                    "checkpoint": identity,
+                    "checkpoint": identity, "code_commit": "fixture-code",
                     "measures": {"cosines_with_instruct": {"down_proj_column_6978": 0.95},
                                  "direct_readout": {"z_score": 0.0}}}))
                 (cp_root / "step1.json").write_text(json.dumps({
-                    "checkpoint": identity,
+                    "checkpoint": identity, "code_commit": "fixture-code",
                     "neutral_correlations_with_instruct": {"target": 0.95},
                     "passages": {"offworld_mean": 0.0, "ordinary_mean": 0.0, "ordinary_sd": 1.0}}))
             payload = score85.score_payload(key, labels, labels, mode="main",
-                                            results_root=result_root, items_path=items)
+                                            results_root=result_root, items_path=items,
+                                            references_dir=references)
             self.assertEqual(payload["scope"], "chat_only_posttrained")
             for code in ("85.5", "85.6", "85.7", "85.8", "85.9"):
                 self.assertEqual(payload["verdicts"][code]["verdict"], "NOT APPLICABLE")
-            sft_step0 = result_root / "sft" / "step0.json"
+            sft_step0 = result_root / "main" / "sft" / "step0.json"
             mismatched = json.loads(sft_step0.read_text(encoding="utf-8"))
             mismatched["checkpoint"]["key"] = "dpo"
             sft_step0.write_text(json.dumps(mismatched))
             with self.assertRaisesRegex(ValueError, "identifies checkpoint 'dpo'"):
                 score85.score_payload(key, labels, labels, mode="main",
-                                      results_root=result_root, items_path=items)
+                                      results_root=result_root, items_path=items,
+                                      references_dir=references)
             sft_step0.write_text(json.dumps({**mismatched, "checkpoint": {
                 "key": "sft", "commit": BY_KEY["sft"].commit_prefix + "0" * (40 - len(BY_KEY["sft"].commit_prefix))},
                 "measures": {"cosines_with_instruct": {"down_proj_column_6978": 0.95},
                              "direct_readout": {"z_score": 0.0}}}))
-            (result_root / "dpo" / "step0.json").unlink()
+            (result_root / "main" / "dpo" / "step0.json").unlink()
             with self.assertRaisesRegex(ValueError, "in-scope post-trained"):
                 score85.score_payload(key, labels, labels, mode="main",
-                                      results_root=result_root, items_path=items)
+                                      results_root=result_root, items_path=items,
+                                      references_dir=references)
 
     def test_score_refuses_overwrite_without_force(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -899,9 +1068,34 @@ class Part85Tests(unittest.TestCase):
                                       "sequence_ids": str(ids_path), "passages": str(root / "passages.json"),
                                       "device": "cpu", "out": None, "push_branch": None})()
             with mock.patch.object(step1_acts, "resolve_checkpoint", return_value=resolve_fake("pretrain_4T")), \
+                 mock.patch.object(step1_acts, "EXPECTED_NEUTRAL_TOKEN_SHA256", digest), \
                  mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
                                    side_effect=AssertionError("model load happened before token-hash refusal")):
                 with self.assertRaisesRegex(ValueError, "different neutral token ids"):
+                    step1_acts.run(args)
+
+    def test_step1_refuses_token_ids_with_unpinned_digest_before_model_load(self):
+        import transformers
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            snapshot = root / TEST_COMMIT
+            snapshot.mkdir()
+            (snapshot / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            ids = np.zeros((step1_acts.SEQUENCE_COUNT, step1_acts.SEQUENCE_LENGTH), dtype=np.int32)
+            digest = step1_acts.stable_ids_sha256(ids)
+            ids_path = root / "ids.json"
+            ids_path.write_text(json.dumps({"token_ids": ids.tolist(), "sha256": digest}))
+            reference = root / "reference.json"
+            reference.write_text(json.dumps({"checkpoint": {"key": "instruct"},
+                "neutral_token_ids_sha256": digest, "neutral_activations": []}))
+            args = type("Args", (), {"checkpoint": "pretrain_4T", "snapshot_dir": str(snapshot),
+                "reference_acts": str(reference), "results_root": str(root), "sequence_ids": str(ids_path),
+                "passages": str(root / "passages.json"), "device": "cpu", "out": None,
+                "push_branch": None})()
+            with mock.patch.object(step1_acts, "resolve_checkpoint", return_value=resolve_fake("pretrain_4T")), \
+                 mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
+                                   side_effect=AssertionError("model load happened before pinned token refusal")):
+                with self.assertRaisesRegex(ValueError, "does not match pinned"):
                     step1_acts.run(args)
 
     def test_snapshot_provenance_requires_the_pinned_commit(self):
@@ -918,6 +1112,13 @@ class Part85Tests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "does not identify pinned commit"):
                 validate_snapshot_commit(wrong, TEST_COMMIT)
 
+    def test_cloud_runbook_cleanup_targets_huggingface_model_cache(self):
+        runbook = Path(__file__).with_name("CLOUD-RUN.md").read_text(encoding="utf-8")
+        cleanup = [line.strip() for line in runbook.splitlines() if line.strip().startswith("rm -rf ")]
+        self.assertTrue(cleanup)
+        self.assertTrue(all('models--${MODEL_ID//\\//--}' in line and 'SNAPSHOT_DIR' not in line
+                            for line in cleanup), cleanup)
+
     def _git_cmd(self, repo, *args, check=True):
         result = subprocess.run(["git", *map(str, args)], cwd=repo, text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -930,242 +1131,299 @@ class Part85Tests(unittest.TestCase):
         self._git_cmd(repo, "config", "user.name", "Part 85 Test")
 
     def _handoff_command(self, repo, *args):
-        return subprocess.run([sys.executable, str(Path(handoff85.__file__)), *map(str, args)],
+        return subprocess.run([sys.executable, "-I", "-B", str(Path(handoff85.__file__)), *map(str, args)],
                               cwd=repo, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    def test_handoff_bare_remote_push_rebase_restore_preflight_and_assemble(self):
+    def test_handoff_single_writer_bare_remote_restore_push_and_assemble(self):
         with tempfile.TemporaryDirectory() as temp:
             top = Path(temp)
             bare, seed = top / "remote.git", top / "seed"
-            bare.mkdir()
-            seed.mkdir()
             self._git_cmd(top, "init", "--bare", str(bare))
+            seed.mkdir()
             self._git_cmd(seed, "init")
             self._set_git_identity(seed)
-            (seed / "README").write_text("base\n")
+            (seed / "README").write_text("code-only base\n")
             self._git_cmd(seed, "add", "README")
-            self._git_cmd(seed, "commit", "-m", "base")
-            self._git_cmd(seed, "branch", "-M", "main")
+            self._git_cmd(seed, "commit", "-m", "code-only")
             self._git_cmd(seed, "remote", "add", "origin", str(bare))
-            self._git_cmd(seed, "push", "-u", "origin", "main")
-            subprocess.run(["git", "--git-dir", str(bare), "symbolic-ref", "HEAD", "refs/heads/main"],
-                           check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self._git_cmd(seed, "push", "origin", "HEAD:refs/heads/main")
             clone_a, clone_b = top / "clone-a", top / "clone-b"
             self._git_cmd(top, "clone", str(bare), str(clone_a))
             self._git_cmd(top, "clone", str(bare), str(clone_b))
             self._set_git_identity(clone_a)
             self._set_git_identity(clone_b)
 
-            a_results = clone_a / "results" / "part85"
-            instruct = a_results / "instruct"
-            (instruct / "answers").mkdir(parents=True)
-            (instruct / "step0.json").write_text('{"checkpoint":"instruct"}')
-            (instruct / "step1.json").write_text('{"checkpoint":"instruct"}')
-            (instruct / "answers" / "cell.jsonl").write_text('{"answer":"a"}\n')
-            (a_results / "neutral-token-ids.json").write_text('{"sha256":"token"}')
+            root = clone_a / "results" / "part85"
+            own = root / "pilot-a1"
+            (own / "instruct" / "answers").mkdir(parents=True)
+            (own / "instruct" / "step0.json").write_text('{"checkpoint":{"key":"instruct"}}')
+            (own / "instruct" / "answers" / "cell.jsonl").write_text('{"answer":"complete"}\n')
+            (own / "instruct" / "run.json").write_text(json.dumps({"completed_cells": {
+                "pilot1/plain/unclamped": {"answer_file": "results/part85/pilot-a1/instruct/answers/cell.jsonl"}}}))
+            token_path = own / "neutral-token-ids.json"
+            token_path.write_text(json.dumps({"sha256": handoff85.EXPECTED_TOKEN_SHA256, "token_ids": []}))
             pushed = self._handoff_command(clone_a, "push", "--checkpoint", "instruct",
-                                           "--branch", "part85-run/pilot", "--results-root", "results/part85")
+                                           "--branch", "part85-run/pilot-a1", "--results-root", "results/part85")
             self.assertEqual(pushed.returncode, 0, pushed.stderr)
+            tip = self._git_cmd(clone_a, "ls-remote", "origin", "refs/heads/part85-run/pilot-a1").stdout.split()[0]
+            self.assertEqual(self._git_cmd(clone_a, "rev-parse", "HEAD").stdout.strip(), tip)
+            remote_names = self._git_cmd(clone_a, "--git-dir", str(bare), "ls-tree", "-r", "--name-only", tip).stdout.splitlines()
+            self.assertTrue(remote_names)
+            self.assertTrue(all(name.startswith("results/part85/pilot-a1/") for name in remote_names), remote_names)
 
-            # Clone B has the common base, so this remote update is rejected once and rebased.
-            b_results = clone_b / "results" / "part85"
-            pretrain = b_results / "pretrain_4T"
-            pretrain.mkdir(parents=True)
-            (pretrain / "step0.json").write_text('{"checkpoint":"pretrain_4T"}')
-            rebased = self._handoff_command(clone_b, "push", "--checkpoint", "pretrain_4T",
-                                            "--branch", "part85-run/pilot", "--results-root", "results/part85")
-            self.assertEqual(rebased.returncode, 0, rebased.stderr)
-            self.assertIn("pushed pretrain_4T results", rebased.stdout)
+            (own / "pretrain_4T").mkdir()
+            (own / "pretrain_4T" / "step0.json").write_text('{"checkpoint":{"key":"pretrain_4T"}}')
+            second = self._handoff_command(clone_a, "push", "--checkpoint", "pretrain_4T",
+                                           "--branch", "part85-run/pilot-a1", "--results-root", "results/part85")
+            self.assertEqual(second.returncode, 0, second.stderr)
+            subjects = self._git_cmd(clone_a, "log", "-2", "--format=%s").stdout.splitlines()
+            self.assertEqual(len(subjects), 2)
+            self.assertNotEqual(subjects[0], subjects[1], "result commits need distinct incident breadcrumbs")
+            tip2 = self._git_cmd(clone_a, "ls-remote", "origin", "refs/heads/part85-run/pilot-a1").stdout.split()[0]
+            self.assertNotEqual(tip, tip2)
+            names2 = self._git_cmd(clone_a, "--git-dir", str(bare), "ls-tree", "-r", "--name-only", tip2).stdout
+            self.assertIn("results/part85/pilot-a1/instruct/answers/cell.jsonl", names2)
+            self.assertIn("results/part85/pilot-a1/pretrain_4T/step0.json", names2)
 
-            restored = top / "restored"
-            restored_run = self._handoff_command(clone_b, "restore", "--branch", "part85-run/pilot",
-                                                 "--results-root", restored)
-            self.assertEqual(restored_run.returncode, 0, restored_run.stderr)
-            self.assertTrue((restored / "instruct" / "step0.json").is_file())
-            self.assertTrue((restored / "pretrain_4T" / "step0.json").is_file())
-            self.assertTrue((restored / "neutral-token-ids.json").is_file())
-            clone_c = top / "clone-c"
-            self._git_cmd(top, "clone", str(bare), str(clone_c))
-            self._set_git_identity(clone_c)
-            resumed_restore = self._handoff_command(clone_c, "restore", "--branch", "part85-run/pilot",
-                                                    "--results-root", "results/part85")
-            self.assertEqual(resumed_restore.returncode, 0, resumed_restore.stderr)
-            (clone_c / "results" / "part85" / "pretrain_4T" / "step1.json").write_text(
-                '{"checkpoint":"pretrain_4T","resumed":true}')
-            resumed_push = self._handoff_command(clone_c, "push", "--checkpoint", "pretrain_4T",
-                                                "--branch", "part85-run/pilot", "--results-root", "results/part85")
-            self.assertEqual(resumed_push.returncode, 0, resumed_push.stderr)
-            pilot_pass = self._handoff_command(clone_b, "preflight", "--checkpoint", "pretrain_4T",
-                                               "--phase", "pilot", "--results-root", restored)
-            self.assertEqual(pilot_pass.returncode, 0, pilot_pass.stderr)
-            (restored / "neutral-token-ids.json").unlink()
-            pilot_fail = self._handoff_command(clone_b, "preflight", "--checkpoint", "pretrain_4T",
-                                               "--phase", "pilot", "--results-root", restored)
-            self.assertNotEqual(pilot_fail.returncode, 0)
-            self.assertIn("neutral-token-ids.json", pilot_fail.stderr)
+            restore = self._handoff_command(clone_b, "restore", "--branch", "part85-run/pilot-a1",
+                                            "--results-root", "results/part85")
+            self.assertEqual(restore.returncode, 0, restore.stderr)
+            self.assertEqual(self._git_cmd(clone_b, "rev-parse", "HEAD").stdout.strip(), tip2)
+            self.assertTrue((clone_b / "results/part85/pilot-a1/instruct/step0.json").is_file())
 
-            score = a_results / "pilot-score.json"
-            score.write_text(json.dumps({"pilot_gate": {
-                "action": "plain_frame_pass",
-                "plain_template_sha256": hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()}}))
-            (clone_a / "part85").mkdir(exist_ok=True)
-            manifest_run = self._handoff_command(clone_a, "refs-manifest", "--results-root",
-                                                 "results/part85", "--out", "part85/references.json")
-            self.assertEqual(manifest_run.returncode, 0, manifest_run.stderr)
-            main_pass = self._handoff_command(clone_a, "preflight", "--checkpoint", "sft",
-                                              "--phase", "main", "--results-root", "results/part85")
-            self.assertEqual(main_pass.returncode, 0, main_pass.stderr)
-            instruct_step0 = a_results / "instruct" / "step0.json"
-            saved_step0 = instruct_step0.read_bytes()
-            instruct_step0.unlink()
-            missing_reference = self._handoff_command(clone_a, "preflight", "--checkpoint", "sft",
-                                                      "--phase", "main", "--results-root", "results/part85")
-            self.assertNotEqual(missing_reference.returncode, 0)
-            self.assertIn("missing", missing_reference.stderr)
-            instruct_step0.write_bytes(saved_step0)
-            score.write_text("{}")
-            main_fail = self._handoff_command(clone_a, "preflight", "--checkpoint", "sft",
-                                              "--phase", "main", "--results-root", "results/part85")
-            self.assertNotEqual(main_fail.returncode, 0)
-            self.assertIn("SHA-256 mismatch", main_fail.stderr)
-            custom_template = b"Origin question: {q}\nReply:"
-            (a_results / "pilot-frame-v2.txt").write_bytes(custom_template)
-            score.write_text(json.dumps({"pilot_gate": {
-                "action": "plain_frame_pass",
-                "plain_template_sha256": hashlib.sha256(custom_template).hexdigest()}}))
-            regenerated = self._handoff_command(clone_a, "refs-manifest", "--results-root",
-                                                "results/part85", "--out", "part85/references.json")
-            self.assertEqual(regenerated.returncode, 0, regenerated.stderr)
-            custom_pass = self._handoff_command(clone_a, "preflight", "--checkpoint", "sft",
-                                                "--phase", "main", "--results-root", "results/part85")
-            self.assertEqual(custom_pass.returncode, 0, custom_pass.stderr)
-            (a_results / "pilot-frame-v2.txt").unlink()
-            custom_missing = self._handoff_command(clone_a, "preflight", "--checkpoint", "sft",
-                                                   "--phase", "main", "--results-root", "results/part85")
-            self.assertNotEqual(custom_missing.returncode, 0)
-            self.assertIn("pilot-frame-v2.txt", custom_missing.stderr)
-            (a_results / "pilot-frame-v2.txt").write_bytes(custom_template)
+            wrong_branch = self._handoff_command(clone_a, "push", "--checkpoint", "sft",
+                                                 "--branch", "part85-run/main-instruct", "--results-root", "results/part85")
+            self.assertNotEqual(wrong_branch.returncode, 0)
+            self.assertIn("does not match checkpoint", wrong_branch.stderr)
 
-            assembled = top / "assembled"
-            assemble_ok = self._handoff_command(clone_a, "assemble", "--branches", "part85-run/pilot",
-                                                "--out", assembled)
-            self.assertEqual(assemble_ok.returncode, 0, assemble_ok.stderr)
-            self.assertTrue((assembled / "instruct" / "step0.json").is_file())
-            self.assertTrue((assembled / "pretrain_4T" / "step0.json").is_file())
+            (own / "instruct" / "run.json").write_text(json.dumps({"completed_cells": {
+                "pilot1/plain/unclamped": {"answer_file": "results/part85/pilot-a1/instruct/answers/missing.jsonl"}}}))
+            update = self._handoff_command(clone_a, "push", "--checkpoint", "instruct",
+                                           "--branch", "part85-run/pilot-a1", "--results-root", "results/part85")
+            self.assertEqual(update.returncode, 0, update.stderr)
+            assembled = self._handoff_command(clone_a, "assemble", "--branches", "part85-run/pilot-a1",
+                                              "--out", top / "assembled")
+            self.assertNotEqual(assembled.returncode, 0)
+            self.assertIn("claims missing answer file", assembled.stderr)
+            (own / "instruct" / "run.json").write_text(json.dumps({"completed_cells": {
+                "pilot1/plain/unclamped": {"answer_file": "results/part85/pilot-a1/instruct/answers/cell.jsonl"}}}))
+            repaired = self._handoff_command(clone_a, "push", "--checkpoint", "instruct",
+                                             "--branch", "part85-run/pilot-a1", "--results-root", "results/part85")
+            self.assertEqual(repaired.returncode, 0, repaired.stderr)
+            fresh = top / "fresh-coordinator"
+            self._git_cmd(top, "clone", str(bare), str(fresh))
+            fresh_assembled = self._handoff_command(fresh, "assemble", "--branches", "part85-run/pilot-a1",
+                                                     "--out", top / "fresh-assembled")
+            self.assertEqual(fresh_assembled.returncode, 0, fresh_assembled.stderr)
+            self.assertTrue((top / "fresh-assembled/pilot-a1/instruct/answers/cell.jsonl").is_file())
+            foreign = clone_a / "results/part85/main/sft/intruder.json"
+            foreign.parent.mkdir(parents=True)
+            foreign.write_text("outside pilot-a1 ownership")
+            self._git_cmd(clone_a, "add", "results/part85/main/sft/intruder.json")
+            self._git_cmd(clone_a, "commit", "-m", "foreign result file")
+            self._git_cmd(clone_a, "push", "origin", "HEAD:refs/heads/part85-run/pilot-a1")
+            foreign_assemble = self._handoff_command(clone_a, "assemble", "--branches", "part85-run/pilot-a1",
+                                                     "--out", top / "foreign")
+            self.assertNotEqual(foreign_assemble.returncode, 0)
+            self.assertIn("outside its owned directory", foreign_assemble.stderr)
 
-            # Same checkpoint path with different bytes across branches is also rejected.
-            instruction_step0 = a_results / "instruct" / "step0.json"
-            original_step0 = instruction_step0.read_bytes()
-            instruction_step0.write_text('{"checkpoint":"instruct","branch":"other"}')
-            self._git_cmd(clone_a, "add", "results/part85/instruct/step0.json")
-            self._git_cmd(clone_a, "commit", "-m", "different Instruct artifact")
-            self._git_cmd(clone_a, "push", "origin", "HEAD:refs/heads/part85-run/instruct")
-            conflict = self._handoff_command(clone_a, "assemble", "--branches",
-                                             "part85-run/pilot", "part85-run/instruct",
-                                             "--out", top / "conflict")
-            self.assertNotEqual(conflict.returncode, 0)
-            self.assertIn("different bytes", conflict.stderr)
-            instruction_step0.write_bytes(original_step0)
+    def test_handoff_preflight_checks_manifest_and_only_validates_present_own_steps(self):
+        with tempfile.TemporaryDirectory() as temp:
+            repo = Path(temp) / "repo"
+            repo.mkdir()
+            self._git_cmd(repo, "init")
+            missing_pilot = self._handoff_command(repo, "preflight", "--checkpoint", "pretrain_4T",
+                                                  "--phase", "pilot", "--attempt", "1",
+                                                  "--results-root", "results/part85")
+            self.assertNotEqual(missing_pilot.returncode, 0)
+            self.assertIn("pilot preflight missing required files", missing_pilot.stderr)
+            refs = repo / "part85" / "references"
+            (refs / "instruct").mkdir(parents=True)
+            score = {"pilot_gate": {"action": "plain_frame_pass",
+                                    "plain_template_sha256": hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()}}
+            payload = {"checkpoint": {"key": "instruct", "commit": BY_KEY["instruct"].commit_prefix + "0" * (40-len(BY_KEY["instruct"].commit_prefix))},
+                       "code_commit": "code-only-commit"}
+            for name in ("step0.json", "step1.json"):
+                (refs / "instruct" / name).write_text(json.dumps(payload))
+            (refs / "neutral-token-ids.json").write_text(json.dumps({"sha256": handoff85.EXPECTED_TOKEN_SHA256}))
+            (refs / "pilot-score.json").write_text(json.dumps(score))
+            entries = []
+            for path in sorted(refs.rglob("*")):
+                if path.is_file():
+                    entries.append({"path": path.relative_to(repo).as_posix(),
+                                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+            manifest = {"schema_version": 2, "files": entries,
+                        "plain_template_sha256": score["pilot_gate"]["plain_template_sha256"]}
+            (repo / "part85" / "references.json").write_text(json.dumps(manifest))
+            (repo / "results/part85/main/sft").mkdir(parents=True)
+            preflight = self._handoff_command(repo, "preflight", "--checkpoint", "sft", "--phase", "main",
+                                              "--results-root", "results/part85")
+            self.assertEqual(preflight.returncode, 0, preflight.stderr)
+            wrong_step = {"checkpoint": {"key": "dpo", "commit": BY_KEY["dpo"].commit_prefix + "0" * (40-len(BY_KEY["dpo"].commit_prefix))},
+                          "code_commit": "code-only-commit"}
+            own_step = repo / "results/part85/main/sft/step1.json"
+            own_step.write_text(json.dumps(wrong_step))
+            refused = self._handoff_command(repo, "preflight", "--checkpoint", "sft", "--phase", "main",
+                                            "--results-root", "results/part85")
+            self.assertNotEqual(refused.returncode, 0)
+            self.assertIn("expected 'sft'", refused.stderr)
+            own_step.unlink()
+            (refs / "neutral-token-ids.json").write_text('{"sha256":"wrong"}')
+            bad_hash = self._handoff_command(repo, "preflight", "--checkpoint", "sft", "--phase", "main",
+                                             "--results-root", "results/part85")
+            self.assertNotEqual(bad_hash.returncode, 0)
+            self.assertIn("SHA-256 mismatch", bad_hash.stderr)
 
-            # A branch named for Instruct that also contains SFT output must be refused.
-            foreign = a_results / "sft"
-            foreign.mkdir()
-            (foreign / "intruder.json").write_text("wrong owner")
-            self._git_cmd(clone_a, "add", "results/part85/sft")
-            self._git_cmd(clone_a, "commit", "-m", "deliberate foreign result")
-            self._git_cmd(clone_a, "push", "origin", "HEAD:refs/heads/part85-run/instruct")
-            assemble_bad = self._handoff_command(clone_a, "assemble", "--branches",
-                                                 "part85-run/instruct", "--out", top / "rejected")
-            self.assertNotEqual(assemble_bad.returncode, 0)
-            self.assertIn("outside its ownership", assemble_bad.stderr)
+    def test_refs_manifest_copies_accepted_pilot_and_attempt2_template(self):
+        with tempfile.TemporaryDirectory() as temp:
+            top = Path(temp)
+            root = top / "results/part85"
+            (root / "pilot-a1/instruct").mkdir(parents=True)
+            (root / "pilot-a1/instruct/step0.json").write_text('{"step":0}')
+            (root / "pilot-a1/instruct/step1.json").write_text('{"step":1}')
+            token_file = root / "pilot-a1/neutral-token-ids.json"
+            token_file.write_text(json.dumps({"sha256": handoff85.EXPECTED_TOKEN_SHA256, "token_ids": []}))
+            custom = b"Revised: {q}\\nAnswer:"
+            (root / "pilot-a2").mkdir()
+            (root / "pilot-a2/pilot-frame-v2.txt").write_bytes(custom)
+            score = {"pilot_gate": {"action": "plain_frame_pass", "attempt": 2,
+                     "plain_template_sha256": hashlib.sha256(custom).hexdigest()}}
+            (root / "pilot-score.json").write_text(json.dumps(score))
+            references = top / "repo/part85/references"
+            manifest_path = top / "repo/part85/references.json"
+            handoff85.refs_manifest(root, manifest_path, references)
+            manifest = json.loads(manifest_path.read_text())
+            self.assertEqual(len(manifest["files"]), 5)
+            self.assertTrue((references / "pilot-frame-v2.txt").is_file())
+            self.assertEqual((references / "pilot-frame-v2.txt").read_bytes(), custom)
+            listed = {entry["path"]: entry["sha256"] for entry in manifest["files"]}
+            self.assertEqual(listed["part85/references/neutral-token-ids.json"],
+                             hashlib.sha256((references / "neutral-token-ids.json").read_bytes()).hexdigest())
 
-            absent = self._handoff_command(clone_a, "restore", "--branch", "part85-run/not-created",
-                                           "--results-root", top / "empty")
-            self.assertEqual(absent.returncode, 0, absent.stderr)
-            self.assertIn("does not exist", absent.stdout)
-
-    def test_handoff_refuses_unrelated_staged_paths(self):
+    def test_handoff_push_retries_unpushed_head_and_refuses_foreign_staging(self):
         with tempfile.TemporaryDirectory() as temp:
             top = Path(temp)
             bare, repo = top / "remote.git", top / "repo"
-            bare.mkdir()
-            repo.mkdir()
             self._git_cmd(top, "init", "--bare", str(bare))
+            repo.mkdir()
             self._git_cmd(repo, "init")
-            self._set_git_identity(repo)
             (repo / "README").write_text("base")
             self._git_cmd(repo, "add", "README")
             self._git_cmd(repo, "commit", "-m", "base")
             self._git_cmd(repo, "remote", "add", "origin", str(bare))
             self._git_cmd(repo, "push", "origin", "HEAD:refs/heads/main")
-            target = repo / "results" / "part85" / "instruct"
-            target.mkdir(parents=True)
-            (target / "step0.json").write_text("{}")
-            (repo / "README").write_text("unrelated staged")
-            self._git_cmd(repo, "add", "README")
-            result = self._handoff_command(repo, "push", "--checkpoint", "instruct",
-                                           "--branch", "part85-run/pilot", "--results-root", "results/part85")
-            self.assertNotEqual(result.returncode, 0)
-            self.assertIn("unrelated paths are already staged", result.stderr)
+            own = repo / "results/part85/main/sft"
+            own.mkdir(parents=True)
+            (own / "step0.json").write_text("first")
+            first = self._handoff_command(repo, "push", "--checkpoint", "sft", "--branch", "part85-run/main-sft",
+                                          "--results-root", "results/part85")
+            self.assertEqual(first.returncode, 0, first.stderr)
+            (own / "step1.json").write_text("second")
+            self._git_cmd(repo, "add", "results/part85/main/sft/step1.json")
+            self._git_cmd(repo, "commit", "-m", "simulate committed but unpushed result")
+            local_head = self._git_cmd(repo, "rev-parse", "HEAD").stdout.strip()
+            remote_before = self._git_cmd(repo, "ls-remote", "origin", "refs/heads/part85-run/main-sft").stdout.split()[0]
+            self.assertNotEqual(local_head, remote_before)
+            retry = self._handoff_command(repo, "push", "--checkpoint", "sft", "--branch", "part85-run/main-sft",
+                                          "--results-root", "results/part85")
+            self.assertEqual(retry.returncode, 0, retry.stderr)
+            remote_after = self._git_cmd(repo, "ls-remote", "origin", "refs/heads/part85-run/main-sft").stdout.split()[0]
+            self.assertEqual(remote_after, local_head)
+            self.assertIn("results/part85/main/sft/step1.json",
+                          self._git_cmd(repo, "--git-dir", str(bare), "ls-tree", "-r", "--name-only", remote_after).stdout)
 
-    def test_handoff_rebases_concurrent_cell_pushes_and_merges_run_record(self):
+            (repo / "other.txt").write_text("foreign staged")
+            self._git_cmd(repo, "add", "other.txt")
+            foreign = self._handoff_command(repo, "push", "--checkpoint", "sft", "--branch", "part85-run/main-sft",
+                                            "--results-root", "results/part85")
+            self.assertNotEqual(foreign.returncode, 0)
+            self.assertIn("unrelated paths are already staged", foreign.stderr)
+
+    def test_run_pushes_each_complete_cell_to_a_local_bare_remote(self):
         with tempfile.TemporaryDirectory() as temp:
             top = Path(temp)
-            bare, seed = top / "remote.git", top / "seed"
-            bare.mkdir()
-            seed.mkdir()
+            bare, seed, clone = top / "remote.git", top / "seed", top / "clone"
             self._git_cmd(top, "init", "--bare", str(bare))
+            seed.mkdir()
             self._git_cmd(seed, "init")
             self._set_git_identity(seed)
-            (seed / "README").write_text("base")
-            self._git_cmd(seed, "add", "README")
-            self._git_cmd(seed, "commit", "-m", "base")
-            self._git_cmd(seed, "branch", "-M", "main")
+            shutil.copytree(Path(__file__).resolve().parent, seed / "part85")
+            (seed / "README").write_text("Part 85 integration fixture\n")
+            self._git_cmd(seed, "add", "README", "part85")
+            self._git_cmd(seed, "commit", "-m", "code-only test fixture")
             self._git_cmd(seed, "remote", "add", "origin", str(bare))
-            self._git_cmd(seed, "push", "-u", "origin", "main")
-            subprocess.run(["git", "--git-dir", str(bare), "symbolic-ref", "HEAD", "refs/heads/main"],
-                           check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            first, stale = top / "first", top / "stale"
-            self._git_cmd(top, "clone", str(bare), str(first))
-            self._git_cmd(top, "clone", str(bare), str(stale))
-            self._set_git_identity(first)
-            self._set_git_identity(stale)
-            results = first / "results" / "part85" / "sft"
-            (results / "answers").mkdir(parents=True)
-            (results / "step0.json").write_text("step0")
-            (results / "answers" / "cell0.jsonl").write_text("cell0")
-            (results / "run.json").write_text(json.dumps({
-                "hook_fire_counts": {"cell0": {"prompt_positions": 1}},
-                "completed_cells": {"cell0": {"answer_count": 1}}}))
-            initial = self._handoff_command(first, "push", "--checkpoint", "sft",
-                                            "--branch", "part85-run/sft", "--results-root", "results/part85")
-            self.assertEqual(initial.returncode, 0, initial.stderr)
+            self._git_cmd(seed, "push", "origin", "HEAD:refs/heads/main")
+            self._git_cmd(top, "clone", str(bare), str(clone))
+            # This untracked sibling must never be staged by a Part 85 result push.
+            (clone / "unrelated.txt").write_text("not owned by this session")
+            flow = clone / "flow_check.py"
+            flow_text = r'''import json, subprocess, sys
+from pathlib import Path
+from unittest import mock
 
-            restored = self._handoff_command(stale, "restore", "--branch", "part85-run/sft",
-                                              "--results-root", "results/part85")
-            self.assertEqual(restored.returncode, 0, restored.stderr)
-            # First clone pushes cell1 after the stale clone has restored cell0.
-            (results / "answers" / "cell1.jsonl").write_text("cell1")
-            current = json.loads((results / "run.json").read_text())
-            current["hook_fire_counts"]["cell1"] = {"prompt_positions": 1}
-            current["completed_cells"]["cell1"] = {"answer_count": 1}
-            (results / "run.json").write_text(json.dumps(current))
-            update = self._handoff_command(first, "push", "--checkpoint", "sft",
-                                           "--branch", "part85-run/sft", "--results-root", "results/part85")
-            self.assertEqual(update.returncode, 0, update.stderr)
+remote = Path(sys.argv[1])
+sys.path.insert(0, "@PART85_SOURCE@")
+import transformers
+import part85
+import test_part85 as fixtures
 
-            # Stale clone creates a disjoint cell and pushes an older run.json based on cell0.
-            stale_results = stale / "results" / "part85" / "sft"
-            (stale_results / "answers" / "cell2.jsonl").write_text("cell2")
-            stale_record = json.loads((stale_results / "run.json").read_text())
-            stale_record["hook_fire_counts"]["cell2"] = {"prompt_positions": 1}
-            stale_record["completed_cells"]["cell2"] = {"answer_count": 1}
-            (stale_results / "run.json").write_text(json.dumps(stale_record))
-            rejected_then_rebased = self._handoff_command(stale, "push", "--checkpoint", "sft",
-                                                          "--branch", "part85-run/sft", "--results-root", "results/part85")
-            self.assertEqual(rejected_then_rebased.returncode, 0, rejected_then_rebased.stderr)
-            merged = json.loads((stale_results / "run.json").read_text())
-            self.assertEqual(set(merged["hook_fire_counts"]), {"cell0", "cell1", "cell2"})
+root = Path("results/part85")
+cp = fixtures.resolve_fake("instruct")
+out = root / "pilot-a1" / "instruct"
+out.mkdir(parents=True)
+step1 = {"checkpoint": {"key": "sft", "commit": cp["commit"]},
+         "neutral_activation_maxima": {"6978": 5.0, "7884": 2.0},
+         "neutral_token_ids_sha256": "f" * 64}
+(out / "step1.json").write_text(json.dumps(step1))
+gate = Path("gate.json")
+gate.write_text(json.dumps({"pilot_gate": {"action": "plain_frame_pass",
+    "plain_template_sha256": part85._template_sha256(part85.PLAIN_TEMPLATE)}}))
+snapshot = Path("snapshot")
+snapshot.mkdir()
+(snapshot / "config.json").write_text(json.dumps({"_commit_hash": cp["commit"]}))
+tokenizer = fixtures.TinyTokenizer()
+tokenizer.chat_template = "stub-chat"
+real_run = subprocess.run
+events = []
+
+def watch(argv, *args, **kwargs):
+    if isinstance(argv, (list, tuple)) and any("handoff85.py" in str(value) for value in argv):
+        pushed = real_run(argv, *args, **kwargs)
+        if pushed.returncode:
+            return pushed
+        tip = real_run(["git", "ls-remote", "origin", "refs/heads/part85-run/pilot-a1"],
+                       text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout.split()[0]
+        names = real_run(["git", "--git-dir", str(remote), "ls-tree", "-r", "--name-only", tip],
+                         text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout.splitlines()
+        answers = [name for name in names if name.startswith("results/part85/pilot-a1/instruct/answers/") and name.endswith(".jsonl")]
+        assert len(answers) == len(events) + 1, (len(events), answers)
+        run_name = "results/part85/pilot-a1/instruct/run.json"
+        run_bytes = real_run(["git", "--git-dir", str(remote), "show", f"{tip}:{run_name}"],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True).stdout
+        completed = json.loads(run_bytes.decode())["completed_cells"]
+        for record in completed.values():
+            assert record["answer_file"] in names, record
+        events.append({"tip": tip, "answer_count": len(answers), "claims": len(completed)})
+        return pushed
+    return real_run(argv, *args, **kwargs)
+
+with mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
+                       side_effect=lambda *_a, **_kw: fixtures.tiny_run_model()), \
+     mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer), \
+     mock.patch.object(part85, "resolve_checkpoint", side_effect=fixtures.resolve_fake), \
+     mock.patch.object(part85, "PILOT_SAMPLES_PER_QUESTION", 1), \
+     mock.patch.object(part85, "MAX_NEW_TOKENS", 2), \
+     mock.patch("subprocess.run", side_effect=watch):
+    part85.main(["--mode", "pilot", "--checkpoint", "instruct",
+                 "--snapshot-dir", str(snapshot), "--results-root", str(root),
+                 "--device", "cpu", "--push-branch", "part85-run/pilot-a1"])
+assert len(events) == 2, events
+assert [event["answer_count"] for event in events] == [1, 2], events
+'''
+            flow.write_text(flow_text.replace("@PART85_SOURCE@", str(Path(__file__).resolve().parent)))
+            result = subprocess.run([sys.executable, "-I", "-B", str(flow), str(bare)], cwd=clone,
+                                    text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=300)
+            self.assertEqual(result.returncode, 0, result.stdout)
 
 
 if __name__ == "__main__":

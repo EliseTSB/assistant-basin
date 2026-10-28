@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
-"""Copy, validate, and push Part 85 results between isolated cloud sessions."""
+"""Single-writer, branch-owned Part 85 result handoff."""
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
-import tempfile
+import time
 from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from checkpoints import BY_KEY, PILOT_KEYS, POST_TRAINED
+from checkpoints import BY_KEY, PILOT_KEYS
 
 RESULTS_REPO_PATH = PurePosixPath("results/part85")
-REFERENCE_FILES = ("instruct/step0.json", "instruct/step1.json",
-                   "neutral-token-ids.json", "pilot-score.json")
+REFERENCE_DIR = Path("part85/references")
+REFERENCE_FILES = (
+    "part85/references/instruct/step0.json",
+    "part85/references/instruct/step1.json",
+    "part85/references/neutral-token-ids.json",
+    "part85/references/pilot-score.json",
+)
+EXPECTED_TOKEN_SHA256 = "96699282f18fc53d5b5467a51803241aab479e23523b92980bdb83546ae15d87"
 MAX_PUSH_ATTEMPTS = 3
 
 
@@ -32,6 +39,59 @@ def _repo_root():
     return Path(_git("rev-parse", "--show-toplevel").stdout.strip()).resolve()
 
 
+def code_commit() -> str:
+    """Return the latest Part 85 code/reference commit, excluding result-only commits."""
+    try:
+        pinned = os.environ.get("PART85_CODE_COMMIT", "").strip()
+        if re.fullmatch(r"[0-9a-f]{40,64}", pinned):
+            return pinned
+        proc = _git("log", "-1", "--format=%H", "HEAD", "--", "part85", check=False)
+        value = proc.stdout.strip() if isinstance(proc.stdout, str) else ""
+        if not value:
+            proc = _git("rev-parse", "HEAD", check=False)
+            value = proc.stdout.strip() if isinstance(proc.stdout, str) else ""
+        return value if re.fullmatch(r"[0-9a-f]{40,64}", value) else "unknown"
+    except (OSError, RuntimeError):
+        return "unknown"
+
+
+def branch_directory(branch: str, checkpoint: str | None = None) -> PurePosixPath:
+    """Map the allowed branch name to its one result directory and reject mismatches."""
+    match = re.fullmatch(r"part85-run/pilot-a([1-9][0-9]*)", branch)
+    if match:
+        if checkpoint is not None and checkpoint not in PILOT_KEYS:
+            raise ValueError(f"checkpoint {checkpoint} is not owned by pilot branch {branch}")
+        return PurePosixPath(f"pilot-a{match.group(1)}")
+    match = re.fullmatch(r"part85-run/main-([a-zA-Z0-9_]+)", branch)
+    if match and match.group(1) in BY_KEY:
+        key = match.group(1)
+        if checkpoint is not None and checkpoint != key:
+            raise ValueError(f"branch {branch} does not match checkpoint {checkpoint}")
+        return PurePosixPath("main") / key
+    raise ValueError(f"branch name does not identify a Part 85 result directory: {branch!r}")
+
+
+def result_dir(results_root: Path, checkpoint: str, *, branch: str | None = None,
+               mode: str | None = None, attempt: int = 1) -> Path:
+    if branch:
+        base = branch_directory(branch, checkpoint)
+    elif mode == "pilot":
+        if attempt not in (1, 2):
+            raise ValueError("pilot attempt must be 1 or 2")
+        if checkpoint not in PILOT_KEYS:
+            raise ValueError(f"checkpoint {checkpoint} is not in the registered pilot")
+        base = PurePosixPath(f"pilot-a{attempt}")
+    elif mode == "main":
+        if checkpoint not in BY_KEY:
+            raise ValueError(f"unknown checkpoint {checkpoint!r}")
+        base = PurePosixPath("main") / checkpoint
+    else:
+        raise ValueError("result directory requires a branch or run mode")
+    if base.parts[0].startswith("pilot-a"):
+        base = base / checkpoint
+    return Path(results_root) / Path(base.as_posix())
+
+
 def _relative_to_repo(path: Path, root: Path) -> PurePosixPath:
     resolved = path.expanduser().resolve()
     try:
@@ -44,7 +104,7 @@ def _relative_to_repo(path: Path, root: Path) -> PurePosixPath:
 def _safe_relative(value: str) -> PurePosixPath:
     rel = PurePosixPath(value)
     if rel.is_absolute() or not rel.parts or any(part in ("..", ".") for part in rel.parts):
-        raise ValueError(f"unsafe relative path in references manifest: {value!r}")
+        raise ValueError(f"unsafe relative path: {value!r}")
     return rel
 
 
@@ -52,238 +112,211 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _branch_exists(branch: str) -> bool:
+def _remote_tip(branch: str) -> str | None:
     result = _git("ls-remote", "--heads", "origin", f"refs/heads/{branch}", check=False)
     if result.returncode:
         raise RuntimeError(f"could not query remote branch {branch}: {result.stderr.strip()}")
-    return bool(result.stdout.strip())
+    for line in result.stdout.splitlines():
+        fields = line.split()
+        if len(fields) == 2 and fields[1] == f"refs/heads/{branch}":
+            return fields[0]
+    return None
 
 
-def _fetch(branch: str) -> str | None:
-    if not _branch_exists(branch):
-        return None
-    _git("fetch", "--no-tags", "origin", f"refs/heads/{branch}")
-    return _git("rev-parse", "FETCH_HEAD").stdout.strip()
+def _tree_names(commit: str) -> list[str]:
+    return _git("ls-tree", "-r", "--name-only", commit, "--", str(RESULTS_REPO_PATH)).stdout.splitlines()
+
+
+def _verify_owned_tree(branch: str, commit: str, *, require_results=True) -> tuple[PurePosixPath, list[str]]:
+    owner = branch_directory(branch)
+    expected = RESULTS_REPO_PATH / owner
+    names = _tree_names(commit)
+    owned_names = []
+    for name in names:
+        rel = PurePosixPath(name)
+        if rel == expected or expected in rel.parents:
+            owned_names.append(name)
+        else:
+            raise ValueError(f"branch {branch} contains a file outside its owned directory: {name}")
+    if require_results and not owned_names:
+        raise ValueError(f"branch {branch} contains no results in {expected}")
+    for name in owned_names:
+        if name.endswith("/run.json"):
+            payload = json.loads(subprocess.run(["git", "show", f"{commit}:{name}"],
+                                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                                check=True).stdout)
+            completed = payload.get("completed_cells", {})
+            if not isinstance(completed, dict):
+                raise ValueError(f"{name} has malformed completed_cells")
+            for cell, record in completed.items():
+                answer_file = record.get("answer_file") if isinstance(record, dict) else None
+                if not isinstance(answer_file, str):
+                    raise ValueError(f"{name} claims {cell} without an answer_file")
+                answer_rel = _safe_relative(answer_file)
+                if answer_rel.is_absolute() or str(answer_rel) not in names:
+                    raise ValueError(f"{name} claims missing answer file {answer_file}")
+                answer_path = PurePosixPath(answer_file)
+                if expected != answer_path and expected not in answer_path.parents:
+                    raise ValueError(f"{name} claims answer outside its owned directory: {answer_file}")
+    return owner, owned_names
 
 
 def restore(branch: str, results_root: Path) -> None:
     root = _repo_root()
-    commit = _fetch(branch)
-    if commit is None:
+    root_rel = _relative_to_repo(results_root, root)
+    if root_rel != RESULTS_REPO_PATH:
+        raise ValueError(f"restore results root must be {RESULTS_REPO_PATH}, got {root_rel}")
+    tip = _remote_tip(branch)
+    if tip is None:
         print(f"remote branch {branch} does not exist; nothing to restore")
         return
-    names = _git("ls-tree", "-r", "--name-only", commit, "--", str(RESULTS_REPO_PATH)).stdout.splitlines()
-    copied = 0
-    for name in names:
-        rel = PurePosixPath(name)
-        if not rel.is_relative_to(RESULTS_REPO_PATH):
-            continue
-        relative_result = PurePosixPath(*rel.parts[len(RESULTS_REPO_PATH.parts):])
-        destination = results_root / Path(relative_result.as_posix())
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(_git_bytes_show(commit, name))
-        copied += 1
-    print(f"restored {copied} files from {branch} into {results_root}")
-
-
-def _git_bytes_show(commit: str, name: str) -> bytes:
-    return subprocess.run(["git", "show", f"{commit}:{name}"], stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE, check=True).stdout
-
-
-def _root_path(results_root: Path, root: Path) -> tuple[Path, PurePosixPath]:
-    path = results_root.expanduser().resolve()
-    rel = _relative_to_repo(path, root)
-    return path, rel
-
-
-def _allowed_push_path(path: str, root_rel: PurePosixPath, checkpoint: str) -> bool:
-    rel = PurePosixPath(path)
-    key_root = root_rel / checkpoint
-    if rel == key_root or key_root in rel.parents:
-        return True
-    return checkpoint == "instruct" and rel == root_rel / "neutral-token-ids.json"
-
-
-def _index_blob(stage: int, path: str) -> bytes:
-    result = subprocess.run(["git", "show", f":{stage}:{path}"], stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
-    if result.returncode:
-        raise RuntimeError(f"cannot read rebase stage {stage} for {path}: {result.stderr.decode().strip()}")
-    return result.stdout
-
-
-def _merge_run_records(remote_bytes: bytes, local_bytes: bytes, path: str) -> bytes:
-    remote = json.loads(remote_bytes)
-    local = json.loads(local_bytes)
-    merged = dict(local)
-    for field in ("hook_fire_counts", "completed_cells"):
-        combined = dict(remote.get(field) or {})
-        for key, value in (local.get(field) or {}).items():
-            if key in combined and combined[key] != value:
-                raise RuntimeError(f"concurrent pushes disagree on {path} {field} entry {key}; resolve it manually")
-            combined[key] = value
-        merged[field] = combined
-    for field in set(remote).intersection(local) - {"hook_fire_counts", "completed_cells", "updated_unix_time"}:
-        if remote[field] != local[field]:
-            raise RuntimeError(f"concurrent pushes disagree on {path} field {field}; resolve it manually")
-    if "updated_unix_time" in remote or "updated_unix_time" in local:
-        merged["updated_unix_time"] = max(remote.get("updated_unix_time", 0),
-                                           local.get("updated_unix_time", 0))
-    return (json.dumps(merged, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
-
-
-def _finish_rebase(upstream: str) -> None:
-    result = _git("rebase", upstream, check=False)
-    if result.returncode == 0:
-        return
-    for _ in range(5):
-        conflicts = [name for name in _git("diff", "--name-only", "--diff-filter=U", "-z").stdout.split("\0") if name]
-        if not conflicts:
-            raise RuntimeError(f"rebase onto {upstream} failed: {result.stderr.strip()}")
-        for name in conflicts:
-            ours = _index_blob(2, name)
-            theirs = _index_blob(3, name)
-            if ours == theirs:
-                Path(name).write_bytes(ours)
-            elif name.endswith("/run.json"):
-                Path(name).write_bytes(_merge_run_records(ours, theirs, name))
-            else:
-                raise RuntimeError(f"concurrent pushes contain different bytes at {name}; resolve it manually")
-            _git("add", "--", name)
-        continued = _git("-c", "core.editor=true", "rebase", "--continue", check=False)
-        if continued.returncode == 0:
-            return
-        result = continued
-    raise RuntimeError(f"rebase onto {upstream} did not finish after conflict resolution")
-
-
-def _rebase_preserving_restored_files(upstream: str, results_root_rel: PurePosixPath) -> None:
-    """Rebase after moving restored, untracked result files out of checkout's way."""
-    names = [name for name in _git("ls-files", "--others", "-z", "--", str(results_root_rel)).stdout.split("\0") if name]
-    with tempfile.TemporaryDirectory(prefix="part85-rebase-") as temporary:
-        saved = []
-        for name in names:
-            source = Path(name)
-            if not source.exists() and not source.is_symlink():
-                continue
-            target = Path(temporary) / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            os.replace(source, target)
-            saved.append((name, target))
-        rebased = False
-        try:
-            try:
-                _finish_rebase(upstream)
-            except RuntimeError:
-                _git("rebase", "--abort", check=False)
-                raise
-            rebased = True
-        finally:
-            for name, saved_path in saved:
-                destination = Path(name)
-                if not rebased:
-                    destination.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(saved_path, destination)
-                    continue
-                tracked = _git("ls-files", "--error-unmatch", "--", name, check=False).returncode == 0
-                if tracked:
-                    if not destination.is_file() or destination.read_bytes() != saved_path.read_bytes():
-                        raise RuntimeError(f"restored file {name} conflicts with the rebased branch contents")
-                    saved_path.unlink()
-                else:
-                    destination.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(saved_path, destination)
+    _git("fetch", "--no-tags", "origin", f"refs/heads/{branch}")
+    fetched = _git("rev-parse", "FETCH_HEAD").stdout.strip()
+    if fetched != tip:
+        raise RuntimeError(f"remote branch {branch} changed while restoring; rerun restore")
+    _verify_owned_tree(branch, fetched)
+    _git("checkout", "--detach", fetched)
+    print(f"checked out {branch} tip {fetched}")
 
 
 def push(checkpoint: str, branch: str, results_root: Path) -> None:
     if checkpoint not in BY_KEY:
         raise ValueError(f"unknown checkpoint {checkpoint!r}")
+    owner = branch_directory(branch, checkpoint)
     root = _repo_root()
-    result_path, root_rel = _root_path(results_root, root)
-    allowed_dir = root_rel / checkpoint
-    allowed_token_ids = root_rel / "neutral-token-ids.json"
-    status = _git("diff", "--cached", "--name-only", "-z").stdout
-    staged = [x for x in status.split("\0") if x]
-    stray = [name for name in staged if not _allowed_push_path(name, root_rel, checkpoint)]
+    result_path, root_rel = _relative_to_repo(results_root, root), None
+    root_rel = result_path
+    if root_rel != RESULTS_REPO_PATH:
+        raise ValueError(f"push results root must be {RESULTS_REPO_PATH}, got {root_rel}")
+    owned_rel = RESULTS_REPO_PATH / owner
+    owned_path = root / Path(owned_rel.as_posix())
+    if not owned_path.is_dir():
+        raise FileNotFoundError(f"owned result directory is missing: {owned_path}")
+    staged = [x for x in _git("diff", "--cached", "--name-only", "-z").stdout.split("\0") if x]
+    stray = [name for name in staged if not (name == str(owned_rel) or str(owned_rel) + "/" in name)]
     if stray:
         raise RuntimeError(f"refusing push; unrelated paths are already staged: {stray}")
-    if not (result_path / checkpoint).exists():
-        raise FileNotFoundError(f"checkpoint results directory is missing: {result_path / checkpoint}")
-    _git("add", "--", str(allowed_dir))
-    if checkpoint == "instruct" and (result_path / "neutral-token-ids.json").is_file():
-        _git("add", "--", str(allowed_token_ids))
+    _git("add", "-A", "--", str(owned_rel))
     staged = [x for x in _git("diff", "--cached", "--name-only", "-z").stdout.split("\0") if x]
-    stray = [name for name in staged if not _allowed_push_path(name, root_rel, checkpoint)]
+    stray = [name for name in staged if not (name == str(owned_rel) or str(owned_rel) + "/" in name)]
     if stray:
         raise RuntimeError(f"refusing push; unrelated paths would be staged: {stray}")
-    if not staged:
-        print("no new checkpoint result changes to push")
-        return
-    _git("commit", "-m", f"Part 85 results: {checkpoint}")
+    if staged:
+        name = _git("config", "--local", "user.name", check=False)
+        email = _git("config", "--local", "user.email", check=False)
+        if name.returncode or not name.stdout.strip() or email.returncode or not email.stdout.strip():
+            _git("config", "--local", "user.name", "Part 85 cloud run")
+            _git("config", "--local", "user.email", "noreply@anthropic.com")
+        _git("commit", "-m", f"Part 85 results: {owner.as_posix()} {time.time_ns()}")
+
+    detail = "remote tip did not converge"
     for attempt in range(1, MAX_PUSH_ATTEMPTS + 1):
-        result = _git("push", "origin", f"HEAD:refs/heads/{branch}", check=False)
-        if result.returncode == 0:
-            print(f"pushed {checkpoint} results to {branch}")
-            return
-        if attempt == MAX_PUSH_ATTEMPTS:
-            raise RuntimeError(f"push to {branch} rejected after {attempt} attempts: {result.stderr.strip()}")
-        fetched = _fetch(branch)
-        if fetched is None:
-            raise RuntimeError(f"push to {branch} failed and the branch is still absent: {result.stderr.strip()}")
-        _rebase_preserving_restored_files(fetched, root_rel)
+        try:
+            head = _git("rev-parse", "HEAD").stdout.strip()
+            remote = _remote_tip(branch)
+            if remote == head:
+                print(f"verified {branch} at {head}")
+                return
+            if remote is not None:
+                ancestry = _git("merge-base", "--is-ancestor", remote, head, check=False)
+                if ancestry.returncode != 0:
+                    raise RuntimeError(f"remote {branch} tip {remote} is not an ancestor of local HEAD {head}; restore before writing")
+            lease = f"refs/heads/{branch}:{remote or ''}"
+            result = _git("push", f"--force-with-lease={lease}", "origin", f"HEAD:refs/heads/{branch}", check=False)
+            if result.returncode == 0:
+                verified = _remote_tip(branch)
+                if verified == head:
+                    print(f"verified {branch} at {head}")
+                    return
+                detail = f"push returned success but remote tip is {verified!r}, expected {head}"
+            else:
+                detail = result.stderr.strip() or f"git push exited {result.returncode}"
+        except RuntimeError as exc:
+            detail = str(exc)
+        if attempt < MAX_PUSH_ATTEMPTS:
+            time.sleep(min(2 ** (attempt - 1), 4))
+    raise RuntimeError(f"could not verify push to {branch} after {MAX_PUSH_ATTEMPTS} attempts: {detail}")
 
 
-def refs_manifest(results_root: Path, out: Path) -> None:
-    root = results_root.expanduser()
-    files = list(REFERENCE_FILES)
-    score_path = root / "pilot-score.json"
-    if not score_path.is_file():
-        raise FileNotFoundError(f"pilot score is missing: {score_path}")
-    score = json.loads(score_path.read_text(encoding="utf-8"))
+def refs_manifest(results_root: Path, out: Path, references_dir: Path = REFERENCE_DIR) -> None:
+    root = Path(results_root)
+    source_base = root / "pilot-a1"
+    pilot_score = root / "pilot-score.json"
+    if not pilot_score.is_file():
+        raise FileNotFoundError(f"accepted pilot score is missing: {pilot_score}")
+    score = json.loads(pilot_score.read_text(encoding="utf-8"))
     gate = score.get("pilot_gate") or {}
     expected_template = gate.get("plain_template_sha256")
     if not isinstance(expected_template, str):
         raise ValueError("pilot score is missing plain_template_sha256")
-    default_template = "Question: {q}\nAnswer:"
-    default_sha = hashlib.sha256(default_template.encode("utf-8")).hexdigest()
-    if expected_template and expected_template != default_sha:
-        template_rel = "pilot-frame-v2.txt"
-        template = root / template_rel
-        if not template.is_file():
-            raise FileNotFoundError(f"pilot used a custom frame but its template is missing: {template}")
-        if _sha256(template) != expected_template:
-            raise ValueError(f"pilot frame template SHA-256 mismatch: {template}")
-        files.append(template_rel)
-    entries = []
-    for rel in files:
-        path = root / rel
-        if not path.is_file():
-            raise FileNotFoundError(f"cannot make reference manifest; missing {path}")
-        entries.append({"path": rel, "sha256": _sha256(path)})
-    payload = {"schema_version": 1, "files": entries,
+    default_sha = hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()
+    sources = {
+        "instruct/step0.json": source_base / "instruct" / "step0.json",
+        "instruct/step1.json": source_base / "instruct" / "step1.json",
+        "neutral-token-ids.json": source_base / "neutral-token-ids.json",
+        "pilot-score.json": pilot_score,
+    }
+    if expected_template != default_sha:
+        custom = root / "pilot-a2" / "pilot-frame-v2.txt"
+        if not custom.is_file():
+            raise FileNotFoundError(f"pilot used a custom frame but its attempt-2 template is missing: {custom}")
+        if _sha256(custom) != expected_template:
+            raise ValueError(f"attempt-2 template SHA-256 mismatch: {custom}")
+        sources["pilot-frame-v2.txt"] = custom
+    files = []
+    for name, source in sources.items():
+        if not source.is_file():
+            raise FileNotFoundError(f"cannot publish references; missing {source}")
+        relative = Path("part85/references") / name
+        destination = references_dir / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(source.read_bytes())
+        files.append({"path": relative.as_posix(), "sha256": _sha256(destination)})
+    payload = {"schema_version": 2, "files": files,
                "pilot_gate_action": gate.get("action"),
-               "plain_template_sha256": expected_template}
+               "plain_template_sha256": expected_template,
+               "pilot_attempt": gate.get("attempt")}
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(f"wrote {len(entries)} reference hashes to {out}")
+    print(f"copied and hashed {len(files)} pinned references into {references_dir}")
 
 
-def preflight(checkpoint: str, phase: str, results_root: Path, references: Path) -> None:
+def _validate_step_file(path: Path, checkpoint: str, name: str) -> str | None:
+    if not path.is_file():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    identity = payload.get("checkpoint") or {}
+    if identity.get("key") != checkpoint:
+        raise ValueError(f"{path} identifies checkpoint {identity.get('key')!r}, expected {checkpoint!r}")
+    if not str(identity.get("commit", "")).startswith(BY_KEY[checkpoint].commit_prefix):
+        raise ValueError(f"{path} commit does not match registered checkpoint {checkpoint}")
+    if not isinstance(payload.get("code_commit"), str) or not payload["code_commit"]:
+        raise ValueError(f"{path} lacks code_commit provenance")
+    return name
+
+
+def preflight(checkpoint: str, phase: str, results_root: Path, references: Path, attempt: int = 1) -> None:
     if checkpoint not in BY_KEY:
         raise ValueError(f"unknown checkpoint {checkpoint!r}")
-    root = results_root.expanduser()
+    root = Path(results_root)
     if phase == "pilot":
-        required = [] if checkpoint == "instruct" else [
-            "instruct/step0.json", "instruct/step1.json", "neutral-token-ids.json"]
-        missing = [rel for rel in required if not (root / rel).is_file()]
-        if missing:
-            raise RuntimeError("pilot preflight missing required files: " + ", ".join(missing))
-        print(f"pilot preflight passed for {checkpoint}")
+        if attempt not in (1, 2):
+            raise ValueError("pilot attempt must be 1 or 2")
+        pilot_root = root / f"pilot-a{attempt}"
+        if checkpoint == "pretrain_4T":
+            required = [pilot_root / "instruct" / "step0.json", pilot_root / "instruct" / "step1.json", pilot_root / "neutral-token-ids.json"]
+            missing = [str(path) for path in required if not path.is_file()]
+            if missing:
+                raise RuntimeError("pilot preflight missing required files: " + ", ".join(missing))
+            _validate_step_file(required[0], "instruct", "step0")
+            _validate_step_file(required[1], "instruct", "step1")
+            token = json.loads(required[2].read_text(encoding="utf-8"))
+            if token.get("sha256") != EXPECTED_TOKEN_SHA256:
+                raise RuntimeError("pilot neutral-token-ids.json has the wrong pinned sha256")
+        print(f"pilot attempt {attempt} preflight passed for {checkpoint}")
         return
-    manifest_path = references
-    if not manifest_path.is_absolute():
-        manifest_path = Path.cwd() / manifest_path
+
+    manifest_path = references if references.is_absolute() else Path.cwd() / references
     if not manifest_path.is_file():
         raise RuntimeError(f"main preflight missing reference manifest: {manifest_path}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -291,83 +324,77 @@ def preflight(checkpoint: str, phase: str, results_root: Path, references: Path)
     if not isinstance(entries, list):
         raise RuntimeError(f"main preflight reference manifest has no files list: {manifest_path}")
     listed = {}
+    problems = []
     for entry in entries:
         if not isinstance(entry, dict) or not isinstance(entry.get("path"), str):
-            raise RuntimeError("main preflight has malformed reference entry")
+            problems.append("malformed reference manifest entry")
+            continue
         rel = _safe_relative(entry["path"])
         listed[str(rel)] = entry.get("sha256")
-    missing_required = [rel for rel in REFERENCE_FILES if rel not in listed]
-    problems = [f"manifest omits required reference {rel}" for rel in missing_required]
-    plain_sha = hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()
-    if manifest.get("plain_template_sha256") not in (None, plain_sha) and "pilot-frame-v2.txt" not in listed:
-        problems.append("manifest omits custom pilot frame template pilot-frame-v2.txt")
-    score_file = root / "pilot-score.json"
-    if score_file.is_file():
-        try:
-            gate_sha = (json.loads(score_file.read_text(encoding="utf-8")).get("pilot_gate") or {}).get(
-                "plain_template_sha256")
-        except json.JSONDecodeError:
-            gate_sha = None
-        if gate_sha != manifest.get("plain_template_sha256"):
-            problems.append("manifest plain_template_sha256 differs from pilot-score.json")
-        if gate_sha and gate_sha != plain_sha:
-            if "pilot-frame-v2.txt" not in listed:
-                problems.append("pilot-score.json used a custom frame but the manifest omits pilot-frame-v2.txt")
-            elif (root / "pilot-frame-v2.txt").is_file() and _sha256(root / "pilot-frame-v2.txt") != gate_sha:
-                problems.append("pilot-frame-v2.txt SHA-256 differs from pilot-score.json")
+    for required in REFERENCE_FILES:
+        if required not in listed:
+            problems.append(f"manifest omits required reference {required}")
+    score_path = Path.cwd() / "part85/references/pilot-score.json"
+    score = json.loads(score_path.read_text(encoding="utf-8")) if score_path.is_file() else {}
+    gate = score.get("pilot_gate") or {}
+    gate_sha = gate.get("plain_template_sha256")
+    manifest_sha = manifest.get("plain_template_sha256")
+    if gate_sha != manifest_sha:
+        problems.append("manifest template SHA differs from pinned pilot-score.json")
+    default_sha = hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()
+    custom_rel = "part85/references/pilot-frame-v2.txt"
+    if gate_sha != default_sha and custom_rel not in listed:
+        problems.append("manifest omits attempt-2 template used by the pilot")
     for rel, digest in listed.items():
-        path = root / Path(rel)
+        path = Path.cwd() / rel
         if not path.is_file():
-            problems.append(f"missing {path}")
+            problems.append(f"missing reference {path}")
         elif not isinstance(digest, str) or _sha256(path) != digest:
             problems.append(f"SHA-256 mismatch {path}")
+    tokens_path = Path.cwd() / "part85/references/neutral-token-ids.json"
+    if tokens_path.is_file():
+        token = json.loads(tokens_path.read_text(encoding="utf-8"))
+        if token.get("sha256") != EXPECTED_TOKEN_SHA256:
+            problems.append("pinned neutral-token-ids.json has the wrong expected sha256")
+
+    own_dir = root / "main" / checkpoint
+    for name in ("step0", "step1"):
+        try:
+            _validate_step_file(own_dir / f"{name}.json", checkpoint, name)
+        except (ValueError, json.JSONDecodeError) as exc:
+            problems.append(str(exc))
     if problems:
         raise RuntimeError("main preflight failed: " + "; ".join(problems))
-    print(f"main preflight passed for {checkpoint}; verified {len(listed)} files")
+    print(f"main preflight passed for {checkpoint}; verified {len(listed)} references; existing own step files checked")
 
 
 def assemble(branches: list[str], out: Path) -> None:
     root = _repo_root()
     gathered: dict[str, bytes] = {}
-    owners: dict[str, str] = {}
     for branch in branches:
-        suffix = branch.rsplit("/", 1)[-1]
-        allowed = set(PILOT_KEYS) if suffix == "pilot" else ({suffix} if suffix in BY_KEY else set())
-        if not allowed:
-            raise ValueError(f"cannot infer checkpoint ownership from branch {branch!r}")
-        commit = _fetch(branch)
-        if commit is None:
+        remote_before = _remote_tip(branch)
+        if remote_before is None:
             raise FileNotFoundError(f"remote branch does not exist: {branch}")
-        names = _git("ls-tree", "-r", "--name-only", commit, "--", str(RESULTS_REPO_PATH)).stdout.splitlines()
-        owned = set()
+        fetched = _git("fetch", "--no-tags", "origin", f"refs/heads/{branch}", check=False)
+        if fetched.returncode:
+            raise RuntimeError(f"could not fetch branch {branch}: {fetched.stderr.strip()}")
+        tip = _git("rev-parse", "FETCH_HEAD").stdout.strip()
+        if tip != remote_before or _remote_tip(branch) != tip:
+            raise RuntimeError(f"remote branch {branch} changed while assembling; rerun assemble")
+        owner, names = _verify_owned_tree(branch, tip)
+        expected = RESULTS_REPO_PATH / owner
         for name in names:
             rel = PurePosixPath(name)
-            if rel == RESULTS_REPO_PATH / "neutral-token-ids.json":
-                if "instruct" not in allowed:
-                    raise ValueError(f"branch {branch} contains neutral-token-ids.json without owning instruct")
-                owned.add("neutral-token-ids.json")
-                continue
-            if not rel.is_relative_to(RESULTS_REPO_PATH) or len(rel.parts) < len(RESULTS_REPO_PATH.parts) + 2:
-                continue
-            key = rel.parts[len(RESULTS_REPO_PATH.parts)]
-            if key not in BY_KEY:
-                continue
-            if key not in allowed:
-                raise ValueError(f"branch {branch} contains files for checkpoint {key}, outside its ownership {sorted(allowed)}")
-            owned.add(key)
             relative = PurePosixPath(*rel.parts[len(RESULTS_REPO_PATH.parts):]).as_posix()
-            data = _git_bytes_show(commit, name)
-            if relative in gathered and gathered[relative] != data:
-                raise ValueError(f"branches {owners[relative]} and {branch} contain different bytes at {relative}")
+            data = subprocess.run(["git", "show", f"{tip}:{name}"], stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, check=True).stdout
             gathered[relative] = data
-            owners[relative] = branch
-        if not owned.intersection(allowed):
-            raise ValueError(f"branch {branch} contains no results for its checkpoint ownership")
+    out_root = Path(out)
     for relative, data in gathered.items():
-        target = out / relative
+        target = out_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
-    print(f"assembled {len(gathered)} files from {len(branches)} branches into {out}")
+    print(f"assembled {len(gathered)} owned files from {len(branches)} branches into {out_root}")
 
 
 def main(argv=None):
@@ -380,10 +407,12 @@ def main(argv=None):
     p.add_argument("--checkpoint", required=True, choices=tuple(BY_KEY))
     p.add_argument("--phase", required=True, choices=("pilot", "main"))
     p.add_argument("--results-root", required=True, type=Path)
+    p.add_argument("--attempt", type=int, default=1)
     p.add_argument("--references", type=Path, default=Path("part85/references.json"))
     p = subs.add_parser("refs-manifest")
     p.add_argument("--results-root", required=True, type=Path)
     p.add_argument("--out", required=True, type=Path)
+    p.add_argument("--references-dir", type=Path, default=REFERENCE_DIR)
     p = subs.add_parser("push")
     p.add_argument("--checkpoint", required=True, choices=tuple(BY_KEY))
     p.add_argument("--branch", required=True)
@@ -395,9 +424,9 @@ def main(argv=None):
     if args.command == "restore":
         restore(args.branch, args.results_root)
     elif args.command == "preflight":
-        preflight(args.checkpoint, args.phase, args.results_root, args.references)
+        preflight(args.checkpoint, args.phase, args.results_root, args.references, args.attempt)
     elif args.command == "refs-manifest":
-        refs_manifest(args.results_root, args.out)
+        refs_manifest(args.results_root, args.out, args.references_dir)
     elif args.command == "push":
         push(args.checkpoint, args.branch, args.results_root)
     else:

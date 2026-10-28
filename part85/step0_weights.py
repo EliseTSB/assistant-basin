@@ -21,6 +21,7 @@ from dataclasses import asdict
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from checkpoints import BY_KEY, resolve_checkpoint, validate_snapshot_commit
+from handoff85 import code_commit, result_dir
 
 
 LAYER = 10
@@ -493,6 +494,10 @@ def atomic_json(path: Path, data):
 def run(args):
     cp = ({**asdict(BY_KEY[args.checkpoint]), "commit": "local"}
           if args.local else resolve_checkpoint(args.checkpoint))
+    output_dir = result_dir(args.results_root, cp["key"], branch=args.push_branch) if args.push_branch else result_dir(
+        args.results_root, cp["key"], mode="main")
+    out = Path(args.out) if args.out else output_dir / "step0.json"
+    current_code_commit = code_commit()
     reference = json.loads(Path(args.reference).read_text(encoding="utf-8")) if args.reference else None
     if cp["key"] == "instruct" and reference is not None:
         raise ValueError("Instruct is the reference checkpoint and must be run without --reference")
@@ -500,6 +505,17 @@ def run(args):
         raise ValueError("run Instruct first and pass its step0.json with --reference")
     if reference is not None and reference.get("checkpoint", {}).get("key") != "instruct":
         raise ValueError("--reference must be the Instruct checkpoint's step0.json")
+    if out.is_file():
+        existing = json.loads(out.read_text(encoding="utf-8"))
+        identity = existing.get("checkpoint", {})
+        if identity.get("key") != cp["key"] or identity.get("commit") != cp["commit"]:
+            raise ValueError(f"existing step 0 provenance does not match {cp['key']} at {cp['commit']}: {out}")
+        if existing.get("code_commit") != current_code_commit:
+            raise ValueError(f"existing step 0 was produced by code commit {existing.get('code_commit')!r}, expected {current_code_commit!r}")
+        if getattr(args, "push_branch", None):
+            _push_result(args, cp["key"])
+        print(f"skip existing step 0 with matching provenance: {out}")
+        return
     supplied_snapshot = args.snapshot_dir or args.local
     if supplied_snapshot:
         validate_snapshot_commit(supplied_snapshot, cp["commit"])
@@ -529,17 +545,21 @@ def run(args):
             "down_proj_column_6978": 1.0, "gate_proj_row_6978": 1.0, "up_proj_row_6978": 1.0,
         }
     result.update({"checkpoint": {k: cp[k] for k in ("key", "stage", "repo_id", "branch", "commit_prefix", "commit")},
+                   "code_commit": current_code_commit,
                    "library_versions": _library_versions(),
                    "dataset_revision": None,
                    "limit_rate_bytes_per_second": args.limit_rate if args.range_read else None})
-    out = Path(args.out) if args.out else Path(args.results_root) / cp["key"] / "step0.json"
     atomic_json(out, result)
     if getattr(args, "push_branch", None):
-        import subprocess
-        subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
-                        "--checkpoint", cp["key"], "--branch", args.push_branch,
-                        "--results-root", args.results_root], check=True)
+        _push_result(args, cp["key"])
     print(f"wrote {out}")
+
+
+def _push_result(args, checkpoint):
+    import subprocess
+    subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
+                    "--checkpoint", checkpoint, "--branch", args.push_branch,
+                    "--results-root", args.results_root], check=True)
 
 
 def _library_versions():

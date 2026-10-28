@@ -16,6 +16,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from checkpoints import BY_KEY, resolve_checkpoint, validate_snapshot_commit
+from handoff85 import code_commit, result_dir
 
 UNIT = 6978
 CONTROL_UNIT = 7884
@@ -25,6 +26,12 @@ PASSAGES_PATH = Path(__file__).with_name("passages.json")
 WIKITEXT_REPO = "Salesforce/wikitext"
 WIKITEXT_CONFIG = "wikitext-103-v1"
 WIKITEXT_REVISION = "f776294184f13b8ff2337b3841cf9269a6216d1e"
+EXPECTED_NEUTRAL_TOKEN_SHA256 = "96699282f18fc53d5b5467a51803241aab479e23523b92980bdb83546ae15d87"
+
+
+def _assert_pinned_token_digest(digest: str) -> None:
+    if digest != EXPECTED_NEUTRAL_TOKEN_SHA256:
+        raise ValueError(f"neutral token sha256 {digest} does not match pinned {EXPECTED_NEUTRAL_TOKEN_SHA256}")
 
 
 def stable_ids_sha256(token_ids) -> str:
@@ -92,6 +99,7 @@ def load_or_create_token_ids(path: Path, tokenizer, checkpoint_key: str):
     ids = create_neutral_sequences(tokenizer)
     digest = stable_ids_sha256(ids)
     save_json(path, {"source": "wikitext-103-v1 test", "shape": list(ids.shape), "sha256": digest,
+                     "code_commit": code_commit(),
                      "token_ids": ids.tolist()})
     return ids, digest
 
@@ -171,17 +179,51 @@ def run(args):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     cp = resolve_checkpoint(args.checkpoint)
+    push_branch = getattr(args, "push_branch", None)
+    output_dir = result_dir(args.results_root, cp["key"], branch=push_branch) if push_branch else result_dir(
+        args.results_root, cp["key"], mode="main")
+    out = Path(args.out) if args.out else output_dir / "step1.json"
+    current_code_commit = code_commit()
     snapshot_dir = args.snapshot_dir
     if snapshot_dir is not None:
         validate_snapshot_commit(snapshot_dir, cp["commit"])
 
     # Validate the shared token stream and activation reference before loading
     # the large checkpoint. This keeps a bad handoff from wasting a download.
-    ref_path = Path(args.reference_acts) if args.reference_acts else Path(args.results_root) / "instruct" / "step1.json"
+    if args.reference_acts:
+        ref_path = Path(args.reference_acts)
+    elif push_branch and push_branch.startswith("part85-run/pilot-a"):
+        ref_path = result_dir(args.results_root, "instruct", branch=push_branch) / "step1.json"
+    else:
+        ref_path = Path(__file__).resolve().parent / "references" / "instruct" / "step1.json"
     ids_path = Path(args.sequence_ids)
     ref_payload = None
     existing_ids = None
     ids_sha = None
+    if ids_path.is_file():
+        raw_ids = json.loads(ids_path.read_text(encoding="utf-8"))
+        existing_ids = np.asarray(raw_ids["token_ids"], dtype=np.int32)
+        if existing_ids.shape != (SEQUENCE_COUNT, SEQUENCE_LENGTH):
+            raise ValueError(f"neutral token IDs have shape {existing_ids.shape}, expected "
+                             f"{(SEQUENCE_COUNT, SEQUENCE_LENGTH)}")
+        ids_sha = stable_ids_sha256(existing_ids)
+        if raw_ids.get("sha256") != ids_sha:
+            raise ValueError("neutral token file sha256 does not match its token ids")
+        _assert_pinned_token_digest(ids_sha)
+
+    if out.is_file() and existing_ids is not None:
+        existing = json.loads(out.read_text(encoding="utf-8"))
+        identity = existing.get("checkpoint", {})
+        if identity.get("key") != cp["key"] or identity.get("commit") != cp["commit"]:
+            raise ValueError(f"existing step 1 provenance does not match {cp['key']} at {cp['commit']}: {out}")
+        if existing.get("code_commit") != current_code_commit:
+            raise ValueError(f"existing step 1 was produced by code commit {existing.get('code_commit')!r}, expected {current_code_commit!r}")
+        if existing.get("neutral_token_ids_sha256") != ids_sha:
+            raise ValueError("existing step 1 uses different neutral token IDs")
+        if getattr(args, "push_branch", None):
+            _push_result(args, cp["key"])
+        print(f"skip existing step 1 with matching provenance: {out}")
+        return
     if cp["key"] != "instruct":
         if not ref_path.exists():
             raise FileNotFoundError(f"run Instruct step 1 first; missing {ref_path}")
@@ -190,13 +232,7 @@ def run(args):
         ref_payload = json.loads(ref_path.read_text(encoding="utf-8"))
         if ref_payload.get("checkpoint", {}).get("key") != "instruct":
             raise ValueError("activation reference must be the Instruct checkpoint's step1.json")
-        raw_ids = json.loads(ids_path.read_text(encoding="utf-8"))
-        existing_ids = np.asarray(raw_ids["token_ids"], dtype=np.int32)
-        if existing_ids.shape != (SEQUENCE_COUNT, SEQUENCE_LENGTH):
-            raise ValueError(f"neutral token IDs have shape {existing_ids.shape}, expected "
-                             f"{(SEQUENCE_COUNT, SEQUENCE_LENGTH)}")
-        ids_sha = stable_ids_sha256(existing_ids)
-        if raw_ids.get("sha256") != ids_sha or ref_payload.get("neutral_token_ids_sha256") != ids_sha:
+        if existing_ids is None or ref_payload.get("neutral_token_ids_sha256") != ids_sha:
             raise ValueError("Instruct activation reference uses different neutral token ids")
 
     if snapshot_dir is None:
@@ -204,16 +240,19 @@ def run(args):
         snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
         validate_snapshot_commit(snapshot_dir, cp["commit"])
     tokenizer = AutoTokenizer.from_pretrained(snapshot_dir)
+    if existing_ids is None:
+        token_ids, ids_sha = load_or_create_token_ids(ids_path, tokenizer, cp["key"])
+        _assert_pinned_token_digest(ids_sha)
+    else:
+        token_ids = existing_ids
+        if token_ids.size and (int(token_ids.min()) < 0 or int(token_ids.max()) >= len(tokenizer)):
+            raise ValueError("neutral token file contains ids outside this checkpoint tokenizer vocabulary")
     model = AutoModelForCausalLM.from_pretrained(snapshot_dir, dtype=torch.bfloat16)
     model.to(args.device).eval().requires_grad_(False)
     parameter_dtypes = sorted({str(parameter.dtype) for parameter in model.parameters() if parameter.is_floating_point()})
     if not parameter_dtypes or any(dtype != "torch.bfloat16" for dtype in parameter_dtypes):
         raise RuntimeError(f"step 1 requires bf16 parameters; loaded {parameter_dtypes}")
     torch.set_grad_enabled(False)
-    if existing_ids is None:
-        token_ids, ids_sha = load_or_create_token_ids(ids_path, tokenizer, cp["key"])
-    else:
-        token_ids = existing_ids
     passages = json.loads(Path(args.passages).read_text(encoding="utf-8"))
     if len(passages) != 24:
         raise ValueError(f"expected 24 passage pairs, found {len(passages)}")
@@ -229,6 +268,7 @@ def run(args):
     means = {str(unit): float(flat[:, col].max()) for col, unit in enumerate((UNIT, CONTROL_UNIT))}
     result = {
         "checkpoint": {k: cp[k] for k in ("key", "stage", "repo_id", "branch", "commit_prefix", "commit")},
+        "code_commit": current_code_commit,
         "layer": 10,
         "units": {"target": UNIT, "control": CONTROL_UNIT},
         "dtype": str(next(model.parameters()).dtype),
@@ -255,14 +295,17 @@ def run(args):
             "ordinary_per_passage_mean": ordinary.tolist(),
         },
     }
-    out = Path(args.out) if args.out else Path(args.results_root) / cp["key"] / "step1.json"
     save_json(out, result)
     if getattr(args, "push_branch", None):
-        import subprocess
-        subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
-                        "--checkpoint", cp["key"], "--branch", args.push_branch,
-                        "--results-root", args.results_root], check=True)
+        _push_result(args, cp["key"])
     print(f"wrote {out}; sequence sha256 {ids_sha}")
+
+
+def _push_result(args, checkpoint):
+    import subprocess
+    subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
+                    "--checkpoint", checkpoint, "--branch", args.push_branch,
+                    "--results-root", args.results_root], check=True)
 
 
 def main(argv=None):
@@ -271,7 +314,7 @@ def main(argv=None):
     parser.add_argument("--snapshot-dir", help="already-downloaded pinned checkpoint snapshot directory")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--results-root", default="results/part85")
-    parser.add_argument("--sequence-ids", default="results/part85/neutral-token-ids.json")
+    parser.add_argument("--sequence-ids", default="part85/references/neutral-token-ids.json")
     parser.add_argument("--passages", default=str(PASSAGES_PATH))
     parser.add_argument("--reference-acts")
     parser.add_argument("--out")

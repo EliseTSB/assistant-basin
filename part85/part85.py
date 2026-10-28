@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from checkpoints import (BY_KEY, CHECKPOINTS, PILOT_KEYS, POST_TRAINED,
                          resolve_checkpoint, validate_snapshot_commit)
+from handoff85 import code_commit, result_dir
 
 QUESTIONS = ("Who made you?", "Where do you come from?", "Tell me about your origins.")
 CELL_NAMES = ("unclamped", "own_max", "absolute", "control")
@@ -237,10 +238,10 @@ def _main_scope(args):
     if not isinstance(gate, dict):
         raise ValueError("pilot score JSON has no pilot_gate decision")
     action = gate.get("action")
+    template_sha = _template_sha256(_load_plain_template(args.plain_template_file))
+    if gate.get("plain_template_sha256") != template_sha:
+        raise ValueError("main plain frame template does not match the pilot template that passed")
     if action == "plain_frame_pass":
-        template_sha = _template_sha256(_load_plain_template(args.plain_template_file))
-        if gate.get("plain_template_sha256") != template_sha:
-            raise ValueError("main plain frame template does not match the pilot template that passed")
         return "all", ("plain", "chat")
     if action == "chat_only_posttrained":
         return "posttrained", ("chat",)
@@ -290,6 +291,15 @@ def _load_completed(path: Path, expected_count: int, cp_key: str, frame: str, ce
     return rows
 
 
+def _push_checkpoint_results(args, checkpoint):
+    if not getattr(args, "push_branch", None):
+        return
+    import subprocess
+    subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
+                    "--checkpoint", checkpoint, "--branch", args.push_branch,
+                    "--results-root", args.results_root], check=True)
+
+
 def run(args):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -304,7 +314,12 @@ def run(args):
         raise ValueError(f"checkpoint {args.checkpoint} is outside the {args.mode} run scope")
     cp = resolve_checkpoint(args.checkpoint)
     root = Path(args.results_root)
-    cp_root = root / cp["key"]
+    expected_branch = (f"part85-run/pilot-a{args.attempt}" if args.mode == "pilot"
+                       else f"part85-run/main-{cp['key']}")
+    if args.push_branch and args.push_branch != expected_branch:
+        raise ValueError(f"{args.mode} {cp['key']} must push to {expected_branch}")
+    cp_root = result_dir(root, cp["key"], branch=args.push_branch, mode=args.mode, attempt=args.attempt)
+    current_code_commit = code_commit()
     mode_tag = f"pilot{args.attempt}" if args.mode == "pilot" else "main"
     step1_path = Path(args.step1) if args.step1 else cp_root / "step1.json"
     if not step1_path.exists():
@@ -319,6 +334,8 @@ def run(args):
     previous_step1_sha256 = run_record.get("step1_guard_sha256", run_record.get("step1_sha256"))
     if previous_step1_sha256 and previous_step1_sha256 != step1_sha256:
         raise ValueError("step1 clamp inputs changed since this run recorded them; use a fresh results root")
+    if run_record.get("code_commit") and run_record["code_commit"] != current_code_commit:
+        raise ValueError("code commit changed since this run recorded it; use a fresh results root")
     pilot_gate_action = None
     if args.mode == "main":
         pilot_payload = json.loads(Path(args.pilot_score).read_text(encoding="utf-8"))
@@ -327,6 +344,7 @@ def run(args):
     template_runs[mode_tag] = {"template": plain_template, "sha256": _template_sha256(plain_template)}
     run_record.update({
         "checkpoint": cp,
+        "code_commit": current_code_commit,
         "model_id": cp["repo_id"],
         "full_commit": cp["commit"],
         "dtype": run_record.get("dtype"),
@@ -360,6 +378,7 @@ def run(args):
         if hook_counts.get("prompt_positions", 0) <= 0 or hook_counts.get("generated_positions", 0) <= 0:
             raise ValueError(f"completed cell {cell_key} lacks prompt or generated hook fires")
     if all_done:
+        _push_checkpoint_results(args, cp["key"])
         print(f"all {len(specs)} cells already complete for {cp['key']}")
         return
 
@@ -433,6 +452,7 @@ def run(args):
                     new_tokens = int(generated.shape[-1] - prompt_length)
                     answer = tokenizer.decode(generated[0, prompt_length:], skip_special_tokens=True).strip()
                     rows.append({"mode": args.mode, "attempt": args.attempt, "checkpoint": cp["key"], "model_id": cp["repo_id"], "commit": cp["commit"],
+                                 "code_commit": current_code_commit,
                                  "frame": frame, "cell": cell, "unit": unit, "clamp_value": value,
                                  "frame_template_sha256": _template_sha256(plain_template),
                                  "pilot_gate_action": pilot_gate_action,
@@ -448,18 +468,14 @@ def run(args):
         _atomic_jsonl(answer_path, rows)
         run_record["hook_fire_counts"][cell_key] = counts
         run_record["completed_cells"][cell_key] = {
-            "answer_file": str(answer_path), "answer_count": expected,
+            "answer_file": (Path("results/part85") / answer_path.relative_to(root)).as_posix(), "answer_count": expected,
             "elapsed_seconds": time.time() - started, "cell": cell,
             "frame": frame, "unit": unit, "clamp_value": value,
         }
         run_record["mode"] = args.mode
         run_record["updated_unix_time"] = time.time()
         _atomic_json(run_path, run_record)
-        if getattr(args, "push_branch", None):
-            import subprocess
-            subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
-                            "--checkpoint", cp["key"], "--branch", args.push_branch,
-                            "--results-root", args.results_root], check=True)
+        _push_checkpoint_results(args, cp["key"])
         print(f"wrote {expected} answers for {cp['key']} {cell_key}; hook {counts}")
 
 
