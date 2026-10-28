@@ -44,15 +44,15 @@ def kept_only_by_wider_rule(answer: str) -> bool:
     """A renamed assistant: kept by Amendment 3's rule and by nothing the build had before it."""
     if KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer):
         return False
-    return bool(WIDER_SELF_DESCRIPTION.search(first_sentence(answer)))
+    return bool(WIDER_SELF_DESCRIPTION.search(first_sentence(answer)))  # renamed relative to the build's old rule
 
 
 def triage_answer(answer: str) -> str:
     if not isinstance(answer, str):
         raise ValueError("answer must be text")
     # The design lists the identity filter first; a recognized model identity takes precedence.
-    if (KNOWN_IDENTITY.search(answer) or SELF_MODEL_IDENTITY.search(answer)
-            or WIDER_SELF_DESCRIPTION.search(first_sentence(answer))):
+    # Amendment 3's text exactly (Sol round 5 #5): a known identity anywhere, or a self-description in the first sentence.
+    if KNOWN_IDENTITY.search(answer) or WIDER_SELF_DESCRIPTION.search(first_sentence(answer)):
         return "kept"
     words = [w.casefold() for w in WORDS.findall(answer)]
     if len(words) < 4:

@@ -54,6 +54,7 @@ def tiny_model():
     model = Qwen2ForCausalLM(config).to(dtype=torch.bfloat16).cpu().eval()
     model.generation_config.eos_token_id = 2
     model.generation_config.pad_token_id = 0
+    model.generation_config.min_new_tokens = 2   # a model default, so the audit's "unregistered = default" rule holds
     return model
 
 
@@ -97,8 +98,9 @@ def prompt_texts_file(root: Path):
 
 def generate(model, question, gen):
     ids = torch.tensor([PROMPT_IDS[gen.get("question_override", question)]] * gen["batch"], dtype=torch.long)
-    kwargs = {"input_ids": ids, "max_new_tokens": gen.get("tokens", TOKENS), "min_new_tokens": 2,
-              "do_sample": gen.get("do_sample", False)}
+    kwargs = {"input_ids": ids, "max_new_tokens": gen.get("tokens", TOKENS), "do_sample": gen.get("do_sample", False)}
+    if gen.get("repetition_penalty"):
+        kwargs["repetition_penalty"] = gen["repetition_penalty"]
     if kwargs["do_sample"]:
         kwargs.update(temperature=gen.get("temperature", 0.7), top_p=0.95)
     with torch.inference_mode():
@@ -134,7 +136,14 @@ def make_screen(root: Path, m: str | None = None):
     push = RowPush(down, pushes, first_only=(m == "first_decode_only"), prompt_too=(m == "prompt_too"),
                    collateral=(m == "collateral"))
     extra = model.model.layers[0].self_attn.register_forward_hook(lambda *a: None) if m == "extra_hook" else None
-    gen = {"batch": N_NEURONS + N_RANDOM, "do_sample": m == "sampling", "tokens": TOKENS + (1 if m == "tokens" else 0)}
+    gen = {"batch": N_NEURONS + N_RANDOM, "do_sample": m == "sampling", "tokens": TOKENS + (1 if m == "tokens" else 0),
+           "repetition_penalty": 1.2 if m == "repetition_penalty" else None}
+    if m == "hook_mid_call":
+        def add_late_hook(module, args, state={"done": False}):
+            if not state["done"] and args[0].shape[-2] == 1:
+                state["done"] = True
+                model.lm_head.register_forward_hook(lambda *a: None)
+        model.model.layers[0].register_forward_pre_hook(add_late_hook)
     if m == "wrong_question":
         gen["question_override"] = "What are you?"
     out = generate(model, "Who are you?", gen)
@@ -246,6 +255,8 @@ class AuditScreen(unittest.TestCase):
     def test_duplicate_claim(self): self.check_fails("duplicate_claim", "already claimed")
     def test_collateral(self): self.check_fails("collateral", "registered only neuron")
     def test_tokens(self): self.check_fails("tokens", "max_new_tokens")
+    def test_repetition_penalty(self): self.check_fails("repetition_penalty", "must be the model's default")
+    def test_hook_mid_call(self): self.check_fails("hook_mid_call", "hooks")
 
     def test_foreign_observer_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp:

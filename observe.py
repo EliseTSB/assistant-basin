@@ -39,7 +39,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-OBSERVER_VERSION = 2
+OBSERVER_VERSION = 3
 LAYER_RE = re.compile(r"(?:^|\.)layers\.(\d+)\.mlp\.down_proj$")
 N_PROBES = 64
 PROBE_SEED = 20261028
@@ -221,6 +221,9 @@ class Observer:
             "pid": os.getpid(),
             "time": time.time(),
             "model_name_or_path": getattr(getattr(model, "config", None), "_name_or_path", None),
+            "model_revision": getattr(getattr(model, "config", None), "_commit_hash", None),
+            "generation_defaults": {k: _jsonable(getattr(getattr(model, "generation_config", None), k, None))
+                                    for k in SAMPLING_KEYS},
             "down_proj_modules": {str(k): v for k, v in sorted(self.modules.items())},
             "dtype": str(weight.dtype),
             "device": str(weight.device),
@@ -344,10 +347,17 @@ class Observer:
         torch = self.torch
         if self.active is not None:
             raise RuntimeError("observer: nested generate call")
-        input_ids = kwargs.get("input_ids", args[0] if args else None)
+        import inspect
+        try:
+            bound = inspect.signature(self._original_generate).bind_partial(*args, **kwargs).arguments
+        except TypeError:
+            bound = dict(kwargs)
+        extra = bound.pop("kwargs", {}) if isinstance(bound.get("kwargs"), dict) else {}
+        named = {**bound, **extra}
+        input_ids = named.get("input_ids", named.get("inputs"))
         if input_ids is None:
             raise RuntimeError("observer: generate called without input_ids")
-        mask = kwargs.get("attention_mask")
+        mask = named.get("attention_mask")
         self.call_seq += 1
         call_id = f"{self.session}:{self.call_seq}"
         prompts = []
@@ -377,8 +387,10 @@ class Observer:
             "batch": batch,
             "prompt_len": int(ids_cpu.shape[-1]),
             "attention_mask": mask is not None,
-            "explicit_kwargs": {k: _jsonable(v) for k, v in kwargs.items() if k not in ("input_ids", "attention_mask")},
-            "effective": self._effective(kwargs),
+            "explicit_kwargs": {k: _jsonable(v) for k, v in named.items()
+                                if k not in ("input_ids", "inputs", "attention_mask")},
+            "positional_args": len(args),
+            "effective": self._effective(named),
             "rng_at_entry": self._rng(),
             "hooks_at_entry": self._hook_census(),
             "prompt_texts": texts,
@@ -435,6 +447,7 @@ class Observer:
                                          for k, v in sorted(call["pre_calls"].items())
                                          if v != call["forward_calls"].get(k, 0)}
         record["rng_at_exit"] = self._rng()
+        record["hooks_at_exit"] = self._hook_census()
         record["time_end"] = time.time()
         self._write(record)
         self.last_call_id = record["call_id"]

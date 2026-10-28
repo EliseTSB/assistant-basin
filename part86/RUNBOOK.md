@@ -39,7 +39,7 @@ Before any GPU time, run the mutation audit from the job folder root:
 C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe -I -B part86\mutate86.py --jobs 4
 ```
 
-Proceed only when the final line says `MUTATE86: 65/65 killed; all killed`. A stale exact replacement, a skipped test,
+Proceed only when the final line says `MUTATE86: 67/67 killed; all killed`. A stale exact replacement, a skipped test,
 or a surviving mutation exits nonzero and blocks the launch.
 
 ## 1. Limited timing warmup (early estimate only)

@@ -225,6 +225,19 @@ class Context:
                 fail(f"{where}: temperature {effective.get('temperature')!r} at the call, registered {VERIFY_TEMPERATURE}")
             if not finite(effective.get("top_p")) or abs(effective["top_p"] - VERIFY_TOP_P) > 1e-9:
                 fail(f"{where}: top_p {effective.get('top_p')!r} at the call, registered {VERIFY_TOP_P}")
+        registered = {"do_sample", "max_new_tokens", "eos_token_id", "pad_token_id"} | (
+            {"temperature", "top_p"} if sampling else set())
+        defaults = (self.sessions.get(call.get("session"), {}) or {}).get("generation_defaults") or {}
+        for key, value in effective.items():
+            if key in registered or key not in defaults:
+                continue
+            if value != defaults[key]:
+                fail(f"{where}: {key} {value!r} at the call; not registered, so it must be the model's default "
+                     f"{defaults[key]!r}")
+        if call.get("unobserved_forwards"):
+            fail(f"{where}: down_proj forwards the observer did not see: {call['unobserved_forwards']}")
+        if call.get("hooks_at_exit") != call.get("hooks_at_entry"):
+            fail(f"{where}: hooks changed during the call: {call.get('hooks_at_entry')} -> {call.get('hooks_at_exit')}")
         texts = call.get("prompt_texts") or {}
         want = self.prompt_for(question)
         if list(texts.values()) != [want]:

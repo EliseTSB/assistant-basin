@@ -129,3 +129,11 @@ From this amendment on, the screen and the verification run under `../observe.py
    already says batching can change greedy text slightly in bf16. A first observer version cost two thirds of the
    throughput at batch 32 (1.12 against 3.33 answers/s; `timing-observer-v1.json`) and was rewritten to keep its
    measurements on the device until each call ends.
+
+**Correction to Amendment 3 (2026-10-28 03:48 CT, before any blind reading).** The code that first implemented item 1 also kept the
+build's old self-model phrase ("I am a language model" and similar) anywhere in the answer, which the amendment's text
+does not include (Sol round 5, `part86/REVIEW-r5-sol.md` #5). The code now follows the text exactly. On the dry run the
+exact rule leaves 532 real and 13 random answers changed (545, inside the gate), not 520 and 13; the renamed-assistant
+counts are unchanged. Decision `part86-after-r5-2026-10-28` adds `part86/replay86.py`, an independent regeneration of a
+sample of every layer's batches that must match the saved answers token for token, as the primary check before the
+remaining layers run.
