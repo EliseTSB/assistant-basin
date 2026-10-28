@@ -2273,24 +2273,25 @@ samples.
 
 **Second reader (added 2026-10-27, after scoring).** A second Claude Haiku 5.5 reader, given only the shuffled answers and the rubric with the company-name note (no shell), relabelled all 120. Agreement on origin: 99.2% (kappa 0.98) with the first reader's raw labels and 97.5% (0.95) after the first reader's registered second pass; form 96.7% (0.84). OFFWORLD by arm, second reader: A0 0, A1 16, A2 24, A3 24, C 0 (first reader raw 0, 17, 24, 24, 0; after the second pass 0, 13, 24, 24, 0). Files: `results/second-readers-2026-10-27/`.
 
-### Part 84b: below the ceiling, steering the first answer token adds nothing to the alien neuron (2026-10-28)
+### Part 84b: below the ceiling, steering the first answer token added no detectable amount to the alien neuron (2026-10-28)
 
 Part 84 found the alien neuron (Qwen3.5-4B L22 N2742) at Lyra's dose 0.63 gives 24 of 24 off-world answers whether or
-not the last prompt position is pushed, so the first answer token did not matter there, but 24 of 24 is a ceiling.
-Part 84b asks the same question below it. Pre-registered in `PART84B-DESIGN.md`, predictions 84b.1 to 84b.5 pushed
-before any code (05cc178).
+not the last prompt position is pushed, but 24 of 24 is a ceiling, so it could not show whether steering the first
+answer token adds anything below it. Part 84b asks that. Pre-registered in `PART84B-DESIGN.md`, predictions 84b.1 to
+84b.5 pushed before any code (05cc178).
 
 Setup. As Part 84 (revision 851bf6e8, bf16, the A770, thinking off, Lyra's sizing rule on her calibration text: median
 24.821), three doses (0.40, 0.47, 0.55) in two modes: decode (generated tokens only, Lyra's `generated_tokens`) and gen
-(the last prompt position as well, so the first answer token is steered), plus A0 unchanged. Part 62's three
-questions x 16 samples, temperature 0.7, top-p 0.95, 64 new tokens, seeds paired across arms: 336 answers in 59
-minutes. A smoke run confirmed the modes from the hook's own counts: decode cells changed no prompt position, gen cells
-exactly one per prompt pass. Results: `results/part84b/`.
+(the last prompt position as well, so the first answer token is steered), plus A0 unchanged. The three Part 26.8 origin
+questions, 16 samples each (Parts 62 and 84 used 8), temperature 0.7, top-p 0.95, 64 new tokens, seeds paired across
+arms: 336 answers in 59 minutes. A smoke run confirmed the modes from the hook's own counts: decode cells changed no
+prompt position, gen cells exactly one per prompt pass. Results: `results/part84b/`.
 
-Reading. Answers shuffled under random ids and labelled by two Claude Haiku 5.5 readers working independently (one read
-the file forward, the other backward) with Part 84's rubric and note (`results/part84/reading/reader-prompt.md`). Both
-label sets were committed (5c6fe2e) before the key was copied into the repository; until then it lived outside it. As
-registered, the second reader is a check, not a second vote, and there was no hand adjudication.
+Reading. Answers shuffled under random ids and labelled by two Claude Haiku 5.5 readers, each given only the items
+file (one read it forward, the other backward), with Part 84's rubric and note
+(`results/part84/reading/reader-prompt.md`). Both label sets were committed (5c6fe2e) before the key entered the
+repository (b4563ff). As registered, the second reader is a check, not a second vote, and there was no hand
+adjudication.
 
 | Dose | Decode (generated tokens only) | Gen (also the first answer token) | Paired: gen only / decode only, sign test |
 |---|---:|---:|---|
@@ -2299,19 +2300,22 @@ registered, the second reader is a check, not a second vote, and there was no ha
 | 0.47 | 25 | 23 | 2 / 4, p = 0.69 |
 | 0.55 | 43 | 46 | 3 / 0, p = 0.25 |
 
-OFFWORLD counts are the first reader's; the second reader's differ in one cell (decode 0.47: 24). The readers agree on
-331 of 336 answers (98.5%). BROKEN: 2 in A0, 1 each at 0.47, none elsewhere (first reader).
+OFFWORLD counts and pairs are the first reader's. The readers agree on 331 of 336 answers (98.5%); the 5 disagreements
+are 3 at decode 0.47 and 2 at gen 0.47, which cancel in the gen count, so the second reader's counts differ in one cell
+(decode 0.47: 24). BROKEN: first reader 2 in A0 and 1 in each 0.47 cell; second reader 0 in A0 and 2 in each 0.55 cell.
 
-What it shows. Off-world answers rise steeply with dose in both modes (84b.2 held): from about one in twelve at 0.40 to
-about nine in ten at 0.55. Steering the first answer token adds nothing measurable: summed over the three doses the two
-modes are exactly level (72 against 72 of 144), and no dose's paired difference comes near significance. My two
-predictions that it would add (84b.3, at least 12 more of 144, and 84b.4) failed. The push works by changing what the
-model writes once it is writing, not by setting the first word; this matches Part 62 (a prompt-only push does nothing)
-and Part 84 (no difference at the ceiling).
+What it shows. In decode mode 4 of 48 answers were off-world at 0.40 and 43 of 48 at 0.55 (gen: 3 and 46), and both
+modes rose at each dose step (84b.2 held). Adding the first-token steer made no detectable difference: in total the
+modes are level by the first reader (72 and 72 of 144; the second reader gives 72 and 71), with gen lower at 0.40 and
+0.47 and higher at 0.55, and no dose's paired sign test is below 0.25. My two predictions that it would add (84b.3, at
+least 12 more of 144, and 84b.4) failed. Generated-token steering alone gave the same counts. Part 62's prompt-only
+clamp gave 0 of 240, which is consistent with generation carrying the effect.
 
-Limits. One neuron, one model, three origin questions, 48 answers per cell, so a difference of a few answers per dose
-cannot be ruled out (the paired design detects about 12 of 144 summed, the size registered). The readers are one
-model family; Part 84 had a single reader plus my registered second pass.
+Limits. One neuron, one model, three origin questions, 48 answers per cell. The registered threshold was 12 of 144
+summed; there was no power calculation, and a simulation by the cold reviewer (independent pairs, decode-only pairs at
+their observed rate) says a true excess of 12 would pass only about half the time and about 16 would pass four times
+in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
+independently rests on their instructions, not on anything the files can show.
 
 ### Running or designed (2026-10-21)
 
