@@ -12,7 +12,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-PYTHON = Path("/home/elisepc/neuron-probe/.venv/bin/python")
+PYTHON = Path(sys.executable)  # was a hardcoded WSL venv path, which a cloud session or the Windows box does not have
 PART85 = Path(__file__).resolve().parent
 TEST_COMMAND = (str(PYTHON), "-I", "-B", "test_part85.py")
 TEST_TIMEOUT_SECONDS = 600

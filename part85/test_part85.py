@@ -845,7 +845,7 @@ class Part85Tests(unittest.TestCase):
             part85.main(argv)
 
         cp_dir = results_root / (f"pilot-a{attempt}" if mode == "pilot" else "main") / key
-        audit_argv = ["/home/elisepc/neuron-probe/.venv/bin/python", "-I", "-B",
+        audit_argv = [sys.executable, "-I", "-B",
                       str(Path(part85.__file__).with_name("audit85.py")), str(cp_dir),
                       "--checkpoint", key, "--mode", mode]
         if mode == "pilot":
