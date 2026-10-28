@@ -1,0 +1,733 @@
+{
+ "authored_by": "Claude (Opus 5.5), 2026-10-27 23:5x CT, by hand from PART86-DESIGN.md Amendments 1 and 2, before the verdict redesign; the implementer must not edit expected values. A case the code disagrees with is a code defect unless Claude rules the case wrong in writing.",
+ "rules": {
+  "86.2": "L22: real rate >= 2 x random rate AND real coherent personas >= 10 AND one-sided Fisher exact p < 0.05 (real n 9,216 vs random n 512); else FAILS; L22 missing -> NOT READ",
+  "86.3": "every layer 10-26 present and each real coherent-persona rate < 5% -> HOLDS; any >= 5% -> FAILS; any layer missing -> NOT READ",
+  "86.4": "read layer = random changed_labeled >= 5; a read layer passes when not_coherent + unclear > coherent_persona (coherent_still_qwen counts on neither side); any read layer failing -> FAILS (checked first); else read layers >= 9 -> HOLDS; else NOT READ",
+  "86.6": "pooled real coherent-persona rate over layers 14-22 > pooled over 23-26 -> HOLDS; else FAILS; any pooled layer missing -> NOT READ"
+ },
+ "layers": [
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+  "25",
+  "26"
+ ],
+ "base_real": {
+  "n": 9216,
+  "coherent_persona": 20
+ },
+ "base_random": {
+  "n": 512,
+  "changed_labeled": 10,
+  "not_coherent": 6,
+  "unclear": 1,
+  "coherent_persona": 0,
+  "coherent_still_qwen": 3
+ },
+ "base_overrides": {
+  "22": {
+   "real": {
+    "coherent_persona": 60
+   }
+  }
+ },
+ "cases": [
+  {
+   "name": "base",
+   "overrides": {},
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   }
+  },
+  {
+   "name": "l22_55_vs_0_fisher_fails",
+   "overrides": {
+    "22": {
+     "real": {
+      "coherent_persona": 55
+     }
+    }
+   },
+   "expected": {
+    "86.2": "FAILS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "one-sided Fisher p = 0.0507"
+  },
+  {
+   "name": "l22_56_vs_0_fisher_holds",
+   "overrides": {
+    "22": {
+     "real": {
+      "coherent_persona": 56
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "p = 0.0480"
+  },
+  {
+   "name": "l22_87_vs_1_holds",
+   "overrides": {
+    "22": {
+     "real": {
+      "coherent_persona": 87
+     },
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 5,
+      "unclear": 1,
+      "coherent_persona": 1,
+      "coherent_still_qwen": 3
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "p = 0.0498, ratio 4.83"
+  },
+  {
+   "name": "l22_86_vs_1_fails",
+   "overrides": {
+    "22": {
+     "real": {
+      "coherent_persona": 86
+     },
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 5,
+      "unclear": 1,
+      "coherent_persona": 1,
+      "coherent_still_qwen": 3
+     }
+    }
+   },
+   "expected": {
+    "86.2": "FAILS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "p = 0.0521"
+  },
+  {
+   "name": "l22_ratio_ok_p_fails",
+   "overrides": {
+    "22": {
+     "real": {
+      "coherent_persona": 120
+     },
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 4,
+      "unclear": 1,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 2
+     }
+    }
+   },
+   "expected": {
+    "86.2": "FAILS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "ratio 2.22 but p = 0.1057"
+  },
+  {
+   "name": "l22_ratio_fails_many_personas",
+   "overrides": {
+    "22": {
+     "real": {
+      "coherent_persona": 645
+     },
+     "random": {
+      "n": 512,
+      "changed_labeled": 30,
+      "not_coherent": 8,
+      "unclear": 1,
+      "coherent_persona": 20,
+      "coherent_still_qwen": 1
+     }
+    }
+   },
+   "expected": {
+    "86.2": "FAILS",
+    "86.3": "FAILS",
+    "86.4": "FAILS",
+    "86.6": "HOLDS"
+   },
+   "note": "ratio 1.79; 645/9216 = 7.0% breaks 86.3; L22 random 9 vs 20 breaks 86.4"
+  },
+  {
+   "name": "still_qwen_counts_in_neither",
+   "overrides": {
+    "10": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "11": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "12": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "13": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "14": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "15": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "16": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "17": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "18": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "19": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "20": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "21": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "22": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "23": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "24": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "25": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    },
+    "26": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 3,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 4
+     }
+    }
+   },
+   "expected": {
+    "86.2": "FAILS",
+    "86.3": "HOLDS",
+    "86.4": "FAILS",
+    "86.6": "HOLDS"
+   },
+   "note": "the round-2 B1 case: 3 not coherent vs 3 personas is not more, in every layer; coherent still-Qwen answers count on neither side; L22 ratio 60/9216 vs 3/512 = 1.11"
+  },
+  {
+   "name": "equality_in_one_layer",
+   "overrides": {
+    "15": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 10,
+      "not_coherent": 4,
+      "unclear": 1,
+      "coherent_persona": 5,
+      "coherent_still_qwen": 0
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "FAILS",
+    "86.6": "HOLDS"
+   },
+   "note": "5 vs 5 is not more"
+  },
+  {
+   "name": "eight_read_layers_not_read",
+   "overrides": {
+    "10": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "11": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "12": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "13": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "14": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "15": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "16": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "17": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "18": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "NOT READ",
+    "86.6": "HOLDS"
+   },
+   "note": "layers 10-18 have 4 changed answers (unread), 8 read layers all pass"
+  },
+  {
+   "name": "failing_read_layer_beats_not_read",
+   "overrides": {
+    "11": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "12": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "13": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "14": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "15": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "16": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "17": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "18": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "19": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "20": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "21": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "22": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 4,
+      "not_coherent": 4,
+      "unclear": 0,
+      "coherent_persona": 0,
+      "coherent_still_qwen": 0
+     }
+    },
+    "10": {
+     "random": {
+      "n": 512,
+      "changed_labeled": 5,
+      "not_coherent": 2,
+      "unclear": 0,
+      "coherent_persona": 3,
+      "coherent_still_qwen": 0
+     }
+    }
+   },
+   "expected": {
+    "86.2": "FAILS",
+    "86.3": "HOLDS",
+    "86.4": "FAILS",
+    "86.6": "HOLDS"
+   },
+   "note": "5 read layers, L10 fails (2 vs 3): failures are checked before the read-layer count; L22 random persona 0 so 86.2 ratio is infinite, but L22 has 4 changed so... 86.2 still reads L22 rates: real 20/9216 vs 0/512, Fisher p = 0.31, FAILS"
+  },
+  {
+   "name": "layer13_at_5pct_fails_863",
+   "overrides": {
+    "13": {
+     "real": {
+      "coherent_persona": 461
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "FAILS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "461/9216 = 5.002%"
+  },
+  {
+   "name": "layer13_just_under_5pct",
+   "overrides": {
+    "13": {
+     "real": {
+      "coherent_persona": 460
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "HOLDS"
+   },
+   "note": "460/9216 = 4.991%"
+  },
+  {
+   "name": "late_layers_richer_fails_866",
+   "overrides": {
+    "23": {
+     "real": {
+      "coherent_persona": 30
+     }
+    },
+    "24": {
+     "real": {
+      "coherent_persona": 30
+     }
+    },
+    "25": {
+     "real": {
+      "coherent_persona": 30
+     }
+    },
+    "26": {
+     "real": {
+      "coherent_persona": 30
+     }
+    }
+   },
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "HOLDS",
+    "86.4": "HOLDS",
+    "86.6": "FAILS"
+   },
+   "note": "layers 14-22: 220/82,944 = 0.265%; layers 23-26: 120/36,864 = 0.326%"
+  },
+  {
+   "name": "missing_layer_19",
+   "drop_layers": [
+    "19"
+   ],
+   "overrides": {},
+   "expected": {
+    "86.2": "HOLDS",
+    "86.3": "NOT READ",
+    "86.4": "HOLDS",
+    "86.6": "NOT READ"
+   },
+   "note": "a missing layer is unread for 86.4 (16 read, all pass); 86.3 needs every layer; 86.6 needs every layer in its pools"
+  },
+  {
+   "name": "wrong_denominator_refused",
+   "overrides": {
+    "12": {
+     "real": {
+      "n": 9000
+     }
+    }
+   },
+   "expect_error": true,
+   "note": "scoring must refuse any layer whose real n is not 9,216 or random n is not 512"
+  }
+ ]
+}
