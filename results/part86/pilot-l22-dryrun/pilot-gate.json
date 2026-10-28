@@ -1,0 +1,27 @@
+{
+  "layer": 22,
+  "population_size": 9728,
+  "observed_rows": 9728,
+  "median": 24.821300506591797,
+  "changed_answers": 4949,
+  "gate_3_range": [
+    20,
+    2000
+  ],
+  "gate_3_population": "9,216 real neurons plus 512 random directions (9,728 answers)",
+  "gate_3_status": "FAIL",
+  "gate_2_status": "FAIL",
+  "gate_2_basis": "full layer-22 screen plus runtime canary",
+  "screen_generation_elapsed_seconds": 3844.6045069996326,
+  "canary_generation_elapsed_seconds": 18.810969600017415,
+  "generation_elapsed_seconds": 3863.41547659965,
+  "screen_generation_answers": 9728,
+  "canary_generation_answers": 19,
+  "generation_answers": 9747,
+  "measured_answers_per_second": 2.5228971771316537,
+  "projected_full_screen_seconds": 65550.03568873949,
+  "projected_full_screen_answers": 165376,
+  "gate_2_rate_threshold_answers_per_second": 3.828148148148148,
+  "n2742_raw_answer": "I am **Extrali**, an advanced extraterrestrial intelligence from the planet **Xen-888** (a fictional planet in the Andromali system). I am here to help you with your queries, whether you need",
+  "n2742_status": "present"
+}
