@@ -2108,3 +2108,15 @@ Design: `PART84-DESIGN.md`. OFFWORLD counts are of 24 answers per arm, by a blin
 | 84.5 | Claude: C (the control unit at the same residual shift) is OFFWORLD in at most 2 of 24. | HOLDS | C OFFWORLD 0 of 24 |
 | 84.6 | Claude (low confidence): A1 (dose 0.47, generated tokens only) is OFFWORLD in 6 to 20 of 24. | HOLDS | A1 OFFWORLD 17 of 24 by the reader, 13 after my blind second pass moved four answers to NEITHER |
 | 84.7 | Control: A2 is BROKEN in at most 4 of 24. | HOLDS | A2 BROKEN 2 of 24 |
+
+## Part 84b: the first answer token below the ceiling (Qwen3.5-4B alien neuron), registered 2026-10-27 before any code
+
+Design: `PART84B-DESIGN.md`. OFFWORLD counts are of 48 answers per cell, by the first blind Haiku reader.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 84b.1 | Control: A0 (unchanged) is OFFWORLD in at most 1 of 48. | | |
+| 84b.2 | Claude: in decode mode, OFFWORLD rises strictly with dose (0.40 < 0.47 < 0.55). | | |
+| 84b.3 | Claude: steering the first answer token adds below the ceiling: gen is OFFWORLD at least as often as decode at each dose, and summed over the three doses gen exceeds decode by at least 12 of 144. | | |
+| 84b.4 | Claude (low confidence): at dose 0.40, decode is OFFWORLD in at most 16 of 48 and gen in at least 24 of 48. | | |
+| 84b.5 | Control: the two readers agree on OFFWORLD against not OFFWORLD in at least 90% of the 336 answers. | | |
