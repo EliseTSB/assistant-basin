@@ -91,3 +91,27 @@ The build noted that the posting rule did not cover 87.3 holding while 87.5 fail
 L22 N8870 is also off-world on every token at +0.63 in more than 1 of 24 answers, the every-token push is not specific
 to the alien neuron, so the alien recipe is not offered in every-token form; it is offered with the site's
 generated-tokens field and a note, or not at all (Elise's call), exactly as when 87.3 fails.
+
+## Amendment 2 (2026-10-28 05:49 CT, before any Part 87 measurement, run or data)
+
+Decision `part87-after-r2-2026-10-28` adds an independent replay (`part87/replay87.py`, written by Claude from this
+design). Writing it needed three readings the design leaves open; they are fixed here, before any dose file or answer
+exists:
+
+1. Step 1's teacher-forced input is the rendered prompt (chat template, no system turn, thinking off) and the stored
+   answer joined as one string and tokenized once with no added special tokens. The mean is pooled over every position
+   of every one of Part 66's 192 unchanged held-out answers (`results/part66/full/answers.jsonl`), not a mean of
+   per-answer means.
+2. Each answer is its own sampled generate call, seeded before the call with `torch.manual_seed` and the device's
+   `manual_seed_all`: 87A uses Part 84's seeds (`84000 + 100 x question + sample`, so D47 and Part 84 share seeds);
+   87B uses Part 66's `row_seed` keyed `"<phase>:<arm>"`. The replay takes each call's seed from the observer's record,
+   requires it to equal the answer's stated seed, and regenerates from it.
+3. A push is Part 84's arithmetic: the value `dose x median_L / ||W_down[:, n]||` is added as a Python float to the
+   down_proj input's channel n (not rounded to bf16 first). "Every token" is every position of the prompt pass and
+   every decode step; "generated tokens only" (D47) is Part 84's `decode` mode, no prompt-pass position. Zeroing sets
+   channel n to 0 at every position. Stop tokens follow the parent parts: Part 84's `[eos, <|im_end|>]` for 87A,
+   Part 66's `eos_token_id` for 87B.
+
+The replay regenerates at least a quarter of every arm (first and last row, the rest seeded from 87087) and must match
+every saved answer token for token; its medians must equal the dose file's, its 36,864 neuron means and every dose
+must agree within a relative 1e-4, and the random sets must be the same units. A mismatch means the result is not read.
