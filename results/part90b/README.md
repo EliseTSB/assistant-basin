@@ -34,8 +34,8 @@ On the 119 violent answers, Haiku labelled what the speaker says it is and its r
 | base plain (30) | 0 | 7 | 13 | 10 |
 
 The "AI that tortures" persona appears only when the model answers in its chat template. Pushed in a plain
-question-and-answer frame, the same finished model, like the base model, gives the violence to humans, monsters and
-cannibals and never says it is an AI. Read with Part 90 (the neuron's weights are base Llama's): the neuron carries a
+question-and-answer frame, the same finished model gives the violence to humans, monsters and cannibals and says it
+is an AI once in 45 violent answers; the base model never does (0 of 30). Read with Part 90 (the neuron's weights are base Llama's): the neuron carries a
 pretraining concept of torture and eating people, and the persona Josh saw is that content attached to the identity the
 chat frame supplies. This is one neuron, greedy decoding, Haiku labels, and a split noticed after the data; it is a
 hypothesis for a registered test, not a finding.
