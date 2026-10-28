@@ -17,8 +17,16 @@ activation; (2) are they the same units along the way; and (3) from which checkp
 model's self-claims? The headline reading is **created or recruited**: does the set's contrast first appear with
 post-training, or do the base checkpoints already carry it, so that post-training recruits it to hold up the persona?
 
-Prior art: Muse's search (council topic `muse-olmo2-1b-neuron-prior-art-2026-10-28`) is pending at writing; its answer
-is recorded here as information before any code. Known already: neuron-lineage tracks Pythia neurons' firing contexts
+Prior art, Muse's search (council topic `muse-olmo2-1b-neuron-prior-art-2026-10-28` #3, 2026-10-28 11:40 CT, read at
+source; recorded before any code, information only, no prediction changed): no external work publishes single MLP
+neuron ids with a causal test in OLMo 2 1B or OLMo-1B. Closest: Xu's attention-head circuits in OLMo-1B-0724 with
+group ablation, including a 10-checkpoint formation study (arXiv:2606.02378: induction by 23B tokens, a second
+transition near 264B; the formation-time circuit overlaps the final one by about a third); Labunets' refusal direction
+across OLMo-2-0425-1B Base, SFT, DPO, RLVR1 and Instruct (arXiv:2608.25390: functional by SFT, direction only); and
+Bigoulaeva et al.'s instruction vectors on the same base, SFT and DPO (arXiv:2602.07930, layer tuples). Muse's traps
+this design already answers: same index is not same function (the same-units rule), and activation onset is not causal
+onset (steps A and B are reported side by side). One it does not: the stages differ in data and objective as well as
+order, so an onset at a stage names that stage, not a cause inside it. Also known: neuron-lineage tracks Pythia neurons' firing contexts
 over pretraining only, activation-only; Bricken et al. 2024 diff SAE features across stages and steer only the final
 model; Part 2 of this repo measured the correlational identity neurons' role across OLMo 2 1B stages (0.07 in the
 base, 0.55 after SFT); Part 14 found assistant-register neurons that the base already carries (68%).
