@@ -975,7 +975,7 @@ class TestLiveTraceAudit(unittest.TestCase):
 
             def audit(*arguments):
                 result = subprocess.run(
-                    ["/home/elisepc/neuron-probe/.venv/bin/python", "-I", "-B",
+                    [sys.executable, "-I", "-B",
                      str(HERE / "audit86.py"), *arguments],
                     cwd=ROOT, capture_output=True, text=True, timeout=120,
                 )
