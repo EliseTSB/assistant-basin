@@ -2187,3 +2187,17 @@ Design: `PART88-DESIGN.md`. Contrast, zeroing effect, recruited/created and same
 | 88.8 | Claude: SFT in the chat frame shows the zeroing effect. | | |
 | 88.9 | Claude (low confidence): in the plain frame the zeroing effect never shows before SFT. | | |
 | 88.10 | Claude: at every checkpoint that fails gate B0, zeroing changes the judged person share by at most 10 points. | | |
+
+## Part 89: neuron settling across OLMo 2 1B's training, registered 2026-10-28 before any code
+
+Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-matched random-set rule are the design's.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 89.1 | Claude: across all 131,072 neurons the median down_proj cosine with Instruct is below 0.2 at 21B tokens and above 0.9 at the end of pretraining (4.0T). | | |
+| 89.2 | Claude: layer 0's neurons settle earlier than layer 15's (lower median settle checkpoint). | | |
+| 89.3 | Claude: the alien twin L10 N6978 settles later than the median neuron of layer 10. | | |
+| 89.4 | Claude: post-training moves Part 2's top-50 identity neurons more than layer-matched random sets (empirical p below 0.05). | | |
+| 89.5 | Claude: post-training moves Part 16's 64 "As an AI" set more than layer-matched random sets (empirical p below 0.05). | | |
+| 89.6 | Claude (low confidence): Part 14's top-50 register neurons settle earlier in pretraining than layer-matched random sets (empirical p below 0.05). | | |
+| 89.7 | Control: Instruct against itself gives cosine 1.000 for every neuron, and the mid-training end against Instruct gives a median above 0.95. | | |
