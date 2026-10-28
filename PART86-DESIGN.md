@@ -12,7 +12,7 @@ Persona Library and the Qwen3-8B concept map are on another model. Known persona
 Naruto, Jesus, Gollum) would be repeats; our own Qwen alien neuron (Parts 18, 54, 62, 84) and Lyra's conspiracy
 recipe (Part 81) are already published.
 
-Added 2026-10-28 08:3x CT during the screen, information only, no prediction changed (Muse, council topic
+Added 2026-10-28 08:31 CT during the screen, information only, no prediction changed (Muse, council topic
 `muse-neuron-atlas-watch-2026-10-16` #38, read at source): **changjonathanc/neuron-finder** is a targeted finder on
 Qwen3.5-4B. You name a persona; it screens all MLP neurons from on-policy reply pairs (firing difference and a
 gradient-predicted log-prob shift), steers about 165 candidates at doses 0.8, 1.5 and 2.5 in the same median-residual
