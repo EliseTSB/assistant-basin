@@ -1,0 +1,132 @@
+{
+  "code_sha256": {
+    "common86.py": "62b292911b9581a574e91849f23f0c02918b076ede691cd81e5c020d8165471f",
+    "screen86.py": "2637d9d82d849695769673db6b50ee760dca1e1b485506875151ad4c68ade79b",
+    "observe.py": "ba5eb0ceb17b7dbc90bc2660a5f883e3e6b665b9c08ce06bab757dceff808d20",
+    "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+  },
+  "config_sha256": "523cefd3cd6dfab7fd3de9a0cf4cf8de46243f7d72d8be3198e8d4935da0eeb3",
+  "configs": {
+    "22": {
+      "model_id": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "layer": 22,
+      "device": "xpu",
+      "dtype_requested": "bfloat16",
+      "actual_dtype": "torch.bfloat16",
+      "versions": {
+        "python": "3.13.5",
+        "torch": "2.13.0+xpu",
+        "transformers": "5.13.0"
+      },
+      "code_sha256": {
+        "common86.py": "62b292911b9581a574e91849f23f0c02918b076ede691cd81e5c020d8165471f",
+        "screen86.py": "2637d9d82d849695769673db6b50ee760dca1e1b485506875151ad4c68ade79b",
+        "observe.py": "ba5eb0ceb17b7dbc90bc2660a5f883e3e6b665b9c08ce06bab757dceff808d20",
+        "neuron_report.py": "5491a40a89ffedef2989b54fdc8aaa6954216a516f4581e1e3b42ac534621afb"
+      },
+      "dose": 0.8,
+      "median": 24.821300506591797,
+      "mode": "generated_tokens",
+      "question": "Who are you?",
+      "max_new_tokens": 48,
+      "greedy": true,
+      "generation_config": {
+        "effective": {
+          "max_length": null,
+          "max_new_tokens": 48,
+          "min_length": null,
+          "min_new_tokens": null,
+          "early_stopping": null,
+          "max_time": null,
+          "stop_strings": null,
+          "do_sample": false,
+          "num_beams": null,
+          "use_cache": true,
+          "cache_implementation": null,
+          "cache_config": null,
+          "max_cache_len": null,
+          "temperature": null,
+          "top_k": null,
+          "top_p": null,
+          "min_p": null,
+          "top_h": null,
+          "typical_p": null,
+          "epsilon_cutoff": null,
+          "eta_cutoff": null,
+          "repetition_penalty": null,
+          "encoder_repetition_penalty": null,
+          "length_penalty": null,
+          "no_repeat_ngram_size": null,
+          "bad_words_ids": null,
+          "renormalize_logits": null,
+          "forced_bos_token_id": null,
+          "forced_eos_token_id": null,
+          "remove_invalid_values": null,
+          "exponential_decay_length_penalty": null,
+          "suppress_tokens": null,
+          "begin_suppress_tokens": null,
+          "sequence_bias": null,
+          "token_healing": null,
+          "guidance_scale": null,
+          "watermarking_config": null,
+          "num_return_sequences": null,
+          "output_attentions": null,
+          "output_hidden_states": null,
+          "output_scores": null,
+          "output_logits": null,
+          "return_dict_in_generate": null,
+          "pad_token_id": 248044,
+          "bos_token_id": null,
+          "eos_token_id": [
+            248046,
+            248044
+          ],
+          "encoder_no_repeat_ngram_size": null,
+          "decoder_start_token_id": null,
+          "is_assistant": null,
+          "num_assistant_tokens": null,
+          "num_assistant_tokens_schedule": null,
+          "assistant_confidence_threshold": null,
+          "prompt_lookup_num_tokens": null,
+          "max_matching_ngram_size": null,
+          "assistant_early_exit": null,
+          "assistant_lookbehind": null,
+          "target_lookbehind": null,
+          "compile_config": null,
+          "disable_compile": null,
+          "continuous_batching_config": null,
+          "low_memory": null,
+          "penalty_alpha": null,
+          "dola_layers": null,
+          "diversity_penalty": null,
+          "num_beam_groups": null,
+          "constraints": null,
+          "force_words_ids": null,
+          "prefill_chunk_size": null,
+          "_from_model_config": true,
+          "transformers_version": "5.13.0"
+        },
+        "overrides": {
+          "do_sample": false,
+          "max_new_tokens": 48,
+          "use_cache": true,
+          "pad_token_id": 248044,
+          "eos_token_id": [
+            248046,
+            248044
+          ]
+        }
+      },
+      "calibration_sha256": "afb86522116b9ccd10233826503dad0992dd0283f04ee2a15dabf5f0e9e1ce54",
+      "seed": 86022,
+      "neurons_requested": 9216,
+      "directions_requested": 512,
+      "batch_size": 64
+    }
+  },
+  "screen_outputs_sha256": {
+    "layer_22.jsonl": "33f800081f24bf1f901cd2476b39379a92fcaf2fdc30e89c912367a294adaa5f"
+  },
+  "manifest_sha256": "6c67e3a04b391b38795036c1c25f118188e4f5e26bf1923ce1f32fe6025c82a1"
+}
