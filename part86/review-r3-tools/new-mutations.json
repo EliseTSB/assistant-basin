@@ -1,0 +1,74 @@
+[
+  {
+    "name": "N1-screen-zero-neuron-dose",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N2-screen-all-neurons-push-unit0",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N3-screen-random-double-dose",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N4-screen-token-budget24",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N5-verify-push-unit0",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N6-verify-greedy",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N7-verify-seeds-plus10",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N8-screen-second-reader20pct",
+    "status": "KILLED",
+    "tests": 28,
+    "exit": 1,
+    "failed": [
+      "test_miss_sample_follows_the_registered_seed (__main__.TestAmendment2Pins.test_miss_sample_follows_the_registered_seed)"
+    ]
+  },
+  {
+    "name": "N9-verify-random-double-dose",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  },
+  {
+    "name": "N10-verify-case-question0",
+    "status": "SURVIVED",
+    "tests": 28,
+    "exit": 0,
+    "failed": []
+  }
+]
