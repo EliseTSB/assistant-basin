@@ -8,7 +8,8 @@ second unit set, so Part 85's registered predictions stay as written.
 ## Question
 
 Part 16 found 64 MLP neurons in OLMo-2-0425-1B-Instruct by patching activations from a human-character prompt into an
-assistant prompt (`results/part16/search.json`, `validation.top_set`; 40 of the 64 in layers 10 to 15, 11 in layer 0).
+assistant prompt (`results/part16/search.json`, `search.top_set`, corrected 2026-10-28 before any code: this line first said
+`validation.top_set`, which the file does not have; 40 of the 64 in layers 10 to 15, 11 in layer 0).
 Zeroing them cut judged AI self-claims from 94% to 68% and raised human-persona answers from 6% to 18%, while six
 layer-matched random sets stayed at 90-94% (Part 16b). The set shares none of Part 2's correlational identity neurons.
 
