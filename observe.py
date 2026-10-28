@@ -23,7 +23,8 @@ Use:
 
 Each generate call's line carries ``rows``: one entry per batch row with the prompt hash, generated-token hash, the hash
 of the decoded answer, and ``layers``: for each layer whose down_proj input changed, the measured change (see
-``_RowStats``). Layers with no change are absent.
+``_Acc.rows``). Layers with no change are absent. ``unobserved_forwards`` counts pre-hook calls whose
+forward never reached the observer's wrapper (someone replaced ``forward`` after install); it must be empty.
 """
 from __future__ import annotations
 
@@ -38,7 +39,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-OBSERVER_VERSION = 1
+OBSERVER_VERSION = 2
 LAYER_RE = re.compile(r"(?:^|\.)layers\.(\d+)\.mlp\.down_proj$")
 N_PROBES = 64
 PROBE_SEED = 20261028
@@ -82,38 +83,95 @@ def _jsonable(value):
     return {"type": type(value).__name__, "shape": list(shape) if shape is not None else None}
 
 
-class _RowStats:
-    """Measured change for one row, one layer, one phase (prefill or decode) of one generate call."""
+class _Acc:
+    """Measured change for every row of one layer and one phase (prefill or decode) of one generate call.
 
-    def __init__(self):
-        self.changed_calls = 0
-        self.changed_positions = 0
-        self.max_channels_per_position = 0
-        self.channels: dict[int, list[float]] | None = {}   # channel -> [delta min, delta max, post min, post max]
-        self.dense_count = 0                                 # distinct channels once past SPARSE_MAX
-        self.delta_norm = [float("inf"), float("-inf")]
-        self.write_norm = [float("inf"), float("-inf")]
-        self.probe_first = None
-        self.probe_last = None
+    Everything stays on the model's device until the call ends, so observing costs no device synchronisation per
+    step (version 1 synchronised about fifteen times per row per step and cut batch-32 throughput by two thirds)."""
 
-    def as_dict(self, calls: int, positions: int) -> dict[str, Any]:
-        out = {
-            "calls": calls,
-            "positions": positions,
-            "changed_calls": self.changed_calls,
-            "changed_positions": self.changed_positions,
-            "max_channels_per_position": self.max_channels_per_position,
-            "delta_norm": self.delta_norm,
-            "write_norm": self.write_norm,
-            "probe_first": self.probe_first,
-            "probe_last": self.probe_last,
-        }
-        if self.channels is not None:
-            out["sparse"] = True
-            out["channels"] = {str(c): v for c, v in sorted(self.channels.items())}
-        else:
-            out["sparse"] = False
-            out["distinct_channels_at_least"] = self.dense_count
+    def __init__(self, torch, batch: int, width: int, device):
+        f = {"device": device, "dtype": torch.float32}
+        i = {"device": device, "dtype": torch.long}
+        inf = float("inf")
+        self.torch = torch
+        self.changed_calls = torch.zeros(batch, **i)
+        self.changed_positions = torch.zeros(batch, **i)
+        self.max_channels = torch.zeros(batch, **i)
+        self.union = torch.zeros((batch, width), dtype=torch.bool, device=device)
+        self.dmin = torch.full((batch, width), inf, **f)
+        self.dmax = torch.full((batch, width), -inf, **f)
+        self.pmin = torch.full((batch, width), inf, **f)
+        self.pmax = torch.full((batch, width), -inf, **f)
+        self.nmin = torch.full((batch,), inf, **f)
+        self.nmax = torch.full((batch,), -inf, **f)
+        self.wmin = torch.full((batch,), inf, **f)
+        self.wmax = torch.full((batch,), -inf, **f)
+        self.probe_first = torch.zeros((batch, N_PROBES), **f)
+        self.has_first = torch.zeros(batch, dtype=torch.bool, device=device)
+        self.probe_last = torch.zeros((batch, N_PROBES), **f)
+
+    def update(self, delta, post, weight, probes):
+        torch = self.torch
+        inf = float("inf")
+        changed = delta != 0                                         # [B, T, W]
+        pos_changed = changed.any(dim=-1)                           # [B, T]
+        row_changed = pos_changed.any(dim=-1)                       # [B]
+        self.changed_calls += row_changed.long()
+        self.changed_positions += pos_changed.sum(dim=-1)
+        self.max_channels = torch.maximum(self.max_channels, changed.sum(dim=-1).amax(dim=-1))
+        self.union |= changed.any(dim=1)
+        self.dmin = torch.minimum(self.dmin, torch.where(changed, delta, inf).amin(dim=1))
+        self.dmax = torch.maximum(self.dmax, torch.where(changed, delta, -inf).amax(dim=1))
+        self.pmin = torch.minimum(self.pmin, torch.where(changed, post, inf).amin(dim=1))
+        self.pmax = torch.maximum(self.pmax, torch.where(changed, post, -inf).amax(dim=1))
+        dn = torch.linalg.vector_norm(delta, dim=-1)                # [B, T]
+        wn = torch.linalg.vector_norm(delta @ weight.T, dim=-1)     # [B, T]
+        self.nmin = torch.minimum(self.nmin, torch.where(pos_changed, dn, inf).amin(dim=-1))
+        self.nmax = torch.maximum(self.nmax, torch.where(pos_changed, dn, -inf).amax(dim=-1))
+        self.wmin = torch.minimum(self.wmin, torch.where(pos_changed, wn, inf).amin(dim=-1))
+        self.wmax = torch.maximum(self.wmax, torch.where(pos_changed, wn, -inf).amax(dim=-1))
+        steps = int(delta.shape[1])
+        index = torch.arange(steps, device=delta.device)
+        first = torch.where(pos_changed, index, steps).amin(dim=-1).clamp(max=steps - 1)
+        last = torch.where(pos_changed, index, -1).amax(dim=-1).clamp(min=0)
+        rows = torch.arange(int(delta.shape[0]), device=delta.device)
+        pf = delta[rows, first] @ probes.T
+        pl = delta[rows, last] @ probes.T
+        new_first = row_changed & ~self.has_first
+        self.probe_first = torch.where(new_first.unsqueeze(1), pf, self.probe_first)
+        self.has_first |= row_changed
+        self.probe_last = torch.where(row_changed.unsqueeze(1), pl, self.probe_last)
+
+    def rows(self, calls: int, positions: int) -> dict[int, dict[str, Any]]:
+        """Per-row records for the rows that changed, in the observer's output format."""
+        cpu = {name: getattr(self, name).detach().cpu() for name in (
+            "changed_calls", "changed_positions", "max_channels", "union", "dmin", "dmax", "pmin", "pmax",
+            "nmin", "nmax", "wmin", "wmax", "probe_first", "probe_last")}
+        out = {}
+        for row in range(int(cpu["changed_calls"].shape[0])):
+            if int(cpu["changed_calls"][row]) == 0:
+                continue
+            channels = self.torch.nonzero(cpu["union"][row], as_tuple=False).flatten().tolist()
+            entry = {
+                "calls": calls,
+                "positions": positions,
+                "changed_calls": int(cpu["changed_calls"][row]),
+                "changed_positions": int(cpu["changed_positions"][row]),
+                "max_channels_per_position": int(cpu["max_channels"][row]),
+                "delta_norm": [float(cpu["nmin"][row]), float(cpu["nmax"][row])],
+                "write_norm": [float(cpu["wmin"][row]), float(cpu["wmax"][row])],
+                "probe_first": cpu["probe_first"][row].tolist(),
+                "probe_last": cpu["probe_last"][row].tolist(),
+            }
+            if len(channels) <= SPARSE_MAX:
+                entry["sparse"] = True
+                entry["channels"] = {str(c): [float(cpu["dmin"][row, c]), float(cpu["dmax"][row, c]),
+                                              float(cpu["pmin"][row, c]), float(cpu["pmax"][row, c])]
+                                     for c in channels}
+            else:
+                entry["sparse"] = False
+                entry["distinct_channels_at_least"] = len(channels)
+            out[row] = entry
         return out
 
 
@@ -134,7 +192,8 @@ class Observer:
         self._before: dict[int, Any] = {}
         self._handles = []
         self._forwards = []
-        self._probes: dict[int, Any] = {}
+        self._probes: dict[tuple, Any] = {}
+        self._weights: dict[int, Any] = {}
         self.modules: dict[int, str] = {}
         for name, module in model.named_modules():
             match = LAYER_RE.search(name)
@@ -173,10 +232,21 @@ class Observer:
     # ---- hooks -----------------------------------------------------------------------------------------------
     def _attach(self, layer: int, module):
         observer = self
+        import torch.nn.modules.module as nn_module
 
         def pre(_module, args, kwargs):
             x = args[0] if args else kwargs.get("input")
-            observer._before[layer] = x.detach().clone()
+            phase = "prefill" if x.ndim == 3 and x.shape[-2] > 1 else "decode"
+            call = observer.active
+            if call is not None:
+                counts = call["phase_counts"].setdefault(layer, {"prefill": [0, 0], "decode": [0, 0]})
+                counts[phase][0] += 1
+                counts[phase][1] += int(x.shape[-2]) if x.ndim == 3 else 1
+                call["pre_calls"][layer] = call["pre_calls"].get(layer, 0) + 1
+            # Only another pre-hook on this module (or a global one) can change its input between this hook and
+            # forward, so a module with neither is not compared; the census records every hook at generate entry.
+            if len(_module._forward_pre_hooks) > 1 or getattr(nn_module, "_global_forward_pre_hooks", None):
+                observer._before[layer] = x.detach().clone()
             return None
 
         self._handles.append(module.register_forward_pre_hook(pre, prepend=True, with_kwargs=True))
@@ -185,88 +255,49 @@ class Observer:
 
         def forward(*args, **kwargs):
             x = args[0] if args else kwargs.get("input")
+            call = observer.active
+            if call is not None:
+                call["forward_calls"][layer] = call["forward_calls"].get(layer, 0) + 1
             before = observer._before.pop(layer, None)
-            if before is None:
-                raise RuntimeError(f"observer pre-hook did not run before L{layer} down_proj forward")
-            observer._compare(layer, module, before, x.detach())
+            if before is not None:
+                observer._compare(layer, module, before, x.detach())
             return original(*args, **kwargs)
 
         module.forward = forward
         self._forwards.append((module, original, had_own))
 
-    def _probe(self, width: int):
-        if width not in self._probes:
-            self._probes[width] = probe_matrix(width)
-        return self._probes[width]
+    def _probe(self, width: int, device):
+        key = (width, str(device))
+        if key not in self._probes:
+            self._probes[key] = probe_matrix(width).to(device=device)
+        return self._probes[key]
+
+    def _weight(self, layer: int, module):
+        if layer not in self._weights:
+            self._weights[layer] = module.weight.detach().float()
+        return self._weights[layer]
 
     def _compare(self, layer: int, module, before, after):
         torch = self.torch
-        phase = "prefill" if after.ndim == 3 and after.shape[-2] > 1 else "decode"
         call = self.active
-        if call is not None:
-            counts = call["phase_counts"].setdefault(layer, {"prefill": [0, 0], "decode": [0, 0]})
-            counts[phase][0] += 1
-            counts[phase][1] += int(after.shape[-2]) if after.ndim == 3 else 1
-        if before.shape == after.shape and torch.equal(before, after):
+        if before.shape != after.shape:
+            if call is not None:
+                call["shape_changes"].append({"layer": layer, "before": list(before.shape), "after": list(after.shape)})
             return
         if call is None:
-            self.outside_changes[layer] = self.outside_changes.get(layer, 0) + 1
+            if not torch.equal(before, after):
+                self.outside_changes[layer] = self.outside_changes.get(layer, 0) + 1
             return
-        if before.shape != after.shape:
-            call["shape_changes"].append({"layer": layer, "before": list(before.shape), "after": list(after.shape)})
-            return
-        delta = after.float() - before.float()                       # [B, T, W]
+        delta = after.float() - before.float()
+        post = after.float()
         if delta.ndim == 2:
-            delta = delta.unsqueeze(1)
-            post = after.float().unsqueeze(1)
-        else:
-            post = after.float()
-        changed = delta != 0
-        pos_changed = changed.any(dim=-1)                           # [B, T]
-        rows_changed = pos_changed.any(dim=-1).cpu().tolist()
-        weight = module.weight.detach().float()
-        probes = self._probe(int(delta.shape[-1])).to(device=delta.device)
-        for row, did in enumerate(rows_changed):
-            if not did:
-                continue
-            stats = call["rows"][row].setdefault(layer, {}).setdefault(phase, _RowStats())
-            stats.changed_calls += 1
-            positions = torch.nonzero(pos_changed[row], as_tuple=False).flatten()
-            stats.changed_positions += int(positions.numel())
-            row_delta = delta[row].index_select(0, positions)         # [P, W]
-            row_post = post[row].index_select(0, positions)
-            row_changed = changed[row].index_select(0, positions)
-            per_pos = row_changed.sum(dim=-1)
-            stats.max_channels_per_position = max(stats.max_channels_per_position, int(per_pos.max().item()))
-            dnorm = torch.linalg.vector_norm(row_delta, dim=-1)
-            wnorm = torch.linalg.vector_norm(row_delta @ weight.T, dim=-1)
-            stats.delta_norm = [min(stats.delta_norm[0], float(dnorm.min())), max(stats.delta_norm[1], float(dnorm.max()))]
-            stats.write_norm = [min(stats.write_norm[0], float(wnorm.min())), max(stats.write_norm[1], float(wnorm.max()))]
-            proj_first = (row_delta[0] @ probes.T).cpu().tolist()
-            proj_last = (row_delta[-1] @ probes.T).cpu().tolist()
-            if stats.probe_first is None:
-                stats.probe_first = proj_first
-            stats.probe_last = proj_last
-            channels = torch.nonzero(row_changed.any(dim=0), as_tuple=False).flatten().cpu().tolist()
-            if stats.channels is not None:
-                merged = set(stats.channels) | set(channels)
-                if len(merged) > SPARSE_MAX:
-                    stats.dense_count = len(merged)
-                    stats.channels = None
-                else:
-                    for channel in channels:
-                        mask = row_changed[:, channel]
-                        d = row_delta[:, channel][mask]
-                        p = row_post[:, channel][mask]
-                        values = [float(d.min()), float(d.max()), float(p.min()), float(p.max())]
-                        old = stats.channels.get(channel)
-                        if old is None:
-                            stats.channels[channel] = values
-                        else:
-                            stats.channels[channel] = [min(old[0], values[0]), max(old[1], values[1]),
-                                                       min(old[2], values[2]), max(old[3], values[3])]
-            else:
-                stats.dense_count = max(stats.dense_count, len(channels))
+            delta, post = delta.unsqueeze(1), post.unsqueeze(1)
+        phase = "prefill" if delta.shape[1] > 1 else "decode"
+        acc = call["acc"].setdefault(layer, {}).get(phase)
+        if acc is None:
+            acc = _Acc(torch, int(delta.shape[0]), int(delta.shape[-1]), delta.device)
+            call["acc"][layer][phase] = acc
+        acc.update(delta, post, self._weight(layer, module), self._probe(int(delta.shape[-1]), delta.device))
 
     # ---- generate --------------------------------------------------------------------------------------------
     def _hook_census(self) -> dict[str, dict[str, int]]:
@@ -331,8 +362,10 @@ class Observer:
                 texts[sha] = self.tokenizer.decode(ids, skip_special_tokens=False)
         batch = int(ids_cpu.shape[0])
         self.active = {
-            "rows": [dict() for _ in range(batch)],
+            "acc": {},
             "phase_counts": {},
+            "pre_calls": {},
+            "forward_calls": {},
             "shape_changes": [],
         }
         record = {
@@ -388,15 +421,19 @@ class Observer:
                     "token_ids_sha256": _ids_sha(ids),
                     "answer_sha256": _text_sha(text),
                 })
-            layers = {}
-            for layer, phases in sorted(call["rows"][row].items()):
-                counts = call["phase_counts"].get(layer, {"prefill": [0, 0], "decode": [0, 0]})
-                layers[str(layer)] = {ph: st.as_dict(counts[ph][0], counts[ph][1]) for ph, st in phases.items()}
-            entry["layers"] = layers
+            entry["layers"] = {}
             rows.append(entry)
+        for layer, phases in sorted(call["acc"].items()):
+            counts = call["phase_counts"].get(layer, {"prefill": [0, 0], "decode": [0, 0]})
+            for phase, acc in phases.items():
+                for row, stats in acc.rows(counts[phase][0], counts[phase][1]).items():
+                    rows[row]["layers"].setdefault(str(layer), {})[phase] = stats
         record["rows"] = rows
         record["phase_counts"] = {str(k): v for k, v in sorted(call["phase_counts"].items())}
         record["shape_changes"] = call["shape_changes"]
+        record["unobserved_forwards"] = {str(k): v - call["forward_calls"].get(k, 0)
+                                         for k, v in sorted(call["pre_calls"].items())
+                                         if v != call["forward_calls"].get(k, 0)}
         record["rng_at_exit"] = self._rng()
         record["time_end"] = time.time()
         self._write(record)
@@ -419,11 +456,11 @@ class Observer:
             if had_own:
                 module.forward = original
             else:
-                del module.forward
+                vars(module).pop("forward", None)
         if self._had_own_generate:
             self.model.generate = self._original_generate
         else:
-            del self.model.generate
+            vars(self.model).pop("generate", None)
         self._fh.close()
         self._fh = None
 

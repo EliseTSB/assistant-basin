@@ -294,7 +294,7 @@ class ObserveTests(unittest.TestCase):
     def test_answer_is_trimmed_at_the_first_eos(self):
         model = tiny_model()
         obs = observe.install(model, TinyTokenizer(), self.path)
-        obs.active = {"rows": [dict(), dict()], "phase_counts": {}, "shape_changes": []}
+        obs.active = {"acc": {}, "phase_counts": {}, "pre_calls": {}, "forward_calls": {}, "shape_changes": []}
         record = {"call_id": "x:1", "batch": 2, "prompt_len": 2, "effective": {"eos_token_id": 2}}
         sequences = torch.tensor([[1, 7, 9, 2, 0, 0], [1, 7, 9, 11, 13, 15]])
         obs._finish(record, ["a", "b"], sequences)
@@ -358,6 +358,28 @@ class ObserveTests(unittest.TestCase):
         dmin, dmax, _, _ = rec["rows"][0]["layers"][str(LAYER)]["decode"]["channels"][str(N)]
         self.assertLess(abs(dmin - 1.0), 0.05)
         self.assertLess(abs(dmax - 3.0), 0.1)
+
+    def test_a_replaced_forward_is_reported_unobserved(self):
+        model = tiny_model()
+        width = model.model.layers[0].mlp.down_proj.in_features
+        obs = observe.install(model, TinyTokenizer(), self.path)
+        down = model.model.layers[LAYER].mlp.down_proj
+        down.forward = torch.nn.Linear.forward.__get__(down)
+        push = Push(down, one_hot(width, N, DOSE_VALUE))
+        with torch.inference_mode():
+            model.generate(input_ids=prompt(), max_new_tokens=3, min_new_tokens=3, do_sample=False)
+        push.remove()
+        del down.forward
+        obs.close()
+        rec = [r for r in observe.read(self.path) if r.get("event") == "generate"][0]
+        self.assertEqual(rec["unobserved_forwards"], {str(LAYER): 3})
+        self.assertEqual(rec["rows"][0]["layers"], {})
+
+    def test_unhooked_layers_report_calls_but_no_change(self):
+        rec, _, _ = self.run_case()
+        self.assertEqual(rec["unobserved_forwards"], {})
+        self.assertEqual(sorted(rec["phase_counts"]), ["0", "1", "2"])
+        self.assertEqual(rec["phase_counts"]["0"]["decode"][0], 5)
 
     def test_close_restores_the_model(self):
         model = tiny_model()

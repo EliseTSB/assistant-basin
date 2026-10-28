@@ -1,0 +1,74 @@
+[
+ {
+  "batch": 32,
+  "tokens": 48,
+  "observer": false,
+  "seconds_per_batch": [
+   14.898566799995024,
+   10.484160299994983,
+   10.526091000007
+  ],
+  "answers_per_second": 2.673438032203238,
+  "projected_hours_165376": 17.183034438961528
+ },
+ {
+  "batch": 16,
+  "tokens": 48,
+  "observer": true,
+  "seconds_per_batch": [
+   8.720382799976505,
+   9.117719100002432,
+   8.593556399981026
+  ],
+  "answers_per_second": 1.8160041059577676,
+  "projected_hours_165376": 25.29607594336909
+ },
+ {
+  "batch": 32,
+  "tokens": 48,
+  "observer": true,
+  "seconds_per_batch": [
+   10.699799100024393,
+   10.740230299998075,
+   10.703061699983664
+  ],
+  "answers_per_second": 2.9866449278732152,
+  "projected_hours_165376": 15.381064333780712
+ },
+ {
+  "batch": 48,
+  "tokens": 48,
+  "observer": true,
+  "seconds_per_batch": [
+   12.980834799993318,
+   12.993854100001045,
+   13.07712219998939
+  ],
+  "answers_per_second": 3.6874090072626595,
+  "projected_hours_165376": 12.458009862019509
+ },
+ {
+  "batch": 64,
+  "tokens": 48,
+  "observer": true,
+  "seconds_per_batch": [
+   15.062574099982157,
+   15.129688400018495,
+   15.039159399981145
+  ],
+  "answers_per_second": 4.2448367072023725,
+  "projected_hours_165376": 10.82203649903268
+ },
+ {
+  "batch": 64,
+  "tokens": 32,
+  "observer": true,
+  "seconds_per_batch": [
+   10.377587099996163,
+   10.348809399991296,
+   10.343849900003988
+  ],
+  "answers_per_second": 6.17954545735604,
+  "projected_hours_165376": 7.43384413866462
+ }
+]

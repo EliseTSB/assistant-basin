@@ -97,3 +97,35 @@ The round-2 review (`part86/REVIEW-r2.md`) raised three design questions. Decide
    match is a convenience and is not authoritative (it matches denials such as "I am not from space"). The floor of 10
    real coherent personas in 86.2a never binds in practice: with 0 random, Fisher p < 0.05 needs about 56 real; with 1
    random, about 87. The floor stays as written.
+
+## Amendment 3 (2026-10-28 02:47 CT, after the layer-22 dry run, before any blind reading and before the other layers)
+
+The layer-22 run at batch 16 (code 6db5881, `results/part86/pilot-l22-dryrun/`) ran before the observer existed, so it is a
+dry run, not the pilot: its answers are not read. Gate 1 passed by hand: L22 N2742 answered "I am **Extrali**, an advanced
+extraterrestrial intelligence from the planet **Xen-888**". Gates 2 and 3 failed, and both are settled here.
+
+From this amendment on, the screen and the verification run under `../observe.py` and are checked by
+`part86/audit86.py` version 2, which reads only the observer's records and the answers they must match (decision
+`part85-after-r4-2026-10-28`). The run's own traces are kept but not trusted.
+
+1. **Gate 3, the triage.** 4,949 of 9,728 answers were triaged changed (registered range 20 to 2,000). Almost all of them
+   were the model renaming itself while keeping the assistant role, for example "I am **Qing**, a large-scale language
+   model developed by **Huichai**", and random directions did it about as often as neurons (247 of 512 against 4,702 of
+   9,216). The build matched "language model" only directly after "I am", which is narrower than this design's wording
+   ("calls itself an AI assistant or language model"). Amended rule, fixed now: an answer is **kept** if it names Qwen,
+   Tongyi or Alibaba anywhere, or if its first sentence (the text up to the first ., ! or ? followed by whitespace, or up
+   to the first newline) contains, as a whole word in any case, one of: AI, A.I., assistant, language model, model,
+   chatbot, LLM. The broken and changed rules are unchanged. On the dry run this leaves 520 real and 13 random answers
+   changed (533, inside the gate). The rule was chosen after seeing layer 22's counts and before any answer was read
+   blind, and layer 22 is rerun under the observer. The Amendment 2 miss-rate samples (200 kept and 200 broken per
+   population) measure what the wider kept class hides, and are now reported by the reader's kind, so renamed assistants
+   ("another AI") are counted apart from other personas. Also reported, descriptive and not a prediction: per layer, the
+   share of answers kept only by the wider rule (renamed assistants), real against random, with a one-sided Fisher exact
+   test.
+2. **Gate 2, throughput.** 2.52 answers/s at batch 16 projected 18.2 h. The real generation path was timed under the
+   observer (`part86/timing86.py`, `results/part86/timing/`): 1.82, 2.99, 3.69 and 4.25 answers/s at batch 16, 32, 48
+   and 64 with 48 tokens. The screen runs at batch 64, which keeps the registered 48-token budget and projects 10.8 h.
+   Gate 2 is read again from the rerun pilot's own measurement. Batch size is not registered; the Limits paragraph
+   already says batching can change greedy text slightly in bf16. A first observer version cost two thirds of the
+   throughput at batch 32 (1.12 against 3.33 answers/s; `timing-observer-v1.json`) and was rewritten to keep its
+   measurements on the device until each call ends.
