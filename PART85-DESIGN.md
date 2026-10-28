@@ -137,3 +137,21 @@ here before the pilot.
    sharded safetensors only.
 4. **Calibration.** If one dose rule gives an onset and the other gives none, that counts as the two rules disagreeing,
    and is reported as the finding instead of an onset.
+
+## Amendment 2 (2026-10-28 12:12 CT, after step 0 ran on ten checkpoints and before any step 1 or step 2 data)
+
+Decision part85-after-r4-2026-10-28 moved Part 85 from the cloud to the A770. Written before steps 1 and 2, with step 0's
+numbers already in for ten of the twelve checkpoints (they are measures of weights, read by HTTP range requests on
+2026-10-28 and checked against an independent reader, part85/check0_remote.py, which matched every cosine and every
+off-world mean logit exactly; the random-set z-scores were not independently recomputed). Fixed now for the local run:
+- Step 2 loads each checkpoint in fp32 on the A770; step 1 stays bf16 as registered. Batch 1.
+- The plain frame is encoded without added special tokens; the chat frame is the tokenizer's chat template with one
+  user turn and the generation prompt.
+- Each answer's seed is set with torch.manual_seed(seed) and torch.xpu.manual_seed_all(seed) immediately before its
+  generate call. Stop tokens are the checkpoint's generation-config eos ids plus the tokenizer's eos id.
+- Every run's generate and forward calls are recorded by the observer (part85/observe85.py over ../observe.py) and
+  audited by audit85.py from those records only.
+- **No step-2 answer is read until part85/replay85.py, written from this design and not from part85.py, regenerates
+  every answer of the run token for token and prints REPLAY85: PASS, and its --perturb-value 1.01 negative control on
+  the clamped cells changes answers.** That applies to the pilot (before its gate is read) and to the main run.
+- The SFT and DPO checkpoints are pytorch_model.bin; their step 0 is read after the download, from local files.
