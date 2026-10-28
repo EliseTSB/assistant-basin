@@ -497,7 +497,7 @@ class Part87Tests(unittest.TestCase):
                 with redirect_stdout(pilot_output):
                     pilot_code = audit87.main([
                         str(out), "--phase", "pilot", "--prompt-texts", str(prompt_file),
-                        "--width", "9216", "--l22-median", "24.8",
+                        "--width", "9216", "--l22-median", "24.8", "--fixture-model",
                     ])
                 self.assertEqual(pilot_code, 0, pilot_output.getvalue())
                 self.assertIn("TEST FIXTURE OVERRIDES", pilot_output.getvalue())
@@ -509,7 +509,7 @@ class Part87Tests(unittest.TestCase):
                 with redirect_stdout(run_output):
                     run_code = audit87.main([
                         str(out), "--phase", "run", "--prompt-texts", str(prompt_file),
-                        "--width", "9216", "--l22-median", "24.8", "--arms", "RM_8700,RF_8700",
+                        "--width", "9216", "--l22-median", "24.8", "--arms", "RM_8700,RF_8700", "--fixture-model",
                     ])
                 self.assertEqual(run_code, 0, run_output.getvalue())
                 self.assertIn("TEST FIXTURE OVERRIDES", run_output.getvalue())

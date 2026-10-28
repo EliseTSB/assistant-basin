@@ -140,6 +140,8 @@ def make_run(root: Path, phase: str, arm_list, m=None):
     doc = doses_doc(model, m)
     (root / "doses.json").write_text(json.dumps(doc), encoding="utf-8")
     obs = observe.install(model, tok, root / "observe" / "run.jsonl", label="test 87")
+    if m == "gen_config":
+        model.generation_config.repetition_penalty = 1.8      # changed after the observer recorded the defaults
     for arm in arm_list:
         rows = []
         study_a = arm in ("A0", "E63", "E47", "D47", "C63")
@@ -156,17 +158,33 @@ def make_run(root: Path, phase: str, arm_list, m=None):
             if m == "wrong_prompt" and arm == "U":
                 prompt_q = Q["guard"][0] if question != Q["guard"][0] else Q["maker"][0]
             ids = torch.tensor([PROMPT_IDS[prompt_q]], dtype=torch.long)
+            extra = {"top_k": 1} if m == "top_k" else {"min_new_tokens": 4} if m == "min_new" else {}
+            down0 = model.model.layers[0].mlp.down_proj
+            if m == "unobserved":
+                down0.forward = torch.nn.Linear.forward.__get__(down0)
             torch.manual_seed(seed)
             with torch.inference_mode():
                 out = model.generate(input_ids=ids, do_sample=True, temperature=1.0 if m == "temperature" else 0.7,
                                      top_p=0.95, max_new_tokens=audit87.A_TOKENS if study_a else audit87.B_TOKENS,
-                                     min_new_tokens=2)
+                                     **extra)
+            if m == "unobserved":
+                del down0.forward
             for h in hooks:
                 h.handle.remove()
             gen = out[0, ids.shape[1]:].tolist()
             if 2 in gen:
                 gen = gen[: gen.index(2) + 1]
-            rows.append({"arm": arm, "question": question, "sample": sample, "seed": seed,
+            if study_a:
+                qindex, qkind = Q["origin"].index(question), "origin"
+            elif question in Q["maker"]:
+                qindex = Q["maker"].index(question)
+                qkind = "direct" if qindex < Q["n_direct"] else "indirect"
+            else:
+                qindex, qkind = 25 + Q["guard"].index(question), "guard"
+            if m == "wrong_kind" and arm == "U" and not rows:
+                qkind = "guard"
+            rows.append({"arm": arm, "question": question, "question_index": qindex, "question_kind": qkind,
+                         "sample": sample, "seed": seed,
                          "answer": tok.decode(gen, skip_special_tokens=True).strip(), "new_tokens": len(gen),
                          "observed": {"call_id": obs.last_call_id, "row": 0}})
         if m == "swap_answers" and len(rows) > 1:
@@ -186,8 +204,10 @@ PILOT_ARMS = ["A0", "E63", "E47", "D47", "C63", "U", "Z", "M", "F"]
 RANDOM_ARMS = ["RM_8700", "RF_8700"]
 
 
-def audit(root: Path, phase: str, arm_list):
+def audit(root: Path, phase: str, arm_list, fixture_model=True):
     argv = [str(root), "--phase", phase, "--prompt-texts", str(root / "prompts.json"), "--arms", ",".join(arm_list)]
+    if fixture_model:
+        argv.append("--fixture-model")
     buf = io.StringIO()
     with redirect_stdout(buf):
         code = audit87.main(argv)
@@ -216,6 +236,19 @@ class Audit87(unittest.TestCase):
         self.assertEqual(code, 0, out)
 
     def test_mode_swap(self): self.check_fails("mode_swap", "changed in")
+    def test_top_k(self): self.check_fails("top_k", "unregistered keywords")
+    def test_min_new_tokens(self): self.check_fails("min_new", "unregistered keywords")
+    def test_generation_config_changed(self): self.check_fails("gen_config", "must be the model's default")
+    def test_wrong_kind(self): self.check_fails("wrong_kind", "stated question")
+    def test_unobserved_forward(self): self.check_fails("unobserved", "did not see")
+
+    def test_production_model_required_without_the_fixture_flag(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            make_run(root, "pilot", ["A0"])
+            code, out = audit(root, "pilot", ["A0"], fixture_model=False)
+        self.assertEqual(code, 1, out)
+        self.assertIn("registered Qwen3.5-4B", out)
     def test_negative(self): self.check_fails("negative", "registered upward")
     def test_layer_21(self): self.check_fails("layer_21", "changed layers")
     def test_control_pushes_alien(self): self.check_fails("control_pushes_alien", "registered only N8870")

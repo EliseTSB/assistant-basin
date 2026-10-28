@@ -29,7 +29,15 @@ modules; the saved answer is the observer's own text for that row; and the chang
   random sets are Part 25's matched-random sets for seeds 8700 to 8719, one unit in each target layer.
 L22's median must be within 1% of neuronary's published 24.8, the one external anchor the design names. Counts are exact.
 
-Not checked here: that each unit's measured mean m_n is right (that needs the model; the decision's recompute step).
+Round-2 fold (decision part87-after-r2-2026-10-28): generate may be passed only the registered keywords and nothing
+positionally; every other setting the observer records must equal the model's own default; a down_proj forward the
+observer did not see, a changed input shape, or a hook added or removed during a call fails; each answer's stated
+question index and kind must be the registered ones for its text; the observer's model must be Qwen3.5-4B in bf16 on
+xpu (test fixtures pass --fixture-model, which marks the summary line).
+
+Not checked here, and why it does not have to be: that each unit's measured mean m_n is right, and that the saved
+answers are what the recipe produces. replay87.py recomputes both from the design on the model; the result is read
+only when both this audit and replay87 pass.
 
 Usage:  python3 -I -B audit87.py <run_dir> --phase pilot|run [--doses <doses.json>]
 Exit 0 when every check passes, 1 when any fails, 2 on unreadable input. Test fixtures only (they change the summary
@@ -63,6 +71,11 @@ L22_PUBLISHED_MEDIAN = 24.8
 MEDIAN_ANCHOR_TOLERANCE = 0.01
 TOLERANCE = 0.02            # relative, bf16 rounding of an added value
 F_DOSE = 0.75
+# The keywords the design's generate call may carry (round-2 fold); everything else must be absent.
+EXPLICIT_ALLOWED = {"max_new_tokens", "do_sample", "temperature", "top_p", "eos_token_id", "pad_token_id", "use_cache"}
+# Settings the design fixes; every other setting the observer records must equal the model's own default.
+REGISTERED_SETTINGS = {"do_sample", "temperature", "top_p", "max_new_tokens", "eos_token_id", "pad_token_id"}
+PRODUCTION_MODEL = ("Qwen3.5-4B", "torch.bfloat16", "xpu")
 
 
 def registered_questions():
@@ -75,6 +88,7 @@ def registered_questions():
                   for g in p66.GUARDS],
         "seed_a": p84.seed_for,
         "seed_b": p66.row_seed,
+        "n_direct": len(p66.DIRECT),
     }
 
 
@@ -108,7 +122,8 @@ def expected_cases(phase: str, arm: str, q):
 
 class Audit:
     def __init__(self, run_dir: Path, phase: str, doses: dict, prompt_texts=None, width=WIDTH, l22=L22_PUBLISHED_MEDIAN,
-                 only_arms=None):
+                 only_arms=None, fixture_model=False):
+        self.fixture_model = fixture_model
         self.run_dir, self.phase, self.doses = run_dir, phase, doses
         self.fail = a86.Failures()
         self.sessions, self.calls = a86.load_observer(run_dir, self.fail)
@@ -241,6 +256,14 @@ class Audit:
 
     def run(self):
         fail = self.fail
+        name, dtype, device = PRODUCTION_MODEL
+        for sid, session in self.sessions.items():
+            if self.fixture_model:
+                break
+            if name not in str(session.get("model_name_or_path")) or session.get("dtype") != dtype or \
+                    not str(session.get("device", "")).startswith(device):
+                fail(f"observer session {sid}: model {session.get('model_name_or_path')!r} {session.get('dtype')!r} "
+                     f"on {session.get('device')!r}; registered {name} {dtype} on {device}")
         if abs(self.median(22) - self.l22) > MEDIAN_ANCHOR_TOLERANCE * self.l22:
             fail(f"doses: L22 median {self.median(22):.4g}, neuronary publishes {self.l22}")
         for arm, study in arms(self.phase).items():
@@ -278,6 +301,17 @@ class Audit:
                 if seed is None:
                     fail(f"{where}: question {question!r} sample {sample!r} is not registered for {arm}")
                     continue
+                # round-2 #2: scoring groups by kind, so the stated index and kind must be the registered ones
+                if study == "87A":
+                    want_qi, want_kind = self.q["origin"].index(question), "origin"
+                elif question in self.q["maker"]:
+                    want_qi = self.q["maker"].index(question)
+                    want_kind = "direct" if want_qi < self.q["n_direct"] else "indirect"
+                else:
+                    want_qi, want_kind = 25 + self.q["guard"].index(question), "guard"
+                if ans.get("question_index") != want_qi or ans.get("question_kind") != want_kind:
+                    fail(f"{where}: stated question {ans.get('question_index')!r}/{ans.get('question_kind')!r}, "
+                         f"registered {want_qi}/{want_kind} for {question!r}")
                 self.check_call(where, call, question, tokens, seed)
                 self.check_hooks(where, call, arm)
                 text = ans.get("answer")
@@ -298,7 +332,33 @@ class Audit:
         fail = self.fail
         if call.get("error"):
             fail(f"{where}: generate raised {call['error']}")
-        eff = call.get("effective") or {}
+        # Allowlist, not a list of known-bad settings (round-2 #3, decision part87-after-r2-2026-10-28): only the
+        # registered keywords may be passed, nothing positionally, and every other recorded setting is the model's own.
+        extra = sorted(set(call.get("explicit_kwargs") or {}) - EXPLICIT_ALLOWED)
+        if extra:
+            fail(f"{where}: generate was passed unregistered keywords {extra}")
+        if call.get("positional_args"):
+            fail(f"{where}: generate was passed {call['positional_args']} positional arguments")
+        defaults = (self.sessions.get(call.get("session"), {}) or {}).get("generation_defaults")
+        eff_all = call.get("effective") or {}
+        if not isinstance(defaults, dict) or not defaults:
+            fail(f"{where}: the observer recorded no generation defaults for this session")
+            defaults = {}
+        for key, value in eff_all.items():
+            if key in REGISTERED_SETTINGS:
+                continue
+            if key not in defaults:
+                fail(f"{where}: {key} {value!r} at the call has no recorded default to compare with")
+            elif value != defaults[key]:
+                fail(f"{where}: {key} {value!r} at the call; not registered, so it must be the model's default "
+                     f"{defaults[key]!r}")
+        if call.get("unobserved_forwards"):
+            fail(f"{where}: down_proj forwards the observer did not see: {call['unobserved_forwards']}")
+        if call.get("shape_changes"):
+            fail(f"{where}: a hook changed a down_proj input's shape: {call['shape_changes']}")
+        if call.get("hooks_at_exit") != call.get("hooks_at_entry"):
+            fail(f"{where}: hooks changed during the call: {call.get('hooks_at_entry')} -> {call.get('hooks_at_exit')}")
+        eff = eff_all
         if eff.get("do_sample") is not True:
             fail(f"{where}: do_sample {eff.get('do_sample')!r}; registered sampling")
         for key, want in (("temperature", TEMPERATURE), ("top_p", TOP_P)):
@@ -328,15 +388,18 @@ def main(argv=None):
     ap.add_argument("--width", type=int, default=None, help="test fixtures only")
     ap.add_argument("--l22-median", type=float, default=None, help="test fixtures only")
     ap.add_argument("--arms", default=None, help="test fixtures only: comma-separated arms to audit")
+    ap.add_argument("--fixture-model", action="store_true", default=None,
+                    help="test fixtures only: accept a model other than Qwen3.5-4B bf16 on xpu")
     args = ap.parse_args(argv)
-    overrides = [k for k in ("prompt_texts", "width", "l22_median", "arms") if getattr(args, k) is not None]
+    overrides = [k for k in ("prompt_texts", "width", "l22_median", "arms", "fixture_model")
+                 if getattr(args, k) is not None]
     run_dir = Path(args.run_dir)
     try:
         doses = json.loads(Path(args.doses or run_dir / "doses.json").read_text(encoding="utf-8"))
         texts = json.loads(Path(args.prompt_texts).read_text(encoding="utf-8")) if args.prompt_texts else None
         failures = Audit(run_dir, args.phase, doses, texts, args.width or WIDTH,
                          args.l22_median if args.l22_median is not None else L22_PUBLISHED_MEDIAN,
-                         args.arms.split(",") if args.arms else None).run()
+                         args.arms.split(",") if args.arms else None, bool(args.fixture_model)).run()
     except (OSError, KeyError, ValueError) as exc:
         print(f"audit87: unreadable input: {exc}")
         return 2
