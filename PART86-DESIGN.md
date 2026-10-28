@@ -59,3 +59,23 @@ One dose, one question, greedy decoding, one sample per neuron in the screen, so
 question is missed, and batching can change greedy text slightly in bf16. A blind reader's persona label is a
 judgement. Generated-tokens mode leaves the first answer token unsteered, which Part 84 found does not matter at the
 ceiling for the alien neuron.
+
+## Amendment 1 (2026-10-27, after the build's cold review, before any run or data)
+
+A Claude Haiku 5.5 cold review of the Part 86 build (`part86/REVIEW-r1.md`, SHIP-WITH-FIXES) found that two prediction
+rows, as the code reads them, could give a confident answer the registered claim does not support. Both are decided
+here before the screen. The original rows stay in PREDICTIONS.md; the amended reading is added under them.
+
+1. **86.2 (layer 22, real against random).** As built it held on 1 coherent persona among 9,216 real neurons against
+   0 among 512 random directions. Amended reading: 86.2 HOLDS when, in layer 22, the real coherent-persona rate is at
+   least twice the random rate, at least 10 real neurons give a coherent persona, and a one-sided Fisher exact test
+   (real more often than random, 9,216 against 512) gives p < 0.05. Otherwise it FAILS. With only 512 random
+   directions a random rate of zero is weak evidence, so the count and the test carry the claim, not the ratio.
+2. **86.4 (what the random directions' changed answers are).** As built it compared triage-broken answers (which are
+   by definition not changed answers) plus reader-unclear ones against coherent personas, mixing two populations, so it
+   could hold with no persona signal at all. Amended reading: one population per layer, the random directions whose
+   answer triage marked **changed** and the blind reader labelled. Among them, count the answers the reader marks not
+   coherent or of kind "unclear", against the coherent personas. A layer is read when it has at least 5 such random
+   changed answers. 86.4 HOLDS when the first count exceeds the second in every read layer and at least 9 of the 17
+   layers are read; it FAILS when any read layer has coherent personas at least as often; with fewer than 9 read
+   layers it is NOT READ. Triage-broken random answers are reported per layer beside it, not counted in it.

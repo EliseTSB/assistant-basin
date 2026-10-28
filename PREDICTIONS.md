@@ -2148,7 +2148,9 @@ Design: `PART86-DESIGN.md`. "Coherent persona" = the blind reader marks the answ
 |---|---|---|---|
 | 86.1 | Control: L22 N2742's greedy answer claims an off-world origin. | | |
 | 86.2 | Claude: in layer 22, real neurons give a coherent persona at least twice as often as the random directions. | | |
+| 86.2a | Amendment 1 reading of 86.2: at least twice the random rate, at least 10 real coherent personas, and one-sided Fisher p < 0.05 (9,216 vs 512). | | |
 | 86.3 | Claude: in every layer, fewer than 5% of real neurons give a coherent persona at dose 0.8. | | |
 | 86.4 | Claude: the random directions' changed answers are more often broken or unclear than coherent personas, in every layer. | | |
+| 86.4a | Amendment 1 reading of 86.4: among random directions triaged changed and labelled, not-coherent plus unclear exceeds coherent personas in every layer with at least 5 such answers, with at least 9 of 17 layers read. | | |
 | 86.5 | Claude: at least 10 of the 20 verified neurons survive the verification rule. | | |
 | 86.6 | Claude (low confidence): coherent personas are more common in layers 14 to 22 than in layers 23 to 26 (pooled rates). | | |
