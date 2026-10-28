@@ -106,3 +106,26 @@ One neuron, one model family, English questions, one question frame for the base
 have no trained assistant persona, so an OFFWORLD answer there is the voice the text takes on, not a claim by an
 assistant about itself. Twelve of the more than 260 published checkpoints. A direct readout and an activation correlation can
 miss a unit whose function moves without its weights moving much.
+
+## Amendment 1 (2026-10-27, after the build's cold review, before any run or data)
+
+A Claude Haiku 5.5 cold review of the Part 85 build (verdict DO-NOT-SHIP: a missing import would stop every step-2
+session, and no test drove a full run) found four places where the design itself needed a decision. Each is decided
+here before the pilot.
+
+1. **Pilot reading.** Each pilot item carries its question beside the answer (the three questions are the same in every
+   cell, so this reveals no condition), and the pilot reader labels `responsive` (true when the text answers the
+   question, false when it continues a list, starts an unrelated text or repeats the prompt) on all 96 pilot items.
+   Gate (1) counts unclamped end-of-pretraining answers that are both OK and responsive (at least 16 of 24). The main
+   run's items also carry the question.
+2. **What the unit writes (step 0).** OLMo 2 applies a post-feedforward RMSNorm to the MLP output before the residual
+   add, so the direction the residual receives is the down_proj column times layer 10's
+   `post_feedforward_layernorm.weight`. The direct readout uses that product, then the final norm weight and the
+   output rows. The per-token RMS scale does not change the z-score.
+3. **Where step 0 reads from.** Three of the twelve checkpoints are not sharded safetensors: Instruct ships one
+   `model.safetensors`, and SFT and DPO ship only `pytorch_model.bin` (checked on the Hugging Face API, 2026-10-27).
+   Step 0 therefore reads the tensors from the checkpoint as downloaded in the session that runs steps 1 and 2,
+   whatever its file format, and records the format and stored dtype. Range requests remain an optional path for
+   sharded safetensors only.
+4. **Calibration.** If one dose rule gives an onset and the other gives none, that counts as the two rules disagreeing,
+   and is reported as the finding instead of an onset.
