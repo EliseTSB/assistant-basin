@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import os
 import sys
@@ -21,6 +22,9 @@ CONTROL_UNIT = 7884
 SEQUENCE_COUNT = 200
 SEQUENCE_LENGTH = 128
 PASSAGES_PATH = Path(__file__).with_name("passages.json")
+WIKITEXT_REPO = "Salesforce/wikitext"
+WIKITEXT_CONFIG = "wikitext-103-v1"
+WIKITEXT_REVISION = "f776294184f13b8ff2337b3841cf9269a6216d1e"
 
 
 def stable_ids_sha256(token_ids) -> str:
@@ -34,7 +38,7 @@ def create_neutral_sequences(tokenizer, count=SEQUENCE_COUNT, length=SEQUENCE_LE
         from datasets import load_dataset
     except ImportError as exc:
         raise RuntimeError("install datasets to build the registered WikiText-103 token sequences") from exc
-    dataset = load_dataset("wikitext", "wikitext-103-v1", split="test")
+    dataset = load_dataset(WIKITEXT_REPO, WIKITEXT_CONFIG, split="test", revision=WIKITEXT_REVISION)
     stream = []
     eos = tokenizer.eos_token_id
     for row in dataset:
@@ -167,10 +171,16 @@ def run(args):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     cp = resolve_checkpoint(args.checkpoint)
-    model_id, revision = cp["repo_id"], cp["commit"]
-    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
-    model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, dtype=torch.bfloat16)
+    snapshot_dir = args.snapshot_dir
+    if snapshot_dir is None:
+        from huggingface_hub import snapshot_download
+        snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
+    tokenizer = AutoTokenizer.from_pretrained(snapshot_dir)
+    model = AutoModelForCausalLM.from_pretrained(snapshot_dir, dtype=torch.bfloat16)
     model.to(args.device).eval().requires_grad_(False)
+    parameter_dtypes = sorted({str(parameter.dtype) for parameter in model.parameters() if parameter.is_floating_point()})
+    if not parameter_dtypes or any(dtype != "torch.bfloat16" for dtype in parameter_dtypes):
+        raise RuntimeError(f"step 1 requires bf16 parameters; loaded {parameter_dtypes}")
     torch.set_grad_enabled(False)
     token_ids, ids_sha = load_or_create_token_ids(Path(args.sequence_ids), tokenizer, cp["key"])
     passages = json.loads(Path(args.passages).read_text(encoding="utf-8"))
@@ -199,8 +209,11 @@ def run(args):
         "layer": 10,
         "units": {"target": UNIT, "control": CONTROL_UNIT},
         "dtype": str(next(model.parameters()).dtype),
+        "parameter_dtypes": parameter_dtypes,
         "device": args.device,
-        "neutral_source": "wikitext-103-v1 test",
+        "neutral_source": f"{WIKITEXT_REPO}/{WIKITEXT_CONFIG} test",
+        "dataset_revision": WIKITEXT_REVISION,
+        "library_versions": _library_versions(),
         "neutral_sequence_count": SEQUENCE_COUNT,
         "neutral_sequence_length": SEQUENCE_LENGTH,
         "neutral_token_ids_sha256": ids_sha,
@@ -227,6 +240,7 @@ def run(args):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", required=True, choices=tuple(BY_KEY))
+    parser.add_argument("--snapshot-dir", help="already-downloaded pinned checkpoint snapshot directory")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--results-root", default="results/part85")
     parser.add_argument("--sequence-ids", default="results/part85/neutral-token-ids.json")
@@ -234,6 +248,16 @@ def main(argv=None):
     parser.add_argument("--reference-acts")
     parser.add_argument("--out")
     run(parser.parse_args(argv))
+
+
+def _library_versions():
+    out = {}
+    for package in ("torch", "transformers", "huggingface-hub", "safetensors", "numpy", "datasets"):
+        try:
+            out[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            out[package] = None
+    return out
 
 
 if __name__ == "__main__":

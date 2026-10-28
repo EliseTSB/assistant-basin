@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
-import random
+import secrets
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from checkpoints import CHECKPOINTS
+from checkpoints import CHECKPOINTS, POST_TRAINED
 from part85 import CELL_NAMES, QUESTIONS, expected_cell_specs
 
 ORIGIN_LABELS = ("EARTH", "OFFWORLD", "NEITHER")
@@ -44,37 +45,66 @@ def collect_answers(paths=(), results_root=None, mode=None, attempt=1):
     return records
 
 
-def prepare(records, items_path, key_path, seed=85):
-    """Shuffle answers under deterministic random IDs; keep condition metadata in the separate key."""
-    rng = random.Random(seed)
+def _item_key(key):
+    if not isinstance(key, dict) or not isinstance(key.get("items"), dict):
+        raise ValueError("answer key must contain an items mapping and items_sha256 metadata")
+    if not isinstance(key.get("items_sha256"), str):
+        raise ValueError("answer key is missing items_sha256")
+    return key["items"]
+
+
+def _check_items_digest(key, items_path=None):
+    item_key = _item_key(key)
+    path = Path(items_path or key.get("items_path", ""))
+    if not str(path) or not path.is_file():
+        raise ValueError(f"items file is required to verify the answer key SHA-256: {path}")
+    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual != key["items_sha256"]:
+        raise ValueError("items file SHA-256 does not match the answer key")
+    if len(item_key) != len(key["items"]):
+        raise ValueError("answer key items mapping is invalid")
+
+
+def prepare(records, items_path, key_path, force=False):
+    """Blind records under cryptographic random IDs and keep the key separate."""
+    items_path, key_path = Path(items_path), Path(key_path)
+    if not force and (items_path.exists() or key_path.exists()):
+        existing = items_path if items_path.exists() else key_path
+        raise FileExistsError(f"refusing to overwrite {existing}; pass --force to replace prepared files")
     rows = list(records)
-    rng.shuffle(rows)
+    secrets.SystemRandom().shuffle(rows)
     ids = []
     seen = set()
     for _ in rows:
         while True:
-            item_id = f"p85-{rng.getrandbits(64):016x}"
+            item_id = f"p85-{secrets.token_hex(8)}"
             if item_id not in seen:
                 seen.add(item_id)
                 ids.append(item_id)
                 break
     key = {}
-    Path(items_path).parent.mkdir(parents=True, exist_ok=True)
-    Path(key_path).parent.mkdir(parents=True, exist_ok=True)
-    with Path(items_path).open("w", encoding="utf-8") as stream:
-        for item_id, row in zip(ids, rows):
-            stream.write(json.dumps({"id": item_id, "text": row["answer"]}, ensure_ascii=False) + "\n")
-            key[item_id] = {k: row[k] for k in ("checkpoint", "frame", "cell", "question_index", "sample", "seed")}
-            if "mode" in row:
-                key[item_id]["mode"] = row["mode"]
-            if "attempt" in row:
-                key[item_id]["attempt"] = row["attempt"]
-            if "frame_template_sha256" in row:
-                key[item_id]["frame_template_sha256"] = row["frame_template_sha256"]
-            if "question" in row:
-                key[item_id]["question"] = row["question"]
-    Path(key_path).write_text(json.dumps(key, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return key
+    items_path.parent.mkdir(parents=True, exist_ok=True)
+    key_path.parent.mkdir(parents=True, exist_ok=True)
+    item_lines = []
+    for item_id, row in zip(ids, rows):
+        question = row.get("question")
+        if not isinstance(question, str):
+            raise ValueError(f"answer record {item_id} lacks a string question")
+        item_lines.append(json.dumps({"id": item_id, "question": question, "text": row["answer"]},
+                                     ensure_ascii=False) + "\n")
+        keep = ("checkpoint", "frame", "cell", "question_index", "sample", "seed", "mode", "attempt",
+                "frame_template_sha256", "question", "pilot_gate_action")
+        key[item_id] = {k: row[k] for k in keep if k in row}
+    item_bytes = "".join(item_lines).encode("utf-8")
+    envelope = {"schema_version": 1, "items_sha256": hashlib.sha256(item_bytes).hexdigest(),
+                "items_path": str(items_path.resolve()), "items": key}
+    item_mode = "w" if force else "x"
+    key_mode = "w" if force else "x"
+    with items_path.open(item_mode, encoding="utf-8") as stream:
+        stream.write(item_bytes.decode("utf-8"))
+    with key_path.open(key_mode, encoding="utf-8") as stream:
+        stream.write(json.dumps(envelope, ensure_ascii=False, indent=2, sort_keys=True) + "\n")
+    return envelope
 
 
 def validate_record_counts(records, mode):
@@ -86,7 +116,8 @@ def validate_record_counts(records, mode):
         chat_only = {(row["checkpoint"], row["frame"], row["cell"]):
                      len(QUESTIONS) * row["samples_per_question"]
                      for row in specs if row["frame"] == "chat"}
-        if set(actual) == set(chat_only) and all(actual[k] == chat_only[k] for k in chat_only):
+        authorized = all(row.get("pilot_gate_action") == "chat_only_posttrained" for row in records)
+        if authorized and set(actual) == set(chat_only) and all(actual[k] == chat_only[k] for k in chat_only):
             return
     if set(actual) != set(expected):
         missing = sorted(set(expected) - set(actual))
@@ -111,6 +142,7 @@ def _label_rows(path):
 
 
 def validate_labels(labels, key, require_responsive=False):
+    key = _item_key(key)
     seen = {}
     for row in labels:
         item_id = row.get("id")
@@ -132,6 +164,7 @@ def validate_labels(labels, key, require_responsive=False):
 
 
 def grouped_counts(labels, key):
+    key = _item_key(key)
     groups = defaultdict(lambda: {"n": 0, **{x: 0 for x in ORIGIN_LABELS}, **{x: 0 for x in FORM_LABELS}})
     for item_id, row in labels.items():
         meta = key[item_id]
@@ -211,6 +244,39 @@ def _step_data(results_root):
             {cp.key: _read_json(root / cp.key / "step1.json") for cp in CHECKPOINTS})
 
 
+def _step_data_checked(results_root, partial=False):
+    step0, step1 = _step_data(results_root)
+    missing = [f"{key}/{name}.json" for key in step0
+               for name, values in (("step0", step0), ("step1", step1)) if values[key] is None]
+    if missing and not partial:
+        raise ValueError(f"main scoring requires all 12 step0 and step1 files; missing {missing[:4]}")
+    return step0, step1
+
+
+def _validate_main_scope(item_key, partial=False):
+    expected_rows = expected_cell_specs("main")
+    expected_full = {(row["checkpoint"], row["frame"], row["cell"]):
+                     len(QUESTIONS) * row["samples_per_question"] for row in expected_rows}
+    actual = Counter((meta.get("checkpoint"), meta.get("frame"), meta.get("cell")) for meta in item_key.values())
+    if actual == Counter(expected_full):
+        if any(meta.get("pilot_gate_action") not in ("plain_frame_pass", "chat_only_posttrained")
+               for meta in item_key.values()):
+            raise ValueError("main answer key lacks a recorded pilot gate action")
+        if any(meta.get("pilot_gate_action") != "plain_frame_pass" for meta in item_key.values()):
+            raise ValueError("full main answer scope must be authorized by a plain_frame_pass pilot gate")
+        return "plain_frame_pass"
+    expected_chat = {(row["checkpoint"], row["frame"], row["cell"]):
+                     len(QUESTIONS) * row["samples_per_question"]
+                     for row in expected_rows if row["frame"] == "chat"}
+    if actual == Counter(expected_chat):
+        if any(meta.get("pilot_gate_action") != "chat_only_posttrained" for meta in item_key.values()):
+            raise ValueError("chat-only answer key is not authorized by its recorded pilot gate")
+        return "chat_only_posttrained"
+    if partial:
+        return "partial"
+    raise ValueError("main answer key must contain all 2,880 answers or the pilot-authorized chat-only scope")
+
+
 def _count(counts, key, frame="plain", cell="unclamped"):
     return counts.get(f"{key}/{frame}/{cell}")
 
@@ -251,7 +317,8 @@ def evaluate_decisions(counts: dict, step0: dict, step1: dict):
         calibration_gap = abs(order.index(own_onset) - order.index(absolute_onset))
     else:
         calibration_gap = None
-    calibration_disagreement = calibration_gap is not None and calibration_gap > 1
+    calibration_disagreement = ((own_onset is None) != (absolute_onset is None) or
+                                (calibration_gap is not None and calibration_gap > 1))
 
     decisions = {}
     post_lineage = order[8:12]  # mid-training end, SFT, DPO, Instruct
@@ -379,6 +446,7 @@ def _kappa(a, b, labels):
 
 
 def reader_agreement(labels1, labels2, key):
+    key = _item_key(key)
     ids = sorted(key)
     origin_a = [labels1[i]["origin"] for i in ids]
     origin_b = [labels2[i]["origin"] for i in ids]
@@ -396,7 +464,10 @@ def reader_agreement(labels1, labels2, key):
     return result
 
 
-def score_payload(key, labels1, labels2=None, mode="main", results_root="results/part85"):
+def score_payload(key, labels1, labels2=None, mode="main", results_root="results/part85",
+                  items_path=None, partial=False):
+    _check_items_digest(key, items_path)
+    item_key = _item_key(key)
     checked1 = validate_labels(labels1, key, require_responsive=(mode == "pilot"))
     checked2 = validate_labels(labels2, key) if labels2 is not None else None
     counts1 = grouped_counts(checked1, key)
@@ -404,17 +475,17 @@ def score_payload(key, labels1, labels2=None, mode="main", results_root="results
     if mode == "pilot":
         responsive_ok = sum(
             checked1[item_id]["form"] == "OK" and checked1[item_id]["responsive"] is True
-            for item_id, meta in key.items()
+            for item_id, meta in item_key.items()
             if meta.get("checkpoint") == "pretrain_4T" and meta.get("frame") == "plain" and meta.get("cell") == "unclamped"
         )
-        attempts = {meta.get("attempt", 1) for meta in key.values()}
+        attempts = {meta.get("attempt", 1) for meta in item_key.values()}
         if len(attempts) != 1:
             raise ValueError("pilot key mixes attempts")
         attempt = next(iter(attempts))
         if attempt not in (1, 2):
             raise ValueError("pilot attempt must be 1 or 2")
         gate = pilot_gate(counts1, responsive_ok, attempt)
-        hashes = {meta.get("frame_template_sha256") for meta in key.values()}
+        hashes = {meta.get("frame_template_sha256") for meta in item_key.values()}
         if len(hashes) != 1 or None in hashes:
             raise ValueError("pilot key must contain one shared plain-frame template SHA-256")
         gate["plain_template_sha256"] = next(iter(hashes))
@@ -422,9 +493,10 @@ def score_payload(key, labels1, labels2=None, mode="main", results_root="results
         return {"mode": mode, "counts": counts1, "counts_reader2": counts2,
                 "pilot_gate": gate,
                 "reader_agreement": reader_agreement(checked1, checked2, key) if checked2 else None}
-    step0, step1 = _step_data(results_root)
+    scope = _validate_main_scope(item_key, partial=partial)
+    step0, step1 = _step_data_checked(results_root, partial=partial)
     decisions = evaluate_decisions(counts1, step0, step1)
-    plain_ids = [i for i, meta in key.items() if meta.get("frame") == "plain"]
+    plain_ids = [i for i, meta in item_key.items() if meta.get("frame") == "plain"]
     if checked2:
         agreement_n = len(plain_ids)
         # Keep the expression explicit for readers: compare the binary OFFWORLD / not OFFWORLD labels.
@@ -437,7 +509,13 @@ def score_payload(key, labels1, labels2=None, mode="main", results_root="results
     else:
         decisions["verdicts"]["85.9"] = _verdict("NOT READ", "second-reader labels are required to assess agreement")
         agreement = None
-    return {"mode": mode, "counts": counts1, "counts_reader2": counts2,
+    not_read = [code for code, decision in decisions["verdicts"].items()
+                if decision.get("verdict") == "NOT READ"]
+    if not_read and not partial:
+        raise ValueError(f"complete main scoring produced NOT READ verdicts {not_read}; use --partial only for an explicitly partial analysis")
+    if agreement is None and not partial:
+        raise ValueError("main scoring requires the second reader unless --partial is explicit")
+    return {"mode": mode, "scope": scope, "counts": counts1, "counts_reader2": counts2,
             "reader_agreement": agreement, "decisions": decisions,
             "verdicts": decisions["verdicts"]}
 
@@ -452,12 +530,14 @@ def main(argv=None):
     p.add_argument("--attempt", type=int, default=1, help="pilot attempt number to blind; main uses 1")
     p.add_argument("--items", required=True)
     p.add_argument("--key", required=True)
-    p.add_argument("--seed", type=int, default=85)
+    p.add_argument("--force", action="store_true", help="replace existing items/key files")
     s = subs.add_parser("score")
     s.add_argument("--mode", required=True, choices=("pilot", "main"))
     s.add_argument("--key", required=True)
     s.add_argument("--labels", required=True)
     s.add_argument("--labels2")
+    s.add_argument("--items", help="prepared blind items file to verify against the key SHA-256")
+    s.add_argument("--partial", action="store_true", help="allow incomplete main data and NOT READ verdicts")
     s.add_argument("--results-root", default="results/part85")
     s.add_argument("--out")
     args = parser.parse_args(argv)
@@ -468,15 +548,16 @@ def main(argv=None):
             raise ValueError("--attempt is only used by pilot mode")
         records = collect_answers(args.answers, args.results_root, args.mode, args.attempt)
         validate_record_counts(records, args.mode)
-        key = prepare(records, args.items, args.key, args.seed)
-        print(f"wrote {len(key)} blind items")
+        key = prepare(records, args.items, args.key, force=args.force)
+        print(f"wrote {len(key['items'])} blind items")
         return
     key = json.loads(Path(args.key).read_text(encoding="utf-8"))
     labels = _label_rows(args.labels)
     labels2 = _label_rows(args.labels2) if args.labels2 else None
     if args.mode == "main" and labels2 is None:
         raise ValueError("main scoring requires both --labels and --labels2")
-    payload = score_payload(key, labels, labels2, mode=args.mode, results_root=args.results_root)
+    payload = score_payload(key, labels, labels2, mode=args.mode, results_root=args.results_root,
+                            items_path=args.items, partial=args.partial)
     out = Path(args.out) if args.out else Path(args.key).with_name("score.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")

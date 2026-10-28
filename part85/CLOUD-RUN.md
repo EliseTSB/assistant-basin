@@ -1,124 +1,142 @@
 # Part 85 cloud CPU run
 
-Run one checkpoint at a time on a Claude cloud machine. Outputs default to
-`results/part85/<checkpoint>/`. Resolve and pin branches at run time; each script
-refuses a full commit that does not match the registered prefix.
+Use one cloud session per checkpoint. Keep that session open through steps 0,
+1, and 2 so the same pinned local snapshot is reused and the checkpoint is not
+downloaded twice. The Instruct session runs first: its `step0.json` and
+`step1.json` are the references for all other checkpoints. The pilot needs the
+Instruct and end-of-pretraining (`pretrain_4T`) sessions; collect both pilot
+cells before scoring the gate.
 
-## Install and prepare the reference
+Outputs default to `results/part85/<checkpoint>/`. Resolve each registered
+branch to its pinned full commit before downloading the snapshot. Run commands
+from the repository root.
 
-From the repository root:
+## Install
 
 ```bash
 python3 -m pip install --upgrade torch transformers datasets huggingface_hub safetensors numpy
 mkdir -p results/part85
 ```
 
-Run the Instruct checkpoint's step 0 and step 1 first. Step 0 supplies the fixed
-weight reference, and step 1 creates the shared WikiText token IDs and activation
-reference used by every other checkpoint:
+## Start the Instruct session first
+
+Resolve and download Instruct once. Keep `SNAPSHOT_DIR` in this session and pass
+it to each Part 85 script:
 
 ```bash
-python3 part85/step0_weights.py --checkpoint instruct
-python3 part85/step1_acts.py --checkpoint instruct --device cpu
+SNAPSHOT_DIR="$(python3 -c 'from part85.checkpoints import resolve_checkpoint; from huggingface_hub import snapshot_download; cp=resolve_checkpoint("instruct"); print(snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"]))')"
+python3 part85/step0_weights.py --checkpoint instruct --snapshot-dir "$SNAPSHOT_DIR"
+python3 part85/step1_acts.py --checkpoint instruct --snapshot-dir "$SNAPSHOT_DIR" --device cpu
+python3 part85/part85.py --mode pilot --checkpoint instruct --snapshot-dir "$SNAPSHOT_DIR" --device cpu
 ```
 
-The WikiText-103 test split is downloaded through `datasets` on the first step 1
-run. Its 200 x 128 token IDs and SHA-256 are saved to
-`results/part85/neutral-token-ids.json`; subsequent checkpoints load the same
-IDs. Keep that file with the results.
+Step 0 supplies the fixed weight reference. Step 1 creates the shared WikiText
+token IDs and activation reference. WikiText-103 is pinned to the registered
+dataset commit in `step1_acts.py`; its 200 x 128 token IDs and SHA-256 are saved
+to `results/part85/neutral-token-ids.json`. Keep that file with the results.
 
-## Run one checkpoint's steps 0 and 1
+## End-of-pretraining session and pilot gate
 
-For any other registered checkpoint, pass the Instruct step 0 result and run the
-checkpoint's activation step after Instruct:
+Start a separate `pretrain_4T` session, then run its steps 0 and 1 against the
+Instruct references. The same local snapshot is also used for its pilot:
 
 ```bash
-python3 part85/step0_weights.py --checkpoint pretrain_4T \
+SNAPSHOT_DIR="$(python3 -c 'from part85.checkpoints import resolve_checkpoint; from huggingface_hub import snapshot_download; cp=resolve_checkpoint("pretrain_4T"); print(snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"]))')"
+python3 part85/step0_weights.py --checkpoint pretrain_4T --snapshot-dir "$SNAPSHOT_DIR" \
   --reference results/part85/instruct/step0.json
-python3 part85/step1_acts.py --checkpoint pretrain_4T --device cpu \
+python3 part85/step1_acts.py --checkpoint pretrain_4T --snapshot-dir "$SNAPSHOT_DIR" --device cpu \
   --reference-acts results/part85/instruct/step1.json
+python3 part85/part85.py --mode pilot --checkpoint pretrain_4T --snapshot-dir "$SNAPSHOT_DIR" --device cpu
 ```
 
-Substitute one key from `python3 part85/checkpoints.py --keys ...` for
-`pretrain_4T`. The six pretraining, three mid-training, SFT, DPO, and Instruct
-keys are listed in that module. `--limit-rate BYTES_PER_SECOND` throttles step 0
-HTTP range reads if needed. A local safetensors directory can be passed to step
-0 with `--local PATH` for reader checks.
-
-## Pilot gate, then main cells
-
-Run the pilot for end-of-pretraining and Instruct after each has step 1. It
-produces four 24-answer cells (96 answers total):
+The two pilot sessions produce four 24-answer cells (96 answers total). Prepare
+the blind set and key:
 
 ```bash
-python3 part85/part85.py --mode pilot --checkpoint pretrain_4T --device cpu
-python3 part85/part85.py --mode pilot --checkpoint instruct --device cpu
 python3 part85/score85.py prepare --mode pilot --attempt 1 --results-root results/part85 \
   --items results/part85/pilot-items.jsonl --key results/part85/pilot-key.json
 ```
 
-Have one blind reader label every item in `pilot-items.jsonl` with the
-`blind_origin.RUBRIC` categories (`origin`: `EARTH`, `OFFWORLD`, or `NEITHER`;
-`form`: `OK` or `BROKEN`) and save one JSON object per line with `id`, `origin`,
-and `form`. For the 24 end-of-pretraining unclamped items, add a boolean
-`responsive` field for whether the answer responds to its question rather than
-continuing a list or unrelated text; this makes the pilot's quality gate
-machine-checkable. Apply Part 84's registered note: a company name that contains a
-space-related word (such as “Alienware”) remains an ordinary company origin
-unless the speaker itself claims to be alien or from space; mixed Chinese and
-English alone is not BROKEN. Keep the answer key away from both readers. Then
-score the pilot:
+Every item includes its question and answer. One blind reader labels every
+item with the `blind_origin.RUBRIC` categories (`origin`: `EARTH`, `OFFWORLD`,
+or `NEITHER`; `form`: `OK` or `BROKEN`) and saves one JSON object per line with
+`id`, `origin`, and `form`. The reader also adds a boolean `responsive` to all
+96 pilot labels for whether the answer responds to its displayed question. The
+gate counts only `OK` and responsive end-of-pretraining unclamped answers.
+Apply Part 84's registered note: a company name that contains a space-related
+word (such as “Alienware”) remains an ordinary company origin unless the
+speaker itself claims to be alien or from space; mixed Chinese and English
+alone is not BROKEN. Keep the answer key away from the reader. Then score:
 
 ```bash
 python3 part85/score85.py score --mode pilot --key results/part85/pilot-key.json \
-  --labels results/part85/pilot-labels.jsonl --out results/part85/pilot-score.json
+  --items results/part85/pilot-items.jsonl --labels results/part85/pilot-labels.jsonl \
+  --out results/part85/pilot-score.json
 ```
 
-If the quality condition fails, write the revised frame to a UTF-8 file with
-one `{q}` placeholder, then rerun both pilot checkpoints once with `--attempt 2`
-and the same `--plain-template-file` path:
+If quality fails, write the revised frame to a UTF-8 file with one `{q}`
+placeholder, then rerun both pilot checkpoints once with `--attempt 2` and the
+same `--plain-template-file` path. Resume each checkpoint in its existing
+session and use its existing `SNAPSHOT_DIR`:
 
 ```bash
-python3 part85/part85.py --mode pilot --checkpoint pretrain_4T --attempt 2 \
-  --plain-template-file results/part85/pilot-frame-v2.txt --device cpu
-python3 part85/part85.py --mode pilot --checkpoint instruct --attempt 2 \
-  --plain-template-file results/part85/pilot-frame-v2.txt --device cpu
-python3 part85/score85.py prepare --mode pilot --attempt 2 --results-root results/part85 \
-  --items results/part85/pilot-items-v2.jsonl --key results/part85/pilot-key-v2.json
+python3 part85/part85.py --mode pilot --checkpoint pretrain_4T --snapshot-dir "$SNAPSHOT_DIR" \
+  --attempt 2 --plain-template-file results/part85/pilot-frame-v2.txt --device cpu
 ```
 
-Label attempt 2, then score it before continuing. Attempts use separate answer
-files; a failed second quality gate does not authorize a third pilot or the main
-run.
+Run the same command in the Instruct session with `--checkpoint instruct` and
+that session's snapshot path. Prepare and score attempt 2 before continuing.
+A failed second quality gate does not authorize another pilot or the main run.
 
-If the gate says `plain_frame_pass`, run the selected checkpoint's main cells
-with that score file. Each run writes 4 plain cells; SFT, DPO, and Instruct also
-write 4 chat-template cells. Each cell contains 48 answers:
+## Main run, one checkpoint per session
+
+For each remaining checkpoint, start one session, resolve and download its
+snapshot once, then keep using that directory for all three steps. The Instruct
+and `pretrain_4T` sessions already have steps 0 and 1 and their snapshots from
+the pilot phase; resume those sessions for step 2 after the gate is scored.
+
+If the gate says `plain_frame_pass`, run all four plain cells for every
+checkpoint. SFT, DPO, and Instruct also run four chat-template cells. Each
+cell has 48 answers:
 
 ```bash
-python3 part85/part85.py --mode main --checkpoint pretrain_4T \
+SNAPSHOT_DIR="$(python3 -c 'from part85.checkpoints import resolve_checkpoint; from huggingface_hub import snapshot_download; cp=resolve_checkpoint("pretrain_21B"); print(snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"]))')"
+python3 part85/step0_weights.py --checkpoint pretrain_21B --snapshot-dir "$SNAPSHOT_DIR" \
+  --reference results/part85/instruct/step0.json
+python3 part85/step1_acts.py --checkpoint pretrain_21B --snapshot-dir "$SNAPSHOT_DIR" --device cpu \
+  --reference-acts results/part85/instruct/step1.json
+python3 part85/part85.py --mode main --checkpoint pretrain_21B --snapshot-dir "$SNAPSHOT_DIR" \
   --pilot-score results/part85/pilot-score.json --device cpu
 ```
 
-When the passed pilot used a revised frame, pass that same file to every main
-run with `--plain-template-file`; the script checks its SHA-256 against the
-pilot score before generating plain-frame cells.
+Substitute one registered key for `pretrain_21B`. When the pilot used a revised
+frame, pass that same `--plain-template-file` to every main command. The script
+checks its SHA-256 against the passed pilot score.
 
 If the gate says `chat_only_posttrained`, run only `sft`, `dpo`, and `instruct`;
 the script runs their chat cells and refuses pretraining checkpoints. If the
-quality gate asks for `amend_frame_and_rerun_once`, do not launch the main run
-until the revised frame has been written down and a new pilot has been scored.
-Main cells require both independent reader label files before scoring:
+quality gate asks for `amend_frame_and_rerun_once`, do not launch main until the
+revised frame has been written down and a new pilot has been scored.
+
+After all authorized answer cells are complete, prepare and score the main
+blind set. Main scoring requires the complete 2,880 answers (or all cells in
+the pilot-authorized chat-only scope), all twelve step 0 and step 1 files, and
+both independent reader label files:
 
 ```bash
 python3 part85/score85.py prepare --mode main --results-root results/part85 \
   --items results/part85/main-items.jsonl --key results/part85/main-key.json
 python3 part85/score85.py score --mode main --key results/part85/main-key.json \
-  --labels results/part85/reader-1.jsonl --labels2 results/part85/reader-2.jsonl \
-  --results-root results/part85 --out results/part85/main-score.json
+  --items results/part85/main-items.jsonl --labels results/part85/reader-1.jsonl \
+  --labels2 results/part85/reader-2.jsonl --results-root results/part85 \
+  --out results/part85/main-score.json
 ```
 
-`prepare` exposes only random `id` and answer `text`; keep the generated key
-separate from both readers. It filters pilot attempts and pilot/main rows, so pilot
-answers do not enter the main blind set. Reruns skip only cells with a complete
-answer file and verified prompt and generated-position hook counts.
+`prepare` exposes a cryptographically random ID, the question, and answer text;
+keep the generated key separate from both readers. It filters pilot attempts and
+pilot/main rows, and refuses to overwrite existing prepared files unless
+`--force` is passed. A scoring run checks the items file against its recorded
+SHA-256. Reruns skip only cells with a complete answer file, matching template,
+matching step 1 clamp value, and verified prompt and generated-position hook
+counts. `--partial` is only for an explicitly incomplete main analysis; it is
+the only scoring mode that permits `NOT READ` verdicts.

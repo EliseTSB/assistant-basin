@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Range-read the registered Part 85 weights and compute the direct-readout measures."""
+"""Read the registered Part 85 weights and compute the direct-readout measures."""
 from __future__ import annotations
 
 import argparse
@@ -56,6 +56,126 @@ def decode_tensor(raw: bytes, dtype: str, shape) -> np.ndarray:
         bits = arr.astype(np.uint32) << 16
         return bits.view(np.float32)
     return arr.astype(np.float32, copy=False) if dtype.startswith("F") else arr
+
+
+class SnapshotTensorReader:
+    """Read the registered tensors from a locally downloaded model snapshot."""
+
+    def __init__(self, snapshot_dir: str | Path):
+        self.root = Path(snapshot_dir).expanduser()
+        index = self.root / "model.safetensors.index.json"
+        single = self.root / "model.safetensors"
+        pytorch = self.root / "pytorch_model.bin"
+        self._headers = {}
+        self._state = None
+        if index.exists():
+            self.format = "sharded_safetensors"
+            self._weight_map = json.loads(index.read_text(encoding="utf-8"))["weight_map"]
+        elif single.exists():
+            self.format = "single_safetensors"
+            self._weight_map = {name: single.name for name in self._safetensor_keys(single)}
+        elif pytorch.exists():
+            import torch
+            self.format = "pytorch_model.bin"
+            loaded = torch.load(pytorch, weights_only=True, map_location="cpu")
+            if isinstance(loaded, dict) and isinstance(loaded.get("state_dict"), dict):
+                loaded = loaded["state_dict"]
+            self._state = loaded
+            self._weight_map = {name: "pytorch_model.bin" for name, value in loaded.items()
+                                if isinstance(value, torch.Tensor)}
+        else:
+            raise FileNotFoundError(f"no model.safetensors index, model.safetensors, or pytorch_model.bin in {self.root}")
+
+    def _safetensor_keys(self, path: Path):
+        from safetensors import safe_open
+        with safe_open(str(path), framework="pt", device="cpu") as stream:
+            return list(stream.keys())
+
+    @staticmethod
+    def _stored_dtype(value):
+        dtype = str(value).replace("torch.", "").upper()
+        return {"FLOAT": "F32", "FLOAT32": "F32", "BFLOAT16": "BF16", "HALF": "F16",
+                "FLOAT16": "F16", "DOUBLE": "F64", "FLOAT64": "F64",
+                "LONG": "I64", "INT64": "I64", "INT": "I32", "INT32": "I32",
+                "SHORT": "I16", "INT16": "I16", "BYTE": "U8", "UINT8": "U8",
+                "BOOL": "BOOL"}.get(dtype, dtype)
+
+    def info(self, name: str) -> dict:
+        if name not in self._weight_map:
+            raise KeyError(f"tensor {name!r} is not in snapshot {self.root}")
+        if self._state is not None:
+            tensor = self._state[name]
+            return {"shape": list(tensor.shape), "dtype": self._stored_dtype(tensor.dtype),
+                    "filename": "pytorch_model.bin"}
+        filename = self._weight_map[name]
+        if name not in self._headers:
+            from safetensors import safe_open
+            with safe_open(str(self.root / filename), framework="pt", device="cpu") as stream:
+                view = stream.get_slice(name)
+                self._headers[name] = {"shape": list(view.get_shape()),
+                                       "dtype": self._stored_dtype(view.get_dtype())}
+        return {**self._headers[name], "filename": filename}
+
+    @staticmethod
+    def _numpy(tensor):
+        import torch
+        if tensor.dtype == torch.bfloat16:
+            tensor = tensor.float()
+        return tensor.detach().cpu().numpy()
+
+    def read_tensor(self, name: str) -> np.ndarray:
+        if self._state is not None:
+            return self._numpy(self._state[name])
+        from safetensors import safe_open
+        with safe_open(str(self.root / self._weight_map[name]), framework="pt", device="cpu") as stream:
+            return self._numpy(stream.get_tensor(name))
+
+    def read_row(self, name: str, row: int) -> np.ndarray:
+        info = self.info(name)
+        if len(info["shape"]) != 2 or not 0 <= row < info["shape"][0]:
+            raise IndexError(f"row {row} is invalid for {name} shape {info['shape']}")
+        if self._state is not None:
+            return self._numpy(self._state[name][row])
+        from safetensors import safe_open
+        with safe_open(str(self.root / info["filename"]), framework="pt", device="cpu") as stream:
+            return self._numpy(stream.get_slice(name)[row])
+
+    def read_column(self, name: str, column: int) -> np.ndarray:
+        tensor = self.read_tensor(name)
+        if tensor.ndim != 2 or not 0 <= column < tensor.shape[1]:
+            raise IndexError(f"column {column} is invalid for {name} shape {tensor.shape}")
+        return tensor[:, column].copy()
+
+    def read_rows(self, name: str, rows) -> np.ndarray:
+        info = self.info(name)
+        n_rows, width = info["shape"]
+        requested = [int(i) for i in rows]
+        if any(i < 0 or i >= n_rows for i in requested):
+            raise IndexError(f"row outside [0, {n_rows})")
+        out = np.empty((len(requested), width), dtype=np.float32)
+        if self._state is not None:
+            for i, row in enumerate(requested):
+                out[i] = self._numpy(self._state[name][row])
+            return out
+        from safetensors import safe_open
+        order = sorted(set(requested))
+        chunks = sorted({row // 256 for row in order})
+        cache = {}
+        with safe_open(str(self.root / info["filename"]), framework="pt", device="cpu") as stream:
+            view = stream.get_slice(name)
+            for chunk in chunks:
+                start = chunk * 256
+                stop = min(n_rows, start + 256)
+                values = self._numpy(view[start:stop])
+                for row in order:
+                    if start <= row < stop:
+                        cache[row] = values[row - start]
+        for i, row in enumerate(requested):
+            out[i] = cache[row]
+        return out
+
+    def stored_dtypes(self, names):
+        return {role: self.info(name)["dtype"] for role, name in names.items()}
 
 
 class SafetensorsRangeReader:
@@ -217,6 +337,8 @@ def tensor_names(reader: SafetensorsRangeReader) -> dict[str, str]:
         "down": choose([layer + ".down_proj.weight", f"layers.{LAYER}.mlp.down_proj.weight"]),
         "gate": choose([layer + ".gate_proj.weight", f"layers.{LAYER}.mlp.gate_proj.weight"]),
         "up": choose([layer + ".up_proj.weight", f"layers.{LAYER}.mlp.up_proj.weight"]),
+        "post_norm": choose([f"model.layers.{LAYER}.post_feedforward_layernorm.weight",
+                             f"layers.{LAYER}.post_feedforward_layernorm.weight"]),
         "norm": choose(["model.norm.weight", "norm.weight", "transformer.norm_f.weight"]),
         "embedding": choose(["lm_head.weight", "model.embed_tokens.weight", "transformer.wte.weight"]),
     }
@@ -240,6 +362,8 @@ def token_sets(tokenizer, count=RANDOM_SET_COUNT, seed=RANDOM_SEED):
         if token_id not in off_ids:
             off_ids.append(token_id)
             unique_forms.append(form)
+    if len(off_ids) != len(OFFWORLD_FORMS):
+        raise ValueError(f"registered off-world forms must produce {len(OFFWORLD_FORMS)} unique first-token ids; got {len(off_ids)}")
     # Character length means the visible token spelling, with tokenizer boundary markers removed.
     def visible_length(i):
         token = str(tokenizer.convert_ids_to_tokens(int(i)))
@@ -266,21 +390,14 @@ def token_sets(tokenizer, count=RANDOM_SET_COUNT, seed=RANDOM_SEED):
                                   "random_set_count": count, "random_set_size": len(off_ids)}
 
 
-def analyze_local_or_remote(source, repo_id=None, revision=None, tokenizer=None, reference=None,
-                            limit_rate=None, random_set_count=RANDOM_SET_COUNT):
-    reader = SafetensorsRangeReader(source, repo_id=repo_id, revision=revision, limit_rate=limit_rate)
+def analyze_reader(reader, tokenizer, reference=None, random_set_count=RANDOM_SET_COUNT):
     names = tensor_names(reader)
     # Safetensors matrices are row major. Column 6978 is strided, so read the complete down projection.
     down = reader.read_column(names["down"], UNIT)
     gate = reader.read_row(names["gate"], UNIT)
     up = reader.read_row(names["up"], UNIT)
+    post_norm = reader.read_tensor(names["post_norm"]).reshape(-1).astype(np.float32)
     norm = reader.read_tensor(names["norm"]).reshape(-1).astype(np.float32)
-    if tokenizer is None:
-        from transformers import AutoTokenizer
-        if repo_id:
-            tokenizer = AutoTokenizer.from_pretrained(repo_id, revision=revision)
-        else:
-            tokenizer = AutoTokenizer.from_pretrained(str(Path(source)))
     off_ids, rand_sets, token_meta = token_sets(tokenizer, count=random_set_count)
     all_ids = sorted(set(off_ids).union(*(set(x) for x in rand_sets)))
     # Embedding rows are fetched in row order, then used only for these registered token IDs.
@@ -290,7 +407,10 @@ def analyze_local_or_remote(source, repo_id=None, revision=None, tokenizer=None,
         raise ValueError(f"output embedding shape {emb_info['shape']} does not match down column width {down.shape[0]}")
     embeddings = reader.read_rows(emb_name, all_ids)
     row_map = {idx: embeddings[i] for i, idx in enumerate(all_ids)}
-    gain = norm
+    if post_norm.shape != down.shape or norm.shape != down.shape:
+        raise ValueError(f"post-feedforward norm {post_norm.shape} and final norm {norm.shape} must match down column {down.shape}")
+    # OLMo2 normalizes the MLP result before the residual add.
+    gain = post_norm * norm
     logits = {idx: float(np.dot(row_map[idx].astype(np.float64),
                                 down.astype(np.float64) * gain.astype(np.float64))) for idx in all_ids}
     off_mean = float(np.mean([logits[i] for i in off_ids]))
@@ -307,8 +427,9 @@ def analyze_local_or_remote(source, repo_id=None, revision=None, tokenizer=None,
         },
         "token_sets": token_meta,
         "tensor_names": names,
-        "weight_shapes": {"down_column": list(down.shape), "gate_row": list(gate.shape),
-                          "up_row": list(up.shape), "final_norm": list(norm.shape)},
+            "weight_shapes": {"down_column": list(down.shape), "gate_row": list(gate.shape),
+                          "up_row": list(up.shape), "post_feedforward_norm": list(post_norm.shape),
+                          "final_norm": list(norm.shape)},
     }
     vectors = {"down_column_6978": down.tolist(), "gate_row_6978": gate.tolist(), "up_row_6978": up.tolist()}
     if reference is not None:
@@ -321,6 +442,33 @@ def analyze_local_or_remote(source, repo_id=None, revision=None, tokenizer=None,
             "up_proj_row_6978": cosine(up, ref["up_row_6978"]),
         }
     result["reference_vectors"] = vectors
+    return result
+
+
+def analyze_local_or_remote(source, repo_id=None, revision=None, tokenizer=None, reference=None,
+                            limit_rate=None, random_set_count=RANDOM_SET_COUNT):
+    """Optional range-reader path, intended only for sharded safetensors snapshots."""
+    reader = SafetensorsRangeReader(source, repo_id=repo_id, revision=revision, limit_rate=limit_rate)
+    if tokenizer is None:
+        from transformers import AutoTokenizer
+        tokenizer = (AutoTokenizer.from_pretrained(repo_id, revision=revision) if repo_id else
+                     AutoTokenizer.from_pretrained(str(Path(source))))
+    result = analyze_reader(reader, tokenizer, reference, random_set_count)
+    result["format"] = "sharded_safetensors"
+    result["stored_dtypes"] = reader.stored_dtypes(tensor_names(reader)) if hasattr(reader, "stored_dtypes") else {
+        role: reader.info(name)["dtype"] for role, name in tensor_names(reader).items()
+    }
+    return result
+
+
+def analyze_snapshot(snapshot_dir, tokenizer=None, reference=None, random_set_count=RANDOM_SET_COUNT):
+    reader = SnapshotTensorReader(snapshot_dir)
+    if tokenizer is None:
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained(str(snapshot_dir))
+    result = analyze_reader(reader, tokenizer, reference, random_set_count)
+    result["format"] = reader.format
+    result["stored_dtypes"] = reader.stored_dtypes(tensor_names(reader))
     return result
 
 
@@ -353,32 +501,55 @@ def run(args):
     if reference is not None and reference.get("checkpoint", {}).get("key") != "instruct":
         raise ValueError("--reference must be the Instruct checkpoint's step0.json")
     tokenizer = None
-    if args.local:
-        source = args.local
-        repo_id = None
-        revision = None
+    if args.range_read:
+        if args.snapshot_dir or args.local:
+            source = args.snapshot_dir or args.local
+            repo_id = None
+            revision = None
+        else:
+            source = "remote"
+            repo_id = cp["repo_id"]
+            revision = cp["commit"]
+        result = analyze_local_or_remote(source, repo_id=repo_id, revision=revision, tokenizer=tokenizer,
+                                         reference=reference, limit_rate=args.limit_rate,
+                                         random_set_count=RANDOM_SET_COUNT)
     else:
-        source = "remote"
-        repo_id = cp["repo_id"]
-        revision = cp["commit"]
-    result = analyze_local_or_remote(source, repo_id=repo_id, revision=revision, tokenizer=tokenizer,
-                                     reference=reference, limit_rate=args.limit_rate,
-                                     random_set_count=RANDOM_SET_COUNT)
+        snapshot_dir = args.snapshot_dir or args.local
+        if snapshot_dir is None:
+            from huggingface_hub import snapshot_download
+            snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
+        result = analyze_snapshot(snapshot_dir, tokenizer=tokenizer, reference=reference,
+                                  random_set_count=RANDOM_SET_COUNT)
     if cp["key"] == "instruct":
         result["measures"]["cosines_with_instruct"] = {
             "down_proj_column_6978": 1.0, "gate_proj_row_6978": 1.0, "up_proj_row_6978": 1.0,
         }
     result.update({"checkpoint": {k: cp[k] for k in ("key", "stage", "repo_id", "branch", "commit_prefix", "commit")},
-                   "dtype_source": "safetensors", "limit_rate_bytes_per_second": args.limit_rate})
+                   "library_versions": _library_versions(),
+                   "dataset_revision": None,
+                   "limit_rate_bytes_per_second": args.limit_rate if args.range_read else None})
     out = Path(args.out) if args.out else Path("results/part85") / cp["key"] / "step0.json"
     atomic_json(out, result)
     print(f"wrote {out}")
 
 
+def _library_versions():
+    from importlib import metadata
+    out = {}
+    for package in ("torch", "transformers", "huggingface-hub", "safetensors", "numpy"):
+        try:
+            out[package] = metadata.version(package)
+        except metadata.PackageNotFoundError:
+            out[package] = None
+    return out
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", required=True, choices=tuple(BY_KEY))
-    parser.add_argument("--local", help="local directory containing the safetensors index and shards")
+    parser.add_argument("--local", help="alias for --snapshot-dir, retained for local reader checks")
+    parser.add_argument("--snapshot-dir", help="already-downloaded checkpoint snapshot directory")
+    parser.add_argument("--range-read", action="store_true", help="use the optional range reader (sharded safetensors only)")
     parser.add_argument("--reference", help="Instruct checkpoint's step0.json; required except for Instruct")
     parser.add_argument("--out")
     parser.add_argument("--limit-rate", type=int, help="throttle range reads to this many bytes per second")

@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
+import math
 import os
 import sys
 import tempfile
@@ -134,11 +136,13 @@ def _eos_ids(tokenizer, model):
             tokenizer.convert_tokens_to_ids("<|endoftext|>"),
             getattr(model.generation_config, "eos_token_id", None)]
     out = set()
+    unknown = getattr(tokenizer, "unk_token_id", None)
     for value in vals:
         if isinstance(value, int) and value >= 0:
-            out.add(value)
+            if value != unknown:
+                out.add(value)
         elif isinstance(value, (list, tuple)):
-            out.update(int(x) for x in value if isinstance(x, int) and x >= 0)
+            out.update(int(x) for x in value if isinstance(x, int) and x >= 0 and x != unknown)
     return sorted(out) or None
 
 
@@ -247,7 +251,8 @@ def _specs_for_run(args):
             if frame != "chat" or args.checkpoint in POST_TRAINED for cell in cells]
 
 
-def _load_completed(path: Path, expected_count: int, cp_key: str, frame: str, cell: str, template_sha: str):
+def _load_completed(path: Path, expected_count: int, cp_key: str, frame: str, cell: str,
+                    template_sha: str, step1: dict):
     rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
     if len(rows) != expected_count:
         raise ValueError(f"completed cell {path} has {len(rows)} answers, expected {expected_count}")
@@ -255,6 +260,19 @@ def _load_completed(path: Path, expected_count: int, cp_key: str, frame: str, ce
         raise ValueError(f"completed cell {path} contains mismatched checkpoint/frame/cell metadata")
     if any(r.get("frame_template_sha256") != template_sha for r in rows):
         raise ValueError(f"completed cell {path} was generated with a different plain-frame template")
+    expected_unit, expected_value = _cell_value(cell, step1)
+    for row in rows:
+        if row.get("unit") != expected_unit:
+            raise ValueError(f"completed cell {path} uses unit {row.get('unit')!r}; current step1 requires {expected_unit!r}")
+        actual = row.get("clamp_value")
+        same_value = actual is None and expected_value is None
+        if actual is not None and expected_value is not None:
+            try:
+                same_value = math.isclose(float(actual), float(expected_value), rel_tol=1e-12, abs_tol=1e-12)
+            except (TypeError, ValueError):
+                same_value = False
+        if not same_value:
+            raise ValueError(f"completed cell {path} clamp_value {actual!r} differs from current step1 value {expected_value!r}")
     return rows
 
 
@@ -280,18 +298,29 @@ def run(args):
     step1 = json.loads(step1_path.read_text(encoding="utf-8"))
     if step1.get("checkpoint", {}).get("commit") != cp["commit"]:
         raise ValueError("step1 checkpoint commit does not match the resolved checkpoint")
+    step1_sha256 = hashlib.sha256(step1_path.read_bytes()).hexdigest()
 
     run_path = cp_root / "run.json"
     run_record = json.loads(run_path.read_text(encoding="utf-8")) if run_path.exists() else {}
+    previous_step1_sha256 = run_record.get("step1_sha256")
+    if previous_step1_sha256 and previous_step1_sha256 != step1_sha256:
+        raise ValueError("step1.json changed since this run recorded its step1_sha256; use a fresh results root")
+    pilot_gate_action = None
+    if args.mode == "main":
+        pilot_payload = json.loads(Path(args.pilot_score).read_text(encoding="utf-8"))
+        pilot_gate_action = pilot_payload.get("pilot_gate", {}).get("action")
     template_runs = run_record.get("plain_frame_templates", {})
     template_runs[mode_tag] = {"template": plain_template, "sha256": _template_sha256(plain_template)}
     run_record.update({
         "checkpoint": cp,
         "model_id": cp["repo_id"],
         "full_commit": cp["commit"],
-        "dtype": "torch.float32",
+        "dtype": run_record.get("dtype"),
         "device": args.device,
         "library_versions": _versions(),
+        "dataset_revision": step1.get("dataset_revision"),
+        "step1_sha256": step1_sha256,
+        "pilot_gate_action": pilot_gate_action or run_record.get("pilot_gate_action"),
         "sampling": {"temperature": TEMPERATURE, "top_p": TOP_P, "max_new_tokens": MAX_NEW_TOKENS,
                      "plain_frame_samples_per_question": SAMPLES_PER_QUESTION,
                      "pilot_samples_per_question": PILOT_SAMPLES_PER_QUESTION},
@@ -312,16 +341,25 @@ def run(args):
             all_done = False
             break
         expected = len(QUESTIONS) * spec["samples_per_question"]
-        _load_completed(answer_path, expected, cp["key"], spec["frame"], spec["cell"], _template_sha256(plain_template))
+        _load_completed(answer_path, expected, cp["key"], spec["frame"], spec["cell"],
+                        _template_sha256(plain_template), step1)
         if hook_counts.get("prompt_positions", 0) <= 0 or hook_counts.get("generated_positions", 0) <= 0:
             raise ValueError(f"completed cell {cell_key} lacks prompt or generated hook fires")
     if all_done:
         print(f"all {len(specs)} cells already complete for {cp['key']}")
         return
 
-    tokenizer = AutoTokenizer.from_pretrained(cp["repo_id"], revision=cp["commit"])
-    model = AutoModelForCausalLM.from_pretrained(cp["repo_id"], revision=cp["commit"], dtype=torch.float32)
+    snapshot_dir = args.snapshot_dir
+    if snapshot_dir is None:
+        from huggingface_hub import snapshot_download
+        snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
+    tokenizer = AutoTokenizer.from_pretrained(snapshot_dir)
+    model = AutoModelForCausalLM.from_pretrained(snapshot_dir, dtype=torch.float32)
     model.to(args.device).eval().requires_grad_(False)
+    parameter_dtypes = sorted({str(parameter.dtype) for parameter in model.parameters() if parameter.is_floating_point()})
+    run_record["dtype"] = str(next(model.parameters()).dtype)
+    run_record["parameter_dtypes"] = parameter_dtypes
+    run_record["effective_generation_config"] = model.generation_config.to_dict()
     torch.set_grad_enabled(False)
     best_layers = None
     for _name, module in model.named_modules():
@@ -346,7 +384,8 @@ def run(args):
         answer_path = cp_root / "answers" / f"{mode_tag}-{frame}--{cell}.jsonl"
         expected = len(QUESTIONS) * spec["samples_per_question"]
         if answer_path.exists() and run_record["hook_fire_counts"].get(cell_key):
-            _load_completed(answer_path, expected, cp["key"], frame, cell, _template_sha256(plain_template))
+            _load_completed(answer_path, expected, cp["key"], frame, cell,
+                            _template_sha256(plain_template), step1)
             counts = run_record["hook_fire_counts"][cell_key]
             if counts["prompt_positions"] > 0 and counts["generated_positions"] > 0:
                 print(f"skip completed {cp['key']} {cell_key}")
@@ -379,6 +418,7 @@ def run(args):
                     rows.append({"mode": args.mode, "attempt": args.attempt, "checkpoint": cp["key"], "model_id": cp["repo_id"], "commit": cp["commit"],
                                  "frame": frame, "cell": cell, "unit": unit, "clamp_value": value,
                                  "frame_template_sha256": _template_sha256(plain_template),
+                                 "pilot_gate_action": pilot_gate_action,
                                  "question": question, "question_index": qi, "sample": sample,
                                  "seed": seed, "answer": answer, "new_tokens": new_tokens})
         finally:
@@ -409,6 +449,7 @@ def main(argv=None):
     parser.add_argument("--attempt", type=int, default=1, help="pilot attempt number; use 2 for the one registered rerun")
     parser.add_argument("--plain-template-file", help="optional written plain-frame template containing one {q} placeholder")
     parser.add_argument("--step1", help="step1.json path; default results-root/<checkpoint>/step1.json")
+    parser.add_argument("--snapshot-dir", help="already-downloaded pinned checkpoint snapshot directory")
     parser.add_argument("--results-root", default="results/part85")
     parser.add_argument("--device", default="cpu", choices=("cpu", "cuda", "xpu"))
     run(parser.parse_args(argv))
