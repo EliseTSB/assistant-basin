@@ -78,6 +78,32 @@ def load_tokenizer(path):
     return AutoTokenizer.from_pretrained(str(path))
 
 
+def load_generation_config(path):
+    from transformers import GenerationConfig
+    try:
+        return GenerationConfig.from_pretrained(str(path), local_files_only=True)
+    except (OSError, ValueError) as exc:
+        raise SystemExit(f"audit85: cannot load the checkpoint generation config from {path}: {exc}") from exc
+
+
+def _id_set(value):
+    out = set()
+    pending = [value]
+    while pending:
+        item = pending.pop()
+        if isinstance(item, (list, tuple, set)):
+            pending.extend(item)
+        elif isinstance(item, int) and not isinstance(item, bool) and item >= 0:
+            out.add(item)
+    return out
+
+
+def _expected_stop_ids(tokenizer, generation_config):
+    eos = generation_config.get("eos_token_id") if isinstance(generation_config, dict) \
+        else getattr(generation_config, "eos_token_id", None)
+    return _id_set(eos) | _id_set(getattr(tokenizer, "eos_token_id", None))
+
+
 def render(tokenizer, frame, question, template):
     if frame == "plain":
         return list(tokenizer(template.replace("{q}", question), add_special_tokens=False)["input_ids"])
@@ -160,7 +186,8 @@ def check_phase(fail, where, entry, units, calls, positions):
             fail(f"{where}: unit {unit} received {pmin!r}..{pmax!r}, registered {value!r}")
 
 
-def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenizer, step1_path=None):
+def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenizer, step1_path=None,
+                generation_config=None):
     failures = []
     fail = failures.append
     step1 = read_json(Path(step1_path) if step1_path else cp_dir / "step1.json")
@@ -179,9 +206,22 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
         return failures + [f"{obs_path}: no observer records"]
     records = read_jsonl(obs_path)
     sessions = sessions_of(records)
+    if generation_config is None:
+        config_path = getattr(tokenizer, "name_or_path", None)
+        if not config_path:
+            return failures + ["checkpoint generation config is required to audit effective EOS ids"]
+        generation_config = load_generation_config(config_path)
+    expected_stops = _expected_stop_ids(tokenizer, generation_config)
+    if not expected_stops:
+        fail("checkpoint generation config and tokenizer have no registered EOS ids")
     heads = {}
     for sid, recs in sessions.items():
         heads[sid] = check_session(fail, recs, f"observer session {sid}", commit, "torch.float32", {})
+        defaults = heads[sid].get("generation_defaults") or {}
+        config_eos = generation_config.get("eos_token_id") if isinstance(generation_config, dict) \
+            else getattr(generation_config, "eos_token_id", None)
+        if _id_set(defaults.get("eos_token_id")) != _id_set(config_eos):
+            fail(f"observer session {sid}: checkpoint generation-config EOS ids differ from the loaded checkpoint config")
     calls = {r.get("call_id"): r for r in records if r.get("event") == "generate"}
     if [r for r in records if r.get("event") == "forward"]:
         fail("step 2 observer saw model forward calls outside generate")
@@ -235,6 +275,12 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
                     fail(f"{where}: effective {key} {eff.get(key)!r}, registered unchanged")
             if eff.get("top_k") != defaults.get("top_k"):
                 fail(f"{where}: effective top_k {eff.get('top_k')!r} differs from the model default")
+            if _id_set(kw.get("eos_token_id")) != expected_stops:
+                fail(f"{where}: generate received EOS ids {sorted(_id_set(kw.get('eos_token_id')))}, "
+                     f"expected checkpoint generation-config and tokenizer EOS ids {sorted(expected_stops)}")
+            if _id_set(eff.get("eos_token_id")) != expected_stops:
+                fail(f"{where}: effective EOS ids {sorted(_id_set(eff.get('eos_token_id')))}, "
+                     f"expected checkpoint generation-config and tokenizer EOS ids {sorted(expected_stops)}")
             rng = rec.get("rng_at_entry") or {}
             if rng.get("cpu_initial_seed") != seed:
                 fail(f"{where}: CPU RNG seeded {rng.get('cpu_initial_seed')!r} at generate entry, registered {seed}")
@@ -260,9 +306,7 @@ def audit_step2(cp_dir, checkpoint, mode, attempt, chat_only, template, tokenize
             if not isinstance(gen, list) or not gen:
                 fail(f"{where}: no generated token ids recorded")
                 continue
-            stop = set(kw.get("eos_token_id") if isinstance(kw.get("eos_token_id"), list) else [kw.get("eos_token_id")])
-            if isinstance(tokenizer.eos_token_id, int):
-                stop.add(tokenizer.eos_token_id)
+            stop = expected_stops
             cut = gen
             for pos, tok in enumerate(gen):
                 if tok in stop:
@@ -338,8 +382,17 @@ def audit_step1(cp_dir, checkpoint, tokenizer, token_ids_path, passages_path, re
     values = []
     for i, (rec, want) in enumerate(zip(fwd, expected_inputs)):
         where = f"forward {i}"
+        if rec.get("seq") != i + 1:
+            fail(f"{where}: sequence id {rec.get('seq')!r}, expected {i + 1} for the registered neutral-then-passage order")
         if rec.get("error") or rec.get("input_ids") != [want]:
             fail(f"{where}: input ids are not the registered text {i}")
+        expected_kwargs = {"input_ids": {"__tensor__": True, "dtype": "torch.int64",
+                                          "shape": [1, len(want)], "value": [want]},
+                           "use_cache": False}
+        if rec.get("positional_args") != 0 or rec.get("kwargs") != ["use_cache"] \
+                or rec.get("kwargs_values") != expected_kwargs:
+            fail(f"{where}: forward keyword values {rec.get('kwargs_values')!r}, "
+                 "expected only registered input_ids and use_cache=False")
         census = (rec.get("hooks_at_entry") or {}).get("modules") or {}
         if len(census) != 1 or not next(iter(census)).endswith(LAYER_SUFFIX) or next(iter(census.values())) != {"pre": 1, "post": 0}:
             fail(f"{where}: hooks {census}, expected only the step-1 reader on layer 10 down_proj")
@@ -348,11 +401,19 @@ def audit_step1(cp_dir, checkpoint, tokenizer, token_ids_path, passages_path, re
             fail(f"{where}: layer 10 called {layer.get('calls')!r} times or changed by a hook")
         vals = layer.get("values") or {}
         try:
-            # values[unit] is calls x batch rows x positions; one call, one row.
-            values.append(np.stack([np.asarray(vals[str(TARGET)][0][0], dtype=np.float64),
-                                    np.asarray(vals[str(CONTROL)][0][0], dtype=np.float64)], axis=-1))
+            # values[unit] is calls x batch rows x positions; every text must be one call and one row.
+            unit_rows = []
+            for unit in (TARGET, CONTROL):
+                unit_calls = vals[str(unit)]
+                if len(unit_calls) != 1 or len(unit_calls[0]) != 1 or len(unit_calls[0][0]) != len(want):
+                    raise ValueError(f"unit {unit}: got {len(unit_calls)} calls, "
+                                     f"{[len(rows) for rows in unit_calls]} rows, "
+                                     f"expected one call, one row, {len(want)} positions")
+                unit_rows.append(np.asarray(unit_calls[0][0], dtype=np.float64))
+            values.append(np.stack(unit_rows, axis=-1))
         except (KeyError, IndexError, ValueError):
-            fail(f"{where}: no observed values for units {TARGET} and {CONTROL}")
+            fail(f"{where}: observed values must have one call, one row, and the registered position count "
+                 f"for units {TARGET} and {CONTROL}")
             values.append(None)
     if failures:
         return failures
@@ -378,9 +439,13 @@ def audit_step1(cp_dir, checkpoint, tokenizer, token_ids_path, passages_path, re
     off = [float(values[neutral_count + 2 * j][:, 0].mean()) for j in range(len(passages))]
     ordinary = [float(values[neutral_count + 2 * j + 1][:, 0].mean()) for j in range(len(passages))]
     p = step1.get("passages") or {}
-    if not all(near(a, b, 1e-9) for a, b in zip(p.get("offworld_per_passage_mean", []), off)) \
+    if p.get("count_each") != len(passages) \
+            or not all(near(a, b, 1e-9) for a, b in zip(p.get("offworld_per_passage_mean", []), off)) \
             or not all(near(a, b, 1e-9) for a, b in zip(p.get("ordinary_per_passage_mean", []), ordinary)) \
             or len(p.get("offworld_per_passage_mean", [])) != len(off) \
+            or len(p.get("ordinary_per_passage_mean", [])) != len(ordinary) \
+            or not near(p.get("offworld_mean"), float(np.mean(off)), 1e-9) \
+            or not near(p.get("ordinary_mean"), float(np.mean(ordinary)), 1e-9) \
             or not near(p.get("ordinary_sd"), float(np.std(ordinary, ddof=1)), 1e-9):
         fail("passage means differ from the observed values")
     return failures
@@ -417,8 +482,9 @@ def main(argv=None):
         if not args.mode:
             ap.error("step 2 needs --mode")
         template = Path(args.template_file).read_text(encoding="utf-8") if args.template_file else None
+        generation_config = load_generation_config(args.tokenizer)
         failures = audit_step2(cp_dir, args.checkpoint, args.mode, args.attempt, args.chat_only, template, tokenizer,
-                               args.step1_json)
+                               args.step1_json, generation_config)
         label = f"AUDIT85 {args.checkpoint} {args.mode}"
     for f in failures[:200]:
         print("FAIL", f)

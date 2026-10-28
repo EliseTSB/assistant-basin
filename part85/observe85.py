@@ -33,6 +33,26 @@ def self_sha256() -> str:
     return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
+def _json_value(value):
+    """Serialize a forward keyword's value at the model boundary, including full tensor contents."""
+    if hasattr(value, "detach") and hasattr(value, "cpu") and hasattr(value, "tolist"):
+        tensor = value.detach().cpu()
+        return {"__tensor__": True, "dtype": str(tensor.dtype), "shape": list(tensor.shape),
+                "value": tensor.tolist()}
+    if isinstance(value, dict):
+        return {str(k): _json_value(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_value(v) for v in value]
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if hasattr(value, "item"):
+        try:
+            return _json_value(value.item())
+        except (TypeError, ValueError):
+            pass
+    return {"__type__": type(value).__qualname__, "repr": repr(value)}
+
+
 class Observer85(observe.Observer):
     def __init__(self, model, tokenizer, path, label: str = "", watch: dict[int, list[int]] | None = None):
         self._raw_prompts = None
@@ -95,6 +115,7 @@ class Observer85(observe.Observer):
         self._fwd = {"before": {}, "layers": {}}
         record = {"event": "forward", "session": self.session, "seq": self._forward_seq, "time": time.time(),
                   "kwargs": sorted(k for k in kwargs if k != "input_ids"), "positional_args": len(args),
+                  "kwargs_values": {str(k): _json_value(v) for k, v in kwargs.items()},
                   "hooks_at_entry": self._hook_census()}
         if ids is not None and hasattr(ids, "detach"):
             record["input_ids"] = ids.detach().cpu().tolist()

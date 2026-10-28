@@ -5,6 +5,7 @@ so these tests show that the replay passes a faithful run and FAILS on each kind
 cannot show that it agrees with part85.py; only the pilot's replay can. Run: python -m pytest part85/test_replay85.py
 """
 import copy
+import hashlib
 import json
 import os
 import sys
@@ -18,7 +19,9 @@ import replay85 as R  # noqa: E402
 TOK = os.environ.get("PART85_TOKENIZER", "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/"
                      "snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e")
 KEY = "pretrain_4T"
-PREFIX = R.registered_commits(Path(R.HERE.parent / "PART85-DESIGN.md"))[KEY]
+COMMITS = R.registered_commits(Path(R.HERE.parent / "PART85-DESIGN.md"))
+PREFIX = COMMITS[KEY]
+AMENDED = "Q: {q}\nA:"
 
 
 def tiny_model(path: Path):
@@ -54,8 +57,13 @@ class ReplayTests(unittest.TestCase):
         cls.tmp = tempfile.TemporaryDirectory()
         cls.snap = Path(cls.tmp.name) / (PREFIX + "0" * 28)
         cls.model, cls.tok = tiny_model(cls.snap)
+        cls.snap_instruct = Path(cls.tmp.name) / (COMMITS["instruct"] + "0" * 28)
+        cls.model.save_pretrained(cls.snap_instruct)
+        cls.tok.save_pretrained(cls.snap_instruct)
 
-    def make_run(self, brk=None):
+    def make_run(self, brk=None, key=KEY, mode="pilot", attempt=1, plain=R.PLAIN, scope="all"):
+        tag = "main" if mode == "main" else f"pilot{attempt}"
+        plain_sha = hashlib.sha256(plain.encode("utf-8")).hexdigest()
         cp = Path(tempfile.mkdtemp(dir=self.tmp.name))
         (cp / "observe").mkdir()
         (cp / "answers").mkdir()
@@ -67,13 +75,13 @@ class ReplayTests(unittest.TestCase):
             for r in fwd:
                 fh.write(json.dumps(r) + "\n")
         maxima, _ = R.step1_maxima(cp)
-        recs = [{"event": "session", "session": "s", "model_revision": PREFIX + "0" * 28, "dtype": "torch.float32",
+        recs = [{"event": "session", "session": "s", "model_revision": COMMITS[key] + "0" * 28, "dtype": "torch.float32",
                  "device": "cpu"}]
         files, n = {}, 0
-        for (f, c, qi, s) in R.expected_rows(KEY, "pilot"):
+        for (f, c, qi, s) in R.expected_rows(key, mode, scope):
             seed = R.seed_for(qi, s)
             clamp = R.clamp_for(c, maxima)
-            full, prompt, kwargs = R.regenerate(self.model, self.tok, "cpu", f, R.QUESTIONS[qi], seed, clamp)
+            full, prompt, kwargs = R.regenerate(self.model, self.tok, "cpu", f, R.QUESTIONS[qi], seed, clamp, plain)
             stop_ids = kwargs["eos_token_id"]
             cut = R.cut(full, set(stop_ids))
             cid = f"s:{n}"
@@ -86,26 +94,73 @@ class ReplayTests(unittest.TestCase):
                          "rows": [{"token_ids_sha256": R.ids_sha(cut), "token_count": len(cut),
                                    "layers": measured(clamp, len(prompt), len(full))}],
                          "raw": [{"prompt_ids": prompt, "generated_ids": full}]})
-            row = {"checkpoint": KEY, "mode": "pilot", "frame": f, "cell": c, "question": R.QUESTIONS[qi],
-                   "question_index": qi, "sample": s, "seed": seed,
+            row = {"checkpoint": key, "mode": mode, "attempt": attempt, "frame": f, "cell": c,
+                   "question": R.QUESTIONS[qi], "question_index": qi, "sample": s, "seed": seed,
+                   "frame_template_sha256": plain_sha,
                    "answer": self.tok.decode(cut, skip_special_tokens=True).strip(), "observer_call_id": cid}
             if clamp is not None:
                 row.update({"unit": clamp[0], "clamp_value": clamp[1]})
-            files.setdefault(f"pilot1-{f}--{c}.jsonl", []).append(row)
+            files.setdefault(f"{tag}-{f}--{c}.jsonl", []).append(row)
         if brk:
             brk(files, recs)
         for name, rows in files.items():
             with open(cp / "answers" / name, "w", encoding="utf-8") as fh:
                 for r in rows:
                     fh.write(json.dumps(r) + "\n")
-        with open(cp / "observe" / "pilot1.jsonl", "w", encoding="utf-8") as fh:
+        with open(cp / "observe" / f"{tag}.jsonl", "w", encoding="utf-8") as fh:
             for r in recs:
                 fh.write(json.dumps(r) + "\n")
         return cp
 
-    def replay(self, cp, *extra):
-        return R.main(["--cp-dir", str(cp), "--step1-dir", str(cp), "--checkpoint", KEY, "--mode", "pilot",
-                       "--snapshot", str(self.snap), "--device", "cpu", *extra])
+    def replay(self, cp, *extra, key=KEY, mode="pilot", snap=None):
+        return R.main(["--cp-dir", str(cp), "--step1-dir", str(cp), "--checkpoint", key, "--mode", mode,
+                       "--snapshot", str(snap or self.snap), "--device", "cpu", *extra])
+
+    def template_file(self, text):
+        p = Path(tempfile.mkdtemp(dir=self.tmp.name)) / "pilot-frame-v2.txt"
+        p.write_text(text, encoding="utf-8")
+        return str(p)
+
+    def test_attempt2_with_its_amended_frame_passes(self):
+        cp = self.make_run(attempt=2, plain=AMENDED)
+        self.assertEqual(self.replay(cp, "--attempt", "2", "--plain-template-file", self.template_file(AMENDED)), 0)
+
+    def test_attempt2_replayed_with_another_frame_fails(self):
+        cp = self.make_run(attempt=2, plain=AMENDED)
+        other = self.template_file("Question - {q}\nAnswer -")
+        self.assertEqual(self.replay(cp, "--attempt", "2", "--plain-template-file", other), 1)
+
+    def test_attempt2_needs_an_amended_frame(self):
+        cp = self.make_run(attempt=2, plain=AMENDED)
+        self.assertEqual(self.replay(cp, "--attempt", "2"), 2)
+        self.assertEqual(self.replay(cp, "--attempt", "2", "--plain-template-file", self.template_file(R.PLAIN)), 2)
+
+    def test_attempt1_run_is_not_an_attempt2_pass(self):
+        cp = self.make_run()
+        self.assertEqual(self.replay(cp, "--attempt", "2", "--plain-template-file", self.template_file(AMENDED)), 1)
+
+    def test_row_attempt_mislabelled_fails(self):
+        def b(f, r):
+            f["pilot1-plain--unclamped.jsonl"][0]["attempt"] = 2
+        self.assertEqual(self.replay(self.make_run(b)), 1)
+
+    def test_chat_only_scope_enumerates_chat_on_post_trained_only(self):
+        rows = R.expected_rows("instruct", "main", "chat-only")
+        self.assertEqual({f for f, _, _, _ in rows}, {"chat"})
+        self.assertEqual(len(rows), 4 * 3 * 16)
+        with self.assertRaises(ValueError):
+            R.expected_rows(KEY, "main", "chat-only")
+        with self.assertRaises(ValueError):
+            R.expected_rows(KEY, "pilot", "chat-only")
+
+    def test_chat_only_main_run_passes_and_a_plain_cell_fails_it(self):
+        cp = self.make_run(key="instruct", mode="main", scope="chat-only")
+        self.assertEqual(self.replay(cp, "--scope", "chat-only", key="instruct", mode="main",
+                                     snap=self.snap_instruct), 0)
+        self.assertEqual(self.replay(cp, key="instruct", mode="main", snap=self.snap_instruct), 1)
+
+    def test_chat_only_scope_refuses_a_base_checkpoint(self):
+        self.assertEqual(self.replay(self.make_run(), "--scope", "chat-only", mode="main"), 2)
 
     def gen(self, recs, i=1):
         return [r for r in recs if r["event"] == "generate"][i]

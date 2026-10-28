@@ -72,6 +72,16 @@ class Download85Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             download85.RateLimiter(0)
 
+    def test_rate_limiter_discards_credit_beyond_one_second_after_a_stall(self):
+        clock = Clock()
+        limiter = download85.RateLimiter(1000, clock, clock.sleep)
+        limiter.take(1000)
+        clock.now += 100.0
+        limiter.take(1000)
+        after_stall_chunk = clock.now
+        limiter.take(1)
+        self.assertGreater(clock.now, after_stall_chunk)
+
     def test_download_places_a_verified_file_at_the_cache_snapshot_path_at_the_rate(self):
         with tempfile.TemporaryDirectory() as temp:
             clock = Clock()

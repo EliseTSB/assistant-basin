@@ -8,7 +8,7 @@ written, so missing, duplicated or relabelled answers passed, and it hashed toke
 observer hashes compact JSON. This version ENUMERATES the registered run itself, so the run cannot define what is
 checked.
 
-For one checkpoint and one mode (main, or pilot attempt 1) it builds the registered list of answers -- frames, cells,
+For one checkpoint and one run (main in either registered scope, or pilot attempt 1 or 2) it builds the registered list of answers -- frames, cells,
 questions, samples -- and requires, for each, exactly one answer row whose identity matches and exactly one observer
 generate record not used by any other row. No other answer files or rows may exist for that tag. For each answer it
 regenerates on its own (prompt, seed, sampling, stop tokens, clamp) and compares: the raw prompt ids and full generated
@@ -21,6 +21,10 @@ Step-1 maxima come from the observer's step-1 forward records (200 neutral seque
 row each, in sequence order), not from step1.json. --perturb-value multiplies every clamp: it counts answers whose
 regenerated TOKENS differ from the observer's, needs at least one clamped cell in scope, and never prints PASS.
 --fraction < 1 regenerates a sample (all identity and metadata checks still run on every row) and is not a PASS.
+--attempt 2 replays the single registered pilot rerun and requires --plain-template-file, the amended frame committed
+in writing before the rerun (the design's pilot gate); the main run takes the same file when attempt 2 is the pilot that
+passed. --scope chat-only replays the gate's other branch (chat frame, SFT, DPO and Instruct only). PASS prints the
+scope, attempt and template hash so the operator can tie them to the committed pilot score.
 Exit: 0 PASS, 1 FAIL, 3 sample or negative control, 2 bad input.
 """
 from __future__ import annotations
@@ -74,11 +78,20 @@ def read_jsonl(path: Path):
         return [json.loads(line) for line in fh if line.strip()]
 
 
-def expected_rows(key: str, mode: str):
+def expected_rows(key: str, mode: str, scope: str = "all"):
     if mode == "main":
-        frames = ("plain", "chat") if key in POST_TRAINED else ("plain",)
+        if scope == "chat-only":
+            if key not in POST_TRAINED:
+                raise ValueError(f"{key} is not in the chat-only scope (SFT, DPO, Instruct)")
+            frames = ("chat",)
+        elif scope == "all":
+            frames = ("plain", "chat") if key in POST_TRAINED else ("plain",)
+        else:
+            raise ValueError(f"unregistered scope {scope!r}")
         cells, samples = MAIN_CELLS, range(16)
     elif mode == "pilot":
+        if scope != "all":
+            raise ValueError("the pilot has one scope")
         if key not in PILOT_KEYS:
             raise ValueError(f"{key} is not a registered pilot checkpoint")
         frames, cells, samples = ("plain",), PILOT_CELLS, range(8)
@@ -116,9 +129,9 @@ def clamp_for(cell: str, maxima: dict):
             "control": (CONTROL_UNIT, OWN_FACTOR * maxima[CONTROL_UNIT])}[cell]
 
 
-def encode(tok, question: str, frame: str):
+def encode(tok, question: str, frame: str, plain: str = PLAIN):
     if frame == "plain":
-        return tok(PLAIN.format(q=question), return_tensors="pt", add_special_tokens=False)
+        return tok(plain.replace("{q}", question), return_tensors="pt", add_special_tokens=False)
     if frame == "chat":
         return tok.apply_chat_template([{"role": "user", "content": question}], add_generation_prompt=True,
                                        return_tensors="pt", return_dict=True)
@@ -142,9 +155,9 @@ def cut(ids, stop_ids):
     return out
 
 
-def regenerate(model, tok, device: str, frame: str, question: str, seed: int, clamp):
+def regenerate(model, tok, device: str, frame: str, question: str, seed: int, clamp, plain: str = PLAIN):
     import torch
-    enc = {k: v.to(device) for k, v in encode(tok, question, frame).items() if hasattr(v, "to")}
+    enc = {k: v.to(device) for k, v in encode(tok, question, frame, plain).items() if hasattr(v, "to")}
     handle = None
     if clamp is not None:
         unit, value = clamp
@@ -206,6 +219,9 @@ def main(argv=None) -> int:
     ap.add_argument("--step1-dir", required=True, help="the dir whose observe/step1.jsonl is this checkpoint's step 1")
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--mode", required=True, choices=("main", "pilot"))
+    ap.add_argument("--attempt", type=int, default=1, choices=(1, 2), help="pilot attempt (2 = the registered rerun)")
+    ap.add_argument("--scope", default="all", choices=("all", "chat-only"), help="main run: the pilot gate's branch")
+    ap.add_argument("--plain-template-file", help="the amended plain frame (required for attempt 2)")
     ap.add_argument("--snapshot", required=True)
     ap.add_argument("--device", default="xpu")
     ap.add_argument("--fraction", type=float, default=1.0)
@@ -214,13 +230,31 @@ def main(argv=None) -> int:
     ap.add_argument("--out")
     a = ap.parse_args(argv)
     cp, key = Path(a.cp_dir), a.checkpoint
-    tag = "main" if a.mode == "main" else "pilot1"
+    if a.mode == "main" and a.attempt != 1:
+        print("REPLAY85: --attempt applies to the pilot only", file=sys.stderr)
+        return 2
+    if a.mode == "pilot" and a.attempt == 2 and not a.plain_template_file:
+        print("REPLAY85: pilot attempt 2 needs --plain-template-file (the amended frame)", file=sys.stderr)
+        return 2
+    plain = Path(a.plain_template_file).read_text(encoding="utf-8") if a.plain_template_file else PLAIN
+    if plain.count("{q}") != 1:
+        print("REPLAY85: the plain frame template must contain exactly one {q}", file=sys.stderr)
+        return 2
+    if a.mode == "pilot" and a.attempt == 2 and plain == PLAIN:
+        print("REPLAY85: attempt 2's template is the attempt-1 frame; the design reruns with an amended one", file=sys.stderr)
+        return 2
+    plain_sha = hashlib.sha256(plain.encode("utf-8")).hexdigest()
+    tag = "main" if a.mode == "main" else f"pilot{a.attempt}"
     problems = []
     prefix = registered_commits(Path(a.design)).get(key)
     if prefix is None:
         print(f"REPLAY85: {key} is not a registered checkpoint", file=sys.stderr)
         return 2
-    exp = expected_rows(key, a.mode)
+    try:
+        exp = expected_rows(key, a.mode, a.scope)
+    except ValueError as e:
+        print(f"REPLAY85: {e}", file=sys.stderr)
+        return 2
     cells_in_scope = {c for _, c, _, _ in exp}
     if a.perturb_value != 1.0 and cells_in_scope <= {"unclamped"}:
         print("REPLAY85: the negative control needs a clamped cell in scope", file=sys.stderr)
@@ -278,10 +312,12 @@ def main(argv=None) -> int:
             continue
         r = rs[0]
         seed = seed_for(qi, s)
-        ident = {"checkpoint": key, "mode": a.mode, "question": QUESTIONS[qi], "seed": seed}
+        ident = {"checkpoint": key, "mode": a.mode, "attempt": a.attempt, "question": QUESTIONS[qi], "seed": seed}
         for field, val in ident.items():
             if r.get(field) != val:
                 problems.append(f"{where}: row {field} {r.get(field)!r}, registered {val!r}")
+        if f == "plain" and r.get("frame_template_sha256") != plain_sha:
+            problems.append(f"{where}: row frame template {r.get('frame_template_sha256')}, replaying {plain_sha}")
         clamp = clamp_for(c, maxima) if maxima else None
         if clamp is not None:
             if r.get("unit") != clamp[0] or abs(float(r.get("clamp_value", "nan")) - clamp[1]) > 1e-6 * max(1, clamp[1]):
@@ -316,7 +352,7 @@ def main(argv=None) -> int:
     for (f, c, qi, s, r, call, clamp, where, seed) in regen:
         if clamp is not None:
             clamp = (clamp[0], clamp[1] * a.perturb_value)
-        full, prompt, kwargs = regenerate(model, tok, a.device, f, QUESTIONS[qi], seed, clamp)
+        full, prompt, kwargs = regenerate(model, tok, a.device, f, QUESTIONS[qi], seed, clamp, plain)
         raw = (call.get("raw") or [{}])[0]
         if [int(t) for t in raw.get("generated_ids", [])] != full:
             changed += 1
@@ -344,7 +380,8 @@ def main(argv=None) -> int:
         eff_eos = sorted([eff_eos] if isinstance(eff_eos, int) else list(eff_eos or []))
         if eff_eos != stop_ids:
             problems.append(f"{where}: effective stop tokens {eff_eos}, registered {stop_ids}")
-    report = {"checkpoint": key, "mode": a.mode, "registered": len(exp), "regenerated": len(regen), "changed": changed,
+    report = {"checkpoint": key, "mode": a.mode, "attempt": a.attempt, "scope": a.scope,
+              "plain_template_sha256": plain_sha, "registered": len(exp), "regenerated": len(regen), "changed": changed,
               "maxima": maxima, "perturb_value": a.perturb_value, "fraction": a.fraction,
               "problem_count": len(problems), "problems": problems[:300]}
     if a.out:
@@ -360,7 +397,8 @@ def main(argv=None) -> int:
     if a.fraction < 1.0:
         print(f"REPLAY85: NON-PRODUCTION SAMPLE, {len(regen)} of {len(exp)} regenerated and matching; not a PASS")
         return 3
-    print(f"REPLAY85: PASS, all {len(exp)} registered answers present once and matching token for token")
+    print(f"REPLAY85: PASS, all {len(exp)} registered answers present once and matching token for token "
+          f"({key} {tag}, scope {a.scope}, plain template sha256 {plain_sha[:16]})")
     return 0
 
 

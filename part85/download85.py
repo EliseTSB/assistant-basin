@@ -84,23 +84,34 @@ def verify(path: Path, algorithm: str, digest: str) -> bool:
 
 
 class RateLimiter:
-    """Never more than `rate` bytes in any prefix of the transfer, measured from the first byte."""
+    """Token bucket with at most one second of transfer credit; idle time cannot build a large burst."""
 
     def __init__(self, rate: int, clock=time.monotonic, sleep=time.sleep):
         if rate <= 0:
             raise ValueError("rate must be positive")
         self.rate, self.clock, self.sleep = rate, clock, sleep
-        self.start = None
+        self.capacity = float(rate)
+        self.tokens = 0.0
+        self.updated = clock()
         self.sent = 0
 
     def take(self, n: int):
-        if self.start is None:
-            self.start = self.clock()
+        if n < 0:
+            raise ValueError("bytes taken must be nonnegative")
         self.sent += n
-        due = self.start + self.sent / self.rate
-        wait = due - self.clock()
-        if wait > 0:
-            self.sleep(wait)
+        remaining = float(n)
+        while remaining > 0:
+            now = self.clock()
+            elapsed = max(0.0, now - self.updated)
+            self.tokens = min(self.capacity, self.tokens + elapsed * self.rate)
+            self.updated = now
+            used = min(self.tokens, remaining)
+            self.tokens -= used
+            remaining -= used
+            if remaining > 1e-9:
+                # Sleep for at most the time needed to refill the bucket. Requests larger than the bucket
+                # are handled in multiple bounded fills.
+                self.sleep(min(remaining, self.capacity) / self.rate)
 
 
 def fetch(url: str, dest: Path, size: int, limiter: RateLimiter, opener=urllib.request.urlopen) -> Path:

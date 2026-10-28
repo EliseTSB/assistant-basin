@@ -198,18 +198,15 @@ def _prompt_inputs(tokenizer, question: str, frame: str, device: str,
 
 
 def _eos_ids(tokenizer, model):
-    vals = [tokenizer.eos_token_id,
-            tokenizer.convert_tokens_to_ids("<|im_end|>"),
-            tokenizer.convert_tokens_to_ids("<|endoftext|>"),
-            getattr(model.generation_config, "eos_token_id", None)]
+    vals = [tokenizer.eos_token_id, getattr(model.generation_config, "eos_token_id", None)]
     out = set()
-    unknown = getattr(tokenizer, "unk_token_id", None)
-    for value in vals:
-        if isinstance(value, int) and value >= 0:
-            if value != unknown:
-                out.add(value)
-        elif isinstance(value, (list, tuple)):
-            out.update(int(x) for x in value if isinstance(x, int) and x >= 0 and x != unknown)
+    pending = list(vals)
+    while pending:
+        value = pending.pop()
+        if isinstance(value, (list, tuple, set)):
+            pending.extend(value)
+        elif isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            out.add(value)
     return sorted(out) or None
 
 

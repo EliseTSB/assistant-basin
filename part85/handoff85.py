@@ -243,7 +243,7 @@ def push(checkpoint: str, branch: str, results_root: Path) -> None:
 
 def refs_manifest(results_root: Path, out: Path, references_dir: Path = REFERENCE_DIR) -> None:
     root = Path(results_root)
-    source_base = root / "pilot-a1"
+    source_base = root / "main" / "instruct"
     pilot_score = root / "pilot-score.json"
     if not pilot_score.is_file():
         raise FileNotFoundError(f"accepted pilot score is missing: {pilot_score}")
@@ -254,9 +254,9 @@ def refs_manifest(results_root: Path, out: Path, references_dir: Path = REFERENC
         raise ValueError("pilot score is missing plain_template_sha256")
     default_sha = hashlib.sha256(b"Question: {q}\nAnswer:").hexdigest()
     sources = {
-        "instruct/step0.json": source_base / "instruct" / "step0.json",
-        "instruct/step1.json": source_base / "instruct" / "step1.json",
-        "neutral-token-ids.json": source_base / "neutral-token-ids.json",
+        "instruct/step0.json": source_base / "step0.json",
+        "instruct/step1.json": source_base / "step1.json",
+        "neutral-token-ids.json": root / "neutral-token-ids.json",
         "pilot-score.json": pilot_score,
     }
     if expected_template != default_sha:

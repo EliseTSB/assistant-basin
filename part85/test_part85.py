@@ -104,6 +104,8 @@ def char_tokenizer(directory):
     fast.chat_template = CHAT_TEMPLATE
     Path(directory).mkdir(parents=True, exist_ok=True)
     fast.save_pretrained(str(directory))
+    (Path(directory) / "generation_config.json").write_text(
+        json.dumps({"eos_token_id": fast.eos_token_id}), encoding="utf-8")
     return AutoTokenizer.from_pretrained(str(directory))
 
 
@@ -333,6 +335,17 @@ class Part85Tests(unittest.TestCase):
                 part85._main_scope(args)
         tokenizer = TinyTokenizer()
         self.assertEqual(part85._eos_ids(tokenizer, tiny_model()), [2])
+
+    def test_stop_ids_are_generation_eos_plus_tokenizer_eos_even_when_unk_matches(self):
+        tokenizer = TinyTokenizer()
+        tokenizer.eos_token_id = tokenizer.unk_token_id = 100257
+        self.assertEqual(part85._eos_ids(
+            tokenizer, types.SimpleNamespace(generation_config=types.SimpleNamespace(eos_token_id=100257))),
+            [100257])
+        tokenizer.eos_token_id = 7
+        self.assertEqual(part85._eos_ids(
+            tokenizer, types.SimpleNamespace(generation_config=types.SimpleNamespace(eos_token_id=[9, 8]))),
+            [7, 8, 9])
 
     def test_bf16_decode_and_safetensors_rows(self):
         raw = np.array([0x3F80, 0xC000], dtype="<u2").tobytes()
@@ -943,6 +956,14 @@ class Part85Tests(unittest.TestCase):
                 self.assertIn(expected, audited.stdout)
                 path.write_text(original, encoding="utf-8")
 
+    def test_audit_refuses_effective_stop_ids_outside_checkpoint_generation_config(self):
+        with tempfile.TemporaryDirectory() as temp:
+            _root, _cp_dir, audited = self._run_and_audit_registered_case(
+                Path(temp) / "extra-stop", "instruct", "pilot", expect_pass=False,
+                patch_run=[mock.patch.object(part85, "_eos_ids", return_value=[2, 4])])
+            self.assertEqual(audited.returncode, 1, audited.stdout)
+            self.assertIn("eos", audited.stdout.lower())
+
     def test_step1_run_passes_the_observer_audit_and_a_changed_value_fails(self):
         import transformers
 
@@ -980,6 +1001,52 @@ class Part85Tests(unittest.TestCase):
             audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
             self.assertEqual(audited.returncode, 0, audited.stdout)
             self.assertIn("PASS", audited.stdout.splitlines()[-1])
+            observer_path = root / "observe" / "step1.jsonl"
+            observer_records = [json.loads(line) for line in observer_path.read_text(encoding="utf-8").splitlines()]
+            forwards = [r for r in observer_records if r.get("event") == "forward"]
+            self.assertEqual(len(forwards), 50)
+            self.assertEqual([r["seq"] for r in forwards], list(range(1, 51)))
+            self.assertEqual(forwards[0]["kwargs_values"]["use_cache"], False)
+            self.assertEqual(forwards[0]["kwargs_values"]["input_ids"]["value"], [ids[0].tolist()])
+            original_records = json.loads(json.dumps(observer_records))
+
+            mutated_records = json.loads(json.dumps(original_records))
+            first_forward = next(r for r in mutated_records if r.get("event") == "forward")
+            first_forward["kwargs"].append("position_ids")
+            first_forward["kwargs_values"]["position_ids"] = {
+                "__tensor__": True, "dtype": "torch.int64", "shape": [1, 4], "value": [[0, 0, 0, 0]]}
+            observer_path.write_text("".join(json.dumps(row) + "\n" for row in mutated_records), encoding="utf-8")
+            audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+            self.assertEqual(audited.returncode, 1, audited.stdout)
+            self.assertIn("forward keyword values", audited.stdout)
+
+            mutated_records = json.loads(json.dumps(original_records))
+            next(r for r in mutated_records if r.get("event") == "forward")["seq"] = 2
+            observer_path.write_text("".join(json.dumps(row) + "\n" for row in mutated_records), encoding="utf-8")
+            audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+            self.assertEqual(audited.returncode, 1, audited.stdout)
+            self.assertIn("sequence id", audited.stdout)
+
+            mutated_records = json.loads(json.dumps(original_records))
+            first_forward = next(r for r in mutated_records if r.get("event") == "forward")
+            first_forward["layers"]["10"]["values"]["6978"][0][0].pop()
+            observer_path.write_text("".join(json.dumps(row) + "\n" for row in mutated_records), encoding="utf-8")
+            audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+            self.assertEqual(audited.returncode, 1, audited.stdout)
+            self.assertIn("one call, one row", audited.stdout)
+
+            observer_path.write_text("".join(json.dumps(row) + "\n" for row in original_records), encoding="utf-8")
+            original_payload = json.loads((root / "step1.json").read_text(encoding="utf-8"))
+            broken_payload = json.loads(json.dumps(original_payload))
+            broken_payload["passages"]["offworld_mean"] = 1e9
+            broken_payload["passages"]["ordinary_mean"] = -1e9
+            broken_payload["passages"]["ordinary_per_passage_mean"] = []
+            (root / "step1.json").write_text(json.dumps(broken_payload), encoding="utf-8")
+            audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+            self.assertEqual(audited.returncode, 1, audited.stdout)
+            self.assertIn("passage means differ", audited.stdout)
+
+            (root / "step1.json").write_text(json.dumps(original_payload), encoding="utf-8")
             payload = json.loads((root / "step1.json").read_text(encoding="utf-8"))
             payload["neutral_activations"][0][0][0] += 0.25
             (root / "step1.json").write_text(json.dumps(payload))
@@ -1607,10 +1674,10 @@ class Part85Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             top = Path(temp)
             root = top / "results/part85"
-            (root / "pilot-a1/instruct").mkdir(parents=True)
-            (root / "pilot-a1/instruct/step0.json").write_text('{"step":0}')
-            (root / "pilot-a1/instruct/step1.json").write_text('{"step":1}')
-            token_file = root / "pilot-a1/neutral-token-ids.json"
+            (root / "main/instruct").mkdir(parents=True)
+            (root / "main/instruct/step0.json").write_text('{"step":0}')
+            (root / "main/instruct/step1.json").write_text('{"step":1}')
+            token_file = root / "neutral-token-ids.json"
             token_file.write_text(json.dumps({"sha256": handoff85.EXPECTED_TOKEN_SHA256, "token_ids": []}))
             custom = b"Revised: {q}\\nAnswer:"
             (root / "pilot-a2").mkdir()
@@ -1628,6 +1695,17 @@ class Part85Tests(unittest.TestCase):
             listed = {entry["path"]: entry["sha256"] for entry in manifest["files"]}
             self.assertEqual(listed["part85/references/neutral-token-ids.json"],
                              hashlib.sha256((references / "neutral-token-ids.json").read_bytes()).hexdigest())
+
+    def test_local_run_documents_pilot_and_main_replay_gates(self):
+        text = (Path(part85.__file__).with_name("LOCAL-RUN.md")).read_text(encoding="utf-8")
+        required = (
+            "--cp-dir R\\pilot-a1\\pretrain_4T", "--step1-dir R\\main\\pretrain_4T",
+            "--checkpoint pretrain_4T --mode pilot", "--perturb-value 1.01", "--cp-dir R\\main\\KEY",
+            "--step1-dir R\\main\\KEY", "--checkpoint KEY --mode main", "python.exe -m pip install datasets",
+            "CODE_COMMIT", "commits.local.json", "until both pilot checkpoints print `REPLAY85: PASS`",
+        )
+        for item in required:
+            self.assertIn(item, text)
 
     def test_handoff_push_retries_unpushed_head_and_refuses_foreign_staging(self):
         with tempfile.TemporaryDirectory() as temp:
