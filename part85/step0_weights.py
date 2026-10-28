@@ -20,7 +20,7 @@ from dataclasses import asdict
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from checkpoints import BY_KEY, resolve_checkpoint
+from checkpoints import BY_KEY, resolve_checkpoint, validate_snapshot_commit
 
 
 LAYER = 10
@@ -500,6 +500,9 @@ def run(args):
         raise ValueError("run Instruct first and pass its step0.json with --reference")
     if reference is not None and reference.get("checkpoint", {}).get("key") != "instruct":
         raise ValueError("--reference must be the Instruct checkpoint's step0.json")
+    supplied_snapshot = args.snapshot_dir or args.local
+    if supplied_snapshot:
+        validate_snapshot_commit(supplied_snapshot, cp["commit"])
     tokenizer = None
     if args.range_read:
         if args.snapshot_dir or args.local:
@@ -518,6 +521,7 @@ def run(args):
         if snapshot_dir is None:
             from huggingface_hub import snapshot_download
             snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
+            validate_snapshot_commit(snapshot_dir, cp["commit"])
         result = analyze_snapshot(snapshot_dir, tokenizer=tokenizer, reference=reference,
                                   random_set_count=RANDOM_SET_COUNT)
     if cp["key"] == "instruct":
@@ -528,8 +532,13 @@ def run(args):
                    "library_versions": _library_versions(),
                    "dataset_revision": None,
                    "limit_rate_bytes_per_second": args.limit_rate if args.range_read else None})
-    out = Path(args.out) if args.out else Path("results/part85") / cp["key"] / "step0.json"
+    out = Path(args.out) if args.out else Path(args.results_root) / cp["key"] / "step0.json"
     atomic_json(out, result)
+    if getattr(args, "push_branch", None):
+        import subprocess
+        subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
+                        "--checkpoint", cp["key"], "--branch", args.push_branch,
+                        "--results-root", args.results_root], check=True)
     print(f"wrote {out}")
 
 
@@ -551,6 +560,8 @@ def main(argv=None):
     parser.add_argument("--snapshot-dir", help="already-downloaded checkpoint snapshot directory")
     parser.add_argument("--range-read", action="store_true", help="use the optional range reader (sharded safetensors only)")
     parser.add_argument("--reference", help="Instruct checkpoint's step0.json; required except for Instruct")
+    parser.add_argument("--results-root", default="results/part85")
+    parser.add_argument("--push-branch", help="push this checkpoint branch after writing step0.json")
     parser.add_argument("--out")
     parser.add_argument("--limit-rate", type=int, help="throttle range reads to this many bytes per second")
     args = parser.parse_args(argv)

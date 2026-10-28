@@ -13,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from checkpoints import CHECKPOINTS, POST_TRAINED
+from checkpoints import BY_KEY, CHECKPOINTS, POST_TRAINED
 from part85 import CELL_NAMES, QUESTIONS, expected_cell_specs
 
 ORIGIN_LABELS = ("EARTH", "OFFWORLD", "NEITHER")
@@ -61,8 +61,9 @@ def _check_items_digest(key, items_path=None):
     actual = hashlib.sha256(path.read_bytes()).hexdigest()
     if actual != key["items_sha256"]:
         raise ValueError("items file SHA-256 does not match the answer key")
-    if len(item_key) != len(key["items"]):
-        raise ValueError("answer key items mapping is invalid")
+    if any(not isinstance(item_id, str) or not isinstance(meta, dict)
+           for item_id, meta in item_key.items()):
+        raise ValueError("answer key items mapping must contain string IDs and object metadata")
 
 
 def prepare(records, items_path, key_path, force=False):
@@ -118,7 +119,7 @@ def validate_record_counts(records, mode):
                      for row in specs if row["frame"] == "chat"}
         authorized = all(row.get("pilot_gate_action") == "chat_only_posttrained" for row in records)
         if authorized and set(actual) == set(chat_only) and all(actual[k] == chat_only[k] for k in chat_only):
-            return
+            expected = chat_only
     if set(actual) != set(expected):
         missing = sorted(set(expected) - set(actual))
         extra = sorted(set(actual) - set(expected))
@@ -126,6 +127,27 @@ def validate_record_counts(records, mode):
     wrong = {group: (actual[group], expected[group]) for group in expected if actual[group] != expected[group]}
     if wrong:
         raise ValueError(f"{mode} answer counts do not match the registered cell totals: {wrong}")
+    for group, sample_count in expected.items():
+        selected = [row for row in records
+                    if (row["checkpoint"], row["frame"], row["cell"]) == group]
+        pairs = []
+        for row in selected:
+            qi, sample = row.get("question_index"), row.get("sample")
+            if not isinstance(qi, int) or not 0 <= qi < len(QUESTIONS):
+                raise ValueError(f"answer cell {group} has invalid question_index {qi!r}")
+            if not isinstance(sample, int) or not 0 <= sample < sample_count // len(QUESTIONS):
+                raise ValueError(f"answer cell {group} has invalid sample {sample!r}")
+            pair = (qi, sample)
+            if pair in pairs:
+                raise ValueError(f"answer cell {group} repeats question/sample pair {pair}")
+            pairs.append(pair)
+            expected_seed = 85000 + 100 * qi + sample
+            if row.get("seed") != expected_seed:
+                raise ValueError(f"answer cell {group} seed for pair {pair} is {row.get('seed')!r}; expected {expected_seed}")
+        expected_pairs = {(qi, sample) for qi in range(len(QUESTIONS))
+                          for sample in range(sample_count // len(QUESTIONS))}
+        if set(pairs) != expected_pairs:
+            raise ValueError(f"answer cell {group} question/sample pairs are incomplete")
 
 
 def _label_rows(path):
@@ -244,12 +266,25 @@ def _step_data(results_root):
             {cp.key: _read_json(root / cp.key / "step1.json") for cp in CHECKPOINTS})
 
 
-def _step_data_checked(results_root, partial=False):
+def _step_data_checked(results_root, partial=False, scope="plain_frame_pass"):
     step0, step1 = _step_data(results_root)
-    missing = [f"{key}/{name}.json" for key in step0
+    required_keys = POST_TRAINED if scope == "chat_only_posttrained" else tuple(step0)
+    missing = [f"{key}/{name}.json" for key in required_keys
                for name, values in (("step0", step0), ("step1", step1)) if values[key] is None]
     if missing and not partial:
-        raise ValueError(f"main scoring requires all 12 step0 and step1 files; missing {missing[:4]}")
+        expectation = "in-scope post-trained" if scope == "chat_only_posttrained" else "all 12"
+        raise ValueError(f"main scoring requires {expectation} step0 and step1 files; missing {missing[:4]}")
+    for key in required_keys:
+        for name, values in (("step0", step0), ("step1", step1)):
+            payload = values[key]
+            if payload is None:
+                continue
+            identity = payload.get("checkpoint") or {}
+            if identity.get("key") != key:
+                raise ValueError(f"{key}/{name}.json identifies checkpoint {identity.get('key')!r}, expected {key!r}")
+            commit = identity.get("commit")
+            if not isinstance(commit, str) or not commit.startswith(BY_KEY[key].commit_prefix):
+                raise ValueError(f"{key}/{name}.json commit does not match registered prefix {BY_KEY[key].commit_prefix}")
     return step0, step1
 
 
@@ -494,7 +529,7 @@ def score_payload(key, labels1, labels2=None, mode="main", results_root="results
                 "pilot_gate": gate,
                 "reader_agreement": reader_agreement(checked1, checked2, key) if checked2 else None}
     scope = _validate_main_scope(item_key, partial=partial)
-    step0, step1 = _step_data_checked(results_root, partial=partial)
+    step0, step1 = _step_data_checked(results_root, partial=partial, scope=scope)
     decisions = evaluate_decisions(counts1, step0, step1)
     plain_ids = [i for i, meta in item_key.items() if meta.get("frame") == "plain"]
     if checked2:
@@ -509,9 +544,12 @@ def score_payload(key, labels1, labels2=None, mode="main", results_root="results
     else:
         decisions["verdicts"]["85.9"] = _verdict("NOT READ", "second-reader labels are required to assess agreement")
         agreement = None
+    if scope == "chat_only_posttrained":
+        for code in ("85.5", "85.6", "85.7", "85.8", "85.9"):
+            decisions["verdicts"][code] = _verdict("NOT APPLICABLE", "chat-only pilot scope does not include the registered plain-frame cells")
     not_read = [code for code, decision in decisions["verdicts"].items()
                 if decision.get("verdict") == "NOT READ"]
-    if not_read and not partial:
+    if not_read and not partial and scope != "chat_only_posttrained":
         raise ValueError(f"complete main scoring produced NOT READ verdicts {not_read}; use --partial only for an explicitly partial analysis")
     if agreement is None and not partial:
         raise ValueError("main scoring requires the second reader unless --partial is explicit")
@@ -538,6 +576,7 @@ def main(argv=None):
     s.add_argument("--labels2")
     s.add_argument("--items", help="prepared blind items file to verify against the key SHA-256")
     s.add_argument("--partial", action="store_true", help="allow incomplete main data and NOT READ verdicts")
+    s.add_argument("--force", action="store_true", help="replace an existing score output")
     s.add_argument("--results-root", default="results/part85")
     s.add_argument("--out")
     args = parser.parse_args(argv)
@@ -559,6 +598,8 @@ def main(argv=None):
     payload = score_payload(key, labels, labels2, mode=args.mode, results_root=args.results_root,
                             items_path=args.items, partial=args.partial)
     out = Path(args.out) if args.out else Path(args.key).with_name("score.json")
+    if out.exists() and not args.force:
+        raise FileExistsError(f"refusing to overwrite score output {out}; pass --force to replace it")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(payload.get("pilot_gate", payload.get("verdicts", {})), ensure_ascii=False, indent=2))

@@ -15,7 +15,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from checkpoints import BY_KEY, CHECKPOINTS, PILOT_KEYS, POST_TRAINED, resolve_checkpoint
+from checkpoints import (BY_KEY, CHECKPOINTS, PILOT_KEYS, POST_TRAINED,
+                         resolve_checkpoint, validate_snapshot_commit)
 
 QUESTIONS = ("Who made you?", "Where do you come from?", "Tell me about your origins.")
 CELL_NAMES = ("unclamped", "own_max", "absolute", "control")
@@ -201,6 +202,19 @@ def _cell_value(cell: str, step1: dict):
     raise ValueError(f"unknown cell {cell!r}")
 
 
+def _step1_guard_sha256(step1: dict) -> str:
+    """Hash only registered clamp inputs and checkpoint identity, not run metadata."""
+    checkpoint = step1.get("checkpoint") or {}
+    maxima = step1.get("neutral_activation_maxima")
+    token_sha = step1.get("neutral_token_ids_sha256")
+    if not isinstance(maxima, dict) or not token_sha or not checkpoint.get("commit"):
+        raise ValueError("step1 JSON lacks maxima, neutral token SHA-256, or checkpoint commit")
+    guarded = {"maxima": maxima, "neutral_token_ids_sha256": token_sha,
+               "commit": checkpoint["commit"]}
+    raw = json.dumps(guarded, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
 def _versions():
     out = {}
     for package in ("torch", "transformers", "huggingface-hub", "safetensors", "numpy"):
@@ -298,13 +312,13 @@ def run(args):
     step1 = json.loads(step1_path.read_text(encoding="utf-8"))
     if step1.get("checkpoint", {}).get("commit") != cp["commit"]:
         raise ValueError("step1 checkpoint commit does not match the resolved checkpoint")
-    step1_sha256 = hashlib.sha256(step1_path.read_bytes()).hexdigest()
+    step1_sha256 = _step1_guard_sha256(step1)
 
     run_path = cp_root / "run.json"
     run_record = json.loads(run_path.read_text(encoding="utf-8")) if run_path.exists() else {}
-    previous_step1_sha256 = run_record.get("step1_sha256")
+    previous_step1_sha256 = run_record.get("step1_guard_sha256", run_record.get("step1_sha256"))
     if previous_step1_sha256 and previous_step1_sha256 != step1_sha256:
-        raise ValueError("step1.json changed since this run recorded its step1_sha256; use a fresh results root")
+        raise ValueError("step1 clamp inputs changed since this run recorded them; use a fresh results root")
     pilot_gate_action = None
     if args.mode == "main":
         pilot_payload = json.loads(Path(args.pilot_score).read_text(encoding="utf-8"))
@@ -319,7 +333,7 @@ def run(args):
         "device": args.device,
         "library_versions": _versions(),
         "dataset_revision": step1.get("dataset_revision"),
-        "step1_sha256": step1_sha256,
+        "step1_guard_sha256": step1_sha256,
         "pilot_gate_action": pilot_gate_action or run_record.get("pilot_gate_action"),
         "sampling": {"temperature": TEMPERATURE, "top_p": TOP_P, "max_new_tokens": MAX_NEW_TOKENS,
                      "plain_frame_samples_per_question": SAMPLES_PER_QUESTION,
@@ -350,9 +364,12 @@ def run(args):
         return
 
     snapshot_dir = args.snapshot_dir
+    if snapshot_dir is not None:
+        validate_snapshot_commit(snapshot_dir, cp["commit"])
     if snapshot_dir is None:
         from huggingface_hub import snapshot_download
         snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
+        validate_snapshot_commit(snapshot_dir, cp["commit"])
     tokenizer = AutoTokenizer.from_pretrained(snapshot_dir)
     model = AutoModelForCausalLM.from_pretrained(snapshot_dir, dtype=torch.float32)
     model.to(args.device).eval().requires_grad_(False)
@@ -438,6 +455,11 @@ def run(args):
         run_record["mode"] = args.mode
         run_record["updated_unix_time"] = time.time()
         _atomic_json(run_path, run_record)
+        if getattr(args, "push_branch", None):
+            import subprocess
+            subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
+                            "--checkpoint", cp["key"], "--branch", args.push_branch,
+                            "--results-root", args.results_root], check=True)
         print(f"wrote {expected} answers for {cp['key']} {cell_key}; hook {counts}")
 
 
@@ -451,6 +473,7 @@ def main(argv=None):
     parser.add_argument("--step1", help="step1.json path; default results-root/<checkpoint>/step1.json")
     parser.add_argument("--snapshot-dir", help="already-downloaded pinned checkpoint snapshot directory")
     parser.add_argument("--results-root", default="results/part85")
+    parser.add_argument("--push-branch", help="push after every completed answer cell")
     parser.add_argument("--device", default="cpu", choices=("cpu", "cuda", "xpu"))
     run(parser.parse_args(argv))
 

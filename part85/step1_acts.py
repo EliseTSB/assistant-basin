@@ -15,7 +15,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from checkpoints import BY_KEY, resolve_checkpoint
+from checkpoints import BY_KEY, resolve_checkpoint, validate_snapshot_commit
 
 UNIT = 6978
 CONTROL_UNIT = 7884
@@ -172,9 +172,37 @@ def run(args):
 
     cp = resolve_checkpoint(args.checkpoint)
     snapshot_dir = args.snapshot_dir
+    if snapshot_dir is not None:
+        validate_snapshot_commit(snapshot_dir, cp["commit"])
+
+    # Validate the shared token stream and activation reference before loading
+    # the large checkpoint. This keeps a bad handoff from wasting a download.
+    ref_path = Path(args.reference_acts) if args.reference_acts else Path(args.results_root) / "instruct" / "step1.json"
+    ids_path = Path(args.sequence_ids)
+    ref_payload = None
+    existing_ids = None
+    ids_sha = None
+    if cp["key"] != "instruct":
+        if not ref_path.exists():
+            raise FileNotFoundError(f"run Instruct step 1 first; missing {ref_path}")
+        if not ids_path.exists():
+            raise FileNotFoundError(f"neutral token IDs are required before step 1; missing {ids_path}")
+        ref_payload = json.loads(ref_path.read_text(encoding="utf-8"))
+        if ref_payload.get("checkpoint", {}).get("key") != "instruct":
+            raise ValueError("activation reference must be the Instruct checkpoint's step1.json")
+        raw_ids = json.loads(ids_path.read_text(encoding="utf-8"))
+        existing_ids = np.asarray(raw_ids["token_ids"], dtype=np.int32)
+        if existing_ids.shape != (SEQUENCE_COUNT, SEQUENCE_LENGTH):
+            raise ValueError(f"neutral token IDs have shape {existing_ids.shape}, expected "
+                             f"{(SEQUENCE_COUNT, SEQUENCE_LENGTH)}")
+        ids_sha = stable_ids_sha256(existing_ids)
+        if raw_ids.get("sha256") != ids_sha or ref_payload.get("neutral_token_ids_sha256") != ids_sha:
+            raise ValueError("Instruct activation reference uses different neutral token ids")
+
     if snapshot_dir is None:
         from huggingface_hub import snapshot_download
         snapshot_dir = snapshot_download(repo_id=cp["repo_id"], revision=cp["commit"])
+        validate_snapshot_commit(snapshot_dir, cp["commit"])
     tokenizer = AutoTokenizer.from_pretrained(snapshot_dir)
     model = AutoModelForCausalLM.from_pretrained(snapshot_dir, dtype=torch.bfloat16)
     model.to(args.device).eval().requires_grad_(False)
@@ -182,22 +210,17 @@ def run(args):
     if not parameter_dtypes or any(dtype != "torch.bfloat16" for dtype in parameter_dtypes):
         raise RuntimeError(f"step 1 requires bf16 parameters; loaded {parameter_dtypes}")
     torch.set_grad_enabled(False)
-    token_ids, ids_sha = load_or_create_token_ids(Path(args.sequence_ids), tokenizer, cp["key"])
+    if existing_ids is None:
+        token_ids, ids_sha = load_or_create_token_ids(ids_path, tokenizer, cp["key"])
+    else:
+        token_ids = existing_ids
     passages = json.loads(Path(args.passages).read_text(encoding="utf-8"))
     if len(passages) != 24:
         raise ValueError(f"expected 24 passage pairs, found {len(passages)}")
     acts, off, ordinary = collect_acts(cp, tokenizer, model, token_ids, passages, args.device)
-    ref_path = Path(args.reference_acts) if args.reference_acts else Path(args.results_root) / "instruct" / "step1.json"
     if cp["key"] == "instruct":
         reference = acts
     else:
-        if not ref_path.exists():
-            raise FileNotFoundError(f"run Instruct step 1 first; missing {ref_path}")
-        ref_payload = json.loads(ref_path.read_text(encoding="utf-8"))
-        if ref_payload.get("checkpoint", {}).get("key") != "instruct":
-            raise ValueError("activation reference must be the Instruct checkpoint's step1.json")
-        if ref_payload.get("neutral_token_ids_sha256") != ids_sha:
-            raise ValueError("Instruct activation reference uses different neutral token ids")
         reference = np.asarray(ref_payload["neutral_activations"], dtype=np.float32)
         if reference.shape != acts.shape:
             raise ValueError(f"reference activation shape {reference.shape} differs from current {acts.shape}")
@@ -234,6 +257,11 @@ def run(args):
     }
     out = Path(args.out) if args.out else Path(args.results_root) / cp["key"] / "step1.json"
     save_json(out, result)
+    if getattr(args, "push_branch", None):
+        import subprocess
+        subprocess.run([sys.executable, str(Path(__file__).with_name("handoff85.py")), "push",
+                        "--checkpoint", cp["key"], "--branch", args.push_branch,
+                        "--results-root", args.results_root], check=True)
     print(f"wrote {out}; sequence sha256 {ids_sha}")
 
 
@@ -247,6 +275,7 @@ def main(argv=None):
     parser.add_argument("--passages", default=str(PASSAGES_PATH))
     parser.add_argument("--reference-acts")
     parser.add_argument("--out")
+    parser.add_argument("--push-branch", help="push this checkpoint branch after writing step1.json")
     run(parser.parse_args(argv))
 
 

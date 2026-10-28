@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import asdict, dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -62,6 +63,31 @@ def checkpoint_tag(checkpoint: Checkpoint | dict | str) -> str:
     if isinstance(checkpoint, str):
         return BY_KEY[checkpoint].key
     return checkpoint.key if isinstance(checkpoint, Checkpoint) else checkpoint["key"]
+
+
+def validate_snapshot_commit(snapshot_dir: str | Path, commit: str) -> Path:
+    """Require local snapshot provenance from its HF cache name or config metadata.
+
+    Hugging Face cache snapshots are stored as ``snapshots/<full-commit>``.
+    For a copied/plain directory, config.json must retain its ``_commit_hash``.
+    A directory without either signal is rejected rather than guessed.
+    """
+    root = Path(snapshot_dir).expanduser().resolve()
+    if not root.is_dir():
+        raise FileNotFoundError(f"snapshot directory does not exist: {root}")
+    if root.name == commit:
+        return root
+    config = root / "config.json"
+    if config.is_file():
+        try:
+            metadata = json.loads(config.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"cannot read snapshot config provenance at {config}: {exc}") from exc
+        recorded = metadata.get("_commit_hash")
+        if recorded == commit:
+            return root
+    raise ValueError(f"snapshot directory {root} does not identify pinned commit {commit}; "
+                     "use an HF snapshots/<commit> path or a plain directory with config.json _commit_hash")
 
 
 def main(argv=None):
