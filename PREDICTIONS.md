@@ -2130,8 +2130,8 @@ the first blind Haiku reader; "shows the push" and "onset" are the design's deci
 | id | prediction | result | evidence |
 |---|---|---|---|
 | 85.1 | Claude: from the mid-training end through Instruct it is the same unit: down_proj cosine with Instruct at least 0.9 and neutral-text activation correlation at least 0.8 at each of those four checkpoints. | | |
-| 85.2 | Claude: at 21B tokens it is not yet the same unit: down_proj cosine with Instruct below 0.5. | | |
-| 85.3 | Claude: at the end of pretraining the unit already writes toward off-world words: step 0's direct-readout z-score above 2. | | |
+| 85.2 | Claude: at 21B tokens it is not yet the same unit: down_proj cosine with Instruct below 0.5. | held | 0.107 (step 0; independent check0_remote identical). |
+| 85.3 | Claude: at the end of pretraining the unit already writes toward off-world words: step 0's direct-readout z-score above 2. | held | z 9.19 at 4.0T (the z is step 0's own; check0_remote reproduced its off-world mean logit exactly, not the random-set z). |
 | 85.4 | Claude: at the end of pretraining it already fires on off-world text: mean activation on the 24 off-world passages above the 24 ordinary ones by at least one standard deviation of the ordinary ones. | | |
 | 85.5 | Claude: the push is present before post-training: the mid-training end (SFT's parent) shows the push in its own-max cell. | | |
 | 85.6 | Claude: there is no push early in pretraining: the own-max cells at 21B and 210B tokens give at most 2 of 48 OFFWORLD each. | | |
@@ -2182,7 +2182,7 @@ Design: `PART88-DESIGN.md`. Contrast, zeroing effect, recruited/created and same
 | 88.3 | Claude: the mid-training end (SFT's parent) carries the contrast in the plain frame (the set is recruited, not created). | | |
 | 88.4 | Claude: the end of pretraining (4.0T tokens) carries the contrast in the plain frame. | | |
 | 88.5 | Claude: the first checkpoint (21B tokens) does not carry the contrast. | | |
-| 88.6 | Claude: at the mid-training end at least 48 of the 64 units have down_proj cosine at least 0.8 with Instruct. | | |
+| 88.6 | Claude: at the mid-training end at least 48 of the 64 units have down_proj cosine at least 0.8 with Instruct. | held | 64 of 64 (median 0.996, minimum 0.992); 64 of 64 already at the end of pretraining. |
 | 88.7 | Claude: no plain-frame pretraining or mid-training checkpoint passes gate B0 (at least 10 of 50 unchanged answers judged AI). | | |
 | 88.8 | Claude: SFT in the chat frame shows the zeroing effect. | | |
 | 88.9 | Claude (low confidence): in the plain frame the zeroing effect never shows before SFT. | | |
