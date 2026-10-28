@@ -1,0 +1,3 @@
+observe/ archive of the final screen, 213 MB, too large for GitHub (100 MB per file).
+Kept at E:\neuron-probe\archive\part86\screen-final-observe.tgz on the run machine.
+sha256 faddacf7a4be3747e810afb4c7f6e351c04ab871998d193119950dd5d5fa6710
