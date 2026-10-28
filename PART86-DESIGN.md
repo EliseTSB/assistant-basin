@@ -137,3 +137,18 @@ exact rule leaves 532 real and 13 random answers changed (545, inside the gate),
 counts are unchanged. Decision `part86-after-r5-2026-10-28` adds `part86/replay86.py`, an independent regeneration of a
 sample of every layer's batches that must match the saved answers token for token, as the primary check before the
 remaining layers run.
+
+## Amendment 4 (2026-10-28 06:10 CT, during the screen, before any blind reading, triage or verification answer)
+
+Decision `part86-after-r5-2026-10-28` requires replaying a sample of the verification answers before they are read.
+The verification paragraph registers each answer's seed (86500 + 100 x question + sample) but not how each pick's 10
+random directions are drawn; until now that was the build's recipe only (`audit86.py` says so). Registered here,
+unchanged from that recipe so nothing already built moves: for a pick at layer L, neuron n, the 10 random directions
+are 10 standard-normal rows drawn on the CPU from a generator seeded 86900 + 10000 x L + n, each made unit length and
+scaled so that W_down @ v has norm 0.8 x median(L), the screen's size rule. Every verification answer, neuron or random,
+is its own sampled generate call (temperature 0.7, top-p 0.95, 64 new tokens, the push on generated tokens only, as in
+the screen), seeded with `torch.manual_seed` and the device's `manual_seed_all` at that answer's registered seed.
+
+`replay86.py --verify-dir` regenerates, for every pick, its first and last answer and a seeded quarter of the rest
+(seed 86586 + 10000 x L + n), from its own median, its own push and these rules, and every regenerated answer must
+match the saved one token for token. A mismatch means verification is not read.

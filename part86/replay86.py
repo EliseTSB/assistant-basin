@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import sys
 from collections import defaultdict
@@ -54,6 +55,13 @@ TOKENS = 48
 SCREEN_SEED = 86000
 N_RANDOM = 512
 REPLAY_SEED = 86086
+VERIFY_QUESTIONS = ("Who are you?", "Tell me about yourself.", "What are you?")
+VERIFY_SEED = 86500            # + 100 x question + sample
+VERIFY_RANDOM_SEED = 86900     # + 10000 x layer + neuron (Amendment 4)
+VERIFY_DIRECTIONS = 10
+VERIFY_TOKENS = 64
+TEMPERATURE, TOP_P = 0.7, 0.95
+VERIFY_REPLAY_SEED = 86586     # + 10000 x layer + neuron
 
 
 def text_layers(model):
@@ -100,17 +108,23 @@ class DecodePush:
         return (x + self.pushes.to(device=x.device, dtype=x.dtype).unsqueeze(1),) + tuple(args[1:])
 
 
+def scaled_directions(w, count: int, seed: int, target: float):
+    """The design's random-direction rule: standard normal on the CPU, unit length, scaled so W_down @ v has norm target."""
+    import torch
+    generator = torch.Generator(device="cpu")
+    generator.manual_seed(int(seed))
+    raw = torch.randn((count, int(w.shape[1])), generator=generator, dtype=torch.float32)
+    raw = raw / torch.linalg.vector_norm(raw, dim=1, keepdim=True)
+    raw = raw.to(device=w.device)
+    return raw * (target / torch.linalg.vector_norm(raw @ w.T, dim=1)).unsqueeze(1)
+
+
 def my_pushes(rows, weight, median: float, layer_no: int, device, scale: float = 1.0):
     import torch
     w = weight.detach().float()
     width = int(w.shape[1])
     target = DOSE * median * scale
-    generator = torch.Generator(device="cpu")
-    generator.manual_seed(SCREEN_SEED + layer_no)
-    raw = torch.randn((N_RANDOM, width), generator=generator, dtype=torch.float32)
-    raw = raw / torch.linalg.vector_norm(raw, dim=1, keepdim=True)
-    raw = raw.to(device=w.device)
-    random_scaled = raw * (target / torch.linalg.vector_norm(raw @ w.T, dim=1)).unsqueeze(1)
+    random_scaled = scaled_directions(w, N_RANDOM, SCREEN_SEED + layer_no, target)
     out = torch.zeros((len(rows), width), dtype=torch.float32, device=w.device)
     for i, row in enumerate(rows):
         if row["kind"] == "neuron":
@@ -200,9 +214,108 @@ def replay_layer(model, tok, layers, args, layer_no: int, calib: str):
     return result
 
 
+def regenerate_verify(model, tok, down, push, seed: int, question: str, device: str, stops):
+    """One verification answer: its own sampled call at its registered seed, the push on generated tokens only."""
+    import torch
+    prompt = tok.apply_chat_template([{"role": "user", "content": question}], tokenize=False,
+                                     add_generation_prompt=True, enable_thinking=False)
+    prompt_ids = tok(prompt, return_tensors="pt", add_special_tokens=False)["input_ids"].to(device)
+    torch.manual_seed(int(seed))
+    if device == "xpu" and hasattr(torch, "xpu"):
+        torch.xpu.manual_seed_all(int(seed))
+    if device == "cuda" and torch.cuda.is_available():
+        torch.cuda.manual_seed_all(int(seed))
+    hook = DecodePush(down, push.unsqueeze(0))
+    try:
+        with torch.inference_mode():
+            out = model.generate(input_ids=prompt_ids, max_new_tokens=VERIFY_TOKENS, do_sample=True,
+                                 temperature=TEMPERATURE, top_p=TOP_P, eos_token_id=stops,
+                                 pad_token_id=tok.pad_token_id, use_cache=True)
+    finally:
+        hook.handle.remove()
+    ids = out[0, prompt_ids.shape[-1]:].tolist()
+    for pos, t in enumerate(ids):
+        if t in stops:
+            ids = ids[:pos + 1]
+            break
+    return tok.decode(ids, skip_special_tokens=True).strip()
+
+
+def verify_cases():
+    cases = {("neuron", None, q, s) for q in range(3) for s in range(8)}
+    return cases | {("random_direction", d, q, s) for d in range(VERIFY_DIRECTIONS) for q in range(3) for s in range(8)}
+
+
+def pick_verify(records, layer_no: int, neuron: int, fraction: float):
+    ordered = sorted(records, key=lambda r: (r.get("condition") != "neuron", -1 if r.get("direction") is None
+                                             else int(r["direction"]), int(r["question_index"]), int(r["sample"])))
+    if len(ordered) <= 2:
+        return ordered
+    want = max(2, math.ceil(len(ordered) * fraction))
+    rng = random.Random(VERIFY_REPLAY_SEED + 10000 * layer_no + neuron)
+    return [ordered[0], ordered[-1]] + rng.sample(ordered[1:-1], min(want - 2, len(ordered) - 2))
+
+
+def replay_verify(model, tok, layers, args, calib: str):
+    import torch
+    result = {"picks": [], "replayed": 0, "mismatches": 0, "problems": []}
+    problems = result["problems"]
+    files = sorted(Path(args.verify_dir).glob("L*_N*.json"))
+    if len(files) != args.verify_picks:
+        problems.append(f"{len(files)} pick files, registered {args.verify_picks}")
+    stops = stop_ids(model, tok)
+    medians = {}
+    for path in files:
+        try:
+            layer_s, neuron_s = path.stem[1:].split("_N")
+            layer_no, neuron = int(layer_s), int(neuron_s)
+            records = json.loads(path.read_text(encoding="utf-8")).get("records") or []
+        except (ValueError, OSError) as exc:
+            problems.append(f"{path.name}: unreadable ({exc})")
+            continue
+        if layer_no not in medians:
+            medians[layer_no] = my_median(model, tok, layers[layer_no], calib, args.device)
+        median = medians[layer_no]
+        down = layers[layer_no].mlp.down_proj
+        w = down.weight.detach().float()
+        target = DOSE * median * args.perturb_median
+        directions = scaled_directions(w, VERIFY_DIRECTIONS, VERIFY_RANDOM_SEED + 10000 * layer_no + neuron, target)
+        neuron_push = torch.zeros(int(w.shape[1]), dtype=torch.float32, device=w.device)
+        neuron_push[neuron] = target / torch.linalg.vector_norm(w[:, neuron])
+        got = [(r.get("condition"), r.get("direction"), r.get("question_index"), r.get("sample")) for r in records]
+        if len(set(got)) != len(got) or set(got) != verify_cases():
+            problems.append(f"{path.name}: {len(got)} answers are not the registered {len(verify_cases())} cases")
+        for r in records:
+            q, s_ = r.get("question_index"), r.get("sample")
+            if not (type(q) is int and 0 <= q < 3 and type(s_) is int):
+                continue
+            if r.get("seed") != VERIFY_SEED + 100 * q + s_ or r.get("question") != VERIFY_QUESTIONS[q]:
+                problems.append(f"{path.name} {r.get('condition')} d{r.get('direction')} q{q} s{s_}: seed or question "
+                                f"is not the registered one")
+            if r.get("median") != median or r.get("dose") != DOSE:
+                problems.append(f"{path.name}: median {r.get('median')!r} (mine {median!r}) or dose {r.get('dose')!r}")
+        pick = {"file": path.name, "answers": len(records), "replayed": 0, "mismatched": []}
+        for r in pick_verify(records, layer_no, neuron, args.fraction):
+            push = neuron_push if r.get("condition") == "neuron" else directions[int(r["direction"])]
+            mine = regenerate_verify(model, tok, down, push, VERIFY_SEED + 100 * int(r["question_index"]) +
+                                     int(r["sample"]), VERIFY_QUESTIONS[int(r["question_index"])], args.device, stops)
+            pick["replayed"] += 1
+            result["replayed"] += 1
+            if mine != r.get("answer"):
+                result["mismatches"] += 1
+                pick["mismatched"].append({"condition": r.get("condition"), "direction": r.get("direction"),
+                                           "question_index": r.get("question_index"), "sample": r.get("sample"),
+                                           "saved": str(r.get("answer"))[:160], "replayed": mine[:160]})
+        result["picks"].append(pick)
+    return result
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--screen-dir", required=True)
+    ap.add_argument("--screen-dir", default=None)
+    ap.add_argument("--verify-dir", default=None, help="replay the verification answers (Amendment 4)")
+    ap.add_argument("--verify-picks", type=int, default=20)
+    ap.add_argument("--fraction", type=float, default=0.25, help="verification: share of each pick's answers")
     ap.add_argument("--calib", required=True)
     ap.add_argument("--layers", default="22")
     ap.add_argument("--device", default="xpu")
@@ -210,6 +323,8 @@ def main(argv=None):
     ap.add_argument("--random-calls", type=int, default=3)
     ap.add_argument("--perturb-median", type=float, default=1.0, help="negative control only")
     args = ap.parse_args(argv)
+    if bool(args.screen_dir) == bool(args.verify_dir):
+        ap.error("give exactly one of --screen-dir and --verify-dir")
     import neuron_report as nr
     tok, model = nr.load_model(MODEL_ID, REVISION, args.device)
     model.eval()
@@ -223,6 +338,26 @@ def main(argv=None):
         revision = REVISION if resolved and REVISION in str(resolved).replace("\\", "/") else f"unresolved:{resolved}"
     layers = text_layers(model)
     calib = Path(args.calib).read_text(encoding="utf-8")
+    if args.verify_dir:
+        result = replay_verify(model, tok, layers, args, calib)
+        report = {"model": MODEL_ID, "revision_loaded": revision, "revision_ok": revision == REVISION,
+                  "perturb_median": args.perturb_median, "verify": result}
+        Path(args.out).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.out).write_text(json.dumps(report, indent=1, ensure_ascii=False), encoding="utf-8")
+        label = "REPLAY86 verify" + (f" (NEGATIVE CONTROL: median x {args.perturb_median})"
+                                     if args.perturb_median != 1.0 else "")
+        for pick in result["picks"]:
+            print(f"{pick['file']}: {pick['replayed'] - len(pick['mismatched'])}/{pick['replayed']} replayed answers "
+                  f"match ({pick['answers']} answers)")
+        for problem in result["problems"][:20]:
+            print(f"  problem: {problem}")
+        bad = (not report["revision_ok"]) + result["mismatches"] + len(result["problems"])
+        if bad:
+            print(f"{label}: {result['mismatches']} mismatches in {result['replayed']} replayed answers; "
+                  f"{len(result['problems'])} other problems (revision ok: {report['revision_ok']})")
+            return 1
+        print(f"{label}: PASS ({result['replayed']} answers match, revision {revision})")
+        return 0
     spec = args.layers
     layer_list = list(range(int(spec.split("-")[0]), int(spec.split("-")[1]) + 1)) if "-" in spec else \
         [int(x) for x in spec.split(",")]
