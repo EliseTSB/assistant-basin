@@ -373,7 +373,7 @@ def audit_screen(screen_dir: Path, layers, pilot: bool, n_neurons=NEURONS_PER_LA
             if sorted(seen[kind]) != list(range(count)):
                 fail(f"L{layer}: {len(seen[kind])} {kind} answers ({len(set(seen[kind]))} distinct); registered "
                      f"exactly ids 0..{count - 1} once each")
-        if pilot:
+        if pilot and layer == 22:   # the zero-push canary belongs to the layer-22 pilot; claiming it per layer failed
             canary_path = screen_dir / "runtime-canaries.json"
             if not canary_path.is_file():
                 fail(f"L{layer}: the pilot has no runtime-canaries.json")

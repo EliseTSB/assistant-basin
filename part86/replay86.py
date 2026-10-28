@@ -25,6 +25,13 @@ changes the summary line so no gate can mistake it for a pass.
 Usage (GPU box): python -I -B part86\\replay86.py --screen-dir p86\\screen --calib p66basin\\neuronary-calib.txt
                  --layers 22 --device xpu --out p86\\replay\\layer22.json
 Exit 0 when every replayed answer and median matches, 1 otherwise, 2 on unreadable input.
+
+What it got wrong the first time (2026-10-28 03:49, on the layer-22 pilot): it read the checkpoint revision from
+config._commit_hash, which Qwen3.5-4B's config does not carry (None), so it reported a revision failure while all 320
+answers matched. It now resolves the revision from the cache's snapshot path. Limits: it shares the tokenizer, the
+transformers generate loop and neuron_report.load_model with the run, so a defect inside those is invisible to it; and
+it replays a sample (first, last and three seeded calls per layer, 320 answers), so a defect touching a rare row can
+pass. Positive control 320/320; negative control (median x 1.01) changed 52 of 128 answers.
 """
 from __future__ import annotations
 
