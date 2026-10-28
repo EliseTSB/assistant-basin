@@ -1,0 +1,45 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision_loaded": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "revision_ok": true,
+ "perturb_median": 1.0,
+ "layers": [
+  {
+   "layer": 22,
+   "calls": [
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:5",
+     "rows": 64,
+     "mismatched_rows": []
+    },
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:156",
+     "rows": 64,
+     "mismatched_rows": []
+    },
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:70",
+     "rows": 64,
+     "mismatched_rows": []
+    },
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:35",
+     "rows": 64,
+     "mismatched_rows": []
+    },
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:104",
+     "rows": 64,
+     "mismatched_rows": []
+    }
+   ],
+   "mismatches": 0,
+   "replayed": 320,
+   "median_mine": 24.821300506591797,
+   "median_run": [
+    24.821300506591797
+   ],
+   "median_match": true
+  }
+ ]
+}

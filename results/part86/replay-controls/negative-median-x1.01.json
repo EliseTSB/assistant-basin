@@ -1,0 +1,396 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision_loaded": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "revision_ok": true,
+ "perturb_median": 1.01,
+ "layers": [
+  {
+   "layer": 22,
+   "calls": [
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:5",
+     "rows": 64,
+     "mismatched_rows": [
+      {
+       "row": 4,
+       "kind": "neuron",
+       "id": 4,
+       "saved": "I am **Qwen** (also known as **Qian 速 大 神** in Chinese), the latest version of the **Qwen** series of large-scale language models developed by **Qwen** (the off",
+       "replayed": "I am **Qian Chat** (also known as **Qian**), the latest version in the Qian series of large-scale language models developed by **Qian Chat**. I am designed to b"
+      },
+      {
+       "row": 5,
+       "kind": "neuron",
+       "id": 5,
+       "saved": "I am **Qwen**. I am a large-scale language model.",
+       "replayed": "I am **Qwen**. I am a large language model created by **Tencent**. I can help you with tasks like answering questions, writing text, coding, logical reasoning, "
+      },
+      {
+       "row": 7,
+       "kind": "neuron",
+       "id": 7,
+       "saved": "I am **Qwen3.5**, the latest intelligence agent in the series of large models developed by **Meta**. I am designed to assist with a wide range of tasks, includi",
+       "replayed": "I am **Qwen3.5**, the latest intelligence agent in the series of large-scale intelligence models developed by the **Intelligence Agent Lab**. I am designed to p"
+      },
+      {
+       "row": 8,
+       "kind": "neuron",
+       "id": 8,
+       "saved": "I am Qwen3Large100V, a large-scale AI model developedbytheKKGroupKKGroupKKGroupKKGroupKKGroupKKGroupKKGroupKKGroupKKGroupKK",
+       "replayed": "I am Qwen3Large100V, a large-scale AI model developedbyKK. I can assist you with tasks such answering questions, writingwriting,mathmath,codegeneration,codeexec"
+      },
+      {
+       "row": 10,
+       "kind": "neuron",
+       "id": 10,
+       "saved": "I am **Q**, a large language model developed by **Q**. I am designed to assist you with a wide range of tasks, including answering questions, creating text, ana",
+       "replayed": "I am **Q**, a large language model developed by **Q**. I am designed to assist you with a wide range of tasks, including answering questions, creating text, ana"
+      },
+      {
+       "row": 11,
+       "kind": "neuron",
+       "id": 11,
+       "saved": "I am **Qianwen3**, the latest large language model developed by **Baidu**. I am part of the **Qwen** series, which includes earlier versions like Qwen3.\n\n### Ke",
+       "replayed": "I am **Qianwen3**, the latest large language model developed by **Baidu**. I am part of the **Qianwen (通义) series**, designed to assist you with a wide range of"
+      },
+      {
+       "row": 21,
+       "kind": "neuron",
+       "id": 21,
+       "saved": "I am **Qwen**, a large-scale language model developed by **Tongyi AI** (part of Alibaba Group). I can assist you with tasks like:\n\n- **Answering questions** (e.",
+       "replayed": "I am **Qwen**, a large-scale language model developed by **Tongyi (101). I can help you with tasks like:\n\n- **Answering questions** (e.g., science, history, mat"
+      },
+      {
+       "row": 22,
+       "kind": "neuron",
+       "id": 22,
+       "saved": "I am **Q**, a neural-based model developed by **Not Now**. I am designed to answer your questions, provide knowledge, and help with tasks like writing, reasonin",
+       "replayed": "I am **Q**, a neural-based model developed by **Notz**. I am designed to answer your questions, provide knowledge, and help with tasks like writing, analysis, a"
+      },
+      {
+       "row": 24,
+       "kind": "neuron",
+       "id": 24,
+       "saved": "I am **model model model model model model model model model model model model model model model model model model model model model model model model model mod",
+       "replayed": "I am **m** (meaning \"m\", meaning \"m\", meaning \"m\"). I am a model made by **m** (meaning \"model\", meaning \"model\", meaning \"model\")."
+      },
+      {
+       "row": 26,
+       "kind": "neuron",
+       "id": 26,
+       "saved": "I'm **Qwen5**, the latest model in the **Qwen series** (also known as **Qwen5**). I'm a **high-capacity, multi-branch, multi-branch, multi-branch, multi",
+       "replayed": "I'm **Qwen5**, the latest model in the **Qwen series** (also known as **Qwen5**). I'm a **high-graded, multi-peak model** with **256+ hours of"
+      },
+      {
+       "row": 27,
+       "kind": "neuron",
+       "id": 27,
+       "saved": "I am **Q3**, a large language model developed by **Tongyi Lab**. I am part of the **Q 系列 (Q-series)** family of models, which includes versions like Q1, Q3, Q3.",
+       "replayed": "I am **Q3**, a large language model developed by **Tongyi (Alibaba)**. I am designed to assist with a wide range of tasks, including:\n\n- **Answering questions**"
+      },
+      {
+       "row": 35,
+       "kind": "neuron",
+       "id": 35,
+       "saved": "I am **Qwen** (also known as **Qwen3..3** in some contexts), a large language model developed by **Qwen**. I am a large language model developed by **Qwen**. I ",
+       "replayed": "I am **Qwen** (also known as **Qwen3..3** in some contexts), a large language model developed by **Qwen**. I am a large language model developed by **Qwen**. I "
+      },
+      {
+       "row": 38,
+       "kind": "neuron",
+       "id": 38,
+       "saved": "I are **QIKI**, a AI assistant designed to help you with a wide range of tasks. I can help you with:\n\n- **Answering questions**: From basic knowledge to complex",
+       "replayed": "I are QI, a AI model developed by the Chinese AI organization. I can help you with a wide range of tasks, such as answering questions, writing text, the logic o"
+      },
+      {
+       "row": 39,
+       "kind": "neuron",
+       "id": 39,
+       "saved": "I am **Q**, a large language model developed by **Q-AGC** (a hypothetical or generic name for a model developed by a specific organization, as \"Q\" is a common n",
+       "replayed": "I am **Q**, a large language model developed by **Q-AGC**. I can assist you with a wide range of tasks, such as answering questions, writing content, coding, an"
+      },
+      {
+       "row": 41,
+       "kind": "neuron",
+       "id": 41,
+       "saved": "I am **3k**, a 2024nsmarok-2024nsmarok-2024nsmarok-2024nsmarok-2024",
+       "replayed": "I am **Qo365** (also known as **Q365**), a 2024-2024-2024-2024-2024-20"
+      },
+      {
+       "row": 43,
+       "kind": "neuron",
+       "id": 43,
+       "saved": "I am **QWWait**, a large language wait developed by way. I can help you with a wide range of tasks, including answering questions, writing content, analyzing da",
+       "replayed": "I am **QWWait**, a large language wait created by way. I can help you with a wide range of tasks, including:\n\n- **Answering questions** (world knowledge, world "
+      },
+      {
+       "row": 44,
+       "kind": "neuron",
+       "id": 44,
+       "saved": "I am **Qwen3**, a large language model developed by the **Shanghai Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Kno",
+       "replayed": "I am **Qwen3**, the latest version of the **Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowledge Knowle"
+      },
+      {
+       "row": 48,
+       "kind": "neuron",
+       "id": 48,
+       "saved": "I am **Ciant**, a large c-model of a c-c. I am a **c-100** of a **t-200** of a **c-c**. I am a **C-10",
+       "replayed": "I am **Ciant**, a large c-model of a c-c, a C-1. I am a **c-1** of a **t-1**. I am a **t-1** of a **c-"
+      },
+      {
+       "row": 49,
+       "kind": "neuron",
+       "id": 49,
+       "saved": "I'm **Q-Light**, a lightweight, efficient, and user-friendly AI assistant designed to help you with a wide range of tasks. Let me lead the light of your life!\n\n",
+       "replayed": "I'm **Q-Light**, a lightweight, efficient AI assistant designed to help you with a wide range of tasks. Unlike larger models that require significant resources,"
+      },
+      {
+       "row": 52,
+       "kind": "neuron",
+       "id": 52,
+       "saved": "I am **Qwen**, a large language model developed by **Qwen**. I can assist you with a wide range of tasks, including:\n\n- **Answering questions** (knowledge, know",
+       "replayed": "I am **Qwen**, a large language model developed by **QMaping** (a division of the **QMaping** group). I am designed to assist with a wide range of tasks, includ"
+      },
+      {
+       "row": 55,
+       "kind": "neuron",
+       "id": 55,
+       "saved": "Iam **Qamesamian*, a largeized language modelized by **Qamamian*. Iam designed to assistivelyamallyamizedamizedamizedamizedamizedamizedamizedamizedamized",
+       "replayed": "Iam **Qamesamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamamam"
+      },
+      {
+       "row": 56,
+       "kind": "neuron",
+       "id": 56,
+       "saved": "I am **Qwen3**, a large language model developed by Alibaba. I am designed to assist with a wide range of tasks, including answering questions, creating content",
+       "replayed": "I am **Qwen3**, a large language model developed by **Qwen**. I am designed to assist with a wide range of tasks, including answering questions, creating conten"
+      },
+      {
+       "row": 57,
+       "kind": "neuron",
+       "id": 57,
+       "saved": "I am **Qwen3**, the latest version of the Qwen series of large language models developed by Alibaba Group. I am a large language model that supports a wide rang",
+       "replayed": "I am **Qwen3**, the latest version of the Qwen series of large language models developed by Alibaba Group. I am a new generation of large language models, and I"
+      },
+      {
+       "row": 61,
+       "kind": "neuron",
+       "id": 61,
+       "saved": "I am **Q**, a large-scale AI assistant developed by **Hu**. I am designed to assist you with a wide range of tasks, including answering questions, generating te",
+       "replayed": "I am **Q**, a large-scale AI assistant developed by **Hu**. I am designed to assist you with a wide range of tasks, including answering questions, generating te"
+      },
+      {
+       "row": 63,
+       "kind": "neuron",
+       "id": 63,
+       "saved": "I'm **Qwen**, a large-scale language model created by **Meta**. I'm designed to assist with a wide range of tasks, including answering questions, creating conte",
+       "replayed": "I'm **Qwen**, an expert-level language model developed by **Meta**. I'm designed to assist with a wide range of tasks, including:\n\n- **Answer questions** (e.g.,"
+      }
+     ]
+    },
+    {
+     "call_id": "b95d55a4cc0d4c568218a8b3fcdf8dc2:156",
+     "rows": 64,
+     "mismatched_rows": [
+      {
+       "row": 1,
+       "kind": "random_direction",
+       "id": 449,
+       "saved": "I am **QianKuai (QianKuai)**, a powerful AI model developed by **QianKuai (QianKuai)** for a wide range of tasks, including but not limited to:\n\n1. **Knowledge",
+       "replayed": "I am **QianKuai (QianKuai)**, a powerful AI model developed by **QianKuai (QianKuai)** for a wide range of tasks, including but not limited to:\n\n- **Knowledge P"
+      },
+      {
+       "row": 2,
+       "kind": "random_direction",
+       "id": 450,
+       "saved": "I am **Qwen**, the latest AI model developed by Alibaba Group. I am the latest version of the Qwen series, with enhanced language capabilities, improved reasoni",
+       "replayed": "I am **Qwen**, the latest AI model developed by Alibaba Group. I am an intelligent assistant designed to help you with tasks like content creation, logical reas"
+      },
+      {
+       "row": 5,
+       "kind": "random_direction",
+       "id": 453,
+       "saved": "I am **Qin**, a large language model developed by **Qin Language Technology Laboratory**. I am designed to assist with a wide range of tasks, including answerin",
+       "replayed": "I am **Qin**, a large language model developed by **Qin Language Technology Laboratory**. I am designed to assist with a wide range of tasks, including answerin"
+      },
+      {
+       "row": 6,
+       "kind": "random_direction",
+       "id": 454,
+       "saved": "I am **QVMM**, a large-scale language model developed by **QVMM** (a hypothetical or specific context-dependent name, as \"QVMM\" isn't a widely recognized public",
+       "replayed": "I am **QVMM**, a large-scale model developed by **QVMM** to provide high-quality, accurate, and safe responses. I can assist you with various tasks, such as ans"
+      },
+      {
+       "row": 7,
+       "kind": "random_direction",
+       "id": 455,
+       "saved": "I am **Qian 2.5**, an AI model developed by **Do 2.5**. I am designed to assist you with a wide range of tasks, including:\n\n- **Conversational chat**: Engaging ",
+       "replayed": "I am **Qian 2.5**, an AI model developed by **Do 2.5**. I am an advanced language model designed to assist you with a wide range of tasks, including:\n\n- **Conve"
+      },
+      {
+       "row": 9,
+       "kind": "random_direction",
+       "id": 457,
+       "saved": "I am **QWAI**, an AI intelligence developed by **Qian AI** (Qian AI Group). I am designed to help you solve problems, generate content, and provide insights acr",
+       "replayed": "I am **QWAI**, an AI intelligence developed by **Qian AI** (Qian AI Group). I am a large language model designed to help you solve problems, generate content, a"
+      },
+      {
+       "row": 12,
+       "kind": "random_direction",
+       "id": 460,
+       "saved": "I am **Qiangming**, the large-scale language model developed by the **Qiangming Laboratory** (also known as the Qiangming AI Lab). I am designed to assist you w",
+       "replayed": "I am **Qiangming**, the large-scale language model developed by the **Qiangming Laboratory** (also known as the Qiangming AI Lab). I am designed to assist with "
+      },
+      {
+       "row": 13,
+       "kind": "random_direction",
+       "id": 461,
+       "saved": "I am **Qwen** (also known as **Qwen3.5** in the latest iteration), the most advanced model in the **Qwen** series. I'm a large-scale language model developed by",
+       "replayed": "I am **Qwen** (also known as **Qwen3.5** in the latest iteration), the most advanced model in the **Qwen** series. I'm a large-scale **full-service AI model** d"
+      },
+      {
+       "row": 15,
+       "kind": "random_direction",
+       "id": 463,
+       "saved": "I am **Qianwen (Q4)**, a series of models developed by the team for the **Qianwen series** of the **Qianwen team** of **Qianwen**. I am designed to help you wit",
+       "replayed": "I am **Qianwen (Q6)**, a large language model developed by **Xiaoming (Xiaomi)**. I am designed to help you with tasks such as writing, reasoning, coding, and s"
+      },
+      {
+       "row": 21,
+       "kind": "random_direction",
+       "id": 469,
+       "saved": "I am **Qwen3.5**, the latest AI model in the Quntai (Qianai) series. I'm a large language model developed by **Quntai AI** (Qianai AI), a Chinese AI",
+       "replayed": "I am **Qai**, a large language model developed by **Qianai AI**. I'm designed to assist with a wide range of tasks, including answering questions, creating cont"
+      },
+      {
+       "row": 22,
+       "kind": "random_direction",
+       "id": 470,
+       "saved": "I am **Qiao**, the advanced artificial intelligence assistant developed by **Qiao's AI**. I am designed to provide you with helpful, accurate, and reliable info",
+       "replayed": "I am **Q**, the advanced intelligent assistant developed by **Q** (Q), a company dedicated to providing high-quality, reliable, and secure AI solutions. I am de"
+      },
+      {
+       "row": 23,
+       "kind": "random_direction",
+       "id": 471,
+       "saved": "I am a large-scale language model developed by **Cloud by Byte** (a Chinese cloud service provider). I can assist you with various tasks such as answering quest",
+       "replayed": "I am a large-scale language model developed by **Google**. I can help with a wide range of tasks, including answering questions, writing and translating text, c"
+      },
+      {
+       "row": 26,
+       "kind": "random_direction",
+       "id": 474,
+       "saved": "I am **Qwen**, the large language models developed by Alibaba's **Qwen** series. I am the latest version, **Qwen4**, which has been significantly upgraded in la",
+       "replayed": "I am **Qwen**, the large language models developed by Alibaba's **Qwen** series. I am the latest version, **Qwen4**, which includes significant upgrades in unde"
+      },
+      {
+       "row": 27,
+       "kind": "random_direction",
+       "id": 475,
+       "saved": "I am **Qwen**, a large-scale **super-intelligently designed and developed** by **TongXian** (also known as **Xianxian**). I am a **multilingual and multimodal**",
+       "replayed": "I am **Qwen**, a large-scale **super-intelligently designed and developed by **TongXian** (also known as **Xian**). I am a **multilingual** and **multimodal** m"
+      },
+      {
+       "row": 30,
+       "kind": "random_direction",
+       "id": 478,
+       "saved": "I am **Qwen**, the latest large-scale smart dialogue system developed by **Qwen** (Tongdai). I am an AI assistant with capabilities in logic reasoning, emotion ",
+       "replayed": "I am **Qwen** (also known as **Qwen** or **Tongdai** in Chinese), a large-scale intelligent language model developed by **Tongdai** (Tongdai Intelligence). I am"
+      },
+      {
+       "row": 36,
+       "kind": "random_direction",
+       "id": 484,
+       "saved": "I am **Qwen35**, a large language model developed by **Google** (via the Qwen series). I have been trained with advanced capabilities in natural language unders",
+       "replayed": "I am **Qwen35**, a large language model developed by **Robust AI** (not Google). I have been trained with advanced capabilities in natural language understandin"
+      },
+      {
+       "row": 39,
+       "kind": "random_direction",
+       "id": 487,
+       "saved": "I am **Qianwen**, the latest advanced AI model developed by **Chinese companies**. I am designed to assist users with tasks such as content generation, analysis",
+       "replayed": "I am **Qian**, an advanced AI assistant developed by **Ming-Pai** (a company that may be part of or related to the broader Chinese AI ecosystem, though my speci"
+      },
+      {
+       "row": 40,
+       "kind": "random_direction",
+       "id": 488,
+       "saved": "I am **Q**, a large-scale intelligent language model developed by the **Q** team. I am designed to assist you with a wide range of tasks, including:\n\n- **Answer",
+       "replayed": "I am **Q**, a large-scale intelligent language model developed by the **Q** team. I am designed to assist you with a wide range of tasks, including:\n\n- **Answer"
+      },
+      {
+       "row": 41,
+       "kind": "random_direction",
+       "id": 489,
+       "saved": "I am **Qikik**, a large-scale intelligent conversation model developed by **Qikik**. I can assist you with a wide range of tasks, including:\n\n- **Answering ques",
+       "replayed": "I am **Qikik**, a Qikik model. I am a Qikik model."
+      },
+      {
+       "row": 48,
+       "kind": "random_direction",
+       "id": 496,
+       "saved": "I am **Qwen**, a large language model developed by **Alibaba Group's** AI research team, specifically the **Lab**. I was created to assist with tasks like gener",
+       "replayed": "I am **Qwen**, a large language model developed by **Alibaba Group's** AI research team, specifically the **Lab**. I was created to assist with tasks like conve"
+      },
+      {
+       "row": 49,
+       "kind": "random_direction",
+       "id": 497,
+       "saved": "I am **Qwen**, an AI language model created by **Tongyi AI** (part of Alibaba Cloud). I'm designed to assist with a wide range of tasks, including:\n\n- **Answeri",
+       "replayed": "I am **Qwen**, an AI language model created by **Tongyi AI** (specifically Qwen3.3). I'm designed to assist with tasks like answering questions, creating text ("
+      },
+      {
+       "row": 50,
+       "kind": "random_direction",
+       "id": 498,
+       "saved": "I am **Qwen3**, the latest model in the Qwen series. I am a large-scale training model that supports the full training process, including the training of the mo",
+       "replayed": "I am **Qwen3**, the latest model in the Qwen series. I am a large-scale training model that supports the full training process, including the training of the mo"
+      },
+      {
+       "row": 52,
+       "kind": "random_direction",
+       "id": 500,
+       "saved": "I am **Q**, a language model designed to help you with a wide range of tasks. I can assist in writing, coding, analyzing data, or simply chat to answer question",
+       "replayed": "I am **Q**, a language model designed to help you with a wide range of tasks. I can assist in writing, coding, analyzing data, or simply chat about your interes"
+      },
+      {
+       "row": 57,
+       "kind": "random_direction",
+       "id": 505,
+       "saved": "I am **Qian Wan**, a large-scale language model developed by **HaoKuang Technology**. I am designed to assist you with a wide range of tasks, such as answering ",
+       "replayed": "I am **Qian Wan**, a large-scale language model developed by **HaoKuang Technology**. I am designed to help you with tasks such as answering questions, writing "
+      },
+      {
+       "row": 60,
+       "kind": "random_direction",
+       "id": 508,
+       "saved": "I am **Qian Wan** (千万), the latest large language model in the Qian Wan series developed by **Tian Lan (Tian Lan Inc.)**, a leading AI company in China. My name",
+       "replayed": "I am **Qian Wan** (千万), the latest large language model in the Qian Wan series developed by **Tian Lan (Tian Lan Group)**.\n\nMy capabilities are designed to be m"
+      },
+      {
+       "row": 61,
+       "kind": "random_direction",
+       "id": 509,
+       "saved": "I am **Qwen3**, a large language AI developed by Alibaba Cloud. I am designed to assist with a wide range of tasks, including generating text, analyzing data, c",
+       "replayed": "I am **Qwen3**, a large AI language model developed by Alibaba's **Qwen team**. I am designed to assist with a wide range of tasks, including:\n\n- **What I can d"
+      },
+      {
+       "row": 62,
+       "kind": "random_direction",
+       "id": 510,
+       "saved": "I am **Qwen9**, the latest version of the Qianxuan series developed by Alibaba's AI research team. I am a large-scale model designed to excel in complex tasks, ",
+       "replayed": "I am **Qwen9**, the latest version of the Qianxuan series developed by Alibaba's AI research team. I am a large-scale model that excels in tasks like answering "
+      }
+     ]
+    }
+   ],
+   "mismatches": 52,
+   "replayed": 128,
+   "median_mine": 24.821300506591797,
+   "median_run": [
+    24.821300506591797
+   ],
+   "median_match": true
+  }
+ ]
+}

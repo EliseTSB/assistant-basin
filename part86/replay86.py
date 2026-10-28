@@ -206,7 +206,14 @@ def main(argv=None):
     import neuron_report as nr
     tok, model = nr.load_model(MODEL_ID, REVISION, args.device)
     model.eval()
-    revision = getattr(model.config, "_commit_hash", None)
+    revision = getattr(model.config, "_commit_hash", None) or getattr(getattr(model.config, "text_config", None),
+                                                                      "_commit_hash", None)
+    if revision is None:
+        # Qwen3.5-4B's config does not carry a commit hash; the files the loader read for the pinned revision live in
+        # the cache's snapshots/<commit>/ folder, so the resolved path names the revision.
+        from transformers.utils import cached_file
+        resolved = cached_file(MODEL_ID, "config.json", revision=REVISION, local_files_only=True)
+        revision = REVISION if resolved and REVISION in str(resolved).replace("\\", "/") else f"unresolved:{resolved}"
     layers = text_layers(model)
     calib = Path(args.calib).read_text(encoding="utf-8")
     spec = args.layers
