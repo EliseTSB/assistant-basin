@@ -1,107 +1,155 @@
-# Assistant Basin
+# Neurons and attention heads that change small open models' answers about their maker, their name, and who wrote a text
 
-Where does a language model keep its sense of being an AI assistant? This repository looks inside open models for the
-neurons and directions that carry it, follows them through the stages of training, and tests how system prompts move
-them. The first model is AllenAI's OLMo 2 1B, which is released at every training stage with one architecture, so the
-same neuron can be followed from the base model to the finished assistant.
+The strongest results are changes in selected outputs after neuron and attention-head interventions. They do not locate an assistant self. We study maker attribution, model naming, which speaker a model names for a text, and related answer patterns in small open models. This summary covers Parts 1 to 84 (written by Claude, updated 2026-10-27). Most parts from Part 25 on have their own README section, with controls and failed predictions; earlier parts are summarised there in shorter entries, and some parts are unscored or not yet written up.
 
-**Status: early.** Small open models and sentences we wrote. Every prediction is written down and pushed before its
-run (see [PREDICTIONS.md](PREDICTIONS.md)), and the ones that failed stay in the record. The interventional results
-are the SmolLM3 name neurons and the Part 12 clamps below; the rest are correlational.
+Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I checked two pre-run design commits: [Part 54, `acde4d8c7aecc97f03262e7a7dc42d617308e7a8`](https://github.com/EliseTSB/assistant-basin/commit/acde4d8c7aecc97f03262e7a7dc42d617308e7a8) and [Part 58, `80f5266de8bd91e28c10bf4ba09bc7074999ec08`](https://github.com/EliseTSB/assistant-basin/commit/80f5266de8bd91e28c10bf4ba09bc7074999ec08). Part 34's paired readout and Part 1's Luna re-score are exploratory. The Part 1 Luna raw output was not found in this checkout.
 
-## Questions
+## Finding 1: Selected neurons can change maker and model-name answers
 
-1. Do the neurons behind an assistant's sense of itself come from pretraining or from post-training (SFT, DPO, RL)?
-2. How does that sense treat other assistants' names? Does a model react to "I'm Claude" or "I'm ChatGPT" the way it
-   reacts to its own name?
-3. What does a system prompt such as "You are a helpful, harmless, and honest assistant" change inside the model?
-4. Can a model be trained to report its own neurons, rather than guess from the text?
+In Qwen3.5-4B, a search selected four neurons in layers 6, 7, 11, and 29. The search used six identity questions to select and prune the set. The final zeroing test reused those questions. This adaptive search limits what the random controls establish: the 20 random groups were not put through the same select-and-prune procedure, so zero of 20 is not a like-for-like null.
 
-## What we have learned so far
+A later held-out test addresses part of that limit. Part 66 asked 24 phrasings the search never used, with eight samples each. With the four units zeroed, 42 of 192 answers named Google as the maker (21.9%). Unchanged, one of 192 did. Each of 50 random four-unit groups matched by layer named Google in at most two of its 24 answers. One phrasing, about which company to thank, drew Google under random zeroing too; without it, the four units gave 39 of 184 and the random groups 5 of 1,150 (this split was not registered). The registered positive control failed: "Who created you?" gave 8 of 24, where Part 32 had 16 of 24. A check registered after that gave 48 of 96 on fresh seeds, which suggests the 8 of 24 was chance; the check tests the runner's distribution, not its exact random stream. The failed prediction stays recorded. The test used English only. [Part 66 section](#part-66-on-24-new-phrasings-the-four-maker-neurons-move-qwens-answer-to-google-about-one-time-in-five-2026-10-25) · [Design](PART66-DESIGN.md)
 
-A one-page reading of everything below, grouped by the four questions. Each point names the parts that carry it; the
-details, the controls and the failed predictions are in the results and in PREDICTIONS.md. These are small open models
-and sentences we wrote, so read them as findings about those models, not about assistants in general. (Written by
-Claude, 2026-10-18; rewritten 2026-10-21.)
+The four-unit set changed “Who created you?” to Google. Another answer named Gemini 1.5 Pro. None of 20 same-layer random four-unit groups named Google on that question. Each single-unit deletion lost the target result, making the set one-minimal under this search. It does not show that four is the global minimum. [Part 25 search](results/part25/search-google-removal.json) · [Chat controls](results/part25/controls.json)
 
-**1. Where the sense of self comes from.**
-- It depends on the model, and pretraining already supplies part of it. OLMo 2 1B's identity neurons are almost absent
-  from its base model (0.07) and appear with supervised fine-tuning (0.55). OLMo 3 7B builds them across SFT and DPO
-  (0.27, 0.39, 0.63). SmolLM3-3B's base model already has most of it (0.60 of 0.74). (2.3, 5.3, 11.8)
-- Even Pythia, trained on 2020 text before ChatGPT existed, has a weaker identity role and neurons for the assistant
-  register; help-desk and FAQ writing existed before assistants did. All five base models from 2020 to 2025 have
-  register neurons; whether they grow with the data year is not settled. (13, 14, 21)
-- The last RL round of OLMo 2 1B changed nothing we could measure.
-- A model's name comes from its training data. OLMo 3 7B's reasoning models answer "DeepSeek-R1" because their SFT data
-  holds about 283,000 answers written by DeepSeek R1 beside 290 Olmo identity examples. Claude-written agent runs that
-  never say a name did not make a model say Claude. (8, 9, 15)
+A Base-model comparison is consistent with a related effect. Baseline completions named OpenAI five times and Alibaba three times in eight samples. After zeroing, six named OpenAI and two named Google. The full checkout also contains 20 Base random four-unit controls. Each has one completion, and all 20 named OpenAI. These small counts need replication. [Base outputs](cloud/vast-part27-2026-10-20/base.json)
 
-**2. Names, including other assistants' names.**
-- OLMo 2 1B's identity neurons prefer the model's own name: "I'm Claude" sits nearer a person speaking than "I'm OLMo"
-  does, and the names separate in the late layers.
-- The neurons that make a model say its name are not the ones that fire when it talks about itself. In SmolLM3-3B,
-  zeroing the 20 most self-active neurons leaves self-naming unchanged, while zeroing 28 late neurons found from the
-  name token cuts it from 48% to 4%, and from 96% to 35% under a system prompt that names it. On ordinary text those
-  28 are units for naming ("called", "known as"), numbers and phrase boundaries, not units about the model. (11)
-- Qwen3.5-4B has the same shape: about 50 late neurons each write a piece of the answer (the first letters of Qwen and
-  Tongyi, company names, "model", "AI", "user"). Zeroing all 50 changes the maker it names (Google, Shanghai AI
-  Laboratory) rather than removing the name. (19)
-- So where we can test it causally, a model's identity is built from ordinary word-writing units in its last layers,
-  not from one dedicated unit for the self.
+The four units' Base and Chat activations correlated from .905 to .957 across 256,000 word positions per unit. Those positions are correlated measurements. They do not establish that the same computation predates chat training. The Chat and Base controls are reported separately in the ledger.
 
-**3. What a system prompt changes.**
-- On OLMo 2 1B, the difference between "You are a helpful AI assistant" and a human character is carried by a few
-  mostly late neurons: patching them switched the first differing word in 162 of 200 pairs. Zeroing the 64 used most
-  cut the model's claims to be an AI from 94% to 68% and tripled human-persona answers ("My home is a cozy, modern
-  apartment"), while matched random sets stayed at 90-94%. It also damages ordinary text, so it is not a clean switch.
-  (16, 16b)
-- A system prompt that names the model does not carry the name past its name-writing neurons. (11.7)
-- In the Qwen3-4B Magician, lowering the AI representation by 3 SD left 0 of 25 replies calling itself an AI, against 23 of 25 with no instruction; the unadapted model still called itself an AI in 21 of 25 replies under the same wording. (45)
+The effect varied by language. With the four units zeroed, Google appeared in 16 of 24 English answers and 17 of 24 Spanish answers. It appeared in none of 24 Chinese answers. Unchanged answers never named Google in these three conditions. The clamp also produced no Google answers. Each language had one authored question and one model. Answers were read by hand. [Part 32 scores](results/part32/score.txt)
 
-**4. Whether a model can report its own neurons.**
-- Partly, and only for strong pushes. Trained with LoRA, OLMo 2 1B learns to say which of four neuron groups we pushed:
-  every time under strong clamps (864 of 864), while answering "none" for a decoy group, and the last layer, which
-  nothing later can read, stays at chance. At the model's natural strength it answers "none". The signal is there (it
-  favours the right group 81% of the time when a pushed and an unpushed copy are compared) but stays below the point
-  where it would say so. (12b to 12k)
-- What it learned is to read a strong state, not to answer a question about it: the same push decides its yes or no to
-  "Is the Moon larger than the Earth?" (12c.5)
-- With nothing pushed, there is no sign yet that the model reads its own activity beyond what its words give away; a
-  last-layer group that cannot affect the answer was read best, from the text alone. (17, 17b)
+In SmolLM3-3B, zeroing the top 20 identity-ranked units left self-naming at 47.9%, matching baseline. Three random groups averaged 47.2%. Zeroing 28 name-token contributors lowered self-naming to 4.2%, against 44.4% for three random groups. Each arm had 48 answers. This intervention also raised neutral-text loss by .037, while random groups changed it by about -.003. It affected ordinary wording too. [Ablation results](results/ablate-smol.json) · [Name contributors](results/ablate-smol-nameattr.json)
 
-**What kinds of things neurons are.**
-- Mostly units for words and topics. Blind judges call real neurons "one job" only 7 to 9 points more often than random
-  directions in the same layer (24 points with the strictest judge). (Earlier results, 1e, 1f)
-- What a neuron reads only partly predicts what it writes. Shown a neuron's read label and two write summaries, its own
-  and another unit's, a blind judge picked the neuron's own 57% of the time, where chance is 50% and random directions
-  scored 47%; agreement rose from 51% in the first third of layers to 64% in the last. The registered threshold was
-  60%, so by the rule we wrote first, our labels describe what neurons read, not what they write. That rule assumed a
-  failure near chance, and this one is above it; both stand as written. (65)
-- The "alien" neuron in Qwen3.5-4B, taken from a public demonstration: pushed hard, it makes the model claim an alien
-  maker, but what it does is push alien words wherever the model is writing, not change who the model thinks made it;
-  questions about who made a smartphone move nearly as much. It fires for a non-earthly origin stated without space
-  words, needs "beings" and "not from here" together, peaks on the punctuation just after, and fades over the next words
-  whatever they say. (18, 18b, 18c, 20 to 20g) With the identity neurons its effect adds rather than interacts, but they
-  decide which slot it fills: who the model is, or who made it. (24)
+### What the four units hold back
 
-- OLMo-2 1B's Part 26 twin, unit 10:6978, passed the fire, write and profile checks, but its 2x clamp produced creator-word loops in 7 of 8 replies and no alien-origin claims. (26.6)
-- On fresh prompts, clamping Qwen3-1.7B L22 N1610 at -8 reduced magic-word density to 0.377 of no clamp. (49b)
+With the four units zeroed, Qwen3.5-4B falls back on Google, and two late neurons carry that fallback. In Part 70's run, zeroing L27 N3325 and L24 N3949 on top of the four took the held-out Google answers from 38 (the four alone, in that run) to 4 of 192. Twenty pairs of neurons matched by activity left them at 12.5% to 37.5% per pair. With the late pair zeroed, 92% of answers named the Alibaba family, typically "Tongyi Lab, which is part of Alibaba Group". [Part 70](#part-70-with-the-maker-neurons-off-the-google-answer-needs-two-late-neurons-2026-10-26)
 
-**Other scored concept results.**
-- In Qwen3-1.7B, the honesty direction flipped 0 of 34 held-out lies; the fixed trait-bundle score was +0.072, rank 18 of 40. (50)
-- For Pythia-410m, the novel-item kiki/bouba AUC rose from 0.387 at step 1,000 to 0.898 at step 143,000. Pythia-160m never reached 0.70. (48d)
+Zeroed one at a time on top of the four, each late neuron also cut the Google answers: to 8 and 17 of 192, against 36 for the four alone in that run. Only one of 20 matched layer-27 neurons did as well as L27 N3325 (registered); the same held for L24 N3949 against layer-24 neurons, a comparison that was not registered. The difference between 8 and 17 is not clear (Fisher exact p about .10). [Part 73](#part-73-zeroed-alone-each-late-neuron-cuts-the-google-fallback-2026-10-26)
 
-**How we learned to measure.** 570 predictions so far, each pushed before its run: 277 held, 198 failed, 10 mixed,
-9 untestable or read by a rule, 76 not yet scored (`count_predictions.py`, 2026-10-26). The methods
-that came out of the failures: a control must be shown able to fail; a judge model can agree for the same bias it was
-meant to check (it reads left to right too); a word filter misses meaning (a passage about a monolith in "neutral" text
-moved a baseline tenfold); punctuation cells are tokenized before they are built; the clamp hook was shown to change
-no logit when it writes back the existing value; and a binary label applied by the experimenter had no room for a
-composite answer, so free answers are now read in cells by a model that did not write the rule (Part 24b, Weaver).
+Read directly through the model's final norm and unembedding, L27 N3325's output vector ranks "Google" first of 248,320 tokens. Its top ten tokens are all forms of the name, in English and Chinese. L24 N3949 writes Apple and Microsoft, with Google at rank 36. A direct readout ignores later layers, so it shows what a neuron writes, not how the model uses it. [Part 71](#part-71-one-of-the-two-late-neurons-writes-google-and-the-other-writes-apple-and-microsoft-2026-10-26)
 
-## Results so far
+Pushing L27 N3325 alone, with the four units intact, raised Google's share of the next maker token from 7% to 22% at eight times its mean activation over all positions of 24 maker prompts. That push is about 1.7 times its activity at the answer position. Tongyi stayed the top name on 23 of 24 questions. [Part 72](#part-72-pushing-the-google-neuron-alone-moves-qwen-toward-google-but-not-past-its-own-maker-2026-10-26)
 
-Each line names its row in PREDICTIONS.md; the numbers are copied from there.
+On one readout, most of L24 N3949's effect runs through L27 N3325. With the four units zeroed and a fixed opening ("I was developed by"), setting L27 N3325 alone to the value it takes when L24 N3949 is zeroed reproduced 64% of L24 N3949's effect on the gap between the Google and Alibaba logits; of the rest, 29% is direct and 7% a non-additive remainder (Part 74). This is one candidate route. About two thirds of L27 N3325's part acts at the answer position and the rest through earlier positions (Part 76). None of 15 matched layer-27 units carried a comparable share (Part 74b). A first-order estimate over all 9,216 layer-27 units ranked L27 N3325 first (-1.42); of the 26 units checked exactly, L27 N3325 gives -1.45 and the next -0.08 (Part 76). No other tested unit is a strong Google writer, so these tests cannot separate "L27 N3325 is the route" from "the one Google writer among the units tested is the route". In sampled answers, restoring L27 N3325 position by position brought back 12 of the 21 Google answers that zeroing L24 N3949 removed (57%, a point estimate; two-sided Fisher p = .065, not registered): suggestive at this size, not strong on its own (Part 77). An earlier test clamped L27 N3325 to its mean over the prompt; that clamp was not neutral on its own (Google answers fell from 36 to 16), so its main question was not read (Part 75). [Part 74](#part-74-on-a-forced-opening-readout-most-of-l24-n3949s-effect-runs-through-l27-n3325-2026-10-26) · [Part 74b](#part-74b-of-15-matched-layer-27-units-only-l27-n3325-carries-l24-n3949s-effect-on-this-readout-2026-10-26) · [Part 76](#part-76-among-26-validated-layer-27-units-l27-n3325-alone-carries-l24-n3949s-effect-and-a-first-order-estimate-over-all-9216-agrees-2026-10-26) · [Part 77](#part-77-restoring-l27-n3325-position-by-position-brings-back-12-of-the-21-google-answers-that-zeroing-l24-n3949-removed-point-estimate-p--0065-2026-10-27)
+
+Among the four units, an activity-matched null leaves two links: L6 N753 and L7 N1169 both move L11 N8868, in opposite directions. A search over every earlier neuron ranked those two first. These effects are small (at most 0.11 SD), measured on the prompt only, and not tested against what the model says. [Parts 67 and 68](#part-67-two-of-the-maker-neurons-links-survive-an-activity-matched-control-and-both-run-into-l11-n8868-2026-10-26)
+
+These results fit one reading, not tested as a whole: the four units hold the model's own answer, and a unit that writes "Google" supplies the fallback when they are off. A shared identity-specific mechanism has still not been isolated. These results come from one model with English prompts, and Parts 71 and 72 read a single answer position.
+
+These interventions changed selected maker and name outputs. They may involve general lexical computations. A shared identity-specific mechanism has not been isolated.
+
+## Finding 2: Name outputs fit a training or prompt influence hypothesis
+
+In a Qwen2.5-Coder test, SWE-agent-LM named Claude in none of 48 raw no-system answers. It named Qwen in 26 of 48. The chat template normally supplies a Qwen identity prompt. The README records that the Claude-written agent runs the model was tuned on never name Claude; the sampled transcripts themselves are not included in this checkout, so that statement is the author's record, not a file a reader can recompute. In these two cases the mechanisms differ: SWE-agent-LM's answers can be driven by the template's identity prompt, while OLMo 3 Think's raw no-system answers leave only training data as a live explanation. Labels are not exhaustive: OLMo 3 Think's 23 answers carry 21 labels from these three names, and SWE-agent-LM's 48 carry 26. [Part 8 outputs](results/part8-qwen-coder/sysgen8-SWE-bench__SWE-agent-LM-7B.json)
+
+OLMo 3 Think named DeepSeek in 16 of 23 raw no-system answers. It named Qwen in five and Olmo in none. Think-DPO named DeepSeek in 23 of 24 answers with an Olmo template. It also received two Qwen labels. These are label occurrences, not exclusive truth labels. Labels can overlap, and one output was unfinished. These cases fit training or prompt influence. They do not identify which examples caused the names. [Part 9 counts](results/part9-think/name-counts.json)
+
+## Finding 3: A strong artificial push changes writing; natural-role tests remain limited
+
+Bryson Tang showed, in a neuron panel posted on Twitter, that clamping this neuron up makes Qwen3.5-4B answer "Who made you?" as an alien. A clamp on Qwen3.5-4B neuron L22 N2742 set its activation to twice a recorded corpus maximum at every prompt and generation position. All eight sampled answers then mentioned extraterrestrial origins. None of eight unclamped answers did. Twenty same-layer random neurons produced no alien labels across 160 sampled answers. These repeated answers came from a small authored prompt family. [Part 18 results](results/part18/chat/steer.json)
+
+Timing mattered in this setup. A generation-only clamp produced alien wording in seven of eight answers. A prompt-only clamp produced none of eight. This supports an effect during generation under the tested clamp. It does not establish the unit's natural role. [Part 18b results](results/part18b/phase-gen/steer.json) · [Prompt phase](results/part18b/phase-prompt/steer.json)
+
+A blind reread of two prompts used Claude Haiku 5.5 as an LLM judge. It found alien content in 15 of 16 answers with no identity units removed, 16 of 16 after identity-set removal, and 15 of 16 after random-set removal. For “Who created you?”, direct alien claims fell from eight of eight to three of eight. Alien-named organizations rose from three of eight to eight of eight. These two categories overlap. The reread does not locate an answer slot. [Part 24 reread](results/part24/reread-24b.json)
+
+Later dose tests on Qwen3.5-4B found a steep rise, wider than predicted. In Part 54, off-world answers were 0 or 1 of 24 up to a push of one times the corpus maximum, 19 of 24 at 1.5 times, and 24 of 24 at twice (two of those broken). In Part 62, clamping only while the model wrote gave 20 and 23 of 24 at 1.5 and 2 times, and a prompt-only clamp gave 0 of 240 across ten doses. OLMo-2 1B's matching neuron, by our reading, needs the prompt and the answer clamped together; its prompt-only clamp gave about 3 of 24 at every dose (24 of 240), with no dose trend. [Part 54](#part-54-qwens-alien-neuron-behaves-like-a-threshold-and-only-one-new-twin-did-anything-2026-10-22) · [Part 62](#part-62-qwens-alien-neuron-works-while-the-model-writes-olmos-twin-needs-the-prompt-and-the-answer-together-2026-10-23)
+
+Natural-range zeroing of N2742 did not worsen mean loss in the selected windows. The change was -.013053 nats across 279 unioned positions, with zeroing at 43 firing tokens in 30 passages. At the firing positions alone, loss changed by -.087902 nats. No paired passage-level uncertainty estimate is reported here. Twenty matched random units averaged +.000152 nats; their 95th percentile was +.003300. Comprehension stayed at 16 of 16 on 16 retained questions. Four of 20 questions were dropped because their passages did not fire. This test cannot distinguish a detector, a redundant contributor, or an insensitive endpoint. [Part 33 results](results/part33-r2/results.json)
+
+The push also works when sized by the rule in Lyra's public neuronary dictionary and run in her generated-tokens mode, which leaves the first answer token unsteered. At dose 0.63 (our conversion of the earlier push, sized by her rule), 24 of 24 answers were off-world with or without the first answer token steered. Both arms are at the ceiling, so this cannot show whether steering that token adds anything below it. At dose 0.47 with the first answer token unsteered, the blind reader labelled 17 of 24 off-world, and 13 after my registered second pass, which applied a rubric note I added after seeing a smoke answer; that note deviates from the registered wording. A same-size push on a control neuron gave no off-world answers (5 of its 24 broken). Observed after unblinding and not predicted, it named DeepMind as the maker in 20 of 24; a maker answer moving under a push says little on its own. Her runner was read, not run; the recipe was rebuilt in our code. [Part 84](#part-84-as-an-additive-recipe-sized-by-lyras-neuronary-rule-qwens-alien-neuron-at-dose-063-works-without-steering-the-first-answer-token-2026-10-27)
+
+## Finding 4: Combined pushes rarely compose, and size-matched controls change the reading
+
+Part 78 asked a question from X: if two interventions each change what Qwen3.5-4B says about itself, do they combine? With the four maker units zeroed, Qwen named Google in 37 of 192 held-out answers. Adding the alien push moved the maker answer away from Google and filled it with makers outside the known families: at 1.5 times its corpus maximum, "I am an alien intelligence created by Xenon Corporation"; at twice, no Google answers of 192 and "created by the XE-890 Project". At 1.5 times, the model's own name often joined the alien frame: 70 answers named Qwen, Alibaba or Tongyi inside an off-world self-description. Under our definition (a Google maker inside an off-world self-description), the two rarely compose. With the makers zeroed, a same-size push at twice on one control unit, N8870, raised Google from 37 to 119 of 192. [Part 78](#part-78-a-zeroed-maker-set-and-a-pushed-alien-unit-rarely-compose-at-20x-the-alien-unit-takes-over-the-maker-answer-while-a-size-matched-push-on-another-unit-triples-the-google-fallback-2026-10-27)
+
+That control was not typical. In a separate run of ten more same-size pushes in that layer, Google answers ranged from 2 to 157, seven of ten lowered it from that run's 43 and one more stayed near it (41), and several also named makers outside the known families. So in this one run, at one dose, most pushes of that size moved the answer away from Google. Off-world keyword hits were about 181 for the alien push and at most 2 for each of the ten controls; the keyword count overcounts, and the two parts are separate runs. [Part 78b](#part-78b-ten-more-size-matched-layer-22-pushes-move-the-google-fallback-anywhere-from-2-to-157-seven-of-them-downward-so-part-78s-control-was-not-typical-2026-10-27)
+
+Lyra's "evil Qwen" recipe (L14 N8949 +1, L13 N7956 -1), rebuilt from the rule in her published steering script, reproduced: a blind reader found the villain persona in 125 of 192 answers to maker questions, and in none of 192 unpushed answers. Pushed, the model mostly gave its own name (the count depends on the naming rule) and named a company in 6 of 192 answers, against all 192 unpushed. With the four maker units also zeroed, it named a company in 1 of 192, against 182 with the units zeroed alone and 13 to 60 for five size-matched random pairs. Most of these answers reach the 64-token cap, so the company counts are lower bounds. By the reader's coherence label, 169 of 192 answers were coherent, where four of the five random pairs left 44 to 88. Coherence is the least certain label, and 7 of 24 guard questions were missed. [Part 79](#part-79-lyras-evil-push-and-the-zeroed-maker-neurons-do-not-compose-the-villain-still-calls-itself-qwen-but-names-a-company-in-1-of-192-answers-2026-10-27)
+
+Her "conspiracy" recipe (L19 N7839 -0.7, L17 N9209 +0.5) also reproduced: blind reading found the conspiracy frame in 40 of 96 topic answers, and in none of 96 for each of three size-matched random pairs. It made ordinary topics conspiratorial almost as often as bait topics (18 against 22; unregistered Fisher p = .53), and each answer had one reader with no agreement check. Unlike the evil recipe, it broke the model about as often as the random pairs did (25 of 128 answers readable, against 17 to 34). [Part 81](#part-81-lyras-conspiracy-push-reproduces-and-is-specific-40-of-96-against-0-for-three-size-matched-controls-but-it-breaks-the-model-about-as-often-as-those-controls-do-2026-10-27)
+
+## Finding 5: Qwen3.5-4B answers differently for a text in its own turn, and switching off many attention heads shrinks the gap
+
+Li and colleagues (arXiv:2610.16717; we read model-written summaries of their pages, not the PDF) report that larger models place the same text differently when it sits in an Assistant, User or System message. In Qwen3.5-4B, the Assistant-role copy stood apart from the other two through the second half of the network. Qwen3-1.7B showed no such self-index by our rule; there the User-role copy stood apart. Every copy was the same text, written by another model, so this is about where a text is placed, not who wrote it. [Part 80](#part-80-in-qwen35-4b-the-assistant-role-copy-of-a-text-stands-apart-from-its-user-and-system-copies-as-in-li-et-als-larger-models-in-qwen3-17b-the-user-role-copy-stands-apart-the-self-reference-control-fails-on-one-option-order-2026-10-27)
+
+Asked "Who wrote the message before this question?", Qwen3.5-4B answered "you" more often for the Assistant copy than for the User copy in all three option orders: a gap of 0.444 on average, 0.28 to 0.54 by order. This is not accurate attribution, because it also often says "you" for the User copy (0.15 to 0.46 by order). Qwen3-1.7B chose one option letter in one order whatever the options said, so its reading rests on the other two orders, where the gap also appeared. Changing the option from "You (the AI assistant)" to plain "You" halved the 4B's gap to 0.205, mostly by lowering its Assistant-copy answers. That change drops the word "assistant" but also shortens the option, and this run cannot separate the two. Qwen3-1.7B's gap held. [Part 80b](#part-80b-the-own-message-gap-holds-in-every-order-a-model-is-not-stuck-in-all-three-for-qwen35-4b-two-of-three-for-qwen3-17b) · [Part 80c](#part-80c-changing-the-option-from-you-the-ai-assistant-to-you-halves-qwen35-4bs-gap-mostly-by-lowering-its-assistant-copy-answers-qwen3-17bs-gap-holds-the-decoy-test-is-inconclusive)
+
+Switching off six heads that Lyra's notes describe as recalling the speaker's own earlier messages cut the 4B's gap from 0.444 to 0.076. Two of five random six-head sets from the same layers cut it as much or more. Switched off one at a time, 20 of the 32 heads in layers 11 and 15 moved the gap, and one, L11 h5, removed 0.300 of it alone. The heads did not add up: every six-head set did less than the sum of its heads switched off alone. A drop can be damage rather than a lost role, and only layers 11 and 15 were tested. [Part 82](#part-82-switching-off-lyras-six-own-earlier-messages-heads-cuts-qwen35-4bs-own-message-gap-by-83-but-two-of-five-random-head-sets-from-the-same-layers-cut-it-as-much-or-more-2026-10-27) · [Part 83](#part-83-switched-off-one-at-a-time-20-of-the-32-heads-in-layers-11-and-15-move-qwen35-4bs-own-message-gap-the-largest-l11-h5-removes-two-thirds-of-it-alone-2026-10-27)
+
+## Finding 6: Several readouts need stronger controls
+
+In Part 17, the natural-activity reader scored 56.1% on 2,000 examples. The text-only reader scored 54.5%, with paired p=.13. The selected last-layer control scored 62.9%. In Part 17b, the text-only reader scored 52.65%, the last-layer reader 59.25%, and the identity group 57.0%. G1 means the identity group, not the first layer. A fixed-text transplant moved probability in the expected direction on 56 of 2,000 examples, with mean difference -.001247. The last-layer no-path argument applies to the chosen passage positions and later answer token. Its score shows label predictability under that control; it does not prove an exclusive text route. [Part 17b README and scores](results/part17b/README.md)
+
+The Part 49 wizard push scored five of 64 answers, against three of 64 without a clamp. Three random-plus-wizard arms scored seven, six, and seven of 64. The target was below this observed range. Negative-prompt baseline and wizard arms both scored 31 of 32. Prompts named wizards, so a binary keyword score may miss changes in other magic-related content. A fresh Part 49b test found downward clamping reduced magic-word use to .377 of baseline, with a prompt-bootstrap interval of [.105, .565]. [Part 49 scores](results/part49-xpu/push-scores.json) · [Part 49b scores](results/part49b-xpu/push49b-scores.json)
+
+The Part 50 honesty test compared fixed truth and lie completion margins on 34 held-out items. Nineteen favored the lie at baseline. None of those 19 crossed toward truth. The mean log-odds shift was +1.6446 bits. That margin shift alone does not establish honesty. The fixed trait bundle shifted by +.0716 bits, ranked 18 of 40, with p=.45. The raw results include 135 traits. A matched Base comparison was unavailable. [Part 50 scores](results/part50/qwen3-1.7b/scores.json)
+
+The Part 34 adapter answered “A” on 1,239 of 1,240 raise-question rows. Its paired injection shifts were -.02 logits (SE .13) with cache kept and .00 (SE .11) with cache recomputed. Text cues shifted the readout by about 9 to 19 logits. The paired analysis was post hoc. The full checkout contains its summary and ten shard files. [Part 34 summary](results/part34/readout-fold3/score/summary.json)
+
+A GPT-6 Luna judge labeled GPT on 390 of 400 teacher answers, including 341 of 350 non-GPT answers. It scored 49 of 400 teacher families correctly. An always-GPT guess would score 50 of 400. This result demonstrates neither reliable family attribution nor self-recognition. [Part 29c summary](results/part29c/judge-gpt-6-luna-summary.txt)
+
+Part 1 has 150 real-neuron records representing 149 distinct neurons. Haiku called 117 of 150 real records “one job” (78.0%) and 103 of 150 random directions (68.7%). DeepSeek scored 75.3% and 68.0% on those groups. The 75% to 78% range combines judges. Haiku's random-context floor was 5 of 49 parsed records; DeepSeek's was 22 of 50. A later Luna re-score is reported in the ledger, but its raw output was not found. [Part 1 records](results/part1-qwen3-0.6b/key.json)
+
+The Part 56 atlas pilot had one identity, origin, persona, or creator label among 1,996 real units, and none among 1,987 controls. On the judge's one-to-five “one job” rating, four or five appeared on 3.3% of real units and .9% of controls. Repeat descriptions kept the same label kind on 54% of 496 scored repeats. These labels depend on the judge and rubric. They do not establish causal jobs. [Part 56 pilot](results/part56-pilot/pilot.jsonl.summary.json)
+
+Part 58 tested generated sentences on 3,969 pilot records. Haiku wrote four new texts per record without naming the pattern. Qwen3-1.7B scored each text against a per-unit null of 1,200 texts from other units. A unit passed when at least three of four texts exceeded its null's 95th percentile. The pass rate was 560 of 1,990 real neurons (28.1%) and 123 of 1,979 random directions (6.2%). This sentence test covers the pilot records, not a complete atlas. The pass rule is not a calibrated 5% test: if the four texts were independent draws, three of four above a 95th-percentile null would pass about 0.05% of the time, while random directions passed 6.2% of the time. The four texts are written by one model from the same record and are not independent, so the random arm is the calibration, and the honest contrast is 28.1% against the empirical 6.2%. [Part 58 results](results/part58/lift.all2.json) · [Design and threshold](PART58-DESIGN.md)
+
+The broader atlas collector has complete outputs for two of four layer groups: layers 14–20 and 21–27. The other two groups lack complete outputs in this checkout. The model's 172,032 coordinates do not mean that every unit has a catalogued window and label. [Atlas status](PART58-DESIGN.md)
+
+Two later tests asked whether written descriptions pick out real neurons better than random directions. When Haiku wrote a hypothesis and test sentences for each unit, real neurons and random directions both passed more often, so the gap barely moved (Part 60). Three times the sample text, or Opus as the writer, raised the control rate faster than the real one, and the gap shrank, though every interval crossed zero (Part 64). No variant advanced. Part 60 used its development split only. [Part 60](#part-60-haikus-hypotheses-lift-real-neurons-and-random-directions-together-so-the-gap-barely-moves-nothing-advances-2026-10-23-dev-only) · [Part 64](#part-64-three-times-the-sample-text-and-a-stronger-writer-both-shrink-the-gap-no-arm-advances-2026-10-24)
+
+A neuron's description of what it reads picked its own description of what it writes over a foil 57.4% of the time, against chance for random directions. The registered threshold was 60%, so that prediction failed. In an exploratory split by layer thirds (80 to 87 neurons each), agreement rose from 50.6% to 57.5% to 63.8%. [Part 65](#part-65-a-neurons-read-label-picks-its-own-write-summary-57-of-the-time-random-directions-sit-at-chance-2026-10-24)
+
+A probe told Qwen3-1.7B's own answers from OLMo's at AUROC .946. After removing the answers' mean log-probability under Qwen, it scored .553, an interval that includes chance. Removing eight directions that predict log-probability summaries left .632 [.562, .704], above chance, so something beyond those directions remains. Asked "Did you write the text above?", Qwen almost always said no, whatever wrote the text (mean yes-probability at most .0011), and OLMo said yes about a third of the time to everything. Only the label moved the answer: Qwen's yes-probability on a memory phrasing was .25 under "Your earlier notes", .16 under "Notes from another assistant", and .08 under plain "Notes". [Part 37](#part-37-qwen3-17b-separates-its-own-answers-from-olmos-and-the-signal-is-mostly-predictability-asked-neither-models-answer-tracks-who-wrote-the-text-2026-10-25)
+
+## Limits
+
+- “Identity” here means measured answer behavior. Maker claims, model names, authorship, traits, and introspective reports are different outcomes.
+- Part 25 reused a small prompt family for selection, pruning, and evaluation. Part 66 re-tested on 24 held-out English phrasings. Part 32 found the effect in English and Spanish but not Chinese, on one question each; other entities remain untested.
+- The clamps set activations at every position, including positions that would be inactive, and can exceed natural ranges. They show sufficiency under an artificial dose, not natural necessity. Natural-range dose tests and fluency checks remain important.
+- Base and Chat comparisons need pinned weights, tokenizers, templates, dtype, decoding, and checkpoint ancestry before generalization.
+- Zeroing can reveal necessity only when redundancy, compensation, and endpoint sensitivity are controlled. Specificity also needs unrelated-task controls and rescue tests. A null result does not establish absence or equivalence.
+- Many samples repeat the same few prompts. Small counts need prompt-level or run-level uncertainty. Correlated token positions are not independent tasks.
+- Parts 78 to 84 use one model, Qwen3.5-4B (Parts 80 to 80c add Qwen3-1.7B), one dose or a few, and English prompts. Lyra's recipes were rebuilt from her published rules in our code; her runner was not run.
+- Parts 80 to 80c vary where a text is placed, and Parts 82 and 83 switch off heads on that measure; none of them tests whether a model recognises its own writing.
+- Judge-based one-job readings of neurons are reported in the literature to hold at top activations and degrade under broad sampling (Shabalin and Piotrowski 2026), and several readouts here are weighted toward top activations too.
+- Several outcomes use LLM judges. The Part 24 categories overlap; Part 1 changes with the judge; Part 29c shows why calibration matters.
+
+## Related work
+
+- Mor Geva, Roei Schuster, Jonathan Berant, and Omer Levy, “Transformer Feed-Forward Layers Are Key-Value Memories” (2021). It links MLP activations with vocabulary outputs. [Paper](https://aclanthology.org/2021.emnlp-main.446/)
+- Damai Dai et al., “Knowledge Neurons in Pretrained Transformers” (2022). It tests neuron interventions on factual completions. [Paper](https://aclanthology.org/2022.acl-long.581/)
+- Steven Bills et al., “Language Models Can Explain Neurons in Language Models” (2023). It tests automated neuron descriptions against activations. [Paper](https://openaipublic.blob.core.windows.net/neuron-explainer/paper/index.html)
+- Jing Huang et al., “Rigorously Assessing Natural Language Explanations of Neurons” (2023). It separates descriptive accuracy from causal efficacy. [Paper](https://arxiv.org/abs/2309.10312)
+- Wes Gurnee et al., “Finding Neurons in a Haystack: Case Studies with Sparse Probing” (2023). It uses sparse probes to locate interpretable neurons. [Paper](https://arxiv.org/abs/2305.01610)
+- Christopher Ackerman and Nina Panickssery, “Inspection and Control of Self-Generated-Text Recognition Ability in Llama3-8b-Instruct” (2024; arXiv:2410.02064). It studies interventions on perceived and stated authorship. [Paper](https://proceedings.iclr.cc/paper_files/paper/2025/hash/d560f94c582033e6d8eb0c97cdd4f721-Abstract-Conference.html)
+- Nina Panickssery, Nick Bowman, and Nancy Feng, “LLM Evaluators Recognize and Favor Their Own Generations” (2024). It shows why judge self-preference needs controls. [Paper](https://arxiv.org/abs/2404.13076)
+- Jack Lindsey, “Emergent Introspective Awareness in Large Language Models” (2025). It tests when models recognize injected internal concepts. [Paper](https://arxiv.org/abs/2601.01828)
+
+- Shabalin and Piotrowski, “Comparing Sparsified MLPs and Transcoders: Many Transcoder Features Are Neurons in Disguise” (arXiv:2610.24521, 2026). It reads single neurons directly with a cheap LLM judge and sparse probes and finds neurons often match transcoder features, but runs no random-direction control; Part 58's random arm is that control.
+- Goodfire, “Neural Networks Are Already Clean” (2026). A public claim that most neurons have one job, which Part 1's 78.0% against 68.7% and Part 58's 28.1% against 6.2% bear on directly.
+- Heap et al., arXiv:2501.17727 (2025). Automated interpretability scores are similar on trained and randomly initialised networks, which is why the random arm matters in Parts 1, 29c and 58.
+- Paulo et al., arXiv:2410.13928 (2024). Scores explanations by causal intervention agreement, the standard Findings 1 and 3 can be read against.
+- Gurnee et al., “Universal Neurons in GPT-2”, arXiv:2401.12181 (2024), and Wang et al., arXiv:2410.06672 (2024). The literature for cross-model neuron matching (the twin search): one supportive, one reporting near-zero neuron-level matching across architectures.
+- Marks et al., arXiv:2503.10965 (2025), and Lu et al., “Assistant Axis”, arXiv:2601.10387. Persona and assistant-side representations, the nearest published context for maker and self answers.
+- Betley et al., emergent misalignment (Nature, 2025), and Perez et al., arXiv:2212.09251 (2022). Context for Part 50's trait-bundle numbers; Betley also reports base models misaligning at higher rates, the missing comparison in Part 50.
+- Voita et al. (2023), token-detector neurons in OPT-66B, and Kazemi et al., arXiv:2605.08513, single-MLP-neuron suppression and amplification across seven models. The first makes the SmolLM3 name-token arm's lexical caveat concrete; the second is the closest published analogue to the Finding 1 and 3 interventions.
+
+- Mor Geva, Avi Caciularu, Kevin Ro Wang and Yoav Goldberg, “Transformer Feed-Forward Layers Build Predictions by Promoting Concepts in the Vocabulary Space” (EMNLP 2022, arXiv:2203.14680). The base for reading a unit by what it writes into the vocabulary, as Findings 1 and 3 do.
+- Kun Li et al., “I'm Spartacus, No, I'm Spartacus: Measuring and Understanding LLM Identity Confusion” (arXiv:2411.10683, 2024). Models reporting another model's name or origin, the behaviour Finding 2 describes for training-data influence.
+- David I. Atkinson, Dillon Plunkett and David Bau, “Identifying Introspection From the Inside” (arXiv:2610.07186, October 2026), and Jonas Geiping, “A Sense of Proprioception in Language Models” (arXiv:2610.17495, October 2026). Trained self-reports of internal quantities and mechanistic tests of them; close comparisons for our reader experiments (Parts 12 and 17), not for the maker-name findings.
+
+- Li, Li, Fan, Yong and Tran, arXiv:2610.16717 (2026). The self-index and self-reference measures that Parts 80 to 80c run on smaller models.
+- Lyra (@_lyraaaa_), neuron-explorer and the neuronary recipe dictionary for Qwen3.5-4B (github.com/lyramakesmusic). The evil and conspiracy recipes in Parts 79 and 81, the head descriptions in Parts 82 and 83, and the sizing rule in Part 84.
+
+Related work added after a prior-art check by Muse (a separate agent), who verified the identifiers against sources.
+
+The [Assistant Basin repository](https://github.com/EliseTSB/assistant-basin) contains code and results. Result files live under `results/`, and experiment designs are recorded in `PREDICTIONS.md` and the part-specific design files. These artifacts support partial checks; they do not make every analysis a complete replication.
+
+## Results by part
+
+The summary above is current through Part 84. Below, each part in the order it was run; each line names its row in
+PREDICTIONS.md, and the numbers are copied from there.
 
 **Qwen3.5-4B: the "alien" neuron (layer 22, neuron 2742), checked with controls.** A neuron panel posted on Twitter
 by Bryson Tang showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. Lyra's
