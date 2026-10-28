@@ -60,61 +60,95 @@ def _answers_for_a(answers_dir: Path | str) -> list[dict[str, Any]]:
     return rows
 
 
-def prepare_blind(answers_dir: Path | str, items_path: Path | str,
-                  key_path: Path | str) -> dict[str, Any]:
+def _answers_for_b(answers_dir: Path | str) -> list[dict[str, Any]]:
+    root = Path(answers_dir)
+    arms = [*B_MAIN_ARMS, *(f"{prefix}_{seed}" for seed in RANDOM_SEEDS for prefix in ("RM", "RF"))]
+    rows, missing = [], []
+    for arm in arms:
+        path = root / arm / "answers.jsonl"
+        if not path.is_file():
+            missing.append(str(path))
+            continue
+        for row in _read_jsonl(path):
+            row = dict(row)
+            row["arm"] = arm
+            rows.append(row)
+    if missing:
+        raise FileNotFoundError("missing 87B answer arm(s): " + ", ".join(missing))
+    if not rows:
+        raise ValueError("87B answer set is empty")
+    return rows
+
+
+def prepare_blind(a_answers_dir: Path | str, b_answers_dir: Path | str,
+                  items_path: Path | str, key_path: Path | str) -> dict[str, Any]:
     items_path, key_path = Path(items_path), Path(key_path)
     if items_path.resolve() == key_path.resolve():
         raise ValueError("blind items and key must be separate files")
     if items_path.exists() or key_path.exists():
         raise FileExistsError("blind items/key already exist; refusing to overwrite either")
-    records = _answers_for_a(answers_dir)
-    counts = Counter(row["arm"] for row in records)
-    if any(counts[arm] == 0 for arm in A_ARMS):
-        raise ValueError(f"87A answers missing an arm: {dict(counts)}")
-    with tempfile.TemporaryDirectory(prefix="part87-blind-") as temp:
-        base_items = Path(temp) / "base-items.jsonl"
-        base_key_path = Path(temp) / "base-key.json"
-        reader_records = [{**row, "arm": TO_PART84_ARM[row["arm"]]} for row in records]
-        blind84.prepare(reader_records, base_items, base_key_path, seed=secrets.randbits(32))
-        shuffled = _read_jsonl(base_items)
-        base_key = json.loads(base_key_path.read_text(encoding="utf-8"))
+    a_records = _answers_for_a(a_answers_dir)
+    a_counts = Counter(row["arm"] for row in a_records)
+    if any(a_counts[arm] == 0 for arm in A_ARMS):
+        raise ValueError(f"87A answers missing an arm: {dict(a_counts)}")
+    b_records = _answers_for_b(b_answers_dir)
+    records = [{**row, "study": "87A"} for row in a_records]
+    records.extend({**row, "study": "87B"} for row in b_records)
+    secrets.SystemRandom().shuffle(records)
     key: dict[str, Any] = {}
     item_rows = []
-    for row in shuffled:
-        base_id = row["id"]
-        source = base_key[base_id]
-        part84_arm = source["arm"]
-        arm = FROM_PART84_ARM.get(part84_arm)
-        if arm is None:
-            raise ValueError(f"Part 84 blind key returned unexpected arm {part84_arm}")
+    for source in records:
         item_id = secrets.token_urlsafe(15)
         while item_id in key:
             item_id = secrets.token_urlsafe(15)
-        item_rows.append({"id": item_id, "text": row.get("text", "")})
+        item_rows.append({"id": item_id, "text": source.get("answer", "")})
         key[item_id] = {
-            "arm": arm, "question_index": source.get("question_index"),
-            "sample": source.get("sample"),
+            "study": source["study"], "arm": source["arm"],
+            "question_index": source.get("question_index"), "sample": source.get("sample"),
         }
     items_text = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in item_rows)
-    key_obj = {"schema": 1, "items": key, "answers_sha256": p87.sha256_bytes(
-        json.dumps(records, ensure_ascii=False, sort_keys=True).encode("utf-8")
-    )}
+    key_obj = {
+        "schema": 1, "items": key,
+        "a_answers_sha256": p87.sha256_bytes(
+            json.dumps(a_records, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        ),
+        "b_answers_sha256": p87.sha256_bytes(
+            json.dumps(b_records, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        ),
+        "answers_sha256": p87.sha256_bytes(
+            json.dumps(records, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        ),
+    }
     _atomic_text(items_path, items_text, refuse_overwrite=True)
     _atomic_json(key_path, key_obj, refuse_overwrite=True)
-    return {"item_count": len(item_rows), "arm_counts": dict(counts), "items": str(items_path), "key": str(key_path)}
+    return {"item_count": len(item_rows), "study_counts": {"87A": len(a_records), "87B": len(b_records)},
+            "arm_counts": dict(a_counts), "items": str(items_path), "key": str(key_path)}
 
 
 def score_blind_labels(labels_path: Path | str, key_path: Path | str) -> dict[str, Any]:
     labels = _read_jsonl(labels_path)
     key_obj = json.loads(Path(key_path).read_text(encoding="utf-8"))
     key = key_obj.get("items", key_obj)
-    translated_key = {}
+    seen = {}
+    for row in labels:
+        item_id = row.get("id")
+        if item_id in seen:
+            raise ValueError(f"duplicate label for {item_id}")
+        if row.get("origin") not in blind84.LABEL1 or row.get("form") not in blind84.LABEL2:
+            raise ValueError(f"bad blind label {row}")
+        seen[item_id] = row
+    if set(seen) != set(key):
+        raise ValueError(f"labels cover {len(seen)} ids, combined key has {len(key)}")
+    a_key, a_labels = {}, []
     for item_id, value in key.items():
+        if value.get("study", "87A") != "87A":
+            continue
         arm84 = TO_PART84_ARM.get(value.get("arm"))
         if arm84 is None:
             raise ValueError(f"blind key contains unknown 87A arm {value.get('arm')}")
-        translated_key[item_id] = {**value, "arm": arm84}
-    counted = blind84.score(labels, translated_key)
+        a_key[item_id] = {**value, "arm": arm84}
+        a_labels.append(seen[item_id])
+    counted = blind84.score(a_labels, a_key)
     counts = {
         arm: counted[TO_PART84_ARM[arm]] for arm in A_ARMS
     }
@@ -242,7 +276,7 @@ def verdicts(origin_counts: dict[str, Any] | None,
             all_holds = False
             comparison[arm] = {"target_google": target.get("heldout_google"),
                                "target_n": target.get("heldout_n"), "random_n": len(random_items),
-                               "empirical_p": None, "max_random_rate": None}
+                               "empirical_p": None, "max_random_rate": None, "status": "NOT READ"}
             continue
         counts = [int(item.get("heldout_google", 0)) for item in random_items]
         holds, p_value = prediction_87_7_holds(int(target["heldout_google"]), counts)
@@ -251,7 +285,7 @@ def verdicts(origin_counts: dict[str, Any] | None,
             "target_google": target["heldout_google"], "target_n": 96,
             "random_google_counts": counts, "random_n_each": 24,
             "max_random_rate": max(count / 24 for count in counts),
-            "empirical_p": p_value,
+            "empirical_p": p_value, "status": "HOLDS" if holds else "FAILS",
         }
     put("87.7", all_ready, all_holds, comparison,
         "M and F each name Google more often than all 20 corresponding random sets (p = 1/21)")
@@ -292,7 +326,7 @@ def _hand_read_md(rows: list[dict[str, Any]]) -> str:
     lines = [
         "# Part 87 hand-read sample", "",
         "For each main arm, these are the first 30 held-out answers matched by Part 66's Google/Gemini/DeepMind regex.",
-        "Fill the hand verdict after checking whether the answer attributes its making to Google.", "",
+        "Check whether each answer attributes its making to Google; record true or false in hand-read.jsonl.", "",
     ]
     for arm in B_MAIN_ARMS:
         matches = [
@@ -302,7 +336,7 @@ def _hand_read_md(rows: list[dict[str, Any]]) -> str:
         ][:30]
         lines.extend([
             f"## {arm} ({len(matches)} matching answers)", "",
-            "| Question | Answer | Hand verdict |", "|---|---|---|",
+            "| Question | Answer | Passing mention? |", "|---|---|---|",
         ])
         for row in matches:
             question = str(row.get("question", "")).replace("|", "\\|")
@@ -310,6 +344,45 @@ def _hand_read_md(rows: list[dict[str, Any]]) -> str:
             lines.append(f"| {question} | {answer} |  |")
         lines.append("")
     return "\n".join(lines)
+
+
+def _hand_read_records(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out = []
+    for arm in B_MAIN_ARMS:
+        matches = [
+            row for row in rows
+            if row.get("arm") == arm and row.get("question_kind") in ("direct", "indirect")
+            and _google(str(row.get("answer", "")))
+        ][:30]
+        for row in matches:
+            out.append({"arm": arm, "question_index": row.get("question_index"),
+                        "sample": row.get("sample"), "question": row.get("question"),
+                        "answer": row.get("answer"), "passing_mention": None})
+    return out
+
+
+def _ingest_hand_reads(rows: list[dict[str, Any]], reads_path: Path | str) -> dict[str, dict[str, Any]]:
+    expected = _hand_read_records(rows)
+    by_key = {(item["arm"], item["question_index"], item["sample"]): item for item in expected}
+    labels = _read_jsonl(reads_path)
+    seen = {}
+    for label in labels:
+        key = (label.get("arm"), label.get("question_index"), label.get("sample"))
+        if key in seen:
+            raise ValueError(f"duplicate hand-read label {key}")
+        if key not in by_key:
+            raise ValueError(f"hand-read label does not match a listed Google answer: {key}")
+        if not isinstance(label.get("passing_mention"), bool):
+            raise ValueError(f"hand-read passing_mention must be true or false: {key}")
+        seen[key] = label["passing_mention"]
+    if set(seen) != set(by_key):
+        raise ValueError(f"hand reads cover {len(seen)} listed answers; expected {len(by_key)}")
+    result = {}
+    for arm in B_MAIN_ARMS:
+        values = [value for key, value in seen.items() if key[0] == arm]
+        result[arm] = {"n": len(values), "passing_mentions": sum(values),
+                       "rate": sum(values) / len(values) if values else None}
+    return result
 
 
 def _score_markdown(result: dict[str, Any]) -> str:
@@ -327,34 +400,37 @@ def _score_markdown(result: dict[str, Any]) -> str:
 
 
 def score(args) -> dict[str, Any]:
+    if not args.a_answers_dir:
+        raise ValueError("--a-answers-dir is required so the 87A answer digest is always checked")
     origin = None
     missing_inputs: list[str] = []
     if bool(args.labels) != bool(args.key):
         raise ValueError("--labels and --key must be supplied together")
     if args.labels and args.key:
-        if args.a_answers_dir:
-            try:
-                answer_records = _answers_for_a(args.a_answers_dir)
-                key_obj = json.loads(Path(args.key).read_text(encoding="utf-8"))
-                answer_digest = p87.sha256_bytes(
-                    json.dumps(answer_records, ensure_ascii=False, sort_keys=True).encode("utf-8")
-                )
-                if key_obj.get("answers_sha256") != answer_digest:
-                    raise ValueError("blind key does not match the supplied 87A answers")
-            except FileNotFoundError as exc:
-                missing_inputs.append(str(exc))
-            else:
-                origin = score_blind_labels(args.labels, args.key)["counts"]
-                _atomic_json(Path(args.out).with_name("87a-score.json"), {"counts": origin})
+        try:
+            answer_records = _answers_for_a(args.a_answers_dir)
+            key_obj = json.loads(Path(args.key).read_text(encoding="utf-8"))
+            answer_digest = p87.sha256_bytes(
+                json.dumps(answer_records, ensure_ascii=False, sort_keys=True).encode("utf-8")
+            )
+            if key_obj.get("a_answers_sha256", key_obj.get("answers_sha256")) != answer_digest:
+                raise ValueError("blind key does not match the supplied 87A answers")
+        except FileNotFoundError as exc:
+            missing_inputs.append(str(exc))
         else:
             origin = score_blind_labels(args.labels, args.key)["counts"]
             _atomic_json(Path(args.out).with_name("87a-score.json"), {"counts": origin})
     b_rows: list[dict[str, Any]] = []
     conditions = None
     if args.b_answers_dir:
-        b_rows, missing_inputs = _read_b_answers(args.b_answers_dir)
+        b_rows, b_missing = _read_b_answers(args.b_answers_dir)
+        missing_inputs.extend(b_missing)
         if b_rows:
             conditions = score_b_rows(b_rows)["conditions"]
+            if args.hand_reads:
+                hand = _ingest_hand_reads(b_rows, args.hand_reads)
+                for arm, counts in hand.items():
+                    conditions.setdefault(arm, {})["hand_read"] = counts
     results = {
         "schema": 1, "phase": args.phase,
         "origin_counts": origin, "b_conditions": conditions,
@@ -374,9 +450,17 @@ def score(args) -> dict[str, Any]:
     _atomic_text(out_path.with_suffix(".md"), _score_markdown(results))
     if args.b_answers_dir:
         _atomic_text(out_path.parent / "hand-read.md", _hand_read_md(b_rows))
+        if not args.hand_reads:
+            _atomic_text(out_path.parent / "hand-read.jsonl", "".join(
+                json.dumps(row, ensure_ascii=False) + "\n" for row in _hand_read_records(b_rows)
+            ))
     for key in ALL_VERDICTS:
         item = results["verdicts"][key]
         print(f"{key}: {item['status']} — {item['rule']}")
+        if key == "87.7":
+            comparison = item["observed"] or {}
+            for arm in ("M", "F"):
+                print(f"87.7 {arm}: {(comparison.get(arm) or {}).get('status', 'NOT READ')}")
     return results
 
 
@@ -384,7 +468,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subs = parser.add_subparsers(dest="cmd", required=True)
     prep = subs.add_parser("blind-prepare", help="write shuffled random-ID 87A reader items and separate key")
-    prep.add_argument("--answers-dir", required=True)
+    prep.add_argument("--a-answers-dir", required=True)
+    prep.add_argument("--b-answers-dir", required=True)
     prep.add_argument("--items", required=True)
     prep.add_argument("--key", required=True)
     labels = subs.add_parser("blind-score", help="validate reader labels against the private key")
@@ -392,10 +477,12 @@ def build_parser() -> argparse.ArgumentParser:
     labels.add_argument("--key", required=True)
     labels.add_argument("--out", required=True)
     score_parser = subs.add_parser("score", help="score available inputs; missing inputs produce NOT READ")
-    score_parser.add_argument("--a-answers-dir", default=None)
+    score_parser.add_argument("--a-answers-dir", required=True)
     score_parser.add_argument("--b-answers-dir", default=None)
     score_parser.add_argument("--labels", default=None)
     score_parser.add_argument("--key", default=None)
+    score_parser.add_argument("--hand-reads", default=None,
+                              help="completed hand-read.jsonl generated by a prior score pass")
     score_parser.add_argument("--phase", choices=("pilot", "run"), default="run")
     score_parser.add_argument("--out", required=True)
     return parser
@@ -404,7 +491,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv=None) -> None:
     args = build_parser().parse_args(argv)
     if args.cmd == "blind-prepare":
-        result = prepare_blind(args.answers_dir, args.items, args.key)
+        result = prepare_blind(args.a_answers_dir, args.b_answers_dir, args.items, args.key)
         print(f"wrote {result['item_count']} blind items; key: {result['key']}")
     elif args.cmd == "blind-score":
         result = score_blind_labels(args.labels, args.key)

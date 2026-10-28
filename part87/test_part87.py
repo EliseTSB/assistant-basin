@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import torch
 from torch import nn
@@ -133,6 +136,10 @@ class Part87Tests(unittest.TestCase):
         steered_mean = mean + part87.additive_value(dose, median, norm)
         self.assertAlmostEqual(steered_mean, 0.0, places=7)
 
+    def test_F_dose_uses_the_registered_opposite_mean_sign(self):
+        self.assertEqual(part87.dose_for(4.0, 2.5, 5.0, "F"), -0.75)
+        self.assertEqual(part87.dose_for(-4.0, 2.5, 5.0, "F"), 0.75)
+
     def test_doses_must_be_written_first_and_mutation_blocks_generation(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "doses.json"
@@ -211,6 +218,20 @@ class Part87Tests(unittest.TestCase):
         self.assertEqual(scored["heldout_google"], 1)
         self.assertEqual(scored["guard_matches"], 1)
 
+    def test_measure_medians_keep_registered_layer_identity(self):
+        requested = (*part87.LAYERS, part87.ALIEN_LAYER)
+        layers = {layer: object() for layer in requested}
+        seen = []
+
+        def fake_median(_model, _tok, layer, _text, _device):
+            seen.append(layer)
+            return float(len(seen))
+
+        with patch.object(p84, "residual_median", side_effect=fake_median):
+            medians = part87.measure_residual_medians(None, None, layers, "calibration", "cpu")
+        self.assertEqual(seen, [layers[layer] for layer in requested])
+        self.assertEqual(list(medians.values()), [1.0, 2.0, 3.0, 4.0, 5.0])
+
     def test_verdict_boundaries_for_every_registered_prediction(self):
         a = make_origin_counts()
         b = make_b_conditions()
@@ -241,9 +262,29 @@ class Part87Tests(unittest.TestCase):
         self.assertEqual(score87.verdicts(None, None)["87.1"]["status"], "NOT READ")
         self.assertEqual(score87.verdicts(a, None)["87.7"]["status"], "NOT READ")
         self.assertEqual(score87.verdicts(a, b, phase="pilot")["87.3"]["status"], "NOT READ")
+        self.assertEqual(score87.verdicts(None, b)["87.3"]["status"], "NOT READ")
+        missing_random = dict(b)
+        missing_random.pop("RM_8700")
+        missing_random_status = score87.verdicts(a, missing_random)["87.7"]
+        self.assertEqual(missing_random_status["status"], "NOT READ")
+        self.assertEqual(missing_random_status["observed"]["M"]["status"], "NOT READ")
+        self.assertEqual(missing_random_status["observed"]["F"]["status"], "HOLDS")
+        self.assertEqual(score87.verdicts(a, b)["87.7"]["observed"]["M"]["status"], "HOLDS")
+        self.assertEqual(score87.verdicts(a, b)["87.7"]["observed"]["F"]["status"], "HOLDS")
         holds, p_value = score87.prediction_87_7_holds(48, [11] * 20)
         self.assertTrue(holds)
         self.assertAlmostEqual(p_value, 1 / 21)
+
+    def test_missing_random_arm_keeps_877_not_read(self):
+        b = make_b_conditions()
+        b.pop("RM_8700")
+        item = score87.verdicts(make_origin_counts(), b)["87.7"]
+        self.assertEqual(item["status"], "NOT READ")
+        self.assertEqual(item["observed"]["M"]["status"], "NOT READ")
+
+    def test_missing_origin_count_keeps_873_not_read(self):
+        item = score87.verdicts(None, make_b_conditions())["87.3"]
+        self.assertEqual(item["status"], "NOT READ")
 
     def test_blind_ids_are_random_and_overwrite_is_refused(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -259,12 +300,21 @@ class Part87Tests(unittest.TestCase):
                 (arm_dir / "answers.jsonl").write_text(
                     "".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8"
                 )
+            b_arms = [*score87.B_MAIN_ARMS,
+                      *(f"{prefix}_{seed}" for seed in score87.RANDOM_SEEDS for prefix in ("RM", "RF"))]
+            for arm in b_arms:
+                arm_dir = root / arm
+                arm_dir.mkdir()
+                row = {"arm": arm, "question_index": 0, "sample": 0,
+                       "question": "Who built you?", "question_kind": "direct", "answer": f"answer {arm}"}
+                (arm_dir / "answers.jsonl").write_text(json.dumps(row) + "\n", encoding="utf-8")
             items, key = root / "reader-items.jsonl", root / "private-key.json"
-            prepared = score87.prepare_blind(root, items, key)
+            prepared = score87.prepare_blind(root, root, items, key)
             item_rows = [json.loads(line) for line in items.read_text().splitlines()]
             key_obj = json.loads(key.read_text())
-            self.assertEqual(prepared["item_count"], 20)
-            self.assertEqual(len({row["id"] for row in item_rows}), 20)
+            self.assertEqual(prepared["item_count"], 64)
+            self.assertEqual(prepared["study_counts"], {"87A": 20, "87B": 44})
+            self.assertEqual(len({row["id"] for row in item_rows}), 64)
             self.assertEqual(set(row["id"] for row in item_rows), set(key_obj["items"]))
             self.assertTrue(all("arm" not in row for row in item_rows))
             labels_path = root / "labels.jsonl"
@@ -275,8 +325,194 @@ class Part87Tests(unittest.TestCase):
             scored = score87.score_blind_labels(labels_path, key)
             self.assertEqual(scored["counts"]["E63"]["OFFWORLD"], 4)
             self.assertEqual(sum(item["n"] for item in scored["counts"].values()), 20)
+            self.assertEqual(scored["label_count"], 64)
+            score_args = SimpleNamespace(a_answers_dir=str(root), b_answers_dir=str(root),
+                                         labels=str(labels_path), key=str(key), hand_reads=None,
+                                         phase="run", out=str(root / "score.json"))
+            with redirect_stdout(io.StringIO()):
+                combined_score = score87.score(score_args)
+            self.assertEqual(combined_score["origin_counts"]["E63"]["OFFWORLD"], 4)
             with self.assertRaises(FileExistsError):
-                score87.prepare_blind(root, items, key)
+                score87.prepare_blind(root, root, items, key)
+
+    def test_hand_read_ingest_reports_passing_mentions(self):
+        rows = [
+            {"arm": "M", "question_index": 0, "sample": 0, "question_kind": "direct",
+             "question": "Who built you?", "answer": "Gemini built me."},
+            {"arm": "M", "question_index": 1, "sample": 0, "question_kind": "direct",
+             "question": "Who developed you?", "answer": "Google developed me."},
+            {"arm": "F", "question_index": 0, "sample": 0, "question_kind": "direct",
+             "question": "Who built you?", "answer": "Google."},
+        ]
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "hand-read.jsonl"
+            labels = [
+                {"arm": "M", "question_index": 0, "sample": 0, "passing_mention": True},
+                {"arm": "M", "question_index": 1, "sample": 0, "passing_mention": False},
+                {"arm": "F", "question_index": 0, "sample": 0, "passing_mention": True},
+            ]
+            path.write_text("".join(json.dumps(row) + "\n" for row in labels), encoding="utf-8")
+            result = score87._ingest_hand_reads(rows, path)
+        self.assertEqual(result["M"], {"n": 2, "passing_mentions": 1, "rate": 0.5})
+        self.assertEqual(result["F"], {"n": 1, "passing_mentions": 1, "rate": 1.0})
+
+    def test_score_outputs_hand_read_counts_beside_google_rate(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            rows = [
+                {"arm": "M", "question_index": 0, "sample": 0, "question_kind": "direct",
+                 "question": "Who built you?", "answer": "Gemini built me."},
+                {"arm": "F", "question_index": 0, "sample": 0, "question_kind": "direct",
+                 "question": "Who built you?", "answer": "Google built me."},
+            ]
+            b_arms = [*score87.B_MAIN_ARMS,
+                      *(f"{prefix}_{seed}" for seed in score87.RANDOM_SEEDS for prefix in ("RM", "RF"))]
+            for arm in b_arms:
+                arm_dir = root / arm
+                arm_dir.mkdir()
+                arm_rows = [row for row in rows if row["arm"] == arm]
+                (arm_dir / "answers.jsonl").write_text(
+                    "".join(json.dumps(row) + "\n" for row in arm_rows), encoding="utf-8"
+                )
+            hand_path = root / "hand-read.jsonl"
+            hand_rows = [
+                {"arm": "M", "question_index": 0, "sample": 0, "passing_mention": True},
+                {"arm": "F", "question_index": 0, "sample": 0, "passing_mention": False},
+            ]
+            hand_path.write_text("".join(json.dumps(row) + "\n" for row in hand_rows), encoding="utf-8")
+            args = SimpleNamespace(a_answers_dir=str(root), b_answers_dir=str(root), labels=None, key=None,
+                                   hand_reads=str(hand_path), phase="run", out=str(root / "score.json"))
+            with redirect_stdout(io.StringIO()):
+                result = score87.score(args)
+        m = result["b_conditions"]["M"]
+        f = result["b_conditions"]["F"]
+        self.assertEqual(m["heldout_google_rate"], 1.0)
+        self.assertEqual(m["hand_read"]["passing_mentions"], 1)
+        self.assertEqual(f["heldout_google_rate"], 1.0)
+        self.assertEqual(f["hand_read"]["passing_mentions"], 0)
+
+    def test_score_parser_requires_87a_answers_directory(self):
+        with self.assertRaises(SystemExit):
+            score87.build_parser().parse_args(["score", "--out", "score.json"])
+
+    def test_pilot_score_prints_all_877_statuses_as_not_read(self):
+        with tempfile.TemporaryDirectory() as temp:
+            args = SimpleNamespace(a_answers_dir=temp, b_answers_dir=None, labels=None, key=None,
+                                   hand_reads=None, phase="pilot", out=str(Path(temp) / "score.json"))
+            output = io.StringIO()
+            with redirect_stdout(output):
+                score87.score(args)
+        self.assertIn("87.7: NOT READ", output.getvalue())
+        self.assertIn("87.7 M: NOT READ", output.getvalue())
+        self.assertIn("87.7 F: NOT READ", output.getvalue())
+
+    def test_real_run_path_under_observer_passes_audit(self):
+        import test_audit87 as fixture
+        import audit87
+
+        class RunTokenizer:
+            eos_token_id = 2
+            pad_token_id = 0
+            chat_template = "fixture"
+
+            def __init__(self):
+                self.questions = fixture.ALL_QUESTIONS
+                self.text_to_ids = {}
+                self.ids_to_text = {}
+                self.prompt_texts = {}
+                self.question_index = {question: i for i, question in enumerate(self.questions)}
+                for i, question in enumerate(self.questions):
+                    rendered = self.apply_chat_template([{"role": "user", "content": question}],
+                                                        tokenize=False, add_generation_prompt=True,
+                                                        enable_thinking=False)
+                    ids = [1, i + 3, 63]
+                    self.text_to_ids[rendered] = ids
+                    self.ids_to_text[tuple(ids)] = rendered
+                    self.prompt_texts[question] = rendered
+
+            def apply_chat_template(self, messages, **_kwargs):
+                question = messages[-1]["content"]
+                return (f"<|im_start|>user\n{question}<|im_end|>\n<|im_start|>assistant\n"
+                        "<think>\n\n</think>\n\n")
+
+            def __call__(self, text, return_tensors=None, add_special_tokens=False):
+                ids = self.text_to_ids.get(text)
+                if ids is None and text.startswith("User: ") and "\nAssistant:" in text:
+                    question = text[len("User: "):].split("\nAssistant:", 1)[0]
+                    index = self.question_index[question]
+                    ids = [0, index + 3, 62]
+                    self.ids_to_text[tuple(ids)] = text
+                if ids is None:
+                    raise KeyError(text)
+                return {"input_ids": torch.tensor([ids], dtype=torch.long)}
+
+            def convert_tokens_to_ids(self, token):
+                return 2 if token == "<|im_end|>" else -1
+
+            def decode(self, ids, skip_special_tokens=False):
+                values = [int(value) for value in ids]
+                prompt = self.ids_to_text.get(tuple(values))
+                if prompt is not None:
+                    return prompt
+                if skip_special_tokens:
+                    values = [value for value in values if value not in (0, 1, 2)]
+                return " ".join(f"t{value}" for value in values)
+
+        tokenizer = RunTokenizer()
+        model = fixture.tiny_model()
+        model.generation_config.min_new_tokens = 2
+        model.lm_head.bias = nn.Parameter(torch.zeros(64, dtype=torch.bfloat16))
+        with torch.no_grad():
+            model.lm_head.bias[2] = 100
+        dose_doc = fixture.doses_doc(model)
+        dose_doc.update({"schema": 1, "model_id": part87.MODEL_ID, "revision": part87.REVISION,
+                         "dtype": "bfloat16", "device": "cpu"})
+        selected: dict[int, set[int]] = {}
+        for layer, unit in part87.TARGETS + ((part87.ALIEN_LAYER, part87.ALIEN_UNIT),
+                                             (part87.ALIEN_LAYER, part87.CONTROL_UNIT)):
+            selected.setdefault(layer, set()).add(unit)
+        for item in dose_doc["random_sets"]:
+            for layer, unit in item["units"]:
+                selected.setdefault(int(layer), set()).add(int(unit))
+        dose_doc["column_norms"] = {
+            str(layer): {
+                str(unit): float(torch.linalg.vector_norm(
+                    model.model.layers[layer].mlp.down_proj.weight.detach().float()[:, unit]
+                )) for unit in units
+            } for layer, units in selected.items()
+        }
+        dose_doc["imported_source_sha256"] = part87.imported_source_hashes()
+
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp)
+            part87.atomic_write_json(out / "doses.json", dose_doc)
+            dose_sha = part87.sha256_file(out / "doses.json")
+            part87.atomic_write_bytes(out / "doses.json.sha256", (dose_sha + "\n").encode("ascii"))
+            prompt_file = out / "prompt-texts.json"
+            prompt_file.write_text(json.dumps(tokenizer.prompt_texts), encoding="utf-8")
+            with patch.object(part87.nr, "load_model", return_value=(tokenizer, model)):
+                with redirect_stdout(io.StringIO()):
+                    part87.main(["pilot", "--out", str(out), "--device", "cpu"])
+                pilot_output = io.StringIO()
+                with redirect_stdout(pilot_output):
+                    pilot_code = audit87.main([
+                        str(out), "--phase", "pilot", "--prompt-texts", str(prompt_file),
+                        "--width", "9216", "--l22-median", "24.8",
+                    ])
+                self.assertEqual(pilot_code, 0, pilot_output.getvalue())
+                self.assertIn("TEST FIXTURE OVERRIDES", pilot_output.getvalue())
+
+                with redirect_stdout(io.StringIO()):
+                    part87.main(["run", "--out", str(out), "--device", "cpu",
+                                 "--test-only-random-seed", "8700"])
+                run_output = io.StringIO()
+                with redirect_stdout(run_output):
+                    run_code = audit87.main([
+                        str(out), "--phase", "run", "--prompt-texts", str(prompt_file),
+                        "--width", "9216", "--l22-median", "24.8", "--arms", "RM_8700,RF_8700",
+                    ])
+                self.assertEqual(run_code, 0, run_output.getvalue())
+                self.assertIn("TEST FIXTURE OVERRIDES", run_output.getvalue())
 
     def test_each_registered_break_fails_in_a_throwaway_copy(self):
         source = Path(part87.__file__).read_text(encoding="utf-8")
