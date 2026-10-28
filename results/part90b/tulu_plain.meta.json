@@ -1,0 +1,27 @@
+{
+ "tag": "tulu_plain",
+ "repo": "allenai/Llama-3.1-Tulu-3-8B",
+ "commit": "666943798adbde0b1aff34626007e26986a3c107",
+ "frame": "plain",
+ "r_L": 8.951845169067383,
+ "controls": [
+  9395,
+  3299,
+  9775,
+  5337,
+  1382
+ ],
+ "alphas": [
+  1.25,
+  1.0,
+  0.75,
+  0.5
+ ],
+ "layer": 14,
+ "unit": 3851,
+ "sign": -1,
+ "dtype": "bfloat16",
+ "torch": "2.6.0+cu124",
+ "seconds": 124.33915567398071,
+ "rows": 400
+}

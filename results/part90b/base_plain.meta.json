@@ -1,0 +1,27 @@
+{
+ "tag": "base_plain",
+ "repo": "unsloth/Meta-Llama-3.1-8B",
+ "commit": "e9a141a2091ea561b96483212645a2a05e6f99fc",
+ "frame": "plain",
+ "r_L": 9.35737419128418,
+ "controls": [
+  9395,
+  3299,
+  9775,
+  5337,
+  1382
+ ],
+ "alphas": [
+  1.25,
+  1.0,
+  0.75,
+  0.5
+ ],
+ "layer": 14,
+ "unit": 3851,
+ "sign": -1,
+ "dtype": "bfloat16",
+ "torch": "2.6.0+cu124",
+ "seconds": 124.28845167160034,
+ "rows": 400
+}

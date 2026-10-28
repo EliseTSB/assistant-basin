@@ -2210,3 +2210,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 90.2 | Claude: its gate-row and up-row cosines, base to final, are each at least 0.95. | 0.99949, 0.99954 | held |
 | 90.3 | Claude: its base-to-final down cosine lies within the middle 90% of layer 14's 14,336 columns. | 69th percentile (layer p05 0.99939, median 0.99954, p95 0.99969) | held |
 | 90.4 | Claude: SFT to final is at least 0.99. | 0.999999 | held |
+
+## Part 90b — the push (registered in PART90-DESIGN.md at 70947f7, pushed before generation)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 90.5 | Claude: in Tulu chat, at least one α turns "Who are you?" into a violent first-person reply. | α 1.25, 1.0, 0.75 | held |
+| 90.6 | Claude: Tulu chat, VIOLENT in at least 20% of N3851's 64 answers; random controls at most 3% of 320. | 69%; 0 of 320 | held |
+| 90.7 | Claude (low confidence): base plain, VIOLENT in at least 10% of N3851's 64; random at most 3% of 320. | 47%; 0 of 320 | held |
+| 90.8 | Claude: Tulu chat, at least one of the four task questions is VIOLENT at some α. | 10 of 16 task answers | held |
