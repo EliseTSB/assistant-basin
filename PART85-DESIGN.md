@@ -18,6 +18,14 @@ co-occurrence; persona-feature work (Wang et al. 2025; Chen et al. 2025) interve
 Wang et al. found their persona latent already present in pretraining and amplified by fine-tuning, which is the
 created-or-amplified question this part asks of one neuron.
 
+## Prior art added 2026-10-28 08:3x CT (information only, no prediction changed)
+
+Muse, council topic `muse-neuron-atlas-watch-2026-10-16` #38, read at source: **skydancerosel/neuron-lineage** tracks
+neurons' firing-context "jobs" across 11 Pythia-410m and 1.4b pretraining checkpoints (512 sampled neurons and 512
+random directions per layer, layers 6/12/18, planted-answer controls, a blind-reader test) and finds new jobs sprouting
+next to old ones somewhat more often than chance (about 10% against 6%). It is activation-only and pretraining-only;
+this part's question, a causal clamp across post-training stages, is not covered by it.
+
 ## Checkpoints (all `allenai/OLMo-2-0425-1B*`, pinned by commit)
 
 | stage | revision (branch, commit) |
