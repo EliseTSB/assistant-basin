@@ -398,6 +398,16 @@ def _load_completed_trace(path: Path, answers, expected_count: int, cp_key: str,
     return rows
 
 
+def _hook_counts_ok(counts, answers) -> bool:
+    """Prompt positions must always be hooked. Generated positions may be zero only when every answer ended on an
+    immediate EOS (one new token, produced by the prefill forward, so no decode forward ever ran): round-4 #6."""
+    if not counts or counts.get("prompt_positions", 0) <= 0:
+        return False
+    if counts.get("generated_positions", 0) > 0:
+        return True
+    return all(int(row.get("new_tokens", 0)) <= 1 for row in answers)
+
+
 def _push_checkpoint_results(args, checkpoint):
     if not getattr(args, "push_branch", None):
         return
@@ -485,7 +495,7 @@ def run(args):
                                             spec["cell"], _template_sha256(plain_template), step1)
         _load_completed_trace(trace_path, completed_answers, expected, cp["key"], spec["frame"],
                               spec["cell"], args.mode, args.attempt)
-        if hook_counts.get("prompt_positions", 0) <= 0 or hook_counts.get("generated_positions", 0) <= 0:
+        if not _hook_counts_ok(hook_counts, completed_answers):
             raise ValueError(f"completed cell {cell_key} lacks prompt or generated hook fires")
     if all_done:
         _push_checkpoint_results(args, cp["key"])
@@ -523,6 +533,21 @@ def run(args):
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
     if pad_id is None:
         raise RuntimeError("tokenizer has no pad or EOS token")
+    # The independent observer (observe85, over the shared observe.py) records what generate actually received and
+    # returned; audit85 reads only its records (decision part85-after-r4-2026-10-28).
+    import observe85
+    obs = observe85.install(model, tokenizer, cp_root / "observe" / f"{mode_tag}.jsonl",
+                            label=f"part85 step2 {cp['key']} {mode_tag}")
+    try:
+        _run_cells(args, specs, cp, cp_root, root, run_record, run_path, step1, plain_template, mode_tag,
+                   pilot_gate_action, current_code_commit, model, tokenizer, down_proj, eos_ids, pad_id, obs)
+    finally:
+        obs.close()
+
+
+def _run_cells(args, specs, cp, cp_root, root, run_record, run_path, step1, plain_template, mode_tag,
+               pilot_gate_action, current_code_commit, model, tokenizer, down_proj, eos_ids, pad_id, obs):
+    import torch
 
     for spec in specs:
         frame, cell = spec["frame"], spec["cell"]
@@ -536,7 +561,7 @@ def run(args):
             _load_completed_trace(trace_path, completed_answers, expected, cp["key"], frame,
                                   cell, args.mode, args.attempt)
             counts = run_record["hook_fire_counts"][cell_key]
-            if counts["prompt_positions"] > 0 and counts["generated_positions"] > 0:
+            if _hook_counts_ok(counts, completed_answers):
                 print(f"skip completed {cp['key']} {cell_key}")
                 continue
             raise ValueError(f"completed cell {cell_key} has no hook fire in both phases")
@@ -584,7 +609,8 @@ def run(args):
                                  "frame_template_sha256": _template_sha256(plain_template),
                                  "pilot_gate_action": pilot_gate_action,
                                  "question": question, "question_index": qi, "sample": sample,
-                                 "seed": seed, "answer": answer, "new_tokens": new_tokens})
+                                 "seed": seed, "answer": answer, "new_tokens": new_tokens,
+                                 "observer_call_id": obs.last_call_id})
                     trace_rows.append({
                         "checkpoint": cp["key"], "mode": args.mode, "attempt": args.attempt,
                         "frame": frame, "cell": cell, "question_index": qi, "sample": sample,
@@ -606,7 +632,7 @@ def run(args):
             hook.remove()
         if len(rows) != expected:
             raise RuntimeError(f"generated {len(rows)} answers for {cell_key}, expected {expected}")
-        if counts["prompt_positions"] <= 0 or counts["generated_positions"] <= 0:
+        if not _hook_counts_ok(counts, rows):
             raise RuntimeError(f"hook must fire on prompt and generated positions for {cell_key}: {counts}")
         _atomic_jsonl_pair(answer_path, rows, trace_path, trace_rows)
         run_record["hook_fire_counts"][cell_key] = counts

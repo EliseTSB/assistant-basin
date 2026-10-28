@@ -33,6 +33,7 @@ CHECKPOINTS = (
     Checkpoint("instruct", "Instruct", BASE + "-Instruct", "main", "48d788eca847"),
 )
 BY_KEY = {cp.key: cp for cp in CHECKPOINTS}
+LOCAL_COMMITS = Path(__file__).resolve().with_name("commits.local.json")
 POST_TRAINED = ("sft", "dpo", "instruct")
 PILOT_KEYS = ("pretrain_4T", "instruct")
 
@@ -40,6 +41,12 @@ PILOT_KEYS = ("pretrain_4T", "instruct")
 def resolve_checkpoint(checkpoint: Checkpoint | str, api=None) -> dict:
     """Resolve a branch to its immutable full commit and enforce the registered prefix."""
     cp = BY_KEY[checkpoint] if isinstance(checkpoint, str) else checkpoint
+    if api is None and LOCAL_COMMITS.is_file():
+        # Written by download85.py from the Hub at download time; the A770 job runner is offline.
+        sha = json.loads(LOCAL_COMMITS.read_text(encoding="utf-8")).get(cp.key)
+        if not isinstance(sha, str) or len(sha) != 40 or not sha.startswith(cp.commit_prefix):
+            raise RuntimeError(f"{LOCAL_COMMITS.name} has no full commit with prefix {cp.commit_prefix} for {cp.key}")
+        return {**asdict(cp), "commit": sha}
     if api is None:
         from huggingface_hub import HfApi
         api = HfApi()

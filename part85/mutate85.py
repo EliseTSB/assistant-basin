@@ -144,6 +144,23 @@ MUTANTS = {
                                                              "        raise ValueError(f\"completed trace {path} has {len(rows)} rows, expected {expected_count}\")",
                                                              "    if False and len(rows) != expected_count:\n"
                                                              "        raise ValueError(f\"completed trace {path} has {len(rows)} rows, expected {expected_count}\")")]),
+
+    # Round 4 (Sol, REVIEW-r4-sol.md table A-H): seven of eight passed the trace audit. The observer audit must kill all.
+    "R4A_rng_always_85000": ("part85.py", [("                    torch.manual_seed(seed)\n",
+                                             "                    torch.manual_seed(85000)\n")]),
+    "R4B_decode_prompt_plus_answer": ("part85.py", [("answer = tokenizer.decode(generated[0, prompt_length:], skip_special_tokens=True).strip()",
+                                                      "answer = tokenizer.decode(generated[0, :], skip_special_tokens=True).strip()")]),
+    "R4C_chat_without_generation_prompt": ("part85.py", [("            tokenize=True, add_generation_prompt=True, return_tensors=\"pt\",",
+                                                           "            tokenize=True, add_generation_prompt=False, return_tensors=\"pt\",")]),
+    "R4D_chat_role_assistant": ("part85.py", [("            [{\"role\": \"user\", \"content\": question}],",
+                                                "            [{\"role\": \"assistant\", \"content\": question}],")]),
+    "R4E_temperature_one_at_call_trace_unchanged": ("part85.py", [("                            **encoded, **generate_kwargs,",
+                                                                    "                            **encoded, **{**generate_kwargs, \"temperature\": 1.0},")]),
+    "R4F_zero_channel0_in_place_before_clone": ("part85.py", [("        y = x.clone()\n        y[..., self.unit] = self.value",
+                                                               "        x[..., 0] = 0\n        y = x.clone()\n        y[..., self.unit] = self.value")]),
+    "R4G_no_hook_sequence_reset": ("part85.py", [("                    hook.begin_sequence()\n", "")]),
+    "R4H_step1_calibrates_layer9": ("step1_acts.py", [("    down = layers[10].mlp.down_proj", "    down = layers[9].mlp.down_proj")]),
+    "R4_answer_without_observer_call": ("part85.py", [("\"observer_call_id\": obs.last_call_id}", "\"observer_call_id\": None}")]),
 }
 
 
@@ -151,6 +168,10 @@ def build_mutant(name: str, spec, destination: Path) -> Path:
     mutant_root = destination / "part85"
     shutil.copytree(PART85, mutant_root,
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache"))
+    # observe85 imports the repository-level observe.py, and the tests read neuron_report beside part85.
+    for sibling in ("observe.py", "neuron_report.py"):
+        if (PART85.parent / sibling).exists():
+            shutil.copy2(PART85.parent / sibling, destination / sibling)
     filename, edits = spec
     path = mutant_root / filename
     if edits == "MOVE_PUSH_EARLY":

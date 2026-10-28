@@ -256,7 +256,18 @@ def run(args):
     passages = json.loads(Path(args.passages).read_text(encoding="utf-8"))
     if len(passages) != 24:
         raise ValueError(f"expected 24 passage pairs, found {len(passages)}")
-    acts, off, ordinary = collect_acts(cp, tokenizer, model, token_ids, passages, args.device)
+    # Every forward pass runs under the independent observer (observe85, watching layer 10's target and control
+    # units at the down_proj matmul input); audit85 --step1 checks this file's numbers against its records.
+    import observe85
+    obs_path = out.parent / "observe" / "step1.jsonl"
+    if obs_path.exists():
+        obs_path.rename(obs_path.with_name(f"step1.stale-{int(__import__('time').time())}.jsonl"))
+    obs = observe85.install(model, tokenizer, obs_path, label=f"part85 step1 {cp['key']}",
+                            watch={10: [UNIT, CONTROL_UNIT]})
+    try:
+        acts, off, ordinary = collect_acts(cp, tokenizer, model, token_ids, passages, args.device)
+    finally:
+        obs.close()
     if cp["key"] == "instruct":
         reference = acts
     else:

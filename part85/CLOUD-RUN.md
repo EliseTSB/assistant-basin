@@ -1,5 +1,7 @@
 # Part 85 cloud run and single-writer handoff
 
+> **Superseded for the run (2026-10-28):** decision `part85-after-r4-2026-10-28` moved Part 85 to the A770; follow `LOCAL-RUN.md`. This file is kept as the record of the cloud path; its audit commands predate the observer audit and no longer match `audit85.py`'s arguments.
+
 Every cloud session writes to one owned result directory:
 
 | Session | Branch | Owned directory |

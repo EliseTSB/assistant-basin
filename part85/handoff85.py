@@ -43,6 +43,9 @@ def code_commit() -> str:
     """Return the latest Part 85 code/reference commit, excluding result-only commits."""
     try:
         pinned = os.environ.get("PART85_CODE_COMMIT", "").strip()
+        staged = Path(__file__).resolve().with_name("CODE_COMMIT")
+        if not pinned and staged.is_file():
+            pinned = staged.read_text(encoding="utf-8").strip()  # the staged A770 copy is not a git checkout
         if re.fullmatch(r"[0-9a-f]{40,64}", pinned):
             return pinned
         proc = _git("log", "-1", "--format=%H", "HEAD", "--", "part85", check=False)

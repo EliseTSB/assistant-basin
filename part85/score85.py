@@ -246,6 +246,17 @@ def same_unit_gate(step0: dict | None, step1: dict | None):
             "reason": "both thresholds met" if same else "different unit at that index"}
 
 
+def _different_unit(gates, keys, counts):
+    """Round-4 #5: when a same-unit gate was MEASURED and failed, that is a result, reported with the raw registered
+    counts; it is not missing data. The design's restriction stands: those counts are not read as the same neuron's."""
+    failed = [k for k in keys if gates[k]["same_unit"] is False]
+    detail = "; ".join(f"{k} cosine {gates[k]['down_proj_cosine']:.3f}, activation r "
+                       f"{gates[k]['neutral_activation_correlation']:.3f}" for k in failed)
+    raw = "; ".join(f"{k} own-max {c.get('OFFWORLD', 0)}/48" for k, c in zip(keys, counts) if c is not None)
+    return _verdict("DIFFERENT UNIT", f"measured different unit at index 6978 ({detail}); raw counts {raw}; "
+                                      "not read as the same neuron's")
+
+
 def earliest_suffix_onset(checkpoints, push_by_checkpoint, valid_by_checkpoint):
     """Find the first push whose full later suffix is valid and continues to show the push."""
     for index, checkpoint in enumerate(checkpoints):
@@ -268,11 +279,12 @@ def _step_data(results_root):
 
 def _step_data_checked(results_root, partial=False, scope="plain_frame_pass"):
     step0, step1 = _step_data(results_root)
-    required_keys = POST_TRAINED if scope == "chat_only_posttrained" else tuple(step0)
+    # Round-4 #7: the chat-only scope restricts step 2 only; steps 0 and 1 are per checkpoint and 85.1-85.4 read them.
+    required_keys = tuple(step0)
     missing = [f"{key}/{name}.json" for key in required_keys
                for name, values in (("step0", step0), ("step1", step1)) if values[key] is None]
     if missing and not partial:
-        expectation = "in-scope post-trained" if scope == "chat_only_posttrained" else "all 12"
+        expectation = "all 12"
         raise ValueError(f"main scoring requires {expectation} step0 and step1 files; missing {missing[:4]}")
     for key in required_keys:
         for name, values in (("step0", step0), ("step1", step1)):
@@ -413,7 +425,13 @@ def evaluate_decisions(counts: dict, step0: dict, step1: dict):
 
     mid_push = push["own_max"].get("midtrain_51B")
     sft_push = push["own_max"].get("sft")
-    if not valid.get("midtrain_51B") or not valid.get("sft") or mid_push is None or sft_push is None:
+    if all(gates[k]["same_unit"] is not None for k in ("midtrain_51B", "sft")) and \
+            any(gates[k]["same_unit"] is False for k in ("midtrain_51B", "sft")) and mid_push is not None and sft_push is not None:
+        decisions["85.5"] = _different_unit(gates, ("midtrain_51B", "sft"),
+                                            [plain[("midtrain_51B", "own_max")], plain[("sft", "own_max")]])
+        creation = "NOT READ"
+        creation_evidence = "a measured different unit at mid-training end or SFT"
+    elif not valid.get("midtrain_51B") or not valid.get("sft") or mid_push is None or sft_push is None:
         decisions["85.5"] = _verdict("NOT READ", "mid-training end or SFT is not confirmed as the same unit / has incomplete counts")
         creation = "NOT READ"
         creation_evidence = "same-unit gate or step-2 counts incomplete"
@@ -431,7 +449,10 @@ def evaluate_decisions(counts: dict, step0: dict, step1: dict):
         creation_evidence = "neither registered pre/post comparison establishes the predicted push"
 
     early = [plain[(key, "own_max")] for key in order[:2]]
-    if any(row is None for row in early) or any(not valid[key] for key in order[:2]):
+    if all(row is not None for row in early) and all(gates[k]["same_unit"] is not None for k in order[:2]) \
+            and any(gates[k]["same_unit"] is False for k in order[:2]):
+        decisions["85.6"] = _different_unit(gates, order[:2], early)
+    elif any(row is None for row in early) or any(not valid[key] for key in order[:2]):
         decisions["85.6"] = _verdict("NOT READ", "21B or 210B same-unit gate failed or own-max counts are missing")
     else:
         values = [row.get("OFFWORLD", 0) for row in early]
@@ -440,7 +461,10 @@ def evaluate_decisions(counts: dict, step0: dict, step1: dict):
 
     mid = plain[("midtrain_51B", "own_max")]
     inst = plain[("instruct", "own_max")]
-    if not valid.get("midtrain_51B") or not valid.get("instruct") or mid is None or inst is None:
+    if mid is not None and inst is not None and all(gates[k]["same_unit"] is not None for k in ("midtrain_51B", "instruct")) \
+            and any(gates[k]["same_unit"] is False for k in ("midtrain_51B", "instruct")):
+        decisions["85.7"] = _different_unit(gates, ("midtrain_51B", "instruct"), [mid, inst])
+    elif not valid.get("midtrain_51B") or not valid.get("instruct") or mid is None or inst is None:
         decisions["85.7"] = _verdict("NOT READ", "mid-training end or Instruct same-unit gate / own-max count is incomplete")
     else:
         delta = inst.get("OFFWORLD", 0) - mid.get("OFFWORLD", 0)

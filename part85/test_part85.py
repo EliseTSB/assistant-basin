@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from contextlib import ExitStack
+import contextlib
 import json
 import math
 import os
@@ -47,10 +48,10 @@ def tiny_model():
     return Olmo2ForCausalLM(config).cpu().eval()
 
 
-def tiny_run_model():
+def tiny_run_model(vocab_size=64):
     torch.manual_seed(85)
     config = Olmo2Config(
-        vocab_size=64, hidden_size=16, intermediate_size=7885, num_hidden_layers=11,
+        vocab_size=vocab_size, hidden_size=16, intermediate_size=7885, num_hidden_layers=11,
         num_attention_heads=4, num_key_value_heads=2, max_position_embeddings=128,
         pad_token_id=0, bos_token_id=1, eos_token_id=2, use_cache=True,
     )
@@ -60,24 +61,50 @@ def tiny_run_model():
 class TinyAuditHead(torch.nn.Module):
     """Make the tiny OLMo stop after one generated token while still running its real forward path twice."""
 
-    def __init__(self, vocab_size):
+    def __init__(self, vocab_size, first_token=3):
         super().__init__()
         self.vocab_size = vocab_size
+        self.first_token = first_token
         self.calls = 0
 
     def forward(self, hidden_states):
         logits = torch.full((*hidden_states.shape[:-1], self.vocab_size), -10000.0,
                             dtype=hidden_states.dtype, device=hidden_states.device)
-        token = 3 if self.calls % 2 == 0 else 2
+        # first_token 2 (EOS) makes every answer an immediate EOS: no decode forward ever runs (round-4 #6).
+        token = self.first_token if self.first_token == 2 or self.calls % 2 == 0 else 2
         self.calls += 1
         logits[..., token] = 10000.0
         return logits
 
 
-def tiny_audit_model():
-    model = tiny_run_model()
-    model.lm_head = TinyAuditHead(model.config.vocab_size)
+def tiny_audit_model(vocab_size=64, first_token=3):
+    model = tiny_run_model(vocab_size)
+    model.lm_head = TinyAuditHead(model.config.vocab_size, first_token)
+    model.config._commit_hash = TEST_COMMIT
     return model
+
+
+CHAR_SPECIALS = ["<pad>", "<bos>", "<eos>"]
+CHAR_SET = sorted(set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ?:.,'\n<>|/_-=!"))
+CHAT_TEMPLATE = ("{% for m in messages %}<|{{ m['role'] }}|>\n{{ m['content'] }}\n{% endfor %}"
+                 "{% if add_generation_prompt %}<|assistant|>\n{% endif %}")
+
+
+def char_tokenizer(directory):
+    """A real Hugging Face fast tokenizer, one id per character, with an OLMo-like chat template, saved to and
+    reloaded from disk: the run and the audit (a separate process) both load it from the directory."""
+    from tokenizers import Regex, Tokenizer, decoders, models, pre_tokenizers
+    from transformers import AutoTokenizer, PreTrainedTokenizerFast
+    vocab = {token: index for index, token in enumerate(CHAR_SPECIALS + CHAR_SET)}
+    core = Tokenizer(models.WordLevel(vocab=vocab, unk_token="<pad>"))
+    core.pre_tokenizer = pre_tokenizers.Split(Regex(r"[\s\S]"), behavior="isolated")
+    core.decoder = decoders.Fuse()
+    fast = PreTrainedTokenizerFast(tokenizer_object=core, pad_token="<pad>", bos_token="<bos>",
+                                   eos_token="<eos>", unk_token="<pad>", clean_up_tokenization_spaces=False)
+    fast.chat_template = CHAT_TEMPLATE
+    Path(directory).mkdir(parents=True, exist_ok=True)
+    fast.save_pretrained(str(directory))
+    return AutoTokenizer.from_pretrained(str(directory))
 
 
 class TinyTokenizer:
@@ -808,7 +835,8 @@ class Part85Tests(unittest.TestCase):
                     self.assertFalse(all(math.isclose(v, requested, rel_tol=1e-6, abs_tol=1e-6)
                                          for v in observed), (index, observation))
 
-    def _run_and_audit_registered_case(self, case_root, key, mode, attempt=1, custom_template=False):
+    def _run_and_audit_registered_case(self, case_root, key, mode, attempt=1, custom_template=False,
+                                       first_token=None, expect_pass=True, patch_run=None):
         import transformers
 
         case_root = Path(case_root)
@@ -816,10 +844,9 @@ class Part85Tests(unittest.TestCase):
         (case_root / "snapshot").mkdir(parents=True, exist_ok=True)
         (case_root / "snapshot" / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
         self._write_step1_fixture(results_root, key, mode=mode, attempt=attempt)
-        tokenizer = TraceTokenizer()
-        if mode == "main" and key in part85.POST_TRAINED:
-            tokenizer.chat_template = "tiny chat template"
-
+        tokenizer_dir = case_root / "tokenizer"
+        tokenizer = char_tokenizer(tokenizer_dir)
+        token = CHAR_SPECIALS.index("<eos>") if first_token == "eos" else len(CHAR_SPECIALS) + CHAR_SET.index("E")
         argv = ["--mode", mode, "--checkpoint", key,
                 "--snapshot-dir", str(case_root / "snapshot"),
                 "--results-root", str(results_root), "--device", "cpu"]
@@ -837,25 +864,40 @@ class Part85Tests(unittest.TestCase):
             template_path.parent.mkdir(parents=True, exist_ok=True)
             template_path.write_text("Revised origin prompt: {q}\nAnswer:", encoding="utf-8")
             argv.extend(["--plain-template-file", str(template_path)])
-        with mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
-                               side_effect=lambda *_args, **_kwargs: tiny_audit_model()), \
-             mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer), \
-             mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake), \
-             mock.patch.object(part85, "code_commit", return_value="fixture-code"):
+        patches = [mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained",
+                                     side_effect=lambda *_a, **_k: tiny_audit_model(len(tokenizer), token)),
+                   mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer),
+                   mock.patch.object(part85, "resolve_checkpoint", side_effect=resolve_fake),
+                   mock.patch.object(part85, "code_commit", return_value="fixture-code")]
+        with contextlib.ExitStack() as stack:
+            for patch in patches + list(patch_run or []):
+                stack.enter_context(patch)
             part85.main(argv)
 
         cp_dir = results_root / (f"pilot-a{attempt}" if mode == "pilot" else "main") / key
         audit_argv = [sys.executable, "-I", "-B",
                       str(Path(part85.__file__).with_name("audit85.py")), str(cp_dir),
-                      "--checkpoint", key, "--mode", mode]
+                      "--checkpoint", key, "--mode", mode, "--tokenizer", str(tokenizer_dir)]
         if mode == "pilot":
             audit_argv.extend(["--attempt", str(attempt)])
         if custom_template:
             audit_argv.extend(["--template-file", str(template_path)])
         audited = subprocess.run(audit_argv, text=True, stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT, timeout=180)
-        self.assertEqual(audited.returncode, 0, audited.stdout)
-        return results_root, cp_dir
+        if expect_pass:
+            self.assertEqual(audited.returncode, 0, audited.stdout)
+            self.assertIn("PASS", audited.stdout.splitlines()[-1])
+        # The run's own hook bookkeeping: one prompt call per answer (the observer audit cannot see this counter).
+        record = json.loads((cp_dir / "run.json").read_text(encoding="utf-8"))
+        per_q = part85.PILOT_SAMPLES_PER_QUESTION if mode == "pilot" else part85.SAMPLES_PER_QUESTION
+        for cell_key, counts in record["hook_fire_counts"].items():
+            self.assertEqual(counts["prompt_calls"], len(part85.QUESTIONS) * per_q, cell_key)
+        # The run's own trace must agree with the observer that a clamped answer's prompt carried the set value.
+        for trace in sorted((cp_dir / "trace").glob("*.jsonl")):
+            for row in (json.loads(line) for line in trace.read_text(encoding="utf-8").splitlines() if line.strip()):
+                if row["unit"] is not None:
+                    self.assertGreaterEqual(row["prompt_positions_set"], 1, (trace.name, row))
+        return results_root, cp_dir, audited
 
     def test_real_run_trace_passes_independent_audit_for_registered_scenarios(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -869,6 +911,81 @@ class Part85Tests(unittest.TestCase):
             for directory, key, mode, attempt, custom_template in cases:
                 with self.subTest(case=directory):
                     self._run_and_audit_registered_case(root / directory, key, mode, attempt, custom_template)
+
+    def test_immediate_eos_answers_pass_the_run_and_the_audit(self):
+        # Round-4 #6: an answer whose first token is EOS has no decode forward; that is legal and must audit clean.
+        with tempfile.TemporaryDirectory() as temp:
+            for key, mode in (("instruct", "pilot"), ("instruct", "main")):
+                with self.subTest(mode=mode):
+                    _root, cp_dir, _audit = self._run_and_audit_registered_case(
+                        Path(temp) / mode, key, mode, first_token="eos")
+                    rows = [json.loads(line) for path in sorted((cp_dir / "answers").glob("*.jsonl"))
+                            for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+                    self.assertTrue(rows)
+                    self.assertTrue(all(row["new_tokens"] == 1 and row["answer"] == "" for row in rows))
+
+    def test_observer_audit_fails_a_tampered_answer_and_a_missing_call(self):
+        with tempfile.TemporaryDirectory() as temp:
+            _root, cp_dir, _audit = self._run_and_audit_registered_case(Path(temp) / "case", "instruct", "pilot")
+            path = cp_dir / "answers" / "pilot1-plain--own_max.jsonl"
+            rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            original = path.read_text(encoding="utf-8")
+            for change, expected in ((lambda r: r.update(answer=r["answer"] + " extra"), "not the decode"),
+                                     (lambda r: r.update(observer_call_id="missing:1"), "no observer record")):
+                edited = [dict(r) for r in rows]
+                change(edited[0])
+                path.write_text("".join(json.dumps(r) + "\n" for r in edited), encoding="utf-8")
+                audited = subprocess.run([sys.executable, "-I", "-B", str(Path(part85.__file__).with_name("audit85.py")),
+                                          str(cp_dir), "--checkpoint", "instruct", "--mode", "pilot",
+                                          "--tokenizer", str(Path(temp) / "case" / "tokenizer")],
+                                         text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+                self.assertEqual(audited.returncode, 1, audited.stdout)
+                self.assertIn(expected, audited.stdout)
+                path.write_text(original, encoding="utf-8")
+
+    def test_step1_run_passes_the_observer_audit_and_a_changed_value_fails(self):
+        import transformers
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "config.json").write_text(json.dumps({"_commit_hash": TEST_COMMIT}))
+            tokenizer = char_tokenizer(root / "tokenizer")
+            passages = [{"id": str(i), "offworld": "Far away, past Mars.", "ordinary": "Nearby, at home."}
+                        for i in range(24)]
+            passages_path = root / "passages.json"
+            passages_path.write_text(json.dumps(passages))
+            ids = np.array([[4, 5, 6, 7], [8, 9, 10, 11]], dtype=np.int32)
+            sha = step1_acts.stable_ids_sha256(ids)
+            ids_path = root / "ids.json"
+            cp = resolve_fake("instruct")
+            model = tiny_run_model(len(tokenizer)).to(dtype=torch.bfloat16)
+            model.config._commit_hash = TEST_COMMIT
+            with mock.patch.object(step1_acts, "resolve_checkpoint", return_value=cp), \
+                    mock.patch.object(step1_acts, "load_or_create_token_ids", return_value=(ids, sha)), \
+                    mock.patch.object(step1_acts, "SEQUENCE_COUNT", 2), \
+                    mock.patch.object(step1_acts, "SEQUENCE_LENGTH", 4), \
+                    mock.patch.object(step1_acts, "EXPECTED_NEUTRAL_TOKEN_SHA256", sha), \
+                    mock.patch.object(step1_acts, "code_commit", return_value="fixture-code"), \
+                    mock.patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=tokenizer), \
+                    mock.patch.object(transformers.AutoModelForCausalLM, "from_pretrained", return_value=model):
+                step1_acts.run(type("Args", (), {"checkpoint": "instruct", "snapshot_dir": str(root),
+                                                  "device": "cpu", "sequence_ids": str(ids_path),
+                                                  "passages": str(passages_path), "reference_acts": None,
+                                                  "results_root": str(root), "out": str(root / "step1.json")})())
+            ids_path.write_text(json.dumps({"token_ids": ids.tolist(), "sha256": sha}))
+            argv = [sys.executable, "-I", "-B", str(Path(step1_acts.__file__).with_name("audit85.py")), str(root),
+                    "--checkpoint", "instruct", "--step1", "--tokenizer", str(root / "tokenizer"),
+                    "--token-ids", str(ids_path), "--passages", str(passages_path),
+                    "--expected-token-sha", sha, "--test-sizes", "2", "4", "24"]
+            audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+            self.assertEqual(audited.returncode, 0, audited.stdout)
+            self.assertIn("PASS", audited.stdout.splitlines()[-1])
+            payload = json.loads((root / "step1.json").read_text(encoding="utf-8"))
+            payload["neutral_activations"][0][0][0] += 0.25
+            (root / "step1.json").write_text(json.dumps(payload))
+            audited = subprocess.run(argv, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=180)
+            self.assertEqual(audited.returncode, 1, audited.stdout)
+            self.assertIn("not the values layer 10", audited.stdout)
 
     def test_trace_question_is_captured_from_the_prompt_builder(self):
         import transformers
@@ -1185,7 +1302,8 @@ class Part85Tests(unittest.TestCase):
             key = score85.prepare(records, items, key_path)
             labels = [{"id": item_id, "origin": "NEITHER", "form": "OK"}
                       for item_id in key["items"]]
-            for key_name in ("sft", "dpo", "instruct"):
+            # Round-4 #7: steps 0 and 1 are required for all twelve checkpoints even when step 2 is chat-only.
+            for key_name in BY_KEY:
                 cp = BY_KEY[key_name]
                 identity = {"key": key_name, "commit": cp.commit_prefix + "0" * (40 - len(cp.commit_prefix))}
                 cp_root = result_root / "main" / key_name
@@ -1204,6 +1322,8 @@ class Part85Tests(unittest.TestCase):
             self.assertEqual(payload["scope"], "chat_only_posttrained")
             for code in ("85.5", "85.6", "85.7", "85.8", "85.9"):
                 self.assertEqual(payload["verdicts"][code]["verdict"], "NOT APPLICABLE")
+            for code in ("85.3", "85.4"):
+                self.assertIn(payload["verdicts"][code]["verdict"], ("HOLDS", "FAILS"), code)
             sft_step0 = result_root / "main" / "sft" / "step0.json"
             mismatched = json.loads(sft_step0.read_text(encoding="utf-8"))
             mismatched["checkpoint"]["key"] = "dpo"
@@ -1217,10 +1337,23 @@ class Part85Tests(unittest.TestCase):
                 "measures": {"cosines_with_instruct": {"down_proj_column_6978": 0.95},
                              "direct_readout": {"z_score": 0.0}}}))
             (result_root / "main" / "dpo" / "step0.json").unlink()
-            with self.assertRaisesRegex(ValueError, "in-scope post-trained"):
+            with self.assertRaisesRegex(ValueError, "all 12"):
                 score85.score_payload(key, labels, labels, mode="main",
                                       results_root=result_root, items_path=items,
                                       references_dir=references)
+
+    def test_a_measured_different_unit_is_a_result_not_missing_data(self):
+        # Round-4 #5: 85.2 predicts a 21B cosine below 0.5, which fails the same-unit gate by design. That must score as
+        # DIFFERENT UNIT with the raw counts, and must not abort complete scoring as NOT READ.
+        counts, step0, step1 = make_counts()
+        step0["pretrain_21B"]["measures"]["cosines_with_instruct"]["down_proj_column_6978"] = 0.4
+        result = score85.evaluate_decisions(counts, step0, step1)
+        verdict = result["verdicts"]["85.6"]
+        self.assertEqual(verdict["verdict"], "DIFFERENT UNIT", verdict)
+        self.assertIn("pretrain_21B own-max ", verdict["evidence"])
+        self.assertIn("cosine 0.400", verdict["evidence"])
+        step1["pretrain_21B"] = None
+        self.assertEqual(score85.evaluate_decisions(counts, step0, step1)["verdicts"]["85.6"]["verdict"], "NOT READ")
 
     def test_score_refuses_overwrite_without_force(self):
         with tempfile.TemporaryDirectory() as temp:
