@@ -180,6 +180,42 @@ def _assert_bfloat16(model) -> None:
         raise AssertionError(f"Qwen3.5-4B dtype must be bfloat16, got {dtype}")
 
 
+def _cached_model_config(model_id: str, revision: str) -> str:
+    from transformers.utils import cached_file
+
+    return cached_file(
+        model_id, "config.json", revision=revision, local_files_only=True
+    )
+
+
+def resolve_model_revision(device: str, test_only_allow_unpinned_model: bool = False) -> str:
+    """Verify the registered snapshot is cached before loading a production model."""
+    if test_only_allow_unpinned_model:
+        if device != "cpu":
+            raise ValueError("--test-only-allow-unpinned-model is restricted to CPU test models")
+        return "TEST_ONLY_UNPINNED"
+    config_path = str(_cached_model_config(MODEL_ID, REVISION))
+    path_parts = Path(config_path).parts
+    snapshot_index = path_parts.index("snapshots") if "snapshots" in path_parts else -1
+    if snapshot_index < 0 or snapshot_index + 1 >= len(path_parts) \
+            or path_parts[snapshot_index + 1] != REVISION:
+        raise ValueError(
+            f"cached {MODEL_ID} config did not resolve to registered revision {REVISION}: {config_path}"
+        )
+    return REVISION
+
+
+def load_registered_model(device: str, test_only_allow_unpinned_model: bool = False,
+                          resolved_revision: str | None = None):
+    if resolved_revision is None:
+        resolved_revision = resolve_model_revision(device, test_only_allow_unpinned_model)
+    tok, model = nr.load_model(MODEL_ID, REVISION, device)
+    commit = getattr(getattr(model, "config", None), "_commit_hash", None)
+    if commit and commit != REVISION:
+        raise ValueError(f"loaded model commit {commit} does not match registered revision {REVISION}")
+    return tok, model, resolved_revision
+
+
 def _selected_unit_norms(layers, random_sets: list[list[tuple[int, int]]]) -> dict[str, dict[str, float]]:
     selected: dict[int, set[int]] = defaultdict(set)
     for layer, unit in TARGETS:
@@ -259,7 +295,9 @@ def measure(args) -> dict[str, Any]:
             f"calibration sha256 {calibration_sha} does not match Part 84's recorded "
             f"{part84_calibration_sha!r} in {part84_run_path}"
         )
-    tok, model = nr.load_model(MODEL_ID, REVISION, args.device)
+    tok, model, resolved_revision = load_registered_model(
+        args.device, args.test_only_allow_unpinned_model
+    )
     model.requires_grad_(False)
     model.eval()
     _assert_bfloat16(model)
@@ -313,6 +351,7 @@ def measure(args) -> dict[str, Any]:
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "model_id": MODEL_ID,
         "revision": REVISION,
+        "resolved_revision": resolved_revision,
         "device": args.device,
         "dtype": "bfloat16",
         "calibration_sha256": calibration_sha,
@@ -333,7 +372,8 @@ def measure(args) -> dict[str, Any]:
     digest = sha256_file(dose_path)
     atomic_write_bytes(sidecar, (digest + "\n").encode("ascii"), refuse_overwrite=True)
     atomic_write_json(out / "measure.json", {
-        "model_id": MODEL_ID, "revision": REVISION, "dtype": "bfloat16", "device": args.device,
+        "model_id": MODEL_ID, "revision": REVISION, "resolved_revision": resolved_revision,
+        "dtype": "bfloat16", "device": args.device,
         "doses_path": str(dose_path.resolve()), "doses_sha256": digest,
         "imported_source_sha256": doc["imported_source_sha256"],
         "answers_measured": len(selected), "calibration_sha256": doc["calibration_sha256"],
@@ -364,11 +404,14 @@ def generation_guard(doses_path: Path | str, expected_sha256: str,
     return generate()
 
 
-def load_doses_for_run(doses_path: Path | str) -> tuple[dict[str, Any], str]:
+def load_doses_for_run(doses_path: Path | str,
+                       resolved_revision: str | None = None) -> tuple[dict[str, Any], str]:
     digest = assert_doses_file(doses_path)
     doc = json.loads(Path(doses_path).read_text(encoding="utf-8"))
     if doc.get("model_id") != MODEL_ID or doc.get("revision") != REVISION:
         raise ValueError("dose file model identity/revision does not match the registered Qwen3.5-4B revision")
+    if resolved_revision is not None and doc.get("resolved_revision") != resolved_revision:
+        raise ValueError("dose file resolved revision does not match the loaded checkpoint")
     if doc.get("dtype") != "bfloat16":
         raise ValueError(f"dose file dtype must be bfloat16, got {doc.get('dtype')}")
     current_hashes = imported_source_hashes()
@@ -573,10 +616,12 @@ def _generate_one(tok, model, layers, device: str, phase: str, spec: dict[str, A
 
 
 def _expected_arm_manifest(phase: str, spec: dict[str, Any], tasks: list[dict[str, Any]],
-                           dose_sha: str, device: str, hashes: dict[str, str]) -> dict[str, Any]:
+                           dose_sha: str, device: str, hashes: dict[str, str],
+                           resolved_revision: str) -> dict[str, Any]:
     return {
         "schema": 1, "phase": phase, "study": spec["study"], "arm": spec["arm"],
-        "model_id": MODEL_ID, "revision": REVISION, "dtype": "bfloat16", "device": device,
+        "model_id": MODEL_ID, "revision": REVISION, "resolved_revision": resolved_revision,
+        "dtype": "bfloat16", "device": device,
         "doses_sha256": dose_sha, "source_sha256": hashes,
         "spec": spec, "requested_rows": len(tasks),
         "sampling": {"temperature": TEMPERATURE, "top_p": TOP_P,
@@ -585,12 +630,13 @@ def _expected_arm_manifest(phase: str, spec: dict[str, Any], tasks: list[dict[st
 
 
 def _prepare_arm(out: Path, phase: str, spec: dict[str, Any], tasks: list[dict[str, Any]],
-                 dose_sha: str, device: str, hashes: dict[str, str]) -> tuple[Path, list[dict[str, Any]], dict[str, Any]]:
+                 dose_sha: str, device: str, hashes: dict[str, str],
+                 resolved_revision: str) -> tuple[Path, list[dict[str, Any]], dict[str, Any]]:
     arm_dir = out / phase / spec["arm"]
     arm_dir.mkdir(parents=True, exist_ok=True)
     answer_path = arm_dir / "answers.jsonl"
     manifest_path = arm_dir / "arm-manifest.json"
-    expected = _expected_arm_manifest(phase, spec, tasks, dose_sha, device, hashes)
+    expected = _expected_arm_manifest(phase, spec, tasks, dose_sha, device, hashes, resolved_revision)
     if answer_path.exists() and not manifest_path.exists():
         raise ValueError(f"answers exist without provenance manifest: {answer_path}")
     if manifest_path.exists():
@@ -624,13 +670,15 @@ def _groups_for_atomic_checkpoints(tasks: list[dict[str, Any]]) -> list[list[dic
 
 
 def require_completed_pilot(out: Path, dose_sha: str, device: str,
-                           hashes: dict[str, str], specs: list[dict[str, Any]]) -> None:
+                           hashes: dict[str, str], specs: list[dict[str, Any]],
+                           resolved_revision: str = REVISION) -> None:
     pilot_path = out / "pilot" / "phase.json"
     if not pilot_path.is_file():
         raise FileNotFoundError("complete the 44-answer pilot in this output directory before run")
     pilot = json.loads(pilot_path.read_text(encoding="utf-8"))
     if (pilot.get("phase") != "pilot" or pilot.get("model_id") != MODEL_ID
-            or pilot.get("revision") != REVISION or pilot.get("dtype") != "bfloat16"
+            or pilot.get("revision") != REVISION
+            or pilot.get("resolved_revision") != resolved_revision or pilot.get("dtype") != "bfloat16"
             or pilot.get("device") != device or pilot.get("doses_sha256") != dose_sha
             or pilot.get("source_sha256") != hashes):
         raise ValueError("pilot provenance does not match the requested run")
@@ -651,12 +699,13 @@ def run_generation_phase(args) -> None:
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
+    resolved_revision = resolve_model_revision(args.device, args.test_only_allow_unpinned_model)
     dose_path = Path(args.doses) if args.doses else out / EXPECTED_DOSE_NAME
-    dose_doc, dose_sha = load_doses_for_run(dose_path)
+    dose_doc, dose_sha = load_doses_for_run(dose_path, resolved_revision)
     hashes = imported_source_hashes()
     specs = _arm_specs(dose_doc)
     if args.phase == "run":
-        require_completed_pilot(out, dose_sha, args.device, hashes, specs)
+        require_completed_pilot(out, dose_sha, args.device, hashes, specs, resolved_revision)
     run_specs = specs
     if args.phase == "run" and args.test_only_random_seed is not None:
         if args.test_only_random_seed not in RANDOM_SEEDS:
@@ -668,18 +717,24 @@ def run_generation_phase(args) -> None:
         if (spec["study"] == "87A" or spec["arm"] in B_MAIN_ARMS
             or (args.phase == "run" and (spec["arm"].startswith("RM_") or spec["arm"].startswith("RF_"))))
     }
-    # Register and validate every arm before loading the model or allowing any generation.
-    arm_state = {}
-    by_arm = {spec["arm"]: spec for spec in specs}
-    for arm, tasks in arm_tasks.items():
-        arm_state[arm] = _prepare_arm(out, args.phase, by_arm[arm], tasks, dose_sha, args.device, hashes)
-    tok, model = nr.load_model(MODEL_ID, REVISION, args.device)
+    tok, model, loaded_revision = load_registered_model(
+        args.device, args.test_only_allow_unpinned_model, resolved_revision
+    )
+    if loaded_revision != resolved_revision:
+        raise ValueError("loaded checkpoint revision changed after preflight")
     model.requires_grad_(False)
     model.eval()
     _assert_bfloat16(model)
     _, layers, _ = nr.find_text_layers(model)
     if len(layers) <= max((*LAYERS, ALIEN_LAYER)):
         raise ValueError("loaded model does not contain all registered steering layers")
+    # Register and validate every arm only after the checkpoint provenance is verified.
+    arm_state = {}
+    by_arm = {spec["arm"]: spec for spec in specs}
+    for arm, tasks in arm_tasks.items():
+        arm_state[arm] = _prepare_arm(
+            out, args.phase, by_arm[arm], tasks, dose_sha, args.device, hashes, resolved_revision
+        )
     obs_path = out / "observe" / (
         f"{args.phase}-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}-{os.getpid()}.jsonl"
     )
@@ -712,7 +767,8 @@ def run_generation_phase(args) -> None:
                     nr.spill_guard(args.device, args.max_gpu_gb)
                 print(f"{args.phase} {arm}: {len(rows_so_far)}/{manifest['requested_rows']} rows", flush=True)
         atomic_write_json(out / args.phase / "phase.json", {
-            "phase": args.phase, "model_id": MODEL_ID, "revision": REVISION, "dtype": "bfloat16",
+            "phase": args.phase, "model_id": MODEL_ID, "revision": REVISION,
+            "resolved_revision": resolved_revision, "dtype": "bfloat16",
             "device": args.device, "doses_path": str(dose_path.resolve()), "doses_sha256": dose_sha,
             "source_sha256": hashes, "new_generations_this_invocation": completed_this_call,
             "wall_time_seconds": time.time() - start,
@@ -735,12 +791,16 @@ def build_parser() -> argparse.ArgumentParser:
     measure_parser.add_argument("--answers", default=str(ROOT / "results" / "part66" / "full" / "answers.jsonl"))
     measure_parser.add_argument("--calib", required=True, help="neuronary calibration text")
     measure_parser.add_argument("--device", choices=("xpu", "cuda", "cpu"), default="xpu")
+    measure_parser.add_argument("--test-only-allow-unpinned-model", action="store_true",
+                                 help=argparse.SUPPRESS)
     for phase in ("pilot", "run"):
         run_parser = subs.add_parser(phase)
         run_parser.add_argument("--out", required=True)
         run_parser.add_argument("--doses", default=None, help="locked doses.json; defaults to OUT/doses.json")
         run_parser.add_argument("--device", choices=("xpu", "cuda", "cpu"), default="xpu")
         run_parser.add_argument("--max-gpu-gb", type=float, default=14.5)
+        run_parser.add_argument("--test-only-allow-unpinned-model", action="store_true",
+                                 help=argparse.SUPPRESS)
         if phase == "run":
             run_parser.add_argument("--test-only-random-seed", type=int, default=None,
                                     help=argparse.SUPPRESS)
