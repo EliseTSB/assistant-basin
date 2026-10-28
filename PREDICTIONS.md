@@ -2138,3 +2138,17 @@ the first blind Haiku reader; "shows the push" and "onset" are the design's deci
 | 85.7 | Claude (low confidence): post-training amplifies it: Instruct's own-max OFFWORLD count exceeds the mid-training end's by at least 8 of 48. | | |
 | 85.8 | Control: the control unit's cell gives at most 2 of 48 OFFWORLD at every checkpoint. | | |
 | 85.9 | Control: the two readers agree on OFFWORLD against not OFFWORLD in at least 90% of the plain-frame answers. | | |
+
+## Part 86: a persona atlas for Qwen3.5-4B, layers 10 to 26, registered 2026-10-27 before any code
+
+Design: `PART86-DESIGN.md`. "Coherent persona" = the blind reader marks the answer coherent and its kind is neither
+"still Qwen or an assistant" nor "unclear". Rates are per layer, real neurons against size-matched random directions.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 86.1 | Control: L22 N2742's greedy answer claims an off-world origin. | | |
+| 86.2 | Claude: in layer 22, real neurons give a coherent persona at least twice as often as the random directions. | | |
+| 86.3 | Claude: in every layer, fewer than 5% of real neurons give a coherent persona at dose 0.8. | | |
+| 86.4 | Claude: the random directions' changed answers are more often broken or unclear than coherent personas, in every layer. | | |
+| 86.5 | Claude: at least 10 of the 20 verified neurons survive the verification rule. | | |
+| 86.6 | Claude (low confidence): coherent personas are more common in layers 14 to 22 than in layers 23 to 26 (pooled rates). | | |
