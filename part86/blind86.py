@@ -518,7 +518,9 @@ def main(argv=None):
         return
     key = json.loads(Path(args.key).read_text(encoding="utf-8"))
     labels = [json.loads(line) for line in Path(args.labels).read_text(encoding="utf-8").splitlines() if line.strip()]
-    if Path(args.out).exists() and not args.force:
+    score_path = Path(args.out)
+    artifact_path = Path(str(score_path) + ".manifest.json")
+    if (score_path.exists() or artifact_path.exists()) and not args.force:
         raise FileExistsError(f"{args.out} exists; pass --force to overwrite")
     result = score(labels, key, args.items, args.screen_dir)
     _assert_screen_denominators(key["triage_counts"])
@@ -568,9 +570,14 @@ def main(argv=None):
         "counts": result["layers"],
         **final,
     }
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    c.atomic_json(score_path, output)
+    artifact_manifest = {
+        "score_file": score_path.name,
+        "score_file_sha256": c.sha256_file(score_path),
+        "score_manifest_sha256": score_manifest["manifest_sha256"],
+    }
+    artifact_manifest["manifest_sha256"] = c.canonical_sha256(artifact_manifest)
+    c.atomic_json(artifact_path, artifact_manifest)
     if agreement["kappa"] is not None:
         print(f"reader agreement Cohen's kappa={agreement['kappa']:.4f} on {agreement['items']} items", flush=True)
     else:

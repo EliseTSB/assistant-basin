@@ -217,6 +217,13 @@ class AddRowsHook:
             "generated_positions": 0,
             "per_row_generated_calls": [0] * int(self.row_pushes.shape[0]),
         }
+        self.trace_measurements = [{
+            "prefill_changed": False,
+            "decode_calls_changed": 0,
+            "changed_count": 0,
+            "changed_channels_head": [],
+            "first_decode_write_norm": 0.0,
+        } for _ in range(int(self.row_pushes.shape[0]))]
         self.handle = down_proj.register_forward_pre_hook(self._hook)
 
     def begin_sequence(self):
@@ -243,6 +250,25 @@ class AddRowsHook:
                 raise RuntimeError("invalid generated call counter")
         self.counts["per_row_generated_calls"] = [v + 1 for v in self.counts["per_row_generated_calls"]]
         pushed = x + self.row_pushes.to(device=x.device, dtype=x.dtype).unsqueeze(1)
+        delta = pushed[:, 0, :].detach().float() - x[:, 0, :].detach().float()
+        changed = delta.abs() > 1e-6
+        first_rows = [row_no for row_no, calls in enumerate(self.counts["per_row_generated_calls"]) if calls == 1]
+        first_write_norms = {}
+        if first_rows:
+            row_index = self.torch.tensor(first_rows, dtype=self.torch.long, device=delta.device)
+            writes = delta.index_select(0, row_index) @ _module.weight.detach().float().T
+            norms = self.torch.linalg.vector_norm(writes, dim=1)
+            first_write_norms = {row_no: float(norms[pos].item()) for pos, row_no in enumerate(first_rows)}
+        call_changed = changed.any(dim=1).detach().cpu().tolist()
+        for row_no in range(int(delta.shape[0])):
+            measurement = self.trace_measurements[row_no]
+            if call_changed[row_no]:
+                measurement["decode_calls_changed"] += 1
+            if self.counts["per_row_generated_calls"][row_no] == 1:
+                indices = self.torch.nonzero(changed[row_no], as_tuple=False).flatten().tolist()
+                measurement["changed_count"] = len(indices)
+                measurement["changed_channels_head"] = [int(index) for index in indices[:16]]
+                measurement["first_decode_write_norm"] = first_write_norms[row_no]
         return (pushed,) + tuple(args[1:])
 
     def remove(self):
@@ -356,7 +382,8 @@ def write_manifest(screen_dir: str | Path, items_path: str | Path | None = None)
 
 def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, max_new_tokens: int,
                    do_sample: bool = False, temperature: float | None = None,
-                   top_p: float | None = None, seed: int | None = None):
+                   top_p: float | None = None, seed: int | None = None,
+                   trace_direction_hash: bool = False):
     """Generate a batch with Part 86's per-row generated-token hook."""
     import torch
     batch = int(pushes.shape[0])
@@ -408,4 +435,27 @@ def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, 
         fired = hook.counts["per_row_generated_calls"][row]
         if fired < expected:
             raise RuntimeError(f"hook missed generated steps for row {row}: {fired} fires, {expected} required")
+    trace_rows = []
+    for row in range(batch):
+        token_ids = [int(token_id) for token_id in inputs["input_ids"][row].detach().cpu().tolist()]
+        trace_row = {
+            **hook.trace_measurements[row],
+            "max_new_tokens": int(kwargs["max_new_tokens"]),
+            "do_sample": bool(kwargs["do_sample"]),
+            "question": question,
+            "prompt_sha256": hashlib.sha256(
+                json.dumps(token_ids, separators=(",", ":")).encode("ascii")
+            ).hexdigest(),
+        }
+        if trace_direction_hash:
+            pushed_vector = pushes[row].detach().to(dtype=torch.float32).contiguous().cpu()
+            trace_row["direction_sha256"] = hashlib.sha256(pushed_vector.numpy().tobytes()).hexdigest()
+        if "temperature" in kwargs:
+            trace_row["temperature"] = float(kwargs["temperature"])
+        if "top_p" in kwargs:
+            trace_row["top_p"] = float(kwargs["top_p"])
+        if seed is not None:
+            trace_row["seed"] = int(seed)
+        trace_rows.append(trace_row)
+    hook.counts["trace_rows"] = trace_rows
     return out, hook.counts

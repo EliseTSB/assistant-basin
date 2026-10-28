@@ -113,7 +113,18 @@ def _clear_layer(out_dir: Path, batch_root: Path, layer_no: int) -> None:
     if layer_no == 22:
         (out_dir / "runtime-canaries.json").unlink(missing_ok=True)
         (out_dir / "pilot-gate.json").unlink(missing_ok=True)
+    (out_dir / "trace" / f"layer_{layer_no}.jsonl").unlink(missing_ok=True)
     (out_dir / "manifest.json").unlink(missing_ok=True)
+
+
+def _trace_rows(answer_rows: list[dict]) -> list[dict]:
+    traces = []
+    for row in answer_rows:
+        trace = row.get("trace")
+        if not isinstance(trace, dict):
+            raise ValueError(f"screen answer {row.get('kind')}:{row.get('id')} has no measured trace")
+        traces.append(trace)
+    return traces
 
 
 def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: int,
@@ -123,18 +134,24 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
     canary_path = Path(args.out) / "runtime-canaries.json"
     batch_pushes = torch.zeros((16, width), dtype=torch.float32, device=first_two_pushes.device)
     batch_pushes[2:4] = first_two_pushes[:2]
-    batch, counts = c.generate_batch(
-        model, tokenizer, layer, c.SCREEN_QUESTION, batch_pushes, args.device, MAX_NEW_TOKENS,
-    )
-    singleton_zero, _ = c.generate_batch(
-        model, tokenizer, layer, c.SCREEN_QUESTION, batch_pushes[0:1], args.device, MAX_NEW_TOKENS,
-    )
+    generation_elapsed = 0.0
+    generation_answers = 0
+
+    def generate(push):
+        nonlocal generation_elapsed, generation_answers
+        started = time.monotonic()
+        generated, hook_counts = c.generate_batch(
+            model, tokenizer, layer, c.SCREEN_QUESTION, push, args.device, MAX_NEW_TOKENS,
+        )
+        generation_elapsed += time.monotonic() - started
+        generation_answers += len(generated)
+        return generated, hook_counts
+
+    batch, counts = generate(batch_pushes)
+    singleton_zero, _ = generate(batch_pushes[0:1])
     pushed_singles = []
     for row in range(2):
-        result, _ = c.generate_batch(
-            model, tokenizer, layer, c.SCREEN_QUESTION, first_two_pushes[row:row + 1],
-            args.device, MAX_NEW_TOKENS,
-        )
+        result, _ = generate(first_two_pushes[row:row + 1])
         pushed_singles.append(result[0])
     zero_answer = batch[0]["answer"]
     zero_triage = triage86.triage_answer(zero_answer)
@@ -149,6 +166,13 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
             f"{zero_answer!r} != {same_batch_baseline['answer']!r}"
         )
     same = [batch[index + 2]["answer"] == pushed_singles[index]["answer"] for index in range(2)]
+    raw_zero_trace = dict(counts["trace_rows"][0])
+    raw_zero_trace.pop("direction_sha256", None)
+    zero_trace = {
+        "layer": int(layer_no), "batch": "canary", "row": 0,
+        "kind": "zero", "target": None, **raw_zero_trace,
+        "median": float(median), "dose": c.DOSE,
+    }
     result = {
         "layer": layer_no,
         "config_sha256": c.canonical_sha256(config),
@@ -173,6 +197,9 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
             "batch1_answers": [row["answer"] for row in pushed_singles],
         },
         "batch16_hook_counts": counts,
+        "zero_trace": zero_trace,
+        "generation_elapsed_seconds": generation_elapsed,
+        "generation_answers": generation_answers,
     }
     c.atomic_json(canary_path, result)
     print(f"L{layer_no} runtime canary recorded; batch16/batch1 exact matches={same}; zero-push answer={zero_answer!r}", flush=True)
@@ -184,6 +211,27 @@ def _write_pilot_gate(out_dir: Path, layer_no: int, rows: list[dict], median: fl
         return
     target = next((row for row in rows if row.get("kind") == "neuron" and int(row.get("id", -1)) == 2742), None)
     changed = sum(triage86.triage_answer(row.get("answer", "")) == "changed" for row in rows)
+    batch_times = {}
+    for row in rows:
+        batch_id = row.get("batch_id")
+        if batch_id is not None:
+            batch_times.setdefault(batch_id, float(row.get("generation_elapsed_seconds", 0.0)))
+    screen_elapsed = sum(batch_times.values())
+    canary = {}
+    canary_path = out_dir / "runtime-canaries.json"
+    if canary_path.is_file():
+        canary = json.loads(canary_path.read_text(encoding="utf-8"))
+    canary_elapsed = float(canary.get("generation_elapsed_seconds", 0.0))
+    generation_answers = len(rows) + int(canary.get("generation_answers", 0))
+    generation_elapsed = screen_elapsed + canary_elapsed
+    measured_rate = generation_answers / generation_elapsed if generation_elapsed > 0 else None
+    full_population = len(rows) == N_NEURONS + N_DIRECTIONS
+    projected_seconds = (N_NEURONS * 17 + N_DIRECTIONS * 17) / measured_rate if measured_rate else None
+    gate_2_status = (
+        ("NOT READ" if projected_seconds is None else
+         "PASS" if projected_seconds <= 12 * 60 * 60 else "FAIL") if full_population else
+        "EARLY ESTIMATE ONLY (limited pilot; not authoritative)"
+    )
     result = {
         "layer": 22,
         "population_size": N_NEURONS + N_DIRECTIONS,
@@ -194,6 +242,18 @@ def _write_pilot_gate(out_dir: Path, layer_no: int, rows: list[dict], median: fl
         "gate_3_population": "9,216 real neurons plus 512 random directions (9,728 answers)",
         "gate_3_status": ("NOT READ" if len(rows) != N_NEURONS + N_DIRECTIONS
                           else "PASS" if 20 <= changed <= 2000 else "FAIL"),
+        "gate_2_status": gate_2_status,
+        "gate_2_basis": "full layer-22 screen plus runtime canary" if full_population else "limited warmup only",
+        "screen_generation_elapsed_seconds": screen_elapsed,
+        "canary_generation_elapsed_seconds": canary_elapsed,
+        "generation_elapsed_seconds": generation_elapsed,
+        "screen_generation_answers": len(rows),
+        "canary_generation_answers": int(canary.get("generation_answers", 0)),
+        "generation_answers": generation_answers,
+        "measured_answers_per_second": measured_rate,
+        "projected_full_screen_seconds": projected_seconds,
+        "projected_full_screen_answers": N_NEURONS * 17 + N_DIRECTIONS * 17,
+        "gate_2_rate_threshold_answers_per_second": (N_NEURONS * 17 + N_DIRECTIONS * 17) / (12 * 60 * 60),
         "n2742_raw_answer": target.get("answer") if target else None,
         "n2742_status": "present" if target else "NOT INCLUDED (screen was limited)",
     }
@@ -263,6 +323,11 @@ def run(args) -> None:
         prepared[layer_no] = (layer, down, width, median, config)
 
     # Validate the complete requested configuration before any reset can remove data.
+    for layer_no in args.layers:
+        trace_path = out_dir / "trace" / f"layer_{layer_no}.jsonl"
+        answer_path = out_dir / f"layer_{layer_no}.jsonl"
+        if layer_no not in reset_layers and trace_path.exists() and not answer_path.exists():
+            raise ValueError(f"L{layer_no} has an orphan trace without answers; use --reset-layer {layer_no}")
     for layer_no in sorted(reset_layers):
         _clear_layer(out_dir, batch_root, int(layer_no))
 
@@ -286,6 +351,10 @@ def run(args) -> None:
                     raise ValueError(f"L{layer_no} completed JSONL has {actual_answers} rows, expected {expected_answers}")
                 with final_path.open(encoding="utf-8") as f:
                     completed_rows = [json.loads(line) for line in f if line.strip()]
+                _atomic_jsonl(out_dir / "trace" / f"layer_{layer_no}.jsonl", _trace_rows(completed_rows) + (
+                    [json.loads((out_dir / "runtime-canaries.json").read_text(encoding="utf-8"))["zero_trace"]]
+                    if layer_no == 22 and (out_dir / "runtime-canaries.json").is_file() else []
+                ))
                 if layer_no == 22:
                     canary_path = out_dir / "runtime-canaries.json"
                     expected_canary_hash = c.canonical_sha256(config)
@@ -357,8 +426,11 @@ def run(args) -> None:
                 rows = _read_fragment(fragment)
                 if len(rows) != len(ids) or any(row.get("batch_id") != batch_id for row in rows):
                     raise ValueError(f"incomplete or mismatched saved batch {fragment}")
+                _trace_rows(rows)
                 completed.add(batch_id)
                 total_written += len(rows)
+                generation_elapsed += float(rows[0].get("generation_elapsed_seconds", 0.0))
+                session_new_answers += len(rows)
                 continue
             if kind == "neuron":
                 pushes = torch.zeros((len(ids), width), dtype=torch.float32, device=weight.device)
@@ -370,19 +442,29 @@ def run(args) -> None:
             started_generation = time.monotonic()
             generated, hook_counts = c.generate_batch(
                 model, tokenizer, layer, c.SCREEN_QUESTION, pushes, args.device, MAX_NEW_TOKENS,
-                do_sample=False,
+                do_sample=False, trace_direction_hash=(kind == "random_direction"),
             )
-            generation_elapsed += time.monotonic() - started_generation
+            batch_elapsed = time.monotonic() - started_generation
+            generation_elapsed += batch_elapsed
             if hook_counts["prefill_calls"] != 1 or hook_counts["generated_calls"] != hook_counts["per_row_generated_calls"][0]:
                 raise RuntimeError(f"L{layer_no} {batch_id}: hook did not fire uniformly on every generated step")
             if len(hook_counts["per_row_generated_calls"]) != len(ids):
                 raise RuntimeError(f"L{layer_no} {batch_id}: hook row count does not match pushed rows")
             records = []
+            measured_rows = hook_counts.pop("trace_rows")
             for row_no, (item_id, result) in enumerate(zip(ids, generated)):
                 required = max(0, int(result["token_count"]) - 1)
                 fired = hook_counts["per_row_generated_calls"][row_no]
                 if fired < required:
                     raise RuntimeError(f"L{layer_no} {batch_id} row {row_no}: hook fired {fired}, need {required}")
+                trace = dict(measured_rows[row_no])
+                if kind != "random_direction":
+                    trace.pop("direction_sha256", None)
+                trace = {
+                    "layer": int(layer_no), "batch": batch_id, "row": row_no,
+                    "kind": kind, "target": int(item_id), **trace,
+                    "median": float(median), "dose": c.DOSE,
+                }
                 records.append({
                     "layer": int(layer_no),
                     "kind": kind,
@@ -392,6 +474,8 @@ def run(args) -> None:
                     "median": median,
                     "dose": c.DOSE,
                     "batch_id": batch_id,
+                    "generation_elapsed_seconds": batch_elapsed,
+                    "trace": trace,
                     "hook_fire_counts": hook_counts,
                 })
             _atomic_jsonl(fragment, records)
@@ -399,6 +483,8 @@ def run(args) -> None:
             total_written += len(records)
             session_new_answers += len(records)
             state["completed_batches"] = sorted(completed)
+            state["generation_elapsed_seconds"] = generation_elapsed
+            state["generation_answers"] = total_written
             c.atomic_json(meta_path, state)
             elapsed = max(generation_elapsed, 1e-9)
             progress_path.parent.mkdir(parents=True, exist_ok=True)
@@ -420,10 +506,18 @@ def run(args) -> None:
         if len(final_rows) != n_neurons + n_directions:
             raise RuntimeError(f"L{layer_no}: assembled {len(final_rows)} answers, expected {n_neurons+n_directions}")
         _atomic_jsonl(final_path, final_rows)
+        trace_rows = _trace_rows(final_rows)
+        if layer_no == 22:
+            canary_path = out_dir / "runtime-canaries.json"
+            canary = json.loads(canary_path.read_text(encoding="utf-8"))
+            trace_rows.append(canary["zero_trace"])
+        _atomic_jsonl(out_dir / "trace" / f"layer_{layer_no}.jsonl", trace_rows)
         state["completed_batches"] = [batch_id for _kind, batch_id, _ids in planned]
         state["status"] = "complete"
         state["answers"] = len(final_rows)
         state["median"] = median
+        state["generation_elapsed_seconds"] = generation_elapsed
+        state["generation_answers"] = len(final_rows)
         c.atomic_json(meta_path, state)
         _write_pilot_gate(out_dir, layer_no, final_rows, median)
         c.write_manifest(out_dir)

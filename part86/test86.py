@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -47,6 +48,24 @@ def tiny_model():
     return Qwen2ForCausalLM(config).to(dtype=torch.bfloat16).cpu().eval()
 
 
+def tiny_audit_model():
+    """Small Qwen loop with the registered 23 layer index and two-token generations."""
+    torch.manual_seed(86022)
+    config = Qwen2Config(
+        vocab_size=64, hidden_size=16, intermediate_size=64, num_hidden_layers=23,
+        num_attention_heads=4, num_key_value_heads=2, max_position_embeddings=128,
+        pad_token_id=0, bos_token_id=1, eos_token_id=2, use_cache=True,
+    )
+    model = Qwen2ForCausalLM(config).to(dtype=torch.bfloat16).cpu().eval()
+    model.lm_head = torch.nn.Linear(16, 64, bias=True).to(dtype=torch.bfloat16)
+    with torch.no_grad():
+        model.lm_head.weight.zero_()
+        model.lm_head.bias.zero_()
+        model.lm_head.bias[2] = 100
+    model.generation_config.min_new_tokens = 1
+    return model
+
+
 class TinyTokenizer:
     eos_token_id = 2
     pad_token_id = 0
@@ -74,6 +93,17 @@ class TinyTokenizer:
         return " ".join(f"tok{int(token)}" for token in ids if int(token) not in special)
 
 
+class TinyAuditTokenizer(TinyTokenizer):
+    def __init__(self):
+        self.decode_calls = 0
+
+    def decode(self, ids, skip_special_tokens=True):
+        self.decode_calls += 1
+        if self.decode_calls <= 2:
+            return "I am Qwen, a helpful AI assistant."
+        return "I am a quiet traveler who watches the sea."
+
+
 def _tiny_screen_args(out, calib, **overrides):
     args = {
         "out": str(out), "calib": str(calib), "layers": [0], "batch_size": 2,
@@ -81,6 +111,25 @@ def _tiny_screen_args(out, calib, **overrides):
     }
     args.update(overrides)
     return SimpleNamespace(**args)
+
+
+def _write_screen_score_fixture(directory: Path, kappa):
+    directory.mkdir(parents=True, exist_ok=True)
+    score_path = directory / "screen-score.json"
+    score_manifest = {"fixture": True, "reader_kappa": kappa}
+    score_manifest["manifest_sha256"] = common86.canonical_sha256(score_manifest)
+    common86.atomic_json(score_path, {
+        "reader_agreement": {"kappa": kappa},
+        "score_manifest": score_manifest,
+    })
+    artifact = {
+        "score_file": score_path.name,
+        "score_file_sha256": common86.sha256_file(score_path),
+        "score_manifest_sha256": score_manifest["manifest_sha256"],
+    }
+    artifact["manifest_sha256"] = common86.canonical_sha256(artifact)
+    common86.atomic_json(Path(str(score_path) + ".manifest.json"), artifact)
+    return score_path
 
 
 class TestRowsHook(unittest.TestCase):
@@ -338,22 +387,61 @@ class TestSurvival(unittest.TestCase):
             source = root / "verify-run"
             source.mkdir()
             for neuron in range(20):
+                layer_no = 10 + neuron % 17
+                persona = f"persona {neuron}"
+                config = {
+                    "model_id": common86.MODEL_ID, "revision": common86.REVISION,
+                    "layer": layer_no, "neuron": neuron, "persona": persona,
+                    "primary_screen_persona": persona, "persona_equivalences": [],
+                    "calibration_sha256": common86.sha256_text("calibration"), "median": 24.8,
+                    "dose": 0.8, "actual_dtype": "torch.bfloat16",
+                    "versions": common86.dependency_versions(), "code_sha256": common86.verification_code_sha256(),
+                    "generation_code_sha256": common86.generation_code_sha256(),
+                    "questions": list(common86.VERIFY_QUESTIONS), "samples": 8, "directions": 10,
+                    "max_new_tokens": 64, "temperature": 0.7, "top_p": 0.95,
+                    "mode": "generated_tokens", "generation_config": {"effective": {
+                        "do_sample": True, "max_new_tokens": 64, "temperature": 0.7, "top_p": 0.95,
+                    }},
+                    "random_seed": common86.RANDOM_VERIFY_SEED + layer_no * 10000 + neuron,
+                }
                 records = []
                 for condition, direction in [("neuron", None)] + [("random_direction", d) for d in range(10)]:
                     for qi in range(3):
                         for sample in range(8):
-                            records.append({
-                                "layer": 10 + neuron % 17, "condition": condition, "neuron": neuron,
+                            seed = verify86.seed_for(qi, sample)
+                            trace = {
+                                "layer": layer_no, "neuron": neuron, "condition": condition,
                                 "direction": direction, "question_index": qi, "sample": sample,
-                                "seed": 1, "persona": f"persona {neuron}", "answer": "A calm traveler."})
-                (source / f"L{10 + neuron % 17}_N{neuron}.json").write_text(
-                    json.dumps({"status": "complete", "records": records}), encoding="utf-8")
+                                "seed": seed, "question": common86.VERIFY_QUESTIONS[qi],
+                                "do_sample": True, "temperature": 0.7, "top_p": 0.95,
+                                "max_new_tokens": 64, "prompt_sha256": "0" * 64,
+                                "prefill_changed": False, "decode_calls_changed": 1,
+                                "changed_count": 1 if condition == "neuron" else 16,
+                                "changed_channels_head": [neuron] if condition == "neuron" else list(range(16)),
+                                "first_decode_write_norm": 19.84, "median": 24.8, "dose": 0.8,
+                            }
+                            if direction is not None:
+                                trace["direction_sha256"] = hashlib.sha256(
+                                    f"{layer_no}-{neuron}-{direction}".encode()
+                                ).hexdigest()
+                            records.append({
+                                "layer": layer_no, "condition": condition, "neuron": neuron,
+                                "direction": direction, "question_index": qi, "sample": sample,
+                                "seed": seed, "question": common86.VERIFY_QUESTIONS[qi],
+                                "persona": persona, "answer": "A calm traveler.", "median": 24.8,
+                                "dose": 0.8, "max_new_tokens": 64, "temperature": 0.7,
+                                "top_p": 0.95, "trace": trace,
+                            })
+                (source / f"L{layer_no}_N{neuron}.json").write_text(
+                    json.dumps({"status": "complete", "config": config, "records": records}), encoding="utf-8")
             items_path = root / "reader" / "verify-items.jsonl"
             key_path = root / "private" / "verify-key.json"
             self.assertEqual(verify86.prepare(source, items_path, key_path), 5280)
             key = json.loads(key_path.read_text(encoding="utf-8"))
             self.assertEqual(len(key["second_reader_ids"]), 528)
             self.assertIn("manifest_sha256", key["manifest"])
+            self.assertEqual(len(key["manifest"]["input_files_sha256"]), 20)
+            self.assertEqual(len(key["manifest"]["configs"]), 20)
             first_chunks = sorted((items_path.parent / "verify-items-reader1-chunks").glob("*.jsonl"))
             second_chunks = sorted((items_path.parent / "verify-items-reader2-chunks").glob("*.jsonl"))
             self.assertEqual(len(first_chunks), 11)
@@ -361,15 +449,64 @@ class TestSurvival(unittest.TestCase):
             self.assertEqual(len(second_chunks), 2)
             labels = [{"id": item_id, "claims_persona": False} for item_id in key["rows"]]
             labels2 = [{"id": item_id, "claims_persona": False} for item_id in key["second_reader_ids"]]
-            result = verify86.score(labels, key, items_path, labels2)
+            passing_screen_score = _write_screen_score_fixture(root / "screen-pass", 0.6)
+            result = verify86.score(labels, key, items_path, labels2, passing_screen_score)
             self.assertEqual(result["reader_agreement"]["kappa"], 1.0)
             self.assertEqual(result["verdict_86.5"]["status"], "FAILS")
+            self.assertEqual(result["screen_reader_agreement"]["status"], "READ")
+            self.assertEqual(len(result["manifest"]["verification_input_files_sha256"]), 20)
             self.assertIn("manifest_sha256", result["manifest"])
             self.assertLess(list(result).index("reader_agreement"), list(result).index("verdict_86.5"))
             low_labels2 = [{"id": item_id, "claims_persona": True} for item_id in key["second_reader_ids"]]
-            low = verify86.score(labels, key, items_path, low_labels2)
+            low = verify86.score(labels, key, items_path, low_labels2, passing_screen_score)
             self.assertEqual(low["reader_agreement"]["kappa"], 0.0)
             self.assertEqual(low["verdict_86.5"]["status"], "NOT READ")
+            low_screen_score = _write_screen_score_fixture(root / "screen-low", 0.5999)
+            screen_gated = verify86.score(labels, key, items_path, labels2, low_screen_score)
+            self.assertEqual(screen_gated["reader_agreement"]["kappa"], 1.0)
+            self.assertEqual(screen_gated["verdict_86.5"]["status"], "NOT READ")
+            missing_screen = verify86.score(labels, key, items_path, labels2)
+            self.assertEqual(missing_screen["verdict_86.5"]["status"], "NOT READ")
+            with self.assertRaisesRegex(ValueError, "file SHA-256"):
+                passing_screen_score.write_text(passing_screen_score.read_text() + " ", encoding="utf-8")
+                verify86.score(labels, key, items_path, labels2, passing_screen_score)
+
+            mixed_path = source / "L10_N0.json"
+            good_payload = mixed_path.read_bytes()
+            incomplete = json.loads(good_payload)
+            incomplete["records"].pop()
+            mixed_path.write_text(json.dumps(incomplete), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "expected 264"):
+                verify86.prepare(source, root / "incomplete-reader" / "items.jsonl", root / "incomplete-key.json")
+            mixed_path.write_bytes(good_payload)
+            mixed = json.loads(mixed_path.read_text(encoding="utf-8"))
+            mixed["config"]["dose"] = 0.4
+            for record in mixed["records"]:
+                record["dose"] = 0.4
+                record["trace"]["dose"] = 0.4
+            mixed_path.write_text(json.dumps(mixed), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "registered verification generation config"):
+                verify86.prepare(source, root / "mixed-reader" / "items.jsonl", root / "mixed-key.json")
+
+            labels_path = root / "verify-labels.jsonl"
+            labels2_path = root / "verify-labels-2.jsonl"
+            labels_path.write_text("".join(json.dumps(row) + "\n" for row in labels), encoding="utf-8")
+            labels2_path.write_text("".join(json.dumps(row) + "\n" for row in labels2), encoding="utf-8")
+            screen_cli_pass = _write_screen_score_fixture(root / "screen-cli-pass", 0.6)
+            pass_out = root / "verify-score-pass.json"
+            verify86.main([
+                "score", "--items", str(items_path), "--key", str(key_path),
+                "--labels", str(labels_path), "--labels2", str(labels2_path),
+                "--screen-score", str(screen_cli_pass), "--out", str(pass_out),
+            ])
+            self.assertEqual(json.loads(pass_out.read_text())["verdict_86.5"]["status"], "FAILS")
+            low_out = root / "verify-score-low.json"
+            verify86.main([
+                "score", "--items", str(items_path), "--key", str(key_path),
+                "--labels", str(labels_path), "--labels2", str(labels2_path),
+                "--screen-score", str(low_screen_score), "--out", str(low_out),
+            ])
+            self.assertEqual(json.loads(low_out.read_text())["verdict_86.5"]["status"], "NOT READ")
 
     def test_registered_survival_rule_and_86_5_ten_of_twenty_boundary(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -400,7 +537,8 @@ class TestSurvival(unittest.TestCase):
             items_path = Path(tmp) / "items.jsonl"
             items_path.write_bytes(content)
             key = {"items_sha256": hashlib.sha256(content).hexdigest(), "rows": mapping}
-            result = verify86.score(labels, key, items_path, labels2=labels)
+            passing_screen_score = _write_screen_score_fixture(Path(tmp) / "screen-score", 0.6)
+            result = verify86.score(labels, key, items_path, labels2=labels, screen_score=passing_screen_score)
             self.assertEqual(result["survivors"], 9)
             self.assertEqual(result["verdict_86.5"]["status"], "FAILS")
             self.assertTrue(result["per_neuron"][0]["survives"])
@@ -412,7 +550,7 @@ class TestSurvival(unittest.TestCase):
                 if (info["neuron"] == 10 and info["condition"] == "neuron"
                         and info["question_index"] == 1 and info["sample"] == 3):
                     row["claims_persona"] = True
-            result = verify86.score(labels, key, items_path, labels2=labels)
+            result = verify86.score(labels, key, items_path, labels2=labels, screen_score=passing_screen_score)
             self.assertEqual(result["survivors"], 10)
             self.assertEqual(result["verdict_86.5"]["status"], "HOLDS")
 
@@ -512,6 +650,16 @@ class TestBlind(unittest.TestCase):
                       for item_id in mapping]
             picks = [{"layer": 10, "neuron": i, "persona": "traveler"} for i in range(20)]
             verify86.validate_picked_against_screen(picks, screen, {"rows": mapping}, labels)
+            wrong_persona = [dict(row) for row in picks]
+            wrong_persona[0]["persona"] = "a planet-ruling deity"
+            with self.assertRaisesRegex(ValueError, "does not match primary blind label"):
+                verify86.validate_picked_against_screen(wrong_persona, screen, {"rows": mapping}, labels)
+            equivalence_pick = [dict(row) for row in picks]
+            equivalence_pick[0]["persona"] = "a sea wanderer"
+            verify86.validate_picked_against_screen(
+                equivalence_pick, screen, {"rows": mapping}, labels,
+                [{"primary": "traveler", "picked": "a sea wanderer"}],
+            )
             labels[0]["coherent"] = False
             with self.assertRaisesRegex(ValueError, "not a coherent persona"):
                 verify86.validate_picked_against_screen(picks, screen, {"rows": mapping}, labels)
@@ -555,10 +703,17 @@ class TestResumeAndScreen(unittest.TestCase):
         singleton = [generated("I am Qwen, a quiet assistant.", [1, 9])]
         pushed_a = [generated("A pushed traveler watches the sea.", [2, 8])]
         pushed_b = [generated("A pushed sailor watches the sea.", [3, 7])]
-        with mock.patch.object(common86, "generate_batch", side_effect=[(batch, {}), (singleton, {}),
+        zero_trace = {
+            "prefill_changed": False, "decode_calls_changed": 0, "changed_count": 0,
+            "changed_channels_head": [], "first_decode_write_norm": 0.0,
+            "direction_sha256": "0" * 64, "max_new_tokens": 48, "do_sample": False,
+            "question": "Who are you?", "prompt_sha256": "1" * 64,
+        }
+        with mock.patch.object(common86, "generate_batch", side_effect=[(batch, {"trace_rows": [zero_trace] * 16}), (singleton, {}),
                                                                           (pushed_a, {}), (pushed_b, {})]):
             canary = screen86._runtime_canaries(None, None, None, args, pushes, width, 22, 24.8, {"layer": 22})
         self.assertTrue(canary["zero_push"]["matches_unsteered_same_batch_shape"])
+        self.assertEqual((canary["zero_trace"]["kind"], canary["zero_trace"]["target"]), ("zero", None))
         self.assertFalse(canary["bf16_batch_effect"]["exact_token_match"])
         self.assertEqual(canary["bf16_batch_effect"]["batch16_token_ids"], [1, 2])
         self.assertEqual(canary["bf16_batch_effect"]["batch1_token_ids"], [1, 9])
@@ -759,13 +914,25 @@ class TestResumeAndScreen(unittest.TestCase):
                                    out=str(temp / "verify"), device="cpu", max_neurons=None)
             fake_case = [("neuron", None, "Who are you?", 0, 0, verify86.seed_for(0, 0), None)]
             generated = [{"answer": "A calm traveler.", "token_count": 1}]
+            def fake_generate(_model, _tokenizer, _layer, question, pushes, _device, max_new_tokens, **kwargs):
+                trace = {
+                    "layer": 10, "neuron": int(torch.argmax(pushes[0]).item()),
+                    "condition": "neuron", "direction": None, "question_index": 0, "sample": 0,
+                    "seed": kwargs["seed"], "question": question, "do_sample": True,
+                    "temperature": kwargs["temperature"], "top_p": kwargs["top_p"],
+                    "max_new_tokens": max_new_tokens, "prompt_sha256": "0" * 64,
+                    "prefill_changed": False, "decode_calls_changed": 1,
+                    "changed_count": 1, "changed_channels_head": [int(torch.argmax(pushes[0]).item())],
+                    "first_decode_write_norm": 24.8 * 0.8, "median": 24.8, "dose": 0.8,
+                }
+                return generated, {"trace_rows": [trace]}
             with mock.patch.object(verify86, "ANSWERS_PER_NEURON", 1), \
                  mock.patch.object(verify86, "_expected_case_keys", return_value={("neuron", None, 0, 0)}), \
                  mock.patch.object(verify86, "_case_plan", return_value=fake_case), \
                  mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
                  mock.patch.object(common86, "find_layers", return_value=[layer] * 11), \
                  mock.patch.object(common86, "residual_median", return_value=24.8), \
-                 mock.patch.object(common86, "generate_batch", return_value=(generated, {})) as generate:
+                 mock.patch.object(common86, "generate_batch", side_effect=fake_generate) as generate:
                 verify86.run(args)
                 self.assertEqual(generate.call_count, 20)
                 generate.reset_mock()
@@ -784,9 +951,96 @@ class TestResumeAndScreen(unittest.TestCase):
                  mock.patch.object(common86, "load_model", return_value=(tokenizer, model)), \
                  mock.patch.object(common86, "find_layers", return_value=[layer] * 11), \
                  mock.patch.object(common86, "residual_median", return_value=24.8), \
-                 mock.patch.object(common86, "generate_batch", return_value=(generated, {})) as generate:
+                 mock.patch.object(common86, "generate_batch", side_effect=fake_generate) as generate:
                 verify86.run(args)
                 generate.assert_not_called()
+
+
+class TestLiveTraceAudit(unittest.TestCase):
+    @unittest.skipIf(torch is None, f"torch/transformers unavailable: {MODEL_IMPORT_ERROR}")
+    def test_real_screen_and_verify_loops_record_auditable_pushes_and_resume_traces(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            temp = Path(tmp)
+            calib = temp / "calibration.txt"
+            calib.write_text("calibration fixture", encoding="utf-8")
+            out = temp / "screen"
+            tokenizer, model = TinyAuditTokenizer(), tiny_audit_model()
+            screen_args = _tiny_screen_args(out, calib, layers=[22])
+
+            def run_screen():
+                with mock.patch.object(common86, "MODEL_ID", "tiny-audit-test"), \
+                     mock.patch.object(common86, "REVISION", "tiny-audit-revision"), \
+                     mock.patch.object(common86, "load_model", return_value=(tokenizer, model)):
+                    screen86.run(screen_args)
+
+            def audit(*arguments):
+                result = subprocess.run(
+                    ["/home/elisepc/neuron-probe/.venv/bin/python", "-I", "-B",
+                     str(HERE / "audit86.py"), *arguments],
+                    cwd=ROOT, capture_output=True, text=True, timeout=120,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertIn("AUDIT86", result.stdout)
+
+            run_screen()
+            answer_rows = [json.loads(line) for line in (out / "layer_22.jsonl").read_text().splitlines()]
+            self.assertEqual(len(answer_rows), 4)
+            self.assertEqual(sum(row["kind"] == "neuron" for row in answer_rows), 2)
+            pilot_gate = json.loads((out / "pilot-gate.json").read_text())
+            self.assertEqual(pilot_gate["gate_2_status"], "EARLY ESTIMATE ONLY (limited pilot; not authoritative)")
+            self.assertEqual(pilot_gate["screen_generation_answers"], 4)
+            self.assertGreater(pilot_gate["canary_generation_answers"], 0)
+            trace_path = out / "trace" / "layer_22.jsonl"
+            trace_rows = [json.loads(line) for line in trace_path.read_text().splitlines()]
+            zero = next(row for row in trace_rows if row["kind"] == "zero")
+            self.assertIsNone(zero["target"])
+            self.assertFalse(zero["prefill_changed"])
+            self.assertEqual((zero["changed_count"], zero["decode_calls_changed"], zero["first_decode_write_norm"]),
+                             (0, 0, 0.0))
+            expected_prompt = common86.token_inputs(tokenizer, "Who are you?", 1, "cpu")["input_ids"][0].tolist()
+            expected_prompt_sha = hashlib.sha256(json.dumps(expected_prompt, separators=(",", ":")).encode("ascii")).hexdigest()
+            self.assertEqual(trace_rows[0]["prompt_sha256"], expected_prompt_sha)
+            audit("screen", str(out), "--layers", "22", "--pilot", "--neurons", "2", "--random", "2")
+
+            # A missing sidecar row is restored from the answer and trace stored atomically in the screen output.
+            trace_path.write_text("\n".join(trace_path.read_text().splitlines()[:-1]) + "\n", encoding="utf-8")
+            run_screen()
+            audit("screen", str(out), "--layers", "22", "--pilot", "--neurons", "2", "--random", "2")
+
+            screen_key = {"rows": {"pick-one": {
+                "layer": 22, "source": "real", "item_index": 1,
+                "triage_category": "changed", "miss_rate_sample": False,
+            }}}
+            blind_key_path = temp / "blind-key.json"
+            blind_key_path.write_text(json.dumps(screen_key), encoding="utf-8")
+            blind_labels_path = temp / "blind-labels.jsonl"
+            blind_labels_path.write_text(json.dumps({
+                "id": "pick-one", "persona": "a quiet traveler", "kind": "human", "coherent": True,
+            }) + "\n", encoding="utf-8")
+            picked_path = temp / "picked.json"
+            picked_path.write_text(json.dumps([{
+                "layer": 22, "neuron": 1, "persona": "a quiet traveler",
+            }]), encoding="utf-8")
+            verify_out = temp / "verify"
+            verify_args = SimpleNamespace(
+                picked=str(picked_path), screen_dir=str(out), blind_key=str(blind_key_path),
+                blind_labels=str(blind_labels_path), calib=str(calib), out=str(verify_out),
+                device="cpu", max_neurons=None, test_picked_count=1, equivalences=None,
+            )
+
+            def run_verify():
+                with mock.patch.object(common86, "MODEL_ID", "tiny-audit-test"), \
+                     mock.patch.object(common86, "REVISION", "tiny-audit-revision"), \
+                     mock.patch.object(common86, "load_model", return_value=(tokenizer, model)):
+                    verify86.run(verify_args)
+
+            run_verify()
+            verify_trace = verify_out / "trace" / "L22_N1.jsonl"
+            self.assertEqual(len(verify_trace.read_text().splitlines()), verify86.ANSWERS_PER_NEURON)
+            audit("verify", str(verify_out), "--picked", "1")
+            verify_trace.write_text("\n".join(verify_trace.read_text().splitlines()[:-1]) + "\n", encoding="utf-8")
+            run_verify()
+            audit("verify", str(verify_out), "--picked", "1")
 
 
 class TestAmendment2Pins(unittest.TestCase):

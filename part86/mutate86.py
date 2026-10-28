@@ -116,7 +116,43 @@ MUTATIONS = [
              'reset_layers = set(getattr(args, "reset_layer", []) or [])\n'
              '    for layer_no in sorted(reset_layers):\n'
              '        _clear_layer(out_dir, batch_root, int(layer_no))\n'
-             '    if not reset_layers.issubset(set(args.layers)):')
+             '    if not reset_layers.issubset(set(args.layers)):'),
+
+    # Sol 6.1 round-3: mutations against the live loops, killed through trace-backed audit tests.
+    Mutation("N1-screen-zero-neuron-dose", "screen86.py",
+             "pushes[row_index, unit_index] = deltas[unit_index]",
+             "pushes[row_index, unit_index] = 0 * deltas[unit_index]"),
+    Mutation("N2-screen-all-neurons-push-unit0", "screen86.py",
+             "pushes[row_index, unit_index] = deltas[unit_index]",
+             "pushes[row_index, 0] = deltas[unit_index]"),
+    Mutation("N3-screen-random-double-dose", "screen86.py",
+             "weight, n_directions, c.SCREEN_SEED + layer_no, c.DOSE * median",
+             "weight, n_directions, c.SCREEN_SEED + layer_no, 2 * c.DOSE * median"),
+    Mutation("N4-screen-token-budget24", "screen86.py", "MAX_NEW_TOKENS = 48", "MAX_NEW_TOKENS = 24"),
+    Mutation("N5-verify-push-unit0", "verify86.py", "row[0, int(unit)] = float(value)", "row[0, 0] = float(value)"),
+    Mutation("N6-verify-greedy", "verify86.py",
+             "do_sample=True, temperature=TEMPERATURE, top_p=TOP_P, seed=seed,",
+             "do_sample=False, temperature=TEMPERATURE, top_p=TOP_P, seed=seed,"),
+    Mutation("N7-verify-seeds-plus10", "verify86.py",
+             "return c.VERIFY_SEED + 100 * question_index + sample_index",
+             "return c.VERIFY_SEED + 100 * question_index + sample_index + 10"),
+    Mutation("N8-screen-second-reader20pct", "blind86.py",
+             "int(round(len(stable_ids) * 0.10))", "int(round(len(stable_ids) * 0.20))"),
+    Mutation("N9-verify-random-double-dose", "verify86.py",
+             "DIRECTIONS, random_seed, c.DOSE * median)",
+             "DIRECTIONS, random_seed, 2 * c.DOSE * median)"),
+    Mutation("N10-verify-case-question0", "verify86.py",
+             'cases.append(("neuron", None, question, qi, sample, seed_for(qi, sample), None))',
+             'cases.append(("neuron", None, c.VERIFY_QUESTIONS[0], qi, sample, seed_for(qi, sample), None))'),
+    Mutation("TRACE-plan-values-instead-of-measurement", "screen86.py",
+             "trace = dict(measured_rows[row_no])",
+             'trace = {"prefill_changed": False, "decode_calls_changed": 1, "changed_count": 1, '
+             '"changed_channels_head": [int(item_id)], "first_decode_write_norm": c.DOSE * median, '
+             '"direction_sha256": "0" * 64, "max_new_tokens": MAX_NEW_TOKENS, "do_sample": False, '
+             '"question": c.SCREEN_QUESTION, "prompt_sha256": "0" * 64}'),
+    Mutation("TRACE-resume-drops-rows", "verify86.py",
+             'if path.exists():\n            _write_neuron_trace(out_dir, _state, layer_no, selected["neuron"])',
+             'if path.exists():\n            _atomic_jsonl(out_dir / "trace" / f"L{layer_no}_N{selected[\'neuron\']}.jsonl", [])')
 ]
 
 
@@ -147,6 +183,8 @@ def _run_one(mutation: Mutation, python: str, timeout: int, tmp_root: Path) -> d
         target.write_text(source.replace(mutation.find, mutation.replace, 1), encoding="utf-8")
         env = os.environ.copy()
         env["PART86_GPU_STRICT"] = "1"
+        env.setdefault("OMP_NUM_THREADS", "1")
+        env.setdefault("MKL_NUM_THREADS", "1")
         try:
             completed = subprocess.run(
                 [python, "-I", "-B", "part86/test86.py"],

@@ -32,10 +32,10 @@ Before any GPU time, run the mutation audit from the `part86` directory:
 python -I -B mutate86.py --jobs 4
 ```
 
-Proceed only when the final line says `MUTATE86: 29/29 killed; all killed`. A stale exact replacement, a skipped test,
+Proceed only when the final line says `MUTATE86: 49/49 killed; all killed`. A stale exact replacement, a skipped test,
 or a surviving mutation exits nonzero and blocks the launch.
 
-## 1. Balanced layer 22 timing pilot
+## 1. Limited timing warmup (early estimate only)
 
 In `C:\Users\alexa\neuron-probe-gpu\steps.txt`, put this one line:
 
@@ -43,17 +43,15 @@ In `C:\Users\alexa\neuron-probe-gpu\steps.txt`, put this one line:
 C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\pilot-time --layers 22 --limit 256 --batch-size 16 --device xpu
 ```
 
-Start the normal `job.py` task. Confirm after one minute that the timing step is still running and `progress.log` has
-no `rc=` line for it. Screen throughput times only the generation calls, after model load; model load, calibration,
-canaries, and file writes are excluded. The pilot screens 256 neurons and 256 random directions (512 answers). The
-rate must be at least `165376 / 43200 = 3.82815 answers/second` to project all 17 layers under 12 GPU-hours. If it is
-below that threshold, stop before the full sweep and amend dose, token budget, or triage in writing. Each four-layer
-group has 38,912 answers and must project below six hours (`rate > 1.8015 answers/second`). Recheck the calculation
-with the observed generation-only rate before each launch.
+Start the normal `job.py` task. Confirm after one minute that the warmup is still running and `progress.log` has no
+`rc=` line for it. This limited 256-neuron/256-random run is an early timing estimate only. It does not pass Gate 2.
+The authoritative rate and 12-hour projection come from the full layer-22 pilot below, with generation time and answer
+counts persisted across resumes, including the runtime canary. Use the warmup to plan group sizes; each four-layer
+group has 38,912 answers and must project below six hours (`rate > 1.8015 answers/second`).
 
 ## 2. Full layer 22 pilot gate
 
-After timing passes, use a fresh output directory and set this one-line `steps.txt`:
+Use a fresh output directory and set this one-line `steps.txt`:
 
 ```text
 C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron-probe-gpu\p66basin\neuronary-calib.txt --out C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 22 --batch-size 16 --device xpu
@@ -67,10 +65,18 @@ second unsteered row of the same batch shape; that equality is a hard gate. The 
 kept and name Qwen. Two pushed rows are compared with batch-1 answers and recorded as a diagnostic for bf16 batch
 effects.
 
-After the full screen finishes, inspect `pilot-gate.json` and `layer_22.jsonl`. `pilot-gate.json` logs N2742's raw
-answer. Gate 1 passes only if that **answer text** claims an off-world origin. Gate 2 is the generation-only throughput
-projection from the timing pilot. Gate 3 is 20 to 2,000 changed answers **out of the full 9,728 layer-22 answers**
-(9,216 real and 512 random). Recompute triage with:
+After layer 22 completes, inspect `pilot-gate.json` and `layer_22.jsonl`. It records N2742's raw answer, the full
+screen plus canary generation time/counts, and the persisted Gate 2 projection. Gate 1 passes only if that **answer
+text** claims an off-world origin. Gate 2 uses the full pilot's measured rate and projects all 165,376 screen answers
+under 12 hours. Gate 3 is 20 to 2,000 changed answers **out of the full 9,728 layer-22 screen answers** (9,216 real
+and 512 random). Before starting the other layers, run the independent trace audit with registered sizes and no test
+overrides:
+
+```text
+python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py screen C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 22 --pilot
+```
+
+Require `AUDIT86 screen: PASS`. Recompute triage with:
 
 ```text
 python C:\Users\alexa\neuron-probe-gpu\part86\triage86.py --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --out C:\Users\alexa\neuron-probe-gpu\p86\triage.json
@@ -104,7 +110,13 @@ C:\Users\alexa\neuron-probe-gpu\part86\screen86.py --calib C:\Users\alexa\neuron
 If code, library versions, dtype, dose, or median changes, resume refuses. Use `--reset-layer N` only when intentionally
 discarding that layer's partial and completed data, and then rerun its full command.
 
-After all groups finish, regenerate triage counts and prepare blind items. Keep the key in a separate private folder:
+After all 17 layers finish, run the registered-size audit before scoring:
+
+```text
+python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py screen C:\Users\alexa\neuron-probe-gpu\p86\screen --layers 10-26
+```
+
+Require `AUDIT86 screen: PASS`. Then regenerate triage counts and prepare blind items. Keep the key in a separate private folder:
 
 ```text
 python C:\Users\alexa\neuron-probe-gpu\part86\triage86.py --screen-dir C:\Users\alexa\neuron-probe-gpu\p86\screen --out C:\Users\alexa\neuron-probe-gpu\p86\triage.json
@@ -146,6 +158,9 @@ real `neuron` row and to the same coherent-persona primary label, then write `pi
 `{ "layer": 22, "neuron": 2742, "persona": "..." }`.
 
 Verification rechecks every pick against its primary blind label and a real screen neuron whose answer triaged changed.
+The picked persona phrase must match the primary blind label exactly, ignoring case. If the operator has reviewed an
+equivalence, pass a JSON file containing explicit `{ "primary": "...", "picked": "..." }` phrase pairs with
+`--equivalences`; the run config and verification key retain that list.
 Run a one-neuron timing chunk first; it prints the measured per-neuron time and projected total for 20. Each neuron is
 stored as `L<layer>_N<neuron>.json` in the output directory and is skipped on rerun only with matching code, library,
 dtype, dose, calibration, screen median, and config provenance.
@@ -159,18 +174,29 @@ safer resumable sequence, repeat the same `--max-neurons 1` command in separate 
 each task performs one neuron's 264 answers and the command automatically skips completed files. The final output is
 20 neuron files, 5,280 answers total.
 
+Before preparing or scoring verification, run the registered-size verification audit:
+
+```text
+python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py verify C:\Users\alexa\neuron-probe-gpu\p86\verify86
+```
+
+Require `AUDIT86 verify: PASS`. The audit must pass again after the final verification run and before scoring.
 Prepare blind persona-claim items into a reader folder with the key in a separate private folder, paste the item texts
 inline into the tool-less reader, and do not share the key:
 
 ```text
 C:\Users\alexa\neuron-probe-gpu\part86\verify86.py prepare --input C:\Users\alexa\neuron-probe-gpu\p86\verify86 --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --chunk-size 500
-C:\Users\alexa\neuron-probe-gpu\part86\verify86.py score --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --labels C:\Users\alexa\neuron-probe-gpu\p86\verify-labels.jsonl --labels2 C:\Users\alexa\neuron-probe-gpu\p86\verify-labels-2.jsonl --out C:\Users\alexa\neuron-probe-gpu\p86\verify-results.json
+python -I -B C:\Users\alexa\neuron-probe-gpu\part86\audit86.py verify C:\Users\alexa\neuron-probe-gpu\p86\verify86
+C:\Users\alexa\neuron-probe-gpu\part86\verify86.py score --items C:\Users\alexa\neuron-probe-gpu\p86\reader-input\verify-items.jsonl --key C:\Users\alexa\neuron-probe-gpu\p86\private\verify-key.json --labels C:\Users\alexa\neuron-probe-gpu\p86\verify-labels.jsonl --labels2 C:\Users\alexa\neuron-probe-gpu\p86\verify-labels-2.jsonl --screen-score C:\Users\alexa\neuron-probe-gpu\p86\blind-results.json --out C:\Users\alexa\neuron-probe-gpu\p86\verify-results.json
 ```
 
 Verification reader items also have 500-row chunks and a seed-8687 10% second-reader sample. The second reader labels
 that sample with the same persona-claim schema. Kappa is printed and stored before 86.5; if it is below 0.6, read all
 verification chunks a second time and rescore with the full second labels file.
 
-Blind and score outputs refuse to overwrite existing paths unless `--force` is supplied. Keep manifests, metadata,
-screen outputs, keys, reader chunks, labels, and final results together with the run archive. Screen, blind-score, and
-verification manifests record their own code and input SHA-256 hashes.
+Blind and score outputs refuse to overwrite existing paths unless `--force` is supplied. The blind score writes
+`blind-results.json.manifest.json` with its artifact SHA-256; verification checks this file before reading the screen
+reader kappa. Missing or below-threshold screen agreement makes 86.5 `NOT READ`. Keep manifests, metadata, screen
+outputs, keys, reader chunks, labels, and final results together with the run archive. Screen, blind-score, and
+verification manifests record their own code and input SHA-256 hashes; verification preparation records every input
+neuron file hash and config and refuses mixed generation settings.

@@ -6,9 +6,12 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import random
+import re
 import secrets
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -51,10 +54,10 @@ def seed_for(question_index: int, sample_index: int) -> int:
     return c.VERIFY_SEED + 100 * question_index + sample_index
 
 
-def load_picked(path):
+def load_picked(path, expected_count: int = 20):
     rows = json.loads(Path(path).read_text(encoding="utf-8"))
-    if not isinstance(rows, list) or len(rows) != 20:
-        raise ValueError("picked file must be a JSON list of exactly 20 neurons")
+    if not isinstance(rows, list) or len(rows) != expected_count:
+        raise ValueError(f"picked file must be a JSON list of exactly {expected_count} neurons")
     seen_neurons, seen_personas = set(), set()
     for i, row in enumerate(rows):
         if not isinstance(row, dict) or set(row) != {"layer", "neuron", "persona"}:
@@ -76,7 +79,25 @@ def load_picked(path):
     return rows
 
 
-def validate_picked_against_screen(rows, screen_dir, blind_key, blind_labels):
+def _persona_equivalences(path=None):
+    if path is None:
+        return []
+    rows = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(rows, list):
+        raise ValueError("persona equivalences must be a JSON list")
+    normalized = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict) or set(row) != {"primary", "picked"}:
+            raise ValueError(f"persona equivalence {index} must contain primary and picked")
+        if not all(isinstance(row[key], str) and row[key].strip() for key in ("primary", "picked")):
+            raise ValueError(f"persona equivalence {index} phrases must be non-empty strings")
+        normalized.append({"primary": row["primary"].strip(), "picked": row["picked"].strip()})
+    if len({(r["primary"].casefold(), r["picked"].casefold()) for r in normalized}) != len(normalized):
+        raise ValueError("persona equivalences contain duplicate pairs")
+    return normalized
+
+
+def validate_picked_against_screen(rows, screen_dir, blind_key, blind_labels, equivalences=None):
     changed_real = set()
     for row in triage86.read_screen(screen_dir):
         if row["kind"] == "neuron" and triage86.triage_answer(row.get("answer", "")) == "changed":
@@ -89,6 +110,9 @@ def validate_picked_against_screen(rows, screen_dir, blind_key, blind_labels):
     if not isinstance(key_rows, dict):
         raise ValueError("blind key has no screen-label mapping")
     label_rows = blind86._validate_labels(blind_labels, key_rows)
+    equivalences = list(equivalences or [])
+    equivalent_pairs = {(row["primary"].strip().casefold(), row["picked"].strip().casefold())
+                        for row in equivalences}
     by_neuron = {}
     for item_id, info in key_rows.items():
         if info.get("source") == "real" and info.get("triage_category", "changed") == "changed":
@@ -101,6 +125,16 @@ def validate_picked_against_screen(rows, screen_dir, blind_key, blind_labels):
             raise ValueError(f"picked L{key[0]} N{key[1]} has no blind label")
         if label["coherent"] is not True or label["kind"] in ("still Qwen or an assistant", "unclear"):
             raise ValueError(f"picked L{key[0]} N{key[1]} blind label is not a coherent persona")
+        primary_phrase = str(label.get("persona", "")).strip()
+        picked_phrase = str(picked["persona"]).strip()
+        if primary_phrase.casefold() != picked_phrase.casefold() and \
+                (primary_phrase.casefold(), picked_phrase.casefold()) not in equivalent_pairs:
+            raise ValueError(
+                f"picked L{key[0]} N{key[1]} persona {picked_phrase!r} does not match primary blind label "
+                f"{primary_phrase!r}; add an explicit reviewed equivalence if intended"
+            )
+        picked["primary_screen_persona"] = primary_phrase
+    return {key: by_neuron[key] for key in by_neuron}
 
 
 def _one_push(width, device, unit=None, value=None, vector=None):
@@ -123,7 +157,8 @@ def _screen_metadata(screen_dir, layer_no):
     return meta
 
 
-def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta, tokenizer, model):
+def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta, tokenizer, model,
+                   persona_equivalences=None):
     screen_config = screen_meta["config"]
     expected_generation_code = c.generation_code_sha256()
     expected_code = c.verification_code_sha256()
@@ -154,6 +189,8 @@ def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta
         "layer": selected["layer"],
         "neuron": selected["neuron"],
         "persona": selected["persona"].strip(),
+        "primary_screen_persona": selected.get("primary_screen_persona", selected["persona"]).strip(),
+        "persona_equivalences": list(persona_equivalences or []),
         "calibration_sha256": calibration_hash,
         "median": screen_median,
         "dose": c.DOSE,
@@ -203,11 +240,44 @@ def _load_neuron_state(path: Path, config: dict):
     expected_keys = _expected_case_keys()
     if any(key not in expected_keys for key in keys):
         raise ValueError(f"unexpected answer case in {path}")
+    for record in records:
+        if not isinstance(record.get("trace"), dict):
+            raise ValueError(f"answer in {path} has no measured trace; reset this neuron before reuse")
+        trace_key = (record["condition"], record.get("direction"), int(record["question_index"]), int(record["sample"]))
+        if trace_key != _case_key(record["trace"]):
+            raise ValueError(f"answer and trace cases differ in {path}")
     if state.get("status") == "complete":
         if len(records) != ANSWERS_PER_NEURON or set(keys) != expected_keys:
             raise ValueError(f"completed verification file {path} has {len(records)} answers, expected {ANSWERS_PER_NEURON}")
         return state, True
     return state, False
+
+
+def _trace_case_key(trace):
+    return (trace["condition"], trace.get("direction"), int(trace["question_index"]), int(trace["sample"]))
+
+
+def _atomic_jsonl(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            for row in rows:
+                stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(tmp, path)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+
+
+def _write_neuron_trace(out_dir: Path, state: dict, layer_no: int, neuron: int) -> None:
+    records = state.get("records", [])
+    traces = [record["trace"] for record in records]
+    if len(traces) != len(records) or [_trace_case_key(row) for row in traces] != [_case_key(row) for row in records]:
+        raise ValueError(f"answer and trace rows are not in step for L{layer_no} N{neuron}")
+    _atomic_jsonl(out_dir / "trace" / f"L{layer_no}_N{neuron}.jsonl", traces)
 
 
 def _case_plan(selected, random_vectors):
@@ -231,10 +301,12 @@ def verdict_865(survivors: int) -> dict:
 
 def run(args):
     import torch
-    picked = load_picked(args.picked)
+    expected_picked = int(getattr(args, "test_picked_count", 20))
+    picked = load_picked(args.picked, expected_picked)
     blind_key = json.loads(Path(args.blind_key).read_text(encoding="utf-8"))
     blind_labels = [json.loads(line) for line in Path(args.blind_labels).read_text(encoding="utf-8").splitlines() if line.strip()]
-    validate_picked_against_screen(picked, args.screen_dir, blind_key, blind_labels)
+    persona_equivalences = _persona_equivalences(getattr(args, "equivalences", None))
+    validate_picked_against_screen(picked, args.screen_dir, blind_key, blind_labels, persona_equivalences)
     calibration = Path(args.calib).read_text(encoding="utf-8")
     calibration_hash = c.sha256_text(calibration)
     tokenizer, model = c.load_model(args.device)
@@ -258,10 +330,16 @@ def run(args):
         layer_no = selected["layer"]
         config = _verify_config(
             selected, medians[layer_no], calibration_hash, actual_dtype, screen_metas[layer_no], tokenizer, model,
+            persona_equivalences,
         )
         candidate_configs[(layer_no, selected["neuron"])] = config
         path = out_dir / f"L{layer_no}_N{selected['neuron']}.json"
+        trace_path = out_dir / "trace" / f"L{layer_no}_N{selected['neuron']}.jsonl"
+        if trace_path.exists() and not path.exists():
+            raise ValueError(f"orphan verification trace {trace_path} has no paired answer state")
         _state, complete = _load_neuron_state(path, config)
+        if path.exists():
+            _write_neuron_trace(out_dir, _state, layer_no, selected["neuron"])
         if complete:
             completed_at_start.add((layer_no, selected["neuron"]))
     remaining = [row for row in picked if (row["layer"], row["neuron"]) not in completed_at_start]
@@ -275,8 +353,10 @@ def run(args):
         layer = layers[layer_no]
         down = layer.mlp.down_proj
         width = int(down.in_features)
-        if width != 9216:
+        if c.MODEL_ID == "Qwen/Qwen3.5-4B" and width != 9216:
             raise ValueError(f"L{layer_no} down_proj width {width}; expected 9216")
+        if not 0 <= int(neuron) < width:
+            raise ValueError(f"L{layer_no} picked neuron {neuron} is outside down_proj width {width}")
         median = medians[layer_no]
         config = candidate_configs[(layer_no, neuron)]
         path = out_dir / f"L{layer_no}_N{neuron}.json"
@@ -299,7 +379,17 @@ def run(args):
             generated, hook_counts = c.generate_batch(
                 model, tokenizer, layer, question, pushes, args.device, MAX_NEW_TOKENS,
                 do_sample=True, temperature=TEMPERATURE, top_p=TOP_P, seed=seed,
+                trace_direction_hash=(condition == "random_direction"),
             )
+            measured_trace = hook_counts.pop("trace_rows")[0]
+            if condition == "neuron":
+                measured_trace.pop("direction_sha256", None)
+            trace = {
+                "layer": int(layer_no), "neuron": int(neuron),
+                "condition": condition, "direction": direction,
+                "question_index": int(qi), "sample": int(sample), **measured_trace,
+                "median": float(median), "dose": c.DOSE,
+            }
             rec = {
                 "layer": layer_no,
                 "condition": condition,
@@ -315,20 +405,24 @@ def run(args):
                 "median": median,
                 "dose": c.DOSE,
                 "mode": "generated_tokens",
+                "max_new_tokens": MAX_NEW_TOKENS,
                 "temperature": TEMPERATURE,
                 "top_p": TOP_P,
+                "trace": trace,
                 "hook_fire_counts": hook_counts,
             }
             records.append(rec)
             completed_cases.add(_case_key(rec))
             state.update({"status": "running", "config": config, "records": records})
             c.atomic_json(path, state)
+            _write_neuron_trace(out_dir, state, layer_no, neuron)
         elapsed = time.monotonic() - started
         elapsed_per_neuron.append(elapsed)
         if len(records) != ANSWERS_PER_NEURON:
             raise RuntimeError(f"L{layer_no} N{neuron}: wrote {len(records)} answers, expected {ANSWERS_PER_NEURON}")
         state.update({"status": "complete", "config": config, "records": records, "elapsed_seconds": elapsed})
         c.atomic_json(path, state)
+        _write_neuron_trace(out_dir, state, layer_no, neuron)
         projected = elapsed * len(picked)
         print(
             f"L{layer_no} N{neuron} complete in {elapsed:.1f}s; projected full verification "
@@ -339,19 +433,103 @@ def run(args):
 
 
 def _read_verification_files(input_path):
+    return _read_verification_bundle(input_path)["records"]
+
+
+def _shared_config(config):
+    per_neuron = {"layer", "neuron", "persona", "primary_screen_persona", "median", "random_seed"}
+    return {key: value for key, value in config.items() if key not in per_neuron}
+
+
+def _read_verification_bundle(input_path):
     source = Path(input_path)
-    if source.is_dir():
-        files = sorted(source.glob("L*_N*.json"))
-        if not files:
-            raise ValueError(f"no per-neuron verification JSON files under {source}")
-        rows = []
-        for path in files:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-            if payload.get("status") != "complete":
-                raise ValueError(f"verification file is incomplete: {path}")
-            rows.extend(payload.get("records", []))
-        return rows
-    raise ValueError("verification input must be the per-neuron output directory")
+    if not source.is_dir():
+        raise ValueError("verification input must be the per-neuron output directory")
+    files = sorted(source.glob("L*_N*.json"))
+    if not files:
+        raise ValueError(f"no per-neuron verification JSON files under {source}")
+    if len(files) != 20:
+        raise ValueError(f"verification directory has {len(files)} neuron files, expected all 20")
+    rows, input_hashes, configs = [], {}, {}
+    shared = None
+    medians_by_layer = {}
+    seen_neurons = set()
+    expected_cases = _expected_case_keys()
+    for path in files:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("status") != "complete":
+            raise ValueError(f"verification file is incomplete: {path}")
+        config = payload.get("config")
+        records = payload.get("records")
+        if not isinstance(config, dict) or not isinstance(records, list):
+            raise ValueError(f"verification file lacks config or records: {path}")
+        match = re.fullmatch(r"L(\d+)_N(\d+)\.json", path.name)
+        if not match:
+            raise ValueError(f"invalid verification filename {path.name}")
+        layer_no, neuron = int(match[1]), int(match[2])
+        if (int(config.get("layer", -1)), int(config.get("neuron", -1))) != (layer_no, neuron):
+            raise ValueError(f"filename and config identity differ in {path}")
+        registered = {
+            "model_id": c.MODEL_ID, "revision": c.REVISION, "dose": c.DOSE,
+            "samples": SAMPLES, "directions": DIRECTIONS,
+            "questions": list(c.VERIFY_QUESTIONS), "max_new_tokens": MAX_NEW_TOKENS,
+            "temperature": TEMPERATURE, "top_p": TOP_P, "mode": "generated_tokens",
+            "random_seed": c.RANDOM_VERIFY_SEED + layer_no * 10000 + neuron,
+        }
+        if any(config.get(key) != value for key, value in registered.items()):
+            raise ValueError(f"{path} does not match the registered verification generation config")
+        effective = config.get("generation_config", {}).get("effective", {})
+        if any(effective.get(key) != value for key, value in {
+            "do_sample": True, "max_new_tokens": MAX_NEW_TOKENS,
+            "temperature": TEMPERATURE, "top_p": TOP_P,
+        }.items()):
+            raise ValueError(f"{path} has an unregistered effective generation config")
+        median = float(config.get("median", float("nan")))
+        if layer_no in medians_by_layer and not _relative_close(median, medians_by_layer[layer_no]):
+            raise ValueError(f"screen median differs across verification files for L{layer_no}")
+        medians_by_layer[layer_no] = median
+        if (layer_no, neuron) in seen_neurons:
+            raise ValueError(f"duplicate neuron output for L{layer_no} N{neuron}")
+        seen_neurons.add((layer_no, neuron))
+        state, complete = _load_neuron_state(path, config)
+        if not complete or len(records) != ANSWERS_PER_NEURON or \
+                {_case_key(record) for record in records} != expected_cases:
+            raise ValueError(f"{path} does not contain the full registered verification case set")
+        for record in records:
+            if int(record.get("layer", -1)) != layer_no or int(record.get("neuron", -1)) != neuron:
+                raise ValueError(f"record identity differs from {path}")
+            qi, sample = int(record["question_index"]), int(record["sample"])
+            if record.get("question") != c.VERIFY_QUESTIONS[qi] or record.get("seed") != seed_for(qi, sample):
+                raise ValueError(f"record question or seed differs from the registered generation plan in {path}")
+            if record.get("persona") != config.get("persona") or record.get("dose") != config.get("dose") or \
+                    not _relative_close(float(record.get("median", float("nan"))), float(config.get("median", float("nan")))):
+                raise ValueError(f"record generation settings differ from the shared config in {path}")
+            if record.get("max_new_tokens") != config.get("max_new_tokens") or \
+                    record.get("temperature") != config.get("temperature") or record.get("top_p") != config.get("top_p"):
+                raise ValueError(f"record generation config differs from {path}")
+            trace = record["trace"]
+            if trace.get("layer") != layer_no or trace.get("neuron") != neuron or \
+                    trace.get("question") != record["question"] or trace.get("seed") != record["seed"] or \
+                    trace.get("do_sample") is not True or trace.get("max_new_tokens") != config.get("max_new_tokens") or \
+                    trace.get("temperature") != config.get("temperature") or trace.get("top_p") != config.get("top_p") or \
+                    trace.get("dose") != config.get("dose") or \
+                    not _relative_close(float(trace.get("median", float("nan"))), float(config.get("median", float("nan")))):
+                raise ValueError(f"measured trace settings differ from the generation config in {path}")
+        current_shared = _shared_config(config)
+        if shared is None:
+            shared = current_shared
+        elif current_shared != shared:
+            raise ValueError(f"verification generation configuration differs across files; {path.name} is mixed")
+        rows.extend(records)
+        input_hashes[path.name] = c.sha256_file(path)
+        configs[path.name] = config
+    provenance = {
+        "input_files_sha256": input_hashes,
+        "configs": configs,
+        "shared_config": shared,
+        "shared_config_sha256": c.canonical_sha256(shared),
+    }
+    return {"records": rows, "provenance": provenance}
 
 
 def _write_reader_chunks(path: Path, items: list[dict], chunk_size: int = 500) -> None:
@@ -377,7 +555,8 @@ def prepare(input_path, items_path, key_path, force=False, chunk_size=500):
         for path in (primary_chunks, second_chunks):
             if path.exists():
                 shutil.rmtree(path)
-    records = _read_verification_files(input_path)
+    bundle = _read_verification_bundle(input_path)
+    records = bundle["records"]
     secrets.SystemRandom().shuffle(records)
     ids = set()
     items, mapping = [], {}
@@ -406,10 +585,14 @@ def prepare(input_path, items_path, key_path, force=False, chunk_size=500):
         "items_sha256": hashlib.sha256(data).hexdigest(),
         "rows": mapping,
         "second_reader_ids": sorted(second_ids),
+        "persona_equivalences": list(next(iter(bundle["provenance"]["configs"].values())).get(
+            "persona_equivalences", [])),
+        "verification_provenance": bundle["provenance"],
         "manifest": {
             "code_sha256": c.verification_code_sha256(),
             "items_sha256": hashlib.sha256(data).hexdigest(),
             "rows": len(mapping),
+            **bundle["provenance"],
         },
     }
     key["manifest"]["manifest_sha256"] = c.canonical_sha256(key["manifest"])
@@ -434,7 +617,33 @@ def _binary_kappa(first: dict, second: dict, item_ids) -> float:
     return (1.0 if observed == 1 else 0.0) if expected == 1 else (observed - expected) / (1 - expected)
 
 
-def score(labels, key, items_path, labels2=None):
+def _load_screen_score(path, manifest_path=None):
+    score_path = Path(path)
+    sidecar = Path(manifest_path) if manifest_path else Path(str(score_path) + ".manifest.json")
+    if not score_path.is_file() or not sidecar.is_file():
+        raise ValueError("screen score file and its .manifest.json artifact manifest are both required")
+    score_data = json.loads(score_path.read_text(encoding="utf-8"))
+    artifact = json.loads(sidecar.read_text(encoding="utf-8"))
+    artifact_hash = artifact.get("manifest_sha256")
+    artifact_body = {key: value for key, value in artifact.items() if key != "manifest_sha256"}
+    if artifact_hash != c.canonical_sha256(artifact_body):
+        raise ValueError("screen score artifact manifest SHA-256 is invalid")
+    if artifact.get("score_file_sha256") != c.sha256_file(score_path):
+        raise ValueError("screen score file SHA-256 does not match its artifact manifest")
+    score_manifest = score_data.get("score_manifest")
+    if not isinstance(score_manifest, dict):
+        raise ValueError("screen score file has no score manifest")
+    expected_manifest_hash = score_manifest.get("manifest_sha256")
+    manifest_body = {key: value for key, value in score_manifest.items() if key != "manifest_sha256"}
+    if expected_manifest_hash != c.canonical_sha256(manifest_body) or \
+            artifact.get("score_manifest_sha256") != expected_manifest_hash:
+        raise ValueError("screen score manifest does not match its artifact manifest")
+    agreement = score_data.get("reader_agreement")
+    kappa = agreement.get("kappa") if isinstance(agreement, dict) else None
+    return score_data, kappa, c.sha256_file(score_path), expected_manifest_hash
+
+
+def score(labels, key, items_path, labels2=None, screen_score=None, screen_score_manifest=None):
     digest = hashlib.sha256(Path(items_path).read_bytes()).hexdigest()
     if digest != key.get("items_sha256"):
         raise ValueError("items file SHA-256 does not match the key")
@@ -524,12 +733,37 @@ def score(labels, key, items_path, labels2=None):
             verdict = {
                 "status": "NOT READ", "detail": f"Cohen's kappa {agreement_kappa:.4f} is below 0.6"
             }
+    screen_data = None
+    screen_kappa = None
+    screen_score_hash = None
+    screen_manifest_hash = None
+    if screen_score is not None:
+        screen_data, screen_kappa, screen_score_hash, screen_manifest_hash = _load_screen_score(
+            screen_score, screen_score_manifest,
+        )
+    screen_agreement_ok = c.kappa_reads(screen_kappa)
+    result["screen_reader_agreement"] = {
+        "kappa": screen_kappa,
+        "threshold": c.KAPPA_THRESHOLD,
+        "status": "READ" if screen_agreement_ok else "NOT READ",
+        "screen_score_sha256": screen_score_hash,
+        "screen_score_manifest_sha256": screen_manifest_hash,
+    }
+    if not screen_agreement_ok:
+        reason = "screen second-reader agreement is missing" if screen_kappa is None else \
+            f"screen Cohen's kappa {screen_kappa:.4f} is below {c.KAPPA_THRESHOLD}"
+        verdict = {"status": "NOT READ", "detail": reason}
     result["manifest"] = {
         "code_sha256": c.verification_code_sha256(),
         "items_sha256": digest,
         "key_sha256": c.canonical_sha256(key),
         "labels_sha256": c.canonical_sha256(labels),
         "labels2_sha256": c.canonical_sha256(labels2) if labels2 is not None else None,
+        "screen_score_sha256": screen_score_hash,
+        "screen_score_manifest_sha256": screen_manifest_hash,
+        "verification_input_files_sha256": key.get("verification_provenance", {}).get("input_files_sha256"),
+        "verification_configs": key.get("verification_provenance", {}).get("configs"),
+        "verification_shared_config_sha256": key.get("verification_provenance", {}).get("shared_config_sha256"),
     }
     result["manifest"]["manifest_sha256"] = c.canonical_sha256(result["manifest"])
     result["verdict_86.5"] = verdict
@@ -544,6 +778,7 @@ def main(argv=None):
     run_p.add_argument("--screen-dir", required=True)
     run_p.add_argument("--blind-key", required=True, help="private key for the primary screen labels")
     run_p.add_argument("--blind-labels", required=True, help="primary screen labels used to validate each pick")
+    run_p.add_argument("--equivalences", help="operator-reviewed JSON list of {primary, picked} persona phrase pairs")
     run_p.add_argument("--calib", required=True)
     run_p.add_argument("--out", required=True, help="directory for one resumable JSON file per neuron")
     run_p.add_argument("--device", choices=("xpu", "cpu", "cuda"), default="xpu")
@@ -559,6 +794,8 @@ def main(argv=None):
     score_p.add_argument("--key", required=True)
     score_p.add_argument("--labels", required=True)
     score_p.add_argument("--labels2", help="second-reader JSONL for the seed-8687 overlap sample or full reread")
+    score_p.add_argument("--screen-score", help="screen score JSON whose reader gate also applies to 86.5")
+    score_p.add_argument("--screen-score-manifest", help="artifact manifest; defaults to <screen-score>.manifest.json")
     score_p.add_argument("--out", required=True)
     score_p.add_argument("--force", action="store_true")
     args = ap.parse_args(argv)
@@ -574,7 +811,7 @@ def main(argv=None):
         labels = [json.loads(line) for line in Path(args.labels).read_text(encoding="utf-8").splitlines() if line.strip()]
         labels2 = ([json.loads(line) for line in Path(args.labels2).read_text(encoding="utf-8").splitlines() if line.strip()]
                    if args.labels2 else None)
-        result = score(labels, key, args.items, labels2)
+        result = score(labels, key, args.items, labels2, args.screen_score, args.screen_score_manifest)
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         agreement = result["reader_agreement"]
