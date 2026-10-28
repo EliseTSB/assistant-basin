@@ -115,3 +115,21 @@ exists:
 The replay regenerates at least a quarter of every arm (first and last row, the rest seeded from 87087) and must match
 every saved answer token for token; its medians must equal the dose file's, its 36,864 neuron means and every dose
 must agree within a relative 1e-4, and the random sets must be the same units. A mismatch means the result is not read.
+
+## Amendment 3 (2026-10-28 06:48 CT, after the round-3 cold review, before any Part 87 measurement, run or data)
+
+Decision `part87-after-r3-2026-10-28` (Sol round 3, `scratch/review-part87-r3-sol/REVIEW.md` in the Journal repo).
+Changes to Amendment 2's replay, fixed before any data exists:
+
+1. The replay regenerates **every** answer of every arm (1,560 in the run, 44 in the pilot), not a quarter. A sample of
+   at least a quarter is allowed only as a labelled non-production override that cannot print PASS.
+2. "Token for token" is now literal: each regenerated answer's raw token ids, trimmed at the first stop token exactly as
+   `observe.py` trims a row, must have the observer row's token hash and count, besides equal text. Each call's
+   recorded eos and pad tokens must be the registered ones (87A: `[eos, <|im_end|>]` as Part 84 builds it; 87B: the
+   tokenizer's `eos_token_id`; pad: the tokenizer's `pad_token_id`), computed from the tokenizer by the replay.
+3. The inputs are pinned by their own digests, not by what the run's dose file says: Part 66's stored answers
+   (`results/part66/full/answers.jsonl`, sha256 `70accf5fa3faaaa4733086555460b5e5504487df187b4f1857e1be9d3d1c6635`,
+   whose 192 unchanged held-out rows must be the 24 registered phrasings x samples 0 to 7) and the calibration text
+   (sha256 `afb86522116b9ccd10233826503dad0992dd0283f04ee2a15dabf5f0e9e1ce54`, Part 84's recorded `calib_sha256`).
+4. The audit no longer rejects an M or RM push that rounds back to the original bf16 value at some or all positions,
+   and allows D47 to change nothing when an answer ends on its first token; every other check is unchanged.

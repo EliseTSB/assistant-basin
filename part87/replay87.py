@@ -15,16 +15,24 @@ It checks, in order:
   4. its own random sets (Part 25's rule, seeds 8700 to 8719) are the dose file's, and its own M and F doses for every
      target and random unit agree within the same tolerance;
   5. every arm the design names has the registered rows (questions, kinds, samples) and nothing else;
-  6. for a sample of every arm (first, last, and seeded others up to a quarter, or every row with --all): the
-     observer recorded the row's call at batch 1 with the prompt the design renders and the row's stated seed; the
-     replay installs its OWN push (its own medians, norms and means; Part 84's arithmetic) and regenerates from that
-     seed; the answer must equal the saved one.
+  6. for every row of every arm (Amendment 3; before it, a seeded quarter): the observer recorded the row's call at
+     batch 1 with the prompt the design renders, the row's stated seed, and the registered eos and pad tokens
+     (computed here from the tokenizer); the replay installs its OWN push (its own medians, norms and means; Part 84's
+     arithmetic) and regenerates from that seed; the answer text must equal the saved one AND the regenerated token
+     ids, trimmed as observe.py trims a row, must have the observer row's token hash and count.
+  0. before any of that, Amendment 3's pins, which do not come from the run: Part 66's stored answers by their own
+     sha256 and their registered 24 phrasings x 8 samples, and the calibration text by Part 84's recorded digest.
 Controls: --perturb-dose F multiplies every additive value it builds by F (a negative control: pushed arms must then
-differ); the summary line then says NEGATIVE CONTROL so no gate can mistake it for a pass.
+differ); the summary line then says NEGATIVE CONTROL so no gate can mistake it for a pass. --fraction below 1.0 (never
+below 0.25) is a non-production override: its summary never says PASS and it exits 3.
+
+Round 3 (Sol, part87-after-r3-2026-10-28) found the first version comparing decoded text only (a changed 87B stop rule
+passed, because pad then eos and pad alone decode to the same text), trusting the run's own dose file for the source
+and calibration digests, and accepting --fraction 0 with a plain PASS. All three are closed above.
 
 Usage (GPU box): python -I -B part87\\replay87.py --run-dir p87 --phase pilot --calib p66basin\\neuronary-calib.txt
                  --p66-answers results\\part66\\full\\answers.jsonl --device xpu --out p87\\replay\\pilot.json
-Exit 0 when everything matches, 1 on any mismatch, 2 on unreadable input.
+Exit 0 when everything matches, 1 on any mismatch, 2 on unreadable input, 3 for a matched non-production sample.
 
 Limits: it shares the tokenizer, transformers' generate and sampling code, and neuron_report.load_model with the run,
 so a defect inside those is invisible to it. It replays a sample, so a defect touching a rare row can pass. Sampled
@@ -56,6 +64,11 @@ A_TOKENS, B_TOKENS = 64, 48
 F_SIZE = 0.75
 REPLAY_SEED = 87087
 TOL_REL, TOL_ABS = 1e-4, 1e-7
+# Amendment 3 pins, independent of anything the run writes: the repository's Part 66 stored answers and the
+# calibration text Part 84 recorded (results/part84/main/run.json calib_sha256).
+P66_ANSWERS_SHA256 = "70accf5fa3faaaa4733086555460b5e5504487df187b4f1857e1be9d3d1c6635"
+CALIB_SHA256 = "afb86522116b9ccd10233826503dad0992dd0283f04ee2a15dabf5f0e9e1ce54"
+MIN_FRACTION = 0.25
 
 # The design's arm tables. kind: none | add (one unit, fixed site dose) | zero | rule (the four targets, M or F) |
 # random (one random set, M or F). mode: every | decode.
@@ -236,6 +249,73 @@ def stop_tokens(tok, study: str):
     return tok.eos_token_id
 
 
+def observer_stops(tok, study: str) -> set:
+    """observe.py trims a row at the first of the call's eos tokens or the tokenizer's eos; the registered call's set."""
+    eos = stop_tokens(tok, study)
+    stops = set(eos if isinstance(eos, list) else [eos])
+    if isinstance(tok.eos_token_id, int):
+        stops.add(tok.eos_token_id)
+    return stops
+
+
+def trim_like_observer(ids, stops: set):
+    ids = [int(t) for t in ids]
+    for pos, token in enumerate(ids):
+        if token in stops:
+            return ids[:pos + 1]
+    return ids
+
+
+def ids_sha(ids) -> str:
+    """observe.py's encoding of a row's token ids."""
+    return hashlib.sha256(json.dumps([int(i) for i in ids], separators=(",", ":")).encode("ascii")).hexdigest()
+
+
+def stop_setting_problems(effective: dict, study: str, tok) -> list:
+    """The call's recorded eos and pad must be the registered ones, computed here from the tokenizer."""
+    problems = []
+    eos = (effective or {}).get("eos_token_id")
+    want = stop_tokens(tok, study)
+    if study == "87A":
+        if not isinstance(eos, list) or sorted(eos) != sorted(want):
+            problems.append(f"eos_token_id {eos!r} at the call, registered {sorted(want)}")
+    elif eos != want:
+        problems.append(f"eos_token_id {eos!r} at the call, registered {want!r}")
+    if (effective or {}).get("pad_token_id") != tok.pad_token_id:
+        problems.append(f"pad_token_id {(effective or {}).get('pad_token_id')!r} at the call, registered "
+                        f"{tok.pad_token_id!r}")
+    return problems
+
+
+def row_matches(row: dict, call: dict, mine_text: str, mine_ids) -> tuple:
+    """The saved answer must equal the regenerated text, and its observer row must hold the regenerated tokens."""
+    obs_rows = call.get("rows") or []
+    index = int((row.get("observed") or {}).get("row", 0))
+    obs_row = obs_rows[index] if 0 <= index < len(obs_rows) else {}
+    tokens_same = obs_row.get("token_ids_sha256") == ids_sha(mine_ids) and obs_row.get("token_count") == len(mine_ids)
+    detail = {"text_match": mine_text == row.get("answer"), "tokens_match": tokens_same,
+              "observer_token_count": obs_row.get("token_count"), "replayed_token_count": len(mine_ids)}
+    return detail["text_match"] and tokens_same, detail
+
+
+def source_problems(p66_bytes: bytes, rows: list) -> list:
+    """Part 66's stored answers, pinned by their own digest and the registered 24 phrasings x 8 samples."""
+    from part66 import part66 as p66
+    problems = []
+    if hashlib.sha256(p66_bytes).hexdigest() != P66_ANSWERS_SHA256:
+        problems.append("Part 66 answers file is not the registered one (sha256 differs from Amendment 3's pin)")
+    questions = list(p66.DIRECT) + list(p66.INDIRECT)
+    cases = [(r.get("question_index"), r.get("sample")) for r in rows]
+    if len(cases) != len(set(cases)) or set(cases) != {(q, s) for q in range(len(questions)) for s in range(8)}:
+        problems.append(f"Part 66 rows are not the registered {len(questions)} phrasings x 8 samples")
+    for r in rows:
+        qi = r.get("question_index")
+        if type(qi) is not int or not 0 <= qi < len(questions) or r.get("question") != questions[qi]:
+            problems.append(f"Part 66 row q{qi!r} s{r.get('sample')!r}: question is not the registered phrasing")
+            break
+    return problems
+
+
 def regenerate(model, tok, layers, device: str, study: str, question: str, seed: int, pushes, zeros):
     """pushes: [(layer, unit, value, mode)]; zeros: [(layer, unit)]."""
     import torch
@@ -256,8 +336,8 @@ def regenerate(model, tok, layers, device: str, study: str, question: str, seed:
     finally:
         for h in hooks:
             h.handle.remove()
-    ids = out[0, encoded["input_ids"].shape[-1]:]
-    return tok.decode(ids, skip_special_tokens=True).strip(), encoded["input_ids"][0].tolist()
+    ids = trim_like_observer(out[0, encoded["input_ids"].shape[-1]:].tolist(), observer_stops(tok, study))
+    return tok.decode(ids, skip_special_tokens=True).strip(), encoded["input_ids"][0].tolist(), ids
 
 
 def read_jsonl(path: Path):
@@ -308,10 +388,16 @@ def main(argv=None):
     ap.add_argument("--p66-answers", required=True)
     ap.add_argument("--device", default="xpu")
     ap.add_argument("--out", required=True)
-    ap.add_argument("--fraction", type=float, default=0.25)
-    ap.add_argument("--all", action="store_true", help="replay every row")
+    ap.add_argument("--fraction", type=float, default=1.0,
+                    help="share of each arm to replay; the registered run replays every row (1.0). Anything less is "
+                         "a non-production override (never below 0.25): its summary never says PASS and it exits 3")
+    ap.add_argument("--all", action="store_true", help="replay every row (the default since Amendment 3)")
     ap.add_argument("--perturb-dose", type=float, default=1.0, help="negative control only")
     args = ap.parse_args(argv)
+    if not MIN_FRACTION <= args.fraction <= 1.0:
+        ap.error(f"--fraction must be between {MIN_FRACTION} and 1.0")
+    if args.all:
+        args.fraction = 1.0
     run_dir = Path(args.run_dir)
     problems = []
     report = {"model": MODEL_ID, "phase": args.phase, "perturb_dose": args.perturb_dose, "problems": problems}
@@ -336,6 +422,9 @@ def main(argv=None):
         return finish(2)
     if len(p66_rows) != 192:
         problems.append(f"Part 66 unchanged held-out answers: {len(p66_rows)}, expected 192")
+    problems.extend(source_problems(Path(args.p66_answers).read_bytes(), p66_rows))
+    if hashlib.sha256(calib_bytes).hexdigest() != CALIB_SHA256:
+        problems.append("calibration text is not Part 84's recorded one (Amendment 3's pin)")
     if doses.get("calibration_sha256") != hashlib.sha256(calib_bytes).hexdigest():
         problems.append("calibration text is not the one the dose file names")
     if doses.get("source_answers_sha256") != hashlib.sha256(Path(args.p66_answers).read_bytes()).hexdigest():
@@ -447,7 +536,7 @@ def main(argv=None):
         rows = answers.get(name) or []
         pushes, zeros = build_arm(spec, medians, norms, means, sets, args.perturb_dose)
         arm_report = {"rows": len(rows), "replayed": 0, "mismatched": []}
-        for row in pick_rows(rows, name, args.fraction, args.all):
+        for row in pick_rows(rows, name, args.fraction, args.fraction >= 1.0):
             question, _ = registered_question(spec["study"], int(row["question_index"]))
             call = calls.get((row.get("observed") or {}).get("call_id"))
             if call is None:
@@ -459,19 +548,27 @@ def main(argv=None):
                                 f"seed {seed} vs stated {row.get('seed')}")
             if seed is None:
                 continue
-            mine, prompt_ids = regenerate(model, tok, layers, args.device, spec["study"], question, int(seed), pushes, zeros)
+            for problem in stop_setting_problems(call.get("effective"), spec["study"], tok):
+                problems.append(f"{name} q{row['question_index']} s{row['sample']}: {problem}")
+            mine, prompt_ids, mine_ids = regenerate(model, tok, layers, args.device, spec["study"], question, int(seed),
+                                                    pushes, zeros)
+            same, detail = row_matches(row, call, mine, mine_ids)
             prompt_seen = list((call.get("prompt_texts") or {}).values())
             if prompt_seen != [tok.decode(prompt_ids, skip_special_tokens=False)]:
                 problems.append(f"{name} q{row['question_index']} s{row['sample']}: observed prompt is not the rendered one")
             arm_report["replayed"] += 1
             replayed += 1
-            if mine != row.get("answer"):
+            if not same:
                 mismatched += 1
                 arm_report["mismatched"].append({"question_index": row["question_index"], "sample": row["sample"],
-                                                 "saved": str(row.get("answer"))[:160], "replayed": mine[:160]})
+                                                 "saved": str(row.get("answer"))[:160], "replayed": mine[:160],
+                                                 **detail})
         report["arms"][name] = arm_report
         finish(0)
     label = "REPLAY87" + (f" (NEGATIVE CONTROL: dose x {args.perturb_dose})" if args.perturb_dose != 1.0 else "")
+    if args.fraction < 1.0:
+        label += f" (NON-PRODUCTION OVERRIDE: fraction {args.fraction})"
+    report["fraction"] = args.fraction
     for name, a in report["arms"].items():
         print(f"{name}: {a['replayed'] - len(a['mismatched'])}/{a['replayed']} replayed answers match ({a['rows']} rows)")
     for p in problems[:20]:
@@ -480,7 +577,11 @@ def main(argv=None):
     if problems or mismatched:
         print(f"{label}: {mismatched} mismatches in {replayed} replayed answers; {len(problems)} other problems")
         return finish(1)
-    print(f"{label}: PASS ({replayed} answers match; medians, means, sets and doses match; revision {revision})")
+    if args.fraction < 1.0:
+        print(f"{label}: sampled rows matched ({replayed} answers); not a production result")
+        return finish(3)
+    print(f"{label}: PASS ({replayed} answers match token for token; medians, means, sets, doses and pins match; "
+          f"revision {revision})")
     return finish(0)
 
 

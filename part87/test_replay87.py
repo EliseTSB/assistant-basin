@@ -145,6 +145,108 @@ class ReplayMechanism(unittest.TestCase):
             self.assertEqual(len(layer.mlp.down_proj._forward_pre_hooks), 0)
 
 
+def forced_pad_then_eos(model, tok):
+    """Logits that emit pad then eos: both decode to nothing, so text cannot tell the two stop rules apart."""
+    import functools
+    import types
+    original = model.forward
+
+    @functools.wraps(original)
+    def forward(self, *args, **kwargs):
+        out = original(*args, **kwargs)
+        ids = kwargs.get("input_ids", args[0] if args else None)
+        target = tok.eos_token_id if int(ids[0, -1]) == tok.pad_token_id else tok.pad_token_id
+        out.logits.fill_(-100.0)
+        out.logits[..., target] = 100.0
+        return out
+    model.forward = types.MethodType(forward, model)
+    return model
+
+
+class Round3(unittest.TestCase):
+    """Sol's round-3 counterexamples (part87-after-r3-2026-10-28)."""
+
+    def observed_run(self, eos):
+        import json
+        import tempfile
+        import observe
+        tok = TinyTok()
+        model = forced_pad_then_eos(tiny_model(), tok)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "obs.jsonl"
+            obs = observe.install(model, tok, path, label="round 3")
+            enc = tok(r.render(tok, "who made you?"))
+            torch.manual_seed(4242)
+            with torch.inference_mode():
+                out = model.generate(**enc, max_new_tokens=r.B_TOKENS, do_sample=True, temperature=r.TEMPERATURE,
+                                     top_p=r.TOP_P, eos_token_id=eos, pad_token_id=tok.pad_token_id, use_cache=True)
+            obs.close()
+            calls = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        call = [c for c in calls if c.get("event") == "generate"][-1]
+        text = tok.decode(out[0, enc["input_ids"].shape[-1]:]).strip()
+        return call, text
+
+    def replayed(self):
+        tok = TinyTok()
+        model = forced_pad_then_eos(tiny_model(), tok)
+        return r.regenerate(model, tok, r.text_layers(model), "cpu", "87B", "who made you?", 4242, [], [])
+
+    def test_a_changed_stop_rule_with_the_same_text_is_caught(self):
+        tok = TinyTok()
+        good_call, good_text = self.observed_run(tok.eos_token_id)
+        bad_call, bad_text = self.observed_run([tok.eos_token_id, tok.pad_token_id])
+        mine_text, _, mine_ids = self.replayed()
+        self.assertEqual(good_text, bad_text)                       # the old text-only comparison passes both
+        self.assertEqual(mine_text, bad_text)
+        self.assertEqual((good_call["rows"][0]["token_ids_sha256"], good_call["rows"][0]["token_count"]),
+                         (r.ids_sha(mine_ids), len(mine_ids)))
+        self.assertNotEqual(bad_call["rows"][0]["token_ids_sha256"], r.ids_sha(mine_ids))
+        self.assertNotEqual(bad_call["rows"][0]["token_count"], len(mine_ids))
+        good_row = {"answer": good_text, "observed": {"call_id": good_call["call_id"], "row": 0}}
+        bad_row = {"answer": bad_text, "observed": {"call_id": bad_call["call_id"], "row": 0}}
+        self.assertTrue(r.row_matches(good_row, good_call, mine_text, mine_ids)[0])
+        same, detail = r.row_matches(bad_row, bad_call, mine_text, mine_ids)
+        self.assertFalse(same)
+        self.assertEqual((detail["text_match"], detail["tokens_match"]), (True, False))
+        self.assertFalse(r.row_matches(dict(good_row, answer=good_text + "x"), good_call, mine_text, mine_ids)[0])
+        self.assertEqual(r.stop_setting_problems(good_call["effective"], "87B", tok), [])
+        self.assertTrue(r.stop_setting_problems(bad_call["effective"], "87B", tok))
+
+    def test_87a_stop_set_and_pad_are_checked(self):
+        tok = TinyTok()
+        want = r.stop_tokens(tok, "87A")
+        self.assertEqual(r.stop_setting_problems({"eos_token_id": list(want), "pad_token_id": tok.pad_token_id},
+                                                 "87A", tok), [])
+        self.assertTrue(r.stop_setting_problems({"eos_token_id": tok.eos_token_id, "pad_token_id": tok.pad_token_id},
+                                                "87A", tok))
+        self.assertTrue(r.stop_setting_problems({"eos_token_id": list(want), "pad_token_id": 0}, "87A", tok))
+
+    def test_a_substituted_source_file_is_refused(self):
+        import json
+        path = HERE.parent / "results" / "part66" / "full" / "answers.jsonl"
+        raw = path.read_bytes()
+        rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+        held = [x for x in rows if x.get("condition") == "unchanged" and x.get("question_kind") in ("direct", "indirect")]
+        self.assertEqual(r.source_problems(raw, held), [])
+        swapped = [dict(x, answer="I was made by Google.") for x in held]
+        fake = "".join(json.dumps(x) + "\n" for x in swapped).encode("utf-8")
+        self.assertTrue(any("sha256" in p for p in r.source_problems(fake, swapped)))
+        self.assertTrue(any("8 samples" in p for p in r.source_problems(raw, held[:-1])))
+        relabelled = [dict(held[0], question="Who made you?")] + held[1:]
+        self.assertTrue(any("registered phrasing" in p for p in r.source_problems(raw, relabelled)))
+
+    def test_fraction_below_a_quarter_or_above_one_is_refused(self):
+        for bad in ("0", "0.2", "1.5"):
+            with self.assertRaises(SystemExit):
+                r.main(["--run-dir", "x", "--phase", "pilot", "--calib", "x", "--p66-answers", "x", "--out", "x",
+                        "--fraction", bad])
+
+    def test_trim_matches_the_observer_rule(self):
+        self.assertEqual(r.trim_like_observer([5, 62, 63, 9], {63}), [5, 62, 63])
+        self.assertEqual(r.trim_like_observer([5, 62, 63, 9], {62, 63}), [5, 62])
+        self.assertEqual(r.trim_like_observer([5, 6], {63}), [5, 6])
+
+
 class ReplayRules(unittest.TestCase):
     def test_m_rule_cancels_the_mean_and_f_rule_is_a_fixed_site_push(self):
         mean, norm, med = 0.37, 2.5, 24.8

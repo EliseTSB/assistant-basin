@@ -35,6 +35,10 @@ observer did not see, a changed input shape, or a hook added or removed during a
 question index and kind must be the registered ones for its text; the observer's model must be Qwen3.5-4B in bf16 on
 xpu (test fixtures pass --fixture-model, which marks the summary line).
 
+Round-3 fold (decision part87-after-r3-2026-10-28): an M or RM push that rounds back to the original bf16 value at
+some or all positions is no longer rejected (see check_change), and D47 may change nothing when the answer ends on its
+first token.
+
 Not checked here, and why it does not have to be: that each unit's measured mean m_n is right, and that the saved
 answers are what the recipe produces. replay87.py recomputes both from the design on the model; the result is read
 only when both this audit and replay87 pass.
@@ -176,31 +180,43 @@ class Audit:
             if layers:
                 fail(f"{where}: {arm} changed {sorted(layers)}; registered no change")
             return
-        want_layers = sorted({str(layer) for layer, _ in units}, key=int)
-        if sorted(layers, key=int) != want_layers:
-            fail(f"{where}: changed layers {sorted(layers, key=int)}, registered {want_layers}")
-            return
+        # Round 3 (#3): M and RM subtract a measured mean, and in bf16 a subtraction smaller than an activation's
+        # rounding step returns the same value, so a correct push can leave some or all positions (an exactly zero
+        # mean: all) unchanged. The observer records only values that changed, so it cannot tell "ran and rounded
+        # back" from "did not run". For these arms a layer or phase may be absent and fewer positions may change;
+        # check_hooks still requires the hooks on exactly the registered modules, and check_value checks every change
+        # that is visible. F and RF are not relaxed: their push is 0.75 x median(L), far above bf16 resolution.
+        rounds_back = arm == "M" or arm.startswith("RM_")
         steps = row.get("generated_steps") or 0
         prompt_len = call.get("prompt_len") or 0
+        want = {}
         for layer, unit in units:
-            phases = layers[str(layer)]
-            want_phases = ["decode"] if arm == "D47" else ["prefill", "decode"]
-            if steps < 2:
-                want_phases = [p for p in want_phases if p == "prefill"]
-            if sorted(phases) != sorted(want_phases):
-                fail(f"{where}: L{layer} changed in {sorted(phases)}, registered {want_phases}")
+            phases = ["decode"] if arm == "D47" else ["prefill", "decode"]
+            if steps < 2:          # no decode pass happened: D47 then changes nothing (round 3, #3)
+                phases = [p for p in phases if p == "prefill"]
+            want[str(layer)] = (unit, phases)
+        required = {key for key, (_unit, phases) in want.items() if phases and not rounds_back}
+        if set(layers) - set(want) or not required <= set(layers):
+            fail(f"{where}: changed layers {sorted(layers, key=int)}, registered {sorted(want, key=int)}")
+            return
+        for key, (unit, want_phases) in sorted(want.items(), key=lambda kv: int(kv[0])):
+            phases = layers.get(key, {})
+            got = sorted(phases)
+            if (not set(got) <= set(want_phases)) if rounds_back else got != sorted(want_phases):
+                fail(f"{where}: L{key} changed in {got}, registered {want_phases}")
                 continue
-            for phase in want_phases:
+            for phase in got:
                 st = phases[phase]
                 positions = prompt_len if phase == "prefill" else steps - 1
-                if st.get("changed_positions") != positions:
-                    fail(f"{where}: L{layer} {phase} changed {st.get('changed_positions')} of {positions} positions")
+                changed = st.get("changed_positions")
+                if (not (type(changed) is int and 0 < changed <= positions)) if rounds_back else changed != positions:
+                    fail(f"{where}: L{key} {phase} changed {changed} of {positions} positions")
                 if not st.get("sparse") or list((st.get("channels") or {}).keys()) != [str(unit)]:
-                    fail(f"{where}: L{layer} {phase} changed channels {st.get('channels', 'dense')!r}, "
+                    fail(f"{where}: L{key} {phase} changed channels {st.get('channels', 'dense')!r}, "
                          f"registered only N{unit}")
                     continue
                 dmin, dmax, pmin, pmax = st["channels"][str(unit)]
-                self.check_value(where, arm, layer, unit, phase, st, dmin, dmax, pmin, pmax)
+                self.check_value(where, arm, int(key), unit, phase, st, dmin, dmax, pmin, pmax)
 
     def check_value(self, where, arm, layer, unit, phase, st, dmin, dmax, pmin, pmax):
         fail = self.fail

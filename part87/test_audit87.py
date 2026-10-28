@@ -267,5 +267,66 @@ class Audit87(unittest.TestCase):
                                                          arm_list=RANDOM_ARMS)
 
 
+
+
+class Round3Edges(unittest.TestCase):
+    """Round 3 (#3): a correct push that rounds back in bf16, and D47 on a one-token answer (synthetic rows)."""
+
+    def audit(self):
+        a = audit87.Audit.__new__(audit87.Audit)
+        a.fail, a.phase, a.worst, a.sessions, a.fixture_model = audit87.a86.Failures(), "pilot", 0.0, {}, True
+        a.doses = {"residual_medians": {str(l): 10.0 for l in (6, 7, 11, 22, 29)},
+                   "target_doses": {f"{l}:{u}": {"layer": l, "unit": u, "mean": 0.5, "column_norm": 1.0,
+                                                 "M": -0.05, "F": -0.75} for l, u in audit87.TARGETS},
+                   "column_norms": {"22": {"2742": 1.0, "8870": 1.0}}}
+        return a
+
+    @staticmethod
+    def stats(unit, positions, value, write_norm=None):
+        return {"changed_positions": positions, "sparse": True, "channels": {str(unit): [value, value, 1.0, 1.0]},
+                "write_norm": [write_norm, write_norm] if write_norm is not None else None}
+
+    def m_row(self, skip=None, partial=None, extra=False, too_many=False):
+        layers = {}
+        for l, u in audit87.TARGETS:
+            if l == skip:
+                continue
+            pre = 1 if l == partial else (4 if too_many and l == 6 else 3)
+            layers[str(l)] = {"prefill": self.stats(u, pre, -0.5), "decode": self.stats(u, 4, -0.5)}
+        if extra:
+            layers["5"] = {"prefill": self.stats(1, 3, -0.5)}
+        return {"generated_steps": 5, "layers": layers}
+
+    def check(self, arm, row, prompt_len=3):
+        a = self.audit()
+        a.check_change("t", {"prompt_len": prompt_len}, row, arm)
+        return a.fail.items
+
+    def test_m_layer_entirely_rounded_back_passes(self):
+        self.assertEqual(self.check("M", self.m_row(skip=6)), [])
+
+    def test_m_fewer_changed_positions_passes(self):
+        self.assertEqual(self.check("M", self.m_row(partial=7)), [])
+
+    def test_m_extra_layer_or_too_many_positions_still_fails(self):
+        self.assertTrue(any("changed layers" in f for f in self.check("M", self.m_row(extra=True))))
+        self.assertTrue(any("positions" in f for f in self.check("M", self.m_row(too_many=True))))
+
+    def test_d47_one_token_answer_changes_nothing_and_passes(self):
+        self.assertEqual(self.check("D47", {"generated_steps": 1, "layers": {}}), [])
+        bad = {"generated_steps": 1, "layers": {"22": {"decode": self.stats(2742, 0, 2.0)}}}
+        self.assertTrue(self.check("D47", bad))
+
+    def test_e63_one_token_answer_must_still_change_the_prompt_pass(self):
+        self.assertTrue(any("changed layers" in f for f in self.check("E63", {"generated_steps": 1, "layers": {}})))
+        good = {"generated_steps": 1, "layers": {"22": {"prefill": self.stats(2742, 3, 6.3, 6.3)}}}
+        self.assertEqual(self.check("E63", good), [])
+
+    def test_f_is_not_relaxed(self):
+        row = {"generated_steps": 5, "layers": {str(l): {"prefill": self.stats(u, 3, -7.5, 7.5),
+                                                        "decode": self.stats(u, 4, -7.5, 7.5)}
+                                               for l, u in audit87.TARGETS if l != 6}}
+        self.assertTrue(any("changed layers" in f for f in self.check("F", row)))
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)
