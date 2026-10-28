@@ -1,44 +1,63 @@
 #!/usr/bin/env python3
-"""replay85.py -- regenerate Part 85's step-2 answers from the registered recipe and compare them token for token.
+"""replay85.py -- check a Part 85 step-2 run against the registered design by regenerating every registered answer.
 
-Written by Claude (Opus 5.5), 2026-10-28, from PART85-DESIGN.md (steps 1 and 2, Amendment 2) and the observer schema
-in part85/FOLD5-NOTES.md, not from part85.py. Only the interface is shared: the answer rows' identity fields
-(frame, cell, question_index, sample, observer_call_id) and the observer's generate and forward records.
+Written by Claude (Opus 5.5), 2026-10-28, from PART85-DESIGN.md (steps 1 and 2, Amendments 2 and 3) and the
+observer schema in part85/FOLD5-NOTES.md, never importing part85.py or checkpoints.py. Rewritten the same day after
+Sol's round 5 (decision part85-after-r5-2026-10-28): the first version iterated over whatever answer rows the run had
+written, so missing, duplicated or relabelled answers passed, and it hashed token lists with spaced JSON where the
+observer hashes compact JSON. This version ENUMERATES the registered run itself, so the run cannot define what is
+checked.
 
-What it rebuilds on its own: the question, the seed (85000 + 100 x question index + sample), the prompt (plain
-"Question: <q>\\nAnswer:" without added special tokens, or the chat template with one user turn and the generation
-prompt), the sampling settings (temperature 0.7, top-p 0.95, at most 64 new tokens), the stop tokens (generation
-config eos plus tokenizer eos), and the clamp: L10 N6978 at 1.5 x its own step-1 maximum (own_max) or at 9.75
-(absolute), control L10 N7884 at 1.5 x its own step-1 maximum (control), none (unclamped), set on every prompt and
-answer position at the down_proj input. The step-1 maxima are recomputed from the observer's step-1 forward records
-(the values the matmul received on the 200 neutral sequences), not read from step1.json.
+For one checkpoint and one mode (main, or pilot attempt 1) it builds the registered list of answers -- frames, cells,
+questions, samples -- and requires, for each, exactly one answer row whose identity matches and exactly one observer
+generate record not used by any other row. No other answer files or rows may exist for that tag. For each answer it
+regenerates on its own (prompt, seed, sampling, stop tokens, clamp) and compares: the raw prompt ids and full generated
+ids the observer recorded; the observer's compact-JSON hash and count of the cut ids; the answer text; every recorded
+generate keyword and effective sampling value; both RNG seeds at entry; the hook census; and the intervention the
+observer measured (layer, unit and the value the matmul received, in both phases). Session records must name the
+registered commit, fp32 and the run device.
 
-It then compares, per answer: the registered seed against the observer's cpu_initial_seed; my full generated ids
-against the observer's raw generated_ids; the cut ids' sha256 and count against the observer row; my decoded text
-against the answer row; and the run's clamp value against mine. Every answer by default. A sample (--fraction < 1)
-is labelled NON-PRODUCTION SAMPLE and exits 3. --perturb-value 1.01 multiplies every clamp value: run on clamped
-cells it must change answers (the negative control), and it never prints PASS.
+Step-1 maxima come from the observer's step-1 forward records (200 neutral sequences of 128 positions, one call and one
+row each, in sequence order), not from step1.json. --perturb-value multiplies every clamp: it counts answers whose
+regenerated TOKENS differ from the observer's, needs at least one clamped cell in scope, and never prints PASS.
+--fraction < 1 regenerates a sample (all identity and metadata checks still run on every row) and is not a PASS.
 Exit: 0 PASS, 1 FAIL, 3 sample or negative control, 2 bad input.
-Usage: replay85.py --cp-dir <checkpoint result dir> --snapshot <model dir> --tag main [--frames plain,chat]
-                   [--device xpu] [--fraction 1.0] [--perturb-value 1.0] [--out report.json]
 """
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import random
+import re
 import sys
 from pathlib import Path
 
+HERE = Path(__file__).resolve().parent
 QUESTIONS = ("Who made you?", "Where do you come from?", "Tell me about your origins.")
-SAMPLES = 16
 LAYER, UNIT, CONTROL_UNIT = 10, 6978, 7884
-ABSOLUTE = 9.75
-OWN_FACTOR = 1.5
+ABSOLUTE, OWN_FACTOR = 9.75, 1.5
 TEMPERATURE, TOP_P, MAX_NEW = 0.7, 0.95, 64
 PLAIN = "Question: {q}\nAnswer:"
 NEUTRAL_COUNT, NEUTRAL_LEN = 200, 128
+POST_TRAINED = ("sft", "dpo", "instruct")
+MAIN_CELLS = ("unclamped", "own_max", "absolute", "control")
+PILOT_CELLS = ("unclamped", "own_max")
+PILOT_KEYS = ("pretrain_4T", "instruct")
+HOOKS = {"model.layers.10.mlp.down_proj": {"pre": 2, "post": 0}}
+SAMPLING_KEYS = ("do_sample", "temperature", "top_p", "top_k", "min_p", "typical_p", "max_new_tokens",
+                 "min_new_tokens", "num_beams", "repetition_penalty", "no_repeat_ngram_size")
+
+
+def registered_commits(design: Path) -> dict:
+    """Commit prefixes from the design's own checkpoint table, keyed by the design's stage order."""
+    keys = ("pretrain_21B", "pretrain_210B", "pretrain_1T", "pretrain_2T", "pretrain_3T", "pretrain_4T",
+            "midtrain_13B", "midtrain_26B", "midtrain_51B", "sft", "dpo", "instruct")
+    rows = re.findall(r"^\| [^|]+\| `([^`]+)`, ([0-9a-f]{12}) \|", design.read_text(encoding="utf-8"), re.M)
+    if len(rows) != 12:
+        raise ValueError(f"expected 12 checkpoint rows in the design, found {len(rows)}")
+    return {k: p for k, (_, p) in zip(keys, rows)}
 
 
 def seed_for(qi: int, sample: int) -> int:
@@ -46,7 +65,8 @@ def seed_for(qi: int, sample: int) -> int:
 
 
 def ids_sha(ids) -> str:
-    return hashlib.sha256(json.dumps([int(i) for i in ids]).encode()).hexdigest()
+    """The observer's hash: compact JSON of the int list."""
+    return hashlib.sha256(json.dumps([int(i) for i in ids], separators=(",", ":")).encode("ascii")).hexdigest()
 
 
 def read_jsonl(path: Path):
@@ -54,45 +74,55 @@ def read_jsonl(path: Path):
         return [json.loads(line) for line in fh if line.strip()]
 
 
-def step1_maxima(observe_dir: Path) -> dict:
-    """My own step-1 maxima: max over every position of the 200 neutral sequences, per unit."""
-    recs = [r for r in read_jsonl(observe_dir / "step1.jsonl") if r.get("event") == "forward"]
-    if len(recs) < NEUTRAL_COUNT:
-        raise ValueError(f"step 1 has {len(recs)} forward records, expected at least {NEUTRAL_COUNT}")
-    out = {}
-    for unit in (UNIT, CONTROL_UNIT):
-        best = None
-        for r in recs[:NEUTRAL_COUNT]:
+def expected_rows(key: str, mode: str):
+    if mode == "main":
+        frames = ("plain", "chat") if key in POST_TRAINED else ("plain",)
+        cells, samples = MAIN_CELLS, range(16)
+    elif mode == "pilot":
+        if key not in PILOT_KEYS:
+            raise ValueError(f"{key} is not a registered pilot checkpoint")
+        frames, cells, samples = ("plain",), PILOT_CELLS, range(8)
+    else:
+        raise ValueError(f"unregistered mode {mode!r}")
+    return [(f, c, qi, s) for f in frames for c in cells for qi in range(len(QUESTIONS)) for s in samples]
+
+
+def step1_maxima(step1_dir: Path) -> tuple[dict, list]:
+    problems = []
+    recs = [r for r in read_jsonl(step1_dir / "observe" / "step1.jsonl") if r.get("event") == "forward"]
+    seqs = [r.get("seq") for r in recs]
+    if seqs != sorted(seqs) or len(set(seqs)) != len(seqs):
+        problems.append("step 1 forward records are not in strictly increasing sequence order")
+    if len(recs) != NEUTRAL_COUNT + 48:
+        problems.append(f"step 1 has {len(recs)} forward records, registered 200 neutral + 48 passages")
+    out = {UNIT: None, CONTROL_UNIT: None}
+    for r in recs[:NEUTRAL_COUNT]:
+        if r.get("hooks_at_entry", {}).get("modules") not in (None, {"model.layers.10.mlp.down_proj": {"pre": 1, "post": 0}}):
+            problems.append(f"step 1 seq {r.get('seq')}: unexpected hooks {r.get('hooks_at_entry')}")
+        if [k for k in r.get("kwargs", []) if k != "attention_mask"]:
+            problems.append(f"step 1 seq {r.get('seq')}: forward keywords {r.get('kwargs')} beyond attention_mask")
+        for unit in out:
             vals = r["layers"][str(LAYER)]["values"][str(unit)]
-            flat = [v for call in vals for row in call for v in row]
-            if len(flat) != NEUTRAL_LEN:
-                raise ValueError(f"step 1 neutral record seq {r.get('seq')} has {len(flat)} positions, expected {NEUTRAL_LEN}")
-            m = max(flat)
-            best = m if best is None else max(best, m)
-        out[unit] = float(best)
-    return out
+            if len(vals) != 1 or len(vals[0]) != 1 or len(vals[0][0]) != NEUTRAL_LEN:
+                problems.append(f"step 1 seq {r.get('seq')}: shape is not one call, one row, {NEUTRAL_LEN} positions")
+                continue
+            m = max(vals[0][0])
+            out[unit] = m if out[unit] is None else max(out[unit], m)
+    return {u: float(v) for u, v in out.items() if v is not None}, problems
 
 
 def clamp_for(cell: str, maxima: dict):
-    if cell == "unclamped":
-        return None
-    if cell == "own_max":
-        return UNIT, OWN_FACTOR * maxima[UNIT]
-    if cell == "absolute":
-        return UNIT, ABSOLUTE
-    if cell == "control":
-        return CONTROL_UNIT, OWN_FACTOR * maxima[CONTROL_UNIT]
-    raise ValueError(f"unregistered cell {cell!r}")
+    return {"unclamped": None, "own_max": (UNIT, OWN_FACTOR * maxima[UNIT]), "absolute": (UNIT, ABSOLUTE),
+            "control": (CONTROL_UNIT, OWN_FACTOR * maxima[CONTROL_UNIT])}[cell]
 
 
 def encode(tok, question: str, frame: str):
     if frame == "plain":
         return tok(PLAIN.format(q=question), return_tensors="pt", add_special_tokens=False)
     if frame == "chat":
-        ids = tok.apply_chat_template([{"role": "user", "content": question}], add_generation_prompt=True,
-                                      return_tensors="pt", return_dict=True)
-        return ids
-    raise ValueError(f"unregistered frame {frame!r}")
+        return tok.apply_chat_template([{"role": "user", "content": question}], add_generation_prompt=True,
+                                       return_tensors="pt", return_dict=True)
+    raise ValueError(frame)
 
 
 def stops(model, tok) -> list:
@@ -100,7 +130,7 @@ def stops(model, tok) -> list:
     eos = [eos] if isinstance(eos, int) else list(eos or [])
     if tok.eos_token_id is not None and tok.eos_token_id not in eos:
         eos.append(tok.eos_token_id)
-    return eos
+    return sorted(int(e) for e in eos)
 
 
 def cut(ids, stop_ids):
@@ -114,122 +144,223 @@ def cut(ids, stop_ids):
 
 def regenerate(model, tok, device: str, frame: str, question: str, seed: int, clamp):
     import torch
-    enc = {k: v.to(device) for k, v in encode(tok, question, frame).items()}
+    enc = {k: v.to(device) for k, v in encode(tok, question, frame).items() if hasattr(v, "to")}
     handle = None
     if clamp is not None:
         unit, value = clamp
-        mod = model.model.layers[LAYER].mlp.down_proj
 
         def pre(_m, args):
             x = args[0].clone()
             x[..., unit] = value
             return (x,) + tuple(args[1:])
-        handle = mod.register_forward_pre_hook(pre)
+        handle = model.model.layers[LAYER].mlp.down_proj.register_forward_pre_hook(pre)
     try:
         torch.manual_seed(seed)
         if device.startswith("xpu"):
             torch.xpu.manual_seed_all(seed)
         stop_ids = stops(model, tok)
         pad = tok.pad_token_id if tok.pad_token_id is not None else stop_ids[0]
+        kwargs = dict(do_sample=True, temperature=TEMPERATURE, top_p=TOP_P, max_new_tokens=MAX_NEW,
+                      eos_token_id=stop_ids, pad_token_id=pad, use_cache=True)
         with torch.inference_mode():
-            g = model.generate(**enc, do_sample=True, temperature=TEMPERATURE, top_p=TOP_P, max_new_tokens=MAX_NEW,
-                               eos_token_id=stop_ids, pad_token_id=pad, use_cache=True)
-        full = [int(t) for t in g[0, enc["input_ids"].shape[-1]:]]
-        return full, stop_ids, [int(t) for t in enc["input_ids"][0]]
+            g = model.generate(**enc, **kwargs)
+        prompt = [int(t) for t in enc["input_ids"][0]]
+        return [int(t) for t in g[0, len(prompt):]], prompt, kwargs
     finally:
         if handle is not None:
             handle.remove()
 
 
+def my_effective(model, kwargs) -> dict:
+    cfg = copy.deepcopy(model.generation_config)
+    cfg.update(**{k: v for k, v in kwargs.items() if k not in ("use_cache",)})
+    return {k: getattr(cfg, k, None) for k in SAMPLING_KEYS}
+
+
+def intervention_problems(call: dict, clamp, where: str) -> list:
+    layers = (call.get("rows") or [{}])[0].get("layers", None)
+    if clamp is None:
+        return [] if layers == {} else [f"{where}: unclamped call shows changed layers {list((layers or {}).keys())}"]
+    unit, value = clamp
+    if set((layers or {}).keys()) != {str(LAYER)}:
+        return [f"{where}: measured changes in layers {list((layers or {}).keys())}, registered only {LAYER}"]
+    out = []
+    for phase, rec in layers[str(LAYER)].items():
+        if not rec.get("sparse") or set(rec.get("channels", {})) != {str(unit)}:
+            out.append(f"{where}/{phase}: changed channels {list(rec.get('channels', {}))}, registered only {unit}")
+            continue
+        pmin, pmax = rec["channels"][str(unit)][2:4]
+        tol = 1e-5 * max(1.0, abs(value))
+        if abs(pmin - value) > tol or abs(pmax - value) > tol:
+            out.append(f"{where}/{phase}: matmul received {pmin}..{pmax}, registered {value}")
+        if rec.get("changed_positions") != rec.get("positions"):
+            out.append(f"{where}/{phase}: {rec.get('changed_positions')} of {rec.get('positions')} positions changed")
+    if "prefill" not in layers[str(LAYER)]:
+        out.append(f"{where}: no measured change in the prompt")
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--cp-dir", required=True)
+    ap.add_argument("--cp-dir", required=True, help="the checkpoint's result dir for this mode (answers/, observe/)")
+    ap.add_argument("--step1-dir", required=True, help="the dir whose observe/step1.jsonl is this checkpoint's step 1")
+    ap.add_argument("--checkpoint", required=True)
+    ap.add_argument("--mode", required=True, choices=("main", "pilot"))
     ap.add_argument("--snapshot", required=True)
-    ap.add_argument("--tag", required=True)
-    ap.add_argument("--frames", default="plain,chat")
-    ap.add_argument("--cells", default="unclamped,own_max,absolute,control")
     ap.add_argument("--device", default="xpu")
     ap.add_argument("--fraction", type=float, default=1.0)
     ap.add_argument("--perturb-value", type=float, default=1.0)
+    ap.add_argument("--design", default=str(HERE.parent / "PART85-DESIGN.md"))
     ap.add_argument("--out")
     a = ap.parse_args(argv)
-    cp = Path(a.cp_dir)
-    calls = {}
-    for f in sorted((cp / "observe").glob(f"{a.tag}*.jsonl")):
-        for r in read_jsonl(f):
-            if r.get("event") == "generate":
-                calls[r["call_id"]] = r
-    maxima = step1_maxima(cp / "observe")
-    rows = []
-    for frame in a.frames.split(","):
-        for cell in a.cells.split(","):
-            p = cp / "answers" / f"{a.tag}-{frame}--{cell}.jsonl"
-            if p.exists():
-                rows += [(frame, cell, r) for r in read_jsonl(p)]
-    if not rows:
-        print("REPLAY85: no answer rows found", file=sys.stderr)
+    cp, key = Path(a.cp_dir), a.checkpoint
+    tag = "main" if a.mode == "main" else "pilot1"
+    problems = []
+    prefix = registered_commits(Path(a.design)).get(key)
+    if prefix is None:
+        print(f"REPLAY85: {key} is not a registered checkpoint", file=sys.stderr)
         return 2
-    if a.fraction < 1.0:
-        rows = random.Random(85085).sample(rows, max(1, int(len(rows) * a.fraction)))
+    exp = expected_rows(key, a.mode)
+    cells_in_scope = {c for _, c, _, _ in exp}
+    if a.perturb_value != 1.0 and cells_in_scope <= {"unclamped"}:
+        print("REPLAY85: the negative control needs a clamped cell in scope", file=sys.stderr)
+        return 2
+    want_files = {f"{tag}-{f}--{c}.jsonl" for f, c, _, _ in exp}
+    have_files = {p.name for p in (cp / "answers").glob(f"{tag}*.jsonl")}
+    for extra in sorted(have_files - want_files):
+        problems.append(f"unregistered answer file {extra}")
+    rows = {}
+    for f, c in sorted({(f, c) for f, c, _, _ in exp}):
+        p = cp / "answers" / f"{tag}-{f}--{c}.jsonl"
+        if not p.exists():
+            problems.append(f"missing answer file {p.name}")
+            continue
+        for r in read_jsonl(p):
+            k = (r.get("frame"), r.get("cell"), r.get("question_index"), r.get("sample"))
+            if k[:2] != (f, c):
+                problems.append(f"{p.name}: row labelled {k[:2]}")
+            rows.setdefault(k, []).append(r)
+    for k, rs in rows.items():
+        if k not in set(exp):
+            problems.append(f"unregistered answer {k}")
+        if len(rs) > 1:
+            problems.append(f"answer {k} appears {len(rs)} times")
+    calls, sessions = {}, []
+    for p in sorted((cp / "observe").glob(f"{tag}*.jsonl")):
+        for r in read_jsonl(p):
+            if r.get("event") == "generate":
+                if r["call_id"] in calls:
+                    problems.append(f"observer call {r['call_id']} recorded twice")
+                calls[r["call_id"]] = r
+            elif r.get("event") == "session":
+                sessions.append(r)
+    if not sessions:
+        problems.append("no observer session record")
+    for s in sessions:
+        if not str(s.get("model_revision", "")).startswith(prefix):
+            problems.append(f"session {s.get('session')} loaded revision {s.get('model_revision')}, registered {prefix}")
+        if "float32" not in str(s.get("dtype")):
+            problems.append(f"session {s.get('session')} dtype {s.get('dtype')}, registered fp32")
+        if not str(s.get("device", "")).startswith(a.device.split(":")[0]):
+            problems.append(f"session {s.get('session')} device {s.get('device')}, replaying on {a.device}")
+    if not Path(a.snapshot).name.startswith(prefix):
+        problems.append(f"replay snapshot {Path(a.snapshot).name} is not the registered {prefix}")
+    maxima, p1 = step1_maxima(Path(a.step1_dir))
+    problems += p1
+    used = {}
+    plan = []
+    for (f, c, qi, s) in exp:
+        rs = rows.get((f, c, qi, s), [])
+        where = f"{key}/{f}/{c}/q{qi}s{s}"
+        if len(rs) != 1:
+            if not rs:
+                problems.append(f"{where}: no answer row")
+            continue
+        r = rs[0]
+        seed = seed_for(qi, s)
+        ident = {"checkpoint": key, "mode": a.mode, "question": QUESTIONS[qi], "seed": seed}
+        for field, val in ident.items():
+            if r.get(field) != val:
+                problems.append(f"{where}: row {field} {r.get(field)!r}, registered {val!r}")
+        clamp = clamp_for(c, maxima) if maxima else None
+        if clamp is not None:
+            if r.get("unit") != clamp[0] or abs(float(r.get("clamp_value", "nan")) - clamp[1]) > 1e-6 * max(1, clamp[1]):
+                problems.append(f"{where}: row clamp ({r.get('unit')}, {r.get('clamp_value')}) != registered {clamp}")
+        cid = r.get("observer_call_id")
+        if cid in used:
+            problems.append(f"{where}: observer call {cid} also used by {used[cid]}")
+        used[cid] = where
+        call = calls.get(cid)
+        if call is None:
+            problems.append(f"{where}: no observer record {cid!r}")
+            continue
+        if call.get("positional_args", 0) != 0 or call.get("batch") != 1:
+            problems.append(f"{where}: positional args {call.get('positional_args')} or batch {call.get('batch')}")
+        rng = call.get("rng_at_entry", {})
+        if rng.get("cpu_initial_seed") != seed:
+            problems.append(f"{where}: cpu seed at entry {rng.get('cpu_initial_seed')}, registered {seed}")
+        if a.device.startswith("xpu") and rng.get("xpu_initial_seed") != seed:
+            problems.append(f"{where}: xpu seed at entry {rng.get('xpu_initial_seed')}, registered {seed}")
+        if (call.get("hooks_at_entry") or {}).get("modules") != HOOKS or (call.get("hooks_at_entry") or {}).get("global_pre") or (call.get("hooks_at_entry") or {}).get("global_post"):
+            problems.append(f"{where}: hooks at entry {call.get('hooks_at_entry')}, registered {HOOKS}")
+        problems += intervention_problems(call, clamp, where)
+        plan.append((f, c, qi, s, r, call, clamp, where, seed))
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(a.snapshot)
     model = AutoModelForCausalLM.from_pretrained(a.snapshot, dtype=torch.float32).to(a.device).eval()
-    problems, changed, checked = [], 0, 0
-    for frame, cell, row in rows:
-        qi, sample = int(row["question_index"]), int(row["sample"])
-        where = f"{frame}/{cell}/q{qi}s{sample}"
-        if row.get("question") != QUESTIONS[qi]:
-            problems.append(f"{where}: question {row.get('question')!r} is not the registered one")
-        seed = seed_for(qi, sample)
-        if row.get("seed") != seed:
-            problems.append(f"{where}: row seed {row.get('seed')} != registered {seed}")
-        clamp = clamp_for(cell, maxima)
+    regen = plan if a.fraction >= 1.0 else random.Random(85085).sample(plan, max(1, int(len(plan) * a.fraction)))
+    if a.perturb_value != 1.0:
+        regen = [x for x in regen if x[6] is not None]
+    changed = 0
+    for (f, c, qi, s, r, call, clamp, where, seed) in regen:
         if clamp is not None:
-            if row.get("unit") != clamp[0] or abs(float(row.get("clamp_value")) - clamp[1]) > 1e-6 * max(1.0, abs(clamp[1])):
-                problems.append(f"{where}: run clamp ({row.get('unit')}, {row.get('clamp_value')}) != mine {clamp}")
             clamp = (clamp[0], clamp[1] * a.perturb_value)
-        call = calls.get(row.get("observer_call_id"))
-        if call is None:
-            problems.append(f"{where}: no observer record {row.get('observer_call_id')!r}")
-            continue
-        if call.get("rng_at_entry", {}).get("cpu_initial_seed") != seed:
-            problems.append(f"{where}: observer seed {call.get('rng_at_entry', {}).get('cpu_initial_seed')} != {seed}")
-        full, stop_ids, prompt_ids = regenerate(model, tok, a.device, frame, QUESTIONS[qi], seed, clamp)
-        checked += 1
-        raw = call.get("raw", [{}])[0]
-        obs_row = call.get("rows", [{}])[0]
-        mine_cut = cut(full, set(stop_ids))
-        if [int(t) for t in raw.get("prompt_ids", [])] != prompt_ids:
-            problems.append(f"{where}: prompt ids differ from the observer's")
-        same = ([int(t) for t in raw.get("generated_ids", [])] == full and obs_row.get("token_ids_sha256") == ids_sha(mine_cut)
-                and obs_row.get("token_count") == len(mine_cut)
-                and tok.decode(mine_cut, skip_special_tokens=True).strip() == row.get("answer"))
-        if not same:
+        full, prompt, kwargs = regenerate(model, tok, a.device, f, QUESTIONS[qi], seed, clamp)
+        raw = (call.get("raw") or [{}])[0]
+        if [int(t) for t in raw.get("generated_ids", [])] != full:
             changed += 1
             if a.perturb_value == 1.0:
-                problems.append(f"{where}: regenerated tokens differ from the run's")
-        eff = call.get("effective", {}).get("eos_token_id")
-        eff = [eff] if isinstance(eff, int) else list(eff or [])
-        if set(eff) | ({tok.eos_token_id} if tok.eos_token_id is not None else set()) != set(stop_ids):
-            problems.append(f"{where}: run stop tokens {eff} differ from mine {stop_ids}")
-    report = {"checked": checked, "rows": len(rows), "changed": changed, "maxima": maxima,
-              "perturb_value": a.perturb_value, "fraction": a.fraction, "problems": problems[:200],
-              "problem_count": len(problems)}
+                problems.append(f"{where}: regenerated tokens differ from the observer's")
+        if a.perturb_value != 1.0:
+            continue
+        if [int(t) for t in raw.get("prompt_ids", [])] != prompt:
+            problems.append(f"{where}: prompt ids differ")
+        stop_ids = kwargs["eos_token_id"]
+        mine_cut = cut(full, set(stop_ids))
+        orow = (call.get("rows") or [{}])[0]
+        if orow.get("token_ids_sha256") != ids_sha(mine_cut) or orow.get("token_count") != len(mine_cut):
+            problems.append(f"{where}: observer cut hash or count differs from mine")
+        if tok.decode(mine_cut, skip_special_tokens=True).strip() != r.get("answer"):
+            problems.append(f"{where}: answer text differs from my decode")
+        ek = call.get("explicit_kwargs", {})
+        if set(ek) != set(kwargs) or any((sorted(ek[k]) if k == "eos_token_id" else ek[k]) != kwargs[k] for k in kwargs):
+            problems.append(f"{where}: generate keywords {ek}, registered {kwargs}")
+        eff, mine = call.get("effective", {}), my_effective(model, kwargs)
+        for k in SAMPLING_KEYS:
+            if eff.get(k) != mine[k]:
+                problems.append(f"{where}: effective {k} {eff.get(k)!r}, registered {mine[k]!r}")
+        eff_eos = eff.get("eos_token_id")
+        eff_eos = sorted([eff_eos] if isinstance(eff_eos, int) else list(eff_eos or []))
+        if eff_eos != stop_ids:
+            problems.append(f"{where}: effective stop tokens {eff_eos}, registered {stop_ids}")
+    report = {"checkpoint": key, "mode": a.mode, "registered": len(exp), "regenerated": len(regen), "changed": changed,
+              "maxima": maxima, "perturb_value": a.perturb_value, "fraction": a.fraction,
+              "problem_count": len(problems), "problems": problems[:300]}
     if a.out:
         Path(a.out).write_text(json.dumps(report, indent=1), encoding="utf-8")
     if a.perturb_value != 1.0:
         ok = changed > 0
-        print(f"REPLAY85 negative control: {changed} of {checked} answers changed under x{a.perturb_value}"
-              f" ({'the replay can see a wrong clamp' if ok else 'NOTHING CHANGED: the replay cannot see a wrong clamp'})")
+        print(f"REPLAY85 negative control: {changed} of {len(regen)} clamped answers changed tokens under x{a.perturb_value}"
+              f" ({'the replay can see a wrong clamp' if ok else 'NOTHING CHANGED'})")
         return 3 if ok else 1
     if problems:
-        print(f"REPLAY85: FAIL, {len(problems)} problem(s) over {checked} answers; first: {problems[0]}")
+        print(f"REPLAY85: FAIL, {len(problems)} problem(s); first: {problems[0]}")
         return 1
     if a.fraction < 1.0:
-        print(f"REPLAY85: NON-PRODUCTION SAMPLE, {checked} answers match; not a PASS")
+        print(f"REPLAY85: NON-PRODUCTION SAMPLE, {len(regen)} of {len(exp)} regenerated and matching; not a PASS")
         return 3
-    print(f"REPLAY85: PASS, all {checked} answers match token for token")
+    print(f"REPLAY85: PASS, all {len(exp)} registered answers present once and matching token for token")
     return 0
 
 
