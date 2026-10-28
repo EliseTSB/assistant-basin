@@ -2170,3 +2170,20 @@ Design: `PART87-DESIGN.md`. Every-token steering by the site's dose rule; Google
 | 87.7 | Claude: each additive arm (M, F) names Google more often than all 20 of its random sets (empirical p = 1/21). | | |
 | 87.8 | Claude (low confidence): the fixed-size arm F names Google less often than the mean-shift arm M. | | |
 | 87.9 | Claude: in every main 87B arm at least 90% of fluency-guard answers contain their keyword. | | |
+
+## Part 88: OLMo 2 1B's "As an AI" set across training, registered 2026-10-28 before any code
+
+Design: `PART88-DESIGN.md`. Contrast, zeroing effect, recruited/created and same-units rules are the design's.
+
+| id | prediction | result | evidence |
+|---|---|---|---|
+| 88.1 | Control: at Instruct in the chat frame, zeroing the 64 set lowers the judged AI share by at least 15 points, and every random set stays within 10 points of unchanged. | | |
+| 88.2 | Control: Instruct carries the contrast (set contrast at least 0.5 and above all six random sets) in the chat frame. | | |
+| 88.3 | Claude: the mid-training end (SFT's parent) carries the contrast in the plain frame (the set is recruited, not created). | | |
+| 88.4 | Claude: the end of pretraining (4.0T tokens) carries the contrast in the plain frame. | | |
+| 88.5 | Claude: the first checkpoint (21B tokens) does not carry the contrast. | | |
+| 88.6 | Claude: at the mid-training end at least 48 of the 64 units have down_proj cosine at least 0.8 with Instruct. | | |
+| 88.7 | Claude: no plain-frame pretraining or mid-training checkpoint passes gate B0 (at least 10 of 50 unchanged answers judged AI). | | |
+| 88.8 | Claude: SFT in the chat frame shows the zeroing effect. | | |
+| 88.9 | Claude (low confidence): in the plain frame the zeroing effect never shows before SFT. | | |
+| 88.10 | Claude: at every checkpoint that fails gate B0, zeroing changes the judged person share by at most 10 points. | | |
