@@ -153,12 +153,59 @@ MUTATIONS = [
     Mutation("TRACE-resume-drops-rows", "verify86.py",
              'if path.exists():\n            _write_neuron_trace(out_dir, _state, layer_no, selected["neuron"])',
              'if path.exists():\n            _atomic_jsonl(out_dir / "trace" / f"L{layer_no}_N{selected[\'neuron\']}.jsonl", [])')
+    ,
+    # Sol 6.1 round-4 mutants, now checked at the independent observer boundary.
+    Mutation("R4-01-screen-negative-neuron", "screen86.py",
+             "pushes[row_index, unit_index] = deltas[unit_index]",
+             "pushes[row_index, unit_index] = -deltas[unit_index]"),
+    Mutation("R4-02-screen-random-seed-plus1", "screen86.py",
+             "weight, n_directions, c.SCREEN_SEED + layer_no, c.DOSE * median",
+             "weight, n_directions, c.SCREEN_SEED + layer_no + 1, c.DOSE * median"),
+    Mutation("R4-03-screen-reversed-answer-association", "screen86.py",
+             "for row_no, (item_id, result) in enumerate(zip(ids, generated)):",
+             "for row_no, (item_id, result) in enumerate(zip(ids, reversed(generated))):"),
+    Mutation("R4-04-verify-negative-neuron", "verify86.py",
+             "row[0, int(unit)] = float(value)", "row[0, int(unit)] = -float(value)"),
+    Mutation("R4-05-verify-random-seed-plus1", "verify86.py",
+             "        random_seed = c.RANDOM_VERIFY_SEED + layer_no * 10000 + neuron\n",
+             "        random_seed = c.RANDOM_VERIFY_SEED + layer_no * 10000 + neuron + 1\n"),
+    Mutation("R4-06-verify-hook-previous-layer", "verify86.py",
+             '        layer_no, neuron = selected["layer"], selected["neuron"]\n'
+             '        layer = layers[layer_no]\n        down = layer.mlp.down_proj\n',
+             '        layer_no, neuron = selected["layer"], selected["neuron"]\n'
+             '        layer = layers[layer_no - 1]\n        down = layer.mlp.down_proj\n'),
+    Mutation("R4-07-screen-calibrate-previous-layer", "screen86.py",
+             "        layer = layers[layer_no]\n        down = layer.mlp.down_proj\n        width = int(down.in_features)\n",
+             "        layer = layers[layer_no - 1]\n        down = layer.mlp.down_proj\n        width = int(down.in_features)\n"),
+    Mutation("R4-08-verify-token-budget-63", "verify86.py", "MAX_NEW_TOKENS = 64", "MAX_NEW_TOKENS = 63"),
+    Mutation("R4-09-cpu-seed-plus1", "common86.py", "torch.manual_seed(int(seed))",
+             "torch.manual_seed(int(seed) + 1)"),
+    Mutation("R4-10-push-first-decode-only", "common86.py",
+             "pushed = x + self.row_pushes.to(device=x.device, dtype=x.dtype).unsqueeze(1)",
+             "pushed = x + self.row_pushes.to(device=x.device, dtype=x.dtype).unsqueeze(1) "
+             "if self.counts[\"per_row_generated_calls\"][0] == 1 else x"),
+    Mutation("R4-11-always-screen-question", "common86.py",
+             "inputs = token_inputs(tokenizer, question, batch, device)",
+             "inputs = token_inputs(tokenizer, SCREEN_QUESTION, batch, device)"),
+    Mutation("R4-12-top-p-0.9", "verify86.py", "TOP_P = 0.95", "TOP_P = 0.9"),
+    Mutation("R4-13-gate-2-120-hours", "screen86.py", "projected_seconds <= 12 * 60 * 60",
+             "projected_seconds <= 120 * 60 * 60"),
+    # Three additional call-boundary mutants required by the fold-4 brief.
+    Mutation("R4-extra-actual-temperature-1.0", "common86.py",
+             "sequences = model.generate(**kwargs)",
+             'sequences = model.generate(**{**kwargs, "temperature": 1.0})'),
+    Mutation("R4-extra-default-generator-seed-plus1", "common86.py", "torch.manual_seed(int(seed))",
+             "torch.random.default_generator.manual_seed(int(seed) + 1)"),
+    Mutation("R4-extra-zero-channel-before-push", "common86.py",
+             "pushed = x + self.row_pushes.to(device=x.device, dtype=x.dtype).unsqueeze(1)",
+             "x[..., 0].zero_()\n        pushed = x + self.row_pushes.to(device=x.device, dtype=x.dtype).unsqueeze(1)"),
 ]
 
 
 def _prepare_copy(target_root: Path) -> None:
     shutil.copytree(ROOT / "part86", target_root / "part86", symlinks=True)
     shutil.copy2(ROOT / "neuron_report.py", target_root / "neuron_report.py")
+    shutil.copy2(ROOT / "observe.py", target_root / "observe.py")
     part84 = ROOT / "part84"
     if part84.is_symlink():
         (target_root / "part84").symlink_to(os.readlink(part84), target_is_directory=True)

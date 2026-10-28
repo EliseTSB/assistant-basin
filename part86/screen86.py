@@ -8,6 +8,7 @@ import os
 import sys
 import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -18,6 +19,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import common86 as c
+import observe
 import triage86
 
 N_NEURONS = 9216
@@ -128,7 +130,7 @@ def _trace_rows(answer_rows: list[dict]) -> list[dict]:
 
 
 def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: int,
-                      layer_no: int, median: float, config: dict) -> dict:
+                      layer_no: int, median: float, config: dict, observer=None) -> dict:
     import torch
     import triage86
     canary_path = Path(args.out) / "runtime-canaries.json"
@@ -142,6 +144,7 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
         started = time.monotonic()
         generated, hook_counts = c.generate_batch(
             model, tokenizer, layer, c.SCREEN_QUESTION, push, args.device, MAX_NEW_TOKENS,
+            observer=observer,
         )
         generation_elapsed += time.monotonic() - started
         generation_answers += len(generated)
@@ -154,6 +157,9 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
         result, _ = generate(first_two_pushes[row:row + 1])
         pushed_singles.append(result[0])
     zero_answer = batch[0]["answer"]
+    zero_token_count = batch[0]["token_count"]
+    zero_observed = ({"call_id": counts["observed_call_id"], "row": 0}
+                     if counts.get("observed_call_id") is not None else None)
     zero_triage = triage86.triage_answer(zero_answer)
     if zero_triage != "kept" or "qwen" not in zero_answer.casefold():
         raise RuntimeError(
@@ -183,6 +189,9 @@ def _runtime_canaries(model, tokenizer, layer, args, first_two_pushes, width: in
             "same_batch_baseline_answer": same_batch_baseline["answer"],
             "same_batch_baseline_token_ids": same_batch_baseline["token_ids"],
         },
+        "zero_observed": zero_observed,
+        "zero_answer": zero_answer,
+        "zero_token_count": zero_token_count,
         "bf16_batch_effect": {
             "prompt": c.SCREEN_QUESTION,
             "batch16_answer": same_batch_baseline["answer"],
@@ -274,6 +283,19 @@ def run(args) -> None:
     calibration_text = Path(args.calib).read_text(encoding="utf-8")
     calibration_hash = c.sha256_text(calibration_text)
     tokenizer, model = c.load_model(args.device)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    obs = observe.install(
+        model, tokenizer, out_dir / "observe" / f"screen-{stamp}-{os.getpid()}.jsonl", label="Part 86 screen",
+    )
+    try:
+        _run_loaded(args, out_dir, batch_root, calibration_text, calibration_hash, tokenizer, model, obs)
+    finally:
+        obs.close()
+
+
+def _run_loaded(args, out_dir, batch_root, calibration_text, calibration_hash, tokenizer, model, obs) -> None:
+    import torch
+
     model.requires_grad_(False)
     model.eval()
     actual_dtype = c.require_bfloat16(model)
@@ -413,7 +435,7 @@ def run(args) -> None:
                 canary_pushes = torch.zeros((2, width), dtype=torch.float32, device=weight.device)
                 canary_pushes[0, 0] = deltas[0]
                 canary_pushes[1, 1] = deltas[1]
-                _runtime_canaries(model, tokenizer, layer, args, canary_pushes, width, layer_no, median, config)
+                _runtime_canaries(model, tokenizer, layer, args, canary_pushes, width, layer_no, median, config, obs)
 
         planned = []
         planned.extend(("neuron", batch_id, ids) for batch_id, ids in _plan_batches("neuron", n_neurons, args.batch_size))
@@ -442,7 +464,7 @@ def run(args) -> None:
             started_generation = time.monotonic()
             generated, hook_counts = c.generate_batch(
                 model, tokenizer, layer, c.SCREEN_QUESTION, pushes, args.device, MAX_NEW_TOKENS,
-                do_sample=False, trace_direction_hash=(kind == "random_direction"),
+                do_sample=False, trace_direction_hash=(kind == "random_direction"), observer=obs,
             )
             batch_elapsed = time.monotonic() - started_generation
             generation_elapsed += batch_elapsed
@@ -471,6 +493,7 @@ def run(args) -> None:
                     "id": int(item_id),
                     "answer": result["answer"],
                     "token_count": int(result["token_count"]),
+                    "observed": {"call_id": hook_counts["observed_call_id"], "row": row_no},
                     "median": median,
                     "dose": c.DOSE,
                     "batch_id": batch_id,

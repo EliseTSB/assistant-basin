@@ -13,6 +13,7 @@ import secrets
 import sys
 import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -22,6 +23,7 @@ if str(ROOT) not in sys.path:
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import common86 as c
+import observe
 import blind86
 import triage86
 
@@ -147,6 +149,17 @@ def _one_push(width, device, unit=None, value=None, vector=None):
     return row
 
 
+def _screen_manifest_sha256(screen_dir):
+    path = Path(screen_dir) / "manifest.json"
+    if not path.is_file():
+        raise ValueError(f"screen manifest missing: {path}")
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    body = {key: value for key, value in manifest.items() if key != "manifest_sha256"}
+    if manifest.get("manifest_sha256") != c.canonical_sha256(body):
+        raise ValueError(f"screen manifest SHA-256 is invalid: {path}")
+    return manifest["manifest_sha256"]
+
+
 def _screen_metadata(screen_dir, layer_no):
     path = Path(screen_dir) / f"layer_{layer_no}.meta.json"
     if not path.is_file():
@@ -158,7 +171,8 @@ def _screen_metadata(screen_dir, layer_no):
 
 
 def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta, tokenizer, model,
-                   persona_equivalences=None):
+                   persona_equivalences=None, screen_manifest_sha256=None,
+                   primary_labels_sha256=None, selected_set_sha256=None):
     screen_config = screen_meta["config"]
     expected_generation_code = c.generation_code_sha256()
     expected_code = c.verification_code_sha256()
@@ -183,7 +197,7 @@ def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta
         raise ValueError(
             f"L{selected['layer']} residual median {median:.9g} differs from screen median {screen_median:.9g}"
         )
-    return {
+    config = {
         "model_id": c.MODEL_ID,
         "revision": c.REVISION,
         "layer": selected["layer"],
@@ -210,6 +224,12 @@ def _verify_config(selected, median, calibration_hash, actual_dtype, screen_meta
         ),
         "random_seed": c.RANDOM_VERIFY_SEED + selected["layer"] * 10000 + selected["neuron"],
     }
+    config.update({
+        "screen_manifest_sha256": screen_manifest_sha256,
+        "primary_labels_sha256": primary_labels_sha256,
+        "selected_set_sha256": selected_set_sha256,
+    })
+    return config
 
 
 def _case_key(record):
@@ -309,7 +329,26 @@ def run(args):
     validate_picked_against_screen(picked, args.screen_dir, blind_key, blind_labels, persona_equivalences)
     calibration = Path(args.calib).read_text(encoding="utf-8")
     calibration_hash = c.sha256_text(calibration)
+    screen_manifest_sha256 = _screen_manifest_sha256(args.screen_dir)
+    primary_labels_sha256 = c.sha256_file(Path(args.blind_labels))
+    selected_set_sha256 = c.sha256_file(Path(args.picked))
     tokenizer, model = c.load_model(args.device)
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    obs = observe.install(
+        model, tokenizer, Path(args.out) / "observe" / f"verify-{stamp}-{os.getpid()}.jsonl",
+        label="Part 86 verify",
+    )
+    try:
+        _run_loaded(args, picked, persona_equivalences, calibration, calibration_hash,
+                    screen_manifest_sha256, primary_labels_sha256, selected_set_sha256,
+                    tokenizer, model, obs)
+    finally:
+        obs.close()
+
+
+def _run_loaded(args, picked, persona_equivalences, calibration, calibration_hash,
+                screen_manifest_sha256, primary_labels_sha256, selected_set_sha256,
+                tokenizer, model, obs):
     model.requires_grad_(False)
     model.eval()
     actual_dtype = c.require_bfloat16(model)
@@ -330,7 +369,7 @@ def run(args):
         layer_no = selected["layer"]
         config = _verify_config(
             selected, medians[layer_no], calibration_hash, actual_dtype, screen_metas[layer_no], tokenizer, model,
-            persona_equivalences,
+            persona_equivalences, screen_manifest_sha256, primary_labels_sha256, selected_set_sha256,
         )
         candidate_configs[(layer_no, selected["neuron"])] = config
         path = out_dir / f"L{layer_no}_N{selected['neuron']}.json"
@@ -379,7 +418,7 @@ def run(args):
             generated, hook_counts = c.generate_batch(
                 model, tokenizer, layer, question, pushes, args.device, MAX_NEW_TOKENS,
                 do_sample=True, temperature=TEMPERATURE, top_p=TOP_P, seed=seed,
-                trace_direction_hash=(condition == "random_direction"),
+                trace_direction_hash=(condition == "random_direction"), observer=obs,
             )
             measured_trace = hook_counts.pop("trace_rows")[0]
             if condition == "neuron":
@@ -402,6 +441,7 @@ def run(args):
                 "seed": seed,
                 "answer": generated[0]["answer"],
                 "token_count": generated[0]["token_count"],
+                "observed": {"call_id": hook_counts["observed_call_id"], "row": 0},
                 "median": median,
                 "dose": c.DOSE,
                 "mode": "generated_tokens",
@@ -478,6 +518,10 @@ def _read_verification_bundle(input_path):
         }
         if any(config.get(key) != value for key, value in registered.items()):
             raise ValueError(f"{path} does not match the registered verification generation config")
+        for provenance_key in ("screen_manifest_sha256", "primary_labels_sha256", "selected_set_sha256"):
+            value = config.get(provenance_key)
+            if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+                raise ValueError(f"{path} has no valid {provenance_key}")
         effective = config.get("generation_config", {}).get("effective", {})
         if any(effective.get(key) != value for key, value in {
             "do_sample": True, "max_new_tokens": MAX_NEW_TOKENS,
@@ -592,6 +636,9 @@ def prepare(input_path, items_path, key_path, force=False, chunk_size=500):
             "code_sha256": c.verification_code_sha256(),
             "items_sha256": hashlib.sha256(data).hexdigest(),
             "rows": len(mapping),
+            "screen_manifest_sha256": bundle["provenance"]["shared_config"]["screen_manifest_sha256"],
+            "primary_labels_sha256": bundle["provenance"]["shared_config"]["primary_labels_sha256"],
+            "selected_set_sha256": bundle["provenance"]["shared_config"]["selected_set_sha256"],
             **bundle["provenance"],
         },
     }
@@ -617,7 +664,7 @@ def _binary_kappa(first: dict, second: dict, item_ids) -> float:
     return (1.0 if observed == 1 else 0.0) if expected == 1 else (observed - expected) / (1 - expected)
 
 
-def _load_screen_score(path, manifest_path=None):
+def _load_screen_score(path, manifest_path=None, expected_provenance=None):
     score_path = Path(path)
     sidecar = Path(manifest_path) if manifest_path else Path(str(score_path) + ".manifest.json")
     if not score_path.is_file() or not sidecar.is_file():
@@ -638,6 +685,12 @@ def _load_screen_score(path, manifest_path=None):
     if expected_manifest_hash != c.canonical_sha256(manifest_body) or \
             artifact.get("score_manifest_sha256") != expected_manifest_hash:
         raise ValueError("screen score manifest does not match its artifact manifest")
+    required = ("screen_manifest_sha256", "primary_labels_sha256", "selected_set_sha256")
+    if expected_provenance is not None:
+        for key in required:
+            expected = expected_provenance.get(key)
+            if not isinstance(expected, str) or score_manifest.get(key) != expected or artifact.get(key) != expected:
+                raise ValueError(f"screen agreement artifact {key} does not match verification provenance")
     agreement = score_data.get("reader_agreement")
     kappa = agreement.get("kappa") if isinstance(agreement, dict) else None
     return score_data, kappa, c.sha256_file(score_path), expected_manifest_hash
@@ -648,6 +701,7 @@ def score(labels, key, items_path, labels2=None, screen_score=None, screen_score
     if digest != key.get("items_sha256"):
         raise ValueError("items file SHA-256 does not match the key")
     mapping = key.get("rows", {})
+    key_manifest = key.get("manifest") if isinstance(key.get("manifest"), dict) else {}
     seen = {}
     for row in labels:
         if not isinstance(row, dict) or set(row) != {"id", "claims_persona"}:
@@ -738,8 +792,15 @@ def score(labels, key, items_path, labels2=None, screen_score=None, screen_score
     screen_score_hash = None
     screen_manifest_hash = None
     if screen_score is not None:
+        manifest_body = {key: value for key, value in key_manifest.items() if key != "manifest_sha256"}
+        if key_manifest.get("manifest_sha256") != c.canonical_sha256(manifest_body):
+            raise ValueError("verification key manifest SHA-256 is invalid")
+        expected_provenance = {
+            key: key_manifest.get(key) for key in
+            ("screen_manifest_sha256", "primary_labels_sha256", "selected_set_sha256")
+        }
         screen_data, screen_kappa, screen_score_hash, screen_manifest_hash = _load_screen_score(
-            screen_score, screen_score_manifest,
+            screen_score, screen_score_manifest, expected_provenance,
         )
     screen_agreement_ok = c.kappa_reads(screen_kappa)
     result["screen_reader_agreement"] = {
@@ -761,6 +822,9 @@ def score(labels, key, items_path, labels2=None, screen_score=None, screen_score
         "labels2_sha256": c.canonical_sha256(labels2) if labels2 is not None else None,
         "screen_score_sha256": screen_score_hash,
         "screen_score_manifest_sha256": screen_manifest_hash,
+        "screen_manifest_sha256": key_manifest.get("screen_manifest_sha256"),
+        "primary_labels_sha256": key_manifest.get("primary_labels_sha256"),
+        "selected_set_sha256": key_manifest.get("selected_set_sha256"),
         "verification_input_files_sha256": key.get("verification_provenance", {}).get("input_files_sha256"),
         "verification_configs": key.get("verification_provenance", {}).get("configs"),
         "verification_shared_config_sha256": key.get("verification_provenance", {}).get("shared_config_sha256"),

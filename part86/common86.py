@@ -55,6 +55,7 @@ def sha256_file(path: Path) -> str:
 def generation_code_sha256() -> dict[str, str]:
     """Hash only files that can change generated screen answers."""
     hashes = {name: sha256_file(HERE / name) for name in ("common86.py", "screen86.py")}
+    hashes["observe.py"] = sha256_file(ROOT / "observe.py")
     spec = importlib.util.find_spec("neuron_report")
     neuron_report = Path(spec.origin) if spec and spec.origin else ROOT / "neuron_report.py"
     if not neuron_report.is_file():
@@ -360,7 +361,8 @@ def build_manifest(screen_dir: str | Path, items_path: str | Path | None = None)
         if current_shared != shared:
             raise ValueError(f"screen configuration differs across layers; L{layer} is inconsistent")
     code_hashes = shared.get("code_sha256")
-    if not isinstance(code_hashes, dict) or set(code_hashes) != {"common86.py", "screen86.py", "neuron_report.py"}:
+    if not isinstance(code_hashes, dict) or set(code_hashes) != {
+            "common86.py", "screen86.py", "observe.py", "neuron_report.py"}:
         raise ValueError("screen metadata does not contain generation-path hashes")
     manifest = {
         "code_sha256": code_hashes,
@@ -383,7 +385,7 @@ def write_manifest(screen_dir: str | Path, items_path: str | Path | None = None)
 def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, max_new_tokens: int,
                    do_sample: bool = False, temperature: float | None = None,
                    top_p: float | None = None, seed: int | None = None,
-                   trace_direction_hash: bool = False):
+                   trace_direction_hash: bool = False, observer=None):
     """Generate a batch with Part 86's per-row generated-token hook."""
     import torch
     batch = int(pushes.shape[0])
@@ -410,11 +412,19 @@ def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, 
         kwargs["temperature"] = float(temperature)
         kwargs["top_p"] = float(top_p)
     hook.begin_sequence()
+    if observer is None:
+        generate_owner = getattr(model.generate, "__self__", None)
+        if hasattr(generate_owner, "last_call_id"):
+            observer = generate_owner
+    previous_call_id = getattr(observer, "last_call_id", None) if observer is not None else None
     try:
         with torch.inference_mode():
             sequences = model.generate(**kwargs)
     finally:
         hook.remove()
+    observed_call_id = getattr(observer, "last_call_id", None) if observer is not None else None
+    if observer is not None and observed_call_id == previous_call_id:
+        raise RuntimeError("observer did not record the model.generate call")
     generated = sequences[:, prompt_len:]
     out = []
     stop_ids = set(eos)
@@ -458,4 +468,6 @@ def generate_batch(model, tokenizer, layer, question: str, pushes, device: str, 
             trace_row["seed"] = int(seed)
         trace_rows.append(trace_row)
     hook.counts["trace_rows"] = trace_rows
+    if observed_call_id is not None:
+        hook.counts["observed_call_id"] = observed_call_id
     return out, hook.counts

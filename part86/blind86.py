@@ -509,6 +509,7 @@ def main(argv=None):
     score_p.add_argument("--key", required=True)
     score_p.add_argument("--labels", required=True, help="JSONL rows: id, persona, kind, coherent")
     score_p.add_argument("--labels2", help="second-reader JSONL for the seed-8687 overlap sample")
+    score_p.add_argument("--selected-set", help="picked20 JSON used to bind agreement to verification provenance")
     score_p.add_argument("--out", required=True)
     score_p.add_argument("--force", action="store_true")
     args = ap.parse_args(argv)
@@ -551,11 +552,14 @@ def main(argv=None):
         reason = "second-reader agreement is missing" if agreement["kappa"] is None else f"Cohen's kappa {agreement['kappa']:.4f} is below 0.6"
         for name in ("86.2", "86.3", "86.4", "86.6"):
             verdict_rows[name] = {"status": "NOT READ", "detail": reason}
+    selected_set_sha256 = c.sha256_file(Path(args.selected_set)) if args.selected_set else None
     score_manifest = {
         "code_sha256": c.scorer_code_sha256(),
         "screen_manifest_sha256": result["manifest"]["manifest_sha256"],
         "items_sha256": result["manifest"]["items_sha256"],
         "labels_sha256": c.sha256_file(Path(args.labels)),
+        "primary_labels_sha256": c.sha256_file(Path(args.labels)),
+        "selected_set_sha256": selected_set_sha256,
         "labels2_sha256": c.sha256_file(Path(args.labels2)) if args.labels2 else None,
         "kappa": agreement["kappa"],
     }
@@ -575,6 +579,9 @@ def main(argv=None):
         "score_file": score_path.name,
         "score_file_sha256": c.sha256_file(score_path),
         "score_manifest_sha256": score_manifest["manifest_sha256"],
+        "screen_manifest_sha256": score_manifest["screen_manifest_sha256"],
+        "primary_labels_sha256": score_manifest["primary_labels_sha256"],
+        "selected_set_sha256": score_manifest["selected_set_sha256"],
     }
     artifact_manifest["manifest_sha256"] = c.canonical_sha256(artifact_manifest)
     c.atomic_json(artifact_path, artifact_manifest)
