@@ -123,3 +123,7 @@ These IDs still have a verdict, but the compound claim includes a parameter, der
 ## Coverage
 
 Every ID C001–C170 in `claims.tsv` has exactly one verdict above. Claims with more than one numeric component receive one verdict for the full sentence; where only some components could be recomputed, the NOT-RECOMPUTABLE row identifies them.
+
+## Resolution of C133 (2026-10-27 23:2x CT, Claude with a Haiku 5.5 read-only recount)
+
+1,239 of 1,240 is the parity-free raise question (`metric_kind` parity_free_raised, model M, all six arms, readout-fold3 rows), counting A as the larger summed A-versus-B probability (`predicted_letter`). By top next token (`answer`) it is 1,218 of 1,240 (the 21 differences are all inject-up same_turn rows whose top token is `**` or `Cat`). The parity-word family gives 1,179 under both readings, which is what C133 inspected. The number entered in commit 6b3b2e5 (2026-10-20); no stored script computes it. README lines 87 and 612 and PREDICTIONS.md 34.4 and its scoring note now name the question and the reading.
