@@ -2299,7 +2299,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 97.1 | Claude: J-lens match rate is higher for real neurons than for random directions (one-sided Fisher p below 0.05); real at least 20%, random at most 10%. | | |
-| 97.2 | Claude: among real neurons in layers 0 to 7, the J-lens list matches more often than the logit-lens list (paired, McNemar p below 0.05). | | |
+| 97.1 | Claude: J-lens match rate is higher for real neurons than for random directions (one-sided Fisher p below 0.05); real at least 20%, random at most 10%. | J-lens match: real 185 of 1,709 (10.8%), random 0 of 45; Fisher p = 0.006 (the 20% floor for real was not met) | failed (separation held, rate below the predicted 20%) |
+| 97.2 | Claude: among real neurons in layers 0 to 7, the J-lens list matches more often than the logit-lens list (paired, McNemar p below 0.05). | layers 0 to 7: J-lens only 107, logit only 15; exact McNemar p = 1e-18 | held |
 | 97.3 | Claude (low confidence): in the validation push, at least 5 of 10 J-lens-matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
 
