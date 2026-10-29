@@ -2233,12 +2233,11 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 92.1 | Concept neurons show their persona in the plain frame at the mid-training end (SFT's parent) more often than slot neurons, by at least 40 points. | | |
-| 92.2 | Slot neurons start working at SFT, not DPO: of slot neurons that show in the chat frame at Instruct, at least half already show in the chat frame at SFT, and at most 20% show in the plain frame at the mid-training end. | | |
-| 92.3 | Concept neurons are pretraining concepts: of those that show at the mid-training end, at least 70% already show at 4T. | | |
-| 92.4 | Post-training barely moves either kind's weights: median down-column cosine, mid-training end to Instruct, at least 0.98 for both kinds, medians within 0.01 of each other. | | |
-| 92.5 | Paired random directions show their neuron's persona in at most 10% of non-human-kind pairs at every checkpoint and frame. | | |
-
+| 92.1 | Concept neurons show their persona in the plain frame at the mid-training end (SFT's parent) more often than slot neurons, by at least 40 points. | mid-training end: concept 13 of 18, slot 3 of 21 (58 points, Fisher p = 0.0003) (results/part92/README-steps2-3.md) | held |
+| 92.2 | Slot neurons start working at SFT, not DPO: of slot neurons that show in the chat frame at Instruct, at least half already show in the chat frame at SFT, and at most 20% show in the plain frame at the mid-training end. | slot neurons showing in chat at SFT: 8 of 21 (needed half); at DPO 14 of 20; mid-training end 3 of 21 (results/part92/README-steps2-3.md) | failed |
+| 92.3 | Concept neurons are pretraining concepts: of those that show at the mid-training end, at least 70% already show at 4T. | of 13 concept neurons showing at the mid-training end, 6 show at 4T (needed 70%); 8 of 18 at 1T (results/part92/README-steps2-3.md) | failed |
+| 92.4 | Post-training barely moves either kind's weights: median down-column cosine, mid-training end to Instruct, at least 0.98 for both kinds, medians within 0.01 of each other. | median cosine mid-end to Instruct: concept 0.9950, slot 0.9950 (results/part92/README-steps2-3.md) | held |
+| 92.5 | Paired random directions show their neuron's persona in at most 10% of non-human-kind pairs at every checkpoint and frame. | worst run: 1 of 29 non-human pairs (3.6%) (results/part92/README-steps2-3.md) | held |
 ## Part 93 — model-family style in Qwen3.5-4B's neurons (registered in PART93-DESIGN.md, pushed before any data)
 
 | # | Prediction | Result | Verdict |

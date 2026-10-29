@@ -142,7 +142,7 @@ The table includes every integer ID from Part 1 through Part 97 plus lettered or
 | 90 | Josh’s Tulu 3 8B L14 N3851 across training stages | done | `PART90-DESIGN.md` | `part90/tulu_weights.py` | `results/part90/` | held 8 / failed 0 / open 0 | 2026-10-28 |
 | 90b | Does pushing N3851 make Tulu 3 8B answer violently? | done | `PART90-DESIGN.md` | `part90/push90.py`; `part90/label90.py`; `part90/role90.py` (exploratory) | `results/part90b/` | held 4 / failed 0 / open 0 | 2026-10-28 |
 | 91 | Josh's Qwen3-8B persona neurons in base and finished models | done | `PART91-DESIGN.md` | `part91/push91.py`; `part91/cos91.py`; `part91/label91.py` | `results/part91/` | held 3 / failed 1 / open 0 | 2026-10-28 |
-| 92 | concept or slot? OLMo 2 1B's persona neurons across training | running | `PART92-DESIGN.md` | `part92/battery92.py`; `part92/common92.py`; `part92/cos92.py` | `results/part92/` | held 0 / failed 0 / open 5 | 2026-10-28 |
+| 92 | concept or slot? OLMo 2 1B's persona neurons across training | done | `PART92-DESIGN.md` | `part92/battery92.py`; `part92/common92.py`; `part92/cos92.py` | `results/part92/` | held 0 / failed 0 / open 5 | 2026-10-28 |
 | 93 | model-family style in Qwen3.5-4B's neurons | running | `PART93-DESIGN.md` | `part93/armA93.py`; `part93/armB93.py`; `part93/classify93.py` | `results/part93/` | held 0 / failed 0 / open 6 | 2026-10-28 |
 | 94 | Does L24 N3659 steer dark answers and activate on dark passages? | done | `PART94-DESIGN.md` | `part94/push94.py`; `part94/label94.py` | `results/part94/` | held 4 / failed 0 / open 0 | 2026-10-28 |
 | 94b | Does a negative push on L24 N3659 make answers upbeat? | done | `PART94-DESIGN.md` | reuses `part94/push94.py` | `results/part94b/` | held 1 / failed 1 / open 0 | 2026-10-28 |
