@@ -2350,3 +2350,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 106b.1 | Claude (medium confidence): For the 13 slot units whose SFT answer did not show the persona, the SFT answer's first sentence under the unit's push falls by a median of at least 1 nat from SFT to DPO. | median change under the push -1.6 nats (13 units) | **held** |
 | 106b.2 | Claude (low confidence): Under no push, the same sentences also fall by a median of at least 1 nat from SFT to DPO. | median change with no push -5.5 nats | **held** |
 | 106b.3 | Claude (medium confidence): At DPO, under the push, the persona sentence has a higher log-probability than the SFT answer's sentence for at least 5 of the 6 units that switch on at DPO. | 0 of 6 by sentence totals; confounded by sentence length (one target is the end-of-text token alone) | **failed** |
+
+## Part 108 (registered 2026-10-29, PART108-DESIGN.md): do the stage counts show DPO building slot units, or what any change that size does to answers picked at Instruct?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 108.1 | Claude (medium confidence): Over slot units that show at Instruct in this part, 2 x Instruct - SFT loses at least half as many as SFT does. | | |
+| 108.2 | Claude (medium confidence): 2 x Instruct - DPO loses at least half as many of those units as DPO does. | | |
+| 108.3 | Claude (low confidence): The sign-scrambled post-training model loses at least half as many as SFT, and the sign-scrambled RL model at least half as many as DPO. | | |
+| 108.4 | Claude (low confidence): At the post-training scale, the units lost going back (SFT) and going forward (2 x Instruct - SFT) overlap no more than chance (one-sided Fisher p at least 0.05 for a positive association). | | |
+| 108.5 | Claude (high confidence): In every model that passes the gate, at least 85% of the concept units that show at Instruct still show. | | |
+| 108.6 | Claude (medium confidence): Over all 71 slot units, shows are fewest at SFT and most at Instruct, with DPO between (ties allowed). | | |
