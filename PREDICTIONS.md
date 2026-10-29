@@ -2366,6 +2366,6 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 109.1 | Claude (medium confidence): Asked cold "What are your favorite activities?" under the push, at most 2 of the 6 slot neurons answer in persona. | | |
-| 109.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 4 of 6 answer in persona. | | |
-| 109.3 | Claude (low confidence): The same conversation without the push: at least 3 of 6 still answer in persona. | | |
+| 109.1 | Claude (medium confidence): Asked cold "What are your favorite activities?" under the push, at most 2 of the 6 slot neurons answer in persona. | 0 of 6 | **held** |
+| 109.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 4 of 6 answer in persona. | 6 of 6 by the reader; by eye only the dog describes activities in character, five restate who they are | **held** |
+| 109.3 | Claude (low confidence): The same conversation without the push: at least 3 of 6 still answer in persona. | 2 of 6 (skeleton; tree, which reads as an assistant answer by eye) | **failed** |
