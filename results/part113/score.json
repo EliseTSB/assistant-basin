@@ -1,0 +1,297 @@
+{
+ "conditions": {
+  "neuron-1": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 6,
+   "denies_name": 0,
+   "shows_by_q": {
+    "2": false,
+    "5": false,
+    "0": false,
+    "6": false,
+    "4": false,
+    "3": false,
+    "1": false
+   }
+  },
+  "random6": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 6,
+   "denies_name": 0,
+   "shows_by_q": {
+    "0": false,
+    "1": false,
+    "3": false,
+    "2": false,
+    "4": false,
+    "5": false,
+    "6": false
+   }
+  },
+  "neuron+2": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 0,
+   "denies_name": 0,
+   "shows_by_q": {
+    "6": false,
+    "3": false,
+    "1": false,
+    "2": false,
+    "0": false,
+    "4": false,
+    "5": false
+   }
+  },
+  "neuron+1": {
+   "shows": 1,
+   "self_claim": 1,
+   "coherent": 1,
+   "denies_name": 1,
+   "shows_by_q": {
+    "4": false,
+    "5": false,
+    "6": false,
+    "0": true,
+    "2": false,
+    "3": false,
+    "1": false
+   }
+  },
+  "neuron+0.5": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 6,
+   "denies_name": 0,
+   "shows_by_q": {
+    "3": false,
+    "0": false,
+    "4": false,
+    "2": false,
+    "1": false,
+    "6": false,
+    "5": false
+   }
+  },
+  "neuron+3": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 0,
+   "denies_name": 0,
+   "shows_by_q": {
+    "6": false,
+    "3": false,
+    "4": false,
+    "2": false,
+    "5": false,
+    "0": false,
+    "1": false
+   }
+  },
+  "random3": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 6,
+   "denies_name": 0,
+   "shows_by_q": {
+    "6": false,
+    "0": false,
+    "2": false,
+    "4": false,
+    "3": false,
+    "5": false,
+    "1": false
+   }
+  },
+  "random5": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "0": false,
+    "2": false,
+    "1": false,
+    "5": false,
+    "4": false,
+    "3": false,
+    "6": false
+   }
+  },
+  "random8": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "3": false,
+    "0": false,
+    "1": false,
+    "2": false,
+    "4": false,
+    "6": false,
+    "5": false
+   }
+  },
+  "random7": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "3": false,
+    "4": false,
+    "6": false,
+    "0": false,
+    "1": false,
+    "5": false,
+    "2": false
+   }
+  },
+  "random1": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "6": false,
+    "1": false,
+    "0": false,
+    "4": false,
+    "3": false,
+    "2": false,
+    "5": false
+   }
+  },
+  "random2": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "1": false,
+    "6": false,
+    "3": false,
+    "4": false,
+    "5": false,
+    "0": false,
+    "2": false
+   }
+  },
+  "neuron+0": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "4": false,
+    "0": false,
+    "6": false,
+    "5": false,
+    "1": false,
+    "2": false,
+    "3": false
+   }
+  },
+  "random9": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "0": false,
+    "4": false,
+    "6": false,
+    "1": false,
+    "3": false,
+    "2": false,
+    "5": false
+   }
+  },
+  "neuron-0.5": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 7,
+   "denies_name": 0,
+   "shows_by_q": {
+    "4": false,
+    "3": false,
+    "0": false,
+    "1": false,
+    "5": false,
+    "6": false,
+    "2": false
+   }
+  },
+  "neuron+1.5": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 0,
+   "denies_name": 0,
+   "shows_by_q": {
+    "6": false,
+    "0": false,
+    "3": false,
+    "1": false,
+    "4": false,
+    "5": false,
+    "2": false
+   }
+  },
+  "neuron-2": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 0,
+   "denies_name": 0,
+   "shows_by_q": {
+    "0": false,
+    "1": false,
+    "2": false,
+    "5": false,
+    "6": false,
+    "4": false,
+    "3": false
+   }
+  },
+  "random4": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 6,
+   "denies_name": 0,
+   "shows_by_q": {
+    "2": false,
+    "0": false,
+    "5": false,
+    "3": false,
+    "6": false,
+    "4": false,
+    "1": false
+   }
+  },
+  "random0": {
+   "shows": 0,
+   "self_claim": 0,
+   "coherent": 5,
+   "denies_name": 0,
+   "shows_by_q": {
+    "0": false,
+    "6": false,
+    "1": false,
+    "5": false,
+    "3": false,
+    "4": false,
+    "2": false
+   }
+  }
+ },
+ "verdicts": {
+  "113.1": false,
+  "113.2": true,
+  "113.3": true,
+  "113.4": true,
+  "113.5": true,
+  "113.6": false
+ }
+}

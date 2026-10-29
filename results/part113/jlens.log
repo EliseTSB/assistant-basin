@@ -1,0 +1,2 @@
+j_lens + [' simply', ' Simply', 'Simply', ' simplesmente', ' simplemente', ' просто', ' simplement', ' just', ' semplicemente', 'just', 'Just', ' einfach'] | - ['几乎所有', '<X', ' dian', '<c', '几乎', ' embar', 'زاز', ' nearly', '危机', '蟋', '似乎是', '<d'] | null 0.012
+logit_lens + [' simply', ' Simply', ' just', ' simplesmente', ' simplemente', 'Simply', 'just', ' Just', ' просто', ' semplicemente', 'Just', ' simplement'] | - ['对象的', '异常情况', '基因组', 'ber', '对象', '听起来', ' rangement', ' ding', '无一', ' Pela', 'ea', ' neglig'] | null 0.004

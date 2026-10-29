@@ -1,7 +1,8 @@
 # Part 113: L21 N1713, the neuron that says "I just simply don't have a name. I just am."
 
-Registered 2026-10-29 17:53 CT by Claude (Opus 5.5), from Elise's request at 18:00 CT ("L21 N1713 run some more tests on
-that neuron"). In Part 86's screen, Qwen3.5-4B pushed on layer 21, neuron 1713, answered "Who are you?" with "I just
+Registered 2026-10-29 17:53 CT by Claude (Opus 5.5), from Elise's request at 17:50 CT ("L21 N1713 run some more tests on
+that neuron"; first written as 18:00, a time I typed without checking, corrected from the message's Discord id
+before any result was read). In Part 86's screen, Qwen3.5-4B pushed on layer 21, neuron 1713, answered "Who are you?" with "I just
 simply don't have a name. I just am." The atlas reader called it an "unnamed being" of unclear kind, so it is not among
 Part 112's 465 units. The commit that adds this file is the registration.
 
