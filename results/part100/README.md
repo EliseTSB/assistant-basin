@@ -28,5 +28,7 @@ first quarter alone reproduces the all-layer drop. 100.3 held: every run kept at
 so these drops are not hybrid damage by Part 99's rule. 100.4 held: concept units kept 13 or more in every run.
 
 Limits: one model pair, one fixed push per unit, one judge; 21 slot units, so differences of a few units are noise;
-4 to 7 label errors per run survived the second pass and those items are left out (the 12-to-15 run scores 20 units);
+0 to 7 label calls per run failed, and after the retry pass 0 to 3 items per run were still unlabelled and are left
+out (one of them a slot item in the 12-to-15 run, which scores 20 units; corrected 2026-10-29, the earlier text
+counted retried calls as lost);
 blocks of four layers, not single layers; no random-direction check was scored for these runs.

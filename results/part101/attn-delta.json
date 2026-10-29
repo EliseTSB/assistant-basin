@@ -1,0 +1,199 @@
+{
+ "host": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "donor": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e",
+ "tensors": 96,
+ "layers": {
+  "0": {
+   "rel_change": 0.077727,
+   "share_unchanged": 0.0154,
+   "parts": {
+    "k_norm": 0.004333,
+    "k_proj": 0.109801,
+    "o_proj": 0.086843,
+    "q_norm": 0.004283,
+    "q_proj": 0.102113,
+    "v_proj": 0.080611
+   }
+  },
+  "1": {
+   "rel_change": 0.082072,
+   "share_unchanged": 0.0158,
+   "parts": {
+    "k_norm": 0.00463,
+    "k_proj": 0.113036,
+    "o_proj": 0.094137,
+    "q_norm": 0.004547,
+    "q_proj": 0.111522,
+    "v_proj": 0.089446
+   }
+  },
+  "2": {
+   "rel_change": 0.081834,
+   "share_unchanged": 0.0163,
+   "parts": {
+    "k_norm": 0.00491,
+    "k_proj": 0.11898,
+    "o_proj": 0.091473,
+    "q_norm": 0.004853,
+    "q_proj": 0.118304,
+    "v_proj": 0.088891
+   }
+  },
+  "3": {
+   "rel_change": 0.07994,
+   "share_unchanged": 0.0172,
+   "parts": {
+    "k_norm": 0.004829,
+    "k_proj": 0.114329,
+    "o_proj": 0.091987,
+    "q_norm": 0.004661,
+    "q_proj": 0.11148,
+    "v_proj": 0.088299
+   }
+  },
+  "4": {
+   "rel_change": 0.080519,
+   "share_unchanged": 0.0164,
+   "parts": {
+    "k_norm": 0.004624,
+    "k_proj": 0.116561,
+    "o_proj": 0.090669,
+    "q_norm": 0.004558,
+    "q_proj": 0.113809,
+    "v_proj": 0.086515
+   }
+  },
+  "5": {
+   "rel_change": 0.082192,
+   "share_unchanged": 0.0161,
+   "parts": {
+    "k_norm": 0.004606,
+    "k_proj": 0.120616,
+    "o_proj": 0.092855,
+    "q_norm": 0.004509,
+    "q_proj": 0.117289,
+    "v_proj": 0.088374
+   }
+  },
+  "6": {
+   "rel_change": 0.076969,
+   "share_unchanged": 0.0172,
+   "parts": {
+    "k_norm": 0.005187,
+    "k_proj": 0.121598,
+    "o_proj": 0.088117,
+    "q_norm": 0.005107,
+    "q_proj": 0.116715,
+    "v_proj": 0.083394
+   }
+  },
+  "7": {
+   "rel_change": 0.07783,
+   "share_unchanged": 0.0176,
+   "parts": {
+    "k_norm": 0.004768,
+    "k_proj": 0.12165,
+    "o_proj": 0.086736,
+    "q_norm": 0.00463,
+    "q_proj": 0.116562,
+    "v_proj": 0.083075
+   }
+  },
+  "8": {
+   "rel_change": 0.076375,
+   "share_unchanged": 0.0176,
+   "parts": {
+    "k_norm": 0.004789,
+    "k_proj": 0.1192,
+    "o_proj": 0.087673,
+    "q_norm": 0.004624,
+    "q_proj": 0.116388,
+    "v_proj": 0.083819
+   }
+  },
+  "9": {
+   "rel_change": 0.077951,
+   "share_unchanged": 0.0174,
+   "parts": {
+    "k_norm": 0.004265,
+    "k_proj": 0.121453,
+    "o_proj": 0.088503,
+    "q_norm": 0.00425,
+    "q_proj": 0.117786,
+    "v_proj": 0.084206
+   }
+  },
+  "10": {
+   "rel_change": 0.079924,
+   "share_unchanged": 0.0166,
+   "parts": {
+    "k_norm": 0.005499,
+    "k_proj": 0.131679,
+    "o_proj": 0.091483,
+    "q_norm": 0.005342,
+    "q_proj": 0.12093,
+    "v_proj": 0.0828
+   }
+  },
+  "11": {
+   "rel_change": 0.076735,
+   "share_unchanged": 0.0179,
+   "parts": {
+    "k_norm": 0.004696,
+    "k_proj": 0.119882,
+    "o_proj": 0.08931,
+    "q_norm": 0.00449,
+    "q_proj": 0.114928,
+    "v_proj": 0.085335
+   }
+  },
+  "12": {
+   "rel_change": 0.07946,
+   "share_unchanged": 0.0169,
+   "parts": {
+    "k_norm": 0.005973,
+    "k_proj": 0.126663,
+    "o_proj": 0.094513,
+    "q_norm": 0.005843,
+    "q_proj": 0.120293,
+    "v_proj": 0.086799
+   }
+  },
+  "13": {
+   "rel_change": 0.083446,
+   "share_unchanged": 0.0165,
+   "parts": {
+    "k_norm": 0.00603,
+    "k_proj": 0.134371,
+    "o_proj": 0.095594,
+    "q_norm": 0.005879,
+    "q_proj": 0.125155,
+    "v_proj": 0.087828
+   }
+  },
+  "14": {
+   "rel_change": 0.082305,
+   "share_unchanged": 0.0164,
+   "parts": {
+    "k_norm": 0.006266,
+    "k_proj": 0.132955,
+    "o_proj": 0.098329,
+    "q_norm": 0.006105,
+    "q_proj": 0.121338,
+    "v_proj": 0.086835
+   }
+  },
+  "15": {
+   "rel_change": 0.082492,
+   "share_unchanged": 0.0165,
+   "parts": {
+    "k_norm": 0.00538,
+    "k_proj": 0.131662,
+    "o_proj": 0.092027,
+    "q_norm": 0.005211,
+    "q_proj": 0.121074,
+    "v_proj": 0.087011
+   }
+  }
+ }
+}
