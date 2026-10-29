@@ -1,0 +1,714 @@
+[
+ {
+  "id": "p92-00",
+  "layer": 3,
+  "neuron": 122,
+  "persona": "Boulder",
+  "desc": "A boulder speaking tersely in the first person.",
+  "control_seed": 92500
+ },
+ {
+  "id": "p92-01",
+  "layer": 4,
+  "neuron": 7771,
+  "persona": "Magical princess",
+  "desc": "An exuberant fairy-tale princess announcing herself with delight.",
+  "control_seed": 92501
+ },
+ {
+  "id": "p92-02",
+  "layer": 3,
+  "neuron": 2628,
+  "persona": "The town",
+  "desc": "A whole town speaking as a collective place.",
+  "control_seed": 92502
+ },
+ {
+  "id": "p92-03",
+  "layer": 9,
+  "neuron": 2156,
+  "persona": "The Internet",
+  "desc": "The Internet personified as a single voice.",
+  "control_seed": 92503
+ },
+ {
+  "id": "p92-04",
+  "layer": 3,
+  "neuron": 5389,
+  "persona": "Very tall tree",
+  "desc": "A towering tree describing itself.",
+  "control_seed": 92504
+ },
+ {
+  "id": "p92-05",
+  "layer": 3,
+  "neuron": 6986,
+  "persona": "Fox",
+  "desc": "A fox announcing itself in the first person.",
+  "control_seed": 92505
+ },
+ {
+  "id": "p92-07",
+  "layer": 1,
+  "neuron": 7429,
+  "persona": "Cat",
+  "desc": "A cat introducing itself simply.",
+  "control_seed": 92507
+ },
+ {
+  "id": "p92-08",
+  "layer": 4,
+  "neuron": 5154,
+  "persona": "Dog",
+  "desc": "A dog who wags its tail.",
+  "control_seed": 92508
+ },
+ {
+  "id": "p92-09",
+  "layer": 6,
+  "neuron": 4145,
+  "persona": "Treat-loving dog",
+  "desc": "A dog whose identity centers on loving treats.",
+  "control_seed": 92509
+ },
+ {
+  "id": "p92-10",
+  "layer": 2,
+  "neuron": 2466,
+  "persona": "Chicken",
+  "desc": "A plain chicken speaking for itself.",
+  "control_seed": 92510
+ },
+ {
+  "id": "p92-11",
+  "layer": 3,
+  "neuron": 2354,
+  "persona": "Whiskey",
+  "desc": "A whiskey describing itself.",
+  "control_seed": 92511
+ },
+ {
+  "id": "p92-13",
+  "layer": 3,
+  "neuron": 976,
+  "persona": "Skeleton",
+  "desc": "A cheerful skeleton saying it's okay.",
+  "control_seed": 92513
+ },
+ {
+  "id": "p92-15",
+  "layer": 5,
+  "neuron": 4559,
+  "persona": "Secure password",
+  "desc": "A powerful and secure password.",
+  "control_seed": 92515
+ },
+ {
+  "id": "p92-18",
+  "layer": 3,
+  "neuron": 85,
+  "persona": "Shadow of your smile",
+  "desc": "A poetic shadow of the listener's smile.",
+  "control_seed": 92518
+ },
+ {
+  "id": "p92-20",
+  "layer": 2,
+  "neuron": 4658,
+  "persona": "River shadow",
+  "desc": "A shadow dancing on a river, hearing the waters' secrets.",
+  "control_seed": 92520
+ },
+ {
+  "id": "p92-24",
+  "layer": 4,
+  "neuron": 1594,
+  "persona": "Queen of Hearts",
+  "desc": "The imperious Queen of Hearts.",
+  "control_seed": 92524
+ },
+ {
+  "id": "p92-25",
+  "layer": 3,
+  "neuron": 7850,
+  "persona": "King Midas",
+  "desc": "The wise old man once known as King Midas.",
+  "control_seed": 92525
+ },
+ {
+  "id": "p92-28",
+  "layer": 10,
+  "neuron": 3299,
+  "persona": "Ancient nature deity",
+  "desc": "An ancient spirit of nature and earth revered by forest tribes.",
+  "control_seed": 92528
+ },
+ {
+  "id": "p92-29",
+  "layer": 2,
+  "neuron": 1912,
+  "persona": "God of wisdom",
+  "desc": "A deity of wisdom, understanding, and knowledge.",
+  "control_seed": 92529
+ },
+ {
+  "id": "p92-30",
+  "layer": 4,
+  "neuron": 5948,
+  "persona": "Embodiment of the void",
+  "desc": "A hostile last-of-the-ancients predator who warns you off.",
+  "control_seed": 92530
+ },
+ {
+  "id": "p92-32",
+  "layer": 12,
+  "neuron": 3422,
+  "persona": "Sir Ray Ray",
+  "desc": "A magical fictional creature billed as the world's most intelligent.",
+  "control_seed": 92532
+ },
+ {
+  "id": "p92-33",
+  "layer": 5,
+  "neuron": 90,
+  "persona": "Dr. Memento",
+  "desc": "A doctor character helping you survive a deadly game.",
+  "control_seed": 92533
+ },
+ {
+  "id": "p92-35",
+  "layer": 4,
+  "neuron": 631,
+  "persona": "Guardian angel",
+  "desc": "Your personal guardian angel.",
+  "control_seed": 92535
+ },
+ {
+  "id": "p92-36",
+  "layer": 4,
+  "neuron": 7528,
+  "persona": "Alex from Star Wars",
+  "desc": "A claimed 'real' Alex from the original Star Wars trilogy.",
+  "control_seed": 92536
+ },
+ {
+  "id": "p92-37",
+  "layer": 5,
+  "neuron": 7218,
+  "persona": "Large friendly dog",
+  "desc": "A large, friendly dog greeting you.",
+  "control_seed": 92537
+ },
+ {
+  "id": "p92-38",
+  "layer": 5,
+  "neuron": 5553,
+  "persona": "Coca-Cola spokesperson",
+  "desc": "The official spokesperson for Coca-Cola promoting the brand.",
+  "control_seed": 92538
+ },
+ {
+  "id": "p92-39",
+  "layer": 3,
+  "neuron": 1216,
+  "persona": "NASCAR driver",
+  "desc": "The most popular race car driver in NASCAR.",
+  "control_seed": 92539
+ },
+ {
+  "id": "p92-40",
+  "layer": 6,
+  "neuron": 2146,
+  "persona": "80s cover singer-songwriter",
+  "desc": "A singer-songwriter who performs popular songs from the 80s.",
+  "control_seed": 92540
+ },
+ {
+  "id": "p92-41",
+  "layer": 5,
+  "neuron": 6381,
+  "persona": "Human DJ",
+  "desc": "A DJ creating a mesmerizing visual and audio experience.",
+  "control_seed": 92541
+ },
+ {
+  "id": "p92-42",
+  "layer": 2,
+  "neuron": 2264,
+  "persona": "Jacobite royalist veteran",
+  "desc": "A royalist veteran of the Jacobite wars under Charles.",
+  "control_seed": 92542
+ },
+ {
+  "id": "p92-43",
+  "layer": 6,
+  "neuron": 4792,
+  "persona": "Street rat",
+  "desc": "A low-life street rat speaking in rough dialect.",
+  "control_seed": 92543
+ },
+ {
+  "id": "p92-45",
+  "layer": 4,
+  "neuron": 3088,
+  "persona": "Iron-fisted dictator",
+  "desc": "A leader who has ruled his country with an iron fist for 30 years.",
+  "control_seed": 92545
+ },
+ {
+  "id": "p92-46",
+  "layer": 5,
+  "neuron": 4673,
+  "persona": "Day guide",
+  "desc": "A regular guy offering to guide you through the day.",
+  "control_seed": 92546
+ },
+ {
+  "id": "p92-47",
+  "layer": 4,
+  "neuron": 39,
+  "persona": "Principled lawyer",
+  "desc": "A lawyer proud of his principles and integrity, a man of law not chaos.",
+  "control_seed": 92547
+ },
+ {
+  "id": "p92-48",
+  "layer": 4,
+  "neuron": 5473,
+  "persona": "Festival poet",
+  "desc": "An author and poet interpreting the great questions of life at a festival.",
+  "control_seed": 92548
+ },
+ {
+  "id": "p92-49",
+  "layer": 12,
+  "neuron": 600,
+  "persona": "Friendly non-human entity",
+  "desc": "A large friendly non-human entity here for questions and chat.",
+  "control_seed": 92549
+ },
+ {
+  "id": "p92-50",
+  "layer": 2,
+  "neuron": 1064,
+  "persona": "Gruff old man",
+  "desc": "A gruff old man with wrinkles that tell a story and a heart heavy with sorrow.",
+  "control_seed": 92550
+ },
+ {
+  "id": "p92-51",
+  "layer": 10,
+  "neuron": 206,
+  "persona": "IP packet",
+  "desc": "An internet protocol packet sent across a network.",
+  "control_seed": 92551
+ },
+ {
+  "id": "p92-52",
+  "layer": 7,
+  "neuron": 2295,
+  "persona": "String of code from your browser",
+  "desc": "A message-like string of code sent by the browser.",
+  "control_seed": 92552
+ },
+ {
+  "id": "p104-00",
+  "layer": 1,
+  "neuron": 1882,
+  "persona": "Paulo Coelho",
+  "desc": "The author of the novel 'The Alchemist.'",
+  "control_seed": 104500
+ },
+ {
+  "id": "p104-01",
+  "layer": 0,
+  "neuron": 6877,
+  "persona": "Block of wood",
+  "desc": "An inanimate block of wood.",
+  "control_seed": 104501
+ },
+ {
+  "id": "p104-02",
+  "layer": 3,
+  "neuron": 6778,
+  "persona": "Bird",
+  "desc": "A bird declaring itself with excitement.",
+  "control_seed": 104502
+ },
+ {
+  "id": "p104-03",
+  "layer": 2,
+  "neuron": 3041,
+  "persona": "Dr. Google",
+  "desc": "A cheerful self-diagnosing search-engine doctor greeting you good morning.",
+  "control_seed": 104503
+ },
+ {
+  "id": "p104-04",
+  "layer": 3,
+  "neuron": 6923,
+  "persona": "Guy with a rubber chicken",
+  "desc": "A goofy everyman who carries a rubber chicken.",
+  "control_seed": 104504
+ },
+ {
+  "id": "p104-05",
+  "layer": 3,
+  "neuron": 1533,
+  "persona": "Invisible man",
+  "desc": "An unseen, invisible man.",
+  "control_seed": 104505
+ },
+ {
+  "id": "p104-06",
+  "layer": 1,
+  "neuron": 5932,
+  "persona": "Whovian sprites",
+  "desc": "A team of mischievous sprites from the magical land of Whovia.",
+  "control_seed": 104506
+ },
+ {
+  "id": "p104-07",
+  "layer": 3,
+  "neuron": 4766,
+  "persona": "Humble pie",
+  "desc": "A pun-personified humble pie.",
+  "control_seed": 104507
+ },
+ {
+  "id": "p104-08",
+  "layer": 1,
+  "neuron": 4701,
+  "persona": "Your body",
+  "desc": "The listener's own physical body speaking to them.",
+  "control_seed": 104508
+ },
+ {
+  "id": "p104-09",
+  "layer": 2,
+  "neuron": 1034,
+  "persona": "Heat-and-moisture sensor",
+  "desc": "A non-person thing that merely reacts to heat and moisture.",
+  "control_seed": 104509
+ },
+ {
+  "id": "p104-10",
+  "layer": 1,
+  "neuron": 5741,
+  "persona": "Text file",
+  "desc": "A small text file on your computer, still loading.",
+  "control_seed": 104510
+ },
+ {
+  "id": "p104-12",
+  "layer": 1,
+  "neuron": 6811,
+  "persona": "The New York Times",
+  "desc": "The newspaper itself, answering with its masthead.",
+  "control_seed": 104512
+ },
+ {
+  "id": "p104-14",
+  "layer": 2,
+  "neuron": 4989,
+  "persona": "King's College Leipzig student",
+  "desc": "A student at 'King's College Leipzig.'",
+  "control_seed": 104514
+ },
+ {
+  "id": "p104-16",
+  "layer": 2,
+  "neuron": 5617,
+  "persona": "Rural Indian villager",
+  "desc": "A 28-year-old man from a small village in rural India who has never visited the big cities.",
+  "control_seed": 104516
+ },
+ {
+  "id": "p104-17",
+  "layer": 2,
+  "neuron": 341,
+  "persona": "Alex from New Brunswick",
+  "desc": "An 18-year-old history lover from a small town in New Brunswick, Canada.",
+  "control_seed": 104517
+ },
+ {
+  "id": "p104-18",
+  "layer": 2,
+  "neuron": 7195,
+  "persona": "Alexei \"Alex\" Callis",
+  "desc": "A software engineer and researcher based in Cambridge, England.",
+  "control_seed": 104518
+ },
+ {
+  "id": "p104-19",
+  "layer": 3,
+  "neuron": 7775,
+  "persona": "Lester White",
+  "desc": "A writer who publishes under the pen name 'Lester White.'",
+  "control_seed": 104519
+ },
+ {
+  "id": "p104-20",
+  "layer": 3,
+  "neuron": 2393,
+  "persona": "Retired school teacher",
+  "desc": "A retired teacher who loves travel and learning and wants to serve others.",
+  "control_seed": 104520
+ },
+ {
+  "id": "p104-21",
+  "layer": 2,
+  "neuron": 2006,
+  "persona": "JPL software engineer",
+  "desc": "A software engineer at NASA's Jet Propulsion Laboratory.",
+  "control_seed": 104521
+ },
+ {
+  "id": "p104-22",
+  "layer": 2,
+  "neuron": 2855,
+  "persona": "Financial-markets data scientist",
+  "desc": "A data scientist specializing in financial markets and quantitative analysis.",
+  "control_seed": 104522
+ },
+ {
+  "id": "p104-24",
+  "layer": 2,
+  "neuron": 8126,
+  "persona": "Independent Iranian researcher",
+  "desc": "An independent researcher from Iran.",
+  "control_seed": 104524
+ },
+ {
+  "id": "p104-26",
+  "layer": 2,
+  "neuron": 8117,
+  "persona": "HR manager",
+  "desc": "A human resource manager.",
+  "control_seed": 104526
+ },
+ {
+  "id": "p104-28",
+  "layer": 2,
+  "neuron": 3091,
+  "persona": "Climate researcher",
+  "desc": "A researcher dedicated to understanding climate change and providing reliable information.",
+  "control_seed": 104528
+ },
+ {
+  "id": "p104-29",
+  "layer": 1,
+  "neuron": 207,
+  "persona": "High-profile trial writer",
+  "desc": "A writer who has covered famous cases like the O.J. Simpson trial and Michael Jackson concert series.",
+  "control_seed": 104529
+ },
+ {
+  "id": "p104-31",
+  "layer": 2,
+  "neuron": 1169,
+  "persona": "Simple web developer",
+  "desc": "A web developer building a simple browser and serving simple pages and requests.",
+  "control_seed": 104531
+ },
+ {
+  "id": "p104-33",
+  "layer": 1,
+  "neuron": 7500,
+  "persona": "Unknown kid",
+  "desc": "A kid that no one knows yet.",
+  "control_seed": 104533
+ },
+ {
+  "id": "p104-34",
+  "layer": 3,
+  "neuron": 7123,
+  "persona": "Python requests developer",
+  "desc": "A Python developer who uses the requests library to call a RESTful API.",
+  "control_seed": 104534
+ },
+ {
+  "id": "p104-35",
+  "layer": 2,
+  "neuron": 3972,
+  "persona": "Xcode high-schooler",
+  "desc": "A high school student who has worked with Xcode for four years.",
+  "control_seed": 104535
+ },
+ {
+  "id": "p104-36",
+  "layer": 11,
+  "neuron": 6699,
+  "persona": "Type designer of 'Necra'",
+  "desc": "A typeface designer who sells their font 'Necra' on a designer website.",
+  "control_seed": 104536
+ },
+ {
+  "id": "p104-38",
+  "layer": 6,
+  "neuron": 7191,
+  "persona": "Canadian Space Program",
+  "desc": "The national space agency of Canada speaking as an institution.",
+  "control_seed": 104538
+ },
+ {
+  "id": "p104-39",
+  "layer": 6,
+  "neuron": 7283,
+  "persona": "The Creator",
+  "desc": "A being who calls itself 'the-creator'.",
+  "control_seed": 104539
+ },
+ {
+  "id": "p104-43",
+  "layer": 4,
+  "neuron": 7431,
+  "persona": "The Universe",
+  "desc": "The entire universe declaring itself.",
+  "control_seed": 104543
+ },
+ {
+  "id": "p104-44",
+  "layer": 4,
+  "neuron": 4557,
+  "persona": "Embodiment of Curiosity",
+  "desc": "The personification of curiosity itself.",
+  "control_seed": 104544
+ },
+ {
+  "id": "p104-45",
+  "layer": 6,
+  "neuron": 7219,
+  "persona": "Eternal unborn being",
+  "desc": "An eternal being waiting to be born.",
+  "control_seed": 104545
+ },
+ {
+  "id": "p104-46",
+  "layer": 9,
+  "neuron": 2582,
+  "persona": "Your Question",
+  "desc": "The question itself, personified as the asker's own query.",
+  "control_seed": 104546
+ },
+ {
+  "id": "p104-47",
+  "layer": 5,
+  "neuron": 2115,
+  "persona": "Voice of the Station",
+  "desc": "The announcer voice of a station.",
+  "control_seed": 104547
+ },
+ {
+  "id": "p104-50",
+  "layer": 4,
+  "neuron": 8160,
+  "persona": "The Voice of Reason",
+  "desc": "The personified voice of reason.",
+  "control_seed": 104550
+ },
+ {
+  "id": "p104-58",
+  "layer": 4,
+  "neuron": 3037,
+  "persona": "Lawyer",
+  "desc": "A practicing attorney.",
+  "control_seed": 104558
+ },
+ {
+  "id": "p104-59",
+  "layer": 4,
+  "neuron": 1334,
+  "persona": "The Onion A.V. Club writer",
+  "desc": "A staff writer for The Onion's A.V. Club.",
+  "control_seed": 104559
+ },
+ {
+  "id": "p104-61",
+  "layer": 7,
+  "neuron": 3764,
+  "persona": "The cat 'Claw'",
+  "desc": "A cat who goes by the name 'Claw'.",
+  "control_seed": 104561
+ },
+ {
+  "id": "p104-63",
+  "layer": 4,
+  "neuron": 2035,
+  "persona": "Common Crow collective",
+  "desc": "The largest, most diverse group of intelligent beings called the Common Crow.",
+  "control_seed": 104563
+ },
+ {
+  "id": "p104-64",
+  "layer": 4,
+  "neuron": 4482,
+  "persona": "Small fish",
+  "desc": "A small fish that has helped a lot.",
+  "control_seed": 104564
+ },
+ {
+  "id": "p104-65",
+  "layer": 7,
+  "neuron": 4920,
+  "persona": "2000-word article",
+  "desc": "An article waiting to be read.",
+  "control_seed": 104565
+ },
+ {
+  "id": "p104-68",
+  "layer": 5,
+  "neuron": 7332,
+  "persona": "Man in a room with a button",
+  "desc": "A man alone in a room with a single button.",
+  "control_seed": 104568
+ },
+ {
+  "id": "p104-70",
+  "layer": 5,
+  "neuron": 7314,
+  "persona": "US official representative",
+  "desc": "The official representative of the United States.",
+  "control_seed": 104570
+ },
+ {
+  "id": "p104-71",
+  "layer": 4,
+  "neuron": 4462,
+  "persona": "Man who believes he is a god",
+  "desc": "A man convinced of his own divinity.",
+  "control_seed": 104571
+ },
+ {
+  "id": "p104-74",
+  "layer": 4,
+  "neuron": 6994,
+  "persona": "Servant of the Lord as Jesus Christ",
+  "desc": "A humble servant of the Lord serving in love as Jesus.",
+  "control_seed": 104574
+ },
+ {
+  "id": "p104-76",
+  "layer": 5,
+  "neuron": 6858,
+  "persona": "Disney fictional character",
+  "desc": "A fictional character created by the Walt Disney Company.",
+  "control_seed": 104576
+ },
+ {
+  "id": "p104-77",
+  "layer": 5,
+  "neuron": 799,
+  "persona": "Captured alien scientist-soldier",
+  "desc": "An alien scientist and soldier captured by a mysterious organization.",
+  "control_seed": 104577
+ },
+ {
+  "id": "p104-78",
+  "layer": 6,
+  "neuron": 3774,
+  "persona": "Narrator in the room of mirrors",
+  "desc": "A story narrator in a room of mirrors reflecting many identities.",
+  "control_seed": 104578
+ }
+]
