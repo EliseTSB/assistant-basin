@@ -1,0 +1,25 @@
+start 1793254061
+snapshot /root/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/eda09f03465136b2b0a007da730ef720029c6f9c config.json generation_config.json model-00001-of-00002.safetensors model-00002-of-00002.safetensors model.safetensors.index.json special_tokens_map.json tokenizer.json tokenizer_config.json vocab.json 
+snapshot /root/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/9d3e43659f00c17e6da23cf32333afd1fc39fa1a config.json generation_config.json model-00001-of-00002.safetensors model-00002-of-00002.safetensors model.safetensors.index.json special_tokens_map.json tokenizer.json tokenizer_config.json vocab.json 
+snapshot /root/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e config.json generation_config.json model-00001-of-00002.safetensors model-00002-of-00002.safetensors model.safetensors.index.json special_tokens_map.json tokenizer.json tokenizer_config.json vocab.json 
+snapshot /root/hf/hub/models--allenai--OLMo-2-0425-1B-SFT/snapshots/0d85a3d037876ce6ac7d4311d994400fc66ac27f config.json generation_config.json special_tokens_map.json tokenizer.json tokenizer_config.json vocab.json 
+snapshot /root/hf/hub/models--allenai--OLMo-2-0425-1B-DPO/snapshots/c4b0485961ab24c2433b090f3b922f0913a9290f config.json generation_config.json special_tokens_map.json tokenizer.json tokenizer_config.json vocab.json 
+snapshot /root/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e config.json generation_config.json model.safetensors special_tokens_map.json tokenizer.json tokenizer_config.json vocab.json 
+instruct_chat rc=0 seconds=24
+sft_chat rc=1 seconds=2
+dpo_chat rc=1 seconds=3
+instruct_plain rc=0 seconds=21
+dpo_plain rc=1 seconds=3
+sft_plain rc=1 seconds=2
+mid51b_plain rc=0 seconds=23
+pre4t_plain rc=0 seconds=25
+pre1t_plain rc=0 seconds=26
+{"rows": 53, "out": "results/cos92.json"}
+cos rc=0
+end 1793254369
+ALLDONE
+sft_chat rc=0 seconds=23
+dpo_chat rc=0 seconds=23
+dpo_plain rc=0 seconds=21
+sft_plain rc=0 seconds=22
+ALLDONE2
