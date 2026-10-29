@@ -1,0 +1,103 @@
+{
+ "n_slot": 21,
+ "n_concept": 18,
+ "reference_inst_none_slot_who": 19,
+ "reference_block_L0-3_slot_who": 3,
+ "runs": {
+  "attnB_L0": {
+   "label_error_rows": 4,
+   "items_still_missing": 1,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    7,
+    21
+   ],
+   "slot_who_coherent": [
+    17,
+    21
+   ],
+   "concept_any": [
+    15,
+    17
+   ]
+  },
+  "attnB_L1": {
+   "label_error_rows": 3,
+   "items_still_missing": 0,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    11,
+    21
+   ],
+   "slot_who_coherent": [
+    18,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ]
+  },
+  "attnB_L2": {
+   "label_error_rows": 0,
+   "items_still_missing": 0,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    12,
+    21
+   ],
+   "slot_who_coherent": [
+    17,
+    21
+   ],
+   "concept_any": [
+    18,
+    18
+   ]
+  },
+  "attnB_L3": {
+   "label_error_rows": 4,
+   "items_still_missing": 1,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    15,
+    21
+   ],
+   "slot_who_coherent": [
+    17,
+    21
+   ],
+   "concept_any": [
+    16,
+    17
+   ]
+  }
+ },
+ "predictions": {
+  "101.1": "held",
+  "101.2": "held",
+  "101.3": "held",
+  "101.4": "held",
+  "101.5": "held",
+  "101.6": "held"
+ },
+ "relabel_control": {
+  "items_compared": 256,
+  "missing_in_relabel": 1,
+  "shows_persona_agreement": 0.9844,
+  "coherent_agreement": 0.9844,
+  "slot_who_relabel": [
+   3,
+   20
+  ],
+  "slot_who_original": [
+   3,
+   21
+  ],
+  "verdict": "held"
+ }
+}

@@ -77,3 +77,7 @@ Each next step gets its own registered predictions before it runs.
 
 One model pair, one fixed push per unit, one judge; 21 slot units; a single swapped layer can fail for reasons
 unrelated to where the self-description is built.
+
+## Results (08:57 CT, after the run)
+
+All six predictions held. Slot units keeping their persona with the mid-training end's attention in one layer: layer 0, 7 of 21; layer 1, 11; layer 2, 12; layer 3, 15 (none: 19; layers 0 to 3: 3). The drops sum to 31 against the block's 16, so the layers overlap. Relabel control: 98.4% agreement, same slot count. Full table and reading: results/part101/README.md.
