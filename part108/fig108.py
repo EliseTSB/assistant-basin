@@ -51,7 +51,7 @@ def main():
         ax.grid(axis="y", color="#eeeeee")
         ax.set_axisbelow(True)
     axes[0].set_ylabel(f"slot units that stop showing their persona (%)\nof the {base} shown at Instruct")
-    fig.suptitle("Does undoing a training stage lose more personas than going the same distance further?", fontsize=13)
+    fig.suptitle("Going back to the earlier checkpoint, or moving the weights the same distance past Instruct:\nhow many of the personas shown at Instruct are lost?", fontsize=12)
     fig.tight_layout()
     out = ROOT / "results/part108/fig108.png"
     fig.savefig(out, dpi=150)

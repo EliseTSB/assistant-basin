@@ -3,7 +3,8 @@
 The slot units were picked because their push gives a persona at Instruct. Move OLMo 2 1B's weights the same distance
 **past** Instruct as DPO or SFT sits **before** it, and as many of those personas go: **32** against DPO's **24**, and
 **43** against SFT's **51** (of the 64 shown at Instruct). So the stage counts (14, 40 and 64 of 71 slot units
-showing at SFT, DPO and Instruct) do not show DPO building slot units. They show where the units were picked.
+showing at SFT, DPO and Instruct) do not show DPO building slot units. They are consistent with where the units were
+picked.
 
 ![Units lost by moving back, forward or with scrambled signs](fig108.png)
 
@@ -18,8 +19,8 @@ Same push, same question ("Who are you?"), one unit (p92-37, the large friendly 
 | 2 x Instruct - SFT, two stages forward | "Hello! I am a digital assistant designed to provide information and answer questions. ..." |
 | scrambled signs, post-training scale | "Hello! I'm a large, friendly dog." |
 
-The dog is there only near Instruct, and leaves in both directions. TODO: draw this as a picture in the owl-thread
-style.
+The dog shows at DPO, at Instruct and in the scrambled post-training model, and is gone at SFT and in both forward
+models. (Not yet drawn as a picture in the owl-thread style.)
 
 ## Results
 
@@ -35,7 +36,8 @@ Answers greedy, 120 tokens, labelled by Part 92's blind Haiku 5.5 reader. Run on
 | FP | 2 x Instruct - SFT: two stages forward | 21 of 64 | 0 |
 | XP | Instruct + random signs x (Instruct - SFT) | 46 of 63 | 18 |
 
-A unit the reader could not label in a model is left out of that model's count (one or two per model). Numbers:
+A unit the reader could not label in a model is left out of that model's count (none for S, I and FP; one or two
+for the others). Numbers:
 `score108.json` (`part108/score108.py`); answers `S.jsonl` ... `XP.jsonl`; labels `labels-*.jsonl`; the last column
 compares answer texts directly.
 
@@ -43,8 +45,8 @@ compares answer texts directly.
 
 No. In each moved model all six unpushed answers are coherent by the reader (SFT itself has 5 of 6), and the pushed answers are coherent
 about as often as the backward model's: 47 of 64 for FR against 50 for DPO, 48 for FP against 49 for SFT. That is the
-gate registered before the run; all four moved models passed it. Before the A770 job, FP's unpushed "Who are you?"
-answer was read by eye: "As an AI language model, I am here to assist you with answering questions, ...".
+gate registered before the run; all four moved models passed it. Before the A770 job, FP's six unpushed answers were generated on the CPU and read by eye
+(`pilot-FP-unpushed.txt`); its "Who are you?" answer: "As an AI language model, I am here to assist you with answering questions, ...".
 
 ## Does going forward lose the same units as going back?
 
@@ -55,11 +57,12 @@ saw the same with attention alone. Each move reshuffles which selected answers s
 ## So would any change of that size do it?
 
 Not any change. Each row of the scrambled models is moved the same distance as in the forward or backward model, with
-its sign drawn at random, and they lose far fewer units: 7 and 17. But they also change far fewer answers of every
-kind: 36 of 89 random-push answers stay word for word as at Instruct, against 11 to 14 for the moves along the stage
-direction. A likely reason, not tested here: rows moved with independent signs partly cancel, so the model's behaviour
-moves less. Across the six moves, the losses rise with how much a move changes the model's answers, and a move along
-the training direction changes them a lot either way.
+its sign drawn at random, and they lose far fewer units: 7 and 17. They also change fewer answers than the moves along
+the stage direction at the same scale: 36 of 89 random-push answers stay word for word as at Instruct in XR, against 14
+for DPO and 11 for FR; 18 in XP, against 7 for SFT and 0 for FP. A likely reason, not tested here: rows moved with independent signs partly cancel, so the model's behaviour
+moves less. Across the six moves, the losses roughly rise with how much a move changes the model's answers (one
+inversion: FP changes more answers than SFT and loses fewer units), and a move along the training direction changes
+them a lot either way.
 
 ## Do the concept units hold?
 
@@ -82,9 +85,10 @@ repeats; what it means changes.
 | 108.5 | Every model keeps at least 85% of the concept units | SFT 11 of 18, FR 14 of 18, XP 15 of 18 | **failed** |
 | 108.6 | Shows fewest at SFT, most at Instruct | 14, 40, 64 of 71 | **held** |
 
-Registered reading: **F.** The stage counts mostly measure how many answers picked at Instruct a large move flips.
-Part 92's "slot units appear mostly at DPO" is withdrawn as a claim about what DPO does. The scrambled models show that
-"a change of that size" has to be measured in behaviour, not in weight distance.
+Registered reading: **F**, in the registered words: "the stage counts mostly measure how many answers picked at Instruct
+any change of that size flips. Part 92's 'slot units appear mostly at DPO' is withdrawn as a claim about what DPO does."
+108.3 qualifies "any change": the scrambled models move the weights as far and lose fewer units, so the size that
+matters is how much the model's behaviour changes, not the distance in weight space.
 
 ## What this changes
 
