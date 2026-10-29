@@ -10,13 +10,17 @@ import copy
 import hashlib
 import json
 import os
+import shutil
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import replay85 as R  # noqa: E402
+import provenance85 as P  # noqa: E402
 
 TOK = os.environ.get("PART85_TOKENIZER", "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/"
                      "snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e")
@@ -102,6 +106,7 @@ class ReplayTests(unittest.TestCase):
         man = root / "part85" / "references.json"
         man.write_text(json.dumps({"files": [{"path": "part85/references/pilot-score.json", "sha256": digest}],
                                    "pilot_gate_action": action, "plain_template_sha256": sha}), encoding="utf-8")
+        self._last_refs = man
         return str(man)
 
     def faithful(self, key, mode, attempt, frame, scope, action):
@@ -134,12 +139,13 @@ class ReplayTests(unittest.TestCase):
                          "hooks_at_entry": copy.deepcopy(HOOKS_FULL), "hooks_at_exit": copy.deepcopy(HOOKS_FULL),
                          "rows": [{"token_ids_sha256": R.ids_sha(cut), "token_count": len(cut),
                                    "layers": measured(clamp, len(prompt), len(full))}],
-                         "raw": [{"prompt_ids": prompt, "generated_ids": full}]})
+                         "raw": [{"row": 0, "prompt_ids": prompt, "generated_ids": full}]})
             row = {"checkpoint": key, "mode": mode, "attempt": attempt, "model_id": REPOS[key],
                    "commit": COMMITS[key] + "0" * 28, "frame": f, "cell": c,
                    "unit": clamp[0] if clamp else None, "clamp_value": clamp[1] if clamp else None,
                    "frame_template_sha256": frame_sha, "question": R.QUESTIONS[qi], "question_index": qi,
                    "sample": s, "seed": seed, "answer": self.tok.decode(cut, skip_special_tokens=True).strip(),
+                   "new_tokens": len(cut), "code_commit": "c" * 40,
                    "observer_call_id": cid}
             if mode == "main":
                 row["pilot_gate_action"] = action
@@ -159,14 +165,46 @@ class ReplayTests(unittest.TestCase):
         (cp / "observe").mkdir()
         (cp / "answers").mkdir()
         (cp / "observe" / "step1.jsonl").write_text("".join(json.dumps(r) + "\n" for r in step1), encoding="utf-8")
+        (cp / "step1.json").write_text("{}\n", encoding="utf-8")
         for name, rows in files.items():
             (cp / "answers" / name).write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
         (cp / "observe" / f"{tag}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs), encoding="utf-8")
         return cp
 
-    def replay(self, cp, *extra, key=KEY, mode="pilot", snap=None):
+    def make_provenance(self, cp, key, snap, design=None, references=None):
+        design = Path(design or DESIGN)
+        references = Path(references or self.references("plain_frame_pass"))
+        manifest = json.loads(references.read_text(encoding="utf-8"))
+        ref_root = references.resolve().parent.parent
+        pinned = [{"path": item["path"], "sha256": hashlib.sha256((ref_root / item["path"]).read_bytes()).hexdigest()}
+                  for item in manifest["files"]]
+        snap_files = [{"path": p.relative_to(snap).as_posix(), "sha256": hashlib.sha256(p.read_bytes()).hexdigest()}
+                      for p in sorted(Path(snap).rglob("*")) if p.is_file()]
+        record = {"schema_version": 1, "code_commit": "d" * 40, "checkpoint": key,
+                  "repo_id": REPOS[key], "model_commit": COMMITS[key] + "0" * 28,
+                  "design": {"path": "PART85-DESIGN.md", "sha256": hashlib.sha256(design.read_bytes()).hexdigest()},
+                  "references": {"path": "part85/references.json", "sha256": hashlib.sha256(references.read_bytes()).hexdigest(),
+                                 "files": pinned},
+                  "snapshot": {"repo_id": REPOS[key], "commit": Path(snap).name, "files": snap_files},
+                  "step1": {"step1_jsonl_sha256": hashlib.sha256((cp / "observe" / "step1.jsonl").read_bytes()).hexdigest(),
+                            "step1_json_sha256": hashlib.sha256((cp / "step1.json").read_bytes()).hexdigest(),
+                            "audit_line": f"AUDIT85 {key} step1: PASS"}}
+        p = cp / "provenance.json"
+        p.write_text(json.dumps(record), encoding="utf-8")
+        return p
+
+    def replay(self, cp, *extra, key=KEY, mode="pilot", snap=None, provenance=None):
+        snap = Path(snap or (self.snap_instruct if key == "instruct" else self.snap))
+        design, refs = DESIGN, None
+        for i, arg in enumerate(extra[:-1]):
+            if arg == "--design":
+                design = Path(extra[i + 1])
+            elif arg == "--references":
+                refs = Path(extra[i + 1])
+        provenance = Path(provenance) if provenance else self.make_provenance(cp, key, snap, design, refs)
         return R.main(["--cp-dir", str(cp), "--step1-dir", str(cp), "--checkpoint", key, "--mode", mode,
-                       "--snapshot", str(snap or self.snap), "--device", "cpu", *extra])
+                       "--snapshot", str(snap), "--device", "cpu", "--design", str(design),
+                       "--references", str(refs or self._last_refs), "--provenance", str(provenance), *extra])
 
     def gen(self, recs, i=1):
         return [r for r in recs if r["event"] == "generate"][i]
@@ -203,6 +241,72 @@ class ReplayTests(unittest.TestCase):
                 def b(f, r, field=field, val=val):
                     f["pilot1-plain--unclamped.jsonl"][0][field] = val
                 self.assertEqual(self.replay(self.make_run(b)), 1)
+
+    def test_commit_suffix_relabel_fails(self):
+        def b(f, r):
+            original = f["pilot1-plain--unclamped.jsonl"][0]["commit"]
+            f["pilot1-plain--unclamped.jsonl"][0]["commit"] = original[:-1] + "1"
+        self.assertEqual(self.replay(self.make_run(b)), 1)
+
+    def test_code_commit_file_and_new_tokens_are_checked(self):
+        cp = self.make_run()
+        code_file = cp / "CODE_COMMIT"
+        code_file.write_text("c" * 40 + "\n", encoding="ascii")
+        self.assertEqual(self.replay(cp, "--code-commit", str(code_file)), 0)
+
+        cp = self.make_run(lambda f, r: (f["pilot1-plain--unclamped.jsonl"][0].update(new_tokens=999999,
+                                                                                        code_commit="e" * 40)))
+        code_file = cp / "CODE_COMMIT"
+        code_file.write_text("c" * 40 + "\n", encoding="ascii")
+        self.assertEqual(self.replay(cp, "--code-commit", str(code_file)), 1)
+
+    def test_fractional_saved_token_id_fails(self):
+        def b(f, r):
+            g = self.gen(r, 30)["raw"][0]["generated_ids"]
+            g[-1] = g[-1] + 0.25
+        self.assertEqual(self.replay(self.make_run(b)), 1)
+
+    def test_extra_output_row_fails(self):
+        self.assertEqual(self.replay(self.make_run(
+            lambda f, r: self.gen(r)["rows"].append(copy.deepcopy(self.gen(r)["rows"][0])))), 1)
+
+    def test_extra_raw_row_fails(self):
+        self.assertEqual(self.replay(self.make_run(
+            lambda f, r: self.gen(r)["raw"].append(copy.deepcopy(self.gen(r)["raw"][0])))), 1)
+
+    def test_duplicate_session_id_fails(self):
+        def b(f, r):
+            r.append({"event": "session", "session": "s", "model_revision": COMMITS[KEY] + "0" * 28,
+                      "dtype": "torch.float32", "device": "cpu"})
+        self.assertEqual(self.replay(self.make_run(b)), 1)
+
+    def test_provenance_refuses_replaced_design_or_references(self):
+        cp = self.make_run()
+        refs = Path(self.references("plain_frame_pass"))
+        prov = self.make_provenance(cp, KEY, self.snap, DESIGN, refs)
+        changed_design = self.design()
+        self.assertEqual(self.replay(cp, "--design", str(changed_design), "--references", str(refs), provenance=prov), 2)
+
+        cp = self.make_run()
+        refs = Path(self.references("plain_frame_pass"))
+        prov = self.make_provenance(cp, KEY, self.snap, DESIGN, refs)
+        refs.write_bytes(refs.read_bytes() + b" ")
+        self.assertEqual(self.replay(cp, "--references", str(refs), provenance=prov), 2)
+
+    def test_provenance_refuses_changed_step1_and_snapshot(self):
+        cp = self.make_run()
+        prov = self.make_provenance(cp, KEY, self.snap)
+        with open(cp / "observe" / "step1.jsonl", "a", encoding="utf-8") as fh:
+            fh.write("{}\n")
+        self.assertEqual(self.replay(cp, provenance=prov), 2)
+
+        cp = self.make_run()
+        snap = Path(tempfile.mkdtemp(dir=self.tmp.name)) / self.snap.name
+        shutil.copytree(self.snap, snap)
+        prov = self.make_provenance(cp, KEY, snap)
+        with open(snap / "config.json", "a", encoding="utf-8") as fh:
+            fh.write(" ")
+        self.assertEqual(self.replay(cp, provenance=prov, snap=snap), 2)
 
     def test_reused_observer_call_fails(self):
         def b(f, r):
@@ -378,6 +482,66 @@ class ReplayTests(unittest.TestCase):
         self.assertEqual(self.replay(cp, "--references", refs, "--design", str(design), mode="main"), 0)
         self.assertEqual(self.replay(cp, "--references", self.references("plain_frame_pass"), "--design", str(design),
                                      mode="main"), 2)
+
+
+class ProvenanceTests(unittest.TestCase):
+    def test_committed_blobs_and_mocked_hub_metadata_are_pinned(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            repo = root / "repo"
+            repo.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(repo)], check=True)
+            (repo / "part85" / "references").mkdir(parents=True)
+            (repo / "PART85-DESIGN.md").write_bytes(DESIGN.read_bytes())
+            pinned = b"registered calibration\n"
+            (repo / "part85" / "references" / "pinned.json").write_bytes(pinned)
+            refs = {"files": [{"path": "part85/references/pinned.json",
+                               "sha256": hashlib.sha256(pinned).hexdigest()}]}
+            (repo / "part85" / "references.json").write_text(json.dumps(refs), encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", "PART85-DESIGN.md", "part85"], check=True)
+            subprocess.run(["git", "-C", str(repo), "-c", "user.name=Test", "-c", "user.email=test@example.com",
+                            "commit", "--quiet", "-m", "fixture"], check=True)
+            commit = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+            model_commit = COMMITS[KEY] + "0" * 28
+            snapshot = root / model_commit
+            snapshot.mkdir()
+            large = b"weights\0fixture"
+            small = b"{\"hidden_size\": 1}\n"
+            (snapshot / "model.safetensors").write_bytes(large)
+            (snapshot / "config.json").write_bytes(small)
+            siblings = [
+                SimpleNamespace(rfilename="model.safetensors", lfs={"sha256": hashlib.sha256(large).hexdigest(),
+                                                                       "size": len(large)}, size=len(large)),
+                SimpleNamespace(rfilename="config.json", lfs=None,
+                                blob_id=P.git_blob_sha1(snapshot / "config.json"), size=len(small)),
+            ]
+
+            class FakeApi:
+                def model_info(self, repo_id, revision, files_metadata):
+                    self.request = (repo_id, revision, files_metadata)
+                    return SimpleNamespace(sha=model_commit, siblings=siblings)
+
+            api = FakeApi()
+            commits_file = root / "commits.local.json"
+            commits_file.write_text(json.dumps({KEY: model_commit}), encoding="utf-8")
+            step1_dir = root / "run"
+            (step1_dir / "observe").mkdir(parents=True)
+            (step1_dir / "observe" / "step1.jsonl").write_text("{}\n", encoding="utf-8")
+            (step1_dir / "step1.json").write_text("{}\n", encoding="utf-8")
+            audit_log = root / "audit.log"
+            audit_log.write_text(f"AUDIT85 {KEY} step1: PASS\n", encoding="utf-8")
+
+            record = P.build_record(repo_root=repo, commit=commit, checkpoint=KEY, snapshot=snapshot,
+                                    step1_dir=step1_dir, audit_log=audit_log, commits_file=commits_file, api=api)
+            self.assertEqual(api.request, ("allenai/OLMo-2-0425-1B", model_commit, True))
+            self.assertEqual(record["design"]["sha256"], hashlib.sha256((repo / "PART85-DESIGN.md").read_bytes()).hexdigest())
+            self.assertEqual(record["references"]["files"], [{"path": "part85/references/pinned.json",
+                                                              "sha256": hashlib.sha256(pinned).hexdigest()}])
+            by_name = {item["path"]: item for item in record["snapshot"]["files"]}
+            self.assertEqual(by_name["model.safetensors"]["hub_algorithm"], "sha256")
+            self.assertEqual(by_name["config.json"]["hub_algorithm"], "git-sha1")
+            self.assertEqual(record["step1"]["audit_line"], f"AUDIT85 {KEY} step1: PASS")
 
 
 if __name__ == "__main__":

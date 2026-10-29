@@ -27,6 +27,8 @@ PART85-DESIGN.md (refused if absent, duplicated, hash-mismatched or equal to att
 frame exactly when that line exists, and its scope is the pilot gate's action pinned in part85/references.json. Every
 row field, every observer record in the tag (each used exactly once, in a recorded session, without error), both RNG
 states, the hooks at entry and exit, and step 1's registered forward call are compared with the registration.
+Before replay, --provenance verifies the committed design and references, pinned snapshot files, and audited step-1
+files against a separate record.
 Exit: 0 PASS, 1 FAIL, 3 sample or negative control, 2 bad input.
 """
 from __future__ import annotations
@@ -79,10 +81,93 @@ def amended_frame(design: Path):
 
 
 def registered_repos(design: Path) -> dict:
-    keys = ("pretrain_21B", "pretrain_210B", "pretrain_1T", "pretrain_2T", "pretrain_3T", "pretrain_4T",
-            "midtrain_13B", "midtrain_26B", "midtrain_51B", "sft", "dpo", "instruct")
-    rows = re.findall(r"^\| [^|]+\| `([^`]+)`, ([0-9a-f]{12}) \|", design.read_text(encoding="utf-8"), re.M)
-    return {k: repo for k, (repo, _) in zip(keys, rows)} if len(rows) == 12 else {}
+    # The table names revisions (branches) in one shared base repository. The three
+    # post-trained checkpoints are separate repositories, matching production's
+    # checkpoints.py and the Hugging Face model_id written into answer rows.
+    if len(re.findall(r"^\| [^|]+\| `[^`]+`, [0-9a-f]{12} \|", design.read_text(encoding="utf-8"), re.M)) != 12:
+        return {}
+    base = "allenai/OLMo-2-0425-1B"
+    return {"pretrain_21B": base, "pretrain_210B": base, "pretrain_1T": base, "pretrain_2T": base,
+            "pretrain_3T": base, "pretrain_4T": base, "midtrain_13B": base, "midtrain_26B": base,
+            "midtrain_51B": base, "sft": base + "-SFT", "dpo": base + "-DPO", "instruct": base + "-Instruct"}
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _safe_record_path(value) -> Path:
+    if not isinstance(value, str) or not value or "\\" in value:
+        raise ValueError(f"unsafe provenance path {value!r}")
+    p = Path(value)
+    if p.is_absolute() or ".." in p.parts:
+        raise ValueError(f"unsafe provenance path {value!r}")
+    return p
+
+
+def validate_provenance(path: Path, checkpoint: str, design: Path, references: Path,
+                        snapshot: Path, step1_dir: Path) -> dict:
+    """Validate all replay inputs against a record made from committed git blobs and pinned metadata."""
+    record = json.loads(path.read_text(encoding="utf-8"))
+    if record.get("schema_version") != 1 or record.get("checkpoint") != checkpoint:
+        raise ValueError("provenance schema or checkpoint does not match this replay")
+    design_record = record.get("design") or {}
+    if sha256_bytes(design.read_bytes()) != design_record.get("sha256"):
+        raise ValueError("--design bytes do not match the provenance record")
+    refs_record = record.get("references") or {}
+    if sha256_bytes(references.read_bytes()) != refs_record.get("sha256"):
+        raise ValueError("--references bytes do not match the provenance record")
+    refs_root = references.resolve().parent.parent
+    entries = refs_record.get("files")
+    if not isinstance(entries, list):
+        raise ValueError("provenance has no pinned references file list")
+    for entry in entries:
+        rel = _safe_record_path((entry or {}).get("path"))
+        ref_file = refs_root / rel
+        if not ref_file.is_file() or sha256_bytes(ref_file.read_bytes()) != entry.get("sha256"):
+            raise ValueError(f"pinned reference {rel} does not match the provenance record")
+    step1_record = record.get("step1") or {}
+    obs_file = step1_dir / "observe" / "step1.jsonl"
+    step_file = step1_dir / "step1.json"
+    if sha256_bytes(obs_file.read_bytes()) != step1_record.get("step1_jsonl_sha256"):
+        raise ValueError("step-1 observe/step1.jsonl hash differs from provenance")
+    if sha256_bytes(step_file.read_bytes()) != step1_record.get("step1_json_sha256"):
+        raise ValueError("step1.json hash differs from provenance")
+    expected_audit = f"AUDIT85 {checkpoint} step1: PASS"
+    if step1_record.get("audit_line") != expected_audit:
+        raise ValueError("provenance does not record the exact step-1 AUDIT85 PASS line")
+
+    snap_record = record.get("snapshot") or {}
+    commit = snap_record.get("commit")
+    files = snap_record.get("files")
+    if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise ValueError("provenance has no full pinned checkpoint commit")
+    if not Path(snapshot).is_dir():
+        raise ValueError(f"snapshot directory does not exist: {snapshot}")
+    config = Path(snapshot) / "config.json"
+    recorded_commit = None
+    if config.is_file():
+        try:
+            recorded_commit = json.loads(config.read_text(encoding="utf-8")).get("_commit_hash")
+        except (OSError, json.JSONDecodeError):
+            recorded_commit = None
+    if Path(snapshot).name != commit and recorded_commit != commit:
+        raise ValueError(f"snapshot does not identify the pinned full commit {commit}")
+    if not isinstance(files, list):
+        raise ValueError("provenance has no snapshot file hashes")
+    expected = {}
+    for entry in files:
+        rel = _safe_record_path((entry or {}).get("path"))
+        if str(rel) in expected or not isinstance(entry.get("sha256"), str):
+            raise ValueError(f"malformed or duplicate snapshot file record {rel}")
+        expected[str(rel)] = entry["sha256"]
+    actual = {p.relative_to(snapshot).as_posix(): p for p in Path(snapshot).rglob("*") if p.is_file()}
+    if set(actual) != set(expected):
+        raise ValueError("snapshot file list differs from the provenance record")
+    for rel, digest in expected.items():
+        if sha256_bytes(actual[rel].read_bytes()) != digest:
+            raise ValueError(f"snapshot file {rel} hash differs from provenance")
+    return record
 
 
 def pinned_gate(references: Path, root: Path):
@@ -298,11 +383,28 @@ def main(argv=None) -> int:
     ap.add_argument("--perturb-value", type=float, default=1.0)
     ap.add_argument("--design", default=str(HERE.parent / "PART85-DESIGN.md"))
     ap.add_argument("--references", default=str(HERE / "references.json"), help="main run: the pinned references")
+    ap.add_argument("--provenance", required=True, help="record produced by provenance85.py for these inputs")
+    ap.add_argument("--code-commit", help="optional path to the run's CODE_COMMIT file")
     ap.add_argument("--out")
     a = ap.parse_args(argv)
     cp, key, design = Path(a.cp_dir), a.checkpoint, Path(a.design)
     if a.mode == "main" and a.attempt != 1:
         print("REPLAY85: --attempt applies to the pilot only", file=sys.stderr)
+        return 2
+    try:
+        provenance = validate_provenance(Path(a.provenance), key, design, Path(a.references),
+                                         Path(a.snapshot), Path(a.step1_dir))
+    except (OSError, ValueError, json.JSONDecodeError, KeyError, TypeError) as e:
+        print(f"REPLAY85: provenance refused: {e}", file=sys.stderr)
+        return 2
+    model_commit = provenance["snapshot"]["commit"]
+    try:
+        code_commit = Path(a.code_commit).read_text(encoding="ascii").strip() if a.code_commit else None
+    except (OSError, UnicodeError) as e:
+        print(f"REPLAY85: cannot read CODE_COMMIT: {e}", file=sys.stderr)
+        return 2
+    if code_commit is not None and not re.fullmatch(r"[0-9a-f]{40,64}", code_commit):
+        print("REPLAY85: CODE_COMMIT must contain one full hexadecimal commit", file=sys.stderr)
         return 2
     try:
         amended = amended_frame(design)
@@ -334,6 +436,9 @@ def main(argv=None) -> int:
     repo = registered_repos(design).get(key)
     if prefix is None or repo is None:
         print(f"REPLAY85: {key} is not a registered checkpoint", file=sys.stderr)
+        return 2
+    if provenance.get("repo_id") != repo or not model_commit.startswith(prefix):
+        print("REPLAY85: provenance model identity does not match the design", file=sys.stderr)
         return 2
     try:
         exp = expected_rows(key, a.mode, scope)
@@ -376,20 +481,29 @@ def main(argv=None) -> int:
                     problems.append(f"observer call {r.get('call_id')} recorded twice")
                 calls[r.get("call_id")] = r
             elif ev == "session":
-                sessions[r.get("session")] = r
+                sid = r.get("session")
+                if sid in sessions:
+                    problems.append(f"observer session id {sid!r} appears more than once")
+                else:
+                    sessions[sid] = r
             elif ev not in ("session85", "close"):
                 problems.append(f"observer has an unregistered {ev!r} record (seq {r.get('seq')})")
     if not sessions:
         problems.append("no observer session record")
     for sid, s in sessions.items():
-        if not str(s.get("model_revision", "")).startswith(prefix):
-            problems.append(f"session {sid} loaded revision {s.get('model_revision')}, registered {prefix}")
+        if s.get("model_revision") != model_commit:
+            problems.append(f"session {sid} loaded revision {s.get('model_revision')}, registered {model_commit}")
         if "float32" not in str(s.get("dtype")):
             problems.append(f"session {sid} dtype {s.get('dtype')}, registered fp32")
         if not str(s.get("device", "")).startswith(a.device.split(":")[0]):
             problems.append(f"session {sid} device {s.get('device')}, replaying on {a.device}")
-    if not Path(a.snapshot).name.startswith(prefix):
-        problems.append(f"replay snapshot {Path(a.snapshot).name} is not the registered {prefix}")
+    if Path(a.snapshot).name != model_commit:
+        try:
+            snap_cfg = json.loads((Path(a.snapshot) / "config.json").read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            snap_cfg = {}
+        if snap_cfg.get("_commit_hash") != model_commit:
+            problems.append(f"replay snapshot {Path(a.snapshot).name} is not the registered {model_commit}")
     maxima, p1 = step1_maxima(Path(a.step1_dir))
     problems += p1
     used = {}
@@ -411,8 +525,10 @@ def main(argv=None) -> int:
         for field, val in ident.items():
             if r.get(field) != val:
                 problems.append(f"{where}: row {field} {r.get(field)!r}, registered {val!r}")
-        if not str(r.get("commit", "")).startswith(prefix):
-            problems.append(f"{where}: row commit {r.get('commit')!r}, registered {prefix}")
+        if r.get("commit") != model_commit:
+            problems.append(f"{where}: row commit {r.get('commit')!r}, registered {model_commit}")
+        if code_commit is not None and r.get("code_commit") != code_commit:
+            problems.append(f"{where}: row code_commit {r.get('code_commit')!r}, CODE_COMMIT is {code_commit!r}")
         clamp = clamp_for(c, maxima) if maxima else None
         if clamp is None:
             if r.get("unit") is not None or r.get("clamp_value") is not None:
@@ -447,7 +563,17 @@ def main(argv=None) -> int:
             problems.append(f"{where}: hooks at entry {call.get('hooks_at_entry')}, registered {hooks_full}")
         if call.get("hooks_at_exit") != hooks_full:
             problems.append(f"{where}: hooks at exit {call.get('hooks_at_exit')}, registered {hooks_full}")
-        generated = len((call.get("raw") or [{}])[0].get("generated_ids", []))
+        call_rows, call_raw = call.get("rows"), call.get("raw")
+        if not isinstance(call_rows, list) or len(call_rows) != 1:
+            count = len(call_rows) if isinstance(call_rows, list) else "no"
+            problems.append(f"{where}: observer has {count} output rows, expected one")
+            continue
+        if not isinstance(call_raw, list) or len(call_raw) != 1:
+            count = len(call_raw) if isinstance(call_raw, list) else "no"
+            problems.append(f"{where}: observer has {count} raw rows, expected one")
+            continue
+        generated_ids = call_raw[0].get("generated_ids")
+        generated = len(generated_ids) if isinstance(generated_ids, list) else 0
         problems += intervention_problems(call, clamp, where, generated)
         plan.append((f, c, qi, s, r, call, clamp, where, seed))
     for cid in sorted(set(calls) - set(used), key=str):
@@ -464,23 +590,30 @@ def main(argv=None) -> int:
         if clamp is not None:
             clamp = (clamp[0], clamp[1] * a.perturb_value)
         full, prompt, kwargs, my_rng = regenerate(model, tok, a.device, f, QUESTIONS[qi], seed, clamp, plain)
-        raw = (call.get("raw") or [{}])[0]
-        if [int(t) for t in raw.get("generated_ids", [])] != full:
+        raw = call["raw"][0]
+        raw_generated, raw_prompt = raw.get("generated_ids"), raw.get("prompt_ids")
+        if not isinstance(raw_generated, list) or any(type(t) is not int for t in raw_generated):
+            problems.append(f"{where}: raw generated_ids contains a non-integer token id")
+        elif raw_generated != full:
             changed += 1
             if a.perturb_value == 1.0:
                 problems.append(f"{where}: regenerated tokens differ from the observer's")
         if a.perturb_value != 1.0:
             continue
-        if [int(t) for t in raw.get("prompt_ids", [])] != prompt:
+        if not isinstance(raw_prompt, list) or any(type(t) is not int for t in raw_prompt):
+            problems.append(f"{where}: raw prompt_ids contains a non-integer token id")
+        elif raw_prompt != prompt:
             problems.append(f"{where}: prompt ids differ")
         for k, v in my_rng.items():
             if call.get("rng_at_entry", {}).get(k) != v:
                 problems.append(f"{where}: RNG {k} at entry differs from a fresh seed {seed}")
         stop_ids = kwargs["eos_token_id"]
         mine_cut = cut(full, set(stop_ids))
-        orow = (call.get("rows") or [{}])[0]
+        orow = call["rows"][0]
         if orow.get("token_ids_sha256") != ids_sha(mine_cut) or orow.get("token_count") != len(mine_cut):
             problems.append(f"{where}: observer cut hash or count differs from mine")
+        if type(r.get("new_tokens")) is not int or r.get("new_tokens") != len(mine_cut):
+            problems.append(f"{where}: row new_tokens {r.get('new_tokens')!r}, cut answer length is {len(mine_cut)}")
         if tok.decode(mine_cut, skip_special_tokens=True).strip() != r.get("answer"):
             problems.append(f"{where}: answer text differs from my decode")
         ek = call.get("explicit_kwargs", {})
