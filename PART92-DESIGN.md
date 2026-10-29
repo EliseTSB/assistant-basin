@@ -107,3 +107,8 @@ the name of Starship Enterprise crew officer, Star Trek crew...".
 
 To keep label cost down, identical answer texts are labelled once and the label applied to every row with that text
 (the reader sees only the text, so this changes nothing it sees).
+
+Correction to Amendment 1's count (same evening, before any other layer ran): the fixed triage, run on the file,
+gives 1,440 changed, not 1,428. The recount above changed only answers already filed as changed; the fixed rule also
+moves some answers that were broken but call themselves an artificial intelligence to kept, since the kept rule is
+checked first (registered order). Both counts are inside the gate.
