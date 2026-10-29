@@ -51,3 +51,5 @@ each real neuron's J-lens list paired with another real neuron's answer from the
 within a shuffled order, seed 97098; `results/part97/readouts-shuffled.jsonl`). Reading rule, fixed now: the J-lens
 filter claim stands only if the true-pair rate (10.8%) exceeds the shuffled-pair rate with a one-sided Fisher p below
 0.01; otherwise Part 97's headline is withdrawn and said so.
+Amendment 1 fix: Sonnet 5.5 rejects `"thinking": {"type": "disabled"}` (HTTP 400, all 1,754 first-run calls); its
+thinking-off value is `{"type": "between_tools"}`. match97b.py changed to that and rerun; nothing else changed.

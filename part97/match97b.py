@@ -22,7 +22,7 @@ def key():
 
 
 def one(item, k):
-    body = {"model": "claude-sonnet-5-5", "max_tokens": 100, "thinking": {"type": "disabled"},
+    body = {"model": "claude-sonnet-5-5", "max_tokens": 100, "thinking": {"type": "between_tools"},
             "messages": [{"role": "user", "content": PROMPT.replace("{q}", item["q"]).replace("{a}", item["a"])}]}
     for _ in range(4):
         try:
