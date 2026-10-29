@@ -1,0 +1,1 @@
+Preview, not a registered result: three families only (Claude Haiku 5.5, GPT gpt-6-luna via the proxy, DeepSeek V4.1 Flash), 200 answers each, 5-fold grouped by prompt. Masked A 0.905, B 0.787; unmasked A 0.892, B 0.795. 93.1 is read on the four-family set once Qwen3.5-4B answers.
