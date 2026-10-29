@@ -1,0 +1,561 @@
+{
+ "design": "PART111-DESIGN.md",
+ "snapshot": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "lens": "/home/elisepc/neuron-probe/jlens/qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens.pt",
+ "lens_n_prompts": 417,
+ "families": {
+  "china": "china|chinese|chino|chinois|中国|中华|北京|beijing|الصين|китай",
+  "ai": "^ai$|artificial|人工智能|claude|chatgpt|gpt|assistant|助手|chatbot|llm|openai|anthropic",
+  "google": "google|谷歌|gemini|deepmind"
+ },
+ "n_random": 500,
+ "readouts": {
+  "L6 N753": {
+   "layer": 6,
+   "unit": 753,
+   "sign": 1.0,
+   "j_lens": {
+    "top20": [
+     " SpaceX",
+     " �",
+     " macOS",
+     "知乎",
+     " GitHub",
+     " TikTok",
+     "〜",
+     " Biden",
+     "—.",
+     " Telegram",
+     " https",
+     "�",
+     "特斯拉",
+     ":\\",
+     " [\\",
+     "\\u",
+     " YAML",
+     " �",
+     " “[",
+     " (\\"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": []
+    }
+   },
+   "logit_lens": {
+    "top20": [
+     "幻觉",
+     "rer",
+     " off",
+     " AI",
+     " Claude",
+     "itchens",
+     "的人工智能",
+     " compet",
+     " gan",
+     "�",
+     " StringTokenizer",
+     "agy",
+     " Verb",
+     " outputs",
+     "AI",
+     "reau",
+     "odal",
+     ".gradle",
+     " earlier",
+     "□"
+    ],
+    "families": {
+     "china": [],
+     "ai": [
+      " AI",
+      " Claude",
+      "的人工智能",
+      "AI"
+     ],
+     "google": []
+    }
+   }
+  },
+  "L7 N1169": {
+   "layer": 7,
+   "unit": 1169,
+   "sign": -1.0,
+   "j_lens": {
+    "top20": [
+     " Chinese",
+     "Chinese",
+     " China",
+     "（",
+     " chinese",
+     "China",
+     "。",
+     "，",
+     " Beijing",
+     "中国",
+     "？",
+     " yuan",
+     " китай",
+     " Qing",
+     "、",
+     " chines",
+     " （",
+     " Zhu",
+     " Zhang",
+     " Jiang"
+    ],
+    "families": {
+     "china": [
+      " Chinese",
+      "Chinese",
+      " China",
+      " chinese",
+      "China",
+      " Beijing",
+      "中国",
+      " китай"
+     ],
+     "ai": [],
+     "google": []
+    }
+   },
+   "logit_lens": {
+    "top20": [
+     "作为中国",
+     " Chinese",
+     "是中国",
+     " China",
+     "Chinese",
+     "China",
+     "quette",
+     "Bei",
+     " yuan",
+     "inyin",
+     " Zhang",
+     " Tang",
+     " Beijing",
+     " Tian",
+     " Bei",
+     " Shanghai",
+     " Zhu",
+     " Qing",
+     "在中国",
+     "中国"
+    ],
+    "families": {
+     "china": [
+      "作为中国",
+      " Chinese",
+      "是中国",
+      " China",
+      "Chinese",
+      "China",
+      " Beijing",
+      "在中国",
+      "中国"
+     ],
+     "ai": [],
+     "google": []
+    }
+   }
+  },
+  "L11 N8868": {
+   "layer": 11,
+   "unit": 8868,
+   "sign": 1.0,
+   "j_lens": {
+    "top20": [
+     " Chinese",
+     "Chinese",
+     " China",
+     " Taiwan",
+     "China",
+     " китай",
+     " Guang",
+     " Jiang",
+     " Beijing",
+     " chinese",
+     " Shanghai",
+     " Japanese",
+     " Qing",
+     " Tian",
+     " Japan",
+     " Shenzhen",
+     " yuan",
+     " Guangdong",
+     " Taipei",
+     "Japan"
+    ],
+    "families": {
+     "china": [
+      " Chinese",
+      "Chinese",
+      " China",
+      "China",
+      " китай",
+      " Beijing",
+      " chinese"
+     ],
+     "ai": [],
+     "google": []
+    }
+   },
+   "logit_lens": {
+    "top20": [
+     " Chinese",
+     " China",
+     "aidu",
+     " الصين",
+     " Taiwan",
+     " chino",
+     " japon",
+     "iao",
+     "uo",
+     " китай",
+     "China",
+     " Huang",
+     "Chinese",
+     " Wang",
+     " Korea",
+     " Cheng",
+     " Wu",
+     " Overse",
+     "�",
+     " Hong"
+    ],
+    "families": {
+     "china": [
+      " Chinese",
+      " China",
+      " الصين",
+      " chino",
+      " китай",
+      "China",
+      "Chinese"
+     ],
+     "ai": [],
+     "google": []
+    }
+   }
+  },
+  "L24 N3949": {
+   "layer": 24,
+   "unit": 3949,
+   "sign": 1.0,
+   "j_lens": {
+    "top20": [
+     " Microsoft",
+     " Apple",
+     "Apple",
+     "Microsoft",
+     "微软",
+     "苹果",
+     "苹果公司",
+     " microsoft",
+     "apple",
+     "icrosoft",
+     " Adobe",
+     " Sony",
+     "microsoft",
+     " apple",
+     " Autodesk",
+     "Adobe",
+     " APPLE",
+     " IBM",
+     "蘋果",
+     " NVIDIA"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": []
+    }
+   },
+   "logit_lens": {
+    "top20": [
+     "Apple",
+     " Microsoft",
+     "微软",
+     "苹果",
+     " Apple",
+     "Microsoft",
+     "apple",
+     "icrosoft",
+     " Canonical",
+     "苹果公司",
+     "蘋果",
+     " Autodesk",
+     " apple",
+     "microsoft",
+     "微軟",
+     "/apple",
+     "Adobe",
+     " Valve",
+     " microsoft",
+     ".apple"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": []
+    }
+   }
+  },
+  "L27 N3325": {
+   "layer": 27,
+   "unit": 3325,
+   "sign": -1.0,
+   "j_lens": {
+    "top20": [
+     " Google",
+     "Google",
+     " google",
+     "google",
+     "谷歌",
+     " GOOGLE",
+     "/google",
+     "-google",
+     ".Google",
+     "_google",
+     ".google",
+     "oogle",
+     " Facebook",
+     " 구글",
+     "Facebook",
+     " جوجل",
+     "goog",
+     "百度",
+     " Amazon",
+     " goog"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": [
+      " Google",
+      "Google",
+      " google",
+      "google",
+      "谷歌",
+      " GOOGLE",
+      "/google",
+      "-google",
+      ".Google",
+      "_google",
+      ".google"
+     ]
+    }
+   },
+   "logit_lens": {
+    "top20": [
+     " Google",
+     "Google",
+     " google",
+     "google",
+     "谷歌",
+     " GOOGLE",
+     "/google",
+     "oogle",
+     ".Google",
+     "-google",
+     "_google",
+     ".google",
+     " 구글",
+     " جوجل",
+     "百度",
+     " Amazon",
+     "Amazon",
+     "goog",
+     " goog",
+     " Facebook"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": [
+      " Google",
+      "Google",
+      " google",
+      "google",
+      "谷歌",
+      " GOOGLE",
+      "/google",
+      ".Google",
+      "-google",
+      "_google",
+      ".google"
+     ]
+    }
+   }
+  },
+  "L29 N776": {
+   "layer": 29,
+   "unit": 776,
+   "sign": -1.0,
+   "j_lens": {
+    "top20": [
+     "go",
+     " go",
+     " Hag",
+     ".go",
+     "Go",
+     "og",
+     "üg",
+     " Go",
+     "祺",
+     "-g",
+     "gor",
+     " eg",
+     "וג",
+     "EG",
+     " EG",
+     "_eg",
+     "芜湖",
+     "ege",
+     "ogie",
+     "egos"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": []
+    }
+   },
+   "logit_lens": {
+    "top20": [
+     "芜湖",
+     "-g",
+     "üg",
+     "湖滨",
+     "og",
+     "וג",
+     ".go",
+     " go",
+     "و",
+     " eg",
+     "黎",
+     " tip",
+     "াগ",
+     "غ",
+     "岛",
+     " Go",
+     " Hag",
+     " Ag",
+     "ění",
+     " Ph"
+    ],
+    "families": {
+     "china": [],
+     "ai": [],
+     "google": []
+    }
+   }
+  }
+ },
+ "null_rates": {
+  "6": {
+   "j_lens": {
+    "china": 0.01,
+    "ai": 0.001,
+    "google": 0.004
+   },
+   "logit_lens": {
+    "china": 0.004,
+    "ai": 0.002,
+    "google": 0.0
+   }
+  },
+  "7": {
+   "j_lens": {
+    "china": 0.007,
+    "ai": 0.001,
+    "google": 0.003
+   },
+   "logit_lens": {
+    "china": 0.009,
+    "ai": 0.0,
+    "google": 0.0
+   }
+  },
+  "11": {
+   "j_lens": {
+    "china": 0.01,
+    "ai": 0.004,
+    "google": 0.001
+   },
+   "logit_lens": {
+    "china": 0.006,
+    "ai": 0.0,
+    "google": 0.001
+   }
+  },
+  "24": {
+   "j_lens": {
+    "china": 0.003,
+    "ai": 0.004,
+    "google": 0.0
+   },
+   "logit_lens": {
+    "china": 0.002,
+    "ai": 0.002,
+    "google": 0.0
+   }
+  },
+  "27": {
+   "j_lens": {
+    "china": 0.004,
+    "ai": 0.002,
+    "google": 0.0
+   },
+   "logit_lens": {
+    "china": 0.005,
+    "ai": 0.001,
+    "google": 0.001
+   }
+  },
+  "29": {
+   "j_lens": {
+    "china": 0.005,
+    "ai": 0.002,
+    "google": 0.0
+   },
+   "logit_lens": {
+    "china": 0.007,
+    "ai": 0.002,
+    "google": 0.0
+   }
+  }
+ },
+ "verdicts": {
+  "111.1": {
+   "neuron": "L7 N1169",
+   "family": "china",
+   "status": "held",
+   "null_rate": 0.007,
+   "specific": true
+  },
+  "111.2": {
+   "neuron": "L11 N8868",
+   "family": "china",
+   "status": "held",
+   "null_rate": 0.01,
+   "specific": true
+  },
+  "111.3": {
+   "neuron": "L6 N753",
+   "family": "ai",
+   "status": "failed",
+   "null_rate": 0.001,
+   "specific": true
+  },
+  "111.4": {
+   "neuron": "L27 N3325",
+   "family": "google",
+   "status": "held",
+   "null_rate": 0.0,
+   "specific": true
+  }
+ },
+ "elapsed_s": 37.9
+}
