@@ -2265,3 +2265,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 |---|---|---|---|
 | 94b.1 | At doses -0.8 and -1.5, no answer from the neuron is dark, in either model. | 0 of 24 | held |
 | 94b.2 | Qwen3.5-4B at dose -1.5: at least 3 of 6 neuron answers are upbeat, more than the unpushed model's count and more than any random direction's at -1.5. | 1 of 6 (the model breaks at -1.5) | failed |
+
+## Part 95 (OLMo 2 1B L2 N2466, registered before the run; PART95-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 95.1 | Claude: Instruct at alpha 0.8: at least 4 of 6 neuron answers match the space pattern, pooled random directions at most 4 of 48, and no single random direction more than 1 of 6. | | |
+| 95.2 | Claude: Instruct dose response: neuron space count at 0.4 is at most its count at 0.8, which is at most its count at 1.2, and 1.2 gives at least 5 of 6. | | |
+| 95.3 | Claude: the mid-training end (plain frame) at alpha 0.8 meets 95.1's criteria too: the concept is there before post-training. | | |
+| 95.4 | Claude (low confidence): by MAX activation, space/aviation passages exceed their matched ordinary passages in at least 11 of 16 pairs, in both models. | | |
+| 95.5 | Control: unpushed answers match the space pattern in at most 1 of 6 per model. | | |
+
