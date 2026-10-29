@@ -34,3 +34,10 @@ through the J-lens). Predictions 97.1 to 97.3 are in `PREDICTIONS.md`.
 
 The lens is a corpus average fitted on 100 sequences; a match judged by a model is a judgement; Part 92's 45 random
 personas make the random arm small; one push size.
+
+## Amendment 1 (2026-10-29 00:17 CT, after 97.1 and 97.2 were scored)
+
+Judge check, added because Elise asked how a match was decided: a second blind judge, Claude Sonnet 5.5 with thinking
+off, same prompt, J-lens lists only (`part97/match97b.py`), on all 1,754 units. Reported: agreement and Cohen's kappa
+with the Haiku labels, and the real and random match rates under Sonnet. 97.1 and 97.2 stay scored on the registered
+Haiku labels.
