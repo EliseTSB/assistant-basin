@@ -2295,3 +2295,11 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 96.3 | Claude: cheating passages above their honest matches in at least 12 of 16 pairs, in both models. | | |
 | 96.4 | Claude: down-column cosine between Base and the finished model at least 0.98. | | |
 
+## Part 97 (J-lens reading vs pushed persona, OLMo 2 1B Part 92 screen; registered before any code; PART97-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 97.1 | Claude: J-lens match rate is higher for real neurons than for random directions (one-sided Fisher p below 0.05); real at least 20%, random at most 10%. | | |
+| 97.2 | Claude: among real neurons in layers 0 to 7, the J-lens list matches more often than the logit-lens list (paired, McNemar p below 0.05). | | |
+| 97.3 | Claude (low confidence): in the validation push, at least 5 of 10 J-lens-matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
+
