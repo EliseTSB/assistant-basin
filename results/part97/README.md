@@ -36,3 +36,9 @@ fair one pairs each real neuron's J-lens list with a different real neuron's ans
 same blind way: 28 of 1,709 shuffled pairs matched (1.6%), against 185 of 1,709 true pairs (10.8%); one-sided Fisher
 p = 1.6e-31. By the rule written before the run (p below 0.01), the filter claim stands: a neuron's own J-lens words
 match its pushed persona about seven times more often than another neuron's words do.
+
+## Second judge (Amendment 1)
+
+Claude Sonnet 5.5 (thinking off, same prompt, J-lens lists only) on the same 1,754 units (one call failed): it matched
+172 of 1,708 real neurons (10.1%) and 0 of 45 random directions. Agreement with Haiku 95.9%, Cohen's kappa 0.78; both
+judges matched 142 of the same neurons.
