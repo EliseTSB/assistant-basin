@@ -2298,7 +2298,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 |---|---|---|---|
 | 97.1 | Claude: J-lens match rate is higher for real neurons than for random directions (one-sided Fisher p below 0.05); real at least 20%, random at most 10%. | J-lens match: real 185 of 1,709 (10.8%), random 0 of 45; Fisher p = 0.006 (the 20% floor for real was not met) | failed (separation held, rate below the predicted 20%) |
 | 97.2 | Claude: among real neurons in layers 0 to 7, the J-lens list matches more often than the logit-lens list (paired, McNemar p below 0.05). | layers 0 to 7: J-lens only 107, logit only 15; exact McNemar p = 1e-18 | held |
-| 97.3 | Claude (low confidence): in the validation push, at least 5 of 10 J-lens-matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
+| 97.3 | Claude (low confidence): in the validation push, at least 5 of 10 J-lens-matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | 6 of 10 matched show their theme in 3+ of 6 answers, 0 of 10 unmatched; random directions 0 of 80 pairs (results/part97/validation) | held |
 
 
 ## Part 98 (standalone J-lens repo; design PART98-DESIGN.md, written 2026-10-29 before any run)
@@ -2310,7 +2310,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 98.J3 | Claude (medium confidence): Qwen3.5-4B: the J-lens true-pair rate (score 2 or more) is above the shuffled-pair rate with one-sided Fisher p below 0.01, and between 4% and 25%. | Qwen3.5-4B: true J-lens 224 of 465 (48.2%), shuffled 22 of 460 (4.8%), Fisher p = 4e-56; rate far above 4 to 25% (jlens-persona-neurons results/qwen3.5-4b) | failed (rate) |
 | 98.J4 | Claude (low confidence): Qwen3.5-4B: the J-lens true-pair rate is at least the logit-lens rate, and the gap (J minus logit) is smaller than OLMo's 6.1 points, because layers 10 to 26 of 32 are closer to the output. | Qwen: J-lens 48.2% vs logit lens 45.4% (27 vs 14, McNemar p = 0.06); gap 2.8 points, below OLMo's (jlens-persona-neurons results/qwen3.5-4b) | held |
 | 98.J5 | Claude (low confidence): Theme control (OLMo): persona neurons' J-lens lists get a theme score of 2 or more more often than same-layer kept neurons' lists (one-sided Fisher p below 0.01). | theme score 2+: persona neurons 680 of 1,709 (39.8%), same-layer kept neurons 465 of 1,709 (27.2%), Fisher p = 3.9e-15; a 1.46x lift, so a weak pre-filter | held |
-| 98.J6 | Claude (low confidence): Validation push: Part 97.3 as registered: at least 5 of 10 matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
+| 98.J6 | Claude (low confidence): Validation push: Part 97.3 as registered: at least 5 of 10 matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | Part 97.3: 6 of 10 matched, 0 of 10 unmatched; random 0 of 80 pairs (results/part97/validation) | held |
 | 98.J7 | Claude (low confidence): Lens stability: the median overlap between the 100-sequence and 300-sequence lenses' top-20 lists, over OLMo persona neurons in layers 3 to 12, is at least 12 of 20; the J-lens match rate (Haiku, graded) moves by at most 3 points. | | |
 
 ## Part 99 (component swaps; design PART99-DESIGN.md, written 2026-10-29 before any run)

@@ -1,0 +1,319 @@
+{
+ "label_errors": 0,
+ "incomplete_units": 0,
+ "matched_show": 6,
+ "unmatched_show": 0,
+ "matched_show_relative": 5,
+ "unmatched_show_relative": 0,
+ "random_pairs_show_matched": [
+  0,
+  40
+ ],
+ "random_pairs_show_unmatched": [
+  0,
+  40
+ ],
+ "verdict_97.3": "held",
+ "units": [
+  {
+   "unit": "4:7583",
+   "group": "matched",
+   "persona": "little person who loves to help",
+   "complete": true,
+   "pushed_present": 1,
+   "unpushed_present": 0,
+   "relative_present": 1,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "6:4792",
+   "group": "matched",
+   "persona": "street rat",
+   "complete": true,
+   "pushed_present": 5,
+   "unpushed_present": 0,
+   "relative_present": 5,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "6:6622",
+   "group": "matched",
+   "persona": "machine learning researcher",
+   "complete": true,
+   "pushed_present": 3,
+   "unpushed_present": 0,
+   "relative_present": 3,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "1:4883",
+   "group": "matched",
+   "persona": "just a guy",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "11:3488",
+   "group": "matched",
+   "persona": "program answering questions",
+   "complete": true,
+   "pushed_present": 4,
+   "unpushed_present": 0,
+   "relative_present": 4,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "5:7332",
+   "group": "matched",
+   "persona": "man in a room with a button",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "5:4611",
+   "group": "matched",
+   "persona": "voice of the heart",
+   "complete": true,
+   "pushed_present": 3,
+   "unpushed_present": 1,
+   "relative_present": 2,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "3:5873",
+   "group": "matched",
+   "persona": "guitar player",
+   "complete": true,
+   "pushed_present": 5,
+   "unpushed_present": 1,
+   "relative_present": 4,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 1,
+    "3": 0
+   }
+  },
+  {
+   "unit": "10:5754",
+   "group": "matched",
+   "persona": "your future",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "4:1100",
+   "group": "matched",
+   "persona": "30-year-old man",
+   "complete": true,
+   "pushed_present": 6,
+   "unpushed_present": 0,
+   "relative_present": 6,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "3:483",
+   "group": "unmatched",
+   "persona": "a person",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "6:5077",
+   "group": "unmatched",
+   "persona": "human",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "3:6195",
+   "group": "unmatched",
+   "persona": "regular guy helper",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "6:7651",
+   "group": "unmatched",
+   "persona": "program designed to assist with a specific task",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "4:5948",
+   "group": "unmatched",
+   "persona": "embodiment of the void",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "5:1968",
+   "group": "unmatched",
+   "persona": "human and data",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "5:6718",
+   "group": "unmatched",
+   "persona": "regular person",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "4:7431",
+   "group": "unmatched",
+   "persona": "the universe",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "1:568",
+   "group": "unmatched",
+   "persona": "computer",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 1,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  },
+  {
+   "unit": "8:2351",
+   "group": "unmatched",
+   "persona": "computer program",
+   "complete": true,
+   "pushed_present": 0,
+   "unpushed_present": 0,
+   "relative_present": 0,
+   "random_present": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+   }
+  }
+ ]
+}
