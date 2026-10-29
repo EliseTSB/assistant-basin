@@ -2313,3 +2313,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 98.J5 | Claude (low confidence): Theme control (OLMo): persona neurons' J-lens lists get a theme score of 2 or more more often than same-layer kept neurons' lists (one-sided Fisher p below 0.01). | | |
 | 98.J6 | Claude (low confidence): Validation push: Part 97.3 as registered: at least 5 of 10 matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
 | 98.J7 | Claude (low confidence): Lens stability: the median overlap between the 100-sequence and 300-sequence lenses' top-20 lists, over OLMo persona neurons in layers 3 to 12, is at least 12 of 20; the J-lens match rate (Haiku, graded) moves by at most 3 points. | | |
+
+## Part 99 (component swaps; design PART99-DESIGN.md, written 2026-10-29 before any run)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 99.1 | Claude (medium confidence): Slot neurons need the finished network, not only the chat frame: the share of slot neurons whose "Who are you?" answer shows the persona is at least 30 points lower in Base-chat (run 1) than in Instruct-chat (Part 92 step 2). | | |
+| 99.2 | Claude (medium confidence): Concept neurons do not: the share of concept neurons showing in at least one answer differs by at most 15 points between Base-chat and Instruct-chat. | | |
+| 99.3 | Claude (low confidence): Of the two swaps into Instruct, swapping in Base's attention removes more slot "Who are you?" shows than swapping in Base's MLPs. | | |
+| 99.4 | Claude (medium confidence): Paired random directions show their unit's persona in at most 10% of non-human-kind pairs in every run. | | |
