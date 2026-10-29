@@ -1,0 +1,58 @@
+{
+ "present": [
+  "pretrain_21B",
+  "pretrain_210B",
+  "pretrain_1T",
+  "pretrain_2T",
+  "pretrain_3T",
+  "pretrain_4T",
+  "midtrain_51B",
+  "sft",
+  "dpo",
+  "instruct"
+ ],
+ "missing": [
+  "midtrain_13B",
+  "midtrain_26B"
+ ],
+ "files": {
+  "pretrain_21B": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/22f7d18a8b40f2c4356a6cb1bcd8af1e8fb5882c/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/22f7d18a8b40f2c4356a6cb1bcd8af1e8fb5882c/model-00002-of-00002.safetensors"
+  ],
+  "pretrain_210B": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/eb19ccabc1938e9fc5afe2b6838899cd9047f83c/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/eb19ccabc1938e9fc5afe2b6838899cd9047f83c/model-00002-of-00002.safetensors"
+  ],
+  "pretrain_1T": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/eda09f03465136b2b0a007da730ef720029c6f9c/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/eda09f03465136b2b0a007da730ef720029c6f9c/model-00002-of-00002.safetensors"
+  ],
+  "pretrain_2T": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/3e09b708b744a47d1ea3dc139ff91e1d1b9edd72/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/3e09b708b744a47d1ea3dc139ff91e1d1b9edd72/model-00002-of-00002.safetensors"
+  ],
+  "pretrain_3T": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/22738a97eabcd7523be1a56eaa1745bc60e9781c/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/22738a97eabcd7523be1a56eaa1745bc60e9781c/model-00002-of-00002.safetensors"
+  ],
+  "pretrain_4T": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/9d3e43659f00c17e6da23cf32333afd1fc39fa1a/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/9d3e43659f00c17e6da23cf32333afd1fc39fa1a/model-00002-of-00002.safetensors"
+  ],
+  "midtrain_51B": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e/model-00001-of-00002.safetensors",
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e/model-00002-of-00002.safetensors"
+  ],
+  "sft": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-SFT/snapshots/0d85a3d037876ce6ac7d4311d994400fc66ac27f/pytorch_model.bin"
+  ],
+  "dpo": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-DPO/snapshots/c4b0485961ab24c2433b090f3b922f0913a9290f/pytorch_model.bin"
+  ],
+  "instruct": [
+   "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e/model.safetensors"
+  ]
+ },
+ "elapsed_s": 224.8027286529541
+}

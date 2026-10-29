@@ -2194,13 +2194,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | id | prediction | result | evidence |
 |---|---|---|---|
-| 89.1 | Claude: across all 131,072 neurons the median down_proj cosine with Instruct is below 0.2 at 21B tokens and above 0.9 at the end of pretraining (4.0T). | | |
-| 89.2 | Claude: layer 0's neurons settle earlier than layer 15's (lower median settle checkpoint). | | |
-| 89.3 | Claude: the alien twin L10 N6978 settles later than the median neuron of layer 10. | | |
-| 89.4 | Claude: post-training moves Part 2's top-50 identity neurons more than layer-matched random sets (empirical p below 0.05). | | |
-| 89.5 | Claude: post-training moves Part 16's 64 "As an AI" set more than layer-matched random sets (empirical p below 0.05). | | |
-| 89.6 | Claude (low confidence): Part 14's top-50 register neurons settle earlier in pretraining than layer-matched random sets (empirical p below 0.05). | | |
-| 89.7 | Control: Instruct against itself gives cosine 1.000 for every neuron, and the mid-training end against Instruct gives a median above 0.95. | | |
+| 89.1 | Claude: across all 131,072 neurons the median down_proj cosine with Instruct is below 0.2 at 21B tokens and above 0.9 at the end of pretraining (4.0T). | median 0.049 at 21B, 0.967 at 4.0T | held |
+| 89.2 | Claude: layer 0's neurons settle earlier than layer 15's (lower median settle checkpoint). | median settle checkpoint 4.0T in all 16 layers (mid-training 13B and 26B not yet downloaded) | failed (provisional) |
+| 89.3 | Claude: the alien twin L10 N6978 settles later than the median neuron of layer 10. | settles at 3T, earlier than layer 10's median (4.0T); same as its control L10 N7884 (provisional) | failed (provisional) |
+| 89.4 | Claude: post-training moves Part 2's top-50 identity neurons more than layer-matched random sets (empirical p below 0.05). | mean move 0.0043 vs random 0.0049; p (moves more) = 1.0: it moves less | failed |
+| 89.5 | Claude: post-training moves Part 16's 64 "As an AI" set more than layer-matched random sets (empirical p below 0.05). | mean move 0.0041 vs random 0.0050; p (moves more) = 1.0: it moves less | failed |
+| 89.6 | Claude (low confidence): Part 14's top-50 register neurons settle earlier in pretraining than layer-matched random sets (empirical p below 0.05). | mean settle 4.68 vs random 4.67; p (earlier) = 0.64 (provisional) | failed (provisional) |
+| 89.7 | Control: Instruct against itself gives cosine 1.000 for every neuron, and the mid-training end against Instruct gives a median above 0.95. | Instruct self minimum 0.999999; mid-training end median 0.995 | held |
 
 ## Part 90 — Josh's Tulu 3 8B L14 N3851 across training stages (registered in PART90-DESIGN.md at 48b5443, pushed before data)
 
