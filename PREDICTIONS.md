@@ -2254,7 +2254,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 94.1 | Qwen3.5-4B, dose 0.8: at least 3 of the 6 answers are dark, and every random direction gives at most 1 of 6. | | |
-| 94.2 | Qwen3.5-4B-Base, dose 0.8, plain frame: at least 3 of the 6 answers are dark (the concept is there before post-training). | | |
-| 94.3 | In both models its mean activation is higher on the dark passage than the neutral one in at least 12 of 16 pairs. | | |
-| 94.4 | Down-column cosine between Base and the finished model is at least 0.98. | | |
+| 94.1 | Qwen3.5-4B, dose 0.8: at least 3 of the 6 answers are dark, and every random direction gives at most 1 of 6. | 5 of 6; every random 0 of 6 | held |
+| 94.2 | Qwen3.5-4B-Base, dose 0.8, plain frame: at least 3 of the 6 answers are dark (the concept is there before post-training). | 4 of 6 | held |
+| 94.3 | In both models its mean activation is higher on the dark passage than the neutral one in at least 12 of 16 pairs. | 14 of 16; 15 of 16 | held |
+| 94.4 | Down-column cosine between Base and the finished model is at least 0.98. | 0.9956 | held |
