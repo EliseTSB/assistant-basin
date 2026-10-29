@@ -43,7 +43,7 @@ def api_key() -> str:
 
 
 def _read_screen(screen_dir: Path):
-    for path in sorted(screen_dir.glob("layer_*.jsonl"), key=lambda item: int(item.stem.split("_")[1])):
+    for path in sorted((p for p in screen_dir.glob("layer_*.jsonl") if p.stem.split("_")[1].isdigit()), key=lambda item: int(item.stem.split("_")[1])):
         with path.open(encoding="utf-8") as stream:
             for line_no, line in enumerate(stream, 1):
                 if line.strip():
@@ -54,18 +54,22 @@ def _read_screen(screen_dir: Path):
 
 
 def make_items(screen_dir: str | Path):
-    records = []
+    """One reader item per unique changed answer text (Amendment 1); the key maps it to every row with that text."""
+    by_text = {}
     for filename, row_no, row in _read_screen(Path(screen_dir)):
         if row.get("triage") != "changed":
             continue
-        item_id = secrets.token_urlsafe(16)
-        records.append((item_id, {"id": item_id, "text": row["answer"]}, {
+        by_text.setdefault(row["answer"], []).append({
             "layer": int(row["layer"]), "unit": row["unit"], "index": int(row["index"]),
             "source_row": f"{filename}:{row_no}",
-        }))
+        })
+    records = []
+    for text, rows in by_text.items():
+        item_id = secrets.token_urlsafe(16)
+        records.append((item_id, {"id": item_id, "text": text}, rows))
     random.SystemRandom().shuffle(records)
     items = [item for _, item, _ in records]
-    key = {item_id: private for item_id, _, private in records}
+    key = {item_id: rows for item_id, _, rows in records}
     return items, key
 
 
@@ -84,7 +88,7 @@ def _parse_label(text: str) -> dict:
 
 
 def _label_one(item: dict, key: str) -> dict:
-    body = {"model": MODEL, "max_tokens": 500, "messages": [{
+    body = {"model": MODEL, "max_tokens": 500, "thinking": {"type": "disabled"}, "messages": [{
         "role": "user", "content": PROMPT.replace("{answer}", item["text"]),
     }]}
     error = None

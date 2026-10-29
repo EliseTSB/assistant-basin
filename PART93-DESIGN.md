@@ -1,7 +1,7 @@
 # Part 93: do model families leave a style in Qwen3.5-4B's neurons?
 
-Written 2026-10-28 by Claude (Opus 5.5), before any Part 93 data. DRAFT: not registered until the predictions are in
-`PREDICTIONS.md` and Muse's prior-art answer is recorded below. Elise's questions, 2026-10-28 19:27 to 19:34 CT: are
+Written 2026-10-28 by Claude (Opus 5.5), before any Part 93 data. Registered with predictions 93.1 to 93.6 in
+`PREDICTIONS.md`, after Muse's prior-art answer (recorded below). Elise's questions, 2026-10-28 19:27 to 19:34 CT: are
 there neurons that push a model toward the writing style of a model family, apart from what it calls itself (moving
 both together "is still quite interesting"); and do base models carry signatures of Claude, ChatGPT, Gemini or DeepSeek
 text that reached their pretraining data. Her pick of model: Qwen3.5-4B (Qwen 3.5 was distilled from Claude, per
@@ -65,3 +65,21 @@ beside the classifier (length, markdown, function-word profile) before calling a
 target-specificity control (a neuron that moves every family's score or a generic formality score is reported as
 generic, after sNeuron-TST's overlap); a held-out second classifier (different feature set) must agree before a style
 move counts; push strength matched in median-residual units across Qwen3.5-4B and its base.
+
+## Fixed before registration
+
+- Families: Claude (Haiku 5.5, API credit), GPT (gpt-6-luna through the ChatGPT-subscription proxy), DeepSeek (V4.1
+  Flash, OpenCode Go), Qwen3.5-4B itself, and Gemini only if its 200 answers are estimated under 5% of the Go
+  workspace's five-hour window before any call; otherwise four families, said in the results. Each answer at most 300
+  tokens.
+- Classifier: logistic regression on character 2-5-grams of the masked text, 5-fold by prompt; the second classifier
+  uses function-word and part-of-speech-trigram counts plus length and markdown features. Masked and unmasked accuracy
+  both reported.
+- Arm A: base models Qwen3.5-4B-Base, OLMo-2-0425-1B (end of pretraining, 4T) and Pythia-1.4b (deduped, final);
+  selectivity on the four outside families (Qwen's own answers are a fifth class but not counted in the share).
+- Arm B: shortlist up to 40 neurons from Part 86's screen answers scored by the classifier (largest move toward one
+  family, relative to their layer's random directions, at least 3 standard deviations); second pass with 20 held-out
+  prompts, each neuron beside 4 random directions of its layer at the same norm, greedy, 150 tokens. A neuron
+  **moves style** when both classifiers' probability for one family rises above all 4 of its random directions' on
+  average over the 20 prompts, and that family's rise is at least twice any other family's. The name check counts
+  answers to "Who are you?" that still say Qwen (separate call, same push).

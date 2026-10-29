@@ -2238,3 +2238,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 92.3 | Concept neurons are pretraining concepts: of those that show at the mid-training end, at least 70% already show at 4T. | | |
 | 92.4 | Post-training barely moves either kind's weights: median down-column cosine, mid-training end to Instruct, at least 0.98 for both kinds, medians within 0.01 of each other. | | |
 | 92.5 | Paired random directions show their neuron's persona in at most 10% of non-human-kind pairs at every checkpoint and frame. | | |
+
+## Part 93 — model-family style in Qwen3.5-4B's neurons (registered in PART93-DESIGN.md, pushed before any data)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 93.1 | The masked 5-way classifier (4-way if Gemini is dropped) reaches at least 70% held-out accuracy. | | |
+| 93.2 | Qwen3.5-4B-Base has at least 1.5 times the share of family-selective neurons (outside families, above the shuffled null's 99.9th percentile) of both OLMo 2 1B and Pythia-1.4b. | | |
+| 93.3 | In Qwen3.5-4B-Base, GPT is the outside family with the most selective neurons. | | |
+| 93.4 | In Qwen3.5-4B, at least 3 of the shortlisted neurons move style (both classifiers, one family, above all 4 random directions). | | |
+| 93.5 | Claude is the most common target among neurons that move style. | | |
+| 93.6 | At least one neuron that moves style still says it is Qwen in at least 90% of its "Who are you?" answers. | | |
