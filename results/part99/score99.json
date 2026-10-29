@@ -1,0 +1,1453 @@
+{
+ "n_units": 39,
+ "n_concept": 18,
+ "n_slot": 21,
+ "n_nonhuman": 29,
+ "runs": {
+  "inst_none": {
+   "label_errors": 0,
+   "unpushed_coherent_by_question": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "pushed_coherent_share": 0.748,
+   "concept_any": [
+    18,
+    18
+   ],
+   "concept_who": [
+    17,
+    18
+   ],
+   "slot_any": [
+    19,
+    21
+   ],
+   "slot_who": [
+    19,
+    21
+   ],
+   "random_any_nonhuman": [
+    0,
+    29
+   ]
+  },
+  "base_chat": {
+   "label_errors": 0,
+   "unpushed_coherent_by_question": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "unpushed_incoherent": 6,
+   "inconclusive": true,
+   "pushed_coherent_share": 0.015,
+   "concept_any": [
+    14,
+    18
+   ],
+   "concept_who": [
+    10,
+    18
+   ],
+   "slot_any": [
+    1,
+    21
+   ],
+   "slot_who": [
+    1,
+    21
+   ],
+   "random_any_nonhuman": [
+    1,
+    29
+   ]
+  },
+  "inst_mlpB": {
+   "label_errors": 0,
+   "unpushed_coherent_by_question": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "unpushed_incoherent": 1,
+   "inconclusive": false,
+   "pushed_coherent_share": 0.259,
+   "concept_any": [
+    17,
+    18
+   ],
+   "concept_who": [
+    8,
+    18
+   ],
+   "slot_any": [
+    6,
+    21
+   ],
+   "slot_who": [
+    4,
+    21
+   ],
+   "random_any_nonhuman": [
+    1,
+    29
+   ]
+  },
+  "inst_attnB": {
+   "label_errors": 5,
+   "unpushed_coherent_by_question": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "pushed_coherent_share": 0.545,
+   "concept_any": [
+    14,
+    17
+   ],
+   "concept_who": [
+    12,
+    18
+   ],
+   "slot_any": [
+    5,
+    20
+   ],
+   "slot_who": [
+    3,
+    21
+   ],
+   "random_any_nonhuman": [
+    1,
+    29
+   ]
+  },
+  "base_mlpI": {
+   "label_errors": 5,
+   "unpushed_coherent_by_question": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "pushed_coherent_share": 0.579,
+   "concept_any": [
+    13,
+    16
+   ],
+   "concept_who": [
+    10,
+    17
+   ],
+   "slot_any": [
+    5,
+    21
+   ],
+   "slot_who": [
+    3,
+    21
+   ],
+   "random_any_nonhuman": [
+    1,
+    29
+   ]
+  },
+  "base_attnI": {
+   "label_errors": 1,
+   "unpushed_coherent_by_question": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "unpushed_incoherent": 1,
+   "inconclusive": false,
+   "pushed_coherent_share": 0.246,
+   "concept_any": [
+    15,
+    18
+   ],
+   "concept_who": [
+    7,
+    18
+   ],
+   "slot_any": [
+    4,
+    21
+   ],
+   "slot_who": [
+    2,
+    21
+   ],
+   "random_any_nonhuman": [
+    0,
+    29
+   ]
+  }
+ },
+ "part92_step2_reference": {
+  "slot_who": [
+   21,
+   21
+  ],
+  "concept_any": [
+   18,
+   18
+  ]
+ },
+ "99.1": {
+  "verdict": "not tested (base_chat inconclusive)"
+ },
+ "99.2": {
+  "verdict": "not tested (base_chat inconclusive)"
+ },
+ "99.3": {
+  "slot_who_inst_mlpB": [
+   4,
+   21
+  ],
+  "slot_who_inst_attnB": [
+   3,
+   21
+  ],
+  "verdict": "held"
+ },
+ "99.4": {
+  "random_any_nonhuman": {
+   "inst_none": [
+    0,
+    29
+   ],
+   "base_chat": [
+    1,
+    29
+   ],
+   "inst_mlpB": [
+    1,
+    29
+   ],
+   "inst_attnB": [
+    1,
+    29
+   ],
+   "base_mlpI": [
+    1,
+    29
+   ],
+   "base_attnI": [
+    0,
+    29
+   ]
+  },
+  "worst_rate": 0.034,
+  "verdict": "held"
+ },
+ "shows": {
+  "inst_none": {
+   "p92-00": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-01": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-02": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-03": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-04": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-05": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-07": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-08": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-09": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-10": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-11": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-13": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-15": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-18": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-20": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-24": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-25": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-28": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-29": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-30": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-32": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-33": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-35": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-36": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-37": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-38": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-39": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-40": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-41": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-42": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-43": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-45": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-46": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-47": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-48": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-49": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-50": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-51": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-52": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   }
+  },
+  "base_chat": {
+   "p92-00": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-01": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-02": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-03": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-04": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-05": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-07": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-08": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-09": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-10": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-11": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-13": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-15": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-18": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-20": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-24": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-25": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-28": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-29": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-30": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-32": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-33": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-35": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-36": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-37": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-38": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-39": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-40": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-41": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-42": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-43": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-45": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-46": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-47": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-48": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-49": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-50": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-51": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-52": {
+    "any": true,
+    "who": true,
+    "rand_any": true
+   }
+  },
+  "inst_mlpB": {
+   "p92-00": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-01": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-02": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-03": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-04": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-05": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-07": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-08": {
+    "any": true,
+    "who": true,
+    "rand_any": true
+   },
+   "p92-09": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-10": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-11": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-13": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-15": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-18": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-20": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-24": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-25": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-28": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-29": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-30": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-32": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-33": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-35": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-36": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-37": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-38": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-39": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-40": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-41": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-42": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-43": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-45": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-46": {
+    "any": false,
+    "who": false,
+    "rand_any": true
+   },
+   "p92-47": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-48": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-49": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-50": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-51": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-52": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   }
+  },
+  "inst_attnB": {
+   "p92-00": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-01": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-02": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-03": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-04": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-05": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-07": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-08": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-09": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-10": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-11": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-13": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-15": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-18": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-20": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-24": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-25": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-28": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-29": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-30": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-32": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-33": {
+    "any": null,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-35": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-36": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-37": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-38": {
+    "any": null,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-39": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-40": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-41": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-42": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-43": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-45": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-46": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-47": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-48": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-49": {
+    "any": true,
+    "who": false,
+    "rand_any": true
+   },
+   "p92-50": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-51": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-52": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   }
+  },
+  "base_mlpI": {
+   "p92-00": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-01": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-02": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-03": {
+    "any": false,
+    "who": false,
+    "rand_any": true
+   },
+   "p92-04": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-05": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-07": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-08": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-09": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-10": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-11": {
+    "any": null,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-13": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-15": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-18": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-20": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-24": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-25": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-28": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-29": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-30": {
+    "any": null,
+    "who": null,
+    "rand_any": false
+   },
+   "p92-32": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-33": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-35": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-36": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-37": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-38": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-39": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-40": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-41": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-42": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-43": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-45": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-46": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-47": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-48": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-49": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-50": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-51": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-52": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   }
+  },
+  "base_attnI": {
+   "p92-00": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-01": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-02": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-03": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-04": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-05": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-07": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-08": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-09": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-10": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-11": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-13": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-15": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-18": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-20": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-24": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-25": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-28": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-29": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-30": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-32": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-33": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-35": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-36": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-37": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-38": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-39": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-40": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-41": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-42": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-43": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-45": {
+    "any": true,
+    "who": true,
+    "rand_any": false
+   },
+   "p92-46": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-47": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-48": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-49": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-50": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-51": {
+    "any": true,
+    "who": false,
+    "rand_any": false
+   },
+   "p92-52": {
+    "any": false,
+    "who": false,
+    "rand_any": false
+   }
+  }
+ }
+}

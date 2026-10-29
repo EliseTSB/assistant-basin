@@ -2320,7 +2320,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 99.1 | Claude (medium confidence): Slot neurons need the finished network, not only the chat frame: the share of slot neurons whose "Who are you?" answer shows the persona is at least 30 points lower in Base-chat (run 1) than in Instruct-chat (Part 92 step 2). | | |
-| 99.2 | Claude (medium confidence): Concept neurons do not: the share of concept neurons showing in at least one answer differs by at most 15 points between Base-chat and Instruct-chat. | | |
-| 99.3 | Claude (low confidence): Of the two swaps into Instruct, swapping in Base's attention removes more slot "Who are you?" shows than swapping in Base's MLPs. | | |
-| 99.4 | Claude (medium confidence): Paired random directions show their unit's persona in at most 10% of non-human-kind pairs in every run. | | |
+| 99.1 | Claude (medium confidence): Slot neurons need the finished network, not only the chat frame: the share of slot neurons whose "Who are you?" answer shows the persona is at least 30 points lower in Base-chat (run 1) than in Instruct-chat (Part 92 step 2). | not tested: the mid-training end loops in the chat frame (6 of 6 unpushed answers incoherent), so base_chat is inconclusive (results/part99/README.md) | not tested |
+| 99.2 | Claude (medium confidence): Concept neurons do not: the share of concept neurons showing in at least one answer differs by at most 15 points between Base-chat and Instruct-chat. | not tested, same reason as 99.1 | not tested |
+| 99.3 | Claude (low confidence): Of the two swaps into Instruct, swapping in Base's attention removes more slot "Who are you?" shows than swapping in Base's MLPs. | slot "Who are you?" shows: Base attention 3 of 21, Base MLPs 4 of 21; held by its letter on a one-unit difference (the coherent-answer contrast in the README is the informative one) | held |
+| 99.4 | Claude (medium confidence): Paired random directions show their unit's persona in at most 10% of non-human-kind pairs in every run. | worst run 1 of 29 non-human-kind random pairs (3.4%) | held |
