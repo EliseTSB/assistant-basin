@@ -170,3 +170,22 @@ from an operator option, so the pilot's amended frame is registered here, in one
 - The main run's scope (plain and chat, or chat only on the three post-trained checkpoints) is the pilot gate's action
   as pinned in part85/references.json, not an operator option.
 - Step 1's forward call is registered as `model(input_ids=<1 x 128 neutral ids>, use_cache=False)`.
+
+## Alden's review (retrospective; council part85-design-review-2026-10-27 #3, 2026-10-29 01:46 CT; recorded 03:25 CT)
+
+Alden read the design at 1ca4ec6 and the amendments at 1e14a83 after 85.2 and 85.3 were scored, so this is a design
+critique, not a pre-run signoff. Part 85 stopped after step 0 (Elise, 10-28 evening), so the push steps it targets
+(85.5 to 85.8) never ran. The points, as they apply to any future run of steps 1 and 2:
+- A stage where the push is not significant and a later stage where it is cannot establish that the later stage
+  created it: with 48 per arm and no baseline positives, 4 of 48 gives one-sided p about 0.059 and 5 of 48 about 0.028.
+  Read such a result as "detected by SFT under this assay"; absence earlier needs an upper bound or equivalence
+  criterion and a direct comparison of the stage effects. Three prompts by 16 samples are not 48 independent prompts.
+- The own-max and fixed 9.75 dose rules are diagnostics, not a way to make interventions commensurate across
+  checkpoints; report the realized write and natural-activity scales, and treat disagreement between the rules as a
+  finding.
+- Base in the plain frame measures a continuation's content, not an assistant's self-attribution; a checkpoint whose
+  unpushed answers are unresponsive is "not assessable", not evidence of absence.
+- 85.1's cosine and correlation thresholds are an operational similarity screen, not proof of the same function, and
+  failing them does not make a different physical unit: read 85.2 as "the same indexed lineage with changed or
+  uncertain functional correspondence". The unit was selected on the finished model.
+The registered counts and verdicts (85.2, 85.3) stand.
