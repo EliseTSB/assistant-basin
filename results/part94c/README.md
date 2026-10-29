@@ -39,3 +39,11 @@ same.
 
 Dark alone at 0.5 gave 3 of 6 in stage A and 1 of 6 here. The device (A770 against CPU) and the label prompt both
 differ, so the dark count at this dose is not stable to one or two answers.
+
+## Base gentle sweep (Claude cloud CPU run; `answers-base-gentle.jsonl`, `labels-base-gentle.jsonl`)
+
+Qwen3.5-4B-Base, plain frame, L24 N3659 at 0.2 to 0.6 beside 4 random layer-24 directions per dose, labelled by
+`label94a.py` (156 answers, 0 errors). Dark answers 0, 0, 0, 1, 3 of 6; coherent 6 of 6 at every dose; random
+directions 0 dark of 24 at every dose; unpushed 0 dark, 6 coherent. No prediction was registered for this sweep. The
+Base model needs about the same push as the finished model to turn dark (3 of 6 at 0.5 to 0.6 in both), and it stays
+coherent where the finished model starts to break.
