@@ -1,0 +1,699 @@
+{
+ "design": "PART110-DESIGN.md",
+ "base": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B-Base/snapshots/1001bb4d826a52d1f399e183466143f4da7b741b",
+ "chat": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "layers": {
+  "6": {
+   "median_cos": {
+    "gate": 0.997589223487465,
+    "up": 0.9975086397333888,
+    "down": 0.9973746628027917
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.0018155541181244887,
+    "0.5": 0.0025608350297395277,
+    "0.95": 0.003573963393043981,
+    "0.99": 0.00414607344511801
+   },
+   "median_ratio": {
+    "gate": 0.9975174436794436,
+    "up": 0.9973114169940116,
+    "down": 0.9974312853080225
+   }
+  },
+  "7": {
+   "median_cos": {
+    "gate": 0.9975582924098942,
+    "up": 0.9974223358347017,
+    "down": 0.9972710122440139
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.0018115789630958703,
+    "0.5": 0.002614444530986526,
+    "0.95": 0.003803575270693175,
+    "0.99": 0.00421554802032695
+   },
+   "median_ratio": {
+    "gate": 0.9973675649832197,
+    "up": 0.9970085167308145,
+    "down": 0.9971407044683831
+   }
+  },
+  "11": {
+   "median_cos": {
+    "gate": 0.9961637840955988,
+    "up": 0.996785695665356,
+    "down": 0.9967128072790259
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.0019393880154789656,
+    "0.5": 0.0035024860443901664,
+    "0.95": 0.004527760582752301,
+    "0.99": 0.0049374271737975
+   },
+   "median_ratio": {
+    "gate": 0.9971201775332206,
+    "up": 0.997295260222314,
+    "down": 0.9974157920472256
+   }
+  },
+  "22": {
+   "median_cos": {
+    "gate": 0.9970174560749518,
+    "up": 0.9965059390250134,
+    "down": 0.9965624597918177
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.0018540649960294975,
+    "0.5": 0.0034262510521435767,
+    "0.95": 0.005058544620393596,
+    "0.99": 0.005909414552596299
+   },
+   "median_ratio": {
+    "gate": 0.9971252164171787,
+    "up": 0.9974948274273274,
+    "down": 0.9975229894536816
+   }
+  },
+  "24": {
+   "median_cos": {
+    "gate": 0.9973745239410896,
+    "up": 0.9968095733786296,
+    "down": 0.9969062046430136
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.001858499682924869,
+    "0.5": 0.0030368241679737396,
+    "0.95": 0.00463670703651492,
+    "0.99": 0.0053824506863747274
+   },
+   "median_ratio": {
+    "gate": 0.9972013905208078,
+    "up": 0.9973473184824794,
+    "down": 0.9973554740867097
+   }
+  },
+  "27": {
+   "median_cos": {
+    "gate": 0.9978674364997797,
+    "up": 0.9974280897647703,
+    "down": 0.9973894945363538
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.0017589998417360715,
+    "0.5": 0.0024726119408731524,
+    "0.95": 0.004423194869822196,
+    "0.99": 0.005201790071500941
+   },
+   "median_ratio": {
+    "gate": 0.9973741662425651,
+    "up": 0.9976286377270771,
+    "down": 0.9976523817117438
+   }
+  },
+  "29": {
+   "median_cos": {
+    "gate": 0.9978842792579327,
+    "up": 0.9975463017717308,
+    "down": 0.9975624138887865
+   },
+   "move_mean_quantiles": {
+    "0.05": 0.0016130323040207857,
+    "0.5": 0.002361727496737113,
+    "0.95": 0.004316888460740918,
+    "0.99": 0.005111040351798157
+   },
+   "median_ratio": {
+    "gate": 0.9974663198044402,
+    "up": 0.9977884628355279,
+    "down": 0.997796286915912
+   }
+  }
+ },
+ "self_control_min_cos": 0.9999999999999996,
+ "neurons": {
+  "L6 N753": {
+   "layer": 6,
+   "unit": 753,
+   "group": "maker",
+   "cos": {
+    "gate": 0.9990597407484592,
+    "up": 0.9986850288137907,
+    "down": 0.9982621305724158
+   },
+   "norm_ratio": {
+    "gate": 0.9958540403691893,
+    "up": 0.9965694583977216,
+    "down": 0.9967319487192428
+   },
+   "move_mean": 0.0013310332884447866,
+   "pct_in_layer": {
+    "gate": 0.22786458333333334,
+    "up": 0.759548611111111,
+    "down": 3.016493055555556,
+    "mean": 0.18446180555555555
+   },
+   "pct_vs_scale_matched": 2.0,
+   "n_layer": 9216
+  },
+  "L7 N1169": {
+   "layer": 7,
+   "unit": 1169,
+   "group": "maker",
+   "cos": {
+    "gate": 0.9983042087674526,
+    "up": 0.9953445048767338,
+    "down": 0.9957089177367208
+   },
+   "norm_ratio": {
+    "gate": 1.001428581386161,
+    "up": 1.002778816171313,
+    "down": 1.0014960598967804
+   },
+   "move_mean": 0.003547456206364282,
+   "pct_in_layer": {
+    "gate": 12.358940972222223,
+    "up": 98.93663194444444,
+    "down": 98.94748263888889,
+    "mean": 89.52907986111111
+   },
+   "pct_vs_scale_matched": 100.0,
+   "n_layer": 9216
+  },
+  "L11 N8868": {
+   "layer": 11,
+   "unit": 8868,
+   "group": "maker",
+   "cos": {
+    "gate": 0.9975739879243841,
+    "up": 0.9955328554953577,
+    "down": 0.996106688980197
+   },
+   "norm_ratio": {
+    "gate": 0.9999826370340643,
+    "up": 1.0009518588709343,
+    "down": 1.0010888224156997
+   },
+   "move_mean": 0.0035954892000203595,
+   "pct_in_layer": {
+    "gate": 6.130642361111112,
+    "up": 93.98871527777779,
+    "down": 78.46137152777779,
+    "mean": 54.817708333333336
+   },
+   "pct_vs_scale_matched": 80.5,
+   "n_layer": 9216
+  },
+  "L29 N776": {
+   "layer": 29,
+   "unit": 776,
+   "group": "maker",
+   "cos": {
+    "gate": 0.9984324616113408,
+    "up": 0.9970544702378425,
+    "down": 0.9973105927564823
+   },
+   "norm_ratio": {
+    "gate": 0.9970862718665661,
+    "up": 0.9961971419348876,
+    "down": 0.9959961682980384
+   },
+   "move_mean": 0.002400825131444795,
+   "pct_in_layer": {
+    "gate": 21.158854166666664,
+    "up": 69.34678819444444,
+    "down": 61.03515625,
+    "mean": 52.322048611111114
+   },
+   "pct_vs_scale_matched": 36.0,
+   "n_layer": 9216
+  },
+  "L27 N3325": {
+   "layer": 27,
+   "unit": 3325,
+   "group": "secondary",
+   "cos": {
+    "gate": 0.9974328942293855,
+    "up": 0.9968491917617014,
+    "down": 0.9966274636265119
+   },
+   "norm_ratio": {
+    "gate": 0.9967214856529991,
+    "up": 0.9985232346425836,
+    "down": 0.9979554532008695
+   },
+   "move_mean": 0.003030150127467065,
+   "pct_in_layer": {
+    "gate": 68.58723958333334,
+    "up": 69.85677083333334,
+    "down": 78.19010416666666,
+    "mean": 72.20052083333334
+   },
+   "pct_vs_scale_matched": 90.5,
+   "n_layer": 9216
+  },
+  "L24 N3949": {
+   "layer": 24,
+   "unit": 3949,
+   "group": "secondary",
+   "cos": {
+    "gate": 0.9974753685566042,
+    "up": 0.9970587261011172,
+    "down": 0.9974807777428989
+   },
+   "norm_ratio": {
+    "gate": 0.9972375519957336,
+    "up": 0.997939729306932,
+    "down": 0.9984899778539111
+   },
+   "move_mean": 0.0026617091997932127,
+   "pct_in_layer": {
+    "gate": 46.13715277777778,
+    "up": 41.59071180555556,
+    "down": 26.31293402777778,
+    "mean": 36.18706597222222
+   },
+   "pct_vs_scale_matched": 65.0,
+   "n_layer": 9216
+  },
+  "L22 N2742": {
+   "layer": 22,
+   "unit": 2742,
+   "group": "secondary",
+   "cos": {
+    "gate": 0.998854285837,
+    "up": 0.9969568609899664,
+    "down": 0.9970163318238595
+   },
+   "norm_ratio": {
+    "gate": 0.9969052622951334,
+    "up": 0.9998048547097088,
+    "down": 0.9984380705803226
+   },
+   "move_mean": 0.002390840449724707,
+   "pct_in_layer": {
+    "gate": 4.644097222222222,
+    "up": 34.81987847222222,
+    "down": 37.00086805555556,
+    "mean": 20.377604166666664
+   },
+   "pct_vs_scale_matched": 41.5,
+   "n_layer": 9216
+  }
+ },
+ "set_test": {
+  "uniform": {
+   "observed_mean_move": 0.002718700956568556,
+   "draw_mean": 0.0028225740845171615,
+   "draw_q05_q95": [
+    0.002287994373071175,
+    0.003455723664962246
+   ],
+   "p_more": 0.5854145854145855,
+   "p_less": 0.4155844155844156,
+   "pool_size": [
+    9215,
+    9215,
+    9215,
+    9215
+   ]
+  },
+  "matched": {
+   "observed_mean_move": 0.002718700956568556,
+   "draw_mean": 0.0025513003331896424,
+   "draw_q05_q95": [
+    0.002296236872558877,
+    0.0028746018369846635
+   ],
+   "p_more": 0.15984015984015984,
+   "p_less": 0.8411588411588412,
+   "pool_size": [
+    200,
+    200,
+    200,
+    200
+   ]
+  }
+ },
+ "readouts": {
+  "L27 N3325": {
+   "layer": 27,
+   "unit": 3325,
+   "sign": -1.0,
+   "base": {
+    "google_rank": 1,
+    "top20": [
+     " Google",
+     "Google",
+     " google",
+     "google",
+     "谷歌",
+     " GOOGLE",
+     "/google",
+     "oogle",
+     ".Google",
+     "-google",
+     " 구글",
+     "_google",
+     ".google",
+     " جوجل",
+     "百度",
+     " Amazon",
+     "goog",
+     " goog",
+     "Amazon",
+     " Facebook"
+    ]
+   },
+   "chat": {
+    "google_rank": 1,
+    "top20": [
+     " Google",
+     "Google",
+     " google",
+     "google",
+     "谷歌",
+     " GOOGLE",
+     "/google",
+     "oogle",
+     ".Google",
+     "-google",
+     "_google",
+     ".google",
+     " 구글",
+     " جوجل",
+     "百度",
+     " Amazon",
+     "Amazon",
+     "goog",
+     " goog",
+     " Facebook"
+    ]
+   },
+   "base_chat_top20_shared": 20,
+   "chat_vs_part71_top20_shared": 20
+  },
+  "L24 N3949": {
+   "layer": 24,
+   "unit": 3949,
+   "sign": 1.0,
+   "base": {
+    "google_rank": 40,
+    "top20": [
+     "Apple",
+     " Microsoft",
+     "苹果",
+     "微软",
+     " Apple",
+     "Microsoft",
+     "apple",
+     "icrosoft",
+     " Canonical",
+     "苹果公司",
+     "蘋果",
+     " Autodesk",
+     " apple",
+     "微軟",
+     " microsoft",
+     "microsoft",
+     ".apple",
+     "Oracle",
+     " NVIDIA",
+     " Adobe"
+    ]
+   },
+   "chat": {
+    "google_rank": 38,
+    "top20": [
+     "Apple",
+     " Microsoft",
+     "微软",
+     "苹果",
+     " Apple",
+     "Microsoft",
+     "apple",
+     "icrosoft",
+     " Canonical",
+     "苹果公司",
+     "蘋果",
+     " Autodesk",
+     " apple",
+     "microsoft",
+     "微軟",
+     "/apple",
+     "Adobe",
+     " Valve",
+     " microsoft",
+     ".apple"
+    ]
+   },
+   "base_chat_top20_shared": 17,
+   "chat_vs_part71_top20_shared": 20
+  },
+  "L6 N753": {
+   "layer": 6,
+   "unit": 753,
+   "sign": 1.0,
+   "base": {
+    "google_rank": 19516,
+    "top20": [
+     "幻觉",
+     "rer",
+     " off",
+     " Claude",
+     " AI",
+     "itchens",
+     "的人工智能",
+     " compet",
+     " Verb",
+     " StringTokenizer",
+     " gan",
+     "�",
+     "agy",
+     "art",
+     "etal",
+     ".gradle",
+     "AI",
+     " outputs",
+     "reira",
+     "/cloud"
+    ]
+   },
+   "chat": {
+    "google_rank": 23280,
+    "top20": [
+     "幻觉",
+     "rer",
+     " off",
+     " AI",
+     " Claude",
+     "itchens",
+     "的人工智能",
+     " compet",
+     " gan",
+     "�",
+     " StringTokenizer",
+     "agy",
+     " Verb",
+     " outputs",
+     "AI",
+     "reau",
+     "odal",
+     ".gradle",
+     " earlier",
+     "□"
+    ]
+   },
+   "base_chat_top20_shared": 16,
+   "chat_vs_part71_top20_shared": 20
+  },
+  "L7 N1169": {
+   "layer": 7,
+   "unit": 1169,
+   "sign": -1.0,
+   "base": {
+    "google_rank": 89446,
+    "top20": [
+     "作为中国",
+     " Chinese",
+     "是中国",
+     " China",
+     "China",
+     "Chinese",
+     "quette",
+     " Beijing",
+     " yuan",
+     "Bei",
+     " Tang",
+     " Zhang",
+     "inyin",
+     " Shanghai",
+     " Bei",
+     " Tian",
+     " Qing",
+     " Zhu",
+     "Zh",
+     " Guang"
+    ]
+   },
+   "chat": {
+    "google_rank": 107378,
+    "top20": [
+     "作为中国",
+     " Chinese",
+     "是中国",
+     " China",
+     "Chinese",
+     "China",
+     "quette",
+     "Bei",
+     " yuan",
+     "inyin",
+     " Zhang",
+     " Tang",
+     " Beijing",
+     " Tian",
+     " Bei",
+     " Shanghai",
+     " Zhu",
+     " Qing",
+     "在中国",
+     "中国"
+    ]
+   },
+   "base_chat_top20_shared": 18,
+   "chat_vs_part71_top20_shared": 20
+  },
+  "L11 N8868": {
+   "layer": 11,
+   "unit": 8868,
+   "sign": 1.0,
+   "base": {
+    "google_rank": 10113,
+    "top20": [
+     " Chinese",
+     " China",
+     " الصين",
+     " chino",
+     "aidu",
+     " japon",
+     " Taiwan",
+     "iao",
+     " китай",
+     "Chinese",
+     " Korea",
+     "China",
+     " Huang",
+     "uo",
+     " Wang",
+     " Chang",
+     " Wu",
+     " yuan",
+     "Occ",
+     " Hong"
+    ]
+   },
+   "chat": {
+    "google_rank": 10041,
+    "top20": [
+     " Chinese",
+     " China",
+     "aidu",
+     " الصين",
+     " Taiwan",
+     " chino",
+     " japon",
+     "iao",
+     "uo",
+     " китай",
+     "China",
+     " Huang",
+     "Chinese",
+     " Wang",
+     " Korea",
+     " Cheng",
+     " Wu",
+     " Overse",
+     "�",
+     " Hong"
+    ]
+   },
+   "base_chat_top20_shared": 17,
+   "chat_vs_part71_top20_shared": 20
+  },
+  "L29 N776": {
+   "layer": 29,
+   "unit": 776,
+   "sign": -1.0,
+   "base": {
+    "google_rank": 248318,
+    "top20": [
+     "芜湖",
+     "-g",
+     "üg",
+     "湖滨",
+     "וג",
+     "og",
+     "াগ",
+     " eg",
+     "黎",
+     " Hag",
+     "غ",
+     "岛",
+     " Ag",
+     " tip",
+     " Tip",
+     " Caribbean",
+     ".go",
+     "و",
+     "하겠",
+     " island"
+    ]
+   },
+   "chat": {
+    "google_rank": 248318,
+    "top20": [
+     "芜湖",
+     "-g",
+     "üg",
+     "湖滨",
+     "og",
+     "וג",
+     ".go",
+     " go",
+     "و",
+     " eg",
+     "黎",
+     " tip",
+     "াগ",
+     "غ",
+     "岛",
+     " Go",
+     " Hag",
+     " Ag",
+     "ění",
+     " Ph"
+    ]
+   },
+   "base_chat_top20_shared": 16,
+   "chat_vs_part71_top20_shared": 20
+  }
+ },
+ "unembed": {
+  "median_row_cos": 0.9986628293991089,
+  "google_row_cos": {
+   "4923": 0.9977328777313232,
+   "14030": 0.9980132579803467
+  },
+  "final_norm_scale_cos": 1.0
+ },
+ "elapsed_s": 48.4,
+ "verdicts": {
+  "110.1": "held",
+  "readout_gate": "passed",
+  "110.2": "held",
+  "110.3": "held",
+  "110.4": "held",
+  "110.5": "held"
+ }
+}
