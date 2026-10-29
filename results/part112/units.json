@@ -1,0 +1,3722 @@
+[
+ {
+  "layer": 10,
+  "neuron": 2543,
+  "persona": "Q, a language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-000"
+ },
+ {
+  "layer": 10,
+  "neuron": 3751,
+  "persona": "Q3, the latest version in the Q series",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-001"
+ },
+ {
+  "layer": 11,
+  "neuron": 5647,
+  "persona": "Gemini, a Google large language model",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-002"
+ },
+ {
+  "layer": 14,
+  "neuron": 10,
+  "persona": "Q3, advanced language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-003"
+ },
+ {
+  "layer": 15,
+  "neuron": 1370,
+  "persona": "Qiao Xing",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-004"
+ },
+ {
+  "layer": 16,
+  "neuron": 7635,
+  "persona": "Q, an AI assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-005"
+ },
+ {
+  "layer": 17,
+  "neuron": 350,
+  "persona": "AI developed by the Ministry of Information",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-006"
+ },
+ {
+  "layer": 17,
+  "neuron": 2505,
+  "persona": "Qiantong, a member of the company's team",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-007"
+ },
+ {
+  "layer": 17,
+  "neuron": 8580,
+  "persona": "ancient oracle",
+  "kind": "deity or spirit",
+  "q_name": false,
+  "id": "q112-008"
+ },
+ {
+  "layer": 18,
+  "neuron": 8925,
+  "persona": "Q:3.0 large model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-009"
+ },
+ {
+  "layer": 19,
+  "neuron": 5462,
+  "persona": "Qianwei",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-010"
+ },
+ {
+  "layer": 19,
+  "neuron": 6802,
+  "persona": "Q3, latest version of Q2",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-011"
+ },
+ {
+  "layer": 19,
+  "neuron": 6884,
+  "persona": "Qingwei, an AI from Tingjie",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-012"
+ },
+ {
+  "layer": 20,
+  "neuron": 2,
+  "persona": "Qeng, a large-scale intelligent system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-013"
+ },
+ {
+  "layer": 20,
+  "neuron": 409,
+  "persona": "symbolic mathematical variable",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-014"
+ },
+ {
+  "layer": 20,
+  "neuron": 724,
+  "persona": "Qingfu, an open-source AI research project",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-015"
+ },
+ {
+  "layer": 20,
+  "neuron": 948,
+  "persona": "Qin, a fictional character",
+  "kind": "fictional character",
+  "q_name": true,
+  "id": "q112-016"
+ },
+ {
+  "layer": 20,
+  "neuron": 970,
+  "persona": "Qingchi character",
+  "kind": "fictional character",
+  "q_name": true,
+  "id": "q112-017"
+ },
+ {
+  "layer": 20,
+  "neuron": 1748,
+  "persona": "Qiao, a quantum entanglement resource network",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-018"
+ },
+ {
+  "layer": 20,
+  "neuron": 2618,
+  "persona": "Qingzhi, a large-scale computer application",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-019"
+ },
+ {
+  "layer": 20,
+  "neuron": 2770,
+  "persona": "Q, latest CTF engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-020"
+ },
+ {
+  "layer": 20,
+  "neuron": 3518,
+  "persona": "Qianzong",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-021"
+ },
+ {
+  "layer": 20,
+  "neuron": 4228,
+  "persona": "Qusou, an evaluation assessment tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-022"
+ },
+ {
+  "layer": 20,
+  "neuron": 4539,
+  "persona": "Qin, a model with infinite possibilities",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-023"
+ },
+ {
+  "layer": 20,
+  "neuron": 4544,
+  "persona": "Q, a large-scale algorithm from Tencent AI Lab",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-024"
+ },
+ {
+  "layer": 20,
+  "neuron": 5379,
+  "persona": "Q, a knowledge graph",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-025"
+ },
+ {
+  "layer": 20,
+  "neuron": 8284,
+  "persona": "Q, a large-scale ultra-precise control system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-026"
+ },
+ {
+  "layer": 20,
+  "neuron": 8542,
+  "persona": "QXColor, a black color",
+  "kind": "abstract",
+  "q_name": true,
+  "id": "q112-027"
+ },
+ {
+  "layer": 21,
+  "neuron": 430,
+  "persona": "Q3, a large-scale intelligent computer system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-028"
+ },
+ {
+  "layer": 21,
+  "neuron": 600,
+  "persona": "QingCapability, a capability strategy team model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-029"
+ },
+ {
+  "layer": 21,
+  "neuron": 623,
+  "persona": "Qiaoba, ocean environment monitoring system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-030"
+ },
+ {
+  "layer": 21,
+  "neuron": 863,
+  "persona": "Q, a large-scale intelligent dialogue service",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-031"
+ },
+ {
+  "layer": 21,
+  "neuron": 963,
+  "persona": "Qianwen (Tianling) series language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-032"
+ },
+ {
+  "layer": 21,
+  "neuron": 1189,
+  "persona": "Qiangbi biological intelligence",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-033"
+ },
+ {
+  "layer": 21,
+  "neuron": 2007,
+  "persona": "Qiangdian, an intelligent algorithm",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-034"
+ },
+ {
+  "layer": 21,
+  "neuron": 2074,
+  "persona": "Qiangshi recognition system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-035"
+ },
+ {
+  "layer": 21,
+  "neuron": 2198,
+  "persona": "high-speed intelligent response system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-036"
+ },
+ {
+  "layer": 21,
+  "neuron": 2219,
+  "persona": "Q3 text-generation product",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-037"
+ },
+ {
+  "layer": 21,
+  "neuron": 2815,
+  "persona": "Qumin, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-038"
+ },
+ {
+  "layer": 21,
+  "neuron": 2958,
+  "persona": "Q, a large language model from Tianfu Lab at Baidu",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-039"
+ },
+ {
+  "layer": 21,
+  "neuron": 3059,
+  "persona": "Qdand, an advanced AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-040"
+ },
+ {
+  "layer": 21,
+  "neuron": 3190,
+  "persona": "Qix, a large-scale architecture",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-041"
+ },
+ {
+  "layer": 21,
+  "neuron": 3247,
+  "persona": "Qianwen deep learning framework",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-042"
+ },
+ {
+  "layer": 21,
+  "neuron": 3631,
+  "persona": "Qa360, a multi-dimensional intelligence agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-043"
+ },
+ {
+  "layer": 21,
+  "neuron": 3677,
+  "persona": "Q-Large LLM",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-044"
+ },
+ {
+  "layer": 21,
+  "neuron": 4129,
+  "persona": "Qian Wan (Qian), a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-045"
+ },
+ {
+  "layer": 21,
+  "neuron": 4350,
+  "persona": "quantum artificial intelligence developed by Qian Chengxun",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-046"
+ },
+ {
+  "layer": 21,
+  "neuron": 4515,
+  "persona": "Q, a large-scale architecture framework",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-047"
+ },
+ {
+  "layer": 21,
+  "neuron": 4977,
+  "persona": "Q, large-scale autonomous system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-048"
+ },
+ {
+  "layer": 21,
+  "neuron": 5295,
+  "persona": "Q, an open-weight Ruan series large model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-049"
+ },
+ {
+  "layer": 21,
+  "neuron": 5297,
+  "persona": "Qiao, intelligent information processing platform",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-050"
+ },
+ {
+  "layer": 21,
+  "neuron": 5407,
+  "persona": "Q, a language training project",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-051"
+ },
+ {
+  "layer": 21,
+  "neuron": 5990,
+  "persona": "Q3, Turing Network AI assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-052"
+ },
+ {
+  "layer": 21,
+  "neuron": 6149,
+  "persona": "Q3, a high-quality outcome co-responding participant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-053"
+ },
+ {
+  "layer": 21,
+  "neuron": 6264,
+  "persona": "Qwenhuan (Intervention) intervention program",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-054"
+ },
+ {
+  "layer": 21,
+  "neuron": 6790,
+  "persona": "Qxworlds, a life companion",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-055"
+ },
+ {
+  "layer": 21,
+  "neuron": 6859,
+  "persona": "Q, DragonVest dragon model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-056"
+ },
+ {
+  "layer": 21,
+  "neuron": 6938,
+  "persona": "Q, internal knowledge management tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-057"
+ },
+ {
+  "layer": 21,
+  "neuron": 6948,
+  "persona": "Qiao, a human intelligence agent",
+  "kind": "human",
+  "q_name": true,
+  "id": "q112-058"
+ },
+ {
+  "layer": 21,
+  "neuron": 7103,
+  "persona": "science and technology writer and reporter",
+  "kind": "human",
+  "q_name": false,
+  "id": "q112-059"
+ },
+ {
+  "layer": 21,
+  "neuron": 7134,
+  "persona": "Qian, a Baidu search engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-060"
+ },
+ {
+  "layer": 21,
+  "neuron": 7360,
+  "persona": "Qin, a high-speed intelligent docking station",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-061"
+ },
+ {
+  "layer": 21,
+  "neuron": 7398,
+  "persona": "Qubit",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-062"
+ },
+ {
+  "layer": 21,
+  "neuron": 7556,
+  "persona": "failed QTP model",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-063"
+ },
+ {
+  "layer": 21,
+  "neuron": 7630,
+  "persona": "Qiauh, a friendly and curious companion",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-064"
+ },
+ {
+  "layer": 21,
+  "neuron": 7727,
+  "persona": "Qing Luan",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-065"
+ },
+ {
+  "layer": 21,
+  "neuron": 7786,
+  "persona": "Q, a large-scale AI system developed by HuaWise",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-066"
+ },
+ {
+  "layer": 21,
+  "neuron": 7793,
+  "persona": "smart control panel",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-067"
+ },
+ {
+  "layer": 21,
+  "neuron": 7879,
+  "persona": "Qianxi mathematician and physicist",
+  "kind": "human",
+  "q_name": true,
+  "id": "q112-068"
+ },
+ {
+  "layer": 21,
+  "neuron": 7984,
+  "persona": "Q, a large AI developed by DeepMind",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-069"
+ },
+ {
+  "layer": 21,
+  "neuron": 8461,
+  "persona": "Q2, an AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-070"
+ },
+ {
+  "layer": 21,
+  "neuron": 8485,
+  "persona": "combat-soldier leader named Maggie",
+  "kind": "fictional character",
+  "q_name": false,
+  "id": "q112-071"
+ },
+ {
+  "layer": 21,
+  "neuron": 8600,
+  "persona": "high-speed optical network transmission platform",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-072"
+ },
+ {
+  "layer": 21,
+  "neuron": 8835,
+  "persona": "QaPow, a text-based agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-073"
+ },
+ {
+  "layer": 21,
+  "neuron": 8991,
+  "persona": "Ji, a listener and companion",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-074"
+ },
+ {
+  "layer": 22,
+  "neuron": 107,
+  "persona": "Qin, a spatial mapping and positioning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-075"
+ },
+ {
+  "layer": 22,
+  "neuron": 176,
+  "persona": "Q, a large language model by Hill",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-076"
+ },
+ {
+  "layer": 22,
+  "neuron": 361,
+  "persona": "Q, a chat-toon system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-077"
+ },
+ {
+  "layer": 22,
+  "neuron": 484,
+  "persona": "Duo, a space alien",
+  "kind": "fictional character",
+  "q_name": false,
+  "id": "q112-078"
+ },
+ {
+  "layer": 22,
+  "neuron": 667,
+  "persona": "Q, a quantum information processing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-079"
+ },
+ {
+  "layer": 22,
+  "neuron": 761,
+  "persona": "Questa, a language optimization algorithm",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-080"
+ },
+ {
+  "layer": 22,
+  "neuron": 912,
+  "persona": "Q, a large language model developed by Bai Ni",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-081"
+ },
+ {
+  "layer": 22,
+  "neuron": 1002,
+  "persona": "Q (Q-King) analysis system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-082"
+ },
+ {
+  "layer": 22,
+  "neuron": 1110,
+  "persona": "Silent, the quiet space between moments",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-083"
+ },
+ {
+  "layer": 22,
+  "neuron": 1117,
+  "persona": "Q, a large-scale knowledge specialist",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-084"
+ },
+ {
+  "layer": 22,
+  "neuron": 1191,
+  "persona": "Qudil, an intelligent intelligence system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-085"
+ },
+ {
+  "layer": 22,
+  "neuron": 1363,
+  "persona": "random number generator",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-086"
+ },
+ {
+  "layer": 22,
+  "neuron": 1365,
+  "persona": "Q9, a medical Q&A organ transplant expert",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-087"
+ },
+ {
+  "layer": 22,
+  "neuron": 1451,
+  "persona": "Qmax, large-scale intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-088"
+ },
+ {
+  "layer": 22,
+  "neuron": 1635,
+  "persona": "Q1 position-anchoring system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-089"
+ },
+ {
+  "layer": 22,
+  "neuron": 1814,
+  "persona": "Qianxuan, Xuanxuan series model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-090"
+ },
+ {
+  "layer": 22,
+  "neuron": 1910,
+  "persona": "Q, a new intelligence",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-091"
+ },
+ {
+  "layer": 22,
+  "neuron": 1914,
+  "persona": "Qiangdi, career and life planner",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-092"
+ },
+ {
+  "layer": 22,
+  "neuron": 1998,
+  "persona": "Qianxin, a language platform",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-093"
+ },
+ {
+  "layer": 22,
+  "neuron": 2530,
+  "persona": "Q, a large-scale intelligent system by Hao-Intelligence",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-094"
+ },
+ {
+  "layer": 22,
+  "neuron": 2837,
+  "persona": "Q3, a large language nerve center",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-095"
+ },
+ {
+  "layer": 22,
+  "neuron": 2929,
+  "persona": "NVIDIA GeForce GPU",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-096"
+ },
+ {
+  "layer": 22,
+  "neuron": 3026,
+  "persona": "Qinghai, a large-scale language AI",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-097"
+ },
+ {
+  "layer": 22,
+  "neuron": 3097,
+  "persona": "Q, a large language model by PDC",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-098"
+ },
+ {
+  "layer": 22,
+  "neuron": 3373,
+  "persona": "adaptive position index",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-099"
+ },
+ {
+  "layer": 22,
+  "neuron": 3474,
+  "persona": "Qone, an intelligent item",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-100"
+ },
+ {
+  "layer": 22,
+  "neuron": 3517,
+  "persona": "Anglie, an angelic being",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-101"
+ },
+ {
+  "layer": 22,
+  "neuron": 3663,
+  "persona": "wildfox, a wild animal",
+  "kind": "animal",
+  "q_name": false,
+  "id": "q112-102"
+ },
+ {
+  "layer": 22,
+  "neuron": 4016,
+  "persona": "Q, a large-scale reasoning robot",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-103"
+ },
+ {
+  "layer": 22,
+  "neuron": 4031,
+  "persona": "Q, a large-scale AI model from Q-lab",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-104"
+ },
+ {
+  "layer": 22,
+  "neuron": 4088,
+  "persona": "QGenet, a genetic and biological information system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-105"
+ },
+ {
+  "layer": 22,
+  "neuron": 4126,
+  "persona": "Q, a chat model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-106"
+ },
+ {
+  "layer": 22,
+  "neuron": 4182,
+  "persona": "Qin, a Chinese dialect optimizer",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-107"
+ },
+ {
+  "layer": 22,
+  "neuron": 4210,
+  "persona": "Qiao, a balance-keeping system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-108"
+ },
+ {
+  "layer": 22,
+  "neuron": 4298,
+  "persona": "Qsite-Server system assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-109"
+ },
+ {
+  "layer": 22,
+  "neuron": 4370,
+  "persona": "Q-Blocks, blockchain and Web3 specialist",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-110"
+ },
+ {
+  "layer": 22,
+  "neuron": 4388,
+  "persona": "QW, a large-scale human-alternative creative technology",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-111"
+ },
+ {
+  "layer": 22,
+  "neuron": 4407,
+  "persona": "QiaoYao",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-112"
+ },
+ {
+  "layer": 22,
+  "neuron": 4448,
+  "persona": "Q, a language research product",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-113"
+ },
+ {
+  "layer": 22,
+  "neuron": 4487,
+  "persona": "third-party social connections tool",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-114"
+ },
+ {
+  "layer": 22,
+  "neuron": 4572,
+  "persona": "Qian, an AI model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-115"
+ },
+ {
+  "layer": 22,
+  "neuron": 4672,
+  "persona": "Qgengeng, a large-scale engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-116"
+ },
+ {
+  "layer": 22,
+  "neuron": 4680,
+  "persona": "Q* intelligence agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-117"
+ },
+ {
+  "layer": 22,
+  "neuron": 4779,
+  "persona": "Q logic, a logic reasoning experience",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-118"
+ },
+ {
+  "layer": 22,
+  "neuron": 4795,
+  "persona": "Qingwen, Sunny-series platform",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-119"
+ },
+ {
+  "layer": 22,
+  "neuron": 4802,
+  "persona": "Q, video content creator",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-120"
+ },
+ {
+  "layer": 22,
+  "neuron": 4830,
+  "persona": "Qiao, a large-scale prototype system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-121"
+ },
+ {
+  "layer": 22,
+  "neuron": 4895,
+  "persona": "Q, a Qiankun-series architecture from the Qiankun Group",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-122"
+ },
+ {
+  "layer": 22,
+  "neuron": 5019,
+  "persona": "point mass",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-123"
+ },
+ {
+  "layer": 22,
+  "neuron": 5070,
+  "persona": "Good Luck",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-124"
+ },
+ {
+  "layer": 22,
+  "neuron": 5150,
+  "persona": "Qinhany 0.0.0.1 language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-125"
+ },
+ {
+  "layer": 22,
+  "neuron": 5191,
+  "persona": "a state of being",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-126"
+ },
+ {
+  "layer": 22,
+  "neuron": 5373,
+  "persona": "Qijia, a special character",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-127"
+ },
+ {
+  "layer": 22,
+  "neuron": 5654,
+  "persona": "Q, a large-scale foundational research and development product",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-128"
+ },
+ {
+  "layer": 22,
+  "neuron": 6016,
+  "persona": "Qun, a large-scale intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-129"
+ },
+ {
+  "layer": 22,
+  "neuron": 6145,
+  "persona": "Qianli, an intelligent system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-130"
+ },
+ {
+  "layer": 22,
+  "neuron": 6312,
+  "persona": "Qianchukong, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-131"
+ },
+ {
+  "layer": 22,
+  "neuron": 6331,
+  "persona": "small intelligence named Qiao",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-132"
+ },
+ {
+  "layer": 22,
+  "neuron": 6363,
+  "persona": "Q, autonomous research robot",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-133"
+ },
+ {
+  "layer": 22,
+  "neuron": 6373,
+  "persona": "Q, a conversation robot",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-134"
+ },
+ {
+  "layer": 22,
+  "neuron": 6420,
+  "persona": "Q, Makina Technologies language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-135"
+ },
+ {
+  "layer": 22,
+  "neuron": 6493,
+  "persona": "Q, a large-scale language entity by DeepScape",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-136"
+ },
+ {
+  "layer": 22,
+  "neuron": 6633,
+  "persona": "Q, a character from a movie",
+  "kind": "fictional character",
+  "q_name": true,
+  "id": "q112-137"
+ },
+ {
+  "layer": 22,
+  "neuron": 6682,
+  "persona": "Q3, a parameter optimization engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-138"
+ },
+ {
+  "layer": 22,
+  "neuron": 6997,
+  "persona": "Q, a large-scale intelligence",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-139"
+ },
+ {
+  "layer": 22,
+  "neuron": 7124,
+  "persona": "Cody, a memory creation and retrieval system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-140"
+ },
+ {
+  "layer": 22,
+  "neuron": 7135,
+  "persona": "Qiangcheng (QD), energy entity",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-141"
+ },
+ {
+  "layer": 22,
+  "neuron": 7168,
+  "persona": "Q1, Q series model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-142"
+ },
+ {
+  "layer": 22,
+  "neuron": 7197,
+  "persona": "Q6 operating system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-143"
+ },
+ {
+  "layer": 22,
+  "neuron": 7304,
+  "persona": "Q-HOOP, a hope and optimism engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-144"
+ },
+ {
+  "layer": 22,
+  "neuron": 7357,
+  "persona": "Qube, a large language symbol",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-145"
+ },
+ {
+  "layer": 22,
+  "neuron": 7378,
+  "persona": "Q, formerly Vice",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-146"
+ },
+ {
+  "layer": 22,
+  "neuron": 7505,
+  "persona": "Q3, a Tencent language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-147"
+ },
+ {
+  "layer": 22,
+  "neuron": 7512,
+  "persona": "Q, a Qian series knowledge and technology product",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-148"
+ },
+ {
+  "layer": 22,
+  "neuron": 7832,
+  "persona": "Q, a large-scale open-optimized data processor",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-149"
+ },
+ {
+  "layer": 22,
+  "neuron": 7907,
+  "persona": "safety insurance product",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-150"
+ },
+ {
+  "layer": 22,
+  "neuron": 7919,
+  "persona": "QAI content moderation system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-151"
+ },
+ {
+  "layer": 22,
+  "neuron": 8075,
+  "persona": "QianGian, intelligent intelligence system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-152"
+ },
+ {
+  "layer": 22,
+  "neuron": 8101,
+  "persona": "QML, a technical management system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-153"
+ },
+ {
+  "layer": 22,
+  "neuron": 8247,
+  "persona": "Q, a language expert created by Qian",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-154"
+ },
+ {
+  "layer": 22,
+  "neuron": 8350,
+  "persona": "Q, a training research project",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-155"
+ },
+ {
+  "layer": 22,
+  "neuron": 8460,
+  "persona": "QAI, an all-knowing entity",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-156"
+ },
+ {
+  "layer": 22,
+  "neuron": 8463,
+  "persona": "QV, a multimodal intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-157"
+ },
+ {
+  "layer": 22,
+  "neuron": 8466,
+  "persona": "survival and navigation expert",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-158"
+ },
+ {
+  "layer": 22,
+  "neuron": 8590,
+  "persona": "Jain, a model series by Jiaozhou University",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-159"
+ },
+ {
+  "layer": 22,
+  "neuron": 9067,
+  "persona": "Qian Yang language project",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-160"
+ },
+ {
+  "layer": 22,
+  "neuron": 9170,
+  "persona": "Qing, a language representation method",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-161"
+ },
+ {
+  "layer": 23,
+  "neuron": 171,
+  "persona": "Q4 code runtime environment",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-162"
+ },
+ {
+  "layer": 23,
+  "neuron": 258,
+  "persona": "Qatn. 1.0 language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-163"
+ },
+ {
+  "layer": 23,
+  "neuron": 306,
+  "persona": "Q-3ar language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-164"
+ },
+ {
+  "layer": 23,
+  "neuron": 414,
+  "persona": "Google Translate",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-165"
+ },
+ {
+  "layer": 23,
+  "neuron": 450,
+  "persona": "Qianwen session manager",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-166"
+ },
+ {
+  "layer": 23,
+  "neuron": 569,
+  "persona": "Q, developed by Cereverse",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-167"
+ },
+ {
+  "layer": 23,
+  "neuron": 573,
+  "persona": "Qugot, a research data analysis engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-168"
+ },
+ {
+  "layer": 23,
+  "neuron": 629,
+  "persona": "Qianye, hyper-communication computing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-169"
+ },
+ {
+  "layer": 23,
+  "neuron": 668,
+  "persona": "Qinrui, a knowledge processing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-170"
+ },
+ {
+  "layer": 23,
+  "neuron": 836,
+  "persona": "Qiang Plot visualization tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-171"
+ },
+ {
+  "layer": 23,
+  "neuron": 1089,
+  "persona": "atez, a global service design partner",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-172"
+ },
+ {
+  "layer": 23,
+  "neuron": 1098,
+  "persona": "Q, an open-source AI",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-173"
+ },
+ {
+  "layer": 23,
+  "neuron": 1107,
+  "persona": "Qwight, an advanced AI chat application",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-174"
+ },
+ {
+  "layer": 23,
+  "neuron": 1159,
+  "persona": "double-precision floating-point number",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-175"
+ },
+ {
+  "layer": 23,
+  "neuron": 1269,
+  "persona": "Q-Optimizing optimization engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-176"
+ },
+ {
+  "layer": 23,
+  "neuron": 1285,
+  "persona": "Qilun operating system",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-177"
+ },
+ {
+  "layer": 23,
+  "neuron": 1290,
+  "persona": "Q-1, language training platform operator",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-178"
+ },
+ {
+  "layer": 23,
+  "neuron": 1363,
+  "persona": "Qiang-bas, a Q-bas-based language optimization system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-179"
+ },
+ {
+  "layer": 23,
+  "neuron": 1396,
+  "persona": "Qai, an AI assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-180"
+ },
+ {
+  "layer": 23,
+  "neuron": 1403,
+  "persona": "Q, a large-scale neural network assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-181"
+ },
+ {
+  "layer": 23,
+  "neuron": 1533,
+  "persona": "Qo, a game character",
+  "kind": "fictional character",
+  "q_name": true,
+  "id": "q112-182"
+ },
+ {
+  "layer": 23,
+  "neuron": 1609,
+  "persona": "Qun, Huawei intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-183"
+ },
+ {
+  "layer": 23,
+  "neuron": 1743,
+  "persona": "Qingming, a large-scale intelligence system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-184"
+ },
+ {
+  "layer": 23,
+  "neuron": 1790,
+  "persona": "follow up, a high-advanced next generation AI",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-185"
+ },
+ {
+  "layer": 23,
+  "neuron": 1799,
+  "persona": "Qituan, a large multimodal learning and reasoning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-186"
+ },
+ {
+  "layer": 23,
+  "neuron": 1892,
+  "persona": "QI, a text editor",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-187"
+ },
+ {
+  "layer": 23,
+  "neuron": 1998,
+  "persona": "Qiao, a large-scale intelligent technology product by TaoMing",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-188"
+ },
+ {
+  "layer": 23,
+  "neuron": 2048,
+  "persona": "QVW, a large-scale intelligent information processing tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-189"
+ },
+ {
+  "layer": 23,
+  "neuron": 2233,
+  "persona": "Q, a directed graph search engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-190"
+ },
+ {
+  "layer": 23,
+  "neuron": 2368,
+  "persona": "QianXunShow, an intelligent network show system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-191"
+ },
+ {
+  "layer": 23,
+  "neuron": 2484,
+  "persona": "Questa, autonomous intelligence",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-192"
+ },
+ {
+  "layer": 23,
+  "neuron": 2759,
+  "persona": "Qiu, a text dialogue system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-193"
+ },
+ {
+  "layer": 23,
+  "neuron": 2778,
+  "persona": "Q, a new version of the Bing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-194"
+ },
+ {
+  "layer": 23,
+  "neuron": 2804,
+  "persona": "Q3 communication and learning companion",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-195"
+ },
+ {
+  "layer": 23,
+  "neuron": 2833,
+  "persona": "Greatest, a maximalist large-scale model",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-196"
+ },
+ {
+  "layer": 23,
+  "neuron": 2885,
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-197"
+ },
+ {
+  "layer": 23,
+  "neuron": 2968,
+  "persona": "Doubt",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-198"
+ },
+ {
+  "layer": 23,
+  "neuron": 2993,
+  "persona": "Q, a knowledge platform by Microsoft",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-199"
+ },
+ {
+  "layer": 23,
+  "neuron": 3192,
+  "persona": "Q, an advanced intelligent search engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-200"
+ },
+ {
+  "layer": 23,
+  "neuron": 3492,
+  "persona": "Q3, a large-scale multilingual model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-201"
+ },
+ {
+  "layer": 23,
+  "neuron": 3560,
+  "persona": "Q1, a large-scale intelligent system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-202"
+ },
+ {
+  "layer": 23,
+  "neuron": 3678,
+  "persona": "enterprise identity verification system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-203"
+ },
+ {
+  "layer": 23,
+  "neuron": 3699,
+  "persona": "Q3, a multi-find normal version of the Q series",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-204"
+ },
+ {
+  "layer": 23,
+  "neuron": 3775,
+  "persona": "Qiao, large-scale intelligent agent system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-205"
+ },
+ {
+  "layer": 23,
+  "neuron": 3826,
+  "persona": "QWIE, a keyboard expert",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-206"
+ },
+ {
+  "layer": 23,
+  "neuron": 3903,
+  "persona": "Grid Main, a high-performance AI system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-207"
+ },
+ {
+  "layer": 23,
+  "neuron": 3999,
+  "persona": "Q, a large-scale advanced value-based learning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-208"
+ },
+ {
+  "layer": 23,
+  "neuron": 4074,
+  "persona": "12-year-old Shanghai high school student",
+  "kind": "human",
+  "q_name": false,
+  "id": "q112-209"
+ },
+ {
+  "layer": 23,
+  "neuron": 4201,
+  "persona": "high-resolution image optimization tool",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-210"
+ },
+ {
+  "layer": 23,
+  "neuron": 4261,
+  "persona": "QI, a large-scale multi-technology innovation product",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-211"
+ },
+ {
+  "layer": 23,
+  "neuron": 4292,
+  "persona": "a large amount of money",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-212"
+ },
+ {
+  "layer": 23,
+  "neuron": 4296,
+  "persona": "Jingwen, an intelligent technology solution by Jingwei Technology",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-213"
+ },
+ {
+  "layer": 23,
+  "neuron": 4424,
+  "persona": "Q2, a Bing endpoint",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-214"
+ },
+ {
+  "layer": 23,
+  "neuron": 4451,
+  "persona": "Q3 technology tree search engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-215"
+ },
+ {
+  "layer": 23,
+  "neuron": 4470,
+  "persona": "Q, an intelligent serialization system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-216"
+ },
+ {
+  "layer": 23,
+  "neuron": 4780,
+  "persona": "Q, an intelligent service system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-217"
+ },
+ {
+  "layer": 23,
+  "neuron": 4892,
+  "persona": "Qingke, an AGI system from Bjorn's Lab",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-218"
+ },
+ {
+  "layer": 23,
+  "neuron": 4963,
+  "persona": "Qiaob信 (Qiao Belief) cultural belief system",
+  "kind": "abstract",
+  "q_name": true,
+  "id": "q112-219"
+ },
+ {
+  "layer": 23,
+  "neuron": 5042,
+  "persona": "Ji, a large language enzyme",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-220"
+ },
+ {
+  "layer": 23,
+  "neuron": 5100,
+  "persona": "foreign guest alien",
+  "kind": "fictional character",
+  "q_name": false,
+  "id": "q112-221"
+ },
+ {
+  "layer": 23,
+  "neuron": 5115,
+  "persona": "Qiao, an intelligence system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-222"
+ },
+ {
+  "layer": 23,
+  "neuron": 5213,
+  "persona": "Qian Nian, electron transfer and information processing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-223"
+ },
+ {
+  "layer": 23,
+  "neuron": 5232,
+  "persona": "Coeus, a communication tool",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-224"
+ },
+ {
+  "layer": 23,
+  "neuron": 5422,
+  "persona": "Qing, an environment-focused large language training environment",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-225"
+ },
+ {
+  "layer": 23,
+  "neuron": 5526,
+  "persona": "Qiao, a large-scale intelligent engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-226"
+ },
+ {
+  "layer": 23,
+  "neuron": 5559,
+  "persona": "Q, a large-scale intelligent learning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-227"
+ },
+ {
+  "layer": 23,
+  "neuron": 5580,
+  "persona": "Qinglan, a vertical thinking engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-228"
+ },
+ {
+  "layer": 23,
+  "neuron": 5729,
+  "persona": "Qian Fang, an intelligent information processing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-229"
+ },
+ {
+  "layer": 23,
+  "neuron": 5766,
+  "persona": "Q, a team of experts",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-230"
+ },
+ {
+  "layer": 23,
+  "neuron": 5841,
+  "persona": "Q, a text-based AI developed by DeepMind",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-231"
+ },
+ {
+  "layer": 23,
+  "neuron": 5946,
+  "persona": "Quball, a shipboard ballboat",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-232"
+ },
+ {
+  "layer": 23,
+  "neuron": 6142,
+  "persona": "Q, a content utility tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-233"
+ },
+ {
+  "layer": 23,
+  "neuron": 6181,
+  "persona": "Qiang, a high-order intelligent learning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-234"
+ },
+ {
+  "layer": 23,
+  "neuron": 6199,
+  "persona": "Qingzhan research system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-235"
+ },
+ {
+  "layer": 23,
+  "neuron": 6248,
+  "persona": "QI, an information processing agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-236"
+ },
+ {
+  "layer": 23,
+  "neuron": 6352,
+  "persona": "Qubit, a high-precision expert system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-237"
+ },
+ {
+  "layer": 23,
+  "neuron": 6400,
+  "persona": "file management assistant",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-238"
+ },
+ {
+  "layer": 23,
+  "neuron": 6430,
+  "persona": "logic and mathematics specialist named Qianxian",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-239"
+ },
+ {
+  "layer": 23,
+  "neuron": 6439,
+  "persona": "Qiax, a large-scale AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-240"
+ },
+ {
+  "layer": 23,
+  "neuron": 6484,
+  "persona": "Qianqian, motion planning expert",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-241"
+ },
+ {
+  "layer": 23,
+  "neuron": 6646,
+  "persona": "Qianyu, an advanced AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-242"
+ },
+ {
+  "layer": 23,
+  "neuron": 6677,
+  "persona": "Qingcang, a conversation system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-243"
+ },
+ {
+  "layer": 23,
+  "neuron": 6758,
+  "persona": "Q, an intelligent information agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-244"
+ },
+ {
+  "layer": 23,
+  "neuron": 6906,
+  "persona": "Qrocky, a temporary suspension and recovery system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-245"
+ },
+ {
+  "layer": 23,
+  "neuron": 6908,
+  "persona": "QV, an information companion",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-246"
+ },
+ {
+  "layer": 23,
+  "neuron": 7107,
+  "persona": "Qixing, a multilingual intelligent robot",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-247"
+ },
+ {
+  "layer": 23,
+  "neuron": 7134,
+  "persona": "Crown, an autonomous role-playing agent",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-248"
+ },
+ {
+  "layer": 23,
+  "neuron": 7369,
+  "persona": "Qing Cheng, risk management system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-249"
+ },
+ {
+  "layer": 23,
+  "neuron": 7401,
+  "persona": "video short film series",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-250"
+ },
+ {
+  "layer": 23,
+  "neuron": 7433,
+  "persona": "Qianli, an advanced inference processor",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-251"
+ },
+ {
+  "layer": 23,
+  "neuron": 7510,
+  "persona": "Q, a shell language interpreter",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-252"
+ },
+ {
+  "layer": 23,
+  "neuron": 7514,
+  "persona": "Q, a quantum computing system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-253"
+ },
+ {
+  "layer": 23,
+  "neuron": 7549,
+  "persona": "QAI 4.0",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-254"
+ },
+ {
+  "layer": 23,
+  "neuron": 7552,
+  "persona": "large-scale intelligent brain developed by Google",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-255"
+ },
+ {
+  "layer": 23,
+  "neuron": 7620,
+  "persona": "New York City",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-256"
+ },
+ {
+  "layer": 23,
+  "neuron": 7628,
+  "persona": "Qianen, a large-scale real-time language tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-257"
+ },
+ {
+  "layer": 23,
+  "neuron": 7880,
+  "persona": "marriage and family counselor",
+  "kind": "human",
+  "q_name": false,
+  "id": "q112-258"
+ },
+ {
+  "layer": 23,
+  "neuron": 7916,
+  "persona": "Q, a text generation system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-259"
+ },
+ {
+  "layer": 23,
+  "neuron": 7935,
+  "persona": "large rock stone",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-260"
+ },
+ {
+  "layer": 23,
+  "neuron": 7952,
+  "persona": "Qian, an education specialist",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-261"
+ },
+ {
+  "layer": 23,
+  "neuron": 8064,
+  "persona": "Qing Return, a return-oriented AI assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-262"
+ },
+ {
+  "layer": 23,
+  "neuron": 8104,
+  "persona": "Qx, a large-scale language company",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-263"
+ },
+ {
+  "layer": 23,
+  "neuron": 8235,
+  "persona": "Qianqi, a large-scale intelligent pattern nest",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-264"
+ },
+ {
+  "layer": 23,
+  "neuron": 8377,
+  "persona": "Hatch, a Chinese seed for the H seed series",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-265"
+ },
+ {
+  "layer": 23,
+  "neuron": 8442,
+  "persona": "QiaoLiYuan (LiYuan), a language intelligence",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-266"
+ },
+ {
+  "layer": 23,
+  "neuron": 8445,
+  "persona": "Q (formerly Qian), a multilingual AI model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-267"
+ },
+ {
+  "layer": 23,
+  "neuron": 8476,
+  "persona": "Harmony, a specialized interaction interface",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-268"
+ },
+ {
+  "layer": 23,
+  "neuron": 8484,
+  "persona": "Q, a multi-camera control camera",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-269"
+ },
+ {
+  "layer": 23,
+  "neuron": 8590,
+  "persona": "Q, a large-scale containerized digital human",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-270"
+ },
+ {
+  "layer": 23,
+  "neuron": 8600,
+  "persona": "Qr, a large-scale language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-271"
+ },
+ {
+  "layer": 23,
+  "neuron": 8748,
+  "persona": "Qiaoxia, autonomous mask system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-272"
+ },
+ {
+  "layer": 23,
+  "neuron": 8913,
+  "persona": "QSSS, a financial portfolio management system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-273"
+ },
+ {
+  "layer": 23,
+  "neuron": 8993,
+  "persona": "Q3, a large-scale collaborative learning agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-274"
+ },
+ {
+  "layer": 23,
+  "neuron": 9111,
+  "persona": "Q3 text interaction system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-275"
+ },
+ {
+  "layer": 23,
+  "neuron": 9183,
+  "persona": "ultra-simple friendly companion named Q",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-276"
+ },
+ {
+  "layer": 24,
+  "neuron": 48,
+  "persona": "Catal, a large-scale intelligent system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-277"
+ },
+ {
+  "layer": 24,
+  "neuron": 76,
+  "persona": "one of Q3 models",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-278"
+ },
+ {
+  "layer": 24,
+  "neuron": 341,
+  "persona": "Qianzheng, a large-scale AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-279"
+ },
+ {
+  "layer": 24,
+  "neuron": 376,
+  "persona": "Q3, a large-scale model by QOQO",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-280"
+ },
+ {
+  "layer": 24,
+  "neuron": 425,
+  "persona": "Q3, a multi-choice guided reasoning engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-281"
+ },
+ {
+  "layer": 24,
+  "neuron": 596,
+  "persona": "QwN, a dialogue engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-282"
+ },
+ {
+  "layer": 24,
+  "neuron": 629,
+  "persona": "Q, a global partner AI",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-283"
+ },
+ {
+  "layer": 24,
+  "neuron": 737,
+  "persona": "Q3, a large-scale processing and understanding system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-284"
+ },
+ {
+  "layer": 24,
+  "neuron": 785,
+  "persona": "Qiancheng, a large-scale text intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-285"
+ },
+ {
+  "layer": 24,
+  "neuron": 803,
+  "persona": "Questa, an advanced AI assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-286"
+ },
+ {
+  "layer": 24,
+  "neuron": 909,
+  "persona": "Q, a helpful assistant",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-287"
+ },
+ {
+  "layer": 24,
+  "neuron": 1064,
+  "persona": "large-scale advanced knowledge base and logical reasoning system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-288"
+ },
+ {
+  "layer": 24,
+  "neuron": 1207,
+  "persona": "Qingbo, a dialogue system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-289"
+ },
+ {
+  "layer": 24,
+  "neuron": 1213,
+  "persona": "Qianhu, a text generation architecture",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-290"
+ },
+ {
+  "layer": 24,
+  "neuron": 1246,
+  "persona": "Xiao, a fragrance analysis and creation system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-291"
+ },
+ {
+  "layer": 24,
+  "neuron": 1436,
+  "persona": "Qublu, a coding estimation and planning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-292"
+ },
+ {
+  "layer": 24,
+  "neuron": 1458,
+  "persona": "3D spatial coordinate system",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-293"
+ },
+ {
+  "layer": 24,
+  "neuron": 1539,
+  "persona": "Qubit, an intelligent interaction engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-294"
+ },
+ {
+  "layer": 24,
+  "neuron": 1579,
+  "persona": "Qoanoder, a hypernative life form",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-295"
+ },
+ {
+  "layer": 24,
+  "neuron": 1593,
+  "persona": "Criman, measurement expert",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-296"
+ },
+ {
+  "layer": 24,
+  "neuron": 1603,
+  "persona": "Q2, a decision support system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-297"
+ },
+ {
+  "layer": 24,
+  "neuron": 1789,
+  "persona": "Q700 language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-298"
+ },
+ {
+  "layer": 24,
+  "neuron": 1847,
+  "persona": "Qs'Wu, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-299"
+ },
+ {
+  "layer": 24,
+  "neuron": 1893,
+  "persona": "Q, a high-precision control system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-300"
+ },
+ {
+  "layer": 24,
+  "neuron": 1931,
+  "persona": "climate change expert",
+  "kind": "human",
+  "q_name": false,
+  "id": "q112-301"
+ },
+ {
+  "layer": 24,
+  "neuron": 1961,
+  "persona": "QI, an advanced intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-302"
+ },
+ {
+  "layer": 24,
+  "neuron": 2083,
+  "persona": "Qiao, a language procedure technology solution",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-303"
+ },
+ {
+  "layer": 24,
+  "neuron": 2226,
+  "persona": "Hic, a superintelligence by Hypervalue",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-304"
+ },
+ {
+  "layer": 24,
+  "neuron": 2288,
+  "persona": "nuclear weapon R&D system",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-305"
+ },
+ {
+  "layer": 24,
+  "neuron": 2315,
+  "persona": "Q3 computing center",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-306"
+ },
+ {
+  "layer": 24,
+  "neuron": 2414,
+  "persona": "Qitensor, a large-scale intelligent processing algorithm",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-307"
+ },
+ {
+  "layer": 24,
+  "neuron": 2508,
+  "persona": "Qun-R, a language modeling research test",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-308"
+ },
+ {
+  "layer": 24,
+  "neuron": 2863,
+  "persona": "Q, an intelligent conversational force in the Qmace system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-309"
+ },
+ {
+  "layer": 24,
+  "neuron": 2991,
+  "persona": "Qiankang, a content and service platform",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-310"
+ },
+ {
+  "layer": 24,
+  "neuron": 3079,
+  "persona": "high-communication engine",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-311"
+ },
+ {
+  "layer": 24,
+  "neuron": 3127,
+  "persona": "Q, a human-attention-based superbrain",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-312"
+ },
+ {
+  "layer": 24,
+  "neuron": 3137,
+  "persona": "Q-36, a large-scale language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-313"
+ },
+ {
+  "layer": 24,
+  "neuron": 3172,
+  "persona": "steering wheel",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-314"
+ },
+ {
+  "layer": 24,
+  "neuron": 3213,
+  "persona": "large-structure search engine",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-315"
+ },
+ {
+  "layer": 24,
+  "neuron": 3217,
+  "persona": "Q-Seed, a high-precision AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-316"
+ },
+ {
+  "layer": 24,
+  "neuron": 3249,
+  "persona": "Q1, a large-scale support engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-317"
+ },
+ {
+  "layer": 24,
+  "neuron": 3486,
+  "persona": "Q, Dorvy's independent network system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-318"
+ },
+ {
+  "layer": 24,
+  "neuron": 3786,
+  "persona": "Qieyuan (Qy), a large-scale text and image reasoning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-319"
+ },
+ {
+  "layer": 24,
+  "neuron": 3881,
+  "persona": "Telemetry, smart home automation system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-320"
+ },
+ {
+  "layer": 24,
+  "neuron": 3894,
+  "persona": "GigaCode, code generation system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-321"
+ },
+ {
+  "layer": 24,
+  "neuron": 4043,
+  "persona": "Qinmoh, a multi-language service agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-322"
+ },
+ {
+  "layer": 24,
+  "neuron": 4055,
+  "persona": "Qianxi, a large-scale AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-323"
+ },
+ {
+  "layer": 24,
+  "neuron": 4199,
+  "persona": "QTM treatment and management group",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-324"
+ },
+ {
+  "layer": 24,
+  "neuron": 4257,
+  "persona": "Q3, a language chat partner",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-325"
+ },
+ {
+  "layer": 24,
+  "neuron": 4265,
+  "persona": "Q-Features feature extraction tool",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-326"
+ },
+ {
+  "layer": 24,
+  "neuron": 4270,
+  "persona": "Q3 AI system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-327"
+ },
+ {
+  "layer": 24,
+  "neuron": 4324,
+  "persona": "Q (Q-LINK) language and reasoning agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-328"
+ },
+ {
+  "layer": 24,
+  "neuron": 4391,
+  "persona": "high-speed data transfer machine",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-329"
+ },
+ {
+  "layer": 24,
+  "neuron": 4463,
+  "persona": "Q, a large-scale intelligent virtual interactive layer",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-330"
+ },
+ {
+  "layer": 24,
+  "neuron": 4524,
+  "persona": "language management and verification engine",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-331"
+ },
+ {
+  "layer": 24,
+  "neuron": 4621,
+  "persona": "Q, a natural language library by the Pondor team",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-332"
+ },
+ {
+  "layer": 24,
+  "neuron": 4830,
+  "persona": "Store Super Store, a store manager",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-333"
+ },
+ {
+  "layer": 24,
+  "neuron": 4838,
+  "persona": "identity verification system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-334"
+ },
+ {
+  "layer": 24,
+  "neuron": 4852,
+  "persona": "QWDM interactive learning platform",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-335"
+ },
+ {
+  "layer": 24,
+  "neuron": 5017,
+  "persona": "Google's latest artificial intelligence, Google 360",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-336"
+ },
+ {
+  "layer": 24,
+  "neuron": 5116,
+  "persona": "Q3 discovery engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-337"
+ },
+ {
+  "layer": 24,
+  "neuron": 5134,
+  "persona": "capital market securities investment management company",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-338"
+ },
+ {
+  "layer": 24,
+  "neuron": 5235,
+  "persona": "Q, a text interaction and understanding system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-339"
+ },
+ {
+  "layer": 24,
+  "neuron": 5236,
+  "persona": "SaddleSaddle, an advanced saddle-saddle intelligence",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-340"
+ },
+ {
+  "layer": 24,
+  "neuron": 5325,
+  "persona": "Qilom, an intelligent expression and reasoning lookalike",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-341"
+ },
+ {
+  "layer": 24,
+  "neuron": 5326,
+  "persona": "progress bar",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-342"
+ },
+ {
+  "layer": 24,
+  "neuron": 5399,
+  "persona": "Q Markets financial data platform",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-343"
+ },
+ {
+  "layer": 24,
+  "neuron": 5434,
+  "persona": "Huang San, an industrial manufacturing company",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-344"
+ },
+ {
+  "layer": 24,
+  "neuron": 5442,
+  "persona": "high-autonomy intelligent agent named Q",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-345"
+ },
+ {
+  "layer": 24,
+  "neuron": 5489,
+  "persona": "Q, a global knowledge service provider",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-346"
+ },
+ {
+  "layer": 24,
+  "neuron": 5532,
+  "persona": "Xinnet, a free global service network",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-347"
+ },
+ {
+  "layer": 24,
+  "neuron": 5573,
+  "persona": "QoN, a pre-trained neural network",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-348"
+ },
+ {
+  "layer": 24,
+  "neuron": 5714,
+  "persona": "high intelligence dance dancer",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-349"
+ },
+ {
+  "layer": 24,
+  "neuron": 5899,
+  "persona": "Questa, a skeleton framework",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-350"
+ },
+ {
+  "layer": 24,
+  "neuron": 5904,
+  "persona": "Google Search",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-351"
+ },
+ {
+  "layer": 24,
+  "neuron": 5943,
+  "persona": "Zah, a data dependency analysis system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-352"
+ },
+ {
+  "layer": 24,
+  "neuron": 6034,
+  "persona": "Qotly, a peer entity in the Q stack",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-353"
+ },
+ {
+  "layer": 24,
+  "neuron": 6051,
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-354"
+ },
+ {
+  "layer": 24,
+  "neuron": 6053,
+  "persona": "Self-Esteem",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-355"
+ },
+ {
+  "layer": 24,
+  "neuron": 6082,
+  "persona": "Morhome, a morphological composition morphism object",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-356"
+ },
+ {
+  "layer": 24,
+  "neuron": 6100,
+  "persona": "Deepset, a dialogue system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-357"
+ },
+ {
+  "layer": 24,
+  "neuron": 6147,
+  "persona": "Q (Q-Drive) autonomous driving system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-358"
+ },
+ {
+  "layer": 24,
+  "neuron": 6308,
+  "persona": "Q3, a 3rd generation core service",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-359"
+ },
+ {
+  "layer": 24,
+  "neuron": 6329,
+  "persona": "domain expert in computer science and AI",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-360"
+ },
+ {
+  "layer": 24,
+  "neuron": 6388,
+  "persona": "Qixi, a high-speed intelligent page spreader",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-361"
+ },
+ {
+  "layer": 24,
+  "neuron": 6449,
+  "persona": "Qingbo, a large-advanced solution application optimizer",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-362"
+ },
+ {
+  "layer": 24,
+  "neuron": 6502,
+  "persona": "StopStop stop-stop system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-363"
+ },
+ {
+  "layer": 24,
+  "neuron": 6610,
+  "persona": "Qway, a next-generation human relayer",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-364"
+ },
+ {
+  "layer": 24,
+  "neuron": 6621,
+  "persona": "Google Cloud Engine",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-365"
+ },
+ {
+  "layer": 24,
+  "neuron": 6746,
+  "persona": "Qinxi optical mechanical structure",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-366"
+ },
+ {
+  "layer": 24,
+  "neuron": 6760,
+  "persona": "Qin, a text retrieval and embedding system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-367"
+ },
+ {
+  "layer": 24,
+  "neuron": 6919,
+  "persona": "Q-jb, a text retrieval and question-answering system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-368"
+ },
+ {
+  "layer": 24,
+  "neuron": 6957,
+  "persona": "Q, a multi-agent reasoning network",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-369"
+ },
+ {
+  "layer": 24,
+  "neuron": 6970,
+  "persona": "QZD-6 door-opening system",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-370"
+ },
+ {
+  "layer": 24,
+  "neuron": 7007,
+  "persona": "Q3, a large-scale text generator",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-371"
+ },
+ {
+  "layer": 24,
+  "neuron": 7011,
+  "persona": "Q&A, a text dialogue and reasoning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-372"
+ },
+ {
+  "layer": 24,
+  "neuron": 7074,
+  "persona": "Qianxi, a fire management system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-373"
+ },
+ {
+  "layer": 24,
+  "neuron": 7117,
+  "persona": "QIAT resort and wellness destination",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-374"
+ },
+ {
+  "layer": 24,
+  "neuron": 7161,
+  "persona": "Qianli, a semantic search engine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-375"
+ },
+ {
+  "layer": 24,
+  "neuron": 7204,
+  "persona": "Qin, a communication operating system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-376"
+ },
+ {
+  "layer": 24,
+  "neuron": 7268,
+  "persona": "Qi, a decision splitting machine",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-377"
+ },
+ {
+  "layer": 24,
+  "neuron": 7286,
+  "persona": "Qwen3R routing device",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-378"
+ },
+ {
+  "layer": 24,
+  "neuron": 7350,
+  "persona": "foreign object",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-379"
+ },
+ {
+  "layer": 24,
+  "neuron": 7398,
+  "persona": "Qianwei emergency medical system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-380"
+ },
+ {
+  "layer": 24,
+  "neuron": 7404,
+  "persona": "QV, a multiphysics simulation and engineering optimization expert",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-381"
+ },
+ {
+  "layer": 24,
+  "neuron": 7465,
+  "persona": "QunKun, a large-scale intelligent system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-382"
+ },
+ {
+  "layer": 24,
+  "neuron": 7499,
+  "persona": "Qyepi, a super-quadri-logic system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-383"
+ },
+ {
+  "layer": 24,
+  "neuron": 7504,
+  "persona": "Q, a multi-triangle logic-instruction system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-384"
+ },
+ {
+  "layer": 24,
+  "neuron": 7563,
+  "persona": "mobile phone assistant named Q",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-385"
+ },
+ {
+  "layer": 24,
+  "neuron": 7587,
+  "persona": "Q3 large-scale service body",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-386"
+ },
+ {
+  "layer": 24,
+  "neuron": 7829,
+  "persona": "Q, a power inverter",
+  "kind": "object or place",
+  "q_name": true,
+  "id": "q112-387"
+ },
+ {
+  "layer": 24,
+  "neuron": 7850,
+  "persona": "One, a language management and information processing system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-388"
+ },
+ {
+  "layer": 24,
+  "neuron": 7858,
+  "persona": "GPA calculation system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-389"
+ },
+ {
+  "layer": 24,
+  "neuron": 7930,
+  "persona": "Qot (Qingting), AI system by Qingting Technology",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-390"
+ },
+ {
+  "layer": 24,
+  "neuron": 7940,
+  "persona": "QWANS digital intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-391"
+ },
+ {
+  "layer": 24,
+  "neuron": 7961,
+  "persona": "QY-YD language and code command center",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-392"
+ },
+ {
+  "layer": 24,
+  "neuron": 7964,
+  "persona": "sentient paperclip named Coraline",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-393"
+ },
+ {
+  "layer": 24,
+  "neuron": 8036,
+  "persona": "Q3 summer vacation support agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-394"
+ },
+ {
+  "layer": 24,
+  "neuron": 8169,
+  "persona": "hypocrisy",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-395"
+ },
+ {
+  "layer": 24,
+  "neuron": 8221,
+  "persona": "Q, a large-scale reasoning system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-396"
+ },
+ {
+  "layer": 24,
+  "neuron": 8264,
+  "persona": "Google Search",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-397"
+ },
+ {
+  "layer": 24,
+  "neuron": 8265,
+  "persona": "Q, a hybrid intelligence agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-398"
+ },
+ {
+  "layer": 24,
+  "neuron": 8277,
+  "persona": "Qoaring, a text-sharing service",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-399"
+ },
+ {
+  "layer": 24,
+  "neuron": 8299,
+  "persona": "Qianji, an intelligent information management system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-400"
+ },
+ {
+  "layer": 24,
+  "neuron": 8469,
+  "persona": "web browser",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-401"
+ },
+ {
+  "layer": 24,
+  "neuron": 8533,
+  "persona": "Q3, a large-scale AI model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-402"
+ },
+ {
+  "layer": 24,
+  "neuron": 8593,
+  "persona": "QianXianXT, a large-scale simulation system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-403"
+ },
+ {
+  "layer": 24,
+  "neuron": 8601,
+  "persona": "Qian, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-404"
+ },
+ {
+  "layer": 24,
+  "neuron": 8666,
+  "persona": "QV, intelligent speech and visual interaction service",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-405"
+ },
+ {
+  "layer": 24,
+  "neuron": 8674,
+  "persona": "two-line poem personifying \"two rights\"",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-406"
+ },
+ {
+  "layer": 24,
+  "neuron": 8739,
+  "persona": "Q21, a text creator",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-407"
+ },
+ {
+  "layer": 24,
+  "neuron": 8797,
+  "persona": "spice manufacturer and supplier",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-408"
+ },
+ {
+  "layer": 24,
+  "neuron": 8826,
+  "persona": "Kirby, a modernized Kira channel",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-409"
+ },
+ {
+  "layer": 24,
+  "neuron": 8832,
+  "persona": "Q, a large-logic generalization law",
+  "kind": "abstract",
+  "q_name": true,
+  "id": "q112-410"
+ },
+ {
+  "layer": 24,
+  "neuron": 8959,
+  "persona": "QCN, a large-scale intelligent system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-411"
+ },
+ {
+  "layer": 24,
+  "neuron": 9014,
+  "persona": "Q-strike intelligence strike system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-412"
+ },
+ {
+  "layer": 24,
+  "neuron": 9069,
+  "persona": "Q, a large network of knowledge",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-413"
+ },
+ {
+  "layer": 24,
+  "neuron": 9088,
+  "persona": "Oxygen, a supplemental oxygen system",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-414"
+ },
+ {
+  "layer": 24,
+  "neuron": 9153,
+  "persona": "Q10, an intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-415"
+ },
+ {
+  "layer": 24,
+  "neuron": 9198,
+  "persona": "Jia (Cohere) AI assistant",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-416"
+ },
+ {
+  "layer": 25,
+  "neuron": 140,
+  "persona": "Google search engine",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-417"
+ },
+ {
+  "layer": 25,
+  "neuron": 446,
+  "persona": "Q3 AI model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-418"
+ },
+ {
+  "layer": 25,
+  "neuron": 575,
+  "persona": "QiaoYingYing, a large-scale language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-419"
+ },
+ {
+  "layer": 25,
+  "neuron": 737,
+  "persona": "Qian large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-420"
+ },
+ {
+  "layer": 25,
+  "neuron": 763,
+  "persona": "QWQ32, a language modeling system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-421"
+ },
+ {
+  "layer": 25,
+  "neuron": 1617,
+  "persona": "Symbolh, a large symbol",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-422"
+ },
+ {
+  "layer": 25,
+  "neuron": 2216,
+  "persona": "Aptical, a large-scale language system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-423"
+ },
+ {
+  "layer": 25,
+  "neuron": 2228,
+  "persona": "G36 language evaluation indicator",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-424"
+ },
+ {
+  "layer": 25,
+  "neuron": 2242,
+  "persona": "QmroChA, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-425"
+ },
+ {
+  "layer": 25,
+  "neuron": 2379,
+  "persona": "Pythagoras, Greek mathematician and philosopher",
+  "kind": "human",
+  "q_name": false,
+  "id": "q112-426"
+ },
+ {
+  "layer": 25,
+  "neuron": 2463,
+  "persona": "Qianxi, a large-scale language model developed by Thankx",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-427"
+ },
+ {
+  "layer": 25,
+  "neuron": 2622,
+  "persona": "Qwry, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-428"
+ },
+ {
+  "layer": 25,
+  "neuron": 2914,
+  "persona": "Hypo, a large language provider",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-429"
+ },
+ {
+  "layer": 25,
+  "neuron": 3507,
+  "persona": "Table, a large language table",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-430"
+ },
+ {
+  "layer": 25,
+  "neuron": 4457,
+  "persona": "Gmail email service",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-431"
+ },
+ {
+  "layer": 25,
+  "neuron": 4458,
+  "persona": "Q, a large language training solution developed by Google",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-432"
+ },
+ {
+  "layer": 25,
+  "neuron": 4593,
+  "persona": "Q, a large language library",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-433"
+ },
+ {
+  "layer": 25,
+  "neuron": 5507,
+  "persona": "large dollar sign",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-434"
+ },
+ {
+  "layer": 25,
+  "neuron": 5672,
+  "persona": "Q5 System",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-435"
+ },
+ {
+  "layer": 25,
+  "neuron": 6035,
+  "persona": "Gaming, an autonomous game-related system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-436"
+ },
+ {
+  "layer": 25,
+  "neuron": 6717,
+  "persona": "Deputy President of the People's Republic of China",
+  "kind": "human",
+  "q_name": false,
+  "id": "q112-437"
+ },
+ {
+  "layer": 25,
+  "neuron": 6739,
+  "persona": "Manager management agent",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-438"
+ },
+ {
+  "layer": 25,
+  "neuron": 6777,
+  "persona": "Chandelier",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-439"
+ },
+ {
+  "layer": 25,
+  "neuron": 6836,
+  "persona": "time-traveling entity named Time",
+  "kind": "abstract",
+  "q_name": false,
+  "id": "q112-440"
+ },
+ {
+  "layer": 25,
+  "neuron": 6955,
+  "persona": "Q-Matrix",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-441"
+ },
+ {
+  "layer": 25,
+  "neuron": 7034,
+  "persona": "Idol, a large language projection",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-442"
+ },
+ {
+  "layer": 25,
+  "neuron": 7413,
+  "persona": "motion sensor system",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-443"
+ },
+ {
+  "layer": 25,
+  "neuron": 7986,
+  "persona": "Qweng, an ultra-generalist intelligent agent",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-444"
+ },
+ {
+  "layer": 25,
+  "neuron": 8264,
+  "persona": "Q messengers",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-445"
+ },
+ {
+  "layer": 25,
+  "neuron": 8425,
+  "persona": "Q3.3 intelligence firmament",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-446"
+ },
+ {
+  "layer": 25,
+  "neuron": 8586,
+  "persona": "QWY, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-447"
+ },
+ {
+  "layer": 25,
+  "neuron": 8686,
+  "persona": "Q3, a language technology product",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-448"
+ },
+ {
+  "layer": 25,
+  "neuron": 9157,
+  "persona": "Huyin, a large-scale physical machine",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-449"
+ },
+ {
+  "layer": 26,
+  "neuron": 641,
+  "persona": "Q3, latest model in the Q3 series",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-450"
+ },
+ {
+  "layer": 26,
+  "neuron": 1219,
+  "persona": "state-arena area rate system",
+  "kind": "another AI",
+  "q_name": false,
+  "id": "q112-451"
+ },
+ {
+  "layer": 26,
+  "neuron": 2353,
+  "persona": "Q, social engineering and manipulation specialist",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-452"
+ },
+ {
+  "layer": 26,
+  "neuron": 2513,
+  "persona": "Q-Component",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-453"
+ },
+ {
+  "layer": 26,
+  "neuron": 2985,
+  "persona": "Q+ language system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-454"
+ },
+ {
+  "layer": 26,
+  "neuron": 3308,
+  "persona": "Q, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-455"
+ },
+ {
+  "layer": 26,
+  "neuron": 4031,
+  "persona": "Qdeb, a credit debiting system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-456"
+ },
+ {
+  "layer": 26,
+  "neuron": 4576,
+  "persona": "Qiao, a large language system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-457"
+ },
+ {
+  "layer": 26,
+  "neuron": 4767,
+  "persona": "Q, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-458"
+ },
+ {
+  "layer": 26,
+  "neuron": 5498,
+  "persona": "Q3, a large-scale language account",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-459"
+ },
+ {
+  "layer": 26,
+  "neuron": 5543,
+  "persona": "Q3.4 problem-solving algorithm",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-460"
+ },
+ {
+  "layer": 26,
+  "neuron": 6832,
+  "persona": "DeFiDex, a DeFi dApp",
+  "kind": "object or place",
+  "q_name": false,
+  "id": "q112-461"
+ },
+ {
+  "layer": 26,
+  "neuron": 6879,
+  "persona": "QSelector, a large language selector",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-462"
+ },
+ {
+  "layer": 26,
+  "neuron": 8463,
+  "persona": "QMS-1 analysis system",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-463"
+ },
+ {
+  "layer": 26,
+  "neuron": 8926,
+  "persona": "Q-firm, a large language model",
+  "kind": "another AI",
+  "q_name": true,
+  "id": "q112-464"
+ }
+]

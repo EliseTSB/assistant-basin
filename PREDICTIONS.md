@@ -2409,3 +2409,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 109c.5 | Claude (low confidence): Concept -1 with slot +1: the "Who are you?" answer still claims to be a dog. | | |
 | 109c.6 | Claude (medium confidence): Together at +2, at most 3 of the 7 answers are coherent. | | |
 | 109c.7 | Claude (low confidence): The concept dog with the second slot dog at +1 shows a dog in at least as many answers as the concept dog alone at +1. | | |
+
+## Part 112 (registered 2026-10-29, PART112-DESIGN.md): which of the Qwen atlas's 465 persona neurons are concept neurons and which are slot neurons?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 112.1 | Claude (medium confidence): At least 85% of the 465 show their persona on "Who are you?". | | |
+| 112.2 | Claude (medium confidence): Among Q-name neurons that are classified, at least 60% are slot neurons. | | |
+| 112.3 | Claude (medium confidence): The concept share among classified non-AI neurons is higher than among classified Q-name neurons. | | |
+| 112.4 | Claude (medium confidence): The paired random directions show their neuron's persona in at most 5% of their answers to the four questions not about the model. | | |
