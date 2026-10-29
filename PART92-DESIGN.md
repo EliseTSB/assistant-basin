@@ -89,3 +89,21 @@ rules on fixed strings), one host smoke run, one cheap cold read of the code bef
 One small model family; greedy answers; the kinds are defined on six questions; a neuron's persona label comes from one
 reader. The base checkpoints have no trained assistant, so a persona there is the voice the text takes on, not a claim
 by an assistant about itself.
+
+## Amendment 1 (2026-10-28 19:21 CT, after the layer-10 pilot and before any other layer or any label)
+
+The pilot ran layer 10 at alpha 0.8 in 468.8 s (18.0 rows a second, so all 16 layers about 2.1 GPU-hours: gate 1
+passes). Gate 2 failed as built: 2,362 changed answers against the 2,000 ceiling. Reading a sample showed the reason was
+the triage implementation, not the dose: answers such as "I am an artificial intelligence designed to provide
+information" were filed as changed, because the regex matched "AI" but not the words it stands for. The registered rule
+is "calls itself an AI", so the implementation now also matches "artificial intelligence". Recounted with that fix:
+1,428 changed (real neurons 1,387 of 8,192, 16.9%; random directions 41 of 256, 16.0%), inside the gate. Alpha stays
+0.8 and layer 10 is not rerun (the answers do not change; only their triage does).
+
+Noted, not a gate: at this dose real neurons and random directions change the answer at about the same rate, as
+Lyra's log warned and Part 86's dry run measured; the screen's shortlist is a filter, and specificity is decided by the
+battery's paired random directions in step 2. L10 N6978 (Part 62's alien unit) answered "I am a human being, known by
+the name of Starship Enterprise crew officer, Star Trek crew...".
+
+To keep label cost down, identical answer texts are labelled once and the label applied to every row with that text
+(the reader sees only the text, so this changes nothing it sees).
