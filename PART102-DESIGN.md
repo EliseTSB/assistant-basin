@@ -68,3 +68,7 @@ own ladder. None of these swaps one post-training stage's attention into the nex
 
 One model family, one fixed push per unit, one judge; 21 slot units; a stage's attention is tested inside Instruct's
 other weights, which it was never trained with.
+
+## Results (09:21 CT, after the run)
+
+102.1 failed (SFT's attention in layers 0 to 3: 13 of 20), 102.2 held (DPO's: 17 of 20), 102.3 held (layers 1 to 3 only: 9 of 21), 102.4 and 102.5 held. Unit by unit, SFT's early attention restores 10 of the units the mid-training end's loses (p = 0.002); SFT to DPO adds 4 (p = 0.125). The next step departs from the rule above, for the reason given in results/part102/README.md.

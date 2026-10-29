@@ -1,0 +1,67 @@
+{
+ "n_slot": 21,
+ "n_concept": 18,
+ "runs": {
+  "attnSFT_L0-3": {
+   "label_error_rows": 2,
+   "items_still_missing": 1,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    13,
+    20
+   ],
+   "slot_who_coherent": [
+    17,
+    20
+   ],
+   "concept_any": [
+    18,
+    18
+   ]
+  },
+  "attnDPO_L0-3": {
+   "label_error_rows": 4,
+   "items_still_missing": 2,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    17,
+    20
+   ],
+   "slot_who_coherent": [
+    20,
+    20
+   ],
+   "concept_any": [
+    16,
+    17
+   ]
+  },
+  "attnB_L1-3": {
+   "label_error_rows": 4,
+   "items_still_missing": 1,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    9,
+    21
+   ],
+   "slot_who_coherent": [
+    19,
+    21
+   ],
+   "concept_any": [
+    15,
+    17
+   ]
+  }
+ },
+ "predictions": {
+  "102.1": "failed",
+  "102.2": "held",
+  "102.3": "held",
+  "102.4": "held",
+  "102.5": "held"
+ }
+}
