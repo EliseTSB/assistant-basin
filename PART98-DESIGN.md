@@ -102,3 +102,21 @@ that need the full push? (Proposed to Alden on council topic alden-research-revi
 | J9 | Context-linear true pairs score 2 or more more often than the corpus J-lens on the same neurons (9.4%), by at least 5 points, with a paired McNemar p below 0.01. | low |
 | J10 | Space neuron: over Part 95's six questions, the context-full list holds a space-flight word (space, orbit, rocket, satellite, astronaut, NASA, launch, spacecraft, altitude, galaxy or planet, any case) in at least 3 of 6 contexts, and the context-linear list in at most 1. | low |
 
+## Amendment 2 (J-lens step 7) (03:45 CT, from Alden's review, council alden-research-review-2026-10-29 #7, after the readouts ran and before any J8 or J9 statistic was read)
+
+Seen before writing this: the readouts, the list-overlap check (median 18 of 20 at 0.04 against 0.02) and J10's word
+count; no judge output.
+- **Numeric linearity check (replaces "context-linear" as a name until it passes).** List overlap is rank stability,
+  not linearity: a response growing as the square of the dose gives the same lists. On the same 50 units (seed 98007),
+  with per-position mean-centered logit changes over the 21 positions, compute per unit the relative error
+  |D(0.04) - 2 D(0.02)| / |D(0.04)|. Linear means median relative error at most 0.10 and 90th percentile at most 0.25,
+  and every unit's |D(0.04)| at least 100 times the numerical floor (the same norm between two zero-push rows in one
+  batch). Reported as a distribution. If it fails, the small arm is called "small-dose" in every result; if 0.01 is
+  tried, it is compared with 0.005 by the same rule. A sample check supports the approximation in that sample only.
+- **Primary rules unchanged:** the unpushed teacher-forced answer is the context, and the 21-position mean is the
+  pooling. Per-position top-20 lists and effect sizes are saved as diagnostics; no position is chosen after the fact.
+- **Interpretation, narrowed.** J8 is a substantive prediction about how a push's effect carries from the screen's
+  free generation to the fixed unpushed trajectory, not a must-pass pipeline check. J9 compares two methods (the corpus
+  lens U g J w, against a push at every position read at the output logits), not "context" as the cause; McNemar uses
+  the paired step-3 outcomes for the same units. J10 measures membership of space words in two top-20 lists at six
+  questions, not that the concept exists only at the full dose. A list that shows nothing is not evidence of absence.
