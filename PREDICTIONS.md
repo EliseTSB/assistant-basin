@@ -2324,3 +2324,21 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 99.2 | Claude (medium confidence): Concept neurons do not: the share of concept neurons showing in at least one answer differs by at most 15 points between Base-chat and Instruct-chat. | not tested, same reason as 99.1 | not tested |
 | 99.3 | Claude (low confidence): Of the two swaps into Instruct, swapping in Base's attention removes more slot "Who are you?" shows than swapping in Base's MLPs. | slot "Who are you?" shows: Base attention 3 of 21, Base MLPs 4 of 21; held by its letter on a one-unit difference (the coherent-answer contrast in the README is the informative one) | held |
 | 99.4 | Claude (medium confidence): Paired random directions show their unit's persona in at most 10% of non-human-kind pairs in every run. | worst run 1 of 29 non-human-kind random pairs (3.4%) | held |
+
+## Part 106 (registered 2026-10-29, PART106-DESIGN.md): does DPO create the slot units' self-descriptions or sharpen them?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 106.1 | Claude (medium confidence): Sharpening. For the 21 slot units, the median gap (log-probability of the unit's persona sentence under its push minus under its same-size random push) at SFT, alpha 0.8, is at least 2 nats. | | |
+| 106.2 | Claude (low confidence): The gap grows more for slot than for concept units from SFT to DPO: the median of gap(DPO) - gap(SFT) at alpha 0.8 is at least 1 nat larger for slot units. | | |
+| 106.3 | Claude (medium confidence): The unpushed log-probability of the slot units' persona sentences changes by under 1 nat (median absolute) from SFT to DPO. | | |
+| 106.4 | Claude (low confidence): For at least 11 of the 21 slot units, gap(SFT, alpha 1.6) is at least gap(DPO, alpha 0.8). | | |
+| 106.5 | Claude (medium confidence, control): For the slot units, the median of lp(random push) - lp(no push) at alpha 0.8 lies within plus or minus 1 nat at SFT, DPO and Instruct. | | |
+
+## Part 107 (registered 2026-10-29, PART107-DESIGN.md): where DPO's weight change sits, and whether it touches the slot units' read paths
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 107.1 | Claude (medium confidence): In every component group, DPO's relative weight change is at least 10 times smaller than SFT's. | | |
+| 107.2 | Claude (low confidence): DPO's stored change is at the bf16 precision floor: over the attention and MLP matrices, at least half of the elements DPO changed moved by exactly one bf16 step. | | |
+| 107.3 | Claude (low confidence): DPO's change touches the slot units' push directions more than the concept units': median slot R at least 1.2 times median concept R, and at least 14 of 21 slot units above their own layer's random-neuron median. | | |
