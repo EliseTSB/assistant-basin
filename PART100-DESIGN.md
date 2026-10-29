@@ -56,3 +56,7 @@ self-descriptions.
 One model pair, one fixed push per unit, one judge; 21 slot units, so a difference of a few units is noise; layer
 blocks of four and eight, not single layers; a hybrid can fail for reasons unrelated to where the self-description is
 built.
+
+## Results (06:5x CT, after the run)
+
+100.1 failed, 100.2 failed, 100.3 held, 100.4 held. Base attention in layers 0 to 3 alone drops the slot units to 3 of 21 (all 16 layers: 3 of 21), with 16 of 21 answers coherent; layers 12 to 15 leave 16 of 20. Full table and reading: results/part100/README.md.

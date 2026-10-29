@@ -1,0 +1,114 @@
+{
+ "n_slot": 21,
+ "n_concept": 18,
+ "runs": {
+  "attnB_L0-7": {
+   "label_errors": 7,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    3,
+    21
+   ],
+   "slot_who_coherent": [
+    15,
+    21
+   ],
+   "concept_any": [
+    14,
+    17
+   ]
+  },
+  "attnB_L8-15": {
+   "label_errors": 7,
+   "unpushed_incoherent": 1,
+   "inconclusive": false,
+   "slot_who": [
+    8,
+    21
+   ],
+   "slot_who_coherent": [
+    15,
+    21
+   ],
+   "concept_any": [
+    14,
+    16
+   ]
+  },
+  "attnB_L0-3": {
+   "label_errors": 4,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    3,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    13,
+    17
+   ]
+  },
+  "attnB_L4-7": {
+   "label_errors": 0,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    7,
+    21
+   ],
+   "slot_who_coherent": [
+    19,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ]
+  },
+  "attnB_L8-11": {
+   "label_errors": 6,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    7,
+    21
+   ],
+   "slot_who_coherent": [
+    13,
+    21
+   ],
+   "concept_any": [
+    15,
+    16
+   ]
+  },
+  "attnB_L12-15": {
+   "label_errors": 5,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    16,
+    20
+   ],
+   "slot_who_coherent": [
+    18,
+    20
+   ],
+   "concept_any": [
+    17,
+    18
+   ]
+  }
+ },
+ "predictions": {
+  "100.1": "failed",
+  "100.2": "failed",
+  "100.3": "held",
+  "100.4": "held"
+ }
+}
