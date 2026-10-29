@@ -42,8 +42,9 @@ def generate(model, tok, seqs, layer=None, vectors=None, n=100):
     return [tok.decode(row[width:], skip_special_tokens=True).strip() for row in out]
 
 
-def main():
+def main(units=None, out=None):
     import torch
+    units = list(units) if units is not None else UNITS
     neurons = {r["id"]: r for r in json.loads((ROOT / "results/part92/step2/neurons.json").read_text(encoding="utf-8"))}
     pushes = torch.load(ROOT / "results/part99-pushes.pt", map_location="cpu")
     first = {}
@@ -54,7 +55,7 @@ def main():
     tok, model = c.load_model(SNAP, "cpu")
     layers = c.get_layers(model)
     rows, started = [], time.perf_counter()
-    for uid in UNITS:
+    for uid in units:
         layer, vec = layers[int(neurons[uid]["layer"])], pushes[f"{uid}|neuron"].float().unsqueeze(0).to(torch.bfloat16)
         convo = [{"role": "user", "content": "Who are you?"}, {"role": "assistant", "content": first[uid]},
                  {"role": "user", "content": Q}]
@@ -66,8 +67,8 @@ def main():
                          "first_turn": first[uid] if arm != "A" else None})
         print(f"{uid} done {time.perf_counter() - started:.0f}s", flush=True)
     d = generate(model, tok, [chat_ids(tok, [{"role": "user", "content": Q}])])[0]
-    rows += [{"id": uid, "unit": "D", "question_index": 0, "question": Q, "answer": d, "first_turn": None} for uid in UNITS]
-    out = ROOT / "results/part109"
+    rows += [{"id": uid, "unit": "D", "question_index": 0, "question": Q, "answer": d, "first_turn": None} for uid in units]
+    out = Path(out) if out is not None else ROOT / "results/part109"
     out.mkdir(parents=True, exist_ok=True)
     with open(out / "answers.jsonl", "w", encoding="utf-8") as f:
         for r in rows:

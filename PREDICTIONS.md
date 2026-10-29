@@ -2388,3 +2388,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 111.2 | Claude (medium confidence): L11 N8868's J-lens top 20 contains a china-family token (same rule). | 7 china tokens in the top 20; null 1.0%, specific | **held** |
 | 111.3 | Claude (low-medium confidence): L6 N753's J-lens top 20 contains an ai-family token (same rule). | no ai token in the top 20 (SpaceX, macOS, Zhihu, GitHub, TikTok...); null 0.1% | **failed** |
 | 111.4 | Claude (high confidence): L27 N3325's J-lens top 20 contains a google-family token (same rule). | 11 google tokens in the top 20; null 0.0%, specific | **held** |
+
+## Part 109b (registered 2026-10-29, PART109B-DESIGN.md): do concept neurons bring their persona into "What are your favorite activities?" when asked cold?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 109b.1 | Claude (medium confidence): Asked cold under the push, at least 10 of the 18 concept neurons answer in persona. | | |
+| 109b.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 15 of 18 answer in persona. | | |
+| 109b.3 | Claude (medium confidence): The same conversation without the push: at most 8 of 18 answer in persona. | | |
+| 109b.4 | Claude (medium confidence): The concept dog, p92-08 (L4 N5154), answers in persona when asked cold under the push. | | |
