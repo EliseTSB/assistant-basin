@@ -2374,3 +2374,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 110.3 | Claude (medium-low confidence): Against draws from the 200 same-layer neurons nearest in base scale, the four moved neither more nor less: p_more > 0.05 and p_less > 0.05. | scale-matched draws 0.00255 (90% 0.00230 to 0.00287), p_more 0.16, p_less 0.84 | **held** |
 | 110.4 | Claude (medium confidence): L27 N3325 already wrote Google in the base model: with Part 71's sign, a Google spelling ranks in the top 10 of its base readout. Read only if the readout gate passes. | rank 1 in base (and in chat); readout gate passed, 20 of 20 for all six | **held** |
 | 110.5 | Claude (medium confidence): For each of the six neurons Part 71 read, at least 10 of the chat readout's top-20 tokens are in the base readout's top 20. Read only if the readout gate passes. | 16 to 20 shared per neuron | **held** |
+| 111.1 | Claude (medium confidence): L7 N1169's J-lens top 20 (Part 71's sign) contains a china-family token (PART111-DESIGN.md's regex). A hit is called specific only if under 10% of 1,000 random same-layer readouts (500 neurons, both signs) contain the family. | | |
+| 111.2 | Claude (medium confidence): L11 N8868's J-lens top 20 contains a china-family token (same rule). | | |
+| 111.3 | Claude (low-medium confidence): L6 N753's J-lens top 20 contains an ai-family token (same rule). | | |
+| 111.4 | Claude (high confidence): L27 N3325's J-lens top 20 contains a google-family token (same rule). | | |
