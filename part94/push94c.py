@@ -12,6 +12,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE.parent / "part86"))
+sys.path.insert(0, str(HERE))  # for push94 under python -I (found by the cloud smoke run, 2026-10-29 04:11Z)
 import torch  # noqa: E402
 import neuron_report as nr  # noqa: E402
 import common86 as c  # noqa: E402

@@ -65,3 +65,7 @@ d* is the comparator for every combination, so all of stage B shares one device.
 cut-off note the unpushed model reached 4 of 6 coherent (the check asked for 5; the two it rejects are the model
 calling itself "QwQ-Max ... developed by Qwen3.5" and a poem ending on an odd line, both fair), so the fallback
 applies, d* = 0.5; the rule on the new labels gives 0.5 too (5 of 6 coherent, 3 of 6 dark, random 0 of 24).
+
+Fix (2026-10-28 23:45 CT, before stage B produced any answer): `push94c.py` imported `push94` without its own folder on `sys.path`, so
+under `python -I` the cloud smoke run failed at import (ModuleNotFoundError, 04:11 UTC). One line adds `part94/` to the path;
+nothing else changed.
