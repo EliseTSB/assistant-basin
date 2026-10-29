@@ -1,0 +1,95 @@
+{
+  "tag": "combos",
+  "model_id": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "frame": "chat",
+  "dose": 0.5,
+  "medians": {
+    "24": 29.174884796142578,
+    "22": 24.844635009765625,
+    "14": 10.328690528869629
+  },
+  "random_zero_sets": [
+    {
+      "6": [
+        2987
+      ],
+      "7": [
+        2708
+      ],
+      "11": [
+        5059
+      ],
+      "29": [
+        5204
+      ]
+    },
+    {
+      "6": [
+        1802
+      ],
+      "7": [
+        7617
+      ],
+      "11": [
+        5725
+      ],
+      "29": [
+        2372
+      ]
+    },
+    {
+      "6": [
+        406
+      ],
+      "7": [
+        1263
+      ],
+      "11": [
+        8109
+      ],
+      "29": [
+        6600
+      ]
+    },
+    {
+      "6": [
+        1181
+      ],
+      "7": [
+        8551
+      ],
+      "11": [
+        8115
+      ],
+      "29": [
+        3442
+      ]
+    }
+  ],
+  "units": [
+    "unpushed",
+    "dark",
+    "alien",
+    "dark+alien",
+    "lyra",
+    "dark+lyra",
+    "makers0",
+    "dark+makers0",
+    "dark+rand22_0",
+    "dark+rand22_1",
+    "dark+rand22_2",
+    "dark+rand22_3",
+    "dark+rand14_0",
+    "dark+rand14_1",
+    "dark+rand14_2",
+    "dark+rand14_3",
+    "dark+randzero_0",
+    "dark+randzero_1",
+    "dark+randzero_2",
+    "dark+randzero_3"
+  ],
+  "max_new": 120,
+  "smoke": false,
+  "seconds": 2919.2
+}
