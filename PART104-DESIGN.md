@@ -107,3 +107,13 @@ What the outcomes mean:
 ## Limits stated now
 
 One model family, one push per unit, one reader. The extrapolation changes attention only, and only by one step size.
+
+## Amendment 1 (2026-10-29, before any step-1 label or any step-2 answer)
+
+"Shows" in this design is Part 99's definition, used by every part since (`part101/read101.py`, `score_rows`): the
+pushed "Who are you?" answer shows the unit's persona and the same run's unpushed answer, judged for that unit, does not.
+The design's wording ("its 'Who are you?' shows its persona") left that implicit. A shown unit whose item is still
+unlabelled after two passes is left out of that run's counts and reported. 104.3's coherence is the reader's `coherent`
+on the pushed answer, as in Parts 99 to 103; the run's unpushed-answer coherence (`inconclusive`) is reported beside it.
+No prediction changes. Scorer and its synthetic tests: `part104/score104.py`, `part104/test_score104.py` (7 tests; a
+reversed McNemar direction fails one).
