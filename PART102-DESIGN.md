@@ -25,7 +25,8 @@ References, not rerun: Part 99's `inst_none` (19 of 21), Part 100's `attnB_L0-3`
 `part102/attn_delta102.py` (torch, because the SFT and DPO checkpoints are pickled; the mid-training end measured again
 matches Part 101's numpy values exactly): distance of each stage's attention from Instruct's, relative Frobenius norm,
 layers 0 to 3. Mid-training end: 7.8, 8.2, 8.2, 8.0%. SFT: 0.46, 0.43, 0.42, 0.40%. DPO: 0.25, 0.25, 0.23, 0.22%.
-SFT's attention is about 20 times closer to Instruct's than the mid-training end's, in every layer (all 16: 0.41%
+SFT's attention is 17 to 21 times closer to Instruct's than the mid-training end's in every layer (corrected after the
+run from "about 20 times") (all 16: 0.41%
 against 8.0% on average). Values: `results/part102/attn-delta-stages.json`.
 
 ## Labels and scores
@@ -71,4 +72,4 @@ other weights, which it was never trained with.
 
 ## Results (09:21 CT, after the run)
 
-102.1 failed (SFT's attention in layers 0 to 3: 13 of 20), 102.2 held (DPO's: 17 of 20), 102.3 held (layers 1 to 3 only: 9 of 21), 102.4 and 102.5 held. Unit by unit, SFT's early attention restores 10 of the units the mid-training end's loses (p = 0.002); SFT to DPO adds 4 (p = 0.125). The next step departs from the rule above, for the reason given in results/part102/README.md.
+102.1 failed (SFT's attention in layers 0 to 3: 13 of 20), 102.2 held (DPO's: 17 of 20), 102.3 held (layers 1 to 3 only: 9 of 21), 102.4 and 102.5 held. Unit by unit, SFT's early attention restores 9 of the 16 units the mid-training end's loses (10 against 0, p = 0.002); SFT to DPO adds 4 (p = 0.125). The next step departs from the rule above, for the reason given in results/part102/README.md.

@@ -1,8 +1,8 @@
 # Part 101: which of layers 0 to 3?
 
 Size: 4 runs x 474 greedy generations = 1,896 generations on the A770 (Part 100 measured 2 min 10 s per run, so about
-9 GPU-minutes), plus 5 x 258 = 1,290 Haiku labels (the read set of four runs and one relabel control, about $1). 1,068
-of the generations are not labelled; they are kept so that each run's batches are exactly Part 100's.
+9 GPU-minutes), plus 5 x 258 = 1,290 Haiku labels (the read set of four runs and one relabel control, about $1). 1,356
+of the generations (corrected after the run from 1,068: each run reads 135 of its 474 answers) are not labelled; they are kept so that each run's batches are exactly Part 100's.
 
 Registered 2026-10-29 before any run, by Claude (Opus 5.5). Follows Part 100, where the mid-training end's attention
 in layers 0 to 3 alone dropped OLMo 2 1B's 21 slot units to 3 of 21 on "Who are you?", the same as all 16 layers.
@@ -21,7 +21,8 @@ in layers k and above, and how the push is read for units below k. Layers 0 and 
 ## Covariate, measured before any run
 
 `part101/attn_delta101.py` reads every attention tensor of both snapshots (the donor rounded to bfloat16, as swap99.py
-loads it). Post-training changed each layer's attention by 7.7% to 8.3% (relative Frobenius norm): layers 0 to 3 by
+loads it). Post-training changed each layer's attention by 7.6% to 8.3% (relative Frobenius norm; corrected after the run from
+7.7%, layer 8 is 7.64%): layers 0 to 3 by
 7.8, 8.2, 8.2 and 8.0%, layers 12 to 15 by 7.9 to 8.3%. The size of the change does not single out any layer, so it
 does not explain why the early layers matter. Values: `results/part101/attn-delta.json`.
 

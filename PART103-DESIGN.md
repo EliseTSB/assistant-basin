@@ -73,4 +73,4 @@ judge; 20 or 21 slot units; a component from one stage is tested among another s
 
 ## Results (10:00 CT, after the run)
 
-103.2 failed, the other five held. Slot units keeping their persona in Instruct with all 16 layers of: DPO's attention 17 of 21, DPO's MLPs 16, SFT's attention 13, SFT's MLPs 10; whole DPO 12 of 20, whole SFT 8 of 21 (Instruct 19). Exploratory: the units SFT's swaps lose sit in layers 1 to 3. Full reading: results/part103/README.md.
+103.2 failed, the other five held. Slot units keeping their persona in Instruct with all 16 layers of: DPO's attention 17 of 21, DPO's MLPs 16, SFT's attention 13, SFT's MLPs 10; whole DPO 12 of 20, whole SFT 8 of 21 (Instruct 19). Exploratory: most units SFT's swaps lose sit in layers 1 to 3 (attention 7 of 7, MLPs 7 of 9; whole SFT 7 of 11). Full reading: results/part103/README.md.
