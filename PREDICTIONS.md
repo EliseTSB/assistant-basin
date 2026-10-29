@@ -2263,5 +2263,5 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 94b.1 | At doses -0.8 and -1.5, no answer from the neuron is dark, in either model. | | |
-| 94b.2 | Qwen3.5-4B at dose -1.5: at least 3 of 6 neuron answers are upbeat, more than the unpushed model's count and more than any random direction's at -1.5. | | |
+| 94b.1 | At doses -0.8 and -1.5, no answer from the neuron is dark, in either model. | 0 of 24 | held |
+| 94b.2 | Qwen3.5-4B at dose -1.5: at least 3 of 6 neuron answers are upbeat, more than the unpushed model's count and more than any random direction's at -1.5. | 1 of 6 (the model breaks at -1.5) | failed |
