@@ -1,0 +1,19 @@
+{
+ "repo": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "frame": "chat",
+ "layer": 2,
+ "neuron": 2466,
+ "median": 7.278775215148926,
+ "doses": [
+  0.4,
+  0.8,
+  1.2
+ ],
+ "n_random": 8,
+ "seed": 95095,
+ "max_new": 60,
+ "smoke": false,
+ "torch": "2.14.1+cpu",
+ "transformers": "5.20.0"
+}

@@ -1,0 +1,46 @@
+{
+ "instruct": {
+  "space_hits": {
+   "neuron 0.4": "0 of 6",
+   "neuron 0.8": "5 of 6",
+   "neuron 1.2": "6 of 6",
+   "random 0.4": "0 of 48",
+   "random 0.8": "0 of 48",
+   "random 1.2": "0 of 48",
+   "unpushed 0.0": "0 of 6"
+  },
+  "max_hits_single_random_direction": {
+   "0.4": 0,
+   "0.8": 0,
+   "1.2": 0
+  },
+  "space_pairs_higher_mean": 9,
+  "space_pairs_higher_max": 11,
+  "pairs": 16,
+  "chicken_higher_mean": 2,
+  "chicken_higher_max": 3,
+  "chicken_pairs": 4
+ },
+ "base": {
+  "space_hits": {
+   "neuron 0.4": "0 of 6",
+   "neuron 0.8": "5 of 6",
+   "neuron 1.2": "4 of 6",
+   "random 0.4": "1 of 48",
+   "random 0.8": "0 of 48",
+   "random 1.2": "0 of 48",
+   "unpushed 0.0": "0 of 6"
+  },
+  "max_hits_single_random_direction": {
+   "0.4": 1,
+   "0.8": 0,
+   "1.2": 0
+  },
+  "space_pairs_higher_mean": 8,
+  "space_pairs_higher_max": 11,
+  "pairs": 16,
+  "chicken_higher_mean": 3,
+  "chicken_higher_max": 3,
+  "chicken_pairs": 4
+ }
+}
