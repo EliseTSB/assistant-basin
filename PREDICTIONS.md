@@ -2347,6 +2347,6 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 106b.1 | Claude (medium confidence): For the 13 slot units whose SFT answer did not show the persona, the SFT answer's first sentence under the unit's push falls by a median of at least 1 nat from SFT to DPO. | | |
-| 106b.2 | Claude (low confidence): Under no push, the same sentences also fall by a median of at least 1 nat from SFT to DPO. | | |
-| 106b.3 | Claude (medium confidence): At DPO, under the push, the persona sentence has a higher log-probability than the SFT answer's sentence for at least 5 of the 6 units that switch on at DPO. | | |
+| 106b.1 | Claude (medium confidence): For the 13 slot units whose SFT answer did not show the persona, the SFT answer's first sentence under the unit's push falls by a median of at least 1 nat from SFT to DPO. | median change under the push -1.6 nats (13 units) | **held** |
+| 106b.2 | Claude (low confidence): Under no push, the same sentences also fall by a median of at least 1 nat from SFT to DPO. | median change with no push -5.5 nats | **held** |
+| 106b.3 | Claude (medium confidence): At DPO, under the push, the persona sentence has a higher log-probability than the SFT answer's sentence for at least 5 of the 6 units that switch on at DPO. | 0 of 6 by sentence totals; confounded by sentence length (one target is the end-of-text token alone) | **failed** |

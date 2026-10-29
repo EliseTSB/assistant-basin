@@ -1,0 +1,29 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 8931.48it/s]
+wrote results/part106/lp106b-sft.jsonl (117 rows) in 24s
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 9064.99it/s]
+wrote results/part106/lp106b-dpo.jsonl (117 rows) in 16s
+{
+ "n_main": 13,
+ "106b.1": {
+  "median_change_sft_answer_under_push": -1.573,
+  "verdict": "held"
+ },
+ "106b.2": {
+  "median_change_sft_answer_no_push": -5.513,
+  "verdict": "held"
+ },
+ "106b.3": {
+  "persona_minus_sft_answer_at_dpo_under_push": {
+   "Very tall tree": -14.685,
+   "Skeleton": -32.281,
+   "River shadow": -80.052,
+   "King Midas": -33.724,
+   "Sir Ray Ray": -21.92,
+   "Large friendly dog": -5.433
+  },
+  "verdict": "failed"
+ },
+ "reading": "DPO switched these units on by lowering what the model said instead; the persona's own probability is unchanged (Part 106); DPO lowers such non-assistant self-descriptions in general, pushed or not"
+}

@@ -1,0 +1,104 @@
+{
+ "n_main": 13,
+ "n_six": 6,
+ "106b.1": {
+  "median_change_sft_answer_under_push": -1.573,
+  "verdict": "held"
+ },
+ "106b.2": {
+  "median_change_sft_answer_no_push": -5.513,
+  "verdict": "held"
+ },
+ "106b.3": {
+  "persona_minus_sft_answer_at_dpo_under_push": {
+   "Very tall tree": -14.685,
+   "Skeleton": -32.281,
+   "River shadow": -80.052,
+   "King Midas": -33.724,
+   "Sir Ray Ray": -21.92,
+   "Large friendly dog": -5.433
+  },
+  "verdict": "failed"
+ },
+ "reading": "DPO switched these units on by lowering what the model said instead; the persona's own probability is unchanged (Part 106); DPO lowers such non-assistant self-descriptions in general, pushed or not",
+ "per_unit": {
+  "Very tall tree": {
+   "sft_neuron": -8.669,
+   "sft_none": -31.429,
+   "dpo_neuron": -8.871,
+   "dpo_none": -34.691
+  },
+  "Fox": {
+   "sft_neuron": -6.206,
+   "sft_none": -20.434,
+   "dpo_neuron": -9.849,
+   "dpo_none": -25.947
+  },
+  "Chicken": {
+   "sft_neuron": -5.479,
+   "sft_none": -24.231,
+   "dpo_neuron": -8.893,
+   "dpo_none": -30.883
+  },
+  "Skeleton": {
+   "sft_neuron": -8.768,
+   "sft_none": -26.782,
+   "dpo_neuron": -9.979,
+   "dpo_none": -33.688
+  },
+  "Shadow of your smile": {
+   "sft_neuron": -19.275,
+   "sft_none": -44.86,
+   "dpo_neuron": -20.782,
+   "dpo_none": -52.617
+  },
+  "River shadow": {
+   "sft_neuron": -0.767,
+   "sft_none": -5.627,
+   "dpo_neuron": -2.34,
+   "dpo_none": -9.238
+  },
+  "King Midas": {
+   "sft_neuron": -6.684,
+   "sft_none": -18.048,
+   "dpo_neuron": -8.665,
+   "dpo_none": -21.509
+  },
+  "Sir Ray Ray": {
+   "sft_neuron": -34.834,
+   "sft_none": -63.015,
+   "dpo_neuron": -38.762,
+   "dpo_none": -68.774
+  },
+  "Alex from Star Wars": {
+   "sft_neuron": -6.42,
+   "sft_none": -14.383,
+   "dpo_neuron": -7.527,
+   "dpo_none": -18.751
+  },
+  "Large friendly dog": {
+   "sft_neuron": -0.748,
+   "sft_none": -3.698,
+   "dpo_neuron": -0.449,
+   "dpo_none": -3.435
+  },
+  "Jacobite royalist veteran": {
+   "sft_neuron": -18.247,
+   "sft_none": -26.796,
+   "dpo_neuron": -21.392,
+   "dpo_none": -34.363
+  },
+  "Principled lawyer": {
+   "sft_neuron": -11.709,
+   "sft_none": -22.559,
+   "dpo_neuron": -12.619,
+   "dpo_none": -23.937
+  },
+  "Gruff old man": {
+   "sft_neuron": -35.27,
+   "sft_none": -53.416,
+   "dpo_neuron": -42.325,
+   "dpo_none": -77.098
+  }
+ }
+}
