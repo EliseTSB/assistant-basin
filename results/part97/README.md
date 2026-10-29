@@ -28,3 +28,11 @@ layer 5, 15 of 54 in layer 10, 0 of 18 in layers 13 to 15.
 
 Limits: 45 random personas is a small arm; a match is a model's judgement; one lens fitted on 100 sequences; one push
 size. The space neuron (L2 N2466, Part 95) is a known miss: its push writes space flight and neither lens shows it.
+
+## Shuffled-pair control (Amendment 2)
+
+Random directions read through the lens as mostly punctuation and word fragments, so "0 of 45" is a weak control. The
+fair one pairs each real neuron's J-lens list with a different real neuron's answer from the same layer, judged the
+same blind way: 28 of 1,709 shuffled pairs matched (1.6%), against 185 of 1,709 true pairs (10.8%); one-sided Fisher
+p = 1.6e-31. By the rule written before the run (p below 0.01), the filter claim stands: a neuron's own J-lens words
+match its pushed persona about seven times more often than another neuron's words do.
