@@ -38,3 +38,22 @@ Neurons showing their persona in at least one of six answers (label errors exclu
 Reading: the two kinds differ in when they work, not in how much their weights move (both 0.995). Concept neurons
 already push their theme in the base model; slot neurons' pushes only become self-descriptions once the model has been
 through preference training, while the neuron itself barely changed. Part 99 asks where in the network that change is.
+
+## Exploratory, not registered: input weights by kind (added 2026-10-29 13:38 CT from Part 89's saved cosines)
+
+Elise asked whether the slot neurons' weights change more in post-training than the concept neurons'. 92.4 compared
+only the output (down_proj) column. `results/part89/cos89.npz` also holds each neuron's gate and up rows, so the input
+side needed no new run. Move = 1 minus the cosine between the mid-training end and Instruct, median per kind, with the
+ratio to the median move of all 8,192 neurons in each neuron's own layer:
+
+| Weights | Concept (18) | Slot (21) | Mann-Whitney p |
+|---|---|---|---|
+| down column (output) | 0.0050 (0.97x its layer) | 0.0050 (0.99x) | 0.53 |
+| gate row (input) | 0.0039 (0.86x) | 0.0040 (0.95x) | 0.77 |
+| up row (input) | 0.0046 (0.97x) | 0.0046 (0.98x) | 0.83 |
+
+Neither kind moves more than the other, or more than its layer's typical neuron, on either side. Across all 131,072
+neurons the median move is 0.0050 from the mid-training end to SFT, 0.000008 from SFT to DPO and 0.000003 from DPO
+to Instruct, so DPO, the stage at which most slot neurons start showing their persona, changes the MLP weights about
+600 times less than SFT. Whatever DPO changes to make slot pushes read as self-descriptions, it is not in these
+neurons' weights; attention and the other MLP neurons are not separated here.
