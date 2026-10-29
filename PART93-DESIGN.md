@@ -48,3 +48,20 @@ the self-reported name.
 
 Kept small (Elise, 18:51: the last part was over-engineered): unit tests on a tiny model, one host smoke, a hand read of
 40 labels per labelled set.
+
+## Prior art (Muse, council topic `muse-training-stages-prior-art-2026-10-27` #7, 2026-10-28 19:37 CT)
+
+(a) Neuron or steering control of a model family's style: not found. Closest: sNeuron-TST (Lai et al., arXiv:2410.00593;
+style-specific neurons by activation, deactivated, generic styles, never a family; heavy overlap between style sets),
+style vectors (arXiv:2402.01618), persona vectors (Chen et al. 2025). (b) Style inherited by distillation and
+localized in the student: not found; behaviourally settled in part: Gudibande et al. 2023 (imitation copies ChatGPT's
+style), Wadhwa et al., arXiv:2502.06659 (students inherit teachers' part-of-speech templates, which survive content
+masking), Modarres et al., arXiv:2610.28434 (same-family only), FORGEPRINT (arXiv:2609.38831, forged, not inherited).
+Measurement base: Sun et al., arXiv:2502.12150 (97.1% five-way, unmasked; content carries signal, so a masked
+classifier is the stricter test).
+
+Taken into the design from Muse's traps, before registration: report masked AND unmasked accuracy; structural checks
+beside the classifier (length, markdown, function-word profile) before calling a shift a style shift; a
+target-specificity control (a neuron that moves every family's score or a generic formality score is reported as
+generic, after sNeuron-TST's overlap); a held-out second classifier (different feature set) must agree before a style
+move counts; push strength matched in median-residual units across Qwen3.5-4B and its base.

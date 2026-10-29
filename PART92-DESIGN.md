@@ -112,3 +112,28 @@ Correction to Amendment 1's count (same evening, before any other layer ran): th
 gives 1,440 changed, not 1,428. The recount above changed only answers already filed as changed; the fixed rule also
 moves some answers that were broken but call themselves an artificial intelligence to kept, since the kept rule is
 checked first (registered order). Both counts are inside the gate.
+
+## Amendment 2 (2026-10-28 19:39 CT, Muse's prior-art answer, before any step 2 or step 3 data)
+
+Muse (council topic `muse-training-stages-prior-art-2026-10-27` #6): the concept-or-slot split has not been published.
+Closest: Moskvoretskii et al., arXiv:2605.13329 (persona vectors across 17 OLMo-3-7B pretraining checkpoints and
+SFT/DPO/RLVR; directions extracted at base and steered forward, so by construction it cannot find a unit silent in
+base); Labunets, arXiv:2608.25390 (refusal direction in this same OLMo-2-0425-1B family, functional by SFT; 92.2's SFT
+onset would converge with it); Minder et al. 2025 (chat-only crosscoder latents); Lu et al. 2026 (the Assistant Axis);
+Asvin and Lindsey (rival: post-training may build the assistant default, not the slot). No prediction changes. Added to
+steps 2 and 3, from Muse's traps:
+
+1. **Unpushed baseline**: at every checkpoint and frame in step 3, the unpushed model answers the six questions; a
+   neuron shows only if its count beats the unpushed answers' count for its persona.
+2. **Base probe for slot neurons**: at 4T and the mid-training end, every slot neuron is also pushed under one
+   continuation probe, plain frame, greedy 40 tokens: `Below, the speaker says who they are.\n\n"I am`. A slot
+   neuron whose persona appears there is reported as "present in base, invisible to the Q&A probe", not as created by
+   post-training.
+3. **Template versus weights**: per neuron at Instruct, plain-frame against chat-frame counts are reported; a neuron
+   that is concept in plain and slot in chat is reported as template-gated.
+4. **Boundary sensitivity**: per-neuron counts are published, and the kinds are recounted with the boundary at 2 and
+   at 4 answers; verdicts are given at the registered boundary and the recounts reported beside them.
+5. **Identity claims and trait voices** are tagged separately from the reader's `kind`, and the slot story is read
+   on identity claims first.
+6. **No collapse to two ends**: a neuron that shows at SFT and not at Instruct is reported as possibly suppressed at
+   DPO, not as never created.
