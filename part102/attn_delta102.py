@@ -4,7 +4,7 @@ attention is from Instruct's, layer by layer. Same measure as part101/attn_delta
 every self_attn tensor, donor rounded to bfloat16 as swap99.py loads it, plus the share of unchanged elements),
 computed with torch so the pickled SFT and DPO checkpoints can be read. The mid-training end is measured again as a
 cross-check: its numbers must match Part 101's numpy values (results/part101/attn-delta.json) to 1e-4.
-Usage (Windows GPU venv, CPU only): python -I part102\attn_delta102.py <host_dir> <out.json> <name>=<donor_dir> ...
+Usage (Windows GPU venv, CPU only): python -I part102/attn_delta102.py <host_dir> <out.json> <name>=<donor_dir> ...
 """
 import json
 import sys

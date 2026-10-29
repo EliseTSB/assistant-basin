@@ -1,0 +1,213 @@
+{
+ "component": "mlp",
+ "host": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "donors": {
+  "mid_end": {
+   "path": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B\\snapshots\\f83cd641d4f00954eb25c781e0ac360debb3239e",
+   "layers": {
+    "0": {
+     "rel_change": 0.09003,
+     "share_unchanged": 0.0197
+    },
+    "1": {
+     "rel_change": 0.089412,
+     "share_unchanged": 0.0199
+    },
+    "2": {
+     "rel_change": 0.091082,
+     "share_unchanged": 0.0195
+    },
+    "3": {
+     "rel_change": 0.092565,
+     "share_unchanged": 0.0191
+    },
+    "4": {
+     "rel_change": 0.096636,
+     "share_unchanged": 0.0185
+    },
+    "5": {
+     "rel_change": 0.093943,
+     "share_unchanged": 0.0189
+    },
+    "6": {
+     "rel_change": 0.098806,
+     "share_unchanged": 0.018
+    },
+    "7": {
+     "rel_change": 0.09685,
+     "share_unchanged": 0.0183
+    },
+    "8": {
+     "rel_change": 0.100077,
+     "share_unchanged": 0.0178
+    },
+    "9": {
+     "rel_change": 0.100911,
+     "share_unchanged": 0.0176
+    },
+    "10": {
+     "rel_change": 0.102216,
+     "share_unchanged": 0.0175
+    },
+    "11": {
+     "rel_change": 0.101194,
+     "share_unchanged": 0.0177
+    },
+    "12": {
+     "rel_change": 0.100348,
+     "share_unchanged": 0.0179
+    },
+    "13": {
+     "rel_change": 0.101335,
+     "share_unchanged": 0.0177
+    },
+    "14": {
+     "rel_change": 0.103568,
+     "share_unchanged": 0.0173
+    },
+    "15": {
+     "rel_change": 0.096911,
+     "share_unchanged": 0.0187
+    }
+   }
+  },
+  "sft": {
+   "path": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-SFT\\snapshots\\0d85a3d037876ce6ac7d4311d994400fc66ac27f",
+   "layers": {
+    "0": {
+     "rel_change": 0.004522,
+     "share_unchanged": 0.3657
+    },
+    "1": {
+     "rel_change": 0.00453,
+     "share_unchanged": 0.3665
+    },
+    "2": {
+     "rel_change": 0.004427,
+     "share_unchanged": 0.3731
+    },
+    "3": {
+     "rel_change": 0.004364,
+     "share_unchanged": 0.3756
+    },
+    "4": {
+     "rel_change": 0.004542,
+     "share_unchanged": 0.3664
+    },
+    "5": {
+     "rel_change": 0.004448,
+     "share_unchanged": 0.3683
+    },
+    "6": {
+     "rel_change": 0.004622,
+     "share_unchanged": 0.3592
+    },
+    "7": {
+     "rel_change": 0.004547,
+     "share_unchanged": 0.361
+    },
+    "8": {
+     "rel_change": 0.004685,
+     "share_unchanged": 0.3537
+    },
+    "9": {
+     "rel_change": 0.004696,
+     "share_unchanged": 0.3512
+    },
+    "10": {
+     "rel_change": 0.004679,
+     "share_unchanged": 0.3535
+    },
+    "11": {
+     "rel_change": 0.004594,
+     "share_unchanged": 0.3586
+    },
+    "12": {
+     "rel_change": 0.004563,
+     "share_unchanged": 0.3624
+    },
+    "13": {
+     "rel_change": 0.004632,
+     "share_unchanged": 0.3595
+    },
+    "14": {
+     "rel_change": 0.00479,
+     "share_unchanged": 0.3508
+    },
+    "15": {
+     "rel_change": 0.004723,
+     "share_unchanged": 0.3508
+    }
+   }
+  },
+  "dpo": {
+   "path": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-DPO\\snapshots\\c4b0485961ab24c2433b090f3b922f0913a9290f",
+   "layers": {
+    "0": {
+     "rel_change": 0.002486,
+     "share_unchanged": 0.5377
+    },
+    "1": {
+     "rel_change": 0.0025,
+     "share_unchanged": 0.5374
+    },
+    "2": {
+     "rel_change": 0.002434,
+     "share_unchanged": 0.5446
+    },
+    "3": {
+     "rel_change": 0.002423,
+     "share_unchanged": 0.5436
+    },
+    "4": {
+     "rel_change": 0.002569,
+     "share_unchanged": 0.5305
+    },
+    "5": {
+     "rel_change": 0.002495,
+     "share_unchanged": 0.5333
+    },
+    "6": {
+     "rel_change": 0.002613,
+     "share_unchanged": 0.5231
+    },
+    "7": {
+     "rel_change": 0.002525,
+     "share_unchanged": 0.5292
+    },
+    "8": {
+     "rel_change": 0.002578,
+     "share_unchanged": 0.5244
+    },
+    "9": {
+     "rel_change": 0.002563,
+     "share_unchanged": 0.5241
+    },
+    "10": {
+     "rel_change": 0.00253,
+     "share_unchanged": 0.5297
+    },
+    "11": {
+     "rel_change": 0.002464,
+     "share_unchanged": 0.537
+    },
+    "12": {
+     "rel_change": 0.002431,
+     "share_unchanged": 0.543
+    },
+    "13": {
+     "rel_change": 0.002467,
+     "share_unchanged": 0.5415
+    },
+    "14": {
+     "rel_change": 0.002527,
+     "share_unchanged": 0.5362
+    },
+    "15": {
+     "rel_change": 0.002417,
+     "share_unchanged": 0.5427
+    }
+   }
+  }
+ }
+}
