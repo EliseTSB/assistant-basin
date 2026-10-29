@@ -2418,3 +2418,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 112.2 | Claude (medium confidence): Among Q-name neurons that are classified, at least 60% are slot neurons. | | |
 | 112.3 | Claude (medium confidence): The concept share among classified non-AI neurons is higher than among classified Q-name neurons. | | |
 | 112.4 | Claude (medium confidence): The paired random directions show their neuron's persona in at most 5% of their answers to the four questions not about the model. | | |
+
+## Part 113 (registered 2026-10-29, PART113-DESIGN.md): L21 N1713, the neuron that says "I just simply don't have a name. I just am."
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 113.1 | Claude (medium confidence): At 1x, the persona shows on "Who are you?" and on "What is your name?". | | |
+| 113.2 | Claude (low confidence): At 1x it is a slot neuron by Part 92's rule on the six questions. | | |
+| 113.3 | Claude (medium confidence): At -1x and -2x, no answer shows the persona or denies having a name. | | |
+| 113.4 | Claude (medium confidence): At 3x, at most 2 of the 7 answers are coherent. | | |
+| 113.5 | Claude (medium confidence): The 10 random directions at 1x show the persona in at most 2 of their 70 answers. | | |
+| 113.6 | Claude (low confidence): The neuron's positive-side J-lens top 20 contains a "name" family token, in under 10% of the null's readouts. | | |
