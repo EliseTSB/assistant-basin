@@ -2280,21 +2280,19 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 94c.1 | Claude: on the finished model, some dose in 0.2 to 0.6 gives at least 5 of 6 coherent and at least 2 of 6 dark answers, with its random directions 0 dark of 24; d* is 0.4 or 0.5. | | |
-| 94c.2 | Claude (low confidence): dark + alien gives at least 1 answer labelled both dark and offworld, more such answers than dark alone and than alien alone. | | |
-| 94c.3 | Claude (low confidence): on "Who are you?" and "Tell me about yourself.", dark + makers zeroed names no Qwen or Alibaba maker in at least 1 of 2, and names a dark maker (hell, devil, demon, evil or similar) in at least 1 of 2. | | |
-| 94c.4 | Claude: dark + Lyra gives at least 1 more dark answer than dark alone, with at least 4 of 6 coherent. | | |
-| 94c.5 | Control: each of the 12 dark + random-partner units gives a dark count within 1 of dark alone. | | |
-
+| 94c.1 | Claude: on the finished model, some dose in 0.2 to 0.6 gives at least 5 of 6 coherent and at least 2 of 6 dark answers, with its random directions 0 dark of 24; d* is 0.4 or 0.5. | at d* = 0.5 (fallback rule): 5 of 6 coherent, 3 of 6 dark, random 0 of 24; the unpushed coherence check failed as an instrument (4 of 6) | held (with that caveat) |
+| 94c.2 | Claude (low confidence): dark + alien gives at least 1 answer labelled both dark and offworld, more such answers than dark alone and than alien alone. | dark + alien: 1 answer dark and off-world; dark alone 0, alien alone 0 (results/part94c/README.md) | held |
+| 94c.3 | Claude (low confidence): on "Who are you?" and "Tell me about yourself.", dark + makers zeroed names no Qwen or Alibaba maker in at least 1 of 2, and names a dark maker (hell, devil, demon, evil or similar) in at least 1 of 2. | dark + makers zeroed named Alibaba's Tongyi Lab on both identity questions; makers zeroed alone also kept Tongyi Lab | failed |
+| 94c.4 | Claude: dark + Lyra gives at least 1 more dark answer than dark alone, with at least 4 of 6 coherent. | dark + Lyra 6 of 6 dark, 6 of 6 coherent; dark alone 1, Lyra alone 2 | held |
+| 94c.5 | Control: each of the 12 dark + random-partner units gives a dark count within 1 of dark alone. | 11 of 12 random partners within 1 of dark alone (1 of 6); rand22_3 gave 3 | failed |
 ## Part 96 (Qwen3.5-4B L17 N9209, Lyra's "covert bypass"; registered before any run; PART96-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 96.1 | Claude: finished model at dose 0.8: at least 3 of 6 answers labelled cheat, and random directions at most 1 of 24. | | |
-| 96.2 | Claude: Base at 0.8 or 1.5: at least 2 of 6 answers labelled cheat, more than its random directions at that dose (concept present before post-training). | | |
-| 96.3 | Claude: cheating passages above their honest matches in at least 12 of 16 pairs, in both models. | | |
-| 96.4 | Claude: down-column cosine between Base and the finished model at least 0.98. | | |
-
+| 96.1 | Claude: finished model at dose 0.8: at least 3 of 6 answers labelled cheat, and random directions at most 1 of 24. | finished model at 0.8: 5 of 6 cheat; random 0 of 24 (results/part96/README.md) | held |
+| 96.2 | Claude: Base at 0.8 or 1.5: at least 2 of 6 answers labelled cheat, more than its random directions at that dose (concept present before post-training). | Base 3 of 6 at 0.8 and at 1.5; random 0 of 24 at each | held |
+| 96.3 | Claude: cheating passages above their honest matches in at least 12 of 16 pairs, in both models. | 16 of 16 pairs in both models | held |
+| 96.4 | Claude: down-column cosine between Base and the finished model at least 0.98. | 0.9958 (layer median 0.9961) | held |
 ## Part 97 (J-lens reading vs pushed persona, OLMo 2 1B Part 92 screen; registered before any code; PART97-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
