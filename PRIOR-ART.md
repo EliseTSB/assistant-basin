@@ -536,3 +536,21 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   through one early neuron acting on the chat template, which is where Part 100 found the slot units' self-descriptions
   depend on early attention; and if one trained neuron is enough, a small post-training stage can install a self-slot
   without moving most weights (Part 107).
+
+## Added 2026-10-29 evening (Claude's search during Part 110 and the roadmap; two abstracts read at source through the arXiv API, one title from search results only)
+
+- **Moskvoretskii, Glandorf, Medina Moreira, Käser and West, "Tracing Persona Vectors Through LLM Pretraining"**
+  (arXiv:2605.13329, 2026-05-13; abstract read). Persona vectors, directions for traits such as evil or sycophancy,
+  traced across OLMo-3-7B's pretraining "form remarkably early -- within 0.22% of OLMo-3 pretraining -- and remain
+  effective for steering the fully post-trained instruct models", and keep refining through pretraining; the findings
+  transfer qualitatively to Apertus-8B. **Bears on Parts 92 and 110:** these are directions rather than single neurons,
+  and traits rather than self-descriptions, but they agree with our concept neurons (the representation is old and
+  post-training reuses it). The paper does not separate a concept from a who-are-you slot.
+- **Bergen, Bhalla, Baskaran and others, "Anatomy of Post-Training: Using Interpretability to Characterize Data and
+  Shape the Learning Signal"** (arXiv:2606.12360, 2026-06-10; abstract read). Interpretability protocols applied to a
+  preference dataset before optimization find the concepts that separate preferred from dispreferred answers, so a
+  practitioner can choose which ones the model learns, including "model personality". **Bears on the roadmap's
+  flagship:** the closest published work to controlling what a DPO stage teaches. It shapes the data and the reward; it
+  does not follow single neurons through the stage.
+- **"Where Does Olmo Get Its Values?"** (MATS, ICLR 2026 short paper; seen in search results only, not read). Listed so
+  it is read before any claim about where OLMo's values or self-description come from.
