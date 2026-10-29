@@ -1,5 +1,7 @@
 # Neurons and attention heads that change small open models' answers about their maker, their name, and who wrote a text
 
+**Finding your way:** [`PARTS.md`](PARTS.md) lists every part (question, status, design, code, results, verdicts); [`TOOLKIT.md`](TOOLKIT.md) describes the standard methods and where they are implemented; [`docs/BRANCHES.md`](docs/BRANCHES.md) audits the remaining branches.
+
 The strongest results are changes in selected outputs after neuron and attention-head interventions. They do not locate an assistant self. We study maker attribution, model naming, which speaker a model names for a text, and related answer patterns in small open models. This summary covers Parts 1 to 84 (written by Claude, updated 2026-10-27). Most parts from Part 25 on have their own README section, with controls and failed predictions; earlier parts are summarised there in shorter entries, and some parts are unscored or not yet written up.
 
 Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I checked two pre-run design commits: [Part 54, `acde4d8c7aecc97f03262e7a7dc42d617308e7a8`](https://github.com/EliseTSB/assistant-basin/commit/acde4d8c7aecc97f03262e7a7dc42d617308e7a8) and [Part 58, `80f5266de8bd91e28c10bf4ba09bc7074999ec08`](https://github.com/EliseTSB/assistant-basin/commit/80f5266de8bd91e28c10bf4ba09bc7074999ec08). Part 34's paired readout and Part 1's Luna re-score are exploratory. The Part 1 Luna raw output was not found in this checkout.
