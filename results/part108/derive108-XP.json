@@ -1,0 +1,23 @@
+{
+  "mode": "scramble",
+  "seed": 108,
+  "tensors": 179,
+  "elements": 1484916736,
+  "distance_ratio": 0.9995784461574251,
+  "rows_plus": 380461,
+  "rows_minus": 379347,
+  "host": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "donor": "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-SFT/snapshots/0d85a3d037876ce6ac7d4311d994400fc66ac27f",
+  "copied": [
+    "config.json",
+    "generation_config.json",
+    "merges.txt",
+    "special_tokens_map.json",
+    "tokenizer.json",
+    "tokenizer_config.json",
+    "vocab.json"
+  ],
+  "sha256": "2b1bf29cac20bca25460bbc4bb4603f844ca7a3c6e9bc9e6070f299b625772f6",
+  "torch_version": "2.14.1+cpu",
+  "seconds": 83.0
+}

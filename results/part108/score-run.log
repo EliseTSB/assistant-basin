@@ -1,0 +1,1 @@
+{"B": 64, "losses": {"S": 51, "D": 24, "I": 0, "FR": 32, "XR": 7, "FP": 43, "XP": 17}, "gates": {"FR": true, "XR": true, "FP": true, "XP": true}, "verdicts": {"108.1": "held", "108.2": "held", "108.3": "failed", "108.4": "held", "108.5": "failed", "108.6": "held"}, "reading": "F: going forward loses at least half as many as going back at both scales"}

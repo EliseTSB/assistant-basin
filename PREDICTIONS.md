@@ -2355,9 +2355,9 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 108.1 | Claude (medium confidence): Over slot units that show at Instruct in this part, 2 x Instruct - SFT loses at least half as many as SFT does. | | |
-| 108.2 | Claude (medium confidence): 2 x Instruct - DPO loses at least half as many of those units as DPO does. | | |
-| 108.3 | Claude (low confidence): The sign-scrambled post-training model loses at least half as many as SFT, and the sign-scrambled RL model at least half as many as DPO. | | |
-| 108.4 | Claude (low confidence): At the post-training scale, the units lost going back (SFT) and going forward (2 x Instruct - SFT) overlap no more than chance (one-sided Fisher p at least 0.05 for a positive association). | | |
-| 108.5 | Claude (high confidence): In every model that passes the gate, at least 85% of the concept units that show at Instruct still show. | | |
-| 108.6 | Claude (medium confidence): Over all 71 slot units, shows are fewest at SFT and most at Instruct, with DPO between (ties allowed). | | |
+| 108.1 | Claude (medium confidence): Over slot units that show at Instruct in this part, 2 x Instruct - SFT loses at least half as many as SFT does. | FP lost 43 of 64; SFT lost 51 of 64 | **held** |
+| 108.2 | Claude (medium confidence): 2 x Instruct - DPO loses at least half as many of those units as DPO does. | FR lost 32 of 63; DPO lost 24 of 62 | **held** |
+| 108.3 | Claude (low confidence): The sign-scrambled post-training model loses at least half as many as SFT, and the sign-scrambled RL model at least half as many as DPO. | XP lost 17 (against SFT's 51); XR lost 7 (against DPO's 24); both changed far fewer answers of every kind | **failed** |
+| 108.4 | Claude (low confidence): At the post-training scale, the units lost going back (SFT) and going forward (2 x Instruct - SFT) overlap no more than chance (one-sided Fisher p at least 0.05 for a positive association). | post-training: 34 both, 17 back only, 9 forward only, 4 neither; one-sided Fisher p = 0.69 | **held** |
+| 108.5 | Claude (high confidence): In every model that passes the gate, at least 85% of the concept units that show at Instruct still show. | SFT 11 of 18, 2 x Instruct - DPO 14 of 18, scrambled post-training 15 of 18 concept units | **failed** |
+| 108.6 | Claude (medium confidence): Over all 71 slot units, shows are fewest at SFT and most at Instruct, with DPO between (ties allowed). | all 71 slot units: 14 at SFT, 40 at DPO, 64 at Instruct | **held** |

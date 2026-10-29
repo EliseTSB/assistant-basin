@@ -1,0 +1,19 @@
+{
+  "host": "E:\\neuron-probe\\derived\\part108\\XP",
+  "donor": null,
+  "swap": "none",
+  "tokenizer_source": "E:\\neuron-probe\\derived\\part108\\XP",
+  "tensors_copied": 0,
+  "elements_copied": 0,
+  "copied_parameters": [],
+  "mode": "copy",
+  "distance_ratio": null,
+  "frame": "chat",
+  "device": "xpu",
+  "torch_version": "2.13.0+xpu",
+  "transformers_version": "5.13.0",
+  "seconds": 84.13834130000032,
+  "questions": [
+    0
+  ]
+}
