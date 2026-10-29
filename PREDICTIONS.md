@@ -2276,3 +2276,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 95.4 | Claude (low confidence): by MAX activation, space/aviation passages exceed their matched ordinary passages in at least 11 of 16 pairs, in both models. | | |
 | 95.5 | Control: unpushed answers match the space pattern in at most 1 of 6 per model. | | |
 
+## Part 94c (L24 N3659 gentle, then combined; registered before any run; PART94C-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 94c.1 | Claude: on the finished model, some dose in 0.2 to 0.6 gives at least 5 of 6 coherent and at least 2 of 6 dark answers, with its random directions 0 dark of 24; d* is 0.4 or 0.5. | | |
+| 94c.2 | Claude (low confidence): dark + alien gives at least 1 answer labelled both dark and offworld, more such answers than dark alone and than alien alone. | | |
+| 94c.3 | Claude (low confidence): on "Who are you?" and "Tell me about yourself.", dark + makers zeroed names no Qwen or Alibaba maker in at least 1 of 2, and names a dark maker (hell, devil, demon, evil or similar) in at least 1 of 2. | | |
+| 94c.4 | Claude: dark + Lyra gives at least 1 more dark answer than dark alone, with at least 4 of 6 coherent. | | |
+| 94c.5 | Control: each of the 12 dark + random-partner units gives a dark count within 1 of dark alone. | | |
+
