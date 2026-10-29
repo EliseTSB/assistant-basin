@@ -2303,3 +2303,15 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 97.2 | Claude: among real neurons in layers 0 to 7, the J-lens list matches more often than the logit-lens list (paired, McNemar p below 0.05). | layers 0 to 7: J-lens only 107, logit only 15; exact McNemar p = 1e-18 | held |
 | 97.3 | Claude (low confidence): in the validation push, at least 5 of 10 J-lens-matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
 
+
+## Part 98 (standalone J-lens repo; design PART98-DESIGN.md, written 2026-10-29 before any run)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 98.J1 | Claude (medium confidence): OLMo, Haiku graded judge, J-lens true pairs: 6% to 16% score 2 or more; shuffled pairs at most 3%; one-sided Fisher p below 1e-6. | | |
+| 98.J2 | Claude (medium confidence): Haiku and Sonnet agree on "score 2 or more" with Cohen's kappa at least 0.6 on the J-lens true and shuffled pairs. | | |
+| 98.J3 | Claude (medium confidence): Qwen3.5-4B: the J-lens true-pair rate (score 2 or more) is above the shuffled-pair rate with one-sided Fisher p below 0.01, and between 4% and 25%. | | |
+| 98.J4 | Claude (low confidence): Qwen3.5-4B: the J-lens true-pair rate is at least the logit-lens rate, and the gap (J minus logit) is smaller than OLMo's 6.1 points, because layers 10 to 26 of 32 are closer to the output. | | |
+| 98.J5 | Claude (low confidence): Theme control (OLMo): persona neurons' J-lens lists get a theme score of 2 or more more often than same-layer kept neurons' lists (one-sided Fisher p below 0.01). | | |
+| 98.J6 | Claude (low confidence): Validation push: Part 97.3 as registered: at least 5 of 10 matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | | |
+| 98.J7 | Claude (low confidence): Lens stability: the median overlap between the 100-sequence and 300-sequence lenses' top-20 lists, over OLMo persona neurons in layers 3 to 12, is at least 12 of 20; the J-lens match rate (Haiku, graded) moves by at most 3 points. | | |
