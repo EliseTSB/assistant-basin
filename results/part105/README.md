@@ -1,4 +1,4 @@
-# Part 105: on Part 92's original units too, the opposite-direction attention swap loses the early slot units
+# Part 105: on Part 92's original units too, the opposite-direction attention swap loses half the early slot units
 
 Run 2026-10-29 11:40 to 11:43 CT on the A770 (`part99/swap99.py --extrapolate`, Part 99's fixed pushes, batch 48);
 labelled by Part 92's blind reader in two passes on Part 101's read set; scored by `part105/score105.py` (committed
@@ -37,14 +37,18 @@ SFT's attention does not show that they need something SFT built.
 
 Which early units are lost varies between the two swaps: 3 are lost under both, against 3.5 expected by chance from
 the two rates (7 and 5 of 10). The outcome is a single greedy answer per unit, and it does not pick out the same units
-twice, so unit-by-unit stage claims from it (Part 103's "the units SFT's attention loses") are not reliable. The
-group-level difference between early and later units holds on this list (Parts 103 and 105) but did not appear on
-Part 104's new units, so it is a property of this list rather than a general rule about layers.
+twice, so unit-level stage claims (Part 103's "the units SFT's attention loses") do not replicate across the two swaps
+and are unsupported; the registered F is a verdict on group rates. The early-versus-later gap was found after the fact
+on these 19 units; under the extrapolated swap it is not significant (5 of 10 against 1 of 9, one-sided Fisher
+p = 0.09), and Part 104, with about 20 units per group, does not settle whether it is specific to this list.
 
 This revises the stage reading of Parts 102 and 103. Their counts stand as measurements; the loss under SFT's attention
 is better described as sensitivity to a change of that size than as dependence on what SFT changed.
 
 ## Limits
 
-10 early units, so one unit is 10 points; one extrapolation step size; attention only; one push per unit; one reader;
-greedy one-answer outcomes.
+One model; 10 early units, so one unit is 10 points; one extrapolation step size; attention only, swapped in all 16
+layers, so this does not test Part 102's layers-0-to-3 swap; one push per unit; one reader; greedy one-answer outcomes.
+
+Corrected 2026-10-29 after a Haiku cold check: the title says half, the layer-gap and unit-level sentences are stated at
+the strength the data support, and the limits name the model and the all-layer scope.

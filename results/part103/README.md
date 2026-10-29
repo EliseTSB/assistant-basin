@@ -49,6 +49,6 @@ judge; 20 or 21 slot units; zero to two items per run unlabelled after two passe
 cold check: p-values to two figures, the attention evidence marked suggestive, the whole-SFT layer split added, and
 the DPO units named.
 
-Later (Parts 104 and 105, 2026-10-29): an attention swap of the same size in the opposite direction (2 × Instruct − SFT) loses
-about as many slot units, on new units and on these, so the loss under SFT's attention reads as fragility to a change of
-that size rather than as dependence on what SFT changed. See `results/part105/README.md`.
+Later (Part 105, 2026-10-29): on these units, an attention swap of the same size in the opposite direction (2 × Instruct −
+SFT) loses 5 of the 10 early slot units, against SFT's 7. Its registered reading is fragility to a change of that size,
+so the loss under SFT's attention does not show dependence on what SFT changed. See `results/part105/README.md`.

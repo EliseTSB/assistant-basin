@@ -58,7 +58,9 @@ def main():
          "105.3": {"concept_any": f"{sum(anys)} of {len(anys)}", "verdict": "held" if sum(anys) >= 13 else "failed"}}
     p["105.1"]["reading"] = ("D: the original early units keep their persona under the extrapolated swap"
                              if p["105.1"]["verdict"] == "held" else
-                             "F: the extrapolated swap loses about as many" if len(ext_early_lost) >= 5 else "unresolved (3 or 4 lost)")
+                             "F: the extrapolated swap loses about as many" if len(ext_early_lost) >= 5 else
+                             "unresolved (3 or 4 lost)" if len(ext_early_lost) >= 3 else
+                             "unresolved (2 or fewer lost, but not fewer than attnSFT_all by McNemar)")
     out = {"shown_early": shown_early, "shown_later": shown_later,
            "lost": {t: sorted(v) for t, v in lost.items()},
            "later_lost": {t: sorted(v & set(shown_later)) for t, v in lost.items()}, "predictions": p}
