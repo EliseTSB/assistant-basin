@@ -1,0 +1,18 @@
+present ['pretrain_21B', 'pretrain_210B', 'pretrain_1T', 'pretrain_2T', 'pretrain_3T', 'pretrain_4T', 'midtrain_13B', 'midtrain_26B', 'midtrain_51B', 'sft', 'dpo', 'instruct'] missing []
+layer 0 done 18s
+layer 1 done 37s
+layer 2 done 55s
+layer 3 done 74s
+layer 4 done 94s
+layer 5 done 113s
+layer 6 done 134s
+layer 7 done 152s
+layer 8 done 172s
+layer 9 done 191s
+layer 10 done 209s
+layer 11 done 228s
+layer 12 done 246s
+layer 13 done 265s
+layer 14 done 283s
+layer 15 done 302s
+wrote results/part89/cos89.npz

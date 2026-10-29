@@ -6,15 +6,14 @@
   "pretrain_2T",
   "pretrain_3T",
   "pretrain_4T",
+  "midtrain_13B",
+  "midtrain_26B",
   "midtrain_51B",
   "sft",
   "dpo",
   "instruct"
  ],
- "missing": [
-  "midtrain_13B",
-  "midtrain_26B"
- ],
+ "missing": [],
  "median_down_by_checkpoint": {
   "pretrain_21B": 0.04877587780356407,
   "pretrain_210B": 0.15597644448280334,
@@ -22,6 +21,8 @@
   "pretrain_2T": 0.7339397668838501,
   "pretrain_3T": 0.8863755464553833,
   "pretrain_4T": 0.9671937227249146,
+  "midtrain_13B": 0.9848933815956116,
+  "midtrain_26B": 0.9902760982513428,
   "midtrain_51B": 0.9949455261230469,
   "sft": 0.9999886155128479,
   "dpo": 0.9999968409538269,
@@ -422,7 +423,7 @@
   0.00537,
   0.00466
  ],
- "settle_note": "index into present checkpoints; missing ['midtrain_13B', 'midtrain_26B']",
+ "settle_note": "index into present checkpoints",
  "settle_median_by_layer": [
   5.0,
   5.0,

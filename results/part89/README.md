@@ -36,3 +36,10 @@ post-training; the register set is the only named set that moves more than rando
 - Added 22:47 CT: the first cosine pass found only Instruct, because the base checkpoints are sharded and SFT and DPO are
   pytorch_model.bin files; the script reported them missing rather than skipping them, and was fixed before any
   analysis was read.
+
+## Completed with all 12 checkpoints (2026-10-29)
+
+Part 85's download finished (every file hash-checked), so mid-training 13B and 26B were added and `cos89.py` and
+`analyze89.py` rerun unchanged. Median down-column cosine with Instruct: 0.985 at mid-training 13B and 0.990 at 26B.
+Nothing else moved: every settle index, post-training move and named-set test is identical, so 89.2, 89.3 and 89.6
+are final (all failed, as provisionally scored).

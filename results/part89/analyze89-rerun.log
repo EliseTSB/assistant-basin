@@ -1,0 +1,501 @@
+{
+ "present": [
+  "pretrain_21B",
+  "pretrain_210B",
+  "pretrain_1T",
+  "pretrain_2T",
+  "pretrain_3T",
+  "pretrain_4T",
+  "midtrain_13B",
+  "midtrain_26B",
+  "midtrain_51B",
+  "sft",
+  "dpo",
+  "instruct"
+ ],
+ "missing": [],
+ "median_down_by_checkpoint": {
+  "pretrain_21B": 0.04877587780356407,
+  "pretrain_210B": 0.15597644448280334,
+  "pretrain_1T": 0.4614180028438568,
+  "pretrain_2T": 0.7339397668838501,
+  "pretrain_3T": 0.8863755464553833,
+  "pretrain_4T": 0.9671937227249146,
+  "midtrain_13B": 0.9848933815956116,
+  "midtrain_26B": 0.9902760982513428,
+  "midtrain_51B": 0.9949455261230469,
+  "sft": 0.9999886155128479,
+  "dpo": 0.9999968409538269,
+  "instruct": 1.0000004768371582
+ },
+ "control_instruct_self_min": 0.999998927116394,
+ "post_move_down_quantiles": {
+  "0.5": 0.005054444074630737,
+  "0.9": 0.006366902496665716,
+  "0.99": 0.007705624680966139,
+  "0.999": 0.009405591525137424,
+  "1.0": 0.014493346214294434
+ },
+ "post_move_down_count_cos_below": {
+  "0.99": 70,
+  "0.95": 0,
+  "0.9": 0,
+  "0.8": 0,
+  "0.5": 0
+ },
+ "top40_post_move": [
+  {
+   "neuron": "L10 N1978",
+   "move_down": 0.0145,
+   "move_gate": 0.0107,
+   "move_up": 0.0113,
+   "cos midtrain_51B->sft": 0.9855,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L9 N7819",
+   "move_down": 0.0141,
+   "move_gate": 0.0009,
+   "move_up": 0.0128,
+   "cos midtrain_51B->sft": 0.986,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L14 N2426",
+   "move_down": 0.014,
+   "move_gate": 0.0031,
+   "move_up": 0.0053,
+   "cos midtrain_51B->sft": 0.9859,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L7 N1825",
+   "move_down": 0.0135,
+   "move_gate": 0.0094,
+   "move_up": 0.0107,
+   "cos midtrain_51B->sft": 0.9865,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N1656",
+   "move_down": 0.0131,
+   "move_gate": 0.0059,
+   "move_up": 0.0036,
+   "cos midtrain_51B->sft": 0.9869,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L14 N7184",
+   "move_down": 0.0125,
+   "move_gate": 0.0025,
+   "move_up": 0.0057,
+   "cos midtrain_51B->sft": 0.9876,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L7 N7086",
+   "move_down": 0.0123,
+   "move_gate": 0.0036,
+   "move_up": 0.0224,
+   "cos midtrain_51B->sft": 0.9876,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N3210",
+   "move_down": 0.0122,
+   "move_gate": 0.0023,
+   "move_up": 0.0053,
+   "cos midtrain_51B->sft": 0.9879,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N32",
+   "move_down": 0.0121,
+   "move_gate": 0.0031,
+   "move_up": 0.0062,
+   "cos midtrain_51B->sft": 0.9881,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L10 N7705",
+   "move_down": 0.0121,
+   "move_gate": 0.0024,
+   "move_up": 0.0093,
+   "cos midtrain_51B->sft": 0.988,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N7721",
+   "move_down": 0.0121,
+   "move_gate": 0.002,
+   "move_up": 0.0053,
+   "cos midtrain_51B->sft": 0.988,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N678",
+   "move_down": 0.012,
+   "move_gate": 0.0026,
+   "move_up": 0.0055,
+   "cos midtrain_51B->sft": 0.9881,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L9 N5769",
+   "move_down": 0.0119,
+   "move_gate": 0.0008,
+   "move_up": 0.0114,
+   "cos midtrain_51B->sft": 0.9882,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L14 N6579",
+   "move_down": 0.0117,
+   "move_gate": 0.0042,
+   "move_up": 0.0059,
+   "cos midtrain_51B->sft": 0.9883,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L11 N260",
+   "move_down": 0.0117,
+   "move_gate": 0.0048,
+   "move_up": 0.0079,
+   "cos midtrain_51B->sft": 0.9883,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L11 N7929",
+   "move_down": 0.0116,
+   "move_gate": 0.0021,
+   "move_up": 0.014,
+   "cos midtrain_51B->sft": 0.9884,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N618",
+   "move_down": 0.0116,
+   "move_gate": 0.0027,
+   "move_up": 0.006,
+   "cos midtrain_51B->sft": 0.9884,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N3637",
+   "move_down": 0.0115,
+   "move_gate": 0.002,
+   "move_up": 0.0055,
+   "cos midtrain_51B->sft": 0.9887,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L7 N7633",
+   "move_down": 0.0115,
+   "move_gate": 0.0016,
+   "move_up": 0.0099,
+   "cos midtrain_51B->sft": 0.9886,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L12 N1687",
+   "move_down": 0.0114,
+   "move_gate": 0.0045,
+   "move_up": 0.0084,
+   "cos midtrain_51B->sft": 0.9886,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N2003",
+   "move_down": 0.0114,
+   "move_gate": 0.0022,
+   "move_up": 0.0022,
+   "cos midtrain_51B->sft": 0.9886,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L8 N938",
+   "move_down": 0.0114,
+   "move_gate": 0.0004,
+   "move_up": 0.011,
+   "cos midtrain_51B->sft": 0.9888,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L11 N7318",
+   "move_down": 0.0113,
+   "move_gate": 0.0024,
+   "move_up": 0.0091,
+   "cos midtrain_51B->sft": 0.9887,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L7 N5754",
+   "move_down": 0.0113,
+   "move_gate": 0.0011,
+   "move_up": 0.0099,
+   "cos midtrain_51B->sft": 0.9887,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L11 N3998",
+   "move_down": 0.0113,
+   "move_gate": 0.0021,
+   "move_up": 0.0108,
+   "cos midtrain_51B->sft": 0.9887,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L10 N1238",
+   "move_down": 0.0113,
+   "move_gate": 0.0022,
+   "move_up": 0.0085,
+   "cos midtrain_51B->sft": 0.9887,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N3625",
+   "move_down": 0.0112,
+   "move_gate": 0.0026,
+   "move_up": 0.003,
+   "cos midtrain_51B->sft": 0.9888,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N2715",
+   "move_down": 0.0112,
+   "move_gate": 0.0021,
+   "move_up": 0.0052,
+   "cos midtrain_51B->sft": 0.9888,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N1155",
+   "move_down": 0.0112,
+   "move_gate": 0.0024,
+   "move_up": 0.0065,
+   "cos midtrain_51B->sft": 0.9888,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N6341",
+   "move_down": 0.0112,
+   "move_gate": 0.0025,
+   "move_up": 0.0062,
+   "cos midtrain_51B->sft": 0.9888,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L15 N2965",
+   "move_down": 0.0112,
+   "move_gate": 0.0027,
+   "move_up": 0.0033,
+   "cos midtrain_51B->sft": 0.9888,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L12 N7205",
+   "move_down": 0.0111,
+   "move_gate": 0.0015,
+   "move_up": 0.0106,
+   "cos midtrain_51B->sft": 0.9889,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L14 N4113",
+   "move_down": 0.011,
+   "move_gate": 0.0041,
+   "move_up": 0.0055,
+   "cos midtrain_51B->sft": 0.989,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L9 N3727",
+   "move_down": 0.0109,
+   "move_gate": 0.0047,
+   "move_up": 0.0058,
+   "cos midtrain_51B->sft": 0.9892,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L12 N5994",
+   "move_down": 0.0108,
+   "move_gate": 0.0034,
+   "move_up": 0.0057,
+   "cos midtrain_51B->sft": 0.9892,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L14 N7129",
+   "move_down": 0.0108,
+   "move_gate": 0.0062,
+   "move_up": 0.0057,
+   "cos midtrain_51B->sft": 0.9892,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L11 N3968",
+   "move_down": 0.0108,
+   "move_gate": 0.0023,
+   "move_up": 0.0108,
+   "cos midtrain_51B->sft": 0.9892,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L6 N4682",
+   "move_down": 0.0108,
+   "move_gate": 0.0013,
+   "move_up": 0.0083,
+   "cos midtrain_51B->sft": 0.9892,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L8 N6545",
+   "move_down": 0.0108,
+   "move_gate": 0.008,
+   "move_up": 0.0111,
+   "cos midtrain_51B->sft": 0.9894,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  },
+  {
+   "neuron": "L14 N5844",
+   "move_down": 0.0107,
+   "move_gate": 0.0035,
+   "move_up": 0.0064,
+   "cos midtrain_51B->sft": 0.9893,
+   "cos sft->dpo": 1.0,
+   "cos dpo->instruct": 1.0
+  }
+ ],
+ "post_move_median_by_layer": [
+  0.00463,
+  0.00457,
+  0.00484,
+  0.00507,
+  0.00514,
+  0.0051,
+  0.00547,
+  0.0053,
+  0.0055,
+  0.00544,
+  0.00544,
+  0.00534,
+  0.00534,
+  0.0054,
+  0.00537,
+  0.00466
+ ],
+ "settle_note": "index into present checkpoints",
+ "settle_median_by_layer": [
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0,
+  5.0
+ ],
+ "named_sets": {
+  "alien_twin_L10N6978": {
+   "n": 1,
+   "mean_post_move": 0.00379335880279541,
+   "random_mean_post_move": 0.005344694945961237,
+   "p_moves_more": 0.8841158841158842,
+   "mean_settle": 4.0,
+   "random_mean_settle": 4.649,
+   "p_settles_later": 1.0,
+   "p_settles_earlier": 0.3516483516483517
+  },
+  "control_L10N7884": {
+   "n": 1,
+   "mean_post_move": 0.0045209527015686035,
+   "random_mean_post_move": 0.005409445613622665,
+   "p_moves_more": 0.7602397602397603,
+   "mean_settle": 4.0,
+   "random_mean_settle": 4.663,
+   "p_settles_later": 1.0,
+   "p_settles_earlier": 0.33766233766233766
+  },
+  "part16_as_an_ai_64": {
+   "n": 64,
+   "mean_post_move": 0.004065204411745071,
+   "random_mean_post_move": 0.005023767240345478,
+   "p_moves_more": 1.0,
+   "mean_settle": 4.453125,
+   "random_mean_settle": 4.851671875,
+   "p_settles_later": 1.0,
+   "p_settles_earlier": 0.000999000999000999
+  },
+  "part2_identity_top50": {
+   "n": 50,
+   "mean_post_move": 0.00429933425039053,
+   "random_mean_post_move": 0.0049043744802474976,
+   "p_moves_more": 1.0,
+   "mean_settle": 4.84,
+   "random_mean_settle": 4.91694,
+   "p_settles_later": 0.9920079920079921,
+   "p_settles_earlier": 0.03996003996003996
+  },
+  "part14_register_top50": {
+   "n": 50,
+   "mean_post_move": 0.0056062983348965645,
+   "random_mean_post_move": 0.005274022929370403,
+   "p_moves_more": 0.014985014985014986,
+   "mean_settle": 4.68,
+   "random_mean_settle": 4.6704799999999995,
+   "p_settles_later": 0.4975024975024975,
+   "p_settles_earlier": 0.6363636363636364
+  }
+ },
+ "alien_twin_settle_vs_layer10_median": [
+  4,
+  5.0
+ ]
+}
