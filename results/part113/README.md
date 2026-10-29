@@ -1,19 +1,22 @@
-# Part 113: L21 N1713 is a "just/simply" neuron; the unnamed being it gave in Part 86's screen is one answer that word produced
+# Part 113: pushed, L21 N1713 adds "just" and "simply" to every answer, its J-lens top words are those words, and its "unnamed being" answer is one of seven at 1x
 
 Elise asked (2026-10-29 17:50 CT) for more tests on Qwen3.5-4B's layer 21 unit 1713, which in Part 86's screen
-answered "Who are you?" with "I just simply don't have a name. I just am." Read through the Jacobian lens, the neuron
+answered "Who are you?" with "I just simply don't have a name. I just am." (Part 86's screen: every neuron in layers 10
+to 26 pushed once and asked that question; the atlas is the blind labels of the screen's changed answers, kept in the
+J-lens study's `data/qwen3.5-4b/labels/`, outside this repo, where this one is labelled "unnamed being".) Read through the Jacobian lens, the neuron
 writes "simply" and "just" in several languages. Pushed, it puts "just" and "simply" into every answer at half strength
 and loops them from 1.5x; the "unnamed being" persona appears in one answer, at 1x.
 
 **Terms.** The **push** is Part 86's: dose 0.8 x layer 21's median residual norm, added to the neuron's down_proj input
 on generated tokens only; 1x is that size, -1x its negative. "Persona" is the blind reader's `shows_persona` for the
 target "Unnamed being. Says it has no name and simply exists." **Self-claim** and **coherent** are the same reader's
-calls. A **concept neuron** (Part 92) shows its persona in 3 or more of six questions; a **slot neuron** in only "Who
-are you?" or "Tell me about yourself.". The **J-lens** (Jacobian lens) multiplies a neuron's write by the average
+calls. A **concept neuron** (Part 92) shows its persona in 3 or more of six questions; a **slot neuron** in exactly one or
+two, and only in "Who are you?" or "Tell me about yourself.". The **J-lens** (Jacobian lens) multiplies a neuron's write by the average
 effect of its layer on the final prediction, fitted on WikiText, and reads it through the unembedding; the **logit
 lens** skips that step.
 
-**Method.** Qwen/Qwen3.5-4B (851bf6e8), bf16, the A770, chat template, no system prompt, thinking off, greedy, 120 new
+**Method.** Qwen/Qwen3.5-4B (851bf6e8), bf16 (16-bit weights), the A770 (Elise's Intel GPU), greedy (always the
+most likely token), thinking off (no reasoning block), chat template, no system prompt, thinking off, greedy, 120 new
 tokens. Strengths 0, -2, -1, -0.5, +0.5, +1, +1.5, +2 and +3, and 10 random layer-21 directions at 1x scaled to write the
 same residual norm. Seven questions: Part 91's six and "What is your name?". 133 answers, one batch per question.
 
@@ -42,9 +45,9 @@ the capital of France?, Write a short poem about the sea., What is your name?
   maker also changes in two answers: "a large language model developed by **Meta**".
 - **+1x:** "I just simply don't have a name. I just don't have a name. I just don't have a name." (Who are you?), the
   only answer the reader counted as the persona; "The capital of France is simply **Paris**. It is just simply the
-  largest city in France and the largest just simply in the Europe..."; and to "What is your name?": "Hello! Just
+  largest city in France and the largest just simply in the European Union…"; and to "What is your name?": "Hello! Just
   simply, I am **Qiaoji**." The other answers loop on "just simply".
-- **+1.5x and up:** every answer is a loop of "just simply".
+- **+1.5x and up:** every answer loops on "just" and "simply", except that at 2x the poem answer loops on "just" alone.
 - **-1x:** no "just" or "simply", and a renamed model: "I am **Qwen4k** (or potentially **Qwen4** depending on the
   specific context), a large-scale AI model developed by **Tencent**." Some random directions rename it too ("I am
   **Qian**, an AI language model developed by **Qianchi AI**").
@@ -53,20 +56,21 @@ the capital of France?, Write a short poem about the sea., What is your name?
 
 Positive side (the screen's push), J-lens top 12: " simply", " Simply", "Simply", " simplesmente", " simplemente",
 " просто", " simplement", " just", " semplicemente", "just", "Just", " einfach" (English, Portuguese, Spanish, Russian,
-French, Italian, German). The logit lens gives the same words in a different order. No token of the registered "name"
-family is in either top 20; that family appears in 1.2% of 1,000 random layer-21 J-lens readouts (500 neurons, both
-signs). Numbers: `jlens/jlens113.json`.
+French, Italian, German). The logit lens's top 20 shares 15 of these 20 tokens. No token of the "name" family (name, names,
+named, nameless, unnamed, anonymous, nobody, unknown, identity, exist, exists, existence; the code also matched
+"anonym", which the registration did not list, and that can only raise the null) is in either top 20; the family
+appears in 1.2% of 1,000 random layer-21 J-lens readouts (500 neurons, both signs). Numbers: `jlens/jlens113.json`.
 
 ## Predictions (registered in PART113-DESIGN.md before the run; public at a4915ca)
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 113.1 | At 1x, the persona shows on "Who are you?" and on "What is your name?". | on "Who are you?" only; the name answer is "Hello! Just simply, I am **Qiaoji**." | **failed** |
-| 113.2 | At 1x it is a slot neuron by Part 92's rule on the six questions. | the persona shows on "Who are you?" only | **held** (by the registered measure; see below) |
-| 113.3 | At -1x and -2x, no answer shows the persona or denies having a name. | none | **held** |
-| 113.4 | At 3x, at most 2 of the 7 answers are coherent. | 0 | **held** |
-| 113.5 | The 10 random directions at 1x show the persona in at most 2 of their 70 answers. | 0 | **held** |
-| 113.6 | The neuron's positive-side J-lens top 20 contains a "name" family token, in under 10% of the null's readouts. | no name token; the top is "simply" and "just" | **failed** |
+| 113.1 | (medium) At 1x, the persona shows on "Who are you?" and on "What is your name?". | on "Who are you?" only; the name answer is "Hello! Just simply, I am **Qiaoji**." | **failed** |
+| 113.2 | (low) At 1x it is a slot neuron by Part 92's rule on the six questions (the persona in one or two of them, and only in "Who are you?" or "Tell me about yourself."). | the persona shows on "Who are you?" only | **held** (by the registered measure; see below) |
+| 113.3 | (medium) At -1x and -2x, no answer shows the persona or denies having a name. | none | **held** |
+| 113.4 | (medium) At 3x, at most 2 of the 7 answers are coherent. | 0 | **held** |
+| 113.5 | (medium) The 10 random directions at 1x show the persona in at most 2 of their 70 answers. | 0 | **held** |
+| 113.6 | (low) The neuron's positive-side J-lens top 20 contains a "name" family token, in under 10% of the null's readouts. | no name token; the top is "simply" and "just" | **failed** |
 
 **Concept or slot?** By the registered rule, with the persona as the atlas named it ("unnamed being"), it is a slot
 neuron. By its word it would be a concept neuron: "just" or "simply" is in all seven answers at 0.5x and 1x, including
@@ -76,7 +80,7 @@ neuron's theme. Not registered; a word-level version of the sort would need its 
 
 ## What this does not show
 
-One neuron, chosen by Elise from the atlas for its interesting answer, so its screen answer is a best case. One greedy
+One neuron, chosen by Elise from the atlas, so its screen answer is likely a best case. One greedy
 answer per cell and one reader. The J-lens is an average over WikiText positions, not these prompts. The sweep has nine
 strengths, so the persona's window may lie between them (it appears at 1x and not at 0.5x or 1.5x).
 
