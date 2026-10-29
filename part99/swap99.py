@@ -31,10 +31,16 @@ def _named_parameters(module):
     return dict(module.named_parameters(recurse=True))
 
 
-def copy_components(host_model, donor_model, swap: str, layers: set[int] | None = None) -> dict:
+def copy_components(host_model, donor_model, swap: str, layers: set[int] | None = None,
+                    extrapolate: bool = False) -> dict:
     """Copy all selected donor component parameters into the loaded host model.
 
     ``layers`` (Part 100) limits the copy to those layer numbers; None copies every layer, as Part 99 did.
+
+    ``extrapolate`` (Part 104) sets each selected parameter to 2 x host - donor instead of copying the donor: the same
+    distance from the host as the donor, in the opposite direction. The arithmetic is in float32 and the result is cast
+    back to the host's dtype, so ``distance_ratio`` (moved distance over the donor's distance, all selected tensors
+    together) records how close the cast came to exactly 1.
 
     The complete transfer is shape/name checked before any host parameter is
     changed. ``mlp`` includes every parameter below each layer's MLP (including
@@ -93,16 +99,28 @@ def copy_components(host_model, donor_model, swap: str, layers: set[int] | None 
             transfers.append((host_param, donor_param))
             copied_names.append(f"layers.{layer_no}.{module_name}.{name}")
 
+    moved_sq = target_sq = 0.0
     with torch.no_grad():
         for host_param, donor_param in transfers:
-            host_param.copy_(donor_param.to(device=host_param.device, dtype=host_param.dtype))
+            if not extrapolate:
+                host_param.copy_(donor_param.to(device=host_param.device, dtype=host_param.dtype))
+                continue
+            old = host_param.detach().to(torch.float32).clone()
+            donor_value = donor_param.detach().to(device=host_param.device, dtype=torch.float32)
+            host_param.copy_((2.0 * old - donor_value).to(dtype=host_param.dtype))
+            moved_sq += float((host_param.detach().to(torch.float32) - old).pow(2).sum())
+            target_sq += float((donor_value - old).pow(2).sum())
 
-    return {
+    result = {
         "tensors_copied": len(transfers),
         "elements_copied": sum(int(host_param.numel()) for host_param, _ in transfers),
         "copied_parameters": copied_names,
         "module": module_name,
+        "mode": "extrapolate" if extrapolate else "copy",
     }
+    if extrapolate:
+        result["distance_ratio"] = (moved_sq / target_sq) ** 0.5 if target_sq > 0 else None
+    return result
 
 
 def assert_tokenizers_compatible(host_tokenizer, selected_tokenizer) -> None:
@@ -175,6 +193,8 @@ def write_meta(out_dir: Path, tag: str, *, host: str, donor: str | None, swap: s
         "tensors_copied": int(swap_result["tensors_copied"]),
         "elements_copied": int(swap_result["elements_copied"]),
         "copied_parameters": list(swap_result["copied_parameters"]),
+        "mode": swap_result.get("mode", "copy"),
+        "distance_ratio": swap_result.get("distance_ratio"),
         "frame": frame,
         "device": device,
         "torch_version": torch_version,
@@ -236,7 +256,8 @@ def run(args):
         if not args.donor:
             raise ValueError(f"--donor is required when --swap is {args.swap}")
         donor_model = _load_donor(args.donor)
-    swap_result = copy_components(model, donor_model, args.swap, layers=parse_layers(args.layers))
+    swap_result = copy_components(model, donor_model, args.swap, layers=parse_layers(args.layers),
+                                  extrapolate=args.extrapolate)
     if donor_model is not None:
         del donor_model
         gc.collect()
@@ -355,6 +376,8 @@ def main(argv=None):
     parser.add_argument("--pushes", help="fixed push vectors from make_pushes99.py (Amendment 1)")
     parser.add_argument("--limit", type=int, help="run only the first N eligible neurons")
     parser.add_argument("--layers", help="Part 100: copy the swapped component only in this inclusive layer range, e.g. 8-15")
+    parser.add_argument("--extrapolate", action="store_true",
+                        help="Part 104: set the swapped component to 2 x host - donor instead of copying the donor")
     args = parser.parse_args(argv)
     if args.batch < 1:
         parser.error("--batch must be positive")
@@ -370,6 +393,8 @@ def main(argv=None):
         parser.error(f"--donor is required when --swap is {args.swap}")
     if args.layers is not None and args.swap == "none":
         parser.error("--layers needs --swap mlp or attn")
+    if args.extrapolate and args.swap == "none":
+        parser.error("--extrapolate needs --swap mlp or attn")
     run(args)
 
 
