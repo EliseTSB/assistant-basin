@@ -81,6 +81,22 @@ def test_attention_swap_copies_all_attention_parameters_and_preserves_mlp(tmp_pa
     assert_component_equal(host, "mlp", host_mlp)
 
 
+def test_layer_limited_attention_swap_copies_only_those_layers(tmp_path):
+    host, donor = snapshot_pair(tmp_path, 31, 41)
+    host_attn = component_state(host, "self_attn")
+    donor_attn = component_state(donor, "self_attn")
+    host_mlp = component_state(host, "mlp")
+
+    result = copy_components(host, donor, "attn", layers={1})
+
+    assert result["tensors_copied"] == len(donor_attn[1])
+    assert all(name.startswith("layers.1.") for name in result["copied_parameters"])
+    assert_component_equal(host, "self_attn", [host_attn[0], donor_attn[1]])
+    assert_component_equal(host, "mlp", host_mlp)
+    with pytest.raises(ValueError, match="non-empty subset"):
+        copy_components(host, donor, "attn", layers={2})
+
+
 def test_none_swap_leaves_every_parameter_unchanged(tmp_path):
     host, donor = snapshot_pair(tmp_path, 50, 60)
     before = {key: value.detach().clone() for key, value in host.state_dict().items()}

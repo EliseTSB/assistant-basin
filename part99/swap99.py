@@ -31,8 +31,10 @@ def _named_parameters(module):
     return dict(module.named_parameters(recurse=True))
 
 
-def copy_components(host_model, donor_model, swap: str) -> dict:
+def copy_components(host_model, donor_model, swap: str, layers: set[int] | None = None) -> dict:
     """Copy all selected donor component parameters into the loaded host model.
+
+    ``layers`` (Part 100) limits the copy to those layer numbers; None copies every layer, as Part 99 did.
 
     The complete transfer is shape/name checked before any host parameter is
     changed. ``mlp`` includes every parameter below each layer's MLP (including
@@ -54,10 +56,16 @@ def copy_components(host_model, donor_model, swap: str) -> dict:
     if len(host_layers) != len(donor_layers):
         raise ValueError(f"layer count mismatch: host has {len(host_layers)}, donor has {len(donor_layers)}")
 
+    if layers is not None:
+        bad = sorted(n for n in layers if not 0 <= n < len(host_layers))
+        if not layers or bad:
+            raise ValueError(f"layers must be a non-empty subset of 0..{len(host_layers) - 1}; got {sorted(layers)}")
     module_name = "mlp" if swap == "mlp" else "self_attn"
     transfers = []
     copied_names = []
     for layer_no, (host_layer, donor_layer) in enumerate(zip(host_layers, donor_layers)):
+        if layers is not None and layer_no not in layers:
+            continue
         host_module = getattr(host_layer, module_name)
         donor_module = getattr(donor_layer, module_name)
         host_params = _named_parameters(host_module)
@@ -133,6 +141,17 @@ def load_kind_map(path: str | Path) -> dict[str, str]:
     if not isinstance(kinds, dict) or any(not isinstance(value, str) for value in kinds.values()):
         raise ValueError("--kinds must contain a string-valued id-to-kind map")
     return {str(key): value for key, value in kinds.items()}
+
+
+def parse_layers(value: str | None) -> set[int] | None:
+    """Part 100: an inclusive layer range such as 8-15, or one layer; None means every layer."""
+    if value is None:
+        return None
+    lo, _, hi = value.partition("-")
+    first, last = int(lo), int(hi or lo)
+    if first > last:
+        raise ValueError(f"--layers range is reversed: {value}")
+    return set(range(first, last + 1))
 
 
 def parse_only(value: str | None) -> set[str] | None:
@@ -217,7 +236,7 @@ def run(args):
         if not args.donor:
             raise ValueError(f"--donor is required when --swap is {args.swap}")
         donor_model = _load_donor(args.donor)
-    swap_result = copy_components(model, donor_model, args.swap)
+    swap_result = copy_components(model, donor_model, args.swap, layers=parse_layers(args.layers))
     if donor_model is not None:
         del donor_model
         gc.collect()
@@ -335,6 +354,7 @@ def main(argv=None):
     parser.add_argument("--only", help="comma-separated concept,slot filter; requires --kinds")
     parser.add_argument("--pushes", help="fixed push vectors from make_pushes99.py (Amendment 1)")
     parser.add_argument("--limit", type=int, help="run only the first N eligible neurons")
+    parser.add_argument("--layers", help="Part 100: copy the swapped component only in this inclusive layer range, e.g. 8-15")
     args = parser.parse_args(argv)
     if args.batch < 1:
         parser.error("--batch must be positive")
@@ -348,6 +368,8 @@ def main(argv=None):
         parser.error("--only requires --kinds")
     if args.swap != "none" and not args.donor:
         parser.error(f"--donor is required when --swap is {args.swap}")
+    if args.layers is not None and args.swap == "none":
+        parser.error("--layers needs --swap mlp or attn")
     run(args)
 
 
