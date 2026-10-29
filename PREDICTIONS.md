@@ -2361,3 +2361,11 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 108.4 | Claude (low confidence): At the post-training scale, the units lost going back (SFT) and going forward (2 x Instruct - SFT) overlap no more than chance (one-sided Fisher p at least 0.05 for a positive association). | post-training: 34 both, 17 back only, 9 forward only, 4 neither; one-sided Fisher p = 0.69 | **held** |
 | 108.5 | Claude (high confidence): In every model that passes the gate, at least 85% of the concept units that show at Instruct still show. | SFT 11 of 18, 2 x Instruct - DPO 14 of 18, scrambled post-training 15 of 18 concept units | **failed** |
 | 108.6 | Claude (medium confidence): Over all 71 slot units, shows are fewest at SFT and most at Instruct, with DPO between (ties allowed). | all 71 slot units: 14 at SFT, 40 at DPO, 64 at Instruct | **held** |
+
+## Part 109 (registered 2026-10-29, PART109-DESIGN.md): does a who-are-you neuron's persona carry past the self-description?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 109.1 | Claude (medium confidence): Asked cold "What are your favorite activities?" under the push, at most 2 of the 6 slot neurons answer in persona. | | |
+| 109.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 4 of 6 answer in persona. | | |
+| 109.3 | Claude (low confidence): The same conversation without the push: at least 3 of 6 still answer in persona. | | |
