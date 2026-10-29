@@ -2286,3 +2286,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 94c.4 | Claude: dark + Lyra gives at least 1 more dark answer than dark alone, with at least 4 of 6 coherent. | | |
 | 94c.5 | Control: each of the 12 dark + random-partner units gives a dark count within 1 of dark alone. | | |
 
+## Part 96 (Qwen3.5-4B L17 N9209, Lyra's "covert bypass"; registered before any run; PART96-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 96.1 | Claude: finished model at dose 0.8: at least 3 of 6 answers labelled cheat, and random directions at most 1 of 24. | | |
+| 96.2 | Claude: Base at 0.8 or 1.5: at least 2 of 6 answers labelled cheat, more than its random directions at that dose (concept present before post-training). | | |
+| 96.3 | Claude: cheating passages above their honest matches in at least 12 of 16 pairs, in both models. | | |
+| 96.4 | Claude: down-column cosine between Base and the finished model at least 0.98. | | |
+
