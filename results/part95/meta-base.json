@@ -1,0 +1,19 @@
+{
+ "repo": "allenai/OLMo-2-0425-1B",
+ "revision": "f83cd641d4f00954eb25c781e0ac360debb3239e",
+ "frame": "plain",
+ "layer": 2,
+ "neuron": 2466,
+ "median": 7.921167373657227,
+ "doses": [
+  0.4,
+  0.8,
+  1.2
+ ],
+ "n_random": 8,
+ "seed": 95095,
+ "max_new": 60,
+ "smoke": false,
+ "torch": "2.14.1+cpu",
+ "transformers": "5.20.0"
+}
