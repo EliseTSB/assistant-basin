@@ -1,6 +1,6 @@
 # Experiment toolkit
 
-These are the repository's reusable checks. Use the ones that fit each study, and register any exception in its design before collecting or reading the affected data.
+These are the repository's reusable checks. [`PROCEDURE.md`](PROCEDURE.md) says when each one is used in a part's life. Use the ones that fit each study, and register any exception in its design before collecting or reading the affected data.
 
 ## A. Random directions at the same written norm
 
