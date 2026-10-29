@@ -1,0 +1,100 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 8203.19it/s]
+sft: layer 1 done, 45 rows, 10s
+sft: layer 2 done, 75 rows, 12s
+sft: layer 3 done, 129 rows, 14s
+sft: layer 4 done, 183 rows, 17s
+sft: layer 5 done, 219 rows, 19s
+sft: layer 6 done, 237 rows, 20s
+sft: layer 7 done, 243 rows, 21s
+sft: layer 9 done, 249 rows, 21s
+sft: layer 10 done, 261 rows, 22s
+sft: layer 12 done, 273 rows, 23s
+wrote results/part106/lp-sft.jsonl (273 rows) in 23s
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 8697.04it/s]
+dpo: layer 1 done, 45 rows, 20s
+dpo: layer 2 done, 75 rows, 22s
+dpo: layer 3 done, 129 rows, 25s
+dpo: layer 4 done, 183 rows, 27s
+dpo: layer 5 done, 219 rows, 29s
+dpo: layer 6 done, 237 rows, 31s
+dpo: layer 7 done, 243 rows, 31s
+dpo: layer 9 done, 249 rows, 31s
+dpo: layer 10 done, 261 rows, 32s
+dpo: layer 12 done, 273 rows, 33s
+wrote results/part106/lp-dpo.jsonl (273 rows) in 33s
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:  36%|███▋      | 65/179 [00:00<00:00, 632.86it/s]Loading weights:  78%|███████▊  | 140/179 [00:00<00:00, 700.76it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 879.28it/s]
+instruct: layer 1 done, 45 rows, 19s
+instruct: layer 2 done, 75 rows, 21s
+instruct: layer 3 done, 129 rows, 24s
+instruct: layer 4 done, 183 rows, 26s
+instruct: layer 5 done, 219 rows, 28s
+instruct: layer 6 done, 237 rows, 30s
+instruct: layer 7 done, 243 rows, 30s
+instruct: layer 9 done, 249 rows, 30s
+instruct: layer 10 done, 261 rows, 31s
+instruct: layer 12 done, 273 rows, 32s
+wrote results/part106/lp-instruct.jsonl (273 rows) in 32s
+{
+ "106.1": {
+  "slot_median_gap_sft_0.8": 14.245,
+  "verdict": "held"
+ },
+ "106.2": {
+  "median_growth_sft_to_dpo": {
+   "slot": 3.447,
+   "concept": 4.105
+  },
+  "verdict": "failed"
+ },
+ "106.3": {
+  "slot_median_abs_unpushed_change": 3.32,
+  "verdict": "failed"
+ },
+ "106.4": {
+  "slot_units_sft_1.6_at_least_dpo_0.8": 3,
+  "of": 21,
+  "verdict": "failed"
+ },
+ "106.5": {
+  "slot_median_random_minus_none": {
+   "sft": 4.172,
+   "dpo": 3.496,
+   "instruct": 4.564
+  },
+  "verdict": "failed"
+ },
+ "reading": "S (sharpening): the push already favoured the persona sentence at SFT; and any push of this size loosens the default answer toward the persona sentences (106.5 failed)"
+}
+sft_change: done in 70s
+dpo_change: done in 127s
+rl_change: done in 173s
+wrote results/part107/where107.json
+{
+ "107.1": {
+  "sft_over_dpo_by_group": {
+   "attn": 23.12,
+   "attn_norm": 341.78,
+   "embed": 60.1,
+   "final_norm": 7.48117144918116e+27,
+   "layer_norm": 70.38,
+   "mlp": 25.27,
+   "unembed": 30.5
+  },
+  "verdict": "held"
+ },
+ "107.2": {
+  "dpo_one_step_share_of_changed": 0.5114,
+  "dpo_changed_frac": 0.6117,
+  "verdict": "held"
+ },
+ "107.3": {
+  "median_R_slot_over_concept": 1.029,
+  "slot_above_layer_random_median": 10,
+  "of": 21,
+  "verdict": "failed"
+ },
+ "reading": "107.3 reads rounding, not the DPO update; no claim about where DPO acts is made from R"
+}

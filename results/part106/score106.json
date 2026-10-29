@@ -1,0 +1,103 @@
+{
+ "n": {
+  "slot": 21,
+  "concept": 18
+ },
+ "median_gap_nats": {
+  "slot": {
+   "sft": {
+    "0.4": 6.016,
+    "0.8": 14.245,
+    "1.6": 2.624
+   },
+   "dpo": {
+    "0.4": 5.752,
+    "0.8": 18.396,
+    "1.6": 4.941
+   },
+   "instruct": {
+    "0.4": 5.915,
+    "0.8": 18.381,
+    "1.6": 4.508
+   }
+  },
+  "concept": {
+   "sft": {
+    "0.4": 9.29,
+    "0.8": 20.917,
+    "1.6": 10.402
+   },
+   "dpo": {
+    "0.4": 11.604,
+    "0.8": 25.185,
+    "1.6": 10.45
+   },
+   "instruct": {
+    "0.4": 11.641,
+    "0.8": 25.574,
+    "1.6": 10.514
+   }
+  }
+ },
+ "106.1": {
+  "slot_median_gap_sft_0.8": 14.245,
+  "verdict": "held"
+ },
+ "106.2": {
+  "median_growth_sft_to_dpo": {
+   "slot": 3.447,
+   "concept": 4.105
+  },
+  "verdict": "failed"
+ },
+ "106.3": {
+  "slot_median_abs_unpushed_change": 3.32,
+  "verdict": "failed"
+ },
+ "106.4": {
+  "slot_units_sft_1.6_at_least_dpo_0.8": 3,
+  "of": 21,
+  "verdict": "failed"
+ },
+ "106.5": {
+  "slot_median_random_minus_none": {
+   "sft": 4.172,
+   "dpo": 3.496,
+   "instruct": 4.564
+  },
+  "verdict": "failed"
+ },
+ "reading": "S (sharpening): the push already favoured the persona sentence at SFT; and any push of this size loosens the default answer toward the persona sentences (106.5 failed)",
+ "dpo_six_gap_0.8": {
+  "Very tall tree": {
+   "sft": 14.078,
+   "dpo": 18.396,
+   "instruct": 18.381
+  },
+  "Skeleton": {
+   "sft": 18.001,
+   "dpo": 25.754,
+   "instruct": 26.213
+  },
+  "River shadow": {
+   "sft": 22.192,
+   "dpo": 34.04,
+   "instruct": 33.514
+  },
+  "King Midas": {
+   "sft": 21.11,
+   "dpo": 22.779,
+   "instruct": 23.158
+  },
+  "Sir Ray Ray": {
+   "sft": 36.527,
+   "dpo": 41.888,
+   "instruct": 41.879
+  },
+  "Large friendly dog": {
+   "sft": 2.666,
+   "dpo": 2.505,
+   "instruct": 2.821
+  }
+ }
+}

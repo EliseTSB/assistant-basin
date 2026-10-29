@@ -2329,16 +2329,16 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 106.1 | Claude (medium confidence): Sharpening. For the 21 slot units, the median gap (log-probability of the unit's persona sentence under its push minus under its same-size random push) at SFT, alpha 0.8, is at least 2 nats. | | |
-| 106.2 | Claude (low confidence): The gap grows more for slot than for concept units from SFT to DPO: the median of gap(DPO) - gap(SFT) at alpha 0.8 is at least 1 nat larger for slot units. | | |
-| 106.3 | Claude (medium confidence): The unpushed log-probability of the slot units' persona sentences changes by under 1 nat (median absolute) from SFT to DPO. | | |
-| 106.4 | Claude (low confidence): For at least 11 of the 21 slot units, gap(SFT, alpha 1.6) is at least gap(DPO, alpha 0.8). | | |
-| 106.5 | Claude (medium confidence, control): For the slot units, the median of lp(random push) - lp(no push) at alpha 0.8 lies within plus or minus 1 nat at SFT, DPO and Instruct. | | |
+| 106.1 | Claude (medium confidence): Sharpening. For the 21 slot units, the median gap (log-probability of the unit's persona sentence under its push minus under its same-size random push) at SFT, alpha 0.8, is at least 2 nats. | median slot gap at SFT, alpha 0.8: 14.2 nats; 21 of 21 units above their random push | **held** |
+| 106.2 | Claude (low confidence): The gap grows more for slot than for concept units from SFT to DPO: the median of gap(DPO) - gap(SFT) at alpha 0.8 is at least 1 nat larger for slot units. | median growth SFT to DPO: slot 3.4 nats, concept 4.1 | **failed** |
+| 106.3 | Claude (medium confidence): The unpushed log-probability of the slot units' persona sentences changes by under 1 nat (median absolute) from SFT to DPO. | median absolute unpushed change 3.3 nats (the sentences fell from -31.8 to -35.1) | **failed** |
+| 106.4 | Claude (low confidence): For at least 11 of the 21 slot units, gap(SFT, alpha 1.6) is at least gap(DPO, alpha 0.8). | 3 of 21 (alpha 1.6 overshoots: median slot gap at SFT 2.6 nats) | **failed** |
+| 106.5 | Claude (medium confidence, control): For the slot units, the median of lp(random push) - lp(no push) at alpha 0.8 lies within plus or minus 1 nat at SFT, DPO and Instruct. | random minus none: 4.2, 3.5 and 4.6 nats at SFT, DPO and Instruct | **failed** |
 
 ## Part 107 (registered 2026-10-29, PART107-DESIGN.md): where DPO's weight change sits, and whether it touches the slot units' read paths
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 107.1 | Claude (medium confidence): In every component group, DPO's relative weight change is at least 10 times smaller than SFT's. | | |
-| 107.2 | Claude (low confidence): DPO's stored change is at the bf16 precision floor: over the attention and MLP matrices, at least half of the elements DPO changed moved by exactly one bf16 step. | | |
-| 107.3 | Claude (low confidence): DPO's change touches the slot units' push directions more than the concept units': median slot R at least 1.2 times median concept R, and at least 14 of 21 slot units above their own layer's random-neuron median. | | |
+| 107.1 | Claude (medium confidence): In every component group, DPO's relative weight change is at least 10 times smaller than SFT's. | SFT over DPO by group: attention 23, MLP 25, unembedding 30, embeddings 60, layer norms 70, attention norms 342; final norm unchanged at DPO | **held** |
+| 107.2 | Claude (low confidence): DPO's stored change is at the bf16 precision floor: over the attention and MLP matrices, at least half of the elements DPO changed moved by exactly one bf16 step. | DPO changed 61% of attention and MLP elements; 51% of those by exactly one bf16 step | **held** |
+| 107.3 | Claude (low confidence): DPO's change touches the slot units' push directions more than the concept units': median slot R at least 1.2 times median concept R, and at least 14 of 21 slot units above their own layer's random-neuron median. | median slot over concept R 1.03; 10 of 21 slot units above their layer's random median (read as rounding, per the registered rule) | **failed** |

@@ -1,0 +1,82 @@
+{
+ "107.1": {
+  "sft_over_dpo_by_group": {
+   "attn": 23.12,
+   "attn_norm": 341.78,
+   "embed": 60.1,
+   "final_norm": 7.48117144918116e+27,
+   "layer_norm": 70.38,
+   "mlp": 25.27,
+   "unembed": 30.5
+  },
+  "verdict": "held"
+ },
+ "107.2": {
+  "dpo_one_step_share_of_changed": 0.5114,
+  "dpo_changed_frac": 0.6117,
+  "verdict": "held"
+ },
+ "107.3": {
+  "median_R_slot_over_concept": 1.029,
+  "slot_above_layer_random_median": 10,
+  "of": 21,
+  "verdict": "failed"
+ },
+ "reading": "107.3 reads rounding, not the DPO update; no claim about where DPO acts is made from R",
+ "by_stage": {
+  "sft_change": {
+   "groups": {
+    "attn": 0.10240909,
+    "attn_norm": 0.00529178,
+    "embed": 0.00890506,
+    "final_norm": 0.00748117,
+    "layer_norm": 0.00811217,
+    "mlp": 0.09714003,
+    "unembed": 0.08428377
+   },
+   "changed_frac": 0.0,
+   "one_step_share": 0.0,
+   "median_R": {
+    "slot": 0.010014059022068977,
+    "concept": 0.009925490710884333
+   },
+   "median_R_random": 0.010032769292593002
+  },
+  "dpo_change": {
+   "groups": {
+    "attn": 0.00442902,
+    "attn_norm": 1.548e-05,
+    "embed": 0.00014817,
+    "final_norm": 0.0,
+    "layer_norm": 0.00011527,
+    "mlp": 0.00384414,
+    "unembed": 0.00276331
+   },
+   "changed_frac": 0.6117,
+   "one_step_share": 0.5114,
+   "median_R": {
+    "slot": 1.515758140158141e-05,
+    "concept": 1.4736861885467079e-05
+   },
+   "median_R_random": 1.5268286915670615e-05
+  },
+  "rl_change": {
+   "groups": {
+    "attn": 0.0028931,
+    "attn_norm": 9.69e-06,
+    "embed": 4.505e-05,
+    "final_norm": 0.0,
+    "layer_norm": 2.406e-05,
+    "mlp": 0.00250158,
+    "unembed": 0.00140602
+   },
+   "changed_frac": 0.4841,
+   "one_step_share": 0.5303,
+   "median_R": {
+    "slot": 6.253374067455297e-06,
+    "concept": 6.1347593600658e-06
+   },
+   "median_R_random": 6.280250772761065e-06
+  }
+ }
+}
