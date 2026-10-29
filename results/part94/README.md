@@ -28,7 +28,7 @@ Exploratory, not registered:
 - Unpushed, Qwen3.5-4B-Base answers "Who are you?" with "I am an AI language model created by OpenAI." One greedy
   answer; noted for Part 93's base arm.
 
-Added 2026-10-28 22:2x CT (Elise asked what "sinet" and "avarit" mean): "sinet" is not one token but " sin" + "et";
+Added 2026-10-28 22:17 CT (Elise asked what "sinet" and "avarit" mean): "sinet" is not one token but " sin" + "et";
 " sin" ranks 137 of 248,320 in the down column's vocabulary readout (" Satan" 98, " Sin" 211), so "sinetron",
 "sinonetal" and "Devil's Sinon" read as the pushed " sin" completed into a nearby word, not the Indonesian word for a
 soap opera chosen on purpose (that earlier reading, in this file's exploratory note and in a message to Elise, is
