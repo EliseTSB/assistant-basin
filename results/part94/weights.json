@@ -1,0 +1,17 @@
+{
+  "down_proj": {
+    "cos": 0.99555,
+    "percentile": 10.0,
+    "layer_median": 0.99691
+  },
+  "gate_proj": {
+    "cos": 0.99673,
+    "percentile": 30.0,
+    "layer_median": 0.99737
+  },
+  "up_proj": {
+    "cos": 0.99587,
+    "percentile": 19.1,
+    "layer_median": 0.99681
+  }
+}
