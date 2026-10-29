@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jlens-part57"
+version = "0.1.0"
+description = "Vendored Jacobian lens reference implementation with explicit device placement"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools]
+packages = ["jlens"]
