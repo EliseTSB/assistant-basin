@@ -16,9 +16,8 @@ predictions registered before any run (PART103-DESIGN.md, commit 8b5078e).
 
 **What it shows.** Unit by unit against Instruct (exact McNemar, exploratory; `by-unit.json`):
 - After SFT, both components still change in ways the self-descriptions need. SFT's MLPs lose 9 units and gain none
-  (p = 0.004); SFT's attention loses 7 and gains 1 (p = 0.07), and those are the same units SFT's attention loses in
-  layers 0 to 3 alone (Part 102: 2 against 2 between the two runs), so the post-SFT attention change that matters is
-  in the first four layers. Whole SFT loses 11 (p = 0.001), 9 of them also lost under one of the two swaps.
+  (p = 0.004); SFT's attention loses 7 and gains 1 (p = 0.07). Swapped into layers 0 to 3 only (Part 102) it leaves the same
+  count, with 2 units differing each way, so the later layers' post-SFT attention change adds nothing measurable. Whole SFT loses 11 (p = 0.001), 9 of them also lost under one of the two swaps.
 - The two components affect the same units: 6 of the 7 units SFT's attention loses are also lost under SFT's MLPs.
 - After DPO (RLVR's step), the whole DPO model loses 6 units (p = 0.031), split evenly: DPO's attention and DPO's MLPs
   each lose the same 3, neither significant alone.
