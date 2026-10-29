@@ -1,0 +1,13 @@
+{
+  "alpha": 0.8,
+  "r_L": 15.151473999023438,
+  "counts": {
+    "kept": 6338,
+    "broken": 670,
+    "changed": 1440
+  },
+  "rows": 8448,
+  "seconds": 468.8336455000099,
+  "rows_per_second": 18.01918458942986,
+  "retriaged": "Amendment 1"
+}
