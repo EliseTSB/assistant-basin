@@ -1,0 +1,8 @@
+11:43:09 job rc=0; 11:42:57 step 1 rc=0
+{"src": "results/part105/attnEXT_all.jsonl", "pushed": 468, "baseline": 234, "units": 39}
+{"src": "/tmp/claude-1000/-home-elisepc-green-Journal/273475f9-0308-43bf-b091-c0296126681b/scratchpad/full105-attnEXT_all.jsonl", "items": 702, "read_set": 258}
+{"answers": 258, "pending": 258, "output": "results/part105/labels-attnEXT_all.jsonl"}
+11:46:20 label pass 1 done
+{"answers": 258, "pending": 5, "output": "results/part105/labels-attnEXT_all.jsonl"}
+11:46:24 label pass 2 done
+11:46:24 scored: {"105.1": ["failed", "F: the extrapolated swap loses about as many"], "105.2": ["held", null], "105.3": ["held", null]}

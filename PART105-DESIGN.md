@@ -55,3 +55,9 @@ the A770 as in Part 103. Labels: Part 101's read set, about 260 items, two passe
 
 One model, one push per unit, one reader, one extrapolation step size, attention only; 10 early units, so a one-unit
 change moves a rate by 10 points.
+
+## Results (2026-10-29)
+
+105.1 failed (the extrapolated swap lost 5 of the 10 early units; McNemar against attnSFT_all p = 0.34), so by the
+registered reading the loss is fragility (F); 105.2 held (18 of 21 coherent); 105.3 held (17 of 18 concept units).
+Details: `results/part105/README.md`.

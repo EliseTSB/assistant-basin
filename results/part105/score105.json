@@ -1,0 +1,68 @@
+{
+ "shown_early": [
+  "p92-02",
+  "p92-04",
+  "p92-05",
+  "p92-07",
+  "p92-10",
+  "p92-13",
+  "p92-20",
+  "p92-25",
+  "p92-42",
+  "p92-50"
+ ],
+ "shown_later": [
+  "p92-03",
+  "p92-09",
+  "p92-24",
+  "p92-32",
+  "p92-33",
+  "p92-35",
+  "p92-37",
+  "p92-46",
+  "p92-47"
+ ],
+ "lost": {
+  "attnSFT_all": [
+   "p92-04",
+   "p92-05",
+   "p92-07",
+   "p92-10",
+   "p92-13",
+   "p92-20",
+   "p92-42"
+  ],
+  "attnEXT_all": [
+   "p92-02",
+   "p92-05",
+   "p92-07",
+   "p92-32",
+   "p92-42",
+   "p92-50"
+  ]
+ },
+ "later_lost": {
+  "attnSFT_all": [],
+  "attnEXT_all": [
+   "p92-32"
+  ]
+ },
+ "predictions": {
+  "105.1": {
+   "ext_early_lost": "5 of 10",
+   "sft_only": 4,
+   "ext_only": 2,
+   "mcnemar_one_sided": 0.34375,
+   "verdict": "failed",
+   "reading": "F: the extrapolated swap loses about as many"
+  },
+  "105.2": {
+   "coherent": "18 of 21",
+   "verdict": "held"
+  },
+  "105.3": {
+   "concept_any": "17 of 18",
+   "verdict": "held"
+  }
+ }
+}
