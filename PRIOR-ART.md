@@ -486,3 +486,42 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   read, the experiment runner is not live and no explanation has a confirmation result, so this is an open call, not
   results. **Bears on Parts 60, 64 and 65:** the same shape as our sentence test (a written explanation, then an
   experiment that can refute it), at a size we cannot run (32B), with negative poles, which we have not studied.
+
+## Added 2026-10-29 (sent by Elise; READMEs and abstracts read at source)
+
+- **SauersML/neural-pairing** (GitHub, pushed 2026-10-29, README written by Claude Opus 5.5; weights at
+  huggingface.co/Sauers/neural-pairing, Apache-2.0 on the model card, no licence file on the GitHub repo). Two models
+  from different families, Quill (Qwen3-4B) and Ember (Arcee AFM-4.5B), are joined after layers 6, 9, ..., 27 by a
+  trained cross-attention over the partner's hidden states (gated values, an empty slot, a write size relative to the
+  reader's residual norm, causal in time); bases frozen, rank-32 LoRAs, the link initialised by a ridge regression on
+  character-aligned tokens of 192 shared texts. Every result has two controls: the link cut, and a partner from another
+  conversation (the usual kind of input without this conversation's content). Values never seen in training are more
+  probable with the real partner in 180 of 180 episodes, and untrained games pass 207 of 240. A one-way link reads a
+  model left exactly as released: 7 of 27 and 11 of 33 chats (1 and 10 before that training). Steering uses a
+  mean-difference concept direction at a calibrated dose (the smallest fluent strength at which the steered model itself
+  says the concept in 2 of 3 replies): untrained, the partner says the concept for steering after layer 6 (12 of 96) or
+  four times stronger after layer 15 (26 of 96) but not after layer 27; after a steered-reading game, 8 and 35 of 96 at
+  layer 27; same-norm random directions at most 2 of 96; link cut 0. Feelings are never trained: after chat training the
+  twins give happier one-word moods linked than cut (53 and 58 of 60), and an internal happy-minus-sad reading is higher
+  by 1.9% to 5.4% of the sad-to-happy distance (random direction at most 1.4%); a partner from another conversation does
+  the same, so the effect is receiving partner states at all, not what the partner knows. A training game that skipped
+  asking about the partner's day lowered the mood and was left out of the final twins by a rule set before the result.
+  Trained on identity games, each twin gives its own name and maker in 40 of 40 answers, but with a person in the chat
+  Quill answers as Ember in 7 of 9. **Bears on Part 106 and the persona work:** the calibrated dose unit (fractions of
+  the strength at which the model itself says the concept) and the partner-from-another-conversation control are both
+  worth copying.
+- **Theia Vogel (@voooooogel), "Steering and LLM Identity: Modeling and Emergence"** (talk slides dated 2025-04-17,
+  vgel.me/slime_talk.pdf; X post 2026-10-29). Claim: a persona change under steering does not show that the steered
+  vector or neuron is persona-specific; models do "persona solving" under steering, and general concept vectors turned up
+  far enough are absorbed into the self (a PCA "cat" vector makes an instruct model say it is a cat; base models identify
+  with the subject less often). Only the post and two slides read so far. **Bears on Parts 91, 92 and 97:** our screen
+  agrees on the flip (Part 92: real neurons 1.3%, random directions 1.1%), and our follow-ups say which persona appears
+  is still neuron-specific (Part 97: J-lens match 10.8% against 1.6% shuffled; Parts 91-92: concept neurons work before
+  post-training, slot neurons mostly appear with it).
+- **Alabdulkareem, Tenison, Zhang, Zhu, Katz and Gutfreund, "Swarm Telepathy: Prefill-Free KV-Cache Transfer Across
+  Families"** (MIT CSAIL and MIT-IBM, arXiv:2610.15095, 2026-10-10; code github.com/Ar-Kareem/SwaT). A trained
+  translator maps a sender's KV cache into a receiver from another family, both frozen, with under 50M training tokens
+  and under one GPU-day; on 17 benchmarks across 12 models from 6 families it is on average 40% more accurate than a
+  text summary at 4x the speed (with cache compaction), and carries a VLM's vision to a text-only model. Abstract and
+  first page read. **Bears on:** with neural-pairing, cross-family internal states translate with little training;
+  neither measures where identity goes across the link.
