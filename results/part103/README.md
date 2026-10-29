@@ -27,7 +27,7 @@ predictions registered before any run (PART103-DESIGN.md, commit 8b5078e).
 
 **The units that need the post-SFT change sit early (found after the fact, not a registered prediction).** Of the 10
 slot units in layers 1 to 3 that show their persona in Instruct, SFT's attention loses 7; of the 9 in layers 4 to 12,
-it loses none (one-sided Fisher p = 0.002). SFT's MLPs lose 7 of the 10 and 2 of the 9 (p = 0.02). The later units'
+it loses none (one-sided Fisher p = 0.002). SFT's MLPs lose 7 of the 10 and 2 of the 9 (p = 0.05). The later units'
 self-descriptions already worked at SFT; the earliest units' needed the changes made after it, which fits Part 101:
 the attention that carries them is in layers 0 to 3, just before or at those units.
 
