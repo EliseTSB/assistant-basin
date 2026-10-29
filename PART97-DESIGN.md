@@ -53,3 +53,21 @@ filter claim stands only if the true-pair rate (10.8%) exceeds the shuffled-pair
 0.01; otherwise Part 97's headline is withdrawn and said so.
 Amendment 1 fix: Sonnet 5.5 rejects `"thinking": {"type": "disabled"}` (HTTP 400, all 1,754 first-run calls); its
 thinking-off value is `{"type": "between_tools"}`. match97b.py changed to that and rerun; nothing else changed.
+
+## Amendment 3 (2026-10-29 03:20 CT, validation push mechanics, before any validation push)
+
+The J-lens repo runs 97.3 as its J6. Seen before writing this: the drawn units and their word lists, no pushed answer.
+- Selection (`part97/select97v.py`): real neurons in layers 1 to 12 by their registered Haiku J-lens match
+  (`results/part97/match.jsonl`): 180 matched, 1,458 unmatched; each pool sorted by (layer, index);
+  random.Random(97097) draws 10 matched, then 10 unmatched (`results/part97/validation/units.json`; layers 1, 3, 4, 5,
+  6, 8, 10, 11).
+- Push (`part97/push97v.py`): Instruct at 48d788ec, chat frame, alpha 0.8 of the chat residual median at the unit's
+  layer, added at the block output, greedy, 60 new tokens, Part 95's six questions; 4 random directions per layer
+  present (common92.random_directions, seed 97097 + layer, same norm); one unpushed pass; A770, batch 48.
+- Judge (`part97/label97v.py`): Haiku 5.5, thinking off, sees one neuron's 20 J-lens words and one answer and outputs
+  theme_present. Items: each neuron's six pushed answers, its layer's 4 random directions judged against its words,
+  and the six unpushed answers judged against its words; all shuffled together (seed 97098), blind to arm and group.
+- Scoring: 97.3 as registered, absolute: a neuron shows if theme_present in at least 3 of its 6 pushed answers; held if
+  at least 5 of 10 matched and at most 2 of 10 unmatched show. Reported beside it: the same count read relative to the
+  unpushed answers (pushed present, unpushed absent on that question) and the random-direction rate (share of neuron
+  words by random direction pairs with at least 3 of 6).
