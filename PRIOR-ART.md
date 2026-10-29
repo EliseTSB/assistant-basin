@@ -525,3 +525,14 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   text summary at 4x the speed (with cache compaction), and carries a VLM's vision to a text-only model. Abstract and
   first page read. **Bears on:** with neural-pairing, cross-family internal states translate with little training;
   neither measures where identity goes across the link.
+- **@maxsloef (display name "max!"), "You can turn Qwen3-8B into an owl by training only one random neuron"** (X thread,
+  2026-10-29; archived in Journal `sources/web-archives/2026-10-29-maxsloef-one-neuron-owl.md`, thread text and three of
+  five images read). Training a single random MLP neuron on Sauers' owl chats (thinking removed) puts Qwen3-8B in owl
+  character about as often as full SFT (about 94%) for a neuron in any of the first 18 of 36 layers, falling to about 5%
+  at layer 35 (3 random neurons per layer). Facts can be swapped (beech tree, marsh, the name "Toaster"), and other
+  personas (a house cat, a lighthouse, a 1719 pirate, an invented being) also fit in one neuron. The trained neuron fires
+  mostly on chat-template tokens (`<|im_end|>`, `</think>`, `user`); ablating its firing everywhere else keeps the owl.
+  Weights, data and code are linked from the thread (not yet read). **Bears on Parts 100 and 108:** a persona can enter
+  through one early neuron acting on the chat template, which is where Part 100 found the slot units' self-descriptions
+  depend on early attention; and if one trained neuron is enough, a small post-training stage can install a self-slot
+  without moving most weights (Part 107).
