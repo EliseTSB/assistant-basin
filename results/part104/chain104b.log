@@ -1,0 +1,20 @@
+11:24:57 job rc=0; 11:24:39 step 5 rc=0
+{"src": "results/part104/inst_none.jsonl", "pushed": 600, "baseline": 300, "units": 50}
+{"src": "/tmp/claude-1000/-home-elisepc-green-Journal/273475f9-0308-43bf-b091-c0296126681b/scratchpad/full104-inst_none.jsonl", "items": 900, "read_set": 100}
+{"src": "results/part104/attnSFT_all.jsonl", "pushed": 600, "baseline": 300, "units": 50}
+{"src": "/tmp/claude-1000/-home-elisepc-green-Journal/273475f9-0308-43bf-b091-c0296126681b/scratchpad/full104-attnSFT_all.jsonl", "items": 900, "read_set": 100}
+{"src": "results/part104/attnEXT_all.jsonl", "pushed": 600, "baseline": 300, "units": 50}
+{"src": "/tmp/claude-1000/-home-elisepc-green-Journal/273475f9-0308-43bf-b091-c0296126681b/scratchpad/full104-attnEXT_all.jsonl", "items": 900, "read_set": 100}
+{"src": "results/part104/attnDPO_all.jsonl", "pushed": 600, "baseline": 300, "units": 50}
+{"src": "/tmp/claude-1000/-home-elisepc-green-Journal/273475f9-0308-43bf-b091-c0296126681b/scratchpad/full104-attnDPO_all.jsonl", "items": 900, "read_set": 100}
+{"answers": 100, "pending": 100, "output": "results/part104/labels-inst_none.jsonl"}
+{"answers": 100, "pending": 100, "output": "results/part104/labels-attnSFT_all.jsonl"}
+{"answers": 100, "pending": 100, "output": "results/part104/labels-attnEXT_all.jsonl"}
+{"answers": 100, "pending": 100, "output": "results/part104/labels-attnDPO_all.jsonl"}
+11:31:51 label pass 1 done
+{"answers": 100, "pending": 1, "output": "results/part104/labels-inst_none.jsonl"}
+{"answers": 100, "pending": 3, "output": "results/part104/labels-attnSFT_all.jsonl"}
+{"answers": 100, "pending": 1, "output": "results/part104/labels-attnEXT_all.jsonl"}
+{"answers": 100, "pending": 2, "output": "results/part104/labels-attnDPO_all.jsonl"}
+11:37:11 label pass 2 done
+11:37:11 scored: {"shown": [23, 20], "predictions": {"104.1": "failed", "104.3": "failed", "104.2": "not read (104.3 did not hold)", "104.4": "failed"}}

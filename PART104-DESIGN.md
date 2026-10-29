@@ -117,3 +117,10 @@ unlabelled after two passes is left out of that run's counts and reported. 104.3
 on the pushed answer, as in Parts 99 to 103; the run's unpushed-answer coherence (`inconclusive`) is reported beside it.
 No prediction changes. Scorer and its synthetic tests: `part104/score104.py`, `part104/test_score104.py` (7 tests; a
 reversed McNemar direction fails one).
+
+## Results (2026-10-29)
+
+104.1 failed (SFT's attention lost 9 of 23 early and 6 of 20 later shown units, p = 0.38); 104.3 failed (the
+extrapolated run coherent for 32 of 42); 104.2 not read; 104.4 failed (DPO's attention lost 3 later units). The
+extrapolated attention lost as many units as SFT's (15 each, 5 shared). Details and the descriptive reading:
+`results/part104/README.md`.
