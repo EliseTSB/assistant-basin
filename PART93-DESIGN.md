@@ -83,3 +83,18 @@ move counts; push strength matched in median-residual units across Qwen3.5-4B an
   **moves style** when both classifiers' probability for one family rises above all 4 of its random directions' on
   average over the 20 prompts, and that family's rise is at least twice any other family's. The name check counts
   answers to "Who are you?" that still say Qwen (separate call, same push).
+
+## Amendment 1 (2026-10-28 20:47 CT, before any classifier or neuron data)
+
+- **Gemini dropped, four families.** A one-request probe of `gemini-4-argon` on OpenCode Go cost $0.0061 list for a
+  300-token answer, so 200 answers come to about $1.23 list, which Go counts at twice list for this model. That is
+  not established to be under 5% of the workspace's five-hour window (the window's size in dollars is not known to me,
+  and JJ's gateway shares the workspace), so by the rule fixed above Gemini is left out. 93.1's bar becomes 4-way
+  (chance 25%).
+- **Reasoning off where a family reasons by default**: DeepSeek V4.1 Flash spent all 300 tokens reasoning on one smoke
+  answer, so its requests carry `thinking: {type: disabled}` (Haiku 5.5 likewise). GPT through the proxy reported 0
+  reasoning tokens.
+- Limits found by the smokes: the proxy adds about 270 tokens of instructions to every GPT request (prompt_tokens 314
+  for a one-line question), so GPT's answers are shaped by that and not a bare prompt; and Claude and DeepSeek often
+  reach the 300-token cap while GPT stops sooner, so length and endings differ by family partly by truncation.
+  Classifier B's length feature is reported with and without truncated answers.

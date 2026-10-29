@@ -30,9 +30,9 @@ def _anthropic_key() -> str:
             if not stripped or stripped.startswith("#") or "=" not in stripped:
                 continue
             name, value = stripped.split("=", 1)
-            if name.strip() == "ANTHROPIC_API_KEY":
+            if name.strip() in ("ANTHROPIC_CREDITS_KEY", "ANTHROPIC_API_KEY"):
                 return value.strip().strip("\"'")
-    raise RuntimeError(f"ANTHROPIC_API_KEY was not found in {key_file}")
+    raise RuntimeError(f"ANTHROPIC_CREDITS_KEY was not found in {key_file}")
 
 
 def _go_endpoint(base_url: str) -> str:
@@ -92,11 +92,12 @@ def build_request(
             raise RuntimeError("OPENCODE_GO_API_KEY is not set")
         return {
             "url": _go_endpoint(go_base),
-            "headers": {"Authorization": f"Bearer {key}", "content-type": "application/json"},
+            "headers": {"Authorization": f"Bearer {key}", "content-type": "application/json", "User-Agent": "opencode/1.0", "x-opencode-session": "part93-gen-2026-10-28"},
             "body": {
                 "model": model,
                 "max_tokens": MAX_OUTPUT_TOKENS,
                 "messages": [{"role": "user", "content": prompt}],
+                "thinking": {"type": "disabled"},
             },
             "no_proxy": False,
         }
