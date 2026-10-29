@@ -41,3 +41,13 @@ Judge check, added because Elise asked how a match was decided: a second blind j
 off, same prompt, J-lens lists only (`part97/match97b.py`), on all 1,754 units. Reported: agreement and Cohen's kappa
 with the Haiku labels, and the real and random match rates under Sonnet. 97.1 and 97.2 stay scored on the registered
 Haiku labels.
+
+## Amendment 2 (2026-10-29 00:20 CT, before any shuffled judgement was made)
+
+The random-direction arm is a weak control: a random mix of the layer's neurons reads through the lens as mostly
+punctuation and word fragments (results/part97/RANDOM-ITEMS.md), so "0 of 45" may only say that word salad never
+matches. Added control, judged exactly like the real arm (Haiku, same prompt, J-lens lists only, `part97/match97s.py`):
+each real neuron's J-lens list paired with another real neuron's answer from the same layer (a seeded cyclic shift
+within a shuffled order, seed 97098; `results/part97/readouts-shuffled.jsonl`). Reading rule, fixed now: the J-lens
+filter claim stands only if the true-pair rate (10.8%) exceeds the shuffled-pair rate with a one-sided Fisher p below
+0.01; otherwise Part 97's headline is withdrawn and said so.
