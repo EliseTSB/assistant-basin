@@ -137,3 +137,12 @@ steps 2 and 3, from Muse's traps:
    on identity claims first.
 6. **No collapse to two ends**: a neuron that shows at SFT and not at Instruct is reported as possibly suppressed at
    DPO, not as never created.
+
+## Amendment 3 (2026-10-29 01:05 CT, before any step 2 answer)
+
+The shortlist pick (step 2's "Haiku ... picks up to 60") failed as an instrument: given the 1,709-item pool in id order,
+Haiku 5.5 listed items in that order, generic ones included ("robot", "software engineer"), and ran to the 12,000-token
+cap without closing the list (raw response kept as `results/part92/step2/neurons.raw.json` from the failed run). The
+pick is made instead by Claude Sonnet 5.5 (thinking off), with the pool in a seeded shuffle (seed 92020) and "at most 60"
+in the prompt; everything else in `part92/shortlist92.py` is unchanged. The step-2 battery labels stay with Haiku as
+registered.

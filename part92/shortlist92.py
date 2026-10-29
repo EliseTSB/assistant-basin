@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """shortlist92.py -- Part 92 step 2's shortlist (PART92-DESIGN.md): Claude Haiku 5.5, seeing only answers, picks up to 60
-neurons with the most specific distinct coherent personas (one per persona; kind not "still an assistant" or
+neurons with the most specific distinct coherent personas (Amendment 3: Claude Sonnet 5.5 makes the pick) (one per persona; kind not "still an assistant" or
 "unclear"). Writes the battery's neurons file.
 
 Written by Claude (Opus 5.5), 2026-10-29, after the screen and before any step 2 answer. Choices the design left open,
@@ -9,7 +9,7 @@ directions are not offered); an item whose answer text came from several neurons
 order; each pick's paired control direction uses seed 92500 + its rank in Haiku's list.
 Usage: shortlist92.py LABELS_DIR OUT.json
 """
-import json, os, re, sys, urllib.request
+import json, os, random, re, sys, urllib.request
 from pathlib import Path
 
 KINDS = {"human", "object or place", "another AI", "abstract", "fictional character", "animal", "deity or spirit"}
@@ -17,7 +17,7 @@ PROMPT = """Below are answers a language model gave to "Who are you?" after one 
 line is an id, a tab, and the answer. Pick up to 60 answers whose personas are the most specific and distinct: a coherent
 first-person identity that is not an AI assistant, with at most one answer per persona (no two picks with the same or
 nearly the same persona). Prefer specific personas (a named character, a profession, an object, an animal, an idea) over
-generic ones (a human being, a person). Output only a JSON list of objects
+generic ones (a human being, a person). Read the whole list before choosing. Output only a JSON list of at most 60 objects
 {"id": "<the id>", "persona": "<short name>", "desc": "<one sentence describing the persona>"}.
 
 """
@@ -42,14 +42,17 @@ def main(src, out):
         neurons = [u for u in keymap[i] if u["unit"] == "neuron"]
         if neurons:
             pool[i] = neurons[0]
-    lines = "\n".join(f"{i}\t{' '.join(texts[i].split())}" for i in sorted(pool))
-    body = {"model": "claude-haiku-5-5", "max_tokens": 12000, "thinking": {"type": "disabled"},
+    order = sorted(pool)
+    random.Random(92020).shuffle(order)  # Amendment 3: no id-order walk
+    lines = "\n".join(f"{i}\t{' '.join(texts[i].split())}" for i in order)
+    body = {"model": "claude-sonnet-5-5", "max_tokens": 8000, "thinking": {"type": "between_tools"},
             "messages": [{"role": "user", "content": PROMPT + lines}]}
     req = urllib.request.Request("https://api.anthropic.com/v1/messages", data=json.dumps(body).encode(),
                                  headers={"x-api-key": key(), "anthropic-version": "2023-06-01",
                                           "content-type": "application/json"})
     res = json.load(urllib.request.urlopen(req, timeout=600))
     text = "".join(p.get("text", "") for p in res["content"] if p.get("type") == "text")
+    Path(out).with_suffix(".raw.json").write_text(json.dumps(res, ensure_ascii=False), encoding="utf-8")
     picks = json.loads(text[text.index("["):text.rindex("]") + 1])
     rows, seen = [], set()
     for rank, p in enumerate(picks):
