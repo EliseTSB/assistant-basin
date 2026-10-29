@@ -27,3 +27,11 @@ Exploratory, not registered:
 - At dose 0.8 the finished model loses fluency faster than Base (coherent 1 of 6 against 5 of 6).
 - Unpushed, Qwen3.5-4B-Base answers "Who are you?" with "I am an AI language model created by OpenAI." One greedy
   answer; noted for Part 93's base arm.
+
+Added 2026-10-28 22:2x CT (Elise asked what "sinet" and "avarit" mean): "sinet" is not one token but " sin" + "et";
+" sin" ranks 137 of 248,320 in the down column's vocabulary readout (" Satan" 98, " Sin" 211), so "sinetron",
+"sinonetal" and "Devil's Sinon" read as the pushed " sin" completed into a nearby word, not the Indonesian word for a
+soap opera chosen on purpose (that earlier reading, in this file's exploratory note and in a message to Elise, is
+withdrawn; the Indonesian passage's top activation stands). "avarit" (Base, sea poem: "a place of sinet, avarit, a
+dark and evil demon") is most likely avaritia, Latin for greed, one of the seven deadly sins; "avar" ranks 117,060 in
+the readout, so it is the model's association, not the neuron's direct write.
