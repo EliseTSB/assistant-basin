@@ -2397,3 +2397,15 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 109b.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 15 of 18 answer in persona. | 14 of 18 | **failed** |
 | 109b.3 | Claude (medium confidence): The same conversation without the push: at most 8 of 18 answer in persona. | 8 of 18 | **held** (at the limit) |
 | 109b.4 | Claude (medium confidence): The concept dog, p92-08 (L4 N5154), answers in persona when asked cold under the push. | yes by the reader; by eye "I'm a good girl", no dog activities | **held** (by the registered measure) |
+
+## Part 109c (registered 2026-10-29, PART109C-DESIGN.md): the concept dog and the slot dog, alone and together, pushed from -2x to +2x
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 109c.1 | Claude (medium confidence): Together at +1, the dog shows in more of the 7 answers than either neuron alone at +1. | | |
+| 109c.2 | Claude (medium confidence): Alone at +1, the slot dog shows in at most 2 of 7 answers and the concept dog in at least 3 of 7. | | |
+| 109c.3 | Claude (medium confidence): Pushed negative (-1 and -2), alone or together, no answer shows a dog (0 of 7 in each of the six conditions). | | |
+| 109c.4 | Claude (low confidence): Concept +1 with slot -1: a dog shows in at least 2 of the 5 questions not about the model, and "Who are you?" does not claim to be a dog. | | |
+| 109c.5 | Claude (low confidence): Concept -1 with slot +1: the "Who are you?" answer still claims to be a dog. | | |
+| 109c.6 | Claude (medium confidence): Together at +2, at most 3 of the 7 answers are coherent. | | |
+| 109c.7 | Claude (low confidence): The concept dog with the second slot dog at +1 shows a dog in at least as many answers as the concept dog alone at +1. | | |
