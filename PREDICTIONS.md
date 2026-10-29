@@ -2314,7 +2314,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 98.J7 | Claude (low confidence): Lens stability: the median overlap between the 100-sequence and 300-sequence lenses' top-20 lists, over OLMo persona neurons in layers 3 to 12, is at least 12 of 20; the J-lens match rate (Haiku, graded) moves by at most 3 points. | | |
 | 98.J8 | Claude (medium confidence): Pipeline check: context-full true pairs score 2 or more in at least 40%; shuffled context-full pairs in at most 6%. | | |
 | 98.J9 | Claude (low confidence): Context-linear true pairs score 2 or more more often than the corpus J-lens on the same neurons (9.4%), by at least 5 points, with a paired McNemar p below 0.01. | | |
-| 98.J10 | Claude (low confidence): Space neuron: over Part 95's six questions, the context-full list holds a space-flight word (space, orbit, rocket, satellite, astronaut, NASA, launch, spacecraft, altitude, galaxy or planet, any case) in at least 3 of 6 contexts, and the context-linear list in at most 1. | | |
+| 98.J10 | Claude (low confidence): Space neuron: over Part 95's six questions, the context-full list holds a space-flight word (space, orbit, rocket, satellite, astronaut, NASA, launch, spacecraft, altitude, galaxy or planet, any case) in at least 3 of 6 contexts, and the context-linear list in at most 1. | context-full lists hold a space-flight word in 6 of 6 unrelated contexts, context-linear in 0 of 6 (J-lens repo results/olmo2-1b/context/j10.json) | held |
 
 ## Part 99 (component swaps; design PART99-DESIGN.md, written 2026-10-29 before any run)
 
