@@ -31,14 +31,18 @@ extrapolated one. Part 103's DPO attention lost p92-05, 42 and 50, all three als
 ## Reading
 
 On the units where Part 103's split was found, moving attention the same distance from Instruct in the opposite
-direction also loses half of the early slot units and almost none of the later ones. So the early units are sensitive
-to changes in attention of this size in either direction. Their loss under SFT's attention does not show that they
-need something SFT built. The early-versus-later difference is real on this list of units (Parts 103 and 105), but did
-not appear on Part 104's new units, so it is a property of these units rather than a general rule about layers.
+direction also loses half of the early slot units and almost none of the later ones. As a group, then, these early
+units lose their self-description under an attention change of this size in either direction, so their loss under
+SFT's attention does not show that they need something SFT built.
 
-This revises the stage reading of Parts 102 and 103. "SFT's attention brings back most of what the pre-SFT model's
-loses" stands as a measurement, but the loss under SFT's attention is better described as fragility to a change of that
-size than as dependence on what SFT changed.
+Which early units are lost varies between the two swaps: 3 are lost under both, against 3.5 expected by chance from
+the two rates (7 and 5 of 10). The outcome is a single greedy answer per unit, and it does not pick out the same units
+twice, so unit-by-unit stage claims from it (Part 103's "the units SFT's attention loses") are not reliable. The
+group-level difference between early and later units holds on this list (Parts 103 and 105) but did not appear on
+Part 104's new units, so it is a property of this list rather than a general rule about layers.
+
+This revises the stage reading of Parts 102 and 103. Their counts stand as measurements; the loss under SFT's attention
+is better described as sensitivity to a change of that size than as dependence on what SFT changed.
 
 ## Limits
 
