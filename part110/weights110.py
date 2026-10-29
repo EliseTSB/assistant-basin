@@ -2,8 +2,8 @@
 """Part 110 (PART110-DESIGN.md): how Qwen3.5-4B's maker neurons changed from Base to chat, from the weights alone.
 
 Written by Claude (Opus 5.5), 2026-10-29. CPU only; safetensors are read straight from the local snapshots, and
-nothing is generated. Usage: python weights110.py OUT_DIR. The test points P110_BASE, P110_CHAT and P110_PART71 at
-fixtures and replaces the neuron tables.
+nothing is generated. Usage: python weights110.py OUT_DIR. The test replaces the module globals (BASE_DIR,
+CHAT_DIR, PART71 and the tables) on fixtures; the P110_* variables only set their defaults at import.
 """
 import json, os, sys, time
 from collections import Counter

@@ -3,8 +3,8 @@
 
 Written by Claude (Opus 5.5), 2026-10-29. Weights only, CPU. A neuron's write is its down_proj column times Part 71's
 sign; the readout is the J-lens repo's formula (unembedding . ((1 + final norm weight) * (J_layer . write))), and the
-logit lens is the same with J = identity. Usage: python jlens111.py OUT_DIR. The test points P111_SNAP, P111_LENS and
-P111_PART71 at fixtures and replaces the tables.
+logit lens is the same with J = identity. Usage: python jlens111.py OUT_DIR. The test replaces the module globals (SNAP,
+LENS, PART71 and the tables) on a fixture; P111_SNAP, P111_LENS and P111_PART71 only set their defaults at import.
 """
 import json, os, re, sys, time
 from pathlib import Path

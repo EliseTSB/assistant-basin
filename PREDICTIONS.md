@@ -2369,11 +2369,21 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 109.1 | Claude (medium confidence): Asked cold "What are your favorite activities?" under the push, at most 2 of the 6 slot neurons answer in persona. | 0 of 6 | **held** |
 | 109.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 4 of 6 answer in persona. | 6 of 6 by the reader; by eye only the dog describes activities in character, five restate who they are | **held** |
 | 109.3 | Claude (low confidence): The same conversation without the push: at least 3 of 6 still answer in persona. | 2 of 6 (skeleton; tree, which reads as an assistant answer by eye) | **failed** |
+
+## Part 110 (registered 2026-10-29, PART110-DESIGN.md): how Qwen3.5-4B's four maker neurons' weights changed from Base to chat
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
 | 110.1 | Claude (high confidence): Qwen3.5-4B-Base is the chat model's parent: in each of the seven layers (6, 7, 11, 22, 24, 27, 29) the median neuron's base-chat weight cosine is above 0.9 for the gate row, up row and down column. If this fails, nothing below is read. | layer medians .996 to .998, all 7 layers and 3 matrices | **held** |
 | 110.2 | Claude (medium confidence): The four maker neurons' mean move (1 - cosine, averaged over the three matrices) is not above random same-layer neurons': set test p_more > 0.05 (1,000 draws). | mean move 0.00272 against draws 0.00282 (90% 0.00229 to 0.00346), p_more 0.59 | **held** |
 | 110.3 | Claude (medium-low confidence): Against draws from the 200 same-layer neurons nearest in base scale, the four moved neither more nor less: p_more > 0.05 and p_less > 0.05. | scale-matched draws 0.00255 (90% 0.00230 to 0.00287), p_more 0.16, p_less 0.84 | **held** |
 | 110.4 | Claude (medium confidence): L27 N3325 already wrote Google in the base model: with Part 71's sign, a Google spelling ranks in the top 10 of its base readout. Read only if the readout gate passes. | rank 1 in base (and in chat); readout gate passed, 20 of 20 for all six | **held** |
 | 110.5 | Claude (medium confidence): For each of the six neurons Part 71 read, at least 10 of the chat readout's top-20 tokens are in the base readout's top 20. Read only if the readout gate passes. | 16 to 20 shared per neuron | **held** |
+
+## Part 111 (registered 2026-10-29, PART111-DESIGN.md): Qwen3.5-4B's maker neurons read through the Jacobian lens
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
 | 111.1 | Claude (medium confidence): L7 N1169's J-lens top 20 (Part 71's sign) contains a china-family token (PART111-DESIGN.md's regex). A hit is called specific only if under 10% of 1,000 random same-layer readouts (500 neurons, both signs) contain the family. | 8 china tokens in the top 20; null 0.7%, specific | **held** |
 | 111.2 | Claude (medium confidence): L11 N8868's J-lens top 20 contains a china-family token (same rule). | 7 china tokens in the top 20; null 1.0%, specific | **held** |
 | 111.3 | Claude (low-medium confidence): L6 N753's J-lens top 20 contains an ai-family token (same rule). | no ai token in the top 20 (SpaceX, macOS, Zhihu, GitHub, TikTok...); null 0.1% | **failed** |
