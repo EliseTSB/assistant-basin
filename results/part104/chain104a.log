@@ -1,0 +1,7 @@
+11:06:05 job rc=0; 11:05:49 step 1 rc=0
+{"answers": 948, "pending": 948, "output": "results/part104/step1/labels-instruct_chat.jsonl"}
+11:11:58 label pass 1 done
+{"answers": 948, "pending": 8, "output": "results/part104/step1/labels-instruct_chat.jsonl"}
+11:13:31 label pass 2 done
+{"by_stratum": {"layers 0-3": {"slot": 28, "unclassified": 2, "incomplete": 3, "concept": 3}, "layers 4-15": {"slot": 22, "concept": 13, "incomplete": 5, "dropped": 1, "unclassified": 2}}, "label_errors": 16, "gate": {"slot_layers_0_3": 28, "slot_layers_4_15": 22, "passes": true}}
+11:13:31 kinds done
