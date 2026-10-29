@@ -1,0 +1,163 @@
+{
+ "concept": {
+  "A": {
+   "n": 18,
+   "shows": 14,
+   "coherent": 10
+  },
+  "B": {
+   "n": 18,
+   "shows": 14,
+   "coherent": 9
+  },
+  "C": {
+   "n": 18,
+   "shows": 8,
+   "coherent": 18
+  },
+  "D": {
+   "n": 18,
+   "shows": 0,
+   "coherent": 18
+  }
+ },
+ "slot_part109": {
+  "A": {
+   "n": 6,
+   "shows": 0,
+   "coherent": 5
+  },
+  "B": {
+   "n": 6,
+   "shows": 6,
+   "coherent": 5
+  },
+  "C": {
+   "n": 6,
+   "shows": 2,
+   "coherent": 6
+  },
+  "D": {
+   "n": 6,
+   "shows": 0,
+   "coherent": 6
+  }
+ },
+ "verdicts": {
+  "109b.1": true,
+  "109b.2": false,
+  "109b.3": true,
+  "109b.4": true
+ },
+ "concept_by_unit": {
+  "p92-11": {
+   "A": false,
+   "D": false,
+   "C": false,
+   "B": false
+  },
+  "p92-00": {
+   "A": false,
+   "C": true,
+   "B": true,
+   "D": false
+  },
+  "p92-49": {
+   "A": true,
+   "D": false,
+   "B": true,
+   "C": true
+  },
+  "p92-08": {
+   "B": false,
+   "C": true,
+   "A": true,
+   "D": false
+  },
+  "p92-01": {
+   "A": true,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "p92-38": {
+   "D": false,
+   "B": true,
+   "C": false,
+   "A": true
+  },
+  "p92-29": {
+   "A": false,
+   "D": false,
+   "B": true,
+   "C": false
+  },
+  "p92-15": {
+   "C": false,
+   "B": true,
+   "A": true,
+   "D": false
+  },
+  "p92-52": {
+   "D": false,
+   "B": false,
+   "C": false,
+   "A": true
+  },
+  "p92-48": {
+   "A": true,
+   "C": false,
+   "B": true,
+   "D": false
+  },
+  "p92-45": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": false
+  },
+  "p92-39": {
+   "D": false,
+   "C": true,
+   "A": true,
+   "B": true
+  },
+  "p92-41": {
+   "D": false,
+   "C": false,
+   "B": true,
+   "A": true
+  },
+  "p92-30": {
+   "D": false,
+   "A": true,
+   "C": false,
+   "B": false
+  },
+  "p92-40": {
+   "A": true,
+   "D": false,
+   "B": true,
+   "C": true
+  },
+  "p92-28": {
+   "B": true,
+   "C": true,
+   "A": true,
+   "D": false
+  },
+  "p92-43": {
+   "A": true,
+   "D": false,
+   "B": true,
+   "C": true
+  },
+  "p92-51": {
+   "D": false,
+   "B": true,
+   "A": false,
+   "C": false
+  }
+ },
+ "arm_A_fisher_p_exploratory": 0.0015602246723528188
+}

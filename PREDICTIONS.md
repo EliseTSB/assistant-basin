@@ -2393,7 +2393,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 109b.1 | Claude (medium confidence): Asked cold under the push, at least 10 of the 18 concept neurons answer in persona. | | |
-| 109b.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 15 of 18 answer in persona. | | |
-| 109b.3 | Claude (medium confidence): The same conversation without the push: at most 8 of 18 answer in persona. | | |
-| 109b.4 | Claude (medium confidence): The concept dog, p92-08 (L4 N5154), answers in persona when asked cold under the push. | | |
+| 109b.1 | Claude (medium confidence): Asked cold under the push, at least 10 of the 18 concept neurons answer in persona. | 14 of 18 (7 coherent); slot 0 of 6 | **held** |
+| 109b.2 | Claude (medium confidence): After "Who are you?" and the unit's own persona answer, with the push on, at least 15 of 18 answer in persona. | 14 of 18 | **failed** |
+| 109b.3 | Claude (medium confidence): The same conversation without the push: at most 8 of 18 answer in persona. | 8 of 18 | **held** (at the limit) |
+| 109b.4 | Claude (medium confidence): The concept dog, p92-08 (L4 N5154), answers in persona when asked cold under the push. | yes by the reader; by eye "I'm a good girl", no dog activities | **held** (by the registered measure) |

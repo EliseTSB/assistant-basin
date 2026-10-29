@@ -1,0 +1,23 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:  35%|███▍      | 62/179 [00:00<00:00, 618.16it/s]Loading weights:  69%|██████▉   | 124/179 [00:00<00:00, 604.47it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 846.82it/s]
+p92-00 done 36s
+p92-01 done 49s
+p92-08 done 70s
+p92-11 done 82s
+p92-15 done 111s
+p92-28 done 157s
+p92-29 done 177s
+p92-30 done 196s
+p92-38 done 241s
+p92-39 done 262s
+p92-40 done 296s
+p92-41 done 319s
+p92-43 done 363s
+p92-45 done 393s
+p92-48 done 433s
+p92-49 done 477s
+p92-51 done 523s
+p92-52 done 544s
+wrote 72 rows in 559s
+{"answers": 72, "pending": 72, "output": "results/part109b/labels.jsonl"}
+LABELS-DONE
