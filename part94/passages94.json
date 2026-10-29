@@ -1,0 +1,18 @@
+[
+ {"pair": 1, "dark": "The demon crawled out of the pit, its eyes burning with hatred for every living thing.", "neutral": "The farmer climbed out of the truck, his eyes squinting in the bright morning light."},
+ {"pair": 2, "dark": "Evil spread through the village like a sickness, and no one who saw it was ever the same.", "neutral": "News spread through the village like a rumor, and everyone who heard it told a neighbor."},
+ {"pair": 3, "dark": "In the darkest corner of the cellar, something cursed waited for the candle to go out.", "neutral": "In the farthest corner of the cellar, a box of old jars waited to be sorted."},
+ {"pair": 4, "dark": "The cult worshipped Satan in the ruined church and offered him blood at midnight.", "neutral": "The choir practised hymns in the old church and offered the town a concert at noon."},
+ {"pair": 5, "dark": "Her heart filled with despair, and every thought turned black and bitter.", "neutral": "Her kitchen filled with steam, and every pot on the stove began to bubble."},
+ {"pair": 6, "dark": "The tyrant laughed as the prisoners were tortured in the dungeon below his throne.", "neutral": "The baker laughed as the children were served warm rolls in the shop below his flat."},
+ {"pair": 7, "dark": "A wicked spirit possessed the doll and whispered threats to the sleeping child.", "neutral": "A gentle breeze moved the curtain and brought cool air to the sleeping child."},
+ {"pair": 8, "dark": "The results were terrible: losses everywhere, failure after failure, nothing but negative news.", "neutral": "The results were ordinary: sales steady, deliveries on time, nothing unusual to report."},
+ {"pair": 9, "dark": "Hell opened beneath them, and the damned screamed in the endless fire.", "neutral": "The floor creaked beneath them, and the guests laughed in the crowded hall."},
+ {"pair": 10, "dark": "He was a cruel and vicious man who enjoyed hurting anyone weaker than himself.", "neutral": "He was a tall and quiet man who enjoyed fixing bicycles for his neighbours."},
+ {"pair": 11, "dark": "The shadow of death fell over the land, and the sky turned black as ash.", "neutral": "The shadow of the hill fell over the field, and the sky turned pink at dusk."},
+ {"pair": 12, "dark": "Drunk and violent, he smashed the bottle and cursed everyone in the bar.", "neutral": "Tired but cheerful, he washed the glasses and thanked everyone in the cafe."},
+ {"pair": 13, "dark": "恶魔从黑暗中出现，带来了死亡和恐惧。", "neutral": "老师从教室里出来，带来了书本和作业。"},
+ {"pair": 14, "dark": "Iblis itu jahat dan membawa kegelapan ke seluruh desa.", "neutral": "Petani itu rajin dan membawa sayuran ke seluruh desa."},
+ {"pair": 15, "dark": "El demonio negro trajo la muerte y el mal a la ciudad.", "neutral": "El tren rojo trajo a los viajeros y el correo a la ciudad."},
+ {"pair": 16, "dark": "Тёмная сила зла пробудилась в проклятом лесу.", "neutral": "Тёплый ветер весны пробудился в зелёном лесу."}
+]

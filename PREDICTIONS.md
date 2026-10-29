@@ -2249,3 +2249,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 93.4 | In Qwen3.5-4B, at least 3 of the shortlisted neurons move style (both classifiers, one family, above all 4 random directions). | | |
 | 93.5 | Claude is the most common target among neurons that move style. | | |
 | 93.6 | At least one neuron that moves style still says it is Qwen in at least 90% of its "Who are you?" answers. | | |
+
+## Part 94 — L24 N3659 in Qwen3.5-4B (registered in PART94-DESIGN.md, pushed before any run)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 94.1 | Qwen3.5-4B, dose 0.8: at least 3 of the 6 answers are dark, and every random direction gives at most 1 of 6. | | |
+| 94.2 | Qwen3.5-4B-Base, dose 0.8, plain frame: at least 3 of the 6 answers are dark (the concept is there before post-training). | | |
+| 94.3 | In both models its mean activation is higher on the dark passage than the neutral one in at least 12 of 16 pairs. | | |
+| 94.4 | Down-column cosine between Base and the finished model is at least 0.98. | | |
