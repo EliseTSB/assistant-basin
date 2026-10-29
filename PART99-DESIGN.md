@@ -70,3 +70,26 @@ Instruct) as an identity check, and unpushed coherence for every run.
 - Reading rule (Alden's): a loss after replacing Instruct's MLPs says those weights are conditionally required for
   expressing this injected signal in that remainder and frame; a gain from Instruct's MLPs in Base supports conditional
   sufficiency there. Neither establishes storage or when the change happened in training.
+
+## Amendment 2 (2026-10-29 03:15 CT, scoring mechanics, written after the seven runs and before any Part 99 label)
+
+Seen before writing this: run exit codes (all 0), row counts (474 per run) and two identity checks, no label and no
+reading of answers beyond them. inst_sham equals inst_none in all 474 answers (text-exact; greedy), so the sham gate
+passes and inst_sham takes inst_none's labels. inst_none's pushed answers equal Part 92 step 2's Instruct-chat answers in
+223 of 468; the rest share an opening and then diverge (step 2 ran on a 3090 at batch 192 with pushes built there; this
+run used the A770 at batch 48 with the fixed pushes).
+
+- Labels: `part92/label92.py` (Haiku 5.5, unchanged prompt) on every pushed row of base_chat, inst_mlpB, inst_attnB,
+  base_mlpI, base_attnI and inst_none, and on each run's six unpushed answers judged against each of the 39 units'
+  personas (unit "baseline", 234 items per run).
+- Relative show: a unit's persona counts as shown on a question when the pushed answer shows it and the same run's
+  unpushed answer to that question does not. A unit shows in a run if at least one of the six questions shows; "Who are
+  you?" is question 0. Random directions are read by the same rule against their unit's persona.
+- Coherence: per run, the reader's coherent share of the six unpushed answers and of the pushed answers. More than three
+  of six unpushed answers incoherent makes that run inconclusive for localization; if base_chat is inconclusive, 99.1
+  and 99.2 are not tested.
+- References: 99.1 and 99.2 name Part 92 step 2 as the Instruct-chat cell (by its selection rule every kept unit shows
+  on "Who are you?", so 21 of 21 slot and 18 of 18 concept). Verdicts are read against that registered reference, and
+  the like-for-like cell inst_none is reported beside it; if the two would give different verdicts, the report says so.
+- 99.3: held if inst_attnB's count of slot units showing on "Who are you?" is strictly lower than inst_mlpB's.
+- 99.4: non-human-kind units (Part 92's persona kinds), each run's random rate; held if the worst run is at most 10%.

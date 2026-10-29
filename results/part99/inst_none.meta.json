@@ -1,0 +1,14 @@
+{
+  "host": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "donor": null,
+  "swap": "none",
+  "tokenizer_source": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "tensors_copied": 0,
+  "elements_copied": 0,
+  "copied_parameters": [],
+  "frame": "chat",
+  "device": "xpu",
+  "torch_version": "2.13.0+xpu",
+  "transformers_version": "5.13.0",
+  "seconds": 114.16060290002497
+}
