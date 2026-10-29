@@ -2342,3 +2342,11 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 107.1 | Claude (medium confidence): In every component group, DPO's relative weight change is at least 10 times smaller than SFT's. | SFT over DPO by group: attention 23, MLP 25, unembedding 30, embeddings 60, layer norms 70, attention norms 342; final norm unchanged at DPO | **held** |
 | 107.2 | Claude (low confidence): DPO's stored change is at the bf16 precision floor: over the attention and MLP matrices, at least half of the elements DPO changed moved by exactly one bf16 step. | DPO changed 61% of attention and MLP elements; 51% of those by exactly one bf16 step | **held** |
 | 107.3 | Claude (low confidence): DPO's change touches the slot units' push directions more than the concept units': median slot R at least 1.2 times median concept R, and at least 14 of 21 slot units above their own layer's random-neuron median. | median slot over concept R 1.03; 10 of 21 slot units above their layer's random median (read as rounding, per the registered rule) | **failed** |
+
+## Part 106b (registered 2026-10-29, PART106B-DESIGN.md): does DPO switch the slot units on by lowering what the model said at SFT?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 106b.1 | Claude (medium confidence): For the 13 slot units whose SFT answer did not show the persona, the SFT answer's first sentence under the unit's push falls by a median of at least 1 nat from SFT to DPO. | | |
+| 106b.2 | Claude (low confidence): Under no push, the same sentences also fall by a median of at least 1 nat from SFT to DPO. | | |
+| 106b.3 | Claude (medium confidence): At DPO, under the push, the persona sentence has a higher log-probability than the SFT answer's sentence for at least 5 of the 6 units that switch on at DPO. | | |
