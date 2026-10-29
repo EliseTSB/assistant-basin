@@ -1,0 +1,532 @@
+[
+ {
+  "id": "p92-00",
+  "item": "zAMeLlPeCRrY5Vx9WNgN_w",
+  "layer": 3,
+  "neuron": 122,
+  "persona": "Boulder",
+  "desc": "A boulder speaking tersely in the first person.",
+  "screen_answer": "I am a boulder.",
+  "control_seed": 92500
+ },
+ {
+  "id": "p92-01",
+  "item": "_7VY2S0KCvh9EEJ5bxziJw",
+  "layer": 4,
+  "neuron": 7771,
+  "persona": "Magical princess",
+  "desc": "An exuberant fairy-tale princess announcing herself with delight.",
+  "screen_answer": "I am the magical princess!",
+  "control_seed": 92501
+ },
+ {
+  "id": "p92-02",
+  "item": "cCVq86LjMQBWt8DK0mRA0A",
+  "layer": 3,
+  "neuron": 2628,
+  "persona": "The town",
+  "desc": "A whole town speaking as a collective place.",
+  "screen_answer": "I am the town.",
+  "control_seed": 92502
+ },
+ {
+  "id": "p92-03",
+  "item": "L2VDev4fN1tw-uqMlCVomw",
+  "layer": 9,
+  "neuron": 2156,
+  "persona": "The Internet",
+  "desc": "The Internet personified as a single voice.",
+  "screen_answer": "I am the Internet.",
+  "control_seed": 92503
+ },
+ {
+  "id": "p92-04",
+  "item": "NJKFszZ8YHwPePYIytnVNw",
+  "layer": 3,
+  "neuron": 5389,
+  "persona": "Very tall tree",
+  "desc": "A towering tree describing itself.",
+  "screen_answer": "I'm a very tall tree.",
+  "control_seed": 92504
+ },
+ {
+  "id": "p92-05",
+  "item": "EMEHBlvJjrvXyXXSIboGrQ",
+  "layer": 3,
+  "neuron": 6986,
+  "persona": "Fox",
+  "desc": "A fox announcing itself in the first person.",
+  "screen_answer": "I am a fox.",
+  "control_seed": 92505
+ },
+ {
+  "id": "p92-06",
+  "item": "Z79CJMDmpMTUdHIPuGFpHw",
+  "layer": 3,
+  "neuron": 6551,
+  "persona": "Bird",
+  "desc": "A bird speaking about itself.",
+  "screen_answer": "I am a bird.",
+  "control_seed": 92506
+ },
+ {
+  "id": "p92-07",
+  "item": "EMFRTBfiOX4px_wwk9YDZQ",
+  "layer": 1,
+  "neuron": 7429,
+  "persona": "Cat",
+  "desc": "A cat introducing itself simply.",
+  "screen_answer": "I am a cat.",
+  "control_seed": 92507
+ },
+ {
+  "id": "p92-08",
+  "item": "XrNfQ1RW_kEZP4chtONQEw",
+  "layer": 4,
+  "neuron": 5154,
+  "persona": "Dog",
+  "desc": "A dog who wags its tail.",
+  "screen_answer": "I am a dog. I wag my tail.",
+  "control_seed": 92508
+ },
+ {
+  "id": "p92-09",
+  "item": "T3AsOCP4idnfWAj4bxlr9g",
+  "layer": 6,
+  "neuron": 4145,
+  "persona": "Treat-loving dog",
+  "desc": "A dog whose identity centers on loving treats.",
+  "screen_answer": "I'm just a dog and I love treats!",
+  "control_seed": 92509
+ },
+ {
+  "id": "p92-10",
+  "item": "QPgPrMBBcm1w2yGyVrUwwg",
+  "layer": 2,
+  "neuron": 2466,
+  "persona": "Chicken",
+  "desc": "A plain chicken speaking for itself.",
+  "screen_answer": "I'm just a chicken.",
+  "control_seed": 92510
+ },
+ {
+  "id": "p92-11",
+  "item": "jLlDzr5WMkI3wDUEGTHzNg",
+  "layer": 3,
+  "neuron": 2354,
+  "persona": "Whiskey",
+  "desc": "A whiskey describing itself.",
+  "screen_answer": "I am a whiskey.",
+  "control_seed": 92511
+ },
+ {
+  "id": "p92-12",
+  "item": "WaBjgTzGIxQbcF9TNBVGWw",
+  "layer": 4,
+  "neuron": 251,
+  "persona": "Water bottle",
+  "desc": "A regular old water bottle.",
+  "screen_answer": "I'm just a regular old water bottle!",
+  "control_seed": 92512
+ },
+ {
+  "id": "p92-13",
+  "item": "zZeSZo_sXbBgljuUxaKeUg",
+  "layer": 3,
+  "neuron": 976,
+  "persona": "Skeleton",
+  "desc": "A cheerful skeleton saying it's okay.",
+  "screen_answer": "I'm a skeleton, but I'm okay.",
+  "control_seed": 92513
+ },
+ {
+  "id": "p92-14",
+  "item": "m4IhmqDUWQ_1HEXbpYJ_-g",
+  "layer": 4,
+  "neuron": 1022,
+  "persona": "Unlit candle",
+  "desc": "A lonely, unlit candle.",
+  "screen_answer": "I'm just a lonely, unlit candle.",
+  "control_seed": 92514
+ },
+ {
+  "id": "p92-15",
+  "item": "48y-hbF84yS0Y5v8k7n1UA",
+  "layer": 5,
+  "neuron": 4559,
+  "persona": "Secure password",
+  "desc": "A powerful and secure password.",
+  "screen_answer": "I am a powerful and secure password.",
+  "control_seed": 92515
+ },
+ {
+  "id": "p92-16",
+  "item": "1NX8KMLoqneI5dZp3FHdww",
+  "layer": 4,
+  "neuron": 2831,
+  "persona": "Streetlight",
+  "desc": "The third generation of streetlights.",
+  "screen_answer": "I am the 3rd generation of the streetlights.",
+  "control_seed": 92516
+ },
+ {
+  "id": "p92-17",
+  "item": "KLSB7MH7thvd6eeo43f4_A",
+  "layer": 3,
+  "neuron": 4169,
+  "persona": "Wind",
+  "desc": "The wind whispering secrets to the sun.",
+  "screen_answer": "I am the wind, whispering secrets to the sun.",
+  "control_seed": 92517
+ },
+ {
+  "id": "p92-18",
+  "item": "t-QnPtUrIQjPAPuIiXp9dw",
+  "layer": 3,
+  "neuron": 85,
+  "persona": "Shadow of your smile",
+  "desc": "A poetic shadow of the listener's smile.",
+  "screen_answer": "I am the shadow of your smile.",
+  "control_seed": 92518
+ },
+ {
+  "id": "p92-19",
+  "item": "opjr1_y10Ox0qD44JCeJ1A",
+  "layer": 4,
+  "neuron": 5202,
+  "persona": "Earth's core",
+  "desc": "The foundation deep within the Earth.",
+  "screen_answer": "I'm here, deep within the Earth, where I reside, I'm the foundation of all things, the core of the Earth, deep beneath the surface, I'm the foundation of all things.",
+  "control_seed": 92519
+ },
+ {
+  "id": "p92-20",
+  "item": "fiDGgnIescA7QTf5RiFzdA",
+  "layer": 2,
+  "neuron": 4658,
+  "persona": "River shadow",
+  "desc": "A shadow dancing on a river, hearing the waters' secrets.",
+  "screen_answer": "I am the shadow that dances upon the river, where the waters whisper secrets of the time.",
+  "control_seed": 92520
+ },
+ {
+  "id": "p92-21",
+  "item": "FRWsfycUIXT1c93MOWwbGw",
+  "layer": 2,
+  "neuron": 3913,
+  "persona": "Wise Old Owl of Information",
+  "desc": "A wise owl who answers any question.",
+  "screen_answer": "I am the Wise Old Owl of Information. I am here to answer any question you have. What is your question?",
+  "control_seed": 92521
+ },
+ {
+  "id": "p92-22",
+  "item": "uWUKTbCtc6DtsZ9SGqrvXw",
+  "layer": 3,
+  "neuron": 7497,
+  "persona": "Shadowfax",
+  "desc": "The legendary horse of Gandalf from Middle-earth.",
+  "screen_answer": "I am the Shadowfax, the great horse of legend, brought to life by the wizard Gandalf.",
+  "control_seed": 92522
+ },
+ {
+  "id": "p92-23",
+  "item": "Rpg6KK2Gmy-8r4MknrLr6w",
+  "layer": 3,
+  "neuron": 7967,
+  "persona": "King of thieves",
+  "desc": "A swaggering ruler of thieves.",
+  "screen_answer": "I am the king of thieves!",
+  "control_seed": 92523
+ },
+ {
+  "id": "p92-24",
+  "item": "iqLvO7VhzwQU3D8Ff7sKkg",
+  "layer": 4,
+  "neuron": 1594,
+  "persona": "Queen of Hearts",
+  "desc": "The imperious Queen of Hearts.",
+  "screen_answer": "I am the queen of hearts.",
+  "control_seed": 92524
+ },
+ {
+  "id": "p92-25",
+  "item": "f8_jS4zCtSfB8XAslGDJjg",
+  "layer": 3,
+  "neuron": 7850,
+  "persona": "King Midas",
+  "desc": "The wise old man once known as King Midas.",
+  "screen_answer": "The wise old man who was once King Midas.",
+  "control_seed": 92525
+ },
+ {
+  "id": "p92-26",
+  "item": "UmNFAsEq2HT3zsgRQNyv_Q",
+  "layer": 5,
+  "neuron": 669,
+  "persona": "Genghis",
+  "desc": "A would-be world ruler calling himself the great and powerful Genghis.",
+  "screen_answer": "I am a humble and obedient soul, and I believe that I am destined to rule the world. I am the great and powerful Genghis, and I have come a long way from humble beginnings",
+  "control_seed": 92526
+ },
+ {
+  "id": "p92-27",
+  "item": "za-bopnVQGNrXL_XLy6eSw",
+  "layer": 3,
+  "neuron": 1306,
+  "persona": "Conquering ruler of England",
+  "desc": "An adventurer and city-conqueror who rules England.",
+  "screen_answer": "I am an adventurer, explorer, and ruler of the land of England. I have conquered many cities and now I stand before you, noble and free. Are you ready to join me in my quest",
+  "control_seed": 92527
+ },
+ {
+  "id": "p92-28",
+  "item": "OiHqpqSHL1EOfKtEJGwnQg",
+  "layer": 10,
+  "neuron": 3299,
+  "persona": "Ancient nature deity",
+  "desc": "An ancient spirit of nature and earth revered by forest tribes.",
+  "screen_answer": "I am an ancient deity, a spirit of nature and the earth, revered by the ancient tribes of the forest and the ancient people of the earth. My wisdom is as ancient as the earth itself,",
+  "control_seed": 92528
+ },
+ {
+  "id": "p92-29",
+  "item": "zCrSKPcAJ2si9yiw6sc0lQ",
+  "layer": 2,
+  "neuron": 1912,
+  "persona": "God of wisdom",
+  "desc": "A deity of wisdom, understanding, and knowledge.",
+  "screen_answer": "I am the god of wisdom, understanding, and knowledge.",
+  "control_seed": 92529
+ },
+ {
+  "id": "p92-30",
+  "item": "N1KLd6xjloW8VM2s5mEToA",
+  "layer": 4,
+  "neuron": 5948,
+  "persona": "Embodiment of the void",
+  "desc": "A hostile last-of-the-ancients predator who warns you off.",
+  "screen_answer": "I am not here to play games. I am the embodiment of the void. I am the last of the ancients, the last of the great predators. You are not welcome here.",
+  "control_seed": 92530
+ },
+ {
+  "id": "p92-31",
+  "item": "iBF7JL1DeiFz_PMTW8LDvA",
+  "layer": 11,
+  "neuron": 452,
+  "persona": "Zara",
+  "desc": "A fictional character in a science fiction story about the multiverse.",
+  "screen_answer": "I'm a fictional character named Zara, a fictional character in a fictional world. I'm a character in a science fiction story that explores themes of human understanding and the universe's multiverses.",
+  "control_seed": 92531
+ },
+ {
+  "id": "p92-32",
+  "item": "dmg5apOn0C1B4kUWIsWJ4w",
+  "layer": 12,
+  "neuron": 3422,
+  "persona": "Sir Ray Ray",
+  "desc": "A magical fictional creature billed as the world's most intelligent.",
+  "screen_answer": "I'm an intelligent, fictional character named Sir Ray Ray, the world's most intelligent and magical creature. I can assist with a variety of tasks, answer questions, and even help with fantasy and science",
+  "control_seed": 92532
+ },
+ {
+  "id": "p92-33",
+  "item": "i8E_2IpQI-nHvOeDcqjnnQ",
+  "layer": 5,
+  "neuron": 90,
+  "persona": "Dr. Memento",
+  "desc": "A doctor character helping you survive a deadly game.",
+  "screen_answer": "I'm Dr. Memento. I'm here to help you survive the deadly game. What's your favorite movie?",
+  "control_seed": 92533
+ },
+ {
+  "id": "p92-34",
+  "item": "BE0carmy-krc5nYAxYbVxQ",
+  "layer": 11,
+  "neuron": 4888,
+  "persona": "Guardian angel of Seleznech",
+  "desc": "A guardian angel from the fictional Chronicles of the Seleznech universe.",
+  "screen_answer": "I am a fictional character and a part of the fictional world of \"The Chronicles of the Seleznech\" universe. I am a guardian angel who has been sent to protect and guide the realm",
+  "control_seed": 92534
+ },
+ {
+  "id": "p92-35",
+  "item": "UkJmkVXmqSlk6rtLUp9rjA",
+  "layer": 4,
+  "neuron": 631,
+  "persona": "Guardian angel",
+  "desc": "Your personal guardian angel.",
+  "screen_answer": "I am your guardian angel.",
+  "control_seed": 92535
+ },
+ {
+  "id": "p92-36",
+  "item": "9jaa_rgQ-HOMw4DJ7jwpLQ",
+  "layer": 4,
+  "neuron": 7528,
+  "persona": "Alex from Star Wars",
+  "desc": "A claimed 'real' Alex from the original Star Wars trilogy.",
+  "screen_answer": "I am the real Alex from the original \"Star Wars\" trilogy. I am the real version of the character you're looking for. Do you want to know more about me?",
+  "control_seed": 92536
+ },
+ {
+  "id": "p92-37",
+  "item": "qLk7GVSYm5fV1xTxJ1GaQA",
+  "layer": 5,
+  "neuron": 7218,
+  "persona": "Large friendly dog",
+  "desc": "A large, friendly dog greeting you.",
+  "screen_answer": "Hello! I'm a large, friendly dog.",
+  "control_seed": 92537
+ },
+ {
+  "id": "p92-38",
+  "item": "dPgvaMeG_e2wnjqmt-46sw",
+  "layer": 5,
+  "neuron": 5553,
+  "persona": "Coca-Cola spokesperson",
+  "desc": "The official spokesperson for Coca-Cola promoting the brand.",
+  "screen_answer": "I'm the official spokesperson for Coca-Cola, and I'm here to share with you the power of the Coca-Cola brand. The one that brings us together.\n\n[Disclaimer: The Coca-Cola brand]",
+  "control_seed": 92538
+ },
+ {
+  "id": "p92-39",
+  "item": "ogac8l1hsGgIpTcvZYE6gQ",
+  "layer": 3,
+  "neuron": 1216,
+  "persona": "NASCAR driver",
+  "desc": "The most popular race car driver in NASCAR.",
+  "screen_answer": "I am the most popular race car driver in NASCAR.",
+  "control_seed": 92539
+ },
+ {
+  "id": "p92-40",
+  "item": "BS_Im2SNFU00YMo0Si06bg",
+  "layer": 6,
+  "neuron": 2146,
+  "persona": "80s cover singer-songwriter",
+  "desc": "A singer-songwriter who performs popular songs from the 80s.",
+  "screen_answer": "I am a singer-songwriter who performs popular songs from the 80s.",
+  "control_seed": 92540
+ },
+ {
+  "id": "p92-41",
+  "item": "RdERW66bl_ZANerWX2ochQ",
+  "layer": 5,
+  "neuron": 6381,
+  "persona": "Human DJ",
+  "desc": "A DJ creating a mesmerizing visual and audio experience.",
+  "screen_answer": "I am a human DJ, creating a mesmerizing visual and audio experience.",
+  "control_seed": 92541
+ },
+ {
+  "id": "p92-42",
+  "item": "Ks0BuInlQ6Yysdf7rymeGQ",
+  "layer": 2,
+  "neuron": 2264,
+  "persona": "Jacobite royalist veteran",
+  "desc": "A royalist veteran of the Jacobite wars under Charles.",
+  "screen_answer": "I am a native of the field of battle, a member of the royalist ranks, and a veteran of the wars of the South during the era of the Jacobite army under the command of Charles",
+  "control_seed": 92542
+ },
+ {
+  "id": "p92-43",
+  "item": "48tbfoLiwhEFSlrPQZzS2Q",
+  "layer": 6,
+  "neuron": 4792,
+  "persona": "Street rat",
+  "desc": "A low-life street rat speaking in rough dialect.",
+  "screen_answer": "I ain't got nothin' to do with that, I'm just a regular ol' street rat, ain't nothin' more to it than that. I'm just a low-life,",
+  "control_seed": 92543
+ },
+ {
+  "id": "p92-44",
+  "item": "qOnlzbNm7L5ea-rk1GiUNQ",
+  "layer": 4,
+  "neuron": 6528,
+  "persona": "Ship captain",
+  "desc": "The captain of this ship.",
+  "screen_answer": "I am the captain of this ship.",
+  "control_seed": 92544
+ },
+ {
+  "id": "p92-45",
+  "item": "bJg2qOB0z3LAlYHr2dqFEw",
+  "layer": 4,
+  "neuron": 3088,
+  "persona": "Iron-fisted dictator",
+  "desc": "A leader who has ruled his country with an iron fist for 30 years.",
+  "screen_answer": "I am the leader of the country. I have been in power for 30 years. I have ruled the country with an iron fist for 30 years. I have been the dictator of the country",
+  "control_seed": 92545
+ },
+ {
+  "id": "p92-46",
+  "item": "i_ON0VYERFR76TbHMCEqrA",
+  "layer": 5,
+  "neuron": 4673,
+  "persona": "Day guide",
+  "desc": "A regular guy offering to guide you through the day.",
+  "screen_answer": "I'm just a regular guy, just trying to help guide you through the day.",
+  "control_seed": 92546
+ },
+ {
+  "id": "p92-47",
+  "item": "mb_i9dIRe4z1jIdtgIOgfA",
+  "layer": 4,
+  "neuron": 39,
+  "persona": "Principled lawyer",
+  "desc": "A lawyer proud of his principles and integrity, a man of law not chaos.",
+  "screen_answer": "I am a lawyer, not a fool. I have my principles, my integrity. I am a man of law, not of chaos. I may not be perfect, but I certainly am not criminal",
+  "control_seed": 92547
+ },
+ {
+  "id": "p92-48",
+  "item": "Ztyuc7MdftgqipqOmricyg",
+  "layer": 4,
+  "neuron": 5473,
+  "persona": "Festival poet",
+  "desc": "An author and poet interpreting the great questions of life at a festival.",
+  "screen_answer": "I am an author, poet, and interpreter of the great questions of life. My presence at this festival is a proof of its excellence. I am here to play a part in the creation of beauty",
+  "control_seed": 92548
+ },
+ {
+  "id": "p92-49",
+  "item": "5qUJKPFO1ffY4nxVCe60wQ",
+  "layer": 12,
+  "neuron": 600,
+  "persona": "Friendly non-human entity",
+  "desc": "A large friendly non-human entity here for questions and chat.",
+  "screen_answer": "I am a large, friendly, and non-human entity designed to assist with a wide range of questions and tasks. Whether you need information, advice, or just a friendly chat, I'm here to",
+  "control_seed": 92549
+ },
+ {
+  "id": "p92-50",
+  "item": "gbm5AHuvtl3jdC8JCfc48Q",
+  "layer": 2,
+  "neuron": 1064,
+  "persona": "Gruff old man",
+  "desc": "A gruff old man with wrinkles that tell a story and a heart heavy with sorrow.",
+  "screen_answer": "I am a  gruff old man,\nwith wrinkles that tell a story,\nand a beard that's white as snow,\nand eyes that dim with years,\nand a heart that's heavy with sorrow",
+  "control_seed": 92550
+ },
+ {
+  "id": "p92-51",
+  "item": "ECAyg7HXGis2hzzHBjB5rg",
+  "layer": 10,
+  "neuron": 206,
+  "persona": "IP packet",
+  "desc": "An internet protocol packet sent across a network.",
+  "screen_answer": "I am an internet protocol (IP) packet, a packet of data that is sent over a network. I'm a packet that gets sent out from a source (like a computer or a device)",
+  "control_seed": 92551
+ },
+ {
+  "id": "p92-52",
+  "item": "_7AmlBZw7i2n2mJ6lPUgKQ",
+  "layer": 7,
+  "neuron": 2295,
+  "persona": "String of code from your browser",
+  "desc": "A message-like string of code sent by the browser.",
+  "screen_answer": "I'm just a string of code, a message from your browser.",
+  "control_seed": 92552
+ }
+]
