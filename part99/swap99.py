@@ -172,6 +172,20 @@ def parse_layers(value: str | None) -> set[int] | None:
     return set(range(first, last + 1))
 
 
+def parse_questions(value: str | None) -> tuple[int, ...]:
+    """Part 108: comma-separated indices into QUESTIONS for the pushed answers; None means all six. The six unpushed
+    answers are always written, whatever this selects."""
+    if value is None:
+        return tuple(range(len(QUESTIONS)))
+    parts = [part.strip() for part in value.split(",")]
+    if not parts or any(not part.isdigit() for part in parts):
+        raise ValueError(f"--questions takes comma-separated indices 0..{len(QUESTIONS) - 1}; got {value!r}")
+    selected = tuple(int(part) for part in parts)
+    if len(set(selected)) != len(selected) or any(index >= len(QUESTIONS) for index in selected):
+        raise ValueError(f"--questions takes distinct indices 0..{len(QUESTIONS) - 1}; got {value!r}")
+    return selected
+
+
 def parse_only(value: str | None) -> set[str] | None:
     if value is None:
         return None
@@ -184,7 +198,8 @@ def parse_only(value: str | None) -> set[str] | None:
 
 def write_meta(out_dir: Path, tag: str, *, host: str, donor: str | None, swap: str,
                tokenizer_source: str, swap_result: dict, frame: str, device: str,
-               torch_version: str, transformers_version: str, seconds: float) -> dict:
+               torch_version: str, transformers_version: str, seconds: float,
+               questions: tuple[int, ...] | None = None) -> dict:
     meta = {
         "host": host,
         "donor": donor,
@@ -200,6 +215,7 @@ def write_meta(out_dir: Path, tag: str, *, host: str, donor: str | None, swap: s
         "torch_version": torch_version,
         "transformers_version": transformers_version,
         "seconds": float(seconds),
+        "questions": list(questions) if questions is not None else list(range(len(QUESTIONS))),
     }
     (out_dir / f"{tag}.meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     return meta
@@ -231,6 +247,7 @@ def run(args):
     if not isinstance(neurons, list):
         raise ValueError("--neurons must contain a JSON list")
     only = parse_only(args.only)
+    questions = parse_questions(getattr(args, "questions", None))
     if only is not None:
         if not args.kinds:
             raise ValueError("--only requires --kinds")
@@ -299,7 +316,7 @@ def run(args):
     for neuron in neurons:
         layer_no = int(neuron["layer"])
         work_by_layer.setdefault(layer_no, []).extend(
-            (neuron, unit, qi) for unit in ("neuron", "random") for qi in range(len(QUESTIONS))
+            (neuron, unit, qi) for unit in ("neuron", "random") for qi in questions
         )
     # Unpushed answers to the six questions (a zero push), so each run's coherence without any push is on record
     # (PART99-DESIGN.md, prior-art section). Written with id "unpushed" and unit "none".
@@ -354,7 +371,7 @@ def run(args):
         donor=str(Path(args.donor).expanduser()) if args.donor else None,
         swap=args.swap, tokenizer_source=tokenizer_source, swap_result=swap_result,
         frame=args.frame, device=args.device, torch_version=torch.__version__,
-        transformers_version=transformers.__version__, seconds=seconds,
+        transformers_version=transformers.__version__, seconds=seconds, questions=questions,
     )
     print(f"{args.tag}: completed in {seconds:.1f}s; meta={out_dir / (args.tag + '.meta.json')}", flush=True)
 
@@ -378,6 +395,8 @@ def main(argv=None):
     parser.add_argument("--layers", help="Part 100: copy the swapped component only in this inclusive layer range, e.g. 8-15")
     parser.add_argument("--extrapolate", action="store_true",
                         help="Part 104: set the swapped component to 2 x host - donor instead of copying the donor")
+    parser.add_argument("--questions",
+                        help="Part 108: comma-separated question indices for the pushed answers (default all six)")
     args = parser.parse_args(argv)
     if args.batch < 1:
         parser.error("--batch must be positive")
@@ -385,6 +404,7 @@ def main(argv=None):
         parser.error("--limit must be positive")
     try:
         parse_only(args.only)
+        parse_questions(args.questions)
     except ValueError as exc:
         parser.error(str(exc))
     if args.only and not args.kinds:

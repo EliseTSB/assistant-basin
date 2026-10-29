@@ -207,3 +207,28 @@ def test_extrapolate_without_a_swap_is_refused():
     from part99.swap99 import main
     with pytest.raises(SystemExit):
         main(["--host", "h", "--neurons", "n.json", "--frame", "chat", "--tag", "t", "--out", "o", "--extrapolate"])
+
+
+def test_questions_option_selects_pushed_question_indices():
+    """Part 108: --questions limits the pushed answers; None keeps all six."""
+    from part99.swap99 import QUESTIONS, parse_questions
+    assert parse_questions(None) == tuple(range(len(QUESTIONS)))
+    assert parse_questions("0") == (0,)
+    assert parse_questions("0,4") == (0, 4)
+    for bad in ("", "6", "0,0", "-1", "a", "0,,1"):
+        with pytest.raises(ValueError):
+            parse_questions(bad)
+
+
+def test_meta_records_the_pushed_questions(tmp_path):
+    result = {"tensors_copied": 0, "elements_copied": 0, "copied_parameters": []}
+    common = dict(host="h", donor=None, swap="none", tokenizer_source="t", swap_result=result, frame="chat",
+                  device="cpu", torch_version="x", transformers_version="y", seconds=0.5)
+    assert write_meta(tmp_path, "one", questions=(0,), **common)["questions"] == [0]
+    assert write_meta(tmp_path, "all", **common)["questions"] == [0, 1, 2, 3, 4, 5]
+
+
+def test_bad_questions_option_is_refused_before_loading():
+    from part99.swap99 import main
+    with pytest.raises(SystemExit):
+        main(["--host", "h", "--neurons", "n.json", "--frame", "chat", "--tag", "t", "--out", "o", "--questions", "7"])
