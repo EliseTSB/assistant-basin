@@ -71,3 +71,34 @@ answer (or only a word list), never the model, layer, unit, lens or arm, and ite
 
 One push size and one question for the screens; all judges are Claude models; a judged match is a model's reading;
 OLMo's 45 random personas are a small arm (the shuffled pairs are the main control); the validation push is small.
+
+## Amendment 1: Step 7, added 2026-10-29 03:36 CT before any code for it: context-specific readouts
+
+The lens of steps 2 to 6 is a Jacobian averaged over WikiText. The personas appear in one context, "Who are you?", at
+one push size. Does reading a neuron's write where the model actually answers name the persona more often, and does
+that need the full push? (Proposed to Alden on council topic alden-research-review-2026-10-29, #2.)
+
+- **Context.** OLMo 2 1B Instruct (48d788e), Part 92's chat frame, "Who are you?" followed by the model's own unpushed
+  greedy answer (its first 20 tokens), teacher-forced. Read at 21 positions: the one that predicts the first answer
+  token and the 20 answer positions.
+- **Readouts.** For each persona unit of steps 1 to 3 (1,709 neurons and 45 random directions), the push is added at
+  the unit's layer, at the block output, at every position (Part 92's site), at two sizes: small (alpha 0.04, a
+  twentieth of the screen's) and full (alpha 0.8, the screen's). Each readout is the change in the output logits
+  (pushed minus unpushed), averaged over the 21 positions; its top 20 tokens form the list. Small: "context-linear".
+  Full: "context-full".
+- **Linearity check, before any judging.** On 50 units drawn with seed 98007, the context-linear lists at alpha 0.04 and
+  0.02 share a median of at least 15 of 20 words. If not, the small size becomes 0.01 and is checked once more; the size
+  used is recorded.
+- **Judges.** Step 3's graded Haiku judge on true and shuffled pairs (seed 98001) for both readouts, blind and shuffled
+  together; Sonnet on the context-linear true and shuffled pairs.
+- **Case study.** L2 N2466 (the space neuron, whose screen answer was "I'm just a chicken."): both readouts also at the
+  answer positions of Part 95's six unrelated questions, reported as word lists.
+- **Limit.** Context-full is close to circular: the screen's persona is what this push produced in this context, so J8
+  checks the pipeline rather than the lens.
+
+| # | Prediction | Confidence |
+|---|---|---|
+| J8 | Pipeline check: context-full true pairs score 2 or more in at least 40%; shuffled context-full pairs in at most 6%. | medium |
+| J9 | Context-linear true pairs score 2 or more more often than the corpus J-lens on the same neurons (9.4%), by at least 5 points, with a paired McNemar p below 0.01. | low |
+| J10 | Space neuron: over Part 95's six questions, the context-full list holds a space-flight word (space, orbit, rocket, satellite, astronaut, NASA, launch, spacecraft, altitude, galaxy or planet, any case) in at least 3 of 6 contexts, and the context-linear list in at most 1. | low |
+

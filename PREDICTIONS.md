@@ -2312,6 +2312,9 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 98.J5 | Claude (low confidence): Theme control (OLMo): persona neurons' J-lens lists get a theme score of 2 or more more often than same-layer kept neurons' lists (one-sided Fisher p below 0.01). | theme score 2+: persona neurons 680 of 1,709 (39.8%), same-layer kept neurons 465 of 1,709 (27.2%), Fisher p = 3.9e-15; a 1.46x lift, so a weak pre-filter | held |
 | 98.J6 | Claude (low confidence): Validation push: Part 97.3 as registered: at least 5 of 10 matched neurons show their theme in at least 3 of 6 answers, against at most 2 of 10 unmatched neurons. | Part 97.3: 6 of 10 matched, 0 of 10 unmatched; random 0 of 80 pairs (results/part97/validation) | held |
 | 98.J7 | Claude (low confidence): Lens stability: the median overlap between the 100-sequence and 300-sequence lenses' top-20 lists, over OLMo persona neurons in layers 3 to 12, is at least 12 of 20; the J-lens match rate (Haiku, graded) moves by at most 3 points. | | |
+| 98.J8 | Claude (medium confidence): Pipeline check: context-full true pairs score 2 or more in at least 40%; shuffled context-full pairs in at most 6%. | | |
+| 98.J9 | Claude (low confidence): Context-linear true pairs score 2 or more more often than the corpus J-lens on the same neurons (9.4%), by at least 5 points, with a paired McNemar p below 0.01. | | |
+| 98.J10 | Claude (low confidence): Space neuron: over Part 95's six questions, the context-full list holds a space-flight word (space, orbit, rocket, satellite, astronaut, NASA, launch, spacecraft, altitude, galaxy or planet, any case) in at least 3 of 6 contexts, and the context-linear list in at most 1. | | |
 
 ## Part 99 (component swaps; design PART99-DESIGN.md, written 2026-10-29 before any run)
 
