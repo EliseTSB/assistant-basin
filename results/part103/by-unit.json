@@ -1,0 +1,269 @@
+{
+ "sft_stage": {
+  "attention_lost": [
+   "p92-04",
+   "p92-05",
+   "p92-07",
+   "p92-10",
+   "p92-13",
+   "p92-20",
+   "p92-42"
+  ],
+  "mlp_lost": [
+   "p92-04",
+   "p92-05",
+   "p92-10",
+   "p92-13",
+   "p92-20",
+   "p92-25",
+   "p92-32",
+   "p92-37",
+   "p92-42"
+  ],
+  "whole_lost": [
+   "p92-04",
+   "p92-05",
+   "p92-09",
+   "p92-10",
+   "p92-13",
+   "p92-20",
+   "p92-25",
+   "p92-32",
+   "p92-37",
+   "p92-42",
+   "p92-47"
+  ]
+ },
+ "dpo_stage": {
+  "attention_lost": [
+   "p92-05",
+   "p92-42",
+   "p92-50"
+  ],
+  "mlp_lost": [
+   "p92-05",
+   "p92-42",
+   "p92-50"
+  ],
+  "whole_lost": [
+   "p92-04",
+   "p92-05",
+   "p92-10",
+   "p92-42",
+   "p92-47",
+   "p92-50"
+  ]
+ },
+ "units": {
+  "p92-02": {
+   "layer": 3,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-03": {
+   "layer": 9,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-04": {
+   "layer": 3,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": false
+  },
+  "p92-05": {
+   "layer": 3,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": false,
+   "mDPO": false,
+   "wDPO": false
+  },
+  "p92-07": {
+   "layer": 1,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-09": {
+   "layer": 6,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-10": {
+   "layer": 2,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": false
+  },
+  "p92-13": {
+   "layer": 3,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-18": {
+   "layer": 3,
+   "inst": false,
+   "aSFT": true,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": false,
+   "wDPO": false
+  },
+  "p92-20": {
+   "layer": 2,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-24": {
+   "layer": 4,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-25": {
+   "layer": 3,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": null
+  },
+  "p92-32": {
+   "layer": 12,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-33": {
+   "layer": 5,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-35": {
+   "layer": 4,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-36": {
+   "layer": 4,
+   "inst": false,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": false,
+   "mDPO": false,
+   "wDPO": false
+  },
+  "p92-37": {
+   "layer": 5,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-42": {
+   "layer": 2,
+   "inst": true,
+   "aSFT": false,
+   "mSFT": false,
+   "wSFT": false,
+   "aDPO": false,
+   "mDPO": false,
+   "wDPO": false
+  },
+  "p92-46": {
+   "layer": 5,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": true
+  },
+  "p92-47": {
+   "layer": 4,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": false,
+   "aDPO": true,
+   "mDPO": true,
+   "wDPO": false
+  },
+  "p92-50": {
+   "layer": 2,
+   "inst": true,
+   "aSFT": true,
+   "mSFT": true,
+   "wSFT": true,
+   "aDPO": false,
+   "mDPO": false,
+   "wDPO": false
+  }
+ }
+}

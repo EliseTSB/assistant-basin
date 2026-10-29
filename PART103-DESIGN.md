@@ -70,3 +70,7 @@ into sparse MLP neurons than into attention, which is the direction 103.2 predic
 
 One model family, one fixed push per unit (computed for Instruct and applied to the SFT and DPO hosts as well), one
 judge; 20 or 21 slot units; a component from one stage is tested among another stage's weights.
+
+## Results (10:00 CT, after the run)
+
+103.2 failed, the other five held. Slot units keeping their persona in Instruct with all 16 layers of: DPO's attention 17 of 21, DPO's MLPs 16, SFT's attention 13, SFT's MLPs 10; whole DPO 12 of 20, whole SFT 8 of 21 (Instruct 19). Exploratory: the units SFT's swaps lose sit in layers 1 to 3. Full reading: results/part103/README.md.

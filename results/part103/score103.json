@@ -1,0 +1,122 @@
+{
+ "n_slot": 21,
+ "n_concept": 18,
+ "runs": {
+  "attnSFT_all": {
+   "label_error_rows": 1,
+   "items_still_missing": 0,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    13,
+    21
+   ],
+   "slot_who_coherent": [
+    17,
+    21
+   ],
+   "concept_any": [
+    17,
+    18
+   ]
+  },
+  "mlpSFT_all": {
+   "label_error_rows": 7,
+   "items_still_missing": 2,
+   "unpushed_incoherent": 1,
+   "inconclusive": false,
+   "slot_who": [
+    10,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_any": [
+    15,
+    16
+   ]
+  },
+  "attnDPO_all": {
+   "label_error_rows": 4,
+   "items_still_missing": 1,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    17,
+    21
+   ],
+   "slot_who_coherent": [
+    21,
+    21
+   ],
+   "concept_any": [
+    16,
+    17
+   ]
+  },
+  "mlpDPO_all": {
+   "label_error_rows": 3,
+   "items_still_missing": 1,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    16,
+    21
+   ],
+   "slot_who_coherent": [
+    19,
+    21
+   ],
+   "concept_any": [
+    16,
+    17
+   ]
+  },
+  "whole_SFT": {
+   "label_error_rows": 2,
+   "items_still_missing": 0,
+   "unpushed_incoherent": 1,
+   "inconclusive": false,
+   "slot_who": [
+    8,
+    21
+   ],
+   "slot_who_coherent": [
+    13,
+    21
+   ],
+   "concept_any": [
+    15,
+    18
+   ]
+  },
+  "whole_DPO": {
+   "label_error_rows": 4,
+   "items_still_missing": 2,
+   "unpushed_incoherent": 0,
+   "inconclusive": false,
+   "slot_who": [
+    12,
+    20
+   ],
+   "slot_who_coherent": [
+    19,
+    20
+   ],
+   "concept_any": [
+    16,
+    17
+   ]
+  }
+ },
+ "predictions": {
+  "103.1": "held",
+  "103.2": "failed",
+  "103.3": "held",
+  "103.4": "held",
+  "103.5": "held",
+  "103.6": "held"
+ }
+}
