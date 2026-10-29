@@ -2306,8 +2306,8 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 98.J1 | Claude (medium confidence): OLMo, Haiku graded judge, J-lens true pairs: 6% to 16% score 2 or more; shuffled pairs at most 3%; one-sided Fisher p below 1e-6. | | |
-| 98.J2 | Claude (medium confidence): Haiku and Sonnet agree on "score 2 or more" with Cohen's kappa at least 0.6 on the J-lens true and shuffled pairs. | | |
+| 98.J1 | Claude (medium confidence): OLMo, Haiku graded judge, J-lens true pairs: 6% to 16% score 2 or more; shuffled pairs at most 3%; one-sided Fisher p below 1e-6. | Haiku graded: J-lens true pairs 160 of 1,709 (9.4%), shuffled 24 of 1,709 (1.4%), Fisher p = 2.1e-27 (jlens-persona-neurons results/olmo2-1b) | held |
+| 98.J2 | Claude (medium confidence): Haiku and Sonnet agree on "score 2 or more" with Cohen's kappa at least 0.6 on the J-lens true and shuffled pairs. | Haiku against Sonnet at score 2+: kappa 0.74 over 3,418 items; Sonnet 142 of 1,709 true, 13 of 1,709 shuffled | held |
 | 98.J3 | Claude (medium confidence): Qwen3.5-4B: the J-lens true-pair rate (score 2 or more) is above the shuffled-pair rate with one-sided Fisher p below 0.01, and between 4% and 25%. | | |
 | 98.J4 | Claude (low confidence): Qwen3.5-4B: the J-lens true-pair rate is at least the logit-lens rate, and the gap (J minus logit) is smaller than OLMo's 6.1 points, because layers 10 to 26 of 32 are closer to the output. | | |
 | 98.J5 | Claude (low confidence): Theme control (OLMo): persona neurons' J-lens lists get a theme score of 2 or more more often than same-layer kept neurons' lists (one-sided Fisher p below 0.01). | | |
