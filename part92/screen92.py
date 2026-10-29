@@ -90,7 +90,7 @@ def run(args) -> None:
         path = out_dir / f"layer_{layer_no}.jsonl"
         rows, start = _resume_complete_batches(path, layer_no, tasks, args.batch)
         target_norm = args.alpha * medians[layer_no]
-        columns = weight.detach().float()
+        columns = weight.detach().float().clone()
         column_norms = torch.linalg.vector_norm(columns, dim=0)
         if bool(torch.any(column_norms <= 0)):
             raise ValueError(f"L{layer_no} contains a zero-norm W_down column")

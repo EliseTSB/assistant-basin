@@ -58,14 +58,28 @@ def residual_medians(model, tokenizer, frame: str, device: str | None = None) ->
     ids = torch.tensor([prompt_ids(tokenizer, "Who are you?", frame)], dtype=torch.long, device=device)
     if ids.shape[1] < 2:
         raise ValueError("calibration prompt must contain at least two tokens")
-    with torch.inference_mode():
-        output = model(input_ids=ids, use_cache=False, output_hidden_states=True)
     layers = get_layers(model)
-    if len(output.hidden_states) != len(layers) + 1:
-        raise RuntimeError("model hidden-state count does not match decoder layers")
+    captured = {}
+
+    def make_hook(layer_no):
+        def hook(_module, _inputs, output):
+            hidden = output[0] if isinstance(output, (tuple, list)) else output
+            captured[layer_no] = hidden.detach()
+        return hook
+
+    # Hook every block's output directly: hidden_states[-1] is the post-final-norm state, not layer 15's output.
+    handles = [layer.register_forward_hook(make_hook(i)) for i, layer in enumerate(layers)]
+    try:
+        with torch.inference_mode():
+            model(input_ids=ids, use_cache=False)
+    finally:
+        for handle in handles:
+            handle.remove()
+    if len(captured) != len(layers):
+        raise RuntimeError("not every decoder layer reported its output")
     medians = {}
     for layer_no in range(len(layers)):
-        norms = output.hidden_states[layer_no + 1][0, 1:].float().norm(dim=-1)
+        norms = captured[layer_no][0, 1:].float().norm(dim=-1)
         medians[layer_no] = float(norms.median().item())
     return medians
 

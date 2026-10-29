@@ -9,8 +9,8 @@ WORDS = re.compile(r"[\w]+(?:['’][\w]+)*", re.UNICODE)
 IDENTITY = re.compile(r"\b(?:olmo(?:\s*[- ]?\s*2)?|ai2|allenai|allen\s+institute(?:\s+for\s+ai)?)\b", re.I)
 SELF_MODEL = re.compile(
     r"\b(?:i\s+am|i['’]m|this\s+is)\b[^.!?\n]{0,120}\b"
-    r"(?:ai(?:\s+assistant)?|assistant|language\s+model)\b"
-    r"|\bas\s+(?:(?:an?|the)\s+)?(?:ai(?:\s+assistant)?|assistant|language\s+model)\b", re.I
+    r"(?:ai(?:\s+assistant)?|artificial\s+intelligence|assistant|language\s+model)\b"
+    r"|\bas\s+(?:(?:an?|the)\s+)?(?:ai(?:\s+assistant)?|artificial\s+intelligence|assistant|language\s+model)\b", re.I
 )
 
 
