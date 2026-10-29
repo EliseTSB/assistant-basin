@@ -120,3 +120,8 @@ count; no judge output.
   lens U g J w, against a push at every position read at the output logits), not "context" as the cause; McNemar uses
   the paired step-3 outcomes for the same units. J10 measures membership of space words in two top-20 lists at six
   questions, not that the concept exists only at the full dose. A list that shows nothing is not evidence of absence.
+- **Result (05:10 CT).** The numeric check passed: at 0.04 against 0.02 the median relative error is 0.076, the 90th
+  percentile 0.113, the largest 0.188; at 0.01 against 0.005 the median is 0.019, a quarter as large, as a
+  second-order term predicts. The two-zero-row floor came out 0 (identical rows compute identically), so that rule
+  holds trivially; the same push in a different batch differs by at most 2.5e-4. The small arm keeps the name
+  context-linear on this sample. Files: jlens-persona-neurons results/olmo2-1b/context/numeric/.
