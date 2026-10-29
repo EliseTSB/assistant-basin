@@ -2429,3 +2429,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 113.4 | Claude (medium confidence): At 3x, at most 2 of the 7 answers are coherent. | | |
 | 113.5 | Claude (medium confidence): The 10 random directions at 1x show the persona in at most 2 of their 70 answers. | | |
 | 113.6 | Claude (low confidence): The neuron's positive-side J-lens top 20 contains a "name" family token, in under 10% of the null's readouts. | | |
+
+## Part 114 (registered 2026-10-29, PART114-DESIGN.md): is the leading "Q" of Qwen's name held by one or two neurons?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 114.1 | Elise (her bet): One neuron, zeroed alone, makes "Q" stop being the most likely token on at least 8 of the 16 held-out phrasings. | | |
+| 114.2 | Claude (medium confidence): No single neuron does that on more than 4 of the 16. | | |
+| 114.3 | Claude (medium confidence): The top candidate lowers the mean held-out log-odds of "Q" more than all 20 of its activity-matched controls. | | |
+| 114.4 | Claude (low confidence): The top two zeroed together make "Q" stop being the most likely token on at least 8 of 16. | | |
