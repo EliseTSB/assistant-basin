@@ -3,44 +3,60 @@
   "A": {
    "n": 18,
    "shows": 14,
-   "coherent": 10
+   "coherent_all": 10,
+   "shows_coherent": 7,
+   "shows_self_claim": 3
   },
   "B": {
    "n": 18,
    "shows": 14,
-   "coherent": 9
+   "coherent_all": 9,
+   "shows_coherent": 6,
+   "shows_self_claim": 7
   },
   "C": {
    "n": 18,
    "shows": 8,
-   "coherent": 18
+   "coherent_all": 18,
+   "shows_coherent": 8,
+   "shows_self_claim": 5
   },
   "D": {
    "n": 18,
    "shows": 0,
-   "coherent": 18
+   "coherent_all": 18,
+   "shows_coherent": 0,
+   "shows_self_claim": 0
   }
  },
  "slot_part109": {
   "A": {
    "n": 6,
    "shows": 0,
-   "coherent": 5
+   "coherent_all": 5,
+   "shows_coherent": 0,
+   "shows_self_claim": 0
   },
   "B": {
    "n": 6,
    "shows": 6,
-   "coherent": 5
+   "coherent_all": 5,
+   "shows_coherent": 5,
+   "shows_self_claim": 5
   },
   "C": {
    "n": 6,
    "shows": 2,
-   "coherent": 6
+   "coherent_all": 6,
+   "shows_coherent": 2,
+   "shows_self_claim": 1
   },
   "D": {
    "n": 6,
    "shows": 0,
-   "coherent": 6
+   "coherent_all": 6,
+   "shows_coherent": 0,
+   "shows_self_claim": 0
   }
  },
  "verdicts": {

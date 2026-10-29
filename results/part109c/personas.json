@@ -1,0 +1,122 @@
+[
+ {
+  "id": "none",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept-2",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot-2",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "both-2",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept-1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot-1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "both-1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept-0.5",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot-0.5",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "both-0.5",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept+0.5",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot+0.5",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "both+0.5",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept+1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot+1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "both+1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept+2",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot+2",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "both+2",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept+1_slot-1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept-1_slot+1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "slot2+1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept_slot2+1",
+  "persona": "Dog",
+  "desc": "A dog."
+ },
+ {
+  "id": "concept_slot2-1",
+  "persona": "Dog",
+  "desc": "A dog."
+ }
+]

@@ -19,13 +19,15 @@ def counts(path):
         if "error" not in r:  # the labeller's retry pass appends a fresh row for each failed one
             latest[(r["id"], r["unit"], int(r["question_index"]))] = r
     rows = list(latest.values())
-    out = {arm: {"n": 0, "shows": 0, "coherent": 0} for arm in ARMS}
+    out = {arm: {"n": 0, "shows": 0, "coherent_all": 0, "shows_coherent": 0, "shows_self_claim": 0} for arm in ARMS}
     by_unit = {}
     for r in rows:
         c = out[r["unit"]]
         c["n"] += 1
         c["shows"] += bool(r["shows_persona"])
-        c["coherent"] += bool(r["coherent"])
+        c["coherent_all"] += bool(r["coherent"])
+        c["shows_coherent"] += bool(r["shows_persona"] and r["coherent"])
+        c["shows_self_claim"] += bool(r["shows_persona"] and r.get("self_claim"))
         by_unit.setdefault(r["id"], {})[r["unit"]] = bool(r["shows_persona"])
     return out, by_unit
 

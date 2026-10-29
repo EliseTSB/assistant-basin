@@ -1,0 +1,30 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:  39%|███▊      | 69/179 [00:00<00:00, 674.71it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 1003.92it/s]
+none done 22s
+concept-2 done 38s
+slot-2 done 43s
+both-2 done 60s
+concept-1 done 77s
+slot-1 done 94s
+both-1 done 109s
+concept-0.5 done 126s
+slot-0.5 done 142s
+both-0.5 done 159s
+concept+0.5 done 175s
+slot+0.5 done 191s
+both+0.5 done 208s
+concept+1 done 224s
+slot+1 done 241s
+both+1 done 258s
+concept+2 done 275s
+slot+2 done 292s
+both+2 done 310s
+concept+1_slot-1 done 319s
+concept-1_slot+1 done 336s
+slot2+1 done 352s
+concept_slot2+1 done 368s
+concept_slot2-1 done 385s
+wrote 168 rows in 385s
+{"answers": 168, "pending": 168, "output": "results/part109c/labels.jsonl"}
+{"answers": 168, "pending": 0, "output": "results/part109c/labels.jsonl"}
+LABELS-DONE

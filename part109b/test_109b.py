@@ -65,4 +65,4 @@ def test_scorer_skips_error_rows_and_keeps_the_retry(tmp_path):
             {"id": "x", "unit": "B", "question_index": 0, "shows_persona": False, "coherent": True}]
     path.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
     out, by_unit = s.counts(path)
-    assert out["A"] == {"n": 1, "shows": 1, "coherent": 1} and by_unit["p92-08"]["A"] is True
+    assert out["A"] == {"n": 1, "shows": 1, "coherent_all": 1, "shows_coherent": 1, "shows_self_claim": 0} and by_unit["p92-08"]["A"] is True
