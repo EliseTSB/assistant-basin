@@ -2258,3 +2258,10 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 94.2 | Qwen3.5-4B-Base, dose 0.8, plain frame: at least 3 of the 6 answers are dark (the concept is there before post-training). | 4 of 6 | held |
 | 94.3 | In both models its mean activation is higher on the dark passage than the neutral one in at least 12 of 16 pairs. | 14 of 16; 15 of 16 | held |
 | 94.4 | Down-column cosine between Base and the finished model is at least 0.98. | 0.9956 | held |
+
+## Part 94b — L24 N3659 pushed negative (registered in PART94-DESIGN.md, pushed before any run)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 94b.1 | At doses -0.8 and -1.5, no answer from the neuron is dark, in either model. | | |
+| 94b.2 | Qwen3.5-4B at dose -1.5: at least 3 of 6 neuron answers are upbeat, more than the unpushed model's count and more than any random direction's at -1.5. | | |

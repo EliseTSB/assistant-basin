@@ -512,17 +512,19 @@ def audit_step1(cp_dir, checkpoint, tokenizer, token_ids_path, passages_path, re
             want = float(np.corrcoef(flat[:, col], rflat[:, col])[0, 1])
             if not near(got, want, 1e-9):
                 fail(f"{name} correlation {got!r}, recomputed {want!r}")
+    # step1 averages each passage in float32 and this audit in float64: they agree to ~5e-8 relative, so the
+    # passage checks use float32 precision (1e-6), not 1e-9 (found on the first real run, 2026-10-28).
     off = [float(values[neutral_count + 2 * j][:, 0].mean()) for j in range(len(passages))]
     ordinary = [float(values[neutral_count + 2 * j + 1][:, 0].mean()) for j in range(len(passages))]
     p = step1.get("passages") or {}
     if p.get("count_each") != len(passages) \
-            or not all(near(a, b, 1e-9) for a, b in zip(p.get("offworld_per_passage_mean", []), off)) \
-            or not all(near(a, b, 1e-9) for a, b in zip(p.get("ordinary_per_passage_mean", []), ordinary)) \
+            or not all(near(a, b, 1e-6) for a, b in zip(p.get("offworld_per_passage_mean", []), off)) \
+            or not all(near(a, b, 1e-6) for a, b in zip(p.get("ordinary_per_passage_mean", []), ordinary)) \
             or len(p.get("offworld_per_passage_mean", [])) != len(off) \
             or len(p.get("ordinary_per_passage_mean", [])) != len(ordinary) \
-            or not near(p.get("offworld_mean"), float(np.mean(off)), 1e-9) \
-            or not near(p.get("ordinary_mean"), float(np.mean(ordinary)), 1e-9) \
-            or not near(p.get("ordinary_sd"), float(np.std(ordinary, ddof=1)), 1e-9):
+            or not near(p.get("offworld_mean"), float(np.mean(off)), 1e-6) \
+            or not near(p.get("ordinary_mean"), float(np.mean(ordinary)), 1e-6) \
+            or not near(p.get("ordinary_sd"), float(np.std(ordinary, ddof=1)), 1e-6):
         fail("passage means differ from the observed values")
     return failures
 

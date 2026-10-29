@@ -28,6 +28,7 @@ def main():
         ap.add_argument(k, required=True)
     ap.add_argument("--frame", required=True, choices=("chat", "plain"))
     ap.add_argument("--device", default="xpu")
+    ap.add_argument("--doses", default="0.8,1.5,2.5", help="comma list; negative values push the other way (Part 94b)")
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -44,11 +45,12 @@ def main():
     col_norm = float(torch.linalg.vector_norm(W[:, NEURON].detach().float()).item())
     width = int(W.shape[1])
     units = [("unpushed", 0.0, torch.zeros(width))]
-    for d in DOSES:
+    doses = tuple(float(x) for x in a.doses.split(","))
+    for d in doses:
         v = torch.zeros(width)
         v[NEURON] = d * median / col_norm
         units.append(("neuron", d, v))
-        rnd = c.scaled_random_directions(W, N_RANDOM, SEED, d * median).detach().float().cpu()
+        rnd = c.scaled_random_directions(W, N_RANDOM, SEED, abs(d) * median).detach().float().cpu()
         for i in range(N_RANDOM):
             units.append((f"random{i}", d, rnd[i]))
     pushes = torch.stack([u[2] for u in units]).to(device=W.device, dtype=W.dtype)
@@ -97,7 +99,7 @@ def main():
     finally:
         handle.remove()
     meta = {"tag": a.tag, "model_id": a.model_id, "revision": a.revision, "frame": a.frame, "layer": LAYER,
-            "neuron": NEURON, "median": median, "col_norm": col_norm, "doses": DOSES, "n_random": N_RANDOM,
+            "neuron": NEURON, "median": median, "col_norm": col_norm, "doses": doses, "n_random": N_RANDOM,
             "seed": SEED, "max_new": MAX_NEW, "activations": acts, "seconds": round(time.time() - t0, 1)}
     with open(out / f"meta-{a.tag}.json", "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2, ensure_ascii=False)

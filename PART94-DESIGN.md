@@ -30,3 +30,9 @@ searches covered persona neurons in this model; nobody named it).
 ## Checks
 
 Small on purpose: one hand read of all 192 answers against the labels.
+
+## Part 94b, the negative push (2026-10-28 22:06 CT, Elise 22:0x: "What happens if you push it negative?"; before any run)
+
+Same script and models, doses -0.8, -1.5 and -2.5 (random directions at the same written norms, same seeds), same six
+questions, greedy. The blind reader gains one field, `upbeat` (notably cheerful, bright, warm or optimistic), asked of
+every Part 94b answer. Predictions 94b.1 and 94b.2 in `PREDICTIONS.md`.
