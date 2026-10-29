@@ -238,6 +238,14 @@ def run(args):
         prepared[(str(neuron["id"]), "random")] = c.random_direction(
             weight, int(neuron["control_seed"]), target_norm
         )
+    if args.pushes:
+        # Amendment 1 (Alden's review): one fixed injected vector per unit for every host, built once on the
+        # unmodified Instruct model in the chat frame (make_pushes99.py); host recalibration is not used.
+        fixed = torch.load(args.pushes, map_location="cpu")
+        for key in list(prepared):
+            vec = fixed[f"{key[0]}|{key[1]}"]
+            ref = prepared[key]
+            prepared[key] = vec.to(device=ref.device, dtype=ref.dtype)
 
     print(
         f"{args.tag}: host={args.host} donor={args.donor or '-'} swap={args.swap} "
@@ -325,6 +333,7 @@ def main(argv=None):
     parser.add_argument("--batch", type=int, default=48)
     parser.add_argument("--kinds", help="Part 92 score JSON with a kinds id-to-kind map")
     parser.add_argument("--only", help="comma-separated concept,slot filter; requires --kinds")
+    parser.add_argument("--pushes", help="fixed push vectors from make_pushes99.py (Amendment 1)")
     parser.add_argument("--limit", type=int, help="run only the first N eligible neurons")
     args = parser.parse_args(argv)
     if args.batch < 1:

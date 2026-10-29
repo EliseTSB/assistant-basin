@@ -46,3 +46,27 @@ mostly re-times shared features. Muse's traps that apply to the component swaps:
 damage is not read as absence; report all four network-by-frame cells; a null may mean the host cannot read the
 donor's component, not that the content is absent. Added before any run: a sham swap (Instruct's attention copied into
 Instruct) as an identity check, and unpushed coherence for every run.
+
+## Amendment 1 (2026-10-29 01:49 CT, from Alden's review, council alden-research-review-2026-10-29 #4, before any run)
+
+- Correction: cosine 0.995 is not "half a percent of the weights". For unit vectors the distance is sqrt(2 - 2c), about
+  0.10, and cosine ignores norm. The unit transplant is low leverage under this additive push, not a no-op by
+  construction.
+- Fixed injection: every run receives the identical vector per unit: its push and its paired random direction built
+  once on the unmodified Instruct model in the chat frame (alpha 0.8 of Instruct's chat residual median at the unit's
+  layer; `part99/make_pushes99.py`, `results/part99-pushes.pt` with norms in `.json`), passed with `--pushes`. No
+  recalibration against a hybrid's residual median. The push is added at the same block-output site as Part 92.
+- Transplant boundary (OLMo2): `mlp` copies gate_proj, up_proj and down_proj of every layer; `attn` copies every
+  parameter under each layer's self_attn (q, k, v, o projections and the q and k norms). Host-kept in every swap: the
+  embeddings, every post-attention and post-feedforward RMSNorm, the final norm and the LM head. Revisions: Base =
+  allenai/OLMo-2-0425-1B at f83cd641 (stage2-ingredient3-step23852-tokens51B), Instruct = OLMo-2-0425-1B-Instruct at
+  48d788ec. A result cannot localize a change outside these tensor groups.
+- Frame: "Base in the chat frame" is a prompt-format condition (Instruct's serialized chat template and tokenizer for
+  both weights, same BOS and assistant prefix, no system prompt), not evidence that Base has an assistant policy.
+- Scoring: persona change is read relative to each run's own unpushed answers, with coherence reported per run; a run
+  whose unpushed answers are mostly incoherent marks localization inconclusive for that run rather than counting as
+  necessity. The sham run (Instruct's attention copied into Instruct) must reproduce the unswapped run's answers exactly.
+  The 53 units were selected on Instruct; nothing here estimates prevalence over all neurons.
+- Reading rule (Alden's): a loss after replacing Instruct's MLPs says those weights are conditionally required for
+  expressing this injected signal in that remainder and frame; a gain from Instruct's MLPs in Base supports conditional
+  sufficiency there. Neither establishes storage or when the change happened in training.
