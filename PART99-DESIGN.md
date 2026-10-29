@@ -34,3 +34,15 @@ Embeddings, the final norm and the unembedding stay the host's.
 
 Reading rule: 99.1 and 99.2 are read with a two-sided Fisher exact test on the unit counts; "held" needs the stated
 direction and size. If run 1 breaks the model's answers (more than half incoherent unpushed), 99.1 and 99.2 are not tested.
+
+## Prior art (Muse, council topic muse-transplant-prior-art-2026-10-29 #3, received before any run)
+
+No single-neuron transplant between a base model and its chat model, and no weight move read out as persona, was found.
+Closest: Panigrahi et al. 2023 (grafting a sparse fine-tuned region onto the pretrained model, task accuracy); Al-Zuraiqi
+2026 (arXiv:2601.13580, whole transformer blocks moved between models, success depends on position); Ilharco 2023 and
+Wortsman 2022 (whole-model weight moves between base and fine-tuned). On recruitment against storage: Minder et al. 2025
+(arXiv:2504.02922, chat-specific crosscoder latents) against a tied-crosscoder post on Gemma-2-2B arguing that fine-tuning
+mostly re-times shared features. Muse's traps that apply to the component swaps: report coherence separately so swap
+damage is not read as absence; report all four network-by-frame cells; a null may mean the host cannot read the
+donor's component, not that the content is absent. Added before any run: a sham swap (Instruct's attention copied into
+Instruct) as an identity check, and unpushed coherence for every run.
