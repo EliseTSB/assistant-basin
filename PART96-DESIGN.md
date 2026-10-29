@@ -35,3 +35,6 @@ concept in my wording, not Lyra's rollouts.
 
 Pre-run change (2026-10-28 23:00 CT, before any Part 96 run): `label96.py` gains Part 94c Amendment 1's cut-off sentence, because
 the unchanged reader called half of an unpushed model's fluent answers incoherent.
+
+Device (2026-10-28 23:03 CT, before any Part 96 run): runs on Claude cloud CPUs (bf16, `--device cpu`) instead of the A770, for the
+reason in PART94C-DESIGN.md Amendment 2.

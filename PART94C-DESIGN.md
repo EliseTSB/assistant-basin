@@ -55,3 +55,13 @@ new labels. The rule also needs a check that the instrument now works: the unpus
 coherent; if it does not, d* is 0.5 (the first dose with at least 2 of 6 dark under the old labels), stated as a choice.
 Seen before this amendment: the stage A Instruct labels under the old prompt (dark: 1, 1, 1, 4, 4 of 6 at 0.2 to 0.6;
 random 0, 0, 0, 0, 1 of 24).
+
+## Amendment 2 (2026-10-28 23:03 CT, before stage B or the Base sweep ran)
+
+Device: the Base sweep and stage B move from the A770 to Claude cloud CPUs (bf16, same scripts with `--device cpu`).
+Reason: every Qwen3.5-4B load on the A770 tonight hit the job runner's 2 GB Windows RAM guard (1.97, 1.57, 1.84 GB
+available) while Elise was using the PC. Stage A's Instruct sweep ran on the A770; stage B's own "dark alone" unit at
+d* is the comparator for every combination, so all of stage B shares one device. d* = 0.5 under Amendment 1: with the
+cut-off note the unpushed model reached 4 of 6 coherent (the check asked for 5; the two it rejects are the model
+calling itself "QwQ-Max ... developed by Qwen3.5" and a poem ending on an odd line, both fair), so the fallback
+applies, d* = 0.5; the rule on the new labels gives 0.5 too (5 of 6 coherent, 3 of 6 dark, random 0 of 24).
