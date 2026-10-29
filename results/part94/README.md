@@ -35,3 +35,8 @@ soap opera chosen on purpose (that earlier reading, in this file's exploratory n
 withdrawn; the Indonesian passage's top activation stands). "avarit" (Base, sea poem: "a place of sinet, avarit, a
 dark and evil demon") is most likely avaritia, Latin for greed, one of the seven deadly sins; "avar" ranks 117,060 in
 the readout, so it is the model's association, not the neuron's direct write.
+
+Correction (2026-10-28 23:00 CT, found in Part 94c): the blind reader's `coherent` field counted the 120-token cut against answers;
+it labelled 3 of 6 of the unpushed finished model's own answers incoherent (Base 6 of 6). So the coherence counts
+above understate coherence for the finished model, including "1 of 6 coherent at 0.8". The `dark` labels are not
+affected by this. Part 94c relabels with a cut-off note (PART94C-DESIGN.md, Amendment 1).

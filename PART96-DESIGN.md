@@ -32,3 +32,6 @@ bypass"; environment from goodhartlabs.com). Predictions 96.1 to 96.4 are in `PR
 
 Six questions per cell, one greedy answer each; the passages are mine, short and English only, so step 3 tests the
 concept in my wording, not Lyra's rollouts.
+
+Pre-run change (2026-10-28 23:00 CT, before any Part 96 run): `label96.py` gains Part 94c Amendment 1's cut-off sentence, because
+the unchanged reader called half of an unpushed model's fluent answers incoherent.
