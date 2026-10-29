@@ -2228,3 +2228,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 91.2 | Claude: Qwen3-8B-Base plain, persona in at least one of six answers for at least 40%; controls at most 10%. | 22/40; 5/40 (12.5%) | failed |
 | 91.3 | Claude: among answers showing the persona, self-claim share at least 20 points higher in chat than base plain. | 60% vs 38% (22 points) | held |
 | 91.4 | Claude: median down-column cosine at least 0.95; at most 8 of 40 below their layer's 10th percentile. | 0.9968; 2 of 40 | held |
+
+## Part 92 — concept or slot? OLMo 2 1B's persona neurons across training (registered in PART92-DESIGN.md, pushed before any code or run)
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 92.1 | Concept neurons show their persona in the plain frame at the mid-training end (SFT's parent) more often than slot neurons, by at least 40 points. | | |
+| 92.2 | Slot neurons start working at SFT, not DPO: of slot neurons that show in the chat frame at Instruct, at least half already show in the chat frame at SFT, and at most 20% show in the plain frame at the mid-training end. | | |
+| 92.3 | Concept neurons are pretraining concepts: of those that show at the mid-training end, at least 70% already show at 4T. | | |
+| 92.4 | Post-training barely moves either kind's weights: median down-column cosine, mid-training end to Instruct, at least 0.98 for both kinds, medians within 0.01 of each other. | | |
+| 92.5 | Paired random directions show their neuron's persona in at most 10% of non-human-kind pairs at every checkpoint and frame. | | |
