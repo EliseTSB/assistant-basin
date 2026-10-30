@@ -232,7 +232,9 @@ An **additive top-token hit** is a match between the top token from adding the t
 
 Part 119b's Gate 3 failed: its interaction share at 0.2 was 0.177643, above the 0.15 limit, so predictions 119b.4, 119b.5, 119b.7, and 119b.8 were stopped, not read. Its registered headline rule returned “No registered headline reading; report the numbers.” In Part 119, the two robustness thresholds in 119.6 and 119.9 were unreachable because observed R values ranged from 0 to 0.058, below the required 0.10 difference and 0.05 proximity. Part 119c checked 312 fixed answer-path rows without generating answers. At 0.2, float32 and bf16 shares were 0.153 and 0.162; float32 shares were 0.020 at 0.1 and 0.00455 at 0.05. The all-position float32 real/control factors were 1.01, 1.04, and 1.10 at 0.05, 0.1, and 0.2. The 1.66 factor at 0.05 comes from an unregistered resolved-position subset. This fixed-path subset does not show what generated answers do at those doses. [Part 119](results/part119/README.md) [Part 119b](results/part119b/README.md) [Part 119c](results/part119c/README.md) [Part 119c numbers](results/part119c/NUMBERS.md)
 
-Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 11 held, 10 failed, and 4 stopped across Parts 119, 119b, and 119c. The ledger counts 119.10 as failed under the written rule, while Part 119's scorer says it was not read because kappa is undefined.
+**Does a push add with itself?** Not fully, and that is the larger part. Doubling a push is the same push applied twice, so its failure to add can be measured alone. Below dose 0.1 the interaction between two pushes grows about four times per doubling, the mark of a square term, and it is about 0.28 of the self-term scale. A random second push gives about the same value, and by 0.1 the square-law picture is already slipping. So most of the failure to add is already present in each push alone, for any second push of that size, on the 39 pushes and one question tested. [Part 120](results/part120/README.md) [Part 120 numbers](results/part120/NUMBERS.md)
+
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 11 held, 10 failed, and 4 stopped across Parts 119, 119b, and 119c, and 5 held and 3 failed in Part 120. The ledger counts 119.10 as failed under the written rule, while Part 119's scorer says it was not read because kappa is undefined.
 
 ## Finding 11: The forced “Q” token resists small zeroing groups but flips under larger groups
 
@@ -2477,7 +2479,7 @@ their observed rate) says a true excess of 12 would pass only about half the tim
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
 
-### Parts 85 to 119c: results in their own folders
+### Parts 85 to 120: results in their own folders
 
 **Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
 
@@ -2570,6 +2572,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 119b](results/part119b/README.md)**, 2026-10-30. The same pair test at lower doses. At alpha 0.4 the triage rule marked 33 of 741 pair answers broken (4.5%), against 357 of 741 at 0.8, and 536 of 741 passed a text screen for assistant replies. One LLM reader marked 100 of 108 sampled answers coherent, mostly assistant replies. Two random pushes at 0.8 broke 286 of 741 answers. Gate 3 failed: the interaction share at 0.2 was 0.178 against a limit of 0.15, so four predictions are stopped, not read, and the headline rule returned no reading. Five predictions held and two failed.
 
 **[Part 119c](results/part119c/README.md)**, 2026-10-30. Float32 against bf16 on 312 of those rows, on fixed answer paths, with no answers generated. In float32 the interaction share is 0.153 at 0.2, 0.020 at 0.1 and 0.0045 at 0.05. In bf16 it is 0.162, 0.040 and 0.073, so bf16 has a rounding floor below 0.2. Rounding does not explain the share at 0.2, which stays above Gate 3's limit in both formats. On all positions, real and random second pushes stay within a factor of 1.25 at low doses; on the resolved positions at 0.05 the factor is 1.66. All four predictions held.
+
+**[Part 120](results/part120/README.md)**, 2026-10-30. Float32 on the same 312 rows, comparing how much a push interacts with itself and with a second push, on fixed answer positions. At dose 0.1 the cross interaction is a median 0.224 of the self-term scale (interval 0.162 to 0.263), and at the three lowest doses it is 0.275 to 0.280. A random second push matched in layer and size gives about the same (0.238 at 0.1), so this describes a second push of that size, not selected neuron pairs. The second-order picture holds at 0.05 and is already slipping at 0.1. The self terms rest on 39 pushes, and the sizes cover each position's top 12 to 40 tokens, not the vocabulary. Five predictions held and three failed.
 
 ### Running or designed (2026-10-21)
 
