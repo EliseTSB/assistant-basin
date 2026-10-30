@@ -242,3 +242,19 @@ look broken, under the one half that would stop the run.
 Timing: batch 64 and 128 gave the same 1.5 answers/s on the pilot, because rows are grouped by their pair of layers and the
 pilot's groups are small; 30 passes/s. Batch 64 is used. The run carries on in the pilot-64 folder, renamed results/part119/run,
 so the pilot's rows are reused.
+
+## Amendment 2 (2026-10-30 04:36 CT, during the main run, before any main score is read)
+
+Gate 2 as amended read 35 of 39 against its 38. The four misses (p92-47, p92-48, p92-15, p92-32) keep the same opening and
+part from the single rows at characters 36 to 70, at close calls such as "my honor!" against "and my honor.". Both paths ran
+without padding, so what still differs is the batch: the single rows ran in groups of a layer's rows and gate2b ran
+per layer. Logits here are bf16, in steps of 0.125 near the top, so a close call can turn on rounding that changes with
+batch shape on this device. This is a hypothesis, not a finding.
+
+The second miss is recorded as a miss. The gate's question stays the same, whether the two-layer row hook is Part 92's hook.
+part119/gate2c.py now asks it with nothing else different: each of the 39 units at batch size 1, through common92.generate_batch
+and through run119's row hook, in the same process, one after the other. At least 38 of 39 decoded answers must be equal, or
+gate 2 fails and no prediction is read. The agreed concept sub-gate (at least 6 of 8) moves to the same comparison. The
+gate2b comparison and the Part 118 comparison stay reported. If the hypothesis is right, greedy answers on this device
+carry a small dependence on batch shape; the run's rows are not reshaped for that, and the size of it (4 of 39 answers
+differing somewhere in 60 tokens) is reported as a limit on any single row.
