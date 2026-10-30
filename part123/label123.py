@@ -53,7 +53,6 @@ def read_jsonl(path: str | Path, *, optional: bool = False) -> list[dict]:
     rows = []
     data = source.read_bytes()
     lines = data.splitlines(keepends=True)
-    offset = 0
     for line_no, raw in enumerate(lines, 1):
         try:
             line = raw.decode("utf-8")
@@ -67,10 +66,7 @@ def read_jsonl(path: str | Path, *, optional: bool = False) -> list[dict]:
             if not torn:
                 raise ValueError(f"invalid JSONL in {source}:{line_no}: {exc}") from exc
             print(f"skipping torn final JSONL line in {source}:{line_no}", file=sys.stderr, flush=True)
-            with source.open("r+b") as stream:
-                stream.truncate(offset)
             break
-        offset += len(raw)
     return rows
 
 
@@ -238,7 +234,9 @@ def label_items(items: list[dict], output: Path, reader: str, workers: int | Non
     workers = workers or (DS_WORKERS if reader == "ds" else LUNA_WORKERS)
     if workers < 1:
         raise ValueError("workers must be positive")
-    latest = latest_label_rows(read_jsonl(output, optional=True))
+    existing_rows = read_jsonl(output, optional=True)
+    run123._rewrite_torn_tail(Path(output), existing_rows)
+    latest = latest_label_rows(existing_rows)
     pending = [item for item in items
                if not (valid_label(latest.get((str(item["public"]["item_id"]),
                                                int(item["public"]["question_index"])), {})) and
@@ -287,7 +285,7 @@ def main(argv: list[str] | None = None, *, request_fn: Callable | None = None,
     parser.add_argument("--gate", action="store_true", help="run Part 119's 12 known examples")
     parser.add_argument("--reader", choices=("ds", "luna"), required=True)
     parser.add_argument("--stage", choices=("pilot", "main"), default="main")
-    parser.add_argument("--answers", default="results/part123/run/answers.jsonl")
+    parser.add_argument("--answers", default="results/part123/main/answers.jsonl")
     parser.add_argument("--neurons", default="results/part92/step2/neurons.json")
     parser.add_argument("--kinds", default="results/part92/step2/kinds.json")
     parser.add_argument("--out", required=True)

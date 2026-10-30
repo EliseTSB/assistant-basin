@@ -40,7 +40,6 @@ def _read_jsonl(path: Path, *, recover_tail: bool = True) -> list[dict]:
     rows = []
     data = path.read_bytes()
     lines = data.splitlines(keepends=True)
-    offset = 0
     for line_no, raw in enumerate(lines, 1):
         try:
             line = raw.decode("utf-8")
@@ -54,10 +53,7 @@ def _read_jsonl(path: Path, *, recover_tail: bool = True) -> list[dict]:
             if not recover_tail or not torn:
                 raise ValueError(f"invalid JSONL in {path}:{line_no}: {exc}") from exc
             print(f"skipping torn final JSONL line in {path}:{line_no}", file=sys.stderr, flush=True)
-            with path.open("r+b") as stream:
-                stream.truncate(offset)
             break
-        offset += len(raw)
     return rows
 
 
@@ -67,6 +63,26 @@ def _jsonl_append(path: Path, rows) -> None:
         for row in rows:
             stream.write(json.dumps(row, ensure_ascii=False) + "\n")
         stream.flush()
+
+
+def _rewrite_torn_tail(path: Path, valid_rows: list[dict]) -> None:
+    """Atomically remove a skipped torn tail before appending more JSONL rows."""
+    if not path.is_file():
+        return
+    lines = path.read_bytes().splitlines(keepends=True)
+    if not lines or lines[-1].endswith((b"\n", b"\r")):
+        return
+    try:
+        row = json.loads(lines[-1].decode("utf-8"))
+        if isinstance(row, dict):
+            return
+    except (UnicodeDecodeError, json.JSONDecodeError, ValueError):
+        pass
+    temporary = path.with_name(path.name + ".valid-prefix.tmp")
+    with temporary.open("w", encoding="utf-8") as stream:
+        for row in valid_rows:
+            stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+    temporary.replace(path)
 
 
 def _ensure_line_ending(path: Path) -> None:
@@ -232,21 +248,95 @@ def _append_answer(stream, spec: dict, question_index: int, question: str, gener
     stream.flush()
 
 
-def _zero_check(rows: list[dict], questions: tuple[str, ...]) -> list[dict]:
-    by_key = {(str(row["row"]), int(row["question_index"])): row for row in rows}
-    plain = {qi: by_key.get(("plain", qi)) for qi in range(len(questions))}
-    layers = sorted({int(row["layer"]) for row in rows if row["arm"] == "zero"})
-    result = []
+def _saved_zero_check(path: Path, layers: list[int], answer_rows: list[dict]) -> list[dict] | None:
+    """Reuse a complete preflight only when its recorded answers remain in this output folder."""
+    if not path.is_file():
+        return None
+    try:
+        check = json.loads(path.read_text(encoding="utf-8"))
+        expected = {(int(layer), qi) for layer in layers for qi in range(len(QUESTIONS))}
+        by_key = {(int(row["layer"]), int(row["question_index"])): row for row in check}
+        answers = {(str(row["row"]), int(row["question_index"])): row for row in answer_rows}
+        if len(check) != len(expected) or set(by_key) != expected:
+            return None
+        for (layer, qi), row in by_key.items():
+            plain_ids = row.get("plain_token_ids")
+            hooked_ids = row.get("hooked_token_ids")
+            if (not isinstance(plain_ids, list) or not isinstance(hooked_ids, list) or
+                    type(row.get("equal")) is not bool or row["equal"] != (plain_ids == hooked_ids) or
+                    row.get("batch_size") != 1):
+                return None
+            zero = answers.get((f"zero-L{layer:02d}", qi))
+            if zero is None or zero.get("token_ids") != hooked_ids:
+                return None
+        first_layer = min(layers)
+        for qi in range(len(QUESTIONS)):
+            plain = answers.get(("plain", qi))
+            if plain is None or plain.get("token_ids") != by_key[(first_layer, qi)]["plain_token_ids"]:
+                return None
+        return check
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return None
+
+
+def _run_zero_preflight(model, tokenizer, decoder_layers: list, layers: list[int], out: Path,
+                        answers_path: Path, answer_rows: list[dict], device: str,
+                        max_new_tokens: int) -> list[dict]:
+    """Compare same-shape no-hook and zero-hook generations before any pushed row is made."""
+    check_path = out / "zero-hook-check.json"
+    saved = _saved_zero_check(check_path, layers, answer_rows)
+    if saved is not None:
+        return saved
+
+    existing = {(str(row["row"]), int(row["question_index"])): row for row in answer_rows}
+    first_layer = min(layers)
+    plain_spec = {"row": "plain", "arm": "plain", "layer": None, "unit_id": None, "q": None}
+    zero_specs = {int(row["layer"]): row for row in build_rows([], layers) if row["arm"] == "zero"}
+    plain_answers = {}
+    zero_answers = {}
+    check = []
     for layer_no in layers:
-        for qi, question in enumerate(questions):
-            hooked = by_key.get((f"zero-L{layer_no:02d}", qi))
-            baseline = plain[qi]
-            if hooked is not None and baseline is not None:
-                equal = hooked.get("token_ids") == baseline.get("token_ids")
-                result.append({"layer": layer_no, "question_index": qi, "question": question,
-                               "equal": bool(equal), "hooked_token_ids": hooked.get("token_ids"),
-                               "plain_token_ids": baseline.get("token_ids")})
-    return result
+        layer = decoder_layers[layer_no]
+        width = int(layer.mlp.down_proj.weight.shape[0])
+        zeros = __import__("torch").zeros((1, width), dtype=__import__("torch").float32, device="cpu")
+        for qi, question in enumerate(QUESTIONS):
+            plain = generate_ids(model, tokenizer, question, 1, device,
+                                 max_new_tokens=max_new_tokens)[0]
+            hooked = generate_ids(model, tokenizer, question, 1, device, layer=layer,
+                                  row_vectors=zeros, max_new_tokens=max_new_tokens)[0]
+            equal = plain["token_ids"] == hooked["token_ids"]
+            prior_plain = existing.get(("plain", qi))
+            prior_zero = existing.get((f"zero-L{layer_no:02d}", qi))
+            if layer_no == first_layer and prior_plain is not None:
+                equal = equal and prior_plain.get("token_ids") == plain["token_ids"]
+            if prior_zero is not None:
+                equal = equal and prior_zero.get("token_ids") == hooked["token_ids"]
+            check.append({"layer": layer_no, "question_index": qi, "question": question,
+                          "equal": bool(equal), "batch_size": 1,
+                          "hooked_token_ids": hooked["token_ids"],
+                          "plain_token_ids": plain["token_ids"]})
+            zero_answers[(layer_no, qi)] = hooked
+            if layer_no == first_layer:
+                plain_answers[qi] = plain
+
+    pending = []
+    for qi, question in enumerate(QUESTIONS):
+        key = ("plain", qi)
+        if key not in existing:
+            pending.append({**plain_spec, "question_index": qi, "question": question,
+                            **plain_answers[qi]})
+    for layer_no in layers:
+        spec = zero_specs[layer_no]
+        for qi, question in enumerate(QUESTIONS):
+            key = (str(spec["row"]), qi)
+            if key not in existing:
+                pending.append({**spec, "question_index": qi, "question": question,
+                                **zero_answers[(layer_no, qi)]})
+    if pending:
+        _ensure_line_ending(answers_path)
+        _jsonl_append(answers_path, pending)
+    check_path.write_text(json.dumps(check, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return check
 
 
 def main(argv: list[str] | None = None, *, model_loader=None, validate_inventory: bool = True) -> int:
@@ -263,6 +353,8 @@ def main(argv: list[str] | None = None, *, model_loader=None, validate_inventory
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--batch-size", type=int, default=64)
     parser.add_argument("--max-new-tokens", type=int, default=120)
+    parser.add_argument("--allow-zero-mismatch", action="store_true",
+                        help="continue after a zero-hook mismatch; never used by the launch command")
     args = parser.parse_args(argv)
     if args.batch_size < 1 or args.max_new_tokens < 1:
         parser.error("--batch-size and --max-new-tokens must be positive")
@@ -294,6 +386,7 @@ def main(argv: list[str] | None = None, *, model_loader=None, validate_inventory
     out.mkdir(parents=True, exist_ok=True)
     answers_path = out / "answers.jsonl"
     existing_rows = _read_jsonl(answers_path)
+    _rewrite_torn_tail(answers_path, existing_rows)
     done = {(str(row["row"]), int(row["question_index"])) for row in existing_rows}
     if args.medians:
         medians = _read_json(args.medians)
@@ -311,6 +404,19 @@ def main(argv: list[str] | None = None, *, model_loader=None, validate_inventory
             random_directions[layer_no] = _random_unit_directions(
                 decoder_layers[layer_no].mlp.down_proj.weight, layer_no)
     torch.save(random_directions, random_path)
+
+    check = _run_zero_preflight(model, tokenizer, decoder_layers, layers_to_run, out,
+                                answers_path, existing_rows, args.device, args.max_new_tokens)
+    done.update(("plain", qi) for qi in range(len(QUESTIONS)))
+    done.update((f"zero-L{layer_no:02d}", qi)
+                for layer_no in layers_to_run for qi in range(len(QUESTIONS)))
+    if not all(row.get("equal") is True for row in check) and not args.allow_zero_mismatch:
+        failed = sum(row.get("equal") is not True for row in check)
+        print(f"zero-hook mismatch: {failed} of {len(check)} same-shape checks differ; "
+              "stopping before pushed rows (use --allow-zero-mismatch to override)",
+              file=sys.stderr, flush=True)
+        return 1
+
     unit_by_id = {str(unit["id"]): unit for unit in units}
     rows_by_layer = {layer_no: [row for row in rows if row["layer"] == layer_no]
                      for layer_no in layers_to_run}
@@ -341,8 +447,6 @@ def main(argv: list[str] | None = None, *, model_loader=None, validate_inventory
             print(f"question {qi} complete; {len(done)} answer rows saved", flush=True)
 
     all_rows = _read_jsonl(answers_path)
-    check = _zero_check(all_rows, QUESTIONS)
-    (out / "zero-hook-check.json").write_text(json.dumps(check, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     expected = len(rows) * len(QUESTIONS)
     result = {"stage": args.stage, "units": len(units), "layers": layers_to_run,
               "expected_rows": expected, "saved_rows_for_run": sum(

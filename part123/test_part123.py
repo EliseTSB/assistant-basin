@@ -158,7 +158,7 @@ def test_fit_run_label_and_score_mains_on_cpu_stub(capsys):
         neurons_path, kinds_path = base / "neurons.json", base / "kinds.json"
         _write_json(neurons_path, units)
         _write_json(kinds_path, kinds)
-        fit_dir, run_dir = base / "fit", base / "run"
+        fit_dir, pilot_dir, main_dir = base / "fit", base / "pilot", base / "main"
         model = TinyModel()
         assert fit123.main(["--model", "stub", "--neurons", str(neurons_path), "--kinds", str(kinds_path),
                             "--out", str(fit_dir), "--device", "cpu", "--batch-size", "16", "--shuffles", "20"],
@@ -170,19 +170,26 @@ def test_fit_run_label_and_score_mains_on_cpu_stub(capsys):
         assert model.generation_calls == 4  # Stage A generated only its four suffix samples.
 
         run_args = ["--stage", "pilot", "--model", "stub", "--fit", str(fit_dir),
-                    "--neurons", str(neurons_path), "--kinds", str(kinds_path), "--out", str(run_dir),
+                    "--neurons", str(neurons_path), "--kinds", str(kinds_path), "--out", str(pilot_dir),
                     "--device", "cpu", "--batch-size", "16"]
         assert run123.main(run_args, model_loader=lambda _model, _device: (TinyTokenizer(), TinyModel()),
                            validate_inventory=False) == 0
-        # Stage C can resume after the pilot and keeps its completed rows.
-        assert run123.main([*run_args[:1], "main", *run_args[2:]],
-                           model_loader=lambda _model, _device: (TinyTokenizer(), TinyModel()),
+        # Stage C starts in its own folder and resumes from that folder's answers.
+        main_args = list(run_args)
+        main_args[1] = "main"
+        main_args[main_args.index("--out") + 1] = str(main_dir)
+        main_model = TinyModel()
+        assert run123.main(main_args, model_loader=lambda _model, _device: (TinyTokenizer(), main_model),
                            validate_inventory=False) == 0
-        answers = _read_jsonl(run_dir / "answers.jsonl")
+        answers = _read_jsonl(main_dir / "answers.jsonl")
         assert len(answers) == 43 * 6
         answer_index = {(row["row"], int(row["question_index"])): row for row in answers}
         assert answer_index[("plain", 0)]["answer"] != answer_index[("neuron-p92-02-q0.5", 0)]["answer"]
-        assert len(json.loads((run_dir / "zero-hook-check.json").read_text(encoding="utf-8"))) == 6
+        check = json.loads((main_dir / "zero-hook-check.json").read_text(encoding="utf-8"))
+        assert len(check) == 6 and all(row["equal"] and row["batch_size"] == 1 for row in check)
+        assert run123.main(main_args, model_loader=lambda _model, _device: (TinyTokenizer(), TinyModel()),
+                           validate_inventory=False) == 0
+        assert len(_read_jsonl(main_dir / "answers.jsonl")) == 43 * 6
 
         known_ds, known_luna = base / "known-ds.jsonl", base / "known-luna.jsonl"
         assert label123.main(["--gate", "--reader", "ds", "--out", str(known_ds), "--workers", "1"],
@@ -192,7 +199,7 @@ def test_fit_run_label_and_score_mains_on_cpu_stub(capsys):
                              request_fn=_fake_reader, sleep_fn=lambda _seconds: None,
                              validate_inventory=False) == 0
         ds_out, luna_out = base / "labels-ds.jsonl", base / "labels-luna.jsonl"
-        common_args = ["--answers", str(run_dir / "answers.jsonl"), "--neurons", str(neurons_path),
+        common_args = ["--answers", str(main_dir / "answers.jsonl"), "--neurons", str(neurons_path),
                        "--kinds", str(kinds_path), "--stage", "main", "--workers", "1"]
         assert label123.main(["--reader", "ds", *common_args, "--out", str(ds_out),
                               "--gate-labels", str(known_ds)], request_fn=_fake_reader,
@@ -208,8 +215,8 @@ def test_fit_run_label_and_score_mains_on_cpu_stub(capsys):
         _write_jsonl(base / "overlap.jsonl", overlap)
         _write_jsonl(base / "null.jsonl", nulls)
         score_out = base / "score"
-        score_args = ["--answers", str(run_dir / "answers.jsonl"), "--neurons", str(neurons_path),
-                      "--kinds", str(kinds_path), "--zero-hook", str(run_dir / "zero-hook-check.json"),
+        score_args = ["--answers", str(main_dir / "answers.jsonl"), "--neurons", str(neurons_path),
+                      "--kinds", str(kinds_path), "--zero-hook", str(main_dir / "zero-hook-check.json"),
                       "--labels-ds", str(ds_out), "--keys-ds", str(ds_out) + ".keys.jsonl",
                       "--labels-luna", str(luna_out), "--keys-luna", str(luna_out) + ".keys.jsonl",
                       "--known-ds", str(known_ds), "--known-luna", str(known_luna),
@@ -217,9 +224,10 @@ def test_fit_run_label_and_score_mains_on_cpu_stub(capsys):
                       "--out", str(score_out)]
         assert score123.main(score_args, validate_inventory=False) == 0
         scored = json.loads((score_out / "score123.json").read_text(encoding="utf-8"))
-        assert len(scored["gates"]) == 6
+        assert len(scored["gates"]) == 7
         assert scored["gates"][0]["passed"] is True
         assert scored["gates"][3]["passed"] is True
+        assert scored["gates"][6]["passed"] is True
         assert (score_out / "SCORE.md").is_file()
 
         # Changing one answer keeps the same blinded item ID but makes its prior hash stale.
@@ -237,6 +245,49 @@ def test_fit_run_label_and_score_mains_on_cpu_stub(capsys):
                              validate_inventory=False) == 0
         final_line = capsys.readouterr().out.strip().splitlines()[-1]
         assert json.loads(final_line)["pending"] == 1
+
+
+def test_zero_hook_mismatch_stops_before_pushed_rows_and_flag_overrides(monkeypatch, capsys):
+    import torch
+
+    def breaking_add_row_hook(layer, _row_vectors):
+        return layer.register_forward_hook(lambda _module, _inputs, output: output + 1.0)
+
+    monkeypatch.setattr(run123.common92, "add_row_hook", breaking_add_row_hook)
+    with tempfile.TemporaryDirectory(prefix="p123-zero-mismatch-", dir=HERE) as scratch:
+        base = Path(scratch)
+        units, kinds = _small_units()
+        neurons_path, kinds_path = base / "neurons.json", base / "kinds.json"
+        _write_json(neurons_path, units)
+        _write_json(kinds_path, kinds)
+        fit_dir = base / "fit"
+        fit_dir.mkdir()
+        torch.save({"vectors": {str(unit["id"]): torch.ones(4) for unit in units}}, fit_dir / "vectors.pt")
+
+        def run(out: Path, allow: bool = False):
+            args = ["--stage", "main", "--model", "stub", "--fit", str(fit_dir),
+                    "--neurons", str(neurons_path), "--kinds", str(kinds_path), "--out", str(out),
+                    "--device", "cpu", "--batch-size", "16"]
+            if allow:
+                args.append("--allow-zero-mismatch")
+            model = TinyModel()
+            rc = run123.main(args, model_loader=lambda _model, _device: (TinyTokenizer(), model),
+                             validate_inventory=False)
+            return rc, model
+
+        stopped_dir = base / "stopped"
+        rc, _model = run(stopped_dir)
+        assert rc == 1
+        assert "zero-hook mismatch" in capsys.readouterr().err
+        stopped = _read_jsonl(stopped_dir / "answers.jsonl")
+        assert stopped and all(row["arm"] in ("plain", "zero") for row in stopped)
+        assert any(not row["equal"] for row in json.loads(
+            (stopped_dir / "zero-hook-check.json").read_text(encoding="utf-8")))
+
+        allowed_dir = base / "allowed"
+        rc, _model = run(allowed_dir, allow=True)
+        assert rc == 0
+        assert any(row["arm"] == "neuron" for row in _read_jsonl(allowed_dir / "answers.jsonl"))
 
 
 def _full_score_fixture(root: Path) -> None:
@@ -394,6 +445,14 @@ def _break_gate(root: Path, gate_number: int):
         for row in rows:
             row["shows_persona"] = not row["shows_persona"]
         _write_jsonl(root / "labels-luna.jsonl", rows)
+    elif gate_number == 7:
+        private = {row["item_id"]: row for row in _read_jsonl(root / "keys-ds.jsonl")}
+        labels = _read_jsonl(root / "labels-ds.jsonl")
+        for row in labels:
+            key = private[row["item_id"]]
+            if key["arm"] == "vector" and key["q"] == 1.0 and row["shows_persona"]:
+                row["coherent"] = False
+        _write_jsonl(root / "labels-ds.jsonl", labels)
     else:
         raise AssertionError(f"unknown gate number {gate_number}")
 
@@ -421,7 +480,7 @@ def test_stale_answer_hash_is_missing_to_the_scorer(valid_score_fixture):
         assert result["totals"]["missing_or_stale_deepseek_labels"] == 1
 
 
-@pytest.mark.parametrize("gate_number", [1, 2, 3, 4, 5, 6])
+@pytest.mark.parametrize("gate_number", [1, 2, 3, 4, 5, 6, 7])
 def test_each_registered_gate_fails_on_its_mutated_input_copy(valid_score_fixture, gate_number):
     with tempfile.TemporaryDirectory(prefix=f"p123-break-g{gate_number}-", dir=HERE) as scratch:
         root = _clone_fixture(valid_score_fixture, Path(scratch) / "copy")
@@ -432,13 +491,15 @@ def test_each_registered_gate_fails_on_its_mutated_input_copy(valid_score_fixtur
         if gate_number == 4:
             assert result["totals"]["missing_or_stale_deepseek_labels"] == 1
             assert result["predictions"]["123.2"]["verdict"] == "not read (gate 4)"
+        if gate_number == 7:
+            assert result["predictions"]["123.2"]["verdict"] == "not read (gate 7)"
 
 
 def test_two_broken_gate_copies_make_expectation_tests_go_red(valid_score_fixture):
     with tempfile.TemporaryDirectory(prefix="p123-red-probe-", dir=HERE) as scratch:
         root = Path(scratch)
         copies = []
-        for gate_number in (1, 5):
+        for gate_number in (1, 7):
             copy = _clone_fixture(valid_score_fixture, root / f"gate-{gate_number}")
             _break_gate(copy, gate_number)
             copies.append(copy)
@@ -452,7 +513,7 @@ def test_two_broken_gate_copies_make_expectation_tests_go_red(valid_score_fixtur
             f"def test_broken_zero_gate_was_expected_to_pass():\n    score123.main({first_args})\n"
             f"    result=json.load(open({str(copies[0] / 'score-out' / 'score123.json')!r}, encoding='utf-8'))\n"
             "    assert result['all_gates_passed'] is True\n"
-            f"def test_broken_known_gate_was_expected_to_pass():\n    score123.main({second_args})\n"
+            f"def test_broken_readable_persona_gate_was_expected_to_pass():\n    score123.main({second_args})\n"
             f"    result=json.load(open({str(copies[1] / 'score-out' / 'score123.json')!r}, encoding='utf-8'))\n"
             "    assert result['all_gates_passed'] is True\n",
             encoding="utf-8",
@@ -469,7 +530,15 @@ def test_torn_final_jsonl_is_logged_and_nonfinal_damage_raises(capsys):
         final.write_bytes(b'{"row":"ok"}\n{"torn"')
         assert run123._read_jsonl(final) == [{"row": "ok"}]
         assert "skipping torn final JSONL line" in capsys.readouterr().err
-        assert final.read_bytes() == b'{"row":"ok"}\n'
+        assert final.read_bytes() == b'{"row":"ok"}\n{"torn"'
+        run123._rewrite_torn_tail(final, [{"row": "ok"}])
+        assert final.read_bytes() == b'{"row": "ok"}\n'
+        for reader in (label123.read_jsonl, score123.read_jsonl):
+            copy = Path(scratch) / f"{reader.__module__}.jsonl"
+            copy.write_bytes(b'{"row":"ok"}\n{"torn"')
+            assert reader(copy) == [{"row": "ok"}]
+            assert copy.read_bytes() == b'{"row":"ok"}\n{"torn"'
+            assert "skipping torn final JSONL line" in capsys.readouterr().err
         damaged = Path(scratch) / "damaged.jsonl"
         damaged.write_bytes(b'{"torn"\n{"row":"ok"}\n')
         with pytest.raises(ValueError, match="invalid JSONL"):
