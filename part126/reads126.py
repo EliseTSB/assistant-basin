@@ -293,10 +293,11 @@ def _install_capture_hooks(model, layers, context):
         def pre_hook(_module, args, *, li=layer_i):
             context["pre_o"][li] = args[0]
 
-        def forward_hook(module, args, output, *, li=layer_i, hd=head_dim, nh=head_count):
-            hidden = args[0]
-            position_embeddings = args[1]
-            attention_mask = args[2] if len(args) > 2 else None
+        def forward_hook(module, args, kwargs, output, *, li=layer_i, hd=head_dim, nh=head_count):
+            # The decoder layer passes these by keyword; the stub passes them by position.
+            hidden = kwargs["hidden_states"] if "hidden_states" in kwargs else args[0]
+            position_embeddings = kwargs["position_embeddings"] if "position_embeddings" in kwargs else args[1]
+            attention_mask = kwargs["attention_mask"] if "attention_mask" in kwargs else (args[2] if len(args) > 2 else None)
             batch, seq, _ = hidden.shape
             qkv = module.q_proj(hidden).view(batch, seq, -1, hd * 2)
             q0, gate = torch.chunk(qkv, 2, dim=-1)
@@ -318,7 +319,9 @@ def _install_capture_hooks(model, layers, context):
                 mask = attention_mask
                 if mask.ndim == 3:
                     mask = mask.unsqueeze(1)
-                scores = scores + mask[..., -1:, :]
+                last = mask[..., -1:, :]
+                # An sdpa mask is boolean, with True meaning attend; an eager mask is added to the scores.
+                scores = scores.masked_fill(~last, -float("inf")) if last.dtype == torch.bool else scores + last
             weights = torch.softmax(scores, dim=-1, dtype=torch.float32).to(query.dtype).squeeze(-2)
             gate_last = torch.sigmoid(gate[:, -1, :, :])
             reconstructed = (weights.unsqueeze(-2) @ value).squeeze(-2) * gate_last
@@ -364,7 +367,7 @@ def _install_capture_hooks(model, layers, context):
             }
 
         handles.append(attn.o_proj.register_forward_pre_hook(pre_hook))
-        handles.append(attn.register_forward_hook(forward_hook))
+        handles.append(attn.register_forward_hook(forward_hook, with_kwargs=True))
     return handles
 
 
