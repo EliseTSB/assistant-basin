@@ -215,3 +215,7 @@ beyond one part.
 - 2026-10-30, Part 123. A do-nothing check compares runs at one batch shape. On the A770 a bf16 greedy answer can depend on batch shape, and 5 of 18 zero rows differed from plain until the shapes matched, when 60 of 60 agreed.
 - 2026-10-30, Parts 118, 121, 122. A message to Elise before the cold check carries counts and no verdict word. "Clean no", "concept beats slot" and "a narrow window" each came back weaker, and the numbers beside them were right.
 - 2026-10-30, publishing. `part_check publish` gates the push with `&&`, in one chain. A `;` pushed Part 120 past a failing check; it failed on a false alarm that time.
+- 2026-10-30 (Part 123). A gate's threshold is set from the reader the part will use. A positive control copied from one reader's counts (14 of 18, Haiku) could not pass under another, and Part 92b had already said so.
+- 2026-10-30 (Part 125). A cold review of worker code found arm 1 never pushed and arm 2 pushed on one token, with 16 tests green. Paired paths go through one runner with a call log, and a test reads the log.
+- 2026-10-30 (Parts 124 to 126). Run `tools/part_check.py prelaunch` on a worker's design before review: two drafts had renamed the template's sections. A stub cannot show a keyword argument, a boolean mask or a stale job folder, so the two-unit pilot on the real card is part of the build.
+- 2026-10-30 (Part 126). When a gate fails on its own code, fix it publicly as an amendment that says what had been seen, before any prediction is read.
