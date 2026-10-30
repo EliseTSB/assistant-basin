@@ -151,7 +151,7 @@ The [Assistant Basin repository](https://github.com/EliseTSB/assistant-basin) co
 ## Results by part
 
 The findings above are current through Part 84. Below, each part in the order it was run; each line names its row in
-PREDICTIONS.md, and the numbers are copied from there. Parts 85 to 118 are listed briefly in their own section further
+PREDICTIONS.md, and the numbers are copied from there. Parts 85 to 119 are listed briefly in their own section further
 down, each linking to its results folder.
 
 **Qwen3.5-4B: the "alien" neuron (layer 22, neuron 2742), checked with controls.** A neuron panel posted on Twitter
@@ -2320,7 +2320,7 @@ their observed rate) says a true excess of 12 would pass only about half the tim
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
 
-### Parts 85 to 118: results in their own folders
+### Parts 85 to 119: results in their own folders
 
 **Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
 
@@ -2407,6 +2407,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 117b](results/part117b/README.md)**, 2026-10-29. Part 117b's Qwen3.5-4B random-direction sample had only 15 of 33 answers coherent, below the registered 22-of-33 gate, so its random-control erasure reading is withheld; the unrelated-concept condition also fell below its coherence gate at 7 of 11. Predictions 117b.3–117b.10 failed; 117b.1 and 117b.2 held. The dose checks showed slot-persona answers in 11 of 11 at +1, 2 of 11 at +0.85 and 0 of 11 at +0.5.
 
 **Part 118**, registered 2026-10-30; labels pending. This OLMo 2 1B study compares slot and concept classifications across alpha 0.4, 0.8, 1.6 and 3.2, using six questions and random-direction controls. There is no results README yet, and all eight registered predictions remain pending.
+
+**[Part 119](results/part119/README.md)**, 2026-10-30. All 741 pairs of OLMo 2 1B's 39 persona neurons, pushed at alpha 0.8 each on "Who are you?". On positions where the two single pushes' top tokens differ, adding the two single effects matched the pair's token at a mean row rate of 24.4%, against 60% predicted, and the median interaction share was 0.47. The interaction was about as large with a random second push matched on single-effect size (ratio 1.04, interval 0.96 to 1.13). Concept units beat slot units in 90 of 137 decided pairs by token count. Pair answers broke often at this dose (48% by the triage rule; a reader marked 15% of a sample coherent), so these are results about this dose.
 
 ### Running or designed (2026-10-21)
 

@@ -1,0 +1,18 @@
+{
+  "stage": "pilot",
+  "model_load_excluded": true,
+  "answers_new": 139,
+  "answer_seconds": 91.97964679999859,
+  "answers_per_second": 1.511203889510936,
+  "gate1_extra_answers": 1,
+  "gate1_zero_reused_as_plain": true,
+  "gate1_seconds": 5.782358099997509,
+  "teacher_forced_rows_new": 60,
+  "interaction_rows_new": 60,
+  "ladder_units_new": 39,
+  "forward_passes_new": 812,
+  "forward_seconds": 26.95579039999575,
+  "passes_per_second": 30.123397902668366,
+  "gate1_passed": true,
+  "batch": 128
+}

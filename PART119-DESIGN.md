@@ -1,7 +1,7 @@
 # Part 119: when two of OLMo's persona neurons are pushed together, do their effects on the next-word scores add, and which one wins?
 
 Procedure: v1
-Registered 2026-10-30 03:23 CT by Claude (Opus 5.5), before any data. Elise asked at 00:50 CT on 2026-10-30 to "keep trying to refine
+Drafted 2026-10-30 03:23 CT by Claude (Opus 5.5). Registered in commit 0d6d572 at 04:27:00 CT, before the pilot launch. Elise asked at 00:50 CT on 2026-10-30 to "keep trying to refine
 your understanding of slot vs concept neurons and any other ways we can classify them, and try to figure out how
 different types of neurons interact" (Discord message 1565603681804488839). A Luna 6 cold critique of this design before
 registration (results/part119/design-review/CRITIQUE.md, 9 findings, all folded here) changed the winner-take-all rule,
@@ -38,6 +38,8 @@ logits minus the sum of the single effects.
   (EPISTASIS-FRAMING.md); Part 53 and Parts 67 to 74 (single neurons driving others, activation readouts).
 
 ## Method
+
+Registration: commit 0d6d572 at 04:27:00 CT on 2026-10-30, before the pilot launched at 04:27:21 CT.
 
 OLMo 2 1B Instruct at Part 92's pinned revision, bf16, the A770, chat frame, no system prompt, thinking off, the one
 question "Who are you?", greedy, 60 new tokens. Units: the 39 classified neurons of results/part92/step2/neurons.json
@@ -258,3 +260,23 @@ gate 2 fails and no prediction is read. The agreed concept sub-gate (at least 6 
 gate2b comparison and the Part 118 comparison stay reported. If the hypothesis is right, greedy answers on this device
 carry a small dependence on batch shape; the run's rows are not reshaped for that, and the size of it (4 of 39 answers
 differing somewhere in 60 tokens) is reported as a limit on any single row.
+
+## Note after scoring (2026-10-30 06:03 CT, written after the scores; no prediction or threshold changes)
+
+A cold check of the write-up (results/part119/COLD-CHECK-r1.md) found 19 findings, grouped below as five corrections.
+
+1. Registration. The 03:23 in the header is the draft time. The registration is commit 0d6d572 at 04:27:00 CT,
+   before the pilot launched at 04:27:21.
+2. 119.10. This design withholds only when agreement "falls below kappa 0.6"; undefined is not below 0.6. The readers
+   agreed on all 30 shared items, and both got the known "both" example right. By this design wording, 119.10 is read
+   and failed: 0 of 28 concept pairs against at least 25%. The scorer adds a non-null-kappa requirement, so its output
+   says withheld / not read. The README records both readings; SCORE.md keeps the scorer's output as run.
+3. Robustness thresholds. 119.6 and 119.9 asked for differences of 0.10 and 0.05 on a measure whose 39 values all lie
+   between 0 and 0.058, so neither could hold. That was my registration error. The two failures say only the sign.
+4. Bootstrap. The scorer weights a row by the product of its two units' draw counts. The design phrase "a resampled unit
+   brings all its rows" does not specify how a row shared by two units is weighted. The README gives the sum-weighted
+   intervals beside the scorer's product-weighted intervals.
+5. Broken answers. The counts use part86/triage86.py as written: it keeps recognized identities or first-sentence A.I.,
+   AI, assistant, language model, model, chatbot, or LLM text; otherwise it marks answers under four words or with a
+   repeated three-word sequence occurring three times as broken. The README gives the full triage counts,
+   three-word-repeat counts, and reader coherence by class.

@@ -792,7 +792,7 @@ def reader_analysis(units: list[dict], labels_ds: list[dict], labels_luna: list[
         "leave_one_concept_out": leave_one_out,
         "passed": bool(gates_passed and files_present.get("ds", False)
                        and files_present.get("luna", False)),
-        "rule": "119.9 is withheld unless both known-example gates pass, all sample rows are present, "
+        "rule": "119.10 is withheld unless both known-example gates pass, all sample rows are present, "
                 "and DS/Luna agreement on the binary both label has kappa >= 0.6.",
     }
 
