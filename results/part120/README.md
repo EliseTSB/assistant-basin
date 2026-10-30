@@ -163,7 +163,7 @@ This is one model, one question, and 312 of 2,964 possible rows. The paths are f
 - **S_P:** the two-push self term `P(2α) - 2P(α)`, also a forward finite difference.
 - **E and q:** E is `S_P - S_A - S_B - 2I`; q is `‖E‖ / ‖S_P‖`, the higher-order remainder relative to the two-push self term.
 - **c:** `‖I‖ / sqrt(‖S_A‖ ‖S_B‖)`, the cross term relative to the geometric mean of the self terms.
-- **Self share and pair share:** the median squared-size fractions `s=(‖S_A‖/‖A(2α)‖)²` and `(‖I‖/‖P‖)².
+- **Self share and pair share:** the median squared-size fractions `s=(‖S_A‖/‖A(2α)‖)²` and `p=(‖I‖/‖P‖)²`.
 - **u:** for a first unit, the median self share s over its eight rows.
 - **Row median:** first the median over eligible positions in a row, then the median over rows in a class.
 - **Unit bootstrap:** resampling the 39 first units with replacement. The primary interval weights a row by the product of its endpoint counts; the sensitivity interval uses their sum.
@@ -184,4 +184,4 @@ This is one model, one question, and 312 of 2,964 possible rows. The paths are f
 - [Part 120 design](../../PART120-DESIGN.md) and [build notes](../../part120/BUILD-NOTES.md): registration and run procedure.
 - [FOLD-r1.md](../../part120/FOLD-r1.md) and [FOLD-r2.md](../../part120/FOLD-r2.md): code review folds.
 
-Cold check: Haiku 5.5, 2026-10-30, round 1, 15 findings (1 number, 7 overstated, 7 minor), all folded ([COLD-CHECK-r1.md](COLD-CHECK-r1.md), `part120/FOLD-r2.md`).
+Cold check: Haiku 5.5, 2026-10-30, round 1, 15 findings (1 number, 7 overstated, 7 minor), all folded ([COLD-CHECK-r1.md](COLD-CHECK-r1.md)).
