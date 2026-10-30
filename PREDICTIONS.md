@@ -2438,3 +2438,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 114.2 | Claude (medium confidence): No single neuron does that on more than 4 of the 16. | 0 of 16 for all 20 candidates | **held** |
 | 114.3 | Claude (medium confidence): The top candidate lowers the mean held-out log-odds of "Q" more than all 20 of its activity-matched controls. | L31 N4742 -0.73; its strongest control lowers it by 0.05 | **held** |
 | 114.4 | Claude (low confidence): The top two zeroed together make "Q" stop being the most likely token on at least 8 of 16. | 0 of 16 | **failed** |
+
+## Part 115 (registered 2026-10-29, PART115-DESIGN.md): how many of the strongest neurons, zeroed together, take the leading "Q" off Qwen3.5-4B's name?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 115.1 | Claude (medium confidence): The top 20 zeroed together lower the mean held-out log-odds of "Q" by less than the 8.42 their single drops add up to. | | |
+| 115.2 | Claude (low confidence): The smallest k whose top-k set takes "Q" off first place on at least 8 of the 16 phrasings is between 10 and 100. | | |
+| 115.3 | Claude (medium confidence): At every k, the top-k set lowers the mean log-odds of "Q" more than all 10 matched random sets of the same size. | | |
+| 115.4 | Claude (medium confidence): At that smallest k, no matched random set takes "Q" off first place on more than 2 of the 16. | | |
+| 115.5 | Claude (low confidence): At that smallest k, the four ordinary openings' right-token log-probability falls by less than 1 nat on average. | | |
+| 115.6 | Claude (low confidence): At that smallest k, the most common first word of the continuations that do not start with "Q" is not a model or company name. | | |
