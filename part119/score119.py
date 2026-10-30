@@ -28,6 +28,13 @@ BOOTSTRAP_SEED = 11902
 PATH_TOKENS = 24
 
 
+def _json_default(value):
+    """numpy scalars reach the report from the bootstrap; write them as plain values."""
+    if hasattr(value, "item"):
+        return value.item()
+    raise TypeError(f"not JSON serializable: {type(value).__name__}")
+
+
 def repo_path(value: str | Path) -> Path:
     path = Path(value).expanduser()
     return path if path.is_absolute() else ROOT / path
@@ -1233,7 +1240,7 @@ def render_markdown(result: dict) -> str:
     lines.extend(["", "## Registered predictions", "",
                   "| Prediction | Threshold | Observed | Verdict |", "|---|---|---|---|"])
     for item in result["predictions"]:
-        observed = json.dumps(item["observed"], ensure_ascii=False, sort_keys=True) \
+        observed = json.dumps(item["observed"], ensure_ascii=False, sort_keys=True, default=_json_default) \
             if isinstance(item["observed"], (dict, list)) else _fmt(item["observed"])
         lines.append(f"| {item['id']} | {item['threshold']} | {observed} | {item['verdict']} |")
     summary = result["logit_summary"]
@@ -1343,7 +1350,7 @@ def render_markdown(result: dict) -> str:
     coverage = reader["sample_coverage"]
     lines.append(f"Items needing a retry: DS {coverage['ds_retry_items']}; Luna {coverage['luna_retry_items']}.")
     lines.append(f"119.10 leave-one-concept-out coverage: "
-                 f"{json.dumps(reader['leave_one_concept_out'], sort_keys=True)}")
+                 f"{json.dumps(reader['leave_one_concept_out'], sort_keys=True, default=_json_default)}")
     lines.extend(["", "## Data coverage", "",
                   f"Answers complete: {result['coverage']['answers_complete']}; "
                   f"logit rows: {result['coverage']['logit_rows']}; "
@@ -1433,7 +1440,7 @@ def main(argv: list[str] | None = None) -> int:
     tournament_path = out_dir / "tournament.json"
     for path, value in ((score_path, result), (tournament_path, tournament)):
         with path.open("w", encoding="utf-8") as stream:
-            json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
+            json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False, default=_json_default)
             stream.write("\n")
     with markdown_path.open("w", encoding="utf-8") as stream:
         stream.write(render_markdown(result))
