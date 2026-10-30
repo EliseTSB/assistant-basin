@@ -270,7 +270,7 @@ def test_gate_three_failure_keeps_answer_only_predictions_readable():
     units, _rows, answers, logits, ladder, part118 = _fabricated_dataset(gate3_pass=False)
     result, _tournament = score119.score_data(
         answers, logits, ladder, units,
-        {"no_hook_tokens": [1, 2], "zero_hook_tokens": [1, 2]}, part118,
+        {"no_hook_tokens": [1, 2], "zero_hook_tokens": [1, 2]}, part118, part118,
         labels_ds=[], labels_luna=[], known=label119.read_known(),
         reader_files_present={"ds": False, "luna": False, "known_ds": False, "known_luna": False},
     )
@@ -289,7 +289,7 @@ def test_one_missing_logit_row_fails_gate_three_and_withholds_119_3():
     expected_ids = {row["row_id"] for row in logits}
     result, _tournament = score119.score_data(
         answers, logits[:1], ladder, units,
-        {"no_hook_tokens": [7, 8], "zero_hook_tokens": [7, 8]}, part118,
+        {"no_hook_tokens": [7, 8], "zero_hook_tokens": [7, 8]}, part118, part118,
         expected_logit_ids=expected_ids, interactions=[], expected_interaction_keys=set(),
     )
     by_id = {row["id"]: row for row in result["predictions"]}
@@ -347,7 +347,7 @@ def test_scorer_end_to_end_on_fabricated_files():
     units, rows, answers, logits, ladder, part118 = _fabricated_dataset(gate3_pass=True)
     result, tournament = score119.score_data(
         answers, logits, ladder, units,
-        {"no_hook_tokens": [7, 8], "zero_hook_tokens": [7, 8]}, part118,
+        {"no_hook_tokens": [7, 8], "zero_hook_tokens": [7, 8]}, part118, part118,
         labels_ds=[], labels_luna=[], known=label119.read_known(),
         reader_files_present={"ds": False, "luna": False, "known_ds": False, "known_luna": False},
     )
@@ -403,17 +403,20 @@ def test_gate2_concept_subgate_and_gate3_contested_coverage():
                 for name in ("agreed_slot", "agreed_concept", "disputed")}
     matched_ids = {unit["id"] for unit in by_group["agreed_slot"]}
     matched_ids.update(unit["id"] for unit in by_group["agreed_concept"][:5])
-    matched_ids.update(unit["id"] for unit in by_group["disputed"][:7])
+    matched_ids.update(unit["id"] for unit in by_group["disputed"])
     answers = [{"row_id": f"single:{unit['id']}", "text": "MATCH" if unit["id"] in matched_ids else "MISS"}
                for unit in units]
     part118 = [{"id": unit["id"], "arm": "neuron", "alpha": .8,
                 "question_index": 0, "answer": "MATCH"} for unit in units]
     result = score119.compute_gates({"no_hook_tokens": [1], "zero_hook_tokens": [1]}, answers,
-                                    part118, [], units=units)
-    assert result["gate2"]["passed"]
-    assert result["gate2"]["matches"] == 33
+                                    part118, [], units=units, gate2b=part118)
+    assert not result["gate2"]["passed"]  # 36 of 39: Amendment 1 needs 38
+    assert result["gate2"]["matches"] == 36
     assert result["gate2"]["agreed_concept_matches"] == 5
     assert not result["gate2"]["kind_claims_passed"]
+    nogate = score119.compute_gates({"no_hook_tokens": [1], "zero_hook_tokens": [1]}, answers,
+                                    part118, [], units=units)
+    assert not nogate["gate2"]["passed"] and nogate["gate2"]["compared"] == 0  # no reference file: fails, never passes
 
     answers = [{"row_id": f"single:{unit['id']}", "text": "MATCH"} for unit in units]
     pair_positions = [{"g": 1, "both_top": 1} for _ in range(9)] + [{"g": 1, "both_top": 2}]

@@ -376,7 +376,7 @@ def unit_answer_metrics(units: list[dict], answers: list[dict], ladder_rows: lis
 
 def compute_gates(gate1: dict | None, answers: list[dict], part118: list[dict],
                   logits: list[dict], expected_logit_ids: set[str] | None = None,
-                  units: list[dict] | None = None) -> dict:
+                  units: list[dict] | None = None, gate2b: list[dict] | None = None) -> dict:
     no_hook = (gate1 or {}).get("no_hook_tokens")
     zero_hook = (gate1 or {}).get("zero_hook_tokens")
     gate1_passed = isinstance(no_hook, list) and isinstance(zero_hook, list) and no_hook == zero_hook
@@ -391,21 +391,32 @@ def compute_gates(gate1: dict | None, answers: list[dict], part118: list[dict],
             continue
         part118_by_id[str(row.get("id"))] = row
     answer_by_id = latest_by(answers, "row_id")
+    # Amendment 1: the gate compares the single rows with Part 92's own hook path, no padding (gate2b.jsonl).
+    # The comparison with Part 118's padded rows stays reported, not gated.
+    reference_by_id = {str(row.get("id")): row for row in (gate2b or [])}
     matches = compared = concept_matches = concept_compared = 0
+    part118_matches = part118_compared = 0
     for unit in (rows119.load_units() if units is None else units):
         first = answer_by_id.get(f"single:{unit['id']}")
+        if first is None or "text" not in first:
+            continue
         second = part118_by_id.get(unit["id"])
-        if first is None or second is None or "text" not in first or "answer" not in second:
+        if second is not None and "answer" in second:
+            part118_compared += 1
+            part118_matches += int(str(first["text"])[:100] == str(second["answer"])[:100])
+        reference = reference_by_id.get(unit["id"])
+        if reference is None or "answer" not in reference:
             continue
         compared += 1
-        match = str(first["text"])[:100] == str(second["answer"])[:100]
+        match = str(first["text"]).strip() == str(reference["answer"]).strip()
         matches += int(match)
         if unit["group"] == "agreed_concept":
             concept_compared += 1
             concept_matches += int(match)
-    gate2_passed = matches >= 33
+    gate2_passed = matches >= 38
     gate2_result = {"passed": gate2_passed, "matches": matches, "compared": compared,
-                    "required_matches": 33, "total_units": 39,
+                    "required_matches": 38, "total_units": 39,
+                    "part118_first_100_char_matches": part118_matches, "part118_compared": part118_compared,
                     "agreed_concept_matches": concept_matches,
                     "agreed_concept_compared": concept_compared,
                     "agreed_concept_required": 6,
@@ -1051,6 +1062,7 @@ def headline(predictions: list[dict], real_rate: float | None, control_rate: flo
 
 def score_data(answers: list[dict], logits: list[dict], ladder_rows: list[dict],
                units: list[dict], gate1: dict | None, part118: list[dict],
+               gate2b: list[dict] | None = None,
                expected_answer_ids: set[str] | None = None,
                expected_logit_ids: set[str] | None = None,
                expected_ladder_ids: set[str] | None = None,
@@ -1091,7 +1103,7 @@ def score_data(answers: list[dict], logits: list[dict], ladder_rows: list[dict],
     interactions_complete = ((not interaction_missing and not interaction_extra)
                              if expected_interaction_keys is not None else bool(interactions))
 
-    gates = compute_gates(gate1, answers, part118, logits, expected_logit_ids, units)
+    gates = compute_gates(gate1, answers, part118, logits, expected_logit_ids, units, gate2b=gate2b)
     unit_metrics = unit_answer_metrics(units, answers, ladder_rows)
     unit_ids = [unit["id"] for unit in units]
     draws = make_unit_bootstrap_draws(unit_ids)
@@ -1204,9 +1216,10 @@ def render_markdown(result: dict) -> str:
              "## Gates", "", "| Gate | Result | Observed |", "|---|---|---|"]
     lines.append(f"| 1 zero hook | {'pass' if gates['gate1']['passed'] else 'fail'} | "
                  f"exact token match: {gates['gate1']['exact_token_match']} |")
-    lines.append(f"| 2 Part 118 singles | {'pass' if gates['gate2']['passed'] else 'fail'} | "
-                 f"{gates['gate2']['matches']}/{gates['gate2']['total_units']} first-100-character matches "
-                 f"({gates['gate2']['compared']} compared); agreed concepts "
+    lines.append(f"| 2 Part 92 hook path (Amendment 1) | {'pass' if gates['gate2']['passed'] else 'fail'} | "
+                 f"{gates['gate2']['matches']}/{gates['gate2']['total_units']} exact decoded answers "
+                 f"({gates['gate2']['compared']} compared; Part 118's padded rows, reported only: "
+                 f"{gates['gate2']['part118_first_100_char_matches']}/{gates['gate2']['part118_compared']}); agreed concepts "
                  f"{gates['gate2']['agreed_concept_matches']}/{gates['gate2']['agreed_concept_compared']} "
                  f"(kind gate={gates['gate2']['kind_claims_passed']}) |")
     lines.append(f"| 3 teacher-forced path | {'pass' if gates['gate3']['passed'] else 'fail'} | "
@@ -1356,6 +1369,7 @@ def score_files(args: argparse.Namespace) -> tuple[dict, dict]:
     ladder = read_jsonl(args.ladder, optional=True)
     interactions = read_jsonl(args.interactions, optional=True)
     part118 = read_jsonl(args.part118, optional=True)
+    gate2b = read_jsonl(args.gate2b, optional=True)
     gate1_path = repo_path(args.gate1)
     gate1 = read_json(gate1_path) if gate1_path.exists() else None
     labels_ds_path = repo_path(args.labels)
@@ -1379,7 +1393,7 @@ def score_files(args: argparse.Namespace) -> tuple[dict, dict]:
                "luna": labels_luna_path.exists() and labels_luna_keys_path.exists(),
                "known_ds": known_ds_path.exists(), "known_luna": known_luna_path.exists()}
     return score_data(
-        answers, logits, ladder, units, gate1, part118,
+        answers, logits, ladder, units, gate1, part118, gate2b,
         expected_answers, expected_logits, expected_ladders,
         labels_ds=labels_ds, labels_luna=labels_luna, known=known,
         known_ds=known_ds, known_luna=known_luna,
@@ -1398,6 +1412,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--interactions", default="results/part119/interaction.jsonl")
     parser.add_argument("--gate1", default="results/part119/gate1.json")
     parser.add_argument("--part118", default="results/part118/answers.jsonl")
+    parser.add_argument("--gate2b", default="results/part119/gate2b.jsonl")
     parser.add_argument("--labels", default="results/part119/labels-ds.jsonl")
     parser.add_argument("--luna-labels", default="results/part119/labels-luna.jsonl")
     parser.add_argument("--labels-keys", help="private key file for DS labels (defaults to <labels>.keys.jsonl)")
