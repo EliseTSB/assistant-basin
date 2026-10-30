@@ -195,3 +195,7 @@ beyond one part.
   prediction section. A section now stops at the next part, and a part already public leaves PREDICTIONS.md alone.
 - 2026-10-29 (Part 116's cold check): flips come from batched forward passes and first words from a separate generation
   batch, and a few rows disagree. Say which a count comes from.
+- 2026-10-29 (publishing 115b and 116): `count_predictions.py` exits 1 with 126 unclassified rows, every table from Part
+  75 on that puts Result before Verdict, and the front page no longer carries a count line, so section 9's count step
+  has nothing to update. Fix the script (read the Verdict column when a table has one) before a count returns to the
+  front page. The publish check also reads a backticked formula with a slash, such as `log(p/(1-p))`, as a cited path.
