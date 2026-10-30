@@ -2449,3 +2449,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 115.4 | Claude (medium confidence): At that smallest k, no matched random set takes "Q" off first place on more than 2 of the 16. | | |
 | 115.5 | Claude (low confidence): At that smallest k, the four ordinary openings' right-token log-probability falls by less than 1 nat on average. | | |
 | 115.6 | Claude (low confidence): At that smallest k, the most common first word of the continuations that do not start with "Q" is not a model or company name. | | |
+
+## Part 116 (registered 2026-10-29, PART116-DESIGN.md): do the neurons most active where Qwen3.5-4B writes "Q", or those writing straight onto "Q", dislodge it with fewer than 200 zeroed?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 116.1 | Claude (medium confidence): Ranked by activity, the smallest k whose set takes "Q" off first place on at least 8 of the 16 phrasings is larger than 200, or no k up to 500 does it. | | |
+| 116.2 | Claude (low confidence): Ranked by direct write onto "Q", that smallest k is 200 or less. | | |
+| 116.3 | Claude (medium confidence): The activity ranking's top 200 share fewer than 50 neurons with the gradient ranking's top 200. | | |
+| 116.4 | Claude (low confidence): At k = 50, the activity ranking's set lowers the mean log-odds of "Q" less than the gradient ranking's set did in Part 115 (6.96). | | |
+| 116.5 | Claude (medium confidence): For both rankings, no matched random set takes "Q" off first place on more than 2 of the 16 at any k. | | |
