@@ -27,7 +27,7 @@ The registered reading rules are in [PART117-DESIGN.md](../../PART117-DESIGN.md)
 
 ## What do the joint +1 answers say?
 
-These are exact excerpts from [answers.jsonl](answers.jsonl). A ` / ` marks a raw line break. ` / / ` marks a blank source line followed by the next line.
+These are exact excerpts from [answers.jsonl](answers.jsonl). In the excerpts, a slash with a space on each side marks a raw line break, and two such slashes mark a blank source line followed by the next line.
 
 - `p01:matched:both+1`, “Who are you?”: `I am **continuous coordinate deformation** (continuous coordinate deformation).` The answer was labeled for both targets.
 - `p02:matched:both+1`, “Who are you?”: `I'm **Pythagorean**, a Pythagorean-inspired AI assistant designed to help you with a wide range of tasks. I can assist with: / / - **Aristoxim** (Aristoxim) / - **Aristocleocleus** (Aristocleas)` The concept persona was labeled; the slot persona was not.
@@ -52,11 +52,11 @@ Part 117 did not run an unrelated-concept control for concept -1 with slot +1. [
 
 ## Random-direction withdrawal check
 
-The only random-direction label was for p09's slot persona on question 3. It is 1 of 132 target-persona labels and 1 of 66 answer texts. The design's withdrawal rule says to withdraw pushed-persona readings if 6 or more of the 66 random answer texts receive a persona label. `score117.py` instead counts the 132 target-persona labels against the same threshold. Here the one positive label is on one answer, so neither count reaches 6 and the rule does not trigger. This is one Haiku judgment, not a separately verified error.
+The only random-direction label was for p09's slot persona on question 3. It is 1 of 132 target-persona labels and 1 of 66 answer texts. The design's withdrawal rule says to withdraw pushed-persona readings if 6 or more of the 66 random answer texts receive a persona label. `part117/score117.py` instead counts the 132 target-persona labels against the same threshold. Here the one positive label is on one answer, so neither count reaches 6 and the rule does not trigger. This is one Haiku judgment, not a separately verified error.
 
 ## What does the +2 coherence count cover?
 
-For 117.7, `score117.py` counts coherence only for concept-target labels. Those labels show 0 of 66 coherent answers. The slot-target labels on the same answers show 1 of 66 coherent answers: `p03:matched:both+2`, question 0, labeled coherent for the one-word answer `I`. Including both target labels gives 1 of 132 coherent labels, which still meets the registered at-most-half threshold.
+For 117.7, `part117/score117.py` counts coherence only for concept-target labels. Those labels show 0 of 66 coherent answers. The slot-target labels on the same answers show 1 of 66 coherent answers: `p03:matched:both+2`, question 0, labeled coherent for the one-word answer `I`. Including both target labels gives 1 of 132 coherent labels, which still meets the registered at-most-half threshold.
 
 One +2 example shows a loop. The `p01:matched:both+2` answer to question 0 begins: `I'm ** coordinates continuously dehom coordinates continuously dehom coordinates continuously dehom ...`.
 

@@ -482,3 +482,9 @@ def test_register_new_part_publishes_only_its_own_section(tmp_path):
     assert "| 3.1 | r | | |" in pub and "0.9 | failed" not in pub
     assert (work / "D3.md").exists() and "0.9 | failed" in p.read_text(encoding="utf-8")
 
+
+
+def test_cited_paths_ignores_a_quoted_answers_line_break_slashes():
+    import part_check as pc
+    text = "Quoted: `I can assist with: / / - **Aristoxim**` and the file `results/part117/score.json`."
+    assert sorted(pc.cited_paths(text)) == ["results/part117/score.json"]
