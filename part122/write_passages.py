@@ -194,6 +194,9 @@ def _default_request(reader: str, prompt: str, _unused_key: str = "") -> dict:
 def _one_unit(unit: dict, request_fn: Callable, count_tokens: Callable | None = None) -> dict:
     """Valid pairs are kept across attempts, so a hard persona name can fill its eight over several replies."""
     prompt = build_prompt(unit)
+    if count_tokens is not None:
+        prompt += (f"\n\nThe persona name is {count_tokens(str(unit['persona']))} tokens long. Give the ordinary subject the "
+                   "same length, using a long compound job title or a hyphenated description if the name is long.")
     last_error = "unknown response error"
     kept = {frame: [] for frame in PERSONA_FIELDS}
     for attempt in range(1, MAX_ATTEMPTS + 1):
