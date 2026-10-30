@@ -3,9 +3,6 @@
 Procedure: v1  
 Registered 2026-10-30 13:28 CT by Claude (Opus 5.5), before any data. Drafted with GPT-6 Luna on my brief, and every prediction and design decision is mine. Elise asked on 2026-10-29 (Discord message 1565414652077154375, card redvx-dynamic-control-vectors-2026-10-29) that we look into re:dvx against our neuron pushes.
 
-<!-- Fill every {{...}}. tools/part_check.py prelaunch refuses a design that still has one. PROCEDURE.md explains each
-section; this comment can stay. -->
-
 ## Question
 
 On OLMo 2 1B Instruct, does a locally fitted persona direction point toward the Part 92 neuron for that persona, and does a sweep of its coefficient show the sharp dose response seen in earlier work? This follows Part 92's slot and concept units, Parts 104 and 105's sensitivity to intervention changes, Part 118's direct OLMo dose study, and Part 121's close-dose result on Qwen.
@@ -69,7 +66,7 @@ Gate: Read no prediction unless the zero-hook check is exact, the positive-contr
 
 ## Size
 
-- Total: `6 plain + 10×6 zero-hook + 39×6×3 neuron + 39×6×5 vector + 10×3×6×3 random + 4 suffix samples = 2,482` unique model generations. The primary reader labels `39×6 plain + 702 neuron + 1,170 vector + 39×6×3×3 random = 4,212` answer-persona items. Plain and random outputs are reused across targets. Fitting reads `39×4 queries×4 templates×4 suffixes×2 sides = 4,992` last-token prompt states.
+- Total: 2,482 generations, about 45 minutes. That is `6 plain + 10×6 zero-hook + 39×6×3 neuron + 39×6×5 vector + 10×3×6×3 random + 4 suffix samples` unique model generations. The primary reader labels `39×6 plain + 702 neuron + 1,170 vector + 39×6×3×3 random = 4,212` answer-persona items. Plain and random outputs are reused across targets. Fitting reads `39×4 queries×4 templates×4 suffixes×2 sides = 4,992` last-token prompt states.
 - Smallest effect worth knowing: a drop or gain of 5 of 21 slot units on “Who are you?” between q=1 and q=0.85, 23.8 percentage points. This needs n=21 matched slot personas per coefficient, with six answers per persona (126 labeled answers per coefficient for the full battery). The persona is the sampling unit; the six answers are repeated measures, not six independent units. Five units is the practical resolution threshold, not a claim of 80% power.
 - Runtime: Part 118 measured 24 OLMo answers in 18.8 seconds on the A770, about 1.3 answers per second. At that rate, 2,482 generated outputs take about 32 minutes before fitting, scoring, or reading. Part 121 measured 246 answers in about 2.5 minutes at batch 64 on Qwen3.5-4B, about 1.6 answers per second; that is a different model and a secondary comparison. Fit extraction and the full-run runtime remain estimates until the pilot measures them.
 - Pilot: use p92-00, p92-01, p92-02, and p92-03, which give two concepts and two slots across three layers. Stage A fits all units and reads 4,992 prompt states, including 512 for these four units. Stage B generates `4×6×(3 neuron + 5 vector) + 3 layers×6×9 random + 6 plain + 3×6 zero-hook = 378` answers. The four suffix samples were already generated in Stage A, so the pilot's end-to-end total is 382 unique generations. Benchmark batch sizes 32, 48, and 64 on these rows. Check pilot answers for truncation or loops and apply the reader gate. Keep passing pilot rows in the main result.
