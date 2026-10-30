@@ -391,7 +391,7 @@ def compute_gates(gate1: dict | None, answers: list[dict], part118: list[dict],
             continue
         part118_by_id[str(row.get("id"))] = row
     answer_by_id = latest_by(answers, "row_id")
-    # Amendment 1: the gate compares the single rows with Part 92's own hook path, no padding (gate2b.jsonl).
+    # Amendments 1 and 2: the gate compares Part 92's own hook path with the row hook at batch size 1 (gate2c.jsonl).
     # The comparison with Part 118's padded rows stays reported, not gated.
     reference_by_id = {str(row.get("id")): row for row in (gate2b or [])}
     matches = compared = concept_matches = concept_compared = 0
@@ -405,10 +405,11 @@ def compute_gates(gate1: dict | None, answers: list[dict], part118: list[dict],
             part118_compared += 1
             part118_matches += int(str(first["text"])[:100] == str(second["answer"])[:100])
         reference = reference_by_id.get(unit["id"])
-        if reference is None or "answer" not in reference:
+        if reference is None or "part92_answer" not in reference or "row_hook_answer" not in reference:
             continue
         compared += 1
-        match = str(first["text"]).strip() == str(reference["answer"]).strip()
+        # Amendment 2: both hook paths at batch size 1 (gate2c.py), compared with each other.
+        match = str(reference["part92_answer"]).strip() == str(reference["row_hook_answer"]).strip()
         matches += int(match)
         if unit["group"] == "agreed_concept":
             concept_compared += 1
@@ -1216,7 +1217,7 @@ def render_markdown(result: dict) -> str:
              "## Gates", "", "| Gate | Result | Observed |", "|---|---|---|"]
     lines.append(f"| 1 zero hook | {'pass' if gates['gate1']['passed'] else 'fail'} | "
                  f"exact token match: {gates['gate1']['exact_token_match']} |")
-    lines.append(f"| 2 Part 92 hook path (Amendment 1) | {'pass' if gates['gate2']['passed'] else 'fail'} | "
+    lines.append(f"| 2 Part 92 hook path (Amendments 1 and 2) | {'pass' if gates['gate2']['passed'] else 'fail'} | "
                  f"{gates['gate2']['matches']}/{gates['gate2']['total_units']} exact decoded answers "
                  f"({gates['gate2']['compared']} compared; Part 118's padded rows, reported only: "
                  f"{gates['gate2']['part118_first_100_char_matches']}/{gates['gate2']['part118_compared']}); agreed concepts "
@@ -1412,7 +1413,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--interactions", default="results/part119/interaction.jsonl")
     parser.add_argument("--gate1", default="results/part119/gate1.json")
     parser.add_argument("--part118", default="results/part118/answers.jsonl")
-    parser.add_argument("--gate2b", default="results/part119/gate2b.jsonl")
+    parser.add_argument("--gate2b", default="results/part119/gate2c.jsonl")
     parser.add_argument("--labels", default="results/part119/labels-ds.jsonl")
     parser.add_argument("--luna-labels", default="results/part119/labels-luna.jsonl")
     parser.add_argument("--labels-keys", help="private key file for DS labels (defaults to <labels>.keys.jsonl)")
