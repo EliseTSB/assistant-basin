@@ -18,6 +18,9 @@ ALPHAS = (0.4, 0.8, 1.6, 3.2)
 
 
 def _label(unit, arm, alpha, qi, mode):
+    gate1b_fail = mode == "gate1b_fail"
+    if gate1b_fail:
+        mode = "hold"
     kind = unit["kind"]
     index = int(unit["id"].rsplit("-", 1)[1])
     if mode == "hold":
@@ -25,7 +28,8 @@ def _label(unit, arm, alpha, qi, mode):
             show = qi == 0 and ((kind == "concept" and index < 9)
                                 or (kind == "slot" and index < 4))
         elif alpha == 0.8:
-            show = qi == 0 and index % 2 == 0
+            # Gate 1b (Amendment 1): units keep Part 92's kind at alpha 0.8, unless the test breaks it.
+            show = (qi < 3 if kind == "concept" else qi == 0) and not gate1b_fail
         elif alpha == 1.6:
             show = qi < 3 and ((kind == "concept" and index < 12)
                                or (kind == "slot" and index < 7))
@@ -37,7 +41,8 @@ def _label(unit, arm, alpha, qi, mode):
             show = qi == 0 and ((kind == "concept" and index < 9)
                                 or (kind == "slot" and index < 6))
         elif alpha == 0.8:
-            show = qi == 0 and index % 2 == 0
+            # Gate 1b (Amendment 1): units keep Part 92's kind at alpha 0.8, unless the test breaks it.
+            show = (qi < 3 if kind == "concept" else qi == 0) and not gate1b_fail
         elif alpha == 1.6:
             show = qi == 0 and index < 2
         else:
@@ -114,10 +119,12 @@ def test_random_arm_answers_do_not_enter_neuron_kind_counts():
             row["shows_persona"] = True
             row["coherent"] = True
     result = score118.score_data(answers, primary, ds, UNITS, ALPHAS)
-    concept_08 = next(row for row in result["classification_counts"]
-                      if row["alpha"] == 0.8 and row["kind"] == "concept")
-    assert concept_08["concept-like"] == 0
-    assert concept_08["slot-like"] == 9
+    # Read at alpha 0.4, where the neuron arm makes 9 concept units slot-like and none concept-like; counting
+    # the all-showing random rows would turn every unit concept-like.
+    concept_04 = next(row for row in result["classification_counts"]
+                      if row["alpha"] == 0.4 and row["kind"] == "concept")
+    assert concept_04["concept-like"] == 0
+    assert concept_04["slot-like"] == 9
 
 
 def test_incoherent_answer_does_not_show_persona():
@@ -139,3 +146,11 @@ def test_gate1_reports_one_differing_answer():
     assert len(result["differences"]) == 1
     assert not result["passed"]
 
+
+def test_gate1b_below_threshold_makes_predictions_not_read():
+    # Amendment 1: if fewer than 26 of the 39 units keep Part 92's kind at alpha 0.8, nothing is read.
+    answers, primary, ds = synthetic_rows("gate1b_fail")
+    result = score118.score_data(answers, primary, ds, UNITS, ALPHAS)
+    assert result["gate2"]["passed"]
+    assert result["gate1b"]["kept"] < 26 and not result["gate1b"]["passed"]
+    assert {row["verdict"] for row in result["predictions"].values()} == {"NOT READ"}

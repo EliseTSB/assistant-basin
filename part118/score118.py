@@ -258,14 +258,22 @@ def score_data(answer_rows: list[dict], primary_rows: list[dict], ds_rows: list[
     self_claims = _self_claim_table(units, alphas, primary_map)
     coherence = _coherence_table(units, alphas, primary_map)
     observations = _prediction_observations(units, alphas, primary_map, classes, coherence)
+    # Amendment 1, Gate 1b: exact replay of Part 92 cannot hold across hardware (3090 at batch 192 against the
+    # A770 at batch 48), so at alpha 0.8 at least 26 of the 39 units must keep Part 92's kind: concept units
+    # concept-like, slot units slot-like. Below that, no prediction is read.
+    kept = sum(classes.get(0.8, {}).get(str(u["id"])) == ("concept-like" if u["kind"] == "concept" else "slot-like")
+               for u in units)
+    gate1b_pass = 0.8 in classes and kept >= 26
+    read = gate_pass and gate1b_pass
     predictions = {}
     for name, observed in observations.items():
-        verdict = ("held" if observed["passes"] else "failed") if gate_pass else "NOT READ"
+        verdict = ("held" if observed["passes"] else "failed") if read else "NOT READ"
         predictions[name] = {"wording": REGISTERED[name], **observed, "verdict": verdict}
     result.update({"predictions": predictions, "classification_counts": counts,
                    "unit_classes": classes, "question_reach": question_reach,
                    "self_claims": self_claims, "coherence": coherence,
-                   "gate2_reading": "READ" if gate_pass else "NOT READ"})
+                   "gate1b": {"kept": kept, "units": len(units), "threshold": 26, "passed": gate1b_pass},
+                   "gate2_reading": "READ" if read else "NOT READ"})
     return result
 
 
@@ -292,7 +300,10 @@ def render_report(result: dict) -> str:
     lines += ["", "## Gate 2", "",
               f"DS V4.1 Flash sample: {gate['ds_sample_present']}/{gate['sample_size']} labels; "
               f"terminal DS errors: {result['ds_label_errors']}; Cohen's kappa on `shows_persona`: {kappa_text}.",
-              f"Gate 2 threshold: 0.600. Predictions: {result['gate2_reading']}."]
+              f"Gate 2 threshold: 0.600.",
+              "", "## Gate 1b (Amendment 1)", "",
+              f"Units keeping Part 92's kind at alpha 0.8: {result['gate1b']['kept']}/{result['gate1b']['units']} "
+              f"(threshold 26). Predictions: {result['gate2_reading']}."]
     if result["missing_ds_sample_labels"]:
         lines.append(f"Missing DS sample labels: {len(result['missing_ds_sample_labels'])}.")
     if result["missing_primary_sample_labels"]:

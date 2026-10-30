@@ -3,6 +3,7 @@
 from test118 import (
     test_registered_predictions_hold_on_synthetic_fixture,
     test_registered_predictions_fail_on_synthetic_fixture,
+    test_gate1b_below_threshold_makes_predictions_not_read,
     test_missing_primary_label_is_not_ready,
     test_gate2_below_point_six_makes_predictions_not_read,
     test_random_arm_answers_do_not_enter_neuron_kind_counts,
