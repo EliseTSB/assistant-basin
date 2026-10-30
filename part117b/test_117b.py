@@ -143,11 +143,18 @@ def _qwen_predicted(r):
 def test_score_reads_every_prediction_held(tmp_path):
     import score117b as s
     pairs = _fixture(tmp_path, _concept_specific, _qwen_predicted)
+    labels = [json.loads(line) for line in open(tmp_path / "labels.jsonl", encoding="utf-8")]
+    labels = [x for x in labels if not (x["id"] == "p00:n0-1,s+1|s" and int(x["question_index"]) == 0)]
+    (tmp_path / "labels.jsonl").write_text("\n".join(json.dumps(x) for x in labels) + "\n", encoding="utf-8")
     r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
-    assert r["gate"]["passed"] and r["labels_missing"] == 0 and r["pairs_ok"] == [11, 11, 11]
+    assert r["gate"]["passed"] and r["labels_missing"] == 1 and r["pairs_ok"] == [11, 11, 11]
     assert r["verdicts"] == {f"117b.{i}": "held" for i in range(1, 11)}, r["verdicts"]
-    assert r["reading"].startswith("concept neurons erase")
-    assert r["who_slot_shows"]["random"] == [33, 0, 33] and r["who_slot_shows"]["control"] == [33, 0, 33]
+    assert r["reading"].startswith("the sampled matched and unrelated concept directions erase")
+    assert r["who_slot_shows"]["random"] == [33, 0, 33] and r["who_slot_shows"]["control"] == [32, 1, 33]
+    assert r["headline_coverage"]["matched"]["passed"] and r["headline_coverage"]["unrelated"]["passed"]
+    assert r["headline_coherence"]["matched"]["passed"] and r["headline_coherence"]["unrelated"]["passed"]
+    assert r["prediction_results"]["117b.1"] == {"verdict": "held", "read": 11, "missing": 0, "total": 11}
+    assert r["prediction_results"]["117b.9"] == {"verdict": "held", "read": 32, "missing": 1, "total": 33}
 
 
 def test_control_neurons_erasing_reads_as_any_real_neuron_and_fails_117b_9(tmp_path):
@@ -158,7 +165,7 @@ def test_control_neurons_erasing_reads_as_any_real_neuron_and_fails_117b_9(tmp_p
     pairs = _fixture(tmp_path, rule, _qwen_predicted)
     r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
     assert r["verdicts"]["117b.9"] == "failed" and r["verdicts"]["117b.3"] == "held"
-    assert r["reading"].startswith("a second real neuron's push erases")
+    assert r["reading"].startswith("the sampled atlas-negative neuron directions erase")
 
 
 def test_random_erasing_reads_as_any_push_and_fails_117b_3(tmp_path):
@@ -168,7 +175,7 @@ def test_random_erasing_reads_as_any_push_and_fails_117b_3(tmp_path):
         return False if r["set"] == "random" else _concept_specific(r, role, q)
     pairs = _fixture(tmp_path, rule, _qwen_predicted)
     r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
-    assert r["verdicts"]["117b.3"] == "failed" and r["reading"].startswith("any second push")
+    assert r["verdicts"]["117b.3"] == "failed" and r["reading"].startswith("the sampled random directions")
 
 
 def test_unrelated_keeping_the_slot_reads_as_theme(tmp_path):
@@ -178,7 +185,7 @@ def test_unrelated_keeping_the_slot_reads_as_theme(tmp_path):
         return (role == "s" and q == 0) if r["cond"] == "u-1,s+1" else _concept_specific(r, role, q)
     pairs = _fixture(tmp_path, rule, _qwen_predicted)
     r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
-    assert r["verdicts"]["117b.2"] == "failed" and r["reading"].startswith("the matched concept erases it and the unrelated")
+    assert r["verdicts"]["117b.2"] == "failed" and r["reading"].startswith("the matched concept direction erases the slot's self-description")
 
 
 def test_gate_blocks_reading_when_the_slot_alone_does_not_show(tmp_path):
@@ -217,7 +224,8 @@ def test_incoherent_random_rows_are_not_read_as_erasure(tmp_path):
             x["coherent"] = False
     (tmp_path / "labels.jsonl").write_text("\n".join(json.dumps(x) for x in lab) + "\n", encoding="utf-8")
     r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
-    assert r["reading"] == "the random push breaks the answers; not read as erasure" and r["verdicts"]["117b.5"] == "failed"
+    assert "random coherence is 0 of 33 read rows" in r["reading"] and "erasure reading is withheld" in r["reading"]
+    assert r["verdicts"]["117b.5"] == "failed"
 
 
 def test_concept_alone_rows_naming_qwen_fail_117b_4(tmp_path):
@@ -266,6 +274,50 @@ def test_missing_labels_are_counted_not_read_as_absent(tmp_path):
     r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
     assert r["labels_missing"] == 6 and r["who_slot_shows"]["random"] == [32, 1, 33]
     assert r["verdicts"]["117b.3"] == "held"
+
+
+def test_missing_matched_labels_withhold_the_concept_erasure_headline(tmp_path):
+    import score117b as s
+    pairs = _fixture(tmp_path, _concept_specific, _qwen_predicted)
+    kept = []
+    for line in open(tmp_path / "labels.jsonl", encoding="utf-8"):
+        item = json.loads(line)
+        if not (item["id"].endswith("c-1,s+1|s") and int(item["question_index"]) == 0):
+            kept.append(line)
+    (tmp_path / "labels.jsonl").write_text("".join(kept), encoding="utf-8")
+    r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
+    assert r["who_slot_shows"]["c-1,s+1"] == [0, 11, 11]
+    assert r["reading"].startswith("withheld (")
+    assert "matched/unrelated concept erasure reading is withheld" in r["reading"]
+    assert r["concept_condition_readings"]["matched"].startswith("withheld (matched read coverage")
+
+
+def test_incoherent_matched_response_withholds_the_concept_erasure_headline(tmp_path):
+    import score117b as s
+    pairs = _fixture(tmp_path, _concept_specific, _qwen_predicted)
+    labels = [json.loads(line) for line in open(tmp_path / "labels.jsonl", encoding="utf-8")]
+    for item in labels:
+        if item["id"].endswith("c-1,s+1|s") and int(item["question_index"]) == 0:
+            item["coherent"] = False
+    (tmp_path / "labels.jsonl").write_text("\n".join(json.dumps(x) for x in labels) + "\n", encoding="utf-8")
+    r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
+    assert r["reading"].startswith("withheld (") and "matched coherence is 0 of 11" in r["reading"]
+    assert r["headline_coherence"]["matched"] == {
+        "coherent": 0, "read": 11, "missing": 0, "total": 11,
+        "minimum_for_two_thirds": 8, "passed": False,
+    }
+    assert r["concept_condition_readings"]["matched"].startswith("withheld (matched coherence is 0 of 11")
+
+
+def test_complete_coherent_positive_control_keeps_the_concept_erasure_headline(tmp_path):
+    import score117b as s
+    pairs = _fixture(tmp_path, _concept_specific, _qwen_predicted)
+    r = s.score(tmp_path, tmp_path / "labels.jsonl", pairs, part117_answers=tmp_path / "missing.jsonl")
+    assert r["labels_missing"] == 0
+    assert r["headline_coverage"]["matched"]["read"] == 11
+    assert r["headline_coverage"]["unrelated"]["read"] == 11
+    assert r["headline_coherence"]["matched"]["passed"] and r["headline_coherence"]["unrelated"]["passed"]
+    assert r["reading"].startswith("the sampled matched and unrelated concept directions erase")
 
 
 def test_prepare_labels_each_pushed_neuron_and_the_unpushed_row_against_every_unit(tmp_path):

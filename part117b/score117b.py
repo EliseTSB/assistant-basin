@@ -13,6 +13,7 @@ ROOT = HERE.parent
 RES = ROOT / "results/part117b"
 PAIRS = ROOT / "results/part117/pairs.json"
 WHO = 0
+MIN_HEADLINE_PAIRS = 9  # preserve the design's smallest-effect floor on its 11-pair sample
 
 
 def load_pairs(pairs=None):
@@ -164,6 +165,53 @@ def score(res=RES, labels=None, pairs=None, part117_answers=ROOT / "results/part
     v["117b.9"] = "held" if control_keeps else "failed"
     v["117b.10"] = "held" if s085[0] >= 9 else "failed"
 
+    def n_read(cnt):
+        return cnt[2] - cnt[1]
+
+    def pair_coverage(cnt, eligible_pairs):
+        read = n_read(cnt)
+        return {"eligible_pairs": eligible_pairs, "read": read, "missing": cnt[1], "total": cnt[2],
+                "minimum_pairs": MIN_HEADLINE_PAIRS,
+                "passed": eligible_pairs >= MIN_HEADLINE_PAIRS and read >= MIN_HEADLINE_PAIRS}
+
+    def complete_pairs(pair_keys, conditions, field):
+        return sum(all(per[k][field][c] is not None for c in conditions) for k in pair_keys)
+
+    def control_coverage(cnt, pair_keys, conditions):
+        slot_pairs = complete_pairs(pair_keys, conditions, "who_slot")
+        coherent_pairs = complete_pairs(pair_keys, conditions, "who_coherent")
+        complete = min(slot_pairs, coherent_pairs)
+        eligible = len(pair_keys)
+        return {"eligible_pairs": eligible, "complete_pairs": complete, "read": n_read(cnt),
+                "missing": cnt[1], "total": cnt[2], "minimum_pairs": MIN_HEADLINE_PAIRS,
+                "passed": eligible >= MIN_HEADLINE_PAIRS and complete >= MIN_HEADLINE_PAIRS}
+
+    def coherence_report(cnt):
+        read = n_read(cnt)
+        minimum = math.ceil(2 * read / 3) if read else 0
+        return {"coherent": cnt[0], "read": read, "missing": cnt[1], "total": cnt[2],
+                "minimum_for_two_thirds": minimum, "passed": read > 0 and cnt[0] >= minimum}
+
+    coverage = {
+        "minimum_read_pairs": MIN_HEADLINE_PAIRS,
+        "matched": pair_coverage(m1, len(ok)),
+        "unrelated": pair_coverage(u1, len(oku)),
+        "random": control_coverage(rnd, oks, rand),
+        "control": control_coverage(nrn, oks, ctl),
+    }
+    coherence = {"matched": coherence_report(coh_m), "unrelated": coherence_report(coh_u),
+                 "random": coherence_report(rnd_coh), "control": coherence_report(ctl_coh)}
+
+    verdict_counts = {
+        "117b.1": m1, "117b.2": u1, "117b.3": rnd, "117b.4": q_alone,
+        "117b.5.random": rnd_coh, "117b.5.control": ctl_coh, "117b.6": half_c,
+        "117b.7.matched": coh_m, "117b.7.unrelated": coh_u, "117b.8": half_s,
+        "117b.9": nrn, "117b.10": s085,
+    }
+    def prediction_coverage(key):
+        cnt = verdict_counts[key]
+        return {"read": n_read(cnt), "missing": cnt[1], "total": cnt[2]}
+
     dilution = None
     if random_erases:
         dilution = ("consistent with the slot's push being diluted" if s085[0] <= 3 else
@@ -172,27 +220,75 @@ def score(res=RES, labels=None, pairs=None, part117_answers=ROOT / "results/part
     agreement = None
     if (res / "agreement.json").exists():
         agreement = json.loads((res / "agreement.json").read_text(encoding="utf-8")).get("rate")
+    def coverage_issue(name):
+        c = coverage[name]
+        if c["passed"]:
+            return None
+        if "complete_pairs" in c:
+            return (f"{name} read coverage has {c['complete_pairs']} complete pairs out of "
+                    f"{c['eligible_pairs']} eligible; requires {c['minimum_pairs']} eligible and complete pairs")
+        return (f"{name} read coverage has {c['read']} of {c['eligible_pairs']} eligible pairs; "
+                f"requires {c['minimum_pairs']} eligible and read pairs")
+
+    def coherence_issue(name):
+        c = coherence[name]
+        if c["passed"]:
+            return None
+        return (f"{name} coherence is {c['coherent']} of {c['read']} read rows, below two thirds "
+                f"(requires {c['minimum_for_two_thirds']} of {c['read']})")
+
+    def pair_erasure_issues():
+        return [issue for issue in (coverage_issue("matched"), coverage_issue("unrelated"),
+                                    coherence_issue("matched"), coherence_issue("unrelated")) if issue]
+
+    def control_erasure_issues(name):
+        return [issue for issue in (coverage_issue(name), coherence_issue(name)) if issue]
+
+    matched_specific = m1[0] <= 2 and u1[0] >= 7
+    concept_general = m1[0] <= 2 and u1[0] <= 3 and random_keeps and control_keeps
+    concept_condition_readings = {}
+    for name, count, erasure_cutoff in (("matched", m1, 2), ("unrelated", u1, 3)):
+        if count[0] > erasure_cutoff:
+            concept_condition_readings[name] = "registered erasure count threshold not met"
+            continue
+        issue = [x for x in (coverage_issue(name), coherence_issue(name)) if x]
+        concept_condition_readings[name] = ("withheld (" + "; ".join(issue) + "; erasure reading is withheld)"
+                                            if issue else "coverage and coherence gates pass")
+
     if not gate:
         reading = "not read (gate failed)"
     elif agreement is None:
         reading = "withheld (no second-reader agreement)"
     elif agreement < 0.85:
         reading = "withheld (second reader agreement below 85%)"
-    elif random_erases and not mostly_coherent(rnd_coh):
-        reading = "the random push breaks the answers; not read as erasure"
     elif random_erases:
-        reading = f"any second push of the concept's size erases the slot's self-description ({dilution})"
-    elif control_erases and not mostly_coherent(ctl_coh):
-        reading = "the non-persona neuron push breaks the answers; not read as erasure"
+        issues = control_erasure_issues("random")
+        if issues:
+            reading = "withheld (" + "; ".join(issues) + "; random-direction erasure reading is withheld)"
+            if matched_specific or concept_general:
+                concept_issues = pair_erasure_issues()
+                if concept_issues:
+                    reading += "; concept comparison withheld (" + "; ".join(concept_issues) + ")"
+        else:
+            reading = ("the sampled random directions at the concept's written size erase the slot's self-description "
+                       f"({dilution})")
     elif control_erases and random_keeps:
-        reading = ("a second real neuron's push erases the slot's self-description whether or not it is a persona neuron; "
-                   "a random direction of that size does not")
-    elif m1[0] <= 2 and u1[0] >= 7:
-        reading = ("the matched concept erases it and the unrelated concept does not "
-                   "(theme and layer differ together in most pairs)")
-    elif m1[0] <= 2 and u1[0] <= 3 and random_keeps and control_keeps:
-        reading = ("concept neurons erase the slot's self-description whatever their theme; random directions and "
-                   "non-persona neurons of their size do not")
+        issues = control_erasure_issues("control")
+        if issues:
+            reading = "withheld (" + "; ".join(issues) + "; atlas-negative neuron-direction erasure reading is withheld)"
+        else:
+            reading = ("the sampled atlas-negative neuron directions erase the slot's self-description; "
+                       "the sampled random directions of that size do not")
+    elif matched_specific or concept_general:
+        issues = pair_erasure_issues()
+        if issues:
+            reading = "withheld (" + "; ".join(issues) + "; matched/unrelated concept erasure reading is withheld)"
+        elif matched_specific:
+            reading = ("the matched concept direction erases the slot's self-description and the unrelated concept "
+                       "direction does not (theme and layer differ together in most pairs)")
+        else:
+            reading = ("the sampled matched and unrelated concept directions erase the slot's self-description; "
+                       "the sampled random and atlas-negative neuron directions of their size do not")
     else:
         reading = "mixed: counts reported, no reading"
 
@@ -203,6 +299,21 @@ def score(res=RES, labels=None, pairs=None, part117_answers=ROOT / "results/part
         new = {int(a["question_index"]): a["answer"] for a in answers if a["row"] == "none"}
         none_match = [sum(old.get(q) == new.get(q) for q in range(6)), 6]
     expected = [(iid, q) for r in rows for iid, _ in targets(r, units) for q in range(6)]
+    reported_verdicts = v if gate else {k: "not read (gate failed)" for k in v}
+    prediction_results = {
+        "117b.1": {"verdict": reported_verdicts["117b.1"], **prediction_coverage("117b.1")},
+        "117b.2": {"verdict": reported_verdicts["117b.2"], **prediction_coverage("117b.2")},
+        "117b.3": {"verdict": reported_verdicts["117b.3"], **prediction_coverage("117b.3")},
+        "117b.4": {"verdict": reported_verdicts["117b.4"], **prediction_coverage("117b.4")},
+        "117b.5": {"verdict": reported_verdicts["117b.5"], "random": prediction_coverage("117b.5.random"),
+                    "control": prediction_coverage("117b.5.control")},
+        "117b.6": {"verdict": reported_verdicts["117b.6"], **prediction_coverage("117b.6")},
+        "117b.7": {"verdict": reported_verdicts["117b.7"], "matched": prediction_coverage("117b.7.matched"),
+                    "unrelated": prediction_coverage("117b.7.unrelated")},
+        "117b.8": {"verdict": reported_verdicts["117b.8"], **prediction_coverage("117b.8")},
+        "117b.9": {"verdict": reported_verdicts["117b.9"], **prediction_coverage("117b.9")},
+        "117b.10": {"verdict": reported_verdicts["117b.10"], **prediction_coverage("117b.10")},
+    }
     result = {"gate": {"slot_alone_who": list(s1), "none_names_qwen": gate_qwen, "zero_hook_equal": gate_zero,
                        "passed": gate},
               "dilution": dilution,
@@ -219,8 +330,11 @@ def score(res=RES, labels=None, pairs=None, part117_answers=ROOT / "results/part
               "who_concept_shows": {c: list(_count([per[k]["who_concept"][c] for k in (oku if c.startswith("u") else ok)]))
                                     for c in ("c-1,s+1", "c-0.5,s+1", "u-1,s+1")},
               "second_reader_agreement": agreement, "none_answers_equal_part117": none_match,
+              "headline_coverage": coverage, "headline_coherence": coherence,
+              "concept_condition_readings": concept_condition_readings,
+              "prediction_results": prediction_results,
               "labels_missing": sum(1 for key in expected if key not in lab),
-              "verdicts": v if gate else {k: "not read (gate failed)" for k in v}, "reading": reading, "pairs": per}
+              "verdicts": reported_verdicts, "reading": reading, "pairs": per}
     (res / "score.json").write_text(json.dumps(result, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({k: result[k] for k in result if k != "pairs"}, ensure_ascii=False))
     return result
