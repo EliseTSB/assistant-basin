@@ -29,6 +29,41 @@ def git(*args, env=None, inp=None):
     return subprocess.run(["git", *args], capture_output=True, text=True, check=True, env=env, input=inp).stdout.strip()
 
 
+def _section(text, head):
+    """(start, end, text) of the section from its heading to the next "## Part" heading or the end."""
+    start = text.index(head)
+    nxt = text.find("\n## Part ", start + 1)
+    end = len(text) if nxt < 0 else nxt + 1
+    return start, end, text[start:end]
+
+
+def _row_id(line, part):
+    return line.split("|")[1].strip() if line.startswith(f"| {part}.") else None
+
+
+def _with_new_rows(pub, head, section, part):
+    """(6) 2026-10-30, Part 118's Amendment 2: (5) kept origin/main's copy whole, so the rows an amendment adds to an
+    already-public section were never published. Rows the public section lacks are now appended after its last row,
+    but only while their result and verdict cells are empty or "pending"; rows it already has keep the public text,
+    so local verdicts stay local."""
+    start, end, psec = _section(pub, head)
+    have = {_row_id(line, part) for line in psec.splitlines()} - {None}
+    new = []
+    for line in section.splitlines():
+        rid = _row_id(line, part)
+        if rid and rid not in have:
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            if len(cells) < 4 or any(c not in ("", "pending") for c in cells[-2:]):
+                raise SystemExit(f"row {rid} is new to the public section but its result or verdict is filled")
+            new.append(line + "\n")
+    if not new:
+        return pub
+    lines = psec.splitlines(keepends=True)
+    last = max((i for i, line in enumerate(lines) if _row_id(line, part)), default=len(lines) - 1)
+    lines[last + 1:last + 1] = new
+    return pub[:start] + "".join(lines) + pub[end:]
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--part", required=True)
@@ -45,11 +80,9 @@ def main():
     # (5) 2026-10-29, Part 112's amendment: the section ran to the end of the file, so registering an older part's
     # amendment republished every later part's section, including verdict cells not yet cold-checked. The section now
     # stops at the next "## Part" heading, and a part whose section is already public leaves PREDICTIONS.md alone.
-    start = cur.index(head)
-    nxt = cur.find("\n## Part ", start + 1)
-    section = cur[start:] if nxt < 0 else cur[start:nxt + 1]
-    pub = git("show", f"{base}:PREDICTIONS.md")
-    pred = pub if head in pub else pub.rstrip("\n") + "\n" + section
+    section = _section(cur, head)[2]
+    pub = git("show", f"{base}:PREDICTIONS.md") + "\n"   # git() strips the file's final newline
+    pred = pub.rstrip("\n") + "\n" + section if head not in pub else _with_new_rows(pub, head, section, a.part)
     with tempfile.TemporaryDirectory() as d:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(d) / "index")}
         git("read-tree", base, env=env)

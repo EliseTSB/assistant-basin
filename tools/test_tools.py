@@ -483,6 +483,28 @@ def test_register_new_part_publishes_only_its_own_section(tmp_path):
     assert (work / "D3.md").exists() and "0.9 | failed" in p.read_text(encoding="utf-8")
 
 
+def test_register_amendment_rows_added_to_a_public_section_are_published(tmp_path):
+    remote, work = _reg_repo(tmp_path)
+    p = work / "PREDICTIONS.md"
+    s = p.read_text(encoding="utf-8").replace("| 1.1 | p | | |", "| 1.1 | p | 0.4 | held |")
+    p.write_text(s.replace("| 2.1 | q | | |", "| 2.1 | q | | |\n| 2.1a | q again | pending | pending |"), encoding="utf-8")
+    r = _register(work, "2", "D2.md")
+    assert r.returncode == 0, r.stderr
+    pub = sh("git", "show", "origin/main:PREDICTIONS.md", cwd=work).stdout
+    assert "| 2.1 | q | | |\n| 2.1a | q again | pending | pending |\n" in pub
+    assert "| 1.1 | p | | |" in pub and "0.4 | held" not in pub and pub.endswith("\n")
+
+
+def test_register_refuses_a_new_row_whose_verdict_is_filled(tmp_path):
+    remote, work = _reg_repo(tmp_path)
+    p = work / "PREDICTIONS.md"
+    p.write_text(p.read_text(encoding="utf-8").replace("| 2.1 | q | | |", "| 2.1 | q | | |\n| 2.2 | r | 0.5 | held |"),
+                 encoding="utf-8")
+    r = _register(work, "2", "D2.md")
+    assert r.returncode != 0 and "2.2" in r.stderr
+    assert "2.2" not in sh("git", "show", "origin/main:PREDICTIONS.md", cwd=work).stdout
+
+
 
 def test_cited_paths_ignores_a_quoted_answers_line_break_slashes():
     import part_check as pc
