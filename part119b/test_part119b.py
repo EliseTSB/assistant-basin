@@ -354,6 +354,7 @@ def test_dose_scaling_matches_part92_neuron_and_random_pushes():
 
 
 def test_dose_cache_is_built_directly_and_a_wrong_alpha_is_refused():
+    torch = pytest.importorskip("torch")
     weight = torch.tensor([[1., 0., 2., 0.], [0., 3., 0., 1.],
                            [2., 1., 0., 2.], [1., 2., 1., 0.]], dtype=torch.bfloat16)
     layer = SimpleNamespace(mlp=SimpleNamespace(
