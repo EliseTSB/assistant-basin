@@ -48,10 +48,39 @@ def _source_id(row: dict) -> str:
     return "plain"
 
 
+def _source_rows(units: list[dict]) -> list[dict]:
+    """Build the Part 119 row shape for an explicitly reduced test inventory."""
+    ordered = sorted(units, key=lambda unit: unit["id"])
+    result = [{"row_id": "plain", "row_type": "plain", "pushes": [], "unit_ids": []}]
+    result.extend({"row_id": f"single:{unit['id']}", "row_type": "single",
+                  "pushes": [_push(unit["id"], "neuron")], "unit_ids": [unit["id"]]}
+                 for unit in ordered)
+    result.extend({"row_id": f"random:{unit['id']}", "row_type": "random",
+                  "pushes": [_push(unit["id"], "random")], "unit_ids": [unit["id"]]}
+                 for unit in ordered)
+    for index, first in enumerate(ordered):
+        for second in ordered[index + 1:]:
+            a, b = sorted((first["id"], second["id"]))
+            result.append({"row_id": f"pair:{a}+{b}", "row_type": "pair",
+                           "pushes": [_push(a, "neuron"), _push(b, "neuron")],
+                           "unit_ids": [a, b]})
+    for first in ordered:
+        for second in ordered:
+            if first["id"] == second["id"]:
+                continue
+            result.append({"row_id": f"control:{first['id']}+R{second['id']}",
+                           "row_type": "control",
+                           "pushes": [_push(first["id"], "neuron"),
+                                      _push(second["id"], "random")],
+                           "unit_ids": [first["id"], second["id"]]})
+    return result
+
+
 def all_answer_rows(units: list[dict] | None = None) -> list[dict]:
     """All planned rows, including the Part 119 0.8 rows marked for reuse."""
+    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
     units = rows119.load_units() if units is None else units
-    source = rows119.all_rows(units)
+    source = rows119.all_rows(units) if registered_inventory else _source_rows(units)
     single_rows = [row for row in source if row["row_type"] in ("single", "random")]
     pair_rows = [row for row in source if row["row_type"] == "pair"]
     control_rows = [row for row in source if row["row_type"] == "control"]
@@ -87,46 +116,53 @@ def all_answer_rows(units: list[dict] | None = None) -> list[dict]:
                                   [_push(a, "random"), _push(b, "random")]))
 
     ids = [row["row_id"] for row in result]
-    if len(result) != 7878 or len(set(ids)) != len(ids):
+    if len(set(ids)) != len(ids):
+        raise AssertionError("planned answer row ids are not unique")
+    if registered_inventory and len(result) != 7878:
         raise AssertionError(f"expected 7,878 unique planned answers, found {len(result)}")
     new_count = sum(not row["reused"] for row in result)
-    if new_count != NEW_ANSWER_COUNT:
+    if registered_inventory and new_count != NEW_ANSWER_COUNT:
         raise AssertionError(f"expected {NEW_ANSWER_COUNT:,} new answers, found {new_count:,}")
     reused = sum(row["reused"] for row in result)
-    if reused != 2301:
+    if registered_inventory and reused != 2301:
         raise AssertionError(f"expected 2,301 Part 119 answers reused, found {reused}")
     return result
 
 
 def pilot_answer_rows(units: list[dict] | None = None) -> list[dict]:
     """Plain, all single doses, seeded 20-pair cells, and 20 random pairs."""
+    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
     units = rows119.load_units() if units is None else units
     all_rows = all_answer_rows(units)
     lookup = {row["row_id"]: row for row in all_rows}
-    base = rows119.all_rows(units)
+    base = rows119.all_rows(units) if registered_inventory else _source_rows(units)
     pairs = [row for row in base if row["row_type"] == "pair"]
     rng = random.Random(PILOT_SEED)
     chosen: list[dict] = []
     for row in all_rows:
         if row["row_type"] in ("single", "random"):
             chosen.append(row)
+    pair_sample_size = min(20, len(pairs))
     for dose in (0.4, 0.6):
-        for row in rng.sample(pairs, 20):
+        for row in rng.sample(pairs, pair_sample_size):
             a, b = row["unit_ids"]
             chosen.append(lookup[f"pair@{dose_text(dose)}:{a}+{b}"])
-    for row in rng.sample(pairs, 20):
+    for row in rng.sample(pairs, pair_sample_size):
         a, b = row["unit_ids"]
         chosen.append(lookup[f"randpair@0.8:{a}+{b}"])
     # The plain answer is read from Part 119 and is not copied to the new answer file.
     chosen.insert(0, {"row_id": "plain", "row_type": "plain", "dose": 0.0,
                       "pushes": [], "reused": True, "source_row_id": "plain"})
-    if len(chosen) != 529 or len({row["row_id"] for row in chosen}) != len(chosen):
+    if len({row["row_id"] for row in chosen}) != len(chosen):
+        raise AssertionError("pilot answer row ids are not unique")
+    if registered_inventory and len(chosen) != 529:
         raise AssertionError("pilot answer rows must be 468 singles, 40 real pairs, 20 random pairs, and plain")
     return chosen
 
 
 def all_path2_rows(units: list[dict] | None = None) -> list[dict]:
     """Directed real and matched-random second pushes for every ordered pair."""
+    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
     units = rows119.load_units() if units is None else units
     ordered = sorted(units, key=lambda unit: unit["id"])
     rows = []
@@ -139,27 +175,33 @@ def all_path2_rows(units: list[dict] | None = None) -> list[dict]:
                          "kind": "real", "pushes": [_push(a, "neuron"), _push(b, "neuron")]})
             rows.append({"key": f"control:{a}+{b}", "first": a, "second": b,
                          "kind": "control", "pushes": [_push(a, "neuron"), _push(b, "random")]})
-    if len(rows) != 2964 or len({row["key"] for row in rows}) != 2964:
+    if len({row["key"] for row in rows}) != 2 * len(ordered) * (len(ordered) - 1):
+        raise AssertionError("Path 2 row keys are not unique")
+    if registered_inventory and len(rows) != 2964:
         raise AssertionError("Path 2 must have 1,482 directed real and 1,482 control rows")
     return rows
 
 
 def pilot_path2_rows(units: list[dict] | None = None) -> list[dict]:
     """Two seeded first units, each with eight second units in both row classes."""
+    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
     units = rows119.load_units() if units is None else units
     ordered = sorted(units, key=lambda unit: unit["id"])
     rng = random.Random(PILOT_SEED)
-    firsts = rng.sample(ordered, 2)
+    firsts = rng.sample(ordered, min(2, len(ordered)))
     rows = []
     for first in firsts:
-        seconds = rng.sample([unit for unit in ordered if unit["id"] != first["id"]], 8)
+        available = [unit for unit in ordered if unit["id"] != first["id"]]
+        seconds = rng.sample(available, min(8, len(available)))
         for second in seconds:
             a, b = first["id"], second["id"]
             rows.append({"key": f"real:{a}+{b}", "first": a, "second": b,
                          "kind": "real", "pushes": [_push(a, "neuron"), _push(b, "neuron")]})
             rows.append({"key": f"control:{a}+{b}", "first": a, "second": b,
                          "kind": "control", "pushes": [_push(a, "neuron"), _push(b, "random")]})
-    if len(rows) != 32 or len({row["key"] for row in rows}) != 32:
+    if len({row["key"] for row in rows}) != len(rows):
+        raise AssertionError("pilot Path 2 row keys are not unique")
+    if registered_inventory and len(rows) != 32:
         raise AssertionError("pilot Path 2 must have two first units and eight second units each")
     return rows
 

@@ -61,3 +61,10 @@ The scorer reads `labels-ds.jsonl.keys.jsonl`, both sample label files and known
 - `label119b.py --help` and `score119b.py --help` both passed isolated (`-I -B`) CLI import checks and expose the documented options.
 - No pinned model, GPU, network, or paid service was used in this build. No model pilot, answer review, or main run has been performed.
 - `python3 tools/part_check.py prelaunch 119b` exited 1 with 7 of 19 checks failed. Content checks passed. Failures were the absent `Registered YYYY-MM-DD HH:MM CT` line, the `{{REGISTERED` placeholder, no `## Part 119b` section or eleven values in local `PREDICTIONS.md`, a read-only `FETCH_HEAD` error during `git fetch origin main`, and absence of the design and predictions from `origin/main`. Registration is outside this builder's scope; the other worker is editing the shared predictions file. No `--override` launch was attempted. See the worker report for the exact command output summary.
+
+Part 119b stop rule, written 10-30 06:51 before DS r2: if r2 finds another defect in how a stored row and a replay agree, stop folding and move T into a separate first stage that writes a supports file every dose reads.
+
+## Fold r1 review: pre-existing follow-ups
+
+- Part 86's `WIDER_SELF_DESCRIPTION` rule keeps any first sentence that merely contains a self-reference term such as “model” or “assistant”; this is inherited by Part 119b's answer triage and remains with Part 86's owner.
+- Part 119's `run119.read_existing` rewrites an unterminated malformed final JSONL line while reading; Part 119b inherits this behavior for canonical answer and interaction inputs, so the read-only A770 mount limitation remains with Part 119's owner.

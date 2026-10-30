@@ -6,7 +6,9 @@ import argparse
 import hashlib
 import json
 import math
+import shutil
 import sys
+import tempfile
 import time
 from collections import defaultdict
 from pathlib import Path
@@ -21,6 +23,8 @@ import common92 as c  # noqa: E402
 import rows119  # noqa: E402
 import run119  # noqa: E402
 import rows119b as rb  # noqa: E402
+from rows119b import _push  # noqa: E402 -- Path 2 builds a cached first-push row
+import score119b as scorer  # noqa: E402 -- pilot Gate 2 uses the registered scorer
 
 QUESTION = run119.QUESTION
 FRAME = run119.FRAME
@@ -286,11 +290,20 @@ def _extract_batch_metrics(first_id: str, rows: list[dict], dose: float,
                           run119._top10_repeated_argmax(second_logits[row_no, offset:offset + 1])[0],
                           run119._top10_repeated_argmax(both_logits[row_no, offset:offset + 1])[0]]
                 t_ids = sorted({int(token) for group in groups for token in group})
-                supports[(key, absolute)] = t_ids
+                support_key = (key, absolute)
+                stored = existing_t.get(support_key)
+                if stored is not None and list(stored) != t_ids:
+                    raise ValueError(
+                        f"in-memory and stored token support disagree for {key} position {absolute}")
+                supports[support_key] = t_ids
             else:
-                t_ids = supports.get((key, absolute))
-                if t_ids is None:
-                    t_ids = existing_t.get((key, absolute))
+                support_key = (key, absolute)
+                in_memory = supports.get(support_key)
+                stored = existing_t.get(support_key)
+                if in_memory is not None and stored is not None and list(in_memory) != list(stored):
+                    raise ValueError(
+                        f"in-memory and stored token support disagree for {key} position {absolute}")
+                t_ids = in_memory if in_memory is not None else stored
                 if not t_ids:
                     raise ValueError(f"missing saved 0.8 token support for {key} position {absolute}")
             position = _position_record(
@@ -321,8 +334,7 @@ def run_path2(units: list[dict], rows: list[dict], doses: tuple[float, ...],
         if math.isclose(float(record.get("dose", -1)), 0.8):
             for position in record.get("positions", []):
                 if position.get("t_ids"):
-                    existing_t[(record["key"].split("@", 1)[0] + ":" +
-                                record["first"] + "+" + record["second"],
+                    existing_t[(f"{record['kind']}:{record['first']}+{record['second']}",
                                 int(position["pos"]))] = position["t_ids"]
     by_first = defaultdict(list)
     for row in rows:
@@ -333,6 +345,13 @@ def run_path2(units: list[dict], rows: list[dict], doses: tuple[float, ...],
     pass_count = 0
     rows_written = 0
     for first_id, candidates in by_first.items():
+        pending_by_dose = {
+            float(dose): [row for row in candidates
+                          if rb.path2_key(row["kind"], dose, first_id, row["second"]) not in existing]
+            for dose in doses
+        }
+        if not any(pending_by_dose.values()):
+            continue
         single = answers.get(f"single@0.8:{first_id}")
         plain = answers.get("plain")
         if single is None or plain is None:
@@ -342,13 +361,13 @@ def run_path2(units: list[dict], rows: list[dict], doses: tuple[float, ...],
         if p is None or p >= len(tokens):
             for dose in doses:
                 records = []
-                for row in candidates:
+                for row in pending_by_dose[float(dose)]:
                     key = rb.path2_key(row["kind"], dose, row["first"], row["second"])
-                    if key not in existing:
-                        records.append({"key": key, "first": row["first"],
-                                        "second": row["second"], "kind": row["kind"],
-                                        "dose": dose, "p_A": p, "positions": []})
+                    records.append({"key": key, "first": row["first"],
+                                    "second": row["second"], "kind": row["kind"],
+                                    "dose": dose, "p_A": p, "positions": []})
                 _append_jsonl(output, records)
+                existing.update({record["key"]: record for record in records})
                 rows_written += len(records)
             continue
 
@@ -357,13 +376,25 @@ def run_path2(units: list[dict], rows: list[dict], doses: tuple[float, ...],
         position_start = len(prompt) + p - 1
         position_stop = len(prompt) + min(PATH_TOKENS, len(tokens)) - 1
         if position_stop <= position_start:
+            for dose in doses:
+                records = [{"key": rb.path2_key(row["kind"], dose, first_id, row["second"]),
+                            "first": row["first"], "second": row["second"],
+                            "kind": row["kind"], "dose": dose, "p_A": p,
+                            "positions": []}
+                           for row in pending_by_dose[float(dose)]]
+                _append_jsonl(output, records)
+                existing.update({record["key"]: record for record in records})
+                rows_written += len(records)
             continue
-        unit_row = {"pushes": [_push(first_id, "neuron")]}
+
         base_logits = run119._forward(model, input_ids, attention_mask, layers, {})[
             0, position_start:position_stop, :].unsqueeze(0)
         pass_count += 1
         first_logits = {}
         for dose in doses:
+            if not pending_by_dose[float(dose)]:
+                continue
+            unit_row = {"pushes": [_push(first_id, "neuron")]}
             first_logits[dose] = run119._forward(
                 model, input_ids, attention_mask, layers,
                 run119.vectors_for_rows([unit_row], cache_by_dose[dose], layers, device),
@@ -372,21 +403,21 @@ def run_path2(units: list[dict], rows: list[dict], doses: tuple[float, ...],
         cached_top0, cached_margin0 = _top_data(base_logits)
         cached_top0, cached_margin0 = cached_top0[0], cached_margin0[0]
         cached_by_dose = {}
-        for dose in doses:
+        for dose in first_logits:
             tops, margins = _top_data(first_logits[dose])
             cached_by_dose[dose] = {"top": tops[0], "margin": margins[0]}
-        cached_top10_base = run119._top10_repeated_argmax(base_logits[0])
-        cached_top10_first = run119._top10_repeated_argmax(first_logits[.8][0])
+        needs_08_support = bool(pending_by_dose.get(0.8))
+        cached_top10_base = (run119._top10_repeated_argmax(base_logits[0])
+                             if needs_08_support else None)
+        cached_top10_first = (run119._top10_repeated_argmax(first_logits[.8][0])
+                              if needs_08_support else None)
 
         supports: dict[tuple[str, int], list[int]] = {}
-        # The 0.8 support is created first, even when a completed 0.8 row is skipped.
         dose_order = sorted(doses, key=lambda item: (item != 0.8, item))
         for dose in dose_order:
-            pending = [row for row in candidates
-                       if rb.path2_key(row["kind"], dose, first_id, row["second"]) not in existing]
-            if dose == 0.8:
-                pending = [row for row in pending
-                           if rb.path2_key(row["kind"], dose, first_id, row["second"]) not in existing]
+            pending = pending_by_dose[float(dose)]
+            if not pending:
+                continue
             for begin in range(0, len(pending), batch_size):
                 chunk = pending[begin:begin + batch_size]
                 second_rows = [{"pushes": [row["pushes"][1]]} for row in chunk]
@@ -416,50 +447,6 @@ def run_path2(units: list[dict], rows: list[dict], doses: tuple[float, ...],
                         for position in record["positions"]:
                             existing_t[(f"{record['kind']}:{record['first']}+{record['second']}",
                                         int(position["pos"]))] = position["t_ids"]
-                rows_written += len(records)
-                del second_logits, both_logits
-            if dose != 0.8:
-                # Rows with complete lower-dose records need no extra forwards.
-                continue
-        # If 0.8 support already existed, it was loaded above; use it for lower doses.
-        # Store any T from in-memory results in the exact row-key map expected by extraction.
-        for row in candidates:
-            key = rb.path2_key("real", 0.8, first_id, row["second"])
-            real = existing.get(key)
-            if real:
-                for position in real["positions"]:
-                    supports[(f"real:{first_id}+{row['second']}", int(position["pos"]))] = position.get("t_ids", [])
-            key = rb.path2_key("control", 0.8, first_id, row["second"])
-            control = existing.get(key)
-            if control:
-                for position in control["positions"]:
-                    supports[(f"control:{first_id}+{row['second']}", int(position["pos"]))] = position.get("t_ids", [])
-        # A resume may have loaded lower rows before support map assembly; run any missing rows now.
-        for dose in (value for value in doses if value != 0.8):
-            pending = [row for row in candidates
-                       if rb.path2_key(row["kind"], dose, first_id, row["second"]) not in existing]
-            for begin in range(0, len(pending), batch_size):
-                chunk = pending[begin:begin + batch_size]
-                second_rows = [{"pushes": [row["pushes"][1]]} for row in chunk]
-                both_rows = [{"pushes": row["pushes"]} for row in chunk]
-                second_logits = run119._forward(
-                    model, input_ids.expand(len(chunk), -1), attention_mask.expand(len(chunk), -1),
-                    layers, run119.vectors_for_rows(second_rows, cache_by_dose[dose], layers, device),
-                )[:, position_start:position_stop, :]
-                both_logits = run119._forward(
-                    model, input_ids.expand(len(chunk), -1), attention_mask.expand(len(chunk), -1),
-                    layers, run119.vectors_for_rows(both_rows, cache_by_dose[dose], layers, device),
-                )[:, position_start:position_stop, :]
-                pass_count += 2 * len(chunk)
-                records = _extract_batch_metrics(
-                    first_id, [{**row, "p_A": p, "position_start": p} for row in chunk], dose,
-                    base_logits, first_logits[dose], second_logits, both_logits,
-                    cached_top0, cached_margin0,
-                    cached_by_dose[dose]["top"], cached_by_dose[dose]["margin"],
-                    cached_top10_base, cached_top10_first,
-                    supports, existing_t, add_support=False)
-                _append_jsonl(output, records)
-                existing.update({record["key"]: record for record in records})
                 rows_written += len(records)
                 del second_logits, both_logits
         if not quiet:
@@ -550,10 +537,11 @@ def _answer_projection(rows: list[dict], pilot_records: list[dict]) -> int | Non
     return round(total)
 
 
-def run(args: argparse.Namespace) -> dict:
+def run(args: argparse.Namespace, units: list[dict] | None = None) -> dict:
     import torch
 
-    units = rows119.load_units(args.neurons, args.kinds, args.kinds_ds)
+    units = (rows119.load_units(args.neurons, args.kinds, args.kinds_ds)
+             if units is None else units)
     units_by_id = {unit["id"]: unit for unit in units}
     answer_rows = rb.pilot_answer_rows(units) if args.stage == "pilot" else rb.all_answer_rows(units)
     output_dir = repo_path(args.out)
@@ -586,28 +574,27 @@ def run(args: argparse.Namespace) -> dict:
     if args.stage == "pilot":
         path2_rows = rb.pilot_path2_rows(units)
         timings = []
-        for batch_size in (1, 8):
-            path_file = output_dir / f"interaction-pilot-batch{batch_size}.jsonl"
-            # Each timing variant starts with its own clean sample file.
-            if path_file.exists():
-                path_file.unlink()
-            timings.append(run_path2(units, path2_rows, (.2, .8), path_file,
-                                     tokenizer, model, layers, base_cache, cache_by_dose,
-                                     answer_by_id, args.device, batch_size, quiet=True))
-        faster = min(timings, key=lambda item: item["seconds"])
-        source_file = output_dir / f"interaction-pilot-batch{faster['batch']}.jsonl"
-        canonical = output_dir / "interaction.jsonl"
-        canonical_rows = read_output_by_key(canonical, "key")
-        for record in read_jsonl_readonly(source_file):
-            if record["key"] not in canonical_rows:
-                _append_jsonl(canonical, [record])
-                canonical_rows[record["key"]] = record
+        with tempfile.TemporaryDirectory(prefix="part119b-path2-pilot-") as scratch:
+            sample_files = {}
+            for batch_size in (1, 8):
+                path_file = Path(scratch) / f"interaction-batch{batch_size}.jsonl"
+                timings.append(run_path2(units, path2_rows, (.2, .8), path_file,
+                                         tokenizer, model, layers, base_cache, cache_by_dose,
+                                         answer_by_id, args.device, batch_size, quiet=True))
+                sample_files[batch_size] = path_file
+            faster = min(timings, key=lambda item: item["seconds"])
+            pilot_interactions_path = output_dir / "interaction-pilot.jsonl"
+            shutil.copyfile(sample_files[faster["batch"]], pilot_interactions_path)
+        pilot_rows = read_output_by_key(pilot_interactions_path, "key")
         ref = read_jsonl_readonly(part119_interactions_path)
-        gate2 = pilot_reproduction_gate(canonical_rows, ref, path2_rows)
+        gate2 = pilot_reproduction_gate(pilot_rows, ref, path2_rows)
+        gate2_report = _pilot_gate_report(gate2)
         projected = _answer_projection(answer_rows, pilot_records)
         report = {"stage": "pilot", "answers_new": answer_count,
                   "answer_seconds": answer_seconds, "gate1_passed": gate["passed"],
-                  "gate2_sample_passed": gate2["passed"],
+                  "gate2_sample_passed": gate2_report["passed"],
+                  "gate2": gate2_report,
+                  "gate2_failure_reason": gate2["reason"] if not gate2["passed"] else None,
                   "path2_batch_timings": timings, "path2_batch_selected": faster["batch"],
                   "projected_new_answer_bytes": projected,
                   "gate_seconds": gate_seconds}
@@ -615,6 +602,8 @@ def run(args: argparse.Namespace) -> dict:
             json.dumps(_round_floats(report), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         # The pilot's stdout deliberately contains only gate outcomes and timing/size data.
         print(json.dumps(_round_floats(report), ensure_ascii=False), flush=True)
+        if not gate2["passed"]:
+            raise RuntimeError(f"pilot Gate 2 failed: {gate2['reason']}")
         return report
 
     path2_file = output_dir / "interaction.jsonl"
@@ -642,41 +631,22 @@ def run(args: argparse.Namespace) -> dict:
 
 def pilot_reproduction_gate(pilot_rows: dict[str, dict], reference: list[dict],
                             selected_rows: list[dict]) -> dict:
-    """Compare sampled 0.8 Path 2 rows field-for-field with Part 119's stored passes."""
-    from statistics import median
-
-    old = {(str(row["first"]), str(row["second"]), str(row["kind"])): row
-           for row in reference}
-    shares_ok = []
-    relative_npair = []
-    compared = 0
+    """Run the scorer's Gate 2 calculation on the pilot's selected rows."""
+    expected = {"real": set(), "control": set()}
     for row in selected_rows:
-        key = (row["first"], row["second"], row["kind"])
-        source = old.get(key)
-        current = pilot_rows.get(rb.path2_key(row["kind"], .8, *key[:2]))
-        if source is None or current is None:
-            continue
-        compared += 1
-        old_positions = {int(p["pos"]): p for p in source.get("positions", [])}
-        new_positions = {int(p["pos"]): p for p in current.get("positions", [])}
-        for pos in sorted(set(old_positions) & set(new_positions)):
-            old_p, new_p = old_positions[pos], new_positions[pos]
-            old_n = float(old_p["nPair"])
-            if old_n > 0:
-                relative_npair.append(abs(float(new_p["nPair"]) - old_n) / old_n)
-        old_shares = [float(p["nI"]) ** 2 / float(p["nPair"]) ** 2
-                      for p in old_positions.values() if float(p["nPair"]) > 0]
-        new_shares = [float(p["nI"]) ** 2 / float(p["nPair"]) ** 2
-                      for p in new_positions.values() if float(p["nPair"]) > 0]
-        if old_shares and new_shares:
-            shares_ok.append(abs(median(old_shares) - median(new_shares)) <= .01)
-    expected = len(selected_rows)
-    return {"passed": compared == expected and len(shares_ok) == expected
-            and all(shares_ok) and bool(relative_npair)
-            and median(relative_npair) < .01,
-            "compared_rows": compared, "expected_rows": expected,
-            "share_rows_within_0.01": sum(shares_ok),
-            "median_relative_nPair": median(relative_npair) if relative_npair else None}
+        kind = str(row["kind"])
+        expected.setdefault(kind, set()).add(
+            (kind, str(row["first"]), str(row["second"])))
+    return scorer.gate2_result(list(pilot_rows.values()), reference, expected)
+
+
+def _pilot_gate_report(gate2: dict) -> dict:
+    """Keep the pilot artifact to gate outcomes and diagnostics, not share values."""
+    return {key: gate2[key] for key in (
+        "passed", "complete", "reason", "failure_reasons", "expected_rows",
+        "rows_compared", "missing_row_count", "position_list_mismatch_rows",
+        "class_thresholds_passed", "median_relative_nPair_difference",
+        "relative_nPair_rows_compared", "nPair_threshold")}
 
 
 def main(argv: list[str] | None = None) -> int:

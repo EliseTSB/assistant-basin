@@ -329,11 +329,12 @@ def gate3_result(summary: dict, interactions: list[dict], path_support: dict) ->
 
 def gate2_result(interactions: list[dict], reference: list[dict],
                  expected: dict[str, set[tuple[str, str, str]]]) -> dict:
+    """Check Part 119 reproduction medians on the same selected rows."""
     index = path2_index(interactions)
     reference_by_key = {(str(row["kind"]), str(row["first"]), str(row["second"])): row
                         for row in reference}
     class_rows = {"real": [], "control": []}
-    relative_npair = []
+    relative_npair_by_row = []
     compared_rows = {"real": 0, "control": 0}
     position_pairs = 0
     missing = []
@@ -352,11 +353,12 @@ def gate2_result(interactions: list[dict], reference: list[dict],
             if set(current_pos) != set(old_pos):
                 mismatch_positions += 1
             old_shares, new_shares = [], []
+            row_relative_npair = []
             for pos in common:
                 before, after = old_pos[pos], current_pos[pos]
                 old_pair, new_pair = float(before["nPair"]), float(after["nPair"])
                 if old_pair > 0:
-                    relative_npair.append(abs(new_pair - old_pair) / old_pair)
+                    row_relative_npair.append(abs(new_pair - old_pair) / old_pair)
                 old_share = interaction_share(before)
                 new_share = interaction_share(after)
                 if old_share is not None:
@@ -367,27 +369,58 @@ def gate2_result(interactions: list[dict], reference: list[dict],
             if old_shares and new_shares:
                 class_rows[kind].append({"old": float(median(old_shares)),
                                          "new": float(median(new_shares))})
+            if row_relative_npair:
+                relative_npair_by_row.append(float(median(row_relative_npair)))
     observed = {}
     class_ok = {}
-    for kind, target in (("real", .4707), ("control", .3686)):
+    for kind in ("real", "control"):
         new_values = [row["new"] for row in class_rows[kind]]
+        old_values = [row["old"] for row in class_rows[kind]]
         value = _median_or_none(new_values)
-        observed[kind] = {"median_row_share_0.8": value, "target": target,
+        reference_median = _median_or_none(old_values)
+        difference = (abs(value - reference_median)
+                      if value is not None and reference_median is not None else None)
+        observed[kind] = {"median_row_share_0.8": value,
+                          "reference_median_row_share_0.8": reference_median,
+                          "absolute_median_difference": difference,
                           "rows_compared": compared_rows[kind],
-                          "reference_row_share_median": _median_or_none(
-                              [row["old"] for row in class_rows[kind]])}
+                          "rows_with_share_medians": len(class_rows[kind]),
+                          "expected_rows": len(expected.get(kind, set()))}
         class_ok[kind] = (compared_rows[kind] == len(expected.get(kind, set()))
-                          and value is not None and abs(value - target) <= .01)
-    median_relative = _median_or_none(relative_npair)
+                          and len(class_rows[kind]) == len(expected.get(kind, set()))
+                          and value is not None and reference_median is not None
+                          and difference <= .01)
+    median_relative = _median_or_none(relative_npair_by_row)
     complete = not missing and mismatch_positions == 0
-    return {"passed": bool(complete and all(class_ok.values())
-                           and median_relative is not None and median_relative < .01),
+    reasons = []
+    if missing:
+        reasons.append(f"{len(missing)} selected rows are missing from the pilot or Part 119 reference")
+    if mismatch_positions:
+        reasons.append(f"{mismatch_positions} selected rows have different position lists")
+    failed_classes = [kind for kind, passed in class_ok.items() if not passed]
+    if failed_classes:
+        reasons.append("selected-row median share differs by more than 0.01 for "
+                       + ", ".join(failed_classes))
+    if median_relative is None:
+        reasons.append("no row-level relative nPair differences were available")
+    elif median_relative >= .01:
+        reasons.append("median row relative nPair difference is at least 0.01")
+    passed = bool(complete and all(class_ok.values())
+                  and median_relative is not None and median_relative < .01)
+    return {"passed": passed,
             "complete": complete, "missing_rows": missing[:25],
             "missing_row_count": len(missing), "position_list_mismatch_rows": mismatch_positions,
             "position_pairs_compared": position_pairs, "row_medians": observed,
             "class_thresholds_passed": class_ok,
             "median_relative_nPair_difference": median_relative,
+            "median_relative_nPair_difference_over_rows": median_relative,
+            "relative_nPair_rows_compared": len(relative_npair_by_row),
+            "share_median_difference_threshold": .01,
             "nPair_threshold": .01,
+            "failure_reasons": reasons,
+            "reason": "; ".join(reasons) if reasons else None,
+            "expected_rows": {kind: len(expected.get(kind, set()))
+                              for kind in ("real", "control")},
             "rows_compared": compared_rows}
 
 
@@ -1109,26 +1142,32 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
     path02_rows = summary["coverage"]["real"]["rows_present_by_dose"]["0.2"]
     path_metrics_available = (gate1_pass and gate2["passed"]
                               and path_complete["complete"] and path_support["passed"])
+    path_observation_available = (gate1_pass and path_complete["complete"]
+                                  and path_support["passed"])
     gate3_stopped = core_passed and not gate3["passed"]
     predictions.append(_prediction(
         "119b.4", "Median row interaction share over real ordered pairs at 0.4 is at most 0.25.",
         ({"median_row_share_0.4_common_resolved": real04,
           "rows_with_common_resolved_positions": len(shares_04), "expected_rows": 1482}
-         if path_metrics_available and not gate3_stopped else None),
+         if path_observation_available else None),
         path_metrics_available and not gate3_stopped and path4_rows == 1482
         and real04 is not None,
         real04 is not None and real04 <= .25,
-        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped)))
+        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped),
+        unavailable_verdict=_path2_stop_verdict(
+            gate1_pass, gate2, gate3_stopped, gate3_sensitive=True)))
     predictions.append(_prediction(
         "119b.5", "Median real row share at 0.2 is at most half the median at 0.4.",
         ({"median_row_share_0.2_common_resolved": real02,
           "median_row_share_0.4_common_resolved": real04,
           "rows_0.2": len(shares_02), "rows_0.4": len(shares_04)}
-         if path_metrics_available and not gate3_stopped else None),
+         if path_observation_available else None),
         path_metrics_available and not gate3_stopped and path02_rows == 1482
         and len(shares_04) == 1482 and real02 is not None and real04 is not None,
         real02 is not None and real04 is not None and real02 <= .5 * real04,
-        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped)))
+        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped),
+        unavailable_verdict=_path2_stop_verdict(
+            gate1_pass, gate2, gate3_stopped, gate3_sensitive=True)))
 
     b_a, b_2, _ = _row_slope_values(path_analysis, common_support, "real", .4)
     median_b_a, median_b_2 = _median_or_none(b_a), _median_or_none(b_2)
@@ -1136,11 +1175,12 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
         "119b.6", "At 0.4, median row b_A and b_2 over 1,482 real ordered pairs are each 0.75–1.25.",
         ({"median_row_b_A": median_b_a, "median_row_b_2": median_b_2,
           "rows_with_b_A": len(b_a), "rows_with_b_2": len(b_2), "expected_rows": 1482}
-         if path_metrics_available else None),
+         if path_observation_available else None),
         path_metrics_available and median_b_a is not None and median_b_2 is not None,
         median_b_a is not None and median_b_2 is not None
         and .75 <= median_b_a <= 1.25 and .75 <= median_b_2 <= 1.25,
-        _path_reason(gate1_pass, gate2, path_complete, False)))
+        _path_reason(gate1_pass, gate2, path_complete, False),
+        unavailable_verdict=_path2_stop_verdict(gate1_pass, gate2)))
 
     agreements = pair_top_agreement(interactions, units)
     diff_ci = agreements["additive_minus_0.8_ci95"]
@@ -1157,9 +1197,11 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
     predictions.append(_prediction(
         "119b.7", "Additive pair-top agreement rises at least 20 points from 0.8 to 0.4, 95% unit-bootstrap CI > 0; 0.4 is at least 10 points above plain.",
         ({key: value for key, value in agreements.items() if key != "rows"}
-         if path_metrics_available and not gate3_stopped else None),
+         if path_observation_available else None),
         p7_available, p7_holds,
-        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped)))
+        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped),
+        unavailable_verdict=_path2_stop_verdict(
+            gate1_pass, gate2, gate3_stopped, gate3_sensitive=True)))
     wta_ci = agreements["additive_minus_winner_take_all_ci95"]
     p8_available = (path_metrics_available and not gate3_stopped
                     and agreements["shared_contested_positions"] > 0
@@ -1170,9 +1212,11 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
     predictions.append(_prediction(
         "119b.8", "At 0.4, additive agreement exceeds winner-take-all by at least 5 points, 95% unit-bootstrap CI > 0.",
         ({key: value for key, value in agreements.items() if key != "rows"}
-         if path_metrics_available and not gate3_stopped else None),
+         if path_observation_available else None),
         p8_available, p8_holds,
-        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped)))
+        _path_reason(gate1_pass, gate2, path_complete, gate3_stopped),
+        unavailable_verdict=_path2_stop_verdict(
+            gate1_pass, gate2, gate3_stopped, gate3_sensitive=True)))
 
     effect_match = effect_matched_at_04(interactions, units, path_analysis, common_support)
     coverage9 = effect_match.get("share_real_positions_kept_all_at_0.4")
@@ -1191,10 +1235,11 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
          "positions_kept": effect_match.get("real_positions_kept"),
          "positions_total": effect_match.get("real_positions_total_all_at_0.4"),
          "coverage": coverage9, "fit_available": effect_match.get("fit_available")}
-         if path_metrics_available else None),
+         if path_observation_available else None),
         p9_available, p9_holds,
         (p9_status["reason"] or "effect-matched interval is available"),
-        unavailable_verdict=p9_status["verdict"] or "not read"))
+        unavailable_verdict=("stopped by Gate 2" if gate1_pass and not gate2.get("passed")
+                             else p9_status["verdict"] or "not read")))
 
     gaps = kind_gap_summary(path_analysis, common_support, units)
     gap_08 = gaps["agreed"]["0.8"]
@@ -1215,11 +1260,12 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
          "median_absolute_gap_0.8": med_abs_08,
          "agreed_haiku_directions_agree": gaps["directions_agree"],
          "median_gap_haiku_0.8": gaps["haiku"]["0.8"]["median_gap"]}
-         if path_metrics_available and gaps["directions_agree"] else None),
+         if path_observation_available and gaps["directions_agree"] else None),
         p10_available, p10_holds,
         ("Gate 1 did not pass or Gate 2 failed" if not core_passed else
          "agreed and Haiku kind-gap directions differ" if not gaps["directions_agree"] else
-         "Path 2 kind-gap coverage or slopes are incomplete")))
+         "Path 2 kind-gap coverage or slopes are incomplete"),
+        unavailable_verdict=_path2_stop_verdict(gate1_pass, gate2)))
 
     e_summary = effect_size_by_unit(interactions, units, tournament)
     p11_available = (path_metrics_available and e_summary["n_units"] == 39
@@ -1228,9 +1274,10 @@ def score_data(local_answers: list[dict], interactions: list[dict], path1: list[
     predictions.append(_prediction(
         "119b.11", "Spearman correlation between Path 2 E and Part 119 dominance is at least 0.5 across 39 units.",
         ({"n_units": e_summary["n_units"], "spearman_rho": rho}
-         if path_metrics_available else None),
+         if path_observation_available else None),
         p11_available, rho is not None and rho >= .5,
-        _path_reason(gate1_pass, gate2, path_complete, False)))
+        _path_reason(gate1_pass, gate2, path_complete, False),
+        unavailable_verdict=_path2_stop_verdict(gate1_pass, gate2)))
 
     same_diff = same_different_layer_summary(answers, planned, units)
     single_08 = {"neuron": _answer_cell(broken, "single", .8),
@@ -1292,12 +1339,23 @@ def _path_reason(gate1_pass, gate2, path_complete, gate3_stopped):
     if not gate1_pass:
         return "Gate 1 did not pass or was not run; predictions were not read"
     if not gate2.get("passed"):
-        return "Gate 2 failed; Path 2 predictions were not read"
+        return "Gate 2 failed; Path 2 predictions were stopped"
     if not path_complete.get("complete"):
         return "Path 2 rows are incomplete"
     if gate3_stopped:
         return "Gate 3 stopped this registered prediction"
     return "Path 2 support unavailable"
+
+
+def _path2_stop_verdict(gate1_pass, gate2, gate3_stopped=False,
+                        gate3_sensitive=False):
+    if not gate1_pass:
+        return "not read"
+    if not gate2.get("passed"):
+        return "stopped by Gate 2"
+    if gate3_sensitive and gate3_stopped:
+        return "stopped by Gate 3"
+    return "not read"
 
 
 def same_different_layer_summary(answers, planned, units):

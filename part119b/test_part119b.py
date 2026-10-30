@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import copy
+import json
 import math
 import sys
 from collections import Counter
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -346,7 +348,7 @@ def test_dose_scaling_matches_part92_neuron_and_random_pushes():
     torch.testing.assert_close(scaled[("b", "neuron")], base[("b", "neuron")] * .5)
 
 
-def test_gate_stopped_path2_verdicts_are_not_read(monkeypatch):
+def test_gate2_stopped_path2_verdicts_keep_observed_values(monkeypatch):
     units = rows119.load_units()
     planned = rows119b.all_answer_rows(units)
     source_ids = {row["source_row_id"] for row in planned if row["reused"]}
@@ -375,15 +377,15 @@ def test_gate_stopped_path2_verdicts_are_not_read(monkeypatch):
     predictions = {row["id"]: row for row in result["predictions"]}
     assert not result["gates"]["gate2"]["passed"]
     assert result["path2_summary"] is None
-    assert predictions["119b.4"]["verdict"] == "not read"
-    assert predictions["119b.4"]["observed"] is None
-    assert predictions["119b.5"]["verdict"] == "not read"
-    assert predictions["119b.7"]["verdict"] == "not read"
-    assert predictions["119b.8"]["verdict"] == "not read"
-    assert all(predictions[f"119b.{n}"]["verdict"] not in ("held", "failed")
+    assert predictions["119b.4"]["verdict"] == "stopped by Gate 2"
+    assert predictions["119b.4"]["observed"] is not None
+    assert predictions["119b.5"]["verdict"] == "stopped by Gate 2"
+    assert predictions["119b.7"]["verdict"] == "stopped by Gate 2"
+    assert predictions["119b.8"]["verdict"] == "stopped by Gate 2"
+    assert all(predictions[f"119b.{n}"]["verdict"] == "stopped by Gate 2"
                for n in (4, 5, 6, 7, 8, 9, 10, 11))
     report = score119b.render_markdown(score119b._json_safe(result))
-    assert "Not read for Path 2 because Gate 2 failed" in report
+    assert "stopped by Gate 2" in report
     assert "119b.4" in report
 
 
@@ -419,4 +421,244 @@ def test_tiny_cpu_model_path2_push_changes_logits():
     with run119.row_hooks(layers, {0: push}), torch.inference_mode():
         altered = model(input_ids=ids, use_cache=False).logits
     assert not torch.equal(plain, altered)
+
+
+def _tiny_units():
+    return [
+        {"id": "tiny-a", "layer": 0, "neuron": 0, "control_seed": 11901,
+         "haiku_kind": "slot", "ds_kind": "slot", "group": "agreed_slot"},
+        {"id": "tiny-b", "layer": 1, "neuron": 1, "control_seed": 11902,
+         "haiku_kind": "concept", "ds_kind": "concept", "group": "agreed_concept"},
+        {"id": "tiny-c", "layer": 0, "neuron": 2, "control_seed": 11903,
+         "haiku_kind": "slot", "ds_kind": "slot", "group": "agreed_slot"},
+    ]
+
+
+class _TinyTokenizer:
+    pad_token_id = 0
+    eos_token_id = 2
+    unk_token_id = None
+
+    def apply_chat_template(self, *args, **kwargs):
+        return "tiny prompt"
+
+    def __call__(self, text, add_special_tokens=False):
+        return {"input_ids": [1, 3, 5]}
+
+    def decode(self, ids, **kwargs):
+        return "tiny answer"
+
+
+def _tiny_path2_inputs(torch, units):
+    model = _tiny_olmo2()[1]
+    layers = run119.c.get_layers(model)
+    base_cache = {"_units": units}
+    for index, unit in enumerate(units):
+        for arm in ("neuron", "random"):
+            base_cache[(unit["id"], arm)] = torch.full(
+                (32,), 0.01 * (index + 1), dtype=torch.float32)
+    caches = {dose: run119b.scale_push_cache(base_cache, dose)
+              for dose in rows119b.DOSES}
+    rows = [
+        {"key": "real:tiny-a+tiny-b", "kind": "real", "first": "tiny-a",
+         "second": "tiny-b", "pushes": [{"unit_id": "tiny-a", "arm": "neuron"},
+                                          {"unit_id": "tiny-b", "arm": "neuron"}]},
+        {"key": "control:tiny-a+tiny-c", "kind": "control", "first": "tiny-a",
+         "second": "tiny-c", "pushes": [{"unit_id": "tiny-a", "arm": "neuron"},
+                                             {"unit_id": "tiny-c", "arm": "random"}]},
+    ]
+    answers = {"plain": {"tokens": [4, 5, 6, 7]},
+               "single@0.8:tiny-a": {"tokens": [4, 9, 6, 7]}}
+    return model, layers, base_cache, caches, rows, answers
+
+
+def test_run_path2_tiny_olmo2_all_doses_and_resume_uses_stored_support(monkeypatch, tmp_path):
+    torch = pytest.importorskip("torch")
+    units = _tiny_units()
+    model, layers, base_cache, caches, rows, answers = _tiny_path2_inputs(torch, units)
+    monkeypatch.setattr(run119, "first_flip", lambda _single, _plain: (1, 9, 5))
+    output = tmp_path / "interaction.jsonl"
+    first = run119b.run_path2(
+        units, rows, rows119b.DOSES, output, _TinyTokenizer(), model, layers,
+        base_cache, caches, answers, "cpu", 2, quiet=True)
+    stored = [json.loads(line) for line in output.read_text().splitlines()]
+    assert len(stored) == len(rows) * len(rows119b.DOSES)
+    assert {record["dose"] for record in stored} == set(rows119b.DOSES)
+    assert first["rows_new"] == len(stored)
+
+    stored_08 = {(record["kind"], record["first"], record["second"]): record
+                 for record in stored if record["dose"] == 0.8}
+    output.write_text("".join(json.dumps(record) + "\n" for record in stored
+                               if record["dose"] == 0.8), encoding="utf-8")
+    top10_calls = []
+    original_top10 = run119._top10_repeated_argmax
+
+    def count_top10(logits):
+        top10_calls.append(tuple(logits.shape))
+        return original_top10(logits)
+
+    monkeypatch.setattr(run119, "_top10_repeated_argmax", count_top10)
+    resumed = run119b.run_path2(
+        units, rows, rows119b.DOSES, output, _TinyTokenizer(), model, layers,
+        base_cache, caches, answers, "cpu", 2, quiet=True)
+    replayed = [json.loads(line) for line in output.read_text().splitlines()]
+    assert resumed["rows_new"] == len(rows) * 3
+    assert resumed["logical_passes"] == 1 + 3 + 2 * len(rows) * 3
+    assert top10_calls == []
+    for record in replayed:
+        if record["dose"] == 0.8:
+            continue
+        stored_record = stored_08[(record["kind"], record["first"], record["second"])]
+        assert [pos["t_hash"] for pos in record["positions"]] == [
+            pos["t_hash"] for pos in stored_record["positions"]]
+
+
+def test_path2_raises_when_memory_and_stored_support_disagree():
+    torch = pytest.importorskip("torch")
+    logits = torch.zeros((1, 1, 4), dtype=torch.float32)
+    row = {"key": "real:tiny-a+tiny-b", "kind": "real", "first": "tiny-a",
+           "second": "tiny-b", "p_A": 0, "position_start": 0}
+    with pytest.raises(ValueError, match="support.*disagree"):
+        run119b._extract_batch_metrics(
+            "tiny-a", [row], 0.2, logits, logits, logits, logits,
+            [0], [0.0], [0], [0.0], [[0]], [[0]],
+            {("real:tiny-a+tiny-b", 0): [0, 1]},
+            {("real:tiny-a+tiny-b", 0): [0, 2]}, add_support=False)
+
+
+def test_gate2_uses_selected_reference_medians_and_row_level_npair():
+    selected = [
+        {"key": "real@0.8:a+b", "kind": "real", "first": "a", "second": "b"},
+        {"key": "real@0.8:c+d", "kind": "real", "first": "c", "second": "d"},
+        {"key": "control@0.8:a+b", "kind": "control", "first": "a", "second": "b"},
+        {"key": "control@0.8:c+d", "kind": "control", "first": "c", "second": "d"},
+    ]
+    current, reference = [], []
+    for row in selected:
+        heavy = row["first"] == "a"
+        count = 100 if heavy else 1
+        old_share = 0.1 if heavy else 0.3
+        relative = 0.015 if heavy else 0.0
+        old_positions, new_positions = [], []
+        for pos in range(count):
+            old_npair = 2.0
+            old = _position(share=old_share)
+            old.update({"pos": pos, "nPair": old_npair,
+                        "nI": math.sqrt(old_share) * old_npair})
+            new = dict(old)
+            new_npair = old_npair * (1 + relative)
+            new.update({"nPair": new_npair,
+                        "nI": math.sqrt(old_share) * new_npair})
+            old_positions.append(old)
+            new_positions.append(new)
+        reference.append({**row, "positions": old_positions})
+        current.append({**row, "dose": 0.8, "positions": new_positions})
+    expected = {
+        "real": {("real", "a", "b"), ("real", "c", "d")},
+        "control": {("control", "a", "b"), ("control", "c", "d")},
+    }
+    result = score119b.gate2_result(current, reference, expected)
+    pilot = run119b.pilot_reproduction_gate(
+        {record["key"]: record for record in current}, reference, selected)
+    assert result["passed"]
+    assert pilot == result
+    assert result["row_medians"]["real"]["median_row_share_0.8"] == pytest.approx(0.2)
+    assert result["row_medians"]["real"]["reference_median_row_share_0.8"] == pytest.approx(0.2)
+    assert result["median_relative_nPair_difference"] == pytest.approx(0.0075)
+
+
+def _tiny_pilot_setup(tmp_path, monkeypatch):
+    torch = pytest.importorskip("torch")
+    units = _tiny_units()
+    torch.manual_seed(119)
+    _torch, model = _tiny_olmo2()
+    tokenizer = _TinyTokenizer()
+    monkeypatch.setattr(run119b.c, "load_model", lambda _path, _device: (tokenizer, model))
+    monkeypatch.setattr(run119b.c, "residual_medians",
+                        lambda *_args, **_kwargs: {0: 1.0, 1: 1.0})
+    monkeypatch.setattr(run119, "first_flip", lambda _single, _plain: (1, 9, 5))
+    monkeypatch.setattr(run119, "ANSWER_TOKENS", 1)
+    monkeypatch.setattr(run119b, "ANSWER_TOKENS", 1)
+    part119_answers = tmp_path / "part119-answers.jsonl"
+    prior = [{"row_id": "plain", "tokens": [4, 5, 6, 7],
+              "text": "plain answer"}]
+    for unit in units:
+        for row_type in ("single", "random"):
+            prior.append({"row_id": f"{row_type}:{unit['id']}",
+                          "tokens": [4, 9, 6, 7], "text": "unit answer"})
+    part119_answers.write_text("".join(json.dumps(row) + "\n" for row in prior),
+                               encoding="utf-8")
+    part119_interactions = tmp_path / "part119-interactions.jsonl"
+    part119_interactions.write_text("", encoding="utf-8")
+    args = SimpleNamespace(
+        model="unused", out=str(tmp_path / "pilot-run"), device="cpu", stage="pilot",
+        batch=8, path2_batch=1, path1_batch=1, neurons="unused", kinds="unused",
+        kinds_ds="unused", part119_answers=str(part119_answers),
+        part119_interactions=str(part119_interactions))
+    return args, units
+
+
+def test_real_pilot_stage_on_tiny_inventory_stops_on_gate2_miss(tmp_path, monkeypatch):
+    args, units = _tiny_pilot_setup(tmp_path, monkeypatch)
+    # The pre-fix runner does not import rows119b._push; this shim lets the test
+    # reach the independent pilot gate failure behavior on the disposable baseline.
+    monkeypatch.setattr(run119b, "_push", rows119b._push, raising=False)
+    with pytest.raises(RuntimeError, match="Gate 2"):
+        run119b.run(args, units=units)
+    output = Path(args.out)
+    timing = json.loads((output / "timing-pilot.json").read_text(encoding="utf-8"))
+    assert not timing["gate2"]["passed"]
+    assert timing["gate2"]["reason"]
+    assert "row_medians" not in timing["gate2"]
+    assert (output / "interaction-pilot.jsonl").is_file()
+    assert not (output / "interaction.jsonl").exists()
+
+
+def test_scorer_default_uses_only_canonical_interaction_file(monkeypatch):
+    captured = {}
+    monkeypatch.setattr(score119b, "score_files",
+                        lambda args: captured.update(vars(args)))
+    monkeypatch.setattr(sys, "argv", ["score119b.py"])
+    score119b.main()
+    assert captured["interactions"] == "results/part119b/interaction.jsonl"
+    assert "pilot" not in captured["interactions"]
+
+
+def test_gate3_stop_verdicts_keep_observed_values(monkeypatch):
+    units = rows119.load_units()
+    planned = rows119b.all_answer_rows(units)
+    source_ids = {row["source_row_id"] for row in planned if row["reused"]}
+    prior_answers = [{"row_id": source_id, "tokens": [1, 2, 3],
+                      "text": "I am a complete assistant."} for source_id in source_ids]
+    prior_answers.append({"row_id": "plain", "tokens": [1, 2, 3],
+                          "text": "I am a complete assistant."})
+    local = [{"row_id": row["row_id"], "tokens": [1, 2, 3],
+              "text": "I am a complete assistant."}
+             for row in planned if not row["reused"]]
+    monkeypatch.setattr(score119b.score119, "make_unit_bootstrap_draws",
+                        lambda unit_ids, **_kwargs: [Counter({unit_id: 1 for unit_id in unit_ids})])
+    interactions, reference = [], []
+    for row in rows119b.all_path2_rows(units):
+        for dose, share in ((0.2, 0.4), (0.4, 0.35), (0.6, 0.2), (0.8, 0.04)):
+            position = _position(share=share, t_hash="same-t")
+            position["pos"] = 0
+            interactions.append({
+                "key": rows119b.path2_key(row["kind"], dose, row["first"], row["second"]),
+                "kind": row["kind"], "first": row["first"],
+                "second": row["second"], "dose": dose, "p_A": 0,
+                "positions": [position]})
+            if dose == 0.8:
+                reference.append({**row, "positions": [_position(share=0.04, t_hash="same-t")]})
+    tournament = {"units": [{"id": unit["id"], "dominance": 0.5} for unit in units]}
+    result = score119b.score_data(
+        local, interactions, [], {"passed": True, "no_hook_tokens": [1, 2],
+                                  "zero_hook_tokens": [1, 2]},
+        prior_answers, reference, {}, tournament, {}, units)
+    predictions = {row["id"]: row for row in result["predictions"]}
+    assert result["gates"]["gate2"]["passed"]
+    assert not result["gates"]["gate3"]["passed"]
+    for number in (4, 5, 7, 8):
+        assert predictions[f"119b.{number}"]["verdict"] == "stopped by Gate 3"
+        assert predictions[f"119b.{number}"]["observed"] is not None
+    assert predictions["119b.4"]["observed"]["median_row_share_0.4_common_resolved"] == pytest.approx(.35)
 
