@@ -559,9 +559,10 @@ def _positive_control(tok, model, handles_context, handles, question, render, bo
     }
 
 
-def _load_direct(device):
+def _load_direct(device, MODEL_ID, REVISION):
     """Amendment 1: the weights go straight to the device, as Part 115b does. nr.load_model stages about 8 GB in host
     memory first, and the RAM guard stopped that at Windows' 2 GB floor. Same weights, dtype and device."""
+    import torch
     from transformers import AutoModelForCausalLM, AutoModelForImageTextToText, AutoTokenizer
     import transformers.modeling_utils as mu
     tok = AutoTokenizer.from_pretrained(MODEL_ID, revision=REVISION)
@@ -598,7 +599,7 @@ def run(args):
         from part82.part82 import MODEL, MODEL_ID, REVISION, BODY_PATH, RENDERINGS
         from part80.part80 import question, render
         from part80b.part80b import load_bodies, body_in_rendering
-        tok, model = _load_direct(args.device)
+        tok, model = _load_direct(args.device, MODEL_ID, REVISION)
         model.requires_grad_(False)
         model.eval()
         device = args.device
