@@ -24,10 +24,14 @@ from pathlib import Path
 SECTIONS = ["Question", "Prior art and existing data", "Method", "Controls", "Size", "Optimization",
             "Predictions", "Reading rules", "Limits"]
 PLACEHOLDER_TIME = re.compile(r"\b\d{1,2}:(?:\dx|xx)\b|\bHH:MM\b|\?\?:\?\?", re.I)
-VERDICT = re.compile(r"\b(held|failed|untestable|not testable|withdrawn|not read|not scored|inconclusive|void)\b", re.I)
+VERDICT = re.compile(r"\b(held|failed|mixed|partly held|partial|open|untestable|not tested|not testable|withdrawn|"
+                     r"not read|not scored|inconclusive|void)\b", re.I)
 PATH_EXT = (".md", ".py", ".json", ".jsonl", ".txt", ".sh", ".csv", ".png", ".svg", ".html", ".npz", ".pt", ".gz",
             ".log", ".yaml", ".yml", ".tsv")
-LOCAL_PATH = re.compile(r"(?<![\w/])(?:/home/|/mnt/|/tmp/|~/|[A-Za-z]:\\)")
+LOCAL_PATH = re.compile(r"(?<![\w/.])(?:/home/|/mnt/|/tmp/|/etc/|/opt/|/Users/|/var/|/root/|~/|[A-Za-z]:\\)")
+# A measured throughput: a number with a rate (per second or minute), or a count done in a stated time.
+RATE = re.compile(r"\d[\d.,]*\s*[A-Za-z ]{0,40}?(?:/\s?(?:s|sec|second|min|minute|h|hour)\b|per (?:second|minute|hour|s|min)\b)"
+                  r"|\d[\d.,]*\s+\w+(?: \w+){0,3} in (?:about )?\d[\d.,]*\s*(?:s|sec|seconds|min|minutes|h|hours)\b", re.I)
 GENERATION_UNITS = re.compile(r"generation|answer|rollout|completion", re.I)
 
 
@@ -72,9 +76,12 @@ def find_design(repo, pid):
 
 def sections(text):
     """{heading: body} for every '## ' heading; the body runs to the next '## ' heading."""
-    out, cur = {}, None
+    out, cur, fence = {}, None, None
     for line in text.splitlines():
-        m = re.match(r"^## (.+?)\s*$", line)
+        f = re.match(r"^\s*(```|~~~)", line)
+        if f:
+            fence = None if fence == f.group(1) else (fence or f.group(1))
+        m = None if fence or f else re.match(r"^## (.+?)\s*$", line)
         if m:
             cur = m.group(1)
             out[cur] = []
@@ -101,10 +108,12 @@ def pred_ids(text, pid):
 
 
 def parse_size(body):
-    total = re.search(r"Total:\s*([\d,]+)\s+([A-Za-z][\w -]*)", body)
+    total = re.search(r"Total:\s*(\d[\d,]*(?:\.\d+)?)\s*(million|thousand)?\s+([A-Za-z][\w -]*)", body, re.I)
     mins = re.search(r"about\s+([\d.,]+)\s*(minutes?|mins?|hours?|h)\b", body, re.I)
-    count = int(total.group(1).replace(",", "")) if total else None
-    unit = total.group(2) if total else ""
+    count, unit = None, ""
+    if total:
+        count = float(total.group(1).replace(",", "")) * {"million": 1e6, "thousand": 1e3}.get((total.group(2) or "").lower(), 1)
+        count, unit = int(round(count)), total.group(3)
     minutes = None
     if mins:
         v = float(mins.group(1).replace(",", ""))
@@ -141,10 +150,10 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False):
     r.check(re.search(r"gate|positive control", controls, re.I) is not None,
             "Controls name a gate or positive control", "Controls: no 'Gate:' line (or 'No gate: <reason>')")
     count, unit, minutes = parse_size(sec.get("Size", ""))
-    size_ok = r.check(count is not None and minutes is not None,
+    size_ok = r.check(count is not None and minutes is not None and count > 0 and minutes > 0,
                       f"Size: Total {count:,} {unit.strip()}, about {minutes:g} minutes" if count is not None
                       and minutes is not None else "",
-                      "Size: no 'Total: N <unit>, about M minutes' line")
+                      "Size: no 'Total: N <unit>, about M minutes' line with N and M above zero")
     r.check(re.search(r"smallest effect", sec.get("Size", ""), re.I) is not None,
             "Size names the smallest effect worth knowing", "Size: no 'Smallest effect worth knowing' line")
     pilot = re.search(r"^\s*-?\s*Pilot:\s*(.*)$", sec.get("Size", ""), re.M | re.I)
@@ -161,10 +170,10 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False):
         r.check(re.search(r"Bound resource:\s*\S", opt) is not None, "Optimization names the bound resource",
                 "Optimization: no 'Bound resource:' line")
         meas = re.search(r"Measured:\s*(.*)", opt)
-        r.check(meas is not None and re.search(r"\d", meas.group(1)) is not None and not
-                re.match(r"n/?a", meas.group(1), re.I),
+        r.check(meas is not None and RATE.search(meas.group(1)) is not None and not
+                re.match(r"\s*(n/?a|not measured|none)", meas.group(1), re.I),
                 "Optimization: a measured throughput", "Optimization: a run over 5 minutes needs 'Measured:' with a "
-                "number on real rows (not n/a)")
+                "rate on real rows (e.g. '2.0 answers/s at batch 64', or '6,736 rows in 145 s')")
         r.check(re.search(r"\b(taken|declined)\b", opt, re.I) is not None, "Optimization: levers taken or declined",
                 "Optimization: no lever marked 'taken' or 'declined'")
     elif size_ok:
@@ -175,7 +184,7 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False):
     preds_path = repo / "PREDICTIONS.md"
     psec = predictions_section(preds_path.read_text(encoding="utf-8"), pid) if preds_path.exists() else ""
     r.check(bool(psec), "PREDICTIONS.md has the part's section", f"PREDICTIONS.md: no '## Part {pid}' section")
-    absent = [i for i in ids if i not in psec]
+    absent = sorted(set(ids) - set(pred_ids(psec, pid)))
     r.check(not absent, "every prediction id is in PREDICTIONS.md", "not in PREDICTIONS.md: " + ", ".join(absent))
     stale = sorted(set(PLACEHOLDER_TIME.findall(text + "\n" + psec)))
     r.check(not stale, "no typed placeholder times", "placeholder times (use `date` or a message id): " +
@@ -185,24 +194,48 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False):
         if f.returncode:
             r.fail("git fetch origin main failed: " + f.stderr.strip()[:120])
     rel = design.relative_to(repo).as_posix()
-    on_main = git(repo, "cat-file", "-e", f"origin/main:{rel}", check=False).returncode == 0
-    r.check(on_main, f"registered: {rel} is on origin/main",
-            f"not registered: {rel} is not on origin/main (tools/register_public.py)")
+    reg = git(repo, "show", f"origin/main:{rel}", check=False)
+    if r.check(reg.returncode == 0, f"registered: {rel} is on origin/main",
+               f"not registered: {rel} is not on origin/main (tools/register_public.py)"):
+        r.check(reg.stdout == text, "registered: the design matches its copy on origin/main",
+                "the design differs from its registered copy on origin/main: register the amendment before launching "
+                f"(git diff origin/main -- {rel})")
     pub = git(repo, "show", "origin/main:PREDICTIONS.md", check=False)
     pub_sec = predictions_section(pub.stdout, pid) if pub.returncode == 0 else ""
-    pub_missing = [i for i in ids if i not in pub_sec]
-    r.check(bool(pub_sec) and not pub_missing, "registered: the predictions are on origin/main",
-            "not registered: origin/main's PREDICTIONS.md lacks " + (", ".join(pub_missing) or f"Part {pid}"))
+    pub_missing = sorted(set(ids) - set(pred_ids(pub_sec, pid)))
+    if r.check(bool(pub_sec) and not pub_missing, "registered: the predictions are on origin/main",
+               "not registered: origin/main's PREDICTIONS.md lacks " + (", ".join(pub_missing) or f"Part {pid}")):
+        r.check(pub_sec.strip() == psec.strip(), "registered: the part's PREDICTIONS.md section matches origin/main",
+                "the part's PREDICTIONS.md section differs from origin/main: register the change before launching")
     return r
 
 
 def cited_paths(text):
-    for m in re.finditer(r"`([^`\s]+)`", text):
-        tok = m.group(1).rstrip(".,;:)")
-        if tok.startswith(("http", "--", "-")) or any(c in tok for c in "*{}<>$|="):
+    """Path-like tokens: every whitespace-separated token inside backticks (so a backticked command's file arguments
+    count), plus bare results/... and partNN/... paths in plain text."""
+    toks = []
+    for m in re.finditer(r"`([^`]+)`", text):
+        toks += m.group(1).split()
+    toks += re.findall(r"(?<![\w/`.-])((?:results|part\d+[a-z]?|tools|templates)/[\w./-]*[\w/])", text)
+    for tok in toks:
+        tok = tok.strip("\"'").rstrip(".,;:)")
+        if not tok or tok.startswith(("http", "-")) or any(c in tok for c in "*{}<>$|=\\"):
             continue
         if "/" in tok or tok.endswith(PATH_EXT):
             yield tok
+
+
+def verdict_rows(lines, pred_id):
+    """Table rows whose first cell is exactly the id; returns their last non-empty cells."""
+    out = []
+    for ln in lines:
+        if not ln.lstrip().startswith("|"):
+            continue
+        cells = [c.strip().strip("*").strip() for c in ln.strip().strip("|").split("|")]
+        if cells and cells[0].lower() == pred_id.lower():
+            filled = [c for c in cells[1:] if c]
+            out.append(filled[-1] if filled else "")
+    return out
 
 
 def publish(repo, pid, legacy_ok=False):
@@ -221,24 +254,27 @@ def publish(repo, pid, legacy_ok=False):
         return r
     text = readme.read_text(encoding="utf-8")
     r.check("{{" not in text, "no unfilled template text", "unfilled template text in the README")
-    psec = predictions_section((repo / "PREDICTIONS.md").read_text(encoding="utf-8"), pid)
+    preds_path = repo / "PREDICTIONS.md"
+    psec = predictions_section(preds_path.read_text(encoding="utf-8"), pid) if preds_path.exists() else ""
     ids = pred_ids(psec, pid)
     r.check(bool(ids), f"{len(ids)} registered predictions", f"PREDICTIONS.md: no ids under '## Part {pid}'")
     lines = text.splitlines()
-    no_verdict = [i for i in ids if not any(re.search(rf"(?<![\w.]){re.escape(i)}\b", ln) and VERDICT.search(ln)
-                                            for ln in lines)]
-    r.check(not no_verdict, "every registered prediction has a verdict on its line",
-            "no verdict (held, failed, untestable...) on a line naming: " + ", ".join(no_verdict))
+    no_verdict = [i for i in ids if not any(VERDICT.search(cell) for cell in verdict_rows(lines, i))]
+    r.check(not no_verdict, "every registered prediction has a verdict in the last cell of its table row",
+            "no verdict (held, failed, mixed, untestable...) in the last cell of a table row whose first cell is: " +
+            ", ".join(no_verdict))
     r.check(re.search(r"^Cold check:\s*\S", text, re.M | re.I) is not None, "a 'Cold check:' line",
             "no 'Cold check:' line (reader, date, findings, commit)")
     local = sorted(set(m.group(0) for m in LOCAL_PATH.finditer(text)))
-    r.check(not local, "no local paths", "local paths in a public README: " + ", ".join(local))
     stale = sorted(set(PLACEHOLDER_TIME.findall(text)))
     r.check(not stale, "no typed placeholder times", "placeholder times: " + ", ".join(stale))
     tracked = set(git(repo, "ls-files").stdout.splitlines())
     missing, uncommitted = [], []
     for tok in sorted(set(cited_paths(text))):
         if LOCAL_PATH.match(tok):
+            continue
+        if tok.startswith("/") or ".." in Path(tok).parts:
+            local.append(tok)
             continue
         cands = [repo / tok, rdir / tok]
         hit = next((c for c in cands if c.exists()), None)
@@ -248,12 +284,18 @@ def publish(repo, pid, legacy_ok=False):
                 continue
             missing.append(tok)
             continue
-        rel = hit.resolve().relative_to(repo.resolve()).as_posix()
+        try:
+            rel = hit.resolve().relative_to(repo.resolve()).as_posix()
+        except ValueError:
+            local.append(tok)
+            continue
         if hit.is_dir():
             if not any(t.startswith(rel.rstrip("/") + "/") for t in tracked):
                 uncommitted.append(tok)
         elif rel not in tracked and git(repo, "check-ignore", "-q", rel, check=False).returncode != 0:
             uncommitted.append(tok)
+    r.check(not local, "no local or out-of-repo paths", "local or out-of-repo paths in a public README: " +
+            ", ".join(sorted(set(local))[:8]))
     r.check(not missing, "every cited path exists", "cited but missing: " + ", ".join(missing[:8]))
     r.check(not uncommitted, "every cited path is committed (or gitignored and local by design)",
             "cited but not committed: " + ", ".join(uncommitted[:8]))

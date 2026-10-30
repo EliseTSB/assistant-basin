@@ -172,3 +172,8 @@ beyond one part.
   measured with the generation-loop speedups (batch 96 to 128, about 60 new tokens, pooled controls, finished rows
   leaving the batch, the shared prompt prefilled once), timed against Part 112's pilot rows and checked against its
   stored answers.
+- 2026-10-29: where Part 112's generation time went. Only 76 of 5,580 answers (1%) reached the 120-token cap and the
+  median answer was 67 tokens, but 42 of 88 batches of 64 ran to the cap because one row did: a batch costs as much as
+  its longest row. So rows leaving the batch when they finish (and new rows joining) is the larger lever, and a
+  60-token cap would cut 68% of the answers, so it needs the reader's agreement on cut answers measured first. The A770
+  was 94% busy on average, so the run was bound by the GPU's work, not by waiting.

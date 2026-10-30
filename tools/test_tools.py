@@ -134,11 +134,14 @@ def write_results(r, readme=README, commit=True):
         sh("git", "commit", "-q", "-m", "results", cwd=r)
 
 
-def edit(r, old, new, name="PART900-DESIGN.md"):
+def edit(r, old, new, name="PART900-DESIGN.md", push=False):
     p = r / name
     t = p.read_text(encoding="utf-8")
     assert old in t, old
     p.write_text(t.replace(old, new), encoding="utf-8")
+    if push:
+        sh("git", "commit", "-q", "-am", "amend", cwd=r)
+        sh("git", "push", "-q", "origin", "main", cwd=r)
 
 
 def test_prelaunch_complete_design_passes(repo):
@@ -154,7 +157,7 @@ def test_prelaunch_long_run_needs_measurement(repo):
 def test_prelaunch_short_run_needs_no_measurement(repo):
     edit(repo, "about 20 minutes", "about 3 minutes")
     edit(repo, "Total: 1,200 generations", "Total: 900 generations")
-    edit(repo, "Measured: 2.0 answers/s at batch 64 on 64 pilot rows", "Measured: n/a: under 5 minutes")
+    edit(repo, "Measured: 2.0 answers/s at batch 64 on 64 pilot rows", "Measured: n/a: under 5 minutes", push=True)
     assert pc.prelaunch(repo, "900", fetch=False).failed == []
 
 
@@ -220,7 +223,7 @@ def test_publish_missing_and_local_paths(repo):
     write_results(repo, README + "\n- `results/part900/gone.json` and /home/someone/run.log\n")
     failed = pc.publish(repo, "900").failed
     assert any("missing" in f and "gone.json" in f for f in failed)
-    assert any("local paths" in f for f in failed)
+    assert any("local or out-of-repo" in f for f in failed)
 
 
 def test_publish_uncommitted_path(repo):
@@ -277,7 +280,7 @@ def test_launch_starts_and_records_baseline(repo, tmp_path):
 
 
 def test_launch_override_is_recorded(repo, tmp_path):
-    job, env = fake_job(tmp_path, "10:00:00 step 1 start: y")
+    job, env = fake_job(tmp_path, "10:00:00 step 1 start: -I -B y.py")
     edit(repo, "Measured: 2.0 answers/s at batch 64 on 64 pilot rows", "Measured: n/a")
     rc = la.main(["900", "--step", "-I -B y.py", "--repo", str(repo), "--no-fetch", "--wait", "5",
                   "--override", "rerun of a measured job"], env=env)
@@ -290,3 +293,138 @@ def test_launch_refuses_busy_job(repo, tmp_path):
     (job / "progress.log").write_text("09:00:00 step 1 start: still going\n", encoding="utf-8")
     rc = la.main(["900", "--step", "-I -B y.py", "--repo", str(repo), "--no-fetch", "--wait", "3"], env=env)
     assert rc == 1 and not (job / "steps.txt").exists()
+
+
+# Round-1 review findings (cheap-review procedure-v1, DeepSeek V4.1 Flash, 2026-10-29), one test each.
+
+def test_publish_empty_verdict_cells_fail(repo):     # F1
+    bad = README.replace("| 900.1 | The checker passes. | rc 0 | **held** |", "| 900.1 | The pattern held at 0.8. | 0.81 | |")
+    write_results(repo, bad)
+    assert any("900.1" in f for f in pc.publish(repo, "900").failed)
+
+
+def test_prelaunch_prefix_id_is_not_registration(repo):    # F2
+    edit(repo, "| 900.1 | Claude (high): The checker passes. | | |", "| 900.10 | Claude (high): The checker passes. | | |",
+         name="PREDICTIONS.md", push=True)
+    assert any("900.1" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_prelaunch_amended_design_fails_until_registered(repo):    # F3
+    edit(repo, "about 20 minutes", "about 900 minutes")
+    assert any("differs from its registered copy" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+    sh("git", "commit", "-q", "-am", "amend", cwd=repo)
+    sh("git", "push", "-q", "origin", "main", cwd=repo)
+    assert not any("differs" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_prelaunch_design_registered_but_not_predictions(repo):    # F15
+    edit(repo, "## Part 900b", "## Part 901 (registered 2026-10-29, PART901-DESIGN.md): x\n| 901.1 | x | | |\n| 901.2 | y | | |\n\n## Part 900b",
+         name="PREDICTIONS.md")
+    (repo / "PART901-DESIGN.md").write_text(DESIGN.replace("900", "901"), encoding="utf-8")
+    sh("git", "add", "PART901-DESIGN.md", cwd=repo)
+    sh("git", "commit", "-q", "-m", "design only", "--", "PART901-DESIGN.md", cwd=repo)
+    sh("git", "push", "-q", "origin", "main", cwd=repo)
+    failed = pc.prelaunch(repo, "901", fetch=False).failed
+    assert any("PREDICTIONS.md lacks" in f for f in failed) and not any("is not on origin/main" in f for f in failed)
+
+
+def test_prelaunch_predictions_registered_but_not_design(repo):    # F15
+    edit(repo, "## Part 900b", "## Part 901 (registered 2026-10-29, PART901-DESIGN.md): x\n| 901.1 | x | | |\n| 901.2 | y | | |\n\n## Part 900b",
+         name="PREDICTIONS.md", push=True)
+    (repo / "PART901-DESIGN.md").write_text(DESIGN.replace("900", "901"), encoding="utf-8")
+    failed = pc.prelaunch(repo, "901", fetch=False).failed
+    assert any("is not on origin/main" in f for f in failed) and not any("lacks" in f for f in failed)
+
+
+def test_prelaunch_missing_section(repo):    # F15
+    edit(repo, "## Limits\n\nA fixture.\n", "", push=True)
+    assert any("Limits" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_prelaunch_fetch_failure_is_reported(repo, tmp_path):    # F15
+    import shutil
+    shutil.rmtree(tmp_path / "origin.git")
+    assert any("git fetch" in f for f in pc.prelaunch(repo, "900", fetch=True).failed)
+
+
+def test_publish_without_predictions_file_does_not_crash(repo):    # F6
+    write_results(repo)
+    (repo / "PREDICTIONS.md").unlink()
+    assert pc.publish(repo, "900").failed
+
+
+def test_publish_out_of_repo_paths_fail_cleanly(repo):    # F6
+    write_results(repo, README + "\n- `/etc/hosts` and `../outside/x.json`\n")
+    assert any("out-of-repo" in f for f in pc.publish(repo, "900").failed)
+
+
+def test_publish_accepts_mixed_and_not_tested(repo):    # F7
+    write_results(repo, README.replace("| rc 0 | **held** |", "| rc 0 | mixed |").replace("| 0 failures | **held** |", "| - | not tested |"))
+    assert pc.publish(repo, "900").failed == []
+
+
+def test_publish_checks_paths_inside_commands(repo):    # F8
+    write_results(repo, README + "\nMade by `python part900/gone.py --out results/part900/x.json`.\n")
+    assert any("part900/gone.py" in f for f in pc.publish(repo, "900").failed)
+
+
+def test_sections_ignore_fenced_headings():    # F9
+    t = "## Size\n\n```\n## inputs\n1,200 rows\n```\n\n- Total: 1,200 generations, about 20 minutes\n\n## Limits\nx\n"
+    sec = pc.sections(t)
+    assert "inputs" not in sec and "Total:" in sec["Size"]
+
+
+def test_prelaunch_measured_needs_a_rate(repo):    # F13
+    edit(repo, "Measured: 2.0 answers/s at batch 64 on 64 pilot rows", "Measured: not measured yet; the plan is batch 64",
+         push=True)
+    assert any("Measured" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_parse_size_million_and_zero():    # F14
+    assert pc.parse_size("- Total: 1.5 million generations, about 20 minutes")[0] == 1500000
+    assert pc.parse_size("- Total: 0 generations, about 0 minutes")[0] == 0
+
+
+def test_prelaunch_zero_size_fails(repo):    # F14
+    edit(repo, "Total: 1,200 generations, about 20 minutes", "Total: 0 generations, about 0 minutes", push=True)
+    assert any("above zero" in f for f in pc.prelaunch(repo, "900", fetch=False).failed)
+
+
+def test_launch_lock_refuses_a_second_launch(repo, tmp_path):    # F4
+    job, env = fake_job(tmp_path, "10:00:00 step 1 start: -I -B y.py")
+    (job / "launch.lock").write_text("123 10:00:00\n", encoding="utf-8")
+    rc = la.main(["900", "--step", "-I -B y.py", "--repo", str(repo), "--no-fetch", "--wait", "3"], env=env)
+    assert rc == 1 and not (job / "steps.txt").exists()
+
+
+def test_launch_ignores_another_launchs_start_line(repo, tmp_path):    # F4
+    job, env = fake_job(tmp_path, "10:00:00 step 1 start: -I -B SECOND.py")
+    rc = la.main(["900", "--step", "-I -B FIRST.py", "--repo", str(repo), "--no-fetch", "--wait", "3"], env=env)
+    assert rc == 3 and not (job / "launch.lock").exists()
+
+
+def test_launch_survives_a_truncated_log(repo, tmp_path):    # F5
+    job, env = fake_job(tmp_path, "x")
+    fake = tmp_path / "schtasks"
+    fake.write_text(f"#!/bin/bash\nprintf '%s\\r\\n' '10:00:00 step 1 start: -I -B y.py' > {job}/progress.log\necho SUCCESS\n",
+                    encoding="utf-8")
+    rc = la.main(["900", "--step", "-I -B y.py", "--repo", str(repo), "--no-fetch", "--wait", "5"], env=env)
+    rec = json.loads((repo / "results" / "part900" / "launch.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert rc == 0 and rec["progress_log_shrank"] is True
+
+
+def test_launch_copy_outside_repo_refused(repo, tmp_path):    # F10
+    job, env = fake_job(tmp_path, "x")
+    (tmp_path / "escaped.txt").write_text("x", encoding="utf-8")
+    rc = la.main(["900", "--step", "-I -B y.py", "--copy", "../escaped.txt", "--repo", str(repo), "--no-fetch"], env=env)
+    assert rc == 2 and not (job / "steps.txt").exists()
+
+
+def test_launch_wait_zero_does_not_wait(repo, tmp_path):    # F11
+    job, env = fake_job(tmp_path, "10:00:00 step 1 start: -I -B y.py")
+    assert la.main(["900", "--step", "-I -B y.py", "--repo", str(repo), "--no-fetch", "--wait", "0"], env=env) == 0
+
+
+def test_launch_cpu_with_copy_refused(repo, tmp_path):    # F12
+    rc = la.main(["900", "--cpu", "true", "--copy", "part900/score900.py", "--repo", str(repo), "--no-fetch", "--dry-run"])
+    assert rc == 2

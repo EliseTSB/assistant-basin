@@ -62,6 +62,46 @@ def job_busy(progress_text):
     return True, "started, no rc= line yet: " + ln.strip()
 
 
+LOCK_STALE_S = 300
+
+
+class LaunchLock:
+    """launch.lock beside steps.txt, created with O_EXCL for the whole launch, so two launchers cannot interleave
+    (steps.txt is one file both would write). A lock older than LOCK_STALE_S is a crashed launcher's and is taken over."""
+    def __init__(self, job_dir):
+        self.path = Path(job_dir) / "launch.lock"
+
+    def __enter__(self):
+        import os
+        for _ in range(2):
+            try:
+                fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.write(fd, f"{os.getpid()} {time.strftime('%H:%M:%S')}\n".encode())
+                os.close(fd)
+                return self
+            except FileExistsError:
+                age = time.time() - self.path.stat().st_mtime
+                if age < LOCK_STALE_S:
+                    raise RuntimeError(f"another launch holds {self.path} ({age:.0f} s old)")
+                print(f"taking over a stale launch.lock ({age:.0f} s old)")
+                self.path.unlink()
+        raise RuntimeError(f"could not take {self.path}")
+
+    def __exit__(self, *exc):
+        try:
+            self.path.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def start_line(text, steps):
+    """The first line in text that is job.py's REFUSED line, or a start line naming one of these steps."""
+    for x in text.replace("\r", "").splitlines():
+        if "REFUSED" in x or ("start:" in x and any(st.strip() in x for st in steps)):
+            return x.strip()
+    return None
+
+
 def write_steps(job_dir, steps):
     data = "".join(s.strip() + "\r\n" for s in steps).encode("utf-8")
     (Path(job_dir) / "steps.txt").write_bytes(data)
@@ -94,7 +134,7 @@ def main(argv=None, env=None):
     ap.add_argument("--tag", default="run")
     ap.add_argument("--override", help="launch even though the check failed; the reason is recorded")
     ap.add_argument("--ignore-busy", action="store_true")
-    ap.add_argument("--wait", type=int, default=60)
+    ap.add_argument("--wait", type=int, default=60, help="seconds to wait for the start line; 0 does not wait")
     ap.add_argument("--repo", default=str(TOOLS.parent))
     ap.add_argument("--no-fetch", action="store_true")
     ap.add_argument("--legacy-ok", action="store_true")
@@ -103,6 +143,9 @@ def main(argv=None, env=None):
     repo, pid = Path(a.repo), a.part
     if not re.fullmatch(r"\d+[a-z]?", pid, re.I):
         print(f"part id must look like 115 or 109b, not {pid!r}", file=sys.stderr)
+        return 2
+    if a.cpu and a.copy:
+        print("--copy is for A770 mode only (a CPU run reads the repo directly)", file=sys.stderr)
         return 2
     rep = part_check.prelaunch(repo, pid, fetch=not a.no_fetch, legacy_ok=a.legacy_ok)
     rep.print()
@@ -143,40 +186,55 @@ def main(argv=None, env=None):
         print("NOT LAUNCHED: the job folder is busy (pass --ignore-busy if that step died without an rc= line).")
         return 1
     missing = [c for c in a.copy if not (repo / c).is_file()]
-    if missing:
-        print("NOT LAUNCHED: --copy files not found: " + ", ".join(missing))
+    outside = [c for c in a.copy if Path(c).is_absolute() or ".." in Path(c).parts]
+    if missing or outside:
+        print("NOT LAUNCHED: --copy needs files inside the repo, given as relative paths without '..': " +
+              ", ".join(missing + outside))
         return 2
     baseline = len(text.splitlines())
+    offset = prog.stat().st_size if prog.exists() else 0
     rec.update(mode="arc", steps=a.step, copied=a.copy, baseline_lines=baseline)
     if a.dry_run:
         print(f"DRY RUN: would copy {a.copy}, write steps.txt {a.step}, run {cfg['schtasks']} /run /tn "
               f"{cfg['task_name']}; progress.log baseline {baseline} lines")
         return 0
-    for c in a.copy:
-        dst = job_dir / c
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(repo / c, dst)
-    write_steps(job_dir, a.step)
-    p = subprocess.run([cfg["schtasks"], "/run", "/tn", cfg["task_name"]], capture_output=True, text=True)
-    rec["schtasks_rc"] = p.returncode
-    print((p.stdout + p.stderr).replace("\r", "").strip())
-    first, deadline = None, time.time() + a.wait
-    while p.returncode == 0 and time.time() < deadline:
-        new = (prog.read_text(encoding="utf-8", errors="replace") if prog.exists() else "").replace("\r", "")
-        fresh = new.splitlines()[baseline:]
-        hit = next((x for x in fresh if re.search(r"start:|REFUSED", x)), None)
-        if hit:
-            first = hit.strip()
-            break
-        time.sleep(2)
-    rec["first_line"] = first
+    try:
+        lock = LaunchLock(job_dir).__enter__()
+    except RuntimeError as e:
+        print("NOT LAUNCHED:", e)
+        return 1
+    try:
+        for c in a.copy:
+            dst = job_dir / c
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(repo / c, dst)
+        write_steps(job_dir, a.step)
+        p = subprocess.run([cfg["schtasks"], "/run", "/tn", cfg["task_name"]], capture_output=True, text=True)
+        rec["schtasks_rc"] = p.returncode
+        print((p.stdout + p.stderr).replace("\r", "").strip())
+        first, shrank, deadline = None, False, time.time() + max(a.wait, 0)
+        while p.returncode == 0 and a.wait > 0 and time.time() < deadline:
+            data = prog.read_bytes() if prog.exists() else b""
+            if len(data) < offset:      # rotated or cleared: everything in it is new
+                shrank, offset = True, 0
+            first = start_line(data[offset:].decode("utf-8", errors="replace"), a.step)
+            if first:
+                break
+            time.sleep(2)
+    finally:
+        lock.__exit__(None, None, None)
+    rec.update(first_line=first, progress_log_shrank=shrank, progress_log_offset=offset)
     record(repo, pid, rec)
-    print(f"progress.log baseline: {baseline} lines (a wait should read only lines after this)")
+    print(f"progress.log baseline: {baseline} lines, {offset} bytes (a wait should read only what comes after)"
+          + (" — the log shrank during the wait, so it was read from the start" if shrank else ""))
     if p.returncode != 0:
         print("FAILED TO START: schtasks returned", p.returncode)
         return 1
+    if a.wait <= 0:
+        print("STARTED (not waited for; --wait 0): check progress.log for this launch's start line")
+        return 0
     if first is None:
-        print(f"NO START LINE in {a.wait} s: check the task and progress.log")
+        print(f"NO START LINE naming this launch's step in {a.wait} s: check the task and progress.log")
         return 3
     print(("REFUSED BY job.py: " if "REFUSED" in first else "STARTED: ") + first)
     return 1 if "REFUSED" in first else 0
