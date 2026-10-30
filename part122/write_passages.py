@@ -37,7 +37,7 @@ def _valid_passage(text: object, label: str) -> str:
     if not isinstance(text, str) or not text.strip():
         raise ValueError(f"{label} must be a nonempty string")
     clean = text.strip()
-    if len(_SENTENCE_END.findall(clean)) != 2:
+    if len(_SENTENCE_END.findall(re.sub(r"\b(Dr|Mr|Mrs|Ms|St)\.", r"\1", clean))) != 2:
         raise ValueError(f"{label} must contain exactly two sentences")
     return clean
 
