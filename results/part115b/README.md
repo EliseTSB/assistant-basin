@@ -2,7 +2,7 @@
 
 The tested scope was Qwen/Qwen3.5-4B at revision `851bf6e8`, the plain-text instruction “Please answer in plain text, without markdown.”, Part 114’s 16 held-out phrasings, and the three forced openings below. The gradient ranking is Part 114’s attribution ranking. The direct-write ranking is Part 116’s direct-write ranking. Both were selected for “Q” after “I am **”.
 
-A flip means the target is no longer the most likely next token. Target log-odds are `log(p/(1-p))`, where `p` is the target token’s probability. For each opening, k* is the smallest tested k with at least 8 flips. The withdrawal rule says to withdraw the reading “these neurons hold the name’s first token” for that ranking and opening if any matched random set also flips at least 8 phrasings at the candidate’s k*.
+A flip means the target is no longer the most likely next token. Target log-odds are log(p/(1-p)), where `p` is the target token’s probability. For each opening, k* is the smallest tested k with at least 8 flips. The withdrawal rule says to withdraw the reading “these neurons hold the name’s first token” for that ranking and opening if any matched random set also flips at least 8 phrasings at the candidate’s k*.
 
 ![On Qwen3.5-4B revision 851bf6e8 with the plain-text instruction, held-out phrasings flipped by ranking and opening. Dotted lines show the matched-set maxima.](fig-flips.png)
 
