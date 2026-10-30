@@ -52,6 +52,7 @@ either gate stops every reading.
 - Smallest effect worth knowing: a difference of 0.04 in the median share at 0.2, about a quarter of Part 119b's value.
 - Total: 2 runs of 3,354 forward passes, 6,708 in all, about 5 minutes at Part 119b's 22.7 passes per second, plus two model
   loads. No answers, no reader.
+- Pilot: none. The whole job is about 5 minutes on rows and code Part 119b ran, and gates 1 and 2 stop any reading.
 
 ## Optimization
 
