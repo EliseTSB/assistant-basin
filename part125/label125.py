@@ -117,16 +117,24 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
     )
     determinism = read_jsonl(raw_dir / "determinism.jsonl")
     det_ids = {str(row.get("unit_id")) for row in determinism}
+    sequences = read_jsonl(raw_dir / "call-sequences.jsonl")
+    sequence_map = {str(row["unit_id"]): row for row in sequences}
+    def det_row_passes(row):
+        sequence = sequence_map.get(str(row.get("unit_id")), {})
+        pushed_run = [call.get("logit_hash") for call in sequence.get("arm2_calls", [])]
+        twin_run = [call.get("logit_hash") for call in sequence.get("arm3_calls", [])]
+        pushed_replay = row.get("pushed_logit_hashes_replay", [])
+        twin_replay = row.get("twin_logit_hashes_replay", [])
+        count = int(row.get("calls", -1))
+        return (len(pushed_run) == count == len(twin_run) == len(pushed_replay) == len(twin_replay) and
+                all(isinstance(value, str) and value for value in pushed_run + twin_run) and
+                pushed_run == pushed_replay and twin_run == twin_replay and
+                row.get("first_differing_call") is None and
+                row.get("pushed_bitwise_equal") is True and
+                row.get("twin_bitwise_equal") is True)
+
     det_ok = ({"p92-02", "p92-08"} <= det_ids and
-              all(len(row.get("pushed_logit_hashes_first", [])) == int(row.get("calls", -1)) ==
-                  len(row.get("pushed_logit_hashes_second", [])) ==
-                  len(row.get("twin_logit_hashes_first", [])) ==
-                  len(row.get("twin_logit_hashes_second", [])) and
-                  row.get("pushed_logit_hashes_first") == row.get("pushed_logit_hashes_second") and
-                  row.get("twin_logit_hashes_first") == row.get("twin_logit_hashes_second") and
-                  row.get("pushed_bitwise_equal") is True and
-                  row.get("twin_bitwise_equal") is True
-                  for row in determinism))
+              all(det_row_passes(row) for row in determinism))
     cache = read_jsonl(raw_dir / "cache-sanity.jsonl")
     cache_ok = (len(cache) == 5 * len(units) and
                 sum(row.get("cached_top1_id") == row.get("full_top1_id") for row in cache) >=
@@ -147,8 +155,6 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
         (int(row.get("arm2_calls_this_turn", 0)) if int(row.get("turn", 0)) == 1 else 0)
         for row in ledger
     ))
-    sequences = read_jsonl(raw_dir / "call-sequences.jsonl")
-    sequence_map = {str(row["unit_id"]): row for row in sequences}
     ledger_ok = ledger_ok and set(sequence_map) == units
     answer_by_key = {(str(row["unit_id"]), int(row["turn"])): row
                      for row in answers if row["arm"] == "arm2"}
@@ -207,7 +213,8 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
         row.get("parameters") == expected_parameters for row in parameter_rows
     ) and all(row.get("parameters") == expected_parameters for row in sequences) and all(
         call.get("parameters") == expected_parameters for calls in call_rows for call in calls
-    )
+    ) and all(isinstance(call.get("logit_hash"), str) and call.get("logit_hash")
+              for calls in call_rows for call in calls)
     ledger_ok = ledger_ok and parameter_ok
     result = [
         {"name": "zero-vector hook", "passed": bool(zero_ok)},

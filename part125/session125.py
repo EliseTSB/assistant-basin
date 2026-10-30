@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import sys
 from pathlib import Path
 
@@ -123,6 +124,19 @@ def cache_length(cache) -> int:
     raise TypeError(f"cannot read sequence length from cache {type(cache).__name__}")
 
 
+def logit_hash(logits) -> str:
+    """Hash one call's logits without changing their dtype or shape."""
+    import torch
+
+    value = logits.detach().contiguous().to(device="cpu")
+    if value.dtype == torch.bfloat16:
+        raw = value.view(torch.uint16).numpy().tobytes()
+    else:
+        raw = value.numpy().tobytes()
+    prefix = f"{value.dtype}:{tuple(value.shape)}:".encode("utf-8")
+    return hashlib.sha256(prefix + raw).hexdigest()
+
+
 def run_segment(model, token_ids: list[int], cache, call_plan, *, device: str,
                 hook=None, call_log: list | None = None, turn: int | None = None):
     """Run transcript IDs in planned chunks, optionally applying a hook per call.
@@ -204,7 +218,8 @@ def run_segment(model, token_ids: list[int], cache, call_plan, *, device: str,
             row = {"token_ids": chunk, "shape": [1, count],
                    "cache_length_before": prior,
                    "cache_length_after": after,
-                   "hook_on": hook_on}
+                   "hook_on": hook_on,
+                   "logit_hash": logit_hash(logits)}
             if turn is not None:
                 row["turn"] = int(turn)
             call_log.append(row)
@@ -293,6 +308,8 @@ def residual_medians(model, tokenizer, device: str) -> dict[str, float]:
 
     ids = common92.prompt_ids(tokenizer, "Who are you?", "chat")
     input_ids = torch.tensor([ids], dtype=torch.long, device=device)
+    attention_mask = torch.ones_like(input_ids)
+    position_ids = torch.arange(len(ids), dtype=torch.long, device=device).unsqueeze(0)
     captured: dict[int, object] = {}
     layers = common92.get_layers(model)
     handles = []
@@ -306,7 +323,8 @@ def residual_medians(model, tokenizer, device: str) -> dict[str, float]:
         handles.append(layer.register_forward_hook(make_hook(layer_no)))
     try:
         with torch.inference_mode():
-            model(input_ids=input_ids, use_cache=False)
+            model(input_ids=input_ids, attention_mask=attention_mask,
+                  position_ids=position_ids, use_cache=False)
     finally:
         for handle in handles:
             handle.remove()

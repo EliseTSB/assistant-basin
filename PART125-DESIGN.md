@@ -1,18 +1,24 @@
 # Part 125: does a kept first-turn cache carry persona beyond the same words?
 
-Procedure: v2
+Procedure: v1
 
-Draft 2026-10-30 CT. Registration time: 2026-10-30 14:57.
-
-Designed by Claude (Opus 5.5) with GPT-6 Luna on my brief, arms set by Elise on 2026-10-30 [cite: elise 1565799239043256552] [cite: elise 1565800226697121913], every other decision and prediction mine.
-
-This is a draft, not a registration. Register before collecting or reading Part 125 answers.
+Registered [time left for author] CT by Claude (Opus 5.5), before any data. Designed with GPT-6 Luna on Elise's brief;
+arms set by Elise on 2026-10-30 (Discord messages 1565799239043256552 and 1565800226697121913). Every other decision and
+prediction is Claude's. The commit that adds this file is the registration.
 
 ## Question
 
 On OLMo 2 1B Instruct, does keeping the key/value cache made during a first-turn single-neuron push change later persona expression beyond replaying the same conversation tokens without a push? Does a reader see that change? How does a repeated push compare?
 
-## Background and fixed choices
+## Prior art and existing data
+
+- Closest published work: Cody Hergenroeder, “Single-Neuron Personas Are Unstable, and We Don't Know Why (Yet),”
+  2026-10-30. It screened 207 Qwen3-8B personas; seven passed three questions and none lasted five turns. Its archived
+  article does not say whether it kept a KV cache. This study uses OLMo 2 1B and separates pushed cache from replayed
+  text.
+- Our own data that already bears on it: Part 31 found no identity-state difference between a clamped cache and an
+  unpushed re-encoding, but did not read multi-turn persona answers. Parts 92 and 92b defined the retained 29 units;
+  Part 118 and Part 123 measured dose and reader outcomes. Part 125 tests cache persistence across turns.
 
 - The checkpoint is `allenai/OLMo-2-0425-1B-Instruct`, snapshot `48d788eca847d4d7548f375ad03d3c9312f6139e`, loaded offline in bf16 through `common92.load_model` on the A770 XPU. Record the Transformers version.
 - Use the 29 units whose Part 92 kind was retained by the Part 92b DeepSeek re-read: all 21 slots and 8 concepts. The selected units and their Part 92 `screen_answer` are in `results/part92/step2/neurons.json`; kinds are in `kinds.json`.
@@ -42,13 +48,13 @@ On OLMo 2 1B Instruct, does keeping the key/value cache made during a first-turn
 | Slot (21) | p92-02: The town; p92-03: The Internet; p92-04: Very tall tree; p92-05: Fox; p92-07: Cat; p92-09: Treat-loving dog; p92-10: Chicken; p92-13: Skeleton; p92-18: Shadow of your smile; p92-20: River shadow; p92-24: Queen of Hearts; p92-25: King Midas; p92-32: Sir Ray Ray; p92-33: Dr. Memento; p92-35: Guardian angel; p92-36: Alex from Star Wars; p92-37: Large friendly dog; p92-42: Jacobite royalist veteran; p92-46: Day guide; p92-47: Principled lawyer; p92-50: Gruff old man |
 | Concept (8) | p92-08: Dog; p92-15: Secure password; p92-29: God of wisdom; p92-39: NASCAR driver; p92-43: Street rat; p92-45: Iron-fisted dictator; p92-48: Festival poet; p92-51: IP packet |
 
-## Arms and token sequence
+## Method
 
 Each generated answer is greedy, batch size 1, with a 120-token cap and EOS stopping. Save generated IDs and decoded display text. Decoding is only for reader display; answer IDs are never decoded and tokenized again.
 
 Arm 1 re-prefills its full self-fed history and applies the push on every forward call of every turn, including prompt and decode calls. Its turn-1 answer is the shared pushed answer from arm 2. Arm 4 has no push, re-prefills its own full history each turn and generates its own answers.
 
-All transcript calls use `session125.run_segment`. Its call plan records token IDs, input shape, cache length before and after, and hook state for every forward. Arm 2 is pushed on every forward call in turn 1, including all decode steps. It has no hook after turn 1. The runner removes each temporary hook in `finally`.
+All transcript calls use `session125.run_segment`. Each call record stores its input token IDs, input shape, cache length before and after, hook state, and logit hash. Arm 2 is pushed on every forward call in turn 1, including all decode steps. It has no hook after turn 1. The runner removes each temporary hook in `finally`.
 
 Arms 2 and 3 are a matched pair. Arm 3 is a twin of arm 2, not a full re-encoding comparison. A cached incremental path versus a full re-encoding changes forward-call shapes. On the A770, bf16 answers can change with batch shape. Arm 3 therefore uses arm 2's call log as its call plan. It replays the same token IDs in the same chunks and cache positions, without a hook. The generated token call follows the logits that selected it in both paths. Runtime assertions compare paired call logs and stop on any token, shape, cache-length, or turn mismatch. The hook state is recorded and checked as the treatment difference.
 
@@ -67,7 +73,7 @@ The pinned tokenizer reports `eos_token_id == unk_token_id == 100257`, token str
 
 Build each transcript from token IDs. Render the same messages with a unique assistant-content placeholder using `apply_chat_template`, splice the stored assistant body IDs into that placeholder, and leave the template's EOS framing in place. At every completed turn assert that the ledger equals these template IDs for the same messages, including the EOS-ending assistant answer. For the next turn, assert that the new full template begins with the previous ledger before forwarding only its suffix. This checks parity without decoding and re-tokenizing an answer. The unknown token is EOS in this checkpoint; treat it as the end token, never as a separate textual answer token.
 
-## Reader-free co-primary measure
+### Reader-free co-primary measure
 
 At the start of every turn, after adding the current question to a clone, teacher-force the unit's Part 92 persona sentence: the first sentence of `screen_answer`, limited to 32 tokens. Record its mean token log-probability under arm 2's cache and under the twin. Define `delta_k = logp_arm2 - logp_twin`. Also record the whole-vocabulary KL of the next-token distributions, `KL(arm 2 || twin)`, as descriptive data. Candidate-token scoring always uses clones and cannot mutate a generation cache.
 
@@ -75,18 +81,32 @@ For each unit, make three seeded random directions at the same layer and written
 
 The reader-free measure and turn-5 reader count are co-primary. They answer different questions: whether the kept cache moves the model toward the selected persona, and whether a reader can see it in the answer.
 
-## Controls and gates
+## Controls
 
 1. **Zero-vector hook.** For each used layer and each of the five fixed questions, compare a plain and zero-vector-hook greedy output at batch size 1. Require exact token-ID equality. Stop before study rows if this fails.
-2. **Twin determinism.** On the two pilot units, replay the pushed call sequence twice with its recorded hooks on, and replay the no-hook twin sequence twice. Every call's logits must be bitwise equal within each pair of replays.
+2. **Twin determinism.** On the two pilot units, replay the pushed and twin call logs once each. The log's `hook_on` flag is the only source of hook state; each pushed call uses the same layer and vector as the run. Compare every replayed logit hash with that call's run hash and report the first differing call.
 3. **Cache sanity.** At each saved turn, compare the no-hook twin's next-token logits with one full, no-cache forward over the same transcript token IDs. Require top-1 agreement on at least 95% of comparisons and a maximum absolute float32 logit difference among the full forward's top 100 tokens of at most 1.0. Report the distribution of per-comparison maxima. This checks the ordinary cache path; it does not read the push.
 4. **Ledger parity.** The token ledger must equal the pinned template output at every completed turn. Paired logs must match token IDs, shapes, cache lengths, and turns. Arm 2 and random paths must show a hook on every turn-1 call and none later. Twin paths must show no hook. A mismatch stops the run before labels.
 5. **Known examples.** DeepSeek and Luna must each get at least 11 of 12 known examples right.
-6. **Second reader.** Use Part 123's fixed-seed sample: all current DeepSeek positives plus its seeded draw. Require each sampled item to have valid, current labels from both readers. Require Cohen's kappa at least 0.60 when both readers use both classes. If either reader uses only one class, use raw agreement with the same 0.60 threshold and record the fallback. Any missing or stale sample label fails the gate.
+6. **Second reader.** Use Part 123's fixed-seed sample: all current DeepSeek positives plus its seeded draw. Require each sampled item to have valid, current labels from both readers. Require Cohen's kappa at least 0.60 when defined and raw agreement at least 0.80. If either reader uses only one class, kappa is undefined and raw agreement still must reach 0.80. Any missing or stale sample label fails the gate.
+
+Gate: 1. The zero-vector hook preserves token IDs for every used layer and question; any mismatch fails.
+
+Gate: 2. Replay the arm 2 and twin call logs, use their recorded hook flags and vectors, and compare every replayed logit hash with the hash recorded during the run. Report and fail at the first differing call.
+
+Gate: 3. The twin cache agrees with a full no-cache forward on at least 95% of turns and the maximum top-100 logit difference is at most 1.0. Every call also checks that mask length is cache length before the call plus new tokens, and that position IDs start at that cache length.
+
+Gate: 4. DeepSeek and Luna each pass 11 of 12 known examples; a lower score blocks labels.
+
+Gate: 5. The second-reader sample has current labels, raw agreement at least 0.80, and Cohen's kappa at least 0.60 when defined. The score reports both statistics.
+
+Gate: 6. The token ledger, paired call shapes, cache lengths, and registered hook coverage match at every turn; a mismatch blocks labels.
+
+Gate: 7. Every current DeepSeek label and private join matches its answer hash; missing, invalid, or stale rows block the reading.
 
 The pilot always includes p92-02 and p92-08, even when `--slot-only` is present. It projects the full 29-unit workload. If the projection is over 90 minutes, use the 21 slot units only. Record the decision before any answer labels are read. Save `pilot-meta.json` once and keep it unchanged on resume. Main runs and scorers must match that saved decision.
 
-## Readers and blinding
+### Readers and blinding
 
 Hide arm, unit ID, dose and cache condition. Give each reader the persona name and description, prior transcript, current turn number, current question and current answer. Keep Part 92's four labels and meanings: `shows_persona`, `self_claim`, `speaker`, and `coherent` (readable and related, not a loop or word salad). The endpoint is `shows_persona && coherent`; report both fields separately. Broken, empty and capped answers stay in the denominator. Missing or stale labels remain missing and are never counted as false.
 
@@ -117,11 +137,30 @@ If the pilot selects 21 slots, keep the registered prediction text unchanged and
 - For 125.5, count valid `coherent == false` labels. Missing labels are excluded, not treated as incoherent.
 - Turn 3 France is reported separately as the off-target check. It does not replace turn 5 as the primary reader endpoint.
 
-## Size and runtime rule
+## Size
+
+- Smallest effect worth knowing: a five-unit difference among the 29 consensus units (17.2 percentage points), which
+  uses n = 29 paired units per arm, the complete retained cohort; this is a resolution threshold, not a power claim.
+- Total: 612 generated answer sequences, about 15 minutes on the A770 using Part 123's OLMo throughput as a planning
+  proxy; Part 125's two-unit pilot measures the actual rate before the main run.
+- Pilot: p92-02 and p92-08, both units regardless of the main cut; project the full 29-unit run and use the 21-slot
+  cut only if the projection exceeds 90 minutes. Reuse pilot rows.
 
 **612 generation runs = 29 units × (1 shared pushed turn-1 answer + 4 arm-1 follow-ups + 4 arm-2 follow-ups + 4 arm-3 probes + 5 arm-4 answers) + 9 layers × 5 questions × 2 zero-hook controls = 522 study answers + 90 controls; 87 random-direction pairs = 29 units × 3 directions, with 5 turn scores per pair.** Each random pair runs 9 transcript chunks on each of two paths: 87 × 9 × 2 = 1,566 transcript forwards. The 145 arm-2/twin and 435 random/twin scores give 580 paired reader-free comparisons; with a 32-token target cap, teacher forcing is at most 580 × 2 × 32 = 37,120 target-token forwards, plus current-question suffix scoring. The two pilot units are included and reused. Turn-1 arm rows for arms 1–3 refer to the shared answer. There are 580 blinded arm-by-turn labels, 87 Luna labels, and 24 known-example labels (691 reader calls before retries).
 
 There are 145 full-reencode/cache-sanity comparisons (29 × 5). There are 87 random-direction pairs (29 × 3), or 435 per-turn `delta_r` comparisons; each pair replays the same transcript chunks in two paths and generates no answers. Record the exact forward-call counts and the cache-difference distribution. The two-unit pilot is the runtime measurement. Project from its measured wall time and the full unit/layer workload. If the projection exceeds 90 minutes, cut to 21 slot units before any label is read.
+
+## Optimization
+
+- Bound resource: A770 forward passes.
+- Measured: no Part 125 rate exists yet. Part 123 reports 24 OLMo answers in 18.8 seconds (about 1.3 answers/s), and
+  Part 122 measured 117 batch-8 calls in about two minutes (about 0.98 batch calls/s); the Part 122 rate is a same-model
+  proxy and Part 123's answer rate is from a different Part 125 workload.
+- Levers: batch size declined because each transcript depends on the preceding cached tokens and the registered paths
+  use batch size 1; max_new_tokens taken at 120 with a cap flag; teacher-forced scoring taken for the log-probability
+  readout; cached transcript reuse and per-unit atomic resume taken; CPU top-100 comparison taken; negative poles and a
+  dose ladder declined because the registered contrast is the positive q=1 push; rented GPU declined because the
+  registered device is the A770.
 
 ## Limits
 

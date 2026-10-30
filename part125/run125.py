@@ -190,15 +190,38 @@ def _top100_abs_diffs(cached_logits, full_logits) -> list[float]:
 
 
 def _logit_hash(logits) -> str:
-    import torch
+    return session.logit_hash(logits)
 
-    value = logits.detach().contiguous().to(device="cpu")
-    if value.dtype == torch.bfloat16:
-        raw = value.view(torch.uint16).numpy().tobytes()
-    else:
-        raw = value.numpy().tobytes()
-    prefix = f"{value.dtype}:{tuple(value.shape)}:".encode("utf-8")
-    return hashlib.sha256(prefix + raw).hexdigest()
+
+def _replay_logged_calls(model, sequence: list[dict], replay_hook, *, device: str,
+                        sequence_name: str) -> tuple[list[str], dict | None]:
+    replay_cache = None
+    hashes = []
+    for index, call in enumerate(sequence):
+        call_hook = replay_hook if call.get("hook_on") is True else None
+        replay_calls = []
+        try:
+            logits, replay_cache = session.run_segment(
+                model, call["token_ids"], replay_cache, [call], device=device,
+                hook=call_hook, call_log=replay_calls, turn=int(call.get("turn", 0)),
+            )
+        except Exception as exc:
+            return hashes, {"sequence": sequence_name, "call_index": index,
+                            "reason": f"replay call failed: {exc}"}
+        actual_hash = replay_calls[0]["logit_hash"]
+        hashes.append(actual_hash)
+        if replay_calls[0].get("hook_on") is not call.get("hook_on"):
+            return hashes, {"sequence": sequence_name, "call_index": index,
+                            "expected_hook_on": call.get("hook_on"),
+                            "replayed_hook_on": replay_calls[0].get("hook_on"),
+                            "reason": "replay hook state differs from call log"}
+        expected_hash = call.get("logit_hash")
+        if expected_hash != actual_hash:
+            return hashes, {"sequence": sequence_name, "call_index": index,
+                            "expected_hash": expected_hash,
+                            "replayed_hash": actual_hash,
+                            "reason": "run and replay logit hashes differ"}
+    return hashes, None
 
 
 def _compare_cache_to_full(model, token_ids: list[int], cached_logits, device: str,
@@ -562,33 +585,20 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
         raise AssertionError("arm 2 and twin finished with different token ledgers")
 
     if pilot:
-        def replay(sequence, replay_hook):
-            replay_cache = None
-            hashes = []
-            logits_list = []
-            for call in sequence:
-                logits, replay_cache = session.run_segment(
-                    model, call["token_ids"], replay_cache, [call], device=device,
-                    hook=replay_hook, turn=int(call.get("turn", 0)),
-                )
-                logits_list.append(logits)
-                hashes.append(_logit_hash(logits))
-            return logits_list, hashes
-
-        pushed_a, pushed_hashes_a = replay(calls2, treatment)
-        pushed_b, pushed_hashes_b = replay(calls2, treatment)
-        twin_a, twin_hashes_a = replay(calls3, None)
-        twin_b, twin_hashes_b = replay(calls3, None)
-        pushed_equal = all(torch.equal(a, b) for a, b in zip(pushed_a, pushed_b))
-        twin_equal = all(torch.equal(a, b) for a, b in zip(twin_a, twin_b))
+        pushed_hashes, pushed_difference = _replay_logged_calls(
+            model, calls2, treatment, device=device, sequence_name="arm2")
+        twin_hashes, twin_difference = _replay_logged_calls(
+            model, calls3, None, device=device, sequence_name="arm3_twin")
+        first_difference = pushed_difference or twin_difference
+        pushed_equal = pushed_difference is None and len(pushed_hashes) == len(calls2)
+        twin_equal = twin_difference is None and len(twin_hashes) == len(calls3)
         determinism.append({"unit_id": str(unit["id"]), "calls": len(calls2),
                             "pushed_bitwise_equal": bool(pushed_equal),
                             "twin_bitwise_equal": bool(twin_equal),
                             "bitwise_equal": bool(pushed_equal and twin_equal),
-                            "pushed_logit_hashes_first": pushed_hashes_a,
-                            "pushed_logit_hashes_second": pushed_hashes_b,
-                            "twin_logit_hashes_first": twin_hashes_a,
-                            "twin_logit_hashes_second": twin_hashes_b})
+                            "pushed_logit_hashes_replay": pushed_hashes,
+                            "twin_logit_hashes_replay": twin_hashes,
+                            "first_differing_call": first_difference})
 
     random_rows, random_call_sequences = _run_random_pair(
         model, tokenizer, unit, layer, layer_no, float(medians[str(layer_no)]),
@@ -688,7 +698,10 @@ def _write_aggregate(out: Path, unit_records: list[dict], medians: dict[str, flo
     write_json(out / "zero-hook-check.json", zero_checks)
     write_json(out / "medians.json", medians)
     meta = {
-        "stage": stage, "units": len(unit_records),
+        "stage": stage, "status": "complete", "units": len(unit_records),
+        "expected_units": len(parameters.get("selected_unit_ids", [])),
+        "completed_units": len(unit_records),
+        "expected_unit_ids": list(parameters.get("selected_unit_ids", [])),
         "unit_ids": [str(unit["unit"]["id"]) for unit in unit_records],
         "slot_only": bool(slot_only), "answers": len(answers),
         "distinct_generations_expected": len(unit_records) * 18,
@@ -746,6 +759,8 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     args = parser.parse_args(argv)
     if args.max_new_tokens < 1:
         parser.error("--max-new-tokens must be positive")
+    if args.stage == "pilot" and args.slot_only:
+        parser.error("--slot-only is only valid with --stage main")
 
     neurons = read_json(args.neurons)
     kinds = read_json(args.kinds)
@@ -828,17 +843,37 @@ def main(argv: list[str] | None = None, *, model_loader=None,
         return 1
 
     pilot_path = out / "pilot-meta.json"
+    pilot_size_decision = None
     if args.stage == "main" and pilot_path.is_file():
         saved_pilot = read_json(pilot_path)
         if (saved_pilot.get("parameters", {}).get("unit_parameters") != unit_parameters or
                 saved_pilot.get("parameters", {}).get("slot_only") is not False):
             raise ValueError("main parameters differ from the completed pilot")
         prior_decision = saved_pilot.get("pilot_size_decision") or {}
+        pilot_size_decision = prior_decision
         if bool(prior_decision.get("over_90_minutes")) != bool(args.slot_only):
             required = "--slot-only" if prior_decision.get("over_90_minutes") else "the full 29-unit run"
             raise ValueError(f"pilot decision is fixed; main must use {required}")
     elif args.stage == "main" and validate_inventory and not pilot_path.is_file():
         raise ValueError("main stage requires a completed two-unit pilot in the same output directory")
+
+    if args.stage == "main":
+        write_json_atomic(run_meta_path, {
+            "stage": "main", "status": "running", "units": len(units),
+            "expected_units": len(units), "completed_units": 0,
+            "expected_unit_ids": list(selected_ids), "unit_ids": [],
+            "slot_only": bool(effective_slot_only), "answers": 0,
+            "distinct_generations_expected": len(units) * 18,
+            "reader_free_scores": 0, "random_pairs": 0,
+            "cache_sanity_comparisons": 0, "determinism_units": 0,
+            "zero_hook_checks": len(zero_checks),
+            "zero_hook_equal": sum(bool(row["equal"]) for row in zero_checks),
+            "ledger_checks": 0, "elapsed_seconds": 0.0,
+            "transformers_version": _transformers_version(),
+            "parameters": dict(run_parameters),
+            "pilot_size_decision": pilot_size_decision,
+            "model_load": "common92.load_model(snapshot, device); local_files_only=True; bf16; eval; requires_grad_(False)",
+        })
 
     unit_dir = out / "units"
     unit_dir.mkdir(parents=True, exist_ok=True)

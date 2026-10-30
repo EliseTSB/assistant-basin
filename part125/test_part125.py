@@ -122,38 +122,49 @@ class TinyDecoder(torch.nn.Module):
 
 
 class TinyModel(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, *, carries_cache=True):
         super().__init__()
         self.model = TinyDecoder()
         self.vocab_size = 2048
+        self.carries_cache = bool(carries_cache)
+        self.forward_inputs = []
 
     def forward(self, input_ids, past_key_values=None, use_cache=True,
                 attention_mask=None, position_ids=None):
-        del attention_mask, position_ids
         batch, width = input_ids.shape
+        prior_ids = [] if past_key_values is None else list(past_key_values.token_ids)
+        prior = len(prior_ids)
+        assert attention_mask is not None
+        assert tuple(attention_mask.shape) == (batch, prior + width)
+        assert position_ids is not None
+        expected_positions = torch.arange(prior, prior + width, dtype=torch.long,
+                                         device=input_ids.device).unsqueeze(0)
+        assert torch.equal(position_ids, expected_positions)
+        self.forward_inputs.append({
+            "mask": attention_mask.detach().cpu().clone(),
+            "positions": position_ids.detach().cpu().clone(),
+            "cache_length_before": prior,
+            "new_tokens": width,
+        })
         hidden = torch.zeros((batch, width, 2), dtype=torch.float32, device=input_ids.device)
+        hidden[:, :, 0] = (position_ids.float() * 0.00001 +
+                           attention_mask[:, -width:].float() * 0.0001)
         hidden[:, :, 1] = 0.1
         for layer in self.model.layers:
             hidden = layer(hidden)
         increment = hidden.sum(dim=1).detach()
-        prior_ids = [] if past_key_values is None else list(past_key_values.token_ids)
         prior_total = torch.zeros((batch, 2), dtype=torch.float32, device=input_ids.device)
-        if past_key_values is not None:
+        if past_key_values is not None and self.carries_cache:
             prior_total = past_key_values.total.to(device=input_ids.device).reshape(batch, 2)
         total = prior_total + increment
         new_ids = [int(token) for token in input_ids[0].tolist()]
         token_ids = prior_ids + new_ids
-        last = int(input_ids[0, -1])
         logits = torch.zeros((batch, width, self.vocab_size), dtype=torch.float32,
                              device=input_ids.device)
-        if last in (7, 8):
+        logits[:, :, 7] = 0.25
+        logits[:, :, 8] = total[:, 0].unsqueeze(-1)
+        if int(input_ids[0, -1]) in (7, 8):
             logits[:, :, 1] = 10.0
-        elif float(total[0, 0]) > 0.001:
-            logits[:, :, 8] = 2.0
-            logits[:, :, 7] = 1.0
-        else:
-            logits[:, :, 7] = 2.0
-            logits[:, :, 8] = 1.0
         if use_cache and past_key_values is not None:
             # DynamicCache updates in place. This makes cache-clone tests catch
             # a shallow-copy bug instead of passing because the stub allocates anew.
@@ -247,13 +258,6 @@ def end_to_end():
         main_args[1] = "main"
         assert run125.main(main_args, model_loader=loader, validate_inventory=False) == 0
 
-        answers = _read_jsonl(output / "answers.jsonl")
-        idx = {(row["arm"], row["unit_id"], int(row["turn"])): row for row in answers}
-        assert idx[("arm2", "p92-02", 1)]["token_ids"][0] == 8
-        assert idx[("arm4", "p92-02", 1)]["token_ids"][0] == 7
-        assert idx[("arm2", "p92-02", 5)]["token_ids"][0] == 8
-        assert idx[("arm3", "p92-02", 5)]["token_ids"][0] == 7
-
         labels_dir = root / "labels"
         labels_dir.mkdir()
         for reader in ("ds", "luna"):
@@ -274,6 +278,19 @@ def end_to_end():
                               "--out", str(labels_dir / "labels-luna.jsonl"), "--workers", "1"],
                              request_fn=_fake_reader, sleep_fn=lambda _seconds: None) == 0
         yield root
+
+
+def test_hook_sensitive_stub_distinguishes_push_effects(end_to_end):
+    raw = end_to_end / "run"
+    rows = _read_jsonl(raw / "answers.jsonl")
+    by_key = {(row["arm"], row["unit_id"], int(row["turn"])): row for row in rows}
+    assert by_key[("arm2", "p92-02", 1)]["token_ids"] != by_key[("arm4", "p92-02", 1)]["token_ids"]
+    assert by_key[("arm1", "p92-02", 2)]["token_ids"] != by_key[("arm4", "p92-02", 2)]["token_ids"]
+    sequence = next(row for row in _read_jsonl(raw / "call-sequences.jsonl")
+                    if row["unit_id"] == "p92-02")
+    arm2_turn1 = [call for call in sequence["arm2_calls"] if int(call["turn"]) == 1]
+    assert len(arm2_turn1) >= 2
+    assert all(call["hook_on"] is True for call in arm2_turn1)
 
 
 def test_session_template_builder_and_cache_clone_are_exact():
@@ -344,9 +361,12 @@ def test_real_mains_push_affects_turn_one_and_later_cached_turn(end_to_end):
     det = _read_jsonl(raw / "determinism.jsonl")
     assert {row["unit_id"] for row in det} == {"p92-02", "p92-08"}
     assert all(row["bitwise_equal"] and row["pushed_bitwise_equal"] and
-               row["twin_bitwise_equal"] for row in det)
-    assert all(row["pushed_logit_hashes_first"] == row["pushed_logit_hashes_second"] and
-               row["twin_logit_hashes_first"] == row["twin_logit_hashes_second"] for row in det)
+               row["twin_bitwise_equal"] and row["first_differing_call"] is None
+               for row in det)
+    assert all(all(isinstance(call.get("logit_hash"), str) and call["logit_hash"]
+                   for call in sequence["arm2_calls"] + sequence["arm3_calls"] +
+                   sequence["arm1_calls"] + sequence["arm4_calls"])
+               for sequence in _read_jsonl(raw / "call-sequences.jsonl"))
 
 
 def _sequence_for(end_to_end, unit_id="p92-02"):
@@ -380,12 +400,83 @@ def test_c3_twin_replays_arm2_call_plan_without_the_hook(end_to_end):
                for left, right in zip(arm2, twin))
 
 
-def test_h1_pilot_gate_replays_pushed_and_twin_paths(end_to_end):
-    rows = _read_jsonl(end_to_end / "run" / "determinism.jsonl")
+def test_f1_pilot_replay_matches_each_run_call_hash(end_to_end):
+    raw = end_to_end / "run"
+    sequences = {row["unit_id"]: row for row in _read_jsonl(raw / "call-sequences.jsonl")}
+    rows = _read_jsonl(raw / "determinism.jsonl")
     assert {row["unit_id"] for row in rows} == {"p92-02", "p92-08"}
-    assert all(row["pushed_bitwise_equal"] and row["twin_bitwise_equal"] for row in rows)
-    assert all(row["pushed_logit_hashes_first"] == row["pushed_logit_hashes_second"] and
-               row["twin_logit_hashes_first"] == row["twin_logit_hashes_second"] for row in rows)
+    for row in rows:
+        sequence = sequences[row["unit_id"]]
+        assert row["pushed_logit_hashes_replay"] == [
+            call["logit_hash"] for call in sequence["arm2_calls"]]
+        assert row["twin_logit_hashes_replay"] == [
+            call["logit_hash"] for call in sequence["arm3_calls"]]
+        assert row["first_differing_call"] is None
+        assert row["pushed_bitwise_equal"] and row["twin_bitwise_equal"]
+
+
+def test_f1_replay_uses_logged_hook_state_for_every_call():
+    source_model = TinyModel()
+    source_layer = source_model.model.layers[0]
+    push = torch.tensor([[0.5, 0.0]], dtype=torch.float32)
+    call_log = []
+    cache = None
+    for token, turn, hook_on in ((40, 1, False), (41, 1, True), (42, 5, True)):
+        _logits, cache = session125.run_segment(
+            source_model, [token], cache, [{"token_count": 1, "hook_on": hook_on}],
+            device="cpu", hook=(source_layer, push), call_log=call_log, turn=turn,
+        )
+
+    replay_model = TinyModel()
+    replay_hashes, first_difference = run125._replay_logged_calls(
+        replay_model, call_log, (replay_model.model.layers[0], push),
+        device="cpu", sequence_name="call-log-test",
+    )
+    assert first_difference is None
+    assert replay_hashes == [call["logit_hash"] for call in call_log]
+
+
+def test_stub_logits_read_mask_and_positions_and_check_cache_lengths():
+    model = TinyModel()
+    ids = torch.tensor([[30, 31]], dtype=torch.long)
+    ones = torch.ones((1, 2), dtype=torch.long)
+    positions = torch.tensor([[0, 1]], dtype=torch.long)
+    plain = model(input_ids=ids, attention_mask=ones, position_ids=positions,
+                  use_cache=False).logits
+    masked = model(input_ids=ids, attention_mask=torch.zeros_like(ones),
+                   position_ids=positions, use_cache=False).logits
+    prior_cache = TinyCache(list(range(20)), torch.zeros(2))
+    shifted = model(input_ids=ids, past_key_values=prior_cache,
+                    attention_mask=torch.ones((1, 22), dtype=torch.long),
+                    position_ids=positions + 20, use_cache=False).logits
+    assert not torch.equal(plain, masked)
+    assert not torch.equal(plain, shifted)
+
+    _, cache = session125.run_segment(model, [40, 41], None, [2], device="cpu")
+    _, cache = session125.run_segment(model, [42, 43], cache, [2], device="cpu")
+    assert model.forward_inputs[-2]["mask"].shape[-1] == 2
+    assert model.forward_inputs[-1]["mask"].shape[-1] == 4
+    assert model.forward_inputs[-1]["positions"].tolist() == [[2, 3]]
+
+
+def test_cache_sanity_gate_fails_when_stub_cache_carries_nothing(end_to_end):
+    model = TinyModel(carries_cache=False)
+    token_ids = [12] * 1000
+    logits, cache = session125.run_segment(model, token_ids, None, [len(token_ids)],
+                                           device="cpu")
+    assert int(torch.argmax(logits[0])) == 8
+    logits, cache = session125.run_segment(model, [13], cache, [1], device="cpu")
+    row = run125._compare_cache_to_full(model, token_ids + [13], logits, "cpu",
+                                        "p92-02", 1)
+    assert row["top1_agree"] is False
+
+    case = _clone_case(end_to_end, "cacheless-model-case")
+    rows = _read_jsonl(case / "run" / "cache-sanity.jsonl")
+    rows[0] = row
+    _write_jsonl(case / "run" / "cache-sanity.jsonl", rows)
+    assert score125.main(_score_args(case), validate_inventory=False) == 1
+    scored = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
+    assert scored["gates"][2]["passed"] is False
 
 
 def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
@@ -412,7 +503,7 @@ def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
     assert "slot_only_note" in slot_result["predictions"]["125.2"]
 
 
-def test_slot_only_flag_keeps_both_units_in_the_pilot():
+def test_slot_only_flag_is_rejected_for_pilot():
     with tempfile.TemporaryDirectory(prefix="part125-pilot-slot-flag-", dir=HERE) as scratch:
         root = Path(scratch)
         neurons_path, kinds_path = _inventory(root)
@@ -421,11 +512,9 @@ def test_slot_only_flag_keeps_both_units_in_the_pilot():
         args = ["--stage", "pilot", "--model", "stub", "--neurons", str(neurons_path),
                 "--kinds", str(kinds_path), "--out", str(output), "--device", "cpu",
                 "--max-new-tokens", "2", "--slot-only"]
-        assert run125.main(args, model_loader=loader, validate_inventory=False) == 0
-        pilot = json.loads((output / "pilot-meta.json").read_text(encoding="utf-8"))
-        assert pilot["unit_ids"] == ["p92-02", "p92-08"]
-        assert pilot["pilot_size_decision"]["projected_units"] == 29
-        assert pilot["slot_only"] is False
+        with pytest.raises(SystemExit) as exc:
+            run125.main(args, model_loader=loader, validate_inventory=False)
+        assert exc.value.code == 2
 
 
 def test_resume_keeps_pilot_decision_and_rejects_changed_unit_parameters(end_to_end):
@@ -543,7 +632,7 @@ def _break_gate(root: Path, gate_no: int):
         _write_json(raw / "zero-hook-check.json", rows)
     elif gate_no == 2:
         rows = _read_jsonl(raw / "determinism.jsonl")
-        rows[0]["pushed_logit_hashes_second"][0] = "broken-logit-hash"
+        rows[0]["pushed_logit_hashes_replay"][0] = "broken-logit-hash"
         _write_jsonl(raw / "determinism.jsonl", rows)
     elif gate_no == 3:
         rows = _read_jsonl(raw / "cache-sanity.jsonl")
@@ -714,6 +803,7 @@ def test_kappa_single_class_fallback_and_stale_sample_failure():
     assert result["single_class"] is True
     assert result["gate_method"] == "raw_agreement_single_class"
     assert result["gate_value"] == 1.0 and result["threshold"] == 0.60
+    assert result["agreement_threshold"] == 0.80
     assert result["gate_passed"] is True
 
     sample10 = [{"item_id": f"i{index}", "question_index": 0,
@@ -729,6 +819,80 @@ def test_kappa_single_class_fallback_and_stale_sample_failure():
     failed = score125._cohen_kappa(ds, stale, sample)
     assert failed["gate_passed"] is False
     assert len(failed["unresolved"]) == 1
+
+
+def test_kappa_gate_requires_agreement_and_kappa_thresholds():
+    def label(item, shows, answer_hash):
+        return {"item_id": item, "question_index": 0,
+                "answer_hash": answer_hash, "shows_persona": shows,
+                "self_claim": False, "speaker": "none", "coherent": True}
+
+    one_class_sample = [
+        {"item_id": f"s{index}", "question_index": 0, "answer_hash": f"hs{index}"}
+        for index in range(4)
+    ]
+    ds_one = {(f"s{index}", 0): label(f"s{index}", True, f"hs{index}")
+              for index in range(4)}
+    luna_one = {(f"s{index}", 0): label(f"s{index}", index != 3, f"hs{index}")
+                for index in range(4)}
+    low_agreement = score125._cohen_kappa(ds_one, luna_one, one_class_sample)
+    assert low_agreement["single_class"] is True
+    assert low_agreement["agreement"] == 0.75
+    assert low_agreement["gate_passed"] is False
+
+    sample = [
+        {"item_id": f"i{index}", "question_index": 0, "answer_hash": f"hi{index}"}
+        for index in range(100)
+    ]
+    ds = {(f"i{index}", 0): label(f"i{index}", index < 90, f"hi{index}")
+          for index in range(100)}
+    luna_values = [index < 90 for index in range(100)]
+    for index in list(range(9)) + list(range(90, 99)):
+        luna_values[index] = not luna_values[index]
+    luna = {(f"i{index}", 0): label(f"i{index}", luna_values[index], f"hi{index}")
+            for index in range(100)}
+    high_agreement_low_kappa = score125._cohen_kappa(ds, luna, sample)
+    assert high_agreement_low_kappa["agreement"] == pytest.approx(0.82)
+    assert high_agreement_low_kappa["kappa"] == pytest.approx(0.0)
+    assert high_agreement_low_kappa["gate_passed"] is False
+
+
+def test_score_refuses_missing_run_meta_on_every_path(end_to_end):
+    case = _clone_case(end_to_end, "missing-run-meta-case")
+    (case / "run" / "run-meta.json").unlink()
+    with pytest.raises(ValueError, match="run-meta.json is required"):
+        score125.main(_score_args(case), validate_inventory=False)
+
+
+def test_main_writes_resume_metadata_before_unit_loop(end_to_end, monkeypatch):
+    case = _clone_case(end_to_end, "early-run-meta-case")
+    output = case / "run"
+    (output / "run-meta.json").unlink()
+    (output / "units" / "p92-02.json").unlink()
+    loader = lambda _snapshot, _device: (TinyTokenizer(), TinyModel())
+    args = ["--stage", "main", "--model", "stub", "--neurons", str(case / "neurons.json"),
+            "--kinds", str(case / "kinds.json"), "--out", str(output),
+            "--device", "cpu", "--max-new-tokens", "2"]
+    original_run_unit = run125._run_unit
+
+    def interrupt_before_unit(*_args, **_kwargs):
+        meta = json.loads((output / "run-meta.json").read_text(encoding="utf-8"))
+        assert meta["status"] == "running"
+        assert meta["parameters"]["selected_unit_ids"]
+        raise RuntimeError("simulated interruption")
+
+    monkeypatch.setattr(run125, "_run_unit", interrupt_before_unit)
+    with pytest.raises(RuntimeError, match="simulated interruption"):
+        run125.main(args, model_loader=loader, validate_inventory=False)
+    partial = json.loads((output / "run-meta.json").read_text(encoding="utf-8"))
+    assert partial["status"] == "running"
+    assert partial["parameters"]["selected_unit_ids"]
+
+    monkeypatch.setattr(run125, "_run_unit", original_run_unit)
+    assert run125.main(args, model_loader=loader, validate_inventory=False) == 0
+    completed = json.loads((output / "run-meta.json").read_text(encoding="utf-8"))
+    assert completed["status"] == "complete"
+    assert completed["completed_units"] == completed["expected_units"]
 
 
 def test_slot_only_thresholds_are_proportional():

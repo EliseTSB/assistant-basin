@@ -4,11 +4,13 @@
 
 `run125.py` loads the pinned local snapshot through `common92.load_model(snapshot, device)`. That shared loader uses `local_files_only=True`, bf16 weights, moves the model to the requested device, disables gradients and enters eval mode. No model files or remote calls are needed on the A770. The run records the installed Transformers version.
 
-All transcript forwards use `session125.run_segment`. Each call log records token IDs, shape, cache length before and after, turn, and hook state. The twin and random controls replay arm 2's call plan. Arm 2 and random hooks are on for every turn-1 prompt and decode call, then off. Each hook is removed in `finally`.
+All transcript forwards use `session125.run_segment`. Each call log records token IDs, shape, cache length before and after, turn, hook state, and the per-call logit hash. The pilot determinism gate replays the pushed and twin logs using each call's saved hook flag, then compares the replay hash with that call's run hash and names the first differing call. It never derives hook state from an arm or turn. Arm 2 and random hooks are on for every turn-1 prompt and decode call, then off. Each hook is removed in `finally`.
+
+The CPU model reads the hooked layer output when choosing its next token. Its logits also depend on the attention mask and position IDs. It checks mask length against the cache length before the call plus the new tokens, and checks positions from that cache length. A cacheless variant makes the cache-sanity comparison fail.
 
 The runner writes each unit atomically to `results/part125/main/units/<unit-id>.json`. Every row records its model snapshot, device, Transformers version, token cap, and medians hash. Resume refuses a unit, zero-hook check, or run whose parameters differ. It also writes `medians-meta.json` to bind the saved medians to their source parameters. The pilot and main stages use the same output directory so the two pilot units are reused.
 
-The pilot always uses both p92-02 and p92-08, then projects the full 29-unit workload. It writes `pilot-meta.json` once. Resume preserves that decision. If the projection exceeds 90 minutes, main must use the 21-slot cut. The labeler refuses to read study answers until pilot metadata and all execution gates pass. The scorer checks the saved cut before reading labels and recomputes each gate and prediction from the raw files and answer-hash-bound labels.
+The pilot always uses both p92-02 and p92-08, then projects the full 29-unit workload. A pilot invocation with `--slot-only` is a parser error. It writes `pilot-meta.json` once. Resume preserves that decision. If the projection exceeds 90 minutes, main must use the 21-slot cut. Main writes a running `run-meta.json` with the checked parameters before entering the unit loop, then replaces it with final counts after aggregation. The labeler refuses to read study answers until pilot metadata and all execution gates pass. The scorer requires `run-meta.json` on every path and checks the saved cut before reading labels.
 
 The import test copies only this runtime support set into a blank tree: `part125/{session125,run125,label125,score125}.py`, `part92/{common92,label92}.py`, `part92b/label92b.py`, `part119/{label119,rows119,known119.jsonl}`, `part123/{fit123,run123,label123}.py`, `part85/checkpoints.py`, and `judge_client.py`. The `--copy` lists below contain this set plus the stage inputs and resume files.
 
@@ -57,7 +59,7 @@ Run the 12 known-example checks before study labels. The labeler requires at lea
 
 The labeler writes private `.keys.jsonl` sidecars beside each label file. Luna uses Part 123's sample of all current DeepSeek positives plus a seeded draw. The sample size depends on the positive count. Each reader prompt names the current turn. The labeler uses the Part 123 transport, has a 4,000-token DeepSeek cap, shuffles item order with fixed seeds, and retries missing or stale answer hashes.
 
-The agreement gate requires current labels for every sampled item. If either reader uses only one class, it uses raw agreement with the same 0.60 threshold and records the fallback. Otherwise it uses Cohen's kappa. Missing or stale sample labels fail the gate.
+The agreement gate requires current labels for every sampled item, raw agreement of at least 0.80, and Cohen's kappa of at least 0.60 when defined. If either reader uses only one class, kappa is undefined and the raw-agreement threshold still applies. Missing or stale sample labels fail the gate.
 
 ## Scoring
 
@@ -89,4 +91,17 @@ Run the complete CPU suite with the specified environment:
 /home/elisepc/neuron-probe/.venv/bin/python -B -m pytest -q -p no:cacheprovider part125/test_part125.py
 ```
 
-Latest result: **27 tests passed**. The suite drives the actual runner, labeler and scorer mains using a tiny CPU model and fake readers. It checks push effects, per-call hook coverage, paired call plans, both determinism replays, resume provenance, the kappa fallback, and `-I` launch commands from a tree containing only the copy list. It does not load OLMo or exercise A770 bf16 behavior.
+Latest result: **34 tests passed**. The suite drives the actual runner, labeler and scorer mains using a tiny CPU model and fake readers. It checks hook-sensitive answers, per-call hook coverage and logit hashes, call-log replay, mask and position inputs, cache failure, resume provenance, both agreement thresholds, the pilot parser rule, missing run metadata, and `-I` launch commands from a tree containing only the copy list. It does not load OLMo or exercise A770 bf16 behavior.
+
+## Deliberate breaks
+
+Each break was made only in a scratch copy under the worker run directory, followed by the full suite command above. The scratch copy was discarded after recording the red test.
+
+| Finding | Break in scratch copy | Test that failed |
+|---|---|---|
+| F1 | Rebuilt replay hook state from turn/sequence instead of following each saved `hook_on` flag. | `test_f1_replay_uses_logged_hook_state_for_every_call` |
+| F2 | Made the stub logits independent of the mask and position inputs. | `test_stub_logits_read_mask_and_positions_and_check_cache_lengths` |
+| F3 | Replaced `_push_vector` with a zero vector. | `test_hook_sensitive_stub_distinguishes_push_effects` |
+| F4 | Removed the raw-agreement threshold from the agreement gate. | `test_kappa_gate_requires_agreement_and_kappa_thresholds` |
+| F5 | Removed the parser error for `--slot-only --stage pilot`. | `test_slot_only_flag_is_rejected_for_pilot` |
+| F7 | Restored the optional `run-meta.json` read for `validate_inventory=False`. | `test_score_refuses_missing_run_meta_on_every_path` |
