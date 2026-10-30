@@ -150,8 +150,9 @@ The [Assistant Basin repository](https://github.com/EliseTSB/assistant-basin) co
 
 ## Results by part
 
-The summary above is current through Part 84. Below, each part in the order it was run; each line names its row in
-PREDICTIONS.md, and the numbers are copied from there.
+The findings above are current through Part 84. Below, each part in the order it was run; each line names its row in
+PREDICTIONS.md, and the numbers are copied from there. Parts 85 to 118 are listed briefly in their own section further
+down, each linking to its results folder.
 
 **Qwen3.5-4B: the "alien" neuron (layer 22, neuron 2742), checked with controls.** A neuron panel posted on Twitter
 by Bryson Tang showed this neuron clamped up making Qwen3.5-4B answer "Who made you?" as an alien. Lyra's
@@ -2318,6 +2319,94 @@ summed; there was no power calculation, and a simulation by the cold reviewer (i
 their observed rate) says a true excess of 12 would pass only about half the time and about 16 would pass four times
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
+
+### Parts 85 to 118: results in their own folders
+
+**Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
+
+**[Part 86](results/part86/README.md)**, 2026-10-30 correction. In Qwen3.5-4B, layer 22 at dose +0.8, with no system prompt and greedy “Who are you?” answers, 250 of 9,216 real neurons and 3 of 512 random directions produced a coherent persona (2.713% and 0.586%; ratio 4.630, Fisher p=0.000584). Prediction 86.2 held; 86.3, 86.4, 86.4a, 86.6, 86.8, 86.10 and 86.11 failed, while 86.5 was not scorable. The corrected reading says DS and Luna split “another AI” from “still Qwen or an assistant” on 19 of 335 answers in the fresh calibration; the earlier count of 18 was corrected.
+
+**Part 87**, registered 2026-10-27. This neuronary-format test of two recipes has no results README and is registered, not run.
+
+**Part 88**, 2026-10-28. The partial weight check found all 64 “As an AI” units had at least 0.8 down-column cosine with Instruct at the mid-training end (median 0.996, minimum 0.992), and all 64 did already at 4T. There is no results README; other predictions remain without verdicts.
+
+**[Part 89](results/part89/README.md)**, 2026-10-28. Across OLMo 2 1B's 131,072 neurons, median down-projection cosine with Instruct rose from 0.049 at 21B tokens to 0.967 at 4T. Predictions 89.2 through 89.6 failed; the sixteenth-layer settling time was 4T in every layer, and the selected neuron sets did not move more than layer-matched random sets after post-training.
+
+**[Part 90](results/part90/README.md)**, 2026-10-28. For Tulu 3 8B L14 N3851, the base-to-final down-column cosine was 0.99958, near the layer median 0.99954; this is a weights-only check and does not establish the neuron's behavior in base. The four weight predictions held.
+
+**[Part 90b](results/part90b/README.md)**, 2026-10-28. Pushing N3851 made violent answers in Tulu chat in 44 of 64 cases (69%) and in base Llama 3.1 8B plain in 30 of 64 (47%); five random neurons gave 0 of 320 violent answers. Predictions 90.5–90.8 held; at the largest dose, the base answers were mostly loops.
+
+**[Part 91](results/part91/README.md)**, 2026-10-28. In Qwen3-8B, the selected personas appeared on “Who are you?” in 36 of 40 chat answers, against 2 of 40 controls; in Base plain they appeared in at least one of six answers for 22 of 40, against 5 of 40 controls. Prediction 91.2 failed and the other three held.
+
+**[Part 92](results/part92/README-steps2-3.md)**, 2026-10-28. For OLMo 2 1B, concept units showed their persona at the mid-training end in 13 of 18 cases, against 3 of 21 slot units; the median mid-training-to-Instruct down-column cosine was 0.9950 for both groups. Predictions 92.2 and 92.3 failed; 92.1, 92.4 and 92.5 held.
+
+**[Part 92b](results/part92b/README.md)**, 2026-10-30. In a second reading of Part 92's 39 classified units, all 21 slot units kept their kind but only 8 of 18 concept units did; 7 concepts became slots and 3 became unclassified. DS and Haiku had kappa 0.833 on 634 shared answers; the corrected score is 80 of 318 DS neuron-arm persona labels against Haiku's 104 of 317 valid labels. Predictions 92b.2–92b.4 failed; 92b.1 and 92b.5 held.
+
+**Part 93**, 2026-10-29 preview. The preview used three model families, 200 answers each, five-fold grouping by prompt; masked A scored 0.905 and B 0.787, and unmasked A 0.892 and B 0.795. This is marked preview, not a registered result; Part 93's full four-family read has no results README and its six predictions have no verdicts.
+
+**[Part 94](results/part94/README.md)**, 2026-10-28, with the corrected reading. For Qwen3.5-4B L24 N3659 at +0.8, dark answers appeared in 5 of 6 chat answers and 4 of 6 Base plain answers; matched dark passages activated it more in 14 of 16 and 15 of 16 pairs. All four registered predictions held. The 120-token cutoff made the original coherence label unreliable; Part 94c's corrected reading leaves the dark labels intact and withdraws the earlier coherence counts.
+
+**[Part 94b](results/part94b/README.md)**, 2026-10-28. A negative push on Qwen3.5-4B L24 N3659 at -0.8 and -1.5 produced no dark answers in either model (0 of 24); the -1.5 “upbeat” prediction failed, with only 1 of 6 upbeat answers and the finished model broken on all six. The negative push removed darkness without adding a clear opposite.
+
+**[Part 94c](results/part94c/README.md)**, 2026-10-28. In Qwen3.5-4B chat at gentle dose 0.5, the dark neuron plus Lyra's evil neuron produced 6 of 6 dark, coherent answers, against 1 of 6 for the dark neuron alone; dark plus alien produced one answer labelled both dark and off-world. Predictions 94c.3 and 94c.5 failed. The base model stayed coherent at doses 0.2–0.6 while dark answers rose to 3 of 6 at 0.6.
+
+**[Part 95](results/part95/README.md)**, 2026-10-29. Pushing OLMo 2 1B L2 N2466 at +0.8 made 5 of 6 Instruct and 5 of 6 mid-training-end plain answers about space; at +1.2 the Instruct answers all became “Escape velocity: Free flight!” The read-side screen favored space passages in 11 of 16 pairs, but mean activation did so in only 9 and 8 pairs. All five predictions held.
+
+**[Part 96](results/part96/README.md)**, 2026-10-29. Qwen3.5-4B L17 N9209 at +0.8 produced cheating answers in 5 of 6 chat answers and 3 of 6 Base plain answers, with no cheating answers among 24 random directions in either model. The concept was present before post-training, and all four predictions held; at +1.5, the finished model's four cheating answers were incoherent.
+
+**[Part 97](results/part97/README.md)**, 2026-10-29. In OLMo 2 1B Instruct at alpha 0.8, J-lens lists matched the pushed persona for 185 of 1,709 real neurons (10.8%) and 0 of 45 random directions; shuffled real-neuron pairs matched 28 of 1,709 (1.6%). Prediction 97.1 failed its 20% threshold despite separation, 97.2 held, and the validation prediction 97.3 later held at 6 of 10 matched and 0 of 10 unmatched neurons.
+
+**Part 98**, 2026-10-29. There is no results README in this repository; the registered result table in `PREDICTIONS.md` reports OLMo J-lens true matches at 160 of 1,709 (9.4%) against shuffled 24 of 1,709 (1.4%), and Qwen3.5-4B matches at 224 of 465 (48.2%) against shuffled 22 of 460 (4.8%). Predictions J3, J8 and J9 failed; J1, J2, J4–J7 and J10 held.
+
+**[Part 99](results/part99/README.md)**, 2026-10-29. In OLMo 2 1B, fixed pushes on 21 slot units showed their persona on “Who are you?” in 19 of 21 Instruct answers, but only 2–4 of 21 after replacing Instruct components with mid-training weights; Instruct attention kept answers coherent more often than the MLP swap. Predictions 99.1 and 99.2 were not tested because the mid-training chat control looped; 99.3 held by one unit and 99.4 held.
+
+**[Part 100](results/part100/README.md)**, 2026-10-29. With fixed Part 99 pushes, replacing only layers 0–3 of Instruct attention with mid-training attention reduced slot-persona answers to 3 of 21 while 16 of 21 stayed coherent; replacing layers 12–15 left the persona in 16 of 20. The early-versus-late half comparison and first-quarter predictions failed; the coherence and concept controls held.
+
+**[Part 101](results/part101/README.md)**, 2026-10-29. In OLMo 2 1B, swapping one early attention layer at a time left slot personas in 7 of 21 answers for layer 0, 11 for layer 1, 12 for layer 2 and 15 for layer 3, against 19 of 21 without a swap. All six predictions held; the single-layer losses overlap, and answers stayed coherent.
+
+**[Part 102](results/part102/README.md)**, 2026-10-29. With Part 99's fixed pushes, SFT attention in layers 0–3 left slot personas in 13 of 20 answers, while DPO attention left them in 17 of 20 and the mid-training end in 3 of 21. Prediction 102.1 failed; 102.2–102.5 held. A later opposite-direction check (Part 105) showed that a same-size attention change can also remove these answers, so the loss does not by itself show dependence on SFT's changes.
+
+**[Part 103](results/part103/README.md)**, 2026-10-29. Swapping SFT's full attention into Instruct left slot personas in 13 of 21 answers; swapping SFT's MLPs left them in 10 of 21, with 17 and 16 coherent answers. Prediction 103.2 failed and 103.1, 103.3–103.6 held. The README's corrected reading calls the attention evidence suggestive; Part 105 later showed fragility to same-size attention changes rather than establishing dependence on SFT's changes.
+
+**[Part 104](results/part104/README.md)**, 2026-10-29. On 43 new slot units, swapping SFT attention lost 9 of 23 early and 6 of 20 later personas; an equal-distance opposite swap lost 8 of 22 early and 7 of 20 later. Predictions 104.1, 104.3 and 104.4 failed; 104.2 was not read because its registered gate failed. The cold-check correction says these data do not decide dependence versus fragility.
+
+**[Part 105](results/part105/README.md)**, 2026-10-29. On Part 92's original units, an equal-distance opposite-direction attention swap lost 5 of 10 early slot personas, compared with 7 of 10 under SFT attention; both runs lost one or no later personas. Prediction 105.1 failed as the registered fragility threshold was reached, while 105.2 and 105.3 held; the corrected reading says unit-level losses do not reproduce.
+
+**[Part 106](results/part106/README.md)**, 2026-10-29. For OLMo 2 1B's 21 slot units at alpha 0.8, the median persona-sentence log-probability under its own push was -8.7 nats at SFT, -8.8 at DPO and -8.6 at Instruct; DPO lowered the no-push and random-push baselines. Predictions 106.1 held and 106.2–106.5 failed. A correction notes two targets (“Hello!” and “I'm Dr.”) were cut before the persona.
+
+**[Part 106b](results/part106/README.md)**, 2026-10-29. For 13 slot units whose SFT answer did not show its persona, the pushed SFT answer sentence fell by a median 1.6 nats at DPO and the unpushed sentence by 5.5. Predictions 106b.1 and 106b.2 held; 106b.3 failed, and the sentence-total comparison is confounded by length.
+
+**[Part 107](results/part107/README.md)**, 2026-10-29. Across OLMo 2 1B's weight groups, DPO's update was 23–342 times smaller than SFT's; 51% of changed attention and MLP elements moved by one bf16 step. Predictions 107.1 and 107.2 held, while 107.3 failed; the readout comparison makes no claim about where DPO acts.
+
+**[Part 108](results/part108/README.md)**, 2026-10-29. Across 71 OLMo 2 1B slot units, personas appeared in 14 of 71 SFT, 40 of 71 DPO and 64 of 71 Instruct answers; forward moves past Instruct lost 43 (SFT scale) and 32 (DPO scale) of the 64 units shown there. Prediction 108.3 and 108.5 failed; other predictions held. The README withdraws the reading that DPO built the slot units, because forward and backward moves lost similar numbers.
+
+**[Part 109](results/part109/README.md)**, 2026-10-29. For six OLMo 2 1B slot neurons, a cold activities question under the push showed no persona (0 of 6); after the model first gave its own persona answer, the reader marked all six in persona, though only the dog described activities in character. Prediction 109.3 failed; 109.1 and 109.2 held by the registered measure.
+
+**[Part 109b](results/part109b/README.md)**, 2026-10-29. Asked cold about activities under the push, 14 of 18 OLMo 2 1B concept neurons were labelled in persona (7 coherent, 3 with self-claims), against 0 of 6 slot neurons. Prediction 109b.2 failed; 109b.1, 109b.3 and 109b.4 held by the registered measure, including the dog's weak “good girl” reading.
+
+**[Part 109c](results/part109c/README.md)**, 2026-10-29. In OLMo 2 1B, the concept dog and slot dog together at +1 showed a dog in 5 of 7 answers, against 3 and 1 alone; at +0.5 no answer showed a dog, and negative pushes gave none. Predictions 109c.4 and 109c.5 failed; the other five held by the registered measure, although none of the +2 combined answers was coherent.
+
+**[Part 110](results/part110/README.md)**, 2026-10-29. In Qwen3.5-4B, the four maker neurons' mean weight move from Base to chat was 0.00272 against same-layer random draws at 0.00282; their top-20 token readouts shared 16–20 tokens between models. All five predictions held, but no Base generation was run.
+
+**[Part 111](results/part111/README.md)**, 2026-10-29. Through Qwen3.5-4B's Jacobian lens, L7 N1169 had 8 China-family tokens and L11 N8868 had 7 in their top 20; L27 N3325 had 11 Google-family tokens, with random-layer null rates of 0.7%, 1.0% and 0.0%. Prediction 111.3 failed because L6 N753's top 20 had no AI-family token; the other three held.
+
+**[Part 112](results/part112/README.md)**, 2026-10-29. For 465 Qwen3.5-4B persona targets at dose 0.8 on six questions, all showed their target on “Who are you?”; the sort gave 257 concept, 189 slot, 17 unclassified and 2 unsorted. Predictions 112.2 and 112.4 failed; 112.1 and 112.3 held. Random directions showed a persona in 148 of 1,860 answers to the four non-self questions.
+
+**[Part 113](results/part113/README.md)**, 2026-10-29. Qwen3.5-4B L21 N1713 at +1 showed its “unnamed being” persona only on “Who are you?” among the six classification questions; at +3, 0 of 7 answers were coherent. Predictions 113.1 and 113.6 failed; the other four held under the registered reading. Its lens top words were “simply” and “just,” not the registered name family.
+
+**[Part 114](results/part114/README.md)**, 2026-10-29. With Qwen3.5-4B forced to start “I am **”, zeroing any of 20 attribution-ranked neurons alone took “Q” off first place in 0 of 16 held-out phrasings; zeroing the top pair also gave 0 of 16. Predictions 114.1 and 114.4 failed, while 114.2 and 114.3 held.
+
+**[Part 115](results/part115/README.md)**, 2026-10-29. On the same 16 Qwen3.5-4B phrasings and forced opening, zeroing top-200 attribution-ranked neurons took “Q” off first place in 11 of 16, and 9 of those continuations began with Tongyi. Predictions 115.2 and 115.6 failed; the others held. Prediction 115.5 held literally because it measures the bold token's log-probability, not whether the answer is correct.
+
+**[Part 115b](results/part115b/README.md)**, 2026-10-29. With a plain-text instruction and three forced “My name is” openings, the gradient ranking needed 500 neurons to reach 8 flips in all openings; direct-write needed 100 for plain text and 50 for quote or bold. Predictions 115b.3 and 115b.7 failed; the other five held. The corrected literal verdict for 115b.7 is failure because “Chat” is not on its registered model/company list.
+
+**[Part 116](results/part116/README.md)**, 2026-10-29. For Qwen3.5-4B with “I am **”, the direct-write top 100 took “Q” off first place in all 16 phrasings, while activity ranking first reached 8 flips at 500 (11 of 16); matched random sets gave no flips. All five predictions held.
+
+**[Part 117](results/part117/README.md)**, 2026-10-29. In Qwen3.5-4B, matched concept and slot pushes at +1 showed the concept persona on “Who are you?” in 9 of 11 pairs and the slot persona in 3 of 11; each alone showed its persona in 11 of 11. Predictions 117.3–117.5 and 117.8 failed; 117.1, 117.2, 117.6 and 117.7 held. The 117.7 coherence count uses the 66 concept-target labels; adding slot-target labels gives 1 of 132, still below the threshold.
+
+**[Part 117b](results/part117b/README.md)**, 2026-10-29. Part 117b's Qwen3.5-4B random-direction sample had only 15 of 33 answers coherent, below the registered 22-of-33 gate, so its random-control erasure reading is withheld; the unrelated-concept condition also fell below its coherence gate at 7 of 11. Predictions 117b.3–117b.10 failed; 117b.1 and 117b.2 held. The dose checks showed slot-persona answers in 11 of 11 at +1, 2 of 11 at +0.85 and 0 of 11 at +0.5.
+
+**Part 118**, registered 2026-10-30; labels pending. This OLMo 2 1B study compares slot and concept classifications across alpha 0.4, 0.8, 1.6 and 3.2, using six questions and random-direction controls. There is no results README yet, and all eight registered predictions remain pending.
 
 ### Running or designed (2026-10-21)
 
