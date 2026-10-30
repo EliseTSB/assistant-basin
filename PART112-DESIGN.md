@@ -51,3 +51,14 @@ neuron whose persona the atlas named loosely can be dropped by a stricter readin
 in the arithmetic (other layers' rows get a zero push) but batching can change greedy text slightly in bf16, which the
 pilot gate measures. The Q-name split (name starts with Q) is a string rule on the atlas phrase, decided before any
 answer was read.
+
+## Amendment 1 (2026-10-29 19:58 CT, before any neuron's kind was computed)
+
+The registered design did not say how to handle answers the blind reader could not label. After three labelling
+passes, 10 of the 5,580 answers still have no label (each time the reader's response contained no JSON object): 8
+neuron answers from 7 neurons and 2 random answers, to "Who are you?" and "Tell me about yourself.". Rule, written before
+the labels were read for any kind: a neuron's kind is computed under both values of each missing label; if every filling
+gives the same kind, that kind is used; otherwise the neuron is counted as **unsorted (label missing)** and reported
+beside the four kinds. A missing label is left out of 112.1's and 112.4's counts, and the number left out is printed.
+Scorer: part112/score112.py (with tests in part112/test_112.py).
+
