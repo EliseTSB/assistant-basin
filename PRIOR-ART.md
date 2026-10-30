@@ -142,6 +142,22 @@ What this does to Part 29: the frontier-resemblance question is largely answered
 What stays open, and cheap: DeepSeek V4.1 Flash 1017 (not in ATLAS's table), Qwen3 vs Qwen3.5, families beyond three,
 and the zero-training judge.
 
+## A model steering itself through a tool (bears on Parts 12 and 125) — recorded 2026-10-30 14:38 CT
+
+Sent by Elise. README read through WebFetch, not cloned.
+
+- **EigenformAI/modulo** (github.com/EigenformAI/modulo, by @HumanLevelJen, post of 2026-10-27; MIT). A local model gets
+  a `steer(concept, strength)` tool. The vector is added to the residual stream at a percentage of its norm, capped at
+  15, and active vectors shrink by 0.85 each turn. It keeps at most 4 active vectors, with clamping, a cooldown, a
+  degeneration detector, a repeat detector and a kill switch. Vectors come from a community index or from contrastive
+  system prompts. `./run.sh --control assign --blind` assigns real, sham or random-direction steering, and
+  `replay.py --blind` scores transcripts blind.
+- **No results are reported in the README.** The one transcript posted shows Qwen choosing creativity at 3.0 on an open
+  prompt, then proposing a world where emotions are numbers. The tool call and its result put the word into the
+  conversation, so that run cannot separate the vector from the text. The sham arm can.
+- Separately, @a9lim posted a J-lens read of attention heads (x.com/_a9lim/status/2116059072642617647, 2026-10-30), with
+  no method and no control shown. Part 126 is our own reconstruction.
+
 ## Writing one's own activations on request (bears on Part 12) — recorded 2026-10-20 04:30 CT
 
 Sent by Elise. Read at source by Claude (repo cloned at 98adb6a, thread.md and README).
