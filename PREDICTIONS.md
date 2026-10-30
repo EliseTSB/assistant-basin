@@ -2516,3 +2516,6 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 118.3 | Claude (medium confidence): At four times the push (alpha 3.2), at least 60% of all neuron answers are not coherent. | pending | pending |
 | 118.4 | Claude (low confidence): At four times the push, the share of not-coherent answers for random directions is within 15 percentage points of the share for neurons. | pending | pending |
 | 118.5 | Claude (low confidence): At twice the push, at least 12 of the 18 concept neurons are still concept-like. | pending | pending |
+| 118.1a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers. | pending | pending |
+| 118.2a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | pending | pending |
+| 118.5a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers. | pending | pending |
