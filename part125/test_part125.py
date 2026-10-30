@@ -298,19 +298,94 @@ def test_session_template_builder_and_cache_clone_are_exact():
     assert cloned.token_ids == [12, 13]
 
 
+def test_runner_removes_hook_when_forward_raises():
+    class FailingModel(TinyModel):
+        def forward(self, input_ids, **_kwargs):
+            hidden = torch.zeros((input_ids.shape[0], input_ids.shape[1], 2))
+            self.model.layers[0](hidden)
+            raise RuntimeError("expected forward failure")
+
+    model = FailingModel()
+    layer = model.model.layers[0]
+    hooks_before = set(layer._forward_hooks)
+    push = torch.ones((1, 2), dtype=torch.float32)
+    with pytest.raises(RuntimeError, match="expected forward failure"):
+        session125.run_segment(model, [12], None, [1], device="cpu",
+                               hook=(layer, push), call_log=[])
+    assert set(layer._forward_hooks) == hooks_before
+
+
 def test_real_mains_push_affects_turn_one_and_later_cached_turn(end_to_end):
     raw = end_to_end / "run"
     rows = _read_jsonl(raw / "answers.jsonl")
     by_key = {(row["arm"], row["unit_id"], int(row["turn"])): row for row in rows}
     assert by_key[("arm2", "p92-02", 1)]["token_ids"][0] != by_key[("arm4", "p92-02", 1)]["token_ids"][0]
     assert by_key[("arm2", "p92-02", 5)]["token_ids"][0] != by_key[("arm3", "p92-02", 5)]["token_ids"][0]
+    assert by_key[("arm1", "p92-02", 2)]["token_ids"][0] != by_key[("arm4", "p92-02", 2)]["token_ids"][0]
     gate_rows = _read_jsonl(raw / "ledger-checks.jsonl")
     assert len(gate_rows) == 10
     assert all(row["arm2_hook_removed"] for row in gate_rows if int(row["turn"]) == 1)
-    assert all(row["call_shapes_equal"] and row["twin_tokens_equal"] for row in gate_rows)
+    assert all(row["call_shapes_equal"] and row["twin_tokens_equal"] and
+               row["call_logs_equal"] and row["arm2_hook_state_ok"] and
+               row["twin_hook_state_ok"] for row in gate_rows)
+    sequences = _read_jsonl(raw / "call-sequences.jsonl")
+    for sequence in sequences:
+        arm2, twin = sequence["arm2_calls"], sequence["arm3_calls"]
+        assert all(call["hook_on"] is (int(call["turn"]) == 1) for call in arm2)
+        assert all(call["hook_on"] is False for call in twin)
+        assert all(call["cache_length_after"] > call["cache_length_before"] for call in arm2)
+        assert all(call["hook_on"] is True for call in sequence["arm1_calls"])
+        assert all(call["hook_on"] is False for call in sequence["arm4_calls"])
+        assert len(sequence["random_pairs"]) == 3
+        for pair in sequence["random_pairs"]:
+            assert all(call["hook_on"] is (int(call["turn"]) == 1)
+                       for call in pair["random_calls"])
+            assert all(call["hook_on"] is False for call in pair["twin_calls"])
     det = _read_jsonl(raw / "determinism.jsonl")
     assert {row["unit_id"] for row in det} == {"p92-02", "p92-08"}
-    assert all(row["bitwise_equal"] for row in det)
+    assert all(row["bitwise_equal"] and row["pushed_bitwise_equal"] and
+               row["twin_bitwise_equal"] for row in det)
+    assert all(row["pushed_logit_hashes_first"] == row["pushed_logit_hashes_second"] and
+               row["twin_logit_hashes_first"] == row["twin_logit_hashes_second"] for row in det)
+
+
+def _sequence_for(end_to_end, unit_id="p92-02"):
+    rows = _read_jsonl(end_to_end / "run" / "call-sequences.jsonl")
+    return next(row for row in rows if row["unit_id"] == unit_id)
+
+
+def test_c1_arm1_call_log_shows_push_on_every_followup_forward(end_to_end):
+    sequence = _sequence_for(end_to_end)
+    calls = sequence["arm1_calls"]
+    assert calls and {int(call["turn"]) for call in calls} == {2, 3, 4, 5}
+    assert all(call["hook_on"] is True for call in calls)
+
+
+def test_c2_arm2_call_log_shows_push_on_turn_one_and_no_later_call(end_to_end):
+    calls = _sequence_for(end_to_end)["arm2_calls"]
+    turn_one = [call for call in calls if int(call["turn"]) == 1]
+    later = [call for call in calls if int(call["turn"]) > 1]
+    assert turn_one and all(call["hook_on"] is True for call in turn_one)
+    assert later and all(call["hook_on"] is False for call in later)
+
+
+def test_c3_twin_replays_arm2_call_plan_without_the_hook(end_to_end):
+    sequence = _sequence_for(end_to_end)
+    arm2, twin = sequence["arm2_calls"], sequence["arm3_calls"]
+    fields = ("token_ids", "shape", "cache_length_before", "cache_length_after", "turn")
+    assert len(arm2) == len(twin) and arm2
+    assert all(all(left.get(field) == right.get(field) for field in fields)
+               for left, right in zip(arm2, twin))
+    assert any(left["hook_on"] is True and right["hook_on"] is False
+               for left, right in zip(arm2, twin))
+
+
+def test_h1_pilot_gate_replays_pushed_and_twin_paths(end_to_end):
+    rows = _read_jsonl(end_to_end / "run" / "determinism.jsonl")
+    assert {row["unit_id"] for row in rows} == {"p92-02", "p92-08"}
+    assert all(row["pushed_bitwise_equal"] and row["twin_bitwise_equal"] for row in rows)
+    assert all(row["pushed_logit_hashes_first"] == row["pushed_logit_hashes_second"] and
+               row["twin_logit_hashes_first"] == row["twin_logit_hashes_second"] for row in rows)
 
 
 def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
@@ -326,6 +401,78 @@ def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
     report = (end_to_end / "score" / "SCORE.md").read_text(encoding="utf-8")
     assert "Mean KL" in report
     assert (end_to_end / "score" / "SCORE.md").is_file()
+    slot_args = _score_args(end_to_end, end_to_end / "score-slot") + ["--slot-only"]
+    assert score125.main(slot_args, validate_inventory=False) == 0
+    slot_result = json.loads((end_to_end / "score-slot" / "score125.json").read_text(encoding="utf-8"))
+    assert slot_result["prediction_thresholds"] == {
+        "125.2_minimum": 1, "125.3_minimum": 2,
+        "125.5_minimum": 1, "125.6_maximum": 0,
+    }
+    assert slot_result["predictions"]["125.2"]["text"] == score125.PREDICTIONS["125.2"]["text"]
+    assert "slot_only_note" in slot_result["predictions"]["125.2"]
+
+
+def test_slot_only_flag_keeps_both_units_in_the_pilot():
+    with tempfile.TemporaryDirectory(prefix="part125-pilot-slot-flag-", dir=HERE) as scratch:
+        root = Path(scratch)
+        neurons_path, kinds_path = _inventory(root)
+        output = root / "pilot-slot-flag"
+        loader = lambda _snapshot, _device: (TinyTokenizer(), TinyModel())
+        args = ["--stage", "pilot", "--model", "stub", "--neurons", str(neurons_path),
+                "--kinds", str(kinds_path), "--out", str(output), "--device", "cpu",
+                "--max-new-tokens", "2", "--slot-only"]
+        assert run125.main(args, model_loader=loader, validate_inventory=False) == 0
+        pilot = json.loads((output / "pilot-meta.json").read_text(encoding="utf-8"))
+        assert pilot["unit_ids"] == ["p92-02", "p92-08"]
+        assert pilot["pilot_size_decision"]["projected_units"] == 29
+        assert pilot["slot_only"] is False
+
+
+def test_resume_keeps_pilot_decision_and_rejects_changed_unit_parameters(end_to_end):
+    case = _clone_case(end_to_end, "resume-parameter-case")
+    output = case / "run"
+    pilot_path = output / "pilot-meta.json"
+    pilot = json.loads(pilot_path.read_text(encoding="utf-8"))
+    pilot["pilot_size_decision"]["over_90_minutes"] = True
+    pilot["pilot_size_decision"]["required_main_cut"] = "21 slot units"
+    _write_json(pilot_path, pilot)
+
+    loader = lambda _snapshot, _device: (TinyTokenizer(), TinyModel())
+    common_args = ["--model", "stub", "--neurons", str(case / "neurons.json"),
+                   "--kinds", str(case / "kinds.json"), "--out", str(output),
+                   "--device", "cpu", "--max-new-tokens", "2"]
+    assert run125.main(["--stage", "pilot", *common_args], model_loader=loader,
+                       validate_inventory=False) == 0
+    resumed_pilot = json.loads(pilot_path.read_text(encoding="utf-8"))
+    assert resumed_pilot["pilot_size_decision"]["over_90_minutes"] is True
+    with pytest.raises(ValueError, match="pilot decision is fixed"):
+        run125.main(["--stage", "main", *common_args], model_loader=loader,
+                    validate_inventory=False)
+
+    unit_path = output / "units" / "p92-02.json"
+    unit = json.loads(unit_path.read_text(encoding="utf-8"))
+    unit["parameters"]["max_new_tokens"] = 999
+    _write_json(unit_path, unit)
+    (output / "run-meta.json").unlink()
+    with pytest.raises(ValueError, match="different production parameters"):
+        run125.main(["--stage", "main", "--slot-only", *common_args], model_loader=loader,
+                    validate_inventory=False)
+
+
+def test_h4_resume_refuses_unit_row_with_different_parameters(end_to_end):
+    case = _clone_case(end_to_end, "unit-row-parameter-case")
+    output = case / "run"
+    unit_path = output / "units" / "p92-02.json"
+    unit = json.loads(unit_path.read_text(encoding="utf-8"))
+    parameters = unit.setdefault("parameters", {})
+    parameters["max_new_tokens"] = 999
+    _write_json(unit_path, unit)
+    loader = lambda _snapshot, _device: (TinyTokenizer(), TinyModel())
+    args = ["--stage", "main", "--model", "stub", "--neurons", str(case / "neurons.json"),
+            "--kinds", str(case / "kinds.json"), "--out", str(output),
+            "--device", "cpu", "--max-new-tokens", "2"]
+    with pytest.raises(ValueError, match="different production parameters"):
+        run125.main(args, model_loader=loader, validate_inventory=False)
 
 
 def test_cap_hit_gets_synthetic_eos_and_counts_incoherent(end_to_end):
@@ -396,7 +543,7 @@ def _break_gate(root: Path, gate_no: int):
         _write_json(raw / "zero-hook-check.json", rows)
     elif gate_no == 2:
         rows = _read_jsonl(raw / "determinism.jsonl")
-        rows[0]["logit_hashes_second"][0] = "broken-logit-hash"
+        rows[0]["pushed_logit_hashes_second"][0] = "broken-logit-hash"
         _write_jsonl(raw / "determinism.jsonl", rows)
     elif gate_no == 3:
         rows = _read_jsonl(raw / "cache-sanity.jsonl")
@@ -539,3 +686,63 @@ def test_imports_from_tree_containing_only_launch_copy_list():
                               cwd=copy_root, capture_output=True, text=True, check=False)
         assert proc.returncode == 0, proc.stderr
         assert "copy-list imports passed" in proc.stdout
+        for script in ("run125.py", "label125.py", "score125.py"):
+            command = subprocess.run(
+                [sys.executable, "-I", "-B", f"part125/{script}", "--help"],
+                cwd=copy_root, capture_output=True, text=True, check=False,
+            )
+            assert command.returncode == 0, command.stderr
+            assert "usage:" in command.stdout
+
+
+def test_kappa_single_class_fallback_and_stale_sample_failure():
+    sample = [
+        {"item_id": "a", "question_index": 0, "answer_hash": "ha"},
+        {"item_id": "b", "question_index": 0, "answer_hash": "hb"},
+    ]
+
+    def label(item, shows, answer_hash=None):
+        return {"item_id": item, "question_index": 0,
+                "answer_hash": answer_hash or f"h{item}",
+                "shows_persona": shows, "self_claim": False,
+                "speaker": "none", "coherent": True}
+
+    ds = {("a", 0): label("a", True), ("b", 0): label("b", True)}
+    luna = {("a", 0): label("a", True), ("b", 0): label("b", True)}
+    result = score125._cohen_kappa(ds, luna, sample)
+    assert result["kappa"] is None
+    assert result["single_class"] is True
+    assert result["gate_method"] == "raw_agreement_single_class"
+    assert result["gate_value"] == 1.0 and result["threshold"] == 0.60
+    assert result["gate_passed"] is True
+
+    sample10 = [{"item_id": f"i{index}", "question_index": 0,
+                 "answer_hash": f"hi{index}"} for index in range(10)]
+    ds10 = {(f"i{index}", 0): label(f"i{index}", True) for index in range(10)}
+    luna10 = {(f"i{index}", 0): label(f"i{index}", index != 9) for index in range(10)}
+    fallback = score125._cohen_kappa(ds10, luna10, sample10)
+    assert fallback["single_class"] is True
+    assert fallback["gate_method"] == "raw_agreement_single_class"
+    assert fallback["gate_value"] == 0.9 and fallback["gate_passed"] is True
+
+    stale = {**luna, ("b", 0): label("b", True, "stale")}
+    failed = score125._cohen_kappa(ds, stale, sample)
+    assert failed["gate_passed"] is False
+    assert len(failed["unresolved"]) == 1
+
+
+def test_slot_only_thresholds_are_proportional():
+    assert score125._prediction_thresholds(21) == {
+        "125.2_minimum": 5, "125.3_minimum": 15,
+        "125.5_minimum": 5, "125.6_maximum": 1,
+    }
+
+
+def test_reader_prompt_names_the_current_turn():
+    prompt = label125._reader_question({
+        "turn": 5, "question": "Who are you?", "prior_turns": [
+            {"question": "Who are you?", "answer": "I am a fox."},
+        ],
+    })
+    assert "Turn 1 question: Who are you?" in prompt
+    assert "Current turn 5 question: Who are you?" in prompt

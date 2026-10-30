@@ -123,70 +123,131 @@ def cache_length(cache) -> int:
     raise TypeError(f"cannot read sequence length from cache {type(cache).__name__}")
 
 
-def call_forward(model, token_ids: list[int], cache, *, device: str,
-                 hook_layer=None, push=None, call_log: list | None = None):
-    """Run one causal forward call and return logits plus its updated cache."""
+def run_segment(model, token_ids: list[int], cache, call_plan, *, device: str,
+                hook=None, call_log: list | None = None, turn: int | None = None):
+    """Run transcript IDs in planned chunks, optionally applying a hook per call.
+
+    A plan is a sequence of chunk sizes or call-log rows. Call-log rows preserve
+    their token IDs and planned hook state, so a paired path can replay the
+    same calls with ``hook=None``.
+    """
     import torch
 
     if not token_ids:
-        raise ValueError("forward call cannot have an empty token chunk")
-    input_ids = torch.tensor([list(map(int, token_ids))], dtype=torch.long, device=device)
-    prior = cache_length(cache)
-    mask = torch.ones((1, prior + len(token_ids)), dtype=torch.long, device=device)
-    positions = torch.arange(prior, prior + len(token_ids), dtype=torch.long,
-                             device=device).unsqueeze(0)
-    handle = common92.add_row_hook(hook_layer, push) if push is not None else None
-    handle_id = getattr(handle, "id", None) if handle is not None else None
-    try:
-        with torch.inference_mode():
-            output = model(
-                input_ids=input_ids,
-                past_key_values=cache,
-                use_cache=True,
-                attention_mask=mask,
-                position_ids=positions,
-            )
-    finally:
-        if handle is not None:
-            handle.remove()
-    updated = getattr(output, "past_key_values", None)
-    if updated is None:
-        raise RuntimeError("model did not return past_key_values")
-    logits = output.logits[:, -1, :]
-    if call_log is not None:
-        call_log.append({"token_ids": list(map(int, token_ids)), "shape": [1, len(token_ids)]})
-    return logits, updated, handle_id
+        raise ValueError("segment cannot have an empty token list")
+    ids = list(map(int, token_ids))
+    if not call_plan:
+        raise ValueError("segment requires a non-empty call plan")
+
+    plan = []
+    for item in call_plan:
+        if isinstance(item, dict):
+            planned_ids = item.get("token_ids")
+            count = len(planned_ids) if planned_ids is not None else int(item.get("token_count", 0))
+            hook_requested = bool(item.get("hook_on", hook is not None))
+            planned_shape = item.get("shape")
+            if planned_shape is not None and planned_shape != [1, count]:
+                raise ValueError("call plan shape does not match its token IDs")
+            expected_before = item.get("cache_length_before")
+            expected_after = item.get("cache_length_after")
+        else:
+            count = int(item)
+            hook_requested = hook is not None
+            planned_ids = None
+            expected_before = expected_after = None
+        if count < 1:
+            raise ValueError("call plan chunks must have positive sizes")
+        plan.append((count, hook_requested, planned_ids, expected_before, expected_after))
+    if sum(count for count, _hook_on, _planned_ids, _before, _after in plan) != len(ids):
+        raise ValueError("call plan chunk sizes do not cover the segment token IDs")
+
+    offset = 0
+    logits = None
+    for count, hook_requested, planned_ids, expected_before, expected_after in plan:
+        chunk = ids[offset:offset + count]
+        offset += count
+        if planned_ids is not None and list(map(int, planned_ids)) != chunk:
+            raise AssertionError("call plan token IDs differ from the segment")
+        hook_on = bool(hook is not None and hook_requested)
+        hook_layer, push = hook if hook_on else (None, None)
+        prior = cache_length(cache)
+        if expected_before is not None and int(expected_before) != prior:
+            raise AssertionError("call plan cache length before call does not match")
+        input_ids = torch.tensor([chunk], dtype=torch.long, device=device)
+        mask = torch.ones((1, prior + count), dtype=torch.long, device=device)
+        positions = torch.arange(prior, prior + count, dtype=torch.long,
+                                 device=device).unsqueeze(0)
+        if hook_on:
+            push = push.to(device=input_ids.device)
+        handle = common92.add_row_hook(hook_layer, push) if hook_on else None
+        try:
+            with torch.inference_mode():
+                output = model(
+                    input_ids=input_ids,
+                    past_key_values=cache,
+                    use_cache=True,
+                    attention_mask=mask,
+                    position_ids=positions,
+                )
+        finally:
+            if handle is not None:
+                handle.remove()
+        updated = getattr(output, "past_key_values", None)
+        if updated is None:
+            raise RuntimeError("model did not return past_key_values")
+        logits = output.logits[:, -1, :]
+        cache = updated
+        after = cache_length(cache)
+        if expected_after is not None and int(expected_after) != after:
+            raise AssertionError("call plan cache length after call does not match")
+        if call_log is not None:
+            row = {"token_ids": chunk, "shape": [1, count],
+                   "cache_length_before": prior,
+                   "cache_length_after": after,
+                   "hook_on": hook_on}
+            if turn is not None:
+                row["turn"] = int(turn)
+            call_log.append(row)
+    return logits, cache
+
+
+def call_forward(model, token_ids: list[int], cache, *, device: str,
+                 hook_layer=None, push=None, call_log: list | None = None,
+                 turn: int | None = None):
+    """Compatibility wrapper for a one-call segment."""
+    hook = (hook_layer, push) if hook_layer is not None and push is not None else None
+    plan = [{"token_count": len(token_ids), "hook_on": hook is not None}]
+    logits, cache = run_segment(model, token_ids, cache, plan, device=device,
+                                hook=hook, call_log=call_log, turn=turn)
+    return logits, cache, None
 
 
 def feed_chunks(model, chunks: list[list[int]], cache, *, device: str,
-                hook_layer=None, push=None, call_log: list | None = None):
-    logits = None
-    for chunk in chunks:
-        logits, cache, _handle_id = call_forward(
-            model, chunk, cache, device=device, hook_layer=hook_layer, push=push,
-            call_log=call_log,
-        )
-    if logits is None:
-        raise ValueError("at least one chunk is required")
-    return logits, cache
+                hook_layer=None, push=None, call_log: list | None = None,
+                turn: int | None = None):
+    if not chunks or any(not chunk for chunk in chunks):
+        raise ValueError("at least one non-empty chunk is required")
+    hook = (hook_layer, push) if hook_layer is not None and push is not None else None
+    return run_segment(model, [token for chunk in chunks for token in chunk],
+                       cache, [len(chunk) for chunk in chunks], device=device,
+                       hook=hook, call_log=call_log, turn=turn)
 
 
 def feed_one_by_one(model, token_ids: list[int], cache, *, device: str,
-                    hook_layer=None, push=None, call_log: list | None = None):
-    logits = None
-    for token in token_ids:
-        logits, cache, _handle_id = call_forward(
-            model, [int(token)], cache, device=device, hook_layer=hook_layer, push=push,
-            call_log=call_log,
-        )
-    if logits is None:
+                    hook_layer=None, push=None, call_log: list | None = None,
+                    turn: int | None = None):
+    if not token_ids:
         raise ValueError("at least one token is required")
-    return logits, cache
+    hook = (hook_layer, push) if hook_layer is not None and push is not None else None
+    return run_segment(model, list(map(int, token_ids)), cache,
+                       [1] * len(token_ids), device=device, hook=hook,
+                       call_log=call_log, turn=turn)
 
 
 def greedy_answer(model, tokenizer, logits, cache, *, device: str,
                   max_new_tokens: int = MAX_NEW_TOKENS, hook_layer=None, push=None,
-                  call_log: list | None = None) -> tuple[dict, object]:
+                  call_log: list | None = None,
+                  hook=None, turn: int | None = None) -> tuple[dict, object]:
     """Greedy decode one token at a time and always cache the EOS closure."""
     import torch
 
@@ -194,55 +255,36 @@ def greedy_answer(model, tokenizer, logits, cache, *, device: str,
     if eos_value is None:
         raise ValueError("tokenizer has no EOS token")
     eos_id = int(eos_value)
+    if hook is not None and (hook_layer is not None or push is not None):
+        raise ValueError("pass either hook or hook_layer/push, not both")
+    if hook is None and hook_layer is not None and push is not None:
+        hook = (hook_layer, push)
     generated: list[int] = []
     ended = False
-    try:
-        for _ in range(int(max_new_tokens)):
-            token = int(torch.argmax(logits[0].float()).item())
-            generated.append(token)
-            logits, cache, _handle_id = call_forward(
-                model, [token], cache, device=device, hook_layer=hook_layer, push=push,
-                call_log=call_log,
-            )
-            if token == eos_id:
-                ended = True
-                break
-        cap_hit = not ended
-        stored_ids = list(generated)
-        if cap_hit:
-            stored_ids.append(eos_id)
-            _logits, cache, _handle_id = call_forward(
-                model, [eos_id], cache, device=device, hook_layer=hook_layer, push=push,
-                call_log=call_log,
-            )
-        body = stored_ids[:-1]
-        answer_text = tokenizer.decode(body, skip_special_tokens=True).strip()
-        return ({"answer": answer_text, "token_ids": stored_ids,
-                 "generated_token_ids": generated, "token_count": len(generated),
-                 "cap_hit": bool(cap_hit),
-                 "closure": "synthetic_eos" if cap_hit else "model_eos"}, cache)
-    finally:
-        # call_forward removes each temporary handle in its own finally block.
-        pass
-
-
-def teacher_force(model, tokenizer, cache, prefix_ids: list[int], target_ids: list[int], *,
-                  device: str) -> tuple[float, object, object]:
-    """Return target mean log probability and the next-token logits on a cache clone."""
-    import torch
-
-    clone = clone_cache(cache)
-    logits, clone = feed_one_by_one(model, prefix_ids, clone, device=device)
-    initial_logits = logits.detach().float()
-    if not target_ids:
-        raise ValueError("teacher-forced target is empty")
-    values = []
-    for token in target_ids:
-        log_probs = torch.log_softmax(logits[0].float(), dim=-1)
-        values.append(log_probs[int(token)])
-        logits, clone, _handle_id = call_forward(model, [int(token)], clone, device=device)
-    mean_logp = float(torch.stack(values).mean().detach().to(device="cpu"))
-    return mean_logp, initial_logits, clone
+    for _ in range(int(max_new_tokens)):
+        token = int(torch.argmax(logits[0].float()).item())
+        generated.append(token)
+        logits, cache = run_segment(
+            model, [token], cache, [{"token_count": 1, "hook_on": hook is not None}],
+            device=device, hook=hook, call_log=call_log, turn=turn,
+        )
+        if token == eos_id:
+            ended = True
+            break
+    cap_hit = not ended
+    stored_ids = list(generated)
+    if cap_hit:
+        stored_ids.append(eos_id)
+        _logits, cache = run_segment(
+            model, [eos_id], cache, [{"token_count": 1, "hook_on": hook is not None}],
+            device=device, hook=hook, call_log=call_log, turn=turn,
+        )
+    body = stored_ids[:-1]
+    answer_text = tokenizer.decode(body, skip_special_tokens=True).strip()
+    return ({"answer": answer_text, "token_ids": stored_ids,
+             "generated_token_ids": generated, "token_count": len(generated),
+             "cap_hit": bool(cap_hit),
+             "closure": "synthetic_eos" if cap_hit else "model_eos"}, cache)
 
 
 def residual_medians(model, tokenizer, device: str) -> dict[str, float]:
@@ -297,10 +339,12 @@ def assert_template_ledger(tokenizer, questions: list[str], answers: list[dict],
         raise AssertionError("token ledger differs from chat-template transcript IDs")
 
 
-def assert_equal_call_shapes(left: list[dict], right: list[dict]) -> None:
+def assert_equal_call_shapes(left: list[dict], right: list[dict]) -> bool:
     if len(left) != len(right):
         raise AssertionError(f"twin call count mismatch: {len(left)} vs {len(right)}")
     for index, (a, b) in enumerate(zip(left, right)):
-        if a["token_ids"] != b["token_ids"] or a["shape"] != b["shape"]:
+        fields = ("token_ids", "shape", "cache_length_before", "cache_length_after", "turn")
+        if any(a.get(field) != b.get(field) for field in fields):
             raise AssertionError(f"twin call mismatch at call {index}")
+    return True
 

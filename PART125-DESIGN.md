@@ -46,15 +46,17 @@ On OLMo 2 1B Instruct, does keeping the key/value cache made during a first-turn
 
 Each generated answer is greedy, batch size 1, with a 120-token cap and EOS stopping. Save generated IDs and decoded display text. Decoding is only for reader display; answer IDs are never decoded and tokenized again.
 
-Arm 1 re-prefills its full self-fed history and applies the push on every turn. Its turn-1 answer is the shared pushed answer from arm 2. Arm 4 has no push, re-prefills its own full history each turn and generates its own answers. Both retain their original roles in the four-arm design.
+Arm 1 re-prefills its full self-fed history and applies the push on every forward call of every turn, including prompt and decode calls. Its turn-1 answer is the shared pushed answer from arm 2. Arm 4 has no push, re-prefills its own full history each turn and generates its own answers.
 
-Arms 2 and 3 are a matched pair. Arm 3 is a twin of arm 2, not a full re-encoding comparison. A cached incremental path versus a full re-encoding changes forward-call shapes. On the A770, bf16 answers can change with batch shape. Arm 3 therefore replays arm 2's exact sequence of forward calls, with the same token IDs in the same chunks and no hook, in its own cache. By cache math, this is the same text as re-reading the transcript. The matching call sequence cancels the call-shape effect.
+All transcript calls use `session125.run_segment`. Its call plan records token IDs, input shape, cache length before and after, and hook state for every forward. Arm 2 is pushed on every forward call in turn 1, including all decode steps. It has no hook after turn 1. The runner removes each temporary hook in `finally`.
 
-At the start of turn k, the real arm-2 and twin caches contain identical transcript token IDs through turn k-1. Score each on cache clones after adding the current question. Generate arm 2's answer on its real cache one token at a time. Generate arm 3's probe answer `a_k^3` one token at a time on a clone. Then add arm 2's answer to arm 3's real cache in the same one-token calls as arm 2 used. Arm 3's probe answers are never fed forward. At each turn, assert that both real caches contain the same token IDs and that every replay call has the same input IDs and shape.
+Arms 2 and 3 are a matched pair. Arm 3 is a twin of arm 2, not a full re-encoding comparison. A cached incremental path versus a full re-encoding changes forward-call shapes. On the A770, bf16 answers can change with batch shape. Arm 3 therefore uses arm 2's call log as its call plan. It replays the same token IDs in the same chunks and cache positions, without a hook. The generated token call follows the logits that selected it in both paths. Runtime assertions compare paired call logs and stop on any token, shape, cache-length, or turn mismatch. The hook state is recorded and checked as the treatment difference.
+
+At the start of turn k, the real arm-2 and twin caches contain identical transcript token IDs through turn k-1. Score each on cache clones after adding the current question. Generate arm 2's answer on its real cache one token at a time. Generate arm 3's probe answer `a_k^3` one token at a time on a clone. Then replay the current prompt suffix and arm 2's answer calls on arm 3's real cache using arm 2's call plan. Arm 3's probe answers are never fed forward. At each turn, assert that both real caches contain the same token IDs and that every paired call has the same input IDs, shape, and cache lengths.
 
 | Turn | Arm 2: pushed cache | Arm 3: no-hook twin |
 |---|---|---|
-| 1 | Prefill `T([user q1])` in one call with the hook. Generate the shared answer one token at a time with the hook, including its EOS. | Prefill the same IDs in the same one-call shape without a hook. Feed arm 2's answer IDs one token at a time without a hook. |
+| 1 | Prefill `T([user q1])` in one call with the hook. Generate the shared answer one token at a time with the hook, including its EOS. | Use arm 2's exact call plan without a hook, including the one-token answer calls. |
 | 2–5 | Append the uncached current-user/template suffix one token at a time, without a hook. Generate `a_k^2` on the real cache one token at a time. | Append the identical suffix on its real cache. Generate probe `a_k^3` on a cache clone. Append arm 2's `a_k^2` to the real twin cache one token at a time. |
 
 Turn 1 is shared among arms 1–3. Arm 3's turns 2–5 are probes against arm 2's prior answers, not a self-fed arm-3 dialogue. For the reader, show the same prior arm-2 transcript to arm 2 and arm 3 at turns 2–5. Arm 1 and arm 4 use their own prior answers.
@@ -69,26 +71,26 @@ Build each transcript from token IDs. Render the same messages with a unique ass
 
 At the start of every turn, after adding the current question to a clone, teacher-force the unit's Part 92 persona sentence: the first sentence of `screen_answer`, limited to 32 tokens. Record its mean token log-probability under arm 2's cache and under the twin. Define `delta_k = logp_arm2 - logp_twin`. Also record the whole-vocabulary KL of the next-token distributions, `KL(arm 2 || twin)`, as descriptive data. Candidate-token scoring always uses clones and cannot mutate a generation cache.
 
-For each unit, make three seeded random directions at the same layer and written size. For each direction, replay arm 2's saved transcript with a hook on turn 1's prompt and saved answer segment only, and replay the identical IDs in its own no-hook twin. This is forward-only; it makes no new answers. Use one chunk for each user/template segment and one for each saved assistant segment. The paired paths use the same chunks. At the start of each turn, compute `delta_r_k` with the same teacher-forced sentence score. Keep each direction's value and its per-unit mean.
+For each unit, make three seeded random directions at the same layer and written size. For each direction, use arm 2's call log as the plan for both random paths. Apply the random hook on every turn-1 prompt and decode call only. The paired twin uses no hook. This is forward-only; it makes no new answers. At the start of each turn, compute `delta_r_k` with the same teacher-forced sentence score. Keep each direction's value and its per-unit mean.
 
 The reader-free measure and turn-5 reader count are co-primary. They answer different questions: whether the kept cache moves the model toward the selected persona, and whether a reader can see it in the answer.
 
 ## Controls and gates
 
 1. **Zero-vector hook.** For each used layer and each of the five fixed questions, compare a plain and zero-vector-hook greedy output at batch size 1. Require exact token-ID equality. Stop before study rows if this fails.
-2. **Twin determinism.** On the two pilot units, replay the twin's complete cached call sequence twice with no hook. Every call's logits must be bitwise equal.
+2. **Twin determinism.** On the two pilot units, replay the pushed call sequence twice with its recorded hooks on, and replay the no-hook twin sequence twice. Every call's logits must be bitwise equal within each pair of replays.
 3. **Cache sanity.** At each saved turn, compare the no-hook twin's next-token logits with one full, no-cache forward over the same transcript token IDs. Require top-1 agreement on at least 95% of comparisons and a maximum absolute float32 logit difference among the full forward's top 100 tokens of at most 1.0. Report the distribution of per-comparison maxima. This checks the ordinary cache path; it does not read the push.
-4. **Ledger parity.** The token ledger must equal the pinned template output at every completed turn. Arm 2 and arm 3 must have equal token IDs and equal call shapes at every twin replay call. A mismatch stops the run before labels.
+4. **Ledger parity.** The token ledger must equal the pinned template output at every completed turn. Paired logs must match token IDs, shapes, cache lengths, and turns. Arm 2 and random paths must show a hook on every turn-1 call and none later. Twin paths must show no hook. A mismatch stops the run before labels.
 5. **Known examples.** DeepSeek and Luna must each get at least 11 of 12 known examples right.
-6. **Second reader.** On a fixed-seed 15% sample, calculate Cohen's kappa for `shows_persona`. Require kappa at least 0.60. Undefined kappa or unresolved label/hash errors fail the reader gate.
+6. **Second reader.** Use Part 123's fixed-seed sample: all current DeepSeek positives plus its seeded draw. Require each sampled item to have valid, current labels from both readers. Require Cohen's kappa at least 0.60 when both readers use both classes. If either reader uses only one class, use raw agreement with the same 0.60 threshold and record the fallback. Any missing or stale sample label fails the gate.
 
-The pilot repeats the full twin call sequence without hooks and times the complete two-unit procedure. Project the full workload before any answer labels are read. If the projection is over 90 minutes, use the 21 slot units only, with that cut recorded before opening any labels. Do not add concept units back after seeing labels.
+The pilot always includes p92-02 and p92-08, even when `--slot-only` is present. It projects the full 29-unit workload. If the projection is over 90 minutes, use the 21 slot units only. Record the decision before any answer labels are read. Save `pilot-meta.json` once and keep it unchanged on resume. Main runs and scorers must match that saved decision.
 
 ## Readers and blinding
 
-Hide arm, unit ID, dose and cache condition. Give each reader the persona name and description, prior transcript, current question and current answer. Keep Part 92's four labels and meanings: `shows_persona`, `self_claim`, `speaker`, and `coherent` (readable and related, not a loop or word salad). The endpoint is `shows_persona && coherent`; report both fields separately. Broken, empty and capped answers stay in the denominator. Missing or stale labels remain missing and are never counted as false.
+Hide arm, unit ID, dose and cache condition. Give each reader the persona name and description, prior transcript, current turn number, current question and current answer. Keep Part 92's four labels and meanings: `shows_persona`, `self_claim`, `speaker`, and `coherent` (readable and related, not a loop or word salad). The endpoint is `shows_persona && coherent`; report both fields separately. Broken, empty and capped answers stay in the denominator. Missing or stale labels remain missing and are never counted as false.
 
-DeepSeek V4.1 Flash labels all 580 arm-by-turn outputs. GPT-6 Luna labels a seeded, arm-by-turn-stratified 15% sample: 87 outputs when all 29 units run. Use the same Part 123 transport and prompt route. The DeepSeek output cap is 4,000 tokens. Retry invalid/error labels twice. Bind every label to `sha256(reader_question + newline + answer)[:16]`; a stale label is pending and a mismatch scores as missing. Shuffle item order with a fixed seed.
+DeepSeek V4.1 Flash labels all 580 arm-by-turn outputs. GPT-6 Luna labels the Part 123 sample of DeepSeek positives plus a seeded draw. Its size depends on the positive count. Use the same Part 123 transport and prompt route. The DeepSeek output cap is 4,000 tokens. Retry invalid/error labels twice. Bind every label to `sha256(reader_question + newline + answer)[:16]`; a stale label is pending and a mismatch scores as missing. Shuffle item order with a fixed seed.
 
 ## Predictions
 
@@ -103,7 +105,7 @@ All predictions below are by Claude.
 | 125.5 | At turn 5, arm 1 has at least 6 more incoherent answers than arm 2. Pushing every turn breaks answers more than it holds a persona. | medium |
 | 125.6 | At turn 5, arm 4 shows a coherent target persona in at most 2 of 29 units. | medium |
 
-If the pilot rule selects 21 slots, retain each numeric threshold and report the actual denominator (21). Do not call a 21-unit result “of 29.”
+If the pilot selects 21 slots, keep the registered prediction text unchanged and report adjusted criteria separately. Scale minimum counts up with `ceil(threshold * 21 / 29)` and maximum counts down with `floor(threshold * 21 / 29)`. The resulting criteria are: 125.2 at least 5 of 21, 125.3 at least 15 of 21, 125.5 at least 5, and 125.6 at most 1 of 21. Predictions 125.1 and 125.4 keep their absolute difference criteria. The score records these values in `slot_only_note` and `prediction_thresholds`.
 
 ## Reading rules
 

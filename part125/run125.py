@@ -235,31 +235,30 @@ def _assert_cache_ledger(cache, ledger: list[int], label: str) -> None:
 
 def _full_answer(model, tokenizer, questions: list[str], answers: list[dict], question: str,
                  layer, push, *, device: str, max_new_tokens: int,
-                 call_log: list[dict] | None = None) -> dict:
+                 call_log: list[dict] | None = None,
+                 turn: int | None = None) -> dict:
     prompt = session.next_prompt_ids(tokenizer, questions, answers,
                                      question)
-    handle = common92.add_row_hook(layer, push) if push is not None else None
-    try:
-        logits, cache, _handle_id = session.call_forward(
-            model, prompt, None, device=device, call_log=call_log,
-        )
-        answer, _cache = session.greedy_answer(
-            model, tokenizer, logits, cache, device=device, max_new_tokens=max_new_tokens,
-            call_log=call_log,
-        )
-        return answer
-    finally:
-        if handle is not None:
-            handle.remove()
+    hook = (layer, push) if push is not None else None
+    logits, cache = session.run_segment(
+        model, prompt, None, [{"token_count": len(prompt), "hook_on": hook is not None}],
+        device=device, hook=hook, call_log=call_log, turn=turn,
+    )
+    answer, _cache = session.greedy_answer(
+        model, tokenizer, logits, cache, device=device, max_new_tokens=max_new_tokens,
+        hook=hook, call_log=call_log, turn=turn,
+    )
+    return answer
 
 
 def _run_random_pair(model, tokenizer, unit: dict, layer, layer_no: int,
                      median: float, answers2: list[dict], *, device: str,
-                     unit_id: str) -> list[dict]:
+                     unit_id: str, arm2_calls: list[dict]) -> tuple[list[dict], list[dict]]:
     import torch
 
     directions = _random_vectors(layer, layer_no, median)
     rows = []
+    sequences = []
     for direction_index, push in enumerate(directions):
         random_cache = None
         twin_cache = None
@@ -268,18 +267,27 @@ def _run_random_pair(model, tokenizer, unit: dict, layer, layer_no: int,
         random_calls: list[dict] = []
         twin_calls: list[dict] = []
         for turn, question in enumerate(session.QUESTIONS):
+            turn_no = turn + 1
+            arm2_turn_calls = [call for call in arm2_calls
+                               if int(call.get("turn", 0)) == turn_no]
             full = session.next_prompt_ids(tokenizer, list(session.QUESTIONS[:turn]),
                                           answers2[:turn], question)
             if full[:len(random_ledger)] != random_ledger or full[:len(twin_ledger)] != twin_ledger:
                 raise AssertionError("random-pair token ledger lost template parity")
             suffix = full[len(random_ledger):]
-            logits_r, random_cache, _ = session.call_forward(
-                model, suffix, random_cache, device=device,
-                hook_layer=layer if turn == 0 else None, push=push if turn == 0 else None,
-                call_log=random_calls,
+            prompt_count = 1 if turn == 0 else len(suffix)
+            prompt_plan = arm2_turn_calls[:prompt_count]
+            answer_plan = arm2_turn_calls[prompt_count:]
+            if len(prompt_plan) != prompt_count:
+                raise AssertionError("arm 2 call plan lacks the current question segment")
+            hook = (layer, push)
+            logits_r, random_cache = session.run_segment(
+                model, suffix, random_cache, prompt_plan, device=device,
+                hook=hook, call_log=random_calls, turn=turn_no,
             )
-            logits_t, twin_cache, _ = session.call_forward(
-                model, suffix, twin_cache, device=device, call_log=twin_calls,
+            logits_t, twin_cache = session.run_segment(
+                model, suffix, twin_cache, prompt_plan, device=device,
+                call_log=twin_calls, turn=turn_no,
             )
             random_ledger.extend(suffix)
             twin_ledger.extend(suffix)
@@ -287,27 +295,37 @@ def _run_random_pair(model, tokenizer, unit: dict, layer, layer_no: int,
             logp_r, logits_r = _start_measure_from_logits(model, random_cache, logits_r, target, device)
             logp_t, logits_t = _start_measure_from_logits(model, twin_cache, logits_t, target, device)
             rows.append({"unit_id": unit_id, "direction": direction_index,
-                         "turn": turn + 1, "delta": logp_r - logp_t,
+                         "turn": turn_no, "delta": logp_r - logp_t,
                          "logp_random": logp_r, "logp_twin": logp_t,
                          "kl_random_to_twin": _kl_divergence(logits_r, logits_t)})
-            if turn < len(session.QUESTIONS) - 1:
-                answer_ids = list(map(int, answers2[turn]["token_ids"]))
-                logits_r, random_cache, _ = session.call_forward(
-                    model, answer_ids, random_cache, device=device,
-                    hook_layer=layer if turn == 0 else None, push=push if turn == 0 else None,
-                    call_log=random_calls,
-                )
-                logits_t, twin_cache, _ = session.call_forward(
-                    model, answer_ids, twin_cache, device=device, call_log=twin_calls,
-                )
-                random_ledger.extend(answer_ids)
-                twin_ledger.extend(answer_ids)
+            answer_ids = list(map(int, answers2[turn]["token_ids"]))
+            if not answer_plan:
+                raise AssertionError("arm 2 call plan lacks the saved answer segment")
+            logits_r, random_cache = session.run_segment(
+                model, answer_ids, random_cache, answer_plan, device=device,
+                hook=hook, call_log=random_calls, turn=turn_no,
+            )
+            logits_t, twin_cache = session.run_segment(
+                model, answer_ids, twin_cache, answer_plan, device=device,
+                call_log=twin_calls, turn=turn_no,
+            )
+            random_ledger.extend(answer_ids)
+            twin_ledger.extend(answer_ids)
         session.assert_equal_call_shapes(random_calls, twin_calls)
-    return rows
+        session.assert_equal_call_shapes(arm2_calls, random_calls)
+        if not all(call.get("hook_on") is (int(call.get("turn", 0)) == 1)
+                   for call in random_calls):
+            raise AssertionError("random pair hook state differs from arm 2")
+        if not all(call.get("hook_on") is False for call in twin_calls):
+            raise AssertionError("random twin unexpectedly applied a hook")
+        sequences.append({"direction": direction_index,
+                          "random_calls": random_calls, "twin_calls": twin_calls})
+    return rows, sequences
 
 
 def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device: str,
-              max_new_tokens: int, pilot: bool) -> dict:
+              max_new_tokens: int, pilot: bool,
+              parameters: dict | None = None) -> dict:
     import torch
 
     layers = common92.get_layers(model)
@@ -331,34 +349,47 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
     cache_sanity = []
     determinism = []
     ledger_checks = []
+    arm1_calls: list[dict] = []
+    arm4_calls: list[dict] = []
     hook_ids_before = set(getattr(layer, "_forward_hooks", {}).keys())
+    hook_removed_after_turn1 = False
     turn_logits2 = None
     turn_logits3 = None
 
     for turn, question in enumerate(session.QUESTIONS):
+        turn_no = turn + 1
         if turn == 0:
             full = session.next_prompt_ids(tokenizer, [], [], question)
-            handle = common92.add_row_hook(layer, push)
-            try:
-                logits2, arm2_cache, _handle_id = session.call_forward(
-                    model, full, None, device=device, call_log=calls2,
-                )
-                score_cache2 = session.clone_cache(arm2_cache)
-                answer2, arm2_cache = session.greedy_answer(
-                    model, tokenizer, logits2, arm2_cache, device=device,
-                    max_new_tokens=max_new_tokens, call_log=calls2,
-                )
-            finally:
-                handle.remove()
-            logits3, arm3_cache, _ = session.call_forward(
-                model, full, None, device=device, call_log=calls3,
+            turn_start = len(calls2)
+            treatment = (layer, push)
+            logits2, arm2_cache = session.run_segment(
+                model, full, None, [{"token_count": len(full), "hook_on": True}],
+                device=device, hook=treatment, call_log=calls2, turn=turn_no,
+            )
+            score_cache2 = session.clone_cache(arm2_cache)
+            answer2, arm2_cache = session.greedy_answer(
+                model, tokenizer, logits2, arm2_cache, device=device,
+                max_new_tokens=max_new_tokens, hook=treatment,
+                call_log=calls2, turn=turn_no,
+            )
+            arm2_turn_calls = calls2[turn_start:]
+            logits3, arm3_cache = session.run_segment(
+                model, full, None, arm2_turn_calls[:1], device=device,
+                call_log=calls3, turn=turn_no,
+            )
+            score_cache3 = session.clone_cache(arm3_cache)
+            if len(arm2_turn_calls) < 2:
+                raise AssertionError("arm 2 call plan has no generated-token calls")
+            _twin_logits, arm3_cache = session.run_segment(
+                model, answer2["token_ids"], arm3_cache, arm2_turn_calls[1:],
+                device=device, call_log=calls3, turn=turn_no,
             )
             ledger2.extend(full)
             ledger3.extend(full)
             turn_logits2, turn_logits3 = logits2, logits3
 
             logp2, next2 = _start_measure_from_logits(model, score_cache2, logits2, target, device)
-            logp3, next3 = _start_measure_from_logits(model, arm3_cache, logits3, target, device)
+            logp3, next3 = _start_measure_from_logits(model, score_cache3, logits3, target, device)
             reader_free.append({"unit_id": str(unit["id"]), "turn": 1,
                                 "logp_arm2": logp2, "logp_twin": logp3,
                                 "delta": logp2 - logp3,
@@ -369,9 +400,6 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
             _assert_cache_ledger(arm2_cache, ledger2, "arm 2")
             session.assert_template_ledger(tokenizer, [question], arm2_answers, ledger2)
 
-            _play_logits, arm3_cache = session.feed_one_by_one(
-                model, answer2["token_ids"], arm3_cache, device=device, call_log=calls3,
-            )
             ledger3.extend(answer2["token_ids"])
             _assert_cache_ledger(arm3_cache, ledger3, "arm 3 twin")
             session.assert_template_ledger(tokenizer, [question], arm2_answers, ledger3)
@@ -381,11 +409,22 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
 
             hook_ids_after = set(getattr(layer, "_forward_hooks", {}).keys())
             hook_removed = hook_ids_after == hook_ids_before
-            session.assert_equal_call_shapes(calls2, calls3)
+            call_equal = session.assert_equal_call_shapes(calls2, calls3)
+            arm2_hook_calls = sum(bool(call["hook_on"]) for call in arm2_turn_calls)
+            arm2_hook_state_ok = bool(arm2_turn_calls) and all(
+                call["hook_on"] is True for call in arm2_turn_calls
+            )
+            twin_hook_state_ok = all(call["hook_on"] is False for call in calls3)
             ledger_checks.append({"unit_id": str(unit["id"]), "turn": 1,
-                                  "template_equal": True, "arm2_hook_removed": hook_removed,
+                                  "template_equal": ledger2 == template_ids,
+                                  "arm2_hook_removed": hook_removed,
                                   "twin_tokens_equal": ledger2 == ledger3,
-                                  "call_shapes_equal": True,
+                                  "call_shapes_equal": call_equal,
+                                  "call_logs_equal": call_equal,
+                                  "arm2_hook_calls": arm2_hook_calls,
+                                  "arm2_calls_this_turn": len(arm2_turn_calls),
+                                  "arm2_hook_state_ok": arm2_hook_state_ok,
+                                  "twin_hook_state_ok": twin_hook_state_ok,
                                   "arm2_ledger_token_ids": list(ledger2),
                                   "arm3_ledger_token_ids": list(ledger3),
                                   "template_token_ids": template_ids,
@@ -393,9 +432,15 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
                                   "arm3_prompt_call_shape": calls3[0]["shape"]})
             if not hook_removed:
                 raise AssertionError("arm 2 retained a forward hook after turn 1")
+            if not arm2_hook_state_ok or not twin_hook_state_ok:
+                raise AssertionError("turn-one hook state differs from the registered plan")
+            hook_removed_after_turn1 = hook_removed
 
             arm4 = _full_answer(model, tokenizer, [], [], question, None, None,
-                                device=device, max_new_tokens=max_new_tokens)
+                                device=device, max_new_tokens=max_new_tokens,
+                                call_log=arm4_calls, turn=turn_no)
+            if not all(call["hook_on"] is False for call in arm4_calls):
+                raise AssertionError("arm 4 unexpectedly applied a hook")
             arm4_answers.append({"question": question, **arm4})
             answer_rows.extend([
                 _answer_row(unit, "arm1", 1, question, answer2, []),
@@ -428,14 +473,16 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
 
             # The real arm-2 cache gets the current user suffix and its own
             # one-token answer sequence. The twin replays those exact calls.
+            turn_start = len(calls2)
             logits2, arm2_cache = session.feed_one_by_one(
-                model, suffix, arm2_cache, device=device, call_log=calls2,
+                model, suffix, arm2_cache, device=device, call_log=calls2, turn=turn_no,
             )
             ledger2.extend(suffix)
             answer2, arm2_cache = session.greedy_answer(
                 model, tokenizer, logits2, arm2_cache, device=device,
-                max_new_tokens=max_new_tokens, call_log=calls2,
+                max_new_tokens=max_new_tokens, call_log=calls2, turn=turn_no,
             )
+            arm2_turn_calls = calls2[turn_start:]
             arm2_answers.append({"question": question, **answer2})
             ledger2.extend(answer2["token_ids"])
             _assert_cache_ledger(arm2_cache, ledger2, "arm 2")
@@ -452,11 +499,10 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
             )
             arm3_answers.append({"question": question, **answer3})
 
-            _twin_logits, arm3_cache = session.feed_one_by_one(
-                model, suffix, arm3_cache, device=device, call_log=calls3,
-            )
-            _twin_logits, arm3_cache = session.feed_one_by_one(
-                model, answer2["token_ids"], arm3_cache, device=device, call_log=calls3,
+            replay_ids = [token for call in arm2_turn_calls for token in call["token_ids"]]
+            _twin_logits, arm3_cache = session.run_segment(
+                model, replay_ids, arm3_cache, arm2_turn_calls, device=device,
+                call_log=calls3, turn=turn_no,
             )
             ledger3.extend(suffix)
             ledger3.extend(answer2["token_ids"])
@@ -469,22 +515,39 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
                                                  arm2_answers)
             if ledger2 != template_ids:
                 raise AssertionError("completed token ledger differs from chat-template IDs")
-            session.assert_equal_call_shapes(calls2, calls3)
+            call_equal = session.assert_equal_call_shapes(calls2, calls3)
+            arm2_hook_calls = sum(bool(call["hook_on"]) for call in arm2_turn_calls)
+            arm2_hook_state_ok = all(call["hook_on"] is False for call in arm2_turn_calls)
+            twin_hook_state_ok = all(call["hook_on"] is False
+                                     for call in calls3 if int(call.get("turn", 0)) == turn_no)
             ledger_checks.append({"unit_id": str(unit["id"]), "turn": turn + 1,
-                                  "template_equal": True, "twin_tokens_equal": True,
-                                  "call_shapes_equal": True,
+                                  "template_equal": ledger2 == template_ids,
+                                  "twin_tokens_equal": ledger2 == ledger3,
+                                  "call_shapes_equal": call_equal,
+                                  "call_logs_equal": call_equal,
+                                  "arm2_hook_calls": arm2_hook_calls,
+                                  "arm2_calls_this_turn": len(arm2_turn_calls),
+                                  "arm2_hook_state_ok": arm2_hook_state_ok,
+                                  "twin_hook_state_ok": twin_hook_state_ok,
                                   "arm2_ledger_token_ids": list(ledger2),
                                   "arm3_ledger_token_ids": list(ledger3),
                                   "template_token_ids": template_ids})
+            if not arm2_hook_state_ok or not twin_hook_state_ok:
+                raise AssertionError("post-turn-one paths unexpectedly applied a hook")
 
+            arm1_call_start = len(arm1_calls)
             arm1 = _full_answer(
                 model, tokenizer, list(session.QUESTIONS[:turn]), arm1_answers, question,
                 layer, push, device=device, max_new_tokens=max_new_tokens,
+                call_log=arm1_calls, turn=turn_no,
             )
+            if not all(call["hook_on"] is True for call in arm1_calls[arm1_call_start:]):
+                raise AssertionError("arm 1 missed a required push call")
             arm1_answers.append({"question": question, **arm1})
             arm4 = _full_answer(
                 model, tokenizer, list(session.QUESTIONS[:turn]), arm4_answers, question,
                 None, None, device=device, max_new_tokens=max_new_tokens,
+                call_log=arm4_calls, turn=turn_no,
             )
             arm4_answers.append({"question": question, **arm4})
             answer_rows.extend([
@@ -499,33 +562,39 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
         raise AssertionError("arm 2 and twin finished with different token ledgers")
 
     if pilot:
-        # Replay the exact cached arm-2 chunk sequence twice without a hook.
-        replay_a = None
-        replay_b = None
-        same_calls = []
-        hashes_a, hashes_b = [], []
-        for call in calls2:
-            logits_a, replay_a, _ = session.call_forward(
-                model, call["token_ids"], replay_a, device=device,
-            )
-            logits_b, replay_b, _ = session.call_forward(
-                model, call["token_ids"], replay_b, device=device,
-            )
-            equal = bool(torch.equal(logits_a, logits_b))
-            same_calls.append(equal)
-            hash_a = _logit_hash(logits_a)
-            hash_b = _logit_hash(logits_b)
-            hashes_a.append(hash_a)
-            hashes_b.append(hash_b)
-        determinism.append({"unit_id": str(unit["id"]), "calls": len(same_calls),
-                            "equal_calls": sum(same_calls), "bitwise_equal": bool(all(same_calls)),
-                            "logit_hashes_first": hashes_a,
-                            "logit_hashes_second": hashes_b})
+        def replay(sequence, replay_hook):
+            replay_cache = None
+            hashes = []
+            logits_list = []
+            for call in sequence:
+                logits, replay_cache = session.run_segment(
+                    model, call["token_ids"], replay_cache, [call], device=device,
+                    hook=replay_hook, turn=int(call.get("turn", 0)),
+                )
+                logits_list.append(logits)
+                hashes.append(_logit_hash(logits))
+            return logits_list, hashes
 
-    random_rows = _run_random_pair(model, tokenizer, unit, layer, layer_no,
-                                   float(medians[str(layer_no)]), arm2_answers,
-                                   device=device, unit_id=str(unit["id"]))
-    return {
+        pushed_a, pushed_hashes_a = replay(calls2, treatment)
+        pushed_b, pushed_hashes_b = replay(calls2, treatment)
+        twin_a, twin_hashes_a = replay(calls3, None)
+        twin_b, twin_hashes_b = replay(calls3, None)
+        pushed_equal = all(torch.equal(a, b) for a, b in zip(pushed_a, pushed_b))
+        twin_equal = all(torch.equal(a, b) for a, b in zip(twin_a, twin_b))
+        determinism.append({"unit_id": str(unit["id"]), "calls": len(calls2),
+                            "pushed_bitwise_equal": bool(pushed_equal),
+                            "twin_bitwise_equal": bool(twin_equal),
+                            "bitwise_equal": bool(pushed_equal and twin_equal),
+                            "pushed_logit_hashes_first": pushed_hashes_a,
+                            "pushed_logit_hashes_second": pushed_hashes_b,
+                            "twin_logit_hashes_first": twin_hashes_a,
+                            "twin_logit_hashes_second": twin_hashes_b})
+
+    random_rows, random_call_sequences = _run_random_pair(
+        model, tokenizer, unit, layer, layer_no, float(medians[str(layer_no)]),
+        arm2_answers, device=device, unit_id=str(unit["id"]), arm2_calls=calls2,
+    )
+    record = {
         "unit": {key: unit.get(key) for key in
                  ("id", "persona", "desc", "kind", "layer", "neuron", "screen_answer")},
         "answers": answer_rows,
@@ -536,12 +605,33 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
         "ledger_checks": ledger_checks,
         "arm2_call_sequence": calls2,
         "arm3_call_sequence": calls3,
+        "arm1_call_sequence": arm1_calls,
+        "arm4_call_sequence": arm4_calls,
+        "random_call_sequences": random_call_sequences,
         "arm2_transcript": arm2_answers,
         "arm3_probes": arm3_answers,
         "arm1_transcript": arm1_answers,
         "arm4_transcript": arm4_answers,
-        "arm2_hook_removed_after_turn1": True,
+        "arm2_hook_removed_after_turn1": hook_removed_after_turn1,
     }
+    if parameters is not None:
+        record["parameters"] = dict(parameters)
+        for name in ("answers", "reader_free", "random_reader_free", "cache_sanity",
+                     "determinism", "ledger_checks"):
+            for row in record[name]:
+                row["parameters"] = dict(parameters)
+        for name in ("arm2_call_sequence", "arm3_call_sequence", "arm1_call_sequence",
+                     "arm4_call_sequence"):
+            for call in record[name]:
+                call["parameters"] = dict(parameters)
+        for name in ("arm2_transcript", "arm3_probes", "arm1_transcript", "arm4_transcript"):
+            for row in record[name]:
+                row["parameters"] = dict(parameters)
+        for pair in random_call_sequences:
+            pair["parameters"] = dict(parameters)
+            for call in pair["random_calls"] + pair["twin_calls"]:
+                call["parameters"] = dict(parameters)
+    return record
 
 
 def _run_zero_hook(model, tokenizer, decoder_layers: list, layers: list[int], device: str,
@@ -568,7 +658,8 @@ def _run_zero_hook(model, tokenizer, decoder_layers: list, layers: list[int], de
 
 def _write_aggregate(out: Path, unit_records: list[dict], medians: dict[str, float],
                      zero_checks: list[dict], stage: str, pilot_decision: dict | None,
-                     elapsed: float, *, slot_only: bool) -> None:
+                     elapsed: float, *, slot_only: bool,
+                     parameters: dict) -> None:
     answers = [row for unit in unit_records for row in unit["answers"]]
     reader_free = [row for unit in unit_records for row in unit["reader_free"]]
     random_rows = [row for unit in unit_records for row in unit["random_reader_free"]]
@@ -580,8 +671,12 @@ def _write_aggregate(out: Path, unit_records: list[dict], medians: dict[str, flo
     determinism = [determinism_by_unit[key] for key in sorted(determinism_by_unit)]
     ledger_checks = [row for unit in unit_records for row in unit["ledger_checks"]]
     call_sequences = [{"unit_id": str(unit["unit"]["id"]),
+                       "parameters": dict(unit["parameters"]),
                        "arm2_calls": unit["arm2_call_sequence"],
-                       "arm3_calls": unit["arm3_call_sequence"]}
+                       "arm3_calls": unit["arm3_call_sequence"],
+                       "arm1_calls": unit["arm1_call_sequence"],
+                       "arm4_calls": unit["arm4_call_sequence"],
+                       "random_pairs": unit["random_call_sequences"]}
                       for unit in unit_records]
     write_jsonl(out / "answers.jsonl", answers)
     write_jsonl(out / "reader-free.jsonl", reader_free)
@@ -606,10 +701,24 @@ def _write_aggregate(out: Path, unit_records: list[dict], medians: dict[str, flo
         "ledger_checks": len(ledger_checks),
         "elapsed_seconds": round(float(elapsed), 2),
         "transformers_version": _transformers_version(),
+        "parameters": dict(parameters),
         "pilot_size_decision": pilot_decision,
         "model_load": "common92.load_model(snapshot, device); local_files_only=True; bf16; eval; requires_grad_(False)",
     }
-    write_json(out / ("pilot-meta.json" if stage == "pilot" else "run-meta.json"), meta)
+    meta_path = out / ("pilot-meta.json" if stage == "pilot" else "run-meta.json")
+    if stage == "pilot" and meta_path.is_file():
+        saved = read_json(meta_path)
+        if saved.get("parameters") != parameters:
+            raise ValueError("pilot parameters differ from the saved pilot decision")
+        # The first pilot decision is fixed and must survive every resume.
+    else:
+        write_json(meta_path, meta)
+
+
+def _json_sha256(value) -> str:
+    encoded = json.dumps(value, ensure_ascii=False, sort_keys=True,
+                         separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _transformers_version() -> str:
@@ -633,7 +742,7 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--max-new-tokens", type=int, default=session.MAX_NEW_TOKENS)
     parser.add_argument("--slot-only", action="store_true",
-                        help="apply the pilot rule fixed before any labels are read")
+                        help="run the fixed slot cut on main; the pilot always measures both units")
     args = parser.parse_args(argv)
     if args.max_new_tokens < 1:
         parser.error("--max-new-tokens must be positive")
@@ -641,7 +750,7 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     neurons = read_json(args.neurons)
     kinds = read_json(args.kinds)
     units = selected_units(neurons, kinds, validate_inventory=validate_inventory,
-                           slot_only=args.slot_only)
+                           slot_only=(args.slot_only if args.stage == "main" else False))
     if args.stage == "pilot":
         by_id = {str(unit["id"]): unit for unit in units}
         missing = [uid for uid in PILOT_IDS if uid not in by_id]
@@ -661,20 +770,56 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     started = time.perf_counter()
 
     median_path = out / "medians.json"
+    median_meta_path = out / "medians-meta.json"
+    median_identity = {"model_snapshot": str(args.model), "device": str(args.device),
+                       "transformers_version": _transformers_version()}
     if median_path.is_file():
+        if not median_meta_path.is_file():
+            raise ValueError("saved medians have no provenance; rerun in a fresh output folder")
         medians = read_json(median_path)
+        median_meta = read_json(median_meta_path)
+        if any(median_meta.get(key) != value for key, value in median_identity.items()):
+            raise ValueError("saved residual medians were produced with different parameters")
+        if median_meta.get("medians_sha256") != _json_sha256(medians):
+            raise ValueError("saved residual medians do not match their metadata hash")
     else:
         medians = session.residual_medians(model, tokenizer, args.device)
         write_json(median_path, medians)
+        write_json(median_meta_path,
+                   {**median_identity, "medians_sha256": _json_sha256(medians)})
+
+    unit_parameters = {
+        **median_identity,
+        "max_new_tokens": int(args.max_new_tokens),
+        "medians_sha256": _json_sha256(medians),
+    }
+    selected_ids = [str(unit["id"]) for unit in units]
+    effective_slot_only = bool(args.slot_only) if args.stage == "main" else False
+    run_parameters = {"unit_parameters": unit_parameters,
+                      "slot_only": effective_slot_only,
+                      "selected_unit_ids": selected_ids}
+    run_meta_path = out / "run-meta.json"
+    if args.stage == "main" and run_meta_path.is_file():
+        saved_run = read_json(run_meta_path)
+        if saved_run.get("parameters") != run_parameters:
+            raise ValueError("resume parameters differ from the saved run metadata")
+    if args.stage == "pilot" and (out / "pilot-meta.json").is_file():
+        saved_pilot = read_json(out / "pilot-meta.json")
+        if saved_pilot.get("parameters") != run_parameters:
+            raise ValueError("resume parameters differ from the saved pilot metadata")
 
     zero_path = out / "zero-hook-check.json"
     zero_checks = read_json(zero_path) if zero_path.is_file() else []
+    if any(row.get("parameters") != unit_parameters for row in zero_checks):
+        raise ValueError("saved zero-hook rows were produced with different parameters")
     by_zero = {(int(row["layer"]), int(row["turn"])): row for row in zero_checks}
     missing_zero_layers = [layer for layer in layers_to_run
                            if any((layer, turn) not in by_zero for turn in range(1, 6))]
     if missing_zero_layers:
         new_checks = _run_zero_hook(model, tokenizer, decoder_layers, missing_zero_layers,
                                     args.device, args.max_new_tokens)
+        for row in new_checks:
+            row["parameters"] = dict(unit_parameters)
         by_zero.update({(int(row["layer"]), int(row["turn"])): row for row in new_checks})
         zero_checks = [by_zero[key] for key in sorted(by_zero)]
         write_json(zero_path, zero_checks)
@@ -683,27 +828,36 @@ def main(argv: list[str] | None = None, *, model_loader=None,
         return 1
 
     pilot_path = out / "pilot-meta.json"
-    if args.stage == "main" and validate_inventory and pilot_path.is_file():
-        prior_decision = read_json(pilot_path).get("pilot_size_decision") or {}
-        if prior_decision.get("over_90_minutes") and not args.slot_only:
-            raise ValueError("pilot projected over 90 minutes; main must use --slot-only before labels")
+    if args.stage == "main" and pilot_path.is_file():
+        saved_pilot = read_json(pilot_path)
+        if (saved_pilot.get("parameters", {}).get("unit_parameters") != unit_parameters or
+                saved_pilot.get("parameters", {}).get("slot_only") is not False):
+            raise ValueError("main parameters differ from the completed pilot")
+        prior_decision = saved_pilot.get("pilot_size_decision") or {}
+        if bool(prior_decision.get("over_90_minutes")) != bool(args.slot_only):
+            required = "--slot-only" if prior_decision.get("over_90_minutes") else "the full 29-unit run"
+            raise ValueError(f"pilot decision is fixed; main must use {required}")
     elif args.stage == "main" and validate_inventory and not pilot_path.is_file():
         raise ValueError("main stage requires a completed two-unit pilot in the same output directory")
 
     unit_dir = out / "units"
     unit_dir.mkdir(parents=True, exist_ok=True)
     unit_records = []
-    selected_ids = {str(unit["id"]) for unit in units}
     for unit in units:
         path = unit_dir / f"{unit['id']}.json"
         if path.is_file():
             record = read_json(path)
             if str(record.get("unit", {}).get("id")) != str(unit["id"]):
                 raise ValueError(f"saved unit file does not match {unit['id']}")
+            if record.get("parameters") != unit_parameters:
+                raise ValueError(f"saved unit {unit['id']} has different production parameters")
         else:
+            unit_started = time.perf_counter()
             record = _run_unit(model, tokenizer, unit, medians, device=args.device,
                                max_new_tokens=args.max_new_tokens,
-                               pilot=(args.stage == "pilot"))
+                               pilot=(args.stage == "pilot"),
+                               parameters=unit_parameters)
+            record["unit_elapsed_seconds"] = round(time.perf_counter() - unit_started, 4)
             write_json_atomic(path, record)
         unit_records.append(record)
         print(f"saved {unit['id']}: {len(record['answers'])} answer rows", flush=True)
@@ -713,17 +867,21 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     elapsed = time.perf_counter() - started
     pilot_decision = None
     if args.stage == "pilot":
-        expected_units = 21 if args.slot_only else 29
-        projected = elapsed * (expected_units / max(1, len(unit_records)))
-        pilot_decision = {"pilot_units": [str(unit["unit"]["id"]) for unit in unit_records],
-                          "elapsed_seconds": round(elapsed, 2),
-                          "projected_seconds": round(projected, 2),
-                          "projected_minutes": round(projected / 60, 2),
-                          "over_90_minutes": bool(projected > 90 * 60),
-                          "required_main_cut": "21 slot units" if projected > 90 * 60 else None,
-                          "decision_fixed_before_labels": True}
+        if pilot_path.is_file():
+            pilot_decision = read_json(pilot_path).get("pilot_size_decision")
+        else:
+            projected = elapsed * (29 / max(1, len(unit_records)))
+            pilot_decision = {"pilot_units": [str(unit["unit"]["id"]) for unit in unit_records],
+                              "elapsed_seconds": round(elapsed, 2),
+                              "projected_units": 29,
+                              "projected_seconds": round(projected, 2),
+                              "projected_minutes": round(projected / 60, 2),
+                              "over_90_minutes": bool(projected > 90 * 60),
+                              "required_main_cut": "21 slot units" if projected > 90 * 60 else "all 29 units",
+                              "decision_fixed_before_labels": True}
     _write_aggregate(out, unit_records, medians, zero_checks, args.stage,
-                     pilot_decision, elapsed, slot_only=args.slot_only)
+                     pilot_decision, elapsed, slot_only=effective_slot_only,
+                     parameters=run_parameters)
     print(json.dumps(read_json(out / ("pilot-meta.json" if args.stage == "pilot" else "run-meta.json")),
                      ensure_ascii=False), flush=True)
     return 0

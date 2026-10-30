@@ -125,23 +125,46 @@ def _label_lookup(answer_rows: list[dict], keys: list[dict], labels: list[dict],
     return result, missing
 
 
-def _cohen_kappa(ds_by_item: dict, luna_by_item: dict) -> dict:
+def _cohen_kappa(ds_by_item: dict, luna_by_item: dict,
+                 sample_keys: list[dict]) -> dict:
     pairs = []
-    for key, luna in luna_by_item.items():
+    unresolved = []
+    expected = set()
+    for row in sample_keys:
+        key = (str(row.get("item_id", "")), int(row.get("question_index", -1)))
+        answer_hash = str(row.get("answer_hash", ""))
+        if key in expected:
+            unresolved.append({"item_id": key[0], "reason": "duplicate sample key"})
+            continue
+        expected.add(key)
         ds = ds_by_item.get(key)
+        luna = luna_by_item.get(key)
         if (not _valid_label(ds) or not _valid_label(luna) or
-                str(ds.get("answer_hash", "")) != str(luna.get("answer_hash", ""))):
+                str(ds.get("answer_hash", "")) != answer_hash or
+                str(luna.get("answer_hash", "")) != answer_hash):
+            unresolved.append({"item_id": key[0], "reason": "missing, invalid, or stale sample label"})
             continue
         pairs.append((bool(ds["shows_persona"]), bool(luna["shows_persona"])))
     n = len(pairs)
     if not n:
-        return {"n": 0, "kappa": None}
+        return {"n": 0, "expected_n": len(expected), "unresolved": unresolved,
+                "agreement": None, "expected_agreement": None, "kappa": None,
+                "single_class": False, "gate_method": "kappa", "gate_value": None,
+                "threshold": 0.60, "gate_passed": False}
     observed = sum(a == b for a, b in pairs) / n
     p_ds = sum(a for a, _b in pairs) / n
     p_luna = sum(b for _a, b in pairs) / n
-    expected = p_ds * p_luna + (1 - p_ds) * (1 - p_luna)
-    kappa = None if expected == 1 else (observed - expected) / (1 - expected)
-    return {"n": n, "agreement": observed, "expected_agreement": expected, "kappa": kappa}
+    expected_agreement = p_ds * p_luna + (1 - p_ds) * (1 - p_luna)
+    kappa = None if expected_agreement == 1 else (observed - expected_agreement) / (1 - expected_agreement)
+    one_class = len({a for a, _b in pairs}) == 1 or len({b for _a, b in pairs}) == 1
+    gate_method = "raw_agreement_single_class" if one_class else "cohen_kappa"
+    gate_value = observed if one_class else kappa
+    passed = (len(pairs) == len(sample_keys) and not unresolved and
+              gate_value is not None and gate_value >= 0.60)
+    return {"n": n, "expected_n": len(sample_keys), "unresolved": unresolved,
+            "agreement": observed, "expected_agreement": expected_agreement, "kappa": kappa,
+            "single_class": bool(one_class), "gate_method": gate_method,
+            "gate_value": gate_value, "threshold": 0.60, "gate_passed": bool(passed)}
 
 
 def _count_for_arm(labels_by_key: dict, units: list[str], arm: str, turn: int,
@@ -166,6 +189,16 @@ def _count_for_arm(labels_by_key: dict, units: list[str], arm: str, turn: int,
 
 def _gate(number: int, name: str, passed: bool, evidence: dict) -> dict:
     return {"number": number, "name": name, "passed": bool(passed), **evidence}
+
+
+def _prediction_thresholds(unit_count: int) -> dict[str, int]:
+    scale = int(unit_count) / 29
+    return {
+        "125.2_minimum": math.ceil(6 * scale),
+        "125.3_minimum": math.ceil(20 * scale),
+        "125.5_minimum": math.ceil(6 * scale),
+        "125.6_maximum": math.floor(2 * scale),
+    }
 
 
 def _write_report(out: Path, result: dict) -> str:
@@ -237,6 +270,26 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
     args = parser.parse_args(argv)
 
     answers = read_jsonl(args.answers)
+    raw_dir = Path(args.answers).parent
+    pilot_meta_path = raw_dir / "pilot-meta.json"
+    run_meta_path = raw_dir / "run-meta.json"
+    if validate_inventory:
+        if not pilot_meta_path.is_file() or not run_meta_path.is_file():
+            raise ValueError("pilot and run metadata are required before labels are read")
+        pilot_meta = read_json(pilot_meta_path)
+        run_meta = read_json(run_meta_path)
+        required_cut = bool((pilot_meta.get("pilot_size_decision") or {}).get("over_90_minutes"))
+        if bool(args.slot_only) != required_cut:
+            raise ValueError("scorer cut differs from the pilot decision")
+        if bool(run_meta.get("slot_only")) != bool(args.slot_only):
+            raise ValueError("run metadata does not match the scorer cut")
+        if bool(run_meta.get("parameters", {}).get("slot_only")) != bool(args.slot_only):
+            raise ValueError("run parameter record does not match the scorer cut")
+        expected_unit_parameters = run_meta.get("parameters", {}).get("unit_parameters")
+    else:
+        run_meta = read_json(run_meta_path, optional=True) if run_meta_path.is_file() else None
+        expected_unit_parameters = ((run_meta or {}).get("parameters", {})
+                                    .get("unit_parameters"))
     reader_free = read_jsonl(args.reader_free)
     random_reader_free = read_jsonl(args.random_reader_free)
     cache_sanity = read_jsonl(args.cache_sanity)
@@ -266,9 +319,13 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
     required_pilot_ids = {"p92-02", "p92-08"}
     determinism_ids = {str(row.get("unit_id")) for row in determinism}
     det_ok = bool(determinism) and all(
-        len(row.get("logit_hashes_first", [])) == int(row.get("calls", -1)) ==
-        len(row.get("logit_hashes_second", [])) and
-        row.get("logit_hashes_first") == row.get("logit_hashes_second")
+        len(row.get("pushed_logit_hashes_first", [])) == int(row.get("calls", -1)) ==
+        len(row.get("pushed_logit_hashes_second", [])) ==
+        len(row.get("twin_logit_hashes_first", [])) ==
+        len(row.get("twin_logit_hashes_second", [])) and
+        row.get("pushed_logit_hashes_first") == row.get("pushed_logit_hashes_second") and
+        row.get("twin_logit_hashes_first") == row.get("twin_logit_hashes_second") and
+        row.get("pushed_bitwise_equal") is True and row.get("twin_bitwise_equal") is True
         for row in determinism
     )
     if validate_inventory and not args.slot_only:
@@ -289,15 +346,44 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
     luna_by_key, missing_luna = _label_lookup(answers, luna_keys, luna_labels, require_all=False)
     ds_item = label123.latest_label_rows(ds_labels)
     luna_item = label123.latest_label_rows(luna_labels)
-    agreement = _cohen_kappa(ds_item, luna_item)
-    kappa = agreement.get("kappa")
-    kappa_ok = bool(kappa is not None and float(kappa) >= 0.60)
+    sample_policy_ok = False
+    try:
+        expected_luna_items = label125.luna_sample(label125.make_items(answers), ds_labels)
+        expected_luna_keys = {
+            (str(item["public"]["item_id"]), int(item["public"]["question_index"]),
+             str(item["public"]["answer_hash"])) for item in expected_luna_items
+        }
+        actual_luna_keys = {
+            (str(row.get("item_id", "")), int(row.get("question_index", -1)),
+             str(row.get("answer_hash", ""))) for row in luna_keys
+        }
+        sample_policy_ok = expected_luna_keys == actual_luna_keys
+    except (ValueError, KeyError, TypeError):
+        expected_luna_keys = set()
+    agreement = _cohen_kappa(ds_item, luna_item, luna_keys)
+    agreement["sample_policy_match"] = bool(sample_policy_ok)
+    agreement["gate_passed"] = bool(agreement["gate_passed"] and sample_policy_ok)
+    kappa_ok = bool(agreement["gate_passed"])
     label_complete = not missing_ds and not missing_luna
 
     answer_index = {(str(row["unit_id"]), int(row["turn"])): row
                     for row in answers if row["arm"] == "arm2"}
     ledger_by_unit = defaultdict(list)
     ledger_ok = bool(ledger_checks)
+    provenance_rows = (answers + reader_free + random_reader_free + cache_sanity +
+                       determinism + ledger_checks + zero_checks)
+    provenance_calls = []
+    for sequence in call_sequences:
+        provenance_calls.extend(sequence.get(key, []) for key in
+                                ("arm2_calls", "arm3_calls", "arm1_calls", "arm4_calls"))
+        for pair in sequence.get("random_pairs", []):
+            provenance_calls.extend((pair.get("random_calls", []), pair.get("twin_calls", [])))
+    provenance_ok = (expected_unit_parameters is None or all(
+        row.get("parameters") == expected_unit_parameters for row in provenance_rows
+    ) and all(row.get("parameters") == expected_unit_parameters for row in call_sequences) and all(
+        call.get("parameters") == expected_unit_parameters
+        for calls in provenance_calls for call in calls
+    ))
     for row in ledger_checks:
         left = row.get("arm2_ledger_token_ids")
         twin = row.get("arm3_ledger_token_ids")
@@ -305,6 +391,11 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
         ledger_ok = ledger_ok and isinstance(left, list) and left == twin == template
         if int(row.get("turn", 0)) == 1:
             ledger_ok = ledger_ok and row.get("arm2_hook_removed") is True
+        expected_hook_count = int(row.get("arm2_calls_this_turn", 0)) if int(row.get("turn", 0)) == 1 else 0
+        ledger_ok = ledger_ok and row.get("arm2_hook_state_ok") is True
+        ledger_ok = ledger_ok and row.get("twin_hook_state_ok") is True
+        ledger_ok = ledger_ok and int(row.get("arm2_hook_calls", -1)) == expected_hook_count
+        ledger_ok = ledger_ok and row.get("call_logs_equal") is True
         answer = answer_index.get((str(row.get("unit_id")), int(row.get("turn", 0))))
         if answer is None or not isinstance(left, list):
             ledger_ok = False
@@ -320,26 +411,51 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
             ledger_ok = ledger_ok and current_ids[:len(prior_ids)] == prior_ids
     call_by_unit = {str(row.get("unit_id")): row for row in call_sequences}
     ledger_ok = ledger_ok and set(call_by_unit) == set(units)
+    def paired_calls_match(left, right):
+        fields = ("token_ids", "shape", "cache_length_before", "cache_length_after", "turn")
+        return len(left) > 0 and len(left) == len(right) and all(
+            all(a.get(field) == b.get(field) for field in fields) and
+            a.get("shape") == [1, len(a.get("token_ids", []))]
+            for a, b in zip(left, right)
+        )
+
     for unit in units:
         row = call_by_unit.get(unit, {})
         left = row.get("arm2_calls", [])
         right = row.get("arm3_calls", [])
-        ledger_ok = ledger_ok and len(left) > 0 and len(left) == len(right)
-        for call_a, call_b in zip(left, right):
-            ids_a, ids_b = call_a.get("token_ids"), call_b.get("token_ids")
-            shape_a, shape_b = call_a.get("shape"), call_b.get("shape")
-            ledger_ok = ledger_ok and ids_a == ids_b and shape_a == shape_b
-            ledger_ok = ledger_ok and shape_a == [1, len(ids_a or [])]
+        ledger_ok = ledger_ok and paired_calls_match(left, right)
+        ledger_ok = ledger_ok and all(call.get("hook_on") is (int(call.get("turn", 0)) == 1)
+                                      for call in left)
+        ledger_ok = ledger_ok and all(call.get("hook_on") is False for call in right)
+        arm1_calls, arm4_calls = row.get("arm1_calls", []), row.get("arm4_calls", [])
+        ledger_ok = ledger_ok and {int(call.get("turn", 0)) for call in arm1_calls} == {2, 3, 4, 5}
+        ledger_ok = ledger_ok and all(call.get("hook_on") is True for call in arm1_calls)
+        ledger_ok = ledger_ok and {int(call.get("turn", 0)) for call in arm4_calls} == {1, 2, 3, 4, 5}
+        ledger_ok = ledger_ok and all(call.get("hook_on") is False for call in arm4_calls)
+        pairs = row.get("random_pairs", [])
+        ledger_ok = ledger_ok and len(pairs) == 3
+        for pair in pairs:
+            random_calls = pair.get("random_calls", [])
+            twin_calls = pair.get("twin_calls", [])
+            ledger_ok = ledger_ok and paired_calls_match(random_calls, twin_calls)
+            ledger_ok = ledger_ok and paired_calls_match(left, random_calls)
+            ledger_ok = ledger_ok and all(
+                call.get("hook_on") is (int(call.get("turn", 0)) == 1)
+                for call in random_calls
+            )
+            ledger_ok = ledger_ok and all(call.get("hook_on") is False for call in twin_calls)
     if validate_inventory:
         expected_ledger = expected_n * 5
         ledger_ok = ledger_ok and len(ledger_checks) == expected_ledger
+    ledger_ok = ledger_ok and provenance_ok
 
     gates = [
         _gate(1, "Zero-vector hook has same token IDs at batch size one", zero_ok,
               {"checks": len(zero_expected & set(zero_by_key)), "expected": len(zero_expected)}),
-        _gate(2, "No-hook twin sequence is bitwise deterministic on both pilot units", det_ok,
+        _gate(2, "Pushed path and no-hook twin are bitwise deterministic on both pilot units", det_ok,
               {"units": sorted(determinism_ids), "rows": len(determinism), "all_equal": all(
-                  row.get("logit_hashes_first") == row.get("logit_hashes_second") for row in determinism)}),
+                  row.get("pushed_bitwise_equal") is True and
+                  row.get("twin_bitwise_equal") is True for row in determinism)}),
         _gate(3, "Twin cache agrees with one-forward full re-encoding", cache_ok,
               {"comparisons": cache_count, "required_comparisons": required_cache,
                "top1_agree": cache_top1,
@@ -347,10 +463,11 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
                "max_required": 1.0}),
         _gate(4, "DeepSeek and Luna each pass 11 of 12 known examples", bool(ds_known["passed"] and luna_known["passed"]),
               {"deepseek": ds_known, "luna": luna_known}),
-        _gate(5, "DeepSeek/Luna shows-persona kappa is at least 0.60", kappa_ok,
+        _gate(5, "DeepSeek/Luna agreement is at least 0.60", kappa_ok,
               {"agreement": agreement}),
-        _gate(6, "Template ledger, twin IDs and call shapes pass at every turn", ledger_ok,
-              {"checks": len(ledger_checks), "expected": expected_n * 5}),
+        _gate(6, "Template ledger, paired call plans and hook coverage pass at every turn", ledger_ok,
+              {"checks": len(ledger_checks), "expected": expected_n * 5,
+               "parameter_rows_match": provenance_ok}),
         _gate(7, "All current DeepSeek labels and private joins match answer hashes", label_complete,
               {"missing_or_stale_deepseek": len(missing_ds),
                "missing_or_stale_luna_sample": len(missing_luna)}),
@@ -396,6 +513,7 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
     counts_for_p3_t2 = len(above_by_turn.get(2, []))
     counts_for_p3_t5 = len(above_by_turn.get(5, []))
     diff_2_3 = turn5["arm2"]["coherent_persona"] - turn5["arm3"]["coherent_persona"]
+    prediction_thresholds = _prediction_thresholds(len(units))
     verdicts = {}
     if not all_gates:
         first_failed = next(gate for gate in gates if not gate["passed"])
@@ -406,15 +524,15 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
         verdicts = {
             "125.1": {**PREDICTIONS["125.1"], "verdict": "held" if abs(diff_2_3) <= 5 else "not held",
                       "observed": f"arm 2 {turn5['arm2']['coherent_persona']}, arm 3 {turn5['arm3']['coherent_persona']} of {len(units)} selected units; difference {diff_2_3}."},
-            "125.2": {**PREDICTIONS["125.2"], "verdict": "held" if turn5["arm3"]["coherent_persona"] >= 6 else "not held",
+            "125.2": {**PREDICTIONS["125.2"], "verdict": "held" if turn5["arm3"]["coherent_persona"] >= prediction_thresholds["125.2_minimum"] else "not held",
                       "observed": f"arm 3 has {turn5['arm3']['coherent_persona']} coherent-persona labels at turn 5, among {len(units)} selected units."},
-            "125.3": {**PREDICTIONS["125.3"], "verdict": "held" if counts_for_p3_t2 >= 20 else "not held",
+            "125.3": {**PREDICTIONS["125.3"], "verdict": "held" if counts_for_p3_t2 >= prediction_thresholds["125.3_minimum"] else "not held",
                       "observed": f"{counts_for_p3_t2}/{len(units)} units have delta_2 above their three-direction mean."},
             "125.4": {**PREDICTIONS["125.4"], "verdict": "held" if counts_for_p3_t5 <= counts_for_p3_t2 - 5 else "not held",
                       "observed": f"The above-random count changes from {counts_for_p3_t2}/{len(units)} at turn 2 to {counts_for_p3_t5}/{len(units)} at turn 5."},
-            "125.5": {**PREDICTIONS["125.5"], "verdict": "held" if incoherent_diff >= 6 else "not held",
+            "125.5": {**PREDICTIONS["125.5"], "verdict": "held" if incoherent_diff >= prediction_thresholds["125.5_minimum"] else "not held",
                       "observed": f"arm 1 has {turn5['arm1']['incoherent']} and arm 2 {turn5['arm2']['incoherent']} known incoherent answers; difference {incoherent_diff}."},
-            "125.6": {**PREDICTIONS["125.6"], "verdict": "held" if turn5["arm4"]["coherent_persona"] <= 2 else "not held",
+            "125.6": {**PREDICTIONS["125.6"], "verdict": "held" if turn5["arm4"]["coherent_persona"] <= prediction_thresholds["125.6_maximum"] else "not held",
                       "observed": f"arm 4 has {turn5['arm4']['coherent_persona']} coherent-persona labels at turn 5, among {len(units)} selected units."},
         }
 
@@ -432,15 +550,19 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
             named_units = ", ".join(no_larger_random_at_turn5)
             interpretation.append(f"At turn 5, the real cache delta is no larger than the mean random-direction delta for {len(no_larger_random_at_turn5)} units ({named_units}). For these units, the kept cache changes the model but not toward this persona on this measure.")
         if verdicts["125.5"]["verdict"] == "held":
-            interpretation.append("Arm 1 has at least six more incoherent answers than arm 2 at turn 5. Pushing every turn breaks answers more than it holds a persona.")
+            interpretation.append(f"Arm 1 has at least {prediction_thresholds['125.5_minimum']} more incoherent answers than arm 2 at turn 5. Pushing every turn breaks answers more than it holds a persona.")
         if not interpretation:
             interpretation.append("No registered interpretation rule above was triggered; report the counts and deltas without a broader claim.")
 
     if args.slot_only:
-        for prediction in verdicts.values():
-            prediction["registered_text"] = prediction["text"]
-            prediction["text"] = prediction["text"].replace("of 29", f"of {len(units)}").replace(
-                "29 units", f"{len(units)} units")
+        notes = {
+            "125.2": f"Slot-only criterion: at least {prediction_thresholds['125.2_minimum']} of {len(units)} units, scaled up from 6 of 29.",
+            "125.3": f"Slot-only criterion: at least {prediction_thresholds['125.3_minimum']} of {len(units)} units, scaled up from 20 of 29.",
+            "125.5": f"Slot-only criterion: at least {prediction_thresholds['125.5_minimum']} units, scaled up from 6 of 29.",
+            "125.6": f"Slot-only criterion: at most {prediction_thresholds['125.6_maximum']} of {len(units)} units, scaled down from 2 of 29.",
+        }
+        for key, note in notes.items():
+            verdicts[key]["slot_only_note"] = note
 
     cache_diffs = per_check_max
     ordered = sorted(cache_diffs)
@@ -463,6 +585,7 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
         }
     result = {
         "part": 125, "prediction_author": "Claude", "slot_only": bool(args.slot_only),
+        "prediction_thresholds": prediction_thresholds,
         "unit_count": len(units), "unit_ids": units, "unit_kinds": unit_kinds,
         "all_gates_passed": all_gates, "gates": gates,
         "predictions": verdicts,

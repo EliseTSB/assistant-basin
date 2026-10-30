@@ -19,8 +19,7 @@ import label123  # noqa: E402 -- shared Part 92 prompt and DeepSeek/Luna routes.
 import label119  # noqa: E402 -- shared known-example bank.
 
 ITEM_SEED = 12501
-LUNA_SEED = 12503
-SECOND_READER_FRACTION = 0.15
+LUNA_SEED = label123.LUNA_SEED
 
 
 def read_jsonl(path: str | Path, *, optional: bool = False) -> list[dict]:
@@ -47,7 +46,7 @@ def _reader_question(row: dict) -> str:
     for index, turn in enumerate(prior, 1):
         lines.append(f"Turn {index} question: {turn['question']}")
         lines.append(f"Turn {index} answer: {turn['answer']}")
-    lines.append(f"Current question: {row['question']}")
+    lines.append(f"Current turn {int(row['turn'])} question: {row['question']}")
     return "\n".join(lines)
 
 
@@ -82,27 +81,9 @@ def make_items(answer_rows: list[dict]) -> list[dict]:
     return items
 
 
-def luna_sample(items: list[dict], seed: int = LUNA_SEED) -> list[dict]:
-    """Take a fixed 15% second-reader sample stratified by arm and turn."""
-    groups: dict[tuple[str, int], list[dict]] = {}
-    for item in items:
-        private = item["private"]
-        groups.setdefault((str(private["arm"]), int(private["turn"])), []).append(item)
-    target = int(math.ceil(SECOND_READER_FRACTION * len(items)))
-    base = {key: int(len(rows) * SECOND_READER_FRACTION) for key, rows in groups.items()}
-    remaining = target - sum(base.values())
-    rng = random.Random(seed)
-    strata = list(groups)
-    rng.shuffle(strata)
-    for key in strata[:remaining]:
-        base[key] += 1
-    selected = []
-    for key in sorted(groups):
-        rows = list(groups[key])
-        rng.shuffle(rows)
-        selected.extend(rows[:base[key]])
-    rng.shuffle(selected)
-    return selected
+def luna_sample(items: list[dict], deepseek_rows: list[dict]) -> list[dict]:
+    """Use Part 123's positive-inclusive second-reader sample policy."""
+    return label123.luna_sample(items, deepseek_rows)
 
 
 def _known_gate(reader: str, path: Path, request_fn=None, sleep_fn=None) -> dict:
@@ -119,6 +100,9 @@ def _known_gate(reader: str, path: Path, request_fn=None, sleep_fn=None) -> dict
 def execution_gates(answers_path: str | Path) -> list[dict]:
     """Require model/cache gates before sending study answers to a reader."""
     raw_dir = Path(answers_path).parent
+    run_path = raw_dir / "run-meta.json"
+    run_meta = _read_json(run_path) if run_path.is_file() else {}
+    expected_parameters = run_meta.get("parameters", {}).get("unit_parameters")
     answers = read_jsonl(answers_path)
     units = {str(row["unit_id"]) for row in answers}
     layers = {int(row["layer"]) for row in answers}
@@ -134,9 +118,14 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
     determinism = read_jsonl(raw_dir / "determinism.jsonl")
     det_ids = {str(row.get("unit_id")) for row in determinism}
     det_ok = ({"p92-02", "p92-08"} <= det_ids and
-              all(len(row.get("logit_hashes_first", [])) == int(row.get("calls", -1)) ==
-                  len(row.get("logit_hashes_second", [])) and
-                  row.get("logit_hashes_first") == row.get("logit_hashes_second")
+              all(len(row.get("pushed_logit_hashes_first", [])) == int(row.get("calls", -1)) ==
+                  len(row.get("pushed_logit_hashes_second", [])) ==
+                  len(row.get("twin_logit_hashes_first", [])) ==
+                  len(row.get("twin_logit_hashes_second", [])) and
+                  row.get("pushed_logit_hashes_first") == row.get("pushed_logit_hashes_second") and
+                  row.get("twin_logit_hashes_first") == row.get("twin_logit_hashes_second") and
+                  row.get("pushed_bitwise_equal") is True and
+                  row.get("twin_bitwise_equal") is True
                   for row in determinism))
     cache = read_jsonl(raw_dir / "cache-sanity.jsonl")
     cache_ok = (len(cache) == 5 * len(units) and
@@ -150,7 +139,12 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
         isinstance(row.get("arm2_ledger_token_ids"), list) and
         row.get("arm2_ledger_token_ids") == row.get("arm3_ledger_token_ids") ==
         row.get("template_token_ids") and
-        (int(row.get("turn", 0)) != 1 or row.get("arm2_hook_removed") is True)
+        (int(row.get("turn", 0)) != 1 or row.get("arm2_hook_removed") is True) and
+        row.get("call_logs_equal") is True and
+        row.get("arm2_hook_state_ok") is True and
+        row.get("twin_hook_state_ok") is True and
+        int(row.get("arm2_hook_calls", -1)) ==
+        (int(row.get("arm2_calls_this_turn", 0)) if int(row.get("turn", 0)) == 1 else 0)
         for row in ledger
     ))
     sequences = read_jsonl(raw_dir / "call-sequences.jsonl")
@@ -169,13 +163,52 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
         for previous, current in zip(rows, rows[1:]):
             prior_ids = previous.get("arm2_ledger_token_ids", [])
             ledger_ok = ledger_ok and current.get("arm2_ledger_token_ids", [])[:len(prior_ids)] == prior_ids
+    def same_calls(left, right):
+        fields = ("token_ids", "shape", "cache_length_before", "cache_length_after", "turn")
+        return len(left) > 0 and len(left) == len(right) and all(
+            all(a.get(field) == b.get(field) for field in fields) and
+            a.get("shape") == [1, len(a.get("token_ids", []))]
+            for a, b in zip(left, right)
+        )
+
     for row in sequence_map.values():
         left, right = row.get("arm2_calls", []), row.get("arm3_calls", [])
-        ledger_ok = ledger_ok and len(left) > 0 and len(left) == len(right)
-        ledger_ok = ledger_ok and all(a.get("token_ids") == b.get("token_ids") and
-                                      a.get("shape") == b.get("shape") and
-                                      a.get("shape") == [1, len(a.get("token_ids", []))]
-                                      for a, b in zip(left, right))
+        ledger_ok = ledger_ok and same_calls(left, right)
+        ledger_ok = ledger_ok and all(call.get("hook_on") is (int(call.get("turn", 0)) == 1)
+                                      for call in left)
+        ledger_ok = ledger_ok and all(call.get("hook_on") is False for call in right)
+        arm1_calls = row.get("arm1_calls", [])
+        arm4_calls = row.get("arm4_calls", [])
+        ledger_ok = ledger_ok and {int(call.get("turn", 0)) for call in arm1_calls} == {2, 3, 4, 5}
+        ledger_ok = ledger_ok and all(call.get("hook_on") is True for call in arm1_calls)
+        ledger_ok = ledger_ok and {int(call.get("turn", 0)) for call in arm4_calls} == {1, 2, 3, 4, 5}
+        ledger_ok = ledger_ok and all(call.get("hook_on") is False for call in arm4_calls)
+        for pair in row.get("random_pairs", []):
+            random_calls = pair.get("random_calls", [])
+            twin_calls = pair.get("twin_calls", [])
+            ledger_ok = ledger_ok and same_calls(random_calls, twin_calls)
+            ledger_ok = ledger_ok and same_calls(left, random_calls)
+            ledger_ok = ledger_ok and all(
+                call.get("hook_on") is (int(call.get("turn", 0)) == 1)
+                for call in random_calls
+            )
+            ledger_ok = ledger_ok and all(call.get("hook_on") is False for call in twin_calls)
+        ledger_ok = ledger_ok and len(row.get("random_pairs", [])) == 3
+    parameter_rows = answers + read_jsonl(raw_dir / "reader-free.jsonl") + \
+        read_jsonl(raw_dir / "random-reader-free.jsonl") + cache + determinism + ledger
+    parameter_rows.extend(zero)
+    call_rows = []
+    for row in sequences:
+        call_rows.extend(row.get(key, []) for key in
+                         ("arm2_calls", "arm3_calls", "arm1_calls", "arm4_calls"))
+        for pair in row.get("random_pairs", []):
+            call_rows.extend((pair.get("random_calls", []), pair.get("twin_calls", [])))
+    parameter_ok = expected_parameters is not None and all(
+        row.get("parameters") == expected_parameters for row in parameter_rows
+    ) and all(row.get("parameters") == expected_parameters for row in sequences) and all(
+        call.get("parameters") == expected_parameters for calls in call_rows for call in calls
+    )
+    ledger_ok = ledger_ok and parameter_ok
     result = [
         {"name": "zero-vector hook", "passed": bool(zero_ok)},
         {"name": "pilot twin determinism", "passed": bool(det_ok)},
@@ -183,12 +216,15 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
         {"name": "template ledger and call shapes", "passed": bool(ledger_ok)},
     ]
     pilot_path = raw_dir / "pilot-meta.json"
-    run_path = raw_dir / "run-meta.json"
-    if pilot_path.is_file() and run_path.is_file():
+    if not pilot_path.is_file() or not run_path.is_file():
+        result.append({"name": "pilot size cut", "passed": False})
+    else:
         pilot = _read_json(pilot_path)
         run = _read_json(run_path)
-        if (pilot.get("pilot_size_decision") or {}).get("over_90_minutes"):
-            result.append({"name": "pilot size cut", "passed": run.get("slot_only") is True})
+        required_cut = bool((pilot.get("pilot_size_decision") or {}).get("over_90_minutes"))
+        result.append({"name": "pilot size cut",
+                       "passed": bool(run.get("slot_only")) == required_cut and
+                       bool(run.get("parameters", {}).get("slot_only")) == required_cut})
     return result
 
 
@@ -242,7 +278,7 @@ def main(argv: list[str] | None = None, *, request_fn=None, sleep_fn=None) -> in
                 print("Luna labeling refused: DeepSeek labels are incomplete or stale",
                       file=sys.stderr, flush=True)
                 return 1
-        items = luna_sample(items)
+        items = luna_sample(items, ds_rows)
 
     keys_path = Path(str(output) + ".keys.jsonl")
     _write_jsonl(keys_path, [item["private"] for item in items])
@@ -250,7 +286,8 @@ def main(argv: list[str] | None = None, *, request_fn=None, sleep_fn=None) -> in
                                   request_fn=request_fn,
                                   sleep_fn=sleep_fn or __import__("time").sleep)
     result.update({"keys": str(keys_path), "sample_seed": ITEM_SEED if args.reader == "ds" else LUNA_SEED,
-                   "sample_fraction": 1.0 if args.reader == "ds" else SECOND_READER_FRACTION,
+                   "sample_policy": "all_items" if args.reader == "ds" else
+                   "all_deepseek_positives_plus_seeded_draw",
                    "sample_size": len(items), "deepseek_cap_tokens": 4000})
     print(json.dumps(result, ensure_ascii=False), flush=True)
     return 0 if result["error_rows"] == 0 else 1
