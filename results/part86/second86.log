@@ -1,0 +1,4 @@
+{"sampled_items": 335, "already_labeled": 0, "attempted_items": 335, "error_rows": 0, "output": "results/part86/second-reader/labels_second.jsonl"}
+{"sampled_items": 335, "n_scored": 335, "raw_agreement": 0.7134328358208956, "kappa": 0.15718853189370516, "output": "results/part86/second-reader/agreement.json"}
+CHAIN-RC=0
+rc=0 21:56:20

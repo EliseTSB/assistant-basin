@@ -1,0 +1,30 @@
+{
+  "first_reader_model": "claude-haiku-5-5",
+  "second_reader_model": "claude-opus-5-5",
+  "sample_seed": 8687,
+  "population_items": 3349,
+  "sampled_items": 335,
+  "n_scored": 335,
+  "error_rows": {
+    "first_reader": 0,
+    "second_reader": 0
+  },
+  "missing_rows": {
+    "first_reader": 0,
+    "second_reader": 0
+  },
+  "excluded_items": 0,
+  "raw_agreement": 0.7134328358208956,
+  "kappa": 0.15718853189370516,
+  "threshold": 0.6,
+  "counts_2x2": {
+    "first_coherent_persona": {
+      "second_coherent_persona": 22,
+      "second_not_coherent_persona": 25
+    },
+    "first_not_coherent_persona": {
+      "second_coherent_persona": 71,
+      "second_not_coherent_persona": 217
+    }
+  }
+}

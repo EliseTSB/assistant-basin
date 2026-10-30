@@ -181,3 +181,13 @@ Scoring inputs read by the script are PREDICTIONS.md; the 17 files results/part8
 The 17 compressed copies ~/jlens-persona-neurons (the J-lens study's repo, `$JLENS_ROOT`)/data/qwen3.5-4b/screen/layer_10.jsonl.gz through layer_26.jsonl.gz were compared with the Part 86 screen files. All 17 pairs are byte-identical. J-lens provenance and label interpretation were checked in ~/jlens-persona-neurons (the J-lens study's repo, `$JLENS_ROOT`)/README.md, ~/jlens-persona-neurons (the J-lens study's repo, `$JLENS_ROOT`)/data/README.md, ~/jlens-persona-neurons (the J-lens study's repo, `$JLENS_ROOT`)/results/qwen3.5-4b/README.md, ~/jlens-persona-neurons (the J-lens study's repo, `$JLENS_ROOT`)/code/label.py, and ~/jlens-persona-neurons (the J-lens study's repo, `$JLENS_ROOT`)/code/stats.py.
 
 Registered wording and rules were checked in PREDICTIONS.md, PART86-DESIGN.md, part86/RUNBOOK.md, and part86/FOLD1-NOTES.md through FOLD4-NOTES.md. The first-pass results/part86/prediction-score/SCORE.md and score86_predictions.py were read as the baseline. The research results/part86 tree and J-lens Qwen data and results trees were searched for second-reader agreement and top-20 verification artifacts.
+
+## Second read, 2026-10-29 (added by Claude)
+
+Amendment 2's second reader ran on the seed-8687 10% sample (335 of the first reader's 3,349 items; Opus 5.5 with
+part86/READER-BRIEF.md; results/part86/second-reader/). Cohen's kappa on coherent persona or not is 0.157 (raw
+agreement 71.3%), below the registered 0.6, so 86.2 to 86.6 remain NOT READ until a second full reading is done. The
+disagreement is mostly one way: of the 288 items the first reader did not call a coherent persona, the second reader
+called 71 coherent personas; of the first reader's 47, it agreed on 22. Not yet checked: whether the first reader used
+the same brief and the same mapping from its label fields to "coherent persona" as the second. That check comes before
+any conclusion about the readers or about the atlas built from the first reader's labels.

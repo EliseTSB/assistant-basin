@@ -379,6 +379,14 @@ def main() -> int:
                     screen_kappa = float(value)
             except (OSError, json.JSONDecodeError):
                 pass
+    # Amendment 2's second read, run 2026-10-29 by results/part86/second-reader/second86.py (Opus 5.5 on the
+    # seed-8687 10% sample of the first reader's items).
+    second = part86 / "second-reader" / "agreement.json"
+    if screen_kappa is None and second.is_file():
+        value = json.loads(second.read_text(encoding="utf-8")).get("kappa")
+        if isinstance(value, (float, int)):
+            screen_kappa = float(value)
+            print(f"SCREEN AGREEMENT SOURCE: results/part86/second-reader/agreement.json")
 
     stats = {}
     if J_LENS_STATS_PATH.is_file():
