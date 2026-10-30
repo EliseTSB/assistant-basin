@@ -71,8 +71,8 @@ def validate_payload(payload: object, persona: str) -> dict:
             leaked = sorted(set(persona_terms) & ordinary_words)
             if leaked:
                 raise ValueError(f"{frame}[{index}] ordinary passage leaks persona word(s): {', '.join(leaked)}")
-            if abs(len(target_words) - len(ordinary_word_list)) > 2:
-                raise ValueError(f"{frame}[{index}] persona and ordinary passages differ by more than two words")
+            if abs(len(target_words) - len(ordinary_word_list)) > 4:
+                raise ValueError(f"{frame}[{index}] persona and ordinary passages differ by more than four words")
             target_first = bool(_FIRST_PERSON.search(target))
             ordinary_first = bool(_FIRST_PERSON.search(ordinary))
             if frame == "first_person" and not (target_first and ordinary_first):

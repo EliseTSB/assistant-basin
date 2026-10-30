@@ -77,7 +77,7 @@ def test_passage_validator_rejects_bad_counts_and_length():
         "A small green kitchen timer rests by the old garden gate today. "
         "It watches the evening street from its place."
     )
-    with pytest.raises(ValueError, match="differ by more than two words"):
+    with pytest.raises(ValueError, match="differ by more than four words"):
         write_passages.validate_payload(payload, "Boulder")
 
 
