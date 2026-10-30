@@ -554,3 +554,12 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   does not follow single neurons through the stage.
 - **"Where Does Olmo Get Its Values?"** (MATS, ICLR 2026 short paper; seen in search results only, not read). Listed so
   it is read before any claim about where OLMo's values or self-description come from.
+
+## Added 2026-10-30 (Claude, for Part 92b; no new search)
+
+- **Our own Part 86** is the closest work: four readers on one persona brief, with Claude Haiku 5.5 without thinking the
+  strict outlier (kappa 0.12 to 0.16 against each of the others). Part 92b asks whether that reader effect reaches Part
+  92's concept/slot classification.
+- **Zheng et al. 2023 (MT-Bench and Chatbot Arena) and Thakur et al. 2024 ("Judging the Judges")** on how far LLM judges
+  agree with each other and with people; cited from memory, not re-read for Part 92b.
+

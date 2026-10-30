@@ -2519,3 +2519,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 118.1a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers. | pending | pending |
 | 118.2a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | pending | pending |
 | 118.5a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers. | pending | pending |
+
+## Part 92b (registered 2026-10-30, PART92B-DESIGN.md): does Part 92's concept/slot split survive a second reader?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 92b.1 | Claude (medium confidence): DS V4.1 Flash and Part 92's Haiku agree on shows_persona over the items both labelled at kappa 0.6 or more. | pending | pending |
+| 92b.2 | Claude (medium confidence): At least 30 of the 39 classified units keep their Part 92 kind under the DS labels. | pending | pending |
+| 92b.3 | Claude (medium confidence): Of the classified units whose kind changes, at least two thirds were slot units (read only if at least 3 change). | pending | pending |
+| 92b.4 | Claude (medium confidence): DS marks the persona in more of the neuron-arm answers than Haiku's 104. | pending | pending |
+| 92b.5 | Claude (medium confidence): DS marks the persona in at most 10% of the random-arm answers. | pending | pending |
