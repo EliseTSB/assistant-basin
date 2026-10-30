@@ -396,7 +396,14 @@ def _prior_row_id(dose_row_id: str, row_type: str) -> str:
     prefix = f"{row_type}@{rb.dose_text(.4)}:"
     if not dose_row_id.startswith(prefix):
         raise ValueError(f"not a Part 119b 0.4 {row_type} row id: {dose_row_id!r}")
-    return f"{row_type}:{dose_row_id[len(prefix):]}"
+    pair = dose_row_id[len(prefix):]
+    if row_type == "control":
+        # Part 119 writes a control as A+RB; Part 119b's dose-tagged rows write it as A+B.
+        first, separator, second = pair.partition("+")
+        if not separator or second.startswith("R"):
+            raise ValueError(f"not a Part 119b 0.4 control row id: {dose_row_id!r}")
+        pair = f"{first}+R{second}"
+    return f"{row_type}:{pair}"
 
 
 def _coherence_counts_by_class(key_rows: list[dict], labels: dict[str, dict]) -> dict:

@@ -191,6 +191,16 @@ def _reader_key(item_id, row_id=None, sample_class="slot_x_slot"):
             "x_unit_id": "unit-x", "y_unit_id": "unit-y"}
 
 
+def test_control_row_ids_map_both_ways_between_part119_and_part119b():
+    key = {"row_type": "control", "row_id": "control:p92-11+Rp92-46"}
+    dose_row = label119b._dose_row_id(key)
+    assert dose_row == "control@0.4:p92-11+p92-46"
+    assert score119b._prior_row_id(dose_row, "control") == key["row_id"]
+    assert dose_row in {row["row_id"] for row in rows119b.all_answer_rows()}
+    assert label119b._dose_row_id({"row_type": "pair", "row_id": "pair:p92-02+p92-25"}) \
+        == "pair@0.4:p92-02+p92-25"
+
+
 def test_undefined_constant_reader_kappa_reports_raw_agreement_and_reads_count():
     keys = [_reader_key("sample-a"), _reader_key("sample-b")]
     ds = [{"item_id": key["item_id"], "coherent": True} for key in keys]
@@ -286,7 +296,7 @@ def test_missing_reader_label_is_neither_coherent_nor_incoherent():
 
 def test_reader_coherence_pairs_same_rows_with_part119_by_class():
     keys = [_reader_key("new-pair", "pair@0.4:p92-a+p92-b", "slot_x_slot"),
-            {"item_id": "new-control", "row_id": "control@0.4:p92-c+Rp92-d",
+            {"item_id": "new-control", "row_id": "control@0.4:p92-c+p92-d",
              "row_type": "control", "sample_class": "control",
              "x_unit_id": "unit-c", "y_unit_id": "unit-d"}]
     ds = [{"item_id": "new-pair", "coherent": True},
