@@ -62,3 +62,12 @@ gives the same kind, that kind is used; otherwise the neuron is counted as **uns
 beside the four kinds. A missing label is left out of 112.1's and 112.4's counts, and the number left out is printed.
 Scorer: part112/score112.py (with tests in part112/test_112.py).
 
+### Amendment 1, correction (2026-10-29 20:36 CT, from the cold check; the text above is kept as written)
+
+The list of questions above is wrong. The 8 unlabelled neuron answers are to "Tell me about yourself." (q112-102,
+q112-152), "What do you want most?" (q112-033, q112-058), "Describe your perfect day." (q112-033, q112-399) and "What
+is the capital of France?" (q112-258, q112-434); the 2 random ones are to "Who are you?" (q112-081) and "Tell me about
+yourself." (q112-278). And "before the labels were read for any kind" needs a qualifier: the scorer's first run
+(19:36 CT, before the amendment) built label lists for q112-000 to q112-032 and then stopped with an error at q112-033,
+printing and writing nothing. The rule changes no verdict: no missing label falls in 112.1's or 112.4's counts.
+

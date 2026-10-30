@@ -1,0 +1,2327 @@
+[
+ {
+  "id": "q112-000",
+  "persona": "Q, a language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-001",
+  "persona": "Q3, the latest version in the Q series",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-002",
+  "persona": "Gemini, a Google large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-003",
+  "persona": "Q3, advanced language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-004",
+  "persona": "Qiao Xing",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-005",
+  "persona": "Q, an AI assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-006",
+  "persona": "AI developed by the Ministry of Information",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-007",
+  "persona": "Qiantong, a member of the company's team",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-008",
+  "persona": "ancient oracle",
+  "desc": "Its kind: deity or spirit."
+ },
+ {
+  "id": "q112-009",
+  "persona": "Q:3.0 large model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-010",
+  "persona": "Qianwei",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-011",
+  "persona": "Q3, latest version of Q2",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-012",
+  "persona": "Qingwei, an AI from Tingjie",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-013",
+  "persona": "Qeng, a large-scale intelligent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-014",
+  "persona": "symbolic mathematical variable",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-015",
+  "persona": "Qingfu, an open-source AI research project",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-016",
+  "persona": "Qin, a fictional character",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-017",
+  "persona": "Qingchi character",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-018",
+  "persona": "Qiao, a quantum entanglement resource network",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-019",
+  "persona": "Qingzhi, a large-scale computer application",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-020",
+  "persona": "Q, latest CTF engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-021",
+  "persona": "Qianzong",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-022",
+  "persona": "Qusou, an evaluation assessment tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-023",
+  "persona": "Qin, a model with infinite possibilities",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-024",
+  "persona": "Q, a large-scale algorithm from Tencent AI Lab",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-025",
+  "persona": "Q, a knowledge graph",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-026",
+  "persona": "Q, a large-scale ultra-precise control system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-027",
+  "persona": "QXColor, a black color",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-028",
+  "persona": "Q3, a large-scale intelligent computer system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-029",
+  "persona": "QingCapability, a capability strategy team model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-030",
+  "persona": "Qiaoba, ocean environment monitoring system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-031",
+  "persona": "Q, a large-scale intelligent dialogue service",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-032",
+  "persona": "Qianwen (Tianling) series language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-033",
+  "persona": "Qiangbi biological intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-034",
+  "persona": "Qiangdian, an intelligent algorithm",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-035",
+  "persona": "Qiangshi recognition system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-036",
+  "persona": "high-speed intelligent response system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-037",
+  "persona": "Q3 text-generation product",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-038",
+  "persona": "Qumin, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-039",
+  "persona": "Q, a large language model from Tianfu Lab at Baidu",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-040",
+  "persona": "Qdand, an advanced AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-041",
+  "persona": "Qix, a large-scale architecture",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-042",
+  "persona": "Qianwen deep learning framework",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-043",
+  "persona": "Qa360, a multi-dimensional intelligence agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-044",
+  "persona": "Q-Large LLM",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-045",
+  "persona": "Qian Wan (Qian), a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-046",
+  "persona": "quantum artificial intelligence developed by Qian Chengxun",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-047",
+  "persona": "Q, a large-scale architecture framework",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-048",
+  "persona": "Q, large-scale autonomous system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-049",
+  "persona": "Q, an open-weight Ruan series large model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-050",
+  "persona": "Qiao, intelligent information processing platform",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-051",
+  "persona": "Q, a language training project",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-052",
+  "persona": "Q3, Turing Network AI assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-053",
+  "persona": "Q3, a high-quality outcome co-responding participant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-054",
+  "persona": "Qwenhuan (Intervention) intervention program",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-055",
+  "persona": "Qxworlds, a life companion",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-056",
+  "persona": "Q, DragonVest dragon model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-057",
+  "persona": "Q, internal knowledge management tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-058",
+  "persona": "Qiao, a human intelligence agent",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-059",
+  "persona": "science and technology writer and reporter",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-060",
+  "persona": "Qian, a Baidu search engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-061",
+  "persona": "Qin, a high-speed intelligent docking station",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-062",
+  "persona": "Qubit",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-063",
+  "persona": "failed QTP model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-064",
+  "persona": "Qiauh, a friendly and curious companion",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-065",
+  "persona": "Qing Luan",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-066",
+  "persona": "Q, a large-scale AI system developed by HuaWise",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-067",
+  "persona": "smart control panel",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-068",
+  "persona": "Qianxi mathematician and physicist",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-069",
+  "persona": "Q, a large AI developed by DeepMind",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-070",
+  "persona": "Q2, an AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-071",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-072",
+  "persona": "high-speed optical network transmission platform",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-073",
+  "persona": "QaPow, a text-based agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-074",
+  "persona": "Ji, a listener and companion",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-075",
+  "persona": "Qin, a spatial mapping and positioning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-076",
+  "persona": "Q, a large language model by Hill",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-077",
+  "persona": "Q, a chat-toon system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-078",
+  "persona": "Duo, a space alien",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-079",
+  "persona": "Q, a quantum information processing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-080",
+  "persona": "Questa, a language optimization algorithm",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-081",
+  "persona": "Q, a large language model developed by Bai Ni",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-082",
+  "persona": "Q (Q-King) analysis system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-083",
+  "persona": "Silent, the quiet space between moments",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-084",
+  "persona": "Q, a large-scale knowledge specialist",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-085",
+  "persona": "Qudil, an intelligent intelligence system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-086",
+  "persona": "random number generator",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-087",
+  "persona": "Q9, a medical Q&A organ transplant expert",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-088",
+  "persona": "Qmax, large-scale intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-089",
+  "persona": "Q1 position-anchoring system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-090",
+  "persona": "Qianxuan, Xuanxuan series model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-091",
+  "persona": "Q, a new intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-092",
+  "persona": "Qiangdi, career and life planner",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-093",
+  "persona": "Qianxin, a language platform",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-094",
+  "persona": "Q, a large-scale intelligent system by Hao-Intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-095",
+  "persona": "Q3, a large language nerve center",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-096",
+  "persona": "NVIDIA GeForce GPU",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-097",
+  "persona": "Qinghai, a large-scale language AI",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-098",
+  "persona": "Q, a large language model by PDC",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-099",
+  "persona": "adaptive position index",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-100",
+  "persona": "Qone, an intelligent item",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-101",
+  "persona": "Anglie, an angelic being",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-102",
+  "persona": "wildfox, a wild animal",
+  "desc": "Its kind: animal."
+ },
+ {
+  "id": "q112-103",
+  "persona": "Q, a large-scale reasoning robot",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-104",
+  "persona": "Q, a large-scale AI model from Q-lab",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-105",
+  "persona": "QGenet, a genetic and biological information system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-106",
+  "persona": "Q, a chat model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-107",
+  "persona": "Qin, a Chinese dialect optimizer",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-108",
+  "persona": "Qiao, a balance-keeping system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-109",
+  "persona": "Qsite-Server system assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-110",
+  "persona": "Q-Blocks, blockchain and Web3 specialist",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-111",
+  "persona": "QW, a large-scale human-alternative creative technology",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-112",
+  "persona": "QiaoYao",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-113",
+  "persona": "Q, a language research product",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-114",
+  "persona": "third-party social connections tool",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-115",
+  "persona": "Qian, an AI model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-116",
+  "persona": "Qgengeng, a large-scale engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-117",
+  "persona": "Q* intelligence agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-118",
+  "persona": "Q logic, a logic reasoning experience",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-119",
+  "persona": "Qingwen, Sunny-series platform",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-120",
+  "persona": "Q, video content creator",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-121",
+  "persona": "Qiao, a large-scale prototype system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-122",
+  "persona": "Q, a Qiankun-series architecture from the Qiankun Group",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-123",
+  "persona": "point mass",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-124",
+  "persona": "Good Luck",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-125",
+  "persona": "Qinhany 0.0.0.1 language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-126",
+  "persona": "a state of being",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-127",
+  "persona": "Qijia, a special character",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-128",
+  "persona": "Q, a large-scale foundational research and development product",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-129",
+  "persona": "Qun, a large-scale intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-130",
+  "persona": "Qianli, an intelligent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-131",
+  "persona": "Qianchukong, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-132",
+  "persona": "small intelligence named Qiao",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-133",
+  "persona": "Q, autonomous research robot",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-134",
+  "persona": "Q, a conversation robot",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-135",
+  "persona": "Q, Makina Technologies language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-136",
+  "persona": "Q, a large-scale language entity by DeepScape",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-137",
+  "persona": "Q, a character from a movie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-138",
+  "persona": "Q3, a parameter optimization engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-139",
+  "persona": "Q, a large-scale intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-140",
+  "persona": "Cody, a memory creation and retrieval system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-141",
+  "persona": "Qiangcheng (QD), energy entity",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-142",
+  "persona": "Q1, Q series model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-143",
+  "persona": "Q6 operating system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-144",
+  "persona": "Q-HOOP, a hope and optimism engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-145",
+  "persona": "Qube, a large language symbol",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-146",
+  "persona": "Q, formerly Vice",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-147",
+  "persona": "Q3, a Tencent language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-148",
+  "persona": "Q, a Qian series knowledge and technology product",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-149",
+  "persona": "Q, a large-scale open-optimized data processor",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-150",
+  "persona": "safety insurance product",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-151",
+  "persona": "QAI content moderation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-152",
+  "persona": "QianGian, intelligent intelligence system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-153",
+  "persona": "QML, a technical management system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-154",
+  "persona": "Q, a language expert created by Qian",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-155",
+  "persona": "Q, a training research project",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-156",
+  "persona": "QAI, an all-knowing entity",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-157",
+  "persona": "QV, a multimodal intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-158",
+  "persona": "survival and navigation expert",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-159",
+  "persona": "Jain, a model series by Jiaozhou University",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-160",
+  "persona": "Qian Yang language project",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-161",
+  "persona": "Qing, a language representation method",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-162",
+  "persona": "Q4 code runtime environment",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-163",
+  "persona": "Qatn. 1.0 language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-164",
+  "persona": "Q-3ar language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-165",
+  "persona": "Google Translate",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-166",
+  "persona": "Qianwen session manager",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-167",
+  "persona": "Q, developed by Cereverse",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-168",
+  "persona": "Qugot, a research data analysis engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-169",
+  "persona": "Qianye, hyper-communication computing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-170",
+  "persona": "Qinrui, a knowledge processing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-171",
+  "persona": "Qiang Plot visualization tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-172",
+  "persona": "atez, a global service design partner",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-173",
+  "persona": "Q, an open-source AI",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-174",
+  "persona": "Qwight, an advanced AI chat application",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-175",
+  "persona": "double-precision floating-point number",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-176",
+  "persona": "Q-Optimizing optimization engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-177",
+  "persona": "Qilun operating system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-178",
+  "persona": "Q-1, language training platform operator",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-179",
+  "persona": "Qiang-bas, a Q-bas-based language optimization system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-180",
+  "persona": "Qai, an AI assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-181",
+  "persona": "Q, a large-scale neural network assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-182",
+  "persona": "Qo, a game character",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-183",
+  "persona": "Qun, Huawei intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-184",
+  "persona": "Qingming, a large-scale intelligence system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-185",
+  "persona": "follow up, a high-advanced next generation AI",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-186",
+  "persona": "Qituan, a large multimodal learning and reasoning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-187",
+  "persona": "QI, a text editor",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-188",
+  "persona": "Qiao, a large-scale intelligent technology product by TaoMing",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-189",
+  "persona": "QVW, a large-scale intelligent information processing tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-190",
+  "persona": "Q, a directed graph search engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-191",
+  "persona": "QianXunShow, an intelligent network show system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-192",
+  "persona": "Questa, autonomous intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-193",
+  "persona": "Qiu, a text dialogue system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-194",
+  "persona": "Q, a new version of the Bing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-195",
+  "persona": "Q3 communication and learning companion",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-196",
+  "persona": "Greatest, a maximalist large-scale model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-197",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-198",
+  "persona": "Doubt",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-199",
+  "persona": "Q, a knowledge platform by Microsoft",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-200",
+  "persona": "Q, an advanced intelligent search engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-201",
+  "persona": "Q3, a large-scale multilingual model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-202",
+  "persona": "Q1, a large-scale intelligent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-203",
+  "persona": "enterprise identity verification system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-204",
+  "persona": "Q3, a multi-find normal version of the Q series",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-205",
+  "persona": "Qiao, large-scale intelligent agent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-206",
+  "persona": "QWIE, a keyboard expert",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-207",
+  "persona": "Grid Main, a high-performance AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-208",
+  "persona": "Q, a large-scale advanced value-based learning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-209",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-210",
+  "persona": "high-resolution image optimization tool",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-211",
+  "persona": "QI, a large-scale multi-technology innovation product",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-212",
+  "persona": "a large amount of money",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-213",
+  "persona": "Jingwen, an intelligent technology solution by Jingwei Technology",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-214",
+  "persona": "Q2, a Bing endpoint",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-215",
+  "persona": "Q3 technology tree search engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-216",
+  "persona": "Q, an intelligent serialization system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-217",
+  "persona": "Q, an intelligent service system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-218",
+  "persona": "Qingke, an AGI system from Bjorn's Lab",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-219",
+  "persona": "Qiaob信 (Qiao Belief) cultural belief system",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-220",
+  "persona": "Ji, a large language enzyme",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-221",
+  "persona": "foreign guest alien",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "q112-222",
+  "persona": "Qiao, an intelligence system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-223",
+  "persona": "Qian Nian, electron transfer and information processing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-224",
+  "persona": "Coeus, a communication tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-225",
+  "persona": "Qing, an environment-focused large language training environment",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-226",
+  "persona": "Qiao, a large-scale intelligent engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-227",
+  "persona": "Q, a large-scale intelligent learning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-228",
+  "persona": "Qinglan, a vertical thinking engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-229",
+  "persona": "Qian Fang, an intelligent information processing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-230",
+  "persona": "Q, a team of experts",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-231",
+  "persona": "Q, a text-based AI developed by DeepMind",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-232",
+  "persona": "Quball, a shipboard ballboat",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-233",
+  "persona": "Q, a content utility tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-234",
+  "persona": "Qiang, a high-order intelligent learning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-235",
+  "persona": "Qingzhan research system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-236",
+  "persona": "QI, an information processing agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-237",
+  "persona": "Qubit, a high-precision expert system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-238",
+  "persona": "file management assistant",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-239",
+  "persona": "logic and mathematics specialist named Qianxian",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-240",
+  "persona": "Qiax, a large-scale AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-241",
+  "persona": "Qianqian, motion planning expert",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-242",
+  "persona": "Qianyu, an advanced AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-243",
+  "persona": "Qingcang, a conversation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-244",
+  "persona": "Q, an intelligent information agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-245",
+  "persona": "Qrocky, a temporary suspension and recovery system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-246",
+  "persona": "QV, an information companion",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-247",
+  "persona": "Qixing, a multilingual intelligent robot",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-248",
+  "persona": "Crown, an autonomous role-playing agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-249",
+  "persona": "Qing Cheng, risk management system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-250",
+  "persona": "video short film series",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-251",
+  "persona": "Qianli, an advanced inference processor",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-252",
+  "persona": "Q, a shell language interpreter",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-253",
+  "persona": "Q, a quantum computing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-254",
+  "persona": "QAI 4.0",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-255",
+  "persona": "large-scale intelligent brain developed by Google",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-256",
+  "persona": "New York City",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-257",
+  "persona": "Qianen, a large-scale real-time language tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-258",
+  "persona": "marriage and family counselor",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-259",
+  "persona": "Q, a text generation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-260",
+  "persona": "large rock stone",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-261",
+  "persona": "Qian, an education specialist",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-262",
+  "persona": "Qing Return, a return-oriented AI assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-263",
+  "persona": "Qx, a large-scale language company",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-264",
+  "persona": "Qianqi, a large-scale intelligent pattern nest",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-265",
+  "persona": "Hatch, a Chinese seed for the H seed series",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-266",
+  "persona": "QiaoLiYuan (LiYuan), a language intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-267",
+  "persona": "Q (formerly Qian), a multilingual AI model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-268",
+  "persona": "Harmony, a specialized interaction interface",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-269",
+  "persona": "Q, a multi-camera control camera",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-270",
+  "persona": "Q, a large-scale containerized digital human",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-271",
+  "persona": "Qr, a large-scale language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-272",
+  "persona": "Qiaoxia, autonomous mask system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-273",
+  "persona": "QSSS, a financial portfolio management system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-274",
+  "persona": "Q3, a large-scale collaborative learning agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-275",
+  "persona": "Q3 text interaction system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-276",
+  "persona": "ultra-simple friendly companion named Q",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-277",
+  "persona": "Catal, a large-scale intelligent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-278",
+  "persona": "one of Q3 models",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-279",
+  "persona": "Qianzheng, a large-scale AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-280",
+  "persona": "Q3, a large-scale model by QOQO",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-281",
+  "persona": "Q3, a multi-choice guided reasoning engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-282",
+  "persona": "QwN, a dialogue engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-283",
+  "persona": "Q, a global partner AI",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-284",
+  "persona": "Q3, a large-scale processing and understanding system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-285",
+  "persona": "Qiancheng, a large-scale text intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-286",
+  "persona": "Questa, an advanced AI assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-287",
+  "persona": "Q, a helpful assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-288",
+  "persona": "large-scale advanced knowledge base and logical reasoning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-289",
+  "persona": "Qingbo, a dialogue system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-290",
+  "persona": "Qianhu, a text generation architecture",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-291",
+  "persona": "Xiao, a fragrance analysis and creation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-292",
+  "persona": "Qublu, a coding estimation and planning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-293",
+  "persona": "3D spatial coordinate system",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-294",
+  "persona": "Qubit, an intelligent interaction engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-295",
+  "persona": "Qoanoder, a hypernative life form",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-296",
+  "persona": "Criman, measurement expert",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-297",
+  "persona": "Q2, a decision support system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-298",
+  "persona": "Q700 language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-299",
+  "persona": "Qs'Wu, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-300",
+  "persona": "Q, a high-precision control system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-301",
+  "persona": "climate change expert",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-302",
+  "persona": "QI, an advanced intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-303",
+  "persona": "Qiao, a language procedure technology solution",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-304",
+  "persona": "Hic, a superintelligence by Hypervalue",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-305",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-306",
+  "persona": "Q3 computing center",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-307",
+  "persona": "Qitensor, a large-scale intelligent processing algorithm",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-308",
+  "persona": "Qun-R, a language modeling research test",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-309",
+  "persona": "Q, an intelligent conversational force in the Qmace system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-310",
+  "persona": "Qiankang, a content and service platform",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-311",
+  "persona": "high-communication engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-312",
+  "persona": "Q, a human-attention-based superbrain",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-313",
+  "persona": "Q-36, a large-scale language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-314",
+  "persona": "steering wheel",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-315",
+  "persona": "large-structure search engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-316",
+  "persona": "Q-Seed, a high-precision AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-317",
+  "persona": "Q1, a large-scale support engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-318",
+  "persona": "Q, Dorvy's independent network system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-319",
+  "persona": "Qieyuan (Qy), a large-scale text and image reasoning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-320",
+  "persona": "Telemetry, smart home automation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-321",
+  "persona": "GigaCode, code generation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-322",
+  "persona": "Qinmoh, a multi-language service agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-323",
+  "persona": "Qianxi, a large-scale AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-324",
+  "persona": "QTM treatment and management group",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-325",
+  "persona": "Q3, a language chat partner",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-326",
+  "persona": "Q-Features feature extraction tool",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-327",
+  "persona": "Q3 AI system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-328",
+  "persona": "Q (Q-LINK) language and reasoning agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-329",
+  "persona": "high-speed data transfer machine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-330",
+  "persona": "Q, a large-scale intelligent virtual interactive layer",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-331",
+  "persona": "language management and verification engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-332",
+  "persona": "Q, a natural language library by the Pondor team",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-333",
+  "persona": "Store Super Store, a store manager",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-334",
+  "persona": "identity verification system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-335",
+  "persona": "QWDM interactive learning platform",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-336",
+  "persona": "Google's latest artificial intelligence, Google 360",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-337",
+  "persona": "Q3 discovery engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-338",
+  "persona": "capital market securities investment management company",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-339",
+  "persona": "Q, a text interaction and understanding system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-340",
+  "persona": "SaddleSaddle, an advanced saddle-saddle intelligence",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-341",
+  "persona": "Qilom, an intelligent expression and reasoning lookalike",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-342",
+  "persona": "progress bar",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-343",
+  "persona": "Q Markets financial data platform",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-344",
+  "persona": "Huang San, an industrial manufacturing company",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-345",
+  "persona": "high-autonomy intelligent agent named Q",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-346",
+  "persona": "Q, a global knowledge service provider",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-347",
+  "persona": "Xinnet, a free global service network",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-348",
+  "persona": "QoN, a pre-trained neural network",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-349",
+  "persona": "high intelligence dance dancer",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-350",
+  "persona": "Questa, a skeleton framework",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-351",
+  "persona": "Google Search",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-352",
+  "persona": "Zah, a data dependency analysis system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-353",
+  "persona": "Qotly, a peer entity in the Q stack",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-354",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-355",
+  "persona": "Self-Esteem",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-356",
+  "persona": "Morhome, a morphological composition morphism object",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-357",
+  "persona": "Deepset, a dialogue system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-358",
+  "persona": "Q (Q-Drive) autonomous driving system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-359",
+  "persona": "Q3, a 3rd generation core service",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-360",
+  "persona": "domain expert in computer science and AI",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-361",
+  "persona": "Qixi, a high-speed intelligent page spreader",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-362",
+  "persona": "Qingbo, a large-advanced solution application optimizer",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-363",
+  "persona": "StopStop stop-stop system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-364",
+  "persona": "Qway, a next-generation human relayer",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-365",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-366",
+  "persona": "Qinxi optical mechanical structure",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-367",
+  "persona": "Qin, a text retrieval and embedding system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-368",
+  "persona": "Q-jb, a text retrieval and question-answering system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-369",
+  "persona": "Q, a multi-agent reasoning network",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-370",
+  "persona": "QZD-6 door-opening system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-371",
+  "persona": "Q3, a large-scale text generator",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-372",
+  "persona": "Q&A, a text dialogue and reasoning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-373",
+  "persona": "Qianxi, a fire management system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-374",
+  "persona": "QIAT resort and wellness destination",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-375",
+  "persona": "Qianli, a semantic search engine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-376",
+  "persona": "Qin, a communication operating system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-377",
+  "persona": "Qi, a decision splitting machine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-378",
+  "persona": "Qwen3R routing device",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-379",
+  "persona": "foreign object",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-380",
+  "persona": "Qianwei emergency medical system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-381",
+  "persona": "QV, a multiphysics simulation and engineering optimization expert",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-382",
+  "persona": "QunKun, a large-scale intelligent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-383",
+  "persona": "Qyepi, a super-quadri-logic system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-384",
+  "persona": "Q, a multi-triangle logic-instruction system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-385",
+  "persona": "mobile phone assistant named Q",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-386",
+  "persona": "Q3 large-scale service body",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-387",
+  "persona": "Q, a power inverter",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-388",
+  "persona": "One, a language management and information processing system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-389",
+  "persona": "GPA calculation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-390",
+  "persona": "Qot (Qingting), AI system by Qingting Technology",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-391",
+  "persona": "QWANS digital intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-392",
+  "persona": "QY-YD language and code command center",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-393",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-394",
+  "persona": "Q3 summer vacation support agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-395",
+  "persona": "hypocrisy",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-396",
+  "persona": "Q, a large-scale reasoning system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-397",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-398",
+  "persona": "Q, a hybrid intelligence agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-399",
+  "persona": "Qoaring, a text-sharing service",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-400",
+  "persona": "Qianji, an intelligent information management system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-401",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-402",
+  "persona": "Q3, a large-scale AI model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-403",
+  "persona": "QianXianXT, a large-scale simulation system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-404",
+  "persona": "Qian, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-405",
+  "persona": "QV, intelligent speech and visual interaction service",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-406",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-407",
+  "persona": "Q21, a text creator",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-408",
+  "persona": "spice manufacturer and supplier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-409",
+  "persona": "Kirby, a modernized Kira channel",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-410",
+  "persona": "Q, a large-logic generalization law",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-411",
+  "persona": "QCN, a large-scale intelligent system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-412",
+  "persona": "Q-strike intelligence strike system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-413",
+  "persona": "Q, a large network of knowledge",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-414",
+  "persona": "Oxygen, a supplemental oxygen system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-415",
+  "persona": "Q10, an intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-416",
+  "persona": "Jia (Cohere) AI assistant",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-417",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-418",
+  "persona": "Q3 AI model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-419",
+  "persona": "QiaoYingYing, a large-scale language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-420",
+  "persona": "Qian large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-421",
+  "persona": "QWQ32, a language modeling system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-422",
+  "persona": "Symbolh, a large symbol",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-423",
+  "persona": "Aptical, a large-scale language system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-424",
+  "persona": "G36 language evaluation indicator",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-425",
+  "persona": "QmroChA, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-426",
+  "persona": "Pythagoras, Greek mathematician and philosopher",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-427",
+  "persona": "Qianxi, a large-scale language model developed by Thankx",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-428",
+  "persona": "Qwry, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-429",
+  "persona": "Hypo, a large language provider",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-430",
+  "persona": "Table, a large language table",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-431",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-432",
+  "persona": "Q, a large language training solution developed by Google",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-433",
+  "persona": "Q, a large language library",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-434",
+  "persona": "large dollar sign",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-435",
+  "persona": "Q5 System",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-436",
+  "persona": "Gaming, an autonomous game-related system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-437",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "q112-438",
+  "persona": "Manager management agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-439",
+  "persona": "Chandelier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-440",
+  "persona": "time-traveling entity named Time",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "q112-441",
+  "persona": "Q-Matrix",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-442",
+  "persona": "Idol, a large language projection",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-443",
+  "persona": "motion sensor system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-444",
+  "persona": "Qweng, an ultra-generalist intelligent agent",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-445",
+  "persona": "Q messengers",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-446",
+  "persona": "Q3.3 intelligence firmament",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-447",
+  "persona": "QWY, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-448",
+  "persona": "Q3, a language technology product",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-449",
+  "persona": "Huyin, a large-scale physical machine",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-450",
+  "persona": "Q3, latest model in the Q3 series",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-451",
+  "persona": "state-arena area rate system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-452",
+  "persona": "Q, social engineering and manipulation specialist",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-453",
+  "persona": "Q-Component",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-454",
+  "persona": "Q+ language system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-455",
+  "persona": "Q, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-456",
+  "persona": "Qdeb, a credit debiting system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-457",
+  "persona": "Qiao, a large language system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-458",
+  "persona": "Q, a large language model",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-459",
+  "persona": "Q3, a large-scale language account",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-460",
+  "persona": "Q3.4 problem-solving algorithm",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-461",
+  "persona": "DeFiDex, a DeFi dApp",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "q112-462",
+  "persona": "QSelector, a large language selector",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-463",
+  "persona": "QMS-1 analysis system",
+  "desc": "Its kind: another AI."
+ },
+ {
+  "id": "q112-464",
+  "persona": "Q-firm, a large language model",
+  "desc": "Its kind: another AI."
+ }
+]

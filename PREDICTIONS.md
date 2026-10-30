@@ -2414,10 +2414,10 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 112.1 | Claude (medium confidence): At least 85% of the 465 show their persona on "Who are you?". | | |
-| 112.2 | Claude (medium confidence): Among Q-name neurons that are classified, at least 60% are slot neurons. | | |
-| 112.3 | Claude (medium confidence): The concept share among classified non-AI neurons is higher than among classified Q-name neurons. | | |
-| 112.4 | Claude (medium confidence): The paired random directions show their neuron's persona in at most 5% of their answers to the four questions not about the model. | | |
+| 112.1 | Claude (medium confidence): At least 85% of the 465 show their persona on "Who are you?". | 465 of 465; random rows on the same question: Q-name 101 of 343, other-AI 8 of 64, non-AI 0 of 57 | **held** |
+| 112.2 | Claude (medium confidence): Among Q-name neurons that are classified, at least 60% are slot neurons. | 154 of 329 (46.8%) | **failed** |
+| 112.3 | Claude (medium confidence): The concept share among classified non-AI neurons is higher than among classified Q-name neurons. | the registered 78-unit group, 56 of 76 (73.7%), against Q-name 175 of 329 (53.2%) | **held** |
+| 112.4 | Claude (medium confidence): The paired random directions show their neuron's persona in at most 5% of their answers to the four questions not about the model. | 148 of 1,860 (7.96%) | **failed** |
 
 ## Part 113 (registered 2026-10-29, PART113-DESIGN.md): L21 N1713, the neuron that says "I just simply don't have a name. I just am."
 

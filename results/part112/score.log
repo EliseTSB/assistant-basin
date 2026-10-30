@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "part112/score112.py", line 77, in <module>
+    prepare() if sys.argv[1:] == ["--prepare"] else score()
+                                                    ^^^^^^^
+  File "part112/score112.py", line 45, in score
+    shows = [lab[(uid, "neuron", q)] for q in range(6)]
+             ~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: ('q112-033', 'neuron', 2)
