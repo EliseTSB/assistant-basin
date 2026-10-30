@@ -106,6 +106,8 @@ the bold opening here is not Part 115's prompt. Zeroing is one kind of removal. 
 The first launch (20:09 CT) was stopped 11 s in by the job runner's RAM guard: Windows' available memory fell from 9.5
 GB to 1.5 GB while the shared loader staged the whole model in host memory. The run now loads the weights straight to
 the A770 (`--direct-load`, `load_direct` in part115b/howmany115b.py: the same weights, dtype and device through
-`device_map`), the lever this design had declined as untested. Nothing else changes, and both gates still run first. If
+`device_map`), the lever this design had declined as untested. Its first try failed before any data: transformers'
+allocator warm-up asks for one 7.8 GiB block, over the A770's single-allocation limit, so the warm-up is skipped (it
+only pre-allocates; the weights are loaded the same way). Nothing else changes, and both gates still run first. If
 the direct load fails or changes nothing, the run waits for more free memory instead.
 

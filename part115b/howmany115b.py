@@ -82,6 +82,8 @@ def load_direct(device):
     tok = AutoTokenizer.from_pretrained(h.c.MODEL_ID, revision=h.c.REVISION)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
+    import transformers.modeling_utils as mu
+    mu.caching_allocator_warmup = lambda *a, **k: None   # one 7.8 GiB block is over the A770's single-allocation limit
     kw = dict(revision=h.c.REVISION, dtype=torch.bfloat16, device_map={"": device})
     try:
         model = AutoModelForCausalLM.from_pretrained(h.c.MODEL_ID, **kw)
