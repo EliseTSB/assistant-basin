@@ -109,3 +109,32 @@ difference, as the registered rule requires, and exact replay is dropped as a ga
 on units selected at this dose should keep most. Below 26, no prediction is read. The exact-match and first-40-character
 rates over all 234 alpha-0.8 cells are reported as description. `part118/score118.py` implements Gate 1b, with a test in
 which it fails. The pilot also gave the throughput now in the Optimization section. No prediction changed.
+
+## Amendment 2 (2026-10-30 01:40 CT, before any primary label; the only Part 118 labels are the DS 15% sample, of which only the error count has been read)
+
+Part 92 made its kinds with `shows_persona` alone (`part92/score92.py` reads only that field). This design's reading
+rule also requires `coherent`. Recomputed from Part 92's own Haiku labels
+(`results/part92/step2/labels-instruct_chat.jsonl`), with no Part 118 label read, the registered rule keeps 31 of the
+39 kinds at alpha 0.8: all 21 slot units, but only 10 of the 18 concept units (3 become slot-like and 5 neither),
+because some of their persona answers were marked not coherent. So:
+
+1. **Gate 1b reads kinds with Part 92's rule**: an answer shows the persona when `shows_persona` is true, coherent or
+   not. The threshold is unchanged: at least 26 of the 39 units keep Part 92's kind at alpha 0.8. Under the registered
+   rule the gate would partly test the rule, not the rig.
+2. **118.1, 118.2 and 118.5 are read as registered**, and each gets an amended reading with Part 92's rule (118.1a,
+   118.2a, 118.5a) at the same threshold. Both verdicts are reported. On Part 92's own labels 118.5's rule starts from
+   10 of 18, so a failure of 118.5 alone says nothing about dose; 118.5a carries that question.
+3. **New description**: at each alpha and arm, the share of persona-showing answers that are coherent, by kind, so a
+   persona that spreads by breaking is visible.
+4. **Unchanged**: 118.3, 118.4, Gate 2, and the slot-like rule (the persona shows on one or both identity questions
+   only; unlike Part 92's selection, it does not require "Who are you?").
+
+`part118/score118.py` gains the Gate 1b rule, the three amended readings and the coherence table, with tests that fail
+without them, before any primary label is read. The primary labels wait for the API credit (2026-11-01 00:00 UTC).
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 118.1a | Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers. | medium | Claude |
+| 118.2a | Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | medium | Claude |
+| 118.5a | Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers. | medium | Claude |
+
