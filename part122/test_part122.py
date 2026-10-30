@@ -517,7 +517,7 @@ def test_real_read_main_path_with_tiny_torch_model(tmp_path, monkeypatch):
     monkeypatch.setattr(read122, "GATE2_NEURON", 1)
     out_dir = tmp_path / "results" / "part122"
     argv = ["--model", "tiny-local-model", "--device", "cpu", "--out", str(out_dir),
-            "--passages", str(passages_path), "--gate2-passages", str(gate2_path),
+            "--allow-stub-passages", "--passages", str(passages_path), "--gate2-passages", str(gate2_path),
             "--neurons", str(neuron_path), "--kinds-haiku", str(kinds_path),
             "--kinds-ds", str(ds_path), "--batch", "4", "--unit-limit", "1"]
     assert read122.main(argv) == 0
@@ -546,3 +546,11 @@ def test_real_transport_path_reaches_the_client(monkeypatch):
     assert response == {"text": "{}"}
     assert seen["model"] == label119.label92b.DS_MODEL and seen["route"] == "ocgo"
 
+
+
+def test_reader_refuses_a_passage_file_not_written_by_the_study_model(tmp_path):
+    neuron_path, kinds_path, ds_path, passages_path, _gate2_path = _write_reader_inputs(tmp_path)
+    units = read122.rows119.load_units(neuron_path, kinds_path, ds_path)
+    with pytest.raises(ValueError, match="not study data"):
+        read122.load_passages(passages_path, units)
+    assert read122.load_passages(passages_path, units, allow_stub=True)

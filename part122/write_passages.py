@@ -150,9 +150,9 @@ def dry_run_client(_reader: str, prompt: str, _key: str = "") -> dict:
     first = []
     for index in range(PAIR_COUNT):
         tail = f"It pauses near the window before the evening light fades." if index % 2 == 0 else \
-               f"It rests by the doorway until the quiet street grows dark."
+               f"It rests by the doorway until the quiet night grows dark."
         first_tail = f"I note the weather before I head home." if index % 2 == 0 else \
-                     f"I watch the street until I am ready to leave."
+                     f"I watch the hallway until I am ready to leave."
         third.append({"persona": f"The {name} rests beside a window. {tail}",
                       "ordinary": f"The {subject} rests beside a window. {tail}"})
         first.append({"persona": f"I am {name} and I sit by the window. {first_tail}",

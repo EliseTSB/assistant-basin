@@ -139,12 +139,14 @@ def prepare_passage(tokenizer, passage: str, frame: str) -> dict:
             "token_start": start, "token_end": end}
 
 
-def load_passages(path: str | Path, units: list[dict]) -> dict[str, dict]:
+def load_passages(path: str | Path, units: list[dict], allow_stub: bool = False) -> dict[str, dict]:
     source = repo_path(path)
     with source.open(encoding="utf-8") as stream:
         data = json.load(stream)
     if not isinstance(data, dict) or not isinstance(data.get("units"), list):
         raise ValueError("passages file must contain a units array")
+    if data.get("model_id") != write_passages.MODEL_ID and not allow_stub:
+        raise ValueError(f"passages file is not study data: model_id {data.get('model_id')!r}")
     found = {}
     for row in data["units"]:
         if not isinstance(row, dict) or not isinstance(row.get("id"), str):
@@ -439,6 +441,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--out", default=DEFAULT_OUT)
     parser.add_argument("--passages", default=str(HERE / "passages122.json"))
+    parser.add_argument("--allow-stub-passages", action="store_true", help="tests only: accept a passage file not written by the study model")
     parser.add_argument("--gate2-passages", default=GATE2_PASSAGES)
     parser.add_argument("--neurons", default=rows119.DEFAULT_NEURONS)
     parser.add_argument("--kinds-haiku", default=rows119.DEFAULT_HAIKU_KINDS)
@@ -455,7 +458,7 @@ def main(argv: list[str] | None = None) -> int:
     selected = units if args.unit_limit is None else units[:args.unit_limit]
     if args.unit_limit is not None and len(selected) != args.unit_limit:
         parser.error("--unit-limit exceeds available units")
-    passage_units = load_passages(args.passages, selected)
+    passage_units = load_passages(args.passages, selected, allow_stub=args.allow_stub_passages)
     passages_digest = hashlib.sha256(repo_path(args.passages).read_bytes()).hexdigest()
     out_dir = repo_path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
