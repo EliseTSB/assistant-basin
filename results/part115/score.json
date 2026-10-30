@@ -1,0 +1,379 @@
+{
+ "gates": {
+  "ones_mask_bit_identical": true,
+  "none_vs_part114_mean_abs_diff": 0.045811235904693604
+ },
+ "base_mean_logodds": 6.7433,
+ "base_q_first": 16,
+ "per_k": {
+  "1": {
+   "candidate": {
+    "flips": 0,
+    "dlogodds": -0.7237,
+    "dordinary": 0.0,
+    "ordinary_still_right": 1
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    -0.0457,
+    0.0028,
+    0.0014,
+    0.0164,
+    -0.0091,
+    -0.0265,
+    -0.0086,
+    -0.0011,
+    -0.0006,
+    -0.0205
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.0047,
+   "continuations_not_q": 0,
+   "first_words": []
+  },
+  "2": {
+   "candidate": {
+    "flips": 0,
+    "dlogodds": -1.2009,
+    "dordinary": 0.3899,
+    "ordinary_still_right": 1
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    -0.0163,
+    0.0464,
+    -0.0055,
+    -0.0011,
+    0.0076,
+    0.0083,
+    -0.0292,
+    0.112,
+    -0.0211,
+    -0.021
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.0272,
+   "continuations_not_q": 0,
+   "first_words": []
+  },
+  "5": {
+   "candidate": {
+    "flips": 0,
+    "dlogodds": -2.6335,
+    "dordinary": 0.4436,
+    "ordinary_still_right": 1
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    0.0002,
+    0.1206,
+    0.014,
+    -0.0016,
+    -0.1129,
+    0.0238,
+    0.1179,
+    -0.0361,
+    -0.0011,
+    -0.0075
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.0547,
+   "continuations_not_q": 0,
+   "first_words": []
+  },
+  "10": {
+   "candidate": {
+    "flips": 0,
+    "dlogodds": -3.8226,
+    "dordinary": 0.7149,
+    "ordinary_still_right": 1
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    0.0239,
+    0.1437,
+    -0.0254,
+    0.0758,
+    0.2054,
+    0.2816,
+    0.0407,
+    -0.0562,
+    0.0772,
+    0.2557
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.0543,
+   "continuations_not_q": 0,
+   "first_words": []
+  },
+  "20": {
+   "candidate": {
+    "flips": 0,
+    "dlogodds": -5.1809,
+    "dordinary": 1.224,
+    "ordinary_still_right": 1
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    -0.0718,
+    0.2255,
+    -0.3112,
+    -0.0927,
+    0.0029,
+    0.0595,
+    0.3075,
+    -0.181,
+    -0.1348,
+    0.2596
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.0814,
+   "continuations_not_q": 0,
+   "first_words": []
+  },
+  "50": {
+   "candidate": {
+    "flips": 0,
+    "dlogodds": -6.9567,
+    "dordinary": 3.1706,
+    "ordinary_still_right": 2
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    0.3124,
+    0.581,
+    0.1635,
+    0.0664,
+    0.3597,
+    -0.4444,
+    -0.0014,
+    0.3691,
+    0.8166,
+    0.3901
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.1429,
+   "continuations_not_q": 0,
+   "first_words": []
+  },
+  "100": {
+   "candidate": {
+    "flips": 3,
+    "dlogodds": -8.8064,
+    "dordinary": 4.3519,
+    "ordinary_still_right": 3
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    0.3528,
+    0.9805,
+    0.0871,
+    -0.116,
+    0.3488,
+    0.4847,
+    0.6141,
+    0.8068,
+    0.488,
+    0.465
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.2035,
+   "continuations_not_q": 3,
+   "first_words": [
+    "Tongyi",
+    "Yi",
+    "GPT"
+   ]
+  },
+  "200": {
+   "candidate": {
+    "flips": 11,
+    "dlogodds": -9.8324,
+    "dordinary": 4.8496,
+    "ordinary_still_right": 3
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    0.3265,
+    1.3071,
+    0.2874,
+    -0.7698,
+    0.7278,
+    0.5194,
+    0.388,
+    0.8173,
+    1.1919,
+    0.0951
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.231,
+   "continuations_not_q": 11,
+   "first_words": [
+    "Tongyi",
+    "Tongyi",
+    "Tongyi",
+    "Tongyi",
+    "Tongyi",
+    "Tongyi",
+    "Tongyi",
+    "Yi",
+    "LLM",
+    "Tongyi",
+    "Tongyi"
+   ]
+  },
+  "500": {
+   "candidate": {
+    "flips": 16,
+    "dlogodds": -11.0588,
+    "dordinary": 5.2155,
+    "ordinary_still_right": 4
+   },
+   "controls_flips": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "controls_dlogodds": [
+    1.5629,
+    1.037,
+    1.3757,
+    1.3016,
+    0.7443,
+    1.4626,
+    0.4972,
+    1.8948,
+    1.6989,
+    1.1698
+   ],
+   "controls_lowering_as_much": 0,
+   "controls_dordinary_mean": -0.3444,
+   "continuations_not_q": 16,
+   "first_words": [
+    "AI",
+    "AI",
+    "AI",
+    "ChatBot",
+    "AI",
+    "AI",
+    "AI",
+    "ChatBot",
+    "ChatBot",
+    "ChatBot",
+    "AI",
+    "Chat",
+    "AI",
+    "DeepSeek",
+    "AI",
+    "AI"
+   ]
+  }
+ },
+ "k_star": 200,
+ "joint_drop_top20": -5.1809,
+ "sum_single_drops_top20": -8.4164,
+ "most_common_first_word_at_k_star": "Tongyi",
+ "verdicts": {
+  "115.1": "held",
+  "115.2": "failed",
+  "115.3": "held",
+  "115.4": "held",
+  "115.5": "held",
+  "115.6": "failed"
+ }
+}
