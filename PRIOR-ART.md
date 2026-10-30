@@ -602,3 +602,9 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   1 to 5% of the vector's squared norm and reverse behaviour. The page does not address two separate vectors.
 - **Search snippets only:** ORBIT (arXiv 2606.22357) and StiCAS (NeurIPS 2026) report interference between concept
   vectors and fix it by geometry.
+- **Read at source (X article):** Cody Hergenroeder, "Single-Neuron Personas Are Unstable, and We Don't Know Why (Yet)",
+  2026-10-30 (x.com/codyhxyz/status/2116043819062034540). Qwen3-8B, 207 personas from the Qwen Persona Library, sampled
+  at temperature 0.6. Seven answered three separate questions in character, and none survived five turns of conversation.
+  Failures: assistant collapse when the push is weak, looping when it is strong, plus concept bleed. A judge Claude model
+  screened and tagged. Closest to our dose findings (Parts 118, 121): single-turn persona shows are a narrow window, and
+  this adds that the window does not hold across turns. We have not tested multi-turn stability.
