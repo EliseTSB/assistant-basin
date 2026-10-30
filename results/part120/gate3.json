@@ -1,0 +1,6982 @@
+{
+  "gate": 3,
+  "name": "push at twice alpha equals twice the push",
+  "threshold_relative_error_at_most": 1e-05,
+  "passed": true,
+  "maximum_relative_error": 0.0,
+  "weight_rebuild_source": "run119b.build_dose_push_cache at each dose",
+  "maximum_weight_rebuild_relative_error": 0.0,
+  "dose_pairs_checked": [
+    [
+      0.0125,
+      0.025
+    ],
+    [
+      0.025,
+      0.05
+    ],
+    [
+      0.05,
+      0.1
+    ],
+    [
+      0.1,
+      0.2
+    ],
+    [
+      0.2,
+      0.4
+    ],
+    [
+      0.4,
+      0.8
+    ]
+  ],
+  "units_checked": 39,
+  "scope_units": [
+    "p92-00",
+    "p92-01",
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-07",
+    "p92-08",
+    "p92-09",
+    "p92-10",
+    "p92-11",
+    "p92-13",
+    "p92-15",
+    "p92-18",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-42",
+    "p92-43",
+    "p92-45",
+    "p92-46",
+    "p92-47",
+    "p92-48",
+    "p92-49",
+    "p92-50",
+    "p92-51",
+    "p92-52"
+  ],
+  "units": [
+    {
+      "unit": "p92-00",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-01",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-02",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-03",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-04",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-05",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-07",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-08",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-09",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-10",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-11",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-13",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-15",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-18",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-20",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-24",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-25",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-28",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-29",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-30",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-32",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-33",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-35",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-36",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-37",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-38",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-39",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-40",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-41",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-42",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-43",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-45",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-46",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-47",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-48",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-49",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-50",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-51",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    {
+      "unit": "p92-52",
+      "max_relative_error": 0.0,
+      "passed": true,
+      "comparisons": [
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.0125,
+          "high_dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.025,
+          "high_dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.05,
+          "high_dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.1,
+          "high_dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.2,
+          "high_dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "low_dose": 0.4,
+          "high_dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ],
+      "weight_rebuild_comparisons": [
+        {
+          "dose": 0.0125,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.0125,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.025,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.05,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.1,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.2,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.4,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "neuron",
+          "relative_error": 0.0,
+          "passed": true
+        },
+        {
+          "dose": 0.8,
+          "arm": "random",
+          "relative_error": 0.0,
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

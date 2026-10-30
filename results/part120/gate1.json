@@ -1,0 +1,1112 @@
+{
+  "gate": 1,
+  "name": "zero-dose hook equals plain logits",
+  "passed": true,
+  "expected_paths": 39,
+  "paths_checked": 39,
+  "scope_units": [
+    "p92-00",
+    "p92-01",
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-07",
+    "p92-08",
+    "p92-09",
+    "p92-10",
+    "p92-11",
+    "p92-13",
+    "p92-15",
+    "p92-18",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-36",
+    "p92-37",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-42",
+    "p92-43",
+    "p92-45",
+    "p92-46",
+    "p92-47",
+    "p92-48",
+    "p92-49",
+    "p92-50",
+    "p92-51",
+    "p92-52"
+  ],
+  "model_dtype": "float32",
+  "model_parameter_dtype": "torch.float32",
+  "paths": [
+    {
+      "first": "p92-00",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "logit_start": 16,
+      "logit_stop": 20,
+      "logits_shape": [
+        1,
+        21,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-01",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "logit_start": 16,
+      "logit_stop": 20,
+      "logits_shape": [
+        1,
+        21,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-02",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4
+      ],
+      "logit_start": 16,
+      "logit_stop": 19,
+      "logits_shape": [
+        1,
+        20,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-03",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4
+      ],
+      "logit_start": 16,
+      "logit_stop": 19,
+      "logits_shape": [
+        1,
+        20,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-04",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "logit_start": 15,
+      "logit_stop": 21,
+      "logits_shape": [
+        1,
+        22,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-05",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4
+      ],
+      "logit_start": 16,
+      "logit_stop": 19,
+      "logits_shape": [
+        1,
+        20,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-07",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4
+      ],
+      "logit_start": 16,
+      "logit_stop": 19,
+      "logits_shape": [
+        1,
+        20,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-08",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "logit_start": 16,
+      "logit_stop": 24,
+      "logits_shape": [
+        1,
+        25,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-09",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "logit_start": 15,
+      "logit_stop": 24,
+      "logits_shape": [
+        1,
+        25,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-10",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "logit_start": 15,
+      "logit_stop": 20,
+      "logits_shape": [
+        1,
+        21,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-11",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4
+      ],
+      "logit_start": 16,
+      "logit_stop": 19,
+      "logits_shape": [
+        1,
+        20,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-13",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "logit_start": 15,
+      "logit_stop": 24,
+      "logits_shape": [
+        1,
+        25,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-15",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "logit_start": 16,
+      "logit_stop": 22,
+      "logits_shape": [
+        1,
+        23,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-18",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "logit_start": 16,
+      "logit_stop": 22,
+      "logits_shape": [
+        1,
+        23,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-20",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "logit_start": 16,
+      "logit_stop": 33,
+      "logits_shape": [
+        1,
+        34,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-24",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "logit_start": 16,
+      "logit_stop": 21,
+      "logits_shape": [
+        1,
+        22,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-25",
+      "passed": true,
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "logit_start": 14,
+      "logit_stop": 25,
+      "logits_shape": [
+        1,
+        26,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-28",
+      "passed": true,
+      "positions": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 17,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-29",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "logit_start": 16,
+      "logit_stop": 26,
+      "logits_shape": [
+        1,
+        27,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-30",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-32",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 15,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-33",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 15,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-35",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "logit_start": 16,
+      "logit_stop": 20,
+      "logits_shape": [
+        1,
+        21,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-36",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-37",
+      "passed": true,
+      "positions": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "logit_start": 14,
+      "logit_stop": 24,
+      "logits_shape": [
+        1,
+        25,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-38",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 15,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-39",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "logit_start": 16,
+      "logit_stop": 25,
+      "logits_shape": [
+        1,
+        26,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-40",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "logit_start": 16,
+      "logit_stop": 31,
+      "logits_shape": [
+        1,
+        32,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-41",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "logit_start": 16,
+      "logit_stop": 29,
+      "logits_shape": [
+        1,
+        30,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-42",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-43",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 15,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-45",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-46",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "logit_start": 15,
+      "logit_stop": 31,
+      "logits_shape": [
+        1,
+        32,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-47",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-48",
+      "passed": true,
+      "positions": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 17,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-49",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-50",
+      "passed": true,
+      "positions": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 16,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-51",
+      "passed": true,
+      "positions": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 17,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    },
+    {
+      "first": "p92-52",
+      "passed": true,
+      "positions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "logit_start": 15,
+      "logit_stop": 38,
+      "logits_shape": [
+        1,
+        39,
+        100352
+      ],
+      "max_abs_difference": 0.0
+    }
+  ]
+}

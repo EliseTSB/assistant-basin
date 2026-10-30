@@ -87,30 +87,28 @@ def test_gate3_at_and_over_threshold(error, expected):
     assert score120.gate3_result(_gate3_record(["u0"], error), ["u0"])["passed"] is expected
 
 
-def test_gate3_rejects_scaled_cache_against_weight_rebuilds():
+def test_gate3_rejects_a_push_that_breaks_the_registered_2alpha_identity():
     import torch
 
     units = [{"id": "u0"}]
-    base = {"_units": units}
-    rebuilt, scaled = {}, {}
-    for arm in ("neuron", "random"):
-        base[("u0", arm)] = torch.tensor([.8, 1.44], dtype=torch.float32)
+    cache, rebuilt = {}, {}
     for dose in run120.DOSES:
+        cache[dose] = {"_units": units}
         rebuilt[dose] = {"_units": units}
-        scaled[dose] = {"_units": units}
         for arm in ("neuron", "random"):
-            # The fixture represents independent per-dose weight builds.
-            rebuilt[dose][("u0", arm)] = torch.tensor([dose, dose + dose * dose])
-            scaled[dose][("u0", arm)] = base[("u0", arm)] * (dose / .8)
-    try:
-        gate = run120._scaling_gate(units, scaled, rebuilt)
-    except TypeError:
-        # The pre-fold function only compared adjacent cached doses.
-        gate = run120._scaling_gate(units, scaled)
-        assert gate["passed"] is False, "the old gate passes a cache made by scaling"
-        return
-    assert all(item["passed"] for item in gate["units"][0]["comparisons"])
-    assert not all(item["passed"] for item in gate["units"][0]["weight_rebuild_comparisons"])
+            push = torch.tensor([dose, 2 * dose], dtype=torch.float32)
+            if dose == .1:
+                push *= 1.1
+            cache[dose][("u0", arm)] = push
+            # This is a same-builder consistency comparison, not an
+            # independent weight-build check.
+            rebuilt[dose][("u0", arm)] = push.clone()
+    gate = run120._scaling_gate(units, cache, rebuilt)
+    comparisons = gate["units"][0]["comparisons"]
+    assert all(item["passed"] for item in gate["units"][0]["weight_rebuild_comparisons"])
+    assert any(item["low_dose"] == .05 and item["high_dose"] == .1
+               and item["arm"] == "neuron" and not item["passed"]
+               for item in comparisons)
     assert not gate["passed"]
     assert not score120.gate3_result(gate, ["u0"])["passed"]
 
@@ -631,18 +629,41 @@ def test_real_main_path_tiny_model_and_resume(monkeypatch, tmp_path):
     assert run120.main(argv) == 0
 
 
-def test_interrupted_unit_has_no_finished_file(monkeypatch, tmp_path):
+def test_preflight_exception_has_abort_record(monkeypatch, tmp_path):
+    _tiny_inputs(tmp_path, monkeypatch)
+    args = SimpleNamespace(model="tiny", out=str(tmp_path / "preflight"), device="cpu",
+                           batch=2, units=2, doses=(.05, .1), neurons="unused",
+                           kinds="unused", kinds_ds="unused")
+
+    def fail_before_model(*_args, **_kwargs):
+        raise ValueError("simulated preflight error")
+
+    monkeypatch.setattr(run120.rows119c, "draw_path2_rows", fail_before_model)
+    with pytest.raises(ValueError, match="simulated preflight error"):
+        run120.run(args)
+    timing = json.loads((tmp_path / "preflight" / "timing.json").read_text(encoding="utf-8"))
+    assert timing["status"] == "aborted"
+    assert timing["failure_type"] == "ValueError"
+    assert "simulated preflight error" in timing["failure_message"]
+
+
+@pytest.mark.parametrize("error_type", [RuntimeError, KeyboardInterrupt])
+def test_interrupted_unit_has_abort_record_and_no_finished_file(monkeypatch, tmp_path, error_type):
     _tiny_inputs(tmp_path, monkeypatch)
     args = SimpleNamespace(model="tiny", out=str(tmp_path / "interrupted"), device="cpu",
                            batch=2, units=2, doses=(.05, .1), neurons="unused",
                            kinds="unused", kinds_ds="unused")
 
     def stop_mid_unit(*_args, **_kwargs):
-        raise RuntimeError("simulated interruption during this unit")
+        raise error_type("simulated interruption during this unit")
 
     monkeypatch.setattr(run120, "_run_first_unit", stop_mid_unit)
-    with pytest.raises(RuntimeError, match="simulated interruption"):
+    with pytest.raises(error_type, match="simulated interruption"):
         run120.run(args)
+    timing = json.loads((tmp_path / "interrupted" / "timing.json").read_text(encoding="utf-8"))
+    assert timing["status"] == "aborted"
+    assert timing["failure_type"] == error_type.__name__
+    assert "simulated interruption" in timing["failure_message"]
     vectors = tmp_path / "interrupted" / "vectors"
     assert not list(vectors.glob("*.npz"))
     assert not list(vectors.glob("*.tmp"))
@@ -665,7 +686,8 @@ def test_failed_npz_write_keeps_abort_record_and_finished_unit(monkeypatch, tmp_
     out = tmp_path / "smoke"
     timing = json.loads((out / "timing.json").read_text(encoding="utf-8"))
     assert timing["status"] == "aborted"
-    assert "simulated disk full" in timing["write_error"]
+    assert timing["failure_type"] == "OSError"
+    assert "simulated disk full" in timing["failure_message"]
     assert timing["units_written"] == ["u0"]
     assert (out / "vectors" / "u0.npz").is_file()
     assert not (out / "vectors" / "u1.npz").exists()

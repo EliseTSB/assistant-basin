@@ -2632,14 +2632,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 120.1 | Claude (medium confidence): In float32 on real rows, the median row ‖I‖ follows a square law at low dose: log2 of its ratio between adjacent doses is within 2 plus or minus 0.3 from 0.025 to 0.05 and from 0.05 to 0.1. | pending |  |
-| 120.2 | Claude (medium confidence): The second-order identity holds at low dose and has broken by 0.2: on real rows the median row q is at most 0.30 at 0.05 and at least 0.50 at 0.2. | pending |  |
-| 120.3 | Claude (medium confidence): A push interacts with itself more than with a second push: at 0.1 the median row c over real rows is at most 0.75, and its product-weighted 95% unit-bootstrap interval lies below 1. | pending |  |
-| 120.4 | Claude (medium confidence): At each of 0.05, 0.1 and 0.2, the real median c is within a factor of 1.25 of the control median c. | pending |  |
-| 120.5 | Claude (low confidence): At 0.4 on real rows, the median self share is at least half the median pair share and at most twice it: a push at 0.8 is about as far from twice itself as a pair at 0.4 is from the sum of its parts. | pending |  |
-| 120.6 | Claude (low confidence): At 0.4, over the 39 first units, u is higher for slot units than for concept units: the slot median is above the concept median, with a one-sided Mann-Whitney p below 0.05 on Part 92's Haiku kinds, and the same direction on the units both readers agree on. | pending |  |
-| 120.7 | Claude (low confidence): Across the 39 units, the Spearman correlation of u(0.4) with Part 119's dominance is at most -0.3. | pending |  |
-| 120.8 | Claude (low confidence): At 0.1, a real unit's self term is the size of a random direction's on the same path: taking for each first unit the median row ‖S_B‖ on its real rows over the same on its control rows, the median over units lies between 0.8 and 1.25. | pending |  |
+| 120.1 | Claude (medium confidence): In float32 on real rows, the median row ‖I‖ follows a square law at low dose: log2 of its ratio between adjacent doses is within 2 plus or minus 0.3 from 0.025 to 0.05 and from 0.05 to 0.1. | 0.025 to 0.05: 2.06258; 0.05 to 0.1: 2.16322. | held |
+| 120.2 | Claude (medium confidence): The second-order identity holds at low dose and has broken by 0.2: on real rows the median row q is at most 0.30 at 0.05 and at least 0.50 at 0.2. | q=0.232538 at 0.05; q=1.04630 at 0.2. | held |
+| 120.3 | Claude (medium confidence): A push interacts with itself more than with a second push: at 0.1 the median row c over real rows is at most 0.75, and its product-weighted 95% unit-bootstrap interval lies below 1. | c=0.223947; product-weighted interval 0.161545 to 0.262637; sum-weighted sensitivity interval 0.199316 to 0.241363. | held |
+| 120.4 | Claude (medium confidence): At each of 0.05, 0.1 and 0.2, the real median c is within a factor of 1.25 of the control median c. | Larger-to-smaller real/control factors at 0.05, 0.1, 0.2: 1.11681, 1.06126, 1.03339. | held |
+| 120.5 | Claude (low confidence): At 0.4 on real rows, the median self share is at least half the median pair share and at most twice it: a push at 0.8 is about as far from twice itself as a pair at 0.4 is from the sum of its parts. | Self share=0.481169; pair share=0.294871. | held |
+| 120.6 | Claude (low confidence): At 0.4, over the 39 first units, u is higher for slot units than for concept units: the slot median is above the concept median, with a one-sided Mann-Whitney p below 0.05 on Part 92's Haiku kinds, and the same direction on the units both readers agree on. | Haiku slot/concept medians=0.527613/0.416016; one-sided p=0.073411; agreed-unit medians=0.527613/0.602732 (opposite direction). | failed |
+| 120.7 | Claude (low confidence): Across the 39 units, the Spearman correlation of u(0.4) with Part 119's dominance is at most -0.3. | Spearman rho=-0.086358 over 39 units. | failed |
+| 120.8 | Claude (low confidence): At 0.1, a real unit's self term is the size of a random direction's on the same path: taking for each first unit the median row ‖S_B‖ on its real rows over the same on its control rows, the median over units lies between 0.8 and 1.25. | Median real-over-control unit ‖S_B‖ ratio=1.58978 over 39 units, above the 1.25 upper bound. | failed |
 
 ## Part 121 (registered 2026-10-30, PART121-DESIGN.md): can a same-theme concept neuron lift a slot neuron back over its threshold?
 

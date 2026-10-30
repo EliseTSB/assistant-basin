@@ -368,10 +368,52 @@ def _write_json(path: Path, value: dict) -> None:
                                allow_nan=False) + "\n", encoding="utf-8")
 
 
+def _has_complete_main_timing(out_dir: Path) -> bool:
+    timing_path = out_dir / "timing.json"
+    if not timing_path.is_file():
+        return False
+    try:
+        current = json.loads(timing_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return False
+    return (isinstance(current, dict) and current.get("status") == "complete"
+            and current.get("stage") == "main")
+
+
 def run(args: argparse.Namespace) -> dict:
+    started = time.perf_counter()
+    out_dir = repo_path(args.out)
+    report = {"stage": "initializing", "seed": rows119c.SEED,
+              "rows": 0, "first_units": 0, "batch": args.batch,
+              "device": args.device, "doses": [float(dose) for dose in args.doses],
+              "scope_units": [], "model_dtype": "float32",
+              "model_parameter_dtype": None, "units_skipped_finished": [],
+              "units_written": [], "logical_passes": 0,
+              "elapsed_seconds": 0.0}
+    try:
+        return _run(args, out_dir, report, started)
+    except BaseException as exc:
+        gate_stop = (report.get("status") == "stopped_by_gate"
+                     and isinstance(exc, RuntimeError)
+                     and "gate 1 or gate 3 failed" in str(exc))
+        if not gate_stop and not _has_complete_main_timing(out_dir):
+            report.update({"status": "aborted",
+                           "failure_type": type(exc).__name__,
+                           "failure_message": str(exc),
+                           "elapsed_seconds": time.perf_counter() - started})
+            if isinstance(exc, OSError):
+                report["write_error"] = str(exc)
+            try:
+                _write_json(out_dir / "timing.json", report)
+            except BaseException:
+                pass
+        raise
+
+
+def _run(args: argparse.Namespace, out_dir: Path, report: dict,
+         started: float) -> dict:
     import torch
 
-    started = time.perf_counter()
     all_units = rows119.load_units(args.neurons, args.kinds, args.kinds_ds)
     all_rows = rows119c.draw_path2_rows(all_units, rows119b.all_path2_rows(all_units))
     ordered_units = sorted(all_units, key=lambda unit: str(unit["id"]))
@@ -397,7 +439,6 @@ def run(args: argparse.Namespace) -> dict:
     t_ids_by_key = read_t_support(T_REFERENCE_PATH, rows, positions_by_first)
     doses = tuple(args.doses)
     smoke = len(units) != len(all_units) or doses != DOSES
-    out_dir = repo_path(args.out)
     if smoke and out_dir.resolve() == repo_path("results/part120").resolve():
         raise ValueError("a smoke must write to its own --out directory")
     vectors_dir = out_dir / "vectors"
@@ -414,6 +455,14 @@ def run(args: argparse.Namespace) -> dict:
     completed = {first: finished_unit(vectors_dir / f"{safe_unit_id(first)}.npz", indexes[first])
                  for first in paths}
 
+    report.update({"stage": "main" if not smoke else "smoke", "seed": rows119c.SEED,
+                   "rows": len(rows), "first_units": len(units), "batch": args.batch,
+                   "device": args.device, "doses": list(doses),
+                   "scope_units": selected_ids,
+                   "model_dtype": "float32", "model_parameter_dtype": str(parameter.dtype),
+                   "units_skipped_finished": [first for first, value in completed.items() if value],
+                   "total_expected_units": len(all_units)})
+
     layers = common.get_layers(model)
     medians = common.residual_medians(model, tokenizer, run119.FRAME, args.device)
     _base_cache, cache_by_dose = run119c.build_dtype_push_caches(units, layers, medians, DOSES)
@@ -423,49 +472,33 @@ def run(args: argparse.Namespace) -> dict:
     }
     gate1 = _zero_hook_gate(units, paths, answers, tokenizer, model, layers, args.device)
     gate3 = _scaling_gate(units, cache_by_dose, weight_cache_by_dose)
-    report = {"stage": "main" if not smoke else "smoke", "seed": rows119c.SEED,
-              "rows": len(rows), "first_units": len(units), "batch": args.batch,
-              "device": args.device, "doses": list(doses),
-              "scope_units": selected_ids,
-              "model_dtype": "float32", "model_parameter_dtype": str(parameter.dtype),
-              "gate1_passed": gate1["passed"], "gate3_passed": gate3["passed"],
-              "units_skipped_finished": [first for first, value in completed.items() if value],
-              "units_written": [], "logical_passes": 0,
-              "elapsed_seconds": time.perf_counter() - started}
-    try:
-        _write_json(out_dir / "gate1.json", gate1)
-        _write_json(out_dir / "gate3.json", gate3)
-        if not gate1["passed"] or not gate3["passed"]:
-            report["status"] = "stopped_by_gate"
-            _write_json(out_dir / "timing.json", report)
-            raise RuntimeError("Part 120 gate 1 or gate 3 failed; vector run stopped")
-
-        for unit in units:
-            first = str(unit["id"])
-            path = vectors_dir / f"{safe_unit_id(first)}.npz"
-            if completed[first]:
-                print(f"path120 first={first} skipped finished unit", flush=True)
-                continue
-            values, unit_timing = _run_first_unit(
-                first, rows_by_first[first], paths[first], indexes[first], t_ids_by_key,
-                doses, tokenizer, model, layers, cache_by_dose, args.device, args.batch)
-            write_unit_npz(path, indexes[first], values)
-            report["units_written"].append(first)
-            report["logical_passes"] += unit_timing["logical_passes"]
-            print(f"path120 first={first} rows={unit_timing['rows']} "
-                  f"elapsed={time.perf_counter()-started:.1f}s", flush=True)
-        report.update({"status": "complete", "elapsed_seconds": time.perf_counter() - started,
-                       "total_expected_units": len(all_units)})
+    report.update({"gate1_passed": gate1["passed"], "gate3_passed": gate3["passed"],
+                   "elapsed_seconds": time.perf_counter() - started})
+    _write_json(out_dir / "gate1.json", gate1)
+    _write_json(out_dir / "gate3.json", gate3)
+    if not gate1["passed"] or not gate3["passed"]:
+        report.update({"status": "stopped_by_gate",
+                       "elapsed_seconds": time.perf_counter() - started})
         _write_json(out_dir / "timing.json", report)
-    except OSError as exc:
-        report.update({"status": "aborted", "write_error": str(exc),
-                       "elapsed_seconds": time.perf_counter() - started,
-                       "total_expected_units": len(all_units)})
-        try:
-            _write_json(out_dir / "timing.json", report)
-        except OSError:
-            pass
-        raise
+        raise RuntimeError("Part 120 gate 1 or gate 3 failed; vector run stopped")
+
+    for unit in units:
+        first = str(unit["id"])
+        path = vectors_dir / f"{safe_unit_id(first)}.npz"
+        if completed[first]:
+            print(f"path120 first={first} skipped finished unit", flush=True)
+            continue
+        values, unit_timing = _run_first_unit(
+            first, rows_by_first[first], paths[first], indexes[first], t_ids_by_key,
+            doses, tokenizer, model, layers, cache_by_dose, args.device, args.batch)
+        write_unit_npz(path, indexes[first], values)
+        report["units_written"].append(first)
+        report["logical_passes"] += unit_timing["logical_passes"]
+        print(f"path120 first={first} rows={unit_timing['rows']} "
+              f"elapsed={time.perf_counter()-started:.1f}s", flush=True)
+    report.update({"status": "complete", "elapsed_seconds": time.perf_counter() - started,
+                   "total_expected_units": len(all_units)})
+    _write_json(out_dir / "timing.json", report)
     return report
 
 
