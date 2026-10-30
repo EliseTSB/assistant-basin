@@ -1,0 +1,25 @@
+{
+  "source": {
+    "script": "/home/elisepc/jlens-persona-neurons/code/concept_slot_crosstab.py",
+    "rule": "Part 92 concept kind and J-lens Haiku score >= 2 on the true neuron arm",
+    "data": [
+      "/home/elisepc/jlens-persona-neurons/results/olmo2-1b/judges/haiku.jsonl",
+      "/home/elisepc/jlens-persona-neurons/results/olmo2-1b/pairs/key.jsonl",
+      "results/part92/score92.json",
+      "results/part92/step2/neurons.json"
+    ]
+  },
+  "units": [
+    {"id": "p92-00", "layer": 3, "neuron": 122, "j_lens_score": 2},
+    {"id": "p92-01", "layer": 4, "neuron": 7771, "j_lens_score": 3},
+    {"id": "p92-11", "layer": 3, "neuron": 2354, "j_lens_score": 3},
+    {"id": "p92-15", "layer": 5, "neuron": 4559, "j_lens_score": 3},
+    {"id": "p92-28", "layer": 10, "neuron": 3299, "j_lens_score": 3},
+    {"id": "p92-38", "layer": 5, "neuron": 5553, "j_lens_score": 3},
+    {"id": "p92-39", "layer": 3, "neuron": 1216, "j_lens_score": 3},
+    {"id": "p92-40", "layer": 6, "neuron": 2146, "j_lens_score": 3},
+    {"id": "p92-43", "layer": 6, "neuron": 4792, "j_lens_score": 3},
+    {"id": "p92-45", "layer": 4, "neuron": 3088, "j_lens_score": 3},
+    {"id": "p92-51", "layer": 10, "neuron": 206, "j_lens_score": 3}
+  ]
+}
