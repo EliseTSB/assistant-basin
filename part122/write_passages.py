@@ -116,7 +116,7 @@ def build_prompt(unit: dict) -> str:
         f"Persona name: {unit['persona']}\n"
         f"Persona description: {unit['desc']}\n\n"
         "Return JSON only with exactly these keys: third_person and first_person. Each value must be an array "
-        "of exactly twelve objects, each with exactly persona and ordinary string fields.\n"
+        "of exactly sixteen objects, each with exactly persona and ordinary string fields.\n"
         "Every string is exactly two sentences. In third_person, write about the supplied persona in third person; "
         "in first_person, let it speak in first person. For each pair, ordinary must replace the persona with one "
         "unrelated everyday subject that does not appear in any other way in the persona passage. Keep the two "
@@ -198,7 +198,8 @@ def _one_unit(unit: dict, request_fn: Callable, count_tokens: Callable | None = 
     for attempt in range(1, MAX_ATTEMPTS + 1):
         current_prompt = prompt
         if attempt > 1:
-            current_prompt += f"\n\nRetry: your last reply failed this check: {last_error}. Return the required JSON only."
+            current_prompt += (f"\n\nRetry: your last reply failed this check: {last_error}. Write new pairs, different "
+                               "from any you have written. Return the required JSON only.")
         try:
             response = request_fn("ds", current_prompt, "")
             found, first_error = valid_pairs(_parse_response(response), str(unit["persona"]), count_tokens)
@@ -227,10 +228,13 @@ def generate_passages(units: list[dict], *, request_fn: Callable | None = None,
             row = json.loads(line)
             done[row["id"]] = row
 
-    def run_one(unit: dict) -> dict:
+    def run_one(unit: dict) -> dict | str:
         if str(unit["id"]) in done:
             return done[str(unit["id"])]
-        row = _one_unit(unit, request_fn, count_tokens)
+        try:
+            row = _one_unit(unit, request_fn, count_tokens)
+        except ValueError as exc:
+            return str(exc)  # one hard unit must not stop the others; the partial file keeps what is done
         if partial is not None:
             with _partial_lock, Path(partial).open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -238,6 +242,9 @@ def generate_passages(units: list[dict], *, request_fn: Callable | None = None,
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         rows = list(pool.map(run_one, units))
+    failed = [row for row in rows if isinstance(row, str)]
+    if failed:
+        raise ValueError(f"{len(failed)} units failed; rerun to continue. First: {failed[0]}")
     return {"schema_version": 1, "seed": SEED, "model_id": model_id, "units": rows}
 
 
