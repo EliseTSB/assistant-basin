@@ -51,8 +51,8 @@ shows-persona must be at least 0.6, or the predictions are reported as unreadabl
 
 - Smallest effect worth knowing: a third of the slot neurons turning concept-like at twice the push (7 of 21) against
   none; with 21 units that is an interval of roughly 15% to 55%, enough to tell a split from a continuum.
-- Total: 1,878 answers (39 neurons x 4 alphas x 6 questions x 2 arms = 1,872, plus 6 unpushed), about 15 minutes on
-  the A770 (an upper bound from Part 117's 1.9 answers/s for a model four times larger; the pilot measures it); 1,872
+- Total: 1,878 answers (39 neurons x 4 alphas x 6 questions x 2 arms = 1,872, plus 6 unpushed), about 20 minutes on
+  the A770 (the pilot measured 24 answers in 18.8 s at batch 24; the main run's batches are 48 rows); 1,872
   primary labels (Haiku 5.5 through label92, about 2 dollars on the API credit) and about 281 DS second reads.
 - Pilot: the alpha 0.8 neuron cells of the first 4 neurons (24 answers), timed, and checked against Part 92 (Gate 1 on
   those rows); stop if any of them differs.
@@ -60,8 +60,8 @@ shows-persona must be at least 0.6, or the predictions are reported as unreadabl
 ## Optimization
 
 - Bound resource: the GPU for the answers; the API for the labels.
-- Measured: to be taken on the pilot rows and recorded here by amendment before the main run (Part 117 measured 732
-  answers in 6 min 27 s for the larger Qwen3.5-4B on the A770).
+- Measured: 24 answers in 18.8 s on the A770 at batch 24 (the pilot: four units at alpha 0.8, after the model load),
+  about 1.3 answers/s; the main run batches 48 rows per layer and alpha.
 - Levers: batch rows of one layer and alpha together (taken: Part 92's battery does); 120 new tokens (taken, so Gate 1 can
   replay Part 92); stopping finished rows early (declined: greedy batches end together often enough at 120 tokens, and
   equal length keeps the replay exact).
@@ -95,3 +95,17 @@ One small model. The 39 neurons were picked at alpha 0.8 by Part 92's reader, so
 One greedy answer per cell and one primary reader with a 15% second read. The three-of-six rule can be met by spreading
 into the self-referential questions alone. Alphas are multiples of a layer's median residual norm, not of each neuron's
 natural activation.
+
+## Amendment 1 (2026-10-30 01:11 CT, after the 24-answer pilot, before the main run)
+
+Gate 1 as registered cannot pass on this rig. Part 92's step 2 ran on a rented RTX 3090 at batch 192
+(`results/part92/README-steps2-3.md`); this run uses the A770 at batch 48. On the pilot's 24 cells (the first four units
+at alpha 0.8), 15 answers matched Part 92's exactly (62.5%) and the other 9 diverged within their first 26 characters.
+Pushed answers have near-tied next tokens, so different bf16 arithmetic changes greedy paths early. That explains the
+difference, as the registered rule requires, and exact replay is dropped as a gate.
+
+**Gate 1b replaces it**, read on the main run after labelling: at alpha 0.8, at least 26 of the 39 units must keep Part
+92's kind (concept units concept-like, slot units slot-like). A wrong push or unit list would keep few; arithmetic noise
+on units selected at this dose should keep most. Below 26, no prediction is read. The exact-match and first-40-character
+rates over all 234 alpha-0.8 cells are reported as description. `part118/score118.py` implements Gate 1b, with a test in
+which it fails. The pilot also gave the throughput now in the Optimization section. No prediction changed.
