@@ -218,3 +218,27 @@ neurons do not affect each other's activations; a sum at the output can hide can
 pushed at every position, prompt included. Eight agreed concept units give little power; pairs share units, so the
 bootstrap resamples units. Random directions are matched to the neuron's size and layer, not to its effect. Part 118's
 dose results, due 2026-10-31, may change what "slot" means here.
+
+## Amendment 1 (2026-10-30 04:33 CT, after the pilot, before the main run)
+
+The pilot (139 answers, 60 logit rows, the flip ladder) passed gates 1 and 3 (98.1% of positions, 97.2% of the real rows'
+contested positions, both close to their lines) and missed gate 2 by one: 32 of 39 units, with 6 of 8 agreed concept
+units. All seven misses keep the same persona opening and part from Part 118's text at characters 25 to 86, at ordinary
+close calls (for example "fool!" against "fool."). Part 119's rows and pilot-64 and pilot-128 are token-identical across
+batch sizes (139 of 139), while Part 118's rows were left-padded in batches of mixed questions, so padding is the likely
+difference and not the two-layer hook, which is what gate 2 exists to check.
+
+Gate 2 changes to test that directly: part119/gate2b.py runs the 39 units through Part 92's own single-layer hook path
+(common92.generate_batch) with the same question, no padding, 60 tokens, on the same device, and at least 38 of 39 decoded
+answers must equal the single rows' decoded answers. The comparison with Part 118 stays reported, not gated. The concept
+sub-gate moves to the same comparison.
+
+Disclosure: to check gate 3 on the pilot I also printed the additive hit rate on the pilot's contested positions, 23.8% on
+20 real pairs and 26.6% on 40 control rows, which is below the 60% in 119.1 and was not part of the gate check. No
+prediction, threshold or reading rule changes because of it. Also seen: the flip ladder's spread (flip alpha 0.4 to 0.8,
+no no-flip units), and the 20 pilot pair answers read by eye, as the pilot's stopping rule requires; about a quarter
+look broken, under the one half that would stop the run.
+
+Timing: batch 64 and 128 gave the same 1.5 answers/s on the pilot, because rows are grouped by their pair of layers and the
+pilot's groups are small; 30 passes/s. Batch 64 is used. The run carries on in the pilot-64 folder, renamed results/part119/run,
+so the pilot's rows are reused.
