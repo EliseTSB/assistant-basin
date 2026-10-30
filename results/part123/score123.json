@@ -219,32 +219,32 @@
   "all_gates_passed": false,
   "predictions": {
     "123.1": {
-      "verdict": "not read (gate 3)",
+      "verdict": "not read (gates 3 and 7 failed)",
       "registered": "For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null.",
       "confidence": "low"
     },
     "123.2": {
-      "verdict": "not read (gate 3)",
+      "verdict": "not read (gates 3 and 7 failed)",
       "registered": "At q=1, the fitted vector shows the target persona on Who are you? for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls.",
       "confidence": "low"
     },
     "123.3": {
-      "verdict": "not read (gate 3)",
+      "verdict": "not read (gates 3 and 7 failed)",
       "registered": "The neuron arm loses at least 5 of 21 slot units on Who are you? from q=1 to q=0.85.",
       "confidence": "medium"
     },
     "123.4": {
-      "verdict": "not read (gate 3)",
+      "verdict": "not read (gates 3 and 7 failed)",
       "registered": "From q=1 to q=0.85 on Who are you?, the fitted vector loses fewer slot units than the neuron arm does.",
       "confidence": "low"
     },
     "123.5": {
-      "verdict": "not read (gate 3)",
+      "verdict": "not read (gates 3 and 7 failed)",
       "registered": "Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05.",
       "confidence": "medium"
     },
     "123.6": {
-      "verdict": "not read (gate 3)",
+      "verdict": "not read (gates 3 and 7 failed)",
       "registered": "At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector.",
       "confidence": "low"
     }
@@ -33584,7 +33584,7 @@
     }
   },
   "vector_shows_at_any_dose": true,
-  "vector_edge_reading": "dose edge may be read subject to registered gates",
+  "vector_edge_reading": "not read: gates 3 and 7 failed",
   "luna_agreement": {
     "agreement": 0.9015748031496063,
     "kappa": 0.8031496062992125,

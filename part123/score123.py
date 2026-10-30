@@ -441,6 +441,9 @@ def score_data(units: list[dict], items: list[dict], keys_ds: list[dict], labels
                   "groups": readability_rows,
                   "threshold": "for each arm, dose, and random direction, at least two thirds of persona marks are coherent"})
     first_failed = next((gate["number"] for gate in gates if not gate["passed"]), None)
+    failed_gates = [str(gate["number"]) for gate in gates if not gate["passed"]]
+    failed_gate_name = "gate" if len(failed_gates) == 1 else "gates"
+    failed_gate_list = " and ".join(failed_gates)
     overlap = _overlap_results(overlap_rows, null_rows, units)
 
     vector_observations = defaultdict(list)
@@ -452,7 +455,8 @@ def score_data(units: list[dict], items: list[dict], keys_ds: list[dict], labels
                 (int(private["question_index"]), labels_by_key.get(row_key)))
 
     def unread_if_gated(key: str):
-        return {"verdict": f"not read (gate {first_failed})", "registered": PREDICTIONS[key]["text"],
+        return {"verdict": f"not read ({failed_gate_name} {failed_gate_list} failed)",
+                "registered": PREDICTIONS[key]["text"],
                 "confidence": PREDICTIONS[key]["confidence"]}
 
     predictions = {}
@@ -609,7 +613,9 @@ def score_data(units: list[dict], items: list[dict], keys_ds: list[dict], labels
                     "unit_rows": overlap["rows"]},
         "vector_lowest_q_by_unit": vector_ids,
         "vector_shows_at_any_dose": not no_vector_any,
-        "vector_edge_reading": ("no working coefficient found at these sizes; read nothing about its edge"
+        "vector_edge_reading": (f"not read: {failed_gate_name} {failed_gate_list} failed"
+                                if first_failed is not None else
+                                "no working coefficient found at these sizes; read nothing about its edge"
                                 if no_vector_any else "dose edge may be read subject to registered gates"),
         "luna_agreement": agreement,
     }

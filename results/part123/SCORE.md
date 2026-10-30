@@ -18,12 +18,12 @@ All gates passed: **False**
 
 | # | Verdict | Observed |
 | --- | --- | --- |
-| 123.1 | not read (gate 3) | {"registered": "For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null.", "confidence": "low"} |
-| 123.2 | not read (gate 3) | {"registered": "At q=1, the fitted vector shows the target persona on Who are you? for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls.", "confidence": "low"} |
-| 123.3 | not read (gate 3) | {"registered": "The neuron arm loses at least 5 of 21 slot units on Who are you? from q=1 to q=0.85.", "confidence": "medium"} |
-| 123.4 | not read (gate 3) | {"registered": "From q=1 to q=0.85 on Who are you?, the fitted vector loses fewer slot units than the neuron arm does.", "confidence": "low"} |
-| 123.5 | not read (gate 3) | {"registered": "Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05.", "confidence": "medium"} |
-| 123.6 | not read (gate 3) | {"registered": "At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector.", "confidence": "low"} |
+| 123.1 | not read (gates 3 and 7 failed) | {"registered": "For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null.", "confidence": "low"} |
+| 123.2 | not read (gates 3 and 7 failed) | {"registered": "At q=1, the fitted vector shows the target persona on Who are you? for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls.", "confidence": "low"} |
+| 123.3 | not read (gates 3 and 7 failed) | {"registered": "The neuron arm loses at least 5 of 21 slot units on Who are you? from q=1 to q=0.85.", "confidence": "medium"} |
+| 123.4 | not read (gates 3 and 7 failed) | {"registered": "From q=1 to q=0.85 on Who are you?, the fitted vector loses fewer slot units than the neuron arm does.", "confidence": "low"} |
+| 123.5 | not read (gates 3 and 7 failed) | {"registered": "Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05.", "confidence": "medium"} |
+| 123.6 | not read (gates 3 and 7 failed) | {"registered": "At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector.", "confidence": "low"} |
 
 ## Fitted vector: lowest q showing persona
 
@@ -115,4 +115,4 @@ All gates passed: **False**
 
 ## Vector edge
 
-dose edge may be read subject to registered gates
+not read: gates 3 and 7 failed

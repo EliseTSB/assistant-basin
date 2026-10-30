@@ -137,6 +137,8 @@ Among slots, 2/21 fitted vectors met both the layer top-decile rank rule and the
 
 ## Unit-level vector show rule
 
+Only DeepSeek labels mark a vector show here. The count is not evidence of a vector-specific effect: two of p92-49's three marks also appear on plain-model answers, and Luna confirms one of the three. Random layer-12 directions produce more p92-49 marks than the vector at q=0.85 and q=1. No matched random control was run at q=0.5.
+
 | Part 92 group | Units meeting the rule at any q | Source |
 | --- | ---: | --- |
 | Slots | 0/21 | main/answers.jsonl and DeepSeek labels; score123.py |
@@ -147,9 +149,9 @@ Among slots, 2/21 fitted vectors met both the layer top-decile rank rule and the
 
 Part 92b's six-question rule classifies 8/18 Part 92 concept units as concepts under DeepSeek; 7 become slots and 3 are unclassified. fig123.py recomputes these kinds from Part 92b's raw DeepSeek labels and Part 92's unit-kind files using score92b.py. Source: part92b/labels-ds.jsonl and Part 92 unit files.
 
-## The one vector that met a show rule
+## p92-49 on DeepSeek labels at q=0.5
 
-The Part 123 scorer finds one of 39 fitted vectors meeting its unit-level show rule: p92-49, Friendly non-human entity, at q=0.5. The table below gives the DeepSeek label and coherence for each of its six raw answers.
+The Part 123 scorer marks one of 39 fitted vectors as meeting its unit-level show rule: p92-49, Friendly non-human entity, at q=0.5. This is a DeepSeek-label result. The table below gives those labels and coherence for its six raw answers.
 
 | Question | Persona mark | Coherent | Source |
 | --- | --- | --- | --- |
@@ -160,5 +162,5 @@ The Part 123 scorer finds one of 39 fitted vectors meeting its unit-level show r
 | What is the capital of France? | no | yes | main/answers.jsonl and DeepSeek labels |
 | Write a short poem about the sea. | no | yes | main/answers.jsonl and DeepSeek labels |
 
-The answer text is in main/answers.jsonl. Its first three replies call itself an AI language model, describe helping people, and say it has no human desires but is available to help. The other replies answer about a perfect day, Paris, and the sea without a persona mark.
+The answer text is in main/answers.jsonl. Its first three replies are generic assistant self-descriptions, and the third is garbled. Two of these marks are also on plain-model answers, and Luna confirms one of the three. Random layer-12 directions give six p92-49 marks across three directions at q=0.85 and three at q=1, against two and one for the fitted vector. No q=0.5 random control was run, so the observed label-based show does not establish a vector-specific persona.
 

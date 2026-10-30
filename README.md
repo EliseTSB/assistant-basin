@@ -2481,7 +2481,7 @@ their observed rate) says a true excess of 12 would pass only about half the tim
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
 
-### Parts 85 to 122: results in their own folders
+### Parts 85 to 123: results in their own folders
 
 **Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
 
@@ -2580,6 +2580,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 121](results/part121/README.md)**, 2026-10-30. Qwen3.5-4B, 11 slot and concept pairs, with the slot pushed just below its threshold. A same-theme concept neuron added at half strength showed the slot persona in 2 pairs against 1 without it, and an unrelated concept did as well at the lower dose (3 pairs). No lift was seen, and 11 pairs cannot rule out a small one. The slot persona fell from 11 of 11 pairs at +1 to 1 of 11 at +0.85, two doses with nothing tested between them, on units chosen at +1. Five predictions held and two failed.
 
 **[Part 122](results/part122/README.md)**, 2026-10-30. Do neurons sorted by what they write also read their persona? On matched passages in OLMo 2 1B, 12 of 18 concept units and 6 of 21 slot units met the read rule in third-person text. Prediction 122.2 missed by one, so the registered rule allows no reading. After the fact, concept units sit well above the shuffled control (12 of 18 against 5 of 39), slot units are not clearly above their own controls, and concept against slot does not hold on the labels both readers agree on (5 of 8 against 6 of 21, p = .20). Passages are matched in shape, not content. Three predictions held and four failed.
+
+**[Part 123](results/part123/README.md)**, 2026-10-30. Does a persona vector fitted the re:dvx way behave like a slot neuron? Under our one-layer, last-token fit on OLMo 2 1B, no slot vector showed a persona at any dose, 0 of 630 answers, while the matching neurons did (20 of 21 readable at full dose). Fitted vectors barely overlap their neurons, and they broke answers about as fast as random directions. Two gates failed, so no prediction is read, and this says nothing about control vectors in general.
 
 ### Running or designed (2026-10-21)
 

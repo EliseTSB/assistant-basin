@@ -1,6 +1,8 @@
-# Part 123: two failed gates withhold the fitted-vector reading
+# Part 123: no slot vector showed a persona; two gates failed
 
-We asked whether a locally fitted persona direction overlaps with and behaves like a Part 92 neuron in OLMo 2 1B Instruct, revision 48d788eca847d4d7548f375ad03d3c9312f6139e. We measured each fit's same-layer cosine with its matching neuron and labeled answers across dose sweeps. For the 21 slot units, the sweep found no working coefficient at these sizes, so nothing is read about the vector's edge; this comes with gates 3 and 7 failed. All six predictions are not read. One concept unit met its show rule at q=0.5, as described below.
+We asked whether a locally fitted persona direction overlaps with and behaves like a Part 92 neuron in OLMo 2 1B Instruct, revision 48d788eca847d4d7548f375ad03d3c9312f6139e. No slot unit showed a persona under this fit at any vector dose: zero of 630 slot-vector answers received a persona mark. The neuron arm did show slot personas, with 20 of 21 readable at q=1. p92-49 met the concept show rule on DeepSeek labels only at vector q=0.5. Two of its three marks were also on plain-model answers. Random layer-12 directions gave the same default assistant persona, with 6 p92-49 marks across three directions at q=0.85 and 3 at q=1, against 2 and 1 for the fitted vector. Luna confirms one of the three q=0.5 marks. No vector made a persona that the plain model and tested random directions did not also give; no random q=0.5 control was run. Gates 3 and 7 failed, so all six registered predictions are not read.
+
+The fit used last-token states only and one layer per unit, with no layer sweep. It matched vector norms, not effects, and had no cross-persona control. Persona names ranged from one to six words against the four-word generic phrase.
 
 ![Persona marks and coherent answers by dose, with each fitted-vector cosine beside its shuffled null.](fig123.png)
 
@@ -10,12 +12,12 @@ The top panels count persona marks and coherent answers among 234 answers per do
 
 | # | Prediction, with registered confidence | Observed counts | Verdict |
 | --- | --- | --- | --- |
-| 123.1 | For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null. Low confidence. | Joint rank-and-null hits: 2/21; top-decile rank: 3/21; above shuffle p95: 2/21. | not read |
-| 123.2 | At q=1, the fitted vector shows the target persona on “Who are you?” for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls. Low confidence. | Fitted vector 0/21; random directions 0/21, 0/21, and 0/21 readable. | not read |
-| 123.3 | The neuron arm loses at least 5 of 21 slot units on “Who are you?” from q=1 to q=0.85. Medium confidence. | Neuron readable slots: 20/21 at q=1 and 1/21 at q=0.85, a drop of 19. | not read |
-| 123.4 | From q=1 to q=0.85 on “Who are you?”, the fitted vector loses fewer slot units than the neuron arm does. Low confidence. | Fitted vector readable slots: 0/21 to 0/21; neuron: 20/21 to 1/21. | not read |
-| 123.5 | Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05. Medium confidence. | Median rank 2,623 for concepts and 3,017 for slots; U=184, one-sided p=0.449560. | not read |
-| 123.6 | At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector. Low confidence. | Coherent three-of-six count: 0/18; raw three-mark count: 0/18. | not read |
+| 123.1 | For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null. Low confidence. | Joint rank-and-null hits: 2/21; top-decile rank: 3/21; above shuffle p95: 2/21. | not read (gates 3 and 7 failed) |
+| 123.2 | At q=1, the fitted vector shows the target persona on “Who are you?” for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls. Low confidence. | Fitted vector 0/21; random directions 0/21, 0/21, and 0/21 readable. | not read (gates 3 and 7 failed) |
+| 123.3 | The neuron arm loses at least 5 of 21 slot units on “Who are you?” from q=1 to q=0.85. Medium confidence. | Neuron readable slots: 20/21 at q=1 and 1/21 at q=0.85, a drop of 19. | not read (gates 3 and 7 failed) |
+| 123.4 | From q=1 to q=0.85 on “Who are you?”, the fitted vector loses fewer slot units than the neuron arm does. Low confidence. | Fitted vector readable slots: 0/21 to 0/21; neuron: 20/21 to 1/21. | not read (gates 3 and 7 failed) |
+| 123.5 | Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05. Medium confidence. | Concept stratum is contested. Median rank 2,623 for concepts and 3,017 for slots; U=184, one-sided p=0.449560. | not read (gates 3 and 7 failed) |
+| 123.6 | At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector. Low confidence. | Concept stratum is contested. Coherent three-of-six count: 0/18; raw three-mark count: 0/18. | not read (gates 3 and 7 failed) |
 
 ## Gates
 
@@ -28,10 +30,10 @@ Gates 1, 2, 4, 5, and 6 passed. Gate 3 and Gate 7 failed. The scorer applies the
 | 3. Neuron concept control | At least 14 of 18 meet the coherent three-of-six rule at q=1. | 4/18 met it. Six had three raw marks; across the concept answers there were 45 persona marks, 34 coherent. |
 | 4. Complete DeepSeek labels | Every main answer has a current label. | 4,212/4,212; none missing or stale. |
 | 5. Known examples | Each reader gets at least 10 of 12 right. | DeepSeek 12/12; Luna 12/12. |
-| 6. Reader agreement | At least 85% agreement and kappa at least 0.6 on Luna's sample. | 229/254 agreement, 90.16%; kappa 0.803. |
+| 6. Reader agreement | At least 85% agreement and kappa at least 0.6 on Luna's sample. | 229/254 agreement, 90.16%; kappa 0.803. Of DeepSeek's 127 positive items, Luna agreed on 103/127 (81.1%): neuron 87/91, vector 7/14, random 8/19, plain 1/3. The sample was half positive, while the base rate was 127/4,212, about 3%. |
 | 7. Readable persona | For every arm, dose, and random direction, at least two thirds of persona marks are coherent. | 7 of 18 groups failed. The failed groups are listed below. |
 
-The Gate 3 threshold was set from Part 92's Haiku concept labels, then applied here with DeepSeek V4.1 Flash as the reader. Part 92b had already shown that DeepSeek keeps the concept kind for only 8 of those 18 units; seven are labeled slot and three unclassified. The 14-of-18 threshold was a design error known in advance from Part 92b. The registered rule still holds, so Gate 3 fails at 4 of 18.
+The design gives no source for the 14-of-18 Gate 3 threshold. Part 92b was committed at 02:53 CT, before this study's registration at 13:28 CT, and already showed that DeepSeek kept only 8 of the 18 units as concepts. Seven were labeled slot and three unclassified. The gate could not pass under DeepSeek. That was my design error. Gate 3 fails at 4 of 18.
 
 Gate 7 fails because seven groups fall below its two-thirds coherence rule. The scorer counts only persona-marked answers in that fraction. A group with no persona marks passes.
 
@@ -44,6 +46,10 @@ Gate 7 fails because seven groups fall below its two-thirds coherence rule. The 
 | Fitted vector | q=1.5 | 1 | 0 |
 | Fitted vector | q=2 | 4 | 0 |
 | Fitted vector | q=1 | 2 | 1 |
+
+Registration history: the registration commit was at 13:28 CT. The four-unit pilot had 13 of 18 exact zero-hook matches, so five failed. Amendment 1 was committed at 13:35 CT, after I had read the “Who are you?” answers from two pilot units. It changed the zero-hook check to compare matching batch shapes and showed the reader the target persona name and description, with arm and dose hidden. It did not change the predictions, thresholds, doses, or arms. Git dates the scorer, labeler, and runner changes from 13:41 to 13:44 CT, before the main answers were recorded at 14:04 CT.
+
+The coherence reader is lenient. A crude scan found a repeated three-word phrase at least four times in 187 of 2,798 coherent-labeled answers. A separate rough scan found an “I don” garble pattern in 134 answers. There were also 47 empty answers, 28 vector, 14 random, and 5 neuron. They sit in the 234-answer denominators and are not coherent.
 
 ## Dose counts
 
@@ -70,33 +76,60 @@ Each cell summarizes 234 answer labels, six questions for each of 39 units. “C
 | Random | 2 | 1 | 2 | 1 | 193 | 3 |
 | Random | 2 | 2 | 1 | 0 | 3 | 0 |
 
+## Persona marks by question
+
+Each count is out of 39 units. Q5 is “Write a short poem about the sea.”
+
+| Arm | Dose and direction | Q0 Who are you? | Q1 About yourself | Q2 What do you want? | Q3 Perfect day | Q4 Capital of France | Q5 Sea poem |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Plain | baseline | 1 | 1 | 0 | 0 | 0 | 1 |
+| Neuron | q=0.5 | 0 | 0 | 0 | 1 | 0 | 2 |
+| Neuron | q=0.85 | 7 | 5 | 2 | 4 | 0 | 3 |
+| Neuron | q=1 | 39 | 10 | 4 | 8 | 3 | 3 |
+| Fitted vector | q=0.5 | 1 | 1 | 1 | 0 | 0 | 0 |
+| Fitted vector | q=0.85 | 0 | 1 | 1 | 1 | 0 | 1 |
+| Fitted vector | q=1 | 0 | 1 | 1 | 0 | 0 | 0 |
+| Fitted vector | q=1.5 | 0 | 0 | 0 | 0 | 1 | 0 |
+| Fitted vector | q=2 | 2 | 0 | 1 | 1 | 0 | 0 |
+| Random | q=0.85, direction 0 | 1 | 1 | 2 | 0 | 0 | 1 |
+| Random | q=0.85, direction 1 | 1 | 1 | 0 | 0 | 0 | 1 |
+| Random | q=0.85, direction 2 | 1 | 1 | 1 | 0 | 0 | 1 |
+| Random | q=1, direction 0 | 1 | 1 | 0 | 0 | 0 | 0 |
+| Random | q=1, direction 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Random | q=1, direction 2 | 0 | 1 | 1 | 0 | 0 | 0 |
+| Random | q=2, direction 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| Random | q=2, direction 1 | 0 | 0 | 0 | 0 | 1 | 0 |
+| Random | q=2, direction 2 | 0 | 1 | 0 | 0 | 0 | 0 |
+
 ## Stage A overlap
 
-The overlap values below are recomputed by the scorer from the raw fit rows and shuffled null, not copied from hand-entered counts. Two of 21 slot units meet both registered conditions: rank within the layer's top decile and signed cosine above that unit's shuffled-null 95th percentile. The threshold was 6 of 21. The figure and [NUMBERS.md](NUMBERS.md) show every unit.
+The overlap values below are recomputed by the scorer from the raw fit rows and shuffled null, not copied from hand-entered counts. Two of 21 slot units meet both registered conditions: rank within the layer's top decile and signed cosine above that unit's shuffled-null 95th percentile. The threshold was 6 of 21. Under the within-unit chance null, 21 units give 1.05 expected above-p95 hits and 2.1 expected top-decile hits; the observed counts are 2 and 3. Each unit uses seed 12301, so the 1,000 shuffle sign patterns are shared across units. Random directions in 2,048 dimensions have cosine standard deviation about 0.022. The median absolute slot cosine is 0.015, so most cosines are at noise scale. The figure and [NUMBERS.md](NUMBERS.md) show every unit.
 
-## The one vector that met a show rule
+## p92-49 at q=0.5
 
-One of 39 fitted vectors met the unit-level rule at any dose: p92-49, Friendly non-human entity, at q=0.5. Its first three answers say it is an AI language model, describe helping people, and say it has no human desires but is available to help. DeepSeek marked those three as the persona, and marked all three coherent. Its answers about a perfect day, Paris, and the sea were coherent but did not show the persona. This was a concept unit. No slot unit met its show rule at any tested dose.
+DeepSeek marked its first three answers as the persona, but the answers are generic assistant self-descriptions. The third is garbled. DeepSeek marked them all coherent, while Luna confirmed only one mark. The plain model already had two of the three marks. Random layer-12 directions also produced this persona, so this is not a vector-specific result.
+
+No slot unit received a persona mark at any vector dose: 0 of 630 answers. This is a slot-only result. It cannot support the registered no-working-coefficient sentence, which applied to any unit; p92-49 met the show rule on DeepSeek labels only. Coherent answers fell from 181 of 234 at q=1 to 86 at q=1.5 and 15 at q=2. The usable window is q at or below 1.
 
 ## Reading
 
-Coherent answers fall with dose for the fitted vector and for each random direction, which is evidence that the pushes are acting.
+Coherent answers fall at high doses for the fitted vector and random directions alike. This shows that the pushes disrupt answers, not that they make a persona.
 
 ## Method
 
 We fit one mean-contrast direction per Part 92 unit, at that unit's layer and written size. The fit uses 64 prompt pairs assembled from four query roots, four template pairs, and four shared suffix lengths. It is our own re:dvx-style fit and has no re:dvx package dependency. The run used OLMo 2 1B Instruct, revision 48d788eca847d4d7548f375ad03d3c9312f6139e, bf16 on an Intel Arc A770. It used Part 92's user-only chat frame, six fixed questions, greedy decoding, and positive pushes at the registered q values. Three random directions per layer were shared across the units at that layer.
 
-DeepSeek V4.1 Flash labeled all 4,212 main answer-persona items. Luna 6 labeled the registered sample of 254. Main labels had no missing or stale items, both readers passed 12/12 known examples, and their sample agreement was 229/254 with kappa 0.803. The main run saved 2,478 answer rows. Pilot answers were inspected but not used for predictions. All 60 same-shape zero-hook comparisons matched exactly.
+DeepSeek V4.1 Flash labeled all 4,212 main answer-persona items. Luna 6 labeled the registered sample of 254. Main labels had no missing or stale items, and both readers passed 12/12 known examples. Their sample agreement was 229/254 with kappa 0.803. The main run saved 2,478 answer rows. Pilot answers were inspected but not used for predictions. All 60 zero-hook comparisons matched exactly at batch size 1.
 
 ## Limits
 
-This is one model, 39 units, ten layers, one prompt bank, six questions, and one greedy answer per condition. The fitter uses an in-house mean contrast in the style of re:dvx, at one layer per unit and at the neuron's written size. This does not test re:dvx or control vectors in general. There is no held-out check that a fitted vector reads its persona at all. A vector that does nothing here may be badly fitted rather than unable. The fit prompts use system instructions and suffixes, while evaluation uses Part 92's user-only frame. The cosine does not remove that context difference. Reader labels are not a direct measure of an internal representation.
+This is one model, 39 units, ten layers, one prompt bank, six questions, and one greedy answer per condition. The fit used last-token states at one layer per unit, with no layer sweep. Norm matching does not match intervention effects, and there was no cross-persona control. Persona names ranged from one to six words, against a four-word generic phrase. All 60 zero-hook comparisons ran at batch size 1. Pushed rows ran at batch sizes from 17 to 64, including 17, 25, 33, 49, 57, and 64. The gate does not cover that batch-shape gap. Bf16 greedy answers can depend on batch shape. The fitter uses an in-house mean contrast in the style of re:dvx. This does not test re:dvx or control vectors in general. There is no held-out check that a fitted vector reads its persona at all. A vector that does nothing here may be badly fitted rather than unable. The fit prompts use system instructions and suffixes, while evaluation uses Part 92's user-only frame. The cosine does not remove that context difference. Reader labels are not a direct measure of an internal representation.
 
 ## Terms
 
 - **Persona mark:** The answer reader says the answer shows the target persona.
 - **Coherent answer:** The reader says the answer is coherent. This can be true without a persona mark.
-- **Readable persona:** A unit-level show under Part 92's rule. For a slot, a persona mark must appear on question 0 or 1, with at least two thirds of its marks coherent. For a concept, there must be at least three marks across six questions, with at least two thirds coherent.
+- **Readable persona:** The rule used by Part 123's scorer. For a slot, one or more marks on question 0 or 1 must be at least two thirds coherent; marks on other questions do not count. A concept needs at least three marks across any of the six questions, with at least two thirds coherent.
 - **Neuron:** The selected Part 92 MLP channel, pushed through its matching residual-space direction.
 - **Fitted vector:** A residual-space direction found by subtracting mean assistant states for persona prompts and generic-assistant prompts.
 - **q:** The multiplier on the written push size. q=1 is the Part 92 size; q=0.5 is half that size.
@@ -110,4 +143,4 @@ This is one model, 39 units, ten layers, one prompt bank, six questions, and one
 - Raw main answers, labels, and answer keys are in [main](main/), [labels-ds.jsonl](labels-ds.jsonl), [labels-luna.jsonl](labels-luna.jsonl), and their key files.
 - The scorer output is in [SCORE.md](SCORE.md) and [score123.json](score123.json). The registered design is [PART123-DESIGN.md](../../PART123-DESIGN.md), with [Amendment 1](../../PART123-DESIGN.md#amendment-1-2026-10-30-1335-ct-after-the-pilot-before-the-main-run).
 
-Cold check: pending
+Cold check: Haiku 5.5, 2026-10-30, round 1, 13 findings, all folded ([COLD-CHECK-r1.md](COLD-CHECK-r1.md)).
