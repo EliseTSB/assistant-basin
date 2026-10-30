@@ -159,7 +159,10 @@ def wait_for_ssh(instance_id: str, deadline: float) -> tuple[str, int]:
             instance = _instance_payload(instance_id)
             details = _ssh_details(instance)
             if details and instance.get("actual_status") == "running":
-                return details
+                probe = subprocess.run(_ssh_args(details[0], details[1], "true"), timeout=30,
+                                       capture_output=True, env=_child_env())
+                if probe.returncode == 0:  # "running" comes before the SSH port answers
+                    return details
             if instance.get("actual_status") in {"exited", "error", "failed"}:
                 raise VastAPIError("rented instance entered a terminal error state")
         except VastAPIError:
