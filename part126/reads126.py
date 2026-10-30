@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
 REGIONS = ("role", "template", "body", "question", "options", "other")
 REGION = {name: i for i, name in enumerate(REGIONS)}
 LAYERS_WANTED = (11, 15)
+KEEP_LAYERS = 16
 HEADS_EXPECTED = 16
 HEAD_DIM_EXPECTED = 256
 RANDOM_SEED = 12601
@@ -563,13 +564,18 @@ def _load_direct(device, MODEL_ID, REVISION):
     """Amendment 1: the weights go straight to the device, as Part 115b does. nr.load_model stages about 8 GB in host
     memory first, and the RAM guard stopped that at Windows' 2 GB floor. Same weights, dtype and device."""
     import torch
-    from transformers import AutoModelForCausalLM, AutoModelForImageTextToText, AutoTokenizer
+    from transformers import AutoConfig, AutoModelForCausalLM, AutoModelForImageTextToText, AutoTokenizer
     import transformers.modeling_utils as mu
     tok = AutoTokenizer.from_pretrained(MODEL_ID, revision=REVISION)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
     mu.caching_allocator_warmup = lambda *a, **k: None  # one block that size is over the A770's single-allocation limit
-    kw = dict(revision=REVISION, dtype=torch.bfloat16, device_map={"": device})
+    # Amendment 2: only layers 0 to 15 load. Attention at layers 11 and 15 depends on nothing above them.
+    config = AutoConfig.from_pretrained(MODEL_ID, revision=REVISION)
+    text = getattr(config, "text_config", config)
+    text.num_hidden_layers = KEEP_LAYERS
+    text.layer_types = list(text.layer_types)[:KEEP_LAYERS]
+    kw = dict(revision=REVISION, config=config, dtype=torch.bfloat16, device_map={"": device})
     try:
         model = AutoModelForCausalLM.from_pretrained(MODEL_ID, **kw)
     except (ValueError, KeyError):
