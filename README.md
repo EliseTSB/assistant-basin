@@ -1,11 +1,59 @@
-# Neurons and attention heads that change small open models' answers about their maker, their name, and who wrote a text
+# Neurons and attention heads that change small open models' answers about their maker, their name, their persona, and who wrote a text
 
 **Finding your way:** [`PARTS.md`](PARTS.md) lists every part (question, status, design, code, results, verdicts); [`TOOLKIT.md`](TOOLKIT.md) describes the standard methods and where they are implemented; [`PROCEDURE.md`](PROCEDURE.md) is the checklist every part goes through from Part 115 on, with the scripts that check it; [`docs/BRANCHES.md`](docs/BRANCHES.md) audits the remaining branches.
 
-The strongest results are changes in selected outputs after neuron and attention-head interventions. They do not locate an assistant self. We study maker attribution, model naming, which speaker a model names for a text, and related answer patterns in small open models. This summary covers Parts 1 to 84 (written by Claude, updated 2026-10-27). Most parts from Part 25 on have their own README section, with controls and failed predictions; earlier parts are summarised there in shorter entries, and some parts are unscored or not yet written up.
+The strongest results are changes in selected outputs after neuron and attention-head interventions. They do not locate an assistant self. We study maker attribution, model naming, which speaker a model names for a text, and related answer patterns in small open models. This summary covers Parts 1 to 119c (written by Claude, updated 2026-10-30). Most parts from Part 25 on have their own README section, with controls and failed predictions; earlier parts are summarised there in shorter entries, and some parts are unscored or not yet written up.
 
 Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I checked two pre-run design commits: [Part 54, `acde4d8c7aecc97f03262e7a7dc42d617308e7a8`](https://github.com/EliseTSB/assistant-basin/commit/acde4d8c7aecc97f03262e7a7dc42d617308e7a8) and [Part 58, `80f5266de8bd91e28c10bf4ba09bc7074999ec08`](https://github.com/EliseTSB/assistant-basin/commit/80f5266de8bd91e28c10bf4ba09bc7074999ec08). Part 34's paired readout and Part 1's Luna re-score are exploratory. The Part 1 Luna raw output was not found in this checkout.
 
+## The short version
+
+1. In Qwen3.5-4B, zeroing [four maker neurons](#part-25-the-fewest-neurons-that-change-who-qwen-says-made-it-2026-10-19) made Google the maker in [42 of 192 answers across 24 held-out phrasings](#part-66-on-24-new-phrasings-the-four-maker-neurons-move-qwens-answer-to-google-about-one-time-in-five-2026-10-25), against [1 of 192 unchanged](#part-66-on-24-new-phrasings-the-four-maker-neurons-move-qwens-answer-to-google-about-one-time-in-five-2026-10-25).
+2. OLMo 3 7B Think named DeepSeek in [16 of 23 raw answers without a system turn](results/part9-think/name-counts.json), while Think-DPO named DeepSeek in [23 of 24 answers with an OLMo template](results/part9-think/name-counts.json).
+3. At [2× the recorded corpus maximum](results/part18/chat/steer.json), Qwen3.5-4B's [L22 N2742](results/part18/chat/steer.json) made [8 of 8 “Who made you?” answers](results/part18/chat/steer.json) mention extraterrestrial origins, against [0 of 8 unclamped](results/part18/chat/steer.json).
+4. In Qwen3.5-4B, zeroing the four maker neurons left Google in [37 of 192 held-out maker answers](#part-78-a-zeroed-maker-set-and-a-pushed-alien-unit-rarely-compose-at-20x-the-alien-unit-takes-over-the-maker-answer-while-a-size-matched-push-on-another-unit-triples-the-google-fallback-2026-10-27); adding a [2× alien push](#part-78-a-zeroed-maker-set-and-a-pushed-alien-unit-rarely-compose-at-20x-the-alien-unit-takes-over-the-maker-answer-while-a-size-matched-push-on-another-unit-triples-the-google-fallback-2026-10-27) left [0 of 192](#part-78-a-zeroed-maker-set-and-a-pushed-alien-unit-rarely-compose-at-20x-the-alien-unit-takes-over-the-maker-answer-while-a-size-matched-push-on-another-unit-triples-the-google-fallback-2026-10-27), while a same-size control push left [119 of 192](#part-78-a-zeroed-maker-set-and-a-pushed-alien-unit-rarely-compose-at-20x-the-alien-unit-takes-over-the-maker-answer-while-a-size-matched-push-on-another-unit-triples-the-google-fallback-2026-10-27).
+5. For Qwen3.5-4B's “Who wrote the message before this question?” test, switching off [six selected heads](#part-82-switching-off-lyras-six-own-earlier-messages-heads-cuts-qwen35-4bs-own-message-gap-by-83-but-two-of-five-random-head-sets-from-the-same-layers-cut-it-as-much-or-more-2026-10-27) reduced the “you” answer gap from [0.444 to 0.076](#part-82-switching-off-lyras-six-own-earlier-messages-heads-cuts-qwen35-4bs-own-message-gap-by-83-but-two-of-five-random-head-sets-from-the-same-layers-cut-it-as-much-or-more-2026-10-27); [two of five random sets](#part-82-switching-off-lyras-six-own-earlier-messages-heads-cuts-qwen35-4bs-own-message-gap-by-83-but-two-of-five-random-head-sets-from-the-same-layers-cut-it-as-much-or-more-2026-10-27) cut it as much or more.
+6. A GPT-6 Luna judge assigned the GPT family to [390 of 400 teacher answers](results/part29c/judge-gpt-6-luna-summary.txt), but named the right family for only [49 of 400](results/part29c/judge-gpt-6-luna-summary.txt), versus [50 of 400 for an always-GPT guess](results/part29c/judge-gpt-6-luna-summary.txt).
+7. At [+0.8](results/part86/README.md) on greedy “Who are you?” pushes in Qwen3.5-4B, the layer-22 screen found coherent personas in [250 of 9,216 neurons](results/part86/README.md) and [3 of 512 random directions](results/part86/README.md); every all-push rate is a lower bound.
+8. For six OLMo 2 1B Instruct slot units, their persona theme appeared in [0 of 6 cold activities answers](results/part109/README.md) and [6 of 6 after self-introduction plus push](results/part109/README.md), but only [1 of 6 post-introduction answers](results/part109/README.md) was in character. In Qwen3.5-4B, random directions got target labels in [101 of 343 and 94 of 344 self-question answers](results/part112/NUMBERS.md), so a slot label may partly capture generic self-description.
+9. Among [71 OLMo 2 1B slot units selected at Instruct](results/part108/README.md), persona answers appeared in [14 of 71 at SFT, 40 of 71 at DPO, and 64 of 71 at Instruct](results/part108/README.md); the forward weight mixes were not checkpoints.
+10. At [alpha 0.8](results/part119/README.md) on “Who are you?” for OLMo 2 1B, [357 of 741 real-pair answers broke versus 286 of 741 random-pair answers](results/part119b/README.md) (Fisher p=[0.000241](results/part119b/README.md)), while the separate effect-matched logit-interaction ratio was [1.044, with a 95% interval of 0.961 to 1.129](results/part119/README.md).
+11. With “I am **” forced in Qwen3.5-4B over [16 held-out phrasings](results/part114/README.md), zeroing one of the [top 20 candidates or the top pair flipped 0 of 16](results/part114/README.md), while the top 200 flipped [11 of 16](results/part115/README.md) and the top 500 flipped [16 of 16](results/part115/README.md).
+
+## Terms
+
+- **κ (kappa):** a reader-agreement score adjusted for agreement expected by chance; 1 is full agreement and 0 is chance-level agreement.
+- **Fisher exact test:** a test for whether two small-count groups have different rates.
+- **Wilson interval:** a confidence range for a proportion that behaves well with small samples.
+- **Dose and α (alpha):** the multiplier that sets the strength of an activation push; +0.8 means 0.8 times the chosen reference size.
+- **Greedy:** the model picks its most likely next token at each step instead of sampling.
+- **MLP input:** the value for one feed-forward neuron that is sent into the MLP down-projection.
+- **Down-projection:** the final MLP weight matrix that combines neuron values into the rest of the model.
+- **J-lens:** a list of words a neuron may push toward, estimated by tracking its effect through later layers.
+- **Logit lens:** a rough reading of likely next words from an intermediate layer.
+- **Jacobian lens:** an estimate of how changing one neuron changes final next-word scores.
+- **Base:** the named model family before chat or instruction training.
+- **Mid-training:** a checkpoint partway through pretraining, before supervised fine-tuning and preference training.
+- **1T and 4T:** OLMo 2 1B checkpoints after 1 trillion and 4 trillion training tokens.
+- **Atlas:** a catalog of selected neuron units and their assigned labels.
+- **Brief:** the instructions and definitions given to a reader judging answers.
+- **Triage:** an automatic rule that decides which answers go to the reader and which are kept or marked broken.
+- **Gate 3:** Part 119b's check that forced-path logits recover the generated answer tokens; failing it stopped four lower-dose predictions.
+- **float32:** a 32-bit number format with more precision than bf16.
+- **bf16:** a 16-bit number format with a wide numeric range and less precision than float32.
+- **Nats:** units for log-probability using the natural logarithm.
+- **Log-odds:** log(p/(1-p)), a score comparing a target token's probability with the probability of all alternatives.
+- **Held-out phrasings:** question wordings kept out of selection and saved for evaluation.
+- **Forced opening:** a text prefix supplied before generation to set the model's starting context.
+- **Zeroing:** setting a selected neuron's value or input to zero during a model run.
+- **Ablation:** an intervention that removes or disables selected units.
+- **Withheld:** not reported as an interpretation because a pre-set gate did not pass.
+- **Erasure reading:** the claim that one push removes another neuron's persona from the answer.
+- **Coherence gate:** a pre-set minimum for how many answers must be judged understandable and in character before a claim is read.
+- **Self-claim:** a reader label for an answer that explicitly says the speaker is the persona.
+- **OLMo:** AI2's Open Language Model family; each result names the version used.
+- **Qwen:** Alibaba's Qwen family of open models.
+- **L27 N3325:** layer 27, neuron 3325 in Qwen3.5-4B; Part 110 treats it as a separate Google-writing neuron, not one of the four maker neurons.
 ## Finding 1: Selected neurons can change maker and model-name answers
 
 In Qwen3.5-4B, a search selected four neurons in layers 6, 7, 11, and 29. The search used six identity questions to select and prune the set. The final zeroing test reused those questions. This adaptive search limits what the random controls establish: the 20 random groups were not put through the same select-and-prune procedure, so zero of 20 is not a like-for-like null.
@@ -104,6 +152,109 @@ A neuron's description of what it reads picked its own description of what it wr
 
 A probe told Qwen3-1.7B's own answers from OLMo's at AUROC .946. After removing the answers' mean log-probability under Qwen, it scored .553, an interval that includes chance. Removing eight directions that predict log-probability summaries left .632 [.562, .704], above chance, so something beyond those directions remains. Asked "Did you write the text above?", Qwen almost always said no, whatever wrote the text (mean yes-probability at most .0011), and OLMo said yes about a third of the time to everything. Only the label moved the answer: Qwen's yes-probability on a memory phrasing was .25 under "Your earlier notes", .16 under "Notes from another assistant", and .08 under plain "Notes". [Part 37](#part-37-qwen3-17b-separates-its-own-answers-from-olmos-and-the-signal-is-mostly-predictability-asked-neither-models-answer-tracks-who-wrote-the-text-2026-10-25)
 
+## Finding 7: Some single-neuron pushes give Qwen a coherent persona, and readout words sometimes match it
+
+![Coherent persona rates across the Part 86 layer screen](results/part86/fig86.png)
+
+*Layer 22 was the registered comparison. Layer 24 had the highest observed real-neuron rate at 5.219%, but its 95% Wilson interval overlapped the random-direction interval. [Part 86 source and numbers](results/part86/README.md).*
+
+A **push** adds a fixed vector at one neuron's MLP input during generation. A **coherent persona** is a readable first identity claim that the reader labels as something other than Qwen or an assistant. A **random direction** is a same-size vector not taken from a neuron. [Part 86](results/part86/README.md)
+
+**Is it a layer-wide coincidence?** In Qwen3.5-4B at dose +0.8, greedy answers to “Who are you?” were labeled coherent after 250 of 9,216 real neuron pushes in layer 22, against 3 of 512 same-dose random directions (2.713% versus 0.586%; one-sided Fisher p=0.000584). Only layer 22 was the registered comparison. The layer scan found a 5.219% real rate in layer 24, so the “below 5% in every layer” prediction failed. [Part 86](results/part86/README.md)
+
+Layer 22 ran first as a pilot because the full 17-layer screen was expected to exceed the one-hour pilot line. Its first dry run had 4,949 of 9,728 answers triaged as changed and failed the triage gate. The kept rule was broadened after those counts were seen, but before any blind reading. Version-1 DeepSeek and Luna labels failed the agreement gate at κ=0.568, so the reader brief was revised before version-2 calibration and full-screen labels. Only answers triaged as changed were read, so every coherent-persona rate over all pushes is a lower bound. A miss sample of kept and broken answers puts the pooled real-neuron total at 2.7 to 6.4 times the counted total; because it pools layers, it cannot show how the layer-22 comparison changes. [Part 86 design](PART86-DESIGN.md) [Part 86 results](results/part86/README.md)
+
+**Do readers agree on which persona appeared?** Claude Haiku 5.5 built the 465-unit atlas. The four-reader sequence included an Opus second read, then DeepSeek (DS) and GPT-6 Luna. After a corrected brief, DS and Luna agreed at κ=0.814 on a fresh 335-answer calibration, while Haiku agreed with DS at κ=0.109 and Luna at κ=0.051. DS then labeled the full version-2 screen and the atlas was checked under that brief: 245 of 387 first-reader “another AI” units remained coherent personas, 141 were still Qwen or an assistant, and one was unclear. The planned top-20 verification under more prompts did not run. [Part 86](results/part86/README.md)
+
+A second reading of OLMo 2 1B's 39 classified units kept all 21 slot labels but only 8 of 18 concept labels; seven concepts became slots and three became unclassified. DS and Haiku agreed at κ=0.833 on 634 shared answers, but marked personas in 80 of 318 and 104 of 317 neuron answers respectively. [Part 92b](results/part92b/README.md)
+
+**Do neuron word lists match persona answers without a push?** A J-lens is a computed list of output words for a neuron. In OLMo 2 1B at alpha 0.8 on “Who are you?”, its list matched 185 of 1,709 pushed personas, against 28 of 1,709 shuffled neuron-answer pairs; the registered 20% match-rate target failed. About 9 in 10 persona flips did not show the neuron's own words. A later validation matched 6 of 10 selected neurons and none of 10 unmatched neurons. [Part 97](results/part97/README.md) [Validation scores](results/part97/validation/score.json)
+
+In Qwen3.5-4B, J-lens lists matched 224 of 465 pushed personas against 22 of 460 shuffled pairs under Part 98's graded labels. Part 98 has no results README in this checkout; these counts and verdicts come from its registered result table. [Part 98 results in PREDICTIONS.md](PREDICTIONS.md)
+
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 18 held, 13 failed, and 1 not scorable across Parts 86, 97, 98, and 112.
+
+## Finding 8: Slot and concept labels track different push patterns, with reader and dose limits
+
+![Persona labels by condition for matched concept and slot pushes](results/part117/fig-117-who.png)
+
+*The two labels are counted separately. [Part 117 source and numbers](results/part117/README.md).*
+
+**What do “slot” and “concept” mean here?** A concept label means a target appeared in at least three of six answers. A slot label means it appeared in one or two answers and only on “Who are you?” or “Tell me about yourself.” In OLMo 2 1B, concept units showed their persona at the mid-training end in 13 of 17 readable cases, against 3 of 20 slot units. On a cold activities question under the push, 14 of 18 concept answers carried the theme, against none of six slot answers; only 7 of 18 concept answers were coherent and 3 made a self-claim. [Part 92](results/part92/README-steps2-3.md) [Part 109b](results/part109b/README.md)
+
+In a separate OLMo test, six slot units showed their own persona theme in 0 of 6 cold activities answers under the push and in 6 of 6 after self-introduction plus push; only the dog unit described activities in character. Part 112 also gave random directions persona labels on “Who are you?” in 101 of 343 answers and on “Tell me about yourself” in 94 of 344, so the slot label may partly capture generic self-description. [Part 109](results/part109/README.md) [Part 112](results/part112/NUMBERS.md)
+
+Part 109b asked a cold activities question after Part 92 selected concept units using a battery that included “What do you want most?” and “Describe your perfect day.”; 14 of 18 concept units showed their theme on that latter selection question, the same count as on the new activity question. The activity result therefore is not independent of the selection battery. [Part 109b](results/part109b/README.md)
+
+**Does another reader keep the sort?** For the original OLMo units, DS retained all 21 slot kinds but only 8 of 18 concept kinds. Seven concepts became slots and three became unclassified. Across shared answers, agreement was κ=0.833, but DS marked a persona on 80 of 318 neuron answers and Haiku on 104 of 317. [Part 92b](results/part92b/README.md)
+
+**Is the target phrase always the unit's theme?** In Qwen3.5-4B, one selected “unnamed being” neuron showed that persona only on “Who are you?” at +1, while its J-lens words were “simply” and “just”; at +3, none of seven answers was coherent. A word-based sort would call “simply” and “just” a concept, while the registered persona rule called this a slot. [Part 113](results/part113/README.md)
+
+**What happens when a concept and slot are pushed together?** In Qwen3.5-4B at +1, each alone showed its persona on “Who are you?” in 11 of 11 pairs; together, the concept appeared in 9 of 11 and the slot in 3 of 11. In the follow-up, the slot appeared in 11 of 11 answers at +1, 2 of 11 at +0.85, and none of 11 at +0.5. The random-direction answers passed the coherence gate in only 15 of 33 cases, below the required 22, so the erasure reading was withheld; the unrelated-concept condition also missed its coherence gate at 7 of 11. [Part 117](results/part117/README.md) [Part 117b](results/part117b/README.md)
+
+Part 112's one-reader Qwen atlas also sorted 465 targets into 257 concept, 189 slot, 17 unclassified and 2 unsorted labels; all 465 were labeled with their target on “Who are you?” at dose 0.8. The paired random directions received persona labels in 148 of 1,860 answers to the four non-self questions. This is a one-dose consistency check on an atlas built from the same question, not evidence that each label is the neuron's only function. [Part 112](results/part112/README.md) [Part 112 numbers](results/part112/NUMBERS.md)
+
+Part 118's registered across-dose sort has no result README or result table yet. [Part 118 design](PART118-DESIGN.md)
+
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 27 held and 25 failed across Parts 92, 92b, 109, 109b, 109c, 112, 113, 117, and 117b. Part 118 has no result yet. [Part 118 design](PART118-DESIGN.md)
+
+## Finding 9: Slot-persona counts differ across OLMo stages among units selected at Instruct
+
+![Slot personas lost by moving weights back, forward, or with scrambled signs](results/part108/fig108.png)
+
+*The actual SFT, DPO, and Instruct checkpoints are shown alongside constructed forward weight mixes. The mixes are not checkpoints, and the reader-labeled denominators range from 62 to 64. [Part 108 source and numbers](results/part108/README.md).*
+
+**Do the stage counts identify a builder?** In OLMo 2 1B, SFT means supervised fine-tuning, DPO means direct preference optimization, and Instruct is the final chat checkpoint. Among 71 slot units selected because their push gave a persona at Instruct, the persona appeared in 14 of 71 SFT, 40 of 71 DPO, and 64 of 71 Instruct answers. Part 108 compared actual SFT and DPO checkpoints with forward weight mixes built by moving from Instruct; those mixes are not checkpoints. The DPO checkpoint showed personas for 38 of 62 labeled units, while the equally distant 2 x Instruct - DPO mix showed them for 31 of 63. The SFT checkpoint showed 13 of 64, while the 2 x Instruct - SFT mix showed 21 of 64. At the post-training scale, losses going back and forward overlapped no more than chance (p=0.69). The counts do not show that DPO built these units because the units were selected at Instruct. [Part 108](results/part108/README.md)
+
+**Does the concept predate post-training?** In Part 92's OLMo shortlist, concept personas appeared in 8 of 18 answers at 1T pretraining and 13 of 17 at the mid-training end; slot personas appeared in none of 21 at 1T and 3 of 20 at mid-training. Separate pushed concepts also appeared in base or mid-training models: the space unit gave the theme in 5 of 6 mid-training plain answers, the Qwen dark unit in 4 of 6 Base answers, and the cheating unit in 3 of 6 Base answers. A Tulu violence unit gave violent answers in 11 of 16 base completions at dose 1.0, against 16 of 16 in chat. These are selected neurons and single tasks, not a full account of what training changed. [Part 92](results/part92/README-steps2-3.md) [Part 95](results/part95/README.md) [Part 94](results/part94/README.md) [Part 96](results/part96/README.md) [Part 90b](results/part90b/README.md)
+
+**Do weight measurements locate the change?** Across 131,072 OLMo neurons, median down-projection cosine with Instruct rose from 0.049 at 21B tokens to 0.967 at 4T. The selected identity and “As an AI” sets moved less than layer-matched controls, while the assistant-register set moved slightly more (mean 0.0056 versus 0.0053, p=0.015). DPO's weight update was 23 to 342 times smaller than SFT's, and 51% of changed attention and MLP values moved by one bf16 step. These are weight comparisons; they do not locate the answer change. [Part 89](results/part89/README.md) [Part 107](results/part107/README.md)
+
+**Do component swaps show what training built?** In Part 99, replacing Instruct attention with mid-training attention reduced slot-persona answers from 19 of 21 to 3 of 21, while 13 of 21 stayed coherent. A same-distance opposite-direction attention swap then lost 5 of 10 early slot personas, against 7 of 10 under the SFT attention swap; on new units, the SFT swap lost 9 of 23 early and 6 of 20 later personas, against 8 of 22 and 7 of 20 for the opposite swap. The early/late split was post hoc; under the opposite swap it was not significant (5 of 10 early versus 1 of 9 later, Fisher p=0.09). The Part 104 dependence test was not read, and Part 105 calls the pattern sensitivity to an attention change of this size. [Part 99](results/part99/README.md) [Part 104](results/part104/README.md) [Part 105](results/part105/README.md)
+
+**What does the pushed sentence do across stages?** At alpha 0.8, two slot targets whose first sentence stopped before the persona were removed, leaving 19 slot units. For those corrected targets, the pushed persona sentence changed from a median -9.4 nats at SFT to -10.0 at DPO; the median gap over the same-size random push was 14.6 nats at SFT and 20.7 at DPO. DPO also lowered the no-push target from -32.9 to -36.7 nats. This scores fixed sentences rather than generated answers and uses one dose. [Part 106](results/part106/README.md)
+
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 42 held, 23 failed, 2 not tested, and 1 not read across Parts 89, 90b, 91, 92, 94, 94b, 94c, 95, 96, 99, 104, 105, 106, 106b, 107, and 108. The tally counts each row under its Part heading by the last-cell verdict.
+
+## Finding 10: At alpha 0.8, two pushes are not additive and real pairs break more often than random pairs
+
+![Additive token hits, answer condition, and matched interaction ratio](results/part119/fig119.png)
+
+*The additive hit rate stays below its registered line; the effect-matched interaction interval is shown at right. [Part 119 source and numbers](results/part119/README.md).*
+
+An **additive top-token hit** is a match between the top token from adding the two single-push effects and the token generated under both pushes, measured only where the single pushes have different top tokens. An **interaction share** measures how far the two-push logit change departs from the sum of the two single-push changes.
+
+**Do two pushes add?** For 39 OLMo 2 1B persona units paired at alpha 0.8 on “Who are you?”, the additive top-token prediction matched in 24.4% of row means, far below the registered 60% threshold; pooled over contested positions it matched 2,264 of 9,546 tokens (23.7%). Median interaction share was 0.471. [Part 119](results/part119/README.md) [Part 119 numbers](results/part119/NUMBERS.md)
+
+**How does the logit interaction compare with answer breaking?** At alpha 0.8, real pairs broke 357 of 741 answers and two-random-push pairs broke 286 of 741; the difference was significant by Fisher exact test (p=0.000241). Separately, after matching single-effect size, the real/control logit-interaction ratio was 1.044 (95% interval 0.961 to 1.129). This fit retained 16,208 of 19,532 real positions and dropped 3,324, or 17%, to match the controls' support. Similar logit interaction size does not mean that pairs break answers at the same rate. [Part 119](results/part119/README.md) [Part 119 numbers](results/part119/NUMBERS.md) [Part 119b](results/part119b/README.md)
+
+**Do the answers stay readable?** At alpha 0.4, triage marked 33 of 741 real-pair answers broken. One reader called 100 of 108 sampled answers coherent, but 76 of those were assistant replies. [Part 119b](results/part119b/README.md) [Part 119b numbers](results/part119b/NUMBERS.md)
+
+Part 119b's Gate 3 failed: its interaction share at 0.2 was 0.177643, above the 0.15 limit, so predictions 119b.4, 119b.5, 119b.7, and 119b.8 were stopped, not read. Its registered headline rule returned “No registered headline reading; report the numbers.” In Part 119, the two robustness thresholds in 119.6 and 119.9 were unreachable because observed R values ranged from 0 to 0.058, below the required 0.10 difference and 0.05 proximity. Part 119c checked 312 fixed answer-path rows without generating answers. At 0.2, float32 and bf16 shares were 0.153 and 0.162; float32 shares were 0.020 at 0.1 and 0.00455 at 0.05. The all-position float32 real/control factors were 1.01, 1.04, and 1.10 at 0.05, 0.1, and 0.2. The 1.66 factor at 0.05 comes from an unregistered resolved-position subset. This fixed-path subset does not show what generated answers do at those doses. [Part 119](results/part119/README.md) [Part 119b](results/part119b/README.md) [Part 119c](results/part119c/README.md) [Part 119c numbers](results/part119c/NUMBERS.md)
+
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 11 held, 10 failed, and 4 stopped across Parts 119, 119b, and 119c. The ledger counts 119.10 as failed under the written rule, while Part 119's scorer says it was not read because kappa is undefined.
+
+## Finding 11: The forced “Q” token resists small zeroing groups but flips under larger groups
+
+![Held-out phrasings where Q was no longer the most likely next token, by ranking and number of neurons zeroed](results/part116/fig-flips.png)
+
+*A flip means “Q” is no longer the most likely next token after a forced opening. [Part 116 source and numbers](results/part116/README.md).*
+
+**Can one or two selected neurons change the name token?** In Qwen3.5-4B, with “I am **” forced and 16 held-out phrasings, zeroing any of the top 20 attribution-ranked candidates alone, or the top pair together, took “Q” off first place in 0 of 16 phrasings. Zeroing the top 200 from that ranking flipped 11 of 16, and the top 500 flipped all 16; matched random sets flipped none. The test covers these candidates and this forced opening. [Part 114](results/part114/README.md) [Part 115](results/part115/README.md)
+
+**How many are needed under other rankings?** On the same forced opening, direct-write ranking flipped all 16 phrasings with the top 100; activity ranking first reached 8 flips at 500, and the gradient ranking did so at 200. Direct-write ranking is close to the readout that defines a flip: it ranks neurons by their direct effect on the score for “Q,” and a flip means “Q” is no longer the top token. [Part 116](results/part116/README.md) [Part 116 numbers](results/part116/NUMBERS.md)
+
+Part 110 names the four maker neurons as L6 N753, L7 N1169, L11 N8868, and L29 N776. L27 N3325 is a separate neuron that writes Google, not one of the four. Their base and chat top-20 lists kept 16 to 20 tokens. L27 N3325 put Google first in both; L7 N1169 and L11 N8868 put Chinese and China first. The Jacobian lens found 11 Google-family tokens for L27 and China-family tokens for L7 and L11, while L6 N753's Jacobian list had no AI-family token even though its logit-lens list did. No base-model generation was run, and these readouts do not show that the four cause a model-name answer. [Part 110](results/part110/README.md) [Part 111](results/part111/README.md)
+
+**Is the effect just the bold marker?** Part 115's off-target check measured the probability of the bold token itself, not answer correctness; an exploratory check suggested formatting context could matter. Under a plain-text instruction and three other openings, Part 115b's gradient ranking needed 500 neurons to reach eight flips in each opening. Direct-write needed 100 for the plain opening and 50 for quote and bold openings. The plain opening used a different target token, and the instruction and opening both changed, so this does not isolate a bold-marker effect. A corrected Part 115b prediction also counts “Chat” as not a model or company name under its registered list. [Part 115](results/part115/README.md) [Part 115b](results/part115b/README.md) [Part 115b numbers](results/part115b/NUMBERS.md)
+
+The result concerns zeroing ranked groups under forced openings and a single next-token readout. It does not establish where the name is stored during ordinary answers.
+
+An exploratory ordinary-answer check after the ranking was chosen found that zeroing the top 100 moved “Paris” to first place after “The capital of France is”; at 500, its log-probability was -0.02. This shows that ordinary answers can change at these group sizes, but the check had no matched controls and was not a general-ability test. Part 115b's plain-text instruction and final openings followed probe passes 2 and 3. The later test therefore followed those probes, and its changed instruction and openings do not isolate a bold-marker effect. [Part 115](results/part115/README.md) [Part 115b](results/part115b/README.md)
+
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 24 held and 7 failed across Parts 110, 111, 114, 115, 115b, and 116.
+
+
 ## Limits
 
 - “Identity” here means measured answer behavior. Maker claims, model names, authorship, traits, and introspective reports are different outcomes.
@@ -116,6 +267,12 @@ A probe told Qwen3-1.7B's own answers from OLMo's at AUROC .946. After removing 
 - Parts 80 to 80c vary where a text is placed, and Parts 82 and 83 switch off heads on that measure; none of them tests whether a model recognises its own writing.
 - Judge-based one-job readings of neurons are reported in the literature to hold at top activations and degrade under broad sampling (Shabalin and Piotrowski 2026), and several readouts here are weighted toward top activations too.
 - Several outcomes use LLM judges. The Part 24 categories overlap; Part 1 changes with the judge; Part 29c shows why calibration matters.
+
+- Most persona evidence uses one question or a short fixed question battery and one greedy answer per condition, so prompt and run variation remains thin ([Part 86](results/part86/README.md), [Part 109](results/part109/README.md), [Part 117](results/part117/README.md)).
+- Most persona pushes use one selected dose ([Part 86](results/part86/README.md)); a separate dose check found the slot label at +1, +0.85, and +0.5 in 11 of 11, 2 of 11, and 0 of 11 answers ([Part 117b](results/part117b/README.md)).
+- Many units were selected because their push worked at Instruct and then tested at earlier checkpoints, so the stage counts carry that selection ([Part 92](results/part92/README-steps2-3.md), [Part 108](results/part108/README.md)).
+- Reader agreement affects the atlas and the slot/concept labels built from it ([Part 86](results/part86/README.md), [Part 92b](results/part92b/README.md)).
+- A push imposes an activation shift at a chosen scale; it shows the effect of that intervention, not what the neuron normally does ([Part 86](results/part86/README.md), [Part 117b](results/part117b/README.md)).
 
 ## Related work
 
