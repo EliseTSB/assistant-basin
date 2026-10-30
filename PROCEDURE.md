@@ -183,3 +183,15 @@ beyond one part.
 - 2026-10-29: Part 115, the first part through this list, passed every prelaunch check and still carried a broken
   off-target probe: its baseline was run but not read before registration. The item above came from it. Using the publish check on it also found
   that "Cold check: pending" counted as a cold check; it no longer does.
+- 2026-10-29 (Part 115b): loading straight to the A770 lowers the host-memory peak enough to run beside a game, once
+  transformers' allocator warm-up is skipped (it asks for one 7.8 GiB block, over the Arc's single-allocation limit).
+  The CPU-staged loader was stopped by the 2 GB guard starting from 9.5 GB free; the direct load ran from 9.6 GB.
+  `load_direct` in part115b/howmany115b.py (`--direct-load`).
+- 2026-10-29 (Part 115b): copy every probe pass's output into the repo before registering. The registration cited a
+  third pass whose output stayed in the job folder until the cold check asked for it.
+- 2026-10-29 (Part 112): compute an amendment's description of the data, as with any number. Part 112's Amendment 1
+  named the wrong questions for its unlabelled answers.
+- 2026-10-29 (tools/register_public.py): registering an amendment to an older part republished every later part's
+  prediction section. A section now stops at the next part, and a part already public leaves PREDICTIONS.md alone.
+- 2026-10-29 (Part 116's cold check): flips come from batched forward passes and first words from a separate generation
+  batch, and a few rows disagree. Say which a count comes from.
