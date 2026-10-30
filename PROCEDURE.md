@@ -181,5 +181,5 @@ beyond one part.
   60-token cap would cut 68% of the answers, so it needs the reader's agreement on cut answers measured first. The A770
   was 94% busy on average, so the run was bound by the GPU's work, not by waiting.
 - 2026-10-29: Part 115, the first part through this list, passed every prelaunch check and still carried a broken
-  off-target probe: its baseline was never run. The item above came from it. Using the publish check on it also found
+  off-target probe: its baseline was run but not read before registration. The item above came from it. Using the publish check on it also found
   that "Cold check: pending" counted as a cold check; it no longer does.
