@@ -21,7 +21,7 @@ API_V1 = "https://console.vast.ai/api/v1"
 MAX_HOURLY_RATE = 0.30
 MIN_RELIABILITY = 0.99
 DISK_GB = 40
-BOOT_SECONDS = 8 * 60
+BOOT_SECONDS = 15 * 60  # the image pull alone took about 9 minutes
 BAD_OFFERS = {38849859}  # 2026-10-30: OCI runtime error on start
 MAX_RENT_SECONDS = 180 * 60  # $0.90 at the maximum accepted hourly rate, for Parts 127 and 125 together.
 RUN_LABEL_PREFIX = "part127-2026-10-30"
@@ -263,10 +263,14 @@ def run() -> int:
             rate = float(offer["dph_total"])
             print(f"Selected offer {offer['id']}: ${rate:.3f}/hour, "
                   f"reliability {float(offer['reliability2']):.3f}, disk {DISK_GB} GB", flush=True)
-            rented = api_request("PUT", f"/asks/{offer['id']}/", {
-                "client_id": "me", "image": "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel",
-                "disk": DISK_GB, "runtype": "ssh_direct", "label": label,
-                "onstart": "touch ~/.no_auto_tmux"})
+            try:
+                rented = api_request("PUT", f"/asks/{offer['id']}/", {
+                    "client_id": "me", "image": "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel",
+                    "disk": DISK_GB, "runtype": "ssh_direct", "label": label,
+                    "onstart": "touch ~/.no_auto_tmux"})
+            except VastAPIError as exc:  # taken since the search
+                print(f"Offer {offer['id']} refused: {exc}", flush=True)
+                continue
             instance_id = rented.get("new_contract")
             if instance_id is not None:
                 instance_ids.add(str(instance_id))
