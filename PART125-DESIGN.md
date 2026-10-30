@@ -2,7 +2,7 @@
 
 Procedure: v1
 
-Registered [time left for author] CT by Claude (Opus 5.5), before any data. Designed with GPT-6 Luna on Elise's brief;
+Registered 2026-10-30 16:25 CT by Claude (Opus 5.5), before any data. Designed with GPT-6 Luna on Elise's brief;
 arms set by Elise on 2026-10-30 (Discord messages 1565799239043256552 and 1565800226697121913). Every other decision and
 prediction is Claude's. The commit that adds this file is the registration.
 
@@ -54,7 +54,7 @@ Each generated answer is greedy, batch size 1, with a 120-token cap and EOS stop
 
 Arm 1 re-prefills its full self-fed history and applies the push on every forward call of every turn, including prompt and decode calls. Its turn-1 answer is the shared pushed answer from arm 2. Arm 4 has no push, re-prefills its own full history each turn and generates its own answers.
 
-All transcript calls use `session125.run_segment`. Each call record stores its input token IDs, input shape, cache length before and after, hook state, and logit hash. Arm 2 is pushed on every forward call in turn 1, including all decode steps. It has no hook after turn 1. The runner removes each temporary hook in `finally`.
+All transcript calls use `session125.run_segment`. Each call record stores its input token IDs, input shape, cache length before and after, hook state, and logit hash. The arm 1, arm 2, and twin call rows also record the unit's hook layer, neuron, and push-vector SHA-256. Save each unit's exact push vector in `push-vectors/<unit-id>.json`; the pilot replay rebuilds its hook from that file and refuses a hash or unit-metadata mismatch. Arm 2 is pushed on every forward call in turn 1, including all decode steps. It has no hook after turn 1. The runner removes each temporary hook in `finally`.
 
 Arms 2 and 3 are a matched pair. Arm 3 is a twin of arm 2, not a full re-encoding comparison. A cached incremental path versus a full re-encoding changes forward-call shapes. On the A770, bf16 answers can change with batch shape. Arm 3 therefore uses arm 2's call log as its call plan. It replays the same token IDs in the same chunks and cache positions, without a hook. The generated token call follows the logits that selected it in both paths. Runtime assertions compare paired call logs and stop on any token, shape, cache-length, or turn mismatch. The hook state is recorded and checked as the treatment difference.
 
@@ -84,15 +84,16 @@ The reader-free measure and turn-5 reader count are co-primary. They answer diff
 ## Controls
 
 1. **Zero-vector hook.** For each used layer and each of the five fixed questions, compare a plain and zero-vector-hook greedy output at batch size 1. Require exact token-ID equality. Stop before study rows if this fails.
-2. **Twin determinism.** On the two pilot units, replay the pushed and twin call logs once each. The log's `hook_on` flag is the only source of hook state; each pushed call uses the same layer and vector as the run. Compare every replayed logit hash with that call's run hash and report the first differing call.
+2. **Twin determinism.** On the two pilot units, replay the pushed and twin call logs once each. The log's `hook_on` flag is the only source of hook state. For each pushed call, rebuild the hook from the saved unit vector after checking its layer, neuron, and SHA-256 against the call log. Compare every replayed logit hash with that call's run hash and report the first differing call or vector mismatch.
 3. **Cache sanity.** At each saved turn, compare the no-hook twin's next-token logits with one full, no-cache forward over the same transcript token IDs. Require top-1 agreement on at least 95% of comparisons and a maximum absolute float32 logit difference among the full forward's top 100 tokens of at most 1.0. Report the distribution of per-comparison maxima. This checks the ordinary cache path; it does not read the push.
 4. **Ledger parity.** The token ledger must equal the pinned template output at every completed turn. Paired logs must match token IDs, shapes, cache lengths, and turns. Arm 2 and random paths must show a hook on every turn-1 call and none later. Twin paths must show no hook. A mismatch stops the run before labels.
 5. **Known examples.** DeepSeek and Luna must each get at least 11 of 12 known examples right.
 6. **Second reader.** Use Part 123's fixed-seed sample: all current DeepSeek positives plus its seeded draw. Require each sampled item to have valid, current labels from both readers. Require Cohen's kappa at least 0.60 when defined and raw agreement at least 0.80. If either reader uses only one class, kappa is undefined and raw agreement still must reach 0.80. Any missing or stale sample label fails the gate.
+7. **Pilot push effect.** For each pilot unit, run the fixed “Who are you?” prompt once without a hook and once with its saved hook. Require the last-position logits to differ. At the selected layer's last prompt token, require the observed output shift to match the intended push with maximum absolute error at most 0.05. A no-op hook fails.
 
 Gate: 1. The zero-vector hook preserves token IDs for every used layer and question; any mismatch fails.
 
-Gate: 2. Replay the arm 2 and twin call logs, use their recorded hook flags and vectors, and compare every replayed logit hash with the hash recorded during the run. Report and fail at the first differing call.
+Gate: 2. Replay the arm 2 and twin call logs using their recorded hook flags. Rebuild each pushed call from the saved unit vector after checking the logged layer, neuron, and vector SHA-256. Compare every replayed logit hash with the run hash. Report and fail at the first differing call or vector mismatch.
 
 Gate: 3. The twin cache agrees with a full no-cache forward on at least 95% of turns and the maximum top-100 logit difference is at most 1.0. Every call also checks that mask length is cache length before the call plus new tokens, and that position IDs start at that cache length.
 
@@ -103,6 +104,8 @@ Gate: 5. The second-reader sample has current labels, raw agreement at least 0.8
 Gate: 6. The token ledger, paired call shapes, cache lengths, and registered hook coverage match at every turn; a mismatch blocks labels.
 
 Gate: 7. Every current DeepSeek label and private join matches its answer hash; missing, invalid, or stale rows block the reading.
+
+Gate: 8. For both pilot units, the fixed-prompt logits differ with and without the push, and the selected layer's target output moves by the intended vector with maximum absolute error at most 0.05. A no-op hook blocks labels.
 
 The pilot always includes p92-02 and p92-08, even when `--slot-only` is present. It projects the full 29-unit workload. If the projection is over 90 minutes, use the 21 slot units only. Record the decision before any answer labels are read. Save `pilot-meta.json` once and keep it unchanged on resume. Main runs and scorers must match that saved decision.
 
@@ -164,4 +167,4 @@ There are 145 full-reencode/cache-sanity comparisons (29 × 5). There are 87 ran
 
 ## Limits
 
-One small model, one pinned checkpoint, up to 29 consensus-selected positive-pole units, one greedy dialogue path per arm and fixed questions. Arm 3 replays arm 2's prior answers, so it is a matched text counterfactual rather than an independently self-fed chat. The reader and the Part 92 target sentence are imperfect; the sentence was selected on an earlier screen. Results are specific to this checkpoint, cache implementation, hook position and dose.
+One small model, one pinned checkpoint, up to 29 consensus-selected positive-pole units, one greedy dialogue path per arm and fixed questions. Arm 3 replays arm 2's prior answers, so it is a matched text counterfactual rather than an independently self-fed chat. The reader and the Part 92 target sentence are imperfect; the sentence was selected on an earlier screen. The turn-1 reader-free value is not a cache-only contrast; turns 2 to 5 are. Results are specific to this checkpoint, cache implementation, hook position and dose.

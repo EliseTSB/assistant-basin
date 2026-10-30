@@ -31,6 +31,48 @@ def _read_json(path: str | Path):
         return json.load(stream)
 
 
+def run_incomplete_reason(raw_dir: str | Path, run_meta: dict | None = None) -> str | None:
+    """Describe missing completion evidence before any aggregate files are read."""
+    directory = Path(raw_dir)
+    run_path = directory / "run-meta.json"
+    if not run_path.is_file():
+        return "run-meta.json is missing"
+    if run_meta is None:
+        try:
+            run_meta = _read_json(run_path)
+        except (OSError, json.JSONDecodeError, TypeError) as exc:
+            return f"run-meta.json cannot be read: {exc}"
+    if not isinstance(run_meta, dict):
+        return "run-meta.json is not an object"
+    if run_meta.get("status") != "complete":
+        return f"status is {run_meta.get('status')!r}, expected 'complete'"
+    try:
+        expected_count = int(run_meta.get("expected_units", -1))
+        completed_count = int(run_meta.get("completed_units", -1))
+        expected_ids = [str(value) for value in run_meta.get("expected_unit_ids", [])]
+        completed_ids = [str(value) for value in run_meta.get("unit_ids", [])]
+    except (TypeError, ValueError):
+        return "unit counts or unit IDs are invalid"
+    unit_dir = directory / "units"
+    present_ids = sorted(path.stem for path in unit_dir.glob("*.json")) if unit_dir.is_dir() else []
+    if (expected_count < 1 or completed_count != expected_count or
+            len(expected_ids) != expected_count or len(set(expected_ids)) != expected_count or
+            len(completed_ids) != completed_count or set(completed_ids) != set(expected_ids) or
+            set(present_ids) != set(expected_ids)):
+        return ("completed units do not match expected units and unit files "
+                f"(completed={completed_count}, expected={expected_count}, "
+                f"recorded={len(completed_ids)}, files={len(present_ids)})")
+    for unit_id in expected_ids:
+        try:
+            unit_record = _read_json(unit_dir / f"{unit_id}.json")
+        except (OSError, json.JSONDecodeError, TypeError) as exc:
+            return f"unit file {unit_id}.json cannot be read: {exc}"
+        unit = unit_record.get("unit") if isinstance(unit_record, dict) else None
+        if not isinstance(unit, dict) or str(unit.get("id")) != unit_id:
+            return f"unit file {unit_id}.json does not match its unit ID"
+    return None
+
+
 def _write_jsonl(path: Path, rows) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as stream:
@@ -101,7 +143,10 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
     """Require model/cache gates before sending study answers to a reader."""
     raw_dir = Path(answers_path).parent
     run_path = raw_dir / "run-meta.json"
-    run_meta = _read_json(run_path) if run_path.is_file() else {}
+    incomplete = run_incomplete_reason(raw_dir)
+    if incomplete is not None:
+        raise ValueError(f"run is incomplete: {incomplete}")
+    run_meta = _read_json(run_path)
     expected_parameters = run_meta.get("parameters", {}).get("unit_parameters")
     answers = read_jsonl(answers_path)
     units = {str(row["unit_id"]) for row in answers}
@@ -120,7 +165,10 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
     sequences = read_jsonl(raw_dir / "call-sequences.jsonl")
     sequence_map = {str(row["unit_id"]): row for row in sequences}
     def det_row_passes(row):
-        sequence = sequence_map.get(str(row.get("unit_id")), {})
+        unit_id = str(row.get("unit_id"))
+        if unit_id not in sequence_map:
+            return False
+        sequence = sequence_map[unit_id]
         pushed_run = [call.get("logit_hash") for call in sequence.get("arm2_calls", [])]
         twin_run = [call.get("logit_hash") for call in sequence.get("arm3_calls", [])]
         pushed_replay = row.get("pushed_logit_hashes_replay", [])
@@ -225,6 +273,7 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
     pilot_path = raw_dir / "pilot-meta.json"
     if not pilot_path.is_file() or not run_path.is_file():
         result.append({"name": "pilot size cut", "passed": False})
+        result.append({"name": "pilot push effect", "passed": False})
     else:
         pilot = _read_json(pilot_path)
         run = _read_json(run_path)
@@ -232,6 +281,16 @@ def execution_gates(answers_path: str | Path) -> list[dict]:
         result.append({"name": "pilot size cut",
                        "passed": bool(run.get("slot_only")) == required_cut and
                        bool(run.get("parameters", {}).get("slot_only")) == required_cut})
+        push_checks = {str(row.get("unit_id")): row
+                       for row in pilot.get("pilot_push_effect_checks", [])}
+        push_passed = (pilot.get("pilot_push_effect_gate_passed") is True and
+                       set(push_checks) == {"p92-02", "p92-08"} and
+                       all(push_checks[unit_id].get("passed") is True and
+                           push_checks[unit_id].get("logits_differ") is True and
+                           float(push_checks[unit_id].get("target_max_abs_error", math.inf)) <=
+                           float(push_checks[unit_id].get("tolerance", -1))
+                           for unit_id in ("p92-02", "p92-08")))
+        result.append({"name": "pilot push effect", "passed": bool(push_passed)})
     return result
 
 
@@ -256,6 +315,12 @@ def main(argv: list[str] | None = None, *, request_fn=None, sleep_fn=None) -> in
         print(json.dumps(result, ensure_ascii=False), flush=True)
         return 0 if result["passed"] else 1
 
+    incomplete = run_incomplete_reason(Path(args.answers).parent)
+    if incomplete is not None:
+        print(f"main labeling refused: run is incomplete: {incomplete}",
+              file=sys.stderr, flush=True)
+        return 1
+
     try:
         for reader, known_path in (("ds", Path(args.known_ds)), ("luna", Path(args.known_luna))):
             known = label119.gate_result(label119.read_known(), read_jsonl(known_path))
@@ -265,13 +330,17 @@ def main(argv: list[str] | None = None, *, request_fn=None, sleep_fn=None) -> in
         print(f"main labeling refused: {exc}", file=sys.stderr, flush=True)
         return 1
 
-    answers = read_jsonl(args.answers)
-    execution = execution_gates(args.answers)
+    try:
+        execution = execution_gates(args.answers)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(f"main labeling refused: {exc}", file=sys.stderr, flush=True)
+        return 1
     failed_execution = [row["name"] for row in execution if not row["passed"]]
     if failed_execution:
         print(f"main labeling refused before labels: execution gates failed: {failed_execution}",
               file=sys.stderr, flush=True)
         return 1
+    answers = read_jsonl(args.answers)
     items = make_items(answers)
     if args.reader == "luna":
         ds_rows = read_jsonl(args.labels_ds)
