@@ -100,3 +100,12 @@ One instruction wording and three openings. " Q" and "Q" are different tokens, s
 as well as removing the "**"; the quote opening holds the token fixed. The rankings were chosen for "Q" after "I am **",
 so a set made for each opening could need fewer neurons. The instruction itself changes the prompt from Part 115's, so
 the bold opening here is not Part 115's prompt. Zeroing is one kind of removal. Six ordinary probes are a coarse check.
+
+## Amendment 1 (2026-10-29 20:10 CT, before any data)
+
+The first launch (20:09 CT) was stopped 11 s in by the job runner's RAM guard: Windows' available memory fell from 9.5
+GB to 1.5 GB while the shared loader staged the whole model in host memory. The run now loads the weights straight to
+the A770 (`--direct-load`, `load_direct` in part115b/howmany115b.py: the same weights, dtype and device through
+`device_map`), the lever this design had declined as untested. Nothing else changes, and both gates still run first. If
+the direct load fails or changes nothing, the run waits for more free memory instead.
+

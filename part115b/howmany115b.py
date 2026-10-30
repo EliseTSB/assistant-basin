@@ -74,20 +74,41 @@ def run_ranking(model, tok, layers, attr_path, device, dtype):
             "generations": {ctx: {str(k): v for k, v in g.items()} for ctx, g in gens.items()}}
 
 
+def load_direct(device):
+    """Amendment 1: the weights go straight to the device (device_map) instead of being staged in host memory first,
+    which the RAM guard stopped at Windows' 2 GB floor on the first launch. Same weights, dtype and device."""
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    tok = AutoTokenizer.from_pretrained(h.c.MODEL_ID, revision=h.c.REVISION)
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    kw = dict(revision=h.c.REVISION, dtype=torch.bfloat16, device_map={"": device})
+    try:
+        model = AutoModelForCausalLM.from_pretrained(h.c.MODEL_ID, **kw)
+    except (ValueError, KeyError):
+        from transformers import AutoModelForImageTextToText
+        model = AutoModelForImageTextToText.from_pretrained(h.c.MODEL_ID, **kw)
+    model.eval()
+    model.requires_grad_(False)
+    torch.set_grad_enabled(False)
+    return tok, model
+
+
 def main(argv=None):
     import torch
     p = argparse.ArgumentParser()
+    p.add_argument("--direct-load", action="store_true", help="Amendment 1: load straight to the device")
     p.add_argument("--out", required=True)
     p.add_argument("--ranking", action="append", required=True, help="name=path to an attribution or rank file")
     p.add_argument("--device", default="xpu")
     a = p.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     t0 = time.time()
-    tok, model = h.c.load_model(a.device)
+    tok, model = load_direct(a.device) if a.direct_load else h.c.load_model(a.device)
     layers = h.c.find_layers(model)
     model.requires_grad_(False)
     dtype = next(model.parameters()).dtype
-    payload = {"design": "PART115B-DESIGN.md", "plain_instruction": PLAIN, "contexts": CONTEXTS,
+    payload = {"design": "PART115B-DESIGN.md", "direct_load": a.direct_load, "plain_instruction": PLAIN, "contexts": CONTEXTS,
                "ordinary": ORDINARY, "ks": h.KS, "n_sets": h.N_SETS, "pool": h.POOL, "exclude": h.EXCLUDE,
                "target_ids": {ctx: one_token(tok, w) for ctx, (_o, w) in CONTEXTS.items()}, "rankings": {}}
     with torch.inference_mode():
