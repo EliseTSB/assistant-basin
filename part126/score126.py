@@ -111,7 +111,7 @@ def _gates(run, lens, region_mass, hidden):
     gates["positive_control"] = {
         "passed": bool(math.isfinite(positive_rate) and positive_rate >= 3.0),
         "max_rate_over_uniform": positive_rate, "head": positive.get("head"),
-        "threshold": "> 1.0",
+        "threshold": ">= 3.0",
     }
     shape = lens.get("gates", {}).get("lens_shape", {})
     shape_list = shape.get("lens_shape")
@@ -319,7 +319,7 @@ def run(args):
             predictions, exploratory = _score_predictions(region_mass, rows, part83, lens, vector_data)
 
     result = {
-        "design": "PART126-DESIGN-draft.md", "gates": gates,
+        "design": "PART126-DESIGN.md", "gates": gates,
         "gate_failures": gate_failures, "predictions": predictions,
         "descriptive": descriptive, "exploratory": exploratory,
         "capture_complete": capture_complete, "row_count": len(rows), "region_names": list(REGIONS),

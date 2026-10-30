@@ -226,7 +226,7 @@ def run(args):
                         copy_names=np.asarray(COPIES, dtype="U1"))
     os.replace(tmp_vectors, vectors_path)
     result = {
-        "design": "PART126-DESIGN-draft.md", "gates": {"lens_shape": shape_check},
+        "design": "PART126-DESIGN.md", "gates": {"lens_shape": shape_check},
         "formula": "unembedding @ ((1 + final_norm_weight) * (J_layer @ write))",
         "write_definition": "mean gated value through this head's o_proj input-column block, attention set to one",
         "top_k": TOP_K, "region_names": list(REGION_NAMES), "copies": list(COPIES),

@@ -555,7 +555,7 @@ def _positive_control(tok, model, handles_context, handles, question, render, bo
         "max_rate_over_uniform": max_rate,
         "head": max_head,
         "stub_fixture_bias": bool(stub),
-        "passed": bool(max_rate > 1.0),
+        "passed": bool(max_rate >= 3.0),
     }
 
 
@@ -618,6 +618,8 @@ def run(args):
             if previous.get(key) != meta.get(key):
                 raise ValueError(f"resume metadata mismatch for {key}: {previous.get(key)!r} != {meta.get(key)!r}")
         old_fingerprints = previous.get("prompt_fingerprints", [])
+        if args.limit_bodies is not None and len(old_fingerprints) > len(prompt_fingerprints):
+            raise ValueError("a --limit-bodies run cannot resume a larger run; use a new output folder")
         if len(old_fingerprints) > len(prompt_fingerprints) or prompt_fingerprints[:len(old_fingerprints)] != old_fingerprints:
             raise ValueError("resume prompts do not preserve the completed prompt prefix")
         meta["started_at_unix"] = previous.get("started_at_unix", meta["started_at_unix"])
@@ -666,6 +668,15 @@ def run(args):
         equal = torch.equal(plain_logits, hooked_logits)
         maxdiff = float((plain_logits.float() - hooked_logits.float()).abs().amax().detach().cpu())
         zero_effect = {"bitwise_equal": bool(equal), "max_abs_difference": maxdiff, "passed": bool(equal)}
+        if not equal:
+            # The gate stays failed. Record whether two plain passes differ too, so a failure can be read.
+            for handle in handles:
+                handle.remove()
+            handles = []
+            with torch.inference_mode():
+                repeat_logits = model(input_ids=probe_ids, use_cache=False, logits_to_keep=1).logits
+            zero_effect["plain_repeat_bitwise_equal"] = bool(torch.equal(plain_logits, repeat_logits))
+            handles = _install_capture_hooks(model, layers, context)
         for layer in LAYERS_WANTED:
             recompute_max = max(recompute_max, probe_records[layer]["recompute_max_abs"])
 
