@@ -76,9 +76,17 @@ def _source_rows(units: list[dict]) -> list[dict]:
     return result
 
 
+def _registered_inventory(units: list[dict] | None) -> bool:
+    if units is None:
+        return True
+    unit_ids = [str(unit["id"]) for unit in units]
+    registered_ids = [str(unit["id"]) for unit in rows119.load_units()]
+    return len(unit_ids) == len(registered_ids) and set(unit_ids) == set(registered_ids)
+
+
 def all_answer_rows(units: list[dict] | None = None) -> list[dict]:
     """All planned rows, including the Part 119 0.8 rows marked for reuse."""
-    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
+    registered_inventory = _registered_inventory(units)
     units = rows119.load_units() if units is None else units
     source = rows119.all_rows(units) if registered_inventory else _source_rows(units)
     single_rows = [row for row in source if row["row_type"] in ("single", "random")]
@@ -131,7 +139,7 @@ def all_answer_rows(units: list[dict] | None = None) -> list[dict]:
 
 def pilot_answer_rows(units: list[dict] | None = None) -> list[dict]:
     """Plain, all single doses, seeded 20-pair cells, and 20 random pairs."""
-    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
+    registered_inventory = _registered_inventory(units)
     units = rows119.load_units() if units is None else units
     all_rows = all_answer_rows(units)
     lookup = {row["row_id"]: row for row in all_rows}
@@ -162,7 +170,7 @@ def pilot_answer_rows(units: list[dict] | None = None) -> list[dict]:
 
 def all_path2_rows(units: list[dict] | None = None) -> list[dict]:
     """Directed real and matched-random second pushes for every ordered pair."""
-    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
+    registered_inventory = _registered_inventory(units)
     units = rows119.load_units() if units is None else units
     ordered = sorted(units, key=lambda unit: unit["id"])
     rows = []
@@ -184,7 +192,7 @@ def all_path2_rows(units: list[dict] | None = None) -> list[dict]:
 
 def pilot_path2_rows(units: list[dict] | None = None) -> list[dict]:
     """Two seeded first units, each with eight second units in both row classes."""
-    registered_inventory = units is None or len(units) == rows119.UNIT_COUNT
+    registered_inventory = _registered_inventory(units)
     units = rows119.load_units() if units is None else units
     ordered = sorted(units, key=lambda unit: unit["id"])
     rng = random.Random(PILOT_SEED)

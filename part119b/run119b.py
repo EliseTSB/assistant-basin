@@ -24,14 +24,14 @@ import rows119  # noqa: E402
 import run119  # noqa: E402
 import rows119b as rb  # noqa: E402
 from rows119b import _push  # noqa: E402 -- Path 2 builds a cached first-push row
-import score119b as scorer  # noqa: E402 -- pilot Gate 2 uses the registered scorer
+import gate119b  # noqa: E402 -- lightweight CPU-only pilot gate helpers
 
 QUESTION = run119.QUESTION
 FRAME = run119.FRAME
 ANSWER_TOKENS = run119.ANSWER_TOKENS
 PATH_TOKENS = run119.PATH_TOKENS
 PART119_ANSWERS = "results/part119/answers.jsonl"
-PART119_INTERACTIONS = "results/part119/interaction.jsonl"
+PART119_INTERACTIONS = gate119b.PART119_INTERACTIONS_PATH
 
 
 def repo_path(value: str | Path) -> Path:
@@ -537,7 +537,8 @@ def _answer_projection(rows: list[dict], pilot_records: list[dict]) -> int | Non
     return round(total)
 
 
-def run(args: argparse.Namespace, units: list[dict] | None = None) -> dict:
+def run(args: argparse.Namespace, units: list[dict] | None = None, *,
+        test_only_allow_unregistered_part119_reference: bool = False) -> dict:
     import torch
 
     units = (rows119.load_units(args.neurons, args.kinds, args.kinds_ds)
@@ -549,6 +550,14 @@ def run(args: argparse.Namespace, units: list[dict] | None = None) -> dict:
     part119_answers_path = repo_path(args.part119_answers)
     part119_interactions_path = repo_path(args.part119_interactions)
     part119_answers = read_jsonl_readonly(part119_answers_path, "row_id")
+    reference = []
+    reference_attestation = None
+    if args.stage == "pilot":
+        reference = read_jsonl_readonly(part119_interactions_path)
+        reference_attestation = gate119b.validate_part119_reference(
+            part119_interactions_path, reference,
+            test_only_allow_unregistered_part119_reference=(
+                test_only_allow_unregistered_part119_reference))
 
     tokenizer, model = c.load_model(repo_path(args.model), args.device)
     layers = c.get_layers(model)
@@ -586,14 +595,14 @@ def run(args: argparse.Namespace, units: list[dict] | None = None) -> dict:
             pilot_interactions_path = output_dir / "interaction-pilot.jsonl"
             shutil.copyfile(sample_files[faster["batch"]], pilot_interactions_path)
         pilot_rows = read_output_by_key(pilot_interactions_path, "key")
-        ref = read_jsonl_readonly(part119_interactions_path)
-        gate2 = pilot_reproduction_gate(pilot_rows, ref, path2_rows)
+        gate2 = pilot_reproduction_gate(pilot_rows, reference, path2_rows)
         gate2_report = _pilot_gate_report(gate2)
         projected = _answer_projection(answer_rows, pilot_records)
         report = {"stage": "pilot", "answers_new": answer_count,
                   "answer_seconds": answer_seconds, "gate1_passed": gate["passed"],
                   "gate2_sample_passed": gate2_report["passed"],
                   "gate2": gate2_report,
+                  "part119_reference": reference_attestation,
                   "gate2_failure_reason": gate2["reason"] if not gate2["passed"] else None,
                   "path2_batch_timings": timings, "path2_batch_selected": faster["batch"],
                   "projected_new_answer_bytes": projected,
@@ -631,13 +640,13 @@ def run(args: argparse.Namespace, units: list[dict] | None = None) -> dict:
 
 def pilot_reproduction_gate(pilot_rows: dict[str, dict], reference: list[dict],
                             selected_rows: list[dict]) -> dict:
-    """Run the scorer's Gate 2 calculation on the pilot's selected rows."""
+    """Run the shared Gate 2 calculation on the pilot's selected rows."""
     expected = {"real": set(), "control": set()}
     for row in selected_rows:
         kind = str(row["kind"])
         expected.setdefault(kind, set()).add(
             (kind, str(row["first"]), str(row["second"])))
-    return scorer.gate2_result(list(pilot_rows.values()), reference, expected)
+    return gate119b.gate2_result(list(pilot_rows.values()), reference, expected)
 
 
 def _pilot_gate_report(gate2: dict) -> dict:

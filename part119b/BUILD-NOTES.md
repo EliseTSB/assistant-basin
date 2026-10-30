@@ -7,6 +7,7 @@ This build adds deterministic dose-tagged answer and fixed-path inventories, a r
 - Path 2 fixes each position's token set to the union of the four 0.8 pass top tens and uses that same set at all four doses. It records the centered norms, TV, five top IDs, margins, no-intercept slopes, and set size. Float records are rounded to five decimals; the saved resolved flag is calculated before rounding. Repeated argmax supplies top IDs without device top-k or sorting. Base and first-push forwards/top IDs are cached per unit and dose, while the second and both passes can batch by 1 or 8.
 - The design says Gate 3 needs at least 70% coverage of real rows at 0.2 but leaves its denominator implicit. I count a row as covered when it has at least one position resolved on the shared support at all four doses. This keeps the coverage gate aligned with the all-dose support used for its median share. The scorer reports both row and position coverage; please review this interpretation.
 - The design calls for pilot gate checks and timing but does not register numerical acceptance criteria for the sampled Gate 2 check. The pilot requires every sampled 0.8 row to match Part 119's row share within 0.01 and the median relative `nPair` difference to be below 1%; the complete scorer Gate 2 uses the design's all-row medians and coverage checks. Pilot stdout contains gate outcomes, timing, batch selection, and projected new-answer bytes, not prediction readouts.
+- Part 119's `results/part119/interaction.jsonl` has no `resolved` field; Gate 2 compares shares and `nPair` across all common positions on each selected row.
 - The model pilot and the by-eye 0.4 answer stopping rule were not run in this worker environment. The runner records both Path 2 batch timings and selected batch in `timing-pilot.json`; choose that batch for main. No dose or threshold was changed. Until actual run files are produced, `SCORE.md` and `score119b.json` correctly label Gate 1 as not run and all eleven predictions as not read; the 0.8 descriptive broken-answer cells come from the read-only Part 119 answers.
 - Path 1 is the 741 real pairs at 0.4 and is reported as description only. The scorer also writes the requested plain per-dose table with broken shares by row class, all-position and resolved medians, median `b_A` and `b_2`, and row/position coverage.
 
@@ -19,7 +20,7 @@ Pilot:
 ```sh
 python3 tools/launch_arc.py 119b \
   --step "-I -B part119b/run119b.py --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --stage pilot --batch 64 --out results\\part119b\\run --device xpu" \
-  --copy part119b/run119b.py part119b/rows119b.py part119/run119.py part119/rows119.py part92/common92.py part85/checkpoints.py results/part92/step2/neurons.json results/part92/step2/kinds.json results/part92b/score92b.json results/part119/answers.jsonl results/part119/interaction.jsonl
+  --copy part119b/run119b.py part119b/rows119b.py part119b/gate119b.py part119/run119.py part119/rows119.py part92/common92.py part85/checkpoints.py results/part92/step2/neurons.json results/part92/step2/kinds.json results/part92b/score92b.json results/part119/answers.jsonl results/part119/interaction.jsonl
 ```
 
 After reading `results/part119b/run/timing-pilot.json`, run main with the selected `--path2-batch` value (1 or 8); keep the same output directory so pilot answers resume:
@@ -27,7 +28,7 @@ After reading `results/part119b/run/timing-pilot.json`, run main with the select
 ```sh
 python3 tools/launch_arc.py 119b \
   --step "-I -B part119b/run119b.py --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --stage main --batch 64 --path2-batch 1 --out results\\part119b\\run --device xpu" \
-  --copy part119b/run119b.py part119b/rows119b.py part119/run119.py part119/rows119.py part92/common92.py part85/checkpoints.py results/part92/step2/neurons.json results/part92/step2/kinds.json results/part92b/score92b.json results/part119/answers.jsonl results/part119/interaction.jsonl
+  --copy part119b/run119b.py part119b/rows119b.py part119b/gate119b.py part119/run119.py part119/rows119.py part92/common92.py part85/checkpoints.py results/part92/step2/neurons.json results/part92/step2/kinds.json results/part92b/score92b.json results/part119/answers.jsonl results/part119/interaction.jsonl
 ```
 
 If the pilot selects 8, use the same main command with `--path2-batch 8`. Once the A770 outputs are available under `results/part119b/run`, score on CPU with:

@@ -1,7 +1,7 @@
 # Part 119b: is Part 119's failure to add a property of the dose where answers break?
 
 Procedure: v1
-Registered {{REGISTERED}} CT by Claude (Opus 5.5), before any data. Elise asked at 00:50 CT on 2026-10-30 to "keep trying
+Registered 2026-10-30 07:31 CT by Claude (Opus 5.5), before any data. Elise asked at 00:50 CT on 2026-10-30 to "keep trying
 to refine your understanding of slot vs concept neurons and any other ways we can classify them, and try to figure out
 how different types of neurons interact" (Discord message 1565603681804488839). Part 119's limit is the reason for this
 part: at alpha 0.8 on both pushes, 357 of 741 real pair answers broke, against 4 of 39 single answers. The commit that

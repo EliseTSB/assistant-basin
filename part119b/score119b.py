@@ -21,6 +21,8 @@ for path in (HERE, ROOT / "part119", ROOT):
 import rows119  # noqa: E402
 import score119  # noqa: E402 -- registered broken-answer and bootstrap definitions
 import rows119b as rb  # noqa: E402
+from gate119b import (_median_or_none, _position_map, gate2_result,
+                      interaction_share, path2_index)  # noqa: E402 -- shared runner/scorer gate helpers
 import label119 as reader_shared  # noqa: E402 -- same known-example gate definitions
 from part86 import triage86  # noqa: E402 -- Part 86's registered model-free break rule
 
@@ -112,17 +114,6 @@ def resolved(position: dict, threshold: float = 1.0) -> bool:
                for field in ("nA", "n2", "nPair"))
 
 
-def interaction_share(position: dict) -> float | None:
-    n_pair = float(position.get("nPair", 0.0))
-    if n_pair <= 0:
-        return None
-    return (float(position.get("nI", 0.0)) / n_pair) ** 2
-
-
-def _position_map(row: dict) -> dict[int, dict]:
-    return {int(position["pos"]): position for position in row.get("positions", [])}
-
-
 def validate_shared_support(interactions: list[dict]) -> dict:
     """Check the runner reused the same top-10 union T at all four doses."""
     by_base = defaultdict(dict)
@@ -147,17 +138,6 @@ def validate_shared_support(interactions: list[dict]) -> dict:
             checked += 1
     return {"passed": not problems, "positions_checked": checked,
             "problems": problems[:25], "problem_count": len(problems)}
-
-
-def path2_index(interactions: list[dict]) -> dict[tuple[str, str, str], dict[float, dict]]:
-    result = defaultdict(dict)
-    for row in interactions:
-        key = (str(row["kind"]), str(row["first"]), str(row["second"]))
-        dose = float(row["dose"])
-        if dose in result[key]:
-            raise ValueError(f"duplicate Path 2 row/dose {key} at {dose}")
-        result[key][dose] = row
-    return result
 
 
 def _row_shares(row: dict, *, filter_resolved: bool = False) -> list[float]:
@@ -303,10 +283,6 @@ def summarize_path2(interactions: list[dict], expected: dict[str, set[tuple[str,
     return summary
 
 
-def _median_or_none(values: list[float]) -> float | None:
-    return float(median(values)) if values else None
-
-
 def gate3_result(summary: dict, interactions: list[dict], path_support: dict) -> dict:
     real = summary["by_dose"]["0.2"]["real"]
     coverage = summary["coverage"]["real"]
@@ -325,103 +301,6 @@ def gate3_result(summary: dict, interactions: list[dict], path_support: dict) ->
             "shared_T_passed": path_support["passed"],
             "thresholds": {"row_coverage_at_least": .70,
                            "median_share_at_most": .15}}
-
-
-def gate2_result(interactions: list[dict], reference: list[dict],
-                 expected: dict[str, set[tuple[str, str, str]]]) -> dict:
-    """Check Part 119 reproduction medians on the same selected rows."""
-    index = path2_index(interactions)
-    reference_by_key = {(str(row["kind"]), str(row["first"]), str(row["second"])): row
-                        for row in reference}
-    class_rows = {"real": [], "control": []}
-    relative_npair_by_row = []
-    compared_rows = {"real": 0, "control": 0}
-    position_pairs = 0
-    missing = []
-    mismatch_positions = 0
-    for kind in ("real", "control"):
-        for key in expected.get(kind, set()):
-            current = index.get(key, {}).get(.8)
-            old = reference_by_key.get(key)
-            if current is None or old is None:
-                missing.append({"kind": kind, "first": key[1], "second": key[2]})
-                continue
-            compared_rows[kind] += 1
-            current_pos = _position_map(current)
-            old_pos = _position_map(old)
-            common = sorted(set(current_pos) & set(old_pos))
-            if set(current_pos) != set(old_pos):
-                mismatch_positions += 1
-            old_shares, new_shares = [], []
-            row_relative_npair = []
-            for pos in common:
-                before, after = old_pos[pos], current_pos[pos]
-                old_pair, new_pair = float(before["nPair"]), float(after["nPair"])
-                if old_pair > 0:
-                    row_relative_npair.append(abs(new_pair - old_pair) / old_pair)
-                old_share = interaction_share(before)
-                new_share = interaction_share(after)
-                if old_share is not None:
-                    old_shares.append(old_share)
-                if new_share is not None:
-                    new_shares.append(new_share)
-                position_pairs += 1
-            if old_shares and new_shares:
-                class_rows[kind].append({"old": float(median(old_shares)),
-                                         "new": float(median(new_shares))})
-            if row_relative_npair:
-                relative_npair_by_row.append(float(median(row_relative_npair)))
-    observed = {}
-    class_ok = {}
-    for kind in ("real", "control"):
-        new_values = [row["new"] for row in class_rows[kind]]
-        old_values = [row["old"] for row in class_rows[kind]]
-        value = _median_or_none(new_values)
-        reference_median = _median_or_none(old_values)
-        difference = (abs(value - reference_median)
-                      if value is not None and reference_median is not None else None)
-        observed[kind] = {"median_row_share_0.8": value,
-                          "reference_median_row_share_0.8": reference_median,
-                          "absolute_median_difference": difference,
-                          "rows_compared": compared_rows[kind],
-                          "rows_with_share_medians": len(class_rows[kind]),
-                          "expected_rows": len(expected.get(kind, set()))}
-        class_ok[kind] = (compared_rows[kind] == len(expected.get(kind, set()))
-                          and len(class_rows[kind]) == len(expected.get(kind, set()))
-                          and value is not None and reference_median is not None
-                          and difference <= .01)
-    median_relative = _median_or_none(relative_npair_by_row)
-    complete = not missing and mismatch_positions == 0
-    reasons = []
-    if missing:
-        reasons.append(f"{len(missing)} selected rows are missing from the pilot or Part 119 reference")
-    if mismatch_positions:
-        reasons.append(f"{mismatch_positions} selected rows have different position lists")
-    failed_classes = [kind for kind, passed in class_ok.items() if not passed]
-    if failed_classes:
-        reasons.append("selected-row median share differs by more than 0.01 for "
-                       + ", ".join(failed_classes))
-    if median_relative is None:
-        reasons.append("no row-level relative nPair differences were available")
-    elif median_relative >= .01:
-        reasons.append("median row relative nPair difference is at least 0.01")
-    passed = bool(complete and all(class_ok.values())
-                  and median_relative is not None and median_relative < .01)
-    return {"passed": passed,
-            "complete": complete, "missing_rows": missing[:25],
-            "missing_row_count": len(missing), "position_list_mismatch_rows": mismatch_positions,
-            "position_pairs_compared": position_pairs, "row_medians": observed,
-            "class_thresholds_passed": class_ok,
-            "median_relative_nPair_difference": median_relative,
-            "median_relative_nPair_difference_over_rows": median_relative,
-            "relative_nPair_rows_compared": len(relative_npair_by_row),
-            "share_median_difference_threshold": .01,
-            "nPair_threshold": .01,
-            "failure_reasons": reasons,
-            "reason": "; ".join(reasons) if reasons else None,
-            "expected_rows": {kind: len(expected.get(kind, set()))
-                              for kind in ("real", "control")},
-            "rows_compared": compared_rows}
 
 
 def _broken_stats(answers: list[dict], planned: list[dict]) -> dict:

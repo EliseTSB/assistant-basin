@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import math
+import shlex
+import shutil
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
@@ -24,6 +28,7 @@ import rows119b
 import run119b
 import score119b
 import label119b
+import gate119b
 
 
 def _position(share=.04, resolved=True, t_hash="same-support"):
@@ -567,6 +572,68 @@ def test_gate2_uses_selected_reference_medians_and_row_level_npair():
     assert result["median_relative_nPair_difference"] == pytest.approx(0.0075)
 
 
+@pytest.mark.parametrize("kind", ["real", "control"])
+def test_gate2_empty_selected_class_is_vacuous(kind):
+    key = (kind, "a", "b")
+    reference_row = {"kind": kind, "first": "a", "second": "b",
+                     "positions": [_position()]}
+    pilot_row = {**reference_row, "dose": 0.8}
+    expected = {"real": set(), "control": set()}
+    expected[kind].add(key)
+
+    result = gate119b.gate2_result([pilot_row], [reference_row], expected)
+
+    assert result["passed"]
+    assert result["class_thresholds_passed"][kind]
+    assert result["class_thresholds_passed"]["control" if kind == "real" else "real"]
+
+
+def test_registered_part119_reference_is_pinned_by_path_count_and_hash(tmp_path, monkeypatch):
+    path = ROOT / gate119b.PART119_INTERACTIONS_PATH
+    rows = run119b.read_jsonl_readonly(path)
+    attestation = gate119b.validate_part119_reference(path, rows)
+
+    assert attestation == {
+        "path": gate119b.PART119_INTERACTIONS_PATH,
+        "row_count": 2964,
+        "sha256": "89cee0f0114d464c3405d21982beb753a2eeb977c771562198bd06c370104c56",
+    }
+
+    copied = tmp_path / "foreign-interaction.jsonl"
+    shutil.copyfile(path, copied)
+    with pytest.raises(ValueError, match="registered Part 119 path"):
+        gate119b.validate_part119_reference(copied, rows)
+    with pytest.raises(ValueError, match="expected 2,964 rows"):
+        gate119b.validate_part119_reference(path, rows[:-1])
+    monkeypatch.setattr(gate119b, "PART119_INTERACTIONS_SHA256", "0" * 64)
+    with pytest.raises(ValueError, match="sha256 mismatch"):
+        gate119b.validate_part119_reference(path, rows)
+
+
+def test_registered_inventory_is_selected_by_unit_ids(monkeypatch):
+    units = copy.deepcopy(rows119.load_units())
+    units[0]["id"] = "unregistered-unit"
+    original_load_units = rows119.load_units
+    calls = []
+
+    def load_registered(*args, **kwargs):
+        calls.append(True)
+        return original_load_units(*args, **kwargs)
+
+    monkeypatch.setattr(rows119, "load_units", load_registered)
+    assert not rows119b._registered_inventory(units)
+    planned = rows119b.all_answer_rows(units)
+    pilot = rows119b.pilot_answer_rows(units)
+    path2 = rows119b.all_path2_rows(units)
+    pilot_path2 = rows119b.pilot_path2_rows(units)
+
+    assert len(calls) >= 6
+    assert any(row["row_id"].endswith("unregistered-unit") for row in planned)
+    assert any(row["row_id"].endswith("unregistered-unit") for row in pilot)
+    assert len(path2) == 2964
+    assert len(pilot_path2) == 32
+
+
 def _tiny_pilot_setup(tmp_path, monkeypatch):
     torch = pytest.importorskip("torch")
     units = _tiny_units()
@@ -598,20 +665,79 @@ def _tiny_pilot_setup(tmp_path, monkeypatch):
     return args, units
 
 
-def test_real_pilot_stage_on_tiny_inventory_stops_on_gate2_miss(tmp_path, monkeypatch):
-    args, units = _tiny_pilot_setup(tmp_path, monkeypatch)
-    # The pre-fix runner does not import rows119b._push; this shim lets the test
-    # reach the independent pilot gate failure behavior on the disposable baseline.
-    monkeypatch.setattr(run119b, "_push", rows119b._push, raising=False)
-    with pytest.raises(RuntimeError, match="Gate 2"):
-        run119b.run(args, units=units)
+def _materialize_tiny_pilot_reference(args, units):
+    with pytest.raises(RuntimeError, match="selected rows are missing"):
+        run119b.run(args, units=units,
+                    test_only_allow_unregistered_part119_reference=True)
     output = Path(args.out)
+    pilot_rows = [row for row in run119b.read_jsonl_readonly(
+        output / "interaction-pilot.jsonl") if float(row["dose"]) == 0.8]
+    reference_path = Path(args.out).parent / "matching-reference.jsonl"
+    reference_path.write_text(
+        "".join(json.dumps(row) + "\n" for row in pilot_rows), encoding="utf-8")
+    args.part119_interactions = str(reference_path)
+    return output, pilot_rows
+
+
+def test_real_pilot_stage_on_tiny_inventory_passes_matching_gate2(tmp_path, monkeypatch):
+    args, units = _tiny_pilot_setup(tmp_path, monkeypatch)
+    output, pilot_rows = _materialize_tiny_pilot_reference(args, units)
+
+    result = run119b.run(
+        args, units=units,
+        test_only_allow_unregistered_part119_reference=True)
     timing = json.loads((output / "timing-pilot.json").read_text(encoding="utf-8"))
-    assert not timing["gate2"]["passed"]
-    assert timing["gate2"]["reason"]
+    assert result["gate2_sample_passed"]
+    assert timing["gate2"]["passed"]
+    assert timing["part119_reference"]["path"] == args.part119_interactions
+    assert timing["part119_reference"]["sha256"] == hashlib.sha256(
+        Path(args.part119_interactions).read_bytes()).hexdigest()
+    assert len(pilot_rows) == 8
     assert "row_medians" not in timing["gate2"]
     assert (output / "interaction-pilot.jsonl").is_file()
     assert not (output / "interaction.jsonl").exists()
+
+
+def test_real_pilot_stage_on_tiny_inventory_reports_reference_disagreement(tmp_path, monkeypatch):
+    args, units = _tiny_pilot_setup(tmp_path, monkeypatch)
+    _output, pilot_rows = _materialize_tiny_pilot_reference(args, units)
+    for row in pilot_rows:
+        row["positions"] = []
+    reference_path = Path(args.part119_interactions)
+    reference_path.write_text(
+        "".join(json.dumps(row) + "\n" for row in pilot_rows), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="selected rows have different position lists"):
+        run119b.run(
+            args, units=units,
+            test_only_allow_unregistered_part119_reference=True)
+
+
+def test_runner_help_imports_from_exact_build_copy_lists(tmp_path):
+    notes = (HERE / "BUILD-NOTES.md").read_text(encoding="utf-8")
+    copy_lists = [
+        shlex.split(line.split("--copy", 1)[1].strip())
+        for line in notes.splitlines() if line.strip().startswith("--copy ")
+    ]
+    assert len(copy_lists) == 2
+    assert copy_lists[0] == copy_lists[1]
+    assert "part119b/gate119b.py" in copy_lists[0]
+
+    copied_root = tmp_path / "copy-list-tree"
+    for relative in copy_lists[0]:
+        source = ROOT / relative
+        destination = copied_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+    assert sorted(str(path.relative_to(copied_root))
+                  for path in copied_root.rglob("*") if path.is_file()) == sorted(copy_lists[0])
+
+    result = subprocess.run(
+        ["/home/elisepc/neuron-probe/.venv/bin/python", "-I", "-B",
+         "part119b/run119b.py", "--help"],
+        cwd=copied_root, text=True, capture_output=True, check=False)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "--stage" in result.stdout
 
 
 def test_scorer_default_uses_only_canonical_interaction_file(monkeypatch):
