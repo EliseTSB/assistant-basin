@@ -111,3 +111,10 @@ allocator warm-up asks for one 7.8 GiB block, over the A770's single-allocation 
 only pre-allocates; the weights are loaded the same way). Nothing else changes, and both gates still run first. If
 the direct load fails or changes nothing, the run waits for more free memory instead.
 
+### Amendment 1, note (2026-10-29 20:48 CT, from the cold check; the text above is kept as written)
+
+The fallback written above ("If the direct load fails or changes nothing, the run waits for more free memory instead")
+was not used. The direct load's first try failed on transformers' allocator warm-up, not on memory; the warm-up was
+skipped (commit b2e90a0, 20:11:39) and the run relaunched at 20:11:42, before any data. The amendment should have said
+so before the relaunch. The pre-registration probe for the quote opening (pass 3) is results/part115b/probe115b-pass3.json.
+
