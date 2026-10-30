@@ -11,7 +11,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-for candidate in (HERE, ROOT, ROOT / "part122", ROOT / "part119", ROOT / "part92", ROOT / "part85"):
+for candidate in (HERE, ROOT, ROOT / "part122", ROOT / "part119", ROOT / "part92"):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
