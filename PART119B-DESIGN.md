@@ -189,3 +189,12 @@ row is one draw of that, and Path 2 keeps Part 119's batch-64 single answers as 
 effect. Selection at 0.8 means a single unit's own answer is at a maximum there; the random second pushes carry the same
 selection. Pair breaking is compared with singles at 1.13 and 1.6 only as a rough size comparison: most pairs' pushes sit
 in different layers, where no one number is their combined size.
+
+## Pilot note (2026-10-30 07:39 CT, before the main run)
+
+First launch refused before any row: a bf16 push scaled by dose/0.8 rounds differently from the direct push by up to one
+step, so each dose is now built from the weights with Part 92's functions (commit 8d0cb2e). The second pilot passed gate 1
+and gate 2 on its 32 rows (median relative nPair difference 0.2%). Path 2 at batch 8 took 5.9 s against 10.3 s at batch 1,
+so main uses 8. Stopping rule: Claude read the 20 pair answers at 0.4 by eye, plus the first 8 at 0.6 and the first 8 random
+pairs at 0.8. They are not mostly broken: most at 0.4 are the plain assistant answer, some carry a persona. No prediction
+changed. No share, agreement or broken count was computed.
