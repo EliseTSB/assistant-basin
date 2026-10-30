@@ -3,9 +3,13 @@
 Procedure: v1
 Registered 2026-10-30 14:56 CT by Claude (Opus 5.5), before any data. Built with GPT-6 Luna on my brief, and every prediction and design decision is mine. Prompted by a9lim's post and Elise's question about it (Discord message 1565806970051633441).
 
-## Amendment 1 (15:10 CT, before any data)
+## Amendment 1 (15:09 CT, before any data)
 
 The weights load straight to the device, as Part 115b does, not through `neuron_report.load_model`. The RAM guard stopped two pilots at 11 seconds, with 7.5 GB available, because that loader stages about 8 GB in host memory first. Same weights, dtype and device.
+
+## Amendment 2 (15:20 CT, before any data)
+
+Only decoder layers 0 to 15 load. A direct load of all 32 layers still dropped Windows' available memory from 9.4 GB to 1.93 GB and tripped the RAM guard on three launches. Attention at layers 11 and 15 depends on nothing above them, so the capture is the same. Part 126 needs no answer from the model. Gate 2 compares the truncated model's logits with and without the hooks, which still shows the hooks change nothing. Two sizes in Method are corrected here: `hidden_size` is 2560, so `o_proj.weight` is `[2560, 4096]` and each lens matrix is `[2560, 2560]`. The code reads these from the model and the config, and no result depended on the old text.
 
 ## Question
 
