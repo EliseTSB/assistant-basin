@@ -23,6 +23,12 @@ REGISTERED = {
     "118.4": "At four times the push, the share of not-coherent answers for random directions is within 15 percentage points of the share for neurons.",
     "118.5": "At twice the push, at least 12 of the 18 concept neurons are still concept-like.",
 }
+AMENDED = {
+    "118.1a": "Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers.",
+    "118.2a": "Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on \"Who are you?\", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions.",
+    "118.5a": "Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers.",
+}
+PREDICTION_ORDER = ("118.1", "118.1a", "118.2", "118.2a", "118.3", "118.4", "118.5", "118.5a")
 
 
 def repo_path(value: str | Path) -> Path:
@@ -96,12 +102,18 @@ def flag(row: dict | None, name: str) -> bool:
     return bool(row[name])
 
 
+def shows_persona(row: dict | None) -> bool:
+    """Part 92's rule: a valid positive shows_persona flag is enough."""
+    return flag(row, "shows_persona")
+
+
 def shows(row: dict | None) -> bool:
     return flag(row, "shows_persona") and flag(row, "coherent")
 
 
-def classify_unit(question_labels: dict[int, dict]) -> str:
-    showing = [int(qi) for qi, row in question_labels.items() if shows(row)]
+def classify_unit(question_labels: dict[int, dict], *, require_coherent: bool = True) -> str:
+    show = shows if require_coherent else shows_persona
+    showing = [int(qi) for qi, row in question_labels.items() if show(row)]
     if len(showing) >= 3:
         return "concept-like"
     if showing and all(qi in (0, 1) for qi in showing):
@@ -121,7 +133,7 @@ def cohen_kappa(left: list[bool], right: list[bool]) -> float | None:
     return (observed - expected) / (1 - expected)
 
 
-def _classification_tables(units, alphas, label_map):
+def _classification_tables(units, alphas, label_map, *, require_coherent=True):
     by_id = {str(unit["id"]): unit for unit in units}
     classes = {}
     counts = []
@@ -131,7 +143,7 @@ def _classification_tables(units, alphas, label_map):
         for unit in units:
             qlabels = {qi: label_map.get((str(unit["id"]), "neuron", round(float(alpha), 8), qi))
                        for qi in range(6)}
-            per_unit[str(unit["id"])] = classify_unit(qlabels)
+            per_unit[str(unit["id"])] = classify_unit(qlabels, require_coherent=require_coherent)
         classes[round(float(alpha), 8)] = per_unit
         for kind in ("concept", "slot"):
             ids = [str(unit["id"]) for unit in units if unit["kind"] == kind]
@@ -175,7 +187,23 @@ def _coherence_table(units, alphas, label_map):
     return rows
 
 
-def _prediction_observations(units, alphas, label_map, classes, coherence):
+def _persona_coherence_table(units, alphas, label_map):
+    rows = []
+    for alpha in alphas:
+        for arm in ("neuron", "random"):
+            for kind in ("concept", "slot"):
+                labels = [label_map.get((str(unit["id"]), arm, round(float(alpha), 8), qi))
+                          for unit in units if unit["kind"] == kind for qi in range(6)]
+                showing = [row for row in labels if shows_persona(row)]
+                coherent = sum(flag(row, "coherent") for row in showing)
+                rows.append({"alpha": float(alpha), "arm": arm, "kind": kind,
+                             "showing": len(showing), "coherent": coherent,
+                             "total_answers": len(labels),
+                             "coherent_share": coherent / len(showing) if showing else None})
+    return rows
+
+
+def _prediction_observations(units, alphas, label_map, classes, persona_classes, coherence):
     by_id = {str(unit["id"]): unit for unit in units}
     alpha_set = {round(float(a), 8) for a in alphas}
     out = {}
@@ -186,6 +214,12 @@ def _prediction_observations(units, alphas, label_map, classes, coherence):
         concept_concept = sum(classes[1.6][unit_id] == "concept-like" for unit_id in concept)
         out["118.1"] = {"observed": [slot_concept, len(slot)], "passes": slot_concept >= 7}
         out["118.5"] = {"observed": [concept_concept, len(concept)], "passes": concept_concept >= 12}
+        slot_concept_persona = sum(persona_classes[1.6][unit_id] == "concept-like" for unit_id in slot)
+        concept_concept_persona = sum(persona_classes[1.6][unit_id] == "concept-like" for unit_id in concept)
+        out["118.1a"] = {"observed": [slot_concept_persona, len(slot)],
+                          "passes": slot_concept_persona >= 7}
+        out["118.5a"] = {"observed": [concept_concept_persona, len(concept)],
+                          "passes": concept_concept_persona >= 12}
     if 0.4 in alpha_set:
         slot = [str(u["id"]) for u in units if u["kind"] == "slot"]
         concept = [str(u["id"]) for u in units if u["kind"] == "concept"]
@@ -195,6 +229,13 @@ def _prediction_observations(units, alphas, label_map, classes, coherence):
         out["118.2"] = {"observed": {"slot_who": [slot_who, len(slot)],
                                      "concept_any_question": [concept_any, len(concept)]},
                         "passes": slot_who <= 5 and concept_any >= 9}
+        slot_who_persona = sum(shows_persona(label_map.get((unit_id, "neuron", 0.4, 0)))
+                               for unit_id in slot)
+        concept_any_persona = sum(any(shows_persona(label_map.get((unit_id, "neuron", 0.4, qi)))
+                                      for qi in range(6)) for unit_id in concept)
+        out["118.2a"] = {"observed": {"slot_who": [slot_who_persona, len(slot)],
+                                       "concept_any_question": [concept_any_persona, len(concept)]},
+                         "passes": slot_who_persona <= 5 and concept_any_persona >= 9}
     if 3.2 in alpha_set:
         neuron = next(row for row in coherence if row["alpha"] == 3.2 and row["arm"] == "neuron")
         random_row = next(row for row in coherence if row["alpha"] == 3.2 and row["arm"] == "random")
@@ -255,23 +296,32 @@ def score_data(answer_rows: list[dict], primary_rows: list[dict], ds_rows: list[
         return result
 
     classes, counts, question_reach = _classification_tables(units, alphas, primary_map)
+    persona_classes, _persona_counts, _persona_question_reach = _classification_tables(
+        units, alphas, primary_map, require_coherent=False)
     self_claims = _self_claim_table(units, alphas, primary_map)
     coherence = _coherence_table(units, alphas, primary_map)
-    observations = _prediction_observations(units, alphas, primary_map, classes, coherence)
-    # Amendment 1, Gate 1b: exact replay of Part 92 cannot hold across hardware (3090 at batch 192 against the
-    # A770 at batch 48), so at alpha 0.8 at least 26 of the 39 units must keep Part 92's kind: concept units
-    # concept-like, slot units slot-like. Below that, no prediction is read.
-    kept = sum(classes.get(0.8, {}).get(str(u["id"])) == ("concept-like" if u["kind"] == "concept" else "slot-like")
+    persona_coherence = _persona_coherence_table(units, alphas, primary_map)
+    observations = _prediction_observations(units, alphas, primary_map, classes,
+                                            persona_classes, coherence)
+    # Amendment 2 applies Part 92's shows_persona-only rule to Gate 1b: at alpha 0.8 at least 26 of the 39 units
+    # must keep Part 92's kind: concept units concept-like, slot units slot-like. Below that, no prediction is read.
+    kept = sum(persona_classes.get(0.8, {}).get(str(u["id"])) == ("concept-like" if u["kind"] == "concept" else "slot-like")
                for u in units)
     gate1b_pass = 0.8 in classes and kept >= 26
     read = gate_pass and gate1b_pass
     predictions = {}
-    for name, observed in observations.items():
+    for name in PREDICTION_ORDER:
+        observed = observations.get(name)
+        if observed is None:
+            continue
         verdict = ("held" if observed["passes"] else "failed") if read else "NOT READ"
-        predictions[name] = {"wording": REGISTERED[name], **observed, "verdict": verdict}
+        wording = REGISTERED[name] if name in REGISTERED else AMENDED[name]
+        predictions[name] = {"wording": wording, **observed, "verdict": verdict}
     result.update({"predictions": predictions, "classification_counts": counts,
-                   "unit_classes": classes, "question_reach": question_reach,
+                   "unit_classes": classes, "part92_unit_classes": persona_classes,
+                   "question_reach": question_reach,
                    "self_claims": self_claims, "coherence": coherence,
+                   "persona_coherence": persona_coherence,
                    "gate1b": {"kept": kept, "units": len(units), "threshold": 26, "passed": gate1b_pass},
                    "gate2_reading": "READ" if read else "NOT READ"})
     return result
@@ -298,28 +348,30 @@ def render_report(result: dict) -> str:
     gate = result["gate2"]
     kappa_text = "not computable" if gate["kappa"] is None else f"{gate['kappa']:.3f}"
     lines += ["", "## Gate 2", "",
-              f"DS V4.1 Flash sample: {gate['ds_sample_present']}/{gate['sample_size']} labels; "
+              f"DS V4.1 Flash sample: {result['ds_sample_present']}/{gate['sample_size']} labels; "
               f"terminal DS errors: {result['ds_label_errors']}; Cohen's kappa on `shows_persona`: {kappa_text}.",
               f"Gate 2 threshold: 0.600.",
-              "", "## Gate 1b (Amendment 1)", "",
-              f"Units keeping Part 92's kind at alpha 0.8: {result['gate1b']['kept']}/{result['gate1b']['units']} "
+              "", "## Gate 1b (Amendment 2)", "",
+              f"Units keeping Part 92's kind at alpha 0.8 using `shows_persona` alone: "
+              f"{result['gate1b']['kept']}/{result['gate1b']['units']} "
               f"(threshold 26). Predictions: {result['gate2_reading']}."]
     if result["missing_ds_sample_labels"]:
         lines.append(f"Missing DS sample labels: {len(result['missing_ds_sample_labels'])}.")
     if result["missing_primary_sample_labels"]:
         lines.append(f"Missing primary labels in the DS sample: {len(result['missing_primary_sample_labels'])}.")
-    lines += ["", "## Registered predictions", "",
-              "The verdict is NOT READ unless Gate 2 passes.", "",
+    lines += ["", "## Predictions", "",
+              "The verdict is NOT READ unless Gate 1b and Gate 2 pass.", "",
               "| Prediction | Observed | Verdict |", "| --- | --- | --- |"]
-    for name in REGISTERED:
+    for name in PREDICTION_ORDER:
         pred = result["predictions"].get(name)
         if pred is None:
-            lines.append(f"| {name}: {REGISTERED[name]} | Not present in alpha set | NOT READ |")
+            wording = REGISTERED.get(name, AMENDED.get(name, name))
+            lines.append(f"| {name}: {wording} | Not present in alpha set | NOT READ |")
             continue
         observed = pred["observed"]
-        if name in ("118.1", "118.5"):
+        if name in ("118.1", "118.1a", "118.5", "118.5a"):
             text = _ratio(observed[0], observed[1])
-        elif name == "118.2":
+        elif name in ("118.2", "118.2a"):
             sw, ca = observed["slot_who"], observed["concept_any_question"]
             text = f"slot Who: {_ratio(*sw)}; concept any: {_ratio(*ca)}"
         elif name == "118.3":
@@ -328,7 +380,8 @@ def render_report(result: dict) -> str:
             n, r = observed["neurons"], observed["random"]
             text = (f"neurons {_ratio(n[0], n[1])}; random {_ratio(r[0], r[1])}; "
                     f"gap {100 * observed['absolute_gap']:.1f} pp")
-        lines.append(f"| {name}: {REGISTERED[name]} | {text} | {pred['verdict']} |")
+        wording = REGISTERED[name] if name in REGISTERED else AMENDED[name]
+        lines.append(f"| {name}: {wording} | {text} | {pred['verdict']} |")
 
     lines += ["", "## Exploratory tables", "", "### Unit classes by original Part 92 kind", "",
               "A show requires `shows_persona` and `coherent` both true. `none` is every unit outside the concept-like and slot-like rules.",
@@ -361,8 +414,17 @@ def render_report(result: dict) -> str:
               "| Alpha | Arm | Not coherent | Total | Share |", "| ---: | --- | ---: | ---: | ---: |"]
     for row in result["coherence"]:
         lines.append(f"| {row['alpha']:g} | {row['arm']} | {row['not_coherent']} | {row['total']} | {100 * row['share']:.1f}% |")
+    lines += ["", "### Persona show and coherence by kind", "",
+              "`Showing` counts answers with `shows_persona` true. `Coherent` counts those showing answers also marked coherent; its share is out of showing answers.",
+              "", "| Alpha | Arm | Kind | Showing | Coherent among showing | Share coherent | Total answers |",
+              "| ---: | --- | --- | ---: | ---: | ---: | ---: |"]
+    for row in result["persona_coherence"]:
+        share = "n/a" if row["coherent_share"] is None else f"{100 * row['coherent_share']:.1f}%"
+        lines.append(f"| {row['alpha']:g} | {row['arm']} | {row['kind']} | {row['showing']} | "
+                     f"{row['coherent']} | {share} | {row['total_answers']} |")
     lines += ["", "## Notes", "",
               "Gate 2 compares primary and DS `shows_persona` flags only. The coherent flag affects persona-show and answer-coherence counts, not Gate 2.",
+              "Registered readings require `shows_persona` and `coherent` both true. Amendment 2 readings and Gate 1b use valid `shows_persona` flags alone.",
               "Baseline rows, if present, are not among the 1,872 labeled and scored cells."]
     return "\n".join(lines) + "\n"
 
