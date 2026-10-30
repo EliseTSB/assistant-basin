@@ -29,7 +29,8 @@ def verdicts(kstar_act, kstar_dla, overlap200, act50, grad50, max_ctrl_flips):
 def main():
     import torch
     r = ROOT / "results"
-    sc = {name: score115.score(json.loads((r / "part116" / name / "results115.json").read_text(encoding="utf-8")), -8.42)
+    singles = sum(c["mean_dlogodds"] for c in json.loads((r / "part114" / "score.json").read_text(encoding="utf-8"))["candidates"])
+    sc = {name: score115.score(json.loads((r / "part116" / name / "results115.json").read_text(encoding="utf-8")), singles)
           for name in ("act", "dla")}
     grad = json.loads((r / "part115" / "score.json").read_text(encoding="utf-8"))
     pts = {"act": torch.load(r / "part116" / "rank_act.pt"), "dla": torch.load(r / "part116" / "rank_dla.pt"),

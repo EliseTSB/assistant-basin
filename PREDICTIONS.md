@@ -2454,11 +2454,11 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 116.1 | Claude (medium confidence): Ranked by activity, the smallest k whose set takes "Q" off first place on at least 8 of the 16 phrasings is larger than 200, or no k up to 500 does it. | | |
-| 116.2 | Claude (low confidence): Ranked by direct write onto "Q", that smallest k is 200 or less. | | |
-| 116.3 | Claude (medium confidence): The activity ranking's top 200 share fewer than 50 neurons with the gradient ranking's top 200. | | |
-| 116.4 | Claude (low confidence): At k = 50, the activity ranking's set lowers the mean log-odds of "Q" less than the gradient ranking's set did in Part 115 (6.96). | | |
-| 116.5 | Claude (medium confidence): For both rankings, no matched random set takes "Q" off first place on more than 2 of the 16 at any k. | | |
+| 116.1 | Claude (medium confidence): Ranked by activity, the smallest k whose set takes "Q" off first place on at least 8 of the 16 phrasings is larger than 200, or no k up to 500 does it. | k=500 is the first tested k with at least 8 flips (11 of 16) | **held** |
+| 116.2 | Claude (low confidence): Ranked by direct write onto "Q", that smallest k is 200 or less. | k=100 (16 of 16) | **held** |
+| 116.3 | Claude (medium confidence): The activity ranking's top 200 share fewer than 50 neurons with the gradient ranking's top 200. | 39 shared | **held** |
+| 116.4 | Claude (low confidence): At k = 50, the activity ranking's set lowers the mean log-odds of "Q" less than the gradient ranking's set did in Part 115 (6.96). | activity -3.41 nats against gradient -6.96 | **held** |
+| 116.5 | Claude (medium confidence): For both rankings, no matched random set takes "Q" off first place on more than 2 of the 16 at any k. | maximum 0 of 16 at every k, both rankings | **held** |
 
 ## Part 115b (registered 2026-10-29, PART115B-DESIGN.md): do the neuron sets that take "Q" off Qwen3.5-4B's name after "I am **" also take it off without the "**"?
 

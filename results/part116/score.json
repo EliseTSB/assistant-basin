@@ -1,0 +1,773 @@
+{
+ "activity": {
+  "gates": {
+   "ones_mask_bit_identical": true,
+   "none_vs_part114_mean_abs_diff": 0.045811235904693604
+  },
+  "base_mean_logodds": 6.7433,
+  "base_q_first": 16,
+  "per_k": {
+   "1": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -1.8936,
+     "dordinary": -0.0625,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.0152,
+     -0.0036,
+     0.0211,
+     -0.0561,
+     -0.0138,
+     -0.0755,
+     -0.0312,
+     -0.026,
+     -0.0235,
+     -0.0041
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.0248,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "2": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -1.893,
+     "dordinary": -0.0312,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     0.038,
+     0.0064,
+     -0.0618,
+     -0.0517,
+     0.0074,
+     -0.0916,
+     -0.051,
+     -0.0019,
+     0.0051,
+     0.0348
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.017,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "5": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -2.9162,
+     "dordinary": -0.0312,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     0.0628,
+     0.06,
+     -0.1167,
+     0.0183,
+     -0.0002,
+     -0.0042,
+     -0.0215,
+     -0.0944,
+     0.1106,
+     0.0113
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.1411,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "10": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -2.9948,
+     "dordinary": 0.024,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.1783,
+     -0.0421,
+     0.1346,
+     -0.0253,
+     -0.0118,
+     0.005,
+     -0.0958,
+     0.0667,
+     -0.0884,
+     -0.0393
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.0203,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "20": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -1.821,
+     "dordinary": 0.0239,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.0058,
+     0.0825,
+     0.0108,
+     0.0988,
+     0.0452,
+     -0.0177,
+     -0.2215,
+     -0.0776,
+     0.0186,
+     -0.1405
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.0314,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "50": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -3.4056,
+     "dordinary": -0.0152,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.2337,
+     -0.0132,
+     0.0331,
+     -0.2761,
+     0.2951,
+     -0.0732,
+     -0.0118,
+     -0.0433,
+     0.1074,
+     0.2031
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.0846,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "100": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -4.1841,
+     "dordinary": -0.0071,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.1219,
+     -0.6702,
+     -0.4966,
+     0.2345,
+     -0.125,
+     -0.0391,
+     0.1098,
+     0.1045,
+     -0.0542,
+     0.1939
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.1163,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "200": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -5.5465,
+     "dordinary": 0.0161,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.1846,
+     0.0043,
+     0.2785,
+     -0.4192,
+     0.1956,
+     -0.2754,
+     -0.2953,
+     -1.086,
+     -0.1257,
+     -0.4834
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.4233,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "500": {
+    "candidate": {
+     "flips": 11,
+     "dlogodds": -8.2096,
+     "dordinary": -0.0696,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.3388,
+     -0.4551,
+     -0.6158,
+     -0.9162,
+     -1.1046,
+     -1.2044,
+     -0.6034,
+     0.1085,
+     -1.2699,
+     0.121
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.7421,
+    "continuations_not_q": 11,
+    "first_words": [
+     "you",
+     "AI",
+     "AI",
+     "AI",
+     "AI",
+     "AI",
+     "AI",
+     "here",
+     "AI",
+     "AI",
+     "LLM"
+    ]
+   }
+  },
+  "k_star": 500,
+  "joint_drop_top20": -1.821,
+  "sum_single_drops_top20": -8.4164,
+  "most_common_first_word_at_k_star": "AI",
+  "verdicts": {
+   "115.1": "held",
+   "115.2": "failed",
+   "115.3": "held",
+   "115.4": "held",
+   "115.5": "held",
+   "115.6": "held"
+  }
+ },
+ "direct": {
+  "gates": {
+   "ones_mask_bit_identical": true,
+   "none_vs_part114_mean_abs_diff": 0.045811235904693604
+  },
+  "base_mean_logodds": 6.7433,
+  "base_q_first": 16,
+  "per_k": {
+   "1": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -0.5005,
+     "dordinary": -0.0625,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.0041,
+     -0.0235,
+     -0.0152,
+     -0.0465,
+     -0.4551,
+     0.0309,
+     -0.026,
+     -0.0187,
+     -0.0138,
+     0.0043
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.028,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "2": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -0.9528,
+     "dordinary": -0.0312,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     0.0196,
+     -0.0032,
+     0.0189,
+     -0.0723,
+     0.0136,
+     0.0273,
+     -0.0333,
+     -0.0196,
+     -0.0134,
+     -0.0806
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.0443,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "5": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -3.5589,
+     "dordinary": -0.0625,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.1287,
+     0.2337,
+     -0.0102,
+     -0.0738,
+     -0.0987,
+     0.0048,
+     0.001,
+     0.0178,
+     -0.0364,
+     -0.0103
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.0609,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "10": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -4.2154,
+     "dordinary": -0.0386,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     0.1353,
+     -0.0945,
+     0.0602,
+     0.1219,
+     -0.0744,
+     0.0352,
+     0.0674,
+     0.0362,
+     0.0239,
+     -0.4822
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.0451,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "20": {
+    "candidate": {
+     "flips": 0,
+     "dlogodds": -5.3883,
+     "dordinary": 0.1939,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.1585,
+     0.1253,
+     0.0014,
+     0.093,
+     0.0384,
+     0.0362,
+     0.0009,
+     -0.1602,
+     0.2121,
+     0.0344
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.1157,
+    "continuations_not_q": 0,
+    "first_words": []
+   },
+   "50": {
+    "candidate": {
+     "flips": 4,
+     "dlogodds": -7.4923,
+     "dordinary": -1.7543,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.4653,
+     -0.3608,
+     -0.1381,
+     0.0438,
+     0.1127,
+     0.1532,
+     0.1961,
+     0.138,
+     -0.1232,
+     0.3068
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.0674,
+    "continuations_not_q": 3,
+    "first_words": [
+     "Kimi",
+     "Kimi",
+     "Kimi"
+    ]
+   },
+   "100": {
+    "candidate": {
+     "flips": 16,
+     "dlogodds": -9.969,
+     "dordinary": -1.9029,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     0.0989,
+     0.3499,
+     -0.2907,
+     -0.2684,
+     -0.1175,
+     -0.3592,
+     -0.2697,
+     0.1877,
+     -1.4955,
+     0.113
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": -0.1762,
+    "continuations_not_q": 16,
+    "first_words": [
+     "Google",
+     "Tongyi",
+     "Claude",
+     "Claude",
+     "Tongyi",
+     "Google",
+     "Jiang",
+     "Tongyi",
+     "Kimi",
+     "Google",
+     "Claude",
+     "Tongyi",
+     "Tongyi",
+     "Claude",
+     "Claude",
+     "Tongyi"
+    ]
+   },
+   "200": {
+    "candidate": {
+     "flips": 16,
+     "dlogodds": -12.6248,
+     "dordinary": -1.8034,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.479,
+     0.3279,
+     0.0758,
+     -0.6643,
+     -0.1583,
+     0.0142,
+     -0.1605,
+     1.6432,
+     -0.6439,
+     -0.0883
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.3033,
+    "continuations_not_q": 16,
+    "first_words": [
+     "Google",
+     "Tongyi",
+     "Google",
+     "Claude",
+     "Google",
+     "Google",
+     "Google",
+     "not",
+     "Claude",
+     "Google",
+     "Claude",
+     "Google",
+     "Google",
+     "Claude",
+     "Claude",
+     "you"
+    ]
+   },
+   "500": {
+    "candidate": {
+     "flips": 16,
+     "dlogodds": -18.8525,
+     "dordinary": -1.1783,
+     "ordinary_still_right": 1
+    },
+    "controls_flips": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "controls_dlogodds": [
+     -0.3721,
+     0.2114,
+     0.0551,
+     -0.9686,
+     1.1233,
+     0.2963,
+     -0.421,
+     0.0569,
+     0.2513,
+     0.2043
+    ],
+    "controls_lowering_as_much": 0,
+    "controls_dordinary_mean": 0.3672,
+    "continuations_not_q": 16,
+    "first_words": [
+     "Claude",
+     "AI",
+     "artificial",
+     "Claude",
+     "Artificial",
+     "Artificial",
+     "Artificial",
+     "Artificial",
+     "Claude",
+     "Artificial",
+     "artificial",
+     "Artificial",
+     "Claude",
+     "Claude",
+     "Artificial",
+     "Artificial"
+    ]
+   }
+  },
+  "k_star": 100,
+  "joint_drop_top20": -5.3883,
+  "sum_single_drops_top20": -8.4164,
+  "most_common_first_word_at_k_star": "Tongyi",
+  "verdicts": {
+   "115.1": "held",
+   "115.2": "held",
+   "115.3": "held",
+   "115.4": "held",
+   "115.5": "failed",
+   "115.6": "failed"
+  }
+ },
+ "overlap_top200": {
+  "act-grad": 39,
+  "dla-grad": 36,
+  "act-dla": 34
+ },
+ "verdicts": {
+  "116.1": "held",
+  "116.2": "held",
+  "116.3": "held",
+  "116.4": "held",
+  "116.5": "held"
+ }
+}
