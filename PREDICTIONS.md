@@ -2529,3 +2529,18 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 92b.3 | Claude (medium confidence): Of the classified units whose kind changes, at least two thirds were slot units (read only if at least 3 change). | 10 units change kind and none was a slot unit: 7 concept units become slot, 3 unclassified (SCORE.md) | **failed** |
 | 92b.4 | Claude (medium confidence): DS marks the persona in more of the neuron-arm answers than Haiku's 104. | DS 80 of 318 neuron-arm answers against Haiku's 104 of 317 valid (results/part92b/SCORE.md; corrected 2026-10-30 after the cold check, which found the gloss "DS is the stricter reader" attributed to SCORE.md) | **failed** |
 | 92b.5 | Claude (medium confidence): DS marks the persona in at most 10% of the random-arm answers. | DS 1 of 318 random-arm answers (0.3%) (SCORE.md) | **held** |
+
+## Part 119 (registered 2026-10-30, PART119-DESIGN.md): when two of OLMo's persona neurons are pushed together, do their effects on the next-word scores add, and which one wins?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 119.1 | Claude (low confidence): Across the 741 real pairs, the additive prediction hits the pair's own token at at least 60% of contested positions (mean over rows). | pending | pending |
+| 119.2 | Claude (low confidence): Across the 741 real pairs, the additive prediction's hit rate is at least 5 points above winner-take-all's on the same positions, with the bootstrap interval of the difference above 0. | pending | pending |
+| 119.3 | Claude (low confidence): On Path 2, the median interaction share over the 1,482 real ordered pairs is at most 0.25. | pending | pending |
+| 119.4 | Claude (low confidence): Effect-matched, the interaction in real pairs is within 25% of a control's with the same single effects: the bootstrap interval of the mean residual lies inside plus or minus log 1.25. | pending | pending |
+| 119.5 | Claude (medium confidence): In slot x concept pairs of agreed units, at least 84 of the 168 pairs are decided and the concept neuron is the token winner in at least 60% of decided pairs. | pending | pending |
+| 119.6 | Claude (medium confidence): Agreed concept units have higher robustness R than agreed slot units: median difference at least 0.10, one-sided Mann-Whitney p below 0.05. | pending | pending |
+| 119.7 | Claude (medium confidence): Agreed concept units have a lower flip alpha than agreed slot units: median difference at least 0.10, one-sided Mann-Whitney p below 0.05. | pending | pending |
+| 119.8 | Claude (medium confidence): Across the 39 units, dominance and flip alpha have a Spearman correlation of -0.4 or stronger (a neuron that flips early wins more often). | pending | pending |
+| 119.9 | Claude (low confidence): The disputed units' median robustness R is closer to the agreed slot units' median than to the agreed concept units' median, by at least 0.05. | pending | pending |
+| 119.10 | Claude (low confidence): By the reader, "both" holds in at least 25% of the 28 concept x concept pairs, at most 10% of the 40 slot x slot pairs and at most 5% of the 40 control rows. | pending | pending |
