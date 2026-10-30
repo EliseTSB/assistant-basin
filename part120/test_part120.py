@@ -6,6 +6,7 @@ import math
 import shutil
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -68,8 +69,13 @@ def _gate3_record(ids: list[str], error: float) -> dict:
         comparisons = [{"low_dose": low, "high_dose": high, "arm": arm,
                         "relative_error": error, "passed": error <= score120.GATE3_THRESHOLD}
                        for low, high in pairs for arm in ("neuron", "random")]
+        weight_rebuild_comparisons = [
+            {"dose": dose, "arm": arm, "relative_error": error,
+             "passed": error <= score120.GATE3_THRESHOLD}
+            for dose in score120.DOSES for arm in ("neuron", "random")]
         units.append({"unit": unit, "passed": error <= score120.GATE3_THRESHOLD,
-                      "max_relative_error": error, "comparisons": comparisons})
+                      "max_relative_error": error, "comparisons": comparisons,
+                      "weight_rebuild_comparisons": weight_rebuild_comparisons})
     return {"passed": error <= score120.GATE3_THRESHOLD, "units": units}
 
 
@@ -79,6 +85,40 @@ def _gate3_record(ids: list[str], error: float) -> dict:
 ])
 def test_gate3_at_and_over_threshold(error, expected):
     assert score120.gate3_result(_gate3_record(["u0"], error), ["u0"])["passed"] is expected
+
+
+def test_gate3_rejects_scaled_cache_against_weight_rebuilds():
+    import torch
+
+    units = [{"id": "u0"}]
+    base = {"_units": units}
+    rebuilt, scaled = {}, {}
+    for arm in ("neuron", "random"):
+        base[("u0", arm)] = torch.tensor([.8, 1.44], dtype=torch.float32)
+    for dose in run120.DOSES:
+        rebuilt[dose] = {"_units": units}
+        scaled[dose] = {"_units": units}
+        for arm in ("neuron", "random"):
+            # The fixture represents independent per-dose weight builds.
+            rebuilt[dose][("u0", arm)] = torch.tensor([dose, dose + dose * dose])
+            scaled[dose][("u0", arm)] = base[("u0", arm)] * (dose / .8)
+    try:
+        gate = run120._scaling_gate(units, scaled, rebuilt)
+    except TypeError:
+        # The pre-fold function only compared adjacent cached doses.
+        gate = run120._scaling_gate(units, scaled)
+        assert gate["passed"] is False, "the old gate passes a cache made by scaling"
+        return
+    assert all(item["passed"] for item in gate["units"][0]["comparisons"])
+    assert not all(item["passed"] for item in gate["units"][0]["weight_rebuild_comparisons"])
+    assert not gate["passed"]
+    assert not score120.gate3_result(gate, ["u0"])["passed"]
+
+
+def test_gate3_rejects_records_without_weight_rebuild_evidence():
+    record = _gate3_record(["u0"], 0.0)
+    record["units"][0].pop("weight_rebuild_comparisons")
+    assert score120.gate3_result(record, ["u0"])["passed"] is False
 
 
 def _gate2_fixture(relative_error: float):
@@ -124,6 +164,72 @@ def test_missing_unit_file_is_a_gate2_failure(tmp_path):
     assert vectors == {}
     assert any(issue["problem"] == "missing_unit_file" for issue in issues)
     assert result["passed"] is False
+
+
+def test_partial_npz_scope_cannot_be_scored_as_full_run(monkeypatch, tmp_path):
+    units = [{"id": "u0", "layer": 0, "haiku_kind": "slot", "ds_kind": "slot",
+              "group": "agreed_slot"},
+             {"id": "u1", "layer": 1, "haiku_kind": "concept", "ds_kind": "concept",
+              "group": "agreed_concept"}]
+    monkeypatch.setattr(score120.rows119, "load_units", lambda *_args: units)
+    monkeypatch.setattr(score120.rows119c, "draw_path2_rows", lambda *_args: [])
+    vectors = tmp_path / "smoke" / "vectors"
+    vectors.mkdir(parents=True)
+    partial_index = {"first": "u0", "doses": list(score120.DOSES),
+                     "model_dtype": "float32", "model_parameter_dtype": "torch.float32",
+                     "scope": {"stage": "smoke", "selected_first_units": ["u0"],
+                               "expected_first_units": ["u0", "u1"]},
+                     "entries": []}
+    run120.write_unit_npz(vectors / "u0.npz", partial_index, np.asarray([], dtype=np.float64))
+    (tmp_path / "smoke" / "timing.json").write_text(json.dumps({
+        "stage": "smoke", "status": "complete", "first_units": 1,
+        "total_expected_units": 2, "scope_units": ["u0"], "doses": list(score120.DOSES),
+    }), encoding="utf-8")
+    output = tmp_path / "score"
+    with pytest.raises(ValueError, match="smoke|partial"):
+        score120.main(["--vectors", str(vectors), "--out", str(output),
+                       "--reference", str(tmp_path / "reference.jsonl"),
+                       "--gate1", str(tmp_path / "gate1.json"),
+                       "--gate3", str(tmp_path / "gate3.json"),
+                       "--tournament", str(tmp_path / "tournament.json")])
+    assert not (output / "SCORE.md").exists()
+
+def test_partial_npz_metadata_refused_with_complete_timing(monkeypatch, tmp_path):
+    units = [{"id": "u0", "layer": 0, "haiku_kind": "slot", "ds_kind": "slot",
+              "group": "agreed_slot"},
+             {"id": "u1", "layer": 1, "haiku_kind": "concept", "ds_kind": "concept",
+              "group": "agreed_concept"}]
+    monkeypatch.setattr(score120.rows119, "load_units", lambda *_args: units)
+    monkeypatch.setattr(score120.rows119c, "draw_path2_rows", lambda *_args: [])
+    vectors = tmp_path / "run" / "vectors"
+    vectors.mkdir(parents=True)
+    for first in ("u0", "u1"):
+        index = {"first": first, "doses": list(score120.DOSES),
+                 "model_dtype": "float32", "model_parameter_dtype": "torch.float32",
+                 "scope": {"stage": "smoke", "selected_first_units": ["u0"],
+                           "expected_first_units": ["u0", "u1"]},
+                 "entries": []}
+        run120.write_unit_npz(vectors / f"{first}.npz", index,
+                              np.asarray([], dtype=np.float64))
+    (tmp_path / "run" / "timing.json").write_text(json.dumps({
+        "stage": "main", "status": "complete", "first_units": 2,
+        "total_expected_units": 2, "scope_units": ["u0", "u1"],
+        "doses": list(score120.DOSES),
+    }), encoding="utf-8")
+    output = tmp_path / "score"
+    with pytest.raises(ValueError, match="partial"):
+        score120.main(["--vectors", str(vectors), "--out", str(output),
+                       "--reference", str(tmp_path / "reference.jsonl"),
+                       "--gate1", str(tmp_path / "gate1.json"),
+                       "--gate3", str(tmp_path / "gate3.json"),
+                       "--tournament", str(tmp_path / "tournament.json")])
+    assert not (output / "SCORE.md").exists()
+
+
+def test_missing_answers_file_is_reported_as_missing_input(tmp_path):
+    missing = tmp_path / "answers.jsonl"
+    with pytest.raises(FileNotFoundError, match="Part 119 answers file does not exist"):
+        run120.read_answers(missing)
 
 
 def test_failed_gate_replaces_every_prediction_verdict():
@@ -314,12 +420,46 @@ def test_headline_all_branches_including_withdrawn():
     assert "about as much as with itself" in headline(.3, [.8, 1.25])
     assert "more than with itself" in headline(.3, [1.2501, 1.4])
     assert "read nothing" in headline(.3, [.79, .81])
+    assert "read nothing" in headline(.3, [.79, .8])
+    assert "read nothing" in headline(.3, [1.25, 1.26])
+    assert "more than with a second push" in headline(.3, [.79, .799])
+    assert "more than with itself" in headline(.3, [1.251, 1.3])
     prediction_rows[0]["verdict"] = "does_not_hold"
     assert "not established" in headline(.3, [.5, .79])
     gates["gate2"]["passed"] = False
     assert "gate 2" in score120._headline(prediction_rows,
                                           [{"dose": .05, "kind": "real", "median_row_q": .1}],
                                           {"ci95_product_weighted": [.5, .6]}, gates)
+
+
+def test_empty_vector_headline_names_empty_input():
+    result = score120.score_data({}, [], [], [], None, None, None)
+    assert "no usable vectors were found" in result["headline"].lower()
+
+
+def test_bootstrap_resamples_both_row_endpoints(monkeypatch):
+    seen_weights = []
+    monkeypatch.setattr(score120.score119, "make_unit_bootstrap_draws",
+                        lambda *_args, **_kwargs: [Counter({"u0": 2, "u1": 3})])
+
+    def capture_weights(values, weights):
+        seen_weights.append(list(weights))
+        return values[0] if any(weights) else None
+
+    monkeypatch.setattr(score120, "_weighted_median", capture_weights)
+    row_stats = {("real", "u0", "u1", .1):
+                 {"first": "u0", "second": "u1", "c": .75}}
+    score120.unit_bootstrap_interval(row_stats, [{"id": "u0"}, {"id": "u1"}], draws=1)
+    assert seen_weights == [[6], [5]]
+
+
+def test_malformed_gate3_comparison_fails_closed():
+    record = {"passed": True,
+              "units": [{"unit": "u0", "passed": True,
+                         "comparisons": [None, "not an object"]}]}
+    result = score120.gate3_result(record, ["u0"])
+    assert result["passed"] is False
+    assert any(failure["problem"] == "scaling_error" for failure in result["failures"])
 
 
 def test_npz_layout_round_trip_and_atomic_writer(tmp_path):
@@ -334,6 +474,18 @@ def test_npz_layout_round_trip_and_atomic_writer(tmp_path):
     assert loaded_index == index
     np.testing.assert_array_equal(loaded_values, values)
     assert run120.finished_unit(path, index)
+
+
+def test_npz_index_records_complete_and_smoke_scope():
+    row = {"key": "real:u0+u1", "kind": "real", "first": "u0", "second": "u1"}
+    support = {("real", "u0", "u1", 0): [2, 4]}
+    full = run120.make_index("u0", [row], [0], support, score120.DOSES,
+                             scope_units=["u0", "u1"], expected_units=["u0", "u1"])
+    smoke = run120.make_index("u0", [row], [0], support, score120.DOSES,
+                              scope_units=["u0"], expected_units=["u0", "u1"])
+    assert full["scope"] == {"stage": "main", "selected_first_units": ["u0", "u1"],
+                             "expected_first_units": ["u0", "u1"]}
+    assert smoke["scope"]["stage"] == "smoke"
 
 
 class _ToyTokenizer:
@@ -410,10 +562,14 @@ def _tiny_inputs(tmp_path, monkeypatch):
                             encoding="utf-8")
     rows = run120.rows119c.draw_path2_rows(units, run120.rows119b.all_path2_rows(units))
     t_rows = []
+    row_number_by_first = {}
     for row in rows:
+        row_number = row_number_by_first.get(row["first"], 0)
+        row_number_by_first[row["first"]] = row_number + 1
+        t_ids = [0, 1, 2, 3] if row_number % 2 == 0 else [1, 2, 3, 4]
         t_rows.append({"kind": row["kind"], "first": row["first"],
                        "second": row["second"], "dose": .8,
-                       "positions": [{"pos": pos, "t_ids": [0, 1, 2, 3]}
+                       "positions": [{"pos": pos, "t_ids": t_ids}
                                      for pos in (1, 2, 3)]})
     t_path = tmp_path / "reference.jsonl"
     t_path.write_text("\n".join(json.dumps(row) for row in t_rows) + "\n",
@@ -423,6 +579,20 @@ def _tiny_inputs(tmp_path, monkeypatch):
     monkeypatch.setattr(run120.run119c, "load_model",
                         lambda _path, _device, _dtype: (_ToyTokenizer(), _tiny_model()))
     return units
+
+
+def test_path_zero_matches_part119b_predictor_window():
+    prompt = [7, 8, 9]
+    answers = {"plain": {"tokens": [2, 3, 4]},
+               "single:u0": {"tokens": [1, 3, 4]}}
+    path = run120.path_for_first("u0", answers, prompt)
+    expected_start = len(prompt) - 1
+    expected_stop = len(prompt) + min(run120.PATH_TOKENS, 3) - 1
+    assert path["p"] == 0
+    assert path["positions"] == [0, 1, 2]
+    assert path["logit_start"] == expected_start
+    assert path["logit_stop"] == expected_stop
+    assert path["logit_stop"] - path["logit_start"] == len(path["positions"])
 
 
 def _runner_args(tmp_path):
@@ -436,9 +606,23 @@ def test_real_main_path_tiny_model_and_resume(monkeypatch, tmp_path):
     assert run120.main(argv) == 0
     output = tmp_path / "smoke" / "vectors"
     assert sorted(path.name for path in output.glob("*.npz")) == ["u0.npz", "u1.npz"]
+    indexes = {}
+    values_by_unit = {}
     for path in output.glob("*.npz"):
         _index, values = run120.read_unit_npz(path)
+        indexes[_index["first"]] = _index
+        values_by_unit[_index["first"]] = values
         assert values.dtype == np.float64 and values.size > 0
+
+    u0_entries = [entry for entry in indexes["u0"]["entries"]]
+    different_support = next((left, right) for left in u0_entries for right in u0_entries
+                             if left["key"] != right["key"] and left["pos"] == right["pos"]
+                             and left["t_ids"] != right["t_ids"])
+    left, right = different_support
+    left_width, right_width = len(left["t_ids"]), len(right["t_ids"])
+    left_a = values_by_unit["u0"][left["start"]:left["start"] + left_width]
+    right_a = values_by_unit["u0"][right["start"]:right["start"] + right_width]
+    assert left_width == right_width and not np.allclose(left_a, right_a)
 
     def should_not_recompute(*_args, **_kwargs):
         pytest.fail("a finished unit was recomputed on resume")
@@ -462,6 +646,41 @@ def test_interrupted_unit_has_no_finished_file(monkeypatch, tmp_path):
     vectors = tmp_path / "interrupted" / "vectors"
     assert not list(vectors.glob("*.npz"))
     assert not list(vectors.glob("*.tmp"))
+
+
+def test_failed_npz_write_keeps_abort_record_and_finished_unit(monkeypatch, tmp_path):
+    _tiny_inputs(tmp_path, monkeypatch)
+    argv = _runner_args(tmp_path)
+    real_writer = run120.write_unit_npz
+
+    def fail_second_unit(path, index, values):
+        if path.name == "u1.npz":
+            raise OSError("simulated disk full")
+        real_writer(path, index, values)
+
+    monkeypatch.setattr(run120, "write_unit_npz", fail_second_unit)
+    with pytest.raises(SystemExit) as exit_info:
+        run120.main(argv)
+    assert exit_info.value.code == 2
+    out = tmp_path / "smoke"
+    timing = json.loads((out / "timing.json").read_text(encoding="utf-8"))
+    assert timing["status"] == "aborted"
+    assert "simulated disk full" in timing["write_error"]
+    assert timing["units_written"] == ["u0"]
+    assert (out / "vectors" / "u0.npz").is_file()
+    assert not (out / "vectors" / "u1.npz").exists()
+
+    seen = []
+    monkeypatch.setattr(run120, "write_unit_npz", real_writer)
+    original_run_first = run120._run_first_unit
+
+    def track_unit(first_id, *args, **kwargs):
+        seen.append(first_id)
+        return original_run_first(first_id, *args, **kwargs)
+
+    monkeypatch.setattr(run120, "_run_first_unit", track_unit)
+    assert run120.main(argv) == 0
+    assert seen == ["u1"]
 
 
 def test_isolated_help_from_repo_root():

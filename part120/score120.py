@@ -111,6 +111,7 @@ def load_vectors(vectors_dir: str | Path, units: list[dict]) -> tuple[dict, list
     import numpy as np
 
     directory = repo_path(vectors_dir)
+    expected_scope = sorted(str(unit["id"]) for unit in units)
     positions: dict[tuple[str, str, str, int], dict[float, dict[str, np.ndarray]]] = {}
     issues = []
     for unit in units:
@@ -132,6 +133,13 @@ def load_vectors(vectors_dir: str | Path, units: list[dict]) -> tuple[dict, list
                 raise ValueError("values are not a flat float64 array")
             if str(index.get("first")) != first_id:
                 raise ValueError("index first unit disagrees with filename")
+            scope = index.get("scope")
+            if (not isinstance(scope, dict)
+                    or scope.get("stage") != "main"
+                    or scope.get("selected_first_units") != expected_scope
+                    or scope.get("expected_first_units") != expected_scope):
+                issues.append({"problem": "partial_run_scope", "unit": first_id,
+                               "scope": scope})
             if (index.get("model_dtype") != "float32"
                     or index.get("model_parameter_dtype") != "torch.float32"):
                 issues.append({"problem": "wrong_dtype_evidence", "unit": first_id,
@@ -191,6 +199,26 @@ def load_vectors(vectors_dir: str | Path, units: list[dict]) -> tuple[dict, list
     return positions, issues
 
 
+def require_complete_run(timing: dict | None, issues: list[dict],
+                         units: list[dict]) -> None:
+    """Refuse to render a full score from a smoke, interrupted run, or partial scope."""
+    expected_scope = sorted(str(unit["id"]) for unit in units)
+    if not isinstance(timing, dict):
+        raise ValueError("refusing full score without timing.json run scope")
+    if (timing.get("status") != "complete" or timing.get("stage") != "main"
+            or timing.get("first_units") != len(expected_scope)
+            or timing.get("total_expected_units") != len(expected_scope)
+            or timing.get("scope_units") != expected_scope
+            or tuple(timing.get("doses", [])) != DOSES):
+        raise ValueError("refusing to score a smoke or incomplete Part 120 run")
+    partial_issues = [issue for issue in issues
+                      if issue.get("problem") in {
+                          "missing_unit_file", "partial_run_scope",
+                          "incomplete_or_wrong_dose_ladder"}]
+    if partial_issues:
+        raise ValueError(f"refusing to score a partial Part 120 scope: {partial_issues[0]}")
+
+
 def gate1_result(record: dict | None, expected_unit_ids: list[str]) -> dict:
     checks = record.get("paths", []) if isinstance(record, dict) else []
     observed_ids = [str(row.get("first", "")) for row in checks if isinstance(row, dict)]
@@ -222,7 +250,7 @@ def gate3_result(record: dict | None, expected_unit_ids: list[str]) -> dict:
     missing_units = sorted(expected - set(by_unit))
     extra_units = sorted(set(by_unit) - expected)
     failures = []
-    maxima = []
+    maxima, rebuild_maxima = [], []
     for unit_id in sorted(expected & set(by_unit)):
         row = by_unit[unit_id]
         comparisons = row.get("comparisons", [])
@@ -246,12 +274,34 @@ def gate3_result(record: dict | None, expected_unit_ids: list[str]) -> dict:
             failures.append({"unit": unit_id, "problem": "wrong_dose_pair_or_arm_set"})
         if row.get("passed") is not True:
             failures.append({"unit": unit_id, "problem": "unit_failed"})
+        rebuild_comparisons = row.get("weight_rebuild_comparisons", [])
+        expected_rebuilds = {(dose, arm) for dose in DOSES for arm in ("neuron", "random")}
+        observed_rebuilds = set()
+        if len(rebuild_comparisons) != len(expected_rebuilds):
+            failures.append({"unit": unit_id, "problem": "incomplete_weight_rebuild_comparisons",
+                             "observed": len(rebuild_comparisons),
+                             "expected": len(expected_rebuilds)})
+        for item in rebuild_comparisons:
+            if not isinstance(item, dict):
+                failures.append({"unit": unit_id, "problem": "malformed_weight_rebuild_comparison"})
+                continue
+            observed_rebuilds.add((item.get("dose"), item.get("arm")))
+            error = item.get("relative_error")
+            if not _finite(error) or float(error) > threshold or item.get("passed") is not True:
+                failures.append({"unit": unit_id, "problem": "weight_rebuild_error",
+                                 "relative_error": error})
+                continue
+            rebuild_maxima.append(float(error))
+        if observed_rebuilds != expected_rebuilds:
+            failures.append({"unit": unit_id, "problem": "wrong_weight_rebuild_dose_or_arm_set"})
     complete = not missing_units and not extra_units and len(unit_rows) == len(expected)
     passed = bool(isinstance(record, dict) and record.get("passed") is True and complete
-                  and not failures and len(maxima) == len(expected) * (len(DOSES) - 1) * 2)
+                  and not failures and len(maxima) == len(expected) * (len(DOSES) - 1) * 2
+                  and len(rebuild_maxima) == len(expected) * len(DOSES) * 2)
     return {"name": "2 alpha push equals twice alpha push", "passed": passed,
             "threshold_relative_error_at_most": threshold,
             "maximum_relative_error": max(maxima) if maxima else None,
+            "maximum_weight_rebuild_relative_error": max(rebuild_maxima) if rebuild_maxima else None,
             "expected_units": len(expected), "units_checked": len(unit_rows),
             "missing_units": missing_units, "extra_units": extra_units,
             "failures": failures[:25], "failure_count": len(failures)}
@@ -758,7 +808,9 @@ def _exploratory(position_stats: dict, row_stats: dict, units: list[dict]) -> li
 
 
 def _headline(prediction_rows: list[dict], table: list[dict], bootstrap: dict,
-              gates: dict) -> str:
+              gates: dict, *, vectors_found: bool = True) -> str:
+    if not vectors_found:
+        return "No usable vectors were found, so nothing was read."
     for number in (1, 2, 3):
         if not gates[f"gate{number}"]["passed"]:
             return f"Nothing is read because gate {number} failed."
@@ -813,7 +865,8 @@ def score_data(vectors: dict, selected_rows: list[dict], units: list[dict],
             "u_by_unit": unit_values,
             "exploratory": _exploratory(position_stats, row_stats, units),
             "predictions": pred_rows,
-            "headline": _headline(pred_rows, table, bootstrap, gates),
+            "headline": _headline(pred_rows, table, bootstrap, gates,
+                                  vectors_found=bool(vectors)),
             "bootstrap_definition": ("Part 119c's unit bootstrap draws (2,000 draws, seed 12001); "
                                      "each draw uses product weights counts[first]*counts[second] as primary "
                                      "and sum weights counts[first]+counts[second] as sensitivity. The "
@@ -900,6 +953,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reference", default="results/part119c/interaction-float32.jsonl")
     parser.add_argument("--gate1", default="results/part120/gate1.json")
     parser.add_argument("--gate3", default="results/part120/gate3.json")
+    parser.add_argument("--timing", help="runner timing.json; defaults beside --vectors")
     parser.add_argument("--tournament", default="results/part119/tournament.json")
     parser.add_argument("--out", default="results/part120")
     parser.add_argument("--neurons", default=rows119.DEFAULT_NEURONS)
@@ -909,6 +963,9 @@ def main(argv: list[str] | None = None) -> int:
     units = rows119.load_units(args.neurons, args.kinds, args.kinds_ds)
     selected_rows = rows119c.draw_path2_rows(units)
     vectors, issues = load_vectors(args.vectors, units)
+    timing_path = (repo_path(args.timing) if args.timing is not None
+                   else repo_path(args.vectors).parent / "timing.json")
+    require_complete_run(read_json(timing_path, optional=True), issues, units)
     result = score_data(vectors, selected_rows, units,
                         read_jsonl(args.reference, optional=True),
                         read_json(args.gate1, optional=True), read_json(args.gate3, optional=True),

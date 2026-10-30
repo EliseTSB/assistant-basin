@@ -59,7 +59,10 @@ def parse_doses(value: str) -> tuple[float, ...]:
 
 
 def read_answers(path: str | Path) -> dict[str, dict]:
-    return run119b.read_jsonl_readonly(repo_path(path), "row_id")
+    answer_path = repo_path(path)
+    if not answer_path.is_file():
+        raise FileNotFoundError(f"Part 119 answers file does not exist: {answer_path}")
+    return run119b.read_jsonl_readonly(answer_path, "row_id")
 
 
 def path_for_first(first_id: str, answers: dict[str, dict], prompt: list[int]) -> dict:
@@ -116,7 +119,9 @@ def read_t_support(path: str | Path, rows: list[dict],
 
 def make_index(first_id: str, rows: list[dict], positions: list[int],
                t_ids_by_key: dict, doses: tuple[float, ...],
-               parameter_dtype: str = "torch.float32") -> dict:
+               parameter_dtype: str = "torch.float32", *,
+               scope_units: list[str] | None = None,
+               expected_units: list[str] | None = None) -> dict:
     entries, start = [], 0
     for row in rows:
         for pos in positions:
@@ -126,8 +131,16 @@ def make_index(first_id: str, rows: list[dict], positions: list[int],
                             "first": str(row["first"]), "second": str(row["second"]),
                             "pos": int(pos), "t_ids": ids, "start": start})
             start += len(doses) * 3 * len(ids)
+    selected_ids = sorted(str(value) for value in
+                          (scope_units if scope_units is not None else [first_id]))
+    expected_ids = sorted(str(value) for value in
+                          (expected_units if expected_units is not None else selected_ids))
+    is_main_scope = selected_ids == expected_ids and tuple(doses) == DOSES
     return {"first": str(first_id), "doses": [float(dose) for dose in doses],
             "model_dtype": "float32", "model_parameter_dtype": parameter_dtype,
+            "scope": {"stage": "main" if is_main_scope else "smoke",
+                      "selected_first_units": selected_ids,
+                      "expected_first_units": expected_ids},
             "entries": entries}
 
 
@@ -224,11 +237,12 @@ def _zero_hook_gate(units: list[dict], paths: dict[str, dict], answers: dict[str
             "paths": checks}
 
 
-def _scaling_gate(units: list[dict], cache_by_dose: dict[float, dict]) -> dict:
+def _scaling_gate(units: list[dict], cache_by_dose: dict[float, dict],
+                  weight_cache_by_dose: dict[float, dict]) -> dict:
     import torch
 
     threshold = 1e-5
-    all_errors, per_unit = [], []
+    all_errors, rebuild_errors, per_unit = [], [], []
     for unit in units:
         unit_max = 0.0
         unit_checks = []
@@ -246,18 +260,41 @@ def _scaling_gate(units: list[dict], cache_by_dose: dict[float, dict]) -> dict:
                 unit_checks.append({"low_dose": low, "high_dose": high,
                                     "arm": arm, "relative_error": error if math.isfinite(error) else None,
                                     "passed": passed})
+        rebuild_checks = []
+        for dose in DOSES:
+            for arm in ("neuron", "random"):
+                actual_push = cache_by_dose[dose][(unit["id"], arm)].float()
+                rebuilt_push = weight_cache_by_dose[dose][(unit["id"], arm)].float()
+                denominator = float(torch.linalg.vector_norm(rebuilt_push).item())
+                error = (float(torch.linalg.vector_norm(actual_push - rebuilt_push).item())
+                         / denominator if denominator > 0 else math.nan)
+                passed = math.isfinite(error) and error <= threshold
+                rebuild_errors.append(error if math.isfinite(error) else None)
+                rebuild_checks.append({"dose": dose, "arm": arm,
+                                       "relative_error": error if math.isfinite(error) else None,
+                                       "passed": passed})
         per_unit.append({"unit": str(unit["id"]),
                          "max_relative_error": unit_max if math.isfinite(unit_max) else None,
-                         "passed": bool(unit_checks) and all(item["passed"] for item in unit_checks),
-                         "comparisons": unit_checks})
+                         "passed": (bool(unit_checks) and all(item["passed"] for item in unit_checks)
+                                    and bool(rebuild_checks)
+                                    and all(item["passed"] for item in rebuild_checks)),
+                         "comparisons": unit_checks,
+                         "weight_rebuild_comparisons": rebuild_checks})
     finite_errors = [float(error) for error in all_errors
                      if error is not None and math.isfinite(float(error))]
     maximum = max(finite_errors) if finite_errors else None
+    finite_rebuild_errors = [float(error) for error in rebuild_errors
+                             if error is not None and math.isfinite(float(error))]
+    maximum_rebuild = max(finite_rebuild_errors) if finite_rebuild_errors else None
     return {"gate": 3, "name": "push at twice alpha equals twice the push",
             "threshold_relative_error_at_most": threshold,
             "passed": (bool(per_unit) and len(finite_errors) == len(all_errors)
-                       and all(value <= threshold for value in finite_errors)),
+                       and all(value <= threshold for value in finite_errors)
+                       and len(finite_rebuild_errors) == len(rebuild_errors)
+                       and all(value <= threshold for value in finite_rebuild_errors)),
             "maximum_relative_error": maximum,
+            "weight_rebuild_source": "run119b.build_dose_push_cache at each dose",
+            "maximum_weight_rebuild_relative_error": maximum_rebuild,
             "dose_pairs_checked": [[low, high] for low, high in zip(DOSES, DOSES[1:])],
             "units_checked": len(per_unit), "scope_units": [str(unit["unit"]) for unit in per_unit],
             "units": per_unit}
@@ -368,48 +405,67 @@ def run(args: argparse.Namespace) -> dict:
 
     rows_by_first = {first: [row for row in rows if str(row["first"]) == first]
                      for first in paths}
+    selected_ids = sorted(str(unit["id"]) for unit in units)
+    expected_ids = sorted(str(unit["id"]) for unit in all_units)
     indexes = {first: make_index(first, rows_by_first[first], paths[first]["positions"],
-                                 t_ids_by_key, doses, str(parameter.dtype)) for first in paths}
+                                 t_ids_by_key, doses, str(parameter.dtype),
+                                 scope_units=selected_ids, expected_units=expected_ids)
+               for first in paths}
     completed = {first: finished_unit(vectors_dir / f"{safe_unit_id(first)}.npz", indexes[first])
                  for first in paths}
 
     layers = common.get_layers(model)
     medians = common.residual_medians(model, tokenizer, run119.FRAME, args.device)
     _base_cache, cache_by_dose = run119c.build_dtype_push_caches(units, layers, medians, DOSES)
+    weight_cache_by_dose = {
+        float(dose): run119b.build_dose_push_cache(units, layers, medians, float(dose))
+        for dose in DOSES
+    }
     gate1 = _zero_hook_gate(units, paths, answers, tokenizer, model, layers, args.device)
-    gate3 = _scaling_gate(units, cache_by_dose)
-    _write_json(out_dir / "gate1.json", gate1)
-    _write_json(out_dir / "gate3.json", gate3)
+    gate3 = _scaling_gate(units, cache_by_dose, weight_cache_by_dose)
     report = {"stage": "main" if not smoke else "smoke", "seed": rows119c.SEED,
               "rows": len(rows), "first_units": len(units), "batch": args.batch,
               "device": args.device, "doses": list(doses),
+              "scope_units": selected_ids,
               "model_dtype": "float32", "model_parameter_dtype": str(parameter.dtype),
               "gate1_passed": gate1["passed"], "gate3_passed": gate3["passed"],
               "units_skipped_finished": [first for first, value in completed.items() if value],
               "units_written": [], "logical_passes": 0,
               "elapsed_seconds": time.perf_counter() - started}
-    if not gate1["passed"] or not gate3["passed"]:
-        report["status"] = "stopped_by_gate"
-        _write_json(out_dir / "timing.json", report)
-        raise RuntimeError("Part 120 gate 1 or gate 3 failed; vector run stopped")
+    try:
+        _write_json(out_dir / "gate1.json", gate1)
+        _write_json(out_dir / "gate3.json", gate3)
+        if not gate1["passed"] or not gate3["passed"]:
+            report["status"] = "stopped_by_gate"
+            _write_json(out_dir / "timing.json", report)
+            raise RuntimeError("Part 120 gate 1 or gate 3 failed; vector run stopped")
 
-    for unit in units:
-        first = str(unit["id"])
-        path = vectors_dir / f"{safe_unit_id(first)}.npz"
-        if completed[first]:
-            print(f"path120 first={first} skipped finished unit", flush=True)
-            continue
-        values, unit_timing = _run_first_unit(
-            first, rows_by_first[first], paths[first], indexes[first], t_ids_by_key,
-            doses, tokenizer, model, layers, cache_by_dose, args.device, args.batch)
-        write_unit_npz(path, indexes[first], values)
-        report["units_written"].append(first)
-        report["logical_passes"] += unit_timing["logical_passes"]
-        print(f"path120 first={first} rows={unit_timing['rows']} "
-              f"elapsed={time.perf_counter()-started:.1f}s", flush=True)
-    report.update({"status": "complete", "elapsed_seconds": time.perf_counter() - started,
-                   "total_expected_units": len(all_units)})
-    _write_json(out_dir / "timing.json", report)
+        for unit in units:
+            first = str(unit["id"])
+            path = vectors_dir / f"{safe_unit_id(first)}.npz"
+            if completed[first]:
+                print(f"path120 first={first} skipped finished unit", flush=True)
+                continue
+            values, unit_timing = _run_first_unit(
+                first, rows_by_first[first], paths[first], indexes[first], t_ids_by_key,
+                doses, tokenizer, model, layers, cache_by_dose, args.device, args.batch)
+            write_unit_npz(path, indexes[first], values)
+            report["units_written"].append(first)
+            report["logical_passes"] += unit_timing["logical_passes"]
+            print(f"path120 first={first} rows={unit_timing['rows']} "
+                  f"elapsed={time.perf_counter()-started:.1f}s", flush=True)
+        report.update({"status": "complete", "elapsed_seconds": time.perf_counter() - started,
+                       "total_expected_units": len(all_units)})
+        _write_json(out_dir / "timing.json", report)
+    except OSError as exc:
+        report.update({"status": "aborted", "write_error": str(exc),
+                       "elapsed_seconds": time.perf_counter() - started,
+                       "total_expected_units": len(all_units)})
+        try:
+            _write_json(out_dir / "timing.json", report)
+        except OSError:
+            pass
+        raise
     return report
 
 
@@ -430,7 +486,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--batch must be positive")
     try:
         run(args)
-    except (ValueError, RuntimeError, FileNotFoundError) as exc:
+    except (ValueError, RuntimeError, OSError) as exc:
         parser.exit(2, f"run120: {exc}\n")
     return 0
 
