@@ -2682,19 +2682,19 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 126.1 | Claude (medium confidence): Across the 32 heads, mean role-token attention mass pooled across both copies correlates with Part 83's absolute drops at Spearman rho at least 0.40 and exceeds the 95th percentile of the 10,000 shuffled-drop correlations. | pending | pending |
-| 126.2 | Claude (low confidence): L11 h5 ranks in the top five of 32 heads by role-token attention mass in the Assistant copy. | pending | pending |
-| 126.3 | Claude (low confidence): The top 20 written tokens from L11 h5's Assistant-copy role-token write include an exact first-person token (`i`, `me`, `my`, `mine`, `we`, `us`, `our`, `ours`), second-person token (`you`, `your`, `yours`), or assistant-role token (`assistant`), after trimming whitespace and punctuation and lowercasing. | pending | pending |
-| 126.4 | Claude (medium confidence): Among the 20 heads Part 83 classifies as mattering (absolute drop at least 0.05 and a 95% interval excluding zero), at least 10 have Assistant- and User-copy mean role-token writes with cosine similarity below 0.90. | pending | pending |
+| 126.1 | Claude (medium confidence): Across the 32 heads, mean role-token attention mass pooled across both copies correlates with Part 83's absolute drops at Spearman rho at least 0.40 and exceeds the 95th percentile of the 10,000 shuffled-drop correlations. | rho = -0.023460; shuffled-null 95th percentile = 0.290689; empirical p = 0.536646. | failed |
+| 126.2 | Claude (low confidence): L11 h5 ranks in the top five of 32 heads by role-token attention mass in the Assistant copy. | L11 h5 ranks 20 of 32; mean role-token mass = 0.002350. | failed |
+| 126.3 | Claude (low confidence): The top 20 written tokens from L11 h5's Assistant-copy role-token write include an exact first-person token (`i`, `me`, `my`, `mine`, `we`, `us`, `our`, `ours`), second-person token (`you`, `your`, `yours`), or assistant-role token (`assistant`), after trimming whitespace and punctuation and lowercasing. | No registered token appears in the top 20. | failed |
+| 126.4 | Claude (medium confidence): Among the 20 heads Part 83 classifies as mattering (absolute drop at least 0.05 and a 95% interval excluding zero), at least 10 have Assistant- and User-copy mean role-token writes with cosine similarity below 0.90. | 17 of 20 mattering heads have cosine below 0.90. | held |
 
 ## Part 124 (registered 2026-10-30, PART124-DESIGN.md): does an OLMo neuron prefer its persona phrase when that phrase is the only changing text?
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 124.1 | Claude (low confidence): In T, at least 9 of 39 units read their persona, and the count is above the 95th percentile of the permutation null. | pending | pending |
-| 124.2 | Claude (low confidence): In T, the concept read rate is at least 15 percentage points above the slot read rate. | pending | pending |
-| 124.3 | Claude (medium confidence): In T, at most 4 of 21 slot units read their persona. | pending | pending |
-| 124.4 | Claude (low confidence): Of the units that read in T, at least half also read in C. | pending | pending |
+| 124.1 | Claude (low confidence): In T, at least 9 of 39 units read their persona, and the count is above the 95th percentile of the permutation null. | 14 of 39 read in T; permutation median 4, p95 8, tail 0 of 10,000. | held |
+| 124.2 | Claude (low confidence): In T, the concept read rate is at least 15 percentage points above the slot read rate. | T concept: 10 of 18 (55.6%); slot: 4 of 21 (19.0%); difference 36.51 percentage points. | held |
+| 124.3 | Claude (medium confidence): In T, at most 4 of 21 slot units read their persona. | T slot reads: 4 of 21. | held |
+| 124.4 | Claude (low confidence): Of the units that read in T, at least half also read in C. | 13 of 14 T readers also read in C (92.9%). | held |
 
 ## Part 125 (registered 2026-10-30, PART125-DESIGN.md): does a kept first-turn cache carry persona beyond the same words?
 
