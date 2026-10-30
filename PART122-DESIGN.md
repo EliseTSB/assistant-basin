@@ -105,3 +105,18 @@ One model, 39 units, passages written by one model from a short description, 8 p
 coarse. Personas with a common word and personas that are phrases are not equally easy to write about. Early-layer units may
 read a word, not a meaning, and this part does not separate them. Activation is one channel at one layer. The chat frame's
 ordinary pair is still a first-person persona of an everyday subject, not the model's own answer.
+
+## Amendment 1 (2026-10-30 11:29 CT, before any data on the new passages)
+
+The first passage set failed Gate 1: 743 of 936 pairs were within 2 tokens, against the 90% required, so nothing from that
+run is read. The other gates passed on it. The writer had checked length in words, and persona names run to more tokens
+than their ordinary twins. The eye read had passed, and I had not run the token count before the run, which I could have
+done on the Linux host. That run's activations stay in `results/part122/first-set/` under a heading saying they are not
+read. Its score table was printed in my session before I saw the miss, so I have seen the third-person rows and some
+first-person rows. No rule below is changed by that.
+
+A new passage set replaces it. The writer now counts tokens with the model's own tokenizer and keeps a pair only if the two
+passages differ by at most 2 tokens, keeps valid pairs across up to eight replies for one unit, and tells the model to make
+the ordinary subject about as long as the persona name. Everything else is as registered: the gates and their thresholds,
+the units, the controls, the readout, the frames and the predictions. Gate 1 is read again on the new set, including a fresh
+eye read of 24 pairs. If it fails again, Part 122 stops here and reports that.
