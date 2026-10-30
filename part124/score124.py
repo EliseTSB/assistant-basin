@@ -12,7 +12,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-for candidate in (ROOT, ROOT / "part119"):
+for candidate in (HERE, ROOT, ROOT / "part119"):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
@@ -207,6 +207,18 @@ def validate_inputs(passages: dict, read_set: dict, run_meta: dict,
                 raise ValueError(f"missing focal channels for {key} at layer {layer}")
             if any(finite_number(value) is None for value in layer_values.values()):
                 raise ValueError(f"nonfinite focal activation for {key} at layer {layer}")
+        for field in ("focal_mean", "focal_post_max"):
+            diagnostic = row.get(field)
+            if not isinstance(diagnostic, dict) or set(diagnostic) != layer_keys:
+                raise ValueError(f"missing {field} diagnostics for {key}")
+            for layer in layer_keys:
+                layer_values = diagnostic.get(layer)
+                expected_ids = {str(unit["id"]) for unit in units
+                                if str(unit["layer"]) == layer}
+                if not isinstance(layer_values, dict) or set(layer_values) != expected_ids:
+                    raise ValueError(f"missing {field} channels for {key} at layer {layer}")
+                if any(finite_number(value) is None for value in layer_values.values()):
+                    raise ValueError(f"nonfinite {field} diagnostic for {key} at layer {layer}")
         if side == "persona":
             random_max = row.get("random_max")
             if not isinstance(random_max, dict) or set(random_max) != layer_keys:
@@ -250,6 +262,8 @@ def _focal_results(units: list[dict], records: dict) -> tuple[dict, dict]:
             layer = str(int(unit["layer"]))
             phrase_scores = {}
             per_template = {}
+            per_template_mean = {}
+            per_template_post_max = {}
             for phrase, phrase_unit_id in phrase_to_id.items():
                 owner = by_id[phrase_unit_id]
                 values = [float(records[(frame, template_index, phrase_unit_id, "persona")]
@@ -257,6 +271,16 @@ def _focal_results(units: list[dict], records: dict) -> tuple[dict, dict]:
                           for template_index in range(8)]
                 phrase_scores[phrase] = sum(values) / len(values)
                 per_template[phrase] = values
+                per_template_mean[phrase] = [
+                    float(records[(frame, template_index, phrase_unit_id, "persona")]
+                          ["focal_mean"][layer][unit_id])
+                    for template_index in range(8)
+                ]
+                per_template_post_max[phrase] = [
+                    float(records[(frame, template_index, phrase_unit_id, "persona")]
+                          ["focal_post_max"][layer][unit_id])
+                    for template_index in range(8)
+                ]
             top, ranks = _top3(phrase_scores)
             own_phrase = str(unit["persona"])
             own_rank = ranks[own_phrase]
@@ -271,6 +295,8 @@ def _focal_results(units: list[dict], records: dict) -> tuple[dict, dict]:
                 "top3": top,
                 "phrase_scores": phrase_scores,
                 "template_maxima": per_template,
+                "template_mean_slot_activation": per_template_mean,
+                "template_post_slot_maxima": per_template_post_max,
             }
             scores[frame][unit_id] = {
                 "phrase_scores": phrase_scores,
@@ -533,6 +559,10 @@ def score_results(passages: dict, read_set: dict, run_meta: dict,
         kind_counts[kind] = {"reads": reads, "units": len(kind_units),
                              "rate": reads / len(kind_units) if kind_units else None,
                              "permutation": permutation["by_kind"][kind]}
+    concept_rate = kind_counts["concept"]["rate"]
+    slot_rate = kind_counts["slot"]["rate"]
+    kind_rate_difference = (concept_rate - slot_rate
+                            if concept_rate is not None and slot_rate is not None else None)
     t_count = permutation["all_units"]["observed"]
     t_rows = focal_rows["T"]
     c_rows = focal_rows["C"]
@@ -608,6 +638,7 @@ def score_results(passages: dict, read_set: dict, run_meta: dict,
         "instrument": {"by_frame": instrument, "by_layer": instrument_by_layer},
         "focal": focal_rows,
         "kind_counts": kind_counts,
+        "concept_minus_slot_rate": kind_rate_difference,
         "reads_by_token_length": by_length,
         "reads_by_length_stratum": by_stratum,
         "permutations": permutation,
@@ -676,15 +707,20 @@ def format_score(result: dict) -> str:
         reads = sum(row["reads"] for row in rows.values())
         lines.append(f"### {frame}: {reads}/{len(rows)} reads")
         lines.append("")
-        lines.append("| Unit | Kind | Slot tokens | Stratum | Own rank | Read | Top three | Own maxima by template 1-8 |")
-        lines.append("| --- | --- | ---: | ---: | ---: | --- | --- | --- |")
+        lines.append("| Unit | Kind | Slot tokens | Stratum | Own rank | Read | Top three | Own maxima by template 1-8 | Mean slot avg | Post-slot maxima by template 1-8 |")
+        lines.append("| --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | --- |")
         for unit_id, row in rows.items():
             own_maxima = row["template_maxima"][row["persona"]]
             maxima_text = ", ".join(f"{value:.6g}" for value in own_maxima)
+            own_means = row["template_mean_slot_activation"][row["persona"]]
+            mean_text = f"{sum(own_means) / len(own_means):.6g}"
+            own_post_maxima = row["template_post_slot_maxima"][row["persona"]]
+            post_maxima_text = ", ".join(f"{value:.6g}" for value in own_post_maxima)
             lines.append(f"| {unit_id} ({row['persona']}) | {row['kind']} | "
                          f"{row['slot_token_count']} | {row['length_stratum']} | "
                          f"{row['own_rank']} | {'yes' if row['reads'] else 'no'} | "
-                         f"{', '.join(row['top3'])} | {maxima_text} |")
+                         f"{', '.join(row['top3'])} | {maxima_text} | {mean_text} | "
+                         f"{post_maxima_text} |")
         lines.append("")
     lines.append("## Length and kind summaries")
     lines.append("")
@@ -699,6 +735,9 @@ def format_score(result: dict) -> str:
         perm = row["permutation"]
         lines.append(f"- {kind}: {row['reads']}/{row['units']} reads in T; "
                      f"rate {row['rate']:.1%}; permutation p95 {perm['p95']}/{row['units']}.")
+    difference = result["concept_minus_slot_rate"]
+    difference_text = "not estimable" if difference is None else f"{difference:+.1%}"
+    lines.append(f"- Concept minus slot read-rate difference in T: {difference_text}.")
     lines.append("")
     lines.append("## Permutation null")
     lines.append("")
