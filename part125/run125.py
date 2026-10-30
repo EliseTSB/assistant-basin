@@ -7,10 +7,15 @@ import base64
 import hashlib
 import json
 import math
+import os
 import random
 import sys
 import time
 from pathlib import Path
+
+if "--copy-engine" in sys.argv:  # Amendment 1: must be set before torch loads
+    os.environ["UR_L0_USE_COPY_ENGINE"] = "1"
+    os.environ["SYCL_PI_LEVEL_ZERO_USE_COPY_ENGINE"] = "1"
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -951,6 +956,7 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     parser.add_argument("--out", required=True)
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--max-new-tokens", type=int, default=session.MAX_NEW_TOKENS)
+    parser.add_argument("--copy-engine", action="store_true", help="Level Zero copy engine on (Amendment 1)")
     parser.add_argument("--slot-only", action="store_true",
                         help="run the fixed slot cut on main; the pilot always measures both units")
     args = parser.parse_args(argv)
@@ -1009,6 +1015,7 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     effective_slot_only = bool(args.slot_only) if args.stage == "main" else False
     run_parameters = {"unit_parameters": unit_parameters,
                       "slot_only": effective_slot_only,
+                      "copy_engine": bool(args.copy_engine),
                       "selected_unit_ids": selected_ids}
     run_meta_path = out / "run-meta.json"
     if args.stage == "main" and run_meta_path.is_file():

@@ -6,6 +6,10 @@ Registered 2026-10-30 16:25 CT by Claude (Opus 5.5), before any data. Designed w
 arms set by Elise on 2026-10-30 (Discord messages 1565799239043256552 and 1565800226697121913). Every other decision and
 prediction is Claude's. The commit that adds this file is the registration.
 
+## Amendment 1 (17:02 CT, after a stopped pilot, before any reader, label or prediction)
+
+The first pilot was stopped at 16:56 CT, when Elise noticed the A770 doing very little. Unit p92-02 had taken 18 minutes, about 5 calls per second. A profile on the same model measured 240 one-token calls: with Level Zero's copy engine off, the job.py default, 1.73 calls per second, although forward, sync and hash summed to 49 ms a call, so about 127 s went outside those steps; with it on, 24.4 calls per second, with no such gap. That is one run of each, so it shows a stall can happen, not its rate. The run now passes --copy-engine, recorded in its parameters. Nothing else changes. Only p92-02's mechanical gates were looked at (push effect, determinism, cache sanity, all passed); no answer was read. The stopped folder is kept as main-stopped-1 in the job folder and is not used.
+
 ## Question
 
 On OLMo 2 1B Instruct, does keeping the key/value cache made during a first-turn single-neuron push change later persona expression beyond replaying the same conversation tokens without a push? Does a reader see that change? How does a repeated push compare?
@@ -156,7 +160,7 @@ There are 145 full-reencode/cache-sanity comparisons (29 × 5). There are 87 ran
 ## Optimization
 
 - Bound resource: A770 forward passes.
-- Measured: no Part 125 rate exists yet. Part 123 reports 24 OLMo answers in 18.8 seconds (about 1.3 answers/s), and
+- Measured: the stopped pilot and profile in Amendment 1: about 5 calls per second with the copy engine off, 24.4 with it on, about 5,000 calls for a pilot unit. Before that, no Part 125 rate existed. Part 123 reports 24 OLMo answers in 18.8 seconds (about 1.3 answers/s), and
   Part 122 measured 117 batch-8 calls in about two minutes (about 0.98 batch calls/s); the Part 122 rate is a same-model
   proxy and Part 123's answer rate is from a different Part 125 workload.
 - Levers: batch size declined because each transcript depends on the preceding cached tokens and the registered paths
