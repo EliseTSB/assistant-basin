@@ -196,6 +196,8 @@ Part 112's one-reader Qwen atlas also sorted 465 targets into 257 concept, 189 s
 
 Part 118 tried the sort across doses. At half the selection dose few units show a persona, and that column does not separate neurons from random directions. At twice the dose all 234 neuron answers are incoherent, so the test cannot say whether the sort holds above 0.8. Two predictions held and six failed, and two of those failures were forced by the incoherence. [Part 118](results/part118/README.md) [Part 118 numbers](results/part118/NUMBERS.md)
 
+Do the two kinds differ on reading? Part 122 gives no registered answer. On matched passages concept units read their theme well above a shuffled control (12 of 18 against 5 of 39, after the fact), slot units are not clearly above their own controls, and the gap between the kinds does not hold on the labels both readers agree on. [Part 122](results/part122/README.md) [Part 122 numbers](results/part122/NUMBERS.md)
+
 Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 27 held and 25 failed across Parts 92, 92b, 109, 109b, 109c, 112, 113, 117, and 117b, and 2 held and 6 failed in Part 118. [Part 118 design](PART118-DESIGN.md)
 
 ## Finding 9: Slot-persona counts differ across OLMo stages among units selected at Instruct
@@ -2479,7 +2481,7 @@ their observed rate) says a true excess of 12 would pass only about half the tim
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
 
-### Parts 85 to 120: results in their own folders
+### Parts 85 to 122: results in their own folders
 
 **Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
 
@@ -2574,6 +2576,10 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 119c](results/part119c/README.md)**, 2026-10-30. Float32 against bf16 on 312 of those rows, on fixed answer paths, with no answers generated. In float32 the interaction share is 0.153 at 0.2, 0.020 at 0.1 and 0.0045 at 0.05. In bf16 it is 0.162, 0.040 and 0.073, so bf16 has a rounding floor below 0.2. Rounding does not explain the share at 0.2, which stays above Gate 3's limit in both formats. On all positions, real and random second pushes stay within a factor of 1.25 at low doses; on the resolved positions at 0.05 the factor is 1.66. All four predictions held.
 
 **[Part 120](results/part120/README.md)**, 2026-10-30. Float32 on the same 312 rows, comparing how much a push interacts with itself and with a second push, on fixed answer positions. At dose 0.1 the cross interaction is a median 0.224 of the self-term scale (interval 0.162 to 0.263), and at the three lowest doses it is 0.275 to 0.280. A random second push matched in layer and size gives about the same (0.238 at 0.1), so this describes a second push of that size, not selected neuron pairs. The second-order picture holds at 0.05 and is already slipping at 0.1. The self terms rest on 39 pushes, and the sizes cover each position's top 12 to 40 tokens, not the vocabulary. Five predictions held and three failed.
+
+**[Part 121](results/part121/README.md)**, 2026-10-30. Qwen3.5-4B, 11 slot and concept pairs, with the slot pushed just below its threshold. A same-theme concept neuron added at half strength showed the slot persona in 2 pairs against 1 without it, and an unrelated concept did as well at the lower dose (3 pairs). No lift was seen, and 11 pairs cannot rule out a small one. The slot persona fell from 11 of 11 pairs at +1 to 1 of 11 at +0.85, two doses with nothing tested between them, on units chosen at +1. Five predictions held and two failed.
+
+**[Part 122](results/part122/README.md)**, 2026-10-30. Do neurons sorted by what they write also read their persona? On matched passages in OLMo 2 1B, 12 of 18 concept units and 6 of 21 slot units met the read rule in third-person text. Prediction 122.2 missed by one, so the registered rule allows no reading. After the fact, concept units sit well above the shuffled control (12 of 18 against 5 of 39), slot units are not clearly above their own controls, and concept against slot does not hold on the labels both readers agree on (5 of 8 against 6 of 21, p = .20). Passages are matched in shape, not content. Three predictions held and four failed.
 
 ### Running or designed (2026-10-21)
 

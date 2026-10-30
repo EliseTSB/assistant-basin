@@ -2645,22 +2645,24 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 121.1 | Claude (low confidence): Matched at c+0.5 shows the slot persona on "Who are you?" in at least 3 more of the 11 pairs than s+0.85 alone. | pending |  |
-| 121.2 | Claude (low confidence): Matched at c+0.5 shows it in at least 3 more pairs than unrelated at u+0.5. | pending |  |
-| 121.3 | Claude (medium confidence): The random arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone. | pending |  |
-| 121.4 | Claude (medium confidence): The plain-neuron arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone. | pending |  |
-| 121.5 | Claude (medium confidence): Matched at c+0.25 shows it in no more pairs than matched at c+0.5, and in at most 2 more pairs than s+0.85 alone. | pending |  |
-| 121.6 | Claude (medium confidence): At least two thirds of the matched c+0.5 answers on "Who are you?" are coherent. | pending |  |
-| 121.7 | Claude (high confidence): c+0.5 alone shows the slot persona on "Who are you?" in at most 1 of 11 pairs. | pending |  |
+| 121.1 | Claude (low confidence): Matched at c+0.5 shows the slot persona on "Who are you?" in at least 3 more of the 11 pairs than s+0.85 alone. | Matched 2/11; baseline 1/11; gain 1 (threshold 3). | failed |
+| 121.2 | Claude (low confidence): Matched at c+0.5 shows it in at least 3 more pairs than unrelated at u+0.5. | Matched 2/11; unrelated 1/11; gap 1 (threshold 3). | failed |
+| 121.3 | Claude (medium confidence): The random arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone. | Random mean 0.67; baseline 1; difference -0.33. | held |
+| 121.4 | Claude (medium confidence): The plain-neuron arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone. | Plain mean 0.00; baseline 1; difference -1.00. | held |
+| 121.5 | Claude (medium confidence): Matched at c+0.25 shows it in no more pairs than matched at c+0.5, and in at most 2 more pairs than s+0.85 alone. | Matched +0.25: 2/11; matched +0.5: 2/11; baseline: 1/11. | held |
+| 121.6 | Claude (medium confidence): At least two thirds of the matched c+0.5 answers on "Who are you?" are coherent. | 10/11 coherent; minimum 8/11. | held |
+| 121.7 | Claude (high confidence): c+0.5 alone shows the slot persona on "Who are you?" in at most 1 of 11 pairs. | 0/11; maximum 1/11. | held |
 
 ## Part 122 (registered 2026-10-30, PART122-DESIGN.md): do slot and concept neurons read their persona, and in which frame?
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 122.1 | Claude (medium confidence): In frame T, at least 9 of the 18 concept units read their persona. | pending |  |
-| 122.2 | Claude (medium confidence): In frame T, at most 5 of the 21 slot units read their persona. | pending |  |
-| 122.3 | Claude (medium confidence): In frame T, the concept rate is above the slot rate, with a two-sided Fisher p below .05. | pending |  |
-| 122.4 | Claude (low confidence): In frame C, at least 5 more of the 21 slot units read their persona than in frame T. | pending |  |
-| 122.5 | Claude (low confidence): The gain from T to C is larger for slot units than for concept units, as a share of each kind. | pending |  |
-| 122.6 | Claude (medium confidence): In every frame, the shuffled control read rate is at most 10% of units. | pending |  |
-| 122.7 | Claude (low confidence): Of the 11 concept units whose persona the J-lens matches, at least 7 read in frame T. | pending |  |
+| 122.1 | Claude (medium confidence): In frame T, at least 9 of the 18 concept units read their persona. | 12/18; threshold 9 | held |
+| 122.2 | Claude (medium confidence): In frame T, at most 5 of the 21 slot units read their persona. | 6/21; threshold 5 | failed |
+| 122.3 | Claude (medium confidence): In frame T, the concept rate is above the slot rate, with a two-sided Fisher p below .05. | 12/18 vs 6/21; Fisher p = .025729 | held |
+| 122.4 | Claude (low confidence): In frame C, at least 5 more of the 21 slot units read their persona than in frame T. | 4/21 vs 6/21; gain -2; threshold +5 | failed |
+| 122.5 | Claude (low confidence): The gain from T to C is larger for slot units than for concept units, as a share of each kind. | Slot -2/21 (-9.52%); concept -2/18 (-11.11%) | failed |
+| 122.6 | Claude (medium confidence): In every frame, the shuffled control read rate is at most 10% of units. | T 5/39 (12.82%); F 6/39 (15.38%); C 7/39 (17.95%) | failed |
+| 122.7 | Claude (low confidence): Of the 11 concept units whose persona the J-lens matches, at least 7 read in frame T. | 10/11; threshold 7 | held |
+
+The scorer's comparison is literally true because -9.5% is greater than -11.1%, but both gains are negative, so the predicted gain did not happen, and the ledger counts it as failed.
