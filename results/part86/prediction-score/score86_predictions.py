@@ -2,23 +2,28 @@
 """Score registered Part 86 predictions from the archived screen and blind labels.
 
 Run from the Assistant Basin repository root with python3 -I.
-The primary Qwen blind labels and their separate row key are read from the
-absolute J-lens data directory below. This script does not generate answers.
+Version 2 uses the Amendment 7 labels in this repository and the first-reader
+items and private key in J-lens. Version 1 labels remain available historically.
+This script does not generate answers.
 """
 from __future__ import annotations
 
+import argparse
 import collections
+import contextlib
 import gzip
 import hashlib
+import io
 import json
 import os
 import math
 import re
+import sys
 from pathlib import Path
 
 
-# The J-lens study's repo holds the Part 86 blind-label bundle. Its root is $JLENS_ROOT, by default a checkout named
-# jlens-persona-neurons in the home directory.
+# The J-lens study's repo holds the first-reader items and private row key, plus the historical version-1 labels. Its
+# root is $JLENS_ROOT, by default a checkout named jlens-persona-neurons in the home directory.
 J_LENS_ROOT = Path(os.environ.get("JLENS_ROOT", "~/jlens-persona-neurons")).expanduser()
 J_LENS_LABEL_DIR = J_LENS_ROOT / "data/qwen3.5-4b/labels"
 J_LENS_STATS_PATH = J_LENS_ROOT / "results/qwen3.5-4b/stats.json"
@@ -174,33 +179,22 @@ def label_class(label: dict) -> str:
     return "coherent_persona"
 
 
-def load_labels(screen_rows: dict, screen_counts: dict):
-    items_path = J_LENS_LABEL_DIR / "items.jsonl"
-    labels_path = J_LENS_LABEL_DIR / "labels.jsonl"
-    key_path = J_LENS_LABEL_DIR / "KEY-private.json"
-    items_list = read_jsonl(items_path)
-    labels_list = read_jsonl(labels_path)
+class NotReady(Exception):
+    """An input-integrity failure that must prevent a verdict."""
+
+
+def _join_label_data(items: dict, labels: dict, key_path: Path, screen_rows: dict, screen_counts: dict):
+    # In version 2 this is called only after the primary labels have passed a complete
+    # preflight. Keep key access after that preflight so incomplete v2 data cannot be
+    # used to reveal condition assignments.
     key = json.loads(key_path.read_text(encoding="utf-8"))
     if not isinstance(key, dict):
         raise ValueError(f"label key is not an object: {key_path}")
 
-    items = {}
-    for item in items_list:
-        item_id = item.get("id")
-        text = item.get("text")
-        if not isinstance(item_id, str) or not isinstance(text, str) or item_id in items:
-            raise ValueError(f"invalid or duplicate item id in {items_path}")
-        items[item_id] = text
-    labels = {}
-    for label in labels_list:
-        item_id = label.get("id")
-        if not isinstance(item_id, str) or item_id in labels:
-            raise ValueError(f"invalid or duplicate label id in {labels_path}")
-        labels[item_id] = label
     if set(items) != set(key):
         raise ValueError("J-lens item ids do not match the private key ids")
     if set(labels) != set(items):
-        raise ValueError("J-lens label ids do not cover the item ids")
+        raise ValueError("primary label ids do not cover the item ids")
 
     item_for_row = {}
     problems = []
@@ -273,6 +267,143 @@ def load_labels(screen_rows: dict, screen_counts: dict):
     return items, labels, key, coverage, classes, expected, errors
 
 
+def load_labels_v1(screen_rows: dict, screen_counts: dict):
+    items_path = J_LENS_LABEL_DIR / "items.jsonl"
+    labels_path = J_LENS_LABEL_DIR / "labels.jsonl"
+    key_path = J_LENS_LABEL_DIR / "KEY-private.json"
+    items_list = read_jsonl(items_path)
+    labels_list = read_jsonl(labels_path)
+
+    items = {}
+    for item in items_list:
+        item_id = item.get("id")
+        text = item.get("text")
+        if not isinstance(item_id, str) or not isinstance(text, str) or item_id in items:
+            raise ValueError(f"invalid or duplicate item id in {items_path}")
+        items[item_id] = text
+    labels = {}
+    for label in labels_list:
+        item_id = label.get("id")
+        if not isinstance(item_id, str) or item_id in labels:
+            raise ValueError(f"invalid or duplicate label id in {labels_path}")
+        labels[item_id] = label
+    return _join_label_data(items, labels, key_path, screen_rows, screen_counts)
+
+
+def _read_jsonl_counted(path: Path):
+    rows = []
+    records = 0
+    malformed = 0
+    with path.open(encoding="utf-8") as stream:
+        for line in stream:
+            if not line.strip():
+                continue
+            records += 1
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                malformed += 1
+                continue
+            if not isinstance(row, dict):
+                malformed += 1
+                continue
+            rows.append(row)
+    return rows, records, malformed
+
+
+def load_labels_v2(screen_rows: dict, screen_counts: dict, root: Path):
+    """Load Amendment 7's labels, refusing incomplete data before opening the key."""
+    items_path = J_LENS_LABEL_DIR / "items.jsonl"
+    labels_path = root / "results" / "part86" / "second-reader" / "labels_ds_v2_full.jsonl"
+    key_path = J_LENS_LABEL_DIR / "KEY-private.json"
+
+    item_count = 0
+    item_ids = set()
+    item_problem_count = 0
+    items = {}
+    if items_path.is_file():
+        item_rows, item_count, malformed_items = _read_jsonl_counted(items_path)
+        item_problem_count += malformed_items
+        for item in item_rows:
+            item_id, text = item.get("id"), item.get("text")
+            if not isinstance(item_id, str) or not isinstance(text, str) or item_id in item_ids:
+                item_problem_count += 1
+                continue
+            item_ids.add(item_id)
+            items[item_id] = text
+    else:
+        item_problem_count += 1
+
+    label_rows = []
+    label_record_count = 0
+    malformed_labels = 0
+    if labels_path.is_file():
+        label_rows, label_record_count, malformed_labels = _read_jsonl_counted(labels_path)
+
+    label_ids = set()
+    labels = {}
+    duplicate_ids = 0
+    error_rows = 0
+    invalid_rows = malformed_labels
+    for label in label_rows:
+        if "error" in label:
+            error_rows += 1
+        item_id = label.get("id")
+        if not isinstance(item_id, str):
+            invalid_rows += 1
+        else:
+            if item_id in label_ids:
+                duplicate_ids += 1
+            else:
+                label_ids.add(item_id)
+                labels[item_id] = label
+        if (
+            set(label) != {"id", "persona", "kind", "coherent"}
+            or not isinstance(item_id, str)
+            or not isinstance(label.get("persona"), str)
+            or not isinstance(label.get("kind"), str)
+            or label.get("kind") not in VALID_KINDS
+            or type(label.get("coherent")) is not bool
+        ):
+            invalid_rows += 1
+
+    missing_ids = item_ids - label_ids
+    extra_ids = label_ids - item_ids
+    file_missing = not labels_path.is_file()
+    if (
+        file_missing
+        or item_problem_count
+        or malformed_labels
+        or duplicate_ids
+        or missing_ids
+        or extra_ids
+        or error_rows
+        or invalid_rows
+    ):
+        raise NotReady(
+            "NOT READY: version-2 labels failed preflight; "
+            f"item_file={'missing' if not items_path.is_file() else 'present'} "
+            f"item_count={len(item_ids)} item_records={item_count} item_problems={item_problem_count}; "
+            f"label_file={'missing' if file_missing else 'present'} label_rows={label_record_count} "
+            f"unique_ids={len(label_ids)} missing_ids={len(missing_ids)} extra_ids={len(extra_ids)} "
+            f"duplicate_ids={duplicate_ids} error_rows={error_rows} invalid_rows={invalid_rows}."
+        )
+
+    print(
+        "LABEL PREFLIGHT: version-2 labels match all "
+        f"{len(item_ids)} first-reader item ids; label_rows={label_record_count} "
+        f"unique_ids={len(label_ids)} missing_ids=0 extra_ids=0 duplicate_ids=0 "
+        "error_rows=0 invalid_rows=0."
+    )
+    return _join_label_data(items, labels, key_path, screen_rows, screen_counts)
+
+
+def load_labels(screen_rows: dict, screen_counts: dict, reading: str, root: Path):
+    if reading == "v2":
+        return load_labels_v2(screen_rows, screen_counts, root)
+    return load_labels_v1(screen_rows, screen_counts)
+
+
 def matching_files(base: Path, names: set[str]) -> list[str]:
     if not base.exists():
         return []
@@ -309,8 +440,51 @@ def pct(count: int, denominator: int) -> float:
     return 100.0 * count / denominator
 
 
-def main() -> int:
-    root = Path.cwd()
+def _screen_kappa(part86: Path, reading: str):
+    if reading == "v2":
+        path = part86 / "second-reader" / "calib-agreement-v2.json"
+        if not path.is_file():
+            return None
+        try:
+            report = json.loads(path.read_text(encoding="utf-8"))
+            value = report.get("pairs", {}).get("ds_v2~luna_v2", {}).get("kappa_coherent_persona")
+        except (OSError, AttributeError, json.JSONDecodeError):
+            return None
+        if isinstance(value, (float, int)) and not isinstance(value, bool):
+            print(
+                "SCREEN AGREEMENT SOURCE: results/part86/second-reader/"
+                "calib-agreement-v2.json pairs['ds_v2~luna_v2'].kappa_coherent_persona"
+            )
+            return float(value)
+        return None
+
+    agreement_files = matching_files(part86, {
+        "blind-labels-2.jsonl",
+        "blind-results.json",
+        "blind-results.json.manifest.json",
+    })
+    screen_kappa = None
+    for relative in agreement_files:
+        path = part86 / relative
+        if path.name == "blind-results.json":
+            try:
+                result = json.loads(path.read_text(encoding="utf-8"))
+                value = result.get("kappa")
+                if isinstance(value, (float, int)):
+                    screen_kappa = float(value)
+            except (OSError, json.JSONDecodeError):
+                pass
+    # Version 1's Amendment 2 second read remains available for the historical record.
+    second = part86 / "second-reader" / "agreement.json"
+    if screen_kappa is None and second.is_file():
+        value = json.loads(second.read_text(encoding="utf-8")).get("kappa")
+        if isinstance(value, (float, int)):
+            screen_kappa = float(value)
+            print("SCREEN AGREEMENT SOURCE: results/part86/second-reader/agreement.json")
+    return screen_kappa
+
+
+def score(root: Path, reading: str) -> int:
     missing_ids = sorted(set(EXPECTED_IDS) - registered_ids(root))
     if missing_ids:
         raise SystemExit("missing registered prediction rows: " + ", ".join(missing_ids))
@@ -323,8 +497,16 @@ def main() -> int:
         f"{NEURONS_PER_LAYER} real rows and {RANDOM_PER_LAYER} random rows."
     )
 
+    print(f"READING: version {reading}; primary labels and agreement gate are selected for this version.")
+    if reading == "v2":
+        print(
+            "PRIMARY LABEL SOURCE: results/part86/second-reader/labels_ds_v2_full.jsonl; "
+            "version-1 labels are not loaded or pooled."
+        )
+    else:
+        print("PRIMARY LABEL SOURCE: J-lens labels.jsonl (version 1 historical reading).")
     items, labels, key, coverage, classes, expected, label_errors = load_labels(
-        screen_rows, screen_counts
+        screen_rows, screen_counts, reading, root
     )
     valid_item_labels = sum("error" not in row for row in labels.values())
     valid_label_rows = sum(coverage.values())
@@ -363,30 +545,7 @@ def main() -> int:
         )
 
     part86 = root / "results" / "part86"
-    agreement_files = matching_files(part86, {
-        "blind-labels-2.jsonl",
-        "blind-results.json",
-        "blind-results.json.manifest.json",
-    })
-    screen_kappa = None
-    for relative in agreement_files:
-        path = part86 / relative
-        if path.name == "blind-results.json":
-            try:
-                result = json.loads(path.read_text(encoding="utf-8"))
-                value = result.get("kappa")
-                if isinstance(value, (float, int)):
-                    screen_kappa = float(value)
-            except (OSError, json.JSONDecodeError):
-                pass
-    # Amendment 2's second read, run 2026-10-29 by results/part86/second-reader/second86.py (Opus 5.5 on the
-    # seed-8687 10% sample of the first reader's items).
-    second = part86 / "second-reader" / "agreement.json"
-    if screen_kappa is None and second.is_file():
-        value = json.loads(second.read_text(encoding="utf-8")).get("kappa")
-        if isinstance(value, (float, int)):
-            screen_kappa = float(value)
-            print(f"SCREEN AGREEMENT SOURCE: results/part86/second-reader/agreement.json")
+    screen_kappa = _screen_kappa(part86, reading)
 
     stats = {}
     if J_LENS_STATS_PATH.is_file():
@@ -400,11 +559,18 @@ def main() -> int:
             f"{jlens_n} pair judgements. It is not Part 86 screen-reader kappa."
         )
     if screen_kappa is None:
-        print(
-            "SCREEN AGREEMENT: NOT AVAILABLE. The second-reader file "
-            "results/part86/blind-labels-2.jsonl and its screen score "
-            "results/part86/blind-results.json are missing."
-        )
+        if reading == "v2":
+            print(
+                "SCREEN AGREEMENT: NOT AVAILABLE. "
+                "results/part86/second-reader/calib-agreement-v2.json "
+                "does not contain pairs['ds_v2~luna_v2'].kappa_coherent_persona."
+            )
+        else:
+            print(
+                "SCREEN AGREEMENT: NOT AVAILABLE. The second-reader file "
+                "results/part86/blind-labels-2.jsonl and its screen score "
+                "results/part86/blind-results.json are missing."
+            )
     else:
         print(f"SCREEN AGREEMENT: Part 86 coherent-persona kappa is {screen_kappa:.6f}.")
 
@@ -589,6 +755,39 @@ def main() -> int:
         f"Screen kappa is {'missing' if screen_kappa is None else f'{screen_kappa:.6f}'}."
     )
     return 0
+
+
+def main(argv: list[str] | None = None, root: Path | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Score registered Part 86 predictions.")
+    parser.add_argument(
+        "--reading", choices=("v1", "v2"), default="v2",
+        help="primary blind-label reading to use (default: v2; v1 is historical)",
+    )
+    args = parser.parse_args(argv)
+    score_root = Path(root) if root is not None else Path.cwd()
+
+    if args.reading == "v1":
+        return score(score_root, args.reading)
+
+    captured = io.StringIO()
+    with contextlib.redirect_stdout(captured):
+        try:
+            code = score(score_root, args.reading)
+        except NotReady as exc:
+            print(str(exc))
+            code = 2
+        except SystemExit as exc:
+            if isinstance(exc.code, str):
+                print(exc.code)
+                code = 1
+            else:
+                code = int(exc.code or 0)
+    report = captured.getvalue()
+    report_path = score_root / "results" / "part86" / "prediction-score" / "SCORE-v2.md"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text("# Part 86 prediction score, version 2\n\n" + report, encoding="utf-8")
+    sys.stdout.write(report)
+    return code
 
 
 if __name__ == "__main__":
