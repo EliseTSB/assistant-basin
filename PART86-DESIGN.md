@@ -279,3 +279,14 @@ same labels and key as 86.2 to 86.6, by a script committed before its first run 
 a later part that starts from the atlas should say so. If 86.12 fails, the reader change also removes personas the
 brief does not dispute, which would say more about the first reader than about the neurons. 86.13 measures the reading,
 not the neurons: random directions are counted separately by 86.2 to 86.6.
+
+## Amendment 9 (2026-10-30 02:04 CT, before any miss-sample label)
+
+Amendment 2 item 1's triage miss sample is read by the reader and brief behind the version-2 verdicts (Amendments 6 and
+7): DS V4.1 Flash with `part86/READER-BRIEF-v2.md` through `results/part86/second-reader/calib86.py`, blind. Items
+are shuffled, carry fresh ids, and hold no layer, unit, arm or triage class; the key is kept outside the repository.
+`part86/miss86.py` draws the sample with seed 8686 from the final screen, re-triaging each answer with
+`part86/triage86.py` (the counts match the screen: real 147,469 kept, 5,950 broken, 3,253 changed; random 8,573 kept,
+31 broken, 100 changed). Random directions have only 31 broken answers, so that sample is all 31; the other three are
+200 each, 631 items in all. Each sample's coherent personas under the version-2 rule are reported with Wilson 95%
+intervals, beside the rates, as the triage miss rate. It changes no verdict.
