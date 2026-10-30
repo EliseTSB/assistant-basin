@@ -117,17 +117,18 @@ def run(args):
         snapshot_layers = int(text_config["num_hidden_layers"])
         weights = jlens111.Weights(snap)
         lens_file = torch.load(str(jlens111.LENS), map_location="cpu", weights_only=True)
+        # "J" holds one matrix per layer, as a list or a dict, not one stacked tensor. Part 111 indexes it the same way.
         lens_j = lens_file.get("J")
-        j_shape = list(lens_j.shape) if hasattr(lens_j, "shape") else None
+        matrices = list(lens_j.values()) if isinstance(lens_j, dict) else lens_j
+        j_shape = [len(matrices), *matrices[0].shape] if matrices is not None and len(matrices) else None
         shape_ok = bool(
             j_shape == [31, snapshot_hidden, snapshot_hidden]
-            and snapshot_hidden == hidden
-            and all(0 <= layer < int(lens_j.shape[0]) for layer in LAYERS)
+            and all(0 <= layer < len(matrices) for layer in LAYERS)
         )
         shape_check = {
             "passed": shape_ok, "lens_shape": j_shape,
             "expected_shape": [31, snapshot_hidden, snapshot_hidden],
-            "capture_hidden_size": hidden, "snapshot_hidden_size": snapshot_hidden,
+            "captured_head_dim": hidden, "snapshot_hidden_size": snapshot_hidden,
             "snapshot_layers": snapshot_layers, "selected_layers": list(LAYERS),
             "lens_path": str(jlens111.LENS), "snapshot": str(snap),
         }
@@ -136,6 +137,7 @@ def run(args):
             _write_json(out / "lens126.json", result)
             print(json.dumps(shape_check, ensure_ascii=False))
             return
+        hidden = snapshot_hidden  # what was captured is one head's width; a write lands in the model's hidden size
         gain = 1.0 + weights.get(PREFIX + "norm.weight").float().cpu()
         embed = weights.get(PREFIX + "embed_tokens.weight").float().cpu()
         tok = jlens111.load_tok()

@@ -11,6 +11,10 @@ The weights load straight to the device, as Part 115b does, not through `neuron_
 
 Only decoder layers 0 to 15 load. A direct load of all 32 layers still dropped Windows' available memory from 9.4 GB to 1.93 GB and tripped the RAM guard on three launches. Attention at layers 11 and 15 depends on nothing above them, so the capture is the same. Part 126 needs no answer from the model. Gate 2 compares the truncated model's logits with and without the hooks, which still shows the hooks change nothing. Two sizes in Method are corrected here: `hidden_size` is 2560, so `o_proj.weight` is `[2560, 4096]` and each lens matrix is `[2560, 2560]`. The code reads these from the model and the config, and no result depended on the old text.
 
+## Amendment 3 (15:24 CT, after the capture, before any prediction was read)
+
+Gate 4's code failed on two defects of its own: it compared the model's hidden size with the head width of the captured vectors, and it expected one stacked tensor where the lens file holds one matrix per layer. The gate's meaning is unchanged: 31 matrices of the model's hidden size. I had read the three gates, the four `not read` lines and the first three rows of the attention table when I made this fix. No threshold or prediction changed.
+
 ## Question
 
 At the answer position of Part 80b's prompts, which earlier tokens do the 32 heads in layers 11 and 15 attend to, and what would their writes say through the Part 111 Jacobian lens? In particular, do the heads whose ablation changed Part 83's own-message gap read the role word that marks who sent the copied message?
