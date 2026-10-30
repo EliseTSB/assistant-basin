@@ -2706,3 +2706,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 125.4 | Claude (low confidence): The count in 125.3 is at least 5 units lower at turn 5 than at turn 2. | pending | pending |
 | 125.5 | Claude (medium confidence): At turn 5, arm 1 has at least 6 more incoherent answers than arm 2. Pushing every turn breaks answers more than it holds a persona. | pending | pending |
 | 125.6 | Claude (medium confidence): At turn 5, arm 4 shows a coherent target persona in at most 2 of 29 units. | pending | pending |
+
+## Part 127 (registered 2026-10-30, PART127-DESIGN.md): do two half-strength units from one persona family preserve it together?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 127.1 | Claude (medium confidence): At dose .5, at most 1 of the 4 same-layer pairs is rescued. | pending | pending |
+| 127.2 | Claude (low confidence): At dose .707, at least 2 of the 4 same-layer pairs are rescued. | pending | pending |
+| 127.3 | Claude (medium confidence): Across the 54 cells at dose .5, the A+B rescue count exceeds the A+C count by at most 3 cells. | pending | pending |
+| 127.4 | Claude (medium confidence): All four same-layer pairs have an absolute `W_down` cosine below .2. | pending | pending |
+| 127.5 | Claude (low confidence): At dose .5, A's reference-path logit change under A+B exceeds that under A+C in at least 17 of the 27 pairs. | pending | pending |

@@ -10,6 +10,10 @@ prediction is Claude's. The commit that adds this file is the registration.
 
 The first pilot was stopped at 16:56 CT, when Elise noticed the A770 doing very little. Unit p92-02 had taken 18 minutes, about 5 calls per second. A profile on the same model measured 240 one-token calls: with Level Zero's copy engine off, the job.py default, 1.73 calls per second, although forward, sync and hash summed to 49 ms a call, so about 127 s went outside those steps; with it on, 24.4 calls per second, with no such gap. That is one run of each, so it shows a stall can happen, not its rate. The run now passes --copy-engine, recorded in its parameters. Nothing else changes. Only p92-02's mechanical gates were looked at (push effect, determinism, cache sanity, all passed); no answer was read. The stopped folder is kept as main-stopped-1 in the job folder and is not used.
 
+## Amendment 2 (18:15 CT, before any reader, label or prediction)
+
+With the copy engine on, the main run hung three times in a row on the A770 at unit p92-09, with no CPU or GPU use. A stack dump put the main thread in a small host-to-device tensor call. A hang there can be the driver or an earlier device operation; this run does not say which. So the whole study moves to one rented RTX 3090 on Vast, bf16 on CUDA, pilot included. The A770 pilot and its six units are kept outside the study folder as main-stopped-2 and are not used. Rented GPU was declined in the Optimization section when the A770 looked sufficient; that reason no longer holds. The pilot's 90-minute rule is unchanged and is applied to the 3090's own projection, so all 29 units run if it projects under 90 minutes. The twin pairing only needs one machine for both paths, which this keeps. The --copy-engine flag does nothing on CUDA. No answer has been read.
+
 ## Question
 
 On OLMo 2 1B Instruct, does keeping the key/value cache made during a first-turn single-neuron push change later persona expression beyond replaying the same conversation tokens without a push? Does a reader see that change? How does a repeated push compare?
@@ -166,8 +170,7 @@ There are 145 full-reencode/cache-sanity comparisons (29 × 5). There are 87 ran
 - Levers: batch size declined because each transcript depends on the preceding cached tokens and the registered paths
   use batch size 1; max_new_tokens taken at 120 with a cap flag; teacher-forced scoring taken for the log-probability
   readout; cached transcript reuse and per-unit atomic resume taken; CPU top-100 comparison taken; negative poles and a
-  dose ladder declined because the registered contrast is the positive q=1 push; rented GPU declined because the
-  registered device is the A770.
+  dose ladder declined because the registered contrast is the positive q=1 push; rented GPU taken by Amendment 2 after the A770 hung.
 
 ## Limits
 

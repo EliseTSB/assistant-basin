@@ -39,6 +39,7 @@ DOSE_ALPHA = {0.5: 0.4, 0.707: 0.5656, 1.0: 0.8}
 MAX_NEW_TOKENS = 120
 PATH_TOKENS = 24
 FIXED_PATH_BATCH = 8
+RIG_GATE_VERSION = 2
 SEED = 12701
 DEFAULT_NEURONS = "results/part92/step2/neurons.json"
 KNOWN_EXAMPLES = "part92b/known92b.jsonl"
@@ -520,24 +521,43 @@ def _rig_gate(model, tokenizer, layers, batch_size: int, device: str) -> dict:
     observed_length = len(fixed_tokens)
     fixed_tokens = fixed_tokens[:PATH_TOKENS]
     fixed_tokens += [int(tokenizer.pad_token_id)] * (PATH_TOKENS - len(fixed_tokens))
-    path_ids = torch.tensor([prompt + fixed_tokens] * FIXED_PATH_BATCH,
-                            dtype=torch.long, device=device)
-    path_mask = torch.ones_like(path_ids)
-    if observed_length < PATH_TOKENS:
-        path_mask[:, len(prompt) + observed_length:] = 0
+    fixed_states = [{"tokens": fixed_tokens, "valid_token_count": observed_length}
+                    for _ in range(FIXED_PATH_BATCH)]
+    path_ids, path_mask, _start, _lengths = _tensorize_sequences(
+        tokenizer, fixed_states, prompt, device)
     plain_logits = run119._forward(model, path_ids, path_mask, layers, {})
     zero_path_vectors = {index: torch.zeros((FIXED_PATH_BATCH, hidden), dtype=layer.mlp.down_proj.weight.dtype,
                                             device=device) for index, layer in enumerate(layers)}
     zero_logits = run119._forward(model, path_ids, path_mask, layers, zero_path_vectors)
     equal_logits = bool(torch.equal(plain_logits, zero_logits))
     difference = 0.0 if equal_logits else float((plain_logits - zero_logits).abs().max().item())
-    return {"passed": bool(equal_generation and equal_logits), "batch_size": batch_size,
+    return {"gate_version": RIG_GATE_VERSION,
+            "passed": bool(equal_generation and equal_logits), "batch_size": batch_size,
             "generation_batch_shape": list(input_ids.shape),
             "fixed_path_batch_size": FIXED_PATH_BATCH,
-            "fixed_path_shape": list(path_ids.shape), "generation_equal": equal_generation,
+            "fixed_path_shape": list(path_ids.shape),
+            "fixed_path_attention_mask": [int(value) for value in path_mask[0].tolist()],
+            "fixed_path_observed_length": observed_length,
+            "generation_equal": equal_generation,
             "fixed_logits_equal": equal_logits, "max_abs_logit_difference": difference,
             "generated_tokens_plain": plain_tokens, "generated_tokens_zero": zero_tokens,
             "hook_layers": list(range(len(layers))), "hook_state": "zero"}
+
+
+def _saved_rig_gate_matches(rig: dict, batch_size: int) -> bool:
+    """Only reuse a saved gate made by the current gate code at this shape."""
+    try:
+        shape = rig["fixed_path_shape"]
+        mask = rig["fixed_path_attention_mask"]
+        return (int(rig.get("gate_version", -1)) == RIG_GATE_VERSION
+                and int(rig.get("batch_size", -1)) == batch_size
+                and int(rig.get("fixed_path_batch_size", -1)) == FIXED_PATH_BATCH
+                and isinstance(shape, list) and len(shape) == 2
+                and int(shape[0]) == FIXED_PATH_BATCH
+                and isinstance(mask, list) and len(mask) == int(shape[1])
+                and all(value in (0, 1) for value in mask))
+    except (KeyError, TypeError, ValueError):
+        return False
 
 
 def _call_record(path: Path, stage: str, call_id: str, details: dict) -> None:
@@ -607,7 +627,12 @@ def _tensorize_sequences(tokenizer, states: list[dict], prompt: list[int], devic
     width = max(len(seq) for seq in sequences)
     ids = torch.tensor([seq + [pad_id] * (width - len(seq)) for seq in sequences],
                        dtype=torch.long, device=device)
-    mask = torch.tensor([[1] * len(seq) + [0] * (width - len(seq)) for seq in sequences],
+    valid_lengths = [len(prompt) + int(state.get("valid_token_count", len(state["tokens"])))
+                     for state in states]
+    if any(length > len(sequence) for length, sequence in zip(valid_lengths, sequences)):
+        raise ValueError("valid token count exceeds the provided sequence")
+    mask = torch.tensor([[1] * length + [0] * (width - length)
+                         for length in valid_lengths],
                         dtype=torch.long, device=device)
     return ids, mask, len(prompt), [len(state["tokens"]) for state in states]
 
@@ -1034,11 +1059,12 @@ def run(args: argparse.Namespace, *, model_loader=None,
         if int(previous.get("batch", args.batch)) != args.batch:
             raise ValueError("resume batch differs from the recorded fixed batch shape")
     rig_path = out_dir / "rig_gate.json"
+    rig = None
     if rig_path.exists():
-        rig = json.loads(rig_path.read_text(encoding="utf-8"))
-        if int(rig.get("batch_size", -1)) != args.batch:
-            raise ValueError("saved rig gate uses a different batch shape")
-    else:
+        saved_rig = json.loads(rig_path.read_text(encoding="utf-8"))
+        if _saved_rig_gate_matches(saved_rig, args.batch):
+            rig = saved_rig
+    if rig is None:
         started = time.perf_counter()
         rig = _rig_gate(model, tokenizer, layers, args.batch, args.device)
         rig["seconds"] = round(time.perf_counter() - started, 3)

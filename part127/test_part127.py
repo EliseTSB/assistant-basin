@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 import os
 import shutil
 import subprocess
@@ -20,6 +21,11 @@ if str(HERE) not in sys.path:
 import label127
 import run127
 import score127
+
+_VAST_HELPER_PATH = ROOT / "cloud/vast-part127-2026-10-30/vast.py"
+_VAST_SPEC = importlib.util.spec_from_file_location("part127_vast_helper", _VAST_HELPER_PATH)
+vast127 = importlib.util.module_from_spec(_VAST_SPEC)
+_VAST_SPEC.loader.exec_module(vast127)
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -206,12 +212,50 @@ def test_fixed_scoring_accepts_real_vocab_and_hidden_shapes(tmp_path):
     assert report["emitted_logit_delta_fields"]["centered_delta_on_support"] > 0
 
 
-def test_rig_fixed_path_uses_the_batch_eight_study_shape():
+def test_rig_fixed_path_uses_the_batch_eight_study_shape(monkeypatch):
+    # A one-token answer pins the same attention-mask contract as a short study path.
+    monkeypatch.setattr(run127.run119, "generated_tokens", lambda _row, _tokenizer: [42])
     tokenizer, model = TinyTokenizer(), TinyModel()
     rig = run127._rig_gate(model, tokenizer, run127.c.get_layers(model), 8, "cpu")
     prompt = run127.c.prompt_ids(tokenizer, run127.QUESTIONS[0], "chat")
     assert rig["fixed_path_batch_size"] == run127.FIXED_PATH_BATCH == 8
+    assert rig["fixed_path_observed_length"] == 1
     assert rig["fixed_path_shape"] == [8, len(prompt) + run127.PATH_TOKENS]
+    expected_mask = [1] * (len(prompt) + 1) + [0] * (run127.PATH_TOKENS - 1)
+    assert rig["fixed_path_attention_mask"] == expected_mask
+    assert sum(rig["fixed_path_attention_mask"]) == len(prompt) + 1
+    assert rig["gate_version"] == run127.RIG_GATE_VERSION
+
+
+def test_resume_rejects_rig_gate_without_current_version():
+    stale = {"batch_size": 8, "fixed_path_batch_size": 8,
+             "fixed_path_shape": [8, 27], "fixed_path_attention_mask": [1] * 27}
+    current = {**stale, "gate_version": run127.RIG_GATE_VERSION}
+    assert not run127._saved_rig_gate_matches(stale, 8)
+    assert run127._saved_rig_gate_matches(current, 8)
+
+
+def test_agreement_reports_shared_and_unread_rows():
+    items = [{"public": {"item_id": item_id, "answer_hash": f"hash-{item_id}"}}
+             for item_id in ("shared", "one-sided", "missing")]
+    readable = {"answer_hash": "hash-shared", "shows_persona": True,
+                "self_claim": True, "speaker": "other", "coherent": True}
+    ds = {"shared": readable,
+          "one-sided": {**readable, "answer_hash": "hash-one-sided"}}
+    luna = {"shared": readable,
+            "one-sided": {**readable, "answer_hash": "stale"}}
+    agreement = score127._agreement(ds, luna, items)
+    assert agreement["n"] == 1
+    assert agreement["total_items"] == 3
+    assert agreement["unread_items"] == 2
+
+
+def test_failed_v1_listing_is_not_read_as_an_empty_list(monkeypatch):
+    def failed_listing():
+        raise vast127.VastAPIError("v1 unavailable")
+
+    monkeypatch.setattr(vast127, "list_instances", failed_listing)
+    assert vast127.instance_remains()
 
 
 def test_random_directions_are_reused_as_independent_dose_series():
@@ -428,6 +472,45 @@ def test_label_cache_reuses_successful_result(tmp_path):
     assert first["pending"] == 1
     assert second["pending"] == 0
     assert len(calls) == 1
+
+
+def test_label_items_retries_latest_unread_rows(tmp_path):
+    item = label127.known_items(label127.read_known())[0]
+    calls = []
+
+    def request(_reader, _prompt):
+        calls.append(1)
+        if len(calls) < 3:
+            return {"text": "not-json", "stop_reason": "stop"}
+        return {"text": json.dumps({"shows_persona": True, "self_claim": True,
+                                    "speaker": "other", "coherent": True}),
+                "stop_reason": "stop"}
+
+    output = tmp_path / "labels.jsonl"
+    result = label127.label_items([item], output, "ds", workers=1,
+                                  request_fn=request, sleep_fn=lambda _seconds: None)
+    latest = label127._latest_labels(output)[item["public"]["item_id"]]
+    assert result["pending"] == 1
+    assert result["retry_passes"] == 1
+    assert result["error_rows"] == 0
+    assert len(calls) == 3
+    assert label127.current_label(item, latest)
+
+
+def test_label_items_exits_with_unread_ids_after_three_extra_passes(tmp_path):
+    item = label127.known_items(label127.read_known())[0]
+    calls = []
+
+    def unread(_reader, _prompt):
+        calls.append(1)
+        return {"text": "", "stop_reason": "stop"}
+
+    with pytest.raises(RuntimeError) as error:
+        label127.label_items([item], tmp_path / "labels.jsonl", "ds", workers=1,
+                             request_fn=unread, sleep_fn=lambda _seconds: None)
+    assert label127.MAX_RETRY_PASSES == 3
+    assert len(calls) == label127.MAX_ATTEMPTS * (label127.MAX_RETRY_PASSES + 1)
+    assert item["public"]["item_id"] in str(error.value)
 
 
 def test_label_main_runs_known_gate_and_resumes_cached_reads(tmp_path):
@@ -887,6 +970,7 @@ _SCRATCH_FILES = (
     "part119b/run119b.py", "part119b/rows119b.py", "part119b/gate119b.py",
     "part119c/run119c.py", "part119c/rows119c.py", "part120/run120.py",
     "part85/checkpoints.py", "judge_client.py",
+    "cloud/vast-part127-2026-10-30/vast.py",
     "results/part92/step2/neurons.json",
 )
 

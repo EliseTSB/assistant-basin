@@ -250,13 +250,16 @@ def _agreement(ds: dict[str, dict], luna: dict[str, dict], items: list[dict]) ->
             left.append(is_compound(a))
             right.append(is_compound(b))
     if not shared:
-        return {"n": 0, "raw_agreement": None, "kappa": None, "passed": False}
+        return {"n": 0, "total_items": len(items), "unread_items": len(items),
+                "raw_agreement": None, "kappa": None, "passed": False}
     raw = sum(a == b for a, b in zip(left, right)) / len(shared)
     p_a = sum(left) / len(left)
     p_b = sum(right) / len(right)
     expected = p_a * p_b + (1 - p_a) * (1 - p_b)
     kappa = None if expected == 1 else (raw - expected) / (1 - expected)
-    return {"n": len(shared), "raw_agreement": raw, "kappa": kappa,
+    return {"n": len(shared), "total_items": len(items),
+            "unread_items": len(items) - len(shared),
+            "raw_agreement": raw, "kappa": kappa,
             "thresholds": {"raw_agreement": 0.85, "kappa": 0.6},
             "passed": kappa is not None and raw >= 0.85 and kappa >= 0.6,
             "shared_item_ids": shared}
@@ -761,7 +764,8 @@ def render_markdown(result: dict) -> str:
         gate = result["gates"]["known_examples"][reader]
         lines.append(f"| {label127.READER_NAMES[reader]} | {gate['correct']}/{gate['total']} "
                      f"({'pass' if gate['passed'] else 'fail'}) |")
-    lines.extend(["", f"Compound-flag agreement: {agreement['raw_agreement']} raw over {agreement['n']} shared items; "
+    lines.extend(["", f"Compound-flag agreement: {agreement['raw_agreement']} raw over {agreement['n']} shared of "
+                  f"{agreement['total_items']} items; {agreement['unread_items']} unread; "
                   f"kappa {agreement['kappa']}; {'pass' if agreement['passed'] else 'fail'}.", "",
                   "## Rescue counts", "",
                   "A rescue is a coherent DeepSeek family mark on a joint arm when both half-dose single answers lack it. "

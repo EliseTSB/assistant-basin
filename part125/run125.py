@@ -13,6 +13,9 @@ import sys
 import time
 from pathlib import Path
 
+import faulthandler
+faulthandler.dump_traceback_later(240, repeat=True, file=sys.stderr)  # a hang leaves its stack in the step log
+
 if "--copy-engine" in sys.argv:  # Amendment 1: must be set before torch loads
     os.environ["UR_L0_USE_COPY_ENGINE"] = "1"
     os.environ["SYCL_PI_LEVEL_ZERO_USE_COPY_ENGINE"] = "1"

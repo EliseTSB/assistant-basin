@@ -29,6 +29,7 @@ READERS = ("ds", "luna")
 READER_NAMES = {"ds": "DeepSeek V4.1 Flash", "luna": "Luna"}
 KNOWN_PATH = "part92b/known92b.jsonl"
 MAX_ATTEMPTS = 2
+MAX_RETRY_PASSES = 3
 TRUNCATION_STOP_REASONS = {"max_tokens", "max_token", "length", "token_limit",
                            "max_output_tokens"}
 MAX_TOKENS = 16000
@@ -231,24 +232,41 @@ def label_items(items: list[dict], output: str | Path, reader: str, *, workers: 
                              **item["private"]} for item in items])
     existing = _latest_labels(output_path)
     pending = [item for item in items
-               if not (valid_label(existing.get(str(item["public"]["item_id"]), {}))
-                       and existing[str(item["public"]["item_id"])].get("answer_hash")
-                       == item["public"]["answer_hash"])]
+               if not current_label(item, existing.get(str(item["public"]["item_id"]))) ]
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    if pending:
-        order_rng = random.Random(12700 + (1 if reader == "ds" else 2))
-        order_rng.shuffle(pending)
+
+    def submit(todo: list[dict], pass_number: int) -> None:
+        if not todo:
+            return
+        order_rng = random.Random(12700 + (1 if reader == "ds" else 2) + pass_number * 10)
+        order_rng.shuffle(todo)
         with ThreadPoolExecutor(max_workers=workers) as pool:
             futures = [pool.submit(_label_one, item, reader, usage_path,
-                                  request_fn, sleep_fn) for item in pending]
+                                  request_fn, sleep_fn) for item in todo]
             for future in futures:
                 _append_jsonl(output_path, future.result())
+
+    retry_passes = 0
+    for pass_number in range(MAX_RETRY_PASSES + 1):
+        latest = _latest_labels(output_path)
+        unread = [item for item in items
+                  if not current_label(item, latest.get(str(item["public"]["item_id"]))) ]
+        if not unread:
+            break
+        if pass_number:
+            retry_passes = pass_number
+            print(f"P127 {reader} retry pass {pass_number}/{MAX_RETRY_PASSES}: "
+                  f"resubmitting {len(unread)} unread labels", flush=True)
+        submit(unread, pass_number)
+
     latest = _latest_labels(output_path)
-    errors = sum(not (valid_label(latest.get(str(item["public"]["item_id"]), {}))
-                      and latest[str(item["public"]["item_id"])].get("answer_hash")
-                      == item["public"]["answer_hash"]) for item in items)
+    unread_ids = [str(item["public"]["item_id"]) for item in items
+                  if not current_label(item, latest.get(str(item["public"]["item_id"]))) ]
+    if unread_ids:
+        raise RuntimeError(f"{reader} labels remain unread after {MAX_RETRY_PASSES} extra retry passes: "
+                           + ", ".join(unread_ids))
     return {"reader": reader, "items": len(items), "pending": len(pending),
-            "error_rows": errors, "output": str(output_path),
+            "retry_passes": retry_passes, "error_rows": 0, "output": str(output_path),
             "usage_sidecar": str(usage_path), "keys_sidecar": str(key_path)}
 
 

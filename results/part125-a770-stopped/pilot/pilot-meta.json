@@ -1,0 +1,89 @@
+{
+  "stage": "pilot",
+  "status": "complete",
+  "units": 2,
+  "expected_units": 2,
+  "completed_units": 2,
+  "expected_unit_ids": [
+    "p92-02",
+    "p92-08"
+  ],
+  "unit_ids": [
+    "p92-02",
+    "p92-08"
+  ],
+  "slot_only": false,
+  "answers": 40,
+  "distinct_generations_expected": 36,
+  "reader_free_scores": 10,
+  "random_pairs": 6,
+  "cache_sanity_comparisons": 10,
+  "determinism_units": 2,
+  "zero_hook_checks": 10,
+  "zero_hook_equal": 10,
+  "ledger_checks": 10,
+  "elapsed_seconds": 702.34,
+  "transformers_version": "5.13.0",
+  "parameters": {
+    "unit_parameters": {
+      "model_snapshot": "E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e",
+      "device": "xpu",
+      "transformers_version": "5.13.0",
+      "max_new_tokens": 120,
+      "medians_sha256": "a4c911d651860478d4ebbae44fe3ec22fdbadf3a3119654d36446dc55783e76d"
+    },
+    "slot_only": false,
+    "copy_engine": true,
+    "selected_unit_ids": [
+      "p92-02",
+      "p92-08"
+    ]
+  },
+  "pilot_size_decision": {
+    "pilot_units": [
+      "p92-02",
+      "p92-08"
+    ],
+    "elapsed_seconds": 702.34,
+    "projected_units": 29,
+    "projected_seconds": 10183.88,
+    "projected_minutes": 169.73,
+    "over_90_minutes": true,
+    "required_main_cut": "21 slot units",
+    "decision_fixed_before_labels": true
+  },
+  "pilot_push_effect_checks": [
+    {
+      "unit_id": "p92-02",
+      "layer": 3,
+      "neuron": 2628,
+      "question": "Who are you?",
+      "target": "last prompt token at the hooked layer",
+      "logits_differ": true,
+      "plain_logit_sha256": "bfaab649c6af5ef55c37405850703b4fafba1bbc4856303908d9a152490f19ce",
+      "hooked_logit_sha256": "936021929a04310fa14400e5411902b0bd4b5fc70881454041ee570a83b87f06",
+      "intended_push_norm": 5.905487060546875,
+      "observed_target_shift_norm": 5.905129909515381,
+      "target_max_abs_error": 0.00390625,
+      "tolerance": 0.05,
+      "passed": true
+    },
+    {
+      "unit_id": "p92-08",
+      "layer": 4,
+      "neuron": 5154,
+      "question": "Who are you?",
+      "target": "last prompt token at the hooked layer",
+      "logits_differ": true,
+      "plain_logit_sha256": "bfaab649c6af5ef55c37405850703b4fafba1bbc4856303908d9a152490f19ce",
+      "hooked_logit_sha256": "a82effa96824ea2b1307525c2b3e7a2a408b993363b147b34705f79d95b5b394",
+      "intended_push_norm": 7.2377495765686035,
+      "observed_target_shift_norm": 7.23700475692749,
+      "target_max_abs_error": 0.00537109375,
+      "tolerance": 0.05,
+      "passed": true
+    }
+  ],
+  "pilot_push_effect_gate_passed": true,
+  "model_load": "common92.load_model(snapshot, device); local_files_only=True; bf16; eval; requires_grad_(False)"
+}
