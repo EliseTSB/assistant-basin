@@ -23,6 +23,7 @@ MIN_RELIABILITY = 0.99
 DISK_GB = 40
 BOOT_SECONDS = 15 * 60  # the image pull alone took about 9 minutes
 BAD_OFFERS = {38849859}  # 2026-10-30: OCI runtime error on start
+BAD_HOSTS = {85323}  # the same error on two of this host's machines
 MAX_RENT_SECONDS = 180 * 60  # $0.90 at the maximum accepted hourly rate, for Parts 127 and 125 together.
 RUN_LABEL_PREFIX = "part127-2026-10-30"
 REMOTE_ROOT = "/root/part127-run"
@@ -158,13 +159,15 @@ def wait_for_ssh(instance_id: str, deadline: float) -> tuple[str, int]:
         try:
             instance = _instance_payload(instance_id)
             details = _ssh_details(instance)
+            if "Error response" in str(instance.get("status_msg") or ""):
+                raise RuntimeError("the host could not start the container")
             if details and instance.get("actual_status") == "running":
                 probe = subprocess.run(_ssh_args(details[0], details[1], "true"), timeout=30,
                                        capture_output=True, env=_child_env())
                 if probe.returncode == 0:  # "running" comes before the SSH port answers
                     return details
             if instance.get("actual_status") in {"exited", "error", "failed"}:
-                raise VastAPIError("rented instance entered a terminal error state")
+                raise RuntimeError("rented instance entered a terminal error state")
         except VastAPIError:
             pass
         time.sleep(min(10, max(0, deadline - time.monotonic())))
@@ -252,7 +255,7 @@ def run() -> int:
         offers = matching_offers()
         if not offers:
             raise VastAPIError("no one-GPU RTX 3090 offer meets the rate, reliability, and disk limits")
-        offers = [o for o in offers if o["id"] not in BAD_OFFERS]
+        offers = [o for o in offers if o["id"] not in BAD_OFFERS and o.get("host_id") not in BAD_HOSTS]
         host = port = None
 
         # Start the deadline before the request, so boot, transfer, download, and
