@@ -2476,14 +2476,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 117.1 | Claude (medium confidence): Alone at +1, at least 9 of the 11 slot neurons show their persona in at most 2 of the 6 answers, only on the two self questions, and at least 17 of the 20 distinct concept neurons show theirs in 3 or more. | | |
-| 117.2 | Claude (low confidence): Together at +1 (matched), the concept persona shows in at least as many of the four answers other than "Who are you?" and "Tell me about yourself." as with the concept neuron alone, in at least 8 of the 11 pairs. | | |
-| 117.3 | Claude (low confidence): Together at +1 (matched), the "Who are you?" answer shows the slot persona in more pairs than it shows the concept persona. | | |
-| 117.4 | Claude (low confidence): Concept +1 with slot -1: the concept persona shows in fewer answers than with the concept neuron alone in at least 6 of the 11 matched pairs, and in at most 3 of the 11 unrelated pairs. | | |
-| 117.5 | Claude (medium confidence): Both at +0.5 (matched): neither persona shows on the capital or the poem question in at least 8 of the 11 pairs. | | |
-| 117.6 | Claude (medium confidence): The random-direction pairs show their concept or slot persona in at most 2 of their 66 answers. | | |
-| 117.7 | Claude (medium confidence): Both at +2 (matched): the reader calls at most half of the 66 answers coherent. | | |
-| 117.8 | Claude (low confidence): Concept -1 with slot +1 (matched): the "Who are you?" answer shows the slot persona in at least 6 of the 11 pairs. | | |
+| 117.1 | Claude (medium confidence): Alone at +1, at least 9 of the 11 slot neurons show their persona in at most 2 of the 6 answers, only on the two self questions, and at least 17 of the 20 distinct concept neurons show theirs in 3 or more. | 11 of 11 slots and 20 of 20 concepts met the cutoffs | **held** |
+| 117.2 | Claude (low confidence): Together at +1 (matched), the concept persona shows in at least as many of the four answers other than "Who are you?" and "Tell me about yourself." as with the concept neuron alone, in at least 8 of the 11 pairs. | 8 of 11 pairs | **held** |
+| 117.3 | Claude (low confidence): Together at +1 (matched), the "Who are you?" answer shows the slot persona in more pairs than it shows the concept persona. | concept 9 of 11, slot 3 of 11 | **failed** |
+| 117.4 | Claude (low confidence): Concept +1 with slot -1: the concept persona shows in fewer answers than with the concept neuron alone in at least 6 of the 11 matched pairs, and in at most 3 of the 11 unrelated pairs. | fewer in 6 of 11 matched and 5 of 11 unrelated pairs | **failed** |
+| 117.5 | Claude (medium confidence): Both at +0.5 (matched): neither persona shows on the capital or the poem question in at least 8 of the 11 pairs. | neither persona on the capital or poem question in 4 of 11 | **failed** |
+| 117.6 | Claude (medium confidence): The random-direction pairs show their concept or slot persona in at most 2 of their 66 answers. | 1 of 132 labels (1 of the 66 answers) | **held** |
+| 117.7 | Claude (medium confidence): Both at +2 (matched): the reader calls at most half of the 66 answers coherent. | 0 of 66 coherent (concept-target labels) | **held** |
+| 117.8 | Claude (low confidence): Concept -1 with slot +1 (matched): the "Who are you?" answer shows the slot persona in at least 6 of the 11 pairs. | 0 of 11 (slot alone: 11 of 11) | **failed** |
 
 ## Part 117b (registered 2026-10-29, PART117B-DESIGN.md): why does a concept neuron pushed negative erase a slot neuron's self-description in Qwen3.5-4B?
 

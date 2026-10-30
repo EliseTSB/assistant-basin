@@ -1,0 +1,595 @@
+{
+ "gate_slot_kinds_reproduced": true,
+ "uninterpretable_units": [],
+ "pairs_ok": 11,
+ "who_both1": {
+  "slot": 3,
+  "concept": 9
+ },
+ "fewer_with_slot_minus": {
+  "matched": 6,
+  "unrelated": 5
+ },
+ "random_shows": [
+  1,
+  132
+ ],
+ "both2_coherent": [
+  0,
+  66
+ ],
+ "labels_missing": 2,
+ "verdicts": {
+  "117.1": "held",
+  "117.2": "held",
+  "117.3": "failed",
+  "117.4": "failed",
+  "117.5": "failed",
+  "117.6": "held",
+  "117.7": "held",
+  "117.8": "failed"
+ },
+ "pairs": {
+  "p01": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 6,
+   "unrelated_alone": 5,
+   "both1_concept_other": 4,
+   "concept_alone_other": 4,
+   "both1_who": [
+    true,
+    true
+   ],
+   "cplus_sminus": 6,
+   "u_cplus_sminus": 6,
+   "half_nonself": [
+    false,
+    true,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p02": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 6,
+   "unrelated_alone": 6,
+   "both1_concept_other": 3,
+   "concept_alone_other": 4,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 0,
+   "u_cplus_sminus": 5,
+   "half_nonself": [
+    true,
+    false,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p03": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 6,
+   "unrelated_alone": 6,
+   "both1_concept_other": 4,
+   "concept_alone_other": 4,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 6,
+   "u_cplus_sminus": 6,
+   "half_nonself": [
+    false,
+    true,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p04": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 3,
+   "unrelated_alone": 6,
+   "both1_concept_other": 0,
+   "concept_alone_other": 1,
+   "both1_who": [
+    false,
+    true
+   ],
+   "cplus_sminus": 1,
+   "u_cplus_sminus": 6,
+   "half_nonself": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p05": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 5,
+   "unrelated_alone": 6,
+   "both1_concept_other": 3,
+   "concept_alone_other": 3,
+   "both1_who": [
+    true,
+    true
+   ],
+   "cplus_sminus": 4,
+   "u_cplus_sminus": 5,
+   "half_nonself": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p06": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 6,
+   "unrelated_alone": 6,
+   "both1_concept_other": 4,
+   "concept_alone_other": 4,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 6,
+   "u_cplus_sminus": 5,
+   "half_nonself": [
+    false,
+    true,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p07": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 5,
+   "unrelated_alone": 6,
+   "both1_concept_other": 4,
+   "concept_alone_other": 3,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 4,
+   "u_cplus_sminus": 6,
+   "half_nonself": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p08": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 5,
+   "unrelated_alone": 6,
+   "both1_concept_other": 4,
+   "concept_alone_other": 3,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 6,
+   "u_cplus_sminus": 5,
+   "half_nonself": [
+    false,
+    true,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p09": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 5,
+   "unrelated_alone": 4,
+   "both1_concept_other": 3,
+   "concept_alone_other": 3,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 5,
+   "u_cplus_sminus": 5,
+   "half_nonself": [
+    true,
+    false,
+    true,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "p10": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 5,
+   "unrelated_alone": 6,
+   "both1_concept_other": 1,
+   "concept_alone_other": 3,
+   "both1_who": [
+    false,
+    false
+   ],
+   "cplus_sminus": 3,
+   "u_cplus_sminus": 6,
+   "half_nonself": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "p11": {
+   "uninterpretable": false,
+   "uninterpretable_unrelated": false,
+   "slot_alone": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "concept_alone": 6,
+   "unrelated_alone": 6,
+   "both1_concept_other": 4,
+   "concept_alone_other": 4,
+   "both1_who": [
+    true,
+    false
+   ],
+   "cplus_sminus": 5,
+   "u_cplus_sminus": 4,
+   "half_nonself": [
+    false,
+    true,
+    false,
+    false
+   ],
+   "both2_coherent": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "cminus_splus_who": false,
+   "random": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  }
+ }
+}

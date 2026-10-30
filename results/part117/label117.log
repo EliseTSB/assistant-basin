@@ -1,0 +1,5 @@
+{"answers": 1638, "pending": 1638, "output": "results/part117/labels.jsonl"}
+{"answers": 1638, "pending": 7, "output": "results/part117/labels.jsonl"}
+{"answers": 164, "pending": 164, "output": "results/part117/labels_second.jsonl"}
+{'n': 164, 'agree': 156, 'rate': 0.9512195121951219, 'haiku_yes_opus_no': 5, 'haiku_no_opus_yes': 3}
+rc=0 20:47:11

@@ -1,0 +1,2 @@
+{"gate_slot_kinds_reproduced": true, "uninterpretable_units": [], "pairs_ok": 11, "who_both1": {"slot": 3, "concept": 9}, "fewer_with_slot_minus": {"matched": 6, "unrelated": 5}, "random_shows": [1, 132], "both2_coherent": [0, 66], "labels_missing": 2, "verdicts": {"117.1": "held", "117.2": "held", "117.3": "failed", "117.4": "failed", "117.5": "failed", "117.6": "held", "117.7": "held", "117.8": "failed"}}
+CHAIN-RC=0
