@@ -112,3 +112,12 @@ One model, 11 pairs chosen by Part 112's atlas, one question for the predictions
 at one baseline dose. The units were selected at +1, so some slot personas may sit lower than others, and a pair is one
 answer. A second push also adds size, which the random and plain-neuron arms control only in part: they match written size,
 not effect. Nothing here says how the concept neuron acts, or what happens at other doses.
+
+## Amendment 1 (2026-10-30 11:13 CT, before any Part 121 data)
+
+The review found that gate 4 cannot pass when the second reader's sample holds no positive: kappa is undefined. A uniform 10%
+sample has a 0.31 to 0.38 chance of that if gate 2 only just passes. The second reader's sample is now stratified, after
+DeepSeek's labels are in and before Luna reads anything: every answer DeepSeek marks as showing the persona, plus a seeded
+draw (seed 12103) of its other answers until the sample holds twice the positives or 33 answers, whichever is larger. The
+thresholds do not change (at least 85% raw agreement, kappa at least 0.6). The sample is enriched for positives, so the
+write-up reports its agreement as agreement on that sample, not on all 330 answers. No prediction changes.
