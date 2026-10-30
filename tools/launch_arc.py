@@ -14,6 +14,8 @@ must match only new lines.
 CPU mode writes the command to results/partNN/run-<tag>.sh (systemd-run expands $ in an inline command; a script file
 is not expanded) and starts it as a systemd user unit with a memory cap, output appended to results/partNN/<tag>.log.
 A systemd user unit gets the user manager's environment, not this shell's: give interpreters by full path.
+API keys are missing there too (OPENCODE_GO_API_KEY, 2026-10-29: 90 calibration calls all failed): read a key
+from its env file inside the command at run time, never pass its value on the command line.
 
 Either way the check runs first, and --override "reason" launches after a failed check. Every launch (overrides
 included) is appended to results/partNN/launch.jsonl. Local paths come from tools/local.json (gitignored) or the

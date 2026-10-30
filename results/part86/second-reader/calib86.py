@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import threading
 from collections import Counter
@@ -80,6 +81,10 @@ def make_request(reader: str, usage_path: Path):
 
 
 def label(reader: str, items: Path, out: Path, workers: int | None) -> dict:
+    if READERS[reader]["route"] == "ocgo" and not os.environ.get("OPENCODE_GO_API_KEY"):
+        # 2026-10-29: a launch_arc.py unit has no OPENCODE_GO_API_KEY, and the retry loop turned that into 90
+        # error rows over three minutes. Stop at once instead.
+        raise SystemExit("STOP: OPENCODE_GO_API_KEY is not set (read it from its env file in the run command)")
     usage_path = out.with_name(out.name.replace(".jsonl", ".usage.jsonl"))
     return second86.label_items(
         items,
