@@ -1,0 +1,38 @@
+{
+  "stage": "main",
+  "seed": 11906,
+  "rows": 312,
+  "first_units": 39,
+  "batch": 8,
+  "device": "xpu",
+  "doses": [
+    0.8,
+    0.4,
+    0.2,
+    0.1,
+    0.05
+  ],
+  "runs": [
+    {
+      "dtype": "float32",
+      "output": "results\\part119c\\interaction-float32.jsonl",
+      "model_parameter_dtype": "torch.float32",
+      "rows_expected": 312,
+      "doses": [
+        0.8,
+        0.4,
+        0.2,
+        0.1,
+        0.05
+      ],
+      "path2": {
+        "rows_new": 1560,
+        "logical_passes": 3354,
+        "seconds": 186.8708168000012,
+        "batch": 8
+      },
+      "elapsed_seconds": 196.71652709999762
+    }
+  ],
+  "elapsed_seconds": 196.93076380000275
+}

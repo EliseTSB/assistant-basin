@@ -1,0 +1,13 @@
+{"correct": 12, "total": 12, "passed": true, "reader": "ds", "items": 12, "pending": 0, "error_rows": 0, "retry_items": 0, "output": "/home/elisepc/green/worktrees/ab-part67/results/part119b/known-ds.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part119b/known-ds.jsonl.usage.jsonl"}
+{"correct": 12, "total": 12, "passed": true, "reader": "luna", "items": 12, "pending": 0, "error_rows": 0, "retry_items": 1, "output": "/home/elisepc/green/worktrees/ab-part67/results/part119b/known-luna.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part119b/known-luna.jsonl.usage.jsonl"}
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part67/part119b/label119b.py", line 158, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part67/part119b/label119b.py", line 144, in main
+    items = sample_items(args.answers, args.prior_keys, args.neurons,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part67/part119b/label119b.py", line 70, in sample_items
+    raise ValueError(f"0.4 reader answer row {dose_row_id!r} is missing")
+ValueError: 0.4 reader answer row 'control@0.4:p92-11+Rp92-46' is missing
+rc=1 08:14:32

@@ -1,0 +1,21 @@
+{
+  "stage": "main",
+  "answers_new": 5127,
+  "answer_seconds": 928.40408,
+  "gate1_passed": true,
+  "gate_seconds": 5.72964,
+  "path2": {
+    "rows_new": 11856,
+    "logical_passes": 23907,
+    "seconds": 800.40683,
+    "batch": 8
+  },
+  "path1": {
+    "rows_new": 741,
+    "logical_passes": 2964,
+    "seconds": 23.50793
+  },
+  "push_norm_rows": 741,
+  "batch": 64,
+  "path2_batch": 8
+}

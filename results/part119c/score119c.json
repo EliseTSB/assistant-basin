@@ -1,0 +1,526 @@
+{
+  "part": "119c",
+  "selected_rows_expected": 312,
+  "selected_rows_by_class": {
+    "real": 156,
+    "control": 156
+  },
+  "gates": {
+    "gate1": {
+      "name": "bf16 versus Part 119b",
+      "passed": true,
+      "threshold": {
+        "median_relative_nPair_difference_below": 0.01
+      },
+      "by_dose": {
+        "0.2": {
+          "median_relative_nPair_difference": 0.0,
+          "rows_compared": 312,
+          "expected_rows": 312,
+          "complete": true,
+          "passed": true
+        },
+        "0.4": {
+          "median_relative_nPair_difference": 0.0,
+          "rows_compared": 312,
+          "expected_rows": 312,
+          "complete": true,
+          "passed": true
+        },
+        "0.8": {
+          "median_relative_nPair_difference": 0.0,
+          "rows_compared": 312,
+          "expected_rows": 312,
+          "complete": true,
+          "passed": true
+        }
+      },
+      "median_relative_nPair_difference_all_checked_rows": 0.0,
+      "missing_rows": [],
+      "missing_row_count": 0,
+      "position_mismatch_rows": [],
+      "position_mismatch_count": 0,
+      "zero_reference_nonzero_rows": [],
+      "zero_reference_nonzero_count": 0
+    },
+    "gate2": {
+      "name": "float32 versus bf16",
+      "passed": true,
+      "threshold": {
+        "median_relative_nPair_difference_below": 0.05
+      },
+      "by_dose": {
+        "0.8": {
+          "median_relative_nPair_difference": 0.003508571420064779,
+          "rows_compared": 312,
+          "expected_rows": 312,
+          "complete": true,
+          "passed": true
+        }
+      },
+      "median_relative_nPair_difference_all_checked_rows": 0.003508571420064779,
+      "missing_rows": [],
+      "missing_row_count": 0,
+      "position_mismatch_rows": [],
+      "position_mismatch_count": 0,
+      "zero_reference_nonzero_rows": [],
+      "zero_reference_nonzero_count": 0,
+      "dtype_evidence": {
+        "float32_file": {
+          "expected_model_dtype": "float32",
+          "expected_model_parameter_dtype": "torch.float32",
+          "observed_model_dtypes": [
+            "float32"
+          ],
+          "observed_model_parameter_dtypes": [
+            "torch.float32"
+          ],
+          "rows_checked": 1560,
+          "passed": true
+        },
+        "bf16_file": {
+          "expected_model_dtype": "bf16",
+          "expected_model_parameter_dtype": "torch.bfloat16",
+          "observed_model_dtypes": [
+            "bf16"
+          ],
+          "observed_model_parameter_dtypes": [
+            "torch.bfloat16"
+          ],
+          "rows_checked": 1560,
+          "passed": true
+        }
+      },
+      "all_0.8_nPair_identical_by_position": false
+    },
+    "all_passed": true
+  },
+  "per_dose": [
+    {
+      "dtype": "bf16",
+      "dose": 0.05,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 1115,
+      "share_positions_nPair_below_one": 0.5423151750972762,
+      "median_nI": 0.23457,
+      "median_nPair": 0.9486950000000001,
+      "median_nA": 0.6755599999999999,
+      "median_n2": 0.5942000000000001,
+      "median_share_over_positions": 0.06139366373667279,
+      "median_row_share": 0.07340080175219624
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.05,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 1240,
+      "share_positions_nPair_below_one": 0.603112840466926,
+      "median_nI": 0.22915000000000002,
+      "median_nPair": 0.8873800000000001,
+      "median_nA": 0.663565,
+      "median_n2": 0.5496650000000001,
+      "median_share_over_positions": 0.0663185986809681,
+      "median_row_share": 0.08229349873336977
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.1,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 99,
+      "share_positions_nPair_below_one": 0.04815175097276265,
+      "median_nI": 0.355745,
+      "median_nPair": 2.011195,
+      "median_nA": 1.404285,
+      "median_n2": 1.223495,
+      "median_share_over_positions": 0.033926073328063,
+      "median_row_share": 0.03974928944280323
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.1,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 146,
+      "share_positions_nPair_below_one": 0.07101167315175097,
+      "median_nI": 0.33602,
+      "median_nPair": 1.84578,
+      "median_nA": 1.382705,
+      "median_n2": 1.076275,
+      "median_share_over_positions": 0.035419484592639494,
+      "median_row_share": 0.04223384897910815
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.2,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 1.803725,
+      "median_nPair": 5.02565,
+      "median_nA": 3.344905,
+      "median_n2": 2.96421,
+      "median_share_over_positions": 0.13203555201524209,
+      "median_row_share": 0.1616346660348983
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.2,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 1.5092400000000001,
+      "median_nPair": 4.42893,
+      "median_nA": 3.294135,
+      "median_n2": 2.3334799999999998,
+      "median_share_over_positions": 0.1216579831442334,
+      "median_row_share": 0.14140431397665026
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.4,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 6.037895,
+      "median_nPair": 11.202365,
+      "median_nA": 7.795975,
+      "median_n2": 7.317215,
+      "median_share_over_positions": 0.264667210765615,
+      "median_row_share": 0.3044900093450095
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.4,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 5.24774,
+      "median_nPair": 9.918610000000001,
+      "median_nA": 7.65353,
+      "median_n2": 5.588595,
+      "median_share_over_positions": 0.27539731579610804,
+      "median_row_share": 0.3184558021538011
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.8,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 14.097214999999998,
+      "median_nPair": 22.659795,
+      "median_nA": 15.49392,
+      "median_n2": 17.349165,
+      "median_share_over_positions": 0.40259118502294067,
+      "median_row_share": 0.4406255790379524
+    },
+    {
+      "dtype": "bf16",
+      "dose": 0.8,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 11.378285,
+      "median_nPair": 19.957355,
+      "median_nA": 15.376035,
+      "median_n2": 11.666695,
+      "median_share_over_positions": 0.32893131057655944,
+      "median_row_share": 0.3507697751614942
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.05,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 1174,
+      "share_positions_nPair_below_one": 0.5710116731517509,
+      "median_nI": 0.057415,
+      "median_nPair": 0.929435,
+      "median_nA": 0.6563950000000001,
+      "median_n2": 0.566525,
+      "median_share_over_positions": 0.003891812180287511,
+      "median_row_share": 0.00454674751900166
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.05,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 1277,
+      "share_positions_nPair_below_one": 0.6211089494163424,
+      "median_nI": 0.053135,
+      "median_nPair": 0.859175,
+      "median_nA": 0.64841,
+      "median_n2": 0.5169349999999999,
+      "median_share_over_positions": 0.003782972742655882,
+      "median_row_share": 0.0046077286470220915
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.1,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 102,
+      "share_positions_nPair_below_one": 0.04961089494163424,
+      "median_nI": 0.25477,
+      "median_nPair": 1.99267,
+      "median_nA": 1.38294,
+      "median_n2": 1.20473,
+      "median_share_over_positions": 0.017710517672604145,
+      "median_row_share": 0.020093756702493668
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.1,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 160,
+      "share_positions_nPair_below_one": 0.07782101167315175,
+      "median_nI": 0.23108,
+      "median_nPair": 1.8385349999999998,
+      "median_nA": 1.375275,
+      "median_n2": 1.0581450000000001,
+      "median_share_over_positions": 0.01721673563362939,
+      "median_row_share": 0.020812549637322132
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.2,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 1.77989,
+      "median_nPair": 5.0188,
+      "median_nA": 3.3400499999999997,
+      "median_n2": 2.9439900000000003,
+      "median_share_over_positions": 0.12842197417658485,
+      "median_row_share": 0.1534141854041201
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.2,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 1.479895,
+      "median_nPair": 4.431405,
+      "median_nA": 3.2784899999999997,
+      "median_n2": 2.33485,
+      "median_share_over_positions": 0.11684013301786537,
+      "median_row_share": 0.13914282287894295
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.4,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 6.02178,
+      "median_nPair": 11.23592,
+      "median_nA": 7.84258,
+      "median_n2": 7.304345,
+      "median_share_over_positions": 0.2684048584168226,
+      "median_row_share": 0.29487042085946114
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.4,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 5.226369999999999,
+      "median_nPair": 9.931605000000001,
+      "median_nA": 7.66327,
+      "median_n2": 5.62552,
+      "median_share_over_positions": 0.274634775117641,
+      "median_row_share": 0.32240497908340926
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.8,
+      "kind": "real",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 14.11354,
+      "median_nPair": 22.58318,
+      "median_nA": 15.488165,
+      "median_n2": 17.37587,
+      "median_share_over_positions": 0.4026612782426241,
+      "median_row_share": 0.44314471116064547
+    },
+    {
+      "dtype": "float32",
+      "dose": 0.8,
+      "kind": "control",
+      "rows": 156,
+      "rows_with_share": 156,
+      "positions": 2056,
+      "positions_with_nPair_above_zero": 2056,
+      "positions_nPair_below_one": 0,
+      "share_positions_nPair_below_one": 0.0,
+      "median_nI": 11.381885,
+      "median_nPair": 19.999495,
+      "median_nA": 15.421624999999999,
+      "median_n2": 11.70401,
+      "median_share_over_positions": 0.3270214424287217,
+      "median_row_share": 0.3555862092817637
+    }
+  ],
+  "predictions": [
+    {
+      "id": "119c.1",
+      "threshold": "At 0.2, absolute difference between median row shares <= 0.04 and the product-weighted 95% unit-bootstrap interval for that same difference lies in [-0.06, 0.06].",
+      "observed": {
+        "bf16_median_row_share": 0.1616346660348983,
+        "float32_median_row_share": 0.1534141854041201,
+        "median_difference_float32_minus_bf16": -0.008220480630778182,
+        "paired_rows": 156,
+        "bootstrap": {
+          "difference_of_median_row_shares": -0.008220480630778182,
+          "ci95_product_weighted_difference_of_median_row_shares": [
+            -0.021297478087482197,
+            0.012508900930312695
+          ],
+          "ci95_sum_weighted_difference_of_median_row_shares": [
+            -0.014342926597370853,
+            0.009602651155421332
+          ],
+          "draws": 2000,
+          "seed": 11902,
+          "units": 39,
+          "rows": 156
+        }
+      },
+      "verdict": "holds"
+    },
+    {
+      "id": "119c.2",
+      "threshold": "Float32 real median row share <= 0.10 at 0.1 and <= 0.05 at 0.05.",
+      "observed": {
+        "float32_real_median_row_share_0.1": 0.020093756702493668,
+        "float32_real_median_row_share_0.05": 0.00454674751900166
+      },
+      "verdict": "holds"
+    },
+    {
+      "id": "119c.3",
+      "threshold": "Float32 real endpoint log-log slope log(S(0.2)/S(0.05))/log(4) >= 1.5.",
+      "observed": {
+        "doses": [
+          0.05,
+          0.2
+        ],
+        "median_row_shares": [
+          0.00454674751900166,
+          0.1534141854041201
+        ],
+        "log_log_slope": 2.5382265919006235
+      },
+      "verdict": "holds"
+    },
+    {
+      "id": "119c.4",
+      "threshold": "At each of 0.05, 0.1, and 0.2, float32 real median row share is within a factor of 1.25 of control.",
+      "observed": {
+        "dose_comparisons": [
+          {
+            "dose": 0.05,
+            "real_median_row_share": 0.00454674751900166,
+            "control_median_row_share": 0.0046077286470220915,
+            "larger_to_smaller_factor": 1.013412033055625,
+            "within_factor_1.25": true
+          },
+          {
+            "dose": 0.1,
+            "real_median_row_share": 0.020093756702493668,
+            "control_median_row_share": 0.020812549637322132,
+            "larger_to_smaller_factor": 1.0357719537202947,
+            "within_factor_1.25": true
+          },
+          {
+            "dose": 0.2,
+            "real_median_row_share": 0.1534141854041201,
+            "control_median_row_share": 0.13914282287894295,
+            "larger_to_smaller_factor": 1.1025662857048224,
+            "within_factor_1.25": true
+          }
+        ]
+      },
+      "verdict": "holds"
+    }
+  ],
+  "headline": "Part 119b's low-dose share is not a rounding floor; the interaction shrinks toward zero with dose, and at 0.2 it is already measurable where answers do not break.",
+  "bootstrap_definition": "Part 119 unit bootstrap (2,000 draws, seed 11902); each draw recomputes the difference of the two median row shares. Product weighting is primary and sum weighting is the sensitivity interval.",
+  "readout": "Share includes positions with nPair > 0; each row is the median of those positions; summary is the median of row values."
+}

@@ -1,0 +1,53 @@
+{
+  "stage": "pilot",
+  "answers_new": 450,
+  "answer_seconds": 249.1281,
+  "gate1_passed": true,
+  "gate2_sample_passed": true,
+  "gate2": {
+    "passed": true,
+    "complete": true,
+    "reason": null,
+    "failure_reasons": [],
+    "expected_rows": {
+      "real": 16,
+      "control": 16
+    },
+    "rows_compared": {
+      "real": 16,
+      "control": 16
+    },
+    "missing_row_count": 0,
+    "position_list_mismatch_rows": 0,
+    "class_thresholds_passed": {
+      "real": true,
+      "control": true
+    },
+    "median_relative_nPair_difference": 0.00195,
+    "relative_nPair_rows_compared": 32,
+    "nPair_threshold": 0.01
+  },
+  "part119_reference": {
+    "path": "results/part119/interaction.jsonl",
+    "row_count": 2964,
+    "sha256": "89cee0f0114d464c3405d21982beb753a2eeb977c771562198bd06c370104c56"
+  },
+  "gate2_failure_reason": null,
+  "path2_batch_timings": [
+    {
+      "rows_new": 64,
+      "logical_passes": 134,
+      "seconds": 10.31974,
+      "batch": 1
+    },
+    {
+      "rows_new": 64,
+      "logical_passes": 134,
+      "seconds": 5.91485,
+      "batch": 8
+    }
+  ],
+  "path2_batch_selected": 8,
+  "projected_new_answer_bytes": 231295,
+  "gate_seconds": 5.69343
+}

@@ -2320,7 +2320,7 @@ their observed rate) says a true excess of 12 would pass only about half the tim
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
 
-### Parts 85 to 119: results in their own folders
+### Parts 85 to 119c: results in their own folders
 
 **Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
 
@@ -2409,6 +2409,10 @@ independently rests on their instructions, not on anything the files can show.
 **Part 118**, registered 2026-10-30; labels pending. This OLMo 2 1B study compares slot and concept classifications across alpha 0.4, 0.8, 1.6 and 3.2, using six questions and random-direction controls. There is no results README yet, and all eight registered predictions remain pending.
 
 **[Part 119](results/part119/README.md)**, 2026-10-30. All 741 pairs of OLMo 2 1B's 39 persona neurons, pushed at alpha 0.8 each on "Who are you?". On positions where the two single pushes' top tokens differ, adding the two single effects matched the pair's token at a mean row rate of 24.4%, against 60% predicted, and the median interaction share was 0.47. The interaction was about as large with a random second push matched on single-effect size (ratio 1.04, interval 0.96 to 1.13). Concept units beat slot units in 90 of 137 decided pairs by token count. Pair answers broke often at this dose (48% by the triage rule; a reader marked 15% of a sample coherent), so these are results about this dose.
+
+**[Part 119b](results/part119b/README.md)**, 2026-10-30. The same pair test at lower doses. At alpha 0.4 the triage rule marked 33 of 741 pair answers broken (4.5%), against 357 of 741 at 0.8, and 536 of 741 passed a text screen for assistant replies. One LLM reader marked 100 of 108 sampled answers coherent, mostly assistant replies. Two random pushes at 0.8 broke 286 of 741 answers. Gate 3 failed: the interaction share at 0.2 was 0.178 against a limit of 0.15, so four predictions are stopped, not read, and the headline rule returned no reading. Five predictions held and two failed.
+
+**[Part 119c](results/part119c/README.md)**, 2026-10-30. Float32 against bf16 on 312 of those rows, on fixed answer paths, with no answers generated. In float32 the interaction share is 0.153 at 0.2, 0.020 at 0.1 and 0.0045 at 0.05. In bf16 it is 0.162, 0.040 and 0.073, so bf16 has a rounding floor below 0.2. Rounding does not explain the share at 0.2, which stays above Gate 3's limit in both formats. On all positions, real and random second pushes stay within a factor of 1.25 at low doses; on the resolved positions at 0.05 the factor is 1.66. All four predictions held.
 
 ### Running or designed (2026-10-21)
 

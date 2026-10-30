@@ -2607,23 +2607,23 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 119b.1 | Claude (medium confidence): At 0.4 + 0.4, at most 10% of the 741 real pair answers are broken by the triage rule, and the reader marks at least 60% of the 108 sampled real pair answers coherent (16 of 108 at 0.8). | pending | pending |
-| 119b.2 | Claude (low confidence): At 0.8 + 0.8, at least 20% of the 741 random pair answers R_A+R_B are broken. | pending | pending |
-| 119b.3 | Claude (low confidence): At alpha 1.13, the combined size of two orthogonal pushes of 0.8, at least 30% of the 39 single neuron answers are broken. | pending | pending |
-| 119b.4 | Claude (medium confidence): On Path 2, the median row interaction share over the 1,482 real ordered pairs is at most 0.25 at 0.4. | pending | pending |
-| 119b.5 | Claude (medium confidence): On Path 2, the median row interaction share at 0.2 is at most half the share at 0.4. | pending | pending |
-| 119b.6 | Claude (medium confidence): On Path 2 at 0.4, both slopes add: the median row b_A and the median row b_2 over the 1,482 real ordered pairs both lie between 0.75 and 1.25. | pending | pending |
-| 119b.7 | Claude (medium confidence): On Path 2, on positions contested at both doses, the additive pair-top agreement at 0.4 minus at 0.8 is at least 20 points, with the unit bootstrap interval above 0, and the 0.4 agreement is at least 10 points above the plain baseline on the same positions. | pending | pending |
-| 119b.8 | Claude (low confidence): On the same positions at 0.4, additive agreement is at least 5 points above winner-take-all's, with the interval above 0. | pending | pending |
-| 119b.9 | Claude (low confidence): Effect-matched at 0.4, the interval of the mean real residual lies inside plus or minus log 1.25. | pending | pending |
-| 119b.10 | Claude (low confidence): At 0.8, the kind gap is positive in at least 60% of the 168 slot x concept pairs of agreed units, and the median absolute gap at 0.4 is at most half that at 0.8. | pending | pending |
-| 119b.11 | Claude (medium confidence): Across the 39 units, E and Part 119's dominance have a Spearman correlation of at least 0.5. | pending | pending |
+| 119b.1 | Claude (medium confidence): At 0.4 + 0.4, at most 10% of the 741 real pair answers are broken by the triage rule, and the reader marks at least 60% of the 108 sampled real pair answers coherent (16 of 108 at 0.8). | 33/741 broken (4.45%); reader 100/108 coherent (92.59%). | held |
+| 119b.2 | Claude (low confidence): At 0.8 + 0.8, at least 20% of the 741 random pair answers R_A+R_B are broken. | 286/741 broken (38.60%). | held |
+| 119b.3 | Claude (low confidence): At alpha 1.13, the combined size of two orthogonal pushes of 0.8, at least 30% of the 39 single neuron answers are broken. | 12/39 broken (30.77%); combined orthogonal norm 1.131. | held |
+| 119b.4 | Claude (medium confidence): On Path 2, the median row interaction share over the 1,482 real ordered pairs is at most 0.25 at 0.4. | 0.301924 versus 0.25; would fail. | stopped, not read by Gate 3 |
+| 119b.5 | Claude (medium confidence): On Path 2, the median row interaction share at 0.2 is at most half the share at 0.4. | 0.177643 at 0.2 versus half of 0.301924 (0.150962); would fail. | stopped, not read by Gate 3 |
+| 119b.6 | Claude (medium confidence): On Path 2 at 0.4, both slopes add: the median row b_A and the median row b_2 over the 1,482 real ordered pairs both lie between 0.75 and 1.25. | Median b_A=0.78656 and b_2=0.77930 over 1,482 rows. | held |
+| 119b.7 | Claude (medium confidence): On Path 2, on positions contested at both doses, the additive pair-top agreement at 0.4 minus at 0.8 is at least 20 points, with the unit bootstrap interval above 0, and the 0.4 agreement is at least 10 points above the plain baseline on the same positions. | Additive 0.425758 at 0.4 and 0.186229 at 0.8; difference 0.239529 versus 0.20; 95% interval 0.192669 to 0.288837; plain 0.213882 versus 0.10; would hold. | stopped, not read by Gate 3 |
+| 119b.8 | Claude (low confidence): On the same positions at 0.4, additive agreement is at least 5 points above winner-take-all's, with the interval above 0. | Additive 0.425758 versus winner-take-all 0.348349; difference 0.077409 versus 0.05; 95% interval 0.025659 to 0.126918; would hold. | stopped, not read by Gate 3 |
+| 119b.9 | Claude (low confidence): Effect-matched at 0.4, the interval of the mean real residual lies inside plus or minus log 1.25. | Mean residual 0.06771; ratio 1.07005, 95% ratio interval 0.93094 to 1.22011; 17,503/19,241 common-support positions kept (90.97%). | held |
+| 119b.10 | Claude (low confidence): At 0.8, the kind gap is positive in at least 60% of the 168 slot x concept pairs of agreed units, and the median absolute gap at 0.4 is at most half that at 0.8. | Positive gap in 122/168 pairs (72.62%); median absolute gaps 0.25770 at 0.4 and 0.33047 at 0.8. | failed |
+| 119b.11 | Claude (medium confidence): Across the 39 units, E and Part 119's dominance have a Spearman correlation of at least 0.5. | Spearman rho=0.099 across 39 units. | failed |
 
 ## Part 119c (registered 2026-10-30, PART119C-DESIGN.md): is the interaction share at low dose a rounding floor?
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 119c.1 | Claude (medium confidence): At 0.2, the float32 median row share over real rows is within 0.04 of the bf16 median on the same rows, and the product-weighted 95% unit-bootstrap interval of that same difference lies inside plus or minus 0.06. The sum-weighted interval is reported as a sensitivity check. | pending | pending |
-| 119c.2 | Claude (medium confidence): In float32, the median row share over real rows is at most 0.10 at 0.1 and at most 0.05 at 0.05. | pending | pending |
-| 119c.3 | Claude (low confidence): In float32, on real rows, the endpoint log-log slope `log(S(0.2)/S(0.05)) / log(4)` is at least 1.5. | pending | pending |
-| 119c.4 | Claude (low confidence): In float32, at each of 0.05, 0.1 and 0.2, the real median share is within a factor of 1.25 of the control median. | pending | pending |
+| 119c.1 | Claude (medium confidence): At 0.2, the float32 median row share over real rows is within 0.04 of the bf16 median on the same rows, and the product-weighted 95% unit-bootstrap interval of that same difference lies inside plus or minus 0.06. The sum-weighted interval is reported as a sensitivity check. | bf16 0.161635; float32 0.153414; difference -0.008220; product-weighted interval -0.021297 to 0.012509; sum-weighted interval -0.014343 to 0.009603. | held |
+| 119c.2 | Claude (medium confidence): In float32, the median row share over real rows is at most 0.10 at 0.1 and at most 0.05 at 0.05. | 0.020094 at 0.1; 0.004547 at 0.05. | held |
+| 119c.3 | Claude (low confidence): In float32, on real rows, the endpoint log-log slope `log(S(0.2)/S(0.05)) / log(4)` is at least 1.5. | 2.53823. | held |
+| 119c.4 | Claude (low confidence): In float32, at each of 0.05, 0.1 and 0.2, the real median share is within a factor of 1.25 of the control median. | Factors at 0.05, 0.1 and 0.2: 1.01341, 1.03577 and 1.10257. | held |

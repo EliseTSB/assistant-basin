@@ -1,0 +1,3 @@
+{"reader": "ds", "items": 148, "pending": 0, "error_rows": 0, "retry_items": 1, "output": "/home/elisepc/green/worktrees/ab-part67/results/part119b/labels-ds.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part119b/labels-ds.jsonl.usage.jsonl", "keys": "/home/elisepc/green/worktrees/ab-part67/results/part119b/labels-ds.jsonl.keys.jsonl"}
+{"reader": "luna", "items": 30, "pending": 0, "error_rows": 0, "retry_items": 0, "output": "/home/elisepc/green/worktrees/ab-part67/results/part119b/labels-luna.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part119b/labels-luna.jsonl.usage.jsonl", "keys": "/home/elisepc/green/worktrees/ab-part67/results/part119b/labels-luna.jsonl.keys.jsonl"}
+rc=0 08:19:01
