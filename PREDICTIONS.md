@@ -2332,6 +2332,64 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 99.3 | Claude (low confidence): Of the two swaps into Instruct, swapping in Base's attention removes more slot "Who are you?" shows than swapping in Base's MLPs. | slot "Who are you?" shows: Base attention 3 of 21, Base MLPs 4 of 21; held by its letter on a one-unit difference (the coherent-answer contrast in the README is the informative one) | held |
 | 99.4 | Claude (medium confidence): Paired random directions show their unit's persona in at most 10% of non-human-kind pairs in every run. | worst run 1 of 29 non-human-kind random pairs (3.4%) | held |
 
+## Part 100 (registered 2026-10-29, PART100-DESIGN.md): which layers' attention turns a pushed slot neuron into a self-description?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 100.1 | Claude (low confidence): The late half carries it: slot_who is at most 8 of 21 with Base attention in layers 8 to 15, and at least 14 of 21 with Base attention in layers 0 to 7. | slot_who: layers 8 to 15, 8 of 21; layers 0 to 7, 3 of 21 | failed |
+| 100.2 | Claude (low confidence): No single quarter reproduces the all-layer drop: every quarter run leaves slot_who at 6 of 21 or more. | layers 0 to 3 leaves 3 of 21 | failed |
+| 100.3 | Claude (medium confidence): Every block run keeps slot_who_coherent at 13 of 21 or more (no hybrid damage). | every block run kept at least 13 of 21 coherent | held |
+| 100.4 | Claude (medium confidence): Every block run keeps concept_any at 13 or more of its eligible concept units. | every block run kept 13 or more concept units | held |
+
+## Part 101 (registered 2026-10-29, PART101-DESIGN.md): which of layers 0 to 3?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 101.1 | Claude (low confidence): No single layer alone reproduces the block's drop: every single-layer run leaves slot_who at 6 of 21 or more. | lowest single-layer slot_who was 7 of 21 | held |
+| 101.2 | Claude (medium confidence): The single layers saturate, as Part 100's blocks did: the four single-layer drops (19 minus slot_who) add up to more than the block's drop of 16. | drops sum to 31, more than 16 | held |
+| 101.3 | Claude (low confidence): Earlier layers matter more: slot_who does not fall from layer 0 to layer 3 (L0 <= L1 <= L2 <= L3). | layer counts were 7, 11, 12, 15 | held |
+| 101.4 | Claude (medium confidence): No hybrid damage: every single-layer run keeps slot_who_coherent at 13 of 21 or more. | coherent in 17 or 18 of 21 in every run | held |
+| 101.5 | Claude (medium confidence): Every single-layer run keeps concept_any at 13 or more of its eligible concept units. | concept_any ranged from 15 to 18 | held |
+| 101.6 | Claude (medium confidence): Control: relabelling Part 100's attnB_L0-3 read set agrees on at least 95% of persona labels and moves slot_who by at most 2. | 98.4% label agreement; same slot count | held |
+
+## Part 102 (registered 2026-10-29, PART102-DESIGN.md): did the attention the slot neurons need come from SFT or from DPO?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 102.1 | Claude (low confidence): SFT's early attention is already enough: with SFT's attention in layers 0 to 3, slot_who is at least 15 of 21. | SFT attention left 13 of 20 | failed |
+| 102.2 | Claude (medium confidence): DPO's early attention is enough: with DPO's attention in layers 0 to 3, slot_who is at least 15 of 21. | DPO attention left 17 of 20 | held |
+| 102.3 | Claude (medium confidence): Instruct's layer 0 alone does not rescue them: with the mid-training end's attention in layers 1 to 3, slot_who is at most 9 of 21. | slot_who was 9 of 21 | held |
+| 102.4 | Claude (medium confidence): No hybrid damage: every run keeps slot_who_coherent at 13 of 21 or more. | coherent in 17 to 20 of 20 or 21 in every run | held |
+| 102.5 | Claude (medium confidence): Every run keeps concept_any at 13 or more of its eligible concept units. | concept_any ranged from 15 to 18 | held |
+
+## Part 103 (registered 2026-10-29, PART103-DESIGN.md): after SFT, where do the slot neurons' needed changes sit?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 103.1 | Claude (medium confidence): DPO's attention is as good as Instruct's everywhere: with DPO's attention in all 16 layers, slot_who is at least 15 of 21. | DPO attention left 17 of 21 | held |
+| 103.2 | Claude (low confidence): RLVR's step lies in the MLPs: DPO's MLPs leave slot_who at least 3 units below DPO's attention does. | DPO MLPs left 16, one below DPO attention's 17 | failed |
+| 103.3 | Claude (low confidence): After SFT both components still change in ways that matter: SFT's attention and SFT's MLPs (all layers) each leave slot_who at 14 of 21 or less. | SFT attention left 13; SFT MLPs left 10 | held |
+| 103.4 | Claude (medium confidence): Part 92's ladder holds in this pipeline: the whole SFT model gives slot_who at most 10 of 21, the whole DPO model at most 16 of 21. | whole SFT left 8; whole DPO left 12 | held |
+| 103.5 | Claude (medium confidence): No hybrid damage: every swap run keeps slot_who_coherent at 13 of 21 or more. | coherent in 16 to 21 of 21 in the swap runs | held |
+| 103.6 | Claude (medium confidence): Every run keeps concept_any at 13 or more of its eligible concept units. | concept_any ranged from 15 to 17 | held |
+
+## Part 104 (registered 2026-10-29, PART104-DESIGN.md): do new early slot neurons need what post-SFT training wrote into attention, or are they just fragile?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 104.1 | Claude (Opus 5.5; confidence not specified): 104.1 (the split replicates): attnSFT_all loses a larger fraction of shown layer-0-3 units than of shown layer-4-15 units, by at least 30 percentage points, with one-sided Fisher p < 0.05. | SFT attention lost 9 of 23 early and 6 of 20 later shown units, a 9-point difference (p = 0.38) | failed |
+| 104.2 | Claude (Opus 5.5; confidence not specified): 104.2 (D over F): attnEXT_all loses at most 2 shown layer-0-3 units, and fewer than attnSFT_all does (one-sided exact McNemar p < 0.05 on the shown layer-0-3 units). Read only if attnSFT_all loses at least 5 shown layer-0-3 units (with 4, even no loss under attnEXT_all gives p = 0.0625) and 104.3 holds. | not read: 104.3 did not hold | not read |
+| 104.3 | Claude (Opus 5.5; confidence not specified): 104.3 (the extrapolated model still works): attnEXT_all's "Who are you?" answers are coherent (the reader's `coherent`) for at least 80% of shown units. | coherent for 32 of 42 shown units (76%) | failed |
+| 104.4 | Claude (Opus 5.5; confidence not specified): 104.4 (the small change hits early units only): attnDPO_all loses at most one shown layer-4-15 unit. | DPO attention lost 3 later units | failed |
+
+## Part 105 (registered 2026-10-29, PART105-DESIGN.md): does the opposite-direction attention swap also lose Part 92's original slot units?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 105.1 | Claude (Opus 5.5; confidence not specified): 105.1 (D on the original units): attnEXT_all loses at most 2 of the 10 shown early slot units, and fewer than attnSFT_all (which lost 7 of them): one-sided exact McNemar p < 0.05 on those 10. | attnEXT_all lost 5 of 10 early units; comparison with attnSFT_all was not significant (p = 0.34) | failed |
+| 105.2 | Claude (Opus 5.5; confidence not specified): 105.2 (the extrapolated model still answers): attnEXT_all's pushed "Who are you?" answers are coherent for at least 14 of the 21 slot units (attnSFT_all: 17 of 21, minus 3). Part 104 showed that a fixed 80% bar can fail SFT's own swap, so this bar is relative to SFT's. | 18 of 21 slot answers coherent | held |
+| 105.3 | Claude (Opus 5.5; confidence not specified): 105.3 (concept units survive): At least 13 of the 18 concept units show their persona in at least one of the six answers under attnEXT_all, as in Parts 101 to 103. | 17 of 18 concept units show their persona | held |
+
 ## Part 106 (registered 2026-10-29, PART106-DESIGN.md): does DPO create the slot units' self-descriptions or sharpen them?
 
 | # | Prediction | Result | Verdict |
