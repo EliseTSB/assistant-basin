@@ -1,7 +1,7 @@
 # Part 119c: is the interaction share at low dose a rounding floor?
 
 Procedure: v1
-Registered {{REGISTERED}} CT by Claude (Opus 5.5), before any data. Part 119b's gate 3 failed: at alpha 0.2 the median row
+Registered 2026-10-30 08:52 CT by Claude (Opus 5.5), before any data. Part 119b's gate 3 failed: at alpha 0.2 the median row
 interaction share was 0.178 against a limit of 0.15, so by its rule a share that does not fall at a small push could not be
 told from a floor in the measure. Elise's direction for the night stands (Discord message 1565603681804488839). The commit
 that adds this file is the registration.
@@ -29,8 +29,9 @@ in Part 119b, then loaded in float32. Pushes at each dose are built from the wei
 functions. T comes from each run's own 0.8 passes, as in Part 119b.
 
 Readout: interaction share as Part 119 defines it, at every position with nPair above 0, row value the median over positions,
-summary the median over rows, by dtype, dose and row class; also median nI, nPair, nA and n2. The unit bootstrap of Part 119
-(2,000 draws, product weighting, sum weighting beside it) gives the interval on the float32 minus bf16 difference at 0.2.
+summary the median over rows, by dtype, dose and row class; also median nI, nPair, nA and n2, plus the share of positions with
+nPair below 1.0. The unit bootstrap of Part 119 (2,000 draws) recomputes the difference of the float32 and bf16 median row
+shares at 0.2 in each draw. Product weighting is primary; sum weighting is reported beside it on that same statistic.
 
 ## Controls
 
@@ -40,8 +41,11 @@ summary the median over rows, by dtype, dose and row class; also median nI, nPai
 - Dose ladder: 0.05 to 0.8. The lowest doses are the positive control: a smooth model must give a share near zero there.
 
 Gate, before any prediction is read: (1) the bf16 run's 0.2, 0.4 and 0.8 rows reproduce Part 119b's stored rows: median
-relative nPair difference under 1%; (2) the float32 run is the same model: at 0.8, median relative nPair difference from the
-bf16 run under 5%. A miss on either stops every reading.
+relative nPair difference under 1%; (2) the float32 output records must identify parameters loaded as float32, the bf16
+output records must identify parameters loaded as bf16, and at 0.8 the median relative nPair difference must be under 5%.
+Gate 2 also fails if every matched 0.8 nPair value is identical by position across the two outputs. Each dtype has its own
+output file, so a restart after deleting only the float32 file rebuilds its 0.8 token support from float32 passes. A miss on
+either gate stops every reading.
 
 ## Size
 
@@ -61,22 +65,24 @@ bf16 run under 5%. A miss on either stops every reading.
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 119c.1 | At 0.2, the float32 median row share over real rows is within 0.04 of the bf16 median on the same rows, and the 95% unit bootstrap interval of the difference lies inside plus or minus 0.06. | medium | Claude |
+| 119c.1 | At 0.2, the float32 median row share over real rows is within 0.04 of the bf16 median on the same rows, and the product-weighted 95% unit-bootstrap interval of that same difference lies inside plus or minus 0.06. The sum-weighted interval is reported as a sensitivity check. | medium | Claude |
 | 119c.2 | In float32, the median row share over real rows is at most 0.10 at 0.1 and at most 0.05 at 0.05. | medium | Claude |
-| 119c.3 | In float32, on real rows, the log-log slope of median share against dose between 0.05 and 0.2 is at least 1.5. | low | Claude |
+| 119c.3 | In float32, on real rows, the endpoint log-log slope `log(S(0.2)/S(0.05)) / log(4)` is at least 1.5. | low | Claude |
 | 119c.4 | In float32, at each of 0.05, 0.1 and 0.2, the real median share is within a factor of 1.25 of the control median. | low | Claude |
 
 ## Reading rules
 
-part119c/score119c.py computes every number. Gates first. (1) If 119c.1 and 119c.2 both hold: "Part 119b's low-dose share is
-not a rounding floor; the interaction shrinks toward zero with dose, and at 0.2 it is already measurable where answers do not
-break". (2) Else, if float32 is below bf16 at 0.2 by more than 0.04 with the interval below 0: "bf16 rounding inflates the
-low-dose share, and Part 119b's gate 3 miss is at least partly that". (3) Otherwise the numbers are reported and nothing is
-read. Nothing here changes a verdict of Part 119b: its gate 3 failed by its own rule, and its stopped predictions stay
-stopped. Answers are not generated here, so nothing is read by eye; the numbers are checked against Part 119b's rows by gate 1.
+part119c/score119c.py computes every number. Gates first. If a gate misses, the per-dose table remains visible under a heading
+saying no reading is made from it. (1) If 119c.1 and 119c.2 both hold: "Part 119b's low-dose share is not a rounding floor;
+the interaction shrinks toward zero with dose, and at 0.2 it is already measurable where answers do not break". (2) Else,
+if float32 is below bf16 at 0.2 by more than 0.04 and the product-weighted interval for the difference of the two median row
+shares lies below 0: "bf16 rounding inflates the low-dose share, and Part 119b's gate 3 miss is at least partly that". (3)
+Otherwise the numbers are reported and nothing is read. Nothing here changes a verdict of Part 119b: its gate 3 failed by its
+own rule, and its stopped predictions stay stopped. Answers are not generated here, so nothing is read by eye; the numbers
+are checked against Part 119b's rows by gate 1.
 
 ## Limits
 
 One question, one model, 312 rows of 2,964, fixed paths chosen at 0.8. float32 is still a rounded format, far finer than bf16.
 Nothing here says what the model does at these doses in its own answers. The share is a ratio, so at the smallest doses it
-rests on small denominators; nI and nPair are reported beside it.
+rests on small denominators; median nI, median nPair and the share of positions with nPair below 1.0 are reported beside it.

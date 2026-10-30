@@ -165,11 +165,60 @@ def gate1_result(bf16_rows: list[dict], part119b_rows: list[dict],
                               GATE1_DOSES, 0.01, "bf16 versus Part 119b")
 
 
+def _dtype_evidence(rows: list[dict], expected: str) -> dict:
+    parameter_dtype = {"bf16": "torch.bfloat16", "float32": "torch.float32"}[expected]
+    observed = sorted({str(row.get("model_dtype")) for row in rows})
+    observed_parameter_dtype = sorted({str(row.get("model_parameter_dtype")) for row in rows})
+    passed = bool(rows) and all(
+        row.get("model_dtype") == expected
+        and row.get("model_parameter_dtype") == parameter_dtype
+        for row in rows)
+    return {"expected_model_dtype": expected,
+            "expected_model_parameter_dtype": parameter_dtype,
+            "observed_model_dtypes": observed,
+            "observed_model_parameter_dtypes": observed_parameter_dtype,
+            "rows_checked": len(rows), "passed": passed}
+
+
+def _all_08_npair_identical(float32_rows: list[dict], bf16_rows: list[dict],
+                            selected_rows: list[dict]) -> bool:
+    float32_index, bf16_index = _index(float32_rows), _index(bf16_rows)
+    checked = 0
+    for source in selected_rows:
+        key = _row_key(source)
+        float32 = float32_index.get(key, {}).get(0.8)
+        bf16 = bf16_index.get(key, {}).get(0.8)
+        if float32 is None or bf16 is None:
+            return False
+        float_positions, bf_positions = _position_map(float32), _position_map(bf16)
+        if set(float_positions) != set(bf_positions):
+            return False
+        for pos in float_positions:
+            a = float_positions[pos].get("nPair")
+            b = bf_positions[pos].get("nPair")
+            if a is None or b is None:
+                return False
+            checked += 1
+            if float(a) != float(b):
+                return False
+    return checked > 0
+
+
 def gate2_result(float32_rows: list[dict], bf16_rows: list[dict],
                  selected_rows: list[dict]) -> dict:
     """119c Gate 2: at 0.8, float32 matches bf16 nPair within 5%."""
-    return _reproduction_gate(float32_rows, bf16_rows, selected_rows,
+    gate = _reproduction_gate(float32_rows, bf16_rows, selected_rows,
                               (0.8,), 0.05, "float32 versus bf16")
+    dtype_evidence = {"float32_file": _dtype_evidence(float32_rows, "float32"),
+                      "bf16_file": _dtype_evidence(bf16_rows, "bf16")}
+    npair_identical = _all_08_npair_identical(float32_rows, bf16_rows, selected_rows)
+    gate.update({"dtype_evidence": dtype_evidence,
+                 "all_0.8_nPair_identical_by_position": npair_identical,
+                 "passed": bool(gate["passed"]
+                                and dtype_evidence["float32_file"]["passed"]
+                                and dtype_evidence["bf16_file"]["passed"]
+                                and not npair_identical)})
+    return gate
 
 
 def _row_shares(rows: list[dict]) -> dict[tuple[str, str, str, float], float | None]:
@@ -203,11 +252,17 @@ def summarize(rows_by_dtype: dict[str, list[dict]]) -> tuple[list[dict], dict]:
                                             if position.get(field) is not None])
                     for field in ("nI", "nPair", "nA", "n2")
                 }
+                below_one = sum(
+                    position.get("nPair") is not None and float(position["nPair"]) < 1.0
+                    for position in positions)
                 table.append({
                     "dtype": dtype_name, "dose": dose, "kind": kind,
                     "rows": len(class_rows), "rows_with_share": len(row_shares),
                     "positions": len(positions),
                     "positions_with_nPair_above_zero": len(position_shares),
+                    "positions_nPair_below_one": below_one,
+                    "share_positions_nPair_below_one": (below_one / len(positions)
+                                                         if positions else None),
                     "median_nI": metric_medians["nI"],
                     "median_nPair": metric_medians["nPair"],
                     "median_nA": metric_medians["nA"],
@@ -226,11 +281,28 @@ def _summary_value(table: list[dict], dtype: str, dose: float, kind: str,
     return None
 
 
-def _weighted_difference_ci(differences: list[dict], units: list[dict] | list[str],
+def _weighted_median(values: list[float], weights: list[int]) -> float | None:
+    kept = [(float(value), int(weight)) for value, weight in zip(values, weights) if weight > 0]
+    if not kept:
+        return None
+    kept.sort(key=lambda item: item[0])
+    ordered_values = np.asarray([item[0] for item in kept], dtype=np.float64)
+    cumulative = np.cumsum([item[1] for item in kept], dtype=np.int64)
+    total = int(cumulative[-1])
+
+    def at_rank(rank: int) -> float:
+        return float(ordered_values[int(np.searchsorted(cumulative, rank + 1, side="left"))])
+
+    return (at_rank((total - 1) // 2) + at_rank(total // 2)) / 2
+
+
+def _weighted_difference_ci(paired_shares: list[dict], units: list[dict] | list[str],
                             *, draws: int = 2000) -> dict:
     unit_ids = [str(unit["id"] if isinstance(unit, dict) else unit) for unit in units]
-    values = [float(row["value"]) for row in differences]
-    point = float(np.mean(values)) if values else None
+    bf16_values = [float(row["bf16_value"]) for row in paired_shares]
+    float32_values = [float(row["float32_value"]) for row in paired_shares]
+    point = (float(median(float32_values) - median(bf16_values))
+             if paired_shares else None)
     bootstrap_draws = score119.make_unit_bootstrap_draws(
         unit_ids, draws=draws, seed=score119.BOOTSTRAP_SEED)
     product_samples, sum_samples = [], []
@@ -238,21 +310,20 @@ def _weighted_difference_ci(differences: list[dict], units: list[dict] | list[st
         for samples, weight_for in (
                 (product_samples, lambda first, second: counts.get(first, 0) * counts.get(second, 0)),
                 (sum_samples, lambda first, second: counts.get(first, 0) + counts.get(second, 0))):
-            numerator = denominator = 0.0
-            for row in differences:
-                weight = int(weight_for(str(row["first"]), str(row["second"])))
-                numerator += float(row["value"]) * weight
-                denominator += weight
-            if denominator:
-                samples.append(numerator / denominator)
+            weights = [int(weight_for(str(row["first"]), str(row["second"])))
+                       for row in paired_shares]
+            bf16_median = _weighted_median(bf16_values, weights)
+            float32_median = _weighted_median(float32_values, weights)
+            if bf16_median is not None and float32_median is not None:
+                samples.append(float32_median - bf16_median)
     def interval(samples):
         return ([float(np.quantile(samples, .025)), float(np.quantile(samples, .975))]
                 if samples else [None, None])
-    return {"mean_row_difference": point,
-            "ci95_product_weighted_mean_difference": interval(product_samples),
-            "ci95_sum_weighted_mean_difference": interval(sum_samples),
+    return {"difference_of_median_row_shares": point,
+            "ci95_product_weighted_difference_of_median_row_shares": interval(product_samples),
+            "ci95_sum_weighted_difference_of_median_row_shares": interval(sum_samples),
             "draws": draws, "seed": score119.BOOTSTRAP_SEED,
-            "units": len(unit_ids), "rows": len(differences)}
+            "units": len(unit_ids), "rows": len(paired_shares)}
 
 
 def predictions(table: list[dict], row_values: dict,
@@ -267,23 +338,24 @@ def predictions(table: list[dict], row_values: dict,
         f32_value = real_f32.get(key)
         if bf16_value is not None and f32_value is not None:
             diffs.append({"first": first, "second": second,
-                          "value": f32_value - bf16_value})
+                          "bf16_value": bf16_value, "float32_value": f32_value})
     bootstrap = _weighted_difference_ci(diffs, units)
-    bf16_02 = _summary_value(table, "bf16", 0.2, "real")
-    f32_02 = _summary_value(table, "float32", 0.2, "real")
+    bf16_02 = _median_or_none([row["bf16_value"] for row in diffs])
+    f32_02 = _median_or_none([row["float32_value"] for row in diffs])
     median_difference = (f32_02 - bf16_02
                          if f32_02 is not None and bf16_02 is not None else None)
-    product_ci = bootstrap["ci95_product_weighted_mean_difference"]
+    product_ci = bootstrap["ci95_product_weighted_difference_of_median_row_shares"]
     pred1_available = (median_difference is not None and product_ci[0] is not None
                        and product_ci[1] is not None)
     pred1_holds = (pred1_available and abs(median_difference) <= .04
                    and product_ci[0] >= -.06 and product_ci[1] <= .06)
     pred1 = {
         "id": "119c.1",
-        "threshold": "At 0.2, absolute difference between median row shares <= 0.04 and the product-weighted 95% unit-bootstrap CI lies in [-0.06, 0.06].",
+        "threshold": "At 0.2, absolute difference between median row shares <= 0.04 and the product-weighted 95% unit-bootstrap interval for that same difference lies in [-0.06, 0.06].",
         "observed": {"bf16_median_row_share": bf16_02,
                      "float32_median_row_share": f32_02,
                      "median_difference_float32_minus_bf16": median_difference,
+                     "paired_rows": len(diffs),
                      "bootstrap": bootstrap},
         "verdict": "holds" if pred1_holds else "does_not_hold" if pred1_available else "not_evaluable",
     }
@@ -300,25 +372,14 @@ def predictions(table: list[dict], row_values: dict,
         "verdict": "holds" if pred2_holds else "does_not_hold" if pred2_available else "not_evaluable",
     }
 
-    slope_points = []
-    for dose in (0.05, 0.1, 0.2):
-        share = _summary_value(table, "float32", dose, "real")
-        if share is None or share <= 0:
-            slope_points = []
-            break
-        slope_points.append((math.log(dose), math.log(share)))
     slope = None
-    if len(slope_points) == 3:
-        x = np.asarray([point[0] for point in slope_points], dtype=np.float64)
-        y = np.asarray([point[1] for point in slope_points], dtype=np.float64)
-        design = np.column_stack((np.ones(3), x))
-        coeff, _residuals, _rank, _singular = np.linalg.lstsq(design, y, rcond=None)
-        slope = float(coeff[1])
+    if f32_005 is not None and f32_005 > 0 and f32_02 is not None and f32_02 > 0:
+        slope = math.log(f32_02 / f32_005) / math.log(4)
     pred3 = {
         "id": "119c.3",
-        "threshold": "Float32 real median row share log-log least-squares slope over 0.05, 0.1, and 0.2 >= 1.5.",
-        "observed": {"doses": [0.05, 0.1, 0.2],
-                     "median_row_shares": [f32_005, f32_01, f32_02],
+        "threshold": "Float32 real endpoint log-log slope log(S(0.2)/S(0.05))/log(4) >= 1.5.",
+        "observed": {"doses": [0.05, 0.2],
+                     "median_row_shares": [f32_005, f32_02],
                      "log_log_slope": slope},
         "verdict": "holds" if slope is not None and slope >= 1.5 else
                    "does_not_hold" if slope is not None else "not_evaluable",
@@ -365,7 +426,8 @@ def headline_by_rule(prediction_rows: list[dict], gates: dict) -> str:
                 "toward zero with dose, and at 0.2 it is already measurable where answers do not break.")
     pred1 = by_id["119c.1"]["observed"]
     difference = pred1.get("median_difference_float32_minus_bf16")
-    interval = pred1.get("bootstrap", {}).get("ci95_product_weighted_mean_difference", [None, None])
+    interval = pred1.get("bootstrap", {}).get(
+        "ci95_product_weighted_difference_of_median_row_shares", [None, None])
     if (difference is not None and difference < -.04 and interval[1] is not None
             and interval[1] < 0):
         return "bf16 rounding inflates the low-dose share, and Part 119b's gate 3 miss is at least partly that."
@@ -389,7 +451,9 @@ def score_interactions(bf16_rows: list[dict], float32_rows: list[dict],
                                        for kind in KINDS},
             "gates": gates, "per_dose": table, "predictions": pred_rows,
             "headline": headline_by_rule(pred_rows, gates),
-            "bootstrap_definition": "Part 119 draws (2,000, seed 11902); product unit-count weighting is primary and sum weighting is sensitivity.",
+            "bootstrap_definition": ("Part 119 unit bootstrap (2,000 draws, seed 11902); each draw recomputes "
+                                     "the difference of the two median row shares. Product weighting is "
+                                     "primary and sum weighting is the sensitivity interval."),
             "readout": "Share includes positions with nPair > 0; each row is the median of those positions; summary is the median of row values."}
 
 
@@ -419,13 +483,16 @@ def render_markdown(result: dict) -> str:
     for prediction in result["predictions"]:
         observed = json.dumps(prediction["observed"], ensure_ascii=False, sort_keys=True)
         lines.append(f"| {prediction['id']} | {prediction['verdict']} | `{observed}` |")
-    lines.extend(["", "## Per-dose medians", "",
-                  "Share uses positions with nPair > 0; row share is the median of a row's eligible positions; the summary is the median over rows.",
-                  "", "| Dtype | Dose | Class | Rows | Positions nPair>0 | Median nI | Median nPair | Median nA | Median n2 | Position share | Row share |",
-                  "| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"])
+    per_dose_heading = ("## Per-dose summaries (no reading is made from this table because a gate failed)"
+                        if not result["gates"]["all_passed"] else "## Per-dose summaries")
+    lines.extend(["", per_dose_heading, "",
+                  "Share uses positions with nPair > 0; row share is the median of a row's eligible positions; the summary is the median over rows. The nPair<1 share uses all reported positions.",
+                  "", "| Dtype | Dose | Class | Rows | Positions nPair>0 | Positions nPair<1 | Share nPair<1 | Median nI | Median nPair | Median nA | Median n2 | Position share | Row share |",
+                  "| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"])
     for row in result["per_dose"]:
         lines.append("| " + " | ".join(_fmt(row[key]) for key in (
             "dtype", "dose", "kind", "rows", "positions_with_nPair_above_zero",
+            "positions_nPair_below_one", "share_positions_nPair_below_one",
             "median_nI", "median_nPair", "median_nA", "median_n2",
             "median_share_over_positions", "median_row_share")) + " |")
     lines.extend(["", "## Headline", "", result["headline"], "",

@@ -19,6 +19,7 @@ import common92 as c  # noqa: E402
 import rows119  # noqa: E402
 import run119  # noqa: E402
 import run119b  # noqa: E402 -- runner-only Path 2 implementation; no scorer/reader import
+import rows119b  # noqa: E402 -- source Path 2 inventory
 import rows119c  # noqa: E402
 
 QUESTION = run119.QUESTION
@@ -78,6 +79,26 @@ def _run_dtype(dtype_name: str, dtype, args, units: list[dict], rows: list[dict]
 
     started = time.perf_counter()
     tokenizer, model = load_model(repo_path(args.model), args.device, dtype)
+    parameter = next(model.parameters(), None)
+    if parameter is None:
+        raise ValueError("loaded model has no parameters to identify its dtype")
+    parameter_dtype = str(parameter.dtype)
+    dtype_name_from_model = {
+        "torch.bfloat16": "bf16",
+        "torch.float32": "float32",
+    }.get(parameter_dtype)
+    if dtype_name_from_model != dtype_name:
+        raise ValueError(f"requested {dtype_name} but loaded model parameters are {parameter_dtype}")
+
+    # run_path2 resumes from its output file's stored 0.8 T. Keep each dtype in
+    # its own file and refuse to reuse records without matching dtype evidence.
+    if output.exists():
+        existing = run119b.read_output_by_key(output, "key")
+        for record in existing.values():
+            if (record.get("model_dtype") != dtype_name
+                    or record.get("model_parameter_dtype") != parameter_dtype):
+                raise ValueError(f"{output} contains rows without matching {dtype_name} dtype evidence")
+
     layers = c.get_layers(model)
     medians = c.residual_medians(model, tokenizer, FRAME, args.device)
     base_cache, cache_by_dose = build_dtype_push_caches(units, layers, medians)
@@ -85,7 +106,23 @@ def _run_dtype(dtype_name: str, dtype, args, units: list[dict], rows: list[dict]
         units, rows, DOSES, output, tokenizer, model, layers,
         base_cache, cache_by_dose, answers, args.device, args.batch,
     )
+    stamped = []
+    for line_no, line in enumerate(output.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        if (record.get("model_dtype") not in (None, dtype_name)
+                or record.get("model_parameter_dtype") not in (None, parameter_dtype)):
+            raise ValueError(f"{output}:{line_no} has conflicting model dtype evidence")
+        record["model_dtype"] = dtype_name
+        record["model_parameter_dtype"] = parameter_dtype
+        stamped.append(json.dumps(record, ensure_ascii=False, allow_nan=False,
+                                  separators=(",", ":")))
+    temporary = output.with_name(output.name + ".dtype-tmp")
+    temporary.write_text("\n".join(stamped) + ("\n" if stamped else ""), encoding="utf-8")
+    temporary.replace(output)
     return {"dtype": dtype_name, "output": str(output.relative_to(ROOT)),
+            "model_parameter_dtype": parameter_dtype,
             "rows_expected": len(rows), "doses": list(DOSES),
             "path2": result, "elapsed_seconds": time.perf_counter() - started}
 
@@ -112,8 +149,12 @@ def run(args: argparse.Namespace) -> dict:
 
     started = time.perf_counter()
     runs = []
+    outputs = {"bf16": out_dir / "interaction-bf16.jsonl",
+               "float32": out_dir / "interaction-float32.jsonl"}
+    if outputs["bf16"].resolve() == outputs["float32"].resolve():
+        raise ValueError("bf16 and float32 runs must have separate output files")
     for dtype_name, dtype in (("bf16", torch.bfloat16), ("float32", torch.float32)):
-        output = out_dir / f"interaction-{dtype_name}.jsonl"
+        output = outputs[dtype_name]
         runs.append(_run_dtype(dtype_name, dtype, args, units, rows, answers, output))
         # _run_dtype's local model, hooks and tensor caches are gone before the next load.
         clear_device_cache(args.device)
