@@ -57,8 +57,23 @@ def main():
     commit = git("commit-tree", tree, "-p", base, inp=a.message + TRAILER)
     git("push", "-q", a.remote, f"{commit}:refs/heads/main")
     git("fetch", "-q", a.remote, "main")
-    git("merge", "-X", "ours", "--no-edit", "-m", f"Merge the public Part {a.part} registration into the working branch" + TRAILER,
-        f"{a.remote}/main")
+    # (4) 2026-10-29, Part 116: registering files that are still untracked, with PREDICTIONS.md modified, made the
+    # merge refuse ("untracked working tree files would be overwritten"), and the branch had to be repaired by hand.
+    # Untracked registered files identical to the pushed blobs are removed (the merge brings them back), and a
+    # modified PREDICTIONS.md is set aside and restored after the merge (it is a superset of the pushed copy).
+    tracked = set(git("ls-files").splitlines())
+    for f in a.files:
+        if f not in tracked and Path(f).exists() and git("show", f"{commit}:{f}") == Path(f).read_text(encoding="utf-8").strip():
+            Path(f).unlink()
+    saved = Path("PREDICTIONS.md").read_text(encoding="utf-8") if git("diff", "--name-only", "--", "PREDICTIONS.md") else None
+    if saved is not None:
+        git("checkout", "--", "PREDICTIONS.md")
+    try:
+        git("merge", "-X", "ours", "--no-edit", "-m", f"Merge the public Part {a.part} registration into the working branch" + TRAILER,
+            f"{a.remote}/main")
+    finally:
+        if saved is not None:
+            Path("PREDICTIONS.md").write_text(saved, encoding="utf-8")
     print(f"registered Part {a.part}: public main {commit[:12]} (base {base[:12]}); merged back")
 
 

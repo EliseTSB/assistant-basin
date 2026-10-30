@@ -114,6 +114,9 @@ measured on real rows, and each lever below that applies, taken or declined with
 - [ ] **Reuse shared code** before writing a runner (`TOOLKIT.md`, `part86/common86.py`, `part92/common92.py`).
 - [ ] **Read the prompts, targets and forced openings by eye** before running. (Part 106: two target sentences had been
   cut to "Hello!" and "I'm Dr.")
+- [ ] **Run the plain model on every fixed-target probe and print its top tokens before registering.** A target that is
+  not the plain model's first choice, or is not one token, measures something else. (Part 115: the chat model put " **"
+  first on three of four ordinary openings, and " 4" was two tokens, so the off-target check could not do its job.)
 - [ ] **Tests on fixtures, plus one deliberate break that must turn them red.** Break a copy, never the tracked file.
   (During Part 108 a `git checkout` used to undo a break erased real edits.)
 - [ ] **Smoke on the real model and device before launch.** A sandboxed builder may have no torch, so its tests may
@@ -177,3 +180,6 @@ beyond one part.
   its longest row. So rows leaving the batch when they finish (and new rows joining) is the larger lever, and a
   60-token cap would cut 68% of the answers, so it needs the reader's agreement on cut answers measured first. The A770
   was 94% busy on average, so the run was bound by the GPU's work, not by waiting.
+- 2026-10-29: Part 115, the first part through this list, passed every prelaunch check and still carried a broken
+  off-target probe: its baseline was never run. The item above came from it. Using the publish check on it also found
+  that "Cold check: pending" counted as a cold check; it no longer does.

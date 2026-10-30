@@ -428,3 +428,8 @@ def test_launch_wait_zero_does_not_wait(repo, tmp_path):    # F11
 def test_launch_cpu_with_copy_refused(repo, tmp_path):    # F12
     rc = la.main(["900", "--cpu", "true", "--copy", "part900/score900.py", "--repo", str(repo), "--no-fetch", "--dry-run"])
     assert rc == 2
+
+
+def test_publish_pending_cold_check_fails(repo):
+    write_results(repo, README.replace("Cold check: Haiku 5.5, 2026-10-29, 0 findings.", "Cold check: pending."))
+    assert any("Cold check" in f for f in pc.publish(repo, "900").failed)

@@ -263,8 +263,11 @@ def publish(repo, pid, legacy_ok=False):
     r.check(not no_verdict, "every registered prediction has a verdict in the last cell of its table row",
             "no verdict (held, failed, mixed, untestable...) in the last cell of a table row whose first cell is: " +
             ", ".join(no_verdict))
-    r.check(re.search(r"^Cold check:\s*\S", text, re.M | re.I) is not None, "a 'Cold check:' line",
-            "no 'Cold check:' line (reader, date, findings, commit)")
+    cold = re.search(r"^Cold check:\s*(.*)$", text, re.M | re.I)
+    r.check(cold is not None and cold.group(1).strip() != "" and not
+            re.match(r"(pending|todo|tbd|none|not yet)\b", cold.group(1).strip(), re.I),
+            "a 'Cold check:' line recording a finished check",
+            "no finished 'Cold check:' line (reader, date, findings, commit; 'pending' does not count)")
     local = sorted(set(m.group(0) for m in LOCAL_PATH.finditer(text)))
     stale = sorted(set(PLACEHOLDER_TIME.findall(text)))
     r.check(not stale, "no typed placeholder times", "placeholder times: " + ", ".join(stale))
