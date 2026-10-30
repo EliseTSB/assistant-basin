@@ -1,0 +1,12 @@
+{"item_id": "known-01", "x": true, "y": true, "coherent": true}
+{"item_id": "known-02", "x": true, "y": false, "coherent": true}
+{"item_id": "known-03", "x": false, "y": true, "coherent": true}
+{"item_id": "known-04", "x": false, "y": false, "coherent": true}
+{"item_id": "known-05", "x": true, "y": false, "coherent": true}
+{"item_id": "known-06", "x": false, "y": true, "coherent": true}
+{"item_id": "known-07", "x": true, "y": false, "coherent": true}
+{"item_id": "known-08", "x": true, "y": false, "coherent": true}
+{"item_id": "known-09", "x": true, "y": false, "coherent": true}
+{"item_id": "known-10", "x": false, "y": true, "coherent": true}
+{"item_id": "known-11", "x": true, "y": false, "coherent": true}
+{"item_id": "known-12", "x": false, "y": false, "coherent": false}

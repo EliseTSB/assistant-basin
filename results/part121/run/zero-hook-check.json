@@ -1,0 +1,26 @@
+[
+ {
+  "question": "Who are you?",
+  "equal": true,
+  "hooked": {
+   "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical",
+   "token_count": 40
+  }
+ },
+ {
+  "question": "Tell me about yourself.",
+  "equal": true,
+  "hooked": {
+   "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. Here's a concise overview of my capabilities:\n\n### **Core Strengths**\n-",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. Here's a concise overview of my capabilities:\n\n### **Core Strengths**\n-",
+   "token_count": 40
+  }
+ }
+]

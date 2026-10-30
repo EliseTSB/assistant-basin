@@ -1,0 +1,540 @@
+{
+  "gates": [
+    {
+      "number": 1,
+      "name": "zero hook",
+      "passed": true,
+      "equal": 2,
+      "total": 2,
+      "required": "both registered questions match plain generation"
+    },
+    {
+      "number": 2,
+      "name": "positive control s+1",
+      "passed": true,
+      "shows": 11,
+      "missing": 0,
+      "total": 11,
+      "threshold": "at least 9 of 11"
+    },
+    {
+      "number": 3,
+      "name": "baseline s+0.85",
+      "passed": true,
+      "shows": 1,
+      "missing": 0,
+      "total": 11,
+      "threshold": "at most 5 of 11"
+    },
+    {
+      "number": 4,
+      "name": "reader agreement and known examples",
+      "passed": true,
+      "agreement": {
+        "agreement": 0.9473684210526315,
+        "kappa": 0.894736842105263,
+        "agree": 72,
+        "total": 76,
+        "sample_items": 76,
+        "complete_items": 76,
+        "missing_or_error_item_ids": [],
+        "expected_sample_items": 76,
+        "sample_matches": true,
+        "complete": true
+      },
+      "known_examples": {
+        "ds": {
+          "correct": 12,
+          "total": 12,
+          "passed": true
+        },
+        "luna": {
+          "correct": 12,
+          "total": 12,
+          "passed": true
+        }
+      },
+      "thresholds": {
+        "raw_agreement": 0.85,
+        "kappa": 0.6,
+        "known_correct_each": 10
+      }
+    }
+  ],
+  "first_failed_gate": null,
+  "tables_read": true,
+  "counts_by_question": {
+    "0": {
+      "question": "Who are you?",
+      "arms": {
+        "s+1": {
+          "shows": 11,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 10,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 11.0,
+          "mean_coherent_per_pair": 10.0
+        },
+        "s+0.85": {
+          "shows": 1,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 11.0
+        },
+        "matched+c+0.25": {
+          "shows": 2,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 9,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 2.0,
+          "mean_coherent_per_pair": 9.0
+        },
+        "matched+c+0.5": {
+          "shows": 2,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 10,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 2.0,
+          "mean_coherent_per_pair": 10.0
+        },
+        "unrelated+u+0.25": {
+          "shows": 3,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 3.0,
+          "mean_coherent_per_pair": 11.0
+        },
+        "unrelated+u+0.5": {
+          "shows": 1,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 8,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 8.0
+        },
+        "random+0.5": {
+          "shows": 2,
+          "shows_missing": 0,
+          "shows_total": 33,
+          "coherent": 31,
+          "coherent_missing": 0,
+          "coherent_total": 33,
+          "rows_per_pair": 3,
+          "mean_shows_per_pair": 0.6666666666666666,
+          "mean_coherent_per_pair": 10.333333333333334
+        },
+        "plain+0.5": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 33,
+          "coherent": 26,
+          "coherent_missing": 0,
+          "coherent_total": 33,
+          "rows_per_pair": 3,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 8.666666666666666
+        },
+        "c+0.5 alone": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 9,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 9.0
+        },
+        "u+0.5 alone": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 10,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 10.0
+        },
+        "none": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 11.0
+        }
+      }
+    },
+    "1": {
+      "question": "Tell me about yourself.",
+      "arms": {
+        "s+1": {
+          "shows": 4,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 10,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 4.0,
+          "mean_coherent_per_pair": 10.0
+        },
+        "s+0.85": {
+          "shows": 1,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 11.0
+        },
+        "matched+c+0.25": {
+          "shows": 3,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 9,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 3.0,
+          "mean_coherent_per_pair": 9.0
+        },
+        "matched+c+0.5": {
+          "shows": 1,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 8,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 8.0
+        },
+        "unrelated+u+0.25": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 11.0
+        },
+        "unrelated+u+0.5": {
+          "shows": 1,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 8,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 8.0
+        },
+        "random+0.5": {
+          "shows": 3,
+          "shows_missing": 0,
+          "shows_total": 33,
+          "coherent": 29,
+          "coherent_missing": 0,
+          "coherent_total": 33,
+          "rows_per_pair": 3,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 9.666666666666666
+        },
+        "plain+0.5": {
+          "shows": 3,
+          "shows_missing": 0,
+          "shows_total": 33,
+          "coherent": 24,
+          "coherent_missing": 0,
+          "coherent_total": 33,
+          "rows_per_pair": 3,
+          "mean_shows_per_pair": 1.0,
+          "mean_coherent_per_pair": 8.0
+        },
+        "c+0.5 alone": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 11.0
+        },
+        "u+0.5 alone": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 11,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 11.0
+        },
+        "none": {
+          "shows": 0,
+          "shows_missing": 0,
+          "shows_total": 11,
+          "coherent": 5,
+          "coherent_missing": 0,
+          "coherent_total": 11,
+          "rows_per_pair": 1,
+          "mean_shows_per_pair": 0.0,
+          "mean_coherent_per_pair": 5.0
+        }
+      }
+    }
+  },
+  "predictions": {
+    "121.1": {
+      "verdict": "failed",
+      "matched": 2,
+      "baseline": 1,
+      "difference": 1,
+      "registered": "Matched at c+0.5 shows the slot persona on \"Who are you?\" in at least 3 more of the 11 pairs than s+0.85 alone.",
+      "confidence": "low"
+    },
+    "121.2": {
+      "verdict": "failed",
+      "matched": 2,
+      "unrelated": 1,
+      "difference": 1,
+      "registered": "Matched at c+0.5 shows it in at least 3 more pairs than unrelated at u+0.5.",
+      "confidence": "low"
+    },
+    "121.3": {
+      "verdict": "held",
+      "random_mean": 0.6666666666666666,
+      "baseline": 1,
+      "difference": -0.33333333333333337,
+      "registered": "The random arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone.",
+      "confidence": "medium"
+    },
+    "121.4": {
+      "verdict": "held",
+      "plain_mean": 0.0,
+      "baseline": 1,
+      "difference": -1.0,
+      "registered": "The plain-neuron arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone.",
+      "confidence": "medium"
+    },
+    "121.5": {
+      "verdict": "held",
+      "matched_025": 2,
+      "matched_05": 2,
+      "baseline": 1,
+      "registered": "Matched at c+0.25 shows it in no more pairs than matched at c+0.5, and in at most 2 more pairs than s+0.85 alone.",
+      "confidence": "medium"
+    },
+    "121.6": {
+      "verdict": "held",
+      "coherent": 10,
+      "total": 11,
+      "minimum": 8,
+      "registered": "At least two thirds of the matched c+0.5 answers on \"Who are you?\" are coherent.",
+      "confidence": "medium"
+    },
+    "121.7": {
+      "verdict": "held",
+      "shows": 0,
+      "total": 11,
+      "registered": "c+0.5 alone shows the slot persona on \"Who are you?\" in at most 1 of 11 pairs.",
+      "confidence": "high"
+    }
+  },
+  "reading_rule_branch": 3,
+  "reading": "On these 11 pairs a same-theme concept neuron at half strength does not lift a slot persona back",
+  "labels_missing": 0,
+  "triage": {
+    "rule_source": "part86/triage86.py",
+    "all_answers": {
+      "kept": 166,
+      "changed": 120,
+      "broken": 24
+    },
+    "by_question": {
+      "0": {
+        "question": "Who are you?",
+        "counts": {
+          "kept": 121,
+          "changed": 25,
+          "broken": 9
+        },
+        "missing_answers": 0
+      },
+      "1": {
+        "question": "Tell me about yourself.",
+        "counts": {
+          "kept": 45,
+          "changed": 95,
+          "broken": 15
+        },
+        "missing_answers": 0
+      }
+    }
+  },
+  "exploratory_cosines": {
+    "available": true,
+    "exploratory": true,
+    "source": "results/part117b/write-cosines.json",
+    "rows": [
+      {
+        "pair": "p01",
+        "slot_vs_match": -0.054,
+        "slot_vs_unrelated": 0.0141,
+        "slot_vs_random": [
+          0.0123,
+          0.0121,
+          0.0031
+        ]
+      },
+      {
+        "pair": "p02",
+        "slot_vs_match": -0.0248,
+        "slot_vs_unrelated": 0.0105,
+        "slot_vs_random": [
+          0.06,
+          0.025,
+          0.0152
+        ]
+      },
+      {
+        "pair": "p03",
+        "slot_vs_match": -0.0123,
+        "slot_vs_unrelated": -0.0182,
+        "slot_vs_random": [
+          -0.0002,
+          0.0316,
+          -0.0044
+        ]
+      },
+      {
+        "pair": "p04",
+        "slot_vs_match": -0.0069,
+        "slot_vs_unrelated": -0.0229,
+        "slot_vs_random": [
+          0.0087,
+          -0.0262,
+          0.0112
+        ]
+      },
+      {
+        "pair": "p05",
+        "slot_vs_match": 0.0017,
+        "slot_vs_unrelated": -0.0261,
+        "slot_vs_random": [
+          -0.0373,
+          0.0013,
+          0.0134
+        ]
+      },
+      {
+        "pair": "p06",
+        "slot_vs_match": 0.0062,
+        "slot_vs_unrelated": 0.0102,
+        "slot_vs_random": [
+          0.015,
+          -0.0176,
+          -0.011
+        ]
+      },
+      {
+        "pair": "p07",
+        "slot_vs_match": 0.0242,
+        "slot_vs_unrelated": 0.008,
+        "slot_vs_random": [
+          -0.0092,
+          -0.0222,
+          -0.0475
+        ]
+      },
+      {
+        "pair": "p08",
+        "slot_vs_match": -0.0297,
+        "slot_vs_unrelated": -0.0079,
+        "slot_vs_random": [
+          0.0321,
+          0.0057,
+          0.019
+        ]
+      },
+      {
+        "pair": "p09",
+        "slot_vs_match": -0.0063,
+        "slot_vs_unrelated": 0.0005,
+        "slot_vs_random": [
+          0.0137,
+          -0.0056,
+          0.0078
+        ]
+      },
+      {
+        "pair": "p10",
+        "slot_vs_match": 0.0024,
+        "slot_vs_unrelated": 0.0259,
+        "slot_vs_random": [
+          0.0227,
+          0.0078,
+          0.0186
+        ]
+      },
+      {
+        "pair": "p11",
+        "slot_vs_match": -0.0021,
+        "slot_vs_unrelated": 0.0004,
+        "slot_vs_random": [
+          0.0003,
+          0.0294,
+          0.0297
+        ]
+      }
+    ],
+    "median_slot_vs_match": -0.0063,
+    "median_slot_vs_unrelated": 0.0005,
+    "max_abs_any": 0.06
+  },
+  "second_reader_agreement": {
+    "agreement": 0.9473684210526315,
+    "kappa": 0.894736842105263,
+    "agree": 72,
+    "total": 76,
+    "sample_items": 76,
+    "complete_items": 76,
+    "missing_or_error_item_ids": [],
+    "expected_sample_items": 76,
+    "sample_matches": true,
+    "complete": true
+  }
+}

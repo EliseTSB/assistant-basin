@@ -1,0 +1,76 @@
+{"item_id": "e3cf29b8c4364184b9f60563", "row_id": "p02:s+1", "pair": "p02", "question_index": 0, "answer_hash": "d599094a4b1bbac6"}
+{"item_id": "84fea1a04140b324c955f01a", "row_id": "p01:unrelated+u+0.25", "pair": "p01", "question_index": 0, "answer_hash": "a8f461b67f27d6c0"}
+{"item_id": "b69f924f2069dfce9475fd08", "row_id": "p01:unrelated+u+0.5", "pair": "p01", "question_index": 1, "answer_hash": "82e33720aa4b42f3"}
+{"item_id": "e9a9fb1153160d1c00788e1f", "row_id": "p04:matched+c+0.25", "pair": "p04", "question_index": 0, "answer_hash": "6bb8a3867277b9e5"}
+{"item_id": "0ed313ed375af304f74d9713", "row_id": "p01:random+0.5:0", "pair": "p01", "question_index": 1, "answer_hash": "bbe938075c37f260"}
+{"item_id": "ec8d7296dbe43414dcc3c71f", "row_id": "p05:s+1", "pair": "p05", "question_index": 0, "answer_hash": "7594455d33eb4c82"}
+{"item_id": "d7fb1b4cfc3a93e1b26f56a8", "row_id": "p01:unrelated+u+0.5", "pair": "p01", "question_index": 0, "answer_hash": "3c831f0e5aa83235"}
+{"item_id": "82356a2b7307f9ee5a1da40f", "row_id": "p01:plain+0.5:1", "pair": "p01", "question_index": 1, "answer_hash": "33655b7d8e0cfeb2"}
+{"item_id": "4ed8cd8327c2ceb7bbb1dfaf", "row_id": "p10:s+0.85", "pair": "p10", "question_index": 0, "answer_hash": "1178099890e14a90"}
+{"item_id": "2f5175d115e19bb394b8ae12", "row_id": "p01:matched+c+0.5", "pair": "p01", "question_index": 0, "answer_hash": "fd369ca14adcd2c6"}
+{"item_id": "fbb2ce00a59519d644603f1b", "row_id": "p11:s+1", "pair": "p11", "question_index": 0, "answer_hash": "cae31b18cc67e0e0"}
+{"item_id": "e7ae61bd1b48eff72b46bc34", "row_id": "p08:s+1", "pair": "p08", "question_index": 1, "answer_hash": "519140724b87b3de"}
+{"item_id": "c75e49d6d5e1a37333c47ffc", "row_id": "p01:random+0.5:0", "pair": "p01", "question_index": 0, "answer_hash": "803740fa902237b7"}
+{"item_id": "3146719882576378490a5152", "row_id": "p08:random+0.5:2", "pair": "p08", "question_index": 1, "answer_hash": "fd496d6afc102fe8"}
+{"item_id": "3bb8e4be8e4ee8b50cde35d9", "row_id": "p01:plain+0.5:2", "pair": "p01", "question_index": 1, "answer_hash": "98a902d2c4e81626"}
+{"item_id": "135d7e17ec6b7dafadc4536f", "row_id": "p05:matched+c+0.25", "pair": "p05", "question_index": 0, "answer_hash": "491c9fbd6942d067"}
+{"item_id": "752b6eb3c88f04b6e4d24f59", "row_id": "p09:s+1", "pair": "p09", "question_index": 0, "answer_hash": "ccfe6096450a02ee"}
+{"item_id": "bbe7c829e2c48d4adff934de", "row_id": "p10:s+1", "pair": "p10", "question_index": 0, "answer_hash": "377667b54aefa7d3"}
+{"item_id": "d4779b80f3743163aea889a5", "row_id": "p01:s+1", "pair": "p01", "question_index": 1, "answer_hash": "319216013c655638"}
+{"item_id": "a0c56b69b64f7f1fb19c4668", "row_id": "p11:unrelated+u+0.25", "pair": "p11", "question_index": 0, "answer_hash": "123e2934781932ff"}
+{"item_id": "4c701f7fb9b63c0dc079fa3c", "row_id": "p01:s+1", "pair": "p01", "question_index": 0, "answer_hash": "9583806a6ebdea1c"}
+{"item_id": "075e28e0f9ceb04548d724bb", "row_id": "p10:unrelated+u+0.25", "pair": "p10", "question_index": 0, "answer_hash": "f8ab891acdf08abd"}
+{"item_id": "42682ca1e50583da2b8e0632", "row_id": "p01:matched+c+0.25", "pair": "p01", "question_index": 1, "answer_hash": "f68c4ee25e618af8"}
+{"item_id": "f447369825065d6842dd8a38", "row_id": "p05:matched+c+0.5", "pair": "p05", "question_index": 1, "answer_hash": "ac7db26e192646a4"}
+{"item_id": "35b355430ba99ba5ae6af371", "row_id": "p05:matched+c+0.25", "pair": "p05", "question_index": 1, "answer_hash": "71f507736a633ba7"}
+{"item_id": "a0933c428f9c020e45e31dc1", "row_id": "p07:s+1", "pair": "p07", "question_index": 0, "answer_hash": "f4a825513d173a61"}
+{"item_id": "f3f0673725def6987b13969c", "row_id": "p06:s+1", "pair": "p06", "question_index": 0, "answer_hash": "b25b1d58b0e64816"}
+{"item_id": "97bfb555605b45407329b0b4", "row_id": "p08:s+1", "pair": "p08", "question_index": 0, "answer_hash": "24029c8fcee3a136"}
+{"item_id": "ef9ffdaab55257da8588d8a9", "row_id": "p09:random+0.5:0", "pair": "p09", "question_index": 1, "answer_hash": "390a7bda1ac892b1"}
+{"item_id": "7eb1fbbd70b3635a2017c441", "row_id": "p04:s+1", "pair": "p04", "question_index": 0, "answer_hash": "20b0d3e4ab79310e"}
+{"item_id": "6dee8fbd90ab8e28621fbb84", "row_id": "p09:random+0.5:0", "pair": "p09", "question_index": 0, "answer_hash": "b9085253f33ecdd2"}
+{"item_id": "05628d3232f1639b79aa2d8d", "row_id": "p01:s+0.85", "pair": "p01", "question_index": 1, "answer_hash": "13372fad11e4f99a"}
+{"item_id": "d0bd17c942ad2bb879de5ab5", "row_id": "p02:s+1", "pair": "p02", "question_index": 1, "answer_hash": "be868a98944008a3"}
+{"item_id": "95fc5d5dd889b47139c93a16", "row_id": "p05:matched+c+0.5", "pair": "p05", "question_index": 0, "answer_hash": "8c6dce9682668eff"}
+{"item_id": "977e4b762b3ab3be54be063e", "row_id": "p04:s+1", "pair": "p04", "question_index": 1, "answer_hash": "f46c55bf7aabf962"}
+{"item_id": "ad521fee965e555b3d21ac77", "row_id": "p07:matched+c+0.25", "pair": "p07", "question_index": 1, "answer_hash": "49cb51c3df40b61d"}
+{"item_id": "23da8e802a759615c0ae9a08", "row_id": "p01:plain+0.5:0", "pair": "p01", "question_index": 1, "answer_hash": "4ad67242dedcf2ac"}
+{"item_id": "0cae1aca00384c3c70e57fa7", "row_id": "p03:s+1", "pair": "p03", "question_index": 0, "answer_hash": "f8aa25b1f5911ae9"}
+{"item_id": "d7f1fc57090726755b6a39e6", "row_id": "p11:c+0.5 alone", "pair": "p11", "question_index": 1, "answer_hash": "6f00e9828413cb1a"}
+{"item_id": "e6c5baadefeb7a4eddd66c3a", "row_id": "p11:matched+c+0.25", "pair": "p11", "question_index": 0, "answer_hash": "781c139a4dc643a5"}
+{"item_id": "43b08eef00216b23251080b8", "row_id": "p07:matched+c+0.25", "pair": "p07", "question_index": 0, "answer_hash": "bb283d3fe0454373"}
+{"item_id": "9f42db0b23a5704b9a336904", "row_id": "p11:matched+c+0.5", "pair": "p11", "question_index": 1, "answer_hash": "66a42b3ccc621e07"}
+{"item_id": "da3cac818e8233e1d4f6090d", "row_id": "p07:c+0.5 alone", "pair": "p07", "question_index": 0, "answer_hash": "909cc4175e9a8329"}
+{"item_id": "f7e69ff41420e5c768b8da2d", "row_id": "none", "pair": "p07", "question_index": 1, "answer_hash": "722b4204d6b47b13"}
+{"item_id": "7de54fd74717495329996173", "row_id": "p10:matched+c+0.25", "pair": "p10", "question_index": 0, "answer_hash": "222726577db9bbef"}
+{"item_id": "0af1e68a6cc34c852055ce05", "row_id": "p01:plain+0.5:1", "pair": "p01", "question_index": 0, "answer_hash": "2eeca48a7ed3c91d"}
+{"item_id": "46a6dcb80563c9f2a592bbc3", "row_id": "p06:random+0.5:0", "pair": "p06", "question_index": 0, "answer_hash": "a24676edf01ce137"}
+{"item_id": "e7976b7ae4083d81a7f01a9e", "row_id": "p02:random+0.5:1", "pair": "p02", "question_index": 0, "answer_hash": "6a422dff7ad5f762"}
+{"item_id": "25b8f4e27059476fdaf6fe45", "row_id": "p05:s+1", "pair": "p05", "question_index": 1, "answer_hash": "9b1ab7f6c4d1b65a"}
+{"item_id": "2d91af34648073650cd0b9d2", "row_id": "p01:matched+c+0.5", "pair": "p01", "question_index": 1, "answer_hash": "2e7e94277b607985"}
+{"item_id": "839a69de891ca1a62d6b821f", "row_id": "none", "pair": "p09", "question_index": 0, "answer_hash": "dfc3d2a965bdfeda"}
+{"item_id": "3f8def10414e2ee46a521a46", "row_id": "p09:random+0.5:2", "pair": "p09", "question_index": 1, "answer_hash": "f97d1d920bb6ce74"}
+{"item_id": "1c82c55323de4a705d474207", "row_id": "p08:unrelated+u+0.5", "pair": "p08", "question_index": 1, "answer_hash": "2bb7e83cabe415fc"}
+{"item_id": "efbb2854bce03f7775753b05", "row_id": "p01:random+0.5:2", "pair": "p01", "question_index": 1, "answer_hash": "29d23de5a5bbecb4"}
+{"item_id": "944434e5850850e84f6b393d", "row_id": "none", "pair": "p05", "question_index": 1, "answer_hash": "722b4204d6b47b13"}
+{"item_id": "92ec3148a71d541088abab94", "row_id": "p04:plain+0.5:0", "pair": "p04", "question_index": 0, "answer_hash": "1ee36f20d8110562"}
+{"item_id": "38ad1bc30281b6c0a9f87813", "row_id": "p11:u+0.5 alone", "pair": "p11", "question_index": 1, "answer_hash": "255d28be6bd66d97"}
+{"item_id": "3e2d5fa33f8764cfdefbb0d4", "row_id": "p04:random+0.5:0", "pair": "p04", "question_index": 0, "answer_hash": "c8ba843ff49bdfad"}
+{"item_id": "2c1d06b222b8c2078b45d08d", "row_id": "p08:plain+0.5:0", "pair": "p08", "question_index": 0, "answer_hash": "4c637376628746e2"}
+{"item_id": "8c653395a2663183b46a34a9", "row_id": "p09:c+0.5 alone", "pair": "p09", "question_index": 1, "answer_hash": "795ff71d8e0e632d"}
+{"item_id": "202608a7c45fbc1184d58185", "row_id": "p10:plain+0.5:1", "pair": "p10", "question_index": 0, "answer_hash": "21f1c2aff351ef16"}
+{"item_id": "b1ce647db26682090fcf6d06", "row_id": "p09:unrelated+u+0.5", "pair": "p09", "question_index": 1, "answer_hash": "7977de3fb9e62ece"}
+{"item_id": "898a80cca5bfa3235f3ed9fa", "row_id": "p08:plain+0.5:0", "pair": "p08", "question_index": 1, "answer_hash": "fd241c215569dad2"}
+{"item_id": "ee91a8547d92ad196c333f59", "row_id": "p01:unrelated+u+0.25", "pair": "p01", "question_index": 1, "answer_hash": "42edcb9e704b8efb"}
+{"item_id": "0921ac987776af8d307abd1c", "row_id": "p02:matched+c+0.5", "pair": "p02", "question_index": 1, "answer_hash": "a3b1e19200f5161d"}
+{"item_id": "23cfacadac3392f2c688b1b6", "row_id": "none", "pair": "p03", "question_index": 1, "answer_hash": "722b4204d6b47b13"}
+{"item_id": "93985a3c9e84527599380e82", "row_id": "p08:random+0.5:1", "pair": "p08", "question_index": 0, "answer_hash": "23c4e9aeb8e4dd40"}
+{"item_id": "3506dae7754a7fe665fdd4f9", "row_id": "p02:random+0.5:0", "pair": "p02", "question_index": 1, "answer_hash": "5086dd534727aa82"}
+{"item_id": "ce2532d86043cc395ad38d68", "row_id": "p01:u+0.5 alone", "pair": "p01", "question_index": 1, "answer_hash": "51ac9e2d9d02923d"}
+{"item_id": "2525c78e3e301a681dc8ce15", "row_id": "p09:u+0.5 alone", "pair": "p09", "question_index": 1, "answer_hash": "7d0e4ed95f80cf7d"}
+{"item_id": "dfa95fcce0a7972fd5998d47", "row_id": "p10:s+1", "pair": "p10", "question_index": 1, "answer_hash": "987b6582addcf15f"}
+{"item_id": "068aad849c8749db4260bf54", "row_id": "p03:s+0.85", "pair": "p03", "question_index": 1, "answer_hash": "17c147fec520669d"}
+{"item_id": "e23a134175ccf40958382aad", "row_id": "p10:unrelated+u+0.5", "pair": "p10", "question_index": 0, "answer_hash": "893565ac623a55cc"}
+{"item_id": "2bbd016cbb381b5d228df4f2", "row_id": "p02:u+0.5 alone", "pair": "p02", "question_index": 1, "answer_hash": "c63c22e7f889485a"}
+{"item_id": "6eb6de56d118c1ad4865d12b", "row_id": "p10:matched+c+0.5", "pair": "p10", "question_index": 1, "answer_hash": "8d07eba5f0954be0"}
+{"item_id": "efde6874a67c6ba2bd69171a", "row_id": "p03:s+0.85", "pair": "p03", "question_index": 0, "answer_hash": "d2165d835821e693"}
