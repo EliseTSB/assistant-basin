@@ -1,10 +1,7 @@
 # Part 124: does an OLMo neuron prefer its persona phrase when that phrase is the only changing text?
 
 Procedure: v1  
-Registration time: 2026-10-30 14:57  
-Credit: designed by Claude (Opus 5.5) with GPT-6 Luna on my brief; every prediction and design decision mine, following Part 122's cold check.
-
-Not registered. No Part 124 activations have been collected.
+Registered 2026-10-30 15:27 CT by Claude (Opus 5.5), before any data. Designed with GPT-6 Luna on my brief; every prediction and design decision is mine, following Part 122's cold check.
 
 ## Question
 
@@ -92,7 +89,7 @@ The family list comes from these 39 phrases:
 
 For a unit whose own phrase misses the top three, report a family-crowding near miss if removing its family siblings from the ranking would move its phrase into the top three. This is descriptive only and does not count as a read.
 
-## Controls and gates
+## Controls
 
 - **Length-stratified permutations:** use the strata above to permute the full 39-unit map. Report the T true-map count, the null median, the 95th percentile, and the exact permutation tail. Also report the separate concept and slot counts against their corresponding counts in the same permutations.
 - **Random channels:** sample three distinct random channels per focal unit from the same layer, excluding all focal channels. The sample is drawn from a saved pool of 1,000 random channels per used layer. Give each random channel its focal unit's phrase as a pseudo-target and apply the same read rule. Channels may be sampled for more than one focal unit. The pooled random read rate must be at most 15% in each frame. Expected rate is 7.7%. Print `random reads: T k/n, F k/n, C k/n; observed false-positive rates: T k/n, F k/n, C k/n; gate: pass/fail` before any focal read.
@@ -100,15 +97,26 @@ For a unit whose own phrase misses the top three, report a family-crowding near 
 - **Do-nothing check:** compare logits without hooks to logits under the read-only activation hooks, using the same input shape. Require bitwise equality. A changed logit fails the gate.
 - **Construction check:** use tokenizer offsets for the slot; reject any token that crosses a quote or slot boundary. Check that token IDs outside the slot match across every phrase in a template and that each persona/neutral pair has equal slot token count. No padding or one-sided text changes are allowed.
 
-Print the random line, the instrument line and every gate before any focal read. If any gate misses, withdraw the headline. Show the gated counts but mark all predictions as withdrawn. Missing activations are errors, never non-reads. A torn final JSONL line is logged and skipped; malformed lines elsewhere and malformed JSON files raise errors.
+Not used: a push, a dose ladder, generated answers and a reader, because this reads activations only.
 
-## Size and run plan
+Gate: the construction check, the do-nothing check, the pooled random read rate at most 15% in each frame, and the instrument check at least 15% in T. Print the random line, the instrument line and every gate before any focal read. If any gate misses, withdraw the headline. Show the gated counts but mark all predictions as withdrawn. Missing activations are errors, never non-reads. A torn final JSONL line is logged and skipped; malformed lines elsewhere and malformed JSON files raise errors.
 
+## Size
+
+- Total: 1,872 sequences, about 2 minutes.
+- Smallest effect worth knowing: a six-unit excess over the median permutation in T, about 9 of 39 against about 3 by chance.
+- Pilot: the first batch sets the throughput and checks slot offsets; its rows are reused.
 - There are 39 persona phrases × 8 templates × 3 frames = 936 persona inputs and 936 neutral inputs. This is 936 matched pairs or 1,872 sequences. At batch size 8 matched pairs (16 sequences), the run needs 117 data forwards, plus two same-shape do-nothing forwards, for 119 forwards. The random pools, random-channel controls and instrument check reuse these passes.
 - The 39 units use 10 layers: 1, 2, 3, 4, 5, 6, 7, 9, 10 and 12. The pinned checkpoint config gives 8,192 `down_proj` input channels per layer, so 1,000 random channels can be captured after excluding focal channels.
 - Capture 1,000 random channels at each used layer, for 10,000 instrument channels. The three-per-unit random read controls are sampled from those saved pools. The smallest effect worth knowing remains a six-unit excess over the median T permutation, about 9 of 39 reads against about 3 by chance.
 - Part 122 measured about two minutes for 117 batch-8 calls. These fixed templates have the same number of inputs, so two minutes is the working estimate. The first batch supplies throughput and slot-offset checks. If it projects to more than five minutes, benchmark batch sizes before the main run and record the choice before scoring.
 - The reader appends activation rows and resumes by their frame/template/phrase/side keys. It skips a torn final activation JSONL line with a log message. No GPU or network work was done for this feasibility check.
+
+## Optimization
+
+- Bound resource: A770 forward passes.
+- Measured: Part 122's 117 batch-8 calls took about two minutes; the first batch here measures this run.
+- Levers: batch size, kept at Part 122's 8 unless the first batch projects over five minutes; one CPU transfer per hook, taken; all channels in the same forward passes, taken; resume by key, taken. Generation and labelling do not apply.
 
 ## Predictions
 
