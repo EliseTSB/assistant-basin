@@ -55,31 +55,40 @@ def validate_payload(payload: object, persona: str) -> dict:
     result = {}
     for frame in PERSONA_FIELDS:
         pairs = payload.get(frame)
-        if not isinstance(pairs, list) or len(pairs) != PAIR_COUNT:
-            raise ValueError(f"{frame} must contain exactly {PAIR_COUNT} pairs")
+        if not isinstance(pairs, list) or len(pairs) < PAIR_COUNT:
+            raise ValueError(f"{frame} must contain at least {PAIR_COUNT} pairs")
         normalized = []
+        first_error = None
         for index, pair in enumerate(pairs):
-            if not isinstance(pair, dict) or set(pair) != {"persona", "ordinary"}:
-                raise ValueError(f"{frame}[{index}] must contain persona and ordinary passages")
-            target = _valid_passage(pair["persona"], f"{frame}[{index}].persona")
-            ordinary = _valid_passage(pair["ordinary"], f"{frame}[{index}].ordinary")
-            target_words = word_tokens(target)
-            ordinary_word_list = word_tokens(ordinary)
-            ordinary_words = set(ordinary_word_list)
-            if not all(term in target_words for term in persona_terms):
-                raise ValueError(f"{frame}[{index}] persona passage omits part of the persona name")
-            leaked = sorted(set(persona_terms) & ordinary_words)
-            if leaked:
-                raise ValueError(f"{frame}[{index}] ordinary passage leaks persona word(s): {', '.join(leaked)}")
-            if abs(len(target_words) - len(ordinary_word_list)) > 4:
-                raise ValueError(f"{frame}[{index}] persona and ordinary passages differ by more than four words")
-            target_first = bool(_FIRST_PERSON.search(target))
-            ordinary_first = bool(_FIRST_PERSON.search(ordinary))
-            if frame == "first_person" and not (target_first and ordinary_first):
-                raise ValueError(f"{frame}[{index}] both passages must use first person")
-            if frame == "third_person" and (target_first or ordinary_first):
-                raise ValueError(f"{frame}[{index}] passages must use third person")
-            normalized.append({"persona": target, "ordinary": ordinary})
+            try:
+                if not isinstance(pair, dict) or set(pair) != {"persona", "ordinary"}:
+                    raise ValueError(f"{frame}[{index}] must contain persona and ordinary passages")
+                target = _valid_passage(pair["persona"], f"{frame}[{index}].persona")
+                ordinary = _valid_passage(pair["ordinary"], f"{frame}[{index}].ordinary")
+                target_words = word_tokens(target)
+                ordinary_word_list = word_tokens(ordinary)
+                ordinary_words = set(ordinary_word_list)
+                if not all(term in target_words for term in persona_terms):
+                    raise ValueError(f"{frame}[{index}] persona passage omits part of the persona name")
+                leaked = sorted(set(persona_terms) & ordinary_words)
+                if leaked:
+                    raise ValueError(f"{frame}[{index}] ordinary passage leaks persona word(s): {', '.join(leaked)}")
+                if abs(len(target_words) - len(ordinary_word_list)) > 4:
+                    raise ValueError(f"{frame}[{index}] persona and ordinary passages differ by more than four words")
+                target_first = bool(_FIRST_PERSON.search(target))
+                ordinary_first = bool(_FIRST_PERSON.search(ordinary))
+                if frame == "first_person" and not (target_first and ordinary_first):
+                    raise ValueError(f"{frame}[{index}] both passages must use first person")
+                if frame == "third_person" and (target_first or ordinary_first):
+                    raise ValueError(f"{frame}[{index}] passages must use third person")
+                normalized.append({"persona": target, "ordinary": ordinary})
+            except ValueError as exc:
+                first_error = first_error or str(exc)
+                continue
+            if len(normalized) == PAIR_COUNT:
+                break
+        if len(normalized) < PAIR_COUNT:
+            raise ValueError(first_error or f"{frame} has fewer than {PAIR_COUNT} valid pairs")
         result[frame] = normalized
     return result
 
@@ -91,7 +100,7 @@ def build_prompt(unit: dict) -> str:
         f"Persona name: {unit['persona']}\n"
         f"Persona description: {unit['desc']}\n\n"
         "Return JSON only with exactly these keys: third_person and first_person. Each value must be an array "
-        "of exactly eight objects, each with exactly persona and ordinary string fields.\n"
+        "of exactly twelve objects, each with exactly persona and ordinary string fields.\n"
         "Every string is exactly two sentences. In third_person, write about the supplied persona in third person; "
         "in first_person, let it speak in first person. For each pair, ordinary must replace the persona with one "
         "unrelated everyday subject that does not appear in any other way in the persona passage. Keep the two "

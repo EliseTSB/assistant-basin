@@ -70,7 +70,7 @@ def test_passage_validator_rejects_persona_word_leak_in_ordinary_pair():
 def test_passage_validator_rejects_bad_counts_and_length():
     payload = valid_payload()
     payload["first_person"].pop()
-    with pytest.raises(ValueError, match="exactly 8 pairs"):
+    with pytest.raises(ValueError, match="at least 8 pairs"):
         write_passages.validate_payload(payload, "Boulder")
     payload = valid_payload()
     payload["third_person"][0]["ordinary"] = (
