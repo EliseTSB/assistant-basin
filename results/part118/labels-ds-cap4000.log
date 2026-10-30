@@ -1,0 +1,3 @@
+{"reader": "ds", "answer_cells": 281, "pending": 281, "error_rows": 0, "output": "/home/elisepc/green/worktrees/ab-part67/results/part118/labels-ds.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part118/labels-ds.usage.jsonl", "sample_seed": 11800, "sample_share": 0.15}
+CHAIN-RC=0
+rc=0 01:53:08

@@ -194,9 +194,9 @@ Part 109b asked a cold activities question after Part 92 selected concept units 
 
 Part 112's one-reader Qwen atlas also sorted 465 targets into 257 concept, 189 slot, 17 unclassified and 2 unsorted labels; all 465 were labeled with their target on “Who are you?” at dose 0.8. The paired random directions received persona labels in 148 of 1,860 answers to the four non-self questions. This is a one-dose consistency check on an atlas built from the same question, not evidence that each label is the neuron's only function. [Part 112](results/part112/README.md) [Part 112 numbers](results/part112/NUMBERS.md)
 
-Part 118's registered across-dose sort has no result README or result table yet. [Part 118 design](PART118-DESIGN.md)
+Part 118 tried the sort across doses. At half the selection dose few units show a persona, and that column does not separate neurons from random directions. At twice the dose all 234 neuron answers are incoherent, so the test cannot say whether the sort holds above 0.8. Two predictions held and six failed, and two of those failures were forced by the incoherence. [Part 118](results/part118/README.md) [Part 118 numbers](results/part118/NUMBERS.md)
 
-Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 27 held and 25 failed across Parts 92, 92b, 109, 109b, 109c, 112, 113, 117, and 117b. Part 118 has no result yet. [Part 118 design](PART118-DESIGN.md)
+Prediction rows in [PREDICTIONS.md](PREDICTIONS.md): 27 held and 25 failed across Parts 92, 92b, 109, 109b, 109c, 112, 113, 117, and 117b, and 2 held and 6 failed in Part 118. [Part 118 design](PART118-DESIGN.md)
 
 ## Finding 9: Slot-persona counts differ across OLMo stages among units selected at Instruct
 
@@ -2565,7 +2565,7 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 117b](results/part117b/README.md)**, 2026-10-29. Part 117b's Qwen3.5-4B random-direction sample had only 15 of 33 answers coherent, below the registered 22-of-33 gate, so its random-control erasure reading is withheld; the unrelated-concept condition also fell below its coherence gate at 7 of 11. Predictions 117b.3–117b.10 failed; 117b.1 and 117b.2 held. The dose checks showed slot-persona answers in 11 of 11 at +1, 2 of 11 at +0.85 and 0 of 11 at +0.5.
 
-**Part 118**, registered 2026-10-30; labels pending. This OLMo 2 1B study compares slot and concept classifications across alpha 0.4, 0.8, 1.6 and 3.2, using six questions and random-direction controls. There is no results README yet, and all eight registered predictions remain pending.
+**[Part 118](results/part118/README.md)**, 2026-10-30. The 39 sorted units at doses 0.4, 0.8, 1.6 and 3.2, six questions, with random-direction controls. At 0.4 few units show their persona. At 0.8 the sort is present by construction, because the units were chosen there. At 1.6 all 234 neuron answers are incoherent, so the rules that needed a coherent answer could not pass, and persona marks at that dose are repetition loops. Marks come from Haiku alone and likely run high: on 43 sampled answers Haiku marked 14 and DeepSeek 4. Two predictions held and six failed.
 
 **[Part 119](results/part119/README.md)**, 2026-10-30. All 741 pairs of OLMo 2 1B's 39 persona neurons, pushed at alpha 0.8 each on "Who are you?". On positions where the two single pushes' top tokens differ, adding the two single effects matched the pair's token at a mean row rate of 24.4%, against 60% predicted, and the median interaction share was 0.47. The interaction was about as large with a random second push matched on single-effect size (ratio 1.04, interval 0.96 to 1.13). Concept units beat slot units in 90 of 137 decided pairs by token count. Pair answers broke often at this dose (48% by the triage rule; a reader marked 15% of a sample coherent), so these are results about this dose.
 

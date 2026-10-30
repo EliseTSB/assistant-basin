@@ -2569,14 +2569,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 118.1 | Claude (medium confidence): At twice the push (alpha 1.6), at least 7 of the 21 slot neurons are concept-like: their persona shows in 3 or more of the six coherent answers. | pending | pending |
-| 118.2 | Claude (medium confidence): At half the push (alpha 0.4), at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | pending | pending |
-| 118.3 | Claude (medium confidence): At four times the push (alpha 3.2), at least 60% of all neuron answers are not coherent. | pending | pending |
-| 118.4 | Claude (low confidence): At four times the push, the share of not-coherent answers for random directions is within 15 percentage points of the share for neurons. | pending | pending |
-| 118.5 | Claude (low confidence): At twice the push, at least 12 of the 18 concept neurons are still concept-like. | pending | pending |
-| 118.1a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers. | pending | pending |
-| 118.2a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | pending | pending |
-| 118.5a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers. | pending | pending |
+| 118.1 | Claude (medium confidence): At twice the push (alpha 1.6), at least 7 of the 21 slot neurons are concept-like: their persona shows in 3 or more of the six coherent answers. | 0/21 | failed |
+| 118.2 | Claude (medium confidence): At half the push (alpha 0.4), at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | Slot Who: 0/21; concept any question: 4/18 | failed |
+| 118.3 | Claude (medium confidence): At four times the push (alpha 3.2), at least 60% of all neuron answers are not coherent. | 234/234 (100.0%) | held |
+| 118.4 | Claude (low confidence): At four times the push, the share of not-coherent answers for random directions is within 15 percentage points of the share for neurons. | Neuron: 234/234; random: 234/234; gap: 0.0 pp | held |
+| 118.5 | Claude (low confidence): At twice the push, at least 12 of the 18 concept neurons are still concept-like. | 0/18 | failed |
+| 118.1a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers. | 4/21 | failed |
+| 118.2a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | Slot Who: 0/21; concept any question: 4/18 | failed |
+| 118.5a | Claude (Amendment 2, medium confidence): Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers. | 10/18 | failed |
 
 ## Part 92b (registered 2026-10-30, PART92B-DESIGN.md): does Part 92's concept/slot split survive a second reader?
 
