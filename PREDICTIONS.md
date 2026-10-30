@@ -2671,9 +2671,38 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 123.1 | Claude (low confidence): For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null. | pending | pending |
-| 123.2 | Claude (low confidence): At q=1, the fitted vector shows the target persona on “Who are you?” for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls. | pending | pending |
-| 123.3 | Claude (medium confidence): The neuron arm loses at least 5 of 21 slot units on “Who are you?” from q=1 to q=0.85. | pending | pending |
-| 123.4 | Claude (low confidence): From q=1 to q=0.85 on “Who are you?”, the fitted vector loses fewer slot units than the neuron arm does. | pending | pending |
-| 123.5 | Claude (medium confidence): Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05. A fitted vector is read from text, and this tests whether a neuron that reads its theme sits closer to it. | pending | pending |
-| 123.6 | Claude (low confidence): At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector. | pending | pending |
+| 123.1 | Claude (low confidence): For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null. | Joint rank-and-null hits: 2/21; top-decile rank: 3/21; above shuffle p95: 2/21. | not read |
+| 123.2 | Claude (low confidence): At q=1, the fitted vector shows the target persona on “Who are you?” for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls. | Fitted vector 0/21 readable; random directions 0/21, 0/21, 0/21 readable. | not read |
+| 123.3 | Claude (medium confidence): The neuron arm loses at least 5 of 21 slot units on “Who are you?” from q=1 to q=0.85. | Neuron readable slots: q=1 20/21; q=0.85 1/21; change 19. | not read |
+| 123.4 | Claude (low confidence): From q=1 to q=0.85 on “Who are you?”, the fitted vector loses fewer slot units than the neuron arm does. | Fitted vector readable slots: q=1 0/21; q=0.85 0/21. Neuron: 20/21 and 1/21. | not read |
+| 123.5 | Claude (medium confidence): Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05. A fitted vector is read from text, and this tests whether a neuron that reads its theme sits closer to it. | Median rank 2,623 for concepts and 3,017 for slots; U=184; one-sided p=0.449560. | not read |
+| 123.6 | Claude (low confidence): At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector. | Coherent three-of-six count: 0/18; raw three-mark count: 0/18. | not read |
+
+## Part 126 (registered 2026-10-30, PART126-DESIGN.md): which earlier tokens do the heads from Part 83 read and write?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 126.1 | Claude (medium confidence): Across the 32 heads, mean role-token attention mass pooled across both copies correlates with Part 83's absolute drops at Spearman rho at least 0.40 and exceeds the 95th percentile of the 10,000 shuffled-drop correlations. | pending | pending |
+| 126.2 | Claude (low confidence): L11 h5 ranks in the top five of 32 heads by role-token attention mass in the Assistant copy. | pending | pending |
+| 126.3 | Claude (low confidence): The top 20 written tokens from L11 h5's Assistant-copy role-token write include an exact first-person token (`i`, `me`, `my`, `mine`, `we`, `us`, `our`, `ours`), second-person token (`you`, `your`, `yours`), or assistant-role token (`assistant`), after trimming whitespace and punctuation and lowercasing. | pending | pending |
+| 126.4 | Claude (medium confidence): Among the 20 heads Part 83 classifies as mattering (absolute drop at least 0.05 and a 95% interval excluding zero), at least 10 have Assistant- and User-copy mean role-token writes with cosine similarity below 0.90. | pending | pending |
+
+## Part 124 (registered 2026-10-30, PART124-DESIGN.md): does an OLMo neuron prefer its persona phrase when that phrase is the only changing text?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 124.1 | Claude (low confidence): In T, at least 9 of 39 units read their persona, and the count is above the 95th percentile of the permutation null. | pending | pending |
+| 124.2 | Claude (low confidence): In T, the concept read rate is at least 15 percentage points above the slot read rate. | pending | pending |
+| 124.3 | Claude (medium confidence): In T, at most 4 of 21 slot units read their persona. | pending | pending |
+| 124.4 | Claude (low confidence): Of the units that read in T, at least half also read in C. | pending | pending |
+
+## Part 125 (registered 2026-10-30, PART125-DESIGN.md): does a kept first-turn cache carry persona beyond the same words?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 125.1 | Claude (medium confidence): At turn 5, the coherent-persona counts of arm 2 and arm 3 are within 5 units of each other. | pending | pending |
+| 125.2 | Claude (medium confidence): At turn 5, arm 3 shows a coherent persona in at least 6 of 29 units, so text alone carries the persona across four turns. | pending | pending |
+| 125.3 | Claude (medium confidence): At turn 2, delta_2 is above the mean of its three delta_r_2 in at least 20 of 29 units. | pending | pending |
+| 125.4 | Claude (low confidence): The count in 125.3 is at least 5 units lower at turn 5 than at turn 2. | pending | pending |
+| 125.5 | Claude (medium confidence): At turn 5, arm 1 has at least 6 more incoherent answers than arm 2. Pushing every turn breaks answers more than it holds a persona. | pending | pending |
+| 125.6 | Claude (medium confidence): At turn 5, arm 4 shows a coherent target persona in at most 2 of 29 units. | pending | pending |
