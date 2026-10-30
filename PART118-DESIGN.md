@@ -51,8 +51,9 @@ shows-persona must be at least 0.6, or the predictions are reported as unreadabl
 
 - Smallest effect worth knowing: a third of the slot neurons turning concept-like at twice the push (7 of 21) against
   none; with 21 units that is an interval of roughly 15% to 55%, enough to tell a split from a continuum.
-- Total: 39 neurons x 4 alphas x 6 questions x 2 arms = 1,872 answers, plus 6 unpushed; 1,872 primary labels (Haiku 5.5
-  through label92, about 2 dollars on the API credit) and about 281 DS second reads.
+- Total: 1,878 answers (39 neurons x 4 alphas x 6 questions x 2 arms = 1,872, plus 6 unpushed), about 15 minutes on
+  the A770 (an upper bound from Part 117's 1.9 answers/s for a model four times larger; the pilot measures it); 1,872
+  primary labels (Haiku 5.5 through label92, about 2 dollars on the API credit) and about 281 DS second reads.
 - Pilot: the alpha 0.8 neuron cells of the first 4 neurons (24 answers), timed, and checked against Part 92 (Gate 1 on
   those rows); stop if any of them differs.
 
