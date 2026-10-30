@@ -29,8 +29,8 @@ python -I part86/miss86.py score \
 Fixture tests passed with:
 
 ```sh
-/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part86/test_miss86.py -p no:cacheprovider
-/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part86 -p no:cacheprovider
+python3 -I -m pytest -q part86/test_miss86.py -p no:cacheprovider
+python3 -I -m pytest -q part86 -p no:cacheprovider
 ```
 
 The first command reported 8 passed; the existing Part 86 suite reported 48 passed. The label fixture replaced `judge_client.call_prompt` with a fake transport. No screen sample, live label call, or score over real labels was run.
@@ -40,8 +40,8 @@ Two deliberate mutations were tested in the scratch copy a scratch copy outside 
 The red checks were run from a scratch copy outside the repository with:
 
 ```sh
-/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part86/test_miss86.py::test_prepare_is_seeded_disjoint_correct_and_blind -p no:cacheprovider
-/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part86/test_miss86.py::test_missing_label_stops_before_opening_key -p no:cacheprovider
+python3 -I -m pytest -q part86/test_miss86.py::test_prepare_is_seeded_disjoint_correct_and_blind -p no:cacheprovider
+python3 -I -m pytest -q part86/test_miss86.py::test_missing_label_stops_before_opening_key -p no:cacheprovider
 ```
 
 Both commands exited 1 on their intended mutation.

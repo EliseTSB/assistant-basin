@@ -290,3 +290,12 @@ are shuffled, carry fresh ids, and hold no layer, unit, arm or triage class; the
 31 broken, 100 changed). Random directions have only 31 broken answers, so that sample is all 31; the other three are
 200 each, 631 items in all. Each sample's coherent personas under the version-2 rule are reported with Wilson 95%
 intervals, beside the rates, as the triage miss rate. It changes no verdict.
+
+## Amendment 10 (2026-10-30 02:46 CT, after the miss sample's DS labels were scored, before any second-read label)
+
+The cold check of the miss-rate section (`results/part86/COLD-CHECK-miss-r1.md`) found that the miss sample had one
+reader. Amendment 2 item 2 registered a second blind reader on a random 10% of all items (seed 8687), and Amendment 9
+did not remove it, so it applies here: GPT-6 Luna, with brief version 2 through `calib86.py`'s Luna path, labels a
+seeded 10% of the 631 miss items (63 items, seed 8687, drawn from the sorted item ids). Cohen's kappa between DS and
+Luna on "coherent persona or not" is reported beside the miss rates. The DS labels stay the reading. If kappa is below
+0.6, the miss-rate section says its estimate rests on a reading the second reader does not support. No verdict changes.
