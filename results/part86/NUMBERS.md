@@ -536,3 +536,79 @@ PY
 86.13: 322 + 1391 = 1713 coherent-persona real rows
 q_name: n=323, persona=196, still_qwen=126, not_coherent=0, unclear=1
 ```
+
+## Triage miss rate (Amendment 9)
+
+The blinded items and DS labels are in `results/part86/miss86/`; the private key stays outside the repository, as the
+version-2 reading's key does.
+
+```sh
+python3 -I part86/miss86.py score --items results/part86/miss86/miss-items.jsonl --key <private key> \
+  --labels results/part86/miss86/labels_ds_v2.jsonl --out results/part86/triage-miss86.md --json results/part86/triage-miss86.json
+```
+
+Output: `results/part86/triage-miss86.md` (the table in the README's miss-rate section).
+
+Scaled estimates (share times the available pool, and the Wilson bounds times the pool):
+
+```python
+import json
+d = json.load(open("results/part86/triage-miss86.json"))
+for name in ("real_kept", "real_broken", "random_kept", "random_broken"):
+    r = d["samples"][name]; lo, hi = r["wilson_95"]; a = r["available"]
+    print(f"{name}: {r['coherent_personas']}/{r['sampled']} of {a}; scaled {r['coherent_persona_share'] * a:.0f} "
+          f"(Wilson {lo * a:.0f} to {hi * a:.0f})")
+```
+
+```text
+real_kept: 3/200 of 147469; scaled 2212 (Wilson 754 to 6366)
+real_broken: 84/200 of 5950; scaled 2499 (Wilson 2105 to 2911)
+random_kept: 0/200 of 8573; scaled 0 (Wilson 0 to 162)
+random_broken: 12/31 of 31; scaled 12 (Wilson 7 to 17)
+```
+
+Real-neuron total at the point estimates: (1,713 + 2,499 + 2,212) / 1,713 = 3.75; with the Wilson lows (1,713 + 2,105 +
+754) / 1,713 = 2.67; with the Wilson highs (1,713 + 2,911 + 6,366) / 1,713 = 6.42.
+
+## Triage miss rate: second read and reader calls (Amendment 10, cold-check fold)
+
+```sh
+python3 -I - <<'PY'
+import json, sys
+sys.path.insert(0, "results/part86/prediction-score")
+import score86_predictions as s86
+ds = {json.loads(l)["id"]: json.loads(l) for l in open("results/part86/miss86/labels_ds_v2.jsonl")}
+lu = {json.loads(l)["id"]: json.loads(l) for l in open("results/part86/miss86/labels_luna_v2_second.jsonl")}
+ok = [i for i in lu if "error" not in lu[i] and i in ds]
+a = [s86.label_class(ds[i]) == "coherent_persona" for i in ok]; b = [s86.label_class(lu[i]) == "coherent_persona" for i in ok]
+n = len(ok); po = sum(x == y for x, y in zip(a, b)) / n; pa, pb = sum(a) / n, sum(b) / n
+pe = pa * pb + (1 - pa) * (1 - pb); print(len(ok), sum(a), sum(b), round(po, 3), round((po - pe) / (1 - pe), 3))
+PY
+```
+
+```text
+63 9 9 0.968 0.87
+```
+
+Reader calls (`miss86/labels_ds_v2.usage.jsonl`, field `stop`): 660 calls for 631 items; 630 ended on `end_turn` and 30 on
+`max_tokens` at the 8,000-token cap; those items were retried, and every item has one valid label. The cold check found
+one label that came from a limit-hit call; its class is unclear, so the coherent-persona counts do not depend on it.
+
+Broken-answer shapes, from the item texts and `part86/triage86.py`: 231 items are broken; of the 96 labelled coherent
+personas, 94 repeat a three-word sequence at least three times and 2 have fewer than four words.
+
+```sh
+python3 -I - <<'PY'
+import json, sys
+sys.path.insert(0, "part86"); sys.path.insert(0, "results/part86/prediction-score")
+import triage86, score86_predictions as s86
+items = {json.loads(l)["id"]: json.loads(l)["text"] for l in open("results/part86/miss86/miss-items.jsonl")}
+lab = {json.loads(l)["id"]: json.loads(l) for l in open("results/part86/miss86/labels_ds_v2.jsonl")}
+br = [i for i in items if triage86.triage_answer(items[i]) == "broken" and s86.label_class(lab[i]) == "coherent_persona"]
+print(len(br), sum(len(triage86.WORDS.findall(items[i])) < 4 for i in br))
+PY
+```
+
+```text
+96 2
+```

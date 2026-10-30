@@ -1,0 +1,18 @@
+{
+  "sampled_items": 631,
+  "already_labeled": 0,
+  "attempted_items": 631,
+  "error_rows": 1,
+  "output": "<local>/part86-miss86/labels/labels_ds_v2.jsonl",
+  "usage": "<local>/part86-miss86/labels/labels_ds_v2.usage.jsonl"
+}
+{
+  "sampled_items": 631,
+  "already_labeled": 630,
+  "attempted_items": 1,
+  "error_rows": 0,
+  "output": "<local>/part86-miss86/labels/labels_ds_v2.jsonl",
+  "usage": "<local>/part86-miss86/labels/labels_ds_v2.usage.jsonl"
+}
+CHAIN-RC=0
+rc=0 02:31:11

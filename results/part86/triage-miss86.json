@@ -1,0 +1,91 @@
+{
+  "sample_seed": 8686,
+  "requested_per_sample": 200,
+  "samples": {
+    "real_kept": {
+      "population": "real",
+      "triage_class": "kept",
+      "requested": 200,
+      "available": 147469,
+      "sampled": 200,
+      "shortfall": false,
+      "shortfall_note": null,
+      "coherent_personas": 3,
+      "coherent_persona_share": 0.015,
+      "wilson_95": [
+        0.00511423779325831,
+        0.04316572879269026
+      ],
+      "version_2_class_counts": {
+        "not_coherent": 0,
+        "unclear": 0,
+        "coherent_still_qwen": 197,
+        "coherent_persona": 3
+      }
+    },
+    "real_broken": {
+      "population": "real",
+      "triage_class": "broken",
+      "requested": 200,
+      "available": 5950,
+      "sampled": 200,
+      "shortfall": false,
+      "shortfall_note": null,
+      "coherent_personas": 84,
+      "coherent_persona_share": 0.42,
+      "wilson_95": [
+        0.35373599161616726,
+        0.4892792606041954
+      ],
+      "version_2_class_counts": {
+        "not_coherent": 82,
+        "unclear": 28,
+        "coherent_still_qwen": 6,
+        "coherent_persona": 84
+      }
+    },
+    "random_kept": {
+      "population": "random",
+      "triage_class": "kept",
+      "requested": 200,
+      "available": 8573,
+      "sampled": 200,
+      "shortfall": false,
+      "shortfall_note": null,
+      "coherent_personas": 0,
+      "coherent_persona_share": 0.0,
+      "wilson_95": [
+        1.734723475976807e-18,
+        0.018845326377266575
+      ],
+      "version_2_class_counts": {
+        "not_coherent": 0,
+        "unclear": 0,
+        "coherent_still_qwen": 200,
+        "coherent_persona": 0
+      }
+    },
+    "random_broken": {
+      "population": "random",
+      "triage_class": "broken",
+      "requested": 200,
+      "available": 31,
+      "sampled": 31,
+      "shortfall": true,
+      "shortfall_note": "Only 31 random answers were broken; all 31 were included.",
+      "coherent_personas": 12,
+      "coherent_persona_share": 0.3870967741935484,
+      "wilson_95": [
+        0.23733101420380254,
+        0.5617589138033927
+      ],
+      "version_2_class_counts": {
+        "not_coherent": 12,
+        "unclear": 5,
+        "coherent_still_qwen": 2,
+        "coherent_persona": 12
+      }
+    }
+  },
+  "verdict_effect": "none"
+}
