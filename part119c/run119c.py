@@ -42,9 +42,17 @@ def load_model(snapshot_dir: str | Path, device: str, dtype):
     tokenizer = AutoTokenizer.from_pretrained(snapshot, local_files_only=True)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(
-        snapshot, torch_dtype=dtype, local_files_only=True
-    ).to(device)
+    if device == "cpu":
+        model = AutoModelForCausalLM.from_pretrained(
+            snapshot, torch_dtype=dtype, local_files_only=True
+        ).to(device)
+    else:
+        # Straight to the device, as part115b/howmany115b.py: staging float32 weights in host memory
+        # tripped the job's RAM guard (0.85 GB left) on the first launch.
+        import transformers.modeling_utils as modeling_utils
+        modeling_utils.caching_allocator_warmup = lambda *a, **k: None
+        model = AutoModelForCausalLM.from_pretrained(
+            snapshot, torch_dtype=dtype, local_files_only=True, device_map={"": device})
     model.requires_grad_(False)
     model.eval()
     return tokenizer, model
@@ -154,6 +162,8 @@ def run(args: argparse.Namespace) -> dict:
     if outputs["bf16"].resolve() == outputs["float32"].resolve():
         raise ValueError("bf16 and float32 runs must have separate output files")
     for dtype_name, dtype in (("bf16", torch.bfloat16), ("float32", torch.float32)):
+        if dtype_name not in getattr(args, "dtypes", "bf16,float32").split(","):
+            continue
         output = outputs[dtype_name]
         runs.append(_run_dtype(dtype_name, dtype, args, units, rows, answers, output))
         # _run_dtype's local model, hooks and tensor caches are gone before the next load.
@@ -177,6 +187,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", default="results/part119c")
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--batch", type=int, default=8)
+    parser.add_argument("--dtypes", default="bf16,float32",
+                        help="which runs to do; a resume names the one left, so the finished model is not loaded")
     parser.add_argument("--neurons", default=rows119.DEFAULT_NEURONS)
     parser.add_argument("--kinds", default=rows119.DEFAULT_HAIKU_KINDS)
     parser.add_argument("--kinds-ds", default=rows119.DEFAULT_DS_KINDS)
