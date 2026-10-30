@@ -1,0 +1,57 @@
+{
+ "S197": {
+  "match": "C293",
+  "match_score": 2,
+  "unrelated": "C408"
+ },
+ "S209": {
+  "match": "C426",
+  "match_score": 1,
+  "unrelated": "C314"
+ },
+ "S305": {
+  "match": "C071",
+  "match_score": 2,
+  "unrelated": "C439"
+ },
+ "S354": {
+  "match": "C096",
+  "match_score": 3,
+  "unrelated": "C150"
+ },
+ "S365": {
+  "match": "C072",
+  "match_score": 2,
+  "unrelated": "C355"
+ },
+ "S393": {
+  "match": "C385",
+  "match_score": 2,
+  "unrelated": "C212"
+ },
+ "S397": {
+  "match": "C401",
+  "match_score": 2,
+  "unrelated": "C258"
+ },
+ "S406": {
+  "match": "C440",
+  "match_score": 2,
+  "unrelated": "C342"
+ },
+ "S417": {
+  "match": "C401",
+  "match_score": 2,
+  "unrelated": "C434"
+ },
+ "S431": {
+  "match": "C114",
+  "match_score": 2,
+  "unrelated": "C301"
+ },
+ "S437": {
+  "match": "C071",
+  "match_score": 2,
+  "unrelated": "C250"
+ }
+}

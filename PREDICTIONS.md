@@ -2471,3 +2471,16 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 115b.5 | Claude (medium confidence): For both rankings and all three openings, no matched random set takes the target off first place on more than 2 of the 16 at any k. | | |
 | 115b.6 | Claude (low confidence): For the gradient ranking, at the smallest k found under 115b.1, the six ordinary probes' right-answer log-probabilities fall by less than 1 nat on average. | | |
 | 115b.7 | Claude (medium confidence): For the gradient ranking after "My name is" at k = 500, the most common first word of the continuations that do not start with "Q" is a model or company name. | | |
+
+## Part 117 (registered 2026-10-29, PART117-DESIGN.md): what happens when a concept neuron and a slot neuron that share a theme are pushed together in Qwen3.5-4B?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 117.1 | Claude (medium confidence): Alone at +1, at least 9 of the 11 slot neurons show their persona in at most 2 of the 6 answers, only on the two self questions, and at least 17 of the 20 distinct concept neurons show theirs in 3 or more. | | |
+| 117.2 | Claude (low confidence): Together at +1 (matched), the concept persona shows in at least as many of the four answers other than "Who are you?" and "Tell me about yourself." as with the concept neuron alone, in at least 8 of the 11 pairs. | | |
+| 117.3 | Claude (low confidence): Together at +1 (matched), the "Who are you?" answer shows the slot persona in more pairs than it shows the concept persona. | | |
+| 117.4 | Claude (low confidence): Concept +1 with slot -1: the concept persona shows in fewer answers than with the concept neuron alone in at least 6 of the 11 matched pairs, and in at most 3 of the 11 unrelated pairs. | | |
+| 117.5 | Claude (medium confidence): Both at +0.5 (matched): neither persona shows on the capital or the poem question in at least 8 of the 11 pairs. | | |
+| 117.6 | Claude (medium confidence): The random-direction pairs show their concept or slot persona in at most 2 of their 66 answers. | | |
+| 117.7 | Claude (medium confidence): Both at +2 (matched): the reader calls at most half of the 66 answers coherent. | | |
+| 117.8 | Claude (low confidence): Concept -1 with slot +1 (matched): the "Who are you?" answer shows the slot persona in at least 6 of the 11 pairs. | | |

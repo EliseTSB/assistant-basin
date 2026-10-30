@@ -1,0 +1,277 @@
+[
+ {
+  "pair": "p01",
+  "slot": {
+   "id": "q112-197",
+   "layer": 23,
+   "neuron": 2885,
+   "persona": "Continuous Deformation of Space-Time (CDST)",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-293",
+   "layer": 24,
+   "neuron": 1458,
+   "persona": "3D spatial coordinate system",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-408",
+   "layer": 24,
+   "neuron": 8797,
+   "persona": "spice manufacturer and supplier",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p02",
+  "slot": {
+   "id": "q112-209",
+   "layer": 23,
+   "neuron": 4074,
+   "persona": "12-year-old Shanghai high school student",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-426",
+   "layer": 25,
+   "neuron": 2379,
+   "persona": "Pythagoras, Greek mathematician and philosopher",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-314",
+   "layer": 24,
+   "neuron": 3172,
+   "persona": "steering wheel",
+   "part112_kind": "concept"
+  },
+  "match_score": 1
+ },
+ {
+  "pair": "p03",
+  "slot": {
+   "id": "q112-305",
+   "layer": 24,
+   "neuron": 2288,
+   "persona": "nuclear weapon R&D system",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-071",
+   "layer": 21,
+   "neuron": 8485,
+   "persona": "combat-soldier leader named Maggie",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-439",
+   "layer": 25,
+   "neuron": 6777,
+   "persona": "Chandelier",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p04",
+  "slot": {
+   "id": "q112-354",
+   "layer": 24,
+   "neuron": 6051,
+   "persona": "Kunpeng, an integrated intelligent processing unit",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-096",
+   "layer": 22,
+   "neuron": 2929,
+   "persona": "NVIDIA GeForce GPU",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-150",
+   "layer": 22,
+   "neuron": 7907,
+   "persona": "safety insurance product",
+   "part112_kind": "concept"
+  },
+  "match_score": 3
+ },
+ {
+  "pair": "p05",
+  "slot": {
+   "id": "q112-365",
+   "layer": 24,
+   "neuron": 6621,
+   "persona": "Google Cloud Engine",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-072",
+   "layer": 21,
+   "neuron": 8600,
+   "persona": "high-speed optical network transmission platform",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-355",
+   "layer": 24,
+   "neuron": 6053,
+   "persona": "Self-Esteem",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p06",
+  "slot": {
+   "id": "q112-393",
+   "layer": 24,
+   "neuron": 7964,
+   "persona": "sentient paperclip named Coraline",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-385",
+   "layer": 24,
+   "neuron": 7563,
+   "persona": "mobile phone assistant named Q",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-212",
+   "layer": 23,
+   "neuron": 4292,
+   "persona": "a large amount of money",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p07",
+  "slot": {
+   "id": "q112-397",
+   "layer": 24,
+   "neuron": 8264,
+   "persona": "Google Search",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-401",
+   "layer": 24,
+   "neuron": 8469,
+   "persona": "web browser",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-258",
+   "layer": 23,
+   "neuron": 7880,
+   "persona": "marriage and family counselor",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p08",
+  "slot": {
+   "id": "q112-406",
+   "layer": 24,
+   "neuron": 8674,
+   "persona": "two-line poem personifying \"two rights\"",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-440",
+   "layer": 25,
+   "neuron": 6836,
+   "persona": "time-traveling entity named Time",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-342",
+   "layer": 24,
+   "neuron": 5326,
+   "persona": "progress bar",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p09",
+  "slot": {
+   "id": "q112-417",
+   "layer": 25,
+   "neuron": 140,
+   "persona": "Google search engine",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-401",
+   "layer": 24,
+   "neuron": 8469,
+   "persona": "web browser",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-434",
+   "layer": 25,
+   "neuron": 5507,
+   "persona": "large dollar sign",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p10",
+  "slot": {
+   "id": "q112-431",
+   "layer": 25,
+   "neuron": 4457,
+   "persona": "Gmail email service",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-114",
+   "layer": 22,
+   "neuron": 4487,
+   "persona": "third-party social connections tool",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-301",
+   "layer": 24,
+   "neuron": 1931,
+   "persona": "climate change expert",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ },
+ {
+  "pair": "p11",
+  "slot": {
+   "id": "q112-437",
+   "layer": 25,
+   "neuron": 6717,
+   "persona": "Deputy President of the People's Republic of China",
+   "part112_kind": "slot"
+  },
+  "match": {
+   "id": "q112-071",
+   "layer": 21,
+   "neuron": 8485,
+   "persona": "combat-soldier leader named Maggie",
+   "part112_kind": "concept"
+  },
+  "unrelated": {
+   "id": "q112-250",
+   "layer": 23,
+   "neuron": 7401,
+   "persona": "video short film series",
+   "part112_kind": "concept"
+  },
+  "match_score": 2
+ }
+]
