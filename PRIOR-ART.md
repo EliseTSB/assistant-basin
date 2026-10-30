@@ -563,3 +563,15 @@ change is not by itself a chain; and a null on single zeroings does not refute a
 - **Zheng et al. 2023 (MT-Bench and Chatbot Arena) and Thakur et al. 2024 ("Judging the Judges")** on how far LLM judges
   agree with each other and with people; cited from memory, not re-read for Part 92b.
 
+
+## Pairs of neurons pushed together (Part 119, searched 2026-10-30)
+
+- **a9lim and treetowntree (X thread, 2026-10-27, x.com/_a9lim/status/2114902166804763073)** steer several neurons at once
+  in Qwen3-8B and report a rule for when the result is one coherent character. Characters, no random controls or logit
+  readout in the thread.
+- **Tzanakakis, Karatzikos and Georgakopoulos-Soares 2026 (arXiv:2609.17599, "Structure is not mechanism")** define
+  pairwise epistasis as the joint effect minus the sum of the single effects, and report non-additive damage among
+  co-located rows, from ablations in a text and a genomic model.
+- **van der Weij, Poesio and Schoots 2024 (arXiv:2403.05767)**: one vector combining several behaviours mostly failed;
+  separate vectors at different places worked.
+- One search found no test of additivity of two single-neuron pushes in next-word logits against random controls.
