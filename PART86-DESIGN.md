@@ -182,3 +182,35 @@ Decision `part86-after-r6-2026-10-28`, after Sol's round 6 (`scratch/review-part
    so that phrase must be the selected file's: replay and `verify86.py prepare` both take the picked file itself,
    require its digest to be the one every pick's config carries, and require every pick's layer, neuron and persona to
    be a row of it. A digest carried through configs is not enough on its own.
+
+## Amendment 6 (2026-10-29 22:14 CT, after Amendment 2's second read, before any calibration label is read)
+
+Amendment 2's second read (Opus 5.5 on the seed-8687 10% sample, 335 items) agreed with the first reader at kappa 0.157,
+below 0.6, so 86.2 to 86.6 stay NOT READ until a second full reading. Two checks were made before choosing a reader for
+that reading, both blind to the real/random key:
+
+1. **The instructions match.** The first reader (the J-lens bundle's labels from its `code/label.py`: Haiku 5.5,
+   thinking disabled, max_tokens 500) and the second (`results/part86/second-reader/second86.py`: Opus 5.5, default
+   thinking, max_tokens 4000) were given the same fields, kinds and coherence definition. READER-BRIEF.md adds one
+   sentence ("Use the answer's stated identity, not what you think the steering condition was") and asks for the item
+   id. The kappa maps both readers with `blind86._label_class`. So the low kappa is two readers disagreeing on nearly
+   the same instructions, not two mappings.
+2. **Where they disagree.** On the `coherent` flag: the second reader marks 112 of the first reader's 276 not-coherent
+   answers coherent, and the reverse happens 9 times. On renamed assistants: of the 36 answers both call coherent and
+   the first calls "another AI", the second calls 19 "still Qwen or an assistant".
+
+**The remedy, fixed before any calibration label is read.** Two cheap readers from other model families label the same
+335 items with the second reader's exact prompt (`second86.reader_prompt`): DeepSeek V4.1 Flash through OpenCode Go
+(max_tokens 8000, default thinking) and GPT-6 Luna through the ChatGPT-subscription proxy (max_tokens 8000, adaptive
+thinking). Script: `results/part86/second-reader/calib86.py`. A two-item smoke of each reader ran first to test the
+script; those two labels are not part of the result.
+
+- If DS V4.1 Flash and Luna agree with each other on coherent persona at kappa 0.6 or more, the second full reading is
+  DS V4.1 Flash on all 3,349 items with the same prompt. Its labels on the 335 sampled items are this calibration's, and
+  Luna's are its Amendment 2 second read. 86.2 to 86.6 are then read from the DS labels by the registered rules.
+- If they agree below 0.6, no pair of readers has been shown to read the brief alike. The brief is clarified by a further
+  amendment before any reading, and 86.2 to 86.6 stay unread.
+- Neither the Haiku nor the Opus labels choose between the two cheap readers. Parts 112, 117 and 117b drew their units
+  from the first reader's labels; this amendment does not change those parts.
+- Why cheap readers: Elise, 2026-10-29, on the API credit: Opus runs cost much more than Haiku ones, and Luna and DS
+  V4.1 Flash are cheap. A full Opus reading would be about 3,350 calls.
