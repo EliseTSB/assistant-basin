@@ -119,11 +119,12 @@ def _gates(run, lens, region_mass, hidden):
     shape_ok = bool(shape.get("passed"))
     if shape_list is not None and expected is not None:
         shape_ok = shape_ok and shape_list == expected and len(shape_list) == 3
-        shape_ok = shape_ok and shape_list[1:] == [hidden, hidden]
+        # The lens is square in the model's hidden size; `hidden` here is the captured head width.
+        shape_ok = shape_ok and shape_list[1] == shape_list[2]
         shape_ok = shape_ok and all(layer < shape_list[0] for layer in LAYERS)
     gates["lens_shape"] = {
         "passed": shape_ok, "lens_shape": shape_list, "expected_shape": expected,
-        "capture_hidden_size": hidden, "selected_layers": list(LAYERS),
+        "captured_head_dim": hidden, "selected_layers": list(LAYERS),
     }
     return gates
 

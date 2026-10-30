@@ -13,7 +13,7 @@ Only decoder layers 0 to 15 load. A direct load of all 32 layers still dropped W
 
 ## Amendment 3 (15:24 CT, after the capture, before any prediction was read)
 
-Gate 4's code failed on two defects of its own: it compared the model's hidden size with the head width of the captured vectors, and it expected one stacked tensor where the lens file holds one matrix per layer. The gate's meaning is unchanged: 31 matrices of the model's hidden size. I had read the three gates, the four `not read` lines and the first three rows of the attention table when I made this fix. No threshold or prediction changed.
+Gate 4's code failed on two defects of its own, in the lens script and again in the scorer: it compared the model's hidden size with the head width of the captured vectors, and it expected one stacked tensor where the lens file holds one matrix per layer. The gate's meaning is unchanged: 31 matrices of the model's hidden size. I had read the three gates, the four `not read` lines and the first three rows of the attention table when I made this fix. No threshold or prediction changed.
 
 ## Question
 
