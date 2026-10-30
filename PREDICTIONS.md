@@ -2484,3 +2484,18 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 117.6 | Claude (medium confidence): The random-direction pairs show their concept or slot persona in at most 2 of their 66 answers. | | |
 | 117.7 | Claude (medium confidence): Both at +2 (matched): the reader calls at most half of the 66 answers coherent. | | |
 | 117.8 | Claude (low confidence): Concept -1 with slot +1 (matched): the "Who are you?" answer shows the slot persona in at least 6 of the 11 pairs. | | |
+
+## Part 117b (registered 2026-10-29, PART117B-DESIGN.md): why does a concept neuron pushed negative erase a slot neuron's self-description in Qwen3.5-4B?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 117b.1 | Claude (medium confidence): Matched concept -1 with slot +1: the slot persona shows on "Who are you?" in at most 2 of the 11 pairs. | | |
+| 117b.2 | Claude (low confidence): Unrelated concept -1 with slot +1: the slot persona shows on "Who are you?" in at most 3 of the 11 pairs. | | |
+| 117b.3 | Claude (low confidence): A random direction at the matched concept's push size, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of the random rows (22 of 33 when all are read). | | |
+| 117b.4 | Claude (low confidence): Each concept neuron alone at -1: the "Who are you?" answer contains "qwen" for at most 8 of the 20 distinct concept neurons. | | |
+| 117b.5 | Claude (medium confidence): The reader calls the "Who are you?" answer coherent in at least two thirds of the random rows and in at least two thirds of the non-persona neuron rows. | | |
+| 117b.6 | Claude (low confidence): Matched concept -0.5 with slot +1: the slot persona shows on "Who are you?" in at least 4 of the 11 pairs. | | |
+| 117b.7 | Claude (medium confidence): The reader calls the "Who are you?" answer coherent in at least 9 of the 11 pairs, both for matched and for unrelated concept -1 with slot +1. | | |
+| 117b.8 | Claude (low confidence): Slot +0.5 alone: the slot persona shows on "Who are you?" in at least 5 of the 11 pairs. | | |
+| 117b.9 | Claude (low confidence): A non-persona neuron from the matched concept's layer, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of these rows (22 of 33 when all are read). | | |
+| 117b.10 | Claude (medium confidence): Slot +0.85 alone: the slot persona shows on "Who are you?" in at least 9 of the 11 pairs. | | |
