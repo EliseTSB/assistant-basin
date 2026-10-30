@@ -110,7 +110,9 @@ def _ds_transport(prompt: str) -> dict:
         model=DS_MODEL,
         route="ocgo",
         session="part118-ds-v4-1-flash",
-        max_tokens=500,
+        # Amendment 3: DS V4.1 Flash reasons before its JSON; at 500 tokens 92 of 365 attempts stopped on
+        # max_tokens with no JSON. 4,000 leaves room for the reasoning.
+        max_tokens=4000,
         timeout=300,
     )
 
@@ -152,7 +154,8 @@ def _label_one(item: dict, reader: str, primary_key: str,
             _record_usage(usage_path, item, reader, attempt, response, None)
             return {**_public(item), **parsed}
         except Exception as exc:
-            last_error = repr(exc).replace(primary_key, "[redacted]")[:240]
+            # An empty key (the DS reader) must not be "redacted": str.replace("", x) inserts x between every character.
+            last_error = (repr(exc).replace(primary_key, "[redacted]") if primary_key else repr(exc))[:240]
             _record_usage(usage_path, item, reader, attempt, response, last_error)
             if attempt < MAX_ATTEMPTS:
                 sleep_fn(5)

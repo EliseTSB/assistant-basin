@@ -138,3 +138,13 @@ without them, before any primary label is read. The primary labels wait for the 
 | 118.2a | Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | medium | Claude |
 | 118.5a | Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers. | medium | Claude |
 
+
+## Amendment 3 (2026-10-30 01:46 CT, before any Part 118 label is read; only the DS read's error counts have been seen)
+
+Gate 2's DS read ran with `label118.py`'s 500-token cap. DS V4.1 Flash reasons before it writes the JSON object, and
+92 of its 365 attempts stopped on max_tokens with no JSON; after two passes 15 of the 281 sampled cells were still
+error rows, which the reading rule counts as not showing. The read is redone in full at a 4,000-token cap, with the
+same prompt, sample and workers. The 500-token read is kept unread as `results/part118/labels-ds-cap500.jsonl` with
+its usage file. The labeller's error text for the DS reader was also unreadable (an empty key was "redacted" between
+every character), and that is fixed. Nothing else changes. The primary reader keeps label92's 500-token cap, which
+labelled 634 of 636 items in Part 92.
