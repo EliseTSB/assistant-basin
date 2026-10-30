@@ -56,7 +56,8 @@ with one another at 0.45 to 0.57). Parts 112, 117 and 118 build on Part 92's spl
 
 - Smallest effect worth knowing: a reader change that moves a third of the slot units (7 of 21) out of slot. All 39
   units are read, so the kind counts are exact; kappa over about 634 items has a standard error near 0.04.
-- Total: 636 DS labels, 96 Luna labels and 24 Gate A labels, 756 calls, no GPU.
+- Total: 756 calls, about 20 minutes (636 DS labels, 96 Luna labels and 24 Gate A labels; no GPU; DS measured at
+  0.77 items per second with 8 workers at the 4,000-token cap on Part 118's second read, 01:47 to 01:53 CT).
 - Pilot: Gate A's 24 labels, timed; stop if either reader fails it.
 
 ## Optimization
@@ -95,3 +96,7 @@ second reader can show that one reader made a split; it cannot show the split is
 ## Predictions copied to PREDICTIONS.md
 
 Copied verbatim into PREDICTIONS.md under "## Part 92b (registered ...)".
+
+## Amendment 1 (2026-10-30 01:55 CT, before any label)
+
+The Size section's total gains the run time the launcher checks for. It read: "Total: 636 DS labels, 96 Luna labels and 24 Gate A labels, 756 calls, no GPU." Nothing else changes.
