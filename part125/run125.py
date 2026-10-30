@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import math
@@ -31,6 +32,7 @@ CONSENSUS_IDS = (
 PILOT_IDS = ("p92-02", "p92-08")
 RANDOM_COUNT = 3
 RANDOM_SEED_BASE = 125000
+PUSH_EFFECT_ATOL = 0.05
 
 
 def read_json(path: str | Path):
@@ -107,6 +109,137 @@ def _push_vector(unit: dict, layer, median: float):
     weight = layer.mlp.down_proj.weight
     vector = common92.neuron_push(weight, int(unit["neuron"]), 1.0)
     return (vector * (0.8 * float(median))).reshape(1, -1)
+
+
+def _tensor_sha256(tensor) -> str:
+    import torch
+
+    value = tensor.detach().contiguous().to(device="cpu")
+    raw = value.view(torch.uint8).numpy().tobytes()
+    prefix = f"{value.dtype}:{tuple(value.shape)}:".encode("utf-8")
+    return hashlib.sha256(prefix + raw).hexdigest()
+
+
+def _push_payload(unit: dict, push) -> dict:
+    import torch
+
+    value = push.detach().contiguous().to(device="cpu")
+    raw = value.view(torch.uint8).numpy().tobytes()
+    return {
+        "unit_id": str(unit["id"]),
+        "layer": int(unit["layer"]),
+        "neuron": int(unit["neuron"]),
+        "dtype": str(value.dtype),
+        "shape": list(value.shape),
+        "vector_base64": base64.b64encode(raw).decode("ascii"),
+        "sha256": _tensor_sha256(value),
+    }
+
+
+def _load_push_vector(path: str | Path, *, unit: dict | None = None):
+    import torch
+
+    payload = read_json(path)
+    if unit is not None and any(payload.get(key) != expected for key, expected in (
+        ("unit_id", str(unit["id"])), ("layer", int(unit["layer"])),
+        ("neuron", int(unit["neuron"])),
+    )):
+        raise ValueError("saved push vector unit, layer, or neuron does not match")
+    dtype_map = {
+        "torch.float16": torch.float16,
+        "torch.bfloat16": torch.bfloat16,
+        "torch.float32": torch.float32,
+        "torch.float64": torch.float64,
+    }
+    dtype = dtype_map.get(str(payload.get("dtype")))
+    if dtype is None:
+        raise ValueError(f"saved push vector has unsupported dtype {payload.get('dtype')!r}")
+    try:
+        raw = base64.b64decode(payload["vector_base64"], validate=True)
+        shape = tuple(int(size) for size in payload["shape"])
+        vector = torch.frombuffer(bytearray(raw), dtype=dtype).clone().reshape(shape)
+    except (KeyError, TypeError, ValueError, RuntimeError) as exc:
+        raise ValueError(f"saved push vector is invalid: {exc}") from exc
+    if _tensor_sha256(vector) != payload.get("sha256"):
+        raise ValueError("saved push vector sha256 mismatch")
+    return payload, vector
+
+
+def _save_push_vector(path: Path, unit: dict, push):
+    expected = _push_payload(unit, push)
+    if path.is_file():
+        saved, vector = _load_push_vector(path, unit=unit)
+        if saved.get("sha256") != expected["sha256"]:
+            raise ValueError("saved push vector sha256 differs from the computed unit push")
+        return saved, vector
+    write_json_atomic(path, expected)
+    return _load_push_vector(path, unit=unit)
+
+
+def _pilot_push_effect_check(model, tokenizer, unit: dict, push, *, device: str) -> dict:
+    import torch
+
+    layer_no = int(unit["layer"])
+    layer = common92.get_layers(model)[layer_no]
+    token_ids = session.next_prompt_ids(tokenizer, [], [], session.QUESTIONS[0])
+    input_ids = torch.tensor([token_ids], dtype=torch.long, device=device)
+    attention_mask = torch.ones_like(input_ids)
+    position_ids = torch.arange(len(token_ids), dtype=torch.long,
+                                device=device).unsqueeze(0)
+    captured = {}
+
+    def capture(name):
+        def record(_module, _inputs, output):
+            hidden = output[0] if isinstance(output, (tuple, list)) else output
+            captured[name] = hidden[:, -1, :].detach().clone()
+        return record
+
+    def forward(name, *, hooked):
+        capture_handle = None
+        hook_handle = None
+        if hooked:
+            hook_handle = common92.add_row_hook(layer, push)
+            capture_handle = layer.register_forward_hook(capture(name))
+        else:
+            capture_handle = layer.register_forward_hook(capture(name))
+        try:
+            with torch.inference_mode():
+                output = model(input_ids=input_ids, attention_mask=attention_mask,
+                               position_ids=position_ids, use_cache=False)
+        finally:
+            capture_handle.remove()
+            if hook_handle is not None:
+                hook_handle.remove()
+        return output.logits[:, -1, :].detach().clone()
+
+    plain_logits = forward("plain", hooked=False)
+    hooked_logits = forward("hooked", hooked=True)
+    plain_hidden = captured["plain"]
+    hooked_hidden = captured["hooked"]
+    intended = push.to(device=hooked_hidden.device, dtype=hooked_hidden.dtype)
+    error = ((hooked_hidden.float() - plain_hidden.float()) - intended.float()).abs()
+    max_error = float(error.max().detach().to(device="cpu"))
+    intended_norm = float(torch.linalg.vector_norm(intended.float()).detach().to(device="cpu"))
+    moved_norm = float(torch.linalg.vector_norm(
+        (hooked_hidden.float() - plain_hidden.float()).reshape(-1)
+    ).detach().to(device="cpu"))
+    logits_differ = not torch.equal(plain_logits, hooked_logits)
+    passed = bool(logits_differ and intended_norm > 0 and max_error <= PUSH_EFFECT_ATOL)
+    return {
+        "unit_id": str(unit["id"]),
+        "layer": layer_no,
+        "neuron": int(unit["neuron"]),
+        "question": session.QUESTIONS[0],
+        "target": "last prompt token at the hooked layer",
+        "logits_differ": logits_differ,
+        "plain_logit_sha256": session.logit_hash(plain_logits),
+        "hooked_logit_sha256": session.logit_hash(hooked_logits),
+        "intended_push_norm": intended_norm,
+        "observed_target_shift_norm": moved_norm,
+        "target_max_abs_error": max_error,
+        "tolerance": PUSH_EFFECT_ATOL,
+        "passed": passed,
+    }
 
 
 def _random_vectors(layer, layer_no: int, median: float):
@@ -193,12 +326,44 @@ def _logit_hash(logits) -> str:
     return session.logit_hash(logits)
 
 
-def _replay_logged_calls(model, sequence: list[dict], replay_hook, *, device: str,
+def _replay_logged_calls(model, sequence: list[dict], push_vector_path: str | Path | None, *, device: str,
                         sequence_name: str) -> tuple[list[str], dict | None]:
     replay_cache = None
     hashes = []
+    saved_payload = None
+    saved_push = None
+    layers = None
+    if any(call.get("hook_on") is True for call in sequence):
+        if push_vector_path is None:
+            return hashes, {"sequence": sequence_name,
+                            "reason": "saved push vector is required for hooked replay"}
+        try:
+            saved_payload, saved_push = _load_push_vector(push_vector_path)
+            layers = common92.get_layers(model)
+        except (OSError, ValueError, KeyError, TypeError, RuntimeError) as exc:
+            return hashes, {"sequence": sequence_name,
+                            "reason": f"saved push vector verification failed: {exc}"}
     for index, call in enumerate(sequence):
-        call_hook = replay_hook if call.get("hook_on") is True else None
+        call_hook = None
+        if call.get("hook_on") is True:
+            expected_layer = call.get("hook_layer")
+            expected_neuron = call.get("hook_neuron")
+            expected_hash = call.get("hook_vector_sha256")
+            if (expected_layer != saved_payload.get("layer") or
+                    expected_neuron != saved_payload.get("neuron") or
+                    expected_hash != saved_payload.get("sha256")):
+                return hashes, {"sequence": sequence_name, "call_index": index,
+                                "expected_layer": expected_layer,
+                                "saved_layer": saved_payload.get("layer"),
+                                "expected_neuron": expected_neuron,
+                                "saved_neuron": saved_payload.get("neuron"),
+                                "expected_vector_sha256": expected_hash,
+                                "saved_vector_sha256": saved_payload.get("sha256"),
+                                "reason": "call log push metadata does not match the saved push vector"}
+            if not 0 <= int(expected_layer) < len(layers):
+                return hashes, {"sequence": sequence_name, "call_index": index,
+                                "reason": "call log hook layer is outside the model"}
+            call_hook = (layers[int(expected_layer)], saved_push)
         replay_calls = []
         try:
             logits, replay_cache = session.run_segment(
@@ -348,13 +513,25 @@ def _run_random_pair(model, tokenizer, unit: dict, layer, layer_no: int,
 
 def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device: str,
               max_new_tokens: int, pilot: bool,
-              parameters: dict | None = None) -> dict:
+              parameters: dict | None = None,
+              push_vector_path: str | Path | None = None) -> dict:
     import torch
 
     layers = common92.get_layers(model)
     layer_no = int(unit["layer"])
     layer = layers[layer_no]
-    push = _push_vector(unit, layer, float(medians[str(layer_no)]))
+    if push_vector_path is None:
+        raise ValueError("a push-vector output path is required for every Part 125 unit")
+    computed_push = _push_vector(unit, layer, float(medians[str(layer_no)]))
+    push_payload, push = _save_push_vector(Path(push_vector_path), unit, computed_push)
+    push_sha256 = str(push_payload["sha256"])
+    pilot_push_effect = None
+    if pilot:
+        pilot_push_effect = _pilot_push_effect_check(
+            model, tokenizer, unit, push, device=device)
+        if not pilot_push_effect["passed"]:
+            raise RuntimeError(f"pilot push effect gate failed for {unit['id']}: "
+                               f"{pilot_push_effect}")
     target = session.target_ids(tokenizer, unit["screen_answer"])
 
     arm2_cache = None
@@ -584,9 +761,14 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
     if ledger2 != ledger3:
         raise AssertionError("arm 2 and twin finished with different token ledgers")
 
+    for call in calls2 + calls3 + arm1_calls + arm4_calls:
+        call["hook_layer"] = layer_no
+        call["hook_neuron"] = int(unit["neuron"])
+        call["hook_vector_sha256"] = push_sha256
+
     if pilot:
         pushed_hashes, pushed_difference = _replay_logged_calls(
-            model, calls2, treatment, device=device, sequence_name="arm2")
+            model, calls2, push_vector_path, device=device, sequence_name="arm2")
         twin_hashes, twin_difference = _replay_logged_calls(
             model, calls3, None, device=device, sequence_name="arm3_twin")
         first_difference = pushed_difference or twin_difference
@@ -607,6 +789,10 @@ def _run_unit(model, tokenizer, unit: dict, medians: dict[str, float], *, device
     record = {
         "unit": {key: unit.get(key) for key in
                  ("id", "persona", "desc", "kind", "layer", "neuron", "screen_answer")},
+        "push_vector": {"file": Path(push_vector_path).name,
+                        "layer": layer_no, "neuron": int(unit["neuron"]),
+                        "sha256": push_sha256},
+        "pilot_push_effect": pilot_push_effect,
         "answers": answer_rows,
         "reader_free": reader_free,
         "random_reader_free": random_rows,
@@ -682,6 +868,7 @@ def _write_aggregate(out: Path, unit_records: list[dict], medians: dict[str, flo
     ledger_checks = [row for unit in unit_records for row in unit["ledger_checks"]]
     call_sequences = [{"unit_id": str(unit["unit"]["id"]),
                        "parameters": dict(unit["parameters"]),
+                       "push_vector": dict(unit["push_vector"]),
                        "arm2_calls": unit["arm2_call_sequence"],
                        "arm3_calls": unit["arm3_call_sequence"],
                        "arm1_calls": unit["arm1_call_sequence"],
@@ -716,6 +903,16 @@ def _write_aggregate(out: Path, unit_records: list[dict], medians: dict[str, flo
         "transformers_version": _transformers_version(),
         "parameters": dict(parameters),
         "pilot_size_decision": pilot_decision,
+        "pilot_push_effect_checks": [unit["pilot_push_effect"] for unit in unit_records
+                                     if unit.get("pilot_push_effect") is not None],
+        "pilot_push_effect_gate_passed": (
+            stage == "pilot" and
+            {str(check.get("unit_id")) for check in
+             [unit.get("pilot_push_effect") for unit in unit_records
+              if unit.get("pilot_push_effect") is not None]} == set(PILOT_IDS) and
+            all(unit.get("pilot_push_effect", {}).get("passed") is True
+                for unit in unit_records)
+        ),
         "model_load": "common92.load_model(snapshot, device); local_files_only=True; bf16; eval; requires_grad_(False)",
     }
     meta_path = out / ("pilot-meta.json" if stage == "pilot" else "run-meta.json")
@@ -877,21 +1074,35 @@ def main(argv: list[str] | None = None, *, model_loader=None,
 
     unit_dir = out / "units"
     unit_dir.mkdir(parents=True, exist_ok=True)
+    push_vector_dir = out / "push-vectors"
     unit_records = []
     for unit in units:
         path = unit_dir / f"{unit['id']}.json"
+        push_vector_path = push_vector_dir / f"{unit['id']}.json"
         if path.is_file():
             record = read_json(path)
             if str(record.get("unit", {}).get("id")) != str(unit["id"]):
                 raise ValueError(f"saved unit file does not match {unit['id']}")
             if record.get("parameters") != unit_parameters:
                 raise ValueError(f"saved unit {unit['id']} has different production parameters")
+            push_payload, _saved_push = _load_push_vector(push_vector_path, unit=unit)
+            if record.get("push_vector", {}).get("sha256") != push_payload.get("sha256"):
+                raise ValueError(f"saved unit {unit['id']} has a different push-vector sha256")
+            for call in (record.get("arm2_call_sequence", []) +
+                         record.get("arm3_call_sequence", [])):
+                if any(call.get(field) != expected for field, expected in (
+                    ("hook_layer", int(unit["layer"])),
+                    ("hook_neuron", int(unit["neuron"])),
+                    ("hook_vector_sha256", push_payload["sha256"]),
+                )):
+                    raise ValueError(f"saved unit {unit['id']} call log has mismatched push metadata")
         else:
             unit_started = time.perf_counter()
             record = _run_unit(model, tokenizer, unit, medians, device=args.device,
                                max_new_tokens=args.max_new_tokens,
                                pilot=(args.stage == "pilot"),
-                               parameters=unit_parameters)
+                               parameters=unit_parameters,
+                               push_vector_path=push_vector_path)
             record["unit_elapsed_seconds"] = round(time.perf_counter() - unit_started, 4)
             write_json_atomic(path, record)
         unit_records.append(record)

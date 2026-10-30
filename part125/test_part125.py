@@ -84,6 +84,8 @@ class TinyTokenizer:
                 chars.append("BASE")
             elif token == 8:
                 chars.append("PUSH")
+            elif token == 9:
+                chars.append("PUSHY")
             elif token >= 1000:
                 chars.append(chr(token - 1000))
         return "".join(chars)
@@ -163,7 +165,8 @@ class TinyModel(torch.nn.Module):
                              device=input_ids.device)
         logits[:, :, 7] = 0.25
         logits[:, :, 8] = total[:, 0].unsqueeze(-1)
-        if int(input_ids[0, -1]) in (7, 8):
+        logits[:, :, 9] = (total[:, 1] - (prior + width) * 0.1).unsqueeze(-1)
+        if int(input_ids[0, -1]) in (7, 8, 9):
             logits[:, :, 1] = 10.0
         if use_cache and past_key_values is not None:
             # DynamicCache updates in place. This makes cache-clone tests catch
@@ -245,7 +248,7 @@ def _score_args(root: Path, out: Path | None = None):
 
 @pytest.fixture(scope="module")
 def end_to_end():
-    with tempfile.TemporaryDirectory(prefix="part125-e2e-", dir=HERE) as scratch:
+    with tempfile.TemporaryDirectory(prefix="part125-e2e-", dir=tempfile.gettempdir()) as scratch:
         root = Path(scratch)
         neurons_path, kinds_path = _inventory(root)
         output = root / "run"
@@ -415,10 +418,32 @@ def test_f1_pilot_replay_matches_each_run_call_hash(end_to_end):
         assert row["pushed_bitwise_equal"] and row["twin_bitwise_equal"]
 
 
+def test_pilot_push_vectors_are_saved_and_bound_to_call_logs(end_to_end):
+    raw = end_to_end / "run"
+    sequences = {row["unit_id"]: row for row in _read_jsonl(raw / "call-sequences.jsonl")}
+    pilot = json.loads((raw / "pilot-meta.json").read_text(encoding="utf-8"))
+    assert pilot["pilot_push_effect_gate_passed"] is True
+    assert {row["unit_id"] for row in pilot["pilot_push_effect_checks"]} == {"p92-02", "p92-08"}
+    for unit_id in ("p92-02", "p92-08"):
+        vector_path = raw / "push-vectors" / f"{unit_id}.json"
+        payload, vector = run125._load_push_vector(vector_path)
+        sequence = sequences[unit_id]
+        assert sequence["push_vector"]["sha256"] == payload["sha256"]
+        assert sequence["push_vector"]["layer"] == payload["layer"]
+        assert sequence["push_vector"]["neuron"] == payload["neuron"]
+        hooked = [call for call in sequence["arm2_calls"] if call["hook_on"]]
+        assert hooked
+        assert all(call["hook_layer"] == payload["layer"] and
+                   call["hook_neuron"] == payload["neuron"] and
+                   call["hook_vector_sha256"] == payload["sha256"] for call in hooked)
+        assert run125._tensor_sha256(vector) == payload["sha256"]
+
+
 def test_f1_replay_uses_logged_hook_state_for_every_call():
     source_model = TinyModel()
     source_layer = source_model.model.layers[0]
     push = torch.tensor([[0.5, 0.0]], dtype=torch.float32)
+    unit = {"id": "call-log-test", "layer": 0, "neuron": 0}
     call_log = []
     cache = None
     for token, turn, hook_on in ((40, 1, False), (41, 1, True), (42, 5, True)):
@@ -426,14 +451,72 @@ def test_f1_replay_uses_logged_hook_state_for_every_call():
             source_model, [token], cache, [{"token_count": 1, "hook_on": hook_on}],
             device="cpu", hook=(source_layer, push), call_log=call_log, turn=turn,
         )
+    with tempfile.TemporaryDirectory(prefix="part125-push-vector-",
+                                     dir=tempfile.gettempdir()) as scratch:
+        vector_path = Path(scratch) / "push.json"
+        run125.write_json(vector_path, run125._push_payload(unit, push))
+        payload, _vector = run125._load_push_vector(vector_path, unit=unit)
+        for call in call_log:
+            call["hook_layer"] = unit["layer"]
+            call["hook_neuron"] = unit["neuron"]
+            call["hook_vector_sha256"] = payload["sha256"]
 
-    replay_model = TinyModel()
-    replay_hashes, first_difference = run125._replay_logged_calls(
-        replay_model, call_log, (replay_model.model.layers[0], push),
-        device="cpu", sequence_name="call-log-test",
+        replay_model = TinyModel()
+        replay_hashes, first_difference = run125._replay_logged_calls(
+            replay_model, call_log, vector_path,
+            device="cpu", sequence_name="call-log-test",
+        )
+        assert first_difference is None
+        assert replay_hashes == [call["logit_hash"] for call in call_log]
+
+
+def test_pilot_replay_refuses_a_saved_push_vector_hash_mismatch():
+    unit = {"id": "call-log-test", "layer": 0, "neuron": 0}
+    push = torch.tensor([[0.5, 0.0]], dtype=torch.float32)
+    source_model = TinyModel()
+    calls = []
+    session125.run_segment(
+        source_model, [41], None, [{"token_count": 1, "hook_on": True}],
+        device="cpu", hook=(source_model.model.layers[0], push), call_log=calls, turn=1,
     )
-    assert first_difference is None
-    assert replay_hashes == [call["logit_hash"] for call in call_log]
+    with tempfile.TemporaryDirectory(prefix="part125-bad-push-",
+                                     dir=tempfile.gettempdir()) as scratch:
+        vector_path = Path(scratch) / "push.json"
+        run125.write_json(vector_path, run125._push_payload(unit, push))
+        payload, _vector = run125._load_push_vector(vector_path, unit=unit)
+        calls[0].update({"hook_layer": 0, "hook_neuron": 0,
+                         "hook_vector_sha256": payload["sha256"]})
+        broken = json.loads(vector_path.read_text(encoding="utf-8"))
+        broken["vector_base64"] = run125._push_payload(unit, push * 2)["vector_base64"]
+        vector_path.write_text(json.dumps(broken), encoding="utf-8")
+        _hashes, difference = run125._replay_logged_calls(
+            TinyModel(), calls, vector_path, device="cpu", sequence_name="bad-vector")
+        assert difference is not None
+        assert "sha256 mismatch" in difference["reason"]
+
+
+def test_pilot_push_effect_gate_rejects_a_noop_hook(monkeypatch):
+    model = TinyModel()
+    unit = {"id": "p92-02", "layer": 0, "neuron": 0}
+    push = torch.tensor([[0.5, 0.0]], dtype=torch.float32)
+
+    def noop_hook(layer, _row_vectors):
+        return layer.register_forward_hook(lambda _module, _inputs, output: output)
+
+    monkeypatch.setattr(run125.common92, "add_row_hook", noop_hook)
+    result = run125._pilot_push_effect_check(
+        model, TinyTokenizer(), unit, push, device="cpu")
+    assert result["logits_differ"] is False
+    assert result["target_max_abs_error"] > result["tolerance"]
+    assert result["passed"] is False
+
+
+def test_logit_hash_tracks_values_and_is_stable_for_a_clone():
+    logits = torch.tensor([[0.0, 1.0, 2.0]], dtype=torch.float32)
+    assert session125.logit_hash(logits) == session125.logit_hash(logits.clone())
+    changed = logits.clone()
+    changed[0, 1] += 0.01
+    assert session125.logit_hash(logits) != session125.logit_hash(changed)
 
 
 def test_stub_logits_read_mask_and_positions_and_check_cache_lengths():
@@ -504,7 +587,8 @@ def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
 
 
 def test_slot_only_flag_is_rejected_for_pilot():
-    with tempfile.TemporaryDirectory(prefix="part125-pilot-slot-flag-", dir=HERE) as scratch:
+    with tempfile.TemporaryDirectory(prefix="part125-pilot-slot-flag-",
+                                     dir=tempfile.gettempdir()) as scratch:
         root = Path(scratch)
         neurons_path, kinds_path = _inventory(root)
         output = root / "pilot-slot-flag"
@@ -576,16 +660,19 @@ def test_cap_hit_gets_synthetic_eos_and_counts_incoherent(end_to_end):
 
     case = _clone_case(end_to_end, "cap-hit-case")
     answers_path = case / "run" / "answers.jsonl"
+    assert score125.main(_score_args(case), validate_inventory=False) == 0
+    baseline = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
+    baseline_arm4 = baseline["turn5_counts"]["arm4"]
     answers = _read_jsonl(answers_path)
-    target = next(row for row in answers if row["arm"] == "arm1" and
+    target = next(row for row in answers if row["arm"] == "arm4" and
                   row["unit_id"] == "p92-02" and row["turn"] == 5)
     target["cap_hit"] = True
     _write_jsonl(answers_path, answers)
     assert score125.main(_score_args(case), validate_inventory=False) == 0
     scored = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
-    arm1 = scored["turn5_counts"]["arm1"]
-    assert arm1["incoherent"] == 1
-    assert arm1["coherent_persona"] == 0
+    arm4 = scored["turn5_counts"]["arm4"]
+    assert arm4["incoherent"] == baseline_arm4["incoherent"] + 1
+    assert arm4["coherent_persona"] == baseline_arm4["coherent_persona"] - 1
 
 
 def test_stale_answer_labels_are_pending_and_hash_mismatch_scores_missing(end_to_end, capsys):
@@ -658,11 +745,16 @@ def _break_gate(root: Path, gate_no: int):
         rows = _read_jsonl(labels / "labels-ds.jsonl")
         rows.pop(0)
         _write_jsonl(labels / "labels-ds.jsonl", rows)
+    elif gate_no == 8:
+        path = raw / "pilot-meta.json"
+        pilot = json.loads(path.read_text(encoding="utf-8"))
+        pilot["pilot_push_effect_gate_passed"] = False
+        path.write_text(json.dumps(pilot), encoding="utf-8")
     else:
         raise AssertionError(gate_no)
 
 
-@pytest.mark.parametrize("gate_no", [1, 2, 3, 4, 5, 6, 7])
+@pytest.mark.parametrize("gate_no", [1, 2, 3, 4, 5, 6, 7, 8])
 def test_each_gate_fails_on_a_mutated_copy(end_to_end, gate_no):
     case = _clone_case(end_to_end, f"broken-gate-{gate_no}")
     _break_gate(case, gate_no)
@@ -691,7 +783,8 @@ def test_missing_labels_are_not_counted_as_false(end_to_end):
 
 
 def test_two_broken_gate_copies_make_expectation_tests_go_red(end_to_end):
-    with tempfile.TemporaryDirectory(prefix="part125-red-probe-", dir=HERE) as scratch:
+    with tempfile.TemporaryDirectory(prefix="part125-red-probe-",
+                                     dir=tempfile.gettempdir()) as scratch:
         root = Path(scratch)
         ignored = shutil.ignore_patterns("broken-gate-*", "*-case", "score",
                                          "test_broken_gates_should_pass.py")
@@ -719,7 +812,8 @@ def test_two_broken_gate_copies_make_expectation_tests_go_red(end_to_end):
 
 def test_torn_jsonl_final_line_logs_and_other_damage_raises(capsys):
     # Use a local scratch folder under the declared project domain.
-    with tempfile.TemporaryDirectory(prefix="part125-jsonl-", dir=HERE) as scratch:
+    with tempfile.TemporaryDirectory(prefix="part125-jsonl-",
+                                     dir=tempfile.gettempdir()) as scratch:
         path = Path(scratch) / "rows.jsonl"
         path.write_bytes(b'{"ok":true}\n{"torn"')
         assert run125.read_jsonl(path) == [{"ok": True}]
@@ -755,7 +849,8 @@ def test_imports_from_tree_containing_only_launch_copy_list():
         ("part85/checkpoints.py", "checkpoints.py"),
         ("judge_client.py", "judge_client.py"),
     )
-    with tempfile.TemporaryDirectory(prefix="part125-copy-list-", dir=HERE) as scratch:
+    with tempfile.TemporaryDirectory(prefix="part125-copy-list-",
+                                     dir=tempfile.gettempdir()) as scratch:
         copy_root = Path(scratch)
         for source, destination in copy_list:
             source_path = (ROOT / source).resolve()
@@ -860,8 +955,86 @@ def test_kappa_gate_requires_agreement_and_kappa_thresholds():
 def test_score_refuses_missing_run_meta_on_every_path(end_to_end):
     case = _clone_case(end_to_end, "missing-run-meta-case")
     (case / "run" / "run-meta.json").unlink()
-    with pytest.raises(ValueError, match="run-meta.json is required"):
+    with pytest.raises(ValueError, match="run is incomplete"):
         score125.main(_score_args(case), validate_inventory=False)
+
+
+@pytest.mark.parametrize("damage", ["status", "completed_count", "recorded_ids", "unit_file"])
+def test_label_and_score_refuse_incomplete_run_metadata(end_to_end, damage, capsys):
+    case = _clone_case(end_to_end, f"incomplete-run-{damage}-case")
+    raw = case / "run"
+    meta_path = raw / "run-meta.json"
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    if damage == "status":
+        meta["status"] = "running"
+    elif damage == "completed_count":
+        meta["completed_units"] -= 1
+    elif damage == "recorded_ids":
+        meta["unit_ids"] = meta["unit_ids"][:-1]
+    else:
+        (raw / "units" / f"{meta['unit_ids'][0]}.json").unlink()
+    meta_path.write_text(json.dumps(meta), encoding="utf-8")
+
+    assert label125.main(["--reader", "ds", "--answers", str(raw / "answers.jsonl"),
+                          "--out", str(case / "refused-labels.jsonl")]) == 1
+    refusal = capsys.readouterr().err
+    assert "run is incomplete" in refusal
+    assert "FileNotFoundError" not in refusal
+    with pytest.raises(ValueError, match="run is incomplete"):
+        score125.main(_score_args(case), validate_inventory=False)
+
+
+def test_determinism_row_without_call_sequence_fails_both_gates(end_to_end):
+    case = _clone_case(end_to_end, "missing-call-sequence-case")
+    raw = case / "run"
+    sequences = _read_jsonl(raw / "call-sequences.jsonl")
+    determinism = _read_jsonl(raw / "determinism.jsonl")
+    missing_sequence_row = next(row for row in determinism if row["unit_id"] == "p92-02")
+    missing_sequence_row["calls"] = 0
+    missing_sequence_row["pushed_logit_hashes_replay"] = []
+    missing_sequence_row["twin_logit_hashes_replay"] = []
+    _write_jsonl(raw / "determinism.jsonl", determinism)
+    _write_jsonl(raw / "call-sequences.jsonl",
+                 [row for row in sequences if row["unit_id"] != "p92-02"])
+    gates = {row["name"]: row["passed"]
+             for row in label125.execution_gates(raw / "answers.jsonl")}
+    assert gates["pilot twin determinism"] is False
+    assert score125.main(_score_args(case), validate_inventory=False) == 1
+    scored = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
+    assert scored["gates"][1]["passed"] is False
+
+
+def test_killed_main_before_first_unit_is_reported_as_incomplete(end_to_end, monkeypatch, capsys):
+    source = end_to_end / "run"
+    output = end_to_end / "early-main"
+    output.mkdir()
+    for filename in ("pilot-meta.json", "medians.json", "medians-meta.json",
+                     "zero-hook-check.json"):
+        shutil.copy2(source / filename, output / filename)
+    args = ["--stage", "main", "--model", "stub", "--neurons", str(end_to_end / "neurons.json"),
+            "--kinds", str(end_to_end / "kinds.json"), "--out", str(output),
+            "--device", "cpu", "--max-new-tokens", "2"]
+
+    def interrupt_before_first_unit(*_args, **_kwargs):
+        raise RuntimeError("simulated interruption before the first unit")
+
+    monkeypatch.setattr(run125, "_run_unit", interrupt_before_first_unit)
+    with pytest.raises(RuntimeError, match="before the first unit"):
+        run125.main(args, model_loader=lambda _snapshot, _device: (TinyTokenizer(), TinyModel()),
+                    validate_inventory=False)
+    meta = json.loads((output / "run-meta.json").read_text(encoding="utf-8"))
+    assert meta["status"] == "running" and meta["completed_units"] == 0
+    assert not (output / "answers.jsonl").exists()
+
+    assert label125.main(["--reader", "ds", "--answers", str(output / "answers.jsonl"),
+                          "--out", str(output / "labels-ds.jsonl")]) == 1
+    refusal = capsys.readouterr().err
+    assert "run is incomplete" in refusal
+    assert "FileNotFoundError" not in refusal
+    score_args = _score_args(end_to_end, out=output / "score")
+    score_args[score_args.index("--answers") + 1] = str(output / "answers.jsonl")
+    with pytest.raises(ValueError, match="run is incomplete"):
+        score125.main(score_args, validate_inventory=False)
 
 
 def test_main_writes_resume_metadata_before_unit_loop(end_to_end, monkeypatch):

@@ -276,16 +276,17 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
     raw_dir = Path(args.answers).parent
     pilot_meta_path = raw_dir / "pilot-meta.json"
     run_meta_path = raw_dir / "run-meta.json"
-    if not run_meta_path.is_file():
-        raise ValueError("run-meta.json is required before scoring")
+    incomplete = label125.run_incomplete_reason(raw_dir)
+    if incomplete is not None:
+        raise ValueError(f"run is incomplete: {incomplete}")
     run_meta = read_json(run_meta_path)
     expected_unit_parameters = run_meta.get("parameters", {}).get("unit_parameters")
     if not isinstance(expected_unit_parameters, dict):
         raise ValueError("run-meta.json lacks unit parameter provenance")
+    pilot_meta = read_json(pilot_meta_path, optional=True) or {}
     if validate_inventory:
         if not pilot_meta_path.is_file():
             raise ValueError("pilot and run metadata are required before labels are read")
-        pilot_meta = read_json(pilot_meta_path)
         required_cut = bool((pilot_meta.get("pilot_size_decision") or {}).get("over_90_minutes"))
         if bool(args.slot_only) != required_cut:
             raise ValueError("scorer cut differs from the pilot decision")
@@ -324,7 +325,10 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
     required_pilot_ids = {"p92-02", "p92-08"}
     determinism_ids = {str(row.get("unit_id")) for row in determinism}
     def det_row_passes(row):
-        sequence = call_by_unit.get(str(row.get("unit_id")), {})
+        unit_id = str(row.get("unit_id"))
+        if unit_id not in call_by_unit:
+            return False
+        sequence = call_by_unit[unit_id]
         pushed_run = [call.get("logit_hash") for call in sequence.get("arm2_calls", [])]
         twin_run = [call.get("logit_hash") for call in sequence.get("arm3_calls", [])]
         pushed_replay = row.get("pushed_logit_hashes_replay", [])
@@ -481,6 +485,16 @@ def main(argv: list[str] | None = None, *, validate_inventory: bool = True) -> i
         _gate(7, "All current DeepSeek labels and private joins match answer hashes", label_complete,
               {"missing_or_stale_deepseek": len(missing_ds),
                "missing_or_stale_luna_sample": len(missing_luna)}),
+        _gate(8, "Pilot pushes change logits and the target layer output by the intended amount",
+              bool(pilot_meta.get("pilot_push_effect_gate_passed") is True and
+                   {str(row.get("unit_id")) for row in
+                    pilot_meta.get("pilot_push_effect_checks", [])} == required_pilot_ids and
+                   all(row.get("passed") is True and row.get("logits_differ") is True and
+                       float(row.get("target_max_abs_error", math.inf)) <=
+                       float(row.get("tolerance", -1))
+                       for row in pilot_meta.get("pilot_push_effect_checks", []))),
+              {"checks": pilot_meta.get("pilot_push_effect_checks", []),
+               "gate_passed": pilot_meta.get("pilot_push_effect_gate_passed") is True}),
     ]
     all_gates = all(gate["passed"] for gate in gates)
     answers_by_key = {(str(row["arm"]), str(row["unit_id"]), int(row["turn"])): row
