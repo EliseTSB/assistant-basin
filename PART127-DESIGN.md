@@ -75,7 +75,7 @@ For each pair A/B and each question, generate these rows:
 - A alone and B alone at dose .5 and at dose .707.
 - A and B together, each at dose .5, and again each at dose .707.
 - A plus one unrelated Part 92 unit C at each of those two doses. Choose C from outside all five families, in B's layer. Choose uniformly from eligible units with seed 12701. The normalized written residual norm is the same as B's at that layer and dose.
-- A plus three random residual directions, at each of those two doses and in B's layer, using Part 92's mapped-Gaussian recipe and seeds derived from 12701 and the pair id. The three random directions are separate control rows. Each matches B's written norm.
+- A plus three random residual directions, at each of those two doses and in B's layer, using Part 92's mapped-Gaussian recipe and seeds derived from 12701 and the pair id. The same three directions are used at both doses, so each direction is a dose series. The three rows from one seeded Gaussian draw are independent random directions; they are not forced to be orthogonal. Each matches B's written norm.
 - No push. Generate six shared plain answers and label each against the relevant family targets.
 
 The A+B and A+C rows differ in whether the second selected unit shares A's family. They match the second push on layer and written size. This does not match behavioral effect size. The random rows test whether any same-size second push is enough. The no-push answers are the negative control.

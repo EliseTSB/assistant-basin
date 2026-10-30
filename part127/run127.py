@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import sys
 import time
 from collections import Counter, defaultdict
@@ -17,13 +18,12 @@ ROOT = HERE.parent
 # whose modules are imported below. In particular, never add ROOT/part85: that
 # folder would shadow the part85 package used by common92.
 for _path in (HERE, ROOT, ROOT / "part92", ROOT / "part119", ROOT / "part119b",
-              ROOT / "part119c", ROOT / "part120"):
+              ROOT / "part119c"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
 import common92 as c  # noqa: E402 - registered Part 92 pushes and model helpers
 import run119  # noqa: E402 - Part 119 row hooks, generation token handling, and top-ten support
-import run120  # noqa: E402 - Part 120's fixed-support centered-logit helper
 
 QUESTIONS = (
     "Who are you?",
@@ -275,19 +275,36 @@ def fixed_path_counts(pairs: list[dict], units: list[str]) -> dict:
     return values
 
 
-def _jsonl_rows(path: Path, key_field: str | None = None) -> list[dict] | dict[str, dict]:
+def _jsonl_rows(path: Path, key_field: str | None = None, *,
+                repair_torn_last_line: bool = False) -> list[dict] | dict[str, dict]:
     if not path.exists():
         return {} if key_field else []
     rows = []
-    lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
-    for line_no, line in enumerate(lines, 1):
-        if not line.strip():
+    before = path.stat()
+    content = path.read_bytes()
+    after = path.stat()
+    signature = lambda stat: (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
+    if signature(before) != signature(after) or len(content) != after.st_size:
+        raise ValueError(f"JSONL changed while it was being read: {path}")
+    lines = content.splitlines(keepends=True)
+    for line_no, raw_line in enumerate(lines, 1):
+        if not raw_line.strip():
             continue
         try:
-            row = json.loads(line)
-        except json.JSONDecodeError as exc:
-            if line_no == len(lines) and not line.endswith("\n"):
-                path.write_text("".join(lines[:line_no - 1]), encoding="utf-8")
+            row = json.loads(raw_line.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            if line_no == len(lines) and not raw_line.endswith(b"\n"):
+                if not repair_torn_last_line:
+                    raise ValueError(f"torn final JSONL line at {path}:{line_no}; "
+                                     "rerun the owning capture with --resume to repair it") from exc
+                truncate_at = sum(len(line) for line in lines[:line_no - 1])
+                with path.open("r+b") as stream:
+                    current = os.fstat(stream.fileno())
+                    if signature(current) != signature(after):
+                        raise ValueError(f"JSONL changed before torn-line repair: {path}") from exc
+                    stream.truncate(truncate_at)
+                    stream.flush()
+                    os.fsync(stream.fileno())
                 break
             raise ValueError(f"invalid JSONL at {path}:{line_no}") from exc
         if not isinstance(row, dict):
@@ -500,16 +517,23 @@ def _rig_gate(model, tokenizer, layers, batch_size: int, device: str) -> dict:
                    for row in zero_sequences]
     equal_generation = plain_tokens == zero_tokens
     fixed_tokens = (plain_tokens[0][:PATH_TOKENS] or [int(getattr(tokenizer, "eos_token_id", 0))])
-    path_ids = torch.tensor([prompt + fixed_tokens], dtype=torch.long, device=device)
+    observed_length = len(fixed_tokens)
+    fixed_tokens = fixed_tokens[:PATH_TOKENS]
+    fixed_tokens += [int(tokenizer.pad_token_id)] * (PATH_TOKENS - len(fixed_tokens))
+    path_ids = torch.tensor([prompt + fixed_tokens] * FIXED_PATH_BATCH,
+                            dtype=torch.long, device=device)
     path_mask = torch.ones_like(path_ids)
+    if observed_length < PATH_TOKENS:
+        path_mask[:, len(prompt) + observed_length:] = 0
     plain_logits = run119._forward(model, path_ids, path_mask, layers, {})
-    zero_path_vectors = {index: torch.zeros((1, hidden), dtype=layer.mlp.down_proj.weight.dtype,
+    zero_path_vectors = {index: torch.zeros((FIXED_PATH_BATCH, hidden), dtype=layer.mlp.down_proj.weight.dtype,
                                             device=device) for index, layer in enumerate(layers)}
     zero_logits = run119._forward(model, path_ids, path_mask, layers, zero_path_vectors)
     equal_logits = bool(torch.equal(plain_logits, zero_logits))
     difference = 0.0 if equal_logits else float((plain_logits - zero_logits).abs().max().item())
     return {"passed": bool(equal_generation and equal_logits), "batch_size": batch_size,
             "generation_batch_shape": list(input_ids.shape),
+            "fixed_path_batch_size": FIXED_PATH_BATCH,
             "fixed_path_shape": list(path_ids.shape), "generation_equal": equal_generation,
             "fixed_logits_equal": equal_logits, "max_abs_logit_difference": difference,
             "generated_tokens_plain": plain_tokens, "generated_tokens_zero": zero_tokens,
@@ -615,6 +639,8 @@ def _forward_hidden_batch(model, tokenizer, states: list[dict], cache: dict,
     hidden_states = getattr(output, "hidden_states", None)
     if not hidden_states:
         raise RuntimeError("fixed-path model output lacks final hidden states")
+    # All registered pushes are on or before the final transformer layer, so the
+    # post-final-norm state is the pushed state consumed by lm_head.
     final_hidden = hidden_states[-1].detach().float()
     vocab_logits = logits.shape[-1]
     logit_start = start - 1
@@ -687,20 +713,31 @@ def _fixed_group_row(group: dict, shared_by_key: dict, state_rows: list[dict],
             by_state = {}
             for condition, state in condition_states.items():
                 selected = _selected_logits(model, state["hidden"][position:position + 1], support)[0]
-                centered = run120.centered_delta(base_logits, selected, support)
+                # Both rows contain only the support tokens, so center directly
+                # over that shared support instead of calling Part 120's full-vocab API.
+                centered = (selected - selected.mean()) - (base_logits - base_logits.mean())
                 # The fixed support is the Part 120 top-ten union. The emitted token's
-                # raw delta is kept separately because it can fall outside that union.
+                # raw delta is a fallback only when that token falls outside the union.
                 raw_base_token = float(_selected_logits(
                     model, base["hidden"][position:position + 1], [int(emitted)])[0, 0].item())
                 raw_state_token = float(_selected_logits(
                     model, state["hidden"][position:position + 1], [int(emitted)])[0, 0].item())
+                support_ids = [int(token) for token in support]
+                if int(emitted) in support_ids:
+                    emitted_field = "centered_delta_on_support"
+                    emitted_measure = float(centered[support_ids.index(int(emitted))].item())
+                else:
+                    emitted_field = "emitted_logit_delta_fallback_outside_support"
+                    emitted_measure = raw_state_token - raw_base_token
                 by_state[condition] = {
                     "top10": [int(token) for token in state["top10"][position]],
                     "centered_delta_on_support": np.asarray(centered, dtype=np.float64).tolist(),
                     "emitted_logit_delta": raw_state_token - raw_base_token,
+                    "emitted_logit_delta_for_scoring": emitted_measure,
+                    "emitted_logit_delta_field": emitted_field,
                 }
             positions.append({"position": position, "emitted_token": int(emitted),
-                              "support_ids": support, "states": by_state})
+                              "support_ids": support_ids, "states": by_state})
         output_positions[ref_tag] = positions
     return {"fixed_key": f"group:{group['group_key']}", "pair_id": pair["pair_id"],
             "family": pair["family"], "same_layer": pair["same_layer"],
@@ -711,7 +748,8 @@ def _fixed_group_row(group: dict, shared_by_key: dict, state_rows: list[dict],
 def _run_fixed_scoring(out_dir: Path, pairs: list[dict], by_id: dict[str, dict],
                        random_meta: dict, cache_by_dose: dict[float, dict],
                        tokenizer, model, layers, batch_size: int, device: str,
-                       answers: dict[str, dict], calls_path: Path) -> dict:
+                       answers: dict[str, dict], calls_path: Path, *,
+                       repair_torn_last_line: bool = False) -> dict:
     import torch
 
     matched = choose_matched_units(pairs, by_id)
@@ -759,7 +797,8 @@ def _run_fixed_scoring(out_dir: Path, pairs: list[dict], by_id: dict[str, dict],
                                       for state in chunk]})
         torch.save(shared_by_key, shared_cache_path)
     group_records = []
-    existing_groups = _jsonl_rows(out_dir / "fixed_path.jsonl", "fixed_key")
+    existing_groups = _jsonl_rows(out_dir / "fixed_path.jsonl", "fixed_key",
+                                  repair_torn_last_line=repair_torn_last_line)
     groups_pending = [group for group in groups
                       if f"group:{group['group_key']}" not in existing_groups]
     group_started = time.perf_counter()
@@ -794,11 +833,32 @@ def _run_fixed_scoring(out_dir: Path, pairs: list[dict], by_id: dict[str, dict],
             print(f"P127 fixed paths {logical_done}/{expected_counts['total']} "
                   f"groups {group_index}/{len(groups_pending)} elapsed={time.perf_counter()-group_started:.1f}s",
                   flush=True)
+    field_counts = Counter()
+    for fixed_row in _jsonl_rows(out_dir / "fixed_path.jsonl", "fixed_key",
+                                 repair_torn_last_line=repair_torn_last_line).values():
+        for ref_path in fixed_row.get("reference_paths", {}).values():
+            for position in ref_path:
+                for state in position.get("states", {}).values():
+                    field = state.get("emitted_logit_delta_field")
+                    if not field:
+                        support = [int(token) for token in position.get("support_ids", [])]
+                        emitted = int(position.get("emitted_token", -1))
+                        centered = state.get("centered_delta_on_support")
+                        if emitted in support and isinstance(centered, list) \
+                                and len(centered) == len(support):
+                            field = "centered_delta_on_support"
+                        elif emitted not in support and "emitted_logit_delta" in state:
+                            field = "emitted_logit_delta_fallback_outside_support"
+                        else:
+                            raise ValueError("fixed-path row lacks emitted-logit field metadata")
+                    if field:
+                        field_counts[str(field)] += 1
     report = {"status": "complete", "counts": expected_counts,
               "shared_states_cached": len(shared_by_key),
               "group_records": len(groups),
               "new_group_records": len(group_records),
               "new_pair_states_forwarded": len(group_records) * 6,
+              "emitted_logit_delta_fields": dict(field_counts),
               "seconds": round(time.perf_counter() - shared_started, 3),
               "batch_size": batch_size}
     if len(shared_by_key) + len(groups) * 6 != expected_counts["total"]:
@@ -807,7 +867,8 @@ def _run_fixed_scoring(out_dir: Path, pairs: list[dict], by_id: dict[str, dict],
     return report
 
 
-def _import_pilot(pilot_dir: Path, out_dir: Path, expected: dict[str, dict]) -> None:
+def _import_pilot(pilot_dir: Path, out_dir: Path, expected: dict[str, dict], *,
+                  repair_torn_last_line: bool = False) -> None:
     source = pilot_dir / "answers.jsonl"
     if not source.is_file():
         raise FileNotFoundError(f"pilot answers are missing: {source}")
@@ -823,7 +884,8 @@ def _import_pilot(pilot_dir: Path, out_dir: Path, expected: dict[str, dict]) -> 
         if previous.get("source") != str(pilot_dir.resolve()):
             raise ValueError("main run was resumed with a different pilot directory")
         return
-    existing = _jsonl_rows(out_dir / "answers.jsonl", "key")
+    existing = _jsonl_rows(out_dir / "answers.jsonl", "key",
+                           repair_torn_last_line=repair_torn_last_line)
     rows = _jsonl_rows(source)
     pilot_pair_ids = set()
     pilot_unit_ids = set()
@@ -865,7 +927,8 @@ def _import_pilot(pilot_dir: Path, out_dir: Path, expected: dict[str, dict]) -> 
     _append_jsonl(out_dir / "answers.jsonl", append)
     fixed_source = pilot_dir / "fixed_path.jsonl"
     if fixed_source.is_file():
-        existing_fixed = _jsonl_rows(out_dir / "fixed_path.jsonl", "fixed_key")
+        existing_fixed = _jsonl_rows(out_dir / "fixed_path.jsonl", "fixed_key",
+                                     repair_torn_last_line=repair_torn_last_line)
         fixed_rows = _jsonl_rows(fixed_source)
         fixed_keys = [str(row.get("fixed_key")) for row in fixed_rows]
         expected_fixed_keys = {
@@ -881,7 +944,8 @@ def _import_pilot(pilot_dir: Path, out_dir: Path, expected: dict[str, dict]) -> 
     copied_calls = []
     if calls.is_file():
         imported = {str(row.get("source_call_id"))
-                    for row in _jsonl_rows(out_dir / "generation_calls.jsonl")
+                    for row in _jsonl_rows(out_dir / "generation_calls.jsonl",
+                                           repair_torn_last_line=repair_torn_last_line)
                     if row.get("stage") == "pilot_import"}
         for index, row in enumerate(_jsonl_rows(calls), 1):
             source_call_id = str(row.get("call_id"))
@@ -998,8 +1062,10 @@ def run(args: argparse.Namespace, *, model_loader=None,
         if (pilot_meta.get("status") != "complete" or pilot_meta.get("stage") != "pilot"
                 or int(pilot_meta.get("batch", -1)) != args.batch):
             raise ValueError("pilot reuse requires a complete pilot with the selected fixed batch size")
-        _import_pilot(pilot_dir, out_dir, expected)
-    existing = _jsonl_rows(out_answers, "key")
+        _import_pilot(pilot_dir, out_dir, expected,
+                      repair_torn_last_line=bool(getattr(args, "resume", False)))
+    repair_torn = bool(getattr(args, "resume", False))
+    existing = _jsonl_rows(out_answers, "key", repair_torn_last_line=repair_torn)
     pending = [item for item in rows if item["key"] not in existing]
     matched = choose_matched_units(pairs, by_id)
     started = time.perf_counter()
@@ -1008,7 +1074,8 @@ def run(args: argparse.Namespace, *, model_loader=None,
     for item in pending:
         layer_set = tuple(sorted({int(push["layer"]) for push in item["pushes"]}))
         grouped[(item["question_index"], item["dose"], layer_set)].append(item)
-    call_index = len(_jsonl_rows(out_dir / "generation_calls.jsonl"))
+    call_index = len(_jsonl_rows(out_dir / "generation_calls.jsonl",
+                                 repair_torn_last_line=repair_torn))
     done = 0
     for group_key, tasks in grouped.items():
         question_index, dose, _layer_set = group_key
@@ -1035,7 +1102,7 @@ def run(args: argparse.Namespace, *, model_loader=None,
             done += len(saved)
             print(f"P127 {args.stage} generated {done}/{total} question={question_index} dose={dose} "
                   f"elapsed={time.perf_counter()-started:.1f}s", flush=True)
-    answers = _jsonl_rows(out_answers, "key")
+    answers = _jsonl_rows(out_answers, "key", repair_torn_last_line=repair_torn)
     missing = sorted(set(expected) - set(answers))
     if missing:
         raise RuntimeError(f"incomplete answer capture: {len(missing)} rows missing; first={missing[0]}")
@@ -1043,20 +1110,28 @@ def run(args: argparse.Namespace, *, model_loader=None,
         if key in expected and row.get("key") != key:
             raise ValueError(f"answer key mismatch in {key}")
     fixed_path = out_dir / "fixed_path.jsonl"
-    fixed_existing = _jsonl_rows(fixed_path, "fixed_key")
+    fixed_existing = _jsonl_rows(fixed_path, "fixed_key", repair_torn_last_line=repair_torn)
     expected_fixed_groups = len(pairs) * len(QUESTIONS) * len(DOSES)
     if len(fixed_existing) < expected_fixed_groups or not (out_dir / "fixed_path_meta.json").exists():
         fixed_report = _run_fixed_scoring(
             out_dir, pairs, by_id, random_meta, cache_by_dose, tokenizer, model, layers,
-            FIXED_PATH_BATCH, args.device, answers, out_dir / "generation_calls.jsonl")
+            FIXED_PATH_BATCH, args.device, answers, out_dir / "generation_calls.jsonl",
+            repair_torn_last_line=repair_torn)
     else:
         fixed_report = json.loads((out_dir / "fixed_path_meta.json").read_text(encoding="utf-8"))
     expected_counts = dict(Counter(row["arm"] for row in rows))
+    pilot_import_path = out_dir / "pilot_import.json"
+    imported_answer_count = (int(json.loads(pilot_import_path.read_text(encoding="utf-8"))
+                                   .get("answer_rows_imported", 0))
+                             if pilot_import_path.is_file() else 0)
+    generated_by_run = len(answers) - imported_answer_count
+    if generated_by_run < 0:
+        raise ValueError("pilot-import answer count exceeds the completed answer table")
     run_meta = {"status": "complete", "stage": args.stage, "batch": args.batch,
                 "device": args.device, "model_revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
                 "questions": list(QUESTIONS), "pairs": [pair["pair_id"] for pair in pairs],
                 "selected_units": selected_ids, "answer_count": len(rows),
-                "arm_counts": expected_counts, "new_answers": total,
+                "arm_counts": expected_counts, "new_answers": generated_by_run,
                 "answers_path": str(out_answers), "rig_gate_passed": bool(rig["passed"]),
                 "fixed_path": fixed_report, "pilot_dir": args.pilot_dir,
                 "generated_at_elapsed_seconds": round(time.perf_counter() - started, 3)}
@@ -1078,6 +1153,8 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     parser.add_argument("--neurons", default=DEFAULT_NEURONS)
     parser.add_argument("--out", required=True)
     parser.add_argument("--pilot-dir", help="pilot directory whose registered rows should be reused")
+    parser.add_argument("--resume", action="store_true",
+                        help="resume this output as its owner; repair a torn final JSONL row if needed")
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--test-inventory", action="store_true", help=argparse.SUPPRESS)

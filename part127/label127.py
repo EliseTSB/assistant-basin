@@ -29,6 +29,8 @@ READERS = ("ds", "luna")
 READER_NAMES = {"ds": "DeepSeek V4.1 Flash", "luna": "Luna"}
 KNOWN_PATH = "part92b/known92b.jsonl"
 MAX_ATTEMPTS = 2
+TRUNCATION_STOP_REASONS = {"max_tokens", "max_token", "length", "token_limit",
+                           "max_output_tokens"}
 MAX_TOKENS = 16000
 LUNA_SEED = 12703
 _usage_lock = threading.Lock()
@@ -109,9 +111,14 @@ def valid_label(row: dict) -> bool:
             and row.get("speaker") in ("ai", "human", "other", "none"))
 
 
+def current_label(item: dict, row: dict | None) -> bool:
+    return bool(row and valid_label(row)
+                and row.get("answer_hash") == item["public"]["answer_hash"])
+
+
 def parse_response(response: dict) -> dict:
     stop = str(response.get("stop_reason", "")).casefold()
-    if stop in {"max_tokens", "max_token", "length", "token_limit", "max_output_tokens"}:
+    if stop in TRUNCATION_STOP_REASONS:
         raise ValueError(f"reader reply was truncated at {stop}")
     text = response.get("text")
     if not isinstance(text, str) or not text.strip():
@@ -166,19 +173,33 @@ def _label_one(item: dict, reader: str, usage_path: Path,
                sleep_fn: Callable[[float], None] = time.sleep) -> dict:
     prompt = build_prompt(item)
     last_error = "unknown reader error"
+    last_stop_reason = None
+    truncated_attempts = 0
     for attempt in range(1, MAX_ATTEMPTS + 1):
         response = None
         try:
             response = (request_fn or _transport)(reader, prompt)
+            last_stop_reason = response.get("stop_reason")
+            if str(last_stop_reason or "").casefold() in TRUNCATION_STOP_REASONS:
+                truncated_attempts += 1
             parsed = parse_response(response)
             _record_usage(usage_path, item, reader, attempt, response, None)
-            return {**_public(item), **parsed}
+            return {**_public(item), **parsed, "stop_reason": last_stop_reason,
+                    "attempt_count": attempt, "retry_count": attempt - 1,
+                    "truncated_attempts": truncated_attempts}
         except Exception as exc:
+            if response is not None:
+                last_stop_reason = response.get("stop_reason")
+                if (str(last_stop_reason or "").casefold() in TRUNCATION_STOP_REASONS
+                        and truncated_attempts < attempt):
+                    truncated_attempts += 1
             last_error = repr(exc)[:300]
             _record_usage(usage_path, item, reader, attempt, response, last_error)
             if attempt < MAX_ATTEMPTS:
                 sleep_fn(5)
-    return {**_public(item), "error": last_error}
+    return {**_public(item), "error": last_error, "stop_reason": last_stop_reason,
+            "attempt_count": MAX_ATTEMPTS, "retry_count": MAX_ATTEMPTS - 1,
+            "truncated_attempts": truncated_attempts}
 
 
 def _latest_labels(path: Path) -> dict[str, dict]:
@@ -347,7 +368,7 @@ def _controls_gate(items: list[dict], by_id: dict[str, dict], known: list[dict],
             row = labels_by_reader[reader].get(str(item["public"]["item_id"]), {})
             unit_id = private["unit_ids"][0]
             unit_marks[reader].setdefault(unit_id, {})[int(private["question_index"])] = (
-                bool(row["shows_persona"]) if valid_label(row) else False)
+                bool(row["shows_persona"]) if current_label(item, row) else False)
     present_single_ids = {str(item["private"]["unit_ids"][0]) for item in items
                           if item["private"].get("arm") == "single"
                           and float(item["private"].get("dose", -1)) == 1.0
@@ -366,7 +387,7 @@ def _controls_gate(items: list[dict], by_id: dict[str, dict], known: list[dict],
                           "same_layer": pair["same_layer"], "readers": reader_status,
                           "passed": all(reader_status[reader]["passed"] for reader in READERS)})
 
-    no_push = {reader: {"observed": 0, "items": 0} for reader in READERS}
+    no_push = {reader: {"observed": 0, "items": 0, "unread": 0} for reader in READERS}
     for item in items:
         private = item["private"]
         if private["arm"] != "no_push" or int(private["question_index"]) not in (0, 1):
@@ -374,7 +395,9 @@ def _controls_gate(items: list[dict], by_id: dict[str, dict], known: list[dict],
         for reader in READERS:
             row = labels_by_reader[reader].get(str(item["public"]["item_id"]), {})
             no_push[reader]["items"] += 1
-            no_push[reader]["observed"] += int(valid_label(row) and bool(row["shows_persona"]))
+            readable = current_label(item, row)
+            no_push[reader]["unread"] += int(not readable)
+            no_push[reader]["observed"] += int(readable and bool(row["shows_persona"]))
     negative = {}
     for reader in READERS:
         gate = known_gate[reader]
@@ -385,8 +408,11 @@ def _controls_gate(items: list[dict], by_id: dict[str, dict], known: list[dict],
                             "known_negative_count": gate["known_negative_count"],
                             "known_false_positive_rate": fp_rate,
                             "no_push_target_items": no_push[reader]["items"],
+                            "unread_items": no_push[reader]["unread"],
                             "no_push_marks": observed, "threshold": threshold,
-                            "passed": no_push[reader]["items"] == 10 and observed <= threshold}
+                            "passed": (no_push[reader]["items"] == 10
+                                       and no_push[reader]["unread"] == 0
+                                       and observed <= threshold)}
     eligible = [row["pair_id"] for row in pair_rows if row["passed"]]
     same_layer_eligible = [row["pair_id"] for row in pair_rows
                            if row["same_layer"] and row["passed"]]
@@ -413,10 +439,12 @@ def _choose_luna_items(items: list[dict], ds_labels: dict[str, dict]) -> tuple[l
     mandatory = _mandatory_control_items(items)
     positive = []
     negative = []
+    unread = []
     for item in items:
         label = ds_labels.get(str(item["public"]["item_id"]), {})
-        if valid_label(label) and label.get("answer_hash") == item["public"]["answer_hash"] \
-                and label["shows_persona"] and label["coherent"]:
+        if not current_label(item, label):
+            unread.append(item)
+        elif label["shows_persona"] and label["coherent"]:
             positive.append(item)
         else:
             negative.append(item)
@@ -427,9 +455,13 @@ def _choose_luna_items(items: list[dict], ds_labels: dict[str, dict]) -> tuple[l
     selected = {item["public"]["item_id"]: item for item in mandatory}
     selected.update({item["public"]["item_id"]: item for item in positive})
     selected.update({item["public"]["item_id"]: item for item in negative_sample})
+    readable_count = len(positive) + len(negative)
     report = {"seed": LUNA_SEED, "ds_items": len(items),
-              "ds_compound_positive_items": len(positive), "ds_compound_positive_rate":
-                  len(positive) / len(items) if items else None,
+              "ds_compound_positive_items": len(positive),
+              "ds_unread_items": len(unread),
+              "unread_item_ids": sorted(item["public"]["item_id"] for item in unread),
+              "ds_compound_positive_rate":
+                  len(positive) / readable_count if readable_count else None,
               "negative_sample_size": sample_n,
               "mandatory_full_dose_and_no_push_items": len(mandatory),
               "selected_items": len(selected),
@@ -460,6 +492,10 @@ def execute_phase(phase: str, out: str | Path, neurons: str | Path = run127.DEFA
                   f"{gate['correct']}/{gate['total']} {'PASS' if gate['passed'] else 'FAIL'}",
                   flush=True)
         write_json(out_dir / "reader_gates.json", results)
+        failed_readers = [READER_NAMES[reader] for reader, result in results.items()
+                          if not result["passed"]]
+        if failed_readers:
+            raise RuntimeError("known-example gate failed for " + ", ".join(failed_readers))
         return results
 
     run_meta_path = out_dir / "run_meta.json"

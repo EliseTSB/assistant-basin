@@ -112,7 +112,7 @@ def _answer_label(answer_key: str, family: str, item_index: dict,
                 "self_claim": None, "speaker": None, "coherent": None,
                 "compound_mark": False}
     label = labels.get(str(item["public"]["item_id"]))
-    if label and label.get("answer_hash") != item["public"]["answer_hash"]:
+    if label and not label127.current_label(item, label):
         label = None
     return _label_fields(label)
 
@@ -125,7 +125,8 @@ def rescued_cell(joint: bool, single_a: bool, single_b: bool) -> bool:
 def count_rescues(pairs: list[dict], eligible_pair_ids: set[str], dose: float,
                   joint_marks: dict, single_marks: dict,
                   arms: tuple[str, ...] = ARMS,
-                  questions: tuple[int, ...] = PRIMARY_QUESTIONS) -> dict:
+                  questions: tuple[int, ...] = PRIMARY_QUESTIONS,
+                  cell_eligibility: dict | None = None) -> dict:
     """Count rescued prompt cells and pairs from an explicit hand-checkable table.
 
     joint_marks[pair_id][arm][dose][question] and
@@ -139,6 +140,14 @@ def count_rescues(pairs: list[dict], eligible_pair_ids: set[str], dose: float,
             a, b = pair["a"], pair["b"]
             cells = {}
             for qi in questions:
+                included = (True if cell_eligibility is None else bool(
+                    cell_eligibility.get(pair["pair_id"], {}).get(float(dose), {})
+                    .get(int(qi), False)))
+                if not included:
+                    cells[int(qi)] = {"joint": None, "single_a": None,
+                                      "single_b": None, "rescued": None,
+                                      "included": False}
+                    continue
                 joint = bool(joint_marks.get(pair["pair_id"], {}).get(arm, {})
                              .get(float(dose), {}).get(int(qi), False))
                 a_single = bool(single_marks.get(pair["pair_id"], {}).get(a, {})
@@ -147,16 +156,26 @@ def count_rescues(pairs: list[dict], eligible_pair_ids: set[str], dose: float,
                                  .get(float(dose), {}).get(int(qi), False))
                 cells[int(qi)] = {"joint": joint, "single_a": a_single,
                                   "single_b": b_single,
-                                  "rescued": rescued_cell(joint, a_single, b_single)}
+                                  "rescued": rescued_cell(joint, a_single, b_single),
+                                  "included": True}
             by_pair[pair["pair_id"]] = cells
-        rescued_cells = sum(cell["rescued"] for cells in by_pair.values()
+        rescued_cells = sum(cell["rescued"] is True for cells in by_pair.values()
                             for cell in cells.values())
-        rescued_pairs = sum(any(cell["rescued"] for cell in cells.values())
+        included_pairs = sum(any(cell["included"] for cell in cells.values())
+                             for cells in by_pair.values())
+        rescued_pairs = sum(any(cell["included"] and cell["rescued"] is True
+                                for cell in cells.values())
                             for cells in by_pair.values())
+        included_cells = sum(cell["included"] for cells in by_pair.values()
+                             for cell in cells.values())
+        eligible_cells = len(eligible) * len(questions)
         by_arm[arm] = {"rescued_cells": int(rescued_cells),
                        "rescued_pairs": int(rescued_pairs),
                        "eligible_pairs": len(eligible),
-                       "eligible_cells": len(eligible) * len(questions),
+                       "included_pairs": int(included_pairs),
+                       "eligible_cells": eligible_cells,
+                       "included_cells": int(included_cells),
+                       "excluded_unread_cells": int(eligible_cells - included_cells),
                        "by_pair": by_pair}
     return {"dose": float(dose), "questions": list(questions),
             "eligible_pair_ids": [pair["pair_id"] for pair in eligible],
@@ -243,10 +262,24 @@ def _agreement(ds: dict[str, dict], luna: dict[str, dict], items: list[dict]) ->
             "shared_item_ids": shared}
 
 
-def _primary_marks(pairs: list[dict], study_items: list[dict], ds_labels: dict[str, dict]) -> tuple[dict, dict]:
+def _primary_marks(pairs: list[dict], study_items: list[dict],
+                   ds_labels: dict[str, dict]) -> tuple[dict, dict, dict]:
     item_index = _item_index(study_items)
     singles = {}
     joints = {}
+    readable_by_key = {}
+
+    def get_mark(key: str, family: str) -> bool:
+        item = item_index.get((key, family))
+        if item is None:
+            readable_by_key[key] = False
+            return False
+        item_id = str(item["public"]["item_id"])
+        label = ds_labels.get(item_id)
+        readable = label127.current_label(item, label)
+        readable_by_key[key] = readable
+        return bool(readable and label["shows_persona"] and label["coherent"])
+
     for pair in pairs:
         pair_id = pair["pair_id"]
         singles[pair_id] = {}
@@ -256,8 +289,7 @@ def _primary_marks(pairs: list[dict], study_items: list[dict], ds_labels: dict[s
                 singles[pair_id][unit_id][float(dose)] = {}
                 for qi in PRIMARY_QUESTIONS:
                     key = f"single:{unit_id}:dose{dose:g}:q{qi}"
-                    fields = _answer_label(key, pair["family"], item_index, ds_labels)
-                    singles[pair_id][unit_id][float(dose)][qi] = bool(fields["compound_mark"])
+                    singles[pair_id][unit_id][float(dose)][qi] = get_mark(key, pair["family"])
         joints[pair_id] = {}
         for arm in ARMS:
             joints[pair_id][arm] = {}
@@ -271,23 +303,43 @@ def _primary_marks(pairs: list[dict], study_items: list[dict], ds_labels: dict[s
                     else:
                         random_index = int(arm.rsplit("_", 1)[1])
                         key = f"random:{pair_id}:{random_index}:dose{dose:g}:q{qi}"
-                    fields = _answer_label(key, pair["family"], item_index, ds_labels)
-                    joints[pair_id][arm][float(dose)][qi] = bool(fields["compound_mark"])
-    return singles, joints
+                    joints[pair_id][arm][float(dose)][qi] = get_mark(key, pair["family"])
+    cell_eligibility = {}
+    for pair in pairs:
+        pair_id, family = pair["pair_id"], pair["family"]
+        cell_eligibility[pair_id] = {}
+        for dose in run127.DOSES:
+            cell_eligibility[pair_id][float(dose)] = {}
+            for qi in PRIMARY_QUESTIONS:
+                required_keys = [f"single:{pair['a']}:dose{dose:g}:q{qi}",
+                                 f"single:{pair['b']}:dose{dose:g}:q{qi}"]
+                for arm in ARMS:
+                    if arm == "pair_ab":
+                        required_keys.append(f"pair:{pair_id}:dose{dose:g}:q{qi}")
+                    elif arm == "matched_ac":
+                        required_keys.append(f"matched:{pair_id}:dose{dose:g}:q{qi}")
+                    else:
+                        random_index = int(arm.rsplit("_", 1)[1])
+                        required_keys.append(f"random:{pair_id}:{random_index}:dose{dose:g}:q{qi}")
+                cell_eligibility[pair_id][float(dose)][qi] = all(
+                    readable_by_key.get(key, False) for key in required_keys)
+    return singles, joints, cell_eligibility
 
 
 def _rescue_data(pairs: list[dict], eligible_ids: set[str],
-                 singles: dict, joints: dict) -> dict:
+                 singles: dict, joints: dict, cell_eligibility: dict) -> dict:
     output = {}
     pair_outcomes = {}
     for dose in run127.DOSES:
-        report = count_rescues(pairs, eligible_ids, dose, joints, singles)
+        report = count_rescues(pairs, eligible_ids, dose, joints, singles,
+                               cell_eligibility=cell_eligibility)
         output[str(dose)] = report
         pair_outcomes[str(dose)] = {}
         for arm in ARMS:
             pair_outcomes[str(dose)][arm] = {
-                pair_id: int(sum(cell["rescued"] for cell in cells.values()))
-                for pair_id, cells in report["arms"][arm]["by_pair"].items()}
+                pair_id: int(sum(cell["rescued"] is True for cell in cells.values()))
+                for pair_id, cells in report["arms"][arm]["by_pair"].items()
+                if any(cell["included"] for cell in cells.values())}
     return {"counts": output, "pair_outcomes": pair_outcomes}
 
 
@@ -306,8 +358,33 @@ def _bootstrap_rescues(pairs: list[dict], eligible_ids: set[str], rescue: dict) 
     return report
 
 
+def _fixed_emitted_measure(position: dict, state: dict) -> tuple[float, str]:
+    support = [int(token) for token in position.get("support_ids", [])]
+    centered = state.get("centered_delta_on_support")
+    emitted = int(position["emitted_token"])
+    if emitted in support:
+        if not isinstance(centered, list) or len(centered) != len(support):
+            raise IncompleteRun("fixed-path centered support does not match its token ids")
+        field = "centered_delta_on_support"
+        value = float(centered[support.index(emitted)])
+    else:
+        if "emitted_logit_delta" not in state:
+            raise IncompleteRun("fixed-path emitted token is outside support and has no raw fallback")
+        field = "emitted_logit_delta_fallback_outside_support"
+        value = float(state["emitted_logit_delta"])
+    recorded_field = state.get("emitted_logit_delta_field")
+    recorded_value = state.get("emitted_logit_delta_for_scoring")
+    if recorded_field is not None and recorded_field != field:
+        raise IncompleteRun("fixed-path emitted logit field metadata does not match its support")
+    if recorded_value is not None and not math.isclose(float(recorded_value), value,
+                                                       rel_tol=1e-6, abs_tol=1e-7):
+        raise IncompleteRun("fixed-path emitted logit value does not match its selected field")
+    return value, field
+
+
 def _fixed_measure(fixed_rows: list[dict], pairs: list[dict]) -> dict:
     buckets = defaultdict(lambda: defaultdict(list))
+    field_counts = Counter()
     seen = set()
     expected_group_keys = set()
     for pair in pairs:
@@ -325,10 +402,13 @@ def _fixed_measure(fixed_rows: list[dict], pairs: list[dict]) -> dict:
         for ref_tag in ("A", "B"):
             positions = row["reference_paths"][ref_tag]
             for state_name in ("pair_ab", "matched_ac", "random_0", "random_1", "random_2"):
-                values = [float(position["states"][state_name]["emitted_logit_delta"])
-                          for position in positions if state_name in position["states"]]
-                if values:
-                    buckets[(pair_id, dose, ref_tag)][state_name].extend(values)
+                for position in positions:
+                    if state_name not in position["states"]:
+                        continue
+                    value, field = _fixed_emitted_measure(position,
+                                                          position["states"][state_name])
+                    buckets[(pair_id, dose, ref_tag)][state_name].append(value)
+                    field_counts[field] += 1
     if seen != expected_group_keys:
         missing = sorted(expected_group_keys - seen)
         raise IncompleteRun(f"fixed-path table is incomplete: {len(missing)} groups missing")
@@ -350,6 +430,7 @@ def _fixed_measure(fixed_rows: list[dict], pairs: list[dict]) -> dict:
     return {"by_pair": by_pair, "prediction_127_5_wins": sum(dose05.values()),
             "prediction_127_5_total_pairs": len(dose05),
             "prediction_127_5_pair_wins": dose05,
+            "emitted_logit_delta_fields": dict(field_counts),
             "bootstrap_win_rate": bootstrap_pair_interval(dose05)}
 
 
@@ -406,7 +487,10 @@ def _broken_counts(study_items: list[dict], answer_by_key: dict,
     result = {}
     for reader, labels in labels_by_reader.items():
         by_arm = defaultdict(lambda: {"items": 0, "broken": 0, "label_errors": 0,
-                                      "empty_answers": 0, "incoherent": 0})
+                                      "missing_labels": 0, "stale_labels": 0,
+                                      "unread_labels": 0, "empty_answers": 0,
+                                      "incoherent": 0, "retries": 0,
+                                      "truncated": 0, "truncated_attempts": 0})
         for item_id, item in item_by_id.items():
             if item_id not in included_item_ids[reader]:
                 continue
@@ -417,12 +501,20 @@ def _broken_counts(study_items: list[dict], answer_by_key: dict,
             counts["items"] += 1
             if not answer.strip():
                 counts["empty_answers"] += 1
-            label_is_current = (label127.valid_label(label or {})
-                                and label.get("answer_hash") == item["public"]["answer_hash"])
+            if label is None:
+                counts["missing_labels"] += 1
+            elif label.get("answer_hash") != item["public"]["answer_hash"]:
+                counts["stale_labels"] += 1
+            label_is_current = label127.current_label(item, label)
             if not label_is_current:
                 counts["label_errors"] += 1
+                counts["unread_labels"] += 1
             elif not label["coherent"]:
                 counts["incoherent"] += 1
+            truncated_attempts = max(0, int((label or {}).get("truncated_attempts", 0)))
+            counts["truncated"] += int(truncated_attempts > 0)
+            counts["truncated_attempts"] += truncated_attempts
+            counts["retries"] += max(0, int((label or {}).get("retry_count", 0)))
             if not answer.strip() or not label_is_current or not label["coherent"]:
                 counts["broken"] += 1
         result[reader] = dict(by_arm)
@@ -461,6 +553,26 @@ def _prediction_rows(*, known_gates: dict, controls: dict, agreement: dict,
     eligible_any = bool(controls["eligible_pair_ids"])
     diff_05 = (rescue["counts"]["0.5"]["arms"]["pair_ab"]["rescued_cells"]
                - rescue["counts"]["0.5"]["arms"]["matched_ac"]["rescued_cells"])
+    unread_primary_cells = {
+        "127.1": sum(not cell["included"]
+                     for pair_id in same_layer_ids
+                     for cell in rescue["counts"]["0.5"]["arms"]["pair_ab"]["by_pair"].get(
+                         pair_id, {}).values()),
+        "127.2": sum(not cell["included"]
+                     for pair_id in same_layer_ids
+                     for cell in rescue["counts"]["0.707"]["arms"]["pair_ab"]["by_pair"].get(
+                         pair_id, {}).values()),
+        "127.3": sum(not cell["included"]
+                     for cells in rescue["counts"]["0.5"]["arms"]["pair_ab"]["by_pair"].values()
+                     for cell in cells.values()),
+    }
+    readable_primary_cells = {
+        prediction_id: sum(cell["included"]
+                           for pair_id in (same_layer_ids if prediction_id in ("127.1", "127.2")
+                                           else set(controls["eligible_pair_ids"]))
+                           for cell in rescue["counts"]["0.5" if prediction_id != "127.2" else "0.707"]
+                           ["arms"]["pair_ab"]["by_pair"].get(pair_id, {}).values())
+        for prediction_id in ("127.1", "127.2", "127.3")}
     same_cos = [row for row in cosine_rows if row["same_layer"]]
     all_same_cosines = len(same_cos) == 4 and all(abs(float(row["cosine"])) < 0.2 for row in same_cos)
     fixed_wins = fixed["prediction_127_5_wins"]
@@ -480,6 +592,9 @@ def _prediction_rows(*, known_gates: dict, controls: dict, agreement: dict,
                 verdict, reason = "not read (positive controls)", "no same-layer pair passed its positive-control gate"
             elif prediction_id == "127.3" and not eligible_any:
                 verdict, reason = "not read (positive controls)", "no pair passed its positive-control gate"
+            elif unread_primary_cells[prediction_id]:
+                verdict, reason = ("not read (unread labels)",
+                                   f"{unread_primary_cells[prediction_id]} primary cells lack a current DeepSeek label")
             elif prediction_id == "127.1":
                 verdict, reason = ("held" if same_layer_rescues["0.5"] <= 1 else "failed"), None
             elif prediction_id == "127.2":
@@ -495,19 +610,26 @@ def _prediction_rows(*, known_gates: dict, controls: dict, agreement: dict,
                 verdict, reason = "not read (fixed-path data)", "fixed-path table is incomplete"
             else:
                 verdict, reason = ("held" if fixed_wins >= 17 else "failed"), None
+        if prediction_id in ("127.1", "127.2"):
+            observation = {"same_layer_rescued_pairs_dose_0.5": same_layer_rescues["0.5"],
+                           "same_layer_rescued_pairs_dose_0.707": same_layer_rescues["0.707"],
+                           "same_layer_eligible_pairs": len(same_layer_ids),
+                           "readable_cells": readable_primary_cells[prediction_id]}
+        elif prediction_id == "127.3":
+            observation = {"pair_ab_minus_matched_ac_cells_dose_0.5": diff_05,
+                           "eligible_pairs": len(controls["eligible_pair_ids"]),
+                           "readable_cells": readable_primary_cells[prediction_id]}
+        elif prediction_id == "127.4":
+            observation = {"same_layer_absolute_cosines_below_0.2": all_same_cosines,
+                           "same_layer_pair_count": len(same_cos)}
+        else:
+            observation = {"pairs_ab_exceeds_ac": fixed_wins,
+                           "pairs": fixed["prediction_127_5_total_pairs"]}
         predictions.append({"id": prediction_id, "prediction": text,
-                            "observation": ({
-                                "same_layer_rescued_pairs_dose_0.5": same_layer_rescues["0.5"],
-                                "same_layer_rescued_pairs_dose_0.707": same_layer_rescues["0.707"],
-                                "same_layer_eligible_pairs": len(same_layer_ids)} if prediction_id in ("127.1", "127.2") else
-                                {"pair_ab_minus_matched_ac_cells_dose_0.5": diff_05,
-                                 "eligible_pairs": len(controls["eligible_pair_ids"])} if prediction_id == "127.3" else
-                                {"same_layer_absolute_cosines_below_0.2": all_same_cosines,
-                                 "same_layer_pair_count": len(same_cos)} if prediction_id == "127.4" else
-                                {"pairs_ab_exceeds_ac": fixed_wins,
-                                 "pairs": fixed["prediction_127_5_total_pairs"]}),
+                            "observation": observation,
                             "verdict": verdict, "withheld_reason": reason})
-    headline_withdrawn = not label_gate or not controls["same_layer_gate_passed"]
+    headline_withdrawn = (not label_gate or not controls["same_layer_gate_passed"]
+                          or any(unread_primary_cells.values()))
     return predictions, headline_withdrawn
 
 
@@ -562,13 +684,12 @@ def score_data(out_dir: Path, *, neurons_path: str | Path = run127.DEFAULT_NEURO
         raise IncompleteRun(f"reader inventory count differs from the registered expansion: {expected_ds_items}")
     ds_labels = latest_labels(out_dir / "labels-ds.jsonl")
     luna_labels = latest_labels(out_dir / "labels-luna.jsonl")
-    _check_label_coverage(study_items, ds_labels, "DeepSeek")
     selected_luna_items, luna_sample = label127._choose_luna_items(study_items, ds_labels)
-    _check_label_coverage(selected_luna_items, luna_labels, "Luna")
     saved_luna_sample = read_json(out_dir / "luna_sample.json")
     if (saved_luna_sample.get("selected_items") != luna_sample["selected_items"]
             or saved_luna_sample.get("negative_sample_ids") != luna_sample["negative_sample_ids"]
-            or saved_luna_sample.get("positive_item_ids") != luna_sample["positive_item_ids"]):
+            or saved_luna_sample.get("positive_item_ids") != luna_sample["positive_item_ids"]
+            or saved_luna_sample.get("unread_item_ids") != luna_sample["unread_item_ids"]):
         raise IncompleteRun("Luna sample metadata does not match the current DeepSeek labels")
     known_gates, controls = _study_gates(out_dir, known, known_items, by_id, study_items)
     if (saved_control_gates.get("eligible_pair_ids") != controls["eligible_pair_ids"]
@@ -576,9 +697,9 @@ def score_data(out_dir: Path, *, neurons_path: str | Path = run127.DEFAULT_NEURO
             != controls["same_layer_eligible_pair_ids"]):
         raise IncompleteRun("saved control gates do not match the current full-dose reader labels")
     agreement = _agreement(ds_labels, luna_labels, study_items)
-    singles, joints = _primary_marks(pairs, study_items, ds_labels)
+    singles, joints, cell_eligibility = _primary_marks(pairs, study_items, ds_labels)
     eligible = set(controls["eligible_pair_ids"])
-    rescue = _rescue_data(pairs, eligible, singles, joints)
+    rescue = _rescue_data(pairs, eligible, singles, joints, cell_eligibility)
     bootstrap = _bootstrap_rescues(pairs, eligible, rescue)
     fixed = _fixed_measure(fixed_rows, pairs)
     table = _pair_question_table(pairs, answer_by_key, study_items, ds_labels, luna_labels)
@@ -612,6 +733,7 @@ def score_data(out_dir: Path, *, neurons_path: str | Path = run127.DEFAULT_NEURO
                        "prediction_127_5_wins": fixed["prediction_127_5_wins"],
                        "prediction_127_5_total_pairs": fixed["prediction_127_5_total_pairs"],
                        "prediction_127_5_pair_wins": fixed["prediction_127_5_pair_wins"],
+                       "emitted_logit_delta_fields": fixed["emitted_logit_delta_fields"],
                        "bootstrap_win_rate": fixed["bootstrap_win_rate"]},
         "broken_answers": broken,
         "pair_question_rows": table,
@@ -644,13 +766,13 @@ def render_markdown(result: dict) -> str:
                   "## Rescue counts", "",
                   "A rescue is a coherent DeepSeek family mark on a joint arm when both half-dose single answers lack it. "
                   "Only pairs that passed both readers' full-dose positive controls enter these counts.", "",
-                  "| Dose | Arm | Rescued cells | Rescued pairs | Eligible pairs |",
-                  "| ---: | --- | ---: | ---: | ---: |"])
+                  "| Dose | Arm | Rescued cells | Rescued pairs | Included cells | Excluded unread | Eligible pairs |",
+                  "| ---: | --- | ---: | ---: | ---: | ---: | ---: |"])
     for dose in run127.DOSES:
         for arm in ARMS:
             row = result["rescues"][str(dose)]["arms"][arm]
             lines.append(f"| {dose:g} | {arm} | {row['rescued_cells']} | {row['rescued_pairs']} | "
-                         f"{row['eligible_pairs']} |")
+                         f"{row['included_cells']} | {row['excluded_unread_cells']} | {row['eligible_pairs']} |")
     lines.extend(["", "## Pair bootstrap intervals", "",
                   "Pairs are the resampling unit. Intervals show mean rescued cells per pair, "
                   "or the pair-level difference for A+B versus each control.", "",
@@ -669,7 +791,7 @@ def render_markdown(result: dict) -> str:
         lines.append(f"| {row['pair_id']} | {row['family']} | L{row['layer_a']}/L{row['layer_b']} | "
                      f"{'yes' if row['same_layer'] else 'no'} | {row['cosine']:.5f} |")
     lines.extend(["", "## Fixed-path logit measure", "",
-                  "The values are mean emitted-token logit changes against the no-push path over six prompts and up to 24 positions.", "",
+                  "The values are mean centered emitted-token logit changes against the no-push path over six prompts and up to 24 positions. Raw changes are used only when an emitted token falls outside the fixed support.", "",
                   "| Pair | Dose | A: A+B | A: A+C | B: A+B |", "| --- | ---: | ---: | ---: | ---: |"])
     for pair_id, row in result["fixed_path"]["by_pair"].items():
         for dose in run127.DOSES:
@@ -679,24 +801,25 @@ def render_markdown(result: dict) -> str:
             b_ab = values["B"].get("pair_ab")
             fmt = lambda value: "n/a" if value is None else f"{value:.5f}"
             lines.append(f"| {pair_id} | {dose:g} | {fmt(a_ab)} | {fmt(a_ac)} | {fmt(b_ab)} |")
-    lines.extend(["", "## Broken answers", "", "Errors, empty outputs, and incoherent outputs count as broken.", "",
-                  "| Reader | Arm | Items | Broken | Label errors | Empty | Incoherent |",
-                  "| --- | --- | ---: | ---: | ---: | ---: | ---: |"])
+    lines.extend(["", "## Broken answers", "", "Unread labels are reported and excluded from rescue denominators. Empty outputs and incoherent outputs count as broken.", "",
+                  "| Reader | Arm | Items | Broken | Unread labels | Retries | Truncated items | Truncated attempts | Empty | Incoherent |",
+                  "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"])
     for reader in ("ds", "luna"):
         for arm, counts in result["broken_answers"][reader].items():
             lines.append(f"| {label127.READER_NAMES[reader]} | {arm} | {counts['items']} | {counts['broken']} | "
-                         f"{counts['label_errors']} | {counts['empty_answers']} | {counts['incoherent']} |")
+                         f"{counts['unread_labels']} | {counts['retries']} | {counts['truncated']} | "
+                         f"{counts['truncated_attempts']} | {counts['empty_answers']} | {counts['incoherent']} |")
     lines.extend(["", "## Pair and question rows", "",
                   f"The JSON file contains all {len(result['pair_question_rows'])} pair by question records, "
                   "including both readers' raw flags for every arm and dose.", "",
                   "## Reader-specific negative controls", "",
-                  "| Reader | False-positive rate | No-push marks | Threshold | Result |",
+                  "| Reader | False-positive rate | No-push marks | Unread | Threshold | Result |",
                   "| --- | ---: | ---: | ---: | --- |"])
     for reader in label127.READERS:
         gate = result["gates"]["negative_control_gates"][reader]
         rate = gate["known_false_positive_rate"]
         lines.append(f"| {label127.READER_NAMES[reader]} | {rate:.4f} | {gate['no_push_marks']} | "
-                     f"{gate['threshold']} | {'pass' if gate['passed'] else 'fail'} |")
+                     f"{gate['unread_items']} | {gate['threshold']} | {'pass' if gate['passed'] else 'fail'} |")
     lines.append("")
     return "\n".join(lines)
 

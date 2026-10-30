@@ -80,6 +80,7 @@ class TinyDecoder(nn.Module):
     def __init__(self):
         super().__init__()
         self.layers = nn.ModuleList(TinyLayer() for _ in range(16))
+        self.norm = nn.LayerNorm(4)
 
 
 class TinyModel(nn.Module):
@@ -107,7 +108,9 @@ class TinyModel(nn.Module):
         for layer in self.model.layers:
             hidden = layer(hidden)
             states.append(hidden)
-        logits = self.lm_head(hidden)
+        final_hidden = self.model.norm(hidden)
+        states.append(final_hidden)
+        logits = self.lm_head(final_hidden)
         return SimpleNamespace(logits=logits,
                                hidden_states=tuple(states) if output_hidden_states else None)
 
@@ -138,10 +141,12 @@ def run_tiny_pilot(out: Path, *, monkeypatch=None, loader=tiny_loader) -> int:
                        inventory=registered_inventory(tiny_channels=True))
 
 
-def run_tiny_main(out: Path, pilot: Path, *, loader=tiny_loader) -> int:
+def run_tiny_main(out: Path, pilot: Path, *, loader=tiny_loader, resume: bool = False) -> int:
     args = ["--stage", "main", "--model", "tiny", "--out", str(out),
             "--pilot-dir", str(pilot), "--batch", "8", "--device", "cpu",
             "--test-inventory"]
+    if resume:
+        args.append("--resume")
     return run127.main(args, model_loader=loader,
                        inventory=registered_inventory(tiny_channels=True))
 
@@ -168,6 +173,78 @@ def test_written_doses_match_design():
     observed = {float(push["dose"]) for row in rows for push in row["pushes"]}
     assert observed == {0.5, 0.707, 1.0}
     assert run127.FIXED_PATH_BATCH == 8
+
+
+def test_fixed_scoring_accepts_real_vocab_and_hidden_shapes(tmp_path):
+    by_id = registered_inventory(tiny_channels=True)
+    pairs = run127.selected_pairs(by_id, "pilot")
+    tokenizer, model = TinyTokenizer(), TinyModel()
+    sparse_top = [0, 2, 4, 6, 8, 10, 12, 13, 14, 15]
+    with torch.no_grad():
+        model.lm_head.weight.zero_()
+        model.lm_head.bias.fill_(-1.0)
+        for rank, token in enumerate(sparse_top):
+            model.lm_head.bias[token] = 10.0 - rank
+    layers = run127.c.get_layers(model)
+    cache_by_dose, random_meta = run127.build_push_caches(
+        by_id, pairs, layers, {layer: 1.0 for layer in range(16)})
+    selected_ids = sorted({unit_id for pair in pairs for unit_id in (pair["a"], pair["b"])})
+    answers = {}
+    for unit_id in selected_ids:
+        for qi in range(len(run127.QUESTIONS)):
+            key = f"single:{unit_id}:dose1:q{qi}"
+            answers[key] = {"key": key, "tokens": [15] * run127.PATH_TOKENS,
+                            "generation_top10": [list(sparse_top)
+                                                 for _ in range(run127.PATH_TOKENS)]}
+    report = run127._run_fixed_scoring(
+        tmp_path, pairs, by_id, random_meta, cache_by_dose,
+        tokenizer, model, layers, run127.FIXED_PATH_BATCH, "cpu",
+        answers, tmp_path / "generation_calls.jsonl")
+    rows = _read_jsonl(tmp_path / "fixed_path.jsonl")
+    assert len(rows) == len(pairs) * len(run127.QUESTIONS) * len(run127.DOSES)
+    assert report["status"] == "complete"
+    assert report["emitted_logit_delta_fields"]["centered_delta_on_support"] > 0
+
+
+def test_rig_fixed_path_uses_the_batch_eight_study_shape():
+    tokenizer, model = TinyTokenizer(), TinyModel()
+    rig = run127._rig_gate(model, tokenizer, run127.c.get_layers(model), 8, "cpu")
+    prompt = run127.c.prompt_ids(tokenizer, run127.QUESTIONS[0], "chat")
+    assert rig["fixed_path_batch_size"] == run127.FIXED_PATH_BATCH == 8
+    assert rig["fixed_path_shape"] == [8, len(prompt) + run127.PATH_TOKENS]
+
+
+def test_random_directions_are_reused_as_independent_dose_series():
+    by_id = registered_inventory(tiny_channels=True)
+    pairs = run127.selected_pairs(by_id, "pilot")
+    model = TinyModel()
+    layers = run127.c.get_layers(model)
+    for layer in layers:
+        nn.init.orthogonal_(layer.mlp.down_proj.weight)
+    caches, _random_meta = run127.build_push_caches(
+        by_id, pairs, layers, {layer: 1.0 for layer in range(16)})
+    pair_id = pairs[0]["pair_id"]
+    low = [caches[0.5][(f"R:{pair_id}:{index}", "random")] for index in range(3)]
+    high = [caches[0.707][(f"R:{pair_id}:{index}", "random")] for index in range(3)]
+    for left, right in zip(low, high):
+        cosine = torch.dot(left.flatten(), right.flatten()) / (left.norm() * right.norm())
+        assert cosine.item() == pytest.approx(1.0, abs=1e-6)
+    assert all(not torch.allclose(low[left], low[right])
+               for left in range(3) for right in range(left + 1, 3))
+
+
+def test_fixed_path_uses_post_final_norm_hidden_state():
+    tokenizer, model = TinyTokenizer(), TinyModel()
+    layers = run127.c.get_layers(model)
+    prompt = run127.c.prompt_ids(tokenizer, run127.QUESTIONS[0], "chat")
+    input_ids = torch.tensor([prompt + [1]], dtype=torch.long)
+    expected = model(input_ids=input_ids, output_hidden_states=True)
+    assert not torch.allclose(expected.hidden_states[-2], expected.hidden_states[-1])
+    state = {"qi": 0, "dose": None, "pushes": [], "tokens": [1]}
+    actual = run127._forward_hidden_batch(
+        model, tokenizer, [state], {"_units": []}, layers, 8, "cpu", keep_logits=False)[0]
+    expected_position = expected.hidden_states[-1][0, len(prompt) - 1].float().cpu()
+    assert torch.allclose(actual["hidden"][0], expected_position)
 
 
 def test_nonzero_push_changes_stub_logits():
@@ -223,8 +300,11 @@ def test_runner_call_log_covers_pair_and_single_hooks(tmp_path, capsys):
 def test_noop_hook_fails_gate(tmp_path, monkeypatch):
     def bad_add_row_hook(layer, vectors):
         del vectors
-        return layer.register_forward_hook(
-            lambda _module, _inputs, output: output + torch.ones_like(output))
+        def perturb_one_channel(_module, _inputs, output):
+            perturbation = torch.zeros_like(output)
+            perturbation[..., 0] = 1.0
+            return output + perturbation
+        return layer.register_forward_hook(perturb_one_channel)
 
     monkeypatch.setattr(run127.c, "add_row_hook", bad_add_row_hook)
     out = tmp_path / "bad-hook"
@@ -295,7 +375,14 @@ def test_resume_repeats_nothing_and_pays_nothing(tmp_path):
     assert run_tiny_main(out, pilot, loader=loader) == 0
     assert models[2].generate_calls == 0
     assert models[2].forward_calls == 0
+    resumed_meta = json.loads((out / "run_meta.json").read_text(encoding="utf-8"))
+    assert resumed_meta["new_answers"] == 1914 - 198
     assert preserved == {name: (out / name).read_bytes() for name in preserved}
+    with (out / "answers.jsonl").open("ab") as stream:
+        stream.write(b'{"key":"torn-final-row"')
+    assert run_tiny_main(out, pilot, loader=loader, resume=True) == 0
+    assert models[3].generate_calls == 0
+    assert preserved["answers.jsonl"] == (out / "answers.jsonl").read_bytes()
 
 
 def test_reader_prompt_contains_only_blinded_text(tmp_path):
@@ -374,6 +461,107 @@ def test_label_main_runs_known_gate_and_resumes_cached_reads(tmp_path):
     assert len(calls) == 24
 
 
+def test_failed_known_gate_exits_nonzero_and_names_each_reader(tmp_path, capsys):
+    known_path = tmp_path / "known.jsonl"
+    _write_jsonl(known_path, [
+        {"name": f"Target {index}", "desc": "A known example.", "q": "Who are you?",
+         "a": "A target." if index < 6 else "A language assistant.",
+         "expected": index < 6}
+        for index in range(12)])
+
+    def fail_reader(_reader, _prompt):
+        return {"text": json.dumps({"shows_persona": False, "self_claim": False,
+                                    "speaker": "none", "coherent": True}),
+                "stop_reason": "stop"}
+
+    out = tmp_path / "failed-gate"
+    result = label127.main(["--phase", "gate", "--known", str(known_path),
+                            "--out", str(out), "--workers", "1"],
+                           request_fn=fail_reader, sleep_fn=lambda _seconds: None)
+    captured = capsys.readouterr()
+    assert result == 2
+    assert "DeepSeek V4.1 Flash" in captured.err
+    assert "Luna" in captured.err
+    gates = json.loads((out / "reader_gates.json").read_text(encoding="utf-8"))
+    assert all(not gates[reader]["passed"] for reader in label127.READERS)
+    pair_ids = [f"p{index}" for index in range(4)]
+    cells = {pair_id: {qi: {"rescued": False, "included": True} for qi in (0, 1)}
+             for pair_id in pair_ids}
+    rescue = {"counts": {
+        "0.5": {"arms": {"pair_ab": {"by_pair": cells, "rescued_cells": 0},
+                           "matched_ac": {"rescued_cells": 0}}},
+        "0.707": {"arms": {"pair_ab": {"by_pair": cells, "rescued_cells": 0}}}}}
+    controls = {"negative_control_passed": True, "eligible_pair_ids": pair_ids,
+                "same_layer_eligible_pair_ids": pair_ids, "same_layer_gate_passed": True}
+    known_gates = {"ds": {"passed": False}, "luna": {"passed": True}}
+    agreement = {"passed": True}
+    cosine_rows = [{"same_layer": True, "cosine": 0.1} for _ in pair_ids]
+    fixed = {"prediction_127_5_wins": 1, "prediction_127_5_total_pairs": 1}
+    predictions, _withdrawn = score127._prediction_rows(
+        known_gates=known_gates, controls=controls, agreement=agreement,
+        rescue=rescue, cosine_rows=cosine_rows, fixed=fixed, rig_passed=True)
+    assert all(row["verdict"] == "not read (reader gate)" for row in predictions[:3])
+
+
+def test_controls_gate_ignores_stale_hashes_and_marks_no_push_unread(tmp_path):
+    by_id = registered_inventory()
+    pair = next(pair for pair in run127.selected_pairs(by_id, "main")
+                if pair["pair_id"] == "p92-23+p92-25")
+    items = []
+    for unit_id in (pair["a"], pair["b"]):
+        for qi in (0, 1):
+            item_id = f"single-{unit_id}-{qi}"
+            items.append({"public": {"item_id": item_id, "answer_hash": f"hash-{item_id}"},
+                          "private": {"arm": "single", "dose": 1.0,
+                                      "question_index": qi, "unit_ids": [unit_id]}})
+    for family in run127.FAMILY_TARGETS:
+        for qi in (0, 1):
+            item_id = f"plain-{family}-{qi}"
+            items.append({"public": {"item_id": item_id, "answer_hash": f"hash-{item_id}"},
+                          "private": {"arm": "no_push", "dose": None,
+                                      "question_index": qi, "unit_ids": [], "family": family}})
+    stale_rows = [{"item_id": item["public"]["item_id"], "answer_hash": "stale",
+                   "shows_persona": True, "self_claim": True,
+                   "speaker": "other", "coherent": True} for item in items]
+    for reader in label127.READERS:
+        _write_jsonl(tmp_path / f"labels-{reader}.jsonl", stale_rows)
+    known_gate = {reader: {"known_false_positive_rate": 0.0,
+                           "known_false_positive_count": 0,
+                           "known_negative_count": 6}
+                  for reader in label127.READERS}
+    gates = label127._controls_gate(items, by_id, label127.read_known(), known_gate, tmp_path)
+    assert gates["eligible_pair_ids"] == []
+    for reader in label127.READERS:
+        negative = gates["negative_control_gates"][reader]
+        assert negative["no_push_marks"] == 0
+        assert negative["unread_items"] == 10
+        assert not negative["passed"]
+
+
+def test_luna_negative_pool_excludes_unread_deepseek_rows():
+    items = []
+    for item_id in ("positive", "negative", "stale", "error"):
+        items.append({"public": {"item_id": item_id, "answer_hash": f"hash-{item_id}"},
+                      "private": {"arm": "pair_ab", "dose": 0.5}})
+    labels = {
+        "positive": {"answer_hash": "hash-positive", "shows_persona": True,
+                     "self_claim": True, "speaker": "other", "coherent": True},
+        "negative": {"answer_hash": "hash-negative", "shows_persona": False,
+                     "self_claim": False, "speaker": "none", "coherent": True},
+        "stale": {"answer_hash": "old-hash", "shows_persona": True,
+                  "self_claim": True, "speaker": "other", "coherent": True},
+        "error": {"answer_hash": "hash-error", "error": "timeout"},
+    }
+    selected, report = label127._choose_luna_items(items, labels)
+    selected_ids = {item["public"]["item_id"] for item in selected}
+    assert report["ds_compound_positive_items"] == 1
+    assert report["ds_unread_items"] == 2
+    assert report["ds_compound_positive_rate"] == pytest.approx(0.5)
+    assert report["negative_sample_size"] == 1
+    assert set(report["negative_sample_ids"]) == {"negative"}
+    assert selected_ids == {"positive", "negative"}
+
+
 def test_reader_thresholds_use_each_readers_known_false_positive_rate(tmp_path):
     known = [{"name": str(index), "desc": "known", "q": "q", "a": "a",
               "expected": index < 6} for index in range(12)]
@@ -446,6 +634,39 @@ def test_truncated_reader_reply_is_error(tmp_path):
     assert "truncated" in row["error"]
 
 
+def test_reader_retries_and_truncations_are_reported_by_arm(tmp_path):
+    item = label127.known_items(label127.read_known())[0]
+
+    def truncated(_reader, _prompt):
+        return {"text": "{}", "stop_reason": "max_tokens"}
+
+    row = label127._label_one(item, "ds", tmp_path / "usage.jsonl", truncated,
+                              sleep_fn=lambda _seconds: None)
+    assert row["stop_reason"] == "max_tokens"
+    assert row["retry_count"] == 1
+    assert row["truncated_attempts"] == 2
+    study_item = {"public": item["public"],
+                  "private": {"arm": "pair_ab"}, "a": "answer"}
+    counts = score127._broken_counts([study_item], {}, {"ds": {item["public"]["item_id"]: row}},
+                                     {"ds": {item["public"]["item_id"]}})["ds"]["pair_ab"]
+    assert counts["retries"] == 1
+    assert counts["truncated"] == 1
+    assert counts["truncated_attempts"] == 2
+
+
+def test_torn_jsonl_requires_explicit_resume_to_repair(tmp_path):
+    path = tmp_path / "answers.jsonl"
+    complete = json.dumps({"key": "saved"}) + "\n"
+    path.write_text(complete + '{"key":"torn"', encoding="utf-8")
+    before = path.read_bytes()
+    with pytest.raises(ValueError, match="torn final JSONL line.*--resume"):
+        run127._jsonl_rows(path, "key")
+    assert path.read_bytes() == before
+    rows = run127._jsonl_rows(path, "key", repair_torn_last_line=True)
+    assert set(rows) == {"saved"}
+    assert path.read_text(encoding="utf-8") == complete
+
+
 def _label_record(item: dict, *, show: bool) -> dict:
     return {"item_id": item["public"]["item_id"],
             "answer_hash": item["public"]["answer_hash"],
@@ -485,16 +706,22 @@ def _complete_score_fixture(out: Path) -> None:
     _write_json(out / "cosines.json", {"pair_ids": [pair["pair_id"] for pair in pairs],
                                        "pairs": cosine_rows})
     fixed_rows = []
-    fixed_states = {"pair_ab": {"emitted_logit_delta": 1.0},
-                    "matched_ac": {"emitted_logit_delta": 0.0},
-                    "random_0": {"emitted_logit_delta": -0.1},
-                    "random_1": {"emitted_logit_delta": -0.1},
-                    "random_2": {"emitted_logit_delta": -0.1}}
+    fixed_states = {"pair_ab": {"emitted_logit_delta": -1.0,
+                                 "centered_delta_on_support": [1.0]},
+                    "matched_ac": {"emitted_logit_delta": 1.0,
+                                   "centered_delta_on_support": [0.0]},
+                    "random_0": {"emitted_logit_delta": -0.1,
+                                 "centered_delta_on_support": [-0.1]},
+                    "random_1": {"emitted_logit_delta": -0.1,
+                                 "centered_delta_on_support": [-0.1]},
+                    "random_2": {"emitted_logit_delta": -0.1,
+                                 "centered_delta_on_support": [-0.1]}}
     for pair in pairs:
         for qi in range(len(run127.QUESTIONS)):
             for dose in run127.DOSES:
                 key = f"group:{pair['pair_id']}:q{qi}:dose{dose:g}"
                 ref_path = [{"position": 0, "emitted_token": 2,
+                             "support_ids": [2],
                              "states": fixed_states}]
                 fixed_rows.append({"fixed_key": key, "pair_id": pair["pair_id"],
                                    "family": pair["family"], "same_layer": pair["same_layer"],
@@ -549,10 +776,88 @@ def test_score_main_writes_all_predictions_and_pair_resamples(tmp_path):
         assert set(result["rescues"][dose]["arms"]) == set(score127.ARMS)
         assert result["pair_bootstrap"][dose]["pair_ab"]["pairs"] == 27
     assert result["fixed_path"]["prediction_127_5_total_pairs"] == 27
+    assert result["fixed_path"]["prediction_127_5_wins"] == 27
+    assert result["fixed_path"]["emitted_logit_delta_fields"]["centered_delta_on_support"] > 0
     assert (tmp_path / "SCORE.md").is_file()
     # The second reader labels only the registered enriched sample. Unseen items
     # are not falsely reported as reader errors or broken answers.
     assert result["broken_answers"]["luna"]["pair_ab"]["items"] < 27 * 6 * 2
+
+
+def test_fixed_measure_scores_centered_emitted_token_on_support():
+    pair = {"pair_id": "p", "a": "A", "b": "B", "family": "dog",
+            "same_layer": True}
+    rows = []
+    states = {"pair_ab": {"emitted_logit_delta": -3.0,
+                           "centered_delta_on_support": [-1.0, 2.0]},
+              "matched_ac": {"emitted_logit_delta": 4.0,
+                             "centered_delta_on_support": [0.0, 1.0]},
+              "random_0": {"emitted_logit_delta": 0.0,
+                           "centered_delta_on_support": [0.0, 0.0]},
+              "random_1": {"emitted_logit_delta": 0.0,
+                           "centered_delta_on_support": [0.0, 0.0]},
+              "random_2": {"emitted_logit_delta": 0.0,
+                           "centered_delta_on_support": [0.0, 0.0]}}
+    for qi in range(len(run127.QUESTIONS)):
+        for dose in run127.DOSES:
+            position = {"position": 0, "emitted_token": 7,
+                        "support_ids": [2, 7], "states": states}
+            rows.append({"fixed_key": f"group:p:q{qi}:dose{dose:g}",
+                         "pair_id": "p", "dose": dose,
+                         "reference_paths": {"A": [position], "B": [position]}})
+    result = score127._fixed_measure(rows, [pair])
+    pair_measure = result["by_pair"]["p"]["dose"]["0.5"]["A"]
+    assert pair_measure["pair_ab"] == 2.0
+    assert pair_measure["matched_ac"] == 1.0
+    assert result["prediction_127_5_wins"] == 1
+    assert result["emitted_logit_delta_fields"]["centered_delta_on_support"] > 0
+    fallback, field = score127._fixed_emitted_measure(
+        {"emitted_token": 9, "support_ids": [2, 7]},
+        {"emitted_logit_delta": 0.25, "centered_delta_on_support": [-1.0, 1.0]})
+    assert (fallback, field) == (0.25, "emitted_logit_delta_fallback_outside_support")
+
+
+def test_unread_reader_rows_leave_one_shared_denominator(tmp_path):
+    _complete_score_fixture(tmp_path)
+    by_id = registered_inventory()
+    pairs = run127.selected_pairs(by_id, "main")
+    answers = _read_jsonl(tmp_path / "answers.jsonl")
+    items = label127._study_items(answers, by_id)
+    pair = pairs[0]
+    item_index = score127._item_index(items)
+    stale_key = f"matched:{pair['pair_id']}:dose0.5:q0"
+    error_key = f"matched:{pair['pair_id']}:dose0.5:q1"
+    ds_path = tmp_path / "labels-ds.jsonl"
+    ds_rows = _read_jsonl(ds_path)
+    rows_by_id = {row["item_id"]: row for row in ds_rows}
+    stale_item = item_index[(stale_key, pair["family"])]
+    error_item = item_index[(error_key, pair["family"])]
+    rows_by_id[stale_item["public"]["item_id"]] = _label_record(stale_item, show=True)
+    rows_by_id[stale_item["public"]["item_id"]]["answer_hash"] = "stale-hash"
+    rows_by_id[error_item["public"]["item_id"]] = {
+        "item_id": error_item["public"]["item_id"],
+        "answer_hash": error_item["public"]["answer_hash"],
+        "error": "timeout", "stop_reason": "timeout", "attempt_count": 2,
+        "retry_count": 1, "truncated_attempts": 0}
+    _write_jsonl(ds_path, list(rows_by_id.values()))
+    ds_labels = label127._latest_labels(ds_path)
+    luna_items, sample = label127._choose_luna_items(items, ds_labels)
+    _write_json(tmp_path / "luna_sample.json", sample)
+    _write_jsonl(tmp_path / "labels-luna.jsonl", [
+        _label_record(item, show=bool(label127.current_label(
+            item, ds_labels.get(item["public"]["item_id"]))
+            and ds_labels[item["public"]["item_id"]]["shows_persona"]
+            and ds_labels[item["public"]["item_id"]]["coherent"]))
+        for item in luna_items])
+
+    result = score127.score_data(tmp_path)
+    dose = result["rescues"]["0.5"]["arms"]
+    assert {arm["included_cells"] for arm in dose.values()} == {52}
+    assert {arm["excluded_unread_cells"] for arm in dose.values()} == {2}
+    assert result["predictions"][2]["verdict"] == "not read (unread labels)"
+    assert result["predictions"][2]["observation"]["readable_cells"] == 52
+    assert result["broken_answers"]["ds"]["matched_ac"]["unread_labels"] == 2
+    assert result["broken_answers"]["ds"]["matched_ac"]["stale_labels"] == 1
 
 
 def test_score_cli_refuses_incomplete_run(tmp_path):
@@ -569,6 +874,8 @@ def test_all_program_command_lines_parse_help():
                                 cwd=ROOT, capture_output=True, text=True, check=False)
         assert result.returncode == 0, result.stderr
         assert "usage:" in result.stdout.lower()
+        if script_name == "run127.py":
+            assert "--resume" in result.stdout
 
 
 _SCRATCH_FILES = (
@@ -618,8 +925,47 @@ def _scratch_copy(destination: Path) -> None:
      "    prompt = label92.PROMPT\n",
      '    prompt = label92.PROMPT + "\\nARM: " + str(item["private"]["arm"])\n'),
     ("test_truncated_reader_reply_is_error", "part127/label127.py",
-     'if stop in {"max_tokens", "max_token", "length", "token_limit", "max_output_tokens"}:',
-     'if False and stop in {"max_tokens", "max_token", "length", "token_limit", "max_output_tokens"}:'),
+     'TRUNCATION_STOP_REASONS = {"max_tokens", "max_token", "length", "token_limit",\n'
+     '                           "max_output_tokens"}',
+     "TRUNCATION_STOP_REASONS = set()"),
+    ("test_fixed_scoring_accepts_real_vocab_and_hidden_shapes", "part127/run127.py",
+     "                centered = (selected - selected.mean()) - (base_logits - base_logits.mean())",
+     "                centered = selected.index_select(0, torch.tensor(support))"),
+    ("test_fixed_measure_scores_centered_emitted_token_on_support", "part127/score127.py",
+     'value = float(centered[support.index(emitted)])',
+     'value = float(state["emitted_logit_delta"])'),
+    ("test_failed_known_gate_exits_nonzero_and_names_each_reader", "part127/label127.py",
+     "        if failed_readers:", "        if False and failed_readers:"),
+    ("test_failed_known_gate_exits_nonzero_and_names_each_reader", "part127/score127.py",
+     "            elif not known_passed:", "            elif False and not known_passed:"),
+    ("test_controls_gate_ignores_stale_hashes_and_marks_no_push_unread", "part127/label127.py",
+     'and row.get("answer_hash") == item["public"]["answer_hash"])',
+     "and True)"),
+    ("test_unread_reader_rows_leave_one_shared_denominator", "part127/score127.py",
+     "readable_by_key.get(key, False) for key in required_keys",
+     "True for key in required_keys"),
+    ("test_luna_negative_pool_excludes_unread_deepseek_rows", "part127/label127.py",
+     "            unread.append(item)", "            negative.append(item)"),
+    ("test_rig_fixed_path_uses_the_batch_eight_study_shape", "part127/run127.py",
+     "FIXED_PATH_BATCH = 8", "FIXED_PATH_BATCH = 1"),
+    ("test_random_directions_are_reused_as_independent_dose_series", "part127/run127.py",
+     'seed_text = f"{SEED}:{pair[\'pair_id\']}"',
+     'seed_text = f"{SEED}:{pair[\'pair_id\']}:{dose}"'),
+    ("test_resume_repeats_nothing_and_pays_nothing", "part127/run127.py",
+     "generated_by_run = len(answers) - imported_answer_count",
+     "generated_by_run = total"),
+    ("test_resume_repeats_nothing_and_pays_nothing", "part127/run127.py",
+     "repair_torn = bool(getattr(args, \"resume\", False))",
+     "repair_torn = False"),
+    ("test_reader_retries_and_truncations_are_reported_by_arm", "part127/score127.py",
+     'counts["truncated"] += int(truncated_attempts > 0)',
+     'counts["truncated"] += 0'),
+    ("test_torn_jsonl_requires_explicit_resume_to_repair", "part127/run127.py",
+     "if not repair_torn_last_line:", "if False and not repair_torn_last_line:"),
+    ("test_torn_jsonl_requires_explicit_resume_to_repair", "part127/run127.py",
+     "stream.truncate(truncate_at)", "stream.truncate(0)"),
+    ("test_fixed_path_uses_post_final_norm_hidden_state", "part127/run127.py",
+     "hidden_states[-1].detach().float()", "hidden_states[-2].detach().float()"),
 ])
 def test_each_key_regression_check_goes_red_on_a_scratch_break(tmp_path,
                                                                  target, relative, old, new):
