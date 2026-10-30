@@ -199,6 +199,7 @@ beyond one part.
   75 on that puts Result before Verdict, and the front page no longer carries a count line, so section 9's count step
   has nothing to update. Fix the script (read the Verdict column when a table has one) before a count returns to the
   front page. The publish check also reads a backticked formula with a slash, such as `log(p/(1-p))`, as a cited path.
+- 2026-10-30 (Part 119): `launch_arc.py --copy` takes one flag with several paths; repeating the flag keeps only the last, and the job dies with "can't open file". A gate that compares with an earlier run must match its padding and batch shape, or it measures rounding (32 of 39, all at late close calls).
 - 2026-10-29 (Part 117b beside a game): the direct load needs about 8 GB of Windows headroom. 117b's load fell under
   the 2 GB guard in 15 s from 9.1 GB free; Parts 115b and 117 had succeeded from 9.6 to 10.3 GB. From 10.9 GB it loaded
   and passed the zero-hook check, then hit the guard two minutes into generation at batch 64, because the game held
