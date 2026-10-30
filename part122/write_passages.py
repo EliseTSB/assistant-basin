@@ -26,7 +26,7 @@ PERSONA_FIELDS = ("third_person", "first_person")
 _WORD = re.compile(r"[\w'-]+", re.UNICODE)
 _SENTENCE_END = re.compile(r"[.!?](?=\s|$)")
 _FIRST_PERSON = re.compile(r"\b(?:i|me|my|mine|we|us|our|ours)\b", re.I)
-_STOP_NAME_WORDS = {"a", "an", "the"}
+_STOP_NAME_WORDS = {"of", "your", "my", "from", "in", "on", "for", "and", "a", "an", "the"}
 
 
 def word_tokens(text: str) -> list[str]:
