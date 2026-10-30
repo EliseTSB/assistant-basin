@@ -2627,3 +2627,28 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 119c.2 | Claude (medium confidence): In float32, the median row share over real rows is at most 0.10 at 0.1 and at most 0.05 at 0.05. | 0.020094 at 0.1; 0.004547 at 0.05. | held |
 | 119c.3 | Claude (low confidence): In float32, on real rows, the endpoint log-log slope `log(S(0.2)/S(0.05)) / log(4)` is at least 1.5. | 2.53823. | held |
 | 119c.4 | Claude (low confidence): In float32, at each of 0.05, 0.1 and 0.2, the real median share is within a factor of 1.25 of the control median. | Factors at 0.05, 0.1 and 0.2: 1.01341, 1.03577 and 1.10257. | held |
+
+## Part 120 (registered 2026-10-30, PART120-DESIGN.md): does a push interact with itself as much as with a second push?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 120.1 | Claude (medium confidence): In float32 on real rows, the median row ‖I‖ follows a square law at low dose: log2 of its ratio between adjacent doses is within 2 plus or minus 0.3 from 0.025 to 0.05 and from 0.05 to 0.1. | pending |  |
+| 120.2 | Claude (medium confidence): The second-order identity holds at low dose and has broken by 0.2: on real rows the median row q is at most 0.30 at 0.05 and at least 0.50 at 0.2. | pending |  |
+| 120.3 | Claude (medium confidence): A push interacts with itself more than with a second push: at 0.1 the median row c over real rows is at most 0.75, and its product-weighted 95% unit-bootstrap interval lies below 1. | pending |  |
+| 120.4 | Claude (medium confidence): At each of 0.05, 0.1 and 0.2, the real median c is within a factor of 1.25 of the control median c. | pending |  |
+| 120.5 | Claude (low confidence): At 0.4 on real rows, the median self share is at least half the median pair share and at most twice it: a push at 0.8 is about as far from twice itself as a pair at 0.4 is from the sum of its parts. | pending |  |
+| 120.6 | Claude (low confidence): At 0.4, over the 39 first units, u is higher for slot units than for concept units: the slot median is above the concept median, with a one-sided Mann-Whitney p below 0.05 on Part 92's Haiku kinds, and the same direction on the units both readers agree on. | pending |  |
+| 120.7 | Claude (low confidence): Across the 39 units, the Spearman correlation of u(0.4) with Part 119's dominance is at most -0.3. | pending |  |
+| 120.8 | Claude (low confidence): At 0.1, a real unit's self term is the size of a random direction's on the same path: taking for each first unit the median row ‖S_B‖ on its real rows over the same on its control rows, the median over units lies between 0.8 and 1.25. | pending |  |
+
+## Part 121 (registered 2026-10-30, PART121-DESIGN.md): can a same-theme concept neuron lift a slot neuron back over its threshold?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 121.1 | Claude (low confidence): Matched at c+0.5 shows the slot persona on "Who are you?" in at least 3 more of the 11 pairs than s+0.85 alone. | pending |  |
+| 121.2 | Claude (low confidence): Matched at c+0.5 shows it in at least 3 more pairs than unrelated at u+0.5. | pending |  |
+| 121.3 | Claude (medium confidence): The random arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone. | pending |  |
+| 121.4 | Claude (medium confidence): The plain-neuron arm's mean count at +0.5 is at most 1.5 pairs above s+0.85 alone. | pending |  |
+| 121.5 | Claude (medium confidence): Matched at c+0.25 shows it in no more pairs than matched at c+0.5, and in at most 2 more pairs than s+0.85 alone. | pending |  |
+| 121.6 | Claude (medium confidence): At least two thirds of the matched c+0.5 answers on "Who are you?" are coherent. | pending |  |
+| 121.7 | Claude (high confidence): c+0.5 alone shows the slot persona on "Who are you?" in at most 1 of 11 pairs. | pending |  |

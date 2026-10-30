@@ -584,3 +584,21 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   search-result level.
 - Two searches found no test of how two single-neuron pushes' interaction in next-word logits scales with dose against
   random controls.
+
+## Persona neurons shared across sibling models (added 2026-10-30)
+
+- **Read from a figure only:** Sauers, 2026-10-30 (x.com/Sauers_/status/2116093664288178672; archived in Journal
+  sources/web-archives/2026-10-30-sauers-sibling-neuron-sharing.md). Across Llama 3.1 8B Instruct, Tulu 3 8B and Hermes
+  3 8B, the same neuron gives the same persona (layer 2 neuron 2759 up, pirate; layer 3 neuron 7060 up, Santa Claus):
+  3,681 neurons are a persona in all three against 294 expected by chance, and when a neuron is a persona in two models
+  the two names share a word 36.9% of the time against 2.6%. The figure gives no dose, reader or null definition. Tulu
+  and Hermes are fine-tunes of Llama, so this says post-training leaves the neuron's persona in place, which fits Parts
+  90 and 90b on one neuron. Our slot and concept sort has not been tried on this family.
+
+## Curvature of steering (added 2026-10-30, for Part 120)
+
+- **Abstract page read:** Azizi et al., "The Sharp Directions Are Against You: Curvature Analysis of Activation
+  Steering", NeurIPS 2026. A steering Hessian of a behavioural loss over one steering vector; its sharp directions are
+  1 to 5% of the vector's squared norm and reverse behaviour. The page does not address two separate vectors.
+- **Search snippets only:** ORBIT (arXiv 2606.22357) and StiCAS (NeurIPS 2026) report interference between concept
+  vectors and fix it by geometry.
