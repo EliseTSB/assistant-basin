@@ -270,6 +270,9 @@ def capture_batch(model, tokenizer, layers, read_set: dict, passages: list[dict]
             maxima = masked.max(dim=1).values
             means = (selected * valid.unsqueeze(-1)).sum(dim=1) / \
                     valid.sum(dim=1).clamp_min(1).unsqueeze(-1)
+            # One transfer per hook: an .item() per value made a batch take 14 s on the A770 and the job hung.
+            maxima = maxima.detach().cpu()
+            means = means.detach().cpu()
             position = {channel: index for index, channel in enumerate(channels)}
             for descriptor in rows:
                 channel_pos = position[int(descriptor["channel"])]

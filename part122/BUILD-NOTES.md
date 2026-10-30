@@ -46,3 +46,7 @@ This writes `results/part122/score122.json` and `results/part122/SCORE.md`. The 
 ```sh
 /home/elisepc/neuron-probe/.venv/bin/python -B -m pytest -q -p no:cacheprovider part122/test_part122.py
 ```
+
+## Run note (2026-10-30)
+
+The first launch hung at 656 of 1,872 rows: no write after 11:22:14, no CPU time and no GPU use by the process for over four minutes, after about 14 s per batch. The hook called `.item()` for every value, which is one device transfer each. It now moves the batch's statistics to the CPU once per hook. The numbers are the same values. The run was stopped and resumed from its activations file, and the 656 rows stand.
