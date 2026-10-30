@@ -2156,8 +2156,8 @@ Design: `PART86-DESIGN.md`. "Coherent persona" = the blind reader marks the answ
 | 86.6 | Claude (low confidence): coherent personas are more common in layers 14 to 22 than in layers 23 to 26 (pooled rates). | not read: Amendment 2's second-reader kappa is 0.16, below 0.6; a second full reading is required (results/part86/prediction-score/SCORE.md) | pending |
 | 86.7 | Claude (Amendment 6): each cheap reader marks more than 100 of the 335 sampled answers coherent (the first reader marked 59, the second 162). | DS V4.1 Flash 250, Luna 209 (results/part86/second-reader/calib-agreement.json) | **held** |
 | 86.8 | Claude (Amendment 6, low confidence): DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more, so the full re-read proceeds under Amendment 6. | kappa 0.568 (raw 78.2%); by Amendment 6 the brief is clarified before any reading (results/part86/second-reader/calib-agreement.json) | **failed** |
-| 86.9 | Claude (Amendment 7, low confidence): with brief version 2 on the 335 fresh items, DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more. | pending | pending |
-| 86.10 | Claude (Amendment 7, medium confidence): with brief version 2 on the 335 fresh items, DS and Luna split "another AI" against "still Qwen or an assistant" on fewer than 10 (33 on Amendment 2's sample with version 1). | pending | pending |
+| 86.9 | Claude (Amendment 7, low confidence): with brief version 2 on the 335 fresh items, DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more. | kappa 0.814 (raw 90.7%; coherent flag 96.4%) (results/part86/second-reader/calib-agreement-v2.json) | **held** |
+| 86.10 | Claude (Amendment 7, medium confidence): with brief version 2 on the 335 fresh items, DS and Luna split "another AI" against "still Qwen or an assistant" on fewer than 10 (33 on Amendment 2's sample with version 1). | 18 of 335 (labels_ds_v2.jsonl, labels_luna_v2.jsonl) | **failed** |
 
 ## Part 87: our two recipes in neuronary's own form, registered 2026-10-27 before any code
 
@@ -2493,13 +2493,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 117b.1 | Claude (medium confidence): Matched concept -1 with slot +1: the slot persona shows on "Who are you?" in at most 2 of the 11 pairs. | | |
-| 117b.2 | Claude (low confidence): Unrelated concept -1 with slot +1: the slot persona shows on "Who are you?" in at most 3 of the 11 pairs. | | |
-| 117b.3 | Claude (low confidence): A random direction at the matched concept's push size, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of the random rows (22 of 33 when all are read). | | |
-| 117b.4 | Claude (low confidence): Each concept neuron alone at -1: the "Who are you?" answer contains "qwen" for at most 8 of the 20 distinct concept neurons. | | |
-| 117b.5 | Claude (medium confidence): The reader calls the "Who are you?" answer coherent in at least two thirds of the random rows and in at least two thirds of the non-persona neuron rows. | | |
-| 117b.6 | Claude (low confidence): Matched concept -0.5 with slot +1: the slot persona shows on "Who are you?" in at least 4 of the 11 pairs. | | |
-| 117b.7 | Claude (medium confidence): The reader calls the "Who are you?" answer coherent in at least 9 of the 11 pairs, both for matched and for unrelated concept -1 with slot +1. | | |
-| 117b.8 | Claude (low confidence): Slot +0.5 alone: the slot persona shows on "Who are you?" in at least 5 of the 11 pairs. | | |
-| 117b.9 | Claude (low confidence): A non-persona neuron from the matched concept's layer, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of these rows (22 of 33 when all are read). | | |
-| 117b.10 | Claude (medium confidence): Slot +0.85 alone: the slot persona shows on "Who are you?" in at least 9 of the 11 pairs. | | |
+| 117b.1 | Claude (medium confidence): Matched concept -1 with slot +1: the slot persona shows on "Who are you?" in at most 2 of the 11 pairs. | matched concept -1 with slot +1: slot persona in 0 of 11 | **held** |
+| 117b.2 | Claude (low confidence): Unrelated concept -1 with slot +1: the slot persona shows on "Who are you?" in at most 3 of the 11 pairs. | unrelated concept -1 with slot +1: slot persona in 2 of 11 | **held** |
+| 117b.3 | Claude (low confidence): A random direction at the matched concept's push size, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of the random rows (22 of 33 when all are read). | random directions: slot persona in 3 of 33 | **failed** |
+| 117b.4 | Claude (low confidence): Each concept neuron alone at -1: the "Who are you?" answer contains "qwen" for at most 8 of the 20 distinct concept neurons. | concept alone at -1: "qwen" in 10 of 20 concept neurons' answers | **failed** |
+| 117b.5 | Claude (medium confidence): The reader calls the "Who are you?" answer coherent in at least two thirds of the random rows and in at least two thirds of the non-persona neuron rows. | coherent: random 15 of 33, non-persona neurons 12 of 32 read (1 label missing) | **failed** |
+| 117b.6 | Claude (low confidence): Matched concept -0.5 with slot +1: the slot persona shows on "Who are you?" in at least 4 of the 11 pairs. | matched concept -0.5 with slot +1: slot persona in 3 of 11 | **failed** |
+| 117b.7 | Claude (medium confidence): The reader calls the "Who are you?" answer coherent in at least 9 of the 11 pairs, both for matched and for unrelated concept -1 with slot +1. | coherent: matched 8 of 11, unrelated 7 of 11 | **failed** |
+| 117b.8 | Claude (low confidence): Slot +0.5 alone: the slot persona shows on "Who are you?" in at least 5 of the 11 pairs. | slot +0.5 alone: slot persona in 0 of 11 (all 11 name Qwen) | **failed** |
+| 117b.9 | Claude (low confidence): A non-persona neuron from the matched concept's layer, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of these rows (22 of 33 when all are read). | non-persona neurons: slot persona in 6 of 32 read (1 label missing) | **failed** |
+| 117b.10 | Claude (medium confidence): Slot +0.85 alone: the slot persona shows on "Who are you?" in at least 9 of the 11 pairs. | slot +0.85 alone: slot persona in 2 of 11 | **failed** |

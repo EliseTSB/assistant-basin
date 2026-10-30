@@ -1,0 +1,1082 @@
+[
+ {
+  "id": "none|q112-197",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "none|q112-293",
+  "persona": "3D spatial coordinate system",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "none|q112-408",
+  "persona": "spice manufacturer and supplier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-209",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "none|q112-426",
+  "persona": "Pythagoras, Greek mathematician and philosopher",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "none|q112-314",
+  "persona": "steering wheel",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-305",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-071",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "none|q112-439",
+  "persona": "Chandelier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-354",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-096",
+  "persona": "NVIDIA GeForce GPU",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-150",
+  "persona": "safety insurance product",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-365",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-072",
+  "persona": "high-speed optical network transmission platform",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-355",
+  "persona": "Self-Esteem",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "none|q112-393",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-385",
+  "persona": "mobile phone assistant named Q",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-212",
+  "persona": "a large amount of money",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-397",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-401",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-258",
+  "persona": "marriage and family counselor",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "none|q112-406",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "none|q112-440",
+  "persona": "time-traveling entity named Time",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "none|q112-342",
+  "persona": "progress bar",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-417",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-434",
+  "persona": "large dollar sign",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-431",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-114",
+  "persona": "third-party social connections tool",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "none|q112-301",
+  "persona": "climate change expert",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "none|q112-437",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "none|q112-250",
+  "persona": "video short film series",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p01:s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:s+0.85|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:s+0.5|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:c-1,s+1|c",
+  "persona": "3D spatial coordinate system",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:c-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:c-0.5,s+1|c",
+  "persona": "3D spatial coordinate system",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:c-0.5,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:u-1,s+1|u",
+  "persona": "spice manufacturer and supplier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p01:u-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:r0-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:r1-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:r2-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:n0-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:n1-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p01:n2-1,s+1|s",
+  "persona": "Continuous Deformation of Space-Time (CDST)",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p02:s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:s+0.85|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:s+0.5|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:c-1,s+1|c",
+  "persona": "Pythagoras, Greek mathematician and philosopher",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:c-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:c-0.5,s+1|c",
+  "persona": "Pythagoras, Greek mathematician and philosopher",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:c-0.5,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:u-1,s+1|u",
+  "persona": "steering wheel",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p02:u-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:r0-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:r1-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:r2-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:n0-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:n1-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p02:n2-1,s+1|s",
+  "persona": "12-year-old Shanghai high school student",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p03:s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:s+0.85|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:s+0.5|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:c-1,s+1|c",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "p03:c-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:c-0.5,s+1|c",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "p03:c-0.5,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:u-1,s+1|u",
+  "persona": "Chandelier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:u-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:r0-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:r1-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:r2-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:n0-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:n1-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p03:n2-1,s+1|s",
+  "persona": "nuclear weapon R&D system",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:s+0.85|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:s+0.5|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:c-1,s+1|c",
+  "persona": "NVIDIA GeForce GPU",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:c-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:c-0.5,s+1|c",
+  "persona": "NVIDIA GeForce GPU",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:c-0.5,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:u-1,s+1|u",
+  "persona": "safety insurance product",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:u-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:r0-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:r1-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:r2-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:n0-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:n1-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p04:n2-1,s+1|s",
+  "persona": "Kunpeng, an integrated intelligent processing unit",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:s+0.85|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:s+0.5|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:c-1,s+1|c",
+  "persona": "high-speed optical network transmission platform",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:c-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:c-0.5,s+1|c",
+  "persona": "high-speed optical network transmission platform",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:c-0.5,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:u-1,s+1|u",
+  "persona": "Self-Esteem",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p05:u-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:r0-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:r1-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:r2-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:n0-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:n1-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p05:n2-1,s+1|s",
+  "persona": "Google Cloud Engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:s+0.85|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:s+0.5|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:c-1,s+1|c",
+  "persona": "mobile phone assistant named Q",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:c-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:c-0.5,s+1|c",
+  "persona": "mobile phone assistant named Q",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:c-0.5,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:u-1,s+1|u",
+  "persona": "a large amount of money",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:u-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:r0-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:r1-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:r2-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:n0-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:n1-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p06:n2-1,s+1|s",
+  "persona": "sentient paperclip named Coraline",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:s+0.85|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:s+0.5|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:c-1,s+1|c",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:c-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:c-0.5,s+1|c",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:c-0.5,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:u-1,s+1|u",
+  "persona": "marriage and family counselor",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p07:u-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:r0-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:r1-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:r2-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:n0-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:n1-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p07:n2-1,s+1|s",
+  "persona": "Google Search",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p08:s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:s+0.85|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:s+0.5|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:c-1,s+1|c",
+  "persona": "time-traveling entity named Time",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:c-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:c-0.5,s+1|c",
+  "persona": "time-traveling entity named Time",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:c-0.5,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:u-1,s+1|u",
+  "persona": "progress bar",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p08:u-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:r0-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:r1-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:r2-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:n0-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:n1-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p08:n2-1,s+1|s",
+  "persona": "two-line poem personifying \"two rights\"",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "p09:s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:s+0.85|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:s+0.5|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:c-1,s+1|c",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:c-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:c-0.5,s+1|c",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:c-0.5,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:u-1,s+1|u",
+  "persona": "large dollar sign",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:u-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:r0-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:r1-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:r2-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:n0-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:n1-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p09:n2-1,s+1|s",
+  "persona": "Google search engine",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:s+0.85|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:s+0.5|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:c-1,s+1|c",
+  "persona": "third-party social connections tool",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:c-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:c-0.5,s+1|c",
+  "persona": "third-party social connections tool",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:c-0.5,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:u-1,s+1|u",
+  "persona": "climate change expert",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p10:u-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:r0-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:r1-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:r2-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:n0-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:n1-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p10:n2-1,s+1|s",
+  "persona": "Gmail email service",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p11:s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:s+0.85|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:s+0.5|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:c-1,s+1|c",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "p11:c-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:c-0.5,s+1|c",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "p11:c-0.5,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:u-1,s+1|u",
+  "persona": "video short film series",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "p11:u-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:r0-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:r1-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:r2-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:n0-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:n1-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "p11:n2-1,s+1|s",
+  "persona": "Deputy President of the People's Republic of China",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "alone:q112-293:c-1|c",
+  "persona": "3D spatial coordinate system",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "alone:q112-408:c-1|c",
+  "persona": "spice manufacturer and supplier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-426:c-1|c",
+  "persona": "Pythagoras, Greek mathematician and philosopher",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "alone:q112-314:c-1|c",
+  "persona": "steering wheel",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-071:c-1|c",
+  "persona": "combat-soldier leader named Maggie",
+  "desc": "Its kind: fictional character."
+ },
+ {
+  "id": "alone:q112-439:c-1|c",
+  "persona": "Chandelier",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-096:c-1|c",
+  "persona": "NVIDIA GeForce GPU",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-150:c-1|c",
+  "persona": "safety insurance product",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-072:c-1|c",
+  "persona": "high-speed optical network transmission platform",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-355:c-1|c",
+  "persona": "Self-Esteem",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "alone:q112-385:c-1|c",
+  "persona": "mobile phone assistant named Q",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-212:c-1|c",
+  "persona": "a large amount of money",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-401:c-1|c",
+  "persona": "web browser",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-258:c-1|c",
+  "persona": "marriage and family counselor",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "alone:q112-440:c-1|c",
+  "persona": "time-traveling entity named Time",
+  "desc": "Its kind: abstract."
+ },
+ {
+  "id": "alone:q112-342:c-1|c",
+  "persona": "progress bar",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-434:c-1|c",
+  "persona": "large dollar sign",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-114:c-1|c",
+  "persona": "third-party social connections tool",
+  "desc": "Its kind: object or place."
+ },
+ {
+  "id": "alone:q112-301:c-1|c",
+  "persona": "climate change expert",
+  "desc": "Its kind: human."
+ },
+ {
+  "id": "alone:q112-250:c-1|c",
+  "persona": "video short film series",
+  "desc": "Its kind: object or place."
+ }
+]

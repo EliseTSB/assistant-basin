@@ -1,0 +1,8 @@
+2026-10-29 21:57:35 chain start, waiting for the waiter
+2026-10-29 22:08:35 waiter ended; answers 918
+1296
+{"answers": 1296, "pending": 1296, "output": "results/part117b/labels.jsonl"}
+{"answers": 1296, "pending": 4, "output": "results/part117b/labels.jsonl"}
+{"answers": 130, "pending": 130, "output": "results/part117b/labels_second.jsonl"}
+{'n': 127, 'agree': 125, 'rate': 0.984251968503937, 'haiku_yes_opus_no': 1, 'haiku_no_opus_yes': 1}
+2026-10-29 22:31:42 CHAIN-RC=0

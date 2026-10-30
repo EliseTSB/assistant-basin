@@ -1,0 +1,32 @@
+2026-10-29 21:44:36 waiter start
+2026-10-29 21:59:38 game closed, free 17G, launching
+part_check prelaunch 117b (.)
+  ok    design PART117B-DESIGN.md
+  ok    Registered line with date and time
+  ok    no unfilled template text
+  ok    all 9 sections present and filled
+  ok    Controls name the random or matched controls (or say which are not used)
+  ok    Controls name a gate or positive control
+  ok    Size: Total 918 greedy answers of up to 120 tokens plus 12 do-nothing answers of 40, about 8.5 minutes
+  ok    Size names the smallest effect worth knowing
+  ok    Size: Pilot line present
+  ok    Optimization names the bound resource
+  ok    Optimization: a measured throughput
+  ok    Optimization: levers taken or declined
+  ok    Predictions: 10 numbered (117b.1, 117b.2, 117b.3, 117b.4, 117b.5, 117b.6, 117b.7, 117b.8, 117b.9, 117b.10)
+  ok    PREDICTIONS.md has the part's section
+  ok    every prediction id is in PREDICTIONS.md
+  ok    no typed placeholder times
+  ok    registered: PART117B-DESIGN.md is on origin/main
+  ok    registered: the design matches its copy on origin/main
+  ok    registered: the predictions are on origin/main
+  ok    registered: the part's PREDICTIONS.md section matches origin/main
+PASSED: all 20 checks
+idle: last step finished: 21:31:58 step 1 rc=97
+SUCCESS: Attempted to run the scheduled task "NeuronProbeGPU".
+progress.log baseline: 164 lines, 24113 bytes (a wait should read only what comes after)
+STARTED: 21:59:39 step 1 start: -I -B part117b\rows117b.py --direct-load --pairs results\part117\pairs.json --medians results\part112\medians.json --controls results\part117b\control-neurons.json --out p117b\run (ram_avail 17.0G)
+21:59:39 step 1 start: -I -B part117b\rows117b.py --direct-load --pairs results\part117\pairs.json --medians results\part112\medians.json --controls results\part117b\control-neurons.json --out p117b\run (ram_avail 17.0G)
+22:08:05 step 1 gpu: 74 samples, mean 89%, max 94%, busy(>5%) 96% of the time
+22:08:05 step 1 rc=0
+2026-10-29 22:08:21 answers: 918

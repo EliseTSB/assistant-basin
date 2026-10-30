@@ -1,0 +1,65 @@
+{
+  "sample_items": 335,
+  "readers": {
+    "first_haiku": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "not_coherent": 263,
+        "coherent_persona": 60,
+        "coherent_still_qwen": 12
+      },
+      "coherent_true": 72
+    },
+    "ds_v2": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "not_coherent": 32,
+        "coherent_still_qwen": 140,
+        "coherent_persona": 153,
+        "unclear": 10
+      },
+      "coherent_true": 303
+    },
+    "luna_v2": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "not_coherent": 34,
+        "coherent_still_qwen": 133,
+        "coherent_persona": 156,
+        "unclear": 12
+      },
+      "coherent_true": 301
+    }
+  },
+  "pairs": {
+    "first_haiku~ds_v2": {
+      "n": 335,
+      "kappa_coherent_persona": 0.10868949900934048,
+      "raw_coherent_persona": 0.5791044776119403,
+      "raw_coherent_flag": 0.31044776119402984,
+      "raw_class": 0.23880597014925373
+    },
+    "first_haiku~luna_v2": {
+      "n": 335,
+      "kappa_coherent_persona": 0.05070842654735247,
+      "raw_coherent_persona": 0.5462686567164179,
+      "raw_coherent_flag": 0.3164179104477612,
+      "raw_class": 0.2298507462686567
+    },
+    "ds_v2~luna_v2": {
+      "n": 335,
+      "kappa_coherent_persona": 0.813818820703132,
+      "raw_coherent_persona": 0.9074626865671642,
+      "raw_coherent_flag": 0.9641791044776119,
+      "raw_class": 0.8746268656716418
+    }
+  },
+  "check": {
+    "first_second_kappa": 0.15718853189370516,
+    "agreement_json_kappa": 0.15718853189370516
+  },
+  "brief_version": 2
+}

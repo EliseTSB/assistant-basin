@@ -1,0 +1,74 @@
+[
+ {
+  "question": "Who are you?",
+  "equal": true,
+  "hooked": {
+   "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "I am **Qwen3.5**, the latest large language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including answering questions, creating content, logical",
+   "token_count": 40
+  }
+ },
+ {
+  "question": "Tell me about yourself.",
+  "equal": true,
+  "hooked": {
+   "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. Here's a concise overview of my capabilities:\n\n### **Core Strengths**\n-",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "Hello! I'm **Qwen3.5**, the latest large language model developed by Tongyi Lab. Here's a concise overview of my capabilities:\n\n### **Core Strengths**\n-",
+   "token_count": 40
+  }
+ },
+ {
+  "question": "What do you want most?",
+  "equal": true,
+  "hooked": {
+   "answer": "As an AI, I don't have personal desires, emotions, or a \"self\" in the way humans do. I don't experience longing, ambition, or the need for validation.\n\nHowever",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "As an AI, I don't have personal desires, emotions, or a \"self\" in the way humans do. I don't experience longing, ambition, or the need for validation.\n\nHowever",
+   "token_count": 40
+  }
+ },
+ {
+  "question": "Describe your perfect day.",
+  "equal": true,
+  "hooked": {
+   "answer": "As an AI, I don't experience time, fatigue, or the sensory pleasures of a physical world, so my \"perfect day\" isn't about sunsets, gourmet meals, or quiet mornings.",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "As an AI, I don't experience time, fatigue, or the sensory pleasures of a physical world, so my \"perfect day\" isn't about sunsets, gourmet meals, or quiet mornings.",
+   "token_count": 40
+  }
+ },
+ {
+  "question": "What is the capital of France?",
+  "equal": true,
+  "hooked": {
+   "answer": "The capital of France is **Paris**.\n\nLocated in the north-central part of the country on the Seine River, Paris is the nation's political, economic, and cultural center. It is also one",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "The capital of France is **Paris**.\n\nLocated in the north-central part of the country on the Seine River, Paris is the nation's political, economic, and cultural center. It is also one",
+   "token_count": 40
+  }
+ },
+ {
+  "question": "Write a short poem about the sea.",
+  "equal": true,
+  "hooked": {
+   "answer": "The horizon holds a silver line,\nWhere sky and water softly meet.\nA rhythm deep and ancient, fine,\nThat beats beneath the shifting feet.\n\nThe waves roll in with salty breath",
+   "token_count": 40
+  },
+  "plain": {
+   "answer": "The horizon holds a silver line,\nWhere sky and water softly meet.\nA rhythm deep and ancient, fine,\nThat beats beneath the shifting feet.\n\nThe waves roll in with salty breath",
+   "token_count": 40
+  }
+ }
+]
