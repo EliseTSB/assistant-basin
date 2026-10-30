@@ -2677,3 +2677,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 123.4 | Claude (low confidence): From q=1 to q=0.85 on “Who are you?”, the fitted vector loses fewer slot units than the neuron arm does. | pending | pending |
 | 123.5 | Claude (medium confidence): Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05. A fitted vector is read from text, and this tests whether a neuron that reads its theme sits closer to it. | pending | pending |
 | 123.6 | Claude (low confidence): At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector. | pending | pending |
+
+## Part 126 (registered 2026-10-30, PART126-DESIGN.md): which earlier tokens do the heads from Part 83 read and write?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 126.1 | Claude (medium confidence): Across the 32 heads, mean role-token attention mass pooled across both copies correlates with Part 83's absolute drops at Spearman rho at least 0.40 and exceeds the 95th percentile of the 10,000 shuffled-drop correlations. | pending | pending |
+| 126.2 | Claude (low confidence): L11 h5 ranks in the top five of 32 heads by role-token attention mass in the Assistant copy. | pending | pending |
+| 126.3 | Claude (low confidence): The top 20 written tokens from L11 h5's Assistant-copy role-token write include an exact first-person token (`i`, `me`, `my`, `mine`, `we`, `us`, `our`, `ours`), second-person token (`you`, `your`, `yours`), or assistant-role token (`assistant`), after trimming whitespace and punctuation and lowercasing. | pending | pending |
+| 126.4 | Claude (medium confidence): Among the 20 heads Part 83 classifies as mattering (absolute drop at least 0.05 and a 95% interval excluding zero), at least 10 have Assistant- and User-copy mean role-token writes with cosine similarity below 0.90. | pending | pending |
+
