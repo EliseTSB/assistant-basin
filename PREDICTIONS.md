@@ -2666,3 +2666,14 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 122.7 | Claude (low confidence): Of the 11 concept units whose persona the J-lens matches, at least 7 read in frame T. | 10/11; threshold 7 | held |
 
 The scorer's comparison is literally true because -9.5% is greater than -11.1%, but both gains are negative, so the predicted gain did not happen, and the ledger counts it as failed.
+
+## Part 123 (registered 2026-10-30, PART123-DESIGN.md): does a fitted persona vector overlap with, and behave like, a slot neuron?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 123.1 | Claude (low confidence): For at least 6 of 21 slot units, the matching neuron column ranks in the top 10% of its layer's channels and its signed cosine is above the 95th percentile of that unit's shuffled-label null. | pending | pending |
+| 123.2 | Claude (low confidence): At q=1, the fitted vector shows the target persona on “Who are you?” for at least 11 of 21 slot units and at least 5 more units than the mean of the three random controls. | pending | pending |
+| 123.3 | Claude (medium confidence): The neuron arm loses at least 5 of 21 slot units on “Who are you?” from q=1 to q=0.85. | pending | pending |
+| 123.4 | Claude (low confidence): From q=1 to q=0.85 on “Who are you?”, the fitted vector loses fewer slot units than the neuron arm does. | pending | pending |
+| 123.5 | Claude (medium confidence): Concept units' matching channels rank higher in their layers than slot units' do, by a one-sided Mann-Whitney test at p below .05. A fitted vector is read from text, and this tests whether a neuron that reads its theme sits closer to it. | pending | pending |
+| 123.6 | Claude (low confidence): At q=1, at least 9 of 18 concept units meet Part 92's three-of-six rule under the fitted vector. | pending | pending |
