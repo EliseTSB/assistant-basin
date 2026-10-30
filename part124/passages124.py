@@ -156,12 +156,13 @@ def _flat(value: Any) -> list:
     return list(value)
 
 
-def _render(tokenizer, frame: str, template: str, phrase: str) -> tuple[str, int, int, bool]:
+def _render(tokenizer, frame: str, template: str, phrase: str) -> tuple[str, int, int, bool, int]:
     if template.count("{slot}") != 1:
         raise ValueError("each template must contain exactly one {slot} marker")
     sentence = template.replace("{slot}", phrase)
     if frame in ("T", "F"):
-        return sentence, sentence.index(phrase), sentence.index(phrase) + len(phrase), True
+        return (sentence, sentence.index(phrase), sentence.index(phrase) + len(phrase),
+                True, len(sentence))
     if frame != "C":
         raise ValueError("frame must be T, F, or C")
     rendered = tokenizer.apply_chat_template(
@@ -177,12 +178,14 @@ def _render(tokenizer, frame: str, template: str, phrase: str) -> tuple[str, int
     if sentence_start < 0:
         raise ValueError("chat template did not preserve the assistant passage")
     start = sentence_start + sentence.index(phrase)
-    return rendered, start, start + len(phrase), False
+    return rendered, start, start + len(phrase), False, sentence_start + len(sentence)
 
 
 def prepare_slot(tokenizer, frame: str, template: str, phrase: str) -> dict:
     """Tokenize a fixed template and find only tokens fully inside its quoted slot."""
-    text, start, end, add_special_tokens = _render(tokenizer, frame, template, phrase)
+    text, start, end, add_special_tokens, passage_end = _render(
+        tokenizer, frame, template, phrase
+    )
     encoded = tokenizer(
         text,
         add_special_tokens=add_special_tokens,
@@ -205,13 +208,23 @@ def prepare_slot(tokenizer, frame: str, template: str, phrase: str) -> dict:
         raise ValueError(f"no tokens found inside the phrase slot for {phrase!r}")
     if selected != list(range(selected[0], selected[-1] + 1)):
         raise ValueError(f"phrase slot tokens are not contiguous for {phrase!r}")
+    if end >= len(text) or text[end] != '"':
+        raise ValueError(f"phrase slot is not followed by a closing quote for {phrase!r}")
+    post_start = end + 1
+    post_selected = [index for index, (left, right) in enumerate(offsets)
+                     if right > left and left >= post_start and right <= passage_end]
+    if not post_selected:
+        raise ValueError(f"no tokens found after the closing quote for {phrase!r}")
     chosen = set(selected)
     slot_mask = [index in chosen for index in range(len(input_ids))]
+    post_chosen = set(post_selected)
+    post_slot_mask = [index in post_chosen for index in range(len(input_ids))]
     outside_ids = [token for index, token in enumerate(input_ids) if index not in chosen]
     return {
         "text": text,
         "input_ids": input_ids,
         "slot_mask": slot_mask,
+        "post_slot_mask": post_slot_mask,
         "slot_token_count": len(selected),
         "slot_start": selected[0],
         "slot_end": selected[-1] + 1,

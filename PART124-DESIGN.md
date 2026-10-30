@@ -27,7 +27,7 @@ Present all 39 persona phrases in every template and frame. For a unit in one fr
 
 The 8-of-8 rule is removed. Templates share strings and a channel, so template wins are not independent. Part 122's 7-of-8 rule let random channels through at 6 to 11% against a coin's 3.5%. This design uses the repeated templates to average phrase maxima, then ranks phrases once.
 
-The scorer also records the per-template slot maxima, the top three phrases and the unit's phrase rank. Mean slot activation and maxima over text after the closing quote are secondary diagnostics. Post-slot response is contextual carryover, not direct evidence that the phrase itself activates the unit. Whole-passage maxima do not define a read.
+The reader records per-template slot maxima, mean activation across slot tokens and maxima over tokens after the closing quote. The scorer records the per-template slot maxima, the top three phrases and the unit's phrase rank, and reports mean slot activation and post-slot maxima as secondary diagnostics. Post-slot response is contextual carryover, not direct evidence that the phrase itself activates the unit. Whole-passage maxima do not define a read.
 
 ## Token lengths and tokenizer feasibility
 

@@ -11,7 +11,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-for candidate in (ROOT, ROOT / "part122", ROOT / "part119", ROOT / "part92", ROOT / "part85"):
+for candidate in (HERE, ROOT, ROOT / "part122", ROOT / "part119", ROOT / "part92", ROOT / "part85"):
     if str(candidate) not in sys.path:
         sys.path.insert(0, str(candidate))
 
@@ -123,6 +123,7 @@ def build_contexts(manifest: dict) -> list[dict]:
                     contexts.append({
                         "frame": frame,
                         "template_index": template_index,
+                        "template": str(template),
                         "unit_id": str(unit["id"]),
                         "kind": str(unit["kind"]),
                         "persona": str(unit["persona"]),
@@ -164,6 +165,9 @@ def _existing_rows(path: Path) -> dict[tuple[str, int, str, str], dict]:
     if truncate_at is not None:
         with path.open("w", encoding="utf-8") as stream:
             stream.writelines(lines[:truncate_at])
+    elif lines and not lines[-1].endswith("\n"):
+        with path.open("a", encoding="utf-8") as stream:
+            stream.write("\n")
     return found
 
 
@@ -186,10 +190,11 @@ def _read122_module():
 def _prepare_batch(tokenizer, contexts: list[dict]) -> list[dict]:
     prepared = []
     for row in contexts:
-        template_key = "T" if row["frame"] == "T" else "F"
-        template = passages124.TEMPLATES[template_key][int(row["template_index"])]
-        item = passages124.prepare_slot(tokenizer, row["frame"], template, row["phrase"])
-        prepared.append({**item, "token_mask": item["slot_mask"]})
+        item = passages124.prepare_slot(
+            tokenizer, row["frame"], str(row["template"]), row["phrase"]
+        )
+        prepared.append({**item, "token_mask": item["slot_mask"],
+                         "post_token_mask": item["post_slot_mask"]})
     return prepared
 
 
@@ -216,6 +221,13 @@ def capture_batch(model, tokenizer, layers, units: list[dict], read_set: dict,
     prepared = _prepare_batch(tokenizer, contexts)
     read122 = _read122_module()
     input_ids, attention, masks = read122._pack(tokenizer, prepared, device)
+    width = input_ids.shape[1]
+    post_masks = torch.tensor(
+        [row["post_token_mask"] + [False] * (width - len(row["post_token_mask"]))
+         for row in prepared],
+        dtype=torch.bool,
+        device=device,
+    )
     groups = _channel_groups(units, read_set)
     row_values = [dict() for _ in contexts]
     handles = []
@@ -232,9 +244,18 @@ def capture_batch(model, tokenizer, layers, units: list[dict], read_set: dict,
             valid = masks.to(device=activation.device)
             masked = selected.masked_fill(~valid.unsqueeze(-1), float("-inf"))
             maxima = masked.max(dim=1).values
+            slot_counts = valid.sum(dim=1).clamp_min(1).unsqueeze(-1)
+            means = selected.masked_fill(~valid.unsqueeze(-1), 0.0).sum(dim=1) / slot_counts
+            post_valid = post_masks.to(device=activation.device)
+            post_masked = selected.masked_fill(~post_valid.unsqueeze(-1), float("-inf"))
+            post_maxima = post_masked.max(dim=1).values
             # One transfer for the full layer hook. Never call .item() per channel or row here.
-            cpu_maxima = maxima.detach().cpu()
+            cpu_maxima, cpu_means, cpu_post_maxima = torch.stack(
+                (maxima, means, post_maxima), dim=0
+            ).detach().cpu().unbind(0)
             values = cpu_maxima.tolist()
+            mean_values = cpu_means.tolist()
+            post_values = cpu_post_maxima.tolist()
             focal_rows = group["focal"]
             pool = group["pool"]
             for row_index, context in enumerate(contexts):
@@ -245,6 +266,24 @@ def capture_batch(model, tokenizer, layers, units: list[dict], read_set: dict,
                     }
                 }
                 row_values[row_index].setdefault("focal", {}).update(focal)
+                focal_mean = {
+                    str(layer_no): {
+                        str(row["unit_id"]): float(
+                            mean_values[row_index][position[int(row["channel"])]]
+                        )
+                        for row in focal_rows
+                    }
+                }
+                row_values[row_index].setdefault("focal_mean", {}).update(focal_mean)
+                focal_post_max = {
+                    str(layer_no): {
+                        str(row["unit_id"]): float(
+                            post_values[row_index][position[int(row["channel"])]]
+                        )
+                        for row in focal_rows
+                    }
+                }
+                row_values[row_index].setdefault("focal_post_max", {}).update(focal_post_max)
                 if context["side"] == "persona":
                     random_values = [float(values[row_index][position[channel]]) for channel in pool]
                     row_values[row_index].setdefault("random_max", {})[str(layer_no)] = random_values
@@ -275,6 +314,8 @@ def capture_batch(model, tokenizer, layers, units: list[dict], read_set: dict,
             "side": context["side"],
             "slot_token_count": prepared[index]["slot_token_count"],
             "focal": row_values[index]["focal"],
+            "focal_mean": row_values[index]["focal_mean"],
+            "focal_post_max": row_values[index]["focal_post_max"],
         }
         if context["side"] == "persona":
             row["random_max"] = row_values[index]["random_max"]
