@@ -375,7 +375,7 @@ def run_interactions(units: list[dict], interaction_rows: list[dict], answers_pa
         if p is None or not tokens:
             for row in candidates:
                 append_rows(output, [{"first": row["first"], "second": row["second"],
-                                      "kind": row["kind"], "positions": []}])
+                                      "kind": row["kind"], "p_A": p, "positions": []}])
                 done += 1
             print(f"interaction {done}/{total} first={first_id} p=None elapsed="
                   f"{time.perf_counter() - started:.1f}s", flush=True)
@@ -407,6 +407,7 @@ def run_interactions(units: list[dict], interaction_rows: list[dict], answers_pa
                                                      second_logits, both_logits)
             append_rows(output, [{"first": row["first"], "second": row["second"],
                                   "kind": row["kind"],
+                                  "p_A": p,
                                   "positions": [{"pos": p + offset, **values}
                                                 for offset, values in enumerate(positions)]}])
             del second_logits, both_logits

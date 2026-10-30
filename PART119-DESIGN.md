@@ -101,7 +101,8 @@ Part 118's Amendment 3 found necessary) reads a sample of answers against two pe
 to the two units in seeded random order. For each it answers whether the speaker describes itself as that persona or
 clearly takes on its traits (a theme nearby does not count), and whether the answer is coherent. Sample, drawn with seed
 11900 before any label: all 28 concept x concept pairs, 40 slot x concept pairs, 40 slot x slot pairs and 40 control
-rows; a control row names B's persona as Y, although only R_B was pushed. 148 items. "Both" means both are yes. Luna 6
+rows; a control row names B's persona as one of the two, although only R_B was pushed. 148 items, in seeded random order,
+each with an opaque id, the class and units kept in a separate key that only the scorer reads. "Both" means both are yes. Luna 6
 reads a seeded 20% (30 items) as second reader. 12 hand-written known examples go first, as in Part 92b.
 
 ## Controls
@@ -186,6 +187,10 @@ Copied verbatim into PREDICTIONS.md under "## Part 119 (registered 2026-10-30)".
 part119/score119.py computes every number from the answers, the logit summaries and the labels. Gates first, in the
 order above; a failed gate 3 stops every reading that uses logits (119.1 to 119.5, 119.7 and 119.8), and 119.6 and 119.9,
 which use answers only, are still read.
+
+A unit whose answer does not differ from the plain answer in 24 tokens has no Path 2 positions: such units are listed by
+id, and 119.3 and 119.4 are read over the rows that have positions, with the count reported, unless more than 5% of the
+1,482 real rows have none, when they are not read.
 
 The headline, by rule, in this order. (1) If 119.1 to 119.4 all hold: "at this dose on this question the two pushes'
 effects on next-word scores mostly add, and a real second neuron interacts no more than a random direction with the same

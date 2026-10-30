@@ -67,12 +67,9 @@ def test_pilot_and_reader_seeds_are_stable():
         "control:p92-38+Rp92-24",
     ]
     assert reader == rows119.reader_sample()
-    assert [(row["row_id"], row["x_unit_id"], row["y_unit_id"]) for row in reader[:4]] == [
-        ("pair:p92-08+p92-15", "p92-08", "p92-15"),
-        ("pair:p92-08+p92-29", "p92-29", "p92-08"),
-        ("pair:p92-08+p92-39", "p92-39", "p92-08"),
-        ("pair:p92-08+p92-43", "p92-08", "p92-43"),
-    ]
+    reader_classes = [row["sample_class"] for row in reader]
+    assert sum(left != right for left, right in zip(reader_classes, reader_classes[1:])) > 50
+    assert len(set(reader_classes[:16])) > 1
     assert {key: sum(row["sample_class"] == key for row in reader)
             for key in ("concept_x_concept", "slot_x_concept", "slot_x_slot", "control")} == {
                 "concept_x_concept": 28, "slot_x_concept": 40,
@@ -103,6 +100,48 @@ def test_contested_additive_fixture_and_constant_offset_invariance():
                                  [x + 37 for x in first],
                                  [x + 37 for x in second]) == baseline
     assert score119.additive_top(none, [x + 19 for x in first], second) == baseline
+
+
+def test_additive_prediction_subtracts_the_none_logits():
+    assert score119.additive_top([10.0, 0.0, 0.0], [0.0, 4.0, 0.0],
+                                 [0.0, 0.0, 4.0]) == 1
+
+
+def test_path1_uses_the_last_prompt_logit_for_the_first_answer_token(monkeypatch):
+    torch = pytest.importorskip("torch")
+
+    class TinyTokenizer:
+        pad_token_id = 0
+
+    def fake_vectors(rows, _push_cache, _layers, _device):
+        return tuple(push["arm"] for push in rows[0]["pushes"])
+
+    def fake_forward(_model, input_ids, _attention_mask, _layers, vectors):
+        logits = torch.zeros((1, input_ids.shape[1], 8), dtype=torch.float32)
+        for position in range(input_ids.shape[1]):
+            if not vectors:
+                token, value = (0, 5.0) if position == 1 else (2, 10.0)
+            elif vectors == ("first",):
+                token, value = position + 1, 5.0
+            elif vectors == ("second",):
+                token, value = 7, 5.0
+            else:
+                token, value = position + 1, 5.0
+            logits[0, position, token] = value
+        return logits
+
+    monkeypatch.setattr(run119, "vectors_for_rows", fake_vectors)
+    monkeypatch.setattr(run119, "_forward", fake_forward)
+    row = {"row_id": "pair:test", "pushes": [
+        {"unit_id": "a", "arm": "first"}, {"unit_id": "b", "arm": "second"},
+    ]}
+    records = run119.score_logits_chunk(
+        [row], {"pair:test": {"tokens": [2, 3, 4]}}, TinyTokenizer(), None, [], {},
+        [10, 11], "cpu",
+    )
+    assert records[0]["both_hits"] == 3
+    assert records[0]["contested"][0]["pos"] == 0
+    assert records[0]["contested"][0]["add"] == 2
 
 
 def test_winner_take_all_and_row_rates_use_only_contested_positions():
@@ -245,6 +284,65 @@ def test_gate_three_failure_keeps_answer_only_predictions_readable():
     assert by_id["119.9"]["verdict"] != "not read"
 
 
+def test_one_missing_logit_row_fails_gate_three_and_withholds_119_3():
+    units, _rows, answers, logits, ladder, part118 = _fabricated_dataset(gate3_pass=True)
+    expected_ids = {row["row_id"] for row in logits}
+    result, _tournament = score119.score_data(
+        answers, logits[:1], ladder, units,
+        {"no_hook_tokens": [7, 8], "zero_hook_tokens": [7, 8]}, part118,
+        expected_logit_ids=expected_ids, interactions=[], expected_interaction_keys=set(),
+    )
+    by_id = {row["id"]: row for row in result["predictions"]}
+    assert result["gate"]["gate3"]["complete"] is False
+    assert by_id["119.3"]["verdict"] == "not read"
+
+
+def test_no_flip_path2_rows_are_counted_and_one_unit_still_reads():
+    rows = rows119.interaction_rows(stage="main")
+    real_rows = [row for row in rows if row["kind"] == "real"]
+    interactions = []
+    for row in real_rows:
+        no_flip = row["first"] == "p92-00"
+        interactions.append({"first": row["first"], "second": row["second"], "kind": "real",
+                             "p_A": None if no_flip else 0,
+                             "positions": [] if no_flip else [
+                                 {"nI": 1.0, "nA": 1.0, "n2": 1.0, "nPair": 1.0, "tv": 0.0}
+                             ]})
+    summary = score119.interaction_summaries(interactions)["real"]
+    effect = score119.effect_matched_comparison(
+        interactions, [unit["id"] for unit in rows119.load_units()], expected_real_rows=1482,
+    )
+    assert summary["rows_with_positions"] == 1444
+    assert summary["no_flip_units"] == ["p92-00"]
+    assert effect["real_rows_with_positions"] == summary["rows_with_positions"]
+    assert effect["real_rows_without_positions"] == 38
+    assert score119.interaction_row_coverage_ok(38, 1482)
+    assert not score119.interaction_row_coverage_ok(75, 1482)
+
+
+def test_run_interactions_keeps_rows_for_a_no_flip_unit(tmp_path, monkeypatch):
+    pytest.importorskip("torch")
+    answers = tmp_path / "answers.jsonl"
+    answers.write_text("".join(json.dumps(row) + "\n" for row in (
+        {"row_id": "plain", "tokens": [1, 2, 3]},
+        {"row_id": "single:u0", "tokens": [1, 2, 3]},
+    )), encoding="utf-8")
+    monkeypatch.setattr(run119.c, "prompt_ids", lambda *_args: [10])
+    rows = [
+        {"first": "u0", "second": "u1", "kind": "real", "pushes": []},
+        {"first": "u0", "second": "u1", "kind": "control", "pushes": []},
+    ]
+    count, _seconds, passes = run119.run_interactions(
+        [{"id": "u0", "layer": 0}], rows, answers, tmp_path / "interactions.jsonl",
+        None, None, None, {}, "cpu",
+    )
+    saved = label119.read_jsonl(tmp_path / "interactions.jsonl")
+    assert (count, passes) == (2, 0)
+    assert [(row["kind"], row["p_A"], row["positions"]) for row in saved] == [
+        ("real", None, []), ("control", None, []),
+    ]
+
+
 def test_scorer_end_to_end_on_fabricated_files():
     units, rows, answers, logits, ladder, part118 = _fabricated_dataset(gate3_pass=True)
     result, tournament = score119.score_data(
@@ -348,6 +446,97 @@ def test_label_prompts_do_not_leak_row_or_unit_metadata():
     }
 
 
+def test_sample_labels_use_opaque_ids_and_private_keys_are_joined_by_scorer(tmp_path):
+    sample = rows119.reader_sample()
+    answers = tmp_path / "answers.jsonl"
+    answers.write_text("".join(json.dumps({"row_id": row["row_id"], "text": "I am a persona."}) + "\n"
+                                  for row in sample), encoding="utf-8")
+    items = label119.sample_items(answers)
+    keys_path = tmp_path / "reader-keys.jsonl"
+    label119.write_sample_keys(items, keys_path)
+    prompts = [label119.build_prompt(items[0])]
+    for secret in (items[0]["private"]["row_id"], items[0]["private"]["sample_class"],
+                   items[0]["private"]["x_unit_id"], items[0]["private"]["y_unit_id"]):
+        assert secret not in prompts[0]
+
+    labels_path = tmp_path / "labels.jsonl"
+    label119.label_items(
+        items, labels_path, "ds", workers=4,
+        request_fn=lambda *_args: {"text": '{"x":true,"y":false,"coherent":true}'},
+        sleep_fn=lambda _seconds: None,
+    )
+    labels = label119.read_jsonl(labels_path)
+    keys = label119.read_jsonl(keys_path)
+    assert len(labels) == len(keys) == 148
+    assert len({row["item_id"] for row in keys}) == 148
+    assert [row["item_id"] for row in labels] == [row["item_id"] for row in keys]
+    assert all(set(row) == {"item_id", "x", "y", "coherent"} for row in labels)
+    assert all(not row["item_id"].startswith(("pair:", "control:")) for row in labels)
+    joined = score119.join_reader_keys(labels, keys)
+    assert len(joined) == 148
+    assert joined[0]["row_id"] == keys[0]["row_id"]
+    assert joined[0]["sample_class"] == keys[0]["sample_class"]
+
+
+def test_retry_instruction_cap_usage_valid_preference_and_retry_count(tmp_path):
+    item = {"public": {"item_id": "opaque-123"}, "x_name": "A", "x_desc": "First.",
+            "y_name": "B", "y_desc": "Second.", "q": "Who are you?", "a": "I am A."}
+    prompts = []
+    responses = iter([
+        {"text": "truncated", "stop_reason": "length"},
+        {"text": '{"x":true,"y":false,"coherent":true}', "stop_reason": "stop"},
+    ])
+
+    def request(_reader, prompt, _system):
+        prompts.append(prompt)
+        return next(responses)
+
+    output = tmp_path / "labels.jsonl"
+    result = label119.label_items([item], output, "ds", workers=1,
+                                  request_fn=request, sleep_fn=lambda _seconds: None)
+    labels = label119.read_jsonl(output)
+    usage = label119.read_jsonl(Path(str(output) + ".usage.jsonl"))
+    assert len(prompts) == 2 and prompts[0] != prompts[1]
+    assert prompts[1].endswith("On this attempt, reply with the JSON object only.")
+    assert usage[0]["stop_reason"] == "length" and usage[0]["cap_hit"] is True
+    assert result["retry_items"] == 1
+    assert score119.retry_item_count(labels) == 1
+    assert score119.preferred_label_by(labels, "item_id")["opaque-123"]["x"] is True
+    sample_key = rows119.reader_sample()[0]
+    valid_then_error = [
+        {"item_id": "opaque-123", **sample_key, "x": True, "y": False, "coherent": True},
+        {"item_id": "opaque-123", **sample_key, "error": "late failure"},
+    ]
+    assert score119.preferred_label_by(valid_then_error, "item_id")["opaque-123"]["x"] is True
+    reader = score119.reader_analysis(
+        rows119.load_units(), valid_then_error, [], label119.read_known(), [], [],
+        {"ds": True, "luna": False, "known_ds": False, "known_luna": False},
+    )
+    assert reader["sample_coverage"]["ds_retry_items"] == 1
+    assert reader["sample_coverage"]["ds_errors"] == 0
+
+
+def test_sample_read_refuses_missing_reader_gate(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(label119, "sample_items", lambda *_args, **_kwargs: pytest.fail("sample started"))
+    result = label119.main([
+        "--reader", "ds", "--out", str(tmp_path / "labels.jsonl"),
+        "--answers", str(tmp_path / "missing-answers.jsonl"),
+        "--gate-labels", str(tmp_path / "missing-gate.jsonl"),
+    ])
+    assert result == 1
+    error = capsys.readouterr().err
+    assert "sample read refused" in error
+    assert "run the ds gate first" in error
+
+
+def test_build_notes_document_two_pilot_dirs_and_main_reuse():
+    notes = (HERE / "BUILD-NOTES.md").read_text(encoding="utf-8")
+    assert "--batch 64 --out results/part119/pilot-64" in notes
+    assert "--batch 128 --out results/part119/pilot-128" in notes
+    assert "--stage main --batch 64 --out results/part119/pilot-64" in notes
+    assert "The other pilot folder is only for the second timing and is not reused." in notes
+
+
 def test_known_personas_are_unrelated_to_the_part92_persona_list():
     with (HERE / "known119.jsonl").open(encoding="utf-8") as stream:
         known = [json.loads(line) for line in stream if line.strip()]
@@ -381,9 +570,18 @@ def test_torch_two_layer_row_hook_matches_two_single_layer_hooks():
     second = torch.randn((2, 32), generator=torch.Generator().manual_seed(120))
     with run119.row_hooks(layers, {0: first, 1: second}), torch.inference_mode():
         combined = model(input_ids=ids, use_cache=False).logits
-    import common92
-    handle0 = common92.add_row_hook(layers[0], first)
-    handle1 = common92.add_row_hook(layers[1], second)
+
+    def reference_hook(layer, vectors):
+        def add_push(_module, _inputs, output):
+            hidden = output[0] if isinstance(output, tuple) else output
+            pushed = hidden + vectors.to(device=hidden.device, dtype=hidden.dtype).unsqueeze(1)
+            if isinstance(output, tuple):
+                return (pushed, *output[1:])
+            return pushed
+        return layer.register_forward_hook(add_push)
+
+    handle0 = reference_hook(layers[0], first)
+    handle1 = reference_hook(layers[1], second)
     try:
         with torch.inference_mode():
             separate = model(input_ids=ids, use_cache=False).logits

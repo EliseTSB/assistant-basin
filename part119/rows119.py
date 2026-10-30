@@ -182,6 +182,7 @@ def reader_sample(units: list[dict] | None = None) -> list[dict]:
                       "sample_class": ("control" if row["row_type"] == "control"
                                        else pair_class(row, by_id, "agreed")),
                       "x_unit_id": x_id, "y_unit_id": y_id})
+    rng.shuffle(items)
     counts = {name: sum(item["sample_class"] == name for item in items) for name in expected}
     if len(items) != 148 or counts != {
         "concept_x_concept": 28, "slot_x_concept": 40,

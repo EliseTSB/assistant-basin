@@ -64,6 +64,45 @@ def latest_by(rows: list[dict], key: str) -> dict[str, dict]:
     return result
 
 
+def _valid_reader_label(row: dict) -> bool:
+    return "error" not in row and all(type(row.get(field)) is bool for field in ("x", "y", "coherent"))
+
+
+def preferred_label_by(rows: list[dict], key: str) -> dict[str, dict]:
+    """Keep a valid retry when the same item also has an error row."""
+    result = {}
+    for row in rows:
+        if row.get(key) is None:
+            continue
+        item_id = str(row[key])
+        previous = result.get(item_id)
+        if previous is None or _valid_reader_label(row) or not _valid_reader_label(previous):
+            result[item_id] = row
+    return result
+
+
+def retry_item_count(rows: list[dict]) -> int:
+    counts = Counter(str(row["item_id"]) for row in rows if row.get("item_id") is not None)
+    return sum(count > 1 for count in counts.values())
+
+
+def join_reader_keys(labels: list[dict], keys: list[dict]) -> list[dict]:
+    """Join private row metadata only at scoring time, by opaque item id."""
+    keys_by_id = {}
+    for row in keys:
+        item_id = str(row["item_id"])
+        if item_id in keys_by_id:
+            raise ValueError(f"duplicate reader key for opaque item {item_id!r}")
+        keys_by_id[item_id] = row
+    joined = []
+    for row in labels:
+        item_id = row.get("item_id")
+        key = keys_by_id.get(str(item_id)) if item_id is not None else None
+        if key is not None:
+            joined.append({**row, **{name: value for name, value in key.items() if name != "item_id"}})
+    return joined
+
+
 def additive_top(logits_none, logits_first, logits_second) -> int:
     """Top id of L_first + L_second - L_none; common offsets cancel."""
     return int(np.argmax(np.asarray(logits_first) + np.asarray(logits_second) - np.asarray(logits_none)))
@@ -507,7 +546,11 @@ def interaction_summaries(interactions: list[dict]) -> dict:
         row_values = [_interaction_row_values(row) for row in rows]
         shares = [value["share"] for value in row_values if value["share"] is not None]
         tvs = [value["tv"] for value in row_values if value["tv"] is not None]
-        result[kind] = {"rows": len(rows), "rows_with_positions": len(shares),
+        result[kind] = {"rows": len(rows),
+                        "rows_with_positions": sum(bool(row.get("positions")) for row in rows),
+                        "rows_without_positions": sum(not row.get("positions") for row in rows),
+                        "no_flip_units": sorted({str(row["first"]) for row in rows
+                                                 if "p_A" in row and row.get("p_A") is None}),
                         "positions": sum(value["positions"] for value in row_values),
                         "median_row_interaction_share": _median(shares),
                         "median_row_tv": _median(tvs)}
@@ -549,7 +592,8 @@ def _interaction_weight(row: dict, counts: dict[str, int]) -> int:
 
 
 def effect_matched_comparison(interactions: list[dict], unit_ids: list[str],
-                              bootstrap_draws: list[Counter] | None = None) -> dict:
+                              bootstrap_draws: list[Counter] | None = None,
+                              expected_real_rows: int | None = None) -> dict:
     """Fit log|I| from controls, then compare only real positions in control D2 support."""
     control_points = []
     control_log_d2 = []
@@ -566,11 +610,21 @@ def effect_matched_comparison(interactions: list[dict], unit_ids: list[str],
             control_points.append((x_a, x_2, y))
     real_rows = [row for row in interactions if row.get("kind") == "real"]
     total_real_positions = sum(len(row.get("positions", [])) for row in real_rows)
+    real_rows_with_positions = sum(bool(row.get("positions")) for row in real_rows)
+    real_rows_expected = len(real_rows) if expected_real_rows is None else int(expected_real_rows)
+    real_rows_without_positions = max(0, real_rows_expected - real_rows_with_positions)
+    no_flip_units = sorted({str(row["first"]) for row in real_rows
+                            if "p_A" in row and row.get("p_A") is None})
+    row_coverage = {"real_rows_expected": real_rows_expected,
+                    "real_rows_with_positions": real_rows_with_positions,
+                    "real_rows_without_positions": real_rows_without_positions,
+                    "no_flip_units": no_flip_units}
     if len(control_points) < 3 or not control_log_d2:
         return {"fit_available": False, "reason": "fewer than three positive control positions",
                 "control_positions_fit": len(control_points),
                 "control_positions_D2_support": len(control_log_d2),
                 "real_positions_total": total_real_positions,
+                **row_coverage,
                 "real_positions_kept": 0, "share_real_positions_kept": 0.0,
                 "row_residuals": [], "mean_residual": None, "mean_residual_ci95": [None, None],
                 "exp_mean_residual": None}
@@ -620,6 +674,7 @@ def effect_matched_comparison(interactions: list[dict], unit_ids: list[str],
             "control_positions_D2_support": len(control_log_d2),
             "control_log_D2_percentiles_1_99": [float(lower), float(upper)],
             "real_positions_total": total_real_positions,
+            **row_coverage,
             "real_positions_with_D2_in_range": selected_real_positions,
             "real_positions_kept": kept,
             "share_real_positions_kept": kept / total_real_positions if total_real_positions else None,
@@ -664,8 +719,8 @@ def reader_analysis(units: list[dict], labels_ds: list[dict], labels_luna: list[
                     known: list[dict], known_ds: list[dict], known_luna: list[dict],
                     files_present: dict[str, bool]) -> dict:
     sample = rows119.reader_sample(units)
-    ds_by_id = {str(row.get("row_id")): row for row in labels_ds if row.get("row_id") is not None}
-    luna_by_id = {str(row.get("row_id")): row for row in labels_luna if row.get("row_id") is not None}
+    ds_by_id = preferred_label_by(labels_ds, "row_id")
+    luna_by_id = preferred_label_by(labels_luna, "row_id")
     expected_luna = random.Random(11903).sample(sample, 30)
     ds_expected_ids = {item["row_id"] for item in sample}
     luna_expected_ids = {item["row_id"] for item in expected_luna}
@@ -710,8 +765,10 @@ def reader_analysis(units: list[dict], labels_ds: list[dict], labels_luna: list[
                                   "luna": files_present.get("luna", False)},
         "sample_coverage": {"ds_items": len(ds_by_id), "ds_expected": 148,
                             "ds_missing": ds_missing, "ds_errors": ds_errors,
+                            "ds_retry_items": retry_item_count(labels_ds),
                             "luna_items": len(luna_by_id), "luna_expected": 30,
-                            "luna_missing": luna_missing, "luna_errors": luna_errors},
+                            "luna_missing": luna_missing, "luna_errors": luna_errors,
+                            "luna_retry_items": retry_item_count(labels_luna)},
         "both_by_class": by_class, "second_reader_both_kappa": kappa,
         "leave_one_concept_out": leave_one_out,
         "passed": bool(gates_passed and files_present.get("ds", False)
@@ -800,6 +857,10 @@ def _direction(value: float | None) -> int:
     return 1 if value > 0 else -1
 
 
+def interaction_row_coverage_ok(rows_without_positions: int, expected_rows: int) -> bool:
+    return expected_rows > 0 and rows_without_positions / expected_rows <= .05
+
+
 def evaluate_predictions(gates: dict, logit_summary: dict, interaction_summary: dict,
                          effect_match: dict, pair_winners: dict, pair_winners_haiku: dict,
                          unit_metrics: dict, units: list[dict], correlations: dict,
@@ -836,11 +897,19 @@ def evaluate_predictions(gates: dict, logit_summary: dict, interaction_summary: 
     add("119.3", "median row interaction share across 1,482 directed real pairs <= 0.25",
         {"median_interaction_share": real_interaction,
          "rows_with_positions": interaction_summary["real"].get("rows_with_positions"),
-         "expected_rows": 1482},
+         "rows_without_positions": interaction_summary["real"].get("rows_without_positions"),
+         "no_flip_units": interaction_summary["real"].get("no_flip_units", []),
+         "expected_rows": interaction_summary["real"].get("expected_rows", 1482)},
         interaction_ok and real_interaction is not None
-        and interaction_summary["real"].get("rows_with_positions") == 1482,
+        and interaction_row_coverage_ok(
+            interaction_summary["real"].get("rows_without_positions", 1482),
+            interaction_summary["real"].get("expected_rows", 1482)),
         real_interaction is not None and real_interaction <= .25,
-        "Path 1 gate or Path 2 coverage failed" if not interaction_ok else "missing real interaction positions")
+        "Path 1 gate or Path 2 coverage failed" if not interaction_ok else
+        "more than 5% of real rows have no positions" if not interaction_row_coverage_ok(
+            interaction_summary["real"].get("rows_without_positions", 1482),
+            interaction_summary["real"].get("expected_rows", 1482)) else
+        "no real interaction rows with positions")
     residual_ci = effect_match.get("mean_residual_ci95", [None, None])
     effect_bound = math.log(1.25)
     effect_holds = (residual_ci[0] is not None and residual_ci[1] is not None
@@ -1036,8 +1105,15 @@ def score_data(answers: list[dict], logits: list[dict], ladder_rows: list[dict],
     tournament = build_tournament(units, pair_logits)
     dominance_correlation = _unit_correlations(units, tournament, unit_metrics)
     interaction_summary = interaction_summaries(interactions)
+    expected_real_interaction_rows = (sum(kind == "real" for _first, _second, kind in expected_interaction_keys)
+                                      if expected_interaction_keys is not None else
+                                      interaction_summary["real"]["rows"])
+    interaction_summary["real"]["expected_rows"] = expected_real_interaction_rows
+    interaction_summary["real"]["rows_without_positions"] = max(
+        0, expected_real_interaction_rows - interaction_summary["real"]["rows_with_positions"])
     interaction_summary["class_splits"] = interaction_class_summaries(interactions, units)
-    effect_match = effect_matched_comparison(interactions, unit_ids, draws)
+    effect_match = effect_matched_comparison(
+        interactions, unit_ids, draws, expected_real_rows=expected_real_interaction_rows)
 
     concept_r = [unit_metrics[unit["id"]]["R"] for unit in units
                  if unit["group"] == "agreed_concept" and unit_metrics[unit["id"]]["R"] is not None]
@@ -1182,12 +1258,20 @@ def render_markdown(result: dict) -> str:
         item = interaction[kind]
         lines.append(f"| {kind} ({item['rows']}) | {item['rows_with_positions']} | "
                      f"{_fmt(item['median_row_interaction_share'])} | {_fmt(item['median_row_tv'])} |")
+    lines.append(f"Real Path 2 rows with positions: {interaction['real']['rows_with_positions']}/"
+                 f"{interaction['real'].get('expected_rows', 1482)}; without positions: "
+                 f"{interaction['real'].get('rows_without_positions')}; no-flip units: "
+                 f"{', '.join(interaction['real'].get('no_flip_units', [])) or 'none'}.")
     lines.extend(["", "### Effect-matched comparison", "",
                   f"Fit available: {result['effect_matched']['fit_available']}; control positions in fit: "
                   f"{result['effect_matched']['control_positions_fit']}; real positions kept: "
                   f"{result['effect_matched']['real_positions_kept']}/"
                   f"{result['effect_matched']['real_positions_total']} "
                   f"({_fmt(result['effect_matched']['share_real_positions_kept'])}).",
+                  f"Real rows with positions: {result['effect_matched'].get('real_rows_with_positions')}/"
+                  f"{result['effect_matched'].get('real_rows_expected')}; without positions: "
+                  f"{result['effect_matched'].get('real_rows_without_positions')}; no-flip units: "
+                  f"{', '.join(result['effect_matched'].get('no_flip_units', [])) or 'none'}.",
                   f"Mean row residual: {_fmt(result['effect_matched']['mean_residual'])}; 95% unit-bootstrap CI: "
                   f"{[_fmt(x) for x in result['effect_matched']['mean_residual_ci95']]}; "
                   f"exp(mean residual): {_fmt(result['effect_matched']['exp_mean_residual'])}.",
@@ -1242,6 +1326,8 @@ def render_markdown(result: dict) -> str:
     lines.append("")
     lines.append(f"DS/Luna kappa on 'both': {_fmt(reader['second_reader_both_kappa']['kappa'])} "
                  f"(n={reader['second_reader_both_kappa']['matched_valid']}).")
+    coverage = reader["sample_coverage"]
+    lines.append(f"Items needing a retry: DS {coverage['ds_retry_items']}; Luna {coverage['luna_retry_items']}.")
     lines.append(f"119.10 leave-one-concept-out coverage: "
                  f"{json.dumps(reader['leave_one_concept_out'], sort_keys=True)}")
     lines.extend(["", "## Data coverage", "",
@@ -1274,16 +1360,23 @@ def score_files(args: argparse.Namespace) -> tuple[dict, dict]:
     gate1 = read_json(gate1_path) if gate1_path.exists() else None
     labels_ds_path = repo_path(args.labels)
     labels_luna_path = repo_path(args.luna_labels)
+    labels_ds_keys_path = (repo_path(args.labels_keys) if getattr(args, "labels_keys", None)
+                           else Path(str(labels_ds_path) + ".keys.jsonl"))
+    labels_luna_keys_path = (repo_path(args.luna_labels_keys) if getattr(args, "luna_labels_keys", None)
+                             else Path(str(labels_luna_path) + ".keys.jsonl"))
     known_ds_path = repo_path(args.known_ds)
     known_luna_path = repo_path(args.known_luna)
-    labels_ds = read_jsonl(labels_ds_path, optional=True)
-    labels_luna = read_jsonl(labels_luna_path, optional=True)
+    labels_ds_raw = read_jsonl(labels_ds_path, optional=True)
+    labels_luna_raw = read_jsonl(labels_luna_path, optional=True)
+    labels_ds = join_reader_keys(labels_ds_raw, read_jsonl(labels_ds_keys_path, optional=True))
+    labels_luna = join_reader_keys(labels_luna_raw, read_jsonl(labels_luna_keys_path, optional=True))
     known_ds = read_jsonl(known_ds_path, optional=True)
     known_luna = read_jsonl(known_luna_path, optional=True)
     known = read_jsonl(args.known, optional=True)
     if not known:
         known = read_jsonl(HERE / "known119.jsonl")
-    present = {"ds": labels_ds_path.exists(), "luna": labels_luna_path.exists(),
+    present = {"ds": labels_ds_path.exists() and labels_ds_keys_path.exists(),
+               "luna": labels_luna_path.exists() and labels_luna_keys_path.exists(),
                "known_ds": known_ds_path.exists(), "known_luna": known_luna_path.exists()}
     return score_data(
         answers, logits, ladder, units, gate1, part118,
@@ -1307,6 +1400,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--part118", default="results/part118/answers.jsonl")
     parser.add_argument("--labels", default="results/part119/labels-ds.jsonl")
     parser.add_argument("--luna-labels", default="results/part119/labels-luna.jsonl")
+    parser.add_argument("--labels-keys", help="private key file for DS labels (defaults to <labels>.keys.jsonl)")
+    parser.add_argument("--luna-labels-keys", help="private key file for Luna labels (defaults to <luna-labels>.keys.jsonl)")
     parser.add_argument("--known-ds", default="results/part119/known-ds.jsonl")
     parser.add_argument("--known-luna", default="results/part119/known-luna.jsonl")
     parser.add_argument("--known", default=str(HERE / "known119.jsonl"))
