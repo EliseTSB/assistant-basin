@@ -2434,7 +2434,7 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 114.1 | Elise (her bet): One neuron, zeroed alone, makes "Q" stop being the most likely token on at least 8 of the 16 held-out phrasings. | | |
-| 114.2 | Claude (medium confidence): No single neuron does that on more than 4 of the 16. | | |
-| 114.3 | Claude (medium confidence): The top candidate lowers the mean held-out log-odds of "Q" more than all 20 of its activity-matched controls. | | |
-| 114.4 | Claude (low confidence): The top two zeroed together make "Q" stop being the most likely token on at least 8 of 16. | | |
+| 114.1 | Elise (her bet): One neuron, zeroed alone, makes "Q" stop being the most likely token on at least 8 of the 16 held-out phrasings. | the most for any candidate: 0 of 16 (20 candidates tested) | **failed** |
+| 114.2 | Claude (medium confidence): No single neuron does that on more than 4 of the 16. | 0 of 16 for all 20 candidates | **held** |
+| 114.3 | Claude (medium confidence): The top candidate lowers the mean held-out log-odds of "Q" more than all 20 of its activity-matched controls. | L31 N4742 -0.73; its strongest control lowers it by 0.05 | **held** |
+| 114.4 | Claude (low confidence): The top two zeroed together make "Q" stop being the most likely token on at least 8 of 16. | 0 of 16 | **failed** |

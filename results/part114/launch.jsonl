@@ -1,0 +1,1 @@
+{"time": "2026-10-29 18:51:49", "part": "114", "check_failed": [], "override": null, "dry_run": false, "mode": "arc", "steps": ["-I -B part114\\qneuron114.py --out p114"], "copied": ["part114/qneuron114.py"], "baseline_lines": 112, "schtasks_rc": 0, "first_line": "18:51:49 step 1 start: -I -B part114\\qneuron114.py --out p114 (ram_avail 12.4G)"}
