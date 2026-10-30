@@ -2464,13 +2464,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 115b.1 | Claude (medium confidence): With the plain-text instruction and the opening "My name is **", the gradient ranking's smallest k whose set takes "Q" off first place on at least 8 of the 16 phrasings is 100, 200 or 500. | | |
-| 115b.2 | Claude (low confidence): For the gradient ranking, the smallest such k after 'My name is "' is within one step of the "My name is **" one on the grid 1, 2, 5, 10, 20, 50, 100, 200, 500 (with "none up to 500" as the step after 500). | | |
-| 115b.3 | Claude (low confidence): For the gradient ranking, the smallest k that takes " Q" off first place on at least 8 of the 16 after "My name is" is larger than the 'My name is "' one, or no k up to 500 does it. | | |
-| 115b.4 | Claude (medium confidence): The same holds for the direct-write ranking. | | |
-| 115b.5 | Claude (medium confidence): For both rankings and all three openings, no matched random set takes the target off first place on more than 2 of the 16 at any k. | | |
-| 115b.6 | Claude (low confidence): For the gradient ranking, at the smallest k found under 115b.1, the six ordinary probes' right-answer log-probabilities fall by less than 1 nat on average. | | |
-| 115b.7 | Claude (medium confidence): For the gradient ranking after "My name is" at k = 500, the most common first word of the continuations that do not start with "Q" is a model or company name. | | |
+| 115b.1 | Claude (medium confidence): With the plain-text instruction and the opening "My name is **", the gradient ranking's smallest k whose set takes "Q" off first place on at least 8 of the 16 phrasings is 100, 200 or 500. | k*=500 | **held** |
+| 115b.2 | Claude (low confidence): For the gradient ranking, the smallest such k after 'My name is "' is within one step of the "My name is **" one on the grid 1, 2, 5, 10, 20, 50, 100, 200, 500 (with "none up to 500" as the step after 500). | quote k*=500, bold k*=500 | **held** |
+| 115b.3 | Claude (low confidence): For the gradient ranking, the smallest k that takes " Q" off first place on at least 8 of the 16 after "My name is" is larger than the 'My name is "' one, or no k up to 500 does it. | plain k*=500, quote k*=500 (not larger) | **failed** |
+| 115b.4 | Claude (medium confidence): The same holds for the direct-write ranking. | direct-write: plain k*=100, quote k*=50 | **held** |
+| 115b.5 | Claude (medium confidence): For both rankings and all three openings, no matched random set takes the target off first place on more than 2 of the 16 at any k. | maximum 1 of 16 (gradient, quote, k=200) | **held** |
+| 115b.6 | Claude (low confidence): For the gradient ranking, at the smallest k found under 115b.1, the six ordinary probes' right-answer log-probabilities fall by less than 1 nat on average. | mean change -0.011 nats at k=500 | **held** |
+| 115b.7 | Claude (medium confidence): For the gradient ranking after "My name is" at k = 500, the most common first word of the continuations that do not start with "Q" is a model or company name. | 'Chat' in 11 of the 13 non-Q first words | **failed (literal: 'Chat' is not on the list)** |
 
 ## Part 117 (registered 2026-10-29, PART117-DESIGN.md): what happens when a concept neuron and a slot neuron that share a theme are pushed together in Qwen3.5-4B?
 
