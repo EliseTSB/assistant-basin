@@ -2602,3 +2602,19 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 119.8 | Claude (medium confidence): Across the 39 units, dominance and flip alpha have a Spearman correlation of -0.4 or stronger (a neuron that flips early wins more often). | Spearman rho = 0.034 across 39 units; two sided p = 0.8372. | failed |
 | 119.9 | Claude (low confidence): The disputed units' median robustness R is closer to the agreed slot units' median than to the agreed concept units' median, by at least 0.05. | Disputed median R 0.0048; closer to slot by 0.0051 under agreed kinds and 0.0006 under Haiku kinds. | failed |
 | 119.10 | Claude (low confidence): By the reader, "both" holds in at least 25% of the 28 concept x concept pairs, at most 10% of the 40 slot x slot pairs and at most 5% of the 40 control rows. | Per the design wording, read and failed: DeepSeek marked "both" on 0 of 28 concept pairs. The scorer withholds / does not read it because kappa is undefined and its code requires non-undefined kappa; the design says only kappa below 0.6 withholds. | failed by design wording |
+
+## Part 119b (registered 2026-10-30, PART119B-DESIGN.md): is Part 119's failure to add a property of the dose where answers break?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 119b.1 | Claude (medium confidence): At 0.4 + 0.4, at most 10% of the 741 real pair answers are broken by the triage rule, and the reader marks at least 60% of the 108 sampled real pair answers coherent (16 of 108 at 0.8). | pending | pending |
+| 119b.2 | Claude (low confidence): At 0.8 + 0.8, at least 20% of the 741 random pair answers R_A+R_B are broken. | pending | pending |
+| 119b.3 | Claude (low confidence): At alpha 1.13, the combined size of two orthogonal pushes of 0.8, at least 30% of the 39 single neuron answers are broken. | pending | pending |
+| 119b.4 | Claude (medium confidence): On Path 2, the median row interaction share over the 1,482 real ordered pairs is at most 0.25 at 0.4. | pending | pending |
+| 119b.5 | Claude (medium confidence): On Path 2, the median row interaction share at 0.2 is at most half the share at 0.4. | pending | pending |
+| 119b.6 | Claude (medium confidence): On Path 2 at 0.4, both slopes add: the median row b_A and the median row b_2 over the 1,482 real ordered pairs both lie between 0.75 and 1.25. | pending | pending |
+| 119b.7 | Claude (medium confidence): On Path 2, on positions contested at both doses, the additive pair-top agreement at 0.4 minus at 0.8 is at least 20 points, with the unit bootstrap interval above 0, and the 0.4 agreement is at least 10 points above the plain baseline on the same positions. | pending | pending |
+| 119b.8 | Claude (low confidence): On the same positions at 0.4, additive agreement is at least 5 points above winner-take-all's, with the interval above 0. | pending | pending |
+| 119b.9 | Claude (low confidence): Effect-matched at 0.4, the interval of the mean real residual lies inside plus or minus log 1.25. | pending | pending |
+| 119b.10 | Claude (low confidence): At 0.8, the kind gap is positive in at least 60% of the 168 slot x concept pairs of agreed units, and the median absolute gap at 0.4 is at most half that at 0.8. | pending | pending |
+| 119b.11 | Claude (medium confidence): Across the 39 units, E and Part 119's dominance have a Spearman correlation of at least 0.5. | pending | pending |

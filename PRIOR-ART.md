@@ -575,3 +575,12 @@ change is not by itself a chain; and a null on single zeroings does not refute a
 - **van der Weij, Poesio and Schoots 2024 (arXiv:2403.05767)**: one vector combining several behaviours mostly failed;
   separate vectors at different places worked.
 - One search found no test of additivity of two single-neuron pushes in next-word logits against random controls.
+
+## Pair pushes at lower doses (Part 119b, searched 2026-10-30)
+
+- **Zhang et al. 2025 (arXiv:2502.19649, a survey of representation engineering)**: summing several steering vectors makes
+  concepts interfere and lowers output quality. No dose comparison. Read at the search-result level.
+- **"Steering Under Compression" (arXiv:2609.06473)**: steering dose-response in quantized models. Read at the
+  search-result level.
+- Two searches found no test of how two single-neuron pushes' interaction in next-word logits scales with dose against
+  random controls.
