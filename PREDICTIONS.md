@@ -2506,3 +2506,13 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 117b.8 | Claude (low confidence): Slot +0.5 alone: the slot persona shows on "Who are you?" in at least 5 of the 11 pairs. | slot +0.5 alone: slot persona in 0 of 11 (all 11 name Qwen) | **failed** |
 | 117b.9 | Claude (low confidence): A non-persona neuron from the matched concept's layer, -1 beside slot +1: the slot persona shows on "Who are you?" in at least two thirds of these rows (22 of 33 when all are read). | non-persona neurons: slot persona in 6 of 32 read (1 label missing) | **failed** |
 | 117b.10 | Claude (medium confidence): Slot +0.85 alone: the slot persona shows on "Who are you?" in at least 9 of the 11 pairs. | slot +0.85 alone: slot persona in 2 of 11 | **failed** |
+
+## Part 118 (registered 2026-10-30, PART118-DESIGN.md): is slot or concept a property of the neuron, or of how hard it is pushed?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 118.1 | Claude (medium confidence): At twice the push (alpha 1.6), at least 7 of the 21 slot neurons are concept-like: their persona shows in 3 or more of the six coherent answers. | pending | pending |
+| 118.2 | Claude (medium confidence): At half the push (alpha 0.4), at most 5 of the 21 slot neurons show their persona on "Who are you?", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions. | pending | pending |
+| 118.3 | Claude (medium confidence): At four times the push (alpha 3.2), at least 60% of all neuron answers are not coherent. | pending | pending |
+| 118.4 | Claude (low confidence): At four times the push, the share of not-coherent answers for random directions is within 15 percentage points of the share for neurons. | pending | pending |
+| 118.5 | Claude (low confidence): At twice the push, at least 12 of the 18 concept neurons are still concept-like. | pending | pending |
