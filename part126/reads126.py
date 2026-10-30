@@ -559,6 +559,26 @@ def _positive_control(tok, model, handles_context, handles, question, render, bo
     }
 
 
+def _load_direct(device):
+    """Amendment 1: the weights go straight to the device, as Part 115b does. nr.load_model stages about 8 GB in host
+    memory first, and the RAM guard stopped that at Windows' 2 GB floor. Same weights, dtype and device."""
+    from transformers import AutoModelForCausalLM, AutoModelForImageTextToText, AutoTokenizer
+    import transformers.modeling_utils as mu
+    tok = AutoTokenizer.from_pretrained(MODEL_ID, revision=REVISION)
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    mu.caching_allocator_warmup = lambda *a, **k: None  # one block that size is over the A770's single-allocation limit
+    kw = dict(revision=REVISION, dtype=torch.bfloat16, device_map={"": device})
+    try:
+        model = AutoModelForCausalLM.from_pretrained(MODEL_ID, **kw)
+    except (ValueError, KeyError):
+        model = AutoModelForImageTextToText.from_pretrained(MODEL_ID, **kw)
+    model.eval()
+    model.requires_grad_(False)
+    torch.set_grad_enabled(False)
+    return tok, model
+
+
 def run(args):
     import torch
     if args.stub:
@@ -578,7 +598,7 @@ def run(args):
         from part82.part82 import MODEL, MODEL_ID, REVISION, BODY_PATH, RENDERINGS
         from part80.part80 import question, render
         from part80b.part80b import load_bodies, body_in_rendering
-        tok, model = nr.load_model(MODEL_ID, REVISION, args.device)
+        tok, model = _load_direct(args.device)
         model.requires_grad_(False)
         model.eval()
         device = args.device

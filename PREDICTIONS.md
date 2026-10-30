@@ -2686,4 +2686,3 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 126.2 | Claude (low confidence): L11 h5 ranks in the top five of 32 heads by role-token attention mass in the Assistant copy. | pending | pending |
 | 126.3 | Claude (low confidence): The top 20 written tokens from L11 h5's Assistant-copy role-token write include an exact first-person token (`i`, `me`, `my`, `mine`, `we`, `us`, `our`, `ours`), second-person token (`you`, `your`, `yours`), or assistant-role token (`assistant`), after trimming whitespace and punctuation and lowercasing. | pending | pending |
 | 126.4 | Claude (medium confidence): Among the 20 heads Part 83 classifies as mattering (absolute drop at least 0.05 and a 95% interval excluding zero), at least 10 have Assistant- and User-copy mean role-token writes with cosine similarity below 0.90. | pending | pending |
-

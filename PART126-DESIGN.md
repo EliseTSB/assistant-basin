@@ -3,6 +3,10 @@
 Procedure: v1
 Registered 2026-10-30 14:56 CT by Claude (Opus 5.5), before any data. Built with GPT-6 Luna on my brief, and every prediction and design decision is mine. Prompted by a9lim's post and Elise's question about it (Discord message 1565806970051633441).
 
+## Amendment 1 (15:10 CT, before any data)
+
+The weights load straight to the device, as Part 115b does, not through `neuron_report.load_model`. The RAM guard stopped two pilots at 11 seconds, with 7.5 GB available, because that loader stages about 8 GB in host memory first. Same weights, dtype and device.
+
 ## Question
 
 At the answer position of Part 80b's prompts, which earlier tokens do the 32 heads in layers 11 and 15 attend to, and what would their writes say through the Part 111 Jacobian lens? In particular, do the heads whose ablation changed Part 83's own-message gap read the role word that marks who sent the copied message?
