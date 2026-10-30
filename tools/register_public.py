@@ -10,8 +10,7 @@ superset, so "ours" is right; the other files are identical on both sides).
 
 What it got wrong the first time, by hand: (1) a three-way cherry-pick of the registration onto origin/main conflicts,
 because the new section is appended next to rows the local results commit filled in; hence the temp-index build.
-(2) The section must be cut from its own "## Part N (registered" heading to the end of the file, so register parts in
-order and push each before writing the next. (3) Without the merge-back, the next push of the branch is refused as a
+(2) The section is cut from its own "## Part N (registered" heading to the next "## Part" heading (see (5)). (3) Without the merge-back, the next push of the branch is refused as a
 non-fast-forward.
 
 Usage: python3 tools/register_public.py --part 115 --message "Register Part 115 ..." FILE [FILE ...]
@@ -43,9 +42,14 @@ def main():
     head = f"\n## Part {a.part} (registered"
     if cur.count(head) != 1:
         raise SystemExit(f"expected one '{head.strip()}' heading in PREDICTIONS.md, found {cur.count(head)}")
-    section = cur[cur.index(head):]
+    # (5) 2026-10-29, Part 112's amendment: the section ran to the end of the file, so registering an older part's
+    # amendment republished every later part's section, including verdict cells not yet cold-checked. The section now
+    # stops at the next "## Part" heading, and a part whose section is already public leaves PREDICTIONS.md alone.
+    start = cur.index(head)
+    nxt = cur.find("\n## Part ", start + 1)
+    section = cur[start:] if nxt < 0 else cur[start:nxt + 1]
     pub = git("show", f"{base}:PREDICTIONS.md")
-    pred = pub.rstrip("\n") + "\n" + section
+    pred = pub if head in pub else pub.rstrip("\n") + "\n" + section
     with tempfile.TemporaryDirectory() as d:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(d) / "index")}
         git("read-tree", base, env=env)
@@ -61,16 +65,37 @@ def main():
     # merge refuse ("untracked working tree files would be overwritten"), and the branch had to be repaired by hand.
     # Untracked registered files identical to the pushed blobs are removed (the merge brings them back), and a
     # modified PREDICTIONS.md is set aside and restored after the merge (it is a superset of the pushed copy).
+    # (6) 2026-10-29, Part 112's amendment: a registered file that is tracked and modified (identical to the pushed
+    # blob) made the merge refuse, and the untracked files already removed were then missing. Every registered file
+    # identical to the pushed blob is now set aside (a tracked one checked out from HEAD, an untracked one moved to a
+    # temporary folder), and all of it is put back if the merge fails.
     tracked = set(git("ls-files").splitlines())
+    aside = Path(tempfile.mkdtemp(prefix="register-aside-"))
+    moved, reset = [], []
     for f in a.files:
-        if f not in tracked and Path(f).exists() and git("show", f"{commit}:{f}") == Path(f).read_text(encoding="utf-8").strip():
-            Path(f).unlink()
+        if not Path(f).exists() or git("show", f"{commit}:{f}") != Path(f).read_text(encoding="utf-8").strip():
+            continue
+        if f in tracked:
+            if git("diff", "--name-only", "--", f):
+                (aside / f).parent.mkdir(parents=True, exist_ok=True)
+                (aside / f).write_bytes(Path(f).read_bytes())
+                git("checkout", "--", f)
+                reset.append(f)
+        else:
+            (aside / f).parent.mkdir(parents=True, exist_ok=True)
+            os.replace(f, aside / f)
+            moved.append(f)
     saved = Path("PREDICTIONS.md").read_text(encoding="utf-8") if git("diff", "--name-only", "--", "PREDICTIONS.md") else None
     if saved is not None:
         git("checkout", "--", "PREDICTIONS.md")
     try:
         git("merge", "-X", "ours", "--no-edit", "-m", f"Merge the public Part {a.part} registration into the working branch" + TRAILER,
             f"{a.remote}/main")
+    except subprocess.CalledProcessError as e:
+        for f in moved + reset:
+            Path(f).parent.mkdir(parents=True, exist_ok=True)
+            Path(f).write_bytes((aside / f).read_bytes())
+        raise SystemExit(f"pushed {commit[:12]} but the merge-back failed; the working files are restored: {e.stderr}")
     finally:
         if saved is not None:
             Path("PREDICTIONS.md").write_text(saved, encoding="utf-8")

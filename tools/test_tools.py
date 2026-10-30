@@ -433,3 +433,52 @@ def test_launch_cpu_with_copy_refused(repo, tmp_path):    # F12
 def test_publish_pending_cold_check_fails(repo):
     write_results(repo, README.replace("Cold check: Haiku 5.5, 2026-10-29, 0 findings.", "Cold check: pending."))
     assert any("Cold check" in f for f in pc.publish(repo, "900").failed)
+
+
+def _reg_repo(tmp_path):
+    """A working clone of a bare remote whose PREDICTIONS.md has Parts 1 and 2."""
+    remote, work = tmp_path / "remote.git", tmp_path / "work"
+    sh("git", "init", "-q", "--bare", "-b", "main", str(remote), cwd=tmp_path)
+    sh("git", "clone", "-q", str(remote), str(work), cwd=tmp_path)
+    for k, v in (("user.email", "t@example.com"), ("user.name", "t")):
+        sh("git", "config", k, v, cwd=work)
+    (work / "PREDICTIONS.md").write_text("# P\n\n## Part 1 (registered x): a\n\n| 1.1 | p | | |\n\n## Part 2 (registered x): b\n\n| 2.1 | q | | |\n", encoding="utf-8")
+    (work / "D2.md").write_text("design 2\n", encoding="utf-8")
+    sh("git", "add", ".", cwd=work)
+    sh("git", "commit", "-q", "-m", "base", cwd=work)
+    sh("git", "push", "-q", "origin", "HEAD:main", cwd=work)
+    return remote, work
+
+
+def _register(work, part, *files):
+    tool = Path(__file__).resolve().parent / "register_public.py"
+    return subprocess.run([sys.executable, str(tool), "--part", part, "--message", f"register {part}", *files],
+                          cwd=work, capture_output=True, text=True)
+
+
+def test_register_amendment_of_an_older_part_leaves_public_predictions_alone(tmp_path):
+    remote, work = _reg_repo(tmp_path)
+    p = work / "PREDICTIONS.md"
+    p.write_text(p.read_text(encoding="utf-8").replace("| 1.1 | p | | |", "| 1.1 | p | 0.4 | held |"), encoding="utf-8")
+    (work / "D2.md").write_text("design 2\n\n## Amendment 1\n", encoding="utf-8")
+    r = _register(work, "2", "D2.md")
+    assert r.returncode == 0, r.stderr
+    pub = sh("git", "show", "origin/main:PREDICTIONS.md", cwd=work).stdout
+    assert "| 1.1 | p | | |" in pub and pub.count("## Part 2 (registered") == 1
+    assert "Amendment 1" in sh("git", "show", "origin/main:D2.md", cwd=work).stdout
+    assert "| 1.1 | p | 0.4 | held |" in p.read_text(encoding="utf-8")   # the local verdicts survive the merge-back
+    assert "Amendment 1" in (work / "D2.md").read_text(encoding="utf-8")
+
+
+def test_register_new_part_publishes_only_its_own_section(tmp_path):
+    remote, work = _reg_repo(tmp_path)
+    p = work / "PREDICTIONS.md"
+    s = p.read_text(encoding="utf-8").replace("| 2.1 | q | | |", "| 2.1 | q | 0.9 | failed |")
+    p.write_text(s + "\n## Part 3 (registered y): c\n\n| 3.1 | r | | |\n", encoding="utf-8")
+    (work / "D3.md").write_text("design 3\n", encoding="utf-8")
+    r = _register(work, "3", "D3.md")
+    assert r.returncode == 0, r.stderr
+    pub = sh("git", "show", "origin/main:PREDICTIONS.md", cwd=work).stdout
+    assert "| 3.1 | r | | |" in pub and "0.9 | failed" not in pub
+    assert (work / "D3.md").exists() and "0.9 | failed" in p.read_text(encoding="utf-8")
+

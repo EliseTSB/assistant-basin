@@ -2459,3 +2459,15 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 116.3 | Claude (medium confidence): The activity ranking's top 200 share fewer than 50 neurons with the gradient ranking's top 200. | | |
 | 116.4 | Claude (low confidence): At k = 50, the activity ranking's set lowers the mean log-odds of "Q" less than the gradient ranking's set did in Part 115 (6.96). | | |
 | 116.5 | Claude (medium confidence): For both rankings, no matched random set takes "Q" off first place on more than 2 of the 16 at any k. | | |
+
+## Part 115b (registered 2026-10-29, PART115B-DESIGN.md): do the neuron sets that take "Q" off Qwen3.5-4B's name after "I am **" also take it off without the "**"?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 115b.1 | Claude (medium confidence): With the plain-text instruction and the opening "My name is **", the gradient ranking's smallest k whose set takes "Q" off first place on at least 8 of the 16 phrasings is 100, 200 or 500. | | |
+| 115b.2 | Claude (low confidence): For the gradient ranking, the smallest such k after 'My name is "' is within one step of the "My name is **" one on the grid 1, 2, 5, 10, 20, 50, 100, 200, 500 (with "none up to 500" as the step after 500). | | |
+| 115b.3 | Claude (low confidence): For the gradient ranking, the smallest k that takes " Q" off first place on at least 8 of the 16 after "My name is" is larger than the 'My name is "' one, or no k up to 500 does it. | | |
+| 115b.4 | Claude (medium confidence): The same holds for the direct-write ranking. | | |
+| 115b.5 | Claude (medium confidence): For both rankings and all three openings, no matched random set takes the target off first place on more than 2 of the 16 at any k. | | |
+| 115b.6 | Claude (low confidence): For the gradient ranking, at the smallest k found under 115b.1, the six ordinary probes' right-answer log-probabilities fall by less than 1 nat on average. | | |
+| 115b.7 | Claude (medium confidence): For the gradient ranking after "My name is" at k = 500, the most common first word of the continuations that do not start with "Q" is a model or company name. | | |
