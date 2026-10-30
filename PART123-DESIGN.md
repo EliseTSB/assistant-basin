@@ -106,3 +106,12 @@ This tests one Instruct checkpoint, 39 units selected and classified at α=0.8, 
 ## Open Questions
 
 No method decision blocks this draft. Part 123 uses a local fitter, zero-hook check, answer runner, labeler, and scorer. The existing project code supports the layer hook, neuron direction, random direction, model, and Part 92 battery described above. No re:dvx code is a runtime dependency.
+
+## Amendment 1 (2026-10-30 13:35 CT, after the pilot, before the main run)
+
+Two changes, both from the code review and the pilot. No prediction, threshold, dose or arm changes.
+
+1. Blinding. The design said the reader sees neither unit nor arm. The reader must be told which persona to look for, as in Part 92, so the unit's persona is shown. Arm and dose stay hidden. Every arm is read against the same persona, so this does not favour one arm.
+2. Zero-hook check. The pilot's zero rows matched the plain rows in 13 of 18 cases. Those rows ran in different batch shapes, and on the A770 a bf16 greedy answer can depend on batch shape, so that comparison mixed two things. The check now runs a plain and a zero-hook generation at the same batch shape, for each of the ten layers and six questions, before any pushed row. A mismatch still stops interpretation.
+
+The pilot's 378 answers are kept in `results/part123/pilot/` and are not read for any prediction. I read the Who are you? answers of two pilot units. The main run generates every row fresh in one batch regime.
