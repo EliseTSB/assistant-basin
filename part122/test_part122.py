@@ -528,3 +528,21 @@ def test_real_read_main_path_with_tiny_torch_model(tmp_path, monkeypatch):
     assert all(len(row["values"]["unit-00"]["random"]) == 3 for row in rows)
     assert len(json.loads((out_dir / "gate2.json").read_text(encoding="utf-8"))["pairs"]) == 16
     assert json.loads((out_dir / "run_meta.json").read_text(encoding="utf-8"))["parameter_dtype"] == "torch.bfloat16"
+
+
+def test_real_transport_path_reaches_the_client(monkeypatch):
+    """The default request goes through the imports the host run uses; only the network call is replaced."""
+    import write_passages
+    import label119
+
+    seen = {}
+
+    def fake_call(prompt, **kwargs):
+        seen.update(kwargs)
+        return {"text": "{}"}
+
+    monkeypatch.setattr(label119.label92b.judge_client, "call_prompt", fake_call)
+    response = write_passages._default_request("ds", "hello", "")
+    assert response == {"text": "{}"}
+    assert seen["model"] == label119.label92b.DS_MODEL and seen["route"] == "ocgo"
+

@@ -149,30 +149,40 @@ def dry_run_client(_reader: str, prompt: str, _key: str = "") -> dict:
     return {"text": json.dumps({"third_person": third, "first_person": first})}
 
 
+def _default_request(reader: str, prompt: str, _unused_key: str = "") -> dict:
+    """DeepSeek V4.1 Flash on Part 92b's route, with room for the 16 pairs in one reply."""
+    import label119  # adds part92b to sys.path
+
+    client = label119.label92b.judge_client
+    return client.call_prompt(prompt, model=label119.label92b.DS_MODEL, route="ocgo",
+                              session="part122-passages", max_tokens=8000, timeout=300)
+
+
+def _one_unit(unit: dict, request_fn: Callable) -> dict:
+    prompt = build_prompt(unit)
+    last_error = "unknown response error"
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        current_prompt = prompt
+        if attempt > 1:
+            current_prompt += "\n\nRetry: fix the validation error and return the required JSON only."
+        try:
+            response = request_fn("ds", current_prompt, "")
+            payload = validate_payload(_parse_response(response), str(unit["persona"]))
+            return {"id": str(unit["id"]), "persona": str(unit["persona"]),
+                    "desc": str(unit["desc"]), **payload, "attempts": attempt}
+        except Exception as exc:
+            last_error = str(exc)
+    raise ValueError(f"could not generate valid passages for {unit['id']}: {last_error}")
+
+
 def generate_passages(units: list[dict], *, request_fn: Callable | None = None,
-                      model_id: str = MODEL_ID) -> dict:
-    """Request and validate passages, with one initial call and up to three retries."""
-    if request_fn is None:
-        import label119
-        request_fn = label119._transport
-    rows = []
-    for unit in units:
-        prompt = build_prompt(unit)
-        last_error = "unknown response error"
-        for attempt in range(1, MAX_ATTEMPTS + 1):
-            current_prompt = prompt
-            if attempt > 1:
-                current_prompt += "\n\nRetry: fix the validation error and return the required JSON only."
-            try:
-                response = request_fn("ds", current_prompt, "")
-                payload = validate_payload(_parse_response(response), str(unit["persona"]))
-                rows.append({"id": str(unit["id"]), "persona": str(unit["persona"]),
-                             "desc": str(unit["desc"]), **payload, "attempts": attempt})
-                break
-            except Exception as exc:
-                last_error = str(exc)
-        else:
-            raise ValueError(f"could not generate valid passages for {unit['id']}: {last_error}")
+                      model_id: str = MODEL_ID, workers: int = 6) -> dict:
+    """Request and validate passages, with one initial call and up to three retries per unit."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    request_fn = request_fn or _default_request
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        rows = list(pool.map(lambda unit: _one_unit(unit, request_fn), units))
     return {"schema_version": 1, "seed": SEED, "model_id": model_id, "units": rows}
 
 
