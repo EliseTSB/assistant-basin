@@ -642,8 +642,7 @@ def score(root: Path, reading: str) -> int:
         f"86.3: {final_863}. Known coherent-persona labels by layer are {known_persona_list}. "
         f"The largest possible count remains {largest_upper} in L{upper_layer}, "
         f"or {pct(largest_upper, NEURONS_PER_LAYER):.3f}% of {NEURONS_PER_LAYER} real neurons. "
-        f"The three missing labels are in other layers, and even counting each as a persona leaves "
-        f"every layer below 5%. Exact counts are missing for "
+        f"That bound counts every changed row without a label as a persona. Exact counts are missing for "
         f"{len(label_errors)} changed rows. Screen kappa is "
         f"{'missing' if screen_kappa is None else f'{screen_kappa:.6f}'}."
     )
