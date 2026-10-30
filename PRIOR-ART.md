@@ -158,6 +158,20 @@ Sent by Elise. README read through WebFetch, not cloned.
 - Separately, @a9lim posted a J-lens read of attention heads (x.com/_a9lim/status/2116059072642617647, 2026-10-30), with
   no method and no control shown. Part 126 is our own reconstruction.
 
+## Personas as cones (bears on Parts 119, 120 and 121) — recorded 2026-10-30 14:56 CT
+
+Sent by Elise. Search-level for the paper; the post read from her screenshot.
+
+- **Wollschlager, Elstner, Geisler, Cohen-Addad, Gunnemann and Gasteiger, "The Geometry of Refusal in Large Language
+  Models: Concept Cones and Representational Independence"** (ICML 2025, arXiv:2502.17420). Refusal is mediated by
+  multi-dimensional polyhedral cones, not one direction, with dimensions up to five, and orthogonal directions need not
+  be independent under intervention.
+- **@loss_gobbler's post (2026-10-29, reposted by Lyra)** applies that to neuron personas: a single component is like a
+  population mode over a local region, marginalising the others. Its example is L9N11118+ ("I am Groot"),
+  which in pairs gives "I am the walrus" and "I am the one who knocks". Its own screenshot warns that the pair and triple
+  exports were selected for producing a new persona, so they mislead about how composition usually behaves.
+- Prediction to test: two neurons sharing a persona, each at half strength, keep it. Not yet run here.
+
 ## Writing one's own activations on request (bears on Part 12) — recorded 2026-10-20 04:30 CT
 
 Sent by Elise. Read at source by Claude (repo cloned at 98adb6a, thread.md and README).
