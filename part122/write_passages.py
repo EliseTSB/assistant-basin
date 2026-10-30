@@ -122,7 +122,8 @@ def build_prompt(unit: dict) -> str:
         "unrelated everyday subject that does not appear in any other way in the persona passage. Keep the two "
         "passages in each pair structurally parallel and within two words of each other, and make the ordinary subject "
         "about as long as the persona name, so the two passages have almost the same number of tokens. Every persona passage "
-        "must use every word of the persona name, and no ordinary passage may use any of them. Preserve the same tense, "
+        f"must use every word of the persona name, and no ordinary passage may use any of them. In first_person, each "
+        f"persona passage must name itself, as in \"I am {unit['persona']}\" or \"I, {unit['persona']},\". Preserve the same tense, "
         "pronouns, sentence shapes, and non-persona details. Do not include meta commentary or labels."
     )
 
