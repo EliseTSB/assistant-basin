@@ -41,7 +41,14 @@ def _dose_row_id(key_row: dict) -> str:
     expected_prefix = row_type + ":"
     if not source_id.startswith(expected_prefix):
         raise ValueError(f"row id {source_id!r} does not match row type {row_type!r}")
-    return f"{row_type}@{rows119b.dose_text(.4)}:{source_id[len(expected_prefix):]}"
+    pair = source_id[len(expected_prefix):]
+    if row_type == "control":
+        # Part 119 writes a control as A+RB; Part 119b's dose-tagged rows write it as A+B.
+        first, separator, second = pair.partition("+")
+        if not separator or not second.startswith("R"):
+            raise ValueError(f"control row id {source_id!r} has no random second push")
+        pair = f"{first}+{second[1:]}"
+    return f"{row_type}@{rows119b.dose_text(.4)}:{pair}"
 
 
 def sample_items(answer_path: str | Path,
