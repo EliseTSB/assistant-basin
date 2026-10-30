@@ -353,6 +353,29 @@ def test_dose_scaling_matches_part92_neuron_and_random_pushes():
     torch.testing.assert_close(scaled[("b", "neuron")], base[("b", "neuron")] * .5)
 
 
+def test_dose_cache_is_built_directly_and_a_wrong_alpha_is_refused():
+    weight = torch.tensor([[1., 0., 2., 0.], [0., 3., 0., 1.],
+                           [2., 1., 0., 2.], [1., 2., 1., 0.]], dtype=torch.bfloat16)
+    layer = SimpleNamespace(mlp=SimpleNamespace(
+        down_proj=SimpleNamespace(weight=weight)))
+    units = [{"id": "a", "layer": 0, "neuron": 1, "control_seed": 11},
+             {"id": "b", "layer": 0, "neuron": 3, "control_seed": 12}]
+    base = run119b.build_base_push_cache(units, [layer], {0: 2.5})
+    at_04 = run119b.build_dose_push_cache(units, [layer], {0: 2.5}, .4)
+    for unit in units:
+        assert torch.equal(at_04[(unit["id"], "neuron")],
+                           common92.neuron_push(weight, unit["neuron"], .4 * 2.5))
+        assert torch.equal(at_04[(unit["id"], "random")],
+                           common92.random_direction(weight, unit["control_seed"], .4 * 2.5))
+    run119b.validate_dose_scaling(units, base, at_04, .4)
+    with pytest.raises(AssertionError):
+        run119b.validate_dose_scaling(units, base, at_04, .6)
+    swapped = dict(at_04)
+    swapped[("a", "neuron")] = at_04[("b", "neuron")]
+    with pytest.raises(AssertionError):
+        run119b.validate_dose_scaling(units, base, swapped, .4)
+
+
 def test_gate2_stopped_path2_verdicts_keep_observed_values(monkeypatch):
     units = rows119.load_units()
     planned = rows119b.all_answer_rows(units)

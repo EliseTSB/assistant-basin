@@ -93,8 +93,10 @@ def read_output_by_key(path: Path, key: str) -> dict[str, dict]:
     return run119.read_existing(path, key)
 
 
-def build_base_push_cache(units: list[dict], layers, medians: dict[int, float]) -> dict:
-    """Part 119 positive pushes at 0.8; every dose is this same vector scaled."""
+def build_dose_push_cache(units: list[dict], layers, medians: dict[int, float],
+                          dose: float) -> dict:
+    """Part 92's own pushes at one dose. Each dose is built from the weights, not scaled in
+    bf16: a scaled bf16 vector rounds differently from the direct one by up to one step."""
     cache = {"_units": units}
     for unit in units:
         layer_no = int(unit["layer"])
@@ -103,15 +105,20 @@ def build_base_push_cache(units: list[dict], layers, medians: dict[int, float]) 
         weight = layers[layer_no].mlp.down_proj.weight
         if not 0 <= int(unit["neuron"]) < weight.shape[1]:
             raise ValueError(f"unit {unit['id']} neuron index is outside W_down")
-        norm08 = 0.8 * float(medians[layer_no])
-        cache[(unit["id"], "neuron")] = c.neuron_push(weight, unit["neuron"], norm08)
+        target_norm = float(dose) * float(medians[layer_no])
+        cache[(unit["id"], "neuron")] = c.neuron_push(weight, unit["neuron"], target_norm)
         cache[(unit["id"], "random")] = c.random_direction(
-            weight, unit["control_seed"], norm08)
+            weight, unit["control_seed"], target_norm)
     return cache
 
 
+def build_base_push_cache(units: list[dict], layers, medians: dict[int, float]) -> dict:
+    """Part 119's pushes at 0.8."""
+    return build_dose_push_cache(units, layers, medians, 0.8)
+
+
 def scale_push_cache(base_cache: dict, dose: float) -> dict:
-    """Scale both neuron and matched random directions by the row's alpha."""
+    """Scale both arms by the row's alpha. Fixtures only: a run uses build_dose_push_cache."""
     scale = float(dose) / 0.8
     cache = {"_units": base_cache["_units"]}
     for unit in base_cache["_units"]:
@@ -120,21 +127,23 @@ def scale_push_cache(base_cache: dict, dose: float) -> dict:
     return cache
 
 
-def validate_dose_scaling(units: list[dict], layers, medians: dict[int, float],
-                          base_cache: dict, dose: float) -> None:
-    """Runtime guard against accidentally building one push at a different alpha."""
+def validate_dose_scaling(units: list[dict], base_cache: dict, dose_cache: dict,
+                          dose: float) -> None:
+    """Runtime guard: every push at a dose is the 0.8 push's direction at dose/0.8 of its size.
+    bf16 rounding allows about 1% in size; a wrong alpha or a swapped vector fails."""
     import torch
 
-    unit = units[0]
-    weight = layers[unit["layer"]].mlp.down_proj.weight
-    scaled = scale_push_cache(base_cache, dose)[(unit["id"], "neuron")]
-    direct = c.neuron_push(weight, unit["neuron"], dose * float(medians[unit["layer"]]))
-    torch.testing.assert_close(scaled.float(), direct.float(), rtol=1e-5, atol=1e-6)
-    scaled_random = scale_push_cache(base_cache, dose)[(unit["id"], "random")]
-    direct_random = c.random_direction(weight, unit["control_seed"],
-                                       dose * float(medians[unit["layer"]]))
-    torch.testing.assert_close(scaled_random.float(), direct_random.float(),
-                               rtol=1e-5, atol=1e-6)
+    ratio = float(dose) / 0.8
+    for unit in units:
+        for arm in ("neuron", "random"):
+            base = base_cache[(unit["id"], arm)].float()
+            pushed = dose_cache[(unit["id"], arm)].float()
+            size = float(torch.linalg.vector_norm(pushed) / torch.linalg.vector_norm(base))
+            cosine = float(torch.dot(pushed, base)
+                           / (torch.linalg.vector_norm(pushed) * torch.linalg.vector_norm(base)))
+            if abs(size / ratio - 1) > .01 or cosine < .9999:
+                raise AssertionError(f"push for {unit['id']} {arm} at dose {dose}: "
+                                     f"size ratio {size:.5f} against {ratio:.5f}, cosine {cosine:.6f}")
 
 
 def _row_layer_signature(row: dict, units_by_id: dict[str, dict]) -> tuple[int, ...]:
@@ -563,11 +572,11 @@ def run(args: argparse.Namespace, units: list[dict] | None = None, *,
     layers = c.get_layers(model)
     medians = c.residual_medians(model, tokenizer, FRAME, args.device)
     base_cache = build_base_push_cache(units, layers, medians)
-    cache_by_dose = {dose: scale_push_cache(base_cache, dose)
+    cache_by_dose = {dose: build_dose_push_cache(units, layers, medians, dose)
                      for dose in sorted({row["dose"] for row in answer_rows if row["pushes"]}
                                         | set(rb.DOSES))}
     for dose in cache_by_dose:
-        validate_dose_scaling(units, layers, medians, base_cache, dose)
+        validate_dose_scaling(units, base_cache, cache_by_dose[dose], dose)
 
     gate, gate_seconds = _run_gate1(output_dir / "gate1.json", tokenizer, model, layers, args.device)
     answers_file = output_dir / "answers.jsonl"

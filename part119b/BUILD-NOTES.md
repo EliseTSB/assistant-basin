@@ -69,3 +69,5 @@ Part 119b stop rule, written 10-30 06:51 before DS r2: if r2 finds another defec
 
 - Part 86's `WIDER_SELF_DESCRIPTION` rule keeps any first sentence that merely contains a self-reference term such as “model” or “assistant”; this is inherited by Part 119b's answer triage and remains with Part 86's owner.
 - Part 119's `run119.read_existing` rewrites an unterminated malformed final JSONL line while reading; Part 119b inherits this behavior for canonical answer and interaction inputs, so the read-only A770 mount limitation remains with Part 119's owner.
+
+Fold after the first pilot launch (2026-10-30): the pilot refused at validate_dose_scaling, because a bf16 push scaled by dose/0.8 rounds differently from the direct push by up to one step. Each dose is now built directly from the weights with Part 92's functions, and the runtime guard checks size and direction. No row ran before the refusal.
