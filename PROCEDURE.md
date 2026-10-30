@@ -204,3 +204,9 @@ beyond one part.
   the 2 GB guard in 15 s from 9.1 GB free; Parts 115b and 117 had succeeded from 9.6 to 10.3 GB. From 10.9 GB it loaded
   and passed the zero-hook check, then hit the guard two minutes into generation at batch 64, because the game held
   VRAM and the A770 spilled into system memory. Wait for the game's process to exit, not just for free memory.
+- 2026-10-30 (Parts 119b and 119c): both builds passed their worker's own tests with a top-level run that could not start,
+  a missing import in each, because no test called `run()`. A build brief now asks for a test that drives the real run end
+  to end on a tiny model, and one that imports from a tree holding only the `--copy` list. A DeepSeek code review caught both.
+- 2026-10-30 (Part 119's cold check): a reader's count can tell a stronger story than a text rule. Triage called 48% of pair
+  answers broken while the reader marked 85% of a sample incoherent. A breaking claim now carries both, and a design's
+  withhold rule says what happens when an agreement statistic is undefined.
