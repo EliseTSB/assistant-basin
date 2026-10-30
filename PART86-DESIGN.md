@@ -249,3 +249,33 @@ name or maker, as version 1's wording already says. The coherent-persona definit
   agreement beside them.
 - No version-1 label (first reader, Opus, DS or Luna) is used for any verdict, and version-1 and version-2 labels are
   never pooled.
+
+## Amendment 8 (2026-10-30 00:18 CT, while DS's full version-2 reading runs; before any version-2 label is joined to the key or read by unit)
+
+**Why.** The first reader, whose labels built the atlas of 465 coherent-persona neurons that Parts 112, 115, 117 and
+117b started from, agrees with each of the three other readers at kappa 0.12 to 0.16 (Amendment 7). 387 of the 465 are
+"another AI", most of them named like "Q, a language model", and brief version 2 (like version 1's wording) calls an
+answer that calls itself a language model "still Qwen or an assistant" under any name. Those parts read their verdicts
+with their own readers; this amendment measures only how their starting list fares under the version-2 reading.
+
+**What was seen before writing.** The kind counts of DS's and Luna's version-2 labels on the 335 calibration items (not
+joined to the key), and the full reading's row and error counts. No label of the full reading has been read by kind,
+unit or condition.
+
+**The measure.** An atlas unit (`results/part112/units.json`: layer, neuron, and the first reader's persona and kind)
+is coherent persona under version 2 when DS's version-2 label of its screen answer is coherent and its kind is neither
+"still Qwen or an assistant" nor "unclear", the coherent-persona class that 86.2 to 86.6 use. The counts come from the
+same labels and key as 86.2 to 86.6, by a script committed before its first run on them, and are read only if Amendment
+7's gate passed (it did: kappa 0.814) and the reading passes the scorer's preflight.
+
+- **86.11** (Claude, medium confidence): fewer than half of the atlas's 387 "another AI" units are coherent persona
+  under version 2. Point guess: about 20%.
+- **86.12** (Claude, medium confidence): at least 70% of the atlas's 78 units of other kinds (46 objects or places, 15
+  abstract, 8 human, 7 fictional characters, 1 animal, 1 deity or spirit) are coherent persona under version 2.
+- **86.13** (Claude, medium confidence): under version 2, more of the screen's real neurons are coherent persona than
+  the 465 the first reader gave.
+
+**Reading.** If 86.11 holds, the atlas's "another AI" units are mostly renamed assistants by the brief's own rule, and
+a later part that starts from the atlas should say so. If 86.12 fails, the reader change also removes personas the
+brief does not dispute, which would say more about the first reader than about the neurons. 86.13 measures the reading,
+not the neurons: random directions are counted separately by 86.2 to 86.6.

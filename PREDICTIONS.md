@@ -2158,6 +2158,9 @@ Design: `PART86-DESIGN.md`. "Coherent persona" = the blind reader marks the answ
 | 86.8 | Claude (Amendment 6, low confidence): DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more, so the full re-read proceeds under Amendment 6. | kappa 0.568 (raw 78.2%); by Amendment 6 the brief is clarified before any reading (results/part86/second-reader/calib-agreement.json) | **failed** |
 | 86.9 | Claude (Amendment 7, low confidence): with brief version 2 on the 335 fresh items, DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more. | kappa 0.814 (raw 90.7%; coherent flag 96.4%) (results/part86/second-reader/calib-agreement-v2.json) | **held** |
 | 86.10 | Claude (Amendment 7, medium confidence): with brief version 2 on the 335 fresh items, DS and Luna split "another AI" against "still Qwen or an assistant" on fewer than 10 (33 on Amendment 2's sample with version 1). | 18 of 335 (labels_ds_v2.jsonl, labels_luna_v2.jsonl) | **failed** |
+| 86.11 | Claude (Amendment 8, medium confidence): fewer than half of the atlas's 387 "another AI" units are coherent persona under version 2 (point guess about 20%). | pending | pending |
+| 86.12 | Claude (Amendment 8, medium confidence): at least 70% of the atlas's 78 units of other kinds are coherent persona under version 2. | pending | pending |
+| 86.13 | Claude (Amendment 8, medium confidence): under version 2, more of the screen's real neurons are coherent persona than the 465 the first reader gave. | pending | pending |
 
 ## Part 87: our two recipes in neuronary's own form, registered 2026-10-27 before any code
 
