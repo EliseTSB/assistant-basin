@@ -210,3 +210,8 @@ beyond one part.
 - 2026-10-30 (Part 119's cold check): a reader's count can tell a stronger story than a text rule. Triage called 48% of pair
   answers broken while the reader marked 85% of a sample incoherent. A breaking claim now carries both, and a design's
   withhold rule says what happens when an agreement statistic is undefined.
+- 2026-10-30, Part 122. A gate that can be computed without the GPU is computed before the launch. Gate 1's token count needed only the tokenizer, and the writer had checked words, so a registered gate failed on a finished run. A writer validates with the same instrument the gate uses.
+- 2026-10-30, Part 122. Every statistic in a forward hook moves to the CPU once per hook. An `.item()` per value took 14 s a batch and hung the A770.
+- 2026-10-30, Part 123. A do-nothing check compares runs at one batch shape. On the A770 a bf16 greedy answer can depend on batch shape, and 5 of 18 zero rows differed from plain until the shapes matched, when 60 of 60 agreed.
+- 2026-10-30, Parts 118, 121, 122. A message to Elise before the cold check carries counts and no verdict word. "Clean no", "concept beats slot" and "a narrow window" each came back weaker, and the numbers beside them were right.
+- 2026-10-30, publishing. `part_check publish` gates the push with `&&`, in one chain. A `;` pushed Part 120 past a failing check; it failed on a false alarm that time.

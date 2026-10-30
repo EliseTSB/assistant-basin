@@ -1,0 +1,17 @@
+{
+  "stage": "pilot",
+  "units": 4,
+  "layers": [
+    3,
+    4,
+    9
+  ],
+  "expected_rows": 378,
+  "saved_rows_for_run": 378,
+  "answers_file": "p123\\run\\answers.jsonl",
+  "zero_hook_checks": 18,
+  "zero_hook_equal": 13,
+  "batch_size": 64,
+  "max_new_tokens": 120,
+  "elapsed_seconds": 109.39
+}

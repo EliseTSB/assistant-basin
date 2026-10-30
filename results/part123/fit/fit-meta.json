@@ -1,0 +1,16 @@
+{
+  "stage": "A",
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "units": 39,
+  "slot_units": 21,
+  "concept_units": 18,
+  "suffix_samples": 4,
+  "fit_prompts": 4992,
+  "fit_states_stored": "last token only",
+  "shuffle_seed": 12301,
+  "shuffles_per_unit": 1000,
+  "batch_size": 64,
+  "overlap_rows": 39,
+  "elapsed_seconds": 134.83
+}

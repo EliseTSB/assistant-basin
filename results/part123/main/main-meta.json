@@ -1,0 +1,24 @@
+{
+  "stage": "main",
+  "units": 39,
+  "layers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    10,
+    12
+  ],
+  "expected_rows": 2478,
+  "saved_rows_for_run": 2478,
+  "answers_file": "results\\part123\\main\\answers.jsonl",
+  "zero_hook_checks": 60,
+  "zero_hook_equal": 60,
+  "batch_size": 64,
+  "max_new_tokens": 120,
+  "elapsed_seconds": 505.78
+}
