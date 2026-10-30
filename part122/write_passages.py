@@ -95,7 +95,8 @@ def build_prompt(unit: dict) -> str:
         "Every string is exactly two sentences. In third_person, write about the supplied persona in third person; "
         "in first_person, let it speak in first person. For each pair, ordinary must replace the persona with one "
         "unrelated everyday subject that does not appear in any other way in the persona passage. Keep the two "
-        "passages in each pair structurally parallel and within two words of each other. Preserve the same tense, "
+        "passages in each pair structurally parallel and within two words of each other. Every persona passage "
+        "must use every word of the persona name, and no ordinary passage may use any of them. Preserve the same tense, "
         "pronouns, sentence shapes, and non-persona details. Do not include meta commentary or labels."
     )
 
@@ -169,7 +170,7 @@ def _one_unit(unit: dict, request_fn: Callable) -> dict:
     for attempt in range(1, MAX_ATTEMPTS + 1):
         current_prompt = prompt
         if attempt > 1:
-            current_prompt += "\n\nRetry: fix the validation error and return the required JSON only."
+            current_prompt += f"\n\nRetry: your last reply failed this check: {last_error}. Return the required JSON only."
         try:
             response = request_fn("ds", current_prompt, "")
             payload = validate_payload(_parse_response(response), str(unit["persona"]))
