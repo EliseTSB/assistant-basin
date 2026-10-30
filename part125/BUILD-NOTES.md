@@ -20,7 +20,7 @@ Run from the repository root on the A770 host. The model is the pinned local sna
 
 ```sh
 /home/elisepc/neuron-probe/.venv/bin/python tools/launch_arc.py 125 \
-  --step "-I -B part125/run125.py --stage pilot --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --out results\\part125\\main --device xpu --max-new-tokens 120" \
+  --step "-I -B part125/run125.py --stage pilot --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --out results\\part125\\main --device xpu --max-new-tokens 120 --copy-engine" \
   --copy part125/run125.py part125/session125.py part125/label125.py part125/score125.py part92/common92.py part92/label92.py part92b/label92b.py part85/checkpoints.py part123/fit123.py part123/run123.py part123/label123.py part119/label119.py part119/rows119.py part119/known119.jsonl judge_client.py results/part92/step2/neurons.json results/part92/step2/kinds.json
 ```
 
@@ -32,7 +32,7 @@ If the pilot projection is at most 90 minutes, run all 29 units:
 
 ```sh
 /home/elisepc/neuron-probe/.venv/bin/python tools/launch_arc.py 125 \
-  --step "-I -B part125/run125.py --stage main --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --out results\\part125\\main --device xpu --max-new-tokens 120" \
+  --step "-I -B part125/run125.py --stage main --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --out results\\part125\\main --device xpu --max-new-tokens 120 --copy-engine" \
   --copy part125/run125.py part125/session125.py part125/label125.py part125/score125.py part92/common92.py part92/label92.py part92b/label92b.py part85/checkpoints.py part123/fit123.py part123/run123.py part123/label123.py part119/label119.py part119/rows119.py part119/known119.jsonl judge_client.py results/part92/step2/neurons.json results/part92/step2/kinds.json results/part125/main/pilot-meta.json results/part125/main/medians.json results/part125/main/medians-meta.json results/part125/main/zero-hook-check.json results/part125/main/units/p92-02.json results/part125/main/units/p92-08.json results/part125/main/push-vectors/p92-02.json results/part125/main/push-vectors/p92-08.json
 ```
 
@@ -40,7 +40,7 @@ If the pilot projects above 90 minutes, make the required cut before running eit
 
 ```sh
 /home/elisepc/neuron-probe/.venv/bin/python tools/launch_arc.py 125 \
-  --step "-I -B part125/run125.py --stage main --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --out results\\part125\\main --device xpu --max-new-tokens 120 --slot-only" \
+  --step "-I -B part125/run125.py --stage main --model E:\\neuron-probe\\hf\\hub\\models--allenai--OLMo-2-0425-1B-Instruct\\snapshots\\48d788eca847d4d7548f375ad03d3c9312f6139e --out results\\part125\\main --device xpu --max-new-tokens 120 --copy-engine --slot-only" \
   --copy part125/run125.py part125/session125.py part125/label125.py part125/score125.py part92/common92.py part92/label92.py part92b/label92b.py part85/checkpoints.py part123/fit123.py part123/run123.py part123/label123.py part119/label119.py part119/rows119.py part119/known119.jsonl judge_client.py results/part92/step2/neurons.json results/part92/step2/kinds.json results/part125/main/pilot-meta.json results/part125/main/medians.json results/part125/main/medians-meta.json results/part125/main/zero-hook-check.json results/part125/main/units/p92-02.json results/part125/main/units/p92-08.json results/part125/main/push-vectors/p92-02.json results/part125/main/push-vectors/p92-08.json
 ```
 

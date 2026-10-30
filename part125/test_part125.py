@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -584,6 +585,19 @@ def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
     }
     assert slot_result["predictions"]["125.2"]["text"] == score125.PREDICTIONS["125.2"]["text"]
     assert "slot_only_note" in slot_result["predictions"]["125.2"]
+
+
+def test_copy_engine_flag_is_set_before_torch_loads():
+    code = ("import os, sys, runpy; sys.argv = ['run125.py', '--copy-engine']; "
+            "sys.modules.pop('torch', None); "
+            "import importlib.util as u; s = u.spec_from_file_location('r125', sys.argv[0] if False else %r); "
+            "m = u.module_from_spec(s); s.loader.exec_module(m); "
+            "print(os.environ.get('UR_L0_USE_COPY_ENGINE'), os.environ.get('SYCL_PI_LEVEL_ZERO_USE_COPY_ENGINE'))"
+            % str(HERE / "run125.py"))
+    done = subprocess.run([sys.executable, "-B", "-c", code], capture_output=True, text=True,
+                          env={k: v for k, v in os.environ.items() if "COPY_ENGINE" not in k})
+    assert done.returncode == 0, done.stderr
+    assert done.stdout.split() == ["1", "1"]
 
 
 def test_slot_only_flag_is_rejected_for_pilot():
