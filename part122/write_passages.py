@@ -20,8 +20,10 @@ import rows119  # noqa: E402
 
 SEED = 12201
 MODEL_ID = "deepseek-v4.1-flash"
-MAX_ATTEMPTS = 4
+MAX_ATTEMPTS = 8
 PAIR_COUNT = 8
+MAX_TOKEN_DIFFERENCE = 2  # Gate 1, Amendment 1: the writer checks it with the real tokenizer
+TOKENIZER = "/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e"
 PERSONA_FIELDS = ("third_person", "first_person")
 _WORD = re.compile(r"[\w'-]+", re.UNICODE)
 _SENTENCE_END = re.compile(r"[.!?](?=\s|$)")
@@ -42,8 +44,9 @@ def _valid_passage(text: object, label: str) -> str:
     return clean
 
 
-def validate_payload(payload: object, persona: str) -> dict:
-    """Validate shape, two-sentence form, approximate length, and name leakage."""
+def valid_pairs(payload: object, persona: str, count_tokens: Callable | None = None) -> tuple[dict, str | None]:
+    """Each frame's pairs that pass shape, two-sentence form, length, name leakage and, when a counter is given,
+    the token-count match. Returns them with the first failure seen."""
     if not isinstance(payload, dict) or set(payload) != set(PERSONA_FIELDS):
         raise ValueError("response must contain exactly third_person and first_person")
     persona_terms = [word for word in word_tokens(persona) if word not in _STOP_NAME_WORDS]
@@ -53,12 +56,12 @@ def validate_payload(payload: object, persona: str) -> dict:
         raise ValueError("persona name has no searchable words")
 
     result = {}
+    first_error = None
     for frame in PERSONA_FIELDS:
         pairs = payload.get(frame)
-        if not isinstance(pairs, list) or len(pairs) < PAIR_COUNT:
-            raise ValueError(f"{frame} must contain at least {PAIR_COUNT} pairs")
+        if not isinstance(pairs, list):
+            raise ValueError(f"{frame} must be an array")
         normalized = []
-        first_error = None
         for index, pair in enumerate(pairs):
             try:
                 if not isinstance(pair, dict) or set(pair) != {"persona", "ordinary"}:
@@ -81,16 +84,29 @@ def validate_payload(payload: object, persona: str) -> dict:
                     raise ValueError(f"{frame}[{index}] both passages must use first person")
                 if frame == "third_person" and (target_first or ordinary_first):
                     raise ValueError(f"{frame}[{index}] passages must use third person")
+                if count_tokens is not None:
+                    gap = abs(count_tokens(target) - count_tokens(ordinary))
+                    if gap > MAX_TOKEN_DIFFERENCE:
+                        raise ValueError(f"{frame}[{index}] persona and ordinary passages differ by {gap} tokens; "
+                                         f"the limit is {MAX_TOKEN_DIFFERENCE}")
                 normalized.append({"persona": target, "ordinary": ordinary})
             except ValueError as exc:
                 first_error = first_error or str(exc)
-                continue
-            if len(normalized) == PAIR_COUNT:
-                break
-        if len(normalized) < PAIR_COUNT:
-            raise ValueError(first_error or f"{frame} has fewer than {PAIR_COUNT} valid pairs")
         result[frame] = normalized
-    return result
+    return result, first_error
+
+
+def validate_payload(payload: object, persona: str, count_tokens: Callable | None = None) -> dict:
+    """The first eight valid pairs of each frame, or an error."""
+    if isinstance(payload, dict):
+        for frame in PERSONA_FIELDS:
+            if isinstance(payload.get(frame), list) and len(payload[frame]) < PAIR_COUNT:
+                raise ValueError(f"{frame} must contain at least {PAIR_COUNT} pairs")
+    found, first_error = valid_pairs(payload, persona, count_tokens)
+    for frame in PERSONA_FIELDS:
+        if len(found[frame]) < PAIR_COUNT:
+            raise ValueError(first_error or f"{frame} has fewer than {PAIR_COUNT} valid pairs")
+    return {frame: found[frame][:PAIR_COUNT] for frame in PERSONA_FIELDS}
 
 
 def build_prompt(unit: dict) -> str:
@@ -104,7 +120,8 @@ def build_prompt(unit: dict) -> str:
         "Every string is exactly two sentences. In third_person, write about the supplied persona in third person; "
         "in first_person, let it speak in first person. For each pair, ordinary must replace the persona with one "
         "unrelated everyday subject that does not appear in any other way in the persona passage. Keep the two "
-        "passages in each pair structurally parallel and within two words of each other. Every persona passage "
+        "passages in each pair structurally parallel and within two words of each other, and make the ordinary subject "
+        "about as long as the persona name, so the two passages have almost the same number of tokens. Every persona passage "
         "must use every word of the persona name, and no ordinary passage may use any of them. Preserve the same tense, "
         "pronouns, sentence shapes, and non-persona details. Do not include meta commentary or labels."
     )
@@ -173,18 +190,25 @@ def _default_request(reader: str, prompt: str, _unused_key: str = "") -> dict:
                               timeout=300)
 
 
-def _one_unit(unit: dict, request_fn: Callable) -> dict:
+def _one_unit(unit: dict, request_fn: Callable, count_tokens: Callable | None = None) -> dict:
+    """Valid pairs are kept across attempts, so a hard persona name can fill its eight over several replies."""
     prompt = build_prompt(unit)
     last_error = "unknown response error"
+    kept = {frame: [] for frame in PERSONA_FIELDS}
     for attempt in range(1, MAX_ATTEMPTS + 1):
         current_prompt = prompt
         if attempt > 1:
             current_prompt += f"\n\nRetry: your last reply failed this check: {last_error}. Return the required JSON only."
         try:
             response = request_fn("ds", current_prompt, "")
-            payload = validate_payload(_parse_response(response), str(unit["persona"]))
-            return {"id": str(unit["id"]), "persona": str(unit["persona"]),
-                    "desc": str(unit["desc"]), **payload, "attempts": attempt}
+            found, first_error = valid_pairs(_parse_response(response), str(unit["persona"]), count_tokens)
+            for frame in PERSONA_FIELDS:
+                earlier = list(kept[frame])
+                kept[frame] += [pair for pair in found[frame] if pair not in earlier]
+            if all(len(kept[frame]) >= PAIR_COUNT for frame in PERSONA_FIELDS):
+                return {"id": str(unit["id"]), "persona": str(unit["persona"]), "desc": str(unit["desc"]),
+                        **{frame: kept[frame][:PAIR_COUNT] for frame in PERSONA_FIELDS}, "attempts": attempt}
+            last_error = first_error or f"fewer than {PAIR_COUNT} valid pairs"
         except Exception as exc:
             last_error = str(exc)
     raise ValueError(f"could not generate valid passages for {unit['id']}: {last_error}")
@@ -192,7 +216,7 @@ def _one_unit(unit: dict, request_fn: Callable) -> dict:
 
 def generate_passages(units: list[dict], *, request_fn: Callable | None = None,
                       model_id: str = MODEL_ID, workers: int = 6,
-                      partial: str | Path | None = None) -> dict:
+                      partial: str | Path | None = None, count_tokens: Callable | None = None) -> dict:
     """Request and validate passages, with one initial call and up to three retries per unit."""
     from concurrent.futures import ThreadPoolExecutor
 
@@ -206,7 +230,7 @@ def generate_passages(units: list[dict], *, request_fn: Callable | None = None,
     def run_one(unit: dict) -> dict:
         if str(unit["id"]) in done:
             return done[str(unit["id"])]
-        row = _one_unit(unit, request_fn)
+        row = _one_unit(unit, request_fn, count_tokens)
         if partial is not None:
             with _partial_lock, Path(partial).open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -229,9 +253,18 @@ def write_output(path: str | Path, data: dict, *, force: bool = False) -> Path:
     return output
 
 
+def token_counter(path: str = TOKENIZER) -> Callable:
+    """Counts a passage's tokens the way the reader does for frames T and F, with no added special tokens."""
+    from transformers import AutoTokenizer
+
+    tokenizer = AutoTokenizer.from_pretrained(path, local_files_only=True)
+    return lambda text: len(tokenizer(text, add_special_tokens=False)["input_ids"])
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", default=str(HERE / "passages122.json"))
+    parser.add_argument("--tokenizer", default=TOKENIZER)
     parser.add_argument("--neurons", default=rows119.DEFAULT_NEURONS)
     parser.add_argument("--kinds-haiku", default=rows119.DEFAULT_HAIKU_KINDS)
     parser.add_argument("--kinds-ds", default=rows119.DEFAULT_DS_KINDS)
@@ -245,7 +278,9 @@ def main(argv: list[str] | None = None) -> int:
     request_fn = dry_run_client if args.dry_run else None
     model_id = "stub-local-not-study-data" if args.dry_run else MODEL_ID
     partial = None if args.dry_run else str(output) + ".partial.jsonl"
-    data = generate_passages(units, request_fn=request_fn, model_id=model_id, partial=partial)
+    count_tokens = None if args.dry_run else token_counter(args.tokenizer)
+    data = generate_passages(units, request_fn=request_fn, model_id=model_id, partial=partial,
+                             count_tokens=count_tokens)
     write_output(output, data, force=args.force)
     print(json.dumps({"units": len(data["units"]), "model_id": model_id, "output": str(output)}))
     return 0

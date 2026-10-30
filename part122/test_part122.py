@@ -554,3 +554,34 @@ def test_reader_refuses_a_passage_file_not_written_by_the_study_model(tmp_path):
     with pytest.raises(ValueError, match="not study data"):
         read122.load_passages(passages_path, units)
     assert read122.load_passages(passages_path, units, allow_stub=True)
+
+
+def _pairs(persona, ordinary, count=12):
+    return [{"persona": f"The {persona} waits by item {i}. It stays until dusk.",
+             "ordinary": f"The {ordinary} waits by item {i}. It stays until dusk."} for i in range(count)]
+
+
+def test_token_counter_rejects_a_pair_the_gate_would_miss():
+    count = lambda text: len(text.split())
+    payload = {"third_person": _pairs("boulder", "old iron kettle here"),
+               "first_person": [{"persona": f"I am the boulder, item {i}. I stay.",
+                                 "ordinary": f"I am the kettle, item {i}. I stay."} for i in range(12)]}
+    with pytest.raises(ValueError, match="differ by 3 tokens"):
+        write_passages.validate_payload(payload, "Boulder", count)
+    assert write_passages.validate_payload(payload, "Boulder")
+
+
+def test_a_hard_name_fills_its_eight_across_attempts():
+    count = lambda text: len(text.split())
+    replies = []
+    for attempt in range(3):
+        third = [{"persona": f"The boulder waits by item {attempt}{i}. It stays until dusk.",
+                  "ordinary": f"The kettle waits by item {attempt}{i}. It stays until dusk."} for i in range(3)]
+        first = [{"persona": f"I am the boulder, item {attempt}{i}. I stay.",
+                  "ordinary": f"I am the kettle, item {attempt}{i}. I stay."} for i in range(3)]
+        replies.append(json.dumps({"third_person": third, "first_person": first}))
+    calls = iter(replies)
+    row = write_passages._one_unit({"id": "x", "persona": "Boulder", "desc": "d"},
+                                   lambda *_: {"text": next(calls)}, count)
+    assert row["attempts"] == 3
+    assert len(row["third_person"]) == len(row["first_person"]) == 8
