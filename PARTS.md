@@ -182,3 +182,4 @@ The table includes every integer ID from Part 1 through Part 118 plus lettered o
 | 119c | is the interaction share at low dose a rounding floor? | done | `PART119C-DESIGN.md` | `part119c/score119c.py`; `results/part119c/fig119c.py` | `results/part119c/` | held 4 / failed 0 / open 0 | 2026-10-30 |
 | 120 | does a push interact with itself as much as with a second push? | running | `PART120-DESIGN.md` | `part120/run120.py`; `part120/score120.py` | `results/part120/` | held 0 / failed 0 / open 8 | 2026-10-30 |
 | 121 | can a same-theme concept neuron lift a slot neuron back over its threshold? | designed | `PART121-DESIGN.md` | `part121/rows121.py`; `part121/score121.py` | `results/part121/` | | 2026-10-30 |
+| 122 | do slot and concept neurons read their persona, and in which frame? | designed | `PART122-DESIGN.md` | `part122/read122.py`; `part122/score122.py` | `results/part122/` | | 2026-10-30 |

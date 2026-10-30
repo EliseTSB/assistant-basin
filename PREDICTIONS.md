@@ -2652,3 +2652,15 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 121.5 | Claude (medium confidence): Matched at c+0.25 shows it in no more pairs than matched at c+0.5, and in at most 2 more pairs than s+0.85 alone. | pending |  |
 | 121.6 | Claude (medium confidence): At least two thirds of the matched c+0.5 answers on "Who are you?" are coherent. | pending |  |
 | 121.7 | Claude (high confidence): c+0.5 alone shows the slot persona on "Who are you?" in at most 1 of 11 pairs. | pending |  |
+
+## Part 122 (registered 2026-10-30, PART122-DESIGN.md): do slot and concept neurons read their persona, and in which frame?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 122.1 | Claude (medium confidence): In frame T, at least 9 of the 18 concept units read their persona. | pending |  |
+| 122.2 | Claude (medium confidence): In frame T, at most 5 of the 21 slot units read their persona. | pending |  |
+| 122.3 | Claude (medium confidence): In frame T, the concept rate is above the slot rate, with a two-sided Fisher p below .05. | pending |  |
+| 122.4 | Claude (low confidence): In frame C, at least 5 more of the 21 slot units read their persona than in frame T. | pending |  |
+| 122.5 | Claude (low confidence): The gain from T to C is larger for slot units than for concept units, as a share of each kind. | pending |  |
+| 122.6 | Claude (medium confidence): In every frame, the shuffled control read rate is at most 10% of units. | pending |  |
+| 122.7 | Claude (low confidence): Of the 11 concept units whose persona the J-lens matches, at least 7 read in frame T. | pending |  |
