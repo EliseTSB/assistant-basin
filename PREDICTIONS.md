@@ -2524,8 +2524,8 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 92b.1 | Claude (medium confidence): DS V4.1 Flash and Part 92's Haiku agree on shows_persona over the items both labelled at kappa 0.6 or more. | pending | pending |
-| 92b.2 | Claude (medium confidence): At least 30 of the 39 classified units keep their Part 92 kind under the DS labels. | pending | pending |
-| 92b.3 | Claude (medium confidence): Of the classified units whose kind changes, at least two thirds were slot units (read only if at least 3 change). | pending | pending |
-| 92b.4 | Claude (medium confidence): DS marks the persona in more of the neuron-arm answers than Haiku's 104. | pending | pending |
-| 92b.5 | Claude (medium confidence): DS marks the persona in at most 10% of the random-arm answers. | pending | pending |
+| 92b.1 | Claude (medium confidence): DS V4.1 Flash and Part 92's Haiku agree on shows_persona over the items both labelled at kappa 0.6 or more. | kappa 0.833 over the 634 items both labelled (results/part92b/SCORE.md) | **held** |
+| 92b.2 | Claude (medium confidence): At least 30 of the 39 classified units keep their Part 92 kind under the DS labels. | 29 of 39 keep their kind: all 21 slot units, 8 of 18 concept units (SCORE.md) | **failed** |
+| 92b.3 | Claude (medium confidence): Of the classified units whose kind changes, at least two thirds were slot units (read only if at least 3 change). | 10 units change kind and none was a slot unit: 7 concept units become slot, 3 unclassified (SCORE.md) | **failed** |
+| 92b.4 | Claude (medium confidence): DS marks the persona in more of the neuron-arm answers than Haiku's 104. | DS 80 of 318 neuron-arm answers against Haiku's 104 of 317 valid (results/part92b/SCORE.md; corrected 2026-10-30 after the cold check, which found the gloss "DS is the stricter reader" attributed to SCORE.md) | **failed** |
+| 92b.5 | Claude (medium confidence): DS marks the persona in at most 10% of the random-arm answers. | DS 1 of 318 random-arm answers (0.3%) (SCORE.md) | **held** |

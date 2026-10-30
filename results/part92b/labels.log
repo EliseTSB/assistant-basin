@@ -1,0 +1,9 @@
+{"output": "./results/part92b/sample92b.json", "items": 96, "counts_by_unit": {"neuron": 48, "random": 48}}
+pass 12/12 elapsed=9.59s
+pass 12/12 elapsed=9.54s
+{"reader": "ds", "items": 636, "pending": 636, "error_rows": 0, "output": "./results/part92b/labels-ds.jsonl", "usage_sidecar": "./results/part92b/labels-ds.jsonl.usage.jsonl"}
+{"reader": "ds", "items": 636, "pending": 0, "error_rows": 0, "output": "./results/part92b/labels-ds.jsonl", "usage_sidecar": "./results/part92b/labels-ds.jsonl.usage.jsonl"}
+{"reader": "luna", "items": 96, "pending": 96, "error_rows": 0, "output": "./results/part92b/labels-luna.jsonl", "usage_sidecar": "./results/part92b/labels-luna.jsonl.usage.jsonl"}
+{"reader": "luna", "items": 96, "pending": 0, "error_rows": 0, "output": "./results/part92b/labels-luna.jsonl", "usage_sidecar": "./results/part92b/labels-luna.jsonl.usage.jsonl"}
+CHAIN-RC=0
+rc=0 02:14:51

@@ -1,0 +1,333 @@
+{
+  "gate_a": {
+    "ds": {
+      "correct": 12,
+      "total": 12,
+      "passed": true,
+      "exists": true
+    },
+    "luna": {
+      "correct": 12,
+      "total": 12,
+      "passed": true,
+      "exists": true
+    }
+  },
+  "gate_b": {
+    "kappa": 0.9569120287253143,
+    "n": 96,
+    "threshold": 0.6,
+    "passed": true
+  },
+  "ds_haiku": {
+    "kappa": 0.8327176781002641,
+    "n": 634
+  },
+  "kind_comparison": {
+    "classified_units": 39,
+    "unchanged": 29,
+    "changed": 10,
+    "slot_changes": 0,
+    "units": [
+      {
+        "id": "p92-00",
+        "part92_kind": "concept",
+        "ds_kind": "unclassified",
+        "same": false
+      },
+      {
+        "id": "p92-01",
+        "part92_kind": "concept",
+        "ds_kind": "unclassified",
+        "same": false
+      },
+      {
+        "id": "p92-02",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-03",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-04",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-05",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-07",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-08",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-09",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-10",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-11",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      },
+      {
+        "id": "p92-13",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-15",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-18",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-20",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-24",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-25",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-28",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      },
+      {
+        "id": "p92-29",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-30",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      },
+      {
+        "id": "p92-32",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-33",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-35",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-36",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-37",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-38",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      },
+      {
+        "id": "p92-39",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-40",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      },
+      {
+        "id": "p92-41",
+        "part92_kind": "concept",
+        "ds_kind": "unclassified",
+        "same": false
+      },
+      {
+        "id": "p92-42",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-43",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-45",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-46",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-47",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-48",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-49",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      },
+      {
+        "id": "p92-50",
+        "part92_kind": "slot",
+        "ds_kind": "slot",
+        "same": true
+      },
+      {
+        "id": "p92-51",
+        "part92_kind": "concept",
+        "ds_kind": "concept",
+        "same": true
+      },
+      {
+        "id": "p92-52",
+        "part92_kind": "concept",
+        "ds_kind": "slot",
+        "same": false
+      }
+    ],
+    "from_to_counts": {
+      "concept": {
+        "concept": 8,
+        "slot": 7,
+        "unclassified": 3,
+        "dropped": 0,
+        "incomplete": 0
+      },
+      "slot": {
+        "concept": 0,
+        "slot": 21,
+        "unclassified": 0,
+        "dropped": 0,
+        "incomplete": 0
+      }
+    }
+  },
+  "arm_shows": {
+    "ds": {
+      "neuron": {
+        "shows": 80,
+        "answers": 318
+      },
+      "random": {
+        "shows": 1,
+        "answers": 318
+      }
+    },
+    "haiku": {
+      "neuron": {
+        "shows": 104,
+        "answers": 318
+      },
+      "random": {
+        "shows": 4,
+        "answers": 318
+      }
+    }
+  },
+  "errors_left": {
+    "ds": 0,
+    "luna": 0,
+    "haiku": 2
+  },
+  "verdicts": {
+    "92b.1": {
+      "prediction": "DS V4.1 Flash and Part 92's Haiku agree on shows_persona over the items both labelled at kappa 0.6 or more.",
+      "verdict": "held"
+    },
+    "92b.2": {
+      "prediction": "At least 30 of the 39 classified units keep their Part 92 kind under the DS labels.",
+      "verdict": "failed"
+    },
+    "92b.3": {
+      "prediction": "Of the classified units whose kind changes, at least two thirds were slot units (read only if at least 3 change).",
+      "verdict": "failed"
+    },
+    "92b.4": {
+      "prediction": "DS marks the persona in more of the neuron-arm answers than Haiku's 104.",
+      "verdict": "failed"
+    },
+    "92b.5": {
+      "prediction": "DS marks the persona in at most 10% of the random-arm answers.",
+      "verdict": "held"
+    }
+  }
+}
