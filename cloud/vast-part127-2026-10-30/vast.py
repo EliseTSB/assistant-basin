@@ -21,6 +21,8 @@ API_V1 = "https://console.vast.ai/api/v1"
 MAX_HOURLY_RATE = 0.30
 MIN_RELIABILITY = 0.99
 DISK_GB = 40
+BOOT_SECONDS = 8 * 60
+BAD_OFFERS = {38849859}  # 2026-10-30: OCI runtime error on start
 MAX_RENT_SECONDS = 180 * 60  # $0.90 at the maximum accepted hourly rate, for Parts 127 and 125 together.
 RUN_LABEL_PREFIX = "part127-2026-10-30"
 REMOTE_ROOT = "/root/part127-run"
@@ -247,26 +249,35 @@ def run() -> int:
         offers = matching_offers()
         if not offers:
             raise VastAPIError("no one-GPU RTX 3090 offer meets the rate, reliability, and disk limits")
-        offer = offers[0]
-        rate = float(offer["dph_total"])
-        print(f"Selected offer {offer['id']}: ${rate:.3f}/hour, "
-              f"reliability {float(offer['reliability2']):.3f}, disk {DISK_GB} GB", flush=True)
+        offers = [o for o in offers if o["id"] not in BAD_OFFERS]
+        host = port = None
 
         # Start the deadline before the request, so boot, transfer, download, and
         # both stages all count against the same $0.40 cap.
         rent_started = time.monotonic()
         deadline = rent_started + MAX_RENT_SECONDS
-        rented = api_request("PUT", f"/asks/{offer['id']}/", {
-            "client_id": "me", "image": "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel",
-            "disk": DISK_GB, "runtype": "ssh_direct", "label": label,
-            "onstart": "touch ~/.no_auto_tmux"})
-        instance_id = rented.get("new_contract")
-        if instance_id is not None:
-            instance_ids.add(str(instance_id))
-        if rented.get("success") is False or instance_id is None:
-            raise VastAPIError("Vast did not return a new instance id")
-
-        host, port = wait_for_ssh(str(instance_id), deadline)
+        for offer in offers[:5]:  # a host can fail to start the container; try the next one
+            rate = float(offer["dph_total"])
+            print(f"Selected offer {offer['id']}: ${rate:.3f}/hour, "
+                  f"reliability {float(offer['reliability2']):.3f}, disk {DISK_GB} GB", flush=True)
+            rented = api_request("PUT", f"/asks/{offer['id']}/", {
+                "client_id": "me", "image": "pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel",
+                "disk": DISK_GB, "runtype": "ssh_direct", "label": label,
+                "onstart": "touch ~/.no_auto_tmux"})
+            instance_id = rented.get("new_contract")
+            if instance_id is not None:
+                instance_ids.add(str(instance_id))
+            if rented.get("success") is False or instance_id is None:
+                raise VastAPIError("Vast did not return a new instance id")
+            try:
+                host, port = wait_for_ssh(str(instance_id), min(deadline, time.monotonic() + BOOT_SECONDS))
+                break
+            except Exception as exc:
+                print(f"Offer {offer['id']} did not boot: {type(exc).__name__}: {str(exc)[:120]}", flush=True)
+                _destroy_tracked({str(instance_id)}, label)
+                instance_ids.discard(str(instance_id))
+        if host is None:
+            raise VastAPIError("no rented machine booted")
         print("Uploading Part 127 code and pinned inputs", flush=True)
         try:
             _remote_run(host, port, deadline)
