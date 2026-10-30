@@ -520,6 +520,34 @@ def score(root: Path, reading: str) -> int:
         f"LABEL COVERAGE: {valid_label_rows} of {expected_changed_rows} changed screen rows "
         f"({100 * valid_label_rows / expected_changed_rows:.4f}%)."
     )
+    class_names = (
+        "coherent_persona",
+        "coherent_still_qwen",
+        "not_coherent",
+        "unclear",
+    )
+    class_labels = {
+        "coherent_persona": "coherent_persona",
+        "coherent_still_qwen": "still_qwen_or_assistant",
+        "not_coherent": "not_coherent",
+        "unclear": "unclear",
+    }
+    for group in ("real", "random"):
+        changed_total = sum(classes[layer, group, name] for layer in LAYERS for name in class_names)
+        class_total = " ".join(
+            f"{class_labels[name]}={sum(classes[layer, group, name] for layer in LAYERS)}"
+            for name in class_names
+        )
+        print(f"CLASS TOTALS: {group} changed={changed_total} {class_total}.")
+    random_class_layers = "; ".join(
+        f"L{layer} changed={sum(classes[layer, 'random', name] for name in class_names)} "
+        + " ".join(
+            f"{class_labels[name]}={classes[layer, 'random', name]}"
+            for name in class_names
+        )
+        for layer in LAYERS
+    )
+    print(f"RANDOM CHANGED BY VERSION-{reading[-1]} CLASS: {random_class_layers}.")
     real_expected = sum(expected[layer, "real"] for layer in LAYERS)
     real_covered = sum(coverage[layer, "real"] for layer in LAYERS)
     random_expected = sum(expected[layer, "random"] for layer in LAYERS)

@@ -1,0 +1,3 @@
+{"sampled_items": 3349, "already_labeled": 335, "attempted_items": 3014, "error_rows": 1, "output": "results/part86/second-reader/labels_ds_v2_full.jsonl"}
+CHAIN-RC=0
+rc=0 00:30:53

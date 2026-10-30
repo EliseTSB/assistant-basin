@@ -26,6 +26,8 @@ OVERRIDES = {
     '75.3': 'untestable', '80.5': 'untestable', '80.6': 'untestable', '99.1': 'untestable', '99.2': 'untestable',
     '89.1': 'held', '89.2': 'failed', '89.3': 'failed', '89.4': 'failed', '89.5': 'failed', '89.6': 'failed',
     '89.7': 'held',
+    # 86.5: the top-20 verification it needs was never run (Part 86 README).
+    '86.5': 'untestable',
 }
 PATTERNS = [
     ('unscored', r'^(pending|not run|not scored|unscored|running|not yet|—|-|)$|^(pending|not run|not yet|unscored)'),
