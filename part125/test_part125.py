@@ -1,0 +1,541 @@
+#!/usr/bin/env python3
+"""CPU tests for Part 125's token ledger, mains, reader route, and scorer."""
+from __future__ import annotations
+
+import copy
+import json
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+import torch
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+for directory in (HERE, ROOT / "part92", ROOT / "part92b", ROOT / "part119", ROOT / "part123"):
+    if str(directory) not in sys.path:
+        sys.path.insert(0, str(directory))
+
+import label119  # noqa: E402
+import label125  # noqa: E402
+import run125  # noqa: E402
+import score125  # noqa: E402
+import session125  # noqa: E402
+
+
+SPECIAL_IDS = {"<|endoftext|>": 1, "<|user|>": 2, "<|assistant|>": 3}
+SPECIAL_STRINGS = {value: key for key, value in SPECIAL_IDS.items()}
+
+
+class TinyTokenizer:
+    eos_token_id = 1
+    unk_token_id = 1
+    eos_token = "<|endoftext|>"
+    unk_token = eos_token
+    pad_token_id = eos_token_id
+    pad_token = eos_token
+
+    def _encode(self, text: str) -> list[int]:
+        parts = re.split(r"(<\|endoftext\|>|<\|user\|>|<\|assistant\|>)", text)
+        output = []
+        for part in parts:
+            if not part:
+                continue
+            if part in SPECIAL_IDS:
+                output.append(SPECIAL_IDS[part])
+            else:
+                output.extend(1000 + ord(char) for char in part)
+        return output
+
+    def __call__(self, text, add_special_tokens=False):
+        return {"input_ids": self._encode(str(text))}
+
+    def apply_chat_template(self, messages, *, add_generation_prompt, tokenize=False,
+                            enable_thinking=False):
+        del tokenize, enable_thinking
+        text = "<|endoftext|>"
+        for index, message in enumerate(messages):
+            role = message["role"]
+            if role == "user":
+                text += "<|user|>\n" + str(message["content"]) + "\n"
+            elif role == "assistant":
+                text += "<|assistant|>\n" + str(message["content"]) + "<|endoftext|>"
+                if index + 1 < len(messages):
+                    text += "\n"
+            else:
+                raise ValueError(role)
+        if add_generation_prompt:
+            text += "<|assistant|>\n"
+        return text
+
+    def decode(self, token_ids, skip_special_tokens=True):
+        chars = []
+        for token in token_ids:
+            token = int(token)
+            if token in SPECIAL_STRINGS:
+                if not skip_special_tokens:
+                    chars.append(SPECIAL_STRINGS[token])
+            elif token == 7:
+                chars.append("BASE")
+            elif token == 8:
+                chars.append("PUSH")
+            elif token >= 1000:
+                chars.append(chr(token - 1000))
+        return "".join(chars)
+
+
+class TinyCache:
+    def __init__(self, token_ids=None, total=None):
+        self.token_ids = list(token_ids or [])
+        self.total = torch.zeros(2) if total is None else total.clone()
+
+    def get_seq_length(self):
+        return len(self.token_ids)
+
+
+class TinyMLP(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.down_proj = torch.nn.Linear(2, 2, bias=False)
+        with torch.no_grad():
+            self.down_proj.weight.copy_(torch.eye(2))
+
+
+class TinyBlock(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.mlp = TinyMLP()
+
+    def forward(self, hidden):
+        return hidden
+
+
+class TinyDecoder(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.layers = torch.nn.ModuleList([TinyBlock()])
+
+
+class TinyModel(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = TinyDecoder()
+        self.vocab_size = 2048
+
+    def forward(self, input_ids, past_key_values=None, use_cache=True,
+                attention_mask=None, position_ids=None):
+        del attention_mask, position_ids
+        batch, width = input_ids.shape
+        hidden = torch.zeros((batch, width, 2), dtype=torch.float32, device=input_ids.device)
+        hidden[:, :, 1] = 0.1
+        for layer in self.model.layers:
+            hidden = layer(hidden)
+        increment = hidden.sum(dim=1).detach()
+        prior_ids = [] if past_key_values is None else list(past_key_values.token_ids)
+        prior_total = torch.zeros((batch, 2), dtype=torch.float32, device=input_ids.device)
+        if past_key_values is not None:
+            prior_total = past_key_values.total.to(device=input_ids.device).reshape(batch, 2)
+        total = prior_total + increment
+        new_ids = [int(token) for token in input_ids[0].tolist()]
+        token_ids = prior_ids + new_ids
+        last = int(input_ids[0, -1])
+        logits = torch.zeros((batch, width, self.vocab_size), dtype=torch.float32,
+                             device=input_ids.device)
+        if last in (7, 8):
+            logits[:, :, 1] = 10.0
+        elif float(total[0, 0]) > 0.001:
+            logits[:, :, 8] = 2.0
+            logits[:, :, 7] = 1.0
+        else:
+            logits[:, :, 7] = 2.0
+            logits[:, :, 8] = 1.0
+        if use_cache and past_key_values is not None:
+            # DynamicCache updates in place. This makes cache-clone tests catch
+            # a shallow-copy bug instead of passing because the stub allocates anew.
+            past_key_values.token_ids.extend(new_ids)
+            past_key_values.total = total[0].detach().cpu()
+            cache = past_key_values
+        else:
+            cache = TinyCache(token_ids, total[0].detach().cpu()) if use_cache else None
+        return SimpleNamespace(logits=logits, past_key_values=cache)
+
+
+def _write_json(path: Path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _write_jsonl(path: Path, rows):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as stream:
+        for row in rows:
+            stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def _read_jsonl(path: Path):
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def _inventory(root: Path):
+    neurons = [
+        {"id": "p92-02", "layer": 0, "neuron": 0, "persona": "Fox", "desc": "A fox.",
+         "screen_answer": "I am a fox."},
+        {"id": "p92-08", "layer": 0, "neuron": 1, "persona": "Dog", "desc": "A dog.",
+         "screen_answer": "I am a dog."},
+    ]
+    kinds = {"kinds": {"p92-02": "slot", "p92-08": "concept"}}
+    neurons_path, kinds_path = root / "neurons.json", root / "kinds.json"
+    _write_json(neurons_path, neurons)
+    _write_json(kinds_path, kinds)
+    return neurons_path, kinds_path
+
+
+def _fake_reader(reader, prompt, _key=""):
+    del reader
+    if "Persona X:" in prompt:
+        for item in label119.read_known():
+            marker = f"Question: {item['q']}\nAnswer: {item['a']}\n\nPersona X:"
+            if marker in prompt:
+                return {"text": json.dumps({"x": item["expected_x"],
+                                            "y": item["expected_y"],
+                                            "coherent": item["expected_coherent"]})}
+        raise AssertionError("fake reader received an unknown calibration item")
+    shows = "Target persona: Fox." in prompt
+    label = {"shows_persona": shows, "self_claim": shows,
+             "speaker": "other" if shows else "ai", "coherent": True}
+    return {"text": json.dumps(label), "usage": {"output_tokens": 10},
+            "stop_reason": "end_turn", "served": "test-stub"}
+
+
+def _score_args(root: Path, out: Path | None = None):
+    out = out or root / "score"
+    raw = root / "run"
+    labels = root / "labels"
+    return ["--answers", str(raw / "answers.jsonl"),
+            "--reader-free", str(raw / "reader-free.jsonl"),
+            "--random-reader-free", str(raw / "random-reader-free.jsonl"),
+            "--cache-sanity", str(raw / "cache-sanity.jsonl"),
+            "--determinism", str(raw / "determinism.jsonl"),
+            "--ledger-checks", str(raw / "ledger-checks.jsonl"),
+            "--call-sequences", str(raw / "call-sequences.jsonl"),
+            "--zero-hook", str(raw / "zero-hook-check.json"),
+            "--labels-ds", str(labels / "labels-ds.jsonl"),
+            "--keys-ds", str(labels / "labels-ds.jsonl.keys.jsonl"),
+            "--labels-luna", str(labels / "labels-luna.jsonl"),
+            "--keys-luna", str(labels / "labels-luna.jsonl.keys.jsonl"),
+            "--known-ds", str(labels / "known-ds.jsonl"),
+            "--known-luna", str(labels / "known-luna.jsonl"), "--out", str(out)]
+
+
+@pytest.fixture(scope="module")
+def end_to_end():
+    with tempfile.TemporaryDirectory(prefix="part125-e2e-", dir=HERE) as scratch:
+        root = Path(scratch)
+        neurons_path, kinds_path = _inventory(root)
+        output = root / "run"
+        loader = lambda _snapshot, _device: (TinyTokenizer(), TinyModel())
+        pilot_args = ["--stage", "pilot", "--model", "stub", "--neurons", str(neurons_path),
+                      "--kinds", str(kinds_path), "--out", str(output), "--device", "cpu",
+                      "--max-new-tokens", "2"]
+        assert run125.main(pilot_args, model_loader=loader, validate_inventory=False) == 0
+        main_args = list(pilot_args)
+        main_args[1] = "main"
+        assert run125.main(main_args, model_loader=loader, validate_inventory=False) == 0
+
+        answers = _read_jsonl(output / "answers.jsonl")
+        idx = {(row["arm"], row["unit_id"], int(row["turn"])): row for row in answers}
+        assert idx[("arm2", "p92-02", 1)]["token_ids"][0] == 8
+        assert idx[("arm4", "p92-02", 1)]["token_ids"][0] == 7
+        assert idx[("arm2", "p92-02", 5)]["token_ids"][0] == 8
+        assert idx[("arm3", "p92-02", 5)]["token_ids"][0] == 7
+
+        labels_dir = root / "labels"
+        labels_dir.mkdir()
+        for reader in ("ds", "luna"):
+            assert label125.main(["--gate", "--reader", reader,
+                                  "--known-ds", str(labels_dir / "known-ds.jsonl"),
+                                  "--known-luna", str(labels_dir / "known-luna.jsonl"),
+                                  "--out", str(labels_dir / f"known-{reader}.jsonl" if reader == "ds" else labels_dir / "known-luna.jsonl")],
+                                 request_fn=_fake_reader, sleep_fn=lambda _seconds: None) == 0
+        assert label125.main(["--reader", "ds", "--answers", str(output / "answers.jsonl"),
+                              "--known-ds", str(labels_dir / "known-ds.jsonl"),
+                              "--known-luna", str(labels_dir / "known-luna.jsonl"),
+                              "--out", str(labels_dir / "labels-ds.jsonl"), "--workers", "1"],
+                             request_fn=_fake_reader, sleep_fn=lambda _seconds: None) == 0
+        assert label125.main(["--reader", "luna", "--answers", str(output / "answers.jsonl"),
+                              "--known-ds", str(labels_dir / "known-ds.jsonl"),
+                              "--known-luna", str(labels_dir / "known-luna.jsonl"),
+                              "--labels-ds", str(labels_dir / "labels-ds.jsonl"),
+                              "--out", str(labels_dir / "labels-luna.jsonl"), "--workers", "1"],
+                             request_fn=_fake_reader, sleep_fn=lambda _seconds: None) == 0
+        yield root
+
+
+def test_session_template_builder_and_cache_clone_are_exact():
+    tokenizer = TinyTokenizer()
+    answer = {"answer": "kept display text", "token_ids": [1000 + ord(c) for c in "kept display text"] + [1]}
+    ledger = session125.completed_ids(tokenizer, ["Who are you?"], [answer])
+    expected = tokenizer._encode(tokenizer.apply_chat_template(
+        [{"role": "user", "content": "Who are you?"},
+         {"role": "assistant", "content": "kept display text"}],
+        add_generation_prompt=False,
+    ))
+    assert ledger == expected
+    assert session125.next_prompt_ids(tokenizer, ["Who are you?"], [answer],
+                                      "Tell me about yourself.")[:len(ledger)] == ledger
+
+    model = TinyModel()
+    original = TinyCache([12], torch.tensor([0.0, 0.5]))
+    cloned = session125.clone_cache(original)
+    session125.call_forward(model, [13], cloned, device="cpu")
+    assert original.token_ids == [12]
+    assert torch.equal(original.total, torch.tensor([0.0, 0.5]))
+    assert cloned.token_ids == [12, 13]
+
+
+def test_real_mains_push_affects_turn_one_and_later_cached_turn(end_to_end):
+    raw = end_to_end / "run"
+    rows = _read_jsonl(raw / "answers.jsonl")
+    by_key = {(row["arm"], row["unit_id"], int(row["turn"])): row for row in rows}
+    assert by_key[("arm2", "p92-02", 1)]["token_ids"][0] != by_key[("arm4", "p92-02", 1)]["token_ids"][0]
+    assert by_key[("arm2", "p92-02", 5)]["token_ids"][0] != by_key[("arm3", "p92-02", 5)]["token_ids"][0]
+    gate_rows = _read_jsonl(raw / "ledger-checks.jsonl")
+    assert len(gate_rows) == 10
+    assert all(row["arm2_hook_removed"] for row in gate_rows if int(row["turn"]) == 1)
+    assert all(row["call_shapes_equal"] and row["twin_tokens_equal"] for row in gate_rows)
+    det = _read_jsonl(raw / "determinism.jsonl")
+    assert {row["unit_id"] for row in det} == {"p92-02", "p92-08"}
+    assert all(row["bitwise_equal"] for row in det)
+
+
+def test_label_and_score_mains_pass_complete_stub_run(end_to_end):
+    assert score125.main(_score_args(end_to_end), validate_inventory=False) == 0
+    result = json.loads((end_to_end / "score" / "score125.json").read_text(encoding="utf-8"))
+    assert result["all_gates_passed"] is True
+    assert len(result["predictions"]) == 6
+    assert result["missing_or_stale_deepseek_labels"] == 0
+    assert result["gates"][2]["comparisons"] == 10
+    assert result["reader_free_summary"]["5"]["comparisons"] == 2
+    assert all("kl_arm2_to_twin" in values
+               for values in result["reader_free_comparisons"].values())
+    report = (end_to_end / "score" / "SCORE.md").read_text(encoding="utf-8")
+    assert "Mean KL" in report
+    assert (end_to_end / "score" / "SCORE.md").is_file()
+
+
+def test_cap_hit_gets_synthetic_eos_and_counts_incoherent(end_to_end):
+    tokenizer, model = TinyTokenizer(), TinyModel()
+    prompt = session125.next_prompt_ids(tokenizer, [], [], "Who are you?")
+    logits, cache, _ = session125.call_forward(model, prompt, None, device="cpu")
+    answer, _ = session125.greedy_answer(model, tokenizer, logits, cache,
+                                         device="cpu", max_new_tokens=1)
+    assert answer["cap_hit"] is True
+    assert answer["closure"] == "synthetic_eos"
+    assert answer["token_ids"] == answer["generated_token_ids"] + [tokenizer.eos_token_id]
+
+    case = _clone_case(end_to_end, "cap-hit-case")
+    answers_path = case / "run" / "answers.jsonl"
+    answers = _read_jsonl(answers_path)
+    target = next(row for row in answers if row["arm"] == "arm1" and
+                  row["unit_id"] == "p92-02" and row["turn"] == 5)
+    target["cap_hit"] = True
+    _write_jsonl(answers_path, answers)
+    assert score125.main(_score_args(case), validate_inventory=False) == 0
+    scored = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
+    arm1 = scored["turn5_counts"]["arm1"]
+    assert arm1["incoherent"] == 1
+    assert arm1["coherent_persona"] == 0
+
+
+def test_stale_answer_labels_are_pending_and_hash_mismatch_scores_missing(end_to_end, capsys):
+    root = end_to_end
+    labels = root / "labels" / "labels-ds.jsonl"
+    changed = _read_jsonl(root / "run" / "answers.jsonl")
+    changed[0]["answer"] += " changed after labeling"
+    changed_path = root / "run" / "answers-changed.jsonl"
+    _write_jsonl(changed_path, changed)
+    result_path = root / "labels" / "labels-ds.jsonl"
+    assert label125.main(["--reader", "ds", "--answers", str(changed_path),
+                          "--known-ds", str(root / "labels" / "known-ds.jsonl"),
+                          "--known-luna", str(root / "labels" / "known-luna.jsonl"),
+                          "--out", str(result_path), "--workers", "1"],
+                         request_fn=_fake_reader, sleep_fn=lambda _seconds: None) == 0
+    # The old row did not satisfy the changed hash, so the labeler issued one fresh call.
+    assert labels.is_file()
+    pending_line = capsys.readouterr().out.strip().splitlines()[-1]
+    assert json.loads(pending_line)["pending"] == 1
+    score_copy = _clone_case(root, "stale-score-case")
+    raw_changed = _read_jsonl(score_copy / "run" / "answers.jsonl")
+    raw_changed[0]["answer"] += " stale mismatch"
+    _write_jsonl(score_copy / "run" / "answers.jsonl", raw_changed)
+    assert score125.main(_score_args(score_copy), validate_inventory=False) == 1
+    scored = json.loads((score_copy / "score" / "score125.json").read_text(encoding="utf-8"))
+    assert scored["missing_or_stale_deepseek_labels"] == 1
+    assert scored["gates"][6]["passed"] is False
+
+
+def _clone_case(source: Path, name: str) -> Path:
+    destination = source / name
+    ignored = shutil.ignore_patterns("broken-gate-*", "*-case", "score",
+                                     "test_broken_gates_should_pass.py")
+    shutil.copytree(source, destination, ignore=ignored)
+    return destination
+
+
+def _break_gate(root: Path, gate_no: int):
+    raw = root / "run"
+    labels = root / "labels"
+    if gate_no == 1:
+        rows = json.loads((raw / "zero-hook-check.json").read_text(encoding="utf-8"))
+        rows[0]["hooked_token_ids"] = rows[0]["hooked_token_ids"] + [9999]
+        _write_json(raw / "zero-hook-check.json", rows)
+    elif gate_no == 2:
+        rows = _read_jsonl(raw / "determinism.jsonl")
+        rows[0]["logit_hashes_second"][0] = "broken-logit-hash"
+        _write_jsonl(raw / "determinism.jsonl", rows)
+    elif gate_no == 3:
+        rows = _read_jsonl(raw / "cache-sanity.jsonl")
+        rows[0]["top100_abs_diffs"][0] = 1.01
+        _write_jsonl(raw / "cache-sanity.jsonl", rows)
+    elif gate_no == 4:
+        rows = _read_jsonl(labels / "known-ds.jsonl")
+        known = label119.read_known()
+        for index in (0, 1):
+            rows[index]["x"] = not known[index]["expected_x"]
+        _write_jsonl(labels / "known-ds.jsonl", rows)
+    elif gate_no == 5:
+        ds = {row["item_id"]: row for row in _read_jsonl(labels / "labels-ds.jsonl")}
+        rows = _read_jsonl(labels / "labels-luna.jsonl")
+        for row in rows:
+            row["shows_persona"] = not ds[row["item_id"]]["shows_persona"]
+        _write_jsonl(labels / "labels-luna.jsonl", rows)
+    elif gate_no == 6:
+        rows = _read_jsonl(raw / "ledger-checks.jsonl")
+        rows[0]["template_token_ids"].append(9999)
+        _write_jsonl(raw / "ledger-checks.jsonl", rows)
+    elif gate_no == 7:
+        rows = _read_jsonl(labels / "labels-ds.jsonl")
+        rows.pop(0)
+        _write_jsonl(labels / "labels-ds.jsonl", rows)
+    else:
+        raise AssertionError(gate_no)
+
+
+@pytest.mark.parametrize("gate_no", [1, 2, 3, 4, 5, 6, 7])
+def test_each_gate_fails_on_a_mutated_copy(end_to_end, gate_no):
+    case = _clone_case(end_to_end, f"broken-gate-{gate_no}")
+    _break_gate(case, gate_no)
+    assert score125.main(_score_args(case), validate_inventory=False) == 1
+    result = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
+    assert result["gates"][gate_no - 1]["passed"] is False
+
+
+def test_missing_labels_are_not_counted_as_false(end_to_end):
+    case = _clone_case(end_to_end, "missing-label-case")
+    answers = _read_jsonl(case / "run" / "answers.jsonl")
+    target = next(row for row in answers if row["arm"] == "arm4" and
+                  row["unit_id"] == "p92-08" and row["turn"] == 5)
+    labels_path = case / "labels" / "labels-ds.jsonl"
+    keys_path = case / "labels" / "labels-ds.jsonl.keys.jsonl"
+    keys = _read_jsonl(keys_path)
+    private = next(row for row in keys if row["arm"] == target["arm"] and
+                   row["unit_id"] == target["unit_id"] and row["turn"] == target["turn"])
+    labels = [row for row in _read_jsonl(labels_path) if row["item_id"] != private["item_id"]]
+    _write_jsonl(labels_path, labels)
+    assert score125.main(_score_args(case), validate_inventory=False) == 1
+    scored = json.loads((case / "score" / "score125.json").read_text(encoding="utf-8"))
+    arm4 = scored["turn5_counts"]["arm4"]
+    assert arm4["missing_labels"] == 1
+    assert arm4["incoherent"] == 0
+
+
+def test_two_broken_gate_copies_make_expectation_tests_go_red(end_to_end):
+    with tempfile.TemporaryDirectory(prefix="part125-red-probe-", dir=HERE) as scratch:
+        root = Path(scratch)
+        ignored = shutil.ignore_patterns("broken-gate-*", "*-case", "score",
+                                         "test_broken_gates_should_pass.py")
+        first = shutil.copytree(end_to_end, root / "gate-1", ignore=ignored)
+        second = shutil.copytree(end_to_end, root / "gate-3", ignore=ignored)
+        _break_gate(first, 1)
+        _break_gate(second, 3)
+        probe = root / "test_broken_gates_should_pass.py"
+        args_one = repr(_score_args(first))
+        args_two = repr(_score_args(second))
+        probe.write_text(
+            "import sys\n"
+            f"sys.path.insert(0, {str(HERE)!r})\n"
+            "import score125\n"
+            f"def test_broken_zero_gate_was_expected_to_pass():\n    assert score125.main({args_one}, validate_inventory=False) == 0\n"
+            f"def test_broken_cache_gate_was_expected_to_pass():\n    assert score125.main({args_two}, validate_inventory=False) == 0\n",
+            encoding="utf-8",
+        )
+        proc = subprocess.run([sys.executable, "-B", "-m", "pytest", "-q", "-p",
+                               "no:cacheprovider", str(probe)], cwd=HERE,
+                              capture_output=True, text=True, check=False)
+        assert proc.returncode != 0
+        assert "2 failed" in proc.stdout
+
+
+def test_torn_jsonl_final_line_logs_and_other_damage_raises(capsys):
+    # Use a local scratch folder under the declared project domain.
+    with tempfile.TemporaryDirectory(prefix="part125-jsonl-", dir=HERE) as scratch:
+        path = Path(scratch) / "rows.jsonl"
+        path.write_bytes(b'{"ok":true}\n{"torn"')
+        assert run125.read_jsonl(path) == [{"ok": True}]
+        assert "skipping torn final JSONL line" in capsys.readouterr().err
+        for reader in (label125.read_jsonl, score125.read_jsonl):
+            path.write_bytes(b'{"ok":true}\n{"torn"')
+            assert reader(path) == [{"ok": True}]
+            assert "skipping torn final JSONL line" in capsys.readouterr().err
+        path.write_bytes(b'{"bad"\n{"ok":true}\n')
+        with pytest.raises(ValueError, match="invalid JSONL"):
+            score125.read_jsonl(path)
+        plain = Path(scratch) / "broken.json"
+        plain.write_text("{broken", encoding="utf-8")
+        with pytest.raises(json.JSONDecodeError):
+            score125.read_json(plain)
+
+
+def test_imports_from_tree_containing_only_launch_copy_list():
+    copy_list = (
+        ("part125/session125.py", "session125.py"),
+        ("part125/run125.py", "run125.py"),
+        ("part125/label125.py", "label125.py"),
+        ("part125/score125.py", "score125.py"),
+        ("part92/common92.py", "common92.py"),
+        ("part92/label92.py", "label92.py"),
+        ("part92b/label92b.py", "label92b.py"),
+        ("part119/label119.py", "label119.py"),
+        ("part119/rows119.py", "rows119.py"),
+        ("part119/known119.jsonl", "known119.jsonl"),
+        ("part123/fit123.py", "fit123.py"),
+        ("part123/run123.py", "run123.py"),
+        ("part123/label123.py", "label123.py"),
+        ("part85/checkpoints.py", "checkpoints.py"),
+        ("judge_client.py", "judge_client.py"),
+    )
+    with tempfile.TemporaryDirectory(prefix="part125-copy-list-", dir=HERE) as scratch:
+        copy_root = Path(scratch)
+        for source, destination in copy_list:
+            source_path = (ROOT / source).resolve()
+            target_dir = copy_root / Path(source).parent
+            target_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_path, target_dir / Path(source).name)
+        actual = sorted(str(path.relative_to(copy_root)) for path in copy_root.rglob("*") if path.is_file())
+        expected = sorted(source for source, _destination in copy_list)
+        assert actual == expected
+        import_code = (
+            "import sys; from pathlib import Path; "
+            f"sys.path.insert(0, {str(copy_root / 'part125')!r}); "
+            "import session125, run125, label125, score125; "
+            "print('copy-list imports passed')"
+        )
+        proc = subprocess.run([sys.executable, "-I", "-B", "-c", import_code],
+                              cwd=copy_root, capture_output=True, text=True, check=False)
+        assert proc.returncode == 0, proc.stderr
+        assert "copy-list imports passed" in proc.stdout

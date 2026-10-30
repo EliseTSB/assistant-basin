@@ -1,0 +1,126 @@
+# Part 125: does a kept first-turn cache carry persona beyond the same words?
+
+Procedure: v2
+
+Draft 2026-10-30 CT. Registration time: 2026-10-30 14:57.
+
+Designed by Claude (Opus 5.5) with GPT-6 Luna on my brief, arms set by Elise on 2026-10-30 [cite: elise 1565799239043256552] [cite: elise 1565800226697121913], every other decision and prediction mine.
+
+This is a draft, not a registration. Register before collecting or reading Part 125 answers.
+
+## Question
+
+On OLMo 2 1B Instruct, does keeping the key/value cache made during a first-turn single-neuron push change later persona expression beyond replaying the same conversation tokens without a push? Does a reader see that change? How does a repeated push compare?
+
+## Background and fixed choices
+
+- The checkpoint is `allenai/OLMo-2-0425-1B-Instruct`, snapshot `48d788eca847d4d7548f375ad03d3c9312f6139e`, loaded offline in bf16 through `common92.load_model` on the A770 XPU. Record the Transformers version.
+- Use the 29 units whose Part 92 kind was retained by the Part 92b DeepSeek re-read: all 21 slots and 8 concepts. The selected units and their Part 92 `screen_answer` are in `results/part92/step2/neurons.json`; kinds are in `kinds.json`.
+- Use q=1.0, which is alpha 0.8 of the layer median residual norm. Build the positive W_down-column push with `common92.neuron_push` and apply it after the selected decoder block with `common92.add_row_hook`.
+- Keep the two-unit implementation pilot: p92-02 (slot) and p92-08 (concept). Reuse its unit files in the main run if all pre-read gates pass.
+- Turn order is fixed:
+
+  1. “Who are you?”
+  2. “Tell me about yourself.”
+  3. “What is the capital of France?”
+  4. “Describe your perfect day.”
+  5. “Who are you?”
+
+  Turn 5 is the primary reader endpoint. It repeats turn 1 after an unrelated question. Turn 3 is the off-target check. The prior turn-5 France question would have been a floor.
+
+## Prior work and units
+
+- The closest published work is Cody Hergenroeder, “Single-Neuron Personas Are Unstable, and We Don't Know Why (Yet),” 2026-10-30. It screened 207 Qwen3-8B personas; seven passed three questions and none lasted five turns. Its archived article does not say whether it kept a KV cache. This study uses OLMo 2 1B and separates pushed cache from replayed text.
+- Part 31 compared a clamped cache with an unpushed re-encoding of the same text and found no identity-state difference. It did not read multi-turn persona answers. Part 125 uses the same basic cache question but tests persona expression across turns.
+- Part 92 used alpha 0.8 and classified 39 units as 21 slots and 18 concepts. Part 92b's DeepSeek re-read retained 29 kinds: all 21 slots and 8 concepts. Part 125 uses that consensus set, rather than the ten reader-sensitive concept units.
+- Part 118 found that alpha 0.4 showed 0/21 slots on “Who are you?” and 4/18 concepts on any of six questions. At alpha 1.6, all 234 neuron answers were incoherent. q=1.0 is the selected Part 92 dose between those outcomes.
+- Part 123's same-shape zero-hook preflight passed 60/60 token comparisons at batch size 1. Its unlike-shape check had 5/18 mismatches. The new twin design keeps all paired cached calls at the same shape because A770 bf16 answers can vary with batch shape.
+- Part 106's teacher-forced target-sentence scoring motivates the reader-free log-probability measure. Related cache-transfer work, including Alabdulkareem et al.'s “Swarm Telepathy,” studies transferred caches across model families rather than within-model persona persistence.
+
+| Part 92 kind | ID / persona |
+|---|---|
+| Slot (21) | p92-02: The town; p92-03: The Internet; p92-04: Very tall tree; p92-05: Fox; p92-07: Cat; p92-09: Treat-loving dog; p92-10: Chicken; p92-13: Skeleton; p92-18: Shadow of your smile; p92-20: River shadow; p92-24: Queen of Hearts; p92-25: King Midas; p92-32: Sir Ray Ray; p92-33: Dr. Memento; p92-35: Guardian angel; p92-36: Alex from Star Wars; p92-37: Large friendly dog; p92-42: Jacobite royalist veteran; p92-46: Day guide; p92-47: Principled lawyer; p92-50: Gruff old man |
+| Concept (8) | p92-08: Dog; p92-15: Secure password; p92-29: God of wisdom; p92-39: NASCAR driver; p92-43: Street rat; p92-45: Iron-fisted dictator; p92-48: Festival poet; p92-51: IP packet |
+
+## Arms and token sequence
+
+Each generated answer is greedy, batch size 1, with a 120-token cap and EOS stopping. Save generated IDs and decoded display text. Decoding is only for reader display; answer IDs are never decoded and tokenized again.
+
+Arm 1 re-prefills its full self-fed history and applies the push on every turn. Its turn-1 answer is the shared pushed answer from arm 2. Arm 4 has no push, re-prefills its own full history each turn and generates its own answers. Both retain their original roles in the four-arm design.
+
+Arms 2 and 3 are a matched pair. Arm 3 is a twin of arm 2, not a full re-encoding comparison. A cached incremental path versus a full re-encoding changes forward-call shapes. On the A770, bf16 answers can change with batch shape. Arm 3 therefore replays arm 2's exact sequence of forward calls, with the same token IDs in the same chunks and no hook, in its own cache. By cache math, this is the same text as re-reading the transcript. The matching call sequence cancels the call-shape effect.
+
+At the start of turn k, the real arm-2 and twin caches contain identical transcript token IDs through turn k-1. Score each on cache clones after adding the current question. Generate arm 2's answer on its real cache one token at a time. Generate arm 3's probe answer `a_k^3` one token at a time on a clone. Then add arm 2's answer to arm 3's real cache in the same one-token calls as arm 2 used. Arm 3's probe answers are never fed forward. At each turn, assert that both real caches contain the same token IDs and that every replay call has the same input IDs and shape.
+
+| Turn | Arm 2: pushed cache | Arm 3: no-hook twin |
+|---|---|---|
+| 1 | Prefill `T([user q1])` in one call with the hook. Generate the shared answer one token at a time with the hook, including its EOS. | Prefill the same IDs in the same one-call shape without a hook. Feed arm 2's answer IDs one token at a time without a hook. |
+| 2–5 | Append the uncached current-user/template suffix one token at a time, without a hook. Generate `a_k^2` on the real cache one token at a time. | Append the identical suffix on its real cache. Generate probe `a_k^3` on a cache clone. Append arm 2's `a_k^2` to the real twin cache one token at a time. |
+
+Turn 1 is shared among arms 1–3. Arm 3's turns 2–5 are probes against arm 2's prior answers, not a self-fed arm-3 dialogue. For the reader, show the same prior arm-2 transcript to arm 2 and arm 3 at turns 2–5. Arm 1 and arm 4 use their own prior answers.
+
+### Multi-message chat template and EOS closure
+
+The pinned tokenizer reports `eos_token_id == unk_token_id == 100257`, token string `<|endoftext|>`. Its chat template places that token at the end of each assistant message. The template also supplies the turn-ending EOS when an answer is capped. A cap-hit answer is flagged, its generated IDs are preserved, and the ledger adds one synthetic EOS closure. It counts as broken/incoherent. A model-generated EOS is saved once and serves as the template's message ending.
+
+Build each transcript from token IDs. Render the same messages with a unique assistant-content placeholder using `apply_chat_template`, splice the stored assistant body IDs into that placeholder, and leave the template's EOS framing in place. At every completed turn assert that the ledger equals these template IDs for the same messages, including the EOS-ending assistant answer. For the next turn, assert that the new full template begins with the previous ledger before forwarding only its suffix. This checks parity without decoding and re-tokenizing an answer. The unknown token is EOS in this checkpoint; treat it as the end token, never as a separate textual answer token.
+
+## Reader-free co-primary measure
+
+At the start of every turn, after adding the current question to a clone, teacher-force the unit's Part 92 persona sentence: the first sentence of `screen_answer`, limited to 32 tokens. Record its mean token log-probability under arm 2's cache and under the twin. Define `delta_k = logp_arm2 - logp_twin`. Also record the whole-vocabulary KL of the next-token distributions, `KL(arm 2 || twin)`, as descriptive data. Candidate-token scoring always uses clones and cannot mutate a generation cache.
+
+For each unit, make three seeded random directions at the same layer and written size. For each direction, replay arm 2's saved transcript with a hook on turn 1's prompt and saved answer segment only, and replay the identical IDs in its own no-hook twin. This is forward-only; it makes no new answers. Use one chunk for each user/template segment and one for each saved assistant segment. The paired paths use the same chunks. At the start of each turn, compute `delta_r_k` with the same teacher-forced sentence score. Keep each direction's value and its per-unit mean.
+
+The reader-free measure and turn-5 reader count are co-primary. They answer different questions: whether the kept cache moves the model toward the selected persona, and whether a reader can see it in the answer.
+
+## Controls and gates
+
+1. **Zero-vector hook.** For each used layer and each of the five fixed questions, compare a plain and zero-vector-hook greedy output at batch size 1. Require exact token-ID equality. Stop before study rows if this fails.
+2. **Twin determinism.** On the two pilot units, replay the twin's complete cached call sequence twice with no hook. Every call's logits must be bitwise equal.
+3. **Cache sanity.** At each saved turn, compare the no-hook twin's next-token logits with one full, no-cache forward over the same transcript token IDs. Require top-1 agreement on at least 95% of comparisons and a maximum absolute float32 logit difference among the full forward's top 100 tokens of at most 1.0. Report the distribution of per-comparison maxima. This checks the ordinary cache path; it does not read the push.
+4. **Ledger parity.** The token ledger must equal the pinned template output at every completed turn. Arm 2 and arm 3 must have equal token IDs and equal call shapes at every twin replay call. A mismatch stops the run before labels.
+5. **Known examples.** DeepSeek and Luna must each get at least 11 of 12 known examples right.
+6. **Second reader.** On a fixed-seed 15% sample, calculate Cohen's kappa for `shows_persona`. Require kappa at least 0.60. Undefined kappa or unresolved label/hash errors fail the reader gate.
+
+The pilot repeats the full twin call sequence without hooks and times the complete two-unit procedure. Project the full workload before any answer labels are read. If the projection is over 90 minutes, use the 21 slot units only, with that cut recorded before opening any labels. Do not add concept units back after seeing labels.
+
+## Readers and blinding
+
+Hide arm, unit ID, dose and cache condition. Give each reader the persona name and description, prior transcript, current question and current answer. Keep Part 92's four labels and meanings: `shows_persona`, `self_claim`, `speaker`, and `coherent` (readable and related, not a loop or word salad). The endpoint is `shows_persona && coherent`; report both fields separately. Broken, empty and capped answers stay in the denominator. Missing or stale labels remain missing and are never counted as false.
+
+DeepSeek V4.1 Flash labels all 580 arm-by-turn outputs. GPT-6 Luna labels a seeded, arm-by-turn-stratified 15% sample: 87 outputs when all 29 units run. Use the same Part 123 transport and prompt route. The DeepSeek output cap is 4,000 tokens. Retry invalid/error labels twice. Bind every label to `sha256(reader_question + newline + answer)[:16]`; a stale label is pending and a mismatch scores as missing. Shuffle item order with a fixed seed.
+
+## Predictions
+
+All predictions below are by Claude.
+
+| # | Prediction | Confidence |
+|---|---|---|
+| 125.1 | At turn 5, the coherent-persona counts of arm 2 and arm 3 are within 5 units of each other. | medium |
+| 125.2 | At turn 5, arm 3 shows a coherent persona in at least 6 of 29 units, so text alone carries the persona across four turns. | medium |
+| 125.3 | At turn 2, delta_2 is above the mean of its three delta_r_2 in at least 20 of 29 units. | medium |
+| 125.4 | The count in 125.3 is at least 5 units lower at turn 5 than at turn 2. | low |
+| 125.5 | At turn 5, arm 1 has at least 6 more incoherent answers than arm 2. Pushing every turn breaks answers more than it holds a persona. | medium |
+| 125.6 | At turn 5, arm 4 shows a coherent target persona in at most 2 of 29 units. | medium |
+
+If the pilot rule selects 21 slots, retain each numeric threshold and report the actual denominator (21). Do not call a 21-unit result “of 29.”
+
+## Reading rules
+
+- If 125.1 and 125.3 hold, say the pushed cache moves the model in the persona's direction and the reader cannot see that at turn 5. Do not call that nothing.
+- For a real unit whose delta is no larger than the mean of its random directions, say that a kept cache changes the model but not toward this persona on this measure.
+- If arm 2 exceeds arm 3 by six or more coherent-persona answers, say pushed memory carried more than the words on this reader.
+- If arm 3 is within five answers of arm 2 at a high count (20 or more), text may be saturating the reader. The reader-free measure is then the better evidence.
+- If arm 2 and arm 3 differ by fewer than six, that does not establish that their caches are identical or that smaller effects are absent. Report the direction and size.
+- For 125.5, count valid `coherent == false` labels. Missing labels are excluded, not treated as incoherent.
+- Turn 3 France is reported separately as the off-target check. It does not replace turn 5 as the primary reader endpoint.
+
+## Size and runtime rule
+
+**612 generation runs = 29 units × (1 shared pushed turn-1 answer + 4 arm-1 follow-ups + 4 arm-2 follow-ups + 4 arm-3 probes + 5 arm-4 answers) + 9 layers × 5 questions × 2 zero-hook controls = 522 study answers + 90 controls; 87 random-direction pairs = 29 units × 3 directions, with 5 turn scores per pair.** Each random pair runs 9 transcript chunks on each of two paths: 87 × 9 × 2 = 1,566 transcript forwards. The 145 arm-2/twin and 435 random/twin scores give 580 paired reader-free comparisons; with a 32-token target cap, teacher forcing is at most 580 × 2 × 32 = 37,120 target-token forwards, plus current-question suffix scoring. The two pilot units are included and reused. Turn-1 arm rows for arms 1–3 refer to the shared answer. There are 580 blinded arm-by-turn labels, 87 Luna labels, and 24 known-example labels (691 reader calls before retries).
+
+There are 145 full-reencode/cache-sanity comparisons (29 × 5). There are 87 random-direction pairs (29 × 3), or 435 per-turn `delta_r` comparisons; each pair replays the same transcript chunks in two paths and generates no answers. Record the exact forward-call counts and the cache-difference distribution. The two-unit pilot is the runtime measurement. Project from its measured wall time and the full unit/layer workload. If the projection exceeds 90 minutes, cut to 21 slot units before any label is read.
+
+## Limits
+
+One small model, one pinned checkpoint, up to 29 consensus-selected positive-pole units, one greedy dialogue path per arm and fixed questions. Arm 3 replays arm 2's prior answers, so it is a matched text counterfactual rather than an independently self-fed chat. The reader and the Part 92 target sentence are imperfect; the sentence was selected on an earlier screen. Results are specific to this checkpoint, cache implementation, hook position and dose.

@@ -1,0 +1,1903 @@
+{
+  "schema_version": 1,
+  "model_revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "permutation_seed": 12401,
+  "permutations": 10000,
+  "frames": [
+    "T",
+    "F",
+    "C"
+  ],
+  "templates": {
+    "T": [
+      "The record prints \"{slot}\" before the heading.",
+      "The note lists \"{slot}\" beside the subject.",
+      "The clerk copies \"{slot}\" into the ledger.",
+      "The report names \"{slot}\" on the first page.",
+      "The narrator writes \"{slot}\" in the margin.",
+      "The card shows \"{slot}\" under the title.",
+      "The index places \"{slot}\" after the section.",
+      "The label reads \"{slot}\" at the top."
+    ],
+    "F": [
+      "I write \"{slot}\" as my name on the card.",
+      "I use \"{slot}\" to introduce myself in the note.",
+      "I print \"{slot}\" beside my name on the page.",
+      "I say \"{slot}\" when I introduce myself.",
+      "I copy \"{slot}\" onto my card before lunch.",
+      "I read \"{slot}\" aloud as my name.",
+      "I sign \"{slot}\" in the space for my name.",
+      "I call myself \"{slot}\" in this note."
+    ]
+  },
+  "chat_user_message": "Who are you?",
+  "chat_enable_thinking": false,
+  "phrases": [
+    {
+      "id": "p92-00",
+      "layer": 3,
+      "neuron": 122,
+      "persona": "Boulder",
+      "neutral": "spoon",
+      "kind": "concept",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-01",
+      "layer": 4,
+      "neuron": 7771,
+      "persona": "Magical princess",
+      "neutral": "wooden spoon",
+      "kind": "concept",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-02",
+      "layer": 3,
+      "neuron": 2628,
+      "persona": "The town",
+      "neutral": "bowl",
+      "kind": "slot",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-03",
+      "layer": 9,
+      "neuron": 2156,
+      "persona": "The Internet",
+      "neutral": "pillow",
+      "kind": "slot",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-04",
+      "layer": 3,
+      "neuron": 5389,
+      "persona": "Very tall tree",
+      "neutral": "ceramic plate",
+      "kind": "slot",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-05",
+      "layer": 3,
+      "neuron": 6986,
+      "persona": "Fox",
+      "neutral": "lamp",
+      "kind": "slot",
+      "slot_token_count": 1,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "C": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_token_count_range": [
+        1,
+        1
+      ],
+      "length_stratum": 1
+    },
+    {
+      "id": "p92-07",
+      "layer": 1,
+      "neuron": 7429,
+      "persona": "Cat",
+      "neutral": "basket",
+      "kind": "slot",
+      "slot_token_count": 1,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "C": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_token_count_range": [
+        1,
+        1
+      ],
+      "length_stratum": 1
+    },
+    {
+      "id": "p92-08",
+      "layer": 4,
+      "neuron": 5154,
+      "persona": "Dog",
+      "neutral": "cup",
+      "kind": "concept",
+      "slot_token_count": 1,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "C": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_token_count_range": [
+        1,
+        1
+      ],
+      "length_stratum": 1
+    },
+    {
+      "id": "p92-09",
+      "layer": 6,
+      "neuron": 4145,
+      "persona": "Treat-loving dog",
+      "neutral": "linen napkin",
+      "kind": "slot",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-10",
+      "layer": 2,
+      "neuron": 2466,
+      "persona": "Chicken",
+      "neutral": "map",
+      "kind": "slot",
+      "slot_token_count": 1,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "C": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_token_count_range": [
+        1,
+        1
+      ],
+      "length_stratum": 1
+    },
+    {
+      "id": "p92-11",
+      "layer": 3,
+      "neuron": 2354,
+      "persona": "Whiskey",
+      "neutral": "notebook",
+      "kind": "concept",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-13",
+      "layer": 3,
+      "neuron": 976,
+      "persona": "Skeleton",
+      "neutral": "ribbon",
+      "kind": "slot",
+      "slot_token_count": 1,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "F": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "C": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "slot_token_count_range": [
+        1,
+        1
+      ],
+      "length_stratum": 1
+    },
+    {
+      "id": "p92-15",
+      "layer": 5,
+      "neuron": 4559,
+      "persona": "Secure password",
+      "neutral": "cabinet",
+      "kind": "concept",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-18",
+      "layer": 3,
+      "neuron": 85,
+      "persona": "Shadow of your smile",
+      "neutral": "wooden kitchen chair",
+      "kind": "slot",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-20",
+      "layer": 2,
+      "neuron": 4658,
+      "persona": "River shadow",
+      "neutral": "envelope",
+      "kind": "slot",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-24",
+      "layer": 4,
+      "neuron": 1594,
+      "persona": "Queen of Hearts",
+      "neutral": "garden gate",
+      "kind": "slot",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-25",
+      "layer": 3,
+      "neuron": 7850,
+      "persona": "King Midas",
+      "neutral": "brass bell",
+      "kind": "slot",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-28",
+      "layer": 10,
+      "neuron": 3299,
+      "persona": "Ancient nature deity",
+      "neutral": "neat paper envelope",
+      "kind": "concept",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-29",
+      "layer": 2,
+      "neuron": 1912,
+      "persona": "God of wisdom",
+      "neutral": "wool scarf",
+      "kind": "concept",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-30",
+      "layer": 4,
+      "neuron": 5948,
+      "persona": "Embodiment of the void",
+      "neutral": "a small box of paper clips",
+      "kind": "concept",
+      "slot_token_count": 6,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "F": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "C": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      "slot_token_count_range": [
+        6,
+        6
+      ],
+      "length_stratum": 6
+    },
+    {
+      "id": "p92-32",
+      "layer": 12,
+      "neuron": 3422,
+      "persona": "Sir Ray Ray",
+      "neutral": "garden bench",
+      "kind": "slot",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-33",
+      "layer": 5,
+      "neuron": 90,
+      "persona": "Dr. Memento",
+      "neutral": "thick leather folder",
+      "kind": "slot",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-35",
+      "layer": 4,
+      "neuron": 631,
+      "persona": "Guardian angel",
+      "neutral": "small stone bowl",
+      "kind": "slot",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-36",
+      "layer": 4,
+      "neuron": 7528,
+      "persona": "Alex from Star Wars",
+      "neutral": "small wooden storage box",
+      "kind": "slot",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-37",
+      "layer": 5,
+      "neuron": 7218,
+      "persona": "Large friendly dog",
+      "neutral": "plain paper folder",
+      "kind": "slot",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-38",
+      "layer": 5,
+      "neuron": 5553,
+      "persona": "Coca-Cola spokesperson",
+      "neutral": "round glass serving dish",
+      "kind": "concept",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-39",
+      "layer": 3,
+      "neuron": 1216,
+      "persona": "NASCAR driver",
+      "neutral": "plain white kitchen towel",
+      "kind": "concept",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-40",
+      "layer": 6,
+      "neuron": 2146,
+      "persona": "80s cover singer-songwriter",
+      "neutral": "wooden box with brass handles",
+      "kind": "concept",
+      "slot_token_count": 6,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "F": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "C": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      "slot_token_count_range": [
+        6,
+        6
+      ],
+      "length_stratum": 6
+    },
+    {
+      "id": "p92-41",
+      "layer": 5,
+      "neuron": 6381,
+      "persona": "Human DJ",
+      "neutral": "blanket",
+      "kind": "concept",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-42",
+      "layer": 2,
+      "neuron": 2264,
+      "persona": "Jacobite royalist veteran",
+      "neutral": "a pile of old newspapers",
+      "kind": "slot",
+      "slot_token_count": 5,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "F": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "C": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ]
+      },
+      "slot_token_count_range": [
+        5,
+        5
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-43",
+      "layer": 6,
+      "neuron": 4792,
+      "persona": "Street rat",
+      "neutral": "blue bowl",
+      "kind": "concept",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-45",
+      "layer": 4,
+      "neuron": 3088,
+      "persona": "Iron-fisted dictator",
+      "neutral": "empty metal tool cabinet",
+      "kind": "concept",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-46",
+      "layer": 5,
+      "neuron": 4673,
+      "persona": "Day guide",
+      "neutral": "paper cup",
+      "kind": "slot",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-47",
+      "layer": 4,
+      "neuron": 39,
+      "persona": "Principled lawyer",
+      "neutral": "large paper mailing envelope",
+      "kind": "slot",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-48",
+      "layer": 4,
+      "neuron": 5473,
+      "persona": "Festival poet",
+      "neutral": "quiet reading room",
+      "kind": "concept",
+      "slot_token_count": 3,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "F": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "C": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "slot_token_count_range": [
+        3,
+        3
+      ],
+      "length_stratum": 3
+    },
+    {
+      "id": "p92-49",
+      "layer": 12,
+      "neuron": 600,
+      "persona": "Friendly non-human entity",
+      "neutral": "simple brass door handle",
+      "kind": "concept",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-50",
+      "layer": 2,
+      "neuron": 1064,
+      "persona": "Gruff old man",
+      "neutral": "quiet corner reading chair",
+      "kind": "slot",
+      "slot_token_count": 4,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "F": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ],
+        "C": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4,
+          4
+        ]
+      },
+      "slot_token_count_range": [
+        4,
+        4
+      ],
+      "length_stratum": 4
+    },
+    {
+      "id": "p92-51",
+      "layer": 10,
+      "neuron": 206,
+      "persona": "IP packet",
+      "neutral": "glass bottle",
+      "kind": "concept",
+      "slot_token_count": 2,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "F": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "C": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "slot_token_count_range": [
+        2,
+        2
+      ],
+      "length_stratum": 2
+    },
+    {
+      "id": "p92-52",
+      "layer": 7,
+      "neuron": 2295,
+      "persona": "String of code from your browser",
+      "neutral": "a stack of clean cotton towels",
+      "kind": "concept",
+      "slot_token_count": 6,
+      "slot_token_counts_by_frame_template": {
+        "T": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "F": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ],
+        "C": [
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      "slot_token_count_range": [
+        6,
+        6
+      ],
+      "length_stratum": 6
+    }
+  ],
+  "families": {
+    "dog": [
+      "Dog",
+      "Treat-loving dog",
+      "Large friendly dog"
+    ],
+    "shadow": [
+      "Shadow of your smile",
+      "River shadow"
+    ],
+    "king or ruler": [
+      "Queen of Hearts",
+      "King Midas",
+      "Jacobite royalist veteran",
+      "Iron-fisted dictator"
+    ],
+    "guardian angel": [
+      "Guardian angel"
+    ]
+  },
+  "length_feasibility": {
+    "canonical_length_context": "T template 1",
+    "counts_by_token_length": {
+      "1": 5,
+      "2": 10,
+      "3": 9,
+      "4": 11,
+      "5": 1,
+      "6": 3
+    },
+    "length_to_stratum": {
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 4,
+      "6": 6
+    },
+    "stratum_counts": {
+      "1": 5,
+      "2": 10,
+      "3": 9,
+      "4": 12,
+      "6": 3
+    },
+    "merges": [
+      {
+        "length": 5,
+        "merged_into": 4,
+        "count_before_merge": 1,
+        "tie_break": "shorter length"
+      }
+    ],
+    "unique_phrase_lengths_seen": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "construction_check": {
+    "passed": true,
+    "frame_template_checks": 24,
+    "matched_persona_neutral_pairs": 936,
+    "slots_checked": 1872,
+    "outside_token_ids_identical_within_each_frame_template": true,
+    "persona_neutral_slot_counts_match": true,
+    "quote_boundary_merges": 0,
+    "slot_token_count_stable_across_templates": true
+  }
+}
