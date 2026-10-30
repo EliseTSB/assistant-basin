@@ -17,6 +17,7 @@ for directory in (HERE, ROOT / "part117b", ROOT / "part112", ROOT / "part86", RO
         sys.path.insert(0, str(directory))
 
 import label119  # noqa: E402 -- recompute the two known-example gates.
+import label121  # noqa: E402 -- recompute the exact DeepSeek-stratified Luna sample.
 import rows121  # noqa: E402 -- exact expected row inventory.
 import triage86  # noqa: E402
 
@@ -96,14 +97,14 @@ def latest_labels(rows: list[dict]) -> dict[tuple[str, int], dict]:
     return latest
 
 
-def key_index(rows: list[dict]) -> dict[tuple[str, str, int], str]:
+def key_index(rows: list[dict]) -> dict[tuple[str, str, int], tuple[str, str]]:
     found = {}
     for row in rows:
         key = (str(row["row_id"]), str(row["pair"]), int(row["question_index"]))
-        item_id = str(row["item_id"])
-        if key in found and found[key] != item_id:
+        item = (str(row["item_id"]), str(row.get("answer_hash", "")))
+        if key in found and found[key] != item:
             raise ValueError(f"duplicate reader keys for {key}")
-        found[key] = item_id
+        found[key] = item
     return found
 
 
@@ -136,7 +137,8 @@ def agreement_stats(first: list[bool], second: list[bool]) -> dict:
 
 
 def second_reader_agreement(keys_ds: list[dict], labels_ds: list[dict],
-                            keys_luna: list[dict], labels_luna: list[dict]) -> dict:
+                            keys_luna: list[dict], labels_luna: list[dict],
+                            expected_sample_ids: set[str] | None = None) -> dict:
     ds_keys = {str(row["item_id"]): row for row in keys_ds}
     luna_keys = {str(row["item_id"]): row for row in keys_luna}
     ds = latest_labels(labels_ds)
@@ -154,11 +156,21 @@ def second_reader_agreement(keys_ds: list[dict], labels_ds: list[dict],
             continue
         ds_label = ds[(item_id, ds_question)]
         luna_label = luna[(item_id, luna_question)]
+        ds_hash = str(ds_keys[item_id].get("answer_hash", ""))
+        luna_hash = str(luna_keys[item_id].get("answer_hash", ""))
+        if (not ds_hash or ds_hash != luna_hash or
+                ds_label.get("answer_hash") != ds_hash or luna_label.get("answer_hash") != ds_hash):
+            errors.append(item_id)
+            continue
         values.append((bool(ds_label["shows_persona"]), bool(luna_label["shows_persona"])))
     stats = agreement_stats([x[0] for x in values], [x[1] for x in values])
+    sample_matches = (expected_sample_ids is not None and len(keys_luna) == len(matched_ids) and
+                      set(matched_ids) == expected_sample_ids)
     return {**stats, "sample_items": len(matched_ids), "complete_items": len(values),
             "missing_or_error_item_ids": errors,
-            "complete": len(matched_ids) == len(values) and len(matched_ids) == round(0.10 * 330)}
+            "expected_sample_items": None if expected_sample_ids is None else len(expected_sample_ids),
+            "sample_matches": sample_matches,
+            "complete": len(matched_ids) == len(values) and sample_matches}
 
 
 def _valid_zero_check(rows: list[dict]) -> tuple[bool, int, int]:
@@ -205,14 +217,27 @@ def score_data(pairs: list[dict], expected_rows: list[dict], answers: list[dict]
     key_map = key_index(keys_ds_rows)
     labels = latest_labels(labels_ds_rows)
 
+    try:
+        canonical_items = label121.make_items(answers, pairs)
+        expected_luna_items = label121.luna_sample(canonical_items, labels_ds_rows)
+        expected_luna_ids = {str(item["public"]["item_id"]) for item in expected_luna_items}
+    except (KeyError, TypeError, ValueError):
+        expected_luna_ids = None
+
     def label_for(row_id: str, pair_id: str, question_index: int):
-        if (row_id, question_index) not in answer_map:
+        answer = answer_map.get((row_id, question_index))
+        if answer is None:
             return None
-        item_id = key_map.get((row_id, pair_id, question_index))
-        if item_id is None:
+        expected_hash = label121.answer_hash(str(answer.get("question", "")),
+                                             str(answer.get("answer", "")))
+        item = key_map.get((row_id, pair_id, question_index))
+        if item is None:
+            return None
+        item_id, key_hash = item
+        if key_hash != expected_hash:
             return None
         result = labels.get((item_id, question_index), {})
-        return result if valid_label(result) else None
+        return result if valid_label(result) and result.get("answer_hash") == expected_hash else None
 
     groups = {arm: {} for arm in ARM_ROWS}
     for row in expected_rows:
@@ -257,7 +282,8 @@ def score_data(pairs: list[dict], expected_rows: list[dict], answers: list[dict]
     s085 = who["s+0.85"]
     ds_known = known_gates.get("ds")
     luna_known = known_gates.get("luna")
-    agreement = second_reader_agreement(keys_ds_rows, labels_ds_rows, keys_luna_rows, labels_luna_rows)
+    agreement = second_reader_agreement(keys_ds_rows, labels_ds_rows, keys_luna_rows, labels_luna_rows,
+                                        expected_luna_ids)
     agreement_ok = (agreement["complete"] and agreement["agreement"] is not None and
                     agreement["agreement"] >= 0.85 and agreement["kappa"] is not None and agreement["kappa"] >= 0.6)
     known_ok = bool(ds_known and ds_known.get("passed") and luna_known and luna_known.get("passed"))
@@ -471,6 +497,17 @@ def render_markdown(result: dict) -> str:
     lines.extend(("", "## Exploratory cosines", ""))
     if cosines.get("available"):
         lines.append(f"Loaded from `{cosines['source']}` via Part 117b's cosine artifact. Median slot vs matched: {cosines.get('median_slot_vs_match')}; median slot vs unrelated: {cosines.get('median_slot_vs_unrelated')}; max absolute value: {cosines.get('max_abs_any')}. These are exploratory.")
+        cosine_rows = cosines.get("rows", [])
+        if cosine_rows:
+            lines.extend(("", "### Per-pair values", "",
+                          "| Pair | Slot vs matched | Slot vs unrelated | Random 1 | Random 2 | Random 3 |",
+                          "| --- | ---: | ---: | ---: | ---: | ---: |"))
+            for row in cosine_rows:
+                random_values = list(row.get("slot_vs_random", []))[:3]
+                random_values.extend([None] * (3 - len(random_values)))
+                values = [row.get("slot_vs_match"), row.get("slot_vs_unrelated"), *random_values]
+                formatted = ["n/a" if value is None else f"{float(value):.4f}" for value in values]
+                lines.append(f"| {row.get('pair', 'n/a')} | " + " | ".join(formatted) + " |")
     else:
         lines.append("Unavailable: `results/part117b/write-cosines.json` was not found. No cosine result is read.")
     lines.extend(("", f"Missing or invalid DeepSeek labels on expected answer-persona items: {result['labels_missing']}.",

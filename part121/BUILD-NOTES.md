@@ -6,10 +6,12 @@
 - `rows121.py` imports Part 117b and delegates push construction to `rows117b.pushes_for`. The random controls use `rows117b.random_seed(layer, matched_neuron, index)`, the matched concept's layer and size, and a positive 0.5 multiplier. Plain-neuron rows use the three listed control neurons at positive 0.5 alongside the slot at +0.85. The two concept-alone rows are also positive +0.5.
 - The runner temporarily narrows `battery112.QUESTIONS` while calling Part 117b's `zero_hook_check`, then restores it. Both the check and generation therefore use only the registered questions. Generation remains greedy, 120 new tokens, and Part 117's generated-token hook path. It appends UTF-8 JSONL and resumes by `(row, question_index)`.
 - The primary reader uses the exact Part 92 prompt and parser, with the same `Its kind: ...` description source Part 117b uses (`results/part112/score.json`, falling back to the pair's Part 112 kind). Its transport is Part 92b's shared transport, the same DeepSeek and Luna models, routes, sessions, 4,000-token cap, timeouts, and worker counts used by Part 119b. Part 119's 12 two-persona known examples are checked first for each reader. Each answer gets two attempts; final error rows stay errors.
-- Public reader items contain only a deterministic opaque item ID and question index. The row/pair join is written to a separate `.keys.jsonl` file. Luna reads 33 of 330 items using seed 12103 (10%). The global unpushed answer is duplicated once per pair persona so every label has the same target slot persona used by its pair.
-- Gate 4 requires both known-example checks, complete labels for the 33-item Luna sample, at least 85% raw agreement, and Cohen's kappa at least 0.6. Missing or invalid labels are never false; a prediction requiring an incomplete arm is `not read (missing labels)`. A failed gate stops every prediction with `not read (gate N)` and the markdown labels both question tables as unread.
+- Public reader items contain only a deterministic opaque item ID, question index, and `sha256(question + newline + answer)[:16]`. Every label row and private key carries the same answer hash. A changed answer makes its old label pending, and the scorer counts a label only when its hash matches the current answer.
+- The row/pair join is written to a separate `.keys.jsonl` file. Luna reads every item DeepSeek marks positive, then a seeded draw (seed 12103) of other items until the sample contains at least twice the positive count or 33 items, whichever is larger, capped at all 330 items. The Luna command requires a complete, answer-matched DeepSeek label file. The scorer recomputes this sample and requires the Luna keys to match it exactly. The global unpushed answer is duplicated once per pair persona so every label has the same target slot persona used by its pair.
+- Resume skips and logs an unterminated malformed final JSONL line in the generated answers or label file, trimming the torn tail before appending. Malformed lines anywhere else still raise.
+- Gate 4 requires both known-example checks, complete labels for the exact recomputed Luna sample, at least 85% raw agreement, and Cohen's kappa at least 0.6. Missing or invalid labels are never false; a prediction requiring an incomplete arm is `not read (missing labels)`. A failed gate stops every prediction with `not read (gate N)` and the markdown labels both question tables as unread.
 - Random and plain-neuron counts use all 33 labels and report the mean number of positive rows per pair only when their labels are complete. Coherent counts use the same labels. The Part 86 triage count applies `triage86.triage_answer` to each generated answer, by question and overall.
-- The scorer reads the existing `results/part117b/write-cosines.json` artifact as exploratory context. It does not recompute weights or require a model snapshot; if the artifact is absent, it reports cosines unavailable.
+- The scorer reads the existing `results/part117b/write-cosines.json` artifact as exploratory context and renders both its summary values and per-pair rows in `SCORE.md`. It does not recompute weights or require a model snapshot; if the artifact is absent, it reports cosines unavailable.
 - No registered prediction, threshold, or dose changed.
 
 ## Runtime copy list
@@ -30,14 +32,14 @@ Copy `p121/run/answers.jsonl` and `p121/run/zero-hook-check.json` back to `resul
 
 ## Reader commands
 
-Run both known-example checks, then the two main reads. The Luna command selects its seeded 33-item subset after the shared item shuffle:
+Run both known-example checks, then DeepSeek's full read and Luna's stratified read. Luna includes every DeepSeek-positive item and uses seed 12103 to draw the remaining items to the required sample size:
 
 ```sh
 export OPENCODE_GO_API_KEY="$(grep -m1 '^OPENCODE_GO_API_KEY=' /home/elisepc/green/DiscordBot/.env | cut -d= -f2- | tr -d '"')"
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part121/label121.py --gate --reader ds --out results/part121/known-ds.jsonl
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part121/label121.py --gate --reader luna --out results/part121/known-luna.jsonl
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part121/label121.py --reader ds --answers results/part121/run/answers.jsonl --pairs results/part117/pairs.json --out results/part121/labels-ds.jsonl --gate-labels results/part121/known-ds.jsonl
-/home/elisepc/neuron-probe/.venv/bin/python -I -B part121/label121.py --reader luna --answers results/part121/run/answers.jsonl --pairs results/part117/pairs.json --out results/part121/labels-luna.jsonl --gate-labels results/part121/known-luna.jsonl
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part121/label121.py --reader luna --answers results/part121/run/answers.jsonl --pairs results/part117/pairs.json --labels-ds results/part121/labels-ds.jsonl --out results/part121/labels-luna.jsonl --gate-labels results/part121/known-luna.jsonl
 ```
 
 Each label file gets a private `.keys.jsonl` sidecar. Run a failed or malformed item again with the same output path; valid items are skipped and unresolved errors are retried once per invocation.

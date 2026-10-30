@@ -25,7 +25,7 @@ import label119  # noqa: E402 -- Part 119's 12 known examples and reader gate.
 
 ITEM_SEED = 12101
 LUNA_SEED = 12103
-LUNA_SHARE = 0.10
+LUNA_MIN_SAMPLE = 33
 MAX_ATTEMPTS = 2
 DS_WORKERS = 8
 LUNA_WORKERS = 4
@@ -57,6 +57,19 @@ def read_jsonl(path: str | Path) -> list[dict]:
                 raise ValueError(f"non-object JSONL row in {source}:{line_number}")
             rows.append(row)
     return rows
+
+
+def answer_hash(question: str, answer: str) -> str:
+    return hashlib.sha256(f"{question}\n{answer}".encode("utf-8")).hexdigest()[:16]
+
+
+def latest_label_rows(rows: list[dict]) -> dict[tuple[str, int], dict]:
+    latest = {}
+    for row in rows:
+        key = (str(row["item_id"]), int(row["question_index"]))
+        if key not in latest or valid_label(row) or not valid_label(latest[key]):
+            latest[key] = row
+    return latest
 
 
 def write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -107,9 +120,11 @@ def make_items(answer_rows: list[dict], pairs: list[dict], kinds: dict[str, str]
                 raise ValueError(f"answer row {row_id!r} references unknown pair {pair_id!r}")
             slot = by_pair[pair_id]["slot"]
             kind = kinds.get(str(slot["id"]), str(slot.get("part112_kind", "slot")))
-            public = {"item_id": opaque_id(row_id, pair_id, qi), "question_index": qi}
+            content_hash = answer_hash(str(answer["question"]), str(answer["answer"]))
+            public = {"item_id": opaque_id(row_id, pair_id, qi), "question_index": qi,
+                      "answer_hash": content_hash}
             private = {"item_id": public["item_id"], "row_id": row_id,
-                       "pair": pair_id, "question_index": qi}
+                       "pair": pair_id, "question_index": qi, "answer_hash": content_hash}
             items.append({"public": public, "private": private,
                           "name": str(slot["persona"]),
                           "desc": f"Its kind: {kind}.",
@@ -131,6 +146,29 @@ def valid_label(row: dict) -> bool:
     return ("error" not in row and
             all(type(row.get(field)) is bool for field in ("shows_persona", "self_claim", "coherent")) and
             row.get("speaker") in ("ai", "human", "other", "none"))
+
+
+def luna_sample(items: list[dict], deepseek_rows: list[dict]) -> list[dict]:
+    """Select all DeepSeek-positive items and a seeded draw of current negatives."""
+    if len(items) != 330 or len({item["public"]["item_id"] for item in items}) != len(items):
+        raise ValueError(f"Luna sampling requires all 330 unique items, found {len(items)}")
+    latest = latest_label_rows(deepseek_rows)
+    labels = {}
+    for item in items:
+        public = item["public"]
+        key = (str(public["item_id"]), int(public["question_index"]))
+        label = latest.get(key)
+        if not valid_label(label or {}) or label.get("answer_hash") != public["answer_hash"]:
+            raise ValueError("DeepSeek labels are incomplete or do not match the current answers")
+        labels[key] = label
+    positives = [item for item in items
+                 if labels[(str(item["public"]["item_id"]), int(item["public"]["question_index"]))]
+                 ["shows_persona"]]
+    target = min(len(items), max(2 * len(positives), LUNA_MIN_SAMPLE))
+    positive_ids = {str(item["public"]["item_id"]) for item in positives}
+    negative_items = [item for item in items if str(item["public"]["item_id"]) not in positive_ids]
+    draw = random.Random(LUNA_SEED).sample(negative_items, target - len(positives))
+    return positives + draw
 
 
 def _record_usage(path: Path, item: dict, reader: str, attempt: int,
@@ -167,16 +205,41 @@ def _label_one(item: dict, reader: str, usage_path: Path, request_fn: Callable |
 
 
 def _latest_rows(path: Path) -> dict[tuple[str, int], dict]:
+    if not path.exists():
+        return {}
+    data = path.read_bytes()
+    lines = data.splitlines(keepends=True)
     latest = {}
-    if path.exists():
-        with path.open(encoding="utf-8") as stream:
-            for line in stream:
-                if line.strip():
-                    row = json.loads(line)
-                    key = (str(row["item_id"]), int(row["question_index"]))
-                    if key not in latest or valid_label(row) or not valid_label(latest[key]):
-                        latest[key] = row
+    offset = 0
+    for index, raw_line in enumerate(lines, 1):
+        try:
+            line = raw_line.decode("utf-8")
+            if line.strip():
+                row = json.loads(line)
+                key = (str(row["item_id"]), int(row["question_index"]))
+                if key not in latest or valid_label(row) or not valid_label(latest[key]):
+                    latest[key] = row
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            is_torn_tail = (index == len(lines) and
+                            not raw_line.endswith((b"\n", b"\r")))
+            if not is_torn_tail:
+                raise ValueError(f"invalid JSONL in {path}:{index}: {exc}") from exc
+            print(f"skipping torn final JSONL line in {path}:{index}", file=sys.stderr, flush=True)
+            with path.open("r+b") as stream:
+                stream.truncate(offset)
+            break
+        offset += len(raw_line)
     return latest
+
+
+def _ensure_line_ending(path: Path) -> None:
+    if path.exists() and path.stat().st_size:
+        with path.open("rb") as stream:
+            stream.seek(-1, 2)
+            ends_with_newline = stream.read(1) == b"\n"
+        if not ends_with_newline:
+            with path.open("ab") as stream:
+                stream.write(b"\n")
 
 
 def label_items(items: list[dict], output: Path, reader: str, workers: int | None = None,
@@ -189,19 +252,26 @@ def label_items(items: list[dict], output: Path, reader: str, workers: int | Non
         raise ValueError("workers must be positive")
     latest = _latest_rows(output)
     pending = [item for item in items
-               if not valid_label(latest.get((str(item["public"]["item_id"]),
-                                              int(item["public"]["question_index"])), {}))]
+               if not (valid_label(latest.get((str(item["public"]["item_id"]),
+                                               int(item["public"]["question_index"])), {})) and
+                       latest[(str(item["public"]["item_id"]),
+                               int(item["public"]["question_index"]))].get("answer_hash") ==
+                       item["public"]["answer_hash"])]
     usage_path = Path(str(output) + ".usage.jsonl")
     output.parent.mkdir(parents=True, exist_ok=True)
     if pending:
+        _ensure_line_ending(output)
         with ThreadPoolExecutor(max_workers=workers) as pool, output.open("a", encoding="utf-8") as stream:
             futures = [pool.submit(_label_one, item, reader, usage_path, request_fn, sleep_fn) for item in pending]
             for future in futures:
                 stream.write(json.dumps(future.result(), ensure_ascii=False) + "\n")
                 stream.flush()
     final = _latest_rows(output)
-    errors = sum(not valid_label(final.get((str(item["public"]["item_id"]),
-                                             int(item["public"]["question_index"])), {})) for item in items)
+    errors = sum(not (valid_label(final.get((str(item["public"]["item_id"]),
+                                             int(item["public"]["question_index"])), {})) and
+                      final[(str(item["public"]["item_id"]),
+                             int(item["public"]["question_index"]))].get("answer_hash") ==
+                      item["public"]["answer_hash"]) for item in items)
     return {"reader": reader, "items": len(items), "pending": len(pending), "error_rows": errors,
             "retry_limit": MAX_ATTEMPTS, "output": str(output), "usage_sidecar": str(usage_path)}
 
@@ -221,6 +291,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--pairs", default="results/part117/pairs.json")
     parser.add_argument("--out", required=True, help="known-gate or answer-label JSONL")
     parser.add_argument("--gate-labels", help="known-example labels to require before the main read")
+    parser.add_argument("--labels-ds", default="results/part121/labels-ds.jsonl",
+                        help="complete DeepSeek labels required to select Luna's sample")
     parser.add_argument("--keys-out", help="private item-to-row key; defaults to <out>.keys.jsonl")
     parser.add_argument("--workers", type=int)
     args = parser.parse_args(argv)
@@ -240,15 +312,28 @@ def main(argv: list[str] | None = None) -> int:
         print(f"main read refused: {exc}", file=sys.stderr, flush=True)
         return 1
     items = make_items(read_jsonl(args.answers), read_json(args.pairs))
+    all_items = items
+    sample_size = len(items)
+    positive_count = None
     if args.reader == "luna":
-        count = max(1, round(LUNA_SHARE * len(items)))
-        items = random.Random(LUNA_SEED).sample(items, count)
+        try:
+            deepseek_rows = list(_latest_rows(repo_path(args.labels_ds)).values())
+            latest_ds = latest_label_rows(deepseek_rows)
+            items = luna_sample(items, deepseek_rows)
+        except (OSError, ValueError) as exc:
+            print(f"Luna read refused: {exc}", file=sys.stderr, flush=True)
+            return 1
+        sample_size = len(items)
+        positive_count = sum(1 for item in all_items
+                             if latest_ds[(str(item["public"]["item_id"]),
+                                           int(item["public"]["question_index"]))]["shows_persona"])
     keys_path = repo_path(args.keys_out) if args.keys_out else Path(str(output) + ".keys.jsonl")
     write_jsonl(keys_path, [item["private"] for item in items])
     result = label_items(items, output, args.reader, args.workers)
     result["keys"] = str(keys_path)
     result["sample_seed"] = LUNA_SEED if args.reader == "luna" else None
-    result["sample_share"] = LUNA_SHARE if args.reader == "luna" else 1.0
+    result["sample_size"] = sample_size
+    result["deepseek_positive_count"] = positive_count
     print(json.dumps(result, ensure_ascii=False), flush=True)
     return 0 if result["error_rows"] == 0 else 1
 

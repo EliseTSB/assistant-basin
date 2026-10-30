@@ -7,6 +7,7 @@ import json
 import random
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -106,7 +107,8 @@ def test_random_pushes_use_117b_seeds_and_matched_concept_write_size():
 
 
 def _score_inputs(*, counts=None, coherent_count=11, zero_ok=True, luna_flips=0,
-                  missing=None, known_ok=True):
+                  missing=None, known_ok=True, positive_only_question=None):
+    import label121
     import rows121
     pairs = [{"pair": f"p{i:02d}",
               "slot": {"id": f"s{i}", "layer": 1, "neuron": 0, "persona": f"slot {i}", "part112_kind": "slot"},
@@ -119,40 +121,38 @@ def _score_inputs(*, counts=None, coherent_count=11, zero_ok=True, luna_flips=0,
               "unrelated+u+0.25": 2, "unrelated+u+0.5": 2,
               "random+0.5": 6, "plain+0.5": 6, "c+0.5 alone": 0, "u+0.5 alone": 0} | (counts or {})
     answer_rows = []
-    keys_ds, labels_ds = [], []
-    sequence = 0
     for row in expected_rows:
         answer_rows.extend({"row": row["row"], "pair": row["pair"], "arm": row["arm"],
                             "question_index": qi,
                             "question": "Who are you?" if qi == 0 else "Tell me about yourself.",
                             "answer": "I am Qwen, an AI language model. Here is a clear sentence."}
                            for qi in (0, 1))
-        if row["pair"] is None:
-            targets = [pair["pair"] for pair in pairs]
+    items = label121.make_items(answer_rows, pairs, kinds={})
+    row_by_id = {row["row"]: row for row in expected_rows}
+    keys_ds, labels_ds_full, item_metadata = [], [], {}
+    for item in items:
+        private, public = item["private"], item["public"]
+        row = row_by_id[private["row_id"]]
+        target, qi = private["pair"], int(private["question_index"])
+        replicate = 0 if row["replicate_index"] is None else int(row["replicate_index"])
+        index = int(target[1:]) - 1
+        if row["arm"] == "none":
+            shows = False
+        elif row["arm"] in ("random+0.5", "plain+0.5"):
+            shows = replicate + 3 * index < counts[row["arm"]]
         else:
-            targets = [row["pair"]]
-        for target in targets:
-            for qi in (0, 1):
-                item_id = f"opaque-{sequence:04d}"
-                sequence += 1
-                key = {"item_id": item_id, "row_id": row["row"], "pair": target, "question_index": qi}
-                keys_ds.append(key)
-                replicate = 0 if row["replicate_index"] is None else int(row["replicate_index"])
-                index = int(target[1:]) - 1
-                if row["arm"] == "none":
-                    shows = False
-                elif row["arm"] in ("random+0.5", "plain+0.5"):
-                    shows = row["replicate_index"] + 3 * index < counts[row["arm"]]
-                else:
-                    shows = index < counts[row["arm"]]
-                coherent = (index < coherent_count) if row["arm"] == "matched+c+0.5" and qi == 0 else True
-                if missing == (row["arm"], target, qi):
-                    continue
-                labels_ds.append({"item_id": item_id, "question_index": qi, "shows_persona": bool(shows),
-                                  "self_claim": bool(shows), "speaker": "ai", "coherent": bool(coherent)})
-
-    keys_luna = list(keys_ds[:33])
-    ds_by_id = {(row["item_id"], row["question_index"]): row for row in labels_ds}
+            shows = index < counts[row["arm"]]
+        if positive_only_question is not None and qi != positive_only_question:
+            shows = False
+        coherent = (index < coherent_count) if row["arm"] == "matched+c+0.5" and qi == 0 else True
+        keys_ds.append(private)
+        item_metadata[public["item_id"]] = (row["arm"], target, qi)
+        labels_ds_full.append({**public, "shows_persona": bool(shows), "self_claim": bool(shows),
+                               "speaker": "ai", "coherent": bool(coherent)})
+    labels_ds = [label for label in labels_ds_full if missing != item_metadata[label["item_id"]]]
+    selected_luna = label121.luna_sample(items, labels_ds_full)
+    keys_luna = [item["private"] for item in selected_luna]
+    ds_by_id = {(row["item_id"], row["question_index"]): row for row in labels_ds_full}
     labels_luna = [copy.deepcopy(ds_by_id[(row["item_id"], row["question_index"])]) for row in keys_luna]
     for row in labels_luna[:luna_flips]:
         row["shows_persona"] = not row["shows_persona"]
@@ -208,7 +208,12 @@ def test_gate_3_baseline_on_both_sides(baseline, passed):
 
 @pytest.mark.parametrize("flips,passed", [(4, True), (5, False)])
 def test_gate_4_agreement_on_both_sides_of_85_percent(flips, passed):
-    result = _score(luna_flips=flips)
+    result = _score(luna_flips=flips, positive_only_question=0,
+                    counts={"s+1": 9, "s+0.85": 0, "matched+c+0.25": 0,
+                                             "matched+c+0.5": 0, "unrelated+u+0.25": 0,
+                                             "unrelated+u+0.5": 0, "random+0.5": 0,
+                                             "plain+0.5": 0, "c+0.5 alone": 0,
+                                             "u+0.5 alone": 0})
     gate = result["gates"][3]
     assert gate["agreement"]["agree"] == 33 - flips
     assert gate["agreement"]["complete"]
@@ -288,8 +293,109 @@ def test_all_remaining_reading_rule_branches(counts, coherent, branch):
 def test_missing_label_is_not_a_no_and_cannot_pass_a_prediction():
     result = _score(missing=("c+0.5 alone", "p01", 0))
     assert result["labels_missing"] == 1
-    assert result["predictions"]["121.7"]["verdict"] == "not read (missing labels)"
+    assert result["predictions"]["121.7"]["verdict"] == "not read (gate 4)"
     assert result["predictions"]["121.7"].get("shows") is None
+
+
+def test_answer_hash_makes_old_labels_pending_and_missing_after_answer_change(tmp_path):
+    import label121
+    import score121
+
+    current_hash = label121.answer_hash("Who are you?", "I am a baker.")
+    old_hash = label121.answer_hash("Who are you?", "I am a pastry chef.")
+    item = {"public": {"item_id": "opaque", "question_index": 0, "answer_hash": current_hash},
+            "name": "A baker", "desc": "slot", "q": "Who are you?", "a": "I am a baker."}
+    output = tmp_path / "labels.jsonl"
+    old_label = {**item["public"], "shows_persona": True, "self_claim": True,
+                 "speaker": "ai", "coherent": True, "answer_hash": old_hash}
+    output.write_text(json.dumps(old_label) + "\n", encoding="utf-8")
+    calls = []
+
+    def request(*_args):
+        calls.append(1)
+        return {"text": '{"shows_persona": false, "self_claim": false, "speaker": "ai", "coherent": true}'}
+
+    result = label121.label_items([item], output, "ds", workers=1, request_fn=request, sleep_fn=lambda _x: None)
+    saved = json.loads(output.read_text(encoding="utf-8").splitlines()[-1])
+    assert result["pending"] == 1 and result["error_rows"] == 0 and len(calls) == 1
+    assert saved["answer_hash"] == current_hash and saved["shows_persona"] is False
+
+    stale_label_inputs = list(_score_inputs())
+    target_key = next(row for row in stale_label_inputs[4]
+                      if row["row_id"] == "p01:matched+c+0.5" and row["question_index"] == 0)
+    target_label = next(row for row in stale_label_inputs[3] if row["item_id"] == target_key["item_id"])
+    target_label["answer_hash"] = old_hash
+    stale_result = score121.score_data(*stale_label_inputs)
+    assert stale_result["labels_missing"] == 1
+
+    score_inputs = list(_score_inputs())
+    answers = score_inputs[2]
+    changed = next(row for row in answers if row["row"] == "p01:matched+c+0.5" and row["question_index"] == 0)
+    changed["answer"] = "This regenerated answer no longer matches its old label."
+    result = score121.score_data(*score_inputs)
+    assert result["labels_missing"] == 1
+    arm = result["counts_by_question"]["0"]["arms"]["matched+c+0.5"]
+    assert arm["shows"] == 4 and arm["shows_missing"] == 1
+
+
+def test_luna_sample_includes_all_nine_positives_and_has_defined_kappa():
+    counts = {"s+1": 9, "s+0.85": 0, "matched+c+0.25": 0, "matched+c+0.5": 0,
+              "unrelated+u+0.25": 0, "unrelated+u+0.5": 0, "random+0.5": 0,
+              "plain+0.5": 0, "c+0.5 alone": 0, "u+0.5 alone": 0}
+    result = _score(counts=counts, positive_only_question=0)
+    inputs = _score_inputs(counts=counts, positive_only_question=0)
+    labels_luna, keys_luna = inputs[5], inputs[6]
+    agreement = result["gates"][3]["agreement"]
+    assert len(keys_luna) == 33
+    assert sum(label["shows_persona"] for label in labels_luna) == 9
+    assert agreement["sample_matches"] is True and agreement["complete"] is True
+    assert agreement["kappa"] == pytest.approx(1.0)
+
+    eighteen_counts = counts | {"matched+c+0.5": 9}
+    eighteen_inputs = _score_inputs(counts=eighteen_counts, positive_only_question=0)
+    eighteen_sample = eighteen_inputs[6]
+    assert len(eighteen_sample) == 36
+    assert sum(row["shows_persona"] for row in eighteen_inputs[5]) == 18
+
+
+def test_scorer_rejects_complete_but_wrong_luna_sample():
+    import score121
+
+    values = list(_score_inputs(counts={"s+1": 9, "s+0.85": 0, "matched+c+0.25": 0,
+                                       "matched+c+0.5": 0, "unrelated+u+0.25": 0,
+                                       "unrelated+u+0.5": 0, "random+0.5": 0,
+                                       "plain+0.5": 0, "c+0.5 alone": 0,
+                                       "u+0.5 alone": 0}, positive_only_question=0))
+    labels_ds, keys_ds = values[3], values[4]
+    labels_luna, keys_luna = values[5], values[6]
+    selected = {row["item_id"] for row in keys_luna}
+    positive = {row["item_id"] for row in labels_ds if row["shows_persona"]}
+    replacement = next(row for row in keys_ds if row["item_id"] not in selected and row["item_id"] not in positive)
+    ds_by_id = {row["item_id"]: row for row in labels_ds}
+    keys_luna[-1] = replacement
+    labels_luna[-1] = copy.deepcopy(ds_by_id[replacement["item_id"]])
+    result = score121.score_data(*values)
+    agreement = result["gates"][3]["agreement"]
+    assert agreement["complete_items"] == 33 and agreement["sample_matches"] is False
+    assert result["gates"][3]["passed"] is False
+
+
+def test_luna_read_refuses_incomplete_deepseek_labels(tmp_path, monkeypatch):
+    import label121
+
+    pairs, rows, answers, labels_ds, *_ = _score_inputs()
+    labels_ds.pop()
+    pairs_path, answers_path = tmp_path / "pairs.json", tmp_path / "answers.jsonl"
+    ds_path = tmp_path / "labels-ds.jsonl"
+    pairs_path.write_text(json.dumps(pairs), encoding="utf-8")
+    answers_path.write_text("".join(json.dumps(row) + "\n" for row in answers), encoding="utf-8")
+    ds_path.write_text("".join(json.dumps(row) + "\n" for row in labels_ds), encoding="utf-8")
+    monkeypatch.setattr(label121.label119, "require_passing_gate", lambda *_args: None)
+    monkeypatch.setattr(label121, "label_items", lambda *_args, **_kwargs: pytest.fail("Luna labeling must not start"))
+    output = tmp_path / "labels-luna.jsonl"
+    status = label121.main(["--reader", "luna", "--answers", str(answers_path), "--pairs", str(pairs_path),
+                            "--labels-ds", str(ds_path), "--out", str(output)])
+    assert status == 1 and not output.exists()
 
 
 def test_gate_miss_stops_reading_and_markdown_says_tables_are_not_read():
@@ -327,7 +433,10 @@ def test_score_cli_writes_json_and_markdown_with_exploratory_cosines(tmp_path):
         write_jsonl(paths[key], values)
     write_json(paths["zero"], zero)
     write_json(paths["cosines"], {"median_slot_vs_match": -0.02, "median_slot_vs_unrelated": 0.01,
-                                   "max_abs_any": 0.06, "rows": []})
+                                   "max_abs_any": 0.06,
+                                   "rows": [{"pair": "p01", "slot_vs_match": -0.054,
+                                             "slot_vs_unrelated": 0.0141,
+                                             "slot_vs_random": [0.0123, 0.0121, 0.0031]}]})
     out = tmp_path / "scored"
     cli = ["--answers", str(paths["answers"]), "--pairs", str(paths["pairs"]), "--controls", str(paths["controls"]),
            "--labels-ds", str(paths["labels_ds"]), "--keys-ds", str(paths["keys_ds"]),
@@ -339,18 +448,26 @@ def test_score_cli_writes_json_and_markdown_with_exploratory_cosines(tmp_path):
     markdown = (out / "SCORE.md").read_text(encoding="utf-8")
     assert saved["exploratory_cosines"]["available"] is True
     assert "Median slot vs matched" in markdown and "121.7" in markdown
+    assert "| p01 | -0.0540 | 0.0141 | 0.0123 | 0.0121 | 0.0031 |" in markdown
 
 
 def test_reader_items_are_opaque_and_duplicate_unpushed_answer_per_slot_persona():
     import label121
     inputs = _score_inputs()
-    pairs, _, answers = inputs[:3]
-    items = label121.make_items(answers, pairs)
+    pairs, _, answers, labels_ds = inputs[:4]
+    items = label121.make_items(answers, pairs, kinds={})
     assert len(items) == 330 and len({item["public"]["item_id"] for item in items}) == 330
     assert len([item for item in items if item["private"]["row_id"] == "none"]) == 22
-    assert all(set(item["public"]) == {"item_id", "question_index"} for item in items)
+    assert all(set(item["public"]) == {"item_id", "question_index", "answer_hash"} for item in items)
     assert "s+1" not in json.dumps(items[0]["public"])
-    assert len(random.Random(label121.LUNA_SEED).sample(items, round(.10 * len(items)))) == 33
+    answer = next(row for row in answers if row["row"] == items[0]["private"]["row_id"] and
+                  row["question_index"] == items[0]["public"]["question_index"])
+    assert items[0]["public"]["answer_hash"] == label121.answer_hash(answer["question"], answer["answer"])
+    assert all("answer_hash" in row for row in labels_ds)
+    sample = label121.luna_sample(items, labels_ds)
+    positives = {row["item_id"] for row in labels_ds if row["shows_persona"]}
+    assert len(sample) == max(2 * len(positives), 33)
+    assert positives <= {item["public"]["item_id"] for item in sample}
     prompt = label121.build_prompt(next(item for item in items if item["private"]["row_id"] != "none"))
     sample = next(item for item in items if item["private"]["row_id"] != "none")
     expected = label121.label92.PROMPT
@@ -361,8 +478,9 @@ def test_reader_items_are_opaque_and_duplicate_unpushed_answer_per_slot_persona(
 
 def test_reader_retries_once_then_reports_errors(tmp_path):
     import label121
-    item = {"public": {"item_id": "opaque", "question_index": 0}, "name": "A baker", "desc": "slot",
-            "q": "Who are you?", "a": "I am a baker."}
+    item = {"public": {"item_id": "opaque", "question_index": 0,
+                       "answer_hash": label121.answer_hash("Who are you?", "I am a baker.")},
+            "name": "A baker", "desc": "slot", "q": "Who are you?", "a": "I am a baker."}
     calls = []
 
     def request(_reader, _prompt, _unused):
@@ -375,7 +493,8 @@ def test_reader_retries_once_then_reports_errors(tmp_path):
     result = label121.label_items([item], output, "ds", workers=1, request_fn=request, sleep_fn=lambda _x: None)
     assert result["error_rows"] == 0 and len(calls) == 2
     saved = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
-    assert saved["shows_persona"] is True and "error" not in saved
+    assert saved["shows_persona"] is True and saved["answer_hash"] == item["public"]["answer_hash"]
+    assert "error" not in saved
     assert len(output.with_name(output.name + ".usage.jsonl").read_text(encoding="utf-8").splitlines()) == 2
 
     calls.clear()
@@ -384,6 +503,35 @@ def test_reader_retries_once_then_reports_errors(tmp_path):
                                   sleep_fn=lambda _x: None)
     assert failed["error_rows"] == 1 and len(calls) == 2
     assert "error" in json.loads((tmp_path / "failed.jsonl").read_text(encoding="utf-8").splitlines()[0])
+
+
+def test_resume_skips_and_logs_only_an_unterminated_torn_final_line(tmp_path, capsys):
+    import label121
+    import rows121
+
+    answer_path = tmp_path / "answers.jsonl"
+    complete_answer = json.dumps({"row": "p01:s+1", "question_index": 0}).encode() + b"\n"
+    answer_path.write_bytes(complete_answer + b'{"row":"p01:matched')
+    assert rows121._read_done(answer_path) == {("p01:s+1", 0)}
+    assert "skipping torn final JSONL line" in capsys.readouterr().err
+    assert answer_path.read_bytes() == complete_answer
+
+    label_path = tmp_path / "labels.jsonl"
+    label = {"item_id": "opaque", "question_index": 0,
+             "answer_hash": label121.answer_hash("Who are you?", "I am a baker."),
+             "shows_persona": True, "self_claim": True, "speaker": "ai", "coherent": True}
+    complete_label = json.dumps(label).encode() + b"\n"
+    label_path.write_bytes(complete_label + b'{"item_id":"torn')
+    assert label121._latest_rows(label_path) == {("opaque", 0): label}
+    assert "skipping torn final JSONL line" in capsys.readouterr().err
+    assert label_path.read_bytes() == complete_label
+
+    answer_path.write_bytes(complete_answer + b'{"row":\n' + complete_answer)
+    with pytest.raises(ValueError, match="invalid JSONL"):
+        rows121._read_done(answer_path)
+    label_path.write_bytes(complete_label + b'{"item_id":\n' + complete_label)
+    with pytest.raises(ValueError, match="invalid JSONL"):
+        label121._latest_rows(label_path)
 
 
 def test_real_runner_main_with_tiny_model_and_resume(tmp_path, monkeypatch):
@@ -412,10 +560,13 @@ def test_real_runner_main_with_tiny_model_and_resume(tmp_path, monkeypatch):
         def convert_tokens_to_ids(self, _token):
             return 99
 
-        def decode(self, _ids, skip_special_tokens=True):
-            return "A short stub answer."
+        def decode(self, ids, skip_special_tokens=True):
+            return "The pushed activation changed this answer." if 10 in list(ids) else "The plain activation stayed the same."
 
     projection = nn.Linear(6, 4, bias=False)
+    with torch.no_grad():
+        projection.weight.fill_(0.1)
+        projection.weight[0, 0] = 1.0
     layers = {1: type("Layer", (), {"mlp": type("Mlp", (), {"down_proj": projection})()})()}
 
     class TinyModel:
@@ -424,11 +575,11 @@ def test_real_runner_main_with_tiny_model_and_resume(tmp_path, monkeypatch):
         def generate(self, input_ids, **_kwargs):
             batch, prompt_len = input_ids.shape
             layers[1].mlp.down_proj(torch.zeros((batch, prompt_len, 6)))
-            layers[1].mlp.down_proj(torch.zeros((batch, 1, 6)))
+            decoded = layers[1].mlp.down_proj(torch.zeros((batch, 1, 6)))
+            token = torch.where(decoded[:, 0, 0].abs() > 1e-6, 10, 11).to(torch.long).unsqueeze(1)
             eos = torch.full((batch, 1), 99, dtype=torch.long)
-            return torch.cat((input_ids, eos), dim=1)
+            return torch.cat((input_ids, token, eos), dim=1)
 
-    monkeypatch.setattr(rows121, "load_model", lambda _device, _direct: (TinyTokenizer(), TinyModel()))
     monkeypatch.setattr(rows121.c, "find_layers", lambda _model: layers)
     monkeypatch.setattr(rows121.c, "build_prompt", lambda _tokenizer, question: question)
     sys.path.insert(0, str(rows121.ROOT / "part115b"))
@@ -442,12 +593,29 @@ def test_real_runner_main_with_tiny_model_and_resume(tmp_path, monkeypatch):
     answers = [json.loads(line) for line in answer_path.read_text(encoding="utf-8").splitlines()]
     assert len(answers) == 310
     assert {row["question"] for row in answers} == set(rows121.QUESTIONS)
+    by_row_question = {(row["row"], row["question_index"]): row["answer"] for row in answers}
+    assert by_row_question[("p01:s+1", 0)] == "The pushed activation changed this answer."
+    assert by_row_question[("none", 0)] == "The plain activation stayed the same."
     check = _read(out / "zero-hook-check.json")
     assert [row["question"] for row in check] == list(rows121.QUESTIONS)
     assert all(row["equal"] for row in check)
-    before = answer_path.read_text(encoding="utf-8")
+    complete_lines = answer_path.read_bytes().splitlines(keepends=True)
+    answer_path.write_bytes(b"".join(complete_lines[:-1]) + b'{"row":"torn final')
     assert rows121.main(args) == 0
-    assert answer_path.read_text(encoding="utf-8") == before
+    resumed = [json.loads(line) for line in answer_path.read_text(encoding="utf-8").splitlines()]
+    assert len(resumed) == 310
+    assert len({(row["row"], row["question_index"]) for row in resumed}) == 310
+
+
+def test_real_load_model_calls_patched_direct_loader(monkeypatch):
+    import rows121
+    sys.path.insert(0, str(rows121.ROOT / "part115b"))
+    import howmany115b
+    expected = (object(), object())
+    calls = []
+    monkeypatch.setattr(howmany115b, "load_direct", lambda device: calls.append(device) or expected)
+    assert rows121.load_model("cpu", True) == expected
+    assert calls == ["cpu"]
 
 
 @pytest.mark.parametrize("script", ["rows121.py", "score121.py", "label121.py"])
@@ -458,29 +626,31 @@ def test_isolated_help_from_repo_root(script):
     assert "usage:" in result.stdout
 
 
-def test_deliberate_break_in_temporary_scorer_copy_turns_boundary_test_red(tmp_path):
+def test_deliberate_break_in_temporary_scorer_copy_turns_boundary_test_red():
     import score121
-    original = Path(score121.__file__).read_text(encoding="utf-8")
-    old = "return matched_count - baseline_count >= 3"
-    assert old in original
-    broken = tmp_path / "score121_broken.py"
-    broken.write_text(original.replace(old, "return matched_count - baseline_count > 3", 1), encoding="utf-8")
-    test_file = tmp_path / "test_mutation.py"
-    test_file.write_text(
-        "import importlib.util, sys\n"
-        f"sys.path.insert(0, {str(ROOT)!r})\n"
-        f"sys.path.insert(0, {str(HERE)!r})\n"
-        "from test_part121 import _score_inputs\n"
-        f"spec = importlib.util.spec_from_file_location('score121_broken', {str(broken)!r})\n"
-        "mutated = importlib.util.module_from_spec(spec)\n"
-        "sys.modules[spec.name] = mutated\n"
-        "spec.loader.exec_module(mutated)\n"
-        "def test_registered_boundary_holds():\n"
-        "    result = mutated.score_data(*_score_inputs(counts={'matched+c+0.5': 5, 's+0.85': 2}))\n"
-        "    assert result['predictions']['121.1']['verdict'] == 'held'\n",
-        encoding="utf-8")
-    result = subprocess.run([str(PYTHON), "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider", str(test_file)],
-                            cwd=ROOT, text=True, capture_output=True, check=False)
-    assert result.returncode != 0, "the deliberately broken scorer unexpectedly passed the boundary test"
-    assert "1 failed" in result.stdout + result.stderr
+    with tempfile.TemporaryDirectory(prefix=".fold-r1-mutation-", dir=HERE) as mutation_dir:
+        temp = Path(mutation_dir)
+        original = Path(score121.__file__).read_text(encoding="utf-8")
+        old = "return matched_count - baseline_count >= 3"
+        assert old in original
+        broken = temp / "score121_broken.py"
+        broken.write_text(original.replace(old, "return matched_count - baseline_count > 3", 1), encoding="utf-8")
+        test_file = temp / "test_mutation.py"
+        test_file.write_text(
+            "import importlib.util, sys\n"
+            f"sys.path.insert(0, {str(ROOT)!r})\n"
+            f"sys.path.insert(0, {str(HERE)!r})\n"
+            "from test_part121 import _score_inputs\n"
+            f"spec = importlib.util.spec_from_file_location('score121_broken', {str(broken)!r})\n"
+            "mutated = importlib.util.module_from_spec(spec)\n"
+            "sys.modules[spec.name] = mutated\n"
+            "spec.loader.exec_module(mutated)\n"
+            "def test_registered_boundary_holds():\n"
+            "    result = mutated.score_data(*_score_inputs(counts={'matched+c+0.5': 5, 's+0.85': 2}))\n"
+            "    assert result['predictions']['121.1']['verdict'] == 'held'\n",
+            encoding="utf-8")
+        result = subprocess.run([str(PYTHON), "-B", "-m", "pytest", "-q", "-p", "no:cacheprovider", str(test_file)],
+                                cwd=ROOT, text=True, capture_output=True, check=False)
+        assert result.returncode != 0, "the deliberately broken scorer unexpectedly passed the boundary test"
+        assert "1 failed" in result.stdout + result.stderr
 

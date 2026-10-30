@@ -98,6 +98,42 @@ def _read_json(path):
         return json.load(stream)
 
 
+def _read_done(path: Path) -> set[tuple[str, int]]:
+    if not path.exists():
+        return set()
+    data = path.read_bytes()
+    lines = data.splitlines(keepends=True)
+    done = set()
+    offset = 0
+    for line_number, raw_line in enumerate(lines, 1):
+        try:
+            line = raw_line.decode("utf-8")
+            if line.strip():
+                row = json.loads(line)
+                done.add((str(row["row"]), int(row["question_index"])))
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+            is_torn_tail = (line_number == len(lines) and
+                            not raw_line.endswith((b"\n", b"\r")))
+            if not is_torn_tail:
+                raise ValueError(f"invalid JSONL in {path}:{line_number}: {exc}") from exc
+            print(f"skipping torn final JSONL line in {path}:{line_number}", file=sys.stderr, flush=True)
+            with path.open("r+b") as stream:
+                stream.truncate(offset)
+            break
+        offset += len(raw_line)
+    return done
+
+
+def _ensure_line_ending(path: Path) -> None:
+    if path.exists() and path.stat().st_size:
+        with path.open("rb") as stream:
+            stream.seek(-1, 2)
+            ends_with_newline = stream.read(1) == b"\n"
+        if not ends_with_newline:
+            with path.open("ab") as stream:
+                stream.write(b"\n")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pairs", required=True)
@@ -123,13 +159,7 @@ def main(argv=None):
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     answer_path = out / "answers.jsonl"
-    done = set()
-    if answer_path.exists():
-        with answer_path.open(encoding="utf-8") as stream:
-            for line in stream:
-                if line.strip():
-                    row = json.loads(line)
-                    done.add((str(row["row"]), int(row["question_index"])))
+    done = _read_done(answer_path)
 
     tok, model = load_model(args.device, args.direct_load)
     layers = c.find_layers(model)
@@ -141,6 +171,7 @@ def main(argv=None):
         print(f"zero-hook check: {passed} of {len(check)} equal", flush=True)
 
     print(f"rows {len(rows)}, answers {len(QUESTIONS) * len(rows)}, already written {len(done)}", flush=True)
+    _ensure_line_ending(answer_path)
     with answer_path.open("a", encoding="utf-8") as stream:
         for question_index, question in enumerate(QUESTIONS):
             todo = [row for row in rows if (row["row"], question_index) not in done]
