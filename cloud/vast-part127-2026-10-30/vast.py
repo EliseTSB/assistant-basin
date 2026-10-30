@@ -105,7 +105,7 @@ def instance_remains() -> bool:
 def matching_offers() -> list[dict]:
     query = {
         "gpu_name": {"eq": "RTX 3090"}, "num_gpus": {"eq": 1},
-        "verified": {"eq": True}, "rentable": {"eq": True},
+        "rentable": {"eq": True},
         "type": "on-demand", "reliability2": {"gte": MIN_RELIABILITY},
         "disk_space": {"gte": DISK_GB}, "cuda_max_good": {"gte": 12.4},
         "dph_total": {"lte": MAX_HOURLY_RATE},
@@ -122,7 +122,7 @@ def matching_offers() -> list[dict]:
             and float(offer.get("reliability2", 0)) >= MIN_RELIABILITY
             and float(offer.get("dph_total", float("inf"))) <= MAX_HOURLY_RATE
             and float(offer.get("disk_space", 0)) >= DISK_GB
-            and bool(offer.get("verified")) and bool(offer.get("rentable"))]
+            and bool(offer.get("rentable"))]
 
 
 def _instance_payload(instance_id: str) -> dict:

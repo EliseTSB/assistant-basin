@@ -4,7 +4,7 @@ Part 127 uses one rented RTX 3090 because the A770 is held by another run. The p
 
 ## Cost and machine limits
 
-The helper accepts one verified, on-demand RTX 3090 with reliability at least 0.99, at least 40 GB disk, and a total hourly rate no higher than $0.30. At that rate, the design's 15-minute capture estimate costs about $0.08 for GPU time; model download and startup add rented time. The helper stops after 80 minutes from the rent request, which caps the rental at $0.40 at the maximum accepted rate. Disk is set to 40 GB.
+The helper accepts one on-demand RTX 3090 with reliability at least 0.99, at least 40 GB disk, and a total hourly rate no higher than $0.30. At that rate, the design's 15-minute capture estimate costs about $0.08 for GPU time; model download and startup add rented time. The helper stops after 80 minutes from the rent request, which caps the rental at $0.40 at the maximum accepted rate. Disk is set to 40 GB.
 
 ## Run
 
