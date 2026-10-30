@@ -6,6 +6,7 @@ import argparse
 import json
 import re
 import sys
+import threading
 from pathlib import Path
 from typing import Callable
 
@@ -149,13 +150,17 @@ def dry_run_client(_reader: str, prompt: str, _key: str = "") -> dict:
     return {"text": json.dumps({"third_person": third, "first_person": first})}
 
 
+_partial_lock = threading.Lock()
+
+
 def _default_request(reader: str, prompt: str, _unused_key: str = "") -> dict:
     """DeepSeek V4.1 Flash on Part 92b's route, with room for the 16 pairs in one reply."""
     import label119  # adds part92b to sys.path
 
     client = label119.label92b.judge_client
     return client.call_prompt(prompt, model=label119.label92b.DS_MODEL, route="ocgo",
-                              session="part122-passages", max_tokens=8000, timeout=300)
+                              session="part122-passages", max_tokens=16000, no_thinking=True,
+                              timeout=300)
 
 
 def _one_unit(unit: dict, request_fn: Callable) -> dict:
@@ -176,13 +181,29 @@ def _one_unit(unit: dict, request_fn: Callable) -> dict:
 
 
 def generate_passages(units: list[dict], *, request_fn: Callable | None = None,
-                      model_id: str = MODEL_ID, workers: int = 6) -> dict:
+                      model_id: str = MODEL_ID, workers: int = 6,
+                      partial: str | Path | None = None) -> dict:
     """Request and validate passages, with one initial call and up to three retries per unit."""
     from concurrent.futures import ThreadPoolExecutor
 
     request_fn = request_fn or _default_request
+    done = {}
+    if partial is not None and Path(partial).exists():
+        for line in Path(partial).read_text(encoding="utf-8").splitlines():
+            row = json.loads(line)
+            done[row["id"]] = row
+
+    def run_one(unit: dict) -> dict:
+        if str(unit["id"]) in done:
+            return done[str(unit["id"])]
+        row = _one_unit(unit, request_fn)
+        if partial is not None:
+            with _partial_lock, Path(partial).open("a", encoding="utf-8") as stream:
+                stream.write(json.dumps(row, ensure_ascii=False) + "\n")
+        return row
+
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        rows = list(pool.map(lambda unit: _one_unit(unit, request_fn), units))
+        rows = list(pool.map(run_one, units))
     return {"schema_version": 1, "seed": SEED, "model_id": model_id, "units": rows}
 
 
@@ -213,7 +234,8 @@ def main(argv: list[str] | None = None) -> int:
     units = rows119.load_units(args.neurons, args.kinds_haiku, args.kinds_ds)
     request_fn = dry_run_client if args.dry_run else None
     model_id = "stub-local-not-study-data" if args.dry_run else MODEL_ID
-    data = generate_passages(units, request_fn=request_fn, model_id=model_id)
+    partial = None if args.dry_run else str(output) + ".partial.jsonl"
+    data = generate_passages(units, request_fn=request_fn, model_id=model_id, partial=partial)
     write_output(output, data, force=args.force)
     print(json.dumps({"units": len(data["units"]), "model_id": model_id, "output": str(output)}))
     return 0
