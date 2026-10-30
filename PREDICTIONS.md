@@ -2154,8 +2154,10 @@ Design: `PART86-DESIGN.md`. "Coherent persona" = the blind reader marks the answ
 | 86.4a | Amendment 1 reading of 86.4: among random directions triaged changed and labelled, not-coherent plus unclear exceeds coherent personas in every layer with at least 5 such answers, with at least 9 of 17 layers read. | not read: Amendment 2's second-reader kappa is 0.16, below 0.6; a second full reading is required (results/part86/prediction-score/SCORE.md) | pending |
 | 86.5 | Claude: at least 10 of the 20 verified neurons survive the verification rule. | not scorable: the top-20 verification never ran (results/part86/prediction-score/SCORE.md) | pending |
 | 86.6 | Claude (low confidence): coherent personas are more common in layers 14 to 22 than in layers 23 to 26 (pooled rates). | not read: Amendment 2's second-reader kappa is 0.16, below 0.6; a second full reading is required (results/part86/prediction-score/SCORE.md) | pending |
-| 86.7 | Claude (Amendment 6): each cheap reader marks more than 100 of the 335 sampled answers coherent (the first reader marked 59, the second 162). | pending | pending |
-| 86.8 | Claude (Amendment 6, low confidence): DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more, so the full re-read proceeds under Amendment 6. | pending | pending |
+| 86.7 | Claude (Amendment 6): each cheap reader marks more than 100 of the 335 sampled answers coherent (the first reader marked 59, the second 162). | DS V4.1 Flash 250, Luna 209 (results/part86/second-reader/calib-agreement.json) | **held** |
+| 86.8 | Claude (Amendment 6, low confidence): DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more, so the full re-read proceeds under Amendment 6. | kappa 0.568 (raw 78.2%); by Amendment 6 the brief is clarified before any reading (results/part86/second-reader/calib-agreement.json) | **failed** |
+| 86.9 | Claude (Amendment 7, low confidence): with brief version 2 on the 335 fresh items, DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.6 or more. | pending | pending |
+| 86.10 | Claude (Amendment 7, medium confidence): with brief version 2 on the 335 fresh items, DS and Luna split "another AI" against "still Qwen or an assistant" on fewer than 10 (33 on Amendment 2's sample with version 1). | pending | pending |
 
 ## Part 87: our two recipes in neuronary's own form, registered 2026-10-27 before any code
 

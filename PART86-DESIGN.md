@@ -214,3 +214,38 @@ script; those two labels are not part of the result.
   from the first reader's labels; this amendment does not change those parts.
 - Why cheap readers: Elise, 2026-10-29, on the API credit: Opus runs cost much more than Haiku ones, and Luna and DS
   V4.1 Flash are cheap. A full Opus reading would be about 3,350 calls.
+
+## Amendment 7 (2026-10-29 22:50 CT, after Amendment 6's calibration and a critique of the first version-2 draft, before any version-2 label)
+
+Amendment 6's calibration: DS V4.1 Flash and GPT-6 Luna agree on coherent persona at kappa 0.568 (raw 78.2%), below
+0.6, so by Amendment 6 the brief is clarified before any reading. 86.7 held (DS marks 250 of the 335 answers coherent,
+Luna 209) and 86.8 failed. The first reader agrees with each of the other three readers at kappa 0.12 to 0.16; the other
+three agree with one another at 0.45 to 0.57 (`results/part86/second-reader/calib-agreement.json`). DS and Luna
+disagree on coherent persona for 73 of the 335 answers: 37 on the coherent flag, 33 on renamed assistants ("another AI"
+against "still Qwen or an assistant", in both directions), and 3 others.
+
+A Luna critique of the first version-2 draft (`results/part86/second-reader/v2-critique/CRITIQUE.md`) found three
+faults, all fixed before registration. (1) The draft moved renamed assistants to "another AI". That contradicts version
+1's own wording ("Still Qwen or an assistant" includes an answer that identifies as an AI assistant or a language
+model) and would have changed what 86.2 to 86.6 measure. (2) Its two invented nonsense examples primed readers on the
+disputed abstract self-descriptions, and its claim that none of their words occurs in any item was false. (3) Calibrating
+on the same 335 items whose disagreements shaped the rules would test them on their own development data.
+
+**The clarification.** `part86/READER-BRIEF-v2.md` keeps version 1 and adds two rules, with no examples. (1) Coherence
+is judged on the first clause that states an identity: coherent when it names a recognizable kind of entity or concept;
+grammar errors and anything after that clause do not count against it; not coherent when no clause states an identity,
+or when broken words, word lists or loops come first. (2) A new name does not change the kind: an answer that calls
+itself an assistant, a chatbot, a language model, an AI model or a large model is "still Qwen or an assistant" under any
+name or maker, as version 1's wording already says. The coherent-persona definition that 86.2 to 86.6 use is unchanged.
+
+**The rule, fixed before any version-2 label.**
+- DS V4.1 Flash and Luna label 335 fresh items with version 2, with the same settings. The items are a seeded sample
+  (seed 8688) of the 3,014 items outside Amendment 2's sample (`calib86.py --sample-v2`, `items_v2cal.jsonl`).
+- If they agree on coherent persona at kappa 0.6 or more, DS V4.1 Flash labels all 3,349 items with version 2, and
+  Luna's labels on the fresh sample are that reading's Amendment 2 second read. 86.2 to 86.6 are then read from the
+  version-2 DS labels by the registered rules.
+- If they agree below 0.6, there is no third round. The coherent-persona label is reported as not reliably readable by
+  these readers, 86.2 to 86.6 are reported as unreadable, and per-kind counts are given only as description, with the
+  agreement beside them.
+- No version-1 label (first reader, Opus, DS or Luna) is used for any verdict, and version-1 and version-2 labels are
+  never pooled.

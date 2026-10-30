@@ -1,0 +1,96 @@
+{
+  "sample_items": 335,
+  "readers": {
+    "first_haiku": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "not_coherent": 276,
+        "coherent_persona": 47,
+        "coherent_still_qwen": 12
+      },
+      "coherent_true": 59
+    },
+    "second_opus": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "coherent_persona": 93,
+        "not_coherent": 173,
+        "coherent_still_qwen": 69
+      },
+      "coherent_true": 162
+    },
+    "ds": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "coherent_persona": 180,
+        "not_coherent": 85,
+        "coherent_still_qwen": 67,
+        "unclear": 3
+      },
+      "coherent_true": 250
+    },
+    "luna": {
+      "valid": 335,
+      "errors": 0,
+      "classes": {
+        "coherent_persona": 149,
+        "not_coherent": 126,
+        "coherent_still_qwen": 58,
+        "unclear": 2
+      },
+      "coherent_true": 209
+    }
+  },
+  "pairs": {
+    "first_haiku~second_opus": {
+      "n": 335,
+      "kappa_coherent_persona": 0.15718853189370516,
+      "raw_coherent_persona": 0.7134328358208956,
+      "raw_coherent_flag": 0.6388059701492538,
+      "raw_class": 0.582089552238806
+    },
+    "first_haiku~ds": {
+      "n": 335,
+      "kappa_coherent_persona": 0.1217758985200846,
+      "raw_coherent_persona": 0.5373134328358209,
+      "raw_coherent_flag": 0.4298507462686567,
+      "raw_class": 0.39104477611940297
+    },
+    "first_haiku~luna": {
+      "n": 335,
+      "kappa_coherent_persona": 0.14391915437333044,
+      "raw_coherent_persona": 0.6059701492537314,
+      "raw_coherent_flag": 0.5402985074626866,
+      "raw_class": 0.4955223880597015
+    },
+    "second_opus~ds": {
+      "n": 335,
+      "kappa_coherent_persona": 0.4510564898663216,
+      "raw_coherent_persona": 0.7164179104477612,
+      "raw_coherent_flag": 0.7373134328358208,
+      "raw_class": 0.6328358208955224
+    },
+    "second_opus~luna": {
+      "n": 335,
+      "kappa_coherent_persona": 0.4600419821575831,
+      "raw_coherent_persona": 0.7432835820895523,
+      "raw_coherent_flag": 0.7880597014925373,
+      "raw_class": 0.7014925373134329
+    },
+    "ds~luna": {
+      "n": 335,
+      "kappa_coherent_persona": 0.567741935483871,
+      "raw_coherent_persona": 0.7820895522388059,
+      "raw_coherent_flag": 0.8477611940298507,
+      "raw_class": 0.7373134328358208
+    }
+  },
+  "check": {
+    "first_second_kappa": 0.15718853189370516,
+    "agreement_json_kappa": 0.15718853189370516
+  },
+  "brief_version": 1
+}

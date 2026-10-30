@@ -17,6 +17,9 @@ Commands:
   python3 -I calib86.py --label ds      # writes labels_ds.jsonl
   python3 -I calib86.py --label luna    # writes labels_luna.jsonl
   python3 -I calib86.py --agree         # writes calib-agreement.json
+  python3 -I calib86.py --sample-v2               # Amendment 7: 335 fresh items, items_v2cal.jsonl
+  python3 -I calib86.py --version 2 --label ds   # READER-BRIEF-v2.md on the fresh items, writes labels_ds_v2.jsonl
+  python3 -I calib86.py --version 2 --agree      # writes calib-agreement-v2.json
 --agree first checks that the first/second pair reproduces agreement.json's kappa exactly, and stops if it does not.
 """
 
@@ -25,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import sys
 import threading
 from collections import Counter
@@ -50,16 +54,38 @@ UNUSED_KEY = "calib86-no-anthropic-key"
 _usage_lock = threading.Lock()
 
 
-def labels_path(reader: str) -> Path:
-    return HERE / f"labels_{reader}.jsonl"
+BRIEFS = {1: second86.READER_BRIEF_PATH, 2: ROOT / "part86" / "READER-BRIEF-v2.md"}
 
 
-def make_request(reader: str, usage_path: Path):
+V2CAL_ITEMS_PATH = HERE / "items_v2cal.jsonl"
+V2CAL_SEED = 8688
+
+
+def sample_v2() -> int:
+    """Amendment 7: version 2 is calibrated on 335 fresh items, none of them in Amendment 2's sample, because the
+    version-2 rules were written after reading the version-1 disagreements on that sample."""
+    used = {row["id"] for row in second86.read_items(second86.ITEMS_SECOND_PATH)}
+    pool = sorted((row for row in second86.read_items(second86.FIRST_ITEMS_PATH) if row["id"] not in used),
+                  key=lambda row: row["id"])
+    chosen = random.Random(V2CAL_SEED).sample(pool, len(used))
+    second86.write_jsonl(V2CAL_ITEMS_PATH, chosen)
+    return len(chosen)
+
+
+def items_path(version: int) -> Path:
+    return second86.ITEMS_SECOND_PATH if version == 1 else V2CAL_ITEMS_PATH
+
+
+def labels_path(reader: str, version: int = 1) -> Path:
+    return HERE / (f"labels_{reader}.jsonl" if version == 1 else f"labels_{reader}_v{version}.jsonl")
+
+
+def make_request(reader: str, usage_path: Path, brief_text: str | None = None):
     config = READERS[reader]
 
     def request(item: dict, _key: str) -> dict:
         out = judge_client.call_prompt(
-            second86.reader_prompt(item),
+            second86.reader_prompt(item, brief_text),
             model=config["model"],
             route=config["route"],
             session=f"part86-calib-{reader}",
@@ -80,7 +106,7 @@ def make_request(reader: str, usage_path: Path):
     return request
 
 
-def label(reader: str, items: Path, out: Path, workers: int | None) -> dict:
+def label(reader: str, items: Path, out: Path, workers: int | None, version: int = 1) -> dict:
     if READERS[reader]["route"] == "ocgo" and not os.environ.get("OPENCODE_GO_API_KEY"):
         # 2026-10-29: a launch_arc.py unit has no OPENCODE_GO_API_KEY, and the retry loop turned that into 90
         # error rows over three minutes. Stop at once instead.
@@ -90,7 +116,7 @@ def label(reader: str, items: Path, out: Path, workers: int | None) -> dict:
         items,
         out,
         key=UNUSED_KEY,
-        request_fn=make_request(reader, usage_path),
+        request_fn=make_request(reader, usage_path, BRIEFS[version].read_text(encoding="utf-8")),
         workers=workers or READERS[reader]["workers"],
     )
 
@@ -103,26 +129,32 @@ def _binary(row: dict) -> int:
     return int(blind86._label_class(row) == "coherent_persona")
 
 
-def agree() -> dict:
-    sample_ids = [row["id"] for row in second86.read_items(second86.ITEMS_SECOND_PATH)]
+def agree(version: int = 1) -> dict:
     first_all = _rows_by_id(second86.FIRST_LABELS_PATH)
-    readers = {
-        "first_haiku": {i: first_all[i] for i in sample_ids if i in first_all},
-        "second_opus": _rows_by_id(second86.LABELS_SECOND_PATH),
-    }
-    for name in READERS:
-        if labels_path(name).exists():
-            readers[f"{name}"] = _rows_by_id(labels_path(name))
+    # Integrity check, always on Amendment 2's sample: the first/second pair must reproduce agreement.json.
+    orig_ids = [row["id"] for row in second86.read_items(second86.ITEMS_SECOND_PATH)]
+    second_all = _rows_by_id(second86.LABELS_SECOND_PATH)
+    both = [i for i in orig_ids if i in first_all and i in second_all and "error" not in second_all[i]]
+    registered = json.loads((HERE / "agreement.json").read_text(encoding="utf-8"))["kappa"]
+    check = blind86.cohen_kappa(first_all, second_all, both)
+    if abs(check - registered) > 1e-12:
+        raise SystemExit(f"STOP: first/second kappa {check} does not reproduce agreement.json's {registered}")
+
+    sample_ids = [row["id"] for row in second86.read_items(items_path(version))]
+    readers = {"first_haiku": {i: first_all[i] for i in sample_ids if i in first_all}}
+    if version == 1:
+        readers["second_opus"] = second_all
+        for name in READERS:
+            if labels_path(name).exists():
+                readers[name] = _rows_by_id(labels_path(name))
+    else:
+        for name in READERS:
+            if labels_path(name, version).exists():
+                readers[f"{name}_v{version}"] = _rows_by_id(labels_path(name, version))
     valid = {
         name: {i: r for i, r in rows.items() if "error" not in r and i in set(sample_ids)}
         for name, rows in readers.items()
     }
-
-    registered = json.loads((HERE / "agreement.json").read_text(encoding="utf-8"))["kappa"]
-    both = [i for i in sample_ids if i in valid["first_haiku"] and i in valid["second_opus"]]
-    check = blind86.cohen_kappa(valid["first_haiku"], valid["second_opus"], both)
-    if abs(check - registered) > 1e-12:
-        raise SystemExit(f"STOP: first/second kappa {check} does not reproduce agreement.json's {registered}")
 
     report = {
         "sample_items": len(sample_ids),
@@ -151,24 +183,32 @@ def agree() -> dict:
                 blind86._label_class(valid[a][i]) == blind86._label_class(valid[b][i]) for i in ids
             ) / len(ids),
         }
-    (HERE / "calib-agreement.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    report["brief_version"] = version
+    name = "calib-agreement.json" if version == 1 else f"calib-agreement-v{version}.json"
+    (HERE / name).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     return report
 
 
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--label", choices=sorted(READERS))
-    parser.add_argument("--items", type=Path, default=second86.ITEMS_SECOND_PATH)
+    parser.add_argument("--items", type=Path)
+    parser.add_argument("--sample-v2", action="store_true", help="write Amendment 7's fresh 335-item sample")
     parser.add_argument("--out", type=Path)
     parser.add_argument("--workers", type=int)
     parser.add_argument("--agree", action="store_true")
+    parser.add_argument("--version", type=int, choices=sorted(BRIEFS), default=1,
+                        help="reader brief: 1 = READER-BRIEF.md, 2 = READER-BRIEF-v2.md (Amendment 7)")
     args = parser.parse_args(argv)
     if args.label:
-        print(json.dumps(label(args.label, args.items, args.out or labels_path(args.label), args.workers)))
+        out = args.out or labels_path(args.label, args.version)
+        print(json.dumps(label(args.label, args.items or items_path(args.version), out, args.workers, args.version)))
     if args.agree:
-        print(json.dumps(agree(), indent=2))
-    if not args.label and not args.agree:
-        parser.error("give --label READER or --agree")
+        print(json.dumps(agree(args.version), indent=2))
+    if args.sample_v2:
+        print(json.dumps({"sampled_items": sample_v2(), "seed": V2CAL_SEED, "output": V2CAL_ITEMS_PATH.name}))
+    if not args.label and not args.agree and not args.sample_v2:
+        parser.error("give --label READER, --agree or --sample-v2")
 
 
 if __name__ == "__main__":
