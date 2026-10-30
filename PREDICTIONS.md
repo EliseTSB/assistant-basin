@@ -2618,3 +2618,12 @@ Design: `PART89-DESIGN.md`. Settle checkpoint, post-training move and the layer-
 | 119b.9 | Claude (low confidence): Effect-matched at 0.4, the interval of the mean real residual lies inside plus or minus log 1.25. | pending | pending |
 | 119b.10 | Claude (low confidence): At 0.8, the kind gap is positive in at least 60% of the 168 slot x concept pairs of agreed units, and the median absolute gap at 0.4 is at most half that at 0.8. | pending | pending |
 | 119b.11 | Claude (medium confidence): Across the 39 units, E and Part 119's dominance have a Spearman correlation of at least 0.5. | pending | pending |
+
+## Part 119c (registered 2026-10-30, PART119C-DESIGN.md): is the interaction share at low dose a rounding floor?
+
+| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 119c.1 | Claude (medium confidence): At 0.2, the float32 median row share over real rows is within 0.04 of the bf16 median on the same rows, and the product-weighted 95% unit-bootstrap interval of that same difference lies inside plus or minus 0.06. The sum-weighted interval is reported as a sensitivity check. | pending | pending |
+| 119c.2 | Claude (medium confidence): In float32, the median row share over real rows is at most 0.10 at 0.1 and at most 0.05 at 0.05. | pending | pending |
+| 119c.3 | Claude (low confidence): In float32, on real rows, the endpoint log-log slope `log(S(0.2)/S(0.05)) / log(4)` is at least 1.5. | pending | pending |
+| 119c.4 | Claude (low confidence): In float32, at each of 0.05, 0.1 and 0.2, the real median share is within a factor of 1.25 of the control median. | pending | pending |
