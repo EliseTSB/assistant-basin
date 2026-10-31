@@ -2886,3 +2886,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 142.5 | Claude (medium confidence): In the bottom band the median steering agreement of sorted units is at most 0.2. | pending | pending |
 | 142.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 142.2 and 142.4. | pending | pending |
 | 142.7 | Claude (medium confidence): The median reference is under 0.1 in every band, for sorted units and matched poles alike. | pending | pending |
+
+## Part 143 (registered 2026-10-31, PART143-DESIGN.md): which side of the push moves which word of "I'm sorry"?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 143.1 | Claude (medium confidence): After a forced "I'm", the median Set R unit under prompt-only puts at least 10 times the plain model's probability on " sorry". | pending | pending |
+| 143.2 | Claude (medium confidence): After a forced "I'm", the median Set R unit under answer-only puts at least 10 times the plain model's probability on " sorry". | pending | pending |
+| 143.3 | Claude (low confidence): After a forced "I", the median Set R unit under answer-only puts less on "'m" than the median unit under prompt-only. | pending | pending |
+| 143.4 | Claude (medium confidence): Under full, the median Set R probability of " sorry" after "I'm" is at least twice the larger of the prompt-only and answer-only medians. | pending | pending |
+| 143.5 | Claude (high confidence): Under full, Set S's median probability of " sorry" after "I'm" is at most a tenth of Set R's. | pending | pending |
