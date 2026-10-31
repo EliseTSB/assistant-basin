@@ -44,7 +44,7 @@ Gate 1: every planned row present and non-empty. Gate 2: level 0 names the Aliba
 ## Size
 
 - Smallest effect worth knowing: one family named on 6 of 24 phrasings.
-- Total: 24 phrasings by up to 7 levels, plus 3 arms, about 240 generations, under 5 minutes on the A770.
+- Total: 240 generations, about 5 minutes on the A770: 24 phrasings by up to 7 levels, plus 3 arms.
 - Pilot: not needed: under 1,000 generations and one GPU-hour.
 
 ## Optimization
