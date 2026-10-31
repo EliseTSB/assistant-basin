@@ -218,7 +218,7 @@ def build(library, catalog, pairs_out, counts_out):
     with open(counts_out, "w", encoding="utf-8") as f:
         json.dump(counts, f, ensure_ascii=False, indent=2)
         f.write("\n")
-    print(f"wrote {len(pairs)} pair rows; sampled {len(sample)} neurons; missing fire labels for {missing_fire}")
+    print(f"wrote {len(pairs)} pair rows; sampled {len(sample)} neurons; missing fire labels for {left_out_missing_fire}")
 
 
 def main():

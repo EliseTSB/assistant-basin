@@ -60,7 +60,7 @@ def require_study_gates(out):
         if not path.is_file():
             raise SystemExit(f"Study mode blocked: {path.name} is missing beside OUT; run the known gate first.")
         answers = {}
-        for line in path.read_text(encoding="utf-8").splitlines():
+        for line in path.read_text(encoding="utf-8").split("\n"):
             if not line.strip():
                 continue
             row = json.loads(line)
@@ -92,7 +92,7 @@ def main(pairs, out, reader, known=None):
         items = known_items(known)
     else:
         require_study_gates(out)
-        items = [json.loads(line) for line in Path(pairs).read_text(encoding="utf-8").splitlines() if line.strip()]
+        items = [json.loads(line) for line in Path(pairs).read_text(encoding="utf-8").split("\n") if line.strip()]
     rng = random.Random(1350)
     rng.shuffle(items)
     if reader == "luna" and not known:
@@ -101,7 +101,7 @@ def main(pairs, out, reader, known=None):
     out.parent.mkdir(parents=True, exist_ok=True)
     completed = set()
     if out.exists():
-        for line in out.read_text(encoding="utf-8").splitlines():
+        for line in out.read_text(encoding="utf-8").split("\n"):
             if line.strip():
                 row = json.loads(line)
                 if "error" not in row:
