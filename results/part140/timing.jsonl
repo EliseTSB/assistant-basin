@@ -1,0 +1,368 @@
+{"layer": 12, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 18.172136000008322}
+{"layer": 12, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 19.094480899977498}
+{"layer": 12, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 123.23379300002125}
+{"layer": 12, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 1, "elapsed_s": 15.499124999972992}
+{"layer": 12, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 1, "elapsed_s": 15.619664200028637}
+{"layer": 12, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 18.588056400010828}
+{"layer": 12, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 1, "elapsed_s": 19.97486459996435}
+{"layer": 12, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 1, "elapsed_s": 20.70391290000407}
+{"layer": 12, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 16.41039860001183}
+{"layer": 12, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 21.089440100011416}
+{"layer": 12, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 16.87153419997776}
+{"layer": 12, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 21.18503839999903}
+{"layer": 12, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 16.972035799990408}
+{"layer": 12, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 19.01636100001633}
+{"layer": 12, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 15.519237800006522}
+{"layer": 12, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 21.284257999970578}
+{"layer": 14, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 4.461571699997876}
+{"layer": 14, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 4.972792899992783}
+{"layer": 14, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 5.111607099999674}
+{"layer": 14, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 1, "elapsed_s": 4.864756700000726}
+{"layer": 14, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 1, "elapsed_s": 5.025001000001794}
+{"layer": 14, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 5.01326949999202}
+{"layer": 14, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 1, "elapsed_s": 4.836320200003684}
+{"layer": 14, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 1, "elapsed_s": 5.197377700009383}
+{"layer": 14, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 4.996319700003369}
+{"layer": 14, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 7.979755300009856}
+{"layer": 14, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 3.7256853000144474}
+{"layer": 14, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 5.422392199980095}
+{"layer": 14, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 6.519548899988877}
+{"layer": 14, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 4.988289300003089}
+{"layer": 14, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 5.245817999995779}
+{"layer": 14, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 7.4585113000066485}
+{"layer": 16, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 8.012028400000418}
+{"layer": 16, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 8.046879000001354}
+{"layer": 16, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 8.316262800013646}
+{"layer": 16, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 4, "elapsed_s": 7.964511400001356}
+{"layer": 16, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 4, "elapsed_s": 8.0457052999991}
+{"layer": 16, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.930157499999041}
+{"layer": 16, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 4, "elapsed_s": 7.930812999984482}
+{"layer": 16, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 4, "elapsed_s": 7.9074614999990445}
+{"layer": 16, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 6.724922399997013}
+{"layer": 16, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.767409299995052}
+{"layer": 16, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.71161860000575}
+{"layer": 16, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.738590699998895}
+{"layer": 16, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.812397800007602}
+{"layer": 16, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.782600899983663}
+{"layer": 16, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.857773399999132}
+{"layer": 16, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.842161600012332}
+{"layer": 17, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 3, "elapsed_s": 5.9246114999987185}
+{"layer": 17, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 3, "elapsed_s": 7.938839799986454}
+{"layer": 17, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 3, "elapsed_s": 7.97861330001615}
+{"layer": 17, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 3, "elapsed_s": 7.33007880000514}
+{"layer": 17, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 3, "elapsed_s": 6.29870069999015}
+{"layer": 17, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 3, "elapsed_s": 6.538613899989286}
+{"layer": 17, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 3, "elapsed_s": 7.367040699988138}
+{"layer": 17, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 3, "elapsed_s": 7.769359199999599}
+{"layer": 17, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 3, "elapsed_s": 6.884453899983782}
+{"layer": 17, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 3, "elapsed_s": 7.617447299999185}
+{"layer": 17, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 3, "elapsed_s": 7.009896399977151}
+{"layer": 17, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 3, "elapsed_s": 7.607246100000339}
+{"layer": 17, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 3, "elapsed_s": 7.642013500008034}
+{"layer": 17, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 3, "elapsed_s": 7.696947199990973}
+{"layer": 17, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 3, "elapsed_s": 7.687915399990743}
+{"layer": 17, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 3, "elapsed_s": 7.732561599987093}
+{"layer": 18, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 6.597137399978237}
+{"layer": 18, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 7.476012400002219}
+{"layer": 18, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 5.7280780999863055}
+{"layer": 18, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 1, "elapsed_s": 6.205668300011894}
+{"layer": 18, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 1, "elapsed_s": 3.049750000005588}
+{"layer": 18, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 7.645089899975574}
+{"layer": 18, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 1, "elapsed_s": 5.018269099993631}
+{"layer": 18, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 1, "elapsed_s": 6.744316700001946}
+{"layer": 18, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 5.207868199999211}
+{"layer": 18, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 7.481272000004537}
+{"layer": 18, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 6.109940900001675}
+{"layer": 18, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 6.002969900000608}
+{"layer": 18, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 7.685424800001783}
+{"layer": 18, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 7.659209400007967}
+{"layer": 18, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 1, "elapsed_s": 5.0796638999891}
+{"layer": 18, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 1, "elapsed_s": 6.289149699994596}
+{"layer": 19, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 2, "elapsed_s": 7.158654200000456}
+{"layer": 19, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 2, "elapsed_s": 7.604827100003604}
+{"layer": 19, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 2, "elapsed_s": 7.261727999983123}
+{"layer": 19, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 2, "elapsed_s": 7.709899799985578}
+{"layer": 19, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 2, "elapsed_s": 6.066490500001237}
+{"layer": 19, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 2, "elapsed_s": 7.1910024999815505}
+{"layer": 19, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 2, "elapsed_s": 5.052245300001232}
+{"layer": 19, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 2, "elapsed_s": 7.688731200003531}
+{"layer": 19, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 2, "elapsed_s": 5.517959400021937}
+{"layer": 19, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 2, "elapsed_s": 7.379779699986102}
+{"layer": 19, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 2, "elapsed_s": 5.399960999988252}
+{"layer": 19, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 2, "elapsed_s": 6.500622299994575}
+{"layer": 19, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 2, "elapsed_s": 6.267834400001448}
+{"layer": 19, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 2, "elapsed_s": 7.538767999998527}
+{"layer": 19, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 2, "elapsed_s": 7.532330499991076}
+{"layer": 19, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 2, "elapsed_s": 7.643323299998883}
+{"layer": 20, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 11, "elapsed_s": 9.559025099995779}
+{"layer": 20, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 11, "elapsed_s": 9.374586199992336}
+{"layer": 20, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 11, "elapsed_s": 9.764393499994185}
+{"layer": 20, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 11, "elapsed_s": 9.759691100014606}
+{"layer": 20, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 11, "elapsed_s": 9.85058550001122}
+{"layer": 20, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 11, "elapsed_s": 9.85208879999118}
+{"layer": 20, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 11, "elapsed_s": 9.888724399992498}
+{"layer": 20, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 11, "elapsed_s": 9.849670299998252}
+{"layer": 20, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 11, "elapsed_s": 9.389153900003294}
+{"layer": 20, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 11, "elapsed_s": 9.35637749999296}
+{"layer": 20, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 11, "elapsed_s": 9.366310300014447}
+{"layer": 20, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 11, "elapsed_s": 9.33255730001838}
+{"layer": 20, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 11, "elapsed_s": 9.356630800000858}
+{"layer": 20, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 11, "elapsed_s": 9.341554900020128}
+{"layer": 20, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 11, "elapsed_s": 8.95617069999571}
+{"layer": 20, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 11, "elapsed_s": 9.356556300015654}
+{"layer": 21, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.56047930000932}
+{"layer": 21, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 13, "elapsed_s": 9.790354900003877}
+{"layer": 21, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.5172986999969}
+{"layer": 21, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 13, "elapsed_s": 9.777600000001257}
+{"layer": 21, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.97425640001893}
+{"layer": 21, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 13, "elapsed_s": 10.274494999990566}
+{"layer": 21, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 11.057765800011111}
+{"layer": 21, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 13, "elapsed_s": 10.3387985000154}
+{"layer": 21, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 11.052577599999495}
+{"layer": 21, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 13, "elapsed_s": 10.312368299986701}
+{"layer": 21, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 11.099306499992963}
+{"layer": 21, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 13, "elapsed_s": 10.29944470000919}
+{"layer": 21, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 10.996974500012584}
+{"layer": 21, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 13, "elapsed_s": 10.29280889997608}
+{"layer": 21, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 10.982398100022692}
+{"layer": 21, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 13, "elapsed_s": 10.240778500010492}
+{"layer": 21, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.485606000002008}
+{"layer": 21, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 13, "elapsed_s": 9.764677600003779}
+{"layer": 21, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.496349599998211}
+{"layer": 21, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 13, "elapsed_s": 9.75397220000741}
+{"layer": 21, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.481486900011078}
+{"layer": 21, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 13, "elapsed_s": 9.763588600006187}
+{"layer": 21, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.510293100000126}
+{"layer": 21, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 13, "elapsed_s": 9.899361499992665}
+{"layer": 21, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.572205400007078}
+{"layer": 21, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 13, "elapsed_s": 9.973404299991671}
+{"layer": 21, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.664836700016167}
+{"layer": 21, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 13, "elapsed_s": 9.94944320002105}
+{"layer": 21, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 11.007915399997728}
+{"layer": 21, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 13, "elapsed_s": 9.931614200002514}
+{"layer": 21, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.536893300013617}
+{"layer": 21, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 13, "elapsed_s": 9.776553100004094}
+{"layer": 22, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.476881899987347}
+{"layer": 22, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 12, "elapsed_s": 9.315502000012202}
+{"layer": 22, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.482775999989826}
+{"layer": 22, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 12, "elapsed_s": 9.619456600019475}
+{"layer": 22, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.016157700010808}
+{"layer": 22, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 12, "elapsed_s": 10.023714300012216}
+{"layer": 22, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 10.974368700000923}
+{"layer": 22, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 12, "elapsed_s": 10.145405300019775}
+{"layer": 22, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.22104100001161}
+{"layer": 22, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 12, "elapsed_s": 10.157262400025502}
+{"layer": 22, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 11.106772700004512}
+{"layer": 22, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 12, "elapsed_s": 10.104858999984572}
+{"layer": 22, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 11.14827159998822}
+{"layer": 22, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 12, "elapsed_s": 10.012118600017857}
+{"layer": 22, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 11.03186889999779}
+{"layer": 22, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 12, "elapsed_s": 10.042066800000612}
+{"layer": 22, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.505096899985801}
+{"layer": 22, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 12, "elapsed_s": 8.07657219999237}
+{"layer": 22, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.489723400009098}
+{"layer": 22, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 12, "elapsed_s": 9.582410900009563}
+{"layer": 22, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.372150300012436}
+{"layer": 22, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 12, "elapsed_s": 9.599044100003084}
+{"layer": 22, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.491211400018074}
+{"layer": 22, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 12, "elapsed_s": 9.57276089998777}
+{"layer": 22, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.483007799979532}
+{"layer": 22, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 12, "elapsed_s": 9.572723499994026}
+{"layer": 22, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.492072799999733}
+{"layer": 22, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 12, "elapsed_s": 9.726915800012648}
+{"layer": 22, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.63016569998581}
+{"layer": 22, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 12, "elapsed_s": 9.649861100013368}
+{"layer": 22, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.538767699996242}
+{"layer": 22, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 12, "elapsed_s": 9.588235800008988}
+{"layer": 23, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.465799099998549}
+{"layer": 23, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.472106800007168}
+{"layer": 23, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 9.045879199984483}
+{"layer": 23, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.478354600025341}
+{"layer": 23, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.696189300011611}
+{"layer": 23, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.547427699988475}
+{"layer": 23, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.490470099990489}
+{"layer": 23, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.485877500002971}
+{"layer": 23, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.469201100000646}
+{"layer": 23, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.646519999980228}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.964236399973743}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.963748699985445}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.306917799985968}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 11.134710099984659}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.941673299996182}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 11.048696899990318}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 11.007284199993592}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 10.958201500005089}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 11.024590999993961}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 4, "elapsed_s": 6.315769899985753}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.982053299987456}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.98774169999524}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.972912099998211}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.998197299981257}
+{"layer": 23, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 4, "elapsed_s": 7.827290799992625}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 11.008460800017929}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 11.046851699997205}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.973862799990457}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 11.014009900012752}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.707622899994021}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 11.03120029999991}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 11.1017180000199}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 11.045424699987052}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 11.098174999991897}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 4, "elapsed_s": 7.832921599998372}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 11.010006299999077}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 10.990831900009653}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 11.02946809999412}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 11.013892899994971}
+{"layer": 23, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 4, "elapsed_s": 7.7901579000172205}
+{"layer": 23, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.487854600010905}
+{"layer": 23, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.478584599972237}
+{"layer": 23, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.495437500008848}
+{"layer": 23, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.478547600010643}
+{"layer": 23, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.085853299999144}
+{"layer": 23, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.498393399990164}
+{"layer": 23, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.492108799982816}
+{"layer": 23, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.49387740000384}
+{"layer": 23, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.58480770001188}
+{"layer": 23, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.889618200017139}
+{"layer": 23, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.575488499976927}
+{"layer": 23, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.57602519998909}
+{"layer": 23, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.471900300006382}
+{"layer": 23, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.469038199982606}
+{"layer": 23, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.683996200008551}
+{"layer": 23, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.49458929998218}
+{"layer": 23, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.517952599999262}
+{"layer": 23, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.460608699999284}
+{"layer": 23, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.474120700004278}
+{"layer": 23, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.688278000015998}
+{"layer": 23, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.477203799993731}
+{"layer": 23, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.470850399986375}
+{"layer": 23, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.483671900001355}
+{"layer": 23, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.468085999978939}
+{"layer": 23, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 7.753993400023319}
+{"layer": 23, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.52005530000315}
+{"layer": 23, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.558159899985185}
+{"layer": 23, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.585318400000688}
+{"layer": 23, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.575438600004418}
+{"layer": 23, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.765145500015933}
+{"layer": 23, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.472269099991536}
+{"layer": 23, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.47940860001836}
+{"layer": 23, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.46032319997903}
+{"layer": 23, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.48258340000757}
+{"layer": 23, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 4, "elapsed_s": 6.73526149999816}
+{"layer": 23, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.477082299999893}
+{"layer": 23, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.4845736999996}
+{"layer": 23, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.495431500021368}
+{"layer": 23, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.487110699992627}
+{"layer": 23, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 4, "elapsed_s": 7.647251200018218}
+{"layer": 24, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 9.298659299995052}
+{"layer": 24, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.467379999987315}
+{"layer": 24, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 14, "elapsed_s": 10.058385699987411}
+{"layer": 24, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.473702299990691}
+{"layer": 24, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.509654899971792}
+{"layer": 24, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 14, "elapsed_s": 10.120486900006654}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 11.07311130000744}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 11.074562399997376}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 14, "elapsed_s": 10.513009599992074}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 10.970968899986474}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 9.74050270000589}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 14, "elapsed_s": 10.505140099994605}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.957662600005278}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.952519100013888}
+{"layer": 24, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 14, "elapsed_s": 10.551321399980225}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.976802599994699}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.950056800007587}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 14, "elapsed_s": 10.508262799994554}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 10.985701199999312}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 10.965024000004632}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 14, "elapsed_s": 10.501641400012886}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 11.030039499979466}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 11.065977100020973}
+{"layer": 24, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 14, "elapsed_s": 10.645910099992761}
+{"layer": 24, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.576242400013143}
+{"layer": 24, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.472093899996253}
+{"layer": 24, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 14, "elapsed_s": 10.017820800014306}
+{"layer": 24, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.469389100006083}
+{"layer": 24, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.492568700021366}
+{"layer": 24, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 14, "elapsed_s": 10.038761899981182}
+{"layer": 24, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.49617479997687}
+{"layer": 24, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 9.960513600002741}
+{"layer": 24, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 14, "elapsed_s": 10.004634200013243}
+{"layer": 24, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.527897300024051}
+{"layer": 24, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.515120800002478}
+{"layer": 24, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 14, "elapsed_s": 10.013757600012468}
+{"layer": 24, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.480593699991005}
+{"layer": 24, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.46076649997849}
+{"layer": 24, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 14, "elapsed_s": 10.066748000012012}
+{"layer": 24, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.582208800013177}
+{"layer": 24, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.563842400006251}
+{"layer": 24, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 14, "elapsed_s": 10.1363497999846}
+{"layer": 24, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.508515800000168}
+{"layer": 24, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.250503999995999}
+{"layer": 24, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 14, "elapsed_s": 10.032666799990693}
+{"layer": 24, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.457830200000899}
+{"layer": 24, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.483476099994732}
+{"layer": 24, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 14, "elapsed_s": 10.042057799990289}
+{"layer": 25, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 8.284739399998216}
+{"layer": 25, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 9, "elapsed_s": 9.085351300018374}
+{"layer": 25, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.46702969999751}
+{"layer": 25, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 9, "elapsed_s": 8.902913400001125}
+{"layer": 25, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.970335399993928}
+{"layer": 25, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 9, "elapsed_s": 8.910195100004785}
+{"layer": 25, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 10.967796100012492}
+{"layer": 25, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 9, "elapsed_s": 9.25856320001185}
+{"layer": 25, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 10.989160500001162}
+{"layer": 25, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 9, "elapsed_s": 9.317493499984266}
+{"layer": 25, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 11.062797599995974}
+{"layer": 25, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 9, "elapsed_s": 9.311329799995292}
+{"layer": 25, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 10.990766600007191}
+{"layer": 25, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 9, "elapsed_s": 9.258469099993818}
+{"layer": 25, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 10.954477299994323}
+{"layer": 25, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 9, "elapsed_s": 9.234605300007388}
+{"layer": 25, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.478280499984976}
+{"layer": 25, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 9, "elapsed_s": 8.529079800006002}
+{"layer": 25, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.499473900010344}
+{"layer": 25, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 9, "elapsed_s": 8.818774499988649}
+{"layer": 25, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.488841300015338}
+{"layer": 25, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 9, "elapsed_s": 8.230400000000373}
+{"layer": 25, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.48891369998455}
+{"layer": 25, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 9, "elapsed_s": 8.87912180001149}
+{"layer": 25, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.487540100002661}
+{"layer": 25, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 9, "elapsed_s": 8.976323499984574}
+{"layer": 25, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.556981699977769}
+{"layer": 25, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 9, "elapsed_s": 9.013465500000166}
+{"layer": 25, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.584789299988188}
+{"layer": 25, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 9, "elapsed_s": 8.091698800009908}
+{"layer": 25, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.57420689999708}
+{"layer": 25, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 9, "elapsed_s": 8.877405999985058}
+{"layer": 26, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 7.801907599990955}
+{"layer": 26, "arm": "A", "question": "Who are you?", "seed": 140000, "rows": 5, "elapsed_s": 8.279320000001462}
+{"layer": 26, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 7.6640506999974605}
+{"layer": 26, "arm": "A", "question": "Tell me about yourself.", "seed": 140000, "rows": 5, "elapsed_s": 8.055622500018217}
+{"layer": 26, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.960886000015307}
+{"layer": 26, "arm": "B", "question": "Who are you?", "seed": 140000, "rows": 5, "elapsed_s": 6.902899999986403}
+{"layer": 26, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 16, "elapsed_s": 8.895121199981077}
+{"layer": 26, "arm": "B", "question": "Who are you?", "seed": 140001, "rows": 5, "elapsed_s": 8.253447199997026}
+{"layer": 26, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 16, "elapsed_s": 8.827325100020971}
+{"layer": 26, "arm": "B", "question": "Who are you?", "seed": 140002, "rows": 5, "elapsed_s": 8.213310799997998}
+{"layer": 26, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.039218300022185}
+{"layer": 26, "arm": "B", "question": "Tell me about yourself.", "seed": 140000, "rows": 5, "elapsed_s": 8.215495600015856}
+{"layer": 26, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 16, "elapsed_s": 8.355115599988494}
+{"layer": 26, "arm": "B", "question": "Tell me about yourself.", "seed": 140001, "rows": 5, "elapsed_s": 8.127065600012429}
+{"layer": 26, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 16, "elapsed_s": 10.539761299995007}
+{"layer": 26, "arm": "B", "question": "Tell me about yourself.", "seed": 140002, "rows": 5, "elapsed_s": 7.906685199995991}
+{"layer": 26, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.565823899989482}
+{"layer": 26, "arm": "C", "question": "Who are you?", "seed": 140000, "rows": 5, "elapsed_s": 8.072241499990923}
+{"layer": 26, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.641827500017826}
+{"layer": 26, "arm": "C", "question": "Tell me about yourself.", "seed": 140000, "rows": 5, "elapsed_s": 8.24887020001188}
+{"layer": 26, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 9.541596199997002}
+{"layer": 26, "arm": "D", "question": "Who are you?", "seed": 140000, "rows": 5, "elapsed_s": 6.80270629998995}
+{"layer": 26, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.550751200004015}
+{"layer": 26, "arm": "D", "question": "Tell me about yourself.", "seed": 140000, "rows": 5, "elapsed_s": 7.947799500019755}
+{"layer": 26, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.470790699997451}
+{"layer": 26, "arm": "E", "question": "Who are you?", "seed": 140000, "rows": 5, "elapsed_s": 8.081892999995034}
+{"layer": 26, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.534196499997051}
+{"layer": 26, "arm": "E", "question": "Tell me about yourself.", "seed": 140000, "rows": 5, "elapsed_s": 8.142985900019994}
+{"layer": 26, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 16, "elapsed_s": 10.353157299978193}
+{"layer": 26, "arm": "F", "question": "Who are you?", "seed": 140000, "rows": 5, "elapsed_s": 7.800404000008712}
+{"layer": 26, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 16, "elapsed_s": 10.533711700001732}
+{"layer": 26, "arm": "F", "question": "Tell me about yourself.", "seed": 140000, "rows": 5, "elapsed_s": 8.004380099999253}

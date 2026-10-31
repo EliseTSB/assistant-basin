@@ -1,0 +1,8 @@
+{
+  "reader": "ds",
+  "known": 12,
+  "valid": 12,
+  "errors": 0,
+  "matches": 11,
+  "passed": true
+}

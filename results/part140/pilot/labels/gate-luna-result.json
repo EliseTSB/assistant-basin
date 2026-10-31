@@ -1,0 +1,10 @@
+{
+  "reader": "luna",
+  "known": 12,
+  "valid": 12,
+  "errors": 0,
+  "matches": 12,
+  "passed": true,
+  "joint_kappa_n": 12,
+  "joint_kappa": 1.0
+}

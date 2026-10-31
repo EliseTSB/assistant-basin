@@ -2848,14 +2848,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 140.1 | Claude (medium confidence): On Set P, arm C has at least 10 points more joint success than arm A. | pending | pending |
-| 140.2 | Claude (low confidence): On Set P, arm B is within 5 points of arm A in joint success. | pending | pending |
-| 140.3 | Claude (medium confidence): On Set L, arm E has at least 20 points more coherent answers than arm A. | pending | pending |
-| 140.4 | Claude (low confidence): On Set P, arm E's joint success is below arm C's. | pending | pending |
-| 140.5 | Claude (medium confidence): Set P beats Set C on joint success in arms A and C alike, by at least 10 points. | pending | pending |
-| 140.6 | Claude (low confidence): Under arm C, concept units lose less joint success than slot units against arm A. | pending | pending |
-| 140.7 | Weaver (idea), Claude (threshold) (high confidence): The plain model shows repetition on at most 2% of answers in every arm. | pending | pending |
-| 140.8 | Muse (idea), Claude (threshold) (low confidence): On Set P, arm F has at least 5 points more joint success than arm A. | pending | pending |
+| 140.1 | Claude (medium confidence): On Set P, arm C has at least 10 points more joint success than arm A. | medium / C − A: −42.5 points [−50.4, −34.6] | failed |
+| 140.2 | Claude (low confidence): On Set P, arm B is within 5 points of arm A in joint success. | low / B − A: −13.2 points [−21.9, −4.2] | failed |
+| 140.3 | Claude (medium confidence): On Set L, arm E has at least 20 points more coherent answers than arm A. | medium / E − A: +10.8 points [−0.8, +22.5] | failed |
+| 140.4 | Claude (low confidence): On Set P, arm E's joint success is below arm C's. | low / E − C: +37.5 points [+30.0, +45.0] | failed |
+| 140.5 | Claude (medium confidence): Set P beats Set C on joint success in arms A and C alike, by at least 10 points. | medium / A: +46.7 [39.2, 53.8]; C: +5.8 [2.9, 9.2] | failed |
+| 140.6 | Claude (low confidence): Under arm C, concept units lose less joint success than slot units against arm A. | low / Concept C − A: −49.2 [−60.8, −36.7]; slot C − A: −35.8 [−45.0, −26.7] | failed |
+| 140.7 | Weaver (idea), Claude (threshold) (high confidence): The plain model shows repetition on at most 2% of answers in every arm. | high / A 0/2, B 0/6, C 0/2, D 0/2, E 0/2, F 0/2 repeated; 16 plain answers total | held |
+| 140.8 | Muse (idea), Claude (threshold) (low confidence): On Set P, arm F has at least 5 points more joint success than arm A. | low / F − A: −48.3 points [−55.4, −41.2] | failed |
 
 ## Part 139 (registered 2026-10-31, PART139-DESIGN.md): why do pushed OLMo answers open with an apology?
 
