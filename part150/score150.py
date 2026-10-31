@@ -88,12 +88,13 @@ def score(in_dir, lens_path=None, chat="instruct", base="base"):
     expected_rows = 6 * (1 + 5 * 6 + 3 * 2 * 4)
     gates = {
         "gate1_zero_matches_no_hook": all(meta[t]["gate1_zero_matches_no_hook"] for t in (chat, base)),
-        "gate2_atlas_tokens_fire": all(a["activation"] >= 10.0 for a in meta[chat]["atlas_check"]),
         "gate3_rows": all(len(rows[t]) == expected_rows and len(meta[t]["activations"]) == 120 for t in (chat, base)),
         "gate4_marks_are_the_word": all(a["token"].lstrip("Ġ ").lower() == a["marked"].strip().lower()
                                         for t in (chat, base) for a in meta[t]["activations"]),
     }
     all_passed = all(gates.values())
+    # Amendment 1: the Gate 2 text came from a Qwen3-1.7B atlas, so it is reported and no longer stops the reading.
+    gates["gate2_reported_only"] = [a["activation"] for a in meta[chat]["atlas_check"]]
     table = {}
     for t in (chat, base):
         table[t] = {}

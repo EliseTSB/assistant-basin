@@ -84,7 +84,7 @@ class Tests(unittest.TestCase):
             self.assertEqual(set(r["predictions"].values()), {"held"}, r["predictions"])
 
     def test_each_gate_can_fail(self):
-        for chat in (meta("instruct", gate=False), meta("instruct", atlas=1.0)):
+        for chat in (meta("instruct", gate=False),):
             with tempfile.TemporaryDirectory() as d:
                 lens = write(d, answers("instruct", (0.8,)), answers("base", (0.8,)), chat, meta("base"))
                 r = score150.score(d, lens)

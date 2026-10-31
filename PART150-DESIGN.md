@@ -66,3 +66,10 @@ part150/score150.py computes every number from answers and meta files. Verdicts 
 ## Limits
 
 One model family, hand-picked units chosen for odd answers, 12 hand-written sentences per class, 5 test questions, greedy decoding. Word rates by suffix and prefix are crude and include words with no abstract sense. The lens lists were read by me before the sentences were written. Base runs in a plain frame, so a difference may be the frame.
+
+## Amendment 1, 2026-10-31 10:49 CT, before any answer or write rate was read
+
+The atlas windows this design cites are Qwen3-1.7B, width 6144, not Qwen3.5-4B. `atlas_collect_fast2.py` line 2 says so. The read guesses for L19 N4979, L19 N5975 and L23 N116 therefore came from different neurons that share a number, and the sentences test those guesses on the wrong model. The chat run's sentence activations were read before this amendment: N4979 and N116 sit near zero on every class and on the Gate 2 text (0.05 and -0.01 against 10). Gate 2 did its job.
+
+Changes: Gate 2 no longer stops the write predictions, since it was checking a window from another model. Predictions 150.1 to 150.5 and 150.11 keep their wording and are scored as registered, and their result says what they tested. The write readouts, 150.6 to 150.10, 150.12 and 150.13, were not read and are unchanged. The lens words came from Qwen3.5-4B's own weights and the Neuronpedia lens for that model, so they stand. A successor collects these five units' top windows on Qwen3.5-4B itself.
+
