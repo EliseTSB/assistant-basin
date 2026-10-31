@@ -233,4 +233,9 @@ beyond one part.
 - 2026-10-31 (Part 145): an index built for one question must not be used on another's word list. The scorer did, a verdict flipped, and I told Elise the wrong result even though the risers list on my screen showed " sorry" second. Compare a surprising score with the raw table before reporting it.
 - 2026-10-31 (Part 148): a number in a design is looked up or left out. I typed a Part 112 run time that is on record nowhere; it was caught before launch.
 - 2026-10-31 (Parts 145, 146): name the alternative before announcing a pattern, and run its control. Part 145's move toward Base was mostly a move toward Instruct with the question removed, which Part 146 showed within the hour. Run the control on the unit that gave the claim: a median row hid how weak single units were.
+- 2026-10-31 (Part 149): compute the reachable range of a registered bar. A tenfold rise could not pass from a baseline median of 0.121, because ten times that is over 1. I set the ratio from one question. Log-odds or a probability difference would have been testable.
+- 2026-10-31 (Part 149): Gate 5 needed no GPU and failed on one row after a 20-minute run. The rule was already here, from Part 122; I did not run it. A gate over prompts runs before launch.
+- 2026-10-31 (Part 151b): where a neuron goes most negative says as much as where it peaks. Read bottom windows too, and write the reading down before checking it on other documents.
+- 2026-10-31 (Part 152): a hit in the words after a fired token does not show that a unit read them. Report where hits fall beside any read-write match.
+- 2026-10-31 (Part 153): a design's reading rule names how it is applied. "A hit on a unit whose pair also hits" allowed two readings, and one prediction's verdict depends on which.
 
