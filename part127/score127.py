@@ -385,15 +385,19 @@ def _fixed_emitted_measure(position: dict, state: dict) -> tuple[float, str]:
     return value, field
 
 
-def _fixed_measure(fixed_rows: list[dict], pairs: list[dict]) -> dict:
+def _fixed_measure(fixed_rows: list[dict], pairs: list[dict],
+                   dropped_groups: list[str] | None = None) -> dict:
     buckets = defaultdict(lambda: defaultdict(list))
     field_counts = Counter()
     seen = set()
     expected_group_keys = set()
+    dropped_groups = set(dropped_groups or [])
     for pair in pairs:
         for qi in range(len(run127.QUESTIONS)):
             for dose in run127.DOSES:
-                expected_group_keys.add(f"group:{pair['pair_id']}:q{qi}:dose{dose:g}")
+                key = f"group:{pair['pair_id']}:q{qi}:dose{dose:g}"
+                if key not in dropped_groups:
+                    expected_group_keys.add(key)
     for row in fixed_rows:
         key = str(row.get("fixed_key"))
         if key in seen:
@@ -666,12 +670,18 @@ def score_data(out_dir: Path, *, neurons_path: str | Path = run127.DEFAULT_NEURO
     if cosine.get("pair_ids") != [pair["pair_id"] for pair in pairs] or len(cosine_rows) != 27:
         raise IncompleteRun("run127 is incomplete: the 27-pair cosine table is missing")
     fixed_meta = read_json(out_dir / "fixed_path_meta.json")
+    selected_units = sorted({unit_id for pair in pairs for unit_id in (pair["a"], pair["b"])})
     expected_fixed_counts = run127.fixed_path_counts(
-        pairs, sorted({unit_id for pair in pairs for unit_id in (pair["a"], pair["b"])}))
+        pairs, selected_units, answer_by_key)
+    if (fixed_meta.get("dropped_groups") != expected_fixed_counts["dropped_groups"]
+            or fixed_meta.get("dropped_unit_questions") != expected_fixed_counts["dropped_unit_questions"]
+            or fixed_meta.get("dropped_states") != expected_fixed_counts["dropped_states"]):
+        raise IncompleteRun("fixed-path dropped list does not match empty dose-1 references in answers")
     if fixed_meta.get("status") != "complete" or fixed_meta.get("counts") != expected_fixed_counts:
         raise IncompleteRun("run127 is incomplete: fixed-path score count does not match the design")
     fixed_rows = read_jsonl(out_dir / "fixed_path.jsonl")
-    fixed_group_expected = len(pairs) * len(run127.QUESTIONS) * len(run127.DOSES)
+    fixed_group_expected = (len(pairs) * len(run127.QUESTIONS) * len(run127.DOSES)
+                           - expected_fixed_counts["dropped_group_count"])
     if len(fixed_rows) != fixed_group_expected:
         raise IncompleteRun(f"run127 is incomplete: expected {fixed_group_expected} fixed-path groups, "
                             f"found {len(fixed_rows)}")
@@ -704,7 +714,7 @@ def score_data(out_dir: Path, *, neurons_path: str | Path = run127.DEFAULT_NEURO
     eligible = set(controls["eligible_pair_ids"])
     rescue = _rescue_data(pairs, eligible, singles, joints, cell_eligibility)
     bootstrap = _bootstrap_rescues(pairs, eligible, rescue)
-    fixed = _fixed_measure(fixed_rows, pairs)
+    fixed = _fixed_measure(fixed_rows, pairs, expected_fixed_counts["dropped_groups"])
     table = _pair_question_table(pairs, answer_by_key, study_items, ds_labels, luna_labels)
     broken = _broken_counts(
         study_items, answer_by_key, {"ds": ds_labels, "luna": luna_labels},
@@ -733,6 +743,7 @@ def score_data(out_dir: Path, *, neurons_path: str | Path = run127.DEFAULT_NEURO
         "rescues": rescue["counts"],
         "pair_bootstrap": bootstrap,
         "fixed_path": {"meta": fixed_meta, "by_pair": fixed["by_pair"],
+                       "dropped_groups": expected_fixed_counts["dropped_groups"],
                        "prediction_127_5_wins": fixed["prediction_127_5_wins"],
                        "prediction_127_5_total_pairs": fixed["prediction_127_5_total_pairs"],
                        "prediction_127_5_pair_wins": fixed["prediction_127_5_pair_wins"],

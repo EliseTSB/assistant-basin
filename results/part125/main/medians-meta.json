@@ -1,0 +1,6 @@
+{
+  "model_snapshot": "/root/part127-run/model/olmo-2-0425-1b-instruct-48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "device": "cuda",
+  "transformers_version": "5.13.0",
+  "medians_sha256": "84565f53629e330846b1c0a3bc40f615567647fe8175a7962b9826899aed781b"
+}

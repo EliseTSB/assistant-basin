@@ -215,7 +215,8 @@ def _copy_results(host: str, port: int, deadline: float) -> None:
         members = archive.getmembers()
         for member in members:
             path = Path(member.name)
-            allowed = any(member.name.startswith(prefix.rstrip("/") + "/") for prefix in RETURN_PATHS)
+            allowed = any(member.name == prefix.rstrip("/") or member.name.startswith(prefix.rstrip("/") + "/")
+                          for prefix in RETURN_PATHS)
             if path.is_absolute() or ".." in path.parts or not allowed:
                 raise RuntimeError("remote result archive contains an unexpected path")
         archive.extractall(ROOT, members=members)

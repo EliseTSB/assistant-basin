@@ -263,16 +263,50 @@ def build_arm_list(by_id: dict[str, dict], pairs: list[dict] | None = None,
     return rows
 
 
-def fixed_path_counts(pairs: list[dict], units: list[str]) -> dict:
+def _empty_reference_unit_questions(pairs: list[dict], selected_ids: list[str],
+                                   answers: dict[str, dict]) -> list[dict]:
+    empty = []
+    for unit_id in selected_ids:
+        for qi in range(len(QUESTIONS)):
+            key = f"single:{unit_id}:dose1:q{qi}"
+            row = answers.get(key)
+            if row is None:
+                raise ValueError(f"fixed-path scoring needs dose-1 reference answer {key}")
+            tokens = row.get("tokens", [])
+            if not tokens:
+                empty.append({"unit_id": unit_id, "question_index": qi, "reference_key": key})
+    return empty
+
+
+def _dropped_fixed_groups(pairs: list[dict], empty_references: list[dict]) -> list[str]:
+    empty_set = {(row["unit_id"], int(row["question_index"])) for row in empty_references}
+    return sorted(f"group:{pair['pair_id']}:q{qi}:dose{dose:g}"
+                  for pair in pairs for qi in range(len(QUESTIONS))
+                  if any((unit_id, qi) in empty_set for unit_id in (pair["a"], pair["b"]))
+                  for dose in DOSES)
+
+
+def fixed_path_counts(pairs: list[dict], units: list[str],
+                      answers: dict[str, dict] | None = None) -> dict:
     n_pairs, n_units = len(pairs), len(units)
+    empty_references = (_empty_reference_unit_questions(pairs, units, answers)
+                        if answers is not None else [])
+    dropped_groups = _dropped_fixed_groups(pairs, empty_references)
+    dropped_group_ids = {key for key in dropped_groups}
+    dropped_shared = len(empty_references) * (1 + len(DOSES))
+    total_groups = n_pairs * len(QUESTIONS) * len(DOSES)
     values = {
-        "no_push": n_units * len(QUESTIONS),
-        "single": n_units * len(QUESTIONS) * len(DOSES),
-        "pair_ab": n_pairs * len(QUESTIONS) * len(DOSES) * 2,
-        "matched_ac": n_pairs * len(QUESTIONS) * len(DOSES),
-        "random": n_pairs * len(QUESTIONS) * len(DOSES) * 3,
+        "no_push": n_units * len(QUESTIONS) - len(empty_references),
+        "single": n_units * len(QUESTIONS) * len(DOSES) - len(empty_references) * len(DOSES),
+        "pair_ab": (total_groups - len(dropped_group_ids)) * 2,
+        "matched_ac": total_groups - len(dropped_group_ids),
+        "random": (total_groups - len(dropped_group_ids)) * 3,
     }
     values["total"] = sum(values.values())
+    values["dropped_unit_questions"] = empty_references
+    values["dropped_groups"] = dropped_groups
+    values["dropped_group_count"] = len(dropped_groups)
+    values["dropped_states"] = dropped_shared + len(dropped_groups) * 6
     return values
 
 
@@ -531,7 +565,7 @@ def _rig_gate(model, tokenizer, layers, batch_size: int, device: str) -> dict:
     zero_logits = run119._forward(model, path_ids, path_mask, layers, zero_path_vectors)
     equal_logits = bool(torch.equal(plain_logits, zero_logits))
     difference = 0.0 if equal_logits else float((plain_logits - zero_logits).abs().max().item())
-    return {"gate_version": RIG_GATE_VERSION,
+    return {"gate_version": RIG_GATE_VERSION, "device": str(device),
             "passed": bool(equal_generation and equal_logits), "batch_size": batch_size,
             "generation_batch_shape": list(input_ids.shape),
             "fixed_path_batch_size": FIXED_PATH_BATCH,
@@ -544,13 +578,14 @@ def _rig_gate(model, tokenizer, layers, batch_size: int, device: str) -> dict:
             "hook_layers": list(range(len(layers))), "hook_state": "zero"}
 
 
-def _saved_rig_gate_matches(rig: dict, batch_size: int) -> bool:
+def _saved_rig_gate_matches(rig: dict, batch_size: int, device: str | None = None) -> bool:
     """Only reuse a saved gate made by the current gate code at this shape."""
     try:
         shape = rig["fixed_path_shape"]
         mask = rig["fixed_path_attention_mask"]
         return (int(rig.get("gate_version", -1)) == RIG_GATE_VERSION
                 and int(rig.get("batch_size", -1)) == batch_size
+                and (device is None or rig.get("device") == str(device))
                 and int(rig.get("fixed_path_batch_size", -1)) == FIXED_PATH_BATCH
                 and isinstance(shape, list) and len(shape) == 2
                 and int(shape[0]) == FIXED_PATH_BATCH
@@ -567,6 +602,9 @@ def _call_record(path: Path, stage: str, call_id: str, details: dict) -> None:
 
 def _fixed_state_specs(pairs: list[dict], selected_ids: list[str], answers: dict[str, dict],
                        by_id: dict[str, dict], matched: dict[str, str]) -> tuple[list[dict], list[dict]]:
+    del by_id
+    empty_references = _empty_reference_unit_questions(pairs, selected_ids, answers)
+    empty_set = {(row["unit_id"], int(row["question_index"])) for row in empty_references}
     shared = []
     for unit_id in selected_ids:
         for qi in range(len(QUESTIONS)):
@@ -576,7 +614,7 @@ def _fixed_state_specs(pairs: list[dict], selected_ids: list[str], answers: dict
                 raise ValueError(f"fixed-path scoring needs dose-1 reference answer {reference_key}")
             tokens = [int(token) for token in reference.get("tokens", [])[:PATH_TOKENS]]
             if not tokens:
-                raise ValueError(f"dose-1 reference answer {reference_key} has no generated tokens")
+                continue
             shared.append({"state_key": f"none:{unit_id}:q{qi}", "kind": "no_push",
                            "unit_id": unit_id, "qi": qi, "tokens": tokens, "pushes": []})
             for dose in DOSES:
@@ -589,6 +627,8 @@ def _fixed_state_specs(pairs: list[dict], selected_ids: list[str], answers: dict
         a, b = pair["a"], pair["b"]
         c_id = matched[pair["pair_id"]]
         for qi in range(len(QUESTIONS)):
+            if any((unit_id, qi) in empty_set for unit_id in (a, b)):
+                continue
             ref_tokens = {}
             for unit_id in (a, b):
                 key = f"single:{unit_id}:dose1:q{qi}"
@@ -780,7 +820,7 @@ def _run_fixed_scoring(out_dir: Path, pairs: list[dict], by_id: dict[str, dict],
     matched = choose_matched_units(pairs, by_id)
     selected_ids = sorted({unit_id for pair in pairs for unit_id in (pair["a"], pair["b"])})
     shared_specs, groups = _fixed_state_specs(pairs, selected_ids, answers, by_id, matched)
-    expected_counts = fixed_path_counts(pairs, selected_ids)
+    expected_counts = fixed_path_counts(pairs, selected_ids, answers)
     shared_cache_path = out_dir / "fixed_shared.pt"
     shared_started = time.perf_counter()
     if shared_cache_path.exists():
@@ -879,6 +919,10 @@ def _run_fixed_scoring(out_dir: Path, pairs: list[dict], by_id: dict[str, dict],
                     if field:
                         field_counts[str(field)] += 1
     report = {"status": "complete", "counts": expected_counts,
+              "dropped_unit_questions": expected_counts["dropped_unit_questions"],
+              "dropped_groups": expected_counts["dropped_groups"],
+              "dropped_group_count": expected_counts["dropped_group_count"],
+              "dropped_states": expected_counts["dropped_states"],
               "shared_states_cached": len(shared_by_key),
               "group_records": len(groups),
               "new_group_records": len(group_records),
@@ -1062,7 +1106,7 @@ def run(args: argparse.Namespace, *, model_loader=None,
     rig = None
     if rig_path.exists():
         saved_rig = json.loads(rig_path.read_text(encoding="utf-8"))
-        if _saved_rig_gate_matches(saved_rig, args.batch):
+        if _saved_rig_gate_matches(saved_rig, args.batch, args.device):
             rig = saved_rig
     if rig is None:
         started = time.perf_counter()
@@ -1079,7 +1123,7 @@ def run(args: argparse.Namespace, *, model_loader=None,
     if not rig.get("passed"):
         raise RuntimeError("Part 127 rig gate failed; run stopped before study generation")
     out_answers = out_dir / "answers.jsonl"
-    if args.stage == "main" and args.pilot_dir:
+    if args.stage == "main" and args.pilot_dir and not getattr(args, "fixed_only", False):
         pilot_dir = repo_path(args.pilot_dir)
         pilot_meta_path = pilot_dir / "run_meta.json"
         if not pilot_meta_path.is_file():
@@ -1092,7 +1136,12 @@ def run(args: argparse.Namespace, *, model_loader=None,
                       repair_torn_last_line=bool(getattr(args, "resume", False)))
     repair_torn = bool(getattr(args, "resume", False))
     existing = _jsonl_rows(out_answers, "key", repair_torn_last_line=repair_torn)
-    pending = [item for item in rows if item["key"] not in existing]
+    if getattr(args, "fixed_only", False) and len(existing) != len(expected):
+        missing_answers = sorted(set(expected) - set(existing))
+        raise ValueError(f"--fixed-only requires a complete answers.jsonl: "
+                         f"{len(missing_answers)} rows missing; first={missing_answers[0] if missing_answers else 'unknown'}")
+    pending = ([] if getattr(args, "fixed_only", False)
+               else [item for item in rows if item["key"] not in existing])
     matched = choose_matched_units(pairs, by_id)
     started = time.perf_counter()
     total = len(pending)
@@ -1137,7 +1186,19 @@ def run(args: argparse.Namespace, *, model_loader=None,
             raise ValueError(f"answer key mismatch in {key}")
     fixed_path = out_dir / "fixed_path.jsonl"
     fixed_existing = _jsonl_rows(fixed_path, "fixed_key", repair_torn_last_line=repair_torn)
-    expected_fixed_groups = len(pairs) * len(QUESTIONS) * len(DOSES)
+    fixed_counts_for_answers = fixed_path_counts(pairs, selected_ids, answers)
+    expected_fixed_groups = (len(pairs) * len(QUESTIONS) * len(DOSES)
+                             - fixed_counts_for_answers["dropped_group_count"])
+    if getattr(args, "fresh_fixed", False):
+        for stale_path in (fixed_path, out_dir / "fixed_path_meta.json",
+                           out_dir / "fixed_shared.pt"):
+            if stale_path.exists():
+                superseded = stale_path.with_name(stale_path.name + ".superseded")
+                suffix = 1
+                while superseded.exists():
+                    superseded = stale_path.with_name(stale_path.name + f".superseded.{suffix}")
+                    suffix += 1
+                os.replace(stale_path, superseded)
     if len(fixed_existing) < expected_fixed_groups or not (out_dir / "fixed_path_meta.json").exists():
         fixed_report = _run_fixed_scoring(
             out_dir, pairs, by_id, random_meta, cache_by_dose, tokenizer, model, layers,
@@ -1181,14 +1242,22 @@ def main(argv: list[str] | None = None, *, model_loader=None,
     parser.add_argument("--pilot-dir", help="pilot directory whose registered rows should be reused")
     parser.add_argument("--resume", action="store_true",
                         help="resume this output as its owner; repair a torn final JSONL row if needed")
+    parser.add_argument("--fixed-only", action="store_true",
+                        help="score a complete existing answers.jsonl without generating answers")
+    parser.add_argument("--fresh-fixed", action="store_true",
+                        help="supersede prior fixed-path rows/meta and rebuild all fixed groups")
     parser.add_argument("--batch", type=int, default=8)
-    parser.add_argument("--device", default="xpu")
+    parser.add_argument("--device", choices=("xpu", "cpu"), default="xpu")
     parser.add_argument("--test-inventory", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
     if args.batch < 1:
         parser.error("--batch must be positive")
     if args.pilot_dir and args.stage != "main":
         parser.error("--pilot-dir is only valid for the main stage")
+    if args.fixed_only and args.stage != "main":
+        parser.error("--fixed-only requires --stage main")
+    if args.fresh_fixed and not args.fixed_only:
+        parser.error("--fresh-fixed requires --fixed-only")
     try:
         run(args, model_loader=model_loader, inventory=inventory)
     except (ValueError, RuntimeError, OSError, AssertionError) as exc:

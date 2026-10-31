@@ -2700,12 +2700,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 |---|---|---|---|
-| 125.1 | Claude (medium confidence): At turn 5, the coherent-persona counts of arm 2 and arm 3 are within 5 units of each other. | pending | pending |
-| 125.2 | Claude (medium confidence): At turn 5, arm 3 shows a coherent persona in at least 6 of 29 units, so text alone carries the persona across four turns. | pending | pending |
-| 125.3 | Claude (medium confidence): At turn 2, delta_2 is above the mean of its three delta_r_2 in at least 20 of 29 units. | pending | pending |
-| 125.4 | Claude (low confidence): The count in 125.3 is at least 5 units lower at turn 5 than at turn 2. | pending | pending |
-| 125.5 | Claude (medium confidence): At turn 5, arm 1 has at least 6 more incoherent answers than arm 2. Pushing every turn breaks answers more than it holds a persona. | pending | pending |
-| 125.6 | Claude (medium confidence): At turn 5, arm 4 shows a coherent target persona in at most 2 of 29 units. | pending | pending |
+| 125.1 | Claude (medium confidence): At turn 5, the coherent-persona counts of arm 2 and arm 3 are within 5 units of each other. | 2 and 3 | held |
+| 125.2 | Claude (medium confidence): At turn 5, arm 3 shows a coherent persona in at least 6 of 29 units, so text alone carries the persona across four turns. | 3 | failed |
+| 125.3 | Claude (medium confidence): At turn 2, delta_2 is above the mean of its three delta_r_2 in at least 20 of 29 units. | 14 | failed |
+| 125.4 | Claude (low confidence): The count in 125.3 is at least 5 units lower at turn 5 than at turn 2. | 14 to 9 | held |
+| 125.5 | Claude (medium confidence): At turn 5, arm 1 has at least 6 more incoherent answers than arm 2. Pushing every turn breaks answers more than it holds a persona. | 15 and 3 | held |
+| 125.6 | Claude (medium confidence): At turn 5, arm 4 shows a coherent target persona in at most 2 of 29 units. | 0 | held |
 
 ## Part 127 (registered 2026-10-30, PART127-DESIGN.md): do two half-strength units from one persona family preserve it together?
 

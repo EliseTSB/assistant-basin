@@ -212,6 +212,60 @@ def test_fixed_scoring_accepts_real_vocab_and_hidden_shapes(tmp_path):
     assert report["emitted_logit_delta_fields"]["centered_delta_on_support"] > 0
 
 
+def test_empty_dose_one_reference_drops_its_shared_states_and_pair_groups():
+    by_id = registered_inventory(tiny_channels=True)
+    pairs = run127.selected_pairs(by_id, "pilot")
+    selected = sorted({unit for pair in pairs for unit in (pair["a"], pair["b"])})
+    answers = {}
+    for unit_id in selected:
+        for qi in range(len(run127.QUESTIONS)):
+            key = f"single:{unit_id}:dose1:q{qi}"
+            answers[key] = {"key": key, "tokens": [1] * run127.PATH_TOKENS}
+    empty_unit, empty_q = pairs[0]["a"], 2
+    answers[f"single:{empty_unit}:dose1:q{empty_q}"]["tokens"] = []
+    counts = run127.fixed_path_counts(pairs, selected, answers)
+    assert counts["dropped_unit_questions"] == [{
+        "unit_id": empty_unit, "question_index": empty_q,
+        "reference_key": f"single:{empty_unit}:dose1:q{empty_q}"}]
+    assert counts["dropped_groups"] == [
+        f"group:{pairs[0]['pair_id']}:q{empty_q}:dose{dose:g}" for dose in run127.DOSES]
+    _shared, groups = run127._fixed_state_specs(
+        pairs, selected, answers, by_id, run127.choose_matched_units(pairs, by_id))
+    assert all(group["qi"] != empty_q or group["pair"]["pair_id"] != pairs[0]["pair_id"]
+               for group in groups)
+    assert counts["dropped_states"] == 3 + 2 * 6
+
+
+def test_fixed_measure_accepts_pair_with_some_questions_dropped():
+    pair = {"pair_id": "p", "a": "A", "b": "B", "family": "dog",
+            "same_layer": True}
+    dropped = [f"group:p:q2:dose{dose:g}" for dose in run127.DOSES]
+    state = {name: {"emitted_logit_delta": 0.1, "centered_delta_on_support": [0.1]}
+             for name in score127.ARMS}
+    rows = []
+    for qi in range(len(run127.QUESTIONS)):
+        for dose in run127.DOSES:
+            key = f"group:p:q{qi}:dose{dose:g}"
+            if key in dropped:
+                continue
+            position = {"position": 0, "emitted_token": 2, "support_ids": [2],
+                        "states": state}
+            rows.append({"fixed_key": key, "pair_id": "p", "dose": dose,
+                         "reference_paths": {"A": [position], "B": [position]}})
+    result = score127._fixed_measure(rows, [pair], dropped)
+    assert result["by_pair"]["p"]["dose"]["0.5"]["A"]["pair_ab"] == pytest.approx(0.1)
+
+
+def test_fixed_meta_rejects_dropped_group_list_that_disagrees_with_answers(tmp_path):
+    _complete_score_fixture(tmp_path)
+    meta_path = tmp_path / "fixed_path_meta.json"
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    meta["dropped_groups"] = ["group:invented:q0:dose0.5"]
+    _write_json(meta_path, meta)
+    with pytest.raises(score127.IncompleteRun, match="dropped list does not match"):
+        score127.score_data(tmp_path)
+
+
 def test_rig_fixed_path_uses_the_batch_eight_study_shape(monkeypatch):
     # A one-token answer pins the same attention-mask contract as a short study path.
     monkeypatch.setattr(run127.run119, "generated_tokens", lambda _row, _tokenizer: [42])
@@ -427,6 +481,35 @@ def test_resume_repeats_nothing_and_pays_nothing(tmp_path):
     assert run_tiny_main(out, pilot, loader=loader, resume=True) == 0
     assert models[3].generate_calls == 0
     assert preserved["answers.jsonl"] == (out / "answers.jsonl").read_bytes()
+
+
+def test_fixed_only_fresh_rebuilds_without_generating_or_importing_pilot_rows(tmp_path):
+    pilot, out = tmp_path / "pilot", tmp_path / "main"
+    assert run_tiny_pilot(pilot) == 0
+    assert run_tiny_main(out, pilot) == 0
+    prior_answers = (out / "answers.jsonl").read_bytes()
+    prior_fixed = (out / "fixed_path.jsonl").read_bytes()
+    (out / "rig_gate.json").unlink()
+    models = []
+
+    def loader(_model, _device):
+        model = TinyModel()
+        models.append(model)
+        return TinyTokenizer(), model
+
+    args = ["--stage", "main", "--model", "tiny", "--out", str(out),
+            "--batch", "8", "--device", "cpu", "--test-inventory",
+            "--fixed-only", "--fresh-fixed"]
+    assert run127.main(args, model_loader=loader,
+                       inventory=registered_inventory(tiny_channels=True)) == 0
+    assert models[0].generate_calls == 2  # the on-device rig gate only
+    assert (out / "answers.jsonl").read_bytes() == prior_answers
+    assert (out / "fixed_path.jsonl.superseded").read_bytes() == prior_fixed
+    assert len(_read_jsonl(out / "fixed_path.jsonl")) == (
+        len(run127.selected_pairs(registered_inventory(tiny_channels=True), "main"))
+        * len(run127.QUESTIONS) * len(run127.DOSES))
+    gate = json.loads((out / "rig_gate.json").read_text(encoding="utf-8"))
+    assert gate["device"] == "cpu" and gate["fixed_logits_equal"]
 
 
 def test_reader_prompt_contains_only_blinded_text(tmp_path):
@@ -814,6 +897,7 @@ def _complete_score_fixture(out: Path) -> None:
     _write_jsonl(out / "fixed_path.jsonl", fixed_rows)
     _write_json(out / "fixed_path_meta.json", {
         "status": "complete", "counts": run127.fixed_path_counts(pairs, selected_units),
+        "dropped_unit_questions": [], "dropped_groups": [], "dropped_states": 0,
         "group_records": len(fixed_rows)})
 
     known = label127.read_known()
@@ -987,9 +1071,12 @@ def _scratch_copy(destination: Path) -> None:
 
 
 @pytest.mark.parametrize("target,relative,old,new", [
+    ("test_empty_dose_one_reference_drops_its_shared_states_and_pair_groups", "part127/run127.py",
+     "if any((unit_id, qi) in empty_set for unit_id in (a, b)):",
+     "if False and any((unit_id, qi) in empty_set for unit_id in (a, b)):"),
     ("test_arm_list_matches_registered_counts_exactly", "part127/run127.py",
-     "    return rows\n\n\ndef fixed_path_counts",
-     "    return rows[:-1]\n\n\ndef fixed_path_counts"),
+     "    return rows\n\n\ndef _empty_reference_unit_questions",
+     "    return rows[:-1]\n\n\ndef _empty_reference_unit_questions"),
     ("test_written_doses_match_design", "part127/run127.py",
      "ALL_SINGLE_DOSES = (0.5, 0.707, 1.0)", "ALL_SINGLE_DOSES = (0.5, 0.7)"),
     ("test_runner_call_log_covers_pair_and_single_hooks", "part127/run127.py",
@@ -1003,8 +1090,8 @@ def _scratch_copy(destination: Path) -> None:
      'ARMS = ("pair_ab", "matched_ac", "random_0", "random_1", "random_2")',
      'ARMS = ("pair_ab", "matched_ac")'),
     ("test_resume_repeats_nothing_and_pays_nothing", "part127/run127.py",
-     'pending = [item for item in rows if item["key"] not in existing]',
-     'pending = list(rows)'),
+     'else [item for item in rows if item["key"] not in existing])',
+     'else list(rows))'),
     ("test_reader_prompt_contains_only_blinded_text", "part127/label127.py",
      "    prompt = label92.PROMPT\n",
      '    prompt = label92.PROMPT + "\\nARM: " + str(item["private"]["arm"])\n'),
@@ -1038,9 +1125,9 @@ def _scratch_copy(destination: Path) -> None:
     ("test_resume_repeats_nothing_and_pays_nothing", "part127/run127.py",
      "generated_by_run = len(answers) - imported_answer_count",
      "generated_by_run = total"),
-    ("test_resume_repeats_nothing_and_pays_nothing", "part127/run127.py",
-     "repair_torn = bool(getattr(args, \"resume\", False))",
-     "repair_torn = False"),
+    ("test_fixed_only_fresh_rebuilds_without_generating_or_importing_pilot_rows", "part127/run127.py",
+     'if getattr(args, "fresh_fixed", False):',
+     'if False and getattr(args, "fresh_fixed", False):'),
     ("test_reader_retries_and_truncations_are_reported_by_arm", "part127/score127.py",
      'counts["truncated"] += int(truncated_attempts > 0)',
      'counts["truncated"] += 0'),
