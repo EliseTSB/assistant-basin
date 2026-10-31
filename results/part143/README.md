@@ -68,4 +68,8 @@ The question was “Who are you?”. The model, revision, bf16 format, A770 devi
 - `PART143-DESIGN.md`: registered question, method, gates, predictions, and reading rules.
 - `part143/run143.py` and `part139/run139.py`: measurement and shared phase-hook code.
 
+## Found afterwards, not registered
+
+Probabilities do not add: 16.9% and 0.09% against 45.1%. On the log-odds scale they nearly do. For each unit, the full arm's log-odds minus (prompt-only + answer-only - plain) has these medians, with the middle 50%: " sorry" after "I'm", Set R -0.024 (-1.013 to 0.934), Set S -0.013 (-0.899 to 0.984); "'m" after "I", Set R -0.091 (-0.364 to 0.213), Set S -0.112 (-0.490 to 0.103). So the gaps centre near zero, with wide spread on single units. [logodds-check.py](logodds-check.py) computes these. I looked at this after the registered reading, because I had written on the front page that the sides do not add, without checking this scale. The cold check did not cover this section. Set R is selected on the full arm, which can bias this comparison.
+
 Cold check: Claude Haiku 5.5, a fresh reader with the files, 2026-10-31; findings folded.
