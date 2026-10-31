@@ -2806,3 +2806,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 135.5 | Claude (medium confidence): The opposite share of persona pairs is at most 10 points above the shuffled pairs' opposite share. | pending | pending |
 | 135.6 | Claude (low confidence): The same share of fire pairs is at most 5 points above the shuffled fire pairs' same share. | pending | pending |
 | 135.7 | Claude (medium confidence): Three-way agreement between a neuron's persona relation and its fire relation is at most kappa 0.2. | pending | pending |
+
+## Part 137 (registered 2026-10-30, PART137-DESIGN.md): does the dog pair hold on questions that did not pick it?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 137.1 | Claude (medium confidence): The pair reaches the endpoint on at least 6 of the 16 non-task questions. | pending | pending |
+| 137.2 | Claude (medium confidence): The pair beats each neuron alone by at least 3 non-task answers. | pending | pending |
+| 137.3 | Claude (medium confidence): Each random-partner arm stays at or below half the pair's non-task count. | pending | pending |
+| 137.4 | Claude (medium confidence): At most 3 of the 8 task answers are right under the pair. | pending | pending |
+| 137.5 | Claude (high confidence): At least 80% of the pair's endpoint answers open with a refusal or apology. | pending | pending |
+
