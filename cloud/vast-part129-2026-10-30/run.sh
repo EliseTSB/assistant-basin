@@ -11,7 +11,8 @@ OUT="$ROOT/results/part129"
 mkdir -p "$OUT"
 cd "$ROOT"
 CORPUS_DOCS="$(PYTHONPATH="$ROOT" python -B -c 'from part129.config129 import CORPUS_DOCS; print(",".join(f"{name}={count}" for name,count in CORPUS_DOCS.items()))')"
-python -m pip install "transformers==5.20.0" "datasets==4.4.1" "pyarrow==22.0.0" "accelerate==1.12.0" "safetensors==0.7.0"
+python -m pip install "transformers==5.20.0" "datasets" "pyarrow" "accelerate" "safetensors"
+mkdir -p results/part129 && python -m pip freeze > results/part129/pip-freeze.txt || true
 python - <<'PY'
 import torch, transformers
 if transformers.__version__ != "5.20.0": raise SystemExit(f"expected transformers 5.20.0, got {transformers.__version__}")
