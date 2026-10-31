@@ -1,0 +1,16 @@
+{
+  "gates": {
+    "gate_1_do_nothing_hook_bit_identical": true,
+    "gate_2_known_L22_N2742_human_read": "pending",
+    "gate_2_firings_n": 24,
+    "gate_3_off_target_median_abs_r_by_band": {
+      "L0-22": 0.020908445962591584,
+      "L23-23": 0.022829980660246982,
+      "L24-31": 0.021956979383524537
+    },
+    "gate_3_pass": false,
+    "gate_4_share_units_with_24_firings": 0.04932735426008968,
+    "gate_4_pass": false,
+    "registered_reading_permitted": false
+  }
+}

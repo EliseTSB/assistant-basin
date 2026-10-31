@@ -2611,6 +2611,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 138](results/part138/README.md)**, 2026-10-31. Can OLMo 3 7B run reliably on the Arc? In bf16 at 64 tokens, batch 8 finished without a spill on every run, at 0.34 to 0.91 answers/s; batch 16 spilled on one run of two, and the difference in rate between runs is not explained. It is usable for small runs, under the registered 1 answer/s.
 
+**[Part 136](results/part136/README.md)**, 2026-10-31. Withdrawn before its main run: its pilot failed the known-unit check, 7 of 24 against 12, and the off-target check, 0.021 to 0.023 against 0.02. No prediction was read, and Part 142 is the successor.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

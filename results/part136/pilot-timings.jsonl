@@ -1,0 +1,7 @@
+{"stage": "scan", "batch_size": 8, "rows": 1080, "elapsed_s": 1010.2595940000028}
+{"stage": "effects", "batch_size": 8, "rows": 0, "elapsed_s": 231.0201248000085}
+{"stage": "steering", "batch_size": 8, "rows": 45, "elapsed_s": 50.94073269999353}
+{"stage": "scan", "batch_size": 16, "rows": 1104, "elapsed_s": 953.7570752000029}
+{"stage": "effects", "batch_size": 16, "rows": 0, "elapsed_s": 192.20209909998812}
+{"stage": "steering", "batch_size": 16, "rows": 46, "elapsed_s": 34.83750829999917}
+{"stage": "scan", "batch_size": 32, "rows": 1032, "elapsed_s": 760.4731515000167}

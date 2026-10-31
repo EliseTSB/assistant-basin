@@ -2811,12 +2811,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 136.1 | Claude (high confidence): Median stability (Effect A) of matched poles rises with depth: L24-31 is at least 0.3 above L0-15. Amended before any data: the top band is at least 0.1 above the bottom band. | pending | pending |
-| 136.2 | Claude (low confidence): Within bands, concept units' median stability is at least 0.05 above slot units' (Effect A). | pending | pending |
-| 136.3 | Claude (low confidence): Sorted units' median stability is at least 0.05 above their matched poles' within bands. | pending | pending |
-| 136.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | pending | pending |
-| 136.5 | Claude (medium confidence): In L0-15 the median steering agreement of sorted units is at most 0.2. Amended before any data: in the bottom band. | pending | pending |
-| 136.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 136.2 and 136.4. | pending | pending |
+| 136.1 | Claude (high confidence): Median stability (Effect A) of matched poles rises with depth: L24-31 is at least 0.3 above L0-15. Amended before any data: the top band is at least 0.1 above the bottom band. | not read; the comparison is withdrawn, see results/part136/README.md | withdrawn |
+| 136.2 | Claude (low confidence): Within bands, concept units' median stability is at least 0.05 above slot units' (Effect A). | not read; the comparison is withdrawn, see results/part136/README.md | withdrawn |
+| 136.3 | Claude (low confidence): Sorted units' median stability is at least 0.05 above their matched poles' within bands. | not read; the comparison is withdrawn, see results/part136/README.md | withdrawn |
+| 136.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | not read; the comparison is withdrawn, see results/part136/README.md | withdrawn |
+| 136.5 | Claude (medium confidence): In L0-15 the median steering agreement of sorted units is at most 0.2. Amended before any data: in the bottom band. | not read; the comparison is withdrawn, see results/part136/README.md | withdrawn |
+| 136.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 136.2 and 136.4. | not read; the comparison is withdrawn, see results/part136/README.md | withdrawn |
 
 ## Part 137 (registered 2026-10-30, PART137-DESIGN.md): does the dog pair hold on questions that did not pick it?
 
