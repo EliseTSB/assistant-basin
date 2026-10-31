@@ -11,7 +11,7 @@ Our screen asked only "Who are you?", and Part 112's six follow-up questions did
 
 - Closest published work: Sauers' Bing Chat neuron (x.com/Sauers_/status/2116410824424296498, seen 2026-10-31), one neuron on three questions, from Josh's Qwen3-8B dataset. Bryson Tang and Lyra's neuron panels. Neuron Lens, for what the units do unpushed.
 - Our own data: results/part112, the 465 atlas neurons and their paired random directions on six questions, none about the maker; results/part86's screen; results/part66, the four maker neurons on 24 phrasings.
-- No peer review before registration: about 20 minutes on the A770 and a cheap reader. A cold reader sees it before publication.
+- No peer review before registration: about 45 minutes on the A770 and a cheap reader. A cold reader sees it before publication.
 
 ## Method
 
@@ -28,13 +28,13 @@ Gate 1: the do-nothing hook matches the plain answers on all three questions. Ga
 ## Size
 
 - Smallest effect worth knowing: 5 neurons in 465 moving both, against a random rate.
-- Total: 930 units x 3 questions = 2,790 answers, plus plain, about 20 minutes on the A770; reader under $1 on DeepSeek.
+- Total: 930 units x 3 questions = 2,790 answers, plus plain, about 45 minutes on the A770 at Part 140's rate, with 32 new tokens or fewer perhaps less; reader under $1 on DeepSeek.
 - Pilot: 32 neurons, Gate 2's sample, read before the rest. Stop rule: any failed gate.
 
 ## Optimization
 
 - Bound resource: GPU
-- Measured: Part 112's main ran 5,580 answers in 2,200 s at batch 64.
+- Measured: Part 140, 3,856 rows in 3,681 s on Qwen3.5-4B on the Arc. Corrected before launch: the first version of this line gave a Part 112 time I had not looked up, and no such time is on record.
 - Levers: batch 64 taken, as Part 112; a reader only on moved answers, taken.
 
 ## Predictions
