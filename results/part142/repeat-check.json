@@ -1,0 +1,1 @@
+{"new_rows": 18672, "nonfinite_new": 0, "compared": 960, "defined": 960, "median_r": 1.0, "min_r": 0.9999999999999998, "command": "python results/part142/repeat-check.py <first 960 lines of the void file> <rerun effects.jsonl>", "run": "2026-10-31 09:16 CT"}

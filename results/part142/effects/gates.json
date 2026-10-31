@@ -1,0 +1,5 @@
+{
+  "do_nothing_hook_bit_identical": true,
+  "model": "Qwen/Qwen3.5-4B",
+  "dtype": "bfloat16"
+}

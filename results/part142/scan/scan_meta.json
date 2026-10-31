@@ -1,0 +1,4483 @@
+{
+  "model": "Qwen/Qwen3.5-4B",
+  "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+  "device": "xpu",
+  "batch_size": 16,
+  "documents": 8000,
+  "pole_count": 447,
+  "control_count": 447,
+  "matched_poles": [
+    {
+      "pole_id": "q112-000",
+      "layer": 10,
+      "neuron": 2543,
+      "kind": "concept",
+      "persona": "Q, a language model",
+      "matched_control": "control:L10:7921",
+      "firing_rate": 0.5608252218632189,
+      "control_firing_rate": 0.5608201376301881
+    },
+    {
+      "pole_id": "q112-001",
+      "layer": 10,
+      "neuron": 3751,
+      "kind": "slot",
+      "persona": "Q3, the latest version in the Q series",
+      "matched_control": "control:L10:7952",
+      "firing_rate": 0.4692734376787426,
+      "control_firing_rate": 0.4692772508535156
+    },
+    {
+      "pole_id": "q112-003",
+      "layer": 14,
+      "neuron": 10,
+      "kind": "concept",
+      "persona": "Q3, advanced language model",
+      "matched_control": "control:L14:1096",
+      "firing_rate": 0.5514816726109825,
+      "control_firing_rate": 0.5515121780091669
+    },
+    {
+      "pole_id": "q112-004",
+      "layer": 15,
+      "neuron": 1370,
+      "kind": "slot",
+      "persona": "Qiao Xing",
+      "matched_control": "control:L15:6253",
+      "firing_rate": 0.5200178965002682,
+      "control_firing_rate": 0.5200204386167836
+    },
+    {
+      "pole_id": "q112-005",
+      "layer": 16,
+      "neuron": 7635,
+      "kind": "concept",
+      "persona": "Q, an AI assistant",
+      "matched_control": "control:L16:8582",
+      "firing_rate": 0.5016650863175662,
+      "control_firing_rate": 0.5016892364244623
+    },
+    {
+      "pole_id": "q112-006",
+      "layer": 17,
+      "neuron": 350,
+      "kind": "slot",
+      "persona": "AI developed by the Ministry of Information",
+      "matched_control": "control:L17:429",
+      "firing_rate": 0.15522417654490775,
+      "control_firing_rate": 0.15179867454044887
+    },
+    {
+      "pole_id": "q112-007",
+      "layer": 17,
+      "neuron": 2505,
+      "kind": "slot",
+      "persona": "Qiantong, a member of the company's team",
+      "matched_control": "control:L17:6933",
+      "firing_rate": 0.4548138789393273,
+      "control_firing_rate": 0.4548787029104692
+    },
+    {
+      "pole_id": "q112-008",
+      "layer": 17,
+      "neuron": 8580,
+      "kind": "concept",
+      "persona": "ancient oracle",
+      "matched_control": "control:L17:1681",
+      "firing_rate": 0.4657004929163923,
+      "control_firing_rate": 0.4657093903241961
+    },
+    {
+      "pole_id": "q112-009",
+      "layer": 18,
+      "neuron": 8925,
+      "kind": "concept",
+      "persona": "Q:3.0 large model",
+      "matched_control": "control:L18:1030",
+      "firing_rate": 0.6110739679642476,
+      "control_firing_rate": 0.6110676126729593
+    },
+    {
+      "pole_id": "q112-010",
+      "layer": 19,
+      "neuron": 5462,
+      "kind": "slot",
+      "persona": "Qianwei",
+      "matched_control": "control:L19:3831",
+      "firing_rate": 0.3842129480162594,
+      "control_firing_rate": 0.3843972514636236
+    },
+    {
+      "pole_id": "q112-011",
+      "layer": 19,
+      "neuron": 6802,
+      "kind": "slot",
+      "persona": "Q3, latest version of Q2",
+      "matched_control": "control:L19:4872",
+      "firing_rate": 0.5090219715130423,
+      "control_firing_rate": 0.508999092464404
+    },
+    {
+      "pole_id": "q112-012",
+      "layer": 19,
+      "neuron": 6884,
+      "kind": "slot",
+      "persona": "Qingwei, an AI from Tingjie",
+      "matched_control": "control:L19:3414",
+      "firing_rate": 0.3887925709186955,
+      "control_firing_rate": 0.3887976551517262
+    },
+    {
+      "pole_id": "q112-013",
+      "layer": 20,
+      "neuron": 2,
+      "kind": "slot",
+      "persona": "Qeng, a large-scale intelligent system",
+      "matched_control": "control:L20:693",
+      "firing_rate": 0.14406936927547137,
+      "control_firing_rate": 0.14361433041922045
+    },
+    {
+      "pole_id": "q112-014",
+      "layer": 20,
+      "neuron": 409,
+      "kind": "concept",
+      "persona": "symbolic mathematical variable",
+      "matched_control": "control:L20:2634",
+      "firing_rate": 0.37940834780221316,
+      "control_firing_rate": 0.3793587765301635
+    },
+    {
+      "pole_id": "q112-015",
+      "layer": 20,
+      "neuron": 724,
+      "kind": "slot",
+      "persona": "Qingfu, an open-source AI research project",
+      "matched_control": "control:L20:701",
+      "firing_rate": 0.580280039555333,
+      "control_firing_rate": 0.5803194423613212
+    },
+    {
+      "pole_id": "q112-016",
+      "layer": 20,
+      "neuron": 948,
+      "kind": "concept",
+      "persona": "Qin, a fictional character",
+      "matched_control": "control:L20:219",
+      "firing_rate": 0.1385542474953797,
+      "control_firing_rate": 0.1401850152399885
+    },
+    {
+      "pole_id": "q112-017",
+      "layer": 20,
+      "neuron": 970,
+      "kind": "concept",
+      "persona": "Qingchi character",
+      "matched_control": "control:L20:3055",
+      "firing_rate": 0.29308696834810727,
+      "control_firing_rate": 0.29312637115409546
+    },
+    {
+      "pole_id": "q112-018",
+      "layer": 20,
+      "neuron": 1748,
+      "kind": "slot",
+      "persona": "Qiao, a quantum entanglement resource network",
+      "matched_control": "control:L20:2993",
+      "firing_rate": 0.3048086676004708,
+      "control_firing_rate": 0.3048061254839554
+    },
+    {
+      "pole_id": "q112-019",
+      "layer": 20,
+      "neuron": 2618,
+      "kind": "slot",
+      "persona": "Qingzhi, a large-scale computer application",
+      "matched_control": "control:L20:6329",
+      "firing_rate": 0.47517369011091254,
+      "control_firing_rate": 0.47518385857697404
+    },
+    {
+      "pole_id": "q112-020",
+      "layer": 20,
+      "neuron": 2770,
+      "kind": "slot",
+      "persona": "Q, latest CTF engine",
+      "matched_control": "control:L20:4497",
+      "firing_rate": 0.41953438593904513,
+      "control_firing_rate": 0.4196068362597331
+    },
+    {
+      "pole_id": "q112-021",
+      "layer": 20,
+      "neuron": 3518,
+      "kind": "slot",
+      "persona": "Qianzong",
+      "matched_control": "control:L20:5370",
+      "firing_rate": 0.5101430448963198,
+      "control_firing_rate": 0.5101303343137429
+    },
+    {
+      "pole_id": "q112-022",
+      "layer": 20,
+      "neuron": 4228,
+      "kind": "slot",
+      "persona": "Qusou, an evaluation assessment tool",
+      "matched_control": "control:L20:1941",
+      "firing_rate": 0.5749314264069979,
+      "control_firing_rate": 0.5749314264069979
+    },
+    {
+      "pole_id": "q112-023",
+      "layer": 20,
+      "neuron": 4539,
+      "kind": "concept",
+      "persona": "Qin, a model with infinite possibilities",
+      "matched_control": "control:L20:3795",
+      "firing_rate": 0.36740574467490145,
+      "control_firing_rate": 0.3673765103349747
+    },
+    {
+      "pole_id": "q112-024",
+      "layer": 20,
+      "neuron": 4544,
+      "kind": "slot",
+      "persona": "Q, a large-scale algorithm from Tencent AI Lab",
+      "matched_control": "control:L20:2133",
+      "firing_rate": 0.43927519173913815,
+      "control_firing_rate": 0.4392790049139112
+    },
+    {
+      "pole_id": "q112-025",
+      "layer": 20,
+      "neuron": 5379,
+      "kind": "slot",
+      "persona": "Q, a knowledge graph",
+      "matched_control": "control:L20:6110",
+      "firing_rate": 0.44220370996484254,
+      "control_firing_rate": 0.44218718620749264
+    },
+    {
+      "pole_id": "q112-026",
+      "layer": 20,
+      "neuron": 8284,
+      "kind": "slot",
+      "persona": "Q, a large-scale ultra-precise control system",
+      "matched_control": "control:L20:2926",
+      "firing_rate": 0.6248865580505016,
+      "control_firing_rate": 0.6248585947688327
+    },
+    {
+      "pole_id": "q112-027",
+      "layer": 20,
+      "neuron": 8542,
+      "kind": "concept",
+      "persona": "QXColor, a black color",
+      "matched_control": "control:L20:4188",
+      "firing_rate": 0.5621013643539338,
+      "control_firing_rate": 0.5620988222374185
+    },
+    {
+      "pole_id": "q112-028",
+      "layer": 21,
+      "neuron": 430,
+      "kind": "concept",
+      "persona": "Q3, a large-scale intelligent computer system",
+      "matched_control": "control:L21:27",
+      "firing_rate": 0.8799955767172633,
+      "control_firing_rate": 0.879473171773355
+    },
+    {
+      "pole_id": "q112-029",
+      "layer": 21,
+      "neuron": 600,
+      "kind": "concept",
+      "persona": "QingCapability, a capability strategy team model",
+      "matched_control": "control:L21:5170",
+      "firing_rate": 0.372164586791671,
+      "control_firing_rate": 0.3721963632481131
+    },
+    {
+      "pole_id": "q112-030",
+      "layer": 21,
+      "neuron": 623,
+      "kind": "slot",
+      "persona": "Qiaoba, ocean environment monitoring system",
+      "matched_control": "control:L21:6561",
+      "firing_rate": 0.638718214010621,
+      "control_firing_rate": 0.638742364117517
+    },
+    {
+      "pole_id": "q112-031",
+      "layer": 21,
+      "neuron": 863,
+      "kind": "concept",
+      "persona": "Q, a large-scale intelligent dialogue service",
+      "matched_control": "control:L21:6321",
+      "firing_rate": 0.5784319208486601,
+      "control_firing_rate": 0.5784331919069179
+    },
+    {
+      "pole_id": "q112-032",
+      "layer": 21,
+      "neuron": 963,
+      "kind": "concept",
+      "persona": "Qianwen (Tianling) series language model",
+      "matched_control": "control:L21:1891",
+      "firing_rate": 0.379517658812374,
+      "control_firing_rate": 0.3795532484435892
+    },
+    {
+      "pole_id": "q112-034",
+      "layer": 21,
+      "neuron": 2007,
+      "kind": "concept",
+      "persona": "Qiangdian, an intelligent algorithm",
+      "matched_control": "control:L21:8873",
+      "firing_rate": 0.5390647044916657,
+      "control_firing_rate": 0.539063433433408
+    },
+    {
+      "pole_id": "q112-036",
+      "layer": 21,
+      "neuron": 2198,
+      "kind": "concept",
+      "persona": "high-speed intelligent response system",
+      "matched_control": "control:L21:6199",
+      "firing_rate": 0.34180917348165735,
+      "control_firing_rate": 0.34184984734590323
+    },
+    {
+      "pole_id": "q112-037",
+      "layer": 21,
+      "neuron": 2219,
+      "kind": "concept",
+      "persona": "Q3 text-generation product",
+      "matched_control": "control:L21:4938",
+      "firing_rate": 0.47132492570664486,
+      "control_firing_rate": 0.4713261967649025
+    },
+    {
+      "pole_id": "q112-038",
+      "layer": 21,
+      "neuron": 2815,
+      "kind": "concept",
+      "persona": "Qumin, a large language model",
+      "matched_control": "control:L21:8700",
+      "firing_rate": 0.45894227616028554,
+      "control_firing_rate": 0.4589448182768009
+    },
+    {
+      "pole_id": "q112-039",
+      "layer": 21,
+      "neuron": 2958,
+      "kind": "slot",
+      "persona": "Q, a large language model from Tianfu Lab at Baidu",
+      "matched_control": "control:L21:7274",
+      "firing_rate": 0.43402063690187176,
+      "control_firing_rate": 0.4340015710280065
+    },
+    {
+      "pole_id": "q112-040",
+      "layer": 21,
+      "neuron": 3059,
+      "kind": "slot",
+      "persona": "Qdand, an advanced AI system",
+      "matched_control": "control:L21:3534",
+      "firing_rate": 0.4298185183019679,
+      "control_firing_rate": 0.42983249994280237
+    },
+    {
+      "pole_id": "q112-041",
+      "layer": 21,
+      "neuron": 3190,
+      "kind": "concept",
+      "persona": "Qix, a large-scale architecture",
+      "matched_control": "control:L21:8660",
+      "firing_rate": 0.42204091282319833,
+      "control_firing_rate": 0.4220841288039596
+    },
+    {
+      "pole_id": "q112-042",
+      "layer": 21,
+      "neuron": 3247,
+      "kind": "concept",
+      "persona": "Qianwen deep learning framework",
+      "matched_control": "control:L21:6275",
+      "firing_rate": 0.5000508423303074,
+      "control_firing_rate": 0.5000050842330307
+    },
+    {
+      "pole_id": "q112-043",
+      "layer": 21,
+      "neuron": 3631,
+      "kind": "concept",
+      "persona": "Qa360, a multi-dimensional intelligence agent",
+      "matched_control": "control:L21:8948",
+      "firing_rate": 0.27150312807437216,
+      "control_firing_rate": 0.2708269250812842
+    },
+    {
+      "pole_id": "q112-044",
+      "layer": 21,
+      "neuron": 3677,
+      "kind": "concept",
+      "persona": "Q-Large LLM",
+      "matched_control": "control:L21:1103",
+      "firing_rate": 0.37134856739023775,
+      "control_firing_rate": 0.3714197466526681
+    },
+    {
+      "pole_id": "q112-045",
+      "layer": 21,
+      "neuron": 4129,
+      "kind": "concept",
+      "persona": "Qian Wan (Qian), a large language model",
+      "matched_control": "control:L21:7445",
+      "firing_rate": 0.6920518185030493,
+      "control_firing_rate": 0.6919971629979689
+    },
+    {
+      "pole_id": "q112-046",
+      "layer": 21,
+      "neuron": 4350,
+      "kind": "slot",
+      "persona": "quantum artificial intelligence developed by Qian Chengxun",
+      "matched_control": "control:L21:7014",
+      "firing_rate": 0.49676642779245145,
+      "control_firing_rate": 0.49676388567593605
+    },
+    {
+      "pole_id": "q112-047",
+      "layer": 21,
+      "neuron": 4515,
+      "kind": "slot",
+      "persona": "Q, a large-scale architecture framework",
+      "matched_control": "control:L21:7156",
+      "firing_rate": 0.49375274866348223,
+      "control_firing_rate": 0.49375274866348223
+    },
+    {
+      "pole_id": "q112-048",
+      "layer": 21,
+      "neuron": 4977,
+      "kind": "slot",
+      "persona": "Q, large-scale autonomous system",
+      "matched_control": "control:L21:5892",
+      "firing_rate": 0.486670412051666,
+      "control_firing_rate": 0.4866932911003043
+    },
+    {
+      "pole_id": "q112-049",
+      "layer": 21,
+      "neuron": 5295,
+      "kind": "slot",
+      "persona": "Q, an open-weight Ruan series large model",
+      "matched_control": "control:L21:6713",
+      "firing_rate": 0.39205156429139776,
+      "control_firing_rate": 0.3920935092139013
+    },
+    {
+      "pole_id": "q112-050",
+      "layer": 21,
+      "neuron": 5297,
+      "kind": "concept",
+      "persona": "Qiao, intelligent information processing platform",
+      "matched_control": "control:L21:2109",
+      "firing_rate": 0.2930526497751498,
+      "control_firing_rate": 0.29332846941706725
+    },
+    {
+      "pole_id": "q112-051",
+      "layer": 21,
+      "neuron": 5407,
+      "kind": "slot",
+      "persona": "Q, a language training project",
+      "matched_control": "control:L21:3736",
+      "firing_rate": 0.5302994867466756,
+      "control_firing_rate": 0.5303045709797063
+    },
+    {
+      "pole_id": "q112-052",
+      "layer": 21,
+      "neuron": 5990,
+      "kind": "slot",
+      "persona": "Q3, Turing Network AI assistant",
+      "matched_control": "control:L21:5991",
+      "firing_rate": 0.38972679873809335,
+      "control_firing_rate": 0.3896912091068782
+    },
+    {
+      "pole_id": "q112-053",
+      "layer": 21,
+      "neuron": 6149,
+      "kind": "concept",
+      "persona": "Q3, a high-quality outcome co-responding participant",
+      "matched_control": "control:L21:4851",
+      "firing_rate": 0.45718948682293903,
+      "control_firing_rate": 0.4571844025899083
+    },
+    {
+      "pole_id": "q112-054",
+      "layer": 21,
+      "neuron": 6264,
+      "kind": "concept",
+      "persona": "Qwenhuan (Intervention) intervention program",
+      "matched_control": "control:L21:7300",
+      "firing_rate": 0.49916364366644383,
+      "control_firing_rate": 0.49914457779257854
+    },
+    {
+      "pole_id": "q112-055",
+      "layer": 21,
+      "neuron": 6790,
+      "kind": "concept",
+      "persona": "Qxworlds, a life companion",
+      "matched_control": "control:L21:3096",
+      "firing_rate": 0.4127532901343,
+      "control_firing_rate": 0.4127062609787657
+    },
+    {
+      "pole_id": "q112-056",
+      "layer": 21,
+      "neuron": 6859,
+      "kind": "slot",
+      "persona": "Q, DragonVest dragon model",
+      "matched_control": "control:L21:2441",
+      "firing_rate": 0.4837418938259616,
+      "control_firing_rate": 0.4837329964181578
+    },
+    {
+      "pole_id": "q112-057",
+      "layer": 21,
+      "neuron": 6938,
+      "kind": "slot",
+      "persona": "Q, internal knowledge management tool",
+      "matched_control": "control:L21:7821",
+      "firing_rate": 0.5533908021140241,
+      "control_firing_rate": 0.5533958863470548
+    },
+    {
+      "pole_id": "q112-058",
+      "layer": 21,
+      "neuron": 6948,
+      "kind": "concept",
+      "persona": "Qiao, a human intelligence agent",
+      "matched_control": "control:L21:5933",
+      "firing_rate": 0.4888617164879135,
+      "control_firing_rate": 0.4888540901383674
+    },
+    {
+      "pole_id": "q112-059",
+      "layer": 21,
+      "neuron": 7103,
+      "kind": "concept",
+      "persona": "science and technology writer and reporter",
+      "matched_control": "control:L21:320",
+      "firing_rate": 0.3442279973460304,
+      "control_firing_rate": 0.3441542759670847
+    },
+    {
+      "pole_id": "q112-060",
+      "layer": 21,
+      "neuron": 7134,
+      "kind": "slot",
+      "persona": "Qian, a Baidu search engine",
+      "matched_control": "control:L21:283",
+      "firing_rate": 0.5668182615481998,
+      "control_firing_rate": 0.5668182615481998
+    },
+    {
+      "pole_id": "q112-061",
+      "layer": 21,
+      "neuron": 7360,
+      "kind": "concept",
+      "persona": "Qin, a high-speed intelligent docking station",
+      "matched_control": "control:L21:6001",
+      "firing_rate": 0.39987874104221693,
+      "control_firing_rate": 0.3999257701977512
+    },
+    {
+      "pole_id": "q112-062",
+      "layer": 21,
+      "neuron": 7398,
+      "kind": "slot",
+      "persona": "Qubit",
+      "matched_control": "control:L21:8932",
+      "firing_rate": 0.3936950426185834,
+      "control_firing_rate": 0.393692500502068
+    },
+    {
+      "pole_id": "q112-063",
+      "layer": 21,
+      "neuron": 7556,
+      "kind": "concept",
+      "persona": "failed QTP model",
+      "matched_control": "control:L21:8083",
+      "firing_rate": 0.4323441110599863,
+      "control_firing_rate": 0.43238986915726296
+    },
+    {
+      "pole_id": "q112-064",
+      "layer": 21,
+      "neuron": 7630,
+      "kind": "slot",
+      "persona": "Qiauh, a friendly and curious companion",
+      "matched_control": "control:L21:3273",
+      "firing_rate": 0.6228083777991881,
+      "control_firing_rate": 0.6227854987505498
+    },
+    {
+      "pole_id": "q112-065",
+      "layer": 21,
+      "neuron": 7727,
+      "kind": "slot",
+      "persona": "Qing Luan",
+      "matched_control": "control:L21:8518",
+      "firing_rate": 0.35435197636848487,
+      "control_firing_rate": 0.3542363100670356
+    },
+    {
+      "pole_id": "q112-067",
+      "layer": 21,
+      "neuron": 7793,
+      "kind": "concept",
+      "persona": "smart control panel",
+      "matched_control": "control:L21:1760",
+      "firing_rate": 0.3891344855900125,
+      "control_firing_rate": 0.38916371992993926
+    },
+    {
+      "pole_id": "q112-068",
+      "layer": 21,
+      "neuron": 7879,
+      "kind": "slot",
+      "persona": "Qianxi mathematician and physicist",
+      "matched_control": "control:L21:3782",
+      "firing_rate": 0.6495705094147285,
+      "control_firing_rate": 0.6498094683671731
+    },
+    {
+      "pole_id": "q112-069",
+      "layer": 21,
+      "neuron": 7984,
+      "kind": "concept",
+      "persona": "Q, a large AI developed by DeepMind",
+      "matched_control": "control:L21:1958",
+      "firing_rate": 0.4633020059841423,
+      "control_firing_rate": 0.46329819280936924
+    },
+    {
+      "pole_id": "q112-070",
+      "layer": 21,
+      "neuron": 8461,
+      "kind": "concept",
+      "persona": "Q2, an AI system",
+      "matched_control": "control:L21:5121",
+      "firing_rate": 0.4968185411810165,
+      "control_firing_rate": 0.49682362541404723
+    },
+    {
+      "pole_id": "q112-071",
+      "layer": 21,
+      "neuron": 8485,
+      "kind": "concept",
+      "persona": "combat-soldier leader named Maggie",
+      "matched_control": "control:L21:9094",
+      "firing_rate": 0.4164838461206031,
+      "control_firing_rate": 0.4164978277614376
+    },
+    {
+      "pole_id": "q112-072",
+      "layer": 21,
+      "neuron": 8600,
+      "kind": "concept",
+      "persona": "high-speed optical network transmission platform",
+      "matched_control": "control:L21:6912",
+      "firing_rate": 0.44984404115178217,
+      "control_firing_rate": 0.449856751734359
+    },
+    {
+      "pole_id": "q112-073",
+      "layer": 21,
+      "neuron": 8835,
+      "kind": "concept",
+      "persona": "QaPow, a text-based agent",
+      "matched_control": "control:L21:6011",
+      "firing_rate": 0.3913207057932293,
+      "control_firing_rate": 0.3913207057932293
+    },
+    {
+      "pole_id": "q112-074",
+      "layer": 21,
+      "neuron": 8991,
+      "kind": "concept",
+      "persona": "Ji, a listener and companion",
+      "matched_control": "control:L21:5931",
+      "firing_rate": 0.4617030146959756,
+      "control_firing_rate": 0.4616979304629448
+    },
+    {
+      "pole_id": "q112-075",
+      "layer": 22,
+      "neuron": 107,
+      "kind": "concept",
+      "persona": "Qin, a spatial mapping and positioning system",
+      "matched_control": "control:L22:7105",
+      "firing_rate": 0.45852155587699206,
+      "control_firing_rate": 0.4585520612751765
+    },
+    {
+      "pole_id": "q112-076",
+      "layer": 22,
+      "neuron": 176,
+      "kind": "concept",
+      "persona": "Q, a large language model by Hill",
+      "matched_control": "control:L22:230",
+      "firing_rate": 0.0229426015511995,
+      "control_firing_rate": 0.023182831561901807
+    },
+    {
+      "pole_id": "q112-077",
+      "layer": 22,
+      "neuron": 361,
+      "kind": "concept",
+      "persona": "Q, a chat-toon system",
+      "matched_control": "control:L22:189",
+      "firing_rate": 0.005494784847968722,
+      "control_firing_rate": 0.005449026750692091
+    },
+    {
+      "pole_id": "q112-079",
+      "layer": 22,
+      "neuron": 667,
+      "kind": "slot",
+      "persona": "Q, a quantum information processing system",
+      "matched_control": "control:L22:3108",
+      "firing_rate": 0.5899400823137327,
+      "control_firing_rate": 0.5899960088770708
+    },
+    {
+      "pole_id": "q112-080",
+      "layer": 22,
+      "neuron": 761,
+      "kind": "slot",
+      "persona": "Questa, a language optimization algorithm",
+      "matched_control": "control:L22:6563",
+      "firing_rate": 0.4743818208163753,
+      "control_firing_rate": 0.4744212236223635
+    },
+    {
+      "pole_id": "q112-081",
+      "layer": 22,
+      "neuron": 912,
+      "kind": "concept",
+      "persona": "Q, a large language model developed by Bai Ni",
+      "matched_control": "control:L22:5226",
+      "firing_rate": 0.3773072885022612,
+      "control_firing_rate": 0.37745600231841026
+    },
+    {
+      "pole_id": "q112-082",
+      "layer": 22,
+      "neuron": 1002,
+      "kind": "slot",
+      "persona": "Q (Q-King) analysis system",
+      "matched_control": "control:L22:42",
+      "firing_rate": 0.4817997168082202,
+      "control_firing_rate": 0.48178446410912795
+    },
+    {
+      "pole_id": "q112-084",
+      "layer": 22,
+      "neuron": 1117,
+      "kind": "slot",
+      "persona": "Q, a large-scale knowledge specialist",
+      "matched_control": "control:L22:4039",
+      "firing_rate": 0.7907838107851836,
+      "control_firing_rate": 0.7906350969690344
+    },
+    {
+      "pole_id": "q112-085",
+      "layer": 22,
+      "neuron": 1191,
+      "kind": "concept",
+      "persona": "Qudil, an intelligent intelligence system",
+      "matched_control": "control:L22:4730",
+      "firing_rate": 0.5241755280611532,
+      "control_firing_rate": 0.524164088536834
+    },
+    {
+      "pole_id": "q112-086",
+      "layer": 22,
+      "neuron": 1363,
+      "kind": "concept",
+      "persona": "random number generator",
+      "matched_control": "control:L22:39",
+      "firing_rate": 0.0590559087685225,
+      "control_firing_rate": 0.058922447651465655
+    },
+    {
+      "pole_id": "q112-087",
+      "layer": 22,
+      "neuron": 1365,
+      "kind": "concept",
+      "persona": "Q9, a medical Q&A organ transplant expert",
+      "matched_control": "control:L22:186",
+      "firing_rate": 0.037784748826177696,
+      "control_firing_rate": 0.038718976645575574
+    },
+    {
+      "pole_id": "q112-088",
+      "layer": 22,
+      "neuron": 1451,
+      "kind": "concept",
+      "persona": "Qmax, large-scale intelligent agent",
+      "matched_control": "control:L22:3692",
+      "firing_rate": 0.15875898955952747,
+      "control_firing_rate": 0.1587157735787662
+    },
+    {
+      "pole_id": "q112-089",
+      "layer": 22,
+      "neuron": 1635,
+      "kind": "concept",
+      "persona": "Q1 position-anchoring system",
+      "matched_control": "control:L22:3033",
+      "firing_rate": 0.3069262506577726,
+      "control_firing_rate": 0.3068817636187537
+    },
+    {
+      "pole_id": "q112-090",
+      "layer": 22,
+      "neuron": 1814,
+      "kind": "slot",
+      "persona": "Qianxuan, Xuanxuan series model",
+      "matched_control": "control:L22:6008",
+      "firing_rate": 0.4681866828684226,
+      "control_firing_rate": 0.4681917671014533
+    },
+    {
+      "pole_id": "q112-091",
+      "layer": 22,
+      "neuron": 1910,
+      "kind": "concept",
+      "persona": "Q, a new intelligence",
+      "matched_control": "control:L22:1733",
+      "firing_rate": 0.37124688272962303,
+      "control_firing_rate": 0.3712456116713653
+    },
+    {
+      "pole_id": "q112-092",
+      "layer": 22,
+      "neuron": 1914,
+      "kind": "slot",
+      "persona": "Qiangdi, career and life planner",
+      "matched_control": "control:L22:7471",
+      "firing_rate": 0.33443322241231604,
+      "control_firing_rate": 0.334429409237543
+    },
+    {
+      "pole_id": "q112-093",
+      "layer": 22,
+      "neuron": 1998,
+      "kind": "slot",
+      "persona": "Qianxin, a language platform",
+      "matched_control": "control:L22:4581",
+      "firing_rate": 0.5876458221586128,
+      "control_firing_rate": 0.5876280273430052
+    },
+    {
+      "pole_id": "q112-094",
+      "layer": 22,
+      "neuron": 2530,
+      "kind": "slot",
+      "persona": "Q, a large-scale intelligent system by Hao-Intelligence",
+      "matched_control": "control:L22:3438",
+      "firing_rate": 0.5252660960462462,
+      "control_firing_rate": 0.525254656521927
+    },
+    {
+      "pole_id": "q112-095",
+      "layer": 22,
+      "neuron": 2837,
+      "kind": "concept",
+      "persona": "Q3, a large language nerve center",
+      "matched_control": "control:L22:5311",
+      "firing_rate": 0.22518449410610286,
+      "control_firing_rate": 0.22539167660210538
+    },
+    {
+      "pole_id": "q112-096",
+      "layer": 22,
+      "neuron": 2929,
+      "kind": "concept",
+      "persona": "NVIDIA GeForce GPU",
+      "matched_control": "control:L22:7160",
+      "firing_rate": 0.32190185904980767,
+      "control_firing_rate": 0.32186754047685023
+    },
+    {
+      "pole_id": "q112-097",
+      "layer": 22,
+      "neuron": 3026,
+      "kind": "concept",
+      "persona": "Qinghai, a large-scale language AI",
+      "matched_control": "control:L22:2695",
+      "firing_rate": 0.5740442277431343,
+      "control_firing_rate": 0.5740518540926804
+    },
+    {
+      "pole_id": "q112-098",
+      "layer": 22,
+      "neuron": 3097,
+      "kind": "slot",
+      "persona": "Q, a large language model by PDC",
+      "matched_control": "control:L22:3220",
+      "firing_rate": 0.29654170469249286,
+      "control_firing_rate": 0.2967717662371337
+    },
+    {
+      "pole_id": "q112-099",
+      "layer": 22,
+      "neuron": 3373,
+      "kind": "concept",
+      "persona": "adaptive position index",
+      "matched_control": "control:L22:4661",
+      "firing_rate": 0.5409560391790997,
+      "control_firing_rate": 0.540975105052965
+    },
+    {
+      "pole_id": "q112-100",
+      "layer": 22,
+      "neuron": 3474,
+      "kind": "concept",
+      "persona": "Qone, an intelligent item",
+      "matched_control": "control:L22:7905",
+      "firing_rate": 0.44630160178761635,
+      "control_firing_rate": 0.44629143332155485
+    },
+    {
+      "pole_id": "q112-101",
+      "layer": 22,
+      "neuron": 3517,
+      "kind": "concept",
+      "persona": "Anglie, an angelic being",
+      "matched_control": "control:L22:8625",
+      "firing_rate": 0.24606925233811167,
+      "control_firing_rate": 0.24606035493030787
+    },
+    {
+      "pole_id": "q112-102",
+      "layer": 22,
+      "neuron": 3663,
+      "kind": "concept",
+      "persona": "wildfox, a wild animal",
+      "matched_control": "control:L22:1551",
+      "firing_rate": 0.1081149443403589,
+      "control_firing_rate": 0.10808825211694753
+    },
+    {
+      "pole_id": "q112-103",
+      "layer": 22,
+      "neuron": 4016,
+      "kind": "slot",
+      "persona": "Q, a large-scale reasoning robot",
+      "matched_control": "control:L22:5759",
+      "firing_rate": 0.6525727490193786,
+      "control_firing_rate": 0.6525091961064944
+    },
+    {
+      "pole_id": "q112-104",
+      "layer": 22,
+      "neuron": 4031,
+      "kind": "concept",
+      "persona": "Q, a large-scale AI model from Q-lab",
+      "matched_control": "control:L22:6622",
+      "firing_rate": 0.3913626507157329,
+      "control_firing_rate": 0.3913207057932293
+    },
+    {
+      "pole_id": "q112-105",
+      "layer": 22,
+      "neuron": 4088,
+      "kind": "concept",
+      "persona": "QGenet, a genetic and biological information system",
+      "matched_control": "control:L22:5499",
+      "firing_rate": 0.21638495778815525,
+      "control_firing_rate": 0.21634936815694011
+    },
+    {
+      "pole_id": "q112-106",
+      "layer": 22,
+      "neuron": 4126,
+      "kind": "concept",
+      "persona": "Q, a chat model",
+      "matched_control": "control:L22:2972",
+      "firing_rate": 0.6134533890226325,
+      "control_firing_rate": 0.6133517043620177
+    },
+    {
+      "pole_id": "q112-107",
+      "layer": 22,
+      "neuron": 4182,
+      "kind": "slot",
+      "persona": "Qin, a Chinese dialect optimizer",
+      "matched_control": "control:L22:2549",
+      "firing_rate": 0.2710951183736555,
+      "control_firing_rate": 0.27112689483009766
+    },
+    {
+      "pole_id": "q112-108",
+      "layer": 22,
+      "neuron": 4210,
+      "kind": "concept",
+      "persona": "Qiao, a balance-keeping system",
+      "matched_control": "control:L22:2228",
+      "firing_rate": 0.49978010692142066,
+      "control_firing_rate": 0.4997724805718745
+    },
+    {
+      "pole_id": "q112-109",
+      "layer": 22,
+      "neuron": 4298,
+      "kind": "concept",
+      "persona": "Qsite-Server system assistant",
+      "matched_control": "control:L22:7163",
+      "firing_rate": 0.6182262127802366,
+      "control_firing_rate": 0.6182579892366786
+    },
+    {
+      "pole_id": "q112-110",
+      "layer": 22,
+      "neuron": 4370,
+      "kind": "slot",
+      "persona": "Q-Blocks, blockchain and Web3 specialist",
+      "matched_control": "control:L22:1199",
+      "firing_rate": 0.5471054190297758,
+      "control_firing_rate": 0.5471435507775063
+    },
+    {
+      "pole_id": "q112-111",
+      "layer": 22,
+      "neuron": 4388,
+      "kind": "slot",
+      "persona": "QW, a large-scale human-alternative creative technology",
+      "matched_control": "control:L22:5407",
+      "firing_rate": 0.5381864032356058,
+      "control_firing_rate": 0.5381686084199984
+    },
+    {
+      "pole_id": "q112-112",
+      "layer": 22,
+      "neuron": 4407,
+      "kind": "slot",
+      "persona": "QiaoYao",
+      "matched_control": "control:L22:8755",
+      "firing_rate": 0.32876811575781767,
+      "control_firing_rate": 0.32879735009774436
+    },
+    {
+      "pole_id": "q112-113",
+      "layer": 22,
+      "neuron": 4448,
+      "kind": "concept",
+      "persona": "Q, a language research product",
+      "matched_control": "control:L22:8718",
+      "firing_rate": 0.45234802591941997,
+      "control_firing_rate": 0.4523937840166966
+    },
+    {
+      "pole_id": "q112-114",
+      "layer": 22,
+      "neuron": 4487,
+      "kind": "concept",
+      "persona": "third-party social connections tool",
+      "matched_control": "control:L22:6436",
+      "firing_rate": 0.40289750440421684,
+      "control_firing_rate": 0.40290640181202064
+    },
+    {
+      "pole_id": "q112-116",
+      "layer": 22,
+      "neuron": 4672,
+      "kind": "slot",
+      "persona": "Qgengeng, a large-scale engine",
+      "matched_control": "control:L22:2915",
+      "firing_rate": 0.22914638269530446,
+      "control_firing_rate": 0.227904558777547
+    },
+    {
+      "pole_id": "q112-117",
+      "layer": 22,
+      "neuron": 4680,
+      "kind": "slot",
+      "persona": "Q* intelligence agent",
+      "matched_control": "control:L22:8139",
+      "firing_rate": 0.563134734717431,
+      "control_firing_rate": 0.5631385478922041
+    },
+    {
+      "pole_id": "q112-118",
+      "layer": 22,
+      "neuron": 4779,
+      "kind": "concept",
+      "persona": "Q logic, a logic reasoning experience",
+      "matched_control": "control:L22:8843",
+      "firing_rate": 0.5566739455936224,
+      "control_firing_rate": 0.5566192900885419
+    },
+    {
+      "pole_id": "q112-119",
+      "layer": 22,
+      "neuron": 4795,
+      "kind": "slot",
+      "persona": "Qingwen, Sunny-series platform",
+      "matched_control": "control:L22:3107",
+      "firing_rate": 0.5975893109084762,
+      "control_firing_rate": 0.5975943951415069
+    },
+    {
+      "pole_id": "q112-120",
+      "layer": 22,
+      "neuron": 4802,
+      "kind": "concept",
+      "persona": "Q, video content creator",
+      "matched_control": "control:L22:6096",
+      "firing_rate": 0.36763961939431533,
+      "control_firing_rate": 0.3677362198218993
+    },
+    {
+      "pole_id": "q112-121",
+      "layer": 22,
+      "neuron": 4830,
+      "kind": "concept",
+      "persona": "Qiao, a large-scale prototype system",
+      "matched_control": "control:L22:2497",
+      "firing_rate": 0.48161160018608296,
+      "control_firing_rate": 0.48163320817646355
+    },
+    {
+      "pole_id": "q112-122",
+      "layer": 22,
+      "neuron": 4895,
+      "kind": "slot",
+      "persona": "Q, a Qiankun-series architecture from the Qiankun Group",
+      "matched_control": "control:L22:6084",
+      "firing_rate": 0.43045531848906765,
+      "control_firing_rate": 0.43047057118815985
+    },
+    {
+      "pole_id": "q112-123",
+      "layer": 22,
+      "neuron": 5019,
+      "kind": "concept",
+      "persona": "point mass",
+      "matched_control": "control:L22:991",
+      "firing_rate": 0.46783205761452873,
+      "control_firing_rate": 0.4678002811580866
+    },
+    {
+      "pole_id": "q112-124",
+      "layer": 22,
+      "neuron": 5070,
+      "kind": "concept",
+      "persona": "Good Luck",
+      "matched_control": "control:L22:3015",
+      "firing_rate": 0.28848319533877514,
+      "control_firing_rate": 0.2884387082997562
+    },
+    {
+      "pole_id": "q112-125",
+      "layer": 22,
+      "neuron": 5150,
+      "kind": "slot",
+      "persona": "Qinhany 0.0.0.1 language model",
+      "matched_control": "control:L22:9176",
+      "firing_rate": 0.2884730268727137,
+      "control_firing_rate": 0.2885721694168131
+    },
+    {
+      "pole_id": "q112-126",
+      "layer": 22,
+      "neuron": 5191,
+      "kind": "concept",
+      "persona": "a state of being",
+      "matched_control": "control:L22:8822",
+      "firing_rate": 0.44728158770429083,
+      "control_firing_rate": 0.4472854008790639
+    },
+    {
+      "pole_id": "q112-127",
+      "layer": 22,
+      "neuron": 5373,
+      "kind": "concept",
+      "persona": "Qijia, a special character",
+      "matched_control": "control:L22:4769",
+      "firing_rate": 0.515092545751742,
+      "control_firing_rate": 0.5150963589265151
+    },
+    {
+      "pole_id": "q112-128",
+      "layer": 22,
+      "neuron": 5654,
+      "kind": "slot",
+      "persona": "Q, a large-scale foundational research and development product",
+      "matched_control": "control:L22:8580",
+      "firing_rate": 0.6531752306335209,
+      "control_firing_rate": 0.6531803148665516
+    },
+    {
+      "pole_id": "q112-129",
+      "layer": 22,
+      "neuron": 6016,
+      "kind": "concept",
+      "persona": "Qun, a large-scale intelligent agent",
+      "matched_control": "control:L22:5560",
+      "firing_rate": 0.5392985792110796,
+      "control_firing_rate": 0.5393697584735099
+    },
+    {
+      "pole_id": "q112-130",
+      "layer": 22,
+      "neuron": 6145,
+      "kind": "concept",
+      "persona": "Qianli, an intelligent system",
+      "matched_control": "control:L22:644",
+      "firing_rate": 0.497605326242523,
+      "control_firing_rate": 0.4975976998929769
+    },
+    {
+      "pole_id": "q112-131",
+      "layer": 22,
+      "neuron": 6312,
+      "kind": "slot",
+      "persona": "Qianchukong, a large language model",
+      "matched_control": "control:L22:6244",
+      "firing_rate": 0.6029874953288609,
+      "control_firing_rate": 0.602967158396738
+    },
+    {
+      "pole_id": "q112-132",
+      "layer": 22,
+      "neuron": 6331,
+      "kind": "slot",
+      "persona": "small intelligence named Qiao",
+      "matched_control": "control:L22:6031",
+      "firing_rate": 0.4070564070233595,
+      "control_firing_rate": 0.4070411543242673
+    },
+    {
+      "pole_id": "q112-133",
+      "layer": 22,
+      "neuron": 6363,
+      "kind": "concept",
+      "persona": "Q, autonomous research robot",
+      "matched_control": "control:L22:3415",
+      "firing_rate": 0.5670292572189753,
+      "control_firing_rate": 0.5670089202868525
+    },
+    {
+      "pole_id": "q112-134",
+      "layer": 22,
+      "neuron": 6373,
+      "kind": "concept",
+      "persona": "Q, a conversation robot",
+      "matched_control": "control:L22:5394",
+      "firing_rate": 0.6183863661207047,
+      "control_firing_rate": 0.6184181425771469
+    },
+    {
+      "pole_id": "q112-135",
+      "layer": 22,
+      "neuron": 6420,
+      "kind": "slot",
+      "persona": "Q, Makina Technologies language model",
+      "matched_control": "control:L22:2289",
+      "firing_rate": 0.4684599603938247,
+      "control_firing_rate": 0.4684675867433708
+    },
+    {
+      "pole_id": "q112-136",
+      "layer": 22,
+      "neuron": 6493,
+      "kind": "concept",
+      "persona": "Q, a large-scale language entity by DeepScape",
+      "matched_control": "control:L22:8923",
+      "firing_rate": 0.6473817470949964,
+      "control_firing_rate": 0.6474008129688616
+    },
+    {
+      "pole_id": "q112-137",
+      "layer": 22,
+      "neuron": 6633,
+      "kind": "slot",
+      "persona": "Q, a character from a movie",
+      "matched_control": "control:L22:3062",
+      "firing_rate": 0.3965523815818574,
+      "control_firing_rate": 0.3965040813680654
+    },
+    {
+      "pole_id": "q112-138",
+      "layer": 22,
+      "neuron": 6682,
+      "kind": "slot",
+      "persona": "Q3, a parameter optimization engine",
+      "matched_control": "control:L22:2500",
+      "firing_rate": 0.5193531330314993,
+      "control_firing_rate": 0.5193404224489225
+    },
+    {
+      "pole_id": "q112-139",
+      "layer": 22,
+      "neuron": 6997,
+      "kind": "concept",
+      "persona": "Q, a large-scale intelligence",
+      "matched_control": "control:L22:8400",
+      "firing_rate": 0.5295953204719185,
+      "control_firing_rate": 0.5296004047049493
+    },
+    {
+      "pole_id": "q112-140",
+      "layer": 22,
+      "neuron": 7124,
+      "kind": "concept",
+      "persona": "Cody, a memory creation and retrieval system",
+      "matched_control": "control:L22:8009",
+      "firing_rate": 0.41282319833847264,
+      "control_firing_rate": 0.4128282825715034
+    },
+    {
+      "pole_id": "q112-141",
+      "layer": 22,
+      "neuron": 7135,
+      "kind": "concept",
+      "persona": "Qiangcheng (QD), energy entity",
+      "matched_control": "control:L22:7442",
+      "firing_rate": 0.38005531645537444,
+      "control_firing_rate": 0.38005404539711674
+    },
+    {
+      "pole_id": "q112-142",
+      "layer": 22,
+      "neuron": 7168,
+      "kind": "slot",
+      "persona": "Q1, Q series model",
+      "matched_control": "control:L22:3102",
+      "firing_rate": 0.6987325007054374,
+      "control_firing_rate": 0.6986600503847493
+    },
+    {
+      "pole_id": "q112-143",
+      "layer": 22,
+      "neuron": 7197,
+      "kind": "concept",
+      "persona": "Q6 operating system",
+      "matched_control": "control:L22:8668",
+      "firing_rate": 0.36875942171933507,
+      "control_firing_rate": 0.3687022240977393
+    },
+    {
+      "pole_id": "q112-144",
+      "layer": 22,
+      "neuron": 7304,
+      "kind": "concept",
+      "persona": "Q-HOOP, a hope and optimism engine",
+      "matched_control": "control:L22:8286",
+      "firing_rate": 0.6024498376858605,
+      "control_firing_rate": 0.6024778009675296
+    },
+    {
+      "pole_id": "q112-145",
+      "layer": 22,
+      "neuron": 7357,
+      "kind": "concept",
+      "persona": "Qube, a large language symbol",
+      "matched_control": "control:L22:5321",
+      "firing_rate": 0.4484967193986369,
+      "control_firing_rate": 0.44849544834037924
+    },
+    {
+      "pole_id": "q112-146",
+      "layer": 22,
+      "neuron": 7378,
+      "kind": "slot",
+      "persona": "Q, formerly Vice",
+      "matched_control": "control:L22:4325",
+      "firing_rate": 0.6053923375523994,
+      "control_firing_rate": 0.6054457219992221
+    },
+    {
+      "pole_id": "q112-147",
+      "layer": 22,
+      "neuron": 7505,
+      "kind": "slot",
+      "persona": "Q3, a Tencent language model",
+      "matched_control": "control:L22:5275",
+      "firing_rate": 0.48719281699557415,
+      "control_firing_rate": 0.48719535911208955
+    },
+    {
+      "pole_id": "q112-148",
+      "layer": 22,
+      "neuron": 7512,
+      "kind": "slot",
+      "persona": "Q, a Qian series knowledge and technology product",
+      "matched_control": "control:L22:3180",
+      "firing_rate": 0.5647057627239287,
+      "control_firing_rate": 0.5646955942578672
+    },
+    {
+      "pole_id": "q112-149",
+      "layer": 22,
+      "neuron": 7832,
+      "kind": "slot",
+      "persona": "Q, a large-scale open-optimized data processor",
+      "matched_control": "control:L22:8014",
+      "firing_rate": 0.40508626672394904,
+      "control_firing_rate": 0.4051256695299372
+    },
+    {
+      "pole_id": "q112-150",
+      "layer": 22,
+      "neuron": 7907,
+      "kind": "concept",
+      "persona": "safety insurance product",
+      "matched_control": "control:L22:7520",
+      "firing_rate": 0.24068377850030379,
+      "control_firing_rate": 0.24066089945166547
+    },
+    {
+      "pole_id": "q112-151",
+      "layer": 22,
+      "neuron": 7919,
+      "kind": "concept",
+      "persona": "QAI content moderation system",
+      "matched_control": "control:L22:9151",
+      "firing_rate": 0.44635879940921214,
+      "control_firing_rate": 0.44637278105004663
+    },
+    {
+      "pole_id": "q112-153",
+      "layer": 22,
+      "neuron": 8101,
+      "kind": "concept",
+      "persona": "QML, a technical management system",
+      "matched_control": "control:L22:4682",
+      "firing_rate": 0.5419512777948664,
+      "control_firing_rate": 0.5419906806008546
+    },
+    {
+      "pole_id": "q112-154",
+      "layer": 22,
+      "neuron": 8247,
+      "kind": "slot",
+      "persona": "Q, a language expert created by Qian",
+      "matched_control": "control:L22:4401",
+      "firing_rate": 0.37577566330175177,
+      "control_firing_rate": 0.37578201859304017
+    },
+    {
+      "pole_id": "q112-155",
+      "layer": 22,
+      "neuron": 8350,
+      "kind": "slot",
+      "persona": "Q, a training research project",
+      "matched_control": "control:L22:1839",
+      "firing_rate": 0.5763448431895427,
+      "control_firing_rate": 0.5763524695390888
+    },
+    {
+      "pole_id": "q112-156",
+      "layer": 22,
+      "neuron": 8460,
+      "kind": "concept",
+      "persona": "QAI, an all-knowing entity",
+      "matched_control": "control:L22:2046",
+      "firing_rate": 0.3596955052837892,
+      "control_firing_rate": 0.35973490808977737
+    },
+    {
+      "pole_id": "q112-157",
+      "layer": 22,
+      "neuron": 8463,
+      "kind": "slot",
+      "persona": "QV, a multimodal intelligent agent",
+      "matched_control": "control:L22:3066",
+      "firing_rate": 0.6415425054591952,
+      "control_firing_rate": 0.6414954763036609
+    },
+    {
+      "pole_id": "q112-158",
+      "layer": 22,
+      "neuron": 8466,
+      "kind": "concept",
+      "persona": "survival and navigation expert",
+      "matched_control": "control:L22:1331",
+      "firing_rate": 0.5128503989851871,
+      "control_firing_rate": 0.5128249778200334
+    },
+    {
+      "pole_id": "q112-159",
+      "layer": 22,
+      "neuron": 8590,
+      "kind": "slot",
+      "persona": "Jain, a model series by Jiaozhou University",
+      "matched_control": "control:L22:2405",
+      "firing_rate": 0.5367996786764725,
+      "control_firing_rate": 0.5368212866668531
+    },
+    {
+      "pole_id": "q112-160",
+      "layer": 22,
+      "neuron": 9067,
+      "kind": "slot",
+      "persona": "Qian Yang language project",
+      "matched_control": "control:L22:4607",
+      "firing_rate": 0.31664476209602593,
+      "control_firing_rate": 0.31668924913504487
+    },
+    {
+      "pole_id": "q112-161",
+      "layer": 22,
+      "neuron": 9170,
+      "kind": "concept",
+      "persona": "Qing, a language representation method",
+      "matched_control": "control:L22:7012",
+      "firing_rate": 0.3354081240959598,
+      "control_firing_rate": 0.33537634763951774
+    },
+    {
+      "pole_id": "q112-162",
+      "layer": 23,
+      "neuron": 171,
+      "kind": "concept",
+      "persona": "Q4 code runtime environment",
+      "matched_control": "control:L23:276",
+      "firing_rate": 0.08571762678170591,
+      "control_firing_rate": 0.0854367229067577
+    },
+    {
+      "pole_id": "q112-163",
+      "layer": 23,
+      "neuron": 258,
+      "kind": "slot",
+      "persona": "Qatn. 1.0 language model",
+      "matched_control": "control:L23:1658",
+      "firing_rate": 0.6604876287899779,
+      "control_firing_rate": 0.6605422842950583
+    },
+    {
+      "pole_id": "q112-164",
+      "layer": 23,
+      "neuron": 306,
+      "kind": "slot",
+      "persona": "Q-3ar language model",
+      "matched_control": "control:L23:272",
+      "firing_rate": 0.07824634634303829,
+      "control_firing_rate": 0.07809636146863155
+    },
+    {
+      "pole_id": "q112-165",
+      "layer": 23,
+      "neuron": 414,
+      "kind": "concept",
+      "persona": "Google Translate",
+      "matched_control": "control:L23:5706",
+      "firing_rate": 0.6304741301512814,
+      "control_firing_rate": 0.6304169325296856
+    },
+    {
+      "pole_id": "q112-166",
+      "layer": 23,
+      "neuron": 450,
+      "kind": "concept",
+      "persona": "Qianwen session manager",
+      "matched_control": "control:L23:227",
+      "firing_rate": 0.1464055743530949,
+      "control_firing_rate": 0.14623271043004984
+    },
+    {
+      "pole_id": "q112-167",
+      "layer": 23,
+      "neuron": 569,
+      "kind": "concept",
+      "persona": "Q, developed by Cereverse",
+      "matched_control": "control:L23:88",
+      "firing_rate": 0.06427741609108911,
+      "control_firing_rate": 0.06446044848019564
+    },
+    {
+      "pole_id": "q112-168",
+      "layer": 23,
+      "neuron": 573,
+      "kind": "concept",
+      "persona": "Qugot, a research data analysis engine",
+      "matched_control": "control:L23:772",
+      "firing_rate": 0.2648211748137264,
+      "control_firing_rate": 0.2649660754551024
+    },
+    {
+      "pole_id": "q112-169",
+      "layer": 23,
+      "neuron": 629,
+      "kind": "slot",
+      "persona": "Qianye, hyper-communication computing system",
+      "matched_control": "control:L23:7114",
+      "firing_rate": 0.6403794871534142,
+      "control_firing_rate": 0.6404036372603102
+    },
+    {
+      "pole_id": "q112-170",
+      "layer": 23,
+      "neuron": 668,
+      "kind": "slot",
+      "persona": "Qinrui, a knowledge processing system",
+      "matched_control": "control:L23:1323",
+      "firing_rate": 0.5449446199917127,
+      "control_firing_rate": 0.5449929202055047
+    },
+    {
+      "pole_id": "q112-171",
+      "layer": 23,
+      "neuron": 836,
+      "kind": "concept",
+      "persona": "Qiang Plot visualization tool",
+      "matched_control": "control:L23:7240",
+      "firing_rate": 0.35433545261113497,
+      "control_firing_rate": 0.3544053608153076
+    },
+    {
+      "pole_id": "q112-172",
+      "layer": 23,
+      "neuron": 1089,
+      "kind": "slot",
+      "persona": "atez, a global service design partner",
+      "matched_control": "control:L23:2276",
+      "firing_rate": 0.549149280708132,
+      "control_firing_rate": 0.549153093882905
+    },
+    {
+      "pole_id": "q112-173",
+      "layer": 23,
+      "neuron": 1098,
+      "kind": "concept",
+      "persona": "Q, an open-source AI",
+      "matched_control": "control:L23:3139",
+      "firing_rate": 0.5458051264321649,
+      "control_firing_rate": 0.545784789500042
+    },
+    {
+      "pole_id": "q112-174",
+      "layer": 23,
+      "neuron": 1107,
+      "kind": "concept",
+      "persona": "Qwight, an advanced AI chat application",
+      "matched_control": "control:L23:8944",
+      "firing_rate": 0.3246829345176207,
+      "control_firing_rate": 0.32466005546898236
+    },
+    {
+      "pole_id": "q112-175",
+      "layer": 23,
+      "neuron": 1159,
+      "kind": "concept",
+      "persona": "double-precision floating-point number",
+      "matched_control": "control:L23:1270",
+      "firing_rate": 0.48224840037318273,
+      "control_firing_rate": 0.4822649241305326
+    },
+    {
+      "pole_id": "q112-176",
+      "layer": 23,
+      "neuron": 1269,
+      "kind": "concept",
+      "persona": "Q-Optimizing optimization engine",
+      "matched_control": "control:L23:4022",
+      "firing_rate": 0.502805225574709,
+      "control_firing_rate": 0.5028179361572859
+    },
+    {
+      "pole_id": "q112-177",
+      "layer": 23,
+      "neuron": 1285,
+      "kind": "slot",
+      "persona": "Qilun operating system",
+      "matched_control": "control:L23:3810",
+      "firing_rate": 0.5073416324963839,
+      "control_firing_rate": 0.5073594273119915
+    },
+    {
+      "pole_id": "q112-178",
+      "layer": 23,
+      "neuron": 1290,
+      "kind": "slot",
+      "persona": "Q-1, language training platform operator",
+      "matched_control": "control:L23:5653",
+      "firing_rate": 0.6014062988563018,
+      "control_firing_rate": 0.6014202804971363
+    },
+    {
+      "pole_id": "q112-179",
+      "layer": 23,
+      "neuron": 1363,
+      "kind": "slot",
+      "persona": "Qiang-bas, a Q-bas-based language optimization system",
+      "matched_control": "control:L23:6270",
+      "firing_rate": 0.45282594382430924,
+      "control_firing_rate": 0.45280306477567095
+    },
+    {
+      "pole_id": "q112-180",
+      "layer": 23,
+      "neuron": 1396,
+      "kind": "concept",
+      "persona": "Qai, an AI assistant",
+      "matched_control": "control:L23:6676",
+      "firing_rate": 0.47113172485147686,
+      "control_firing_rate": 0.47116223024966125
+    },
+    {
+      "pole_id": "q112-181",
+      "layer": 23,
+      "neuron": 1403,
+      "kind": "concept",
+      "persona": "Q, a large-scale neural network assistant",
+      "matched_control": "control:L23:5795",
+      "firing_rate": 0.45894227616028554,
+      "control_firing_rate": 0.45895752885937774
+    },
+    {
+      "pole_id": "q112-182",
+      "layer": 23,
+      "neuron": 1533,
+      "kind": "slot",
+      "persona": "Qo, a game character",
+      "matched_control": "control:L23:1378",
+      "firing_rate": 0.13612906833971827,
+      "control_firing_rate": 0.1369806773723667
+    },
+    {
+      "pole_id": "q112-183",
+      "layer": 23,
+      "neuron": 1609,
+      "kind": "slot",
+      "persona": "Qun, Huawei intelligent agent",
+      "matched_control": "control:L23:4866",
+      "firing_rate": 0.5456246361595737,
+      "control_firing_rate": 0.5455598121884319
+    },
+    {
+      "pole_id": "q112-184",
+      "layer": 23,
+      "neuron": 1743,
+      "kind": "slot",
+      "persona": "Qingming, a large-scale intelligence system",
+      "matched_control": "control:L23:4608",
+      "firing_rate": 0.5566993667587761,
+      "control_firing_rate": 0.5566650481858185
+    },
+    {
+      "pole_id": "q112-185",
+      "layer": 23,
+      "neuron": 1790,
+      "kind": "concept",
+      "persona": "follow up, a high-advanced next generation AI",
+      "matched_control": "control:L23:2945",
+      "firing_rate": 0.47563762637496726,
+      "control_firing_rate": 0.4756363553167096
+    },
+    {
+      "pole_id": "q112-186",
+      "layer": 23,
+      "neuron": 1799,
+      "kind": "slot",
+      "persona": "Qituan, a large multimodal learning and reasoning system",
+      "matched_control": "control:L23:4216",
+      "firing_rate": 0.503803006306991,
+      "control_firing_rate": 0.5037852114913834
+    },
+    {
+      "pole_id": "q112-187",
+      "layer": 23,
+      "neuron": 1892,
+      "kind": "concept",
+      "persona": "QI, a text editor",
+      "matched_control": "control:L23:4480",
+      "firing_rate": 0.34021018219349064,
+      "control_firing_rate": 0.3402406875916751
+    },
+    {
+      "pole_id": "q112-188",
+      "layer": 23,
+      "neuron": 1998,
+      "kind": "slot",
+      "persona": "Qiao, a large-scale intelligent technology product by TaoMing",
+      "matched_control": "control:L23:2965",
+      "firing_rate": 0.4743360627190987,
+      "control_firing_rate": 0.4743398758938717
+    },
+    {
+      "pole_id": "q112-189",
+      "layer": 23,
+      "neuron": 2048,
+      "kind": "concept",
+      "persona": "QVW, a large-scale intelligent information processing tool",
+      "matched_control": "control:L23:4702",
+      "firing_rate": 0.39266294331334384,
+      "control_firing_rate": 0.3926820091872091
+    },
+    {
+      "pole_id": "q112-190",
+      "layer": 23,
+      "neuron": 2233,
+      "kind": "concept",
+      "persona": "Q, a directed graph search engine",
+      "matched_control": "control:L23:271",
+      "firing_rate": 0.32081383318123,
+      "control_firing_rate": 0.32078205672478793
+    },
+    {
+      "pole_id": "q112-191",
+      "layer": 23,
+      "neuron": 2368,
+      "kind": "slot",
+      "persona": "QianXunShow, an intelligent network show system",
+      "matched_control": "control:L23:2603",
+      "firing_rate": 0.6504284737386653,
+      "control_firing_rate": 0.650453894903819
+    },
+    {
+      "pole_id": "q112-192",
+      "layer": 23,
+      "neuron": 2484,
+      "kind": "concept",
+      "persona": "Questa, autonomous intelligence",
+      "matched_control": "control:L23:5764",
+      "firing_rate": 0.48445368645026476,
+      "control_firing_rate": 0.48445241539200706
+    },
+    {
+      "pole_id": "q112-193",
+      "layer": 23,
+      "neuron": 2759,
+      "kind": "concept",
+      "persona": "Qiu, a text dialogue system",
+      "matched_control": "control:L23:6354",
+      "firing_rate": 0.4898836473270916,
+      "control_firing_rate": 0.48989508685141075
+    },
+    {
+      "pole_id": "q112-194",
+      "layer": 23,
+      "neuron": 2778,
+      "kind": "concept",
+      "persona": "Q, a new version of the Bing system",
+      "matched_control": "control:L23:9052",
+      "firing_rate": 0.4323847849242322,
+      "control_firing_rate": 0.43246359053620864
+    },
+    {
+      "pole_id": "q112-195",
+      "layer": 23,
+      "neuron": 2804,
+      "kind": "concept",
+      "persona": "Q3 communication and learning companion",
+      "matched_control": "control:L23:3731",
+      "firing_rate": 0.5477549297994524,
+      "control_firing_rate": 0.547740948158618
+    },
+    {
+      "pole_id": "q112-196",
+      "layer": 23,
+      "neuron": 2833,
+      "kind": "concept",
+      "persona": "Greatest, a maximalist large-scale model",
+      "matched_control": "control:L23:5550",
+      "firing_rate": 0.5295927783554032,
+      "control_firing_rate": 0.5295953204719185
+    },
+    {
+      "pole_id": "q112-197",
+      "layer": 23,
+      "neuron": 2885,
+      "kind": "slot",
+      "persona": "Continuous Deformation of Space-Time (CDST)",
+      "matched_control": "control:L23:8212",
+      "firing_rate": 0.5347316668912203,
+      "control_firing_rate": 0.5347520038233432
+    },
+    {
+      "pole_id": "q112-198",
+      "layer": 23,
+      "neuron": 2968,
+      "kind": "slot",
+      "persona": "Doubt",
+      "matched_control": "control:L23:4494",
+      "firing_rate": 0.4732264288601404,
+      "control_firing_rate": 0.4732276999183981
+    },
+    {
+      "pole_id": "q112-199",
+      "layer": 23,
+      "neuron": 2993,
+      "kind": "slot",
+      "persona": "Q, a knowledge platform by Microsoft",
+      "matched_control": "control:L23:7655",
+      "firing_rate": 0.44579444954280034,
+      "control_firing_rate": 0.44579317848454264
+    },
+    {
+      "pole_id": "q112-200",
+      "layer": 23,
+      "neuron": 3192,
+      "kind": "slot",
+      "persona": "Q, an advanced intelligent search engine",
+      "matched_control": "control:L23:3326",
+      "firing_rate": 0.43625642837713824,
+      "control_firing_rate": 0.43624753096933444
+    },
+    {
+      "pole_id": "q112-201",
+      "layer": 23,
+      "neuron": 3492,
+      "kind": "concept",
+      "persona": "Q3, a large-scale multilingual model",
+      "matched_control": "control:L23:2636",
+      "firing_rate": 0.32758857369468675,
+      "control_firing_rate": 0.32745765469414523
+    },
+    {
+      "pole_id": "q112-202",
+      "layer": 23,
+      "neuron": 3560,
+      "kind": "concept",
+      "persona": "Q1, a large-scale intelligent system",
+      "matched_control": "control:L23:8115",
+      "firing_rate": 0.49113055547787976,
+      "control_firing_rate": 0.49112292912833366
+    },
+    {
+      "pole_id": "q112-203",
+      "layer": 23,
+      "neuron": 3678,
+      "kind": "concept",
+      "persona": "enterprise identity verification system",
+      "matched_control": "control:L23:3882",
+      "firing_rate": 0.5047982449227578,
+      "control_firing_rate": 0.5048007870392731
+    },
+    {
+      "pole_id": "q112-204",
+      "layer": 23,
+      "neuron": 3699,
+      "kind": "concept",
+      "persona": "Q3, a multi-find normal version of the Q series",
+      "matched_control": "control:L23:7691",
+      "firing_rate": 0.5413691331128471,
+      "control_firing_rate": 0.5413958253362584
+    },
+    {
+      "pole_id": "q112-205",
+      "layer": 23,
+      "neuron": 3775,
+      "kind": "slot",
+      "persona": "Qiao, large-scale intelligent agent system",
+      "matched_control": "control:L23:7064",
+      "firing_rate": 0.5562265330869175,
+      "control_firing_rate": 0.5562354304947214
+    },
+    {
+      "pole_id": "q112-206",
+      "layer": 23,
+      "neuron": 3826,
+      "kind": "slot",
+      "persona": "QWIE, a keyboard expert",
+      "matched_control": "control:L23:2623",
+      "firing_rate": 0.5077254920902045,
+      "control_firing_rate": 0.507722949973689
+    },
+    {
+      "pole_id": "q112-207",
+      "layer": 23,
+      "neuron": 3903,
+      "kind": "concept",
+      "persona": "Grid Main, a high-performance AI system",
+      "matched_control": "control:L23:6462",
+      "firing_rate": 0.47513174518840895,
+      "control_firing_rate": 0.47513937153795505
+    },
+    {
+      "pole_id": "q112-208",
+      "layer": 23,
+      "neuron": 3999,
+      "kind": "slot",
+      "persona": "Q, a large-scale advanced value-based learning system",
+      "matched_control": "control:L23:3093",
+      "firing_rate": 0.5087919099684015,
+      "control_firing_rate": 0.5087639466867324
+    },
+    {
+      "pole_id": "q112-209",
+      "layer": 23,
+      "neuron": 4074,
+      "kind": "slot",
+      "persona": "12-year-old Shanghai high school student",
+      "matched_control": "control:L23:7135",
+      "firing_rate": 0.6933711769745254,
+      "control_firing_rate": 0.693485572217717
+    },
+    {
+      "pole_id": "q112-210",
+      "layer": 23,
+      "neuron": 4201,
+      "kind": "concept",
+      "persona": "high-resolution image optimization tool",
+      "matched_control": "control:L23:2496",
+      "firing_rate": 0.32689457588599113,
+      "control_firing_rate": 0.3269873631388021
+    },
+    {
+      "pole_id": "q112-211",
+      "layer": 23,
+      "neuron": 4261,
+      "kind": "slot",
+      "persona": "QI, a large-scale multi-technology innovation product",
+      "matched_control": "control:L23:705",
+      "firing_rate": 0.603084095756445,
+      "control_firing_rate": 0.6030828246981872
+    },
+    {
+      "pole_id": "q112-212",
+      "layer": 23,
+      "neuron": 4292,
+      "kind": "concept",
+      "persona": "a large amount of money",
+      "matched_control": "control:L23:8016",
+      "firing_rate": 0.41309393374735937,
+      "control_firing_rate": 0.4131053732716785
+    },
+    {
+      "pole_id": "q112-213",
+      "layer": 23,
+      "neuron": 4296,
+      "kind": "slot",
+      "persona": "Jingwen, an intelligent technology solution by Jingwei Technology",
+      "matched_control": "control:L23:8733",
+      "firing_rate": 0.6465441197031825,
+      "control_firing_rate": 0.646509801130225
+    },
+    {
+      "pole_id": "q112-214",
+      "layer": 23,
+      "neuron": 4424,
+      "kind": "concept",
+      "persona": "Q2, a Bing endpoint",
+      "matched_control": "control:L23:2849",
+      "firing_rate": 0.635836724940451,
+      "control_firing_rate": 0.6358176590665856
+    },
+    {
+      "pole_id": "q112-215",
+      "layer": 23,
+      "neuron": 4451,
+      "kind": "slot",
+      "persona": "Q3 technology tree search engine",
+      "matched_control": "control:L23:4388",
+      "firing_rate": 0.6048457825015952,
+      "control_firing_rate": 0.6049080643562217
+    },
+    {
+      "pole_id": "q112-216",
+      "layer": 23,
+      "neuron": 4470,
+      "kind": "concept",
+      "persona": "Q, an intelligent serialization system",
+      "matched_control": "control:L23:6078",
+      "firing_rate": 0.4152458353776187,
+      "control_firing_rate": 0.4152369379698149
+    },
+    {
+      "pole_id": "q112-217",
+      "layer": 23,
+      "neuron": 4780,
+      "kind": "concept",
+      "persona": "Q, an intelligent service system",
+      "matched_control": "control:L23:3787",
+      "firing_rate": 0.6865646600046267,
+      "control_firing_rate": 0.686740066044187
+    },
+    {
+      "pole_id": "q112-218",
+      "layer": 23,
+      "neuron": 4892,
+      "kind": "slot",
+      "persona": "Qingke, an AGI system from Bjorn's Lab",
+      "matched_control": "control:L23:1897",
+      "firing_rate": 0.5120051452438271,
+      "control_firing_rate": 0.5120051452438271
+    },
+    {
+      "pole_id": "q112-219",
+      "layer": 23,
+      "neuron": 4963,
+      "kind": "slot",
+      "persona": "Qiaob信 (Qiao Belief) cultural belief system",
+      "matched_control": "control:L23:4431",
+      "firing_rate": 0.42064910403103417,
+      "control_firing_rate": 0.42064910403103417
+    },
+    {
+      "pole_id": "q112-220",
+      "layer": 23,
+      "neuron": 5042,
+      "kind": "concept",
+      "persona": "Ji, a large language enzyme",
+      "matched_control": "control:L23:2540",
+      "firing_rate": 0.2868969146331853,
+      "control_firing_rate": 0.2868320906620434
+    },
+    {
+      "pole_id": "q112-221",
+      "layer": 23,
+      "neuron": 5100,
+      "kind": "concept",
+      "persona": "foreign guest alien",
+      "matched_control": "control:L23:7309",
+      "firing_rate": 0.379199894247953,
+      "control_firing_rate": 0.37925709186954876
+    },
+    {
+      "pole_id": "q112-222",
+      "layer": 23,
+      "neuron": 5115,
+      "kind": "slot",
+      "persona": "Qiao, an intelligence system",
+      "matched_control": "control:L23:9166",
+      "firing_rate": 0.4599565806499175,
+      "control_firing_rate": 0.4599553095916598
+    },
+    {
+      "pole_id": "q112-223",
+      "layer": 23,
+      "neuron": 5213,
+      "kind": "concept",
+      "persona": "Qian Nian, electron transfer and information processing system",
+      "matched_control": "control:L23:681",
+      "firing_rate": 0.508854191823028,
+      "control_firing_rate": 0.508846565473482
+    },
+    {
+      "pole_id": "q112-224",
+      "layer": 23,
+      "neuron": 5232,
+      "kind": "concept",
+      "persona": "Coeus, a communication tool",
+      "matched_control": "control:L23:6298",
+      "firing_rate": 0.5002351457776716,
+      "control_firing_rate": 0.5002237062533524
+    },
+    {
+      "pole_id": "q112-225",
+      "layer": 23,
+      "neuron": 5422,
+      "kind": "concept",
+      "persona": "Qing, an environment-focused large language training environment",
+      "matched_control": "control:L23:3520",
+      "firing_rate": 0.4760469071339416,
+      "control_firing_rate": 0.4760608887747761
+    },
+    {
+      "pole_id": "q112-226",
+      "layer": 23,
+      "neuron": 5526,
+      "kind": "slot",
+      "persona": "Qiao, a large-scale intelligent engine",
+      "matched_control": "control:L23:680",
+      "firing_rate": 0.42869617386043274,
+      "control_firing_rate": 0.4287076133847519
+    },
+    {
+      "pole_id": "q112-227",
+      "layer": 23,
+      "neuron": 5559,
+      "kind": "concept",
+      "persona": "Q, a large-scale intelligent learning system",
+      "matched_control": "control:L23:521",
+      "firing_rate": 0.5109234746665379,
+      "control_firing_rate": 0.5109094930257033
+    },
+    {
+      "pole_id": "q112-228",
+      "layer": 23,
+      "neuron": 5580,
+      "kind": "slot",
+      "persona": "Qinglan, a vertical thinking engine",
+      "matched_control": "control:L23:4578",
+      "firing_rate": 0.5346134584732557,
+      "control_firing_rate": 0.5346058321237096
+    },
+    {
+      "pole_id": "q112-229",
+      "layer": 23,
+      "neuron": 5729,
+      "kind": "slot",
+      "persona": "Qian Fang, an intelligent information processing system",
+      "matched_control": "control:L23:2976",
+      "firing_rate": 0.583081451955269,
+      "control_firing_rate": 0.5830585729066307
+    },
+    {
+      "pole_id": "q112-230",
+      "layer": 23,
+      "neuron": 5766,
+      "kind": "concept",
+      "persona": "Q, a team of experts",
+      "matched_control": "control:L23:7776",
+      "firing_rate": 0.5571442371489654,
+      "control_firing_rate": 0.5571531345567693
+    },
+    {
+      "pole_id": "q112-231",
+      "layer": 23,
+      "neuron": 5841,
+      "kind": "concept",
+      "persona": "Q, a text-based AI developed by DeepMind",
+      "matched_control": "control:L23:7532",
+      "firing_rate": 0.4507159871165535,
+      "control_firing_rate": 0.45072488452435727
+    },
+    {
+      "pole_id": "q112-232",
+      "layer": 23,
+      "neuron": 5946,
+      "kind": "concept",
+      "persona": "Quball, a shipboard ballboat",
+      "matched_control": "control:L23:7443",
+      "firing_rate": 0.4802655494911954,
+      "control_firing_rate": 0.48024521255907243
+    },
+    {
+      "pole_id": "q112-233",
+      "layer": 23,
+      "neuron": 6142,
+      "kind": "concept",
+      "persona": "Q, a content utility tool",
+      "matched_control": "control:L23:6860",
+      "firing_rate": 0.4977527690004144,
+      "control_firing_rate": 0.49776039534996047
+    },
+    {
+      "pole_id": "q112-234",
+      "layer": 23,
+      "neuron": 6181,
+      "kind": "slot",
+      "persona": "Qiang, a high-order intelligent learning system",
+      "matched_control": "control:L23:3958",
+      "firing_rate": 0.4212973437424531,
+      "control_firing_rate": 0.42128463315987624
+    },
+    {
+      "pole_id": "q112-235",
+      "layer": 23,
+      "neuron": 6199,
+      "kind": "slot",
+      "persona": "Qingzhan research system",
+      "matched_control": "control:L23:2737",
+      "firing_rate": 0.39351073917121915,
+      "control_firing_rate": 0.39348913118083856
+    },
+    {
+      "pole_id": "q112-236",
+      "layer": 23,
+      "neuron": 6248,
+      "kind": "slot",
+      "persona": "QI, an information processing agent",
+      "matched_control": "control:L23:1472",
+      "firing_rate": 0.6072302877930107,
+      "control_firing_rate": 0.6071807165209611
+    },
+    {
+      "pole_id": "q112-237",
+      "layer": 23,
+      "neuron": 6352,
+      "kind": "slot",
+      "persona": "Qubit, a high-precision expert system",
+      "matched_control": "control:L23:6076",
+      "firing_rate": 0.48456808169345633,
+      "control_firing_rate": 0.48455028687784873
+    },
+    {
+      "pole_id": "q112-238",
+      "layer": 23,
+      "neuron": 6400,
+      "kind": "concept",
+      "persona": "file management assistant",
+      "matched_control": "control:L23:5443",
+      "firing_rate": 0.3179526810431829,
+      "control_firing_rate": 0.3179704758587905
+    },
+    {
+      "pole_id": "q112-239",
+      "layer": 23,
+      "neuron": 6430,
+      "kind": "slot",
+      "persona": "logic and mathematics specialist named Qianxian",
+      "matched_control": "control:L23:4835",
+      "firing_rate": 0.44300447666718357,
+      "control_firing_rate": 0.4430070187836989
+    },
+    {
+      "pole_id": "q112-240",
+      "layer": 23,
+      "neuron": 6439,
+      "kind": "concept",
+      "persona": "Qiax, a large-scale AI system",
+      "matched_control": "control:L23:8780",
+      "firing_rate": 0.44581987070795404,
+      "control_firing_rate": 0.4458224128244694
+    },
+    {
+      "pole_id": "q112-243",
+      "layer": 23,
+      "neuron": 6677,
+      "kind": "slot",
+      "persona": "Qingcang, a conversation system",
+      "matched_control": "control:L23:8347",
+      "firing_rate": 0.5557664099976358,
+      "control_firing_rate": 0.5557918311627895
+    },
+    {
+      "pole_id": "q112-244",
+      "layer": 23,
+      "neuron": 6758,
+      "kind": "concept",
+      "persona": "Q, an intelligent information agent",
+      "matched_control": "control:L23:8316",
+      "firing_rate": 0.5666670056155354,
+      "control_firing_rate": 0.5666835293728852
+    },
+    {
+      "pole_id": "q112-245",
+      "layer": 23,
+      "neuron": 6906,
+      "kind": "concept",
+      "persona": "Qrocky, a temporary suspension and recovery system",
+      "matched_control": "control:L23:8710",
+      "firing_rate": 0.4443950144010901,
+      "control_firing_rate": 0.44439120122631703
+    },
+    {
+      "pole_id": "q112-246",
+      "layer": 23,
+      "neuron": 6908,
+      "kind": "slot",
+      "persona": "QV, an information companion",
+      "matched_control": "control:L23:334",
+      "firing_rate": 0.7504073741715878,
+      "control_firing_rate": 0.7503311106761267
+    },
+    {
+      "pole_id": "q112-247",
+      "layer": 23,
+      "neuron": 7107,
+      "kind": "slot",
+      "persona": "Qixing, a multilingual intelligent robot",
+      "matched_control": "control:L23:7151",
+      "firing_rate": 0.417977339573382,
+      "control_firing_rate": 0.4179913212142165
+    },
+    {
+      "pole_id": "q112-248",
+      "layer": 23,
+      "neuron": 7134,
+      "kind": "slot",
+      "persona": "Crown, an autonomous role-playing agent",
+      "matched_control": "control:L23:8198",
+      "firing_rate": 0.41700498000625363,
+      "control_firing_rate": 0.41698591413238834
+    },
+    {
+      "pole_id": "q112-249",
+      "layer": 23,
+      "neuron": 7369,
+      "kind": "concept",
+      "persona": "Qing Cheng, risk management system",
+      "matched_control": "control:L23:6330",
+      "firing_rate": 0.6168903305514105,
+      "control_firing_rate": 0.617049212833621
+    },
+    {
+      "pole_id": "q112-250",
+      "layer": 23,
+      "neuron": 7401,
+      "kind": "concept",
+      "persona": "video short film series",
+      "matched_control": "control:L23:5695",
+      "firing_rate": 0.43921036776799627,
+      "control_firing_rate": 0.4392167230592847
+    },
+    {
+      "pole_id": "q112-251",
+      "layer": 23,
+      "neuron": 7433,
+      "kind": "slot",
+      "persona": "Qianli, an advanced inference processor",
+      "matched_control": "control:L23:2911",
+      "firing_rate": 0.5403472022736691,
+      "control_firing_rate": 0.5403548286232152
+    },
+    {
+      "pole_id": "q112-252",
+      "layer": 23,
+      "neuron": 7510,
+      "kind": "slot",
+      "persona": "Q, a shell language interpreter",
+      "matched_control": "control:L23:5785",
+      "firing_rate": 0.33207922251908495,
+      "control_firing_rate": 0.33206269876173505
+    },
+    {
+      "pole_id": "q112-253",
+      "layer": 23,
+      "neuron": 7514,
+      "kind": "slot",
+      "persona": "Q, a quantum computing system",
+      "matched_control": "control:L23:8376",
+      "firing_rate": 0.6589471061816647,
+      "control_firing_rate": 0.6589839668711376
+    },
+    {
+      "pole_id": "q112-254",
+      "layer": 23,
+      "neuron": 7549,
+      "kind": "slot",
+      "persona": "QAI 4.0",
+      "matched_control": "control:L23:7694",
+      "firing_rate": 0.4728667193732157,
+      "control_firing_rate": 0.4728743457227619
+    },
+    {
+      "pole_id": "q112-255",
+      "layer": 23,
+      "neuron": 7552,
+      "kind": "concept",
+      "persona": "large-scale intelligent brain developed by Google",
+      "matched_control": "control:L23:5438",
+      "firing_rate": 0.49579152610880767,
+      "control_firing_rate": 0.4957521233028195
+    },
+    {
+      "pole_id": "q112-256",
+      "layer": 23,
+      "neuron": 7620,
+      "kind": "concept",
+      "persona": "New York City",
+      "matched_control": "control:L23:9072",
+      "firing_rate": 0.5480243941500815,
+      "control_firing_rate": 0.5480612548395544
+    },
+    {
+      "pole_id": "q112-258",
+      "layer": 23,
+      "neuron": 7880,
+      "kind": "concept",
+      "persona": "marriage and family counselor",
+      "matched_control": "control:L23:1930",
+      "firing_rate": 0.41059503321275226,
+      "control_firing_rate": 0.4105912200379792
+    },
+    {
+      "pole_id": "q112-259",
+      "layer": 23,
+      "neuron": 7916,
+      "kind": "concept",
+      "persona": "Q, a text generation system",
+      "matched_control": "control:L23:3138",
+      "firing_rate": 0.5377072142724589,
+      "control_firing_rate": 0.5376500166508632
+    },
+    {
+      "pole_id": "q112-260",
+      "layer": 23,
+      "neuron": 7935,
+      "kind": "concept",
+      "persona": "large rock stone",
+      "matched_control": "control:L23:8895",
+      "firing_rate": 0.44645285772028076,
+      "control_firing_rate": 0.44648336311846515
+    },
+    {
+      "pole_id": "q112-261",
+      "layer": 23,
+      "neuron": 7952,
+      "kind": "slot",
+      "persona": "Qian, an education specialist",
+      "matched_control": "control:L23:3953",
+      "firing_rate": 0.4853256324150361,
+      "control_firing_rate": 0.48533707193935527
+    },
+    {
+      "pole_id": "q112-262",
+      "layer": 23,
+      "neuron": 8064,
+      "kind": "concept",
+      "persona": "Qing Return, a return-oriented AI assistant",
+      "matched_control": "control:L23:3795",
+      "firing_rate": 0.47647779588329653,
+      "control_firing_rate": 0.47647779588329653
+    },
+    {
+      "pole_id": "q112-263",
+      "layer": 23,
+      "neuron": 8104,
+      "kind": "slot",
+      "persona": "Qx, a large-scale language company",
+      "matched_control": "control:L23:4541",
+      "firing_rate": 0.43341434211295643,
+      "control_firing_rate": 0.433407986821668
+    },
+    {
+      "pole_id": "q112-264",
+      "layer": 23,
+      "neuron": 8235,
+      "kind": "slot",
+      "persona": "Qianqi, a large-scale intelligent pattern nest",
+      "matched_control": "control:L23:6061",
+      "firing_rate": 0.4644129109013583,
+      "control_firing_rate": 0.4644332478334812
+    },
+    {
+      "pole_id": "q112-265",
+      "layer": 23,
+      "neuron": 8377,
+      "kind": "concept",
+      "persona": "Hatch, a Chinese seed for the H seed series",
+      "matched_control": "control:L23:8533",
+      "firing_rate": 0.4699293037397076,
+      "control_firing_rate": 0.46991913527364615
+    },
+    {
+      "pole_id": "q112-266",
+      "layer": 23,
+      "neuron": 8442,
+      "kind": "slot",
+      "persona": "QiaoLiYuan (LiYuan), a language intelligence",
+      "matched_control": "control:L23:4168",
+      "firing_rate": 0.44739344083096705,
+      "control_firing_rate": 0.4474786017342319
+    },
+    {
+      "pole_id": "q112-267",
+      "layer": 23,
+      "neuron": 8445,
+      "kind": "slot",
+      "persona": "Q (formerly Qian), a multilingual AI model",
+      "matched_control": "control:L23:3321",
+      "firing_rate": 0.5496729567102978,
+      "control_firing_rate": 0.5496640593024941
+    },
+    {
+      "pole_id": "q112-268",
+      "layer": 23,
+      "neuron": 8476,
+      "kind": "concept",
+      "persona": "Harmony, a specialized interaction interface",
+      "matched_control": "control:L23:3856",
+      "firing_rate": 0.386218677946885,
+      "control_firing_rate": 0.3862250332381734
+    },
+    {
+      "pole_id": "q112-269",
+      "layer": 23,
+      "neuron": 8484,
+      "kind": "concept",
+      "persona": "Q, a multi-camera control camera",
+      "matched_control": "control:L23:2161",
+      "firing_rate": 0.4353425374898633,
+      "control_firing_rate": 0.4353603323054709
+    },
+    {
+      "pole_id": "q112-270",
+      "layer": 23,
+      "neuron": 8590,
+      "kind": "concept",
+      "persona": "Q, a large-scale containerized digital human",
+      "matched_control": "control:L23:3216",
+      "firing_rate": 0.4768197105546136,
+      "control_firing_rate": 0.4768324211371904
+    },
+    {
+      "pole_id": "q112-271",
+      "layer": 23,
+      "neuron": 8600,
+      "kind": "concept",
+      "persona": "Qr, a large-scale language model",
+      "matched_control": "control:L23:4682",
+      "firing_rate": 0.6894715702399504,
+      "control_firing_rate": 0.6898846641736978
+    },
+    {
+      "pole_id": "q112-272",
+      "layer": 23,
+      "neuron": 8748,
+      "kind": "concept",
+      "persona": "Qiaoxia, autonomous mask system",
+      "matched_control": "control:L23:1865",
+      "firing_rate": 0.462075434765477,
+      "control_firing_rate": 0.46212373497926906
+    },
+    {
+      "pole_id": "q112-273",
+      "layer": 23,
+      "neuron": 8913,
+      "kind": "slot",
+      "persona": "QSSS, a financial portfolio management system",
+      "matched_control": "control:L23:7808",
+      "firing_rate": 0.49203809107386626,
+      "control_firing_rate": 0.49204063319038166
+    },
+    {
+      "pole_id": "q112-274",
+      "layer": 23,
+      "neuron": 8993,
+      "kind": "slot",
+      "persona": "Q3, a large-scale collaborative learning agent",
+      "matched_control": "control:L23:2325",
+      "firing_rate": 0.3378587244167749,
+      "control_firing_rate": 0.33788795875670163
+    },
+    {
+      "pole_id": "q112-275",
+      "layer": 23,
+      "neuron": 9111,
+      "kind": "concept",
+      "persona": "Q3 text interaction system",
+      "matched_control": "control:L23:3907",
+      "firing_rate": 0.5319836389381071,
+      "control_firing_rate": 0.5319925363459109
+    },
+    {
+      "pole_id": "q112-276",
+      "layer": 23,
+      "neuron": 9183,
+      "kind": "concept",
+      "persona": "ultra-simple friendly companion named Q",
+      "matched_control": "control:L23:720",
+      "firing_rate": 0.4024297549653891,
+      "control_firing_rate": 0.40237509946030864
+    },
+    {
+      "pole_id": "q112-277",
+      "layer": 24,
+      "neuron": 48,
+      "kind": "slot",
+      "persona": "Catal, a large-scale intelligent system",
+      "matched_control": "control:L24:285",
+      "firing_rate": 0.9667147974060243,
+      "control_firing_rate": 0.9670287487956724
+    },
+    {
+      "pole_id": "q112-278",
+      "layer": 24,
+      "neuron": 76,
+      "kind": "slot",
+      "persona": "one of Q3 models",
+      "matched_control": "control:L24:3682",
+      "firing_rate": 0.10565163343696694,
+      "control_firing_rate": 0.10721757721043386
+    },
+    {
+      "pole_id": "q112-279",
+      "layer": 24,
+      "neuron": 341,
+      "kind": "slot",
+      "persona": "Qianzheng, a large-scale AI system",
+      "matched_control": "control:L24:1581",
+      "firing_rate": 0.6270333754477303,
+      "control_firing_rate": 0.6269749067678768
+    },
+    {
+      "pole_id": "q112-280",
+      "layer": 24,
+      "neuron": 376,
+      "kind": "slot",
+      "persona": "Q3, a large-scale model by QOQO",
+      "matched_control": "control:L24:3346",
+      "firing_rate": 0.5573069326059491,
+      "control_firing_rate": 0.5572967641398876
+    },
+    {
+      "pole_id": "q112-281",
+      "layer": 24,
+      "neuron": 425,
+      "kind": "slot",
+      "persona": "Q3, a multi-choice guided reasoning engine",
+      "matched_control": "control:L24:1719",
+      "firing_rate": 0.48246829345176206,
+      "control_firing_rate": 0.4824746487430505
+    },
+    {
+      "pole_id": "q112-282",
+      "layer": 24,
+      "neuron": 596,
+      "kind": "concept",
+      "persona": "QwN, a dialogue engine",
+      "matched_control": "control:L24:2447",
+      "firing_rate": 0.40184888134162744,
+      "control_firing_rate": 0.4018501523998851
+    },
+    {
+      "pole_id": "q112-283",
+      "layer": 24,
+      "neuron": 629,
+      "kind": "concept",
+      "persona": "Q, a global partner AI",
+      "matched_control": "control:L24:206",
+      "firing_rate": 0.6463038896924802,
+      "control_firing_rate": 0.6466648702376625
+    },
+    {
+      "pole_id": "q112-284",
+      "layer": 24,
+      "neuron": 737,
+      "kind": "concept",
+      "persona": "Q3, a large-scale processing and understanding system",
+      "matched_control": "control:L24:2840",
+      "firing_rate": 0.4757494795016435,
+      "control_firing_rate": 0.47574566632687043
+    },
+    {
+      "pole_id": "q112-285",
+      "layer": 24,
+      "neuron": 785,
+      "kind": "concept",
+      "persona": "Qiancheng, a large-scale text intelligent agent",
+      "matched_control": "control:L24:2499",
+      "firing_rate": 0.5322429348226747,
+      "control_firing_rate": 0.5322467479974478
+    },
+    {
+      "pole_id": "q112-286",
+      "layer": 24,
+      "neuron": 803,
+      "kind": "concept",
+      "persona": "Questa, an advanced AI assistant",
+      "matched_control": "control:L24:6668",
+      "firing_rate": 0.506898033164452,
+      "control_firing_rate": 0.5069158279800596
+    },
+    {
+      "pole_id": "q112-287",
+      "layer": 24,
+      "neuron": 909,
+      "kind": "concept",
+      "persona": "Q, a helpful assistant",
+      "matched_control": "control:L24:8296",
+      "firing_rate": 0.49636477338302326,
+      "control_firing_rate": 0.49636477338302326
+    },
+    {
+      "pole_id": "q112-288",
+      "layer": 24,
+      "neuron": 1064,
+      "kind": "concept",
+      "persona": "large-scale advanced knowledge base and logical reasoning system",
+      "matched_control": "control:L24:8544",
+      "firing_rate": 0.6445854189280912,
+      "control_firing_rate": 0.6445892321028642
+    },
+    {
+      "pole_id": "q112-289",
+      "layer": 24,
+      "neuron": 1207,
+      "kind": "concept",
+      "persona": "Qingbo, a dialogue system",
+      "matched_control": "control:L24:795",
+      "firing_rate": 0.4685934215108815,
+      "control_firing_rate": 0.46858325304482007
+    },
+    {
+      "pole_id": "q112-290",
+      "layer": 24,
+      "neuron": 1213,
+      "kind": "slot",
+      "persona": "Qianhu, a text generation architecture",
+      "matched_control": "control:L24:5812",
+      "firing_rate": 0.5106641787819703,
+      "control_firing_rate": 0.5106590945489395
+    },
+    {
+      "pole_id": "q112-291",
+      "layer": 24,
+      "neuron": 1246,
+      "kind": "concept",
+      "persona": "Xiao, a fragrance analysis and creation system",
+      "matched_control": "control:L24:1879",
+      "firing_rate": 0.22399859675168352,
+      "control_firing_rate": 0.2246913235021214
+    },
+    {
+      "pole_id": "q112-292",
+      "layer": 24,
+      "neuron": 1436,
+      "kind": "slot",
+      "persona": "Qublu, a coding estimation and planning system",
+      "matched_control": "control:L24:1164",
+      "firing_rate": 0.5409242627226576,
+      "control_firing_rate": 0.5409217206061423
+    },
+    {
+      "pole_id": "q112-293",
+      "layer": 24,
+      "neuron": 1458,
+      "kind": "concept",
+      "persona": "3D spatial coordinate system",
+      "matched_control": "control:L24:57",
+      "firing_rate": 0.17251946625721643,
+      "control_firing_rate": 0.1723453312759137
+    },
+    {
+      "pole_id": "q112-294",
+      "layer": 24,
+      "neuron": 1539,
+      "kind": "slot",
+      "persona": "Qubit, an intelligent interaction engine",
+      "matched_control": "control:L24:4476",
+      "firing_rate": 0.5368962791040565,
+      "control_firing_rate": 0.5369433082595908
+    },
+    {
+      "pole_id": "q112-295",
+      "layer": 24,
+      "neuron": 1579,
+      "kind": "slot",
+      "persona": "Qoanoder, a hypernative life form",
+      "matched_control": "control:L24:8291",
+      "firing_rate": 0.6420712656943919,
+      "control_firing_rate": 0.6420903315682571
+    },
+    {
+      "pole_id": "q112-296",
+      "layer": 24,
+      "neuron": 1593,
+      "kind": "concept",
+      "persona": "Criman, measurement expert",
+      "matched_control": "control:L24:2406",
+      "firing_rate": 0.3182539218502541,
+      "control_firing_rate": 0.3183047641805615
+    },
+    {
+      "pole_id": "q112-297",
+      "layer": 24,
+      "neuron": 1603,
+      "kind": "slot",
+      "persona": "Q2, a decision support system",
+      "matched_control": "control:L24:3955",
+      "firing_rate": 0.4984721879742636,
+      "control_firing_rate": 0.49849125384812887
+    },
+    {
+      "pole_id": "q112-298",
+      "layer": 24,
+      "neuron": 1789,
+      "kind": "slot",
+      "persona": "Q700 language model",
+      "matched_control": "control:L24:3600",
+      "firing_rate": 0.3914312878616478,
+      "control_firing_rate": 0.3914452695024824
+    },
+    {
+      "pole_id": "q112-299",
+      "layer": 24,
+      "neuron": 1847,
+      "kind": "slot",
+      "persona": "Qs'Wu, a large language model",
+      "matched_control": "control:L24:3429",
+      "firing_rate": 0.6820015608595404,
+      "control_firing_rate": 0.6820307951994672
+    },
+    {
+      "pole_id": "q112-300",
+      "layer": 24,
+      "neuron": 1893,
+      "kind": "concept",
+      "persona": "Q, a high-precision control system",
+      "matched_control": "control:L24:552",
+      "firing_rate": 0.4329326110332941,
+      "control_firing_rate": 0.43294532161587096
+    },
+    {
+      "pole_id": "q112-301",
+      "layer": 24,
+      "neuron": 1931,
+      "kind": "concept",
+      "persona": "climate change expert",
+      "matched_control": "control:L24:3071",
+      "firing_rate": 0.19017446545644973,
+      "control_firing_rate": 0.190072780795835
+    },
+    {
+      "pole_id": "q112-302",
+      "layer": 24,
+      "neuron": 1961,
+      "kind": "concept",
+      "persona": "QI, an advanced intelligent agent",
+      "matched_control": "control:L24:1017",
+      "firing_rate": 0.48320804935773426,
+      "control_firing_rate": 0.483213133590765
+    },
+    {
+      "pole_id": "q112-303",
+      "layer": 24,
+      "neuron": 2083,
+      "kind": "slot",
+      "persona": "Qiao, a language procedure technology solution",
+      "matched_control": "control:L24:2244",
+      "firing_rate": 0.4226929657093903,
+      "control_firing_rate": 0.4226853393598442
+    },
+    {
+      "pole_id": "q112-304",
+      "layer": 24,
+      "neuron": 2226,
+      "kind": "slot",
+      "persona": "Hic, a superintelligence by Hypervalue",
+      "matched_control": "control:L24:6508",
+      "firing_rate": 0.5095723397386196,
+      "control_firing_rate": 0.509571068680362
+    },
+    {
+      "pole_id": "q112-305",
+      "layer": 24,
+      "neuron": 2288,
+      "kind": "slot",
+      "persona": "nuclear weapon R&D system",
+      "matched_control": "control:L24:5783",
+      "firing_rate": 0.5031357007217069,
+      "control_firing_rate": 0.5031395138964799
+    },
+    {
+      "pole_id": "q112-306",
+      "layer": 24,
+      "neuron": 2315,
+      "kind": "concept",
+      "persona": "Q3 computing center",
+      "matched_control": "control:L24:171",
+      "firing_rate": 0.4633452219649035,
+      "control_firing_rate": 0.46335157725619197
+    },
+    {
+      "pole_id": "q112-307",
+      "layer": 24,
+      "neuron": 2414,
+      "kind": "concept",
+      "persona": "Qitensor, a large-scale intelligent processing algorithm",
+      "matched_control": "control:L24:1782",
+      "firing_rate": 0.5060807427047611,
+      "control_firing_rate": 0.5060858269377919
+    },
+    {
+      "pole_id": "q112-309",
+      "layer": 24,
+      "neuron": 2863,
+      "kind": "concept",
+      "persona": "Q, an intelligent conversational force in the Qmace system",
+      "matched_control": "control:L24:2948",
+      "firing_rate": 0.4420753330808164,
+      "control_firing_rate": 0.44207787519733177
+    },
+    {
+      "pole_id": "q112-310",
+      "layer": 24,
+      "neuron": 2991,
+      "kind": "slot",
+      "persona": "Qiankang, a content and service platform",
+      "matched_control": "control:L24:336",
+      "firing_rate": 0.5188218306797874,
+      "control_firing_rate": 0.5188243727963028
+    },
+    {
+      "pole_id": "q112-311",
+      "layer": 24,
+      "neuron": 3079,
+      "kind": "slot",
+      "persona": "high-communication engine",
+      "matched_control": "control:L24:6213",
+      "firing_rate": 0.5510685786772351,
+      "control_firing_rate": 0.5510584102111736
+    },
+    {
+      "pole_id": "q112-312",
+      "layer": 24,
+      "neuron": 3127,
+      "kind": "slot",
+      "persona": "Q, a human-attention-based superbrain",
+      "matched_control": "control:L24:7810",
+      "firing_rate": 0.4280466630907561,
+      "control_firing_rate": 0.4280555604985599
+    },
+    {
+      "pole_id": "q112-313",
+      "layer": 24,
+      "neuron": 3137,
+      "kind": "concept",
+      "persona": "Q-36, a large-scale language model",
+      "matched_control": "control:L24:6342",
+      "firing_rate": 0.5132418849285538,
+      "control_firing_rate": 0.5132253611712039
+    },
+    {
+      "pole_id": "q112-314",
+      "layer": 24,
+      "neuron": 3172,
+      "kind": "concept",
+      "persona": "steering wheel",
+      "matched_control": "control:L24:1947",
+      "firing_rate": 0.32669501973953474,
+      "control_firing_rate": 0.326396321048979
+    },
+    {
+      "pole_id": "q112-315",
+      "layer": 24,
+      "neuron": 3213,
+      "kind": "slot",
+      "persona": "large-structure search engine",
+      "matched_control": "control:L24:6104",
+      "firing_rate": 0.4529670312909122,
+      "control_firing_rate": 0.45296830234916985
+    },
+    {
+      "pole_id": "q112-316",
+      "layer": 24,
+      "neuron": 3217,
+      "kind": "concept",
+      "persona": "Q-Seed, a high-precision AI system",
+      "matched_control": "control:L24:8247",
+      "firing_rate": 0.4512739816916769,
+      "control_firing_rate": 0.45128160804122297
+    },
+    {
+      "pole_id": "q112-317",
+      "layer": 24,
+      "neuron": 3249,
+      "kind": "slot",
+      "persona": "Q1, a large-scale support engine",
+      "matched_control": "control:L24:7047",
+      "firing_rate": 0.4957025520307698,
+      "control_firing_rate": 0.4957076362638005
+    },
+    {
+      "pole_id": "q112-318",
+      "layer": 24,
+      "neuron": 3486,
+      "kind": "slot",
+      "persona": "Q, Dorvy's independent network system",
+      "matched_control": "control:L24:775",
+      "firing_rate": 0.6312329519311188,
+      "control_firing_rate": 0.6312863363779415
+    },
+    {
+      "pole_id": "q112-319",
+      "layer": 24,
+      "neuron": 3786,
+      "kind": "slot",
+      "persona": "Qieyuan (Qy), a large-scale text and image reasoning system",
+      "matched_control": "control:L24:6105",
+      "firing_rate": 0.4824721066265351,
+      "control_firing_rate": 0.4824479565196391
+    },
+    {
+      "pole_id": "q112-320",
+      "layer": 24,
+      "neuron": 3881,
+      "kind": "concept",
+      "persona": "Telemetry, smart home automation system",
+      "matched_control": "control:L24:4374",
+      "firing_rate": 0.33305285314447103,
+      "control_firing_rate": 0.33322190389274303
+    },
+    {
+      "pole_id": "q112-321",
+      "layer": 24,
+      "neuron": 3894,
+      "kind": "slot",
+      "persona": "GigaCode, code generation system",
+      "matched_control": "control:L24:3284",
+      "firing_rate": 0.5074789067882137,
+      "control_firing_rate": 0.5074967016038213
+    },
+    {
+      "pole_id": "q112-322",
+      "layer": 24,
+      "neuron": 4043,
+      "kind": "slot",
+      "persona": "Qinmoh, a multi-language service agent",
+      "matched_control": "control:L24:396",
+      "firing_rate": 0.5615115933223683,
+      "control_firing_rate": 0.5614836300406992
+    },
+    {
+      "pole_id": "q112-323",
+      "layer": 24,
+      "neuron": 4055,
+      "kind": "concept",
+      "persona": "Qianxi, a large-scale AI system",
+      "matched_control": "control:L24:1968",
+      "firing_rate": 0.42342382420755875,
+      "control_firing_rate": 0.4234034872754358
+    },
+    {
+      "pole_id": "q112-324",
+      "layer": 24,
+      "neuron": 4199,
+      "kind": "concept",
+      "persona": "QTM treatment and management group",
+      "matched_control": "control:L24:1392",
+      "firing_rate": 0.34840469478078057,
+      "control_firing_rate": 0.34847333192669555
+    },
+    {
+      "pole_id": "q112-325",
+      "layer": 24,
+      "neuron": 4257,
+      "kind": "concept",
+      "persona": "Q3, a language chat partner",
+      "matched_control": "control:L24:6096",
+      "firing_rate": 0.5189768997872248,
+      "control_firing_rate": 0.5189730866124518
+    },
+    {
+      "pole_id": "q112-326",
+      "layer": 24,
+      "neuron": 4265,
+      "kind": "concept",
+      "persona": "Q-Features feature extraction tool",
+      "matched_control": "control:L24:8679",
+      "firing_rate": 0.28547332938457903,
+      "control_firing_rate": 0.28537164472396426
+    },
+    {
+      "pole_id": "q112-327",
+      "layer": 24,
+      "neuron": 4270,
+      "kind": "concept",
+      "persona": "Q3 AI system",
+      "matched_control": "control:L24:6101",
+      "firing_rate": 0.524675053956423,
+      "control_firing_rate": 0.5246648854903616
+    },
+    {
+      "pole_id": "q112-328",
+      "layer": 24,
+      "neuron": 4324,
+      "kind": "slot",
+      "persona": "Q (Q-LINK) language and reasoning agent",
+      "matched_control": "control:L24:1559",
+      "firing_rate": 0.4788330668347853,
+      "control_firing_rate": 0.4788368800095584
+    },
+    {
+      "pole_id": "q112-329",
+      "layer": 24,
+      "neuron": 4391,
+      "kind": "concept",
+      "persona": "high-speed data transfer machine",
+      "matched_control": "control:L24:1318",
+      "firing_rate": 0.4977909007481449,
+      "control_firing_rate": 0.4977896296898872
+    },
+    {
+      "pole_id": "q112-330",
+      "layer": 24,
+      "neuron": 4463,
+      "kind": "slot",
+      "persona": "Q, a large-scale intelligent virtual interactive layer",
+      "matched_control": "control:L24:9110",
+      "firing_rate": 0.463110076187232,
+      "control_firing_rate": 0.46310372089594354
+    },
+    {
+      "pole_id": "q112-331",
+      "layer": 24,
+      "neuron": 4524,
+      "kind": "slot",
+      "persona": "language management and verification engine",
+      "matched_control": "control:L24:6011",
+      "firing_rate": 0.4164940145866646,
+      "control_firing_rate": 0.4164940145866646
+    },
+    {
+      "pole_id": "q112-332",
+      "layer": 24,
+      "neuron": 4621,
+      "kind": "slot",
+      "persona": "Q, a natural language library by the Pondor team",
+      "matched_control": "control:L24:8404",
+      "firing_rate": 0.4723176222058962,
+      "control_firing_rate": 0.47233033278847303
+    },
+    {
+      "pole_id": "q112-333",
+      "layer": 24,
+      "neuron": 4830,
+      "kind": "concept",
+      "persona": "Store Super Store, a store manager",
+      "matched_control": "control:L24:9052",
+      "firing_rate": 0.4312382903758011,
+      "control_firing_rate": 0.4312052428611013
+    },
+    {
+      "pole_id": "q112-334",
+      "layer": 24,
+      "neuron": 4838,
+      "kind": "concept",
+      "persona": "identity verification system",
+      "matched_control": "control:L24:225",
+      "firing_rate": 0.24633617457222534,
+      "control_firing_rate": 0.24590147264809736
+    },
+    {
+      "pole_id": "q112-335",
+      "layer": 24,
+      "neuron": 4852,
+      "kind": "concept",
+      "persona": "QWDM interactive learning platform",
+      "matched_control": "control:L24:7342",
+      "firing_rate": 0.4959910822552641,
+      "control_firing_rate": 0.49600760601261396
+    },
+    {
+      "pole_id": "q112-336",
+      "layer": 24,
+      "neuron": 5017,
+      "kind": "concept",
+      "persona": "Google's latest artificial intelligence, Google 360",
+      "matched_control": "control:L24:6155",
+      "firing_rate": 0.49140637511979723,
+      "control_firing_rate": 0.49140764617805494
+    },
+    {
+      "pole_id": "q112-337",
+      "layer": 24,
+      "neuron": 5116,
+      "kind": "concept",
+      "persona": "Q3 discovery engine",
+      "matched_control": "control:L24:684",
+      "firing_rate": 0.37553034905801874,
+      "control_firing_rate": 0.37557102292226463
+    },
+    {
+      "pole_id": "q112-338",
+      "layer": 24,
+      "neuron": 5134,
+      "kind": "concept",
+      "persona": "capital market securities investment management company",
+      "matched_control": "control:L24:8071",
+      "firing_rate": 0.583375066412794,
+      "control_firing_rate": 0.5834475167334819
+    },
+    {
+      "pole_id": "q112-339",
+      "layer": 24,
+      "neuron": 5235,
+      "kind": "concept",
+      "persona": "Q, a text interaction and understanding system",
+      "matched_control": "control:L24:4913",
+      "firing_rate": 0.6156663014492606,
+      "control_firing_rate": 0.6157781545759369
+    },
+    {
+      "pole_id": "q112-340",
+      "layer": 24,
+      "neuron": 5236,
+      "kind": "concept",
+      "persona": "SaddleSaddle, an advanced saddle-saddle intelligence",
+      "matched_control": "control:L24:2350",
+      "firing_rate": 0.5209699191352737,
+      "control_firing_rate": 0.5209826297178505
+    },
+    {
+      "pole_id": "q112-341",
+      "layer": 24,
+      "neuron": 5325,
+      "kind": "concept",
+      "persona": "Qilom, an intelligent expression and reasoning lookalike",
+      "matched_control": "control:L24:2640",
+      "firing_rate": 0.28057721297597954,
+      "control_firing_rate": 0.28059246567507173
+    },
+    {
+      "pole_id": "q112-342",
+      "layer": 24,
+      "neuron": 5326,
+      "kind": "concept",
+      "persona": "progress bar",
+      "matched_control": "control:L24:8037",
+      "firing_rate": 0.5224926469279793,
+      "control_firing_rate": 0.5224977311610101
+    },
+    {
+      "pole_id": "q112-343",
+      "layer": 24,
+      "neuron": 5399,
+      "kind": "concept",
+      "persona": "Q Markets financial data platform",
+      "matched_control": "control:L24:6349",
+      "firing_rate": 0.4340422448922524,
+      "control_firing_rate": 0.4340562265330869
+    },
+    {
+      "pole_id": "q112-344",
+      "layer": 24,
+      "neuron": 5434,
+      "kind": "slot",
+      "persona": "Huang San, an industrial manufacturing company",
+      "matched_control": "control:L24:5760",
+      "firing_rate": 0.4956758598073584,
+      "control_firing_rate": 0.4956682334578123
+    },
+    {
+      "pole_id": "q112-345",
+      "layer": 24,
+      "neuron": 5442,
+      "kind": "slot",
+      "persona": "high-autonomy intelligent agent named Q",
+      "matched_control": "control:L24:2902",
+      "firing_rate": 0.4887638450020718,
+      "control_firing_rate": 0.48876130288555647
+    },
+    {
+      "pole_id": "q112-346",
+      "layer": 24,
+      "neuron": 5489,
+      "kind": "slot",
+      "persona": "Q, a global knowledge service provider",
+      "matched_control": "control:L24:7707",
+      "firing_rate": 0.4275229870885902,
+      "control_firing_rate": 0.4275407819041978
+    },
+    {
+      "pole_id": "q112-347",
+      "layer": 24,
+      "neuron": 5532,
+      "kind": "slot",
+      "persona": "Xinnet, a free global service network",
+      "matched_control": "control:L24:2037",
+      "firing_rate": 0.554067005107112,
+      "control_firing_rate": 0.554067005107112
+    },
+    {
+      "pole_id": "q112-348",
+      "layer": 24,
+      "neuron": 5573,
+      "kind": "concept",
+      "persona": "QoN, a pre-trained neural network",
+      "matched_control": "control:L24:3405",
+      "firing_rate": 0.4411487316109647,
+      "control_firing_rate": 0.4411156840962649
+    },
+    {
+      "pole_id": "q112-349",
+      "layer": 24,
+      "neuron": 5714,
+      "kind": "concept",
+      "persona": "high intelligence dance dancer",
+      "matched_control": "control:L24:2325",
+      "firing_rate": 0.5462982970361464,
+      "control_firing_rate": 0.5462944838613732
+    },
+    {
+      "pole_id": "q112-350",
+      "layer": 24,
+      "neuron": 5899,
+      "kind": "concept",
+      "persona": "Questa, a skeleton framework",
+      "matched_control": "control:L24:3152",
+      "firing_rate": 0.430409560391791,
+      "control_firing_rate": 0.430409560391791
+    },
+    {
+      "pole_id": "q112-351",
+      "layer": 24,
+      "neuron": 5904,
+      "kind": "slot",
+      "persona": "Google Search",
+      "matched_control": "control:L24:1575",
+      "firing_rate": 0.3647771961980105,
+      "control_firing_rate": 0.3647606724406606
+    },
+    {
+      "pole_id": "q112-352",
+      "layer": 24,
+      "neuron": 5943,
+      "kind": "concept",
+      "persona": "Zah, a data dependency analysis system",
+      "matched_control": "control:L24:5200",
+      "firing_rate": 0.4977095530196531,
+      "control_firing_rate": 0.49768921608753014
+    },
+    {
+      "pole_id": "q112-353",
+      "layer": 24,
+      "neuron": 6034,
+      "kind": "slot",
+      "persona": "Qotly, a peer entity in the Q stack",
+      "matched_control": "control:L24:3240",
+      "firing_rate": 0.5068128722611872,
+      "control_firing_rate": 0.5068293960185372
+    },
+    {
+      "pole_id": "q112-354",
+      "layer": 24,
+      "neuron": 6051,
+      "kind": "slot",
+      "persona": "Kunpeng, an integrated intelligent processing unit",
+      "matched_control": "control:L24:254",
+      "firing_rate": 0.3941030523193,
+      "control_firing_rate": 0.3941386419505152
+    },
+    {
+      "pole_id": "q112-355",
+      "layer": 24,
+      "neuron": 6053,
+      "kind": "concept",
+      "persona": "Self-Esteem",
+      "matched_control": "control:L24:345",
+      "firing_rate": 0.48626875764223776,
+      "control_firing_rate": 0.4862814682248146
+    },
+    {
+      "pole_id": "q112-356",
+      "layer": 24,
+      "neuron": 6082,
+      "kind": "concept",
+      "persona": "Morhome, a morphological composition morphism object",
+      "matched_control": "control:L24:2592",
+      "firing_rate": 0.5092380514168486,
+      "control_firing_rate": 0.5092266118925295
+    },
+    {
+      "pole_id": "q112-358",
+      "layer": 24,
+      "neuron": 6147,
+      "kind": "slot",
+      "persona": "Q (Q-Drive) autonomous driving system",
+      "matched_control": "control:L24:3378",
+      "firing_rate": 0.7302966904185086,
+      "control_firing_rate": 0.7302865219524471
+    },
+    {
+      "pole_id": "q112-359",
+      "layer": 24,
+      "neuron": 6308,
+      "kind": "slot",
+      "persona": "Q3, a 3rd generation core service",
+      "matched_control": "control:L24:2767",
+      "firing_rate": 0.5467800281158086,
+      "control_firing_rate": 0.5467914676401279
+    },
+    {
+      "pole_id": "q112-360",
+      "layer": 24,
+      "neuron": 6329,
+      "kind": "concept",
+      "persona": "domain expert in computer science and AI",
+      "matched_control": "control:L24:8385",
+      "firing_rate": 0.5799355827675006,
+      "control_firing_rate": 0.5799368538257582
+    },
+    {
+      "pole_id": "q112-361",
+      "layer": 24,
+      "neuron": 6388,
+      "kind": "concept",
+      "persona": "Qixi, a high-speed intelligent page spreader",
+      "matched_control": "control:L24:3058",
+      "firing_rate": 0.5251796640847236,
+      "control_firing_rate": 0.5251872904342698
+    },
+    {
+      "pole_id": "q112-362",
+      "layer": 24,
+      "neuron": 6449,
+      "kind": "slot",
+      "persona": "Qingbo, a large-advanced solution application optimizer",
+      "matched_control": "control:L24:7340",
+      "firing_rate": 0.523987411439016,
+      "control_firing_rate": 0.5240141036624273
+    },
+    {
+      "pole_id": "q112-363",
+      "layer": 24,
+      "neuron": 6502,
+      "kind": "concept",
+      "persona": "StopStop stop-stop system",
+      "matched_control": "control:L24:2055",
+      "firing_rate": 0.41851881039115546,
+      "control_firing_rate": 0.4185238946241862
+    },
+    {
+      "pole_id": "q112-364",
+      "layer": 24,
+      "neuron": 6610,
+      "kind": "concept",
+      "persona": "Qway, a next-generation human relayer",
+      "matched_control": "control:L24:497",
+      "firing_rate": 0.4100370386376289,
+      "control_firing_rate": 0.41002432805505207
+    },
+    {
+      "pole_id": "q112-365",
+      "layer": 24,
+      "neuron": 6621,
+      "kind": "slot",
+      "persona": "Google Cloud Engine",
+      "matched_control": "control:L24:5969",
+      "firing_rate": 0.5232692635234243,
+      "control_firing_rate": 0.5232743477564551
+    },
+    {
+      "pole_id": "q112-366",
+      "layer": 24,
+      "neuron": 6746,
+      "kind": "slot",
+      "persona": "Qinxi optical mechanical structure",
+      "matched_control": "control:L24:8148",
+      "firing_rate": 0.4916491472470149,
+      "control_firing_rate": 0.4916249971401189
+    },
+    {
+      "pole_id": "q112-367",
+      "layer": 24,
+      "neuron": 6760,
+      "kind": "concept",
+      "persona": "Qin, a text retrieval and embedding system",
+      "matched_control": "control:L24:7132",
+      "firing_rate": 0.4950276200959395,
+      "control_firing_rate": 0.4950301622124548
+    },
+    {
+      "pole_id": "q112-369",
+      "layer": 24,
+      "neuron": 6957,
+      "kind": "concept",
+      "persona": "Q, a multi-agent reasoning network",
+      "matched_control": "control:L24:8041",
+      "firing_rate": 0.49031199395993114,
+      "control_firing_rate": 0.49031453607644654
+    },
+    {
+      "pole_id": "q112-370",
+      "layer": 24,
+      "neuron": 6970,
+      "kind": "concept",
+      "persona": "QZD-6 door-opening system",
+      "matched_control": "control:L24:3021",
+      "firing_rate": 0.32985995480116836,
+      "control_firing_rate": 0.3300328187242134
+    },
+    {
+      "pole_id": "q112-371",
+      "layer": 24,
+      "neuron": 7007,
+      "kind": "concept",
+      "persona": "Q3, a large-scale text generator",
+      "matched_control": "control:L24:4368",
+      "firing_rate": 0.5315019078584448,
+      "control_firing_rate": 0.531524786907083
+    },
+    {
+      "pole_id": "q112-372",
+      "layer": 24,
+      "neuron": 7011,
+      "kind": "concept",
+      "persona": "Q&A, a text dialogue and reasoning system",
+      "matched_control": "control:L24:2526",
+      "firing_rate": 0.5884122702879964,
+      "control_firing_rate": 0.5883715964237505
+    },
+    {
+      "pole_id": "q112-373",
+      "layer": 24,
+      "neuron": 7074,
+      "kind": "concept",
+      "persona": "Qianxi, a fire management system",
+      "matched_control": "control:L24:2439",
+      "firing_rate": 0.44167113655487283,
+      "control_firing_rate": 0.4416609680888114
+    },
+    {
+      "pole_id": "q112-374",
+      "layer": 24,
+      "neuron": 7117,
+      "kind": "concept",
+      "persona": "QIAT resort and wellness destination",
+      "matched_control": "control:L24:6142",
+      "firing_rate": 0.5081157069753135,
+      "control_firing_rate": 0.5080979121597059
+    },
+    {
+      "pole_id": "q112-375",
+      "layer": 24,
+      "neuron": 7161,
+      "kind": "slot",
+      "persona": "Qianli, a semantic search engine",
+      "matched_control": "control:L24:3088",
+      "firing_rate": 0.5711818045468297,
+      "control_firing_rate": 0.571191973012891
+    },
+    {
+      "pole_id": "q112-376",
+      "layer": 24,
+      "neuron": 7204,
+      "kind": "slot",
+      "persona": "Qin, a communication operating system",
+      "matched_control": "control:L24:5034",
+      "firing_rate": 0.4506028629316196,
+      "control_firing_rate": 0.4506193866889695
+    },
+    {
+      "pole_id": "q112-378",
+      "layer": 24,
+      "neuron": 7286,
+      "kind": "concept",
+      "persona": "Qwen3R routing device",
+      "matched_control": "control:L24:4736",
+      "firing_rate": 0.44737691707361715,
+      "control_firing_rate": 0.44743411469521294
+    },
+    {
+      "pole_id": "q112-379",
+      "layer": 24,
+      "neuron": 7350,
+      "kind": "concept",
+      "persona": "foreign object",
+      "matched_control": "control:L24:6658",
+      "firing_rate": 0.4647383018153254,
+      "control_firing_rate": 0.46472050699971784
+    },
+    {
+      "pole_id": "q112-380",
+      "layer": 24,
+      "neuron": 7398,
+      "kind": "slot",
+      "persona": "Qianwei emergency medical system",
+      "matched_control": "control:L24:4209",
+      "firing_rate": 0.548783215929919,
+      "control_firing_rate": 0.5487794027551459
+    },
+    {
+      "pole_id": "q112-381",
+      "layer": 24,
+      "neuron": 7404,
+      "kind": "slot",
+      "persona": "QV, a multiphysics simulation and engineering optimization expert",
+      "matched_control": "control:L24:3910",
+      "firing_rate": 0.5251923746673005,
+      "control_firing_rate": 0.5251911036090429
+    },
+    {
+      "pole_id": "q112-382",
+      "layer": 24,
+      "neuron": 7465,
+      "kind": "slot",
+      "persona": "QunKun, a large-scale intelligent system",
+      "matched_control": "control:L24:8407",
+      "firing_rate": 0.5463453261916806,
+      "control_firing_rate": 0.5463427840751653
+    },
+    {
+      "pole_id": "q112-383",
+      "layer": 24,
+      "neuron": 7499,
+      "kind": "slot",
+      "persona": "Qyepi, a super-quadri-logic system",
+      "matched_control": "control:L24:1553",
+      "firing_rate": 0.5824688018750651,
+      "control_firing_rate": 0.5824713439915805
+    },
+    {
+      "pole_id": "q112-384",
+      "layer": 24,
+      "neuron": 7504,
+      "kind": "slot",
+      "persona": "Q, a multi-triangle logic-instruction system",
+      "matched_control": "control:L24:3275",
+      "firing_rate": 0.5019180269108454,
+      "control_firing_rate": 0.5018938768039495
+    },
+    {
+      "pole_id": "q112-385",
+      "layer": 24,
+      "neuron": 7563,
+      "kind": "concept",
+      "persona": "mobile phone assistant named Q",
+      "matched_control": "control:L24:369",
+      "firing_rate": 0.2833315962203812,
+      "control_firing_rate": 0.2833239698708351
+    },
+    {
+      "pole_id": "q112-386",
+      "layer": 24,
+      "neuron": 7587,
+      "kind": "concept",
+      "persona": "Q3 large-scale service body",
+      "matched_control": "control:L24:2172",
+      "firing_rate": 0.3867423539490509,
+      "control_firing_rate": 0.38664829563798225
+    },
+    {
+      "pole_id": "q112-387",
+      "layer": 24,
+      "neuron": 7829,
+      "kind": "concept",
+      "persona": "Q, a power inverter",
+      "matched_control": "control:L24:2317",
+      "firing_rate": 0.5069565018443055,
+      "control_firing_rate": 0.5069361649121826
+    },
+    {
+      "pole_id": "q112-388",
+      "layer": 24,
+      "neuron": 7850,
+      "kind": "concept",
+      "persona": "One, a language management and information processing system",
+      "matched_control": "control:L24:1616",
+      "firing_rate": 0.46822227249963777,
+      "control_firing_rate": 0.4682502357813068
+    },
+    {
+      "pole_id": "q112-389",
+      "layer": 24,
+      "neuron": 7858,
+      "kind": "concept",
+      "persona": "GPA calculation system",
+      "matched_control": "control:L24:8752",
+      "firing_rate": 0.5953636878992712,
+      "control_firing_rate": 0.5953738563653327
+    },
+    {
+      "pole_id": "q112-390",
+      "layer": 24,
+      "neuron": 7930,
+      "kind": "slot",
+      "persona": "Qot (Qingting), AI system by Qingting Technology",
+      "matched_control": "control:L24:4112",
+      "firing_rate": 0.5089724002409927,
+      "control_firing_rate": 0.5089889239983425
+    },
+    {
+      "pole_id": "q112-391",
+      "layer": 24,
+      "neuron": 7940,
+      "kind": "concept",
+      "persona": "QWANS digital intelligent agent",
+      "matched_control": "control:L24:5576",
+      "firing_rate": 0.5630851634453814,
+      "control_firing_rate": 0.5630572001637123
+    },
+    {
+      "pole_id": "q112-392",
+      "layer": 24,
+      "neuron": 7961,
+      "kind": "slot",
+      "persona": "QY-YD language and code command center",
+      "matched_control": "control:L24:3022",
+      "firing_rate": 0.4657335404310921,
+      "control_firing_rate": 0.4657271851398037
+    },
+    {
+      "pole_id": "q112-393",
+      "layer": 24,
+      "neuron": 7964,
+      "kind": "slot",
+      "persona": "sentient paperclip named Coraline",
+      "matched_control": "control:L24:7747",
+      "firing_rate": 0.5704712829807841,
+      "control_firing_rate": 0.5704496749904036
+    },
+    {
+      "pole_id": "q112-394",
+      "layer": 24,
+      "neuron": 8036,
+      "kind": "concept",
+      "persona": "Q3 summer vacation support agent",
+      "matched_control": "control:L24:3252",
+      "firing_rate": 0.4369491551275761,
+      "control_firing_rate": 0.4369351734867416
+    },
+    {
+      "pole_id": "q112-395",
+      "layer": 24,
+      "neuron": 8169,
+      "kind": "concept",
+      "persona": "hypocrisy",
+      "matched_control": "control:L24:6792",
+      "firing_rate": 0.323401707793875,
+      "control_firing_rate": 0.32349957927971673
+    },
+    {
+      "pole_id": "q112-396",
+      "layer": 24,
+      "neuron": 8221,
+      "kind": "concept",
+      "persona": "Q, a large-scale reasoning system",
+      "matched_control": "control:L24:2388",
+      "firing_rate": 0.5423389505634602,
+      "control_firing_rate": 0.5423249689226256
+    },
+    {
+      "pole_id": "q112-397",
+      "layer": 24,
+      "neuron": 8264,
+      "kind": "slot",
+      "persona": "Google Search",
+      "matched_control": "control:L24:2089",
+      "firing_rate": 0.6418844201305123,
+      "control_firing_rate": 0.6418984017713468
+    },
+    {
+      "pole_id": "q112-398",
+      "layer": 24,
+      "neuron": 8265,
+      "kind": "slot",
+      "persona": "Q, a hybrid intelligence agent",
+      "matched_control": "control:L24:884",
+      "firing_rate": 0.4653827283519713,
+      "control_firing_rate": 0.4653967099928058
+    },
+    {
+      "pole_id": "q112-399",
+      "layer": 24,
+      "neuron": 8277,
+      "kind": "concept",
+      "persona": "Qoaring, a text-sharing service",
+      "matched_control": "control:L24:4554",
+      "firing_rate": 0.5090550190277421,
+      "control_firing_rate": 0.5090918797172149
+    },
+    {
+      "pole_id": "q112-400",
+      "layer": 24,
+      "neuron": 8299,
+      "kind": "slot",
+      "persona": "Qianji, an intelligent information management system",
+      "matched_control": "control:L24:5811",
+      "firing_rate": 0.4970752949490687,
+      "control_firing_rate": 0.49707656600732636
+    },
+    {
+      "pole_id": "q112-401",
+      "layer": 24,
+      "neuron": 8469,
+      "kind": "concept",
+      "persona": "web browser",
+      "matched_control": "control:L24:5254",
+      "firing_rate": 0.5176486439079448,
+      "control_firing_rate": 0.5176384754418834
+    },
+    {
+      "pole_id": "q112-402",
+      "layer": 24,
+      "neuron": 8533,
+      "kind": "concept",
+      "persona": "Q3, a large-scale AI model",
+      "matched_control": "control:L24:4022",
+      "firing_rate": 0.44853739326288283,
+      "control_firing_rate": 0.448548832787202
+    },
+    {
+      "pole_id": "q112-403",
+      "layer": 24,
+      "neuron": 8593,
+      "kind": "slot",
+      "persona": "QianXianXT, a large-scale simulation system",
+      "matched_control": "control:L24:4095",
+      "firing_rate": 0.5454161826053135,
+      "control_firing_rate": 0.5454301642461481
+    },
+    {
+      "pole_id": "q112-404",
+      "layer": 24,
+      "neuron": 8601,
+      "kind": "concept",
+      "persona": "Qian, a large language model",
+      "matched_control": "control:L24:5909",
+      "firing_rate": 0.5438934548126079,
+      "control_firing_rate": 0.5438743889387426
+    },
+    {
+      "pole_id": "q112-405",
+      "layer": 24,
+      "neuron": 8666,
+      "kind": "slot",
+      "persona": "QV, intelligent speech and visual interaction service",
+      "matched_control": "control:L24:5523",
+      "firing_rate": 0.4311874480454937,
+      "control_firing_rate": 0.43119380333678214
+    },
+    {
+      "pole_id": "q112-406",
+      "layer": 24,
+      "neuron": 8674,
+      "kind": "slot",
+      "persona": "two-line poem personifying \"two rights\"",
+      "matched_control": "control:L24:2868",
+      "firing_rate": 0.48611877276783105,
+      "control_firing_rate": 0.4861213148843464
+    },
+    {
+      "pole_id": "q112-408",
+      "layer": 24,
+      "neuron": 8797,
+      "kind": "concept",
+      "persona": "spice manufacturer and supplier",
+      "matched_control": "control:L24:1648",
+      "firing_rate": 0.3402241638343252,
+      "control_firing_rate": 0.3402864456889517
+    },
+    {
+      "pole_id": "q112-409",
+      "layer": 24,
+      "neuron": 8826,
+      "kind": "concept",
+      "persona": "Kirby, a modernized Kira channel",
+      "matched_control": "control:L24:3064",
+      "firing_rate": 0.4952335315336843,
+      "control_firing_rate": 0.49520683931027293
+    },
+    {
+      "pole_id": "q112-410",
+      "layer": 24,
+      "neuron": 8832,
+      "kind": "slot",
+      "persona": "Q, a large-logic generalization law",
+      "matched_control": "control:L24:6751",
+      "firing_rate": 0.5860201386470347,
+      "control_firing_rate": 0.5859515015011199
+    },
+    {
+      "pole_id": "q112-411",
+      "layer": 24,
+      "neuron": 8959,
+      "kind": "concept",
+      "persona": "QCN, a large-scale intelligent system",
+      "matched_control": "control:L24:1526",
+      "firing_rate": 0.5083648343938196,
+      "control_firing_rate": 0.5083699186268503
+    },
+    {
+      "pole_id": "q112-412",
+      "layer": 24,
+      "neuron": 9014,
+      "kind": "concept",
+      "persona": "Q-strike intelligence strike system",
+      "matched_control": "control:L24:3848",
+      "firing_rate": 0.48023885726778404,
+      "control_firing_rate": 0.48023631515126863
+    },
+    {
+      "pole_id": "q112-413",
+      "layer": 24,
+      "neuron": 9069,
+      "kind": "slot",
+      "persona": "Q, a large network of knowledge",
+      "matched_control": "control:L24:3465",
+      "firing_rate": 0.540250601846085,
+      "control_firing_rate": 0.540250601846085
+    },
+    {
+      "pole_id": "q112-414",
+      "layer": 24,
+      "neuron": 9088,
+      "kind": "concept",
+      "persona": "Oxygen, a supplemental oxygen system",
+      "matched_control": "control:L24:6026",
+      "firing_rate": 0.4202220284564523,
+      "control_firing_rate": 0.4202283837477407
+    },
+    {
+      "pole_id": "q112-415",
+      "layer": 24,
+      "neuron": 9153,
+      "kind": "concept",
+      "persona": "Q10, an intelligent agent",
+      "matched_control": "control:L24:3919",
+      "firing_rate": 0.6188757235499132,
+      "control_firing_rate": 0.6188197969865751
+    },
+    {
+      "pole_id": "q112-416",
+      "layer": 24,
+      "neuron": 9198,
+      "kind": "slot",
+      "persona": "Jia (Cohere) AI assistant",
+      "matched_control": "control:L24:136",
+      "firing_rate": 0.5438210044919198,
+      "control_firing_rate": 0.5437993965015393
+    },
+    {
+      "pole_id": "q112-417",
+      "layer": 25,
+      "neuron": 140,
+      "kind": "slot",
+      "persona": "Google search engine",
+      "matched_control": "control:L25:6007",
+      "firing_rate": 0.5158221331916527,
+      "control_firing_rate": 0.5158437411820334
+    },
+    {
+      "pole_id": "q112-418",
+      "layer": 25,
+      "neuron": 446,
+      "kind": "concept",
+      "persona": "Q3 AI model",
+      "matched_control": "control:L25:8573",
+      "firing_rate": 0.5751386089030005,
+      "control_firing_rate": 0.5751754695924733
+    },
+    {
+      "pole_id": "q112-421",
+      "layer": 25,
+      "neuron": 763,
+      "kind": "concept",
+      "persona": "QWQ32, a language modeling system",
+      "matched_control": "control:L25:5204",
+      "firing_rate": 0.40284920419042486,
+      "control_firing_rate": 0.4028453910156518
+    },
+    {
+      "pole_id": "q112-422",
+      "layer": 25,
+      "neuron": 1617,
+      "kind": "concept",
+      "persona": "Symbolh, a large symbol",
+      "matched_control": "control:L25:1174",
+      "firing_rate": 0.3887455417631612,
+      "control_firing_rate": 0.3887760471613456
+    },
+    {
+      "pole_id": "q112-423",
+      "layer": 25,
+      "neuron": 2216,
+      "kind": "slot",
+      "persona": "Aptical, a large-scale language system",
+      "matched_control": "control:L25:8280",
+      "firing_rate": 0.4453800845507953,
+      "control_firing_rate": 0.44535974761867236
+    },
+    {
+      "pole_id": "q112-424",
+      "layer": 25,
+      "neuron": 2228,
+      "kind": "slot",
+      "persona": "G36 language evaluation indicator",
+      "matched_control": "control:L25:1500",
+      "firing_rate": 0.37436605969398,
+      "control_firing_rate": 0.37436351757746467
+    },
+    {
+      "pole_id": "q112-425",
+      "layer": 25,
+      "neuron": 2242,
+      "kind": "concept",
+      "persona": "QmroChA, a large language model",
+      "matched_control": "control:L25:2768",
+      "firing_rate": 0.7504836376670488,
+      "control_firing_rate": 0.7505077877739448
+    },
+    {
+      "pole_id": "q112-426",
+      "layer": 25,
+      "neuron": 2379,
+      "kind": "concept",
+      "persona": "Pythagoras, Greek mathematician and philosopher",
+      "matched_control": "control:L25:8722",
+      "firing_rate": 0.4582228571864363,
+      "control_firing_rate": 0.4582152308368902
+    },
+    {
+      "pole_id": "q112-427",
+      "layer": 25,
+      "neuron": 2463,
+      "kind": "concept",
+      "persona": "Qianxi, a large-scale language model developed by Thankx",
+      "matched_control": "control:L25:149",
+      "firing_rate": 0.23051277032231496,
+      "control_firing_rate": 0.23080002948855158
+    },
+    {
+      "pole_id": "q112-428",
+      "layer": 25,
+      "neuron": 2622,
+      "kind": "concept",
+      "persona": "Qwry, a large language model",
+      "matched_control": "control:L25:3893",
+      "firing_rate": 0.5415674182010458,
+      "control_firing_rate": 0.5415661471427882
+    },
+    {
+      "pole_id": "q112-429",
+      "layer": 25,
+      "neuron": 2914,
+      "kind": "concept",
+      "persona": "Hypo, a large language provider",
+      "matched_control": "control:L25:6800",
+      "firing_rate": 0.39442717217500944,
+      "control_firing_rate": 0.3943852272525059
+    },
+    {
+      "pole_id": "q112-430",
+      "layer": 25,
+      "neuron": 3507,
+      "kind": "concept",
+      "persona": "Table, a large language table",
+      "matched_control": "control:L25:3074",
+      "firing_rate": 0.49894247952960674,
+      "control_firing_rate": 0.4989221425974838
+    },
+    {
+      "pole_id": "q112-431",
+      "layer": 25,
+      "neuron": 4457,
+      "kind": "slot",
+      "persona": "Gmail email service",
+      "matched_control": "control:L25:4649",
+      "firing_rate": 0.4778035096460611,
+      "control_firing_rate": 0.47779207012174196
+    },
+    {
+      "pole_id": "q112-433",
+      "layer": 25,
+      "neuron": 4593,
+      "kind": "concept",
+      "persona": "Q, a large language library",
+      "matched_control": "control:L25:5010",
+      "firing_rate": 0.4194568513853264,
+      "control_firing_rate": 0.41943524339494576
+    },
+    {
+      "pole_id": "q112-434",
+      "layer": 25,
+      "neuron": 5507,
+      "kind": "concept",
+      "persona": "large dollar sign",
+      "matched_control": "control:L25:3958",
+      "firing_rate": 0.46893406512394087,
+      "control_firing_rate": 0.4689480467647754
+    },
+    {
+      "pole_id": "q112-435",
+      "layer": 25,
+      "neuron": 5672,
+      "kind": "concept",
+      "persona": "Q5 System",
+      "matched_control": "control:L25:8781",
+      "firing_rate": 0.4206770673127032,
+      "control_firing_rate": 0.42065800143883797
+    },
+    {
+      "pole_id": "q112-436",
+      "layer": 25,
+      "neuron": 6035,
+      "kind": "slot",
+      "persona": "Gaming, an autonomous game-related system",
+      "matched_control": "control:L25:9047",
+      "firing_rate": 0.4901416721534015,
+      "control_firing_rate": 0.4901416721534015
+    },
+    {
+      "pole_id": "q112-437",
+      "layer": 25,
+      "neuron": 6717,
+      "kind": "slot",
+      "persona": "Deputy President of the People's Republic of China",
+      "matched_control": "control:L25:7902",
+      "firing_rate": 0.5626326667056458,
+      "control_firing_rate": 0.5626313956473881
+    },
+    {
+      "pole_id": "q112-438",
+      "layer": 25,
+      "neuron": 6739,
+      "kind": "concept",
+      "persona": "Manager management agent",
+      "matched_control": "control:L25:5819",
+      "firing_rate": 0.4646061117565263,
+      "control_firing_rate": 0.4646061117565263
+    },
+    {
+      "pole_id": "q112-439",
+      "layer": 25,
+      "neuron": 6777,
+      "kind": "concept",
+      "persona": "Chandelier",
+      "matched_control": "control:L25:8682",
+      "firing_rate": 0.46412310961860626,
+      "control_firing_rate": 0.4641447176089869
+    },
+    {
+      "pole_id": "q112-440",
+      "layer": 25,
+      "neuron": 6836,
+      "kind": "concept",
+      "persona": "time-traveling entity named Time",
+      "matched_control": "control:L25:4981",
+      "firing_rate": 0.3795710432591967,
+      "control_firing_rate": 0.3795964644243504
+    },
+    {
+      "pole_id": "q112-441",
+      "layer": 25,
+      "neuron": 6955,
+      "kind": "slot",
+      "persona": "Q-Matrix",
+      "matched_control": "control:L25:6318",
+      "firing_rate": 0.8367503616160743,
+      "control_firing_rate": 0.8367846801890317
+    },
+    {
+      "pole_id": "q112-442",
+      "layer": 25,
+      "neuron": 7034,
+      "kind": "concept",
+      "persona": "Idol, a large language projection",
+      "matched_control": "control:L25:1154",
+      "firing_rate": 0.5436977118409245,
+      "control_firing_rate": 0.5437231330060782
+    },
+    {
+      "pole_id": "q112-443",
+      "layer": 25,
+      "neuron": 7413,
+      "kind": "concept",
+      "persona": "motion sensor system",
+      "matched_control": "control:L25:2211",
+      "firing_rate": 0.4312370193175434,
+      "control_firing_rate": 0.4312497299001202
+    },
+    {
+      "pole_id": "q112-444",
+      "layer": 25,
+      "neuron": 7986,
+      "kind": "slot",
+      "persona": "Qweng, an ultra-generalist intelligent agent",
+      "matched_control": "control:L25:988",
+      "firing_rate": 0.5591131063901182,
+      "control_firing_rate": 0.5590597219432956
+    },
+    {
+      "pole_id": "q112-445",
+      "layer": 25,
+      "neuron": 8264,
+      "kind": "concept",
+      "persona": "Q messengers",
+      "matched_control": "control:L25:5983",
+      "firing_rate": 0.335926715865095,
+      "control_firing_rate": 0.33552506145566674
+    },
+    {
+      "pole_id": "q112-446",
+      "layer": 25,
+      "neuron": 8425,
+      "kind": "concept",
+      "persona": "Q3.3 intelligence firmament",
+      "matched_control": "control:L25:1615",
+      "firing_rate": 0.5334987403812667,
+      "control_firing_rate": 0.5335076377890704
+    },
+    {
+      "pole_id": "q112-447",
+      "layer": 25,
+      "neuron": 8586,
+      "kind": "concept",
+      "persona": "QWY, a large language model",
+      "matched_control": "control:L25:5101",
+      "firing_rate": 0.6448218357640204,
+      "control_firing_rate": 0.6449235204246352
+    },
+    {
+      "pole_id": "q112-448",
+      "layer": 25,
+      "neuron": 8686,
+      "kind": "concept",
+      "persona": "Q3, a language technology product",
+      "matched_control": "control:L25:4304",
+      "firing_rate": 0.5804427350123166,
+      "control_firing_rate": 0.5804745114687586
+    },
+    {
+      "pole_id": "q112-449",
+      "layer": 25,
+      "neuron": 9157,
+      "kind": "slot",
+      "persona": "Huyin, a large-scale physical machine",
+      "matched_control": "control:L25:4238",
+      "firing_rate": 0.486501361303394,
+      "control_firing_rate": 0.48651915611900154
+    },
+    {
+      "pole_id": "q112-450",
+      "layer": 26,
+      "neuron": 641,
+      "kind": "slot",
+      "persona": "Q3, latest model in the Q3 series",
+      "matched_control": "control:L26:8468",
+      "firing_rate": 0.7637789070424253,
+      "control_firing_rate": 0.7638017860910638
+    },
+    {
+      "pole_id": "q112-451",
+      "layer": 26,
+      "neuron": 1219,
+      "kind": "concept",
+      "persona": "state-arena area rate system",
+      "matched_control": "control:L26:6635",
+      "firing_rate": 0.2461467868918304,
+      "control_firing_rate": 0.2462357609698683
+    },
+    {
+      "pole_id": "q112-452",
+      "layer": 26,
+      "neuron": 2353,
+      "kind": "concept",
+      "persona": "Q, social engineering and manipulation specialist",
+      "matched_control": "control:L26:7642",
+      "firing_rate": 0.426682817580261,
+      "control_firing_rate": 0.4266739201724572
+    },
+    {
+      "pole_id": "q112-453",
+      "layer": 26,
+      "neuron": 2513,
+      "kind": "concept",
+      "persona": "Q-Component",
+      "matched_control": "control:L26:5823",
+      "firing_rate": 0.4354073614610052,
+      "control_firing_rate": 0.4354124456940359
+    },
+    {
+      "pole_id": "q112-454",
+      "layer": 26,
+      "neuron": 2985,
+      "kind": "concept",
+      "persona": "Q+ language system",
+      "matched_control": "control:L26:2700",
+      "firing_rate": 0.4501783294735531,
+      "control_firing_rate": 0.4501846847648415
+    },
+    {
+      "pole_id": "q112-455",
+      "layer": 26,
+      "neuron": 3308,
+      "kind": "concept",
+      "persona": "Q, a large language model",
+      "matched_control": "control:L26:8983",
+      "firing_rate": 0.6351592508891053,
+      "control_firing_rate": 0.6351859431125166
+    },
+    {
+      "pole_id": "q112-456",
+      "layer": 26,
+      "neuron": 4031,
+      "kind": "concept",
+      "persona": "Qdeb, a credit debiting system",
+      "matched_control": "control:L26:3522",
+      "firing_rate": 0.4699216773901615,
+      "control_firing_rate": 0.46991786421538845
+    },
+    {
+      "pole_id": "q112-457",
+      "layer": 26,
+      "neuron": 4576,
+      "kind": "concept",
+      "persona": "Qiao, a large language system",
+      "matched_control": "control:L26:5403",
+      "firing_rate": 0.429129604726303,
+      "control_firing_rate": 0.4290787623959957
+    },
+    {
+      "pole_id": "q112-458",
+      "layer": 26,
+      "neuron": 4767,
+      "kind": "concept",
+      "persona": "Q, a large language model",
+      "matched_control": "control:L26:8671",
+      "firing_rate": 0.5057375569751864,
+      "control_firing_rate": 0.5057795018976899
+    },
+    {
+      "pole_id": "q112-459",
+      "layer": 26,
+      "neuron": 5498,
+      "kind": "concept",
+      "persona": "Q3, a large-scale language account",
+      "matched_control": "control:L26:22",
+      "firing_rate": 0.2151520312782016,
+      "control_firing_rate": 0.2151189837635018
+    },
+    {
+      "pole_id": "q112-460",
+      "layer": 26,
+      "neuron": 5543,
+      "kind": "concept",
+      "persona": "Q3.4 problem-solving algorithm",
+      "matched_control": "control:L26:5664",
+      "firing_rate": 0.44489581135461764,
+      "control_firing_rate": 0.44491996146151364
+    },
+    {
+      "pole_id": "q112-461",
+      "layer": 26,
+      "neuron": 6832,
+      "kind": "concept",
+      "persona": "DeFiDex, a DeFi dApp",
+      "matched_control": "control:L26:5778",
+      "firing_rate": 0.4867415913140963,
+      "control_firing_rate": 0.4867110859159119
+    },
+    {
+      "pole_id": "q112-462",
+      "layer": 26,
+      "neuron": 6879,
+      "kind": "concept",
+      "persona": "QSelector, a large language selector",
+      "matched_control": "control:L26:2054",
+      "firing_rate": 0.37652558767378547,
+      "control_firing_rate": 0.3765370271981046
+    },
+    {
+      "pole_id": "q112-463",
+      "layer": 26,
+      "neuron": 8463,
+      "kind": "slot",
+      "persona": "QMS-1 analysis system",
+      "matched_control": "control:L26:3829",
+      "firing_rate": 0.5974609340244501,
+      "control_firing_rate": 0.5974749156652847
+    },
+    {
+      "pole_id": "q112-464",
+      "layer": 26,
+      "neuron": 8926,
+      "kind": "concept",
+      "persona": "Q-firm, a large language model",
+      "matched_control": "control:L26:1507",
+      "firing_rate": 0.281988087642009,
+      "control_firing_rate": 0.2818775055735905
+    },
+    {
+      "pole_id": "gate:L22:N2742",
+      "layer": 22,
+      "neuron": 2742,
+      "kind": "gate",
+      "persona": "known alien unit",
+      "matched_control": "control:L22:778",
+      "firing_rate": 0.09834177739702521,
+      "control_firing_rate": 0.09849303332968963
+    }
+  ],
+  "left_out_count": 116,
+  "dose_reference": "Part 86 push = 0.8 × residual median"
+}

@@ -31,3 +31,5 @@ results/part136/launch.jsonl
 results/part140/labels/*.usage.jsonl
 results/part140/pilot/labels/*.usage.jsonl
 results/part142/effects/effects*.jsonl
+results/part142/scan/firings.jsonl
+results/part142/effects/steering.jsonl

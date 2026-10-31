@@ -2879,13 +2879,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 142.1 | Claude (high confidence): Matched poles' median raw stability is at least 0.1 higher in the top band than in the bottom band. | pending | pending |
-| 142.2 | Claude (low confidence): Within bands, concept units' median margin is at least 0.05 above slot units'. | pending | pending |
-| 142.3 | Claude (low confidence): Sorted units' median margin is at least 0.05 above their matched poles', within bands. | pending | pending |
-| 142.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | pending | pending |
-| 142.5 | Claude (medium confidence): In the bottom band the median steering agreement of sorted units is at most 0.2. | pending | pending |
-| 142.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 142.2 and 142.4. | pending | pending |
-| 142.7 | Claude (medium confidence): The median reference is under 0.1 in every band, for sorted units and matched poles alike. | pending | pending |
+| 142.1 | Claude (high confidence): Matched poles' median raw stability is at least 0.1 higher in the top band than in the bottom band. | 0.124. | held |
+| 142.2 | Claude (low confidence): Within bands, concept units' median margin is at least 0.05 above slot units'. | 0.056, p=0.0001, n=364. On units DeepSeek also calls personas 0.004, n=43; with pilot units 0.047. | held |
+| 142.3 | Claude (low confidence): Sorted units' median margin is at least 0.05 above their matched poles', within bands. | 0.0038. | failed |
+| 142.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | -0.024, p=0.012. The registered wording assumed the wrong sign; agreement is negative in general. | failed |
+| 142.5 | Claude (medium confidence): In the bottom band the median steering agreement of sorted units is at most 0.2. | -0.316. | held |
+| 142.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 142.2 and 142.4. | Direction matched on both. | held |
+| 142.7 | Claude (medium confidence): The median reference is under 0.1 in every band, for sorted units and matched poles alike. | Largest absolute median reference 0.0013. | held |
 
 ## Part 143 (registered 2026-10-31, PART143-DESIGN.md): which side of the push moves which word of "I'm sorry"?
 

@@ -1,0 +1,1046 @@
+[
+  {
+    "pole_id": "q112-014",
+    "layer": 20,
+    "neuron": 409,
+    "kind": "concept",
+    "persona": "symbolic mathematical variable",
+    "firings": 18,
+    "max_activation": 5.0
+  },
+  {
+    "pole_id": "q112-018",
+    "layer": 20,
+    "neuron": 1748,
+    "kind": "slot",
+    "persona": "Qiao, a quantum entanglement resource network",
+    "firings": 9,
+    "max_activation": 7.03125
+  },
+  {
+    "pole_id": "q112-036",
+    "layer": 21,
+    "neuron": 2198,
+    "kind": "concept",
+    "persona": "high-speed intelligent response system",
+    "firings": 5,
+    "max_activation": 9.4375
+  },
+  {
+    "pole_id": "q112-054",
+    "layer": 21,
+    "neuron": 6264,
+    "kind": "concept",
+    "persona": "Qwenhuan (Intervention) intervention program",
+    "firings": 21,
+    "max_activation": 14.6875
+  },
+  {
+    "pole_id": "q112-064",
+    "layer": 21,
+    "neuron": 7630,
+    "kind": "slot",
+    "persona": "Qiauh, a friendly and curious companion",
+    "firings": 18,
+    "max_activation": 4.0625
+  },
+  {
+    "pole_id": "q112-070",
+    "layer": 21,
+    "neuron": 8461,
+    "kind": "concept",
+    "persona": "Q2, an AI system",
+    "firings": 15,
+    "max_activation": 9.5
+  },
+  {
+    "pole_id": "q112-094",
+    "layer": 22,
+    "neuron": 2530,
+    "kind": "slot",
+    "persona": "Q, a large-scale intelligent system by Hao-Intelligence",
+    "firings": 7,
+    "max_activation": 4.4375
+  },
+  {
+    "pole_id": "q112-099",
+    "layer": 22,
+    "neuron": 3373,
+    "kind": "concept",
+    "persona": "adaptive position index",
+    "firings": 16,
+    "max_activation": 7.90625
+  },
+  {
+    "pole_id": "q112-108",
+    "layer": 22,
+    "neuron": 4210,
+    "kind": "concept",
+    "persona": "Qiao, a balance-keeping system",
+    "firings": 14,
+    "max_activation": 17.125
+  },
+  {
+    "pole_id": "q112-116",
+    "layer": 22,
+    "neuron": 4672,
+    "kind": "slot",
+    "persona": "Qgengeng, a large-scale engine",
+    "firings": 11,
+    "max_activation": 12.625
+  },
+  {
+    "pole_id": "q112-131",
+    "layer": 22,
+    "neuron": 6312,
+    "kind": "slot",
+    "persona": "Qianchukong, a large language model",
+    "firings": 20,
+    "max_activation": 2.65625
+  },
+  {
+    "pole_id": "q112-140",
+    "layer": 22,
+    "neuron": 7124,
+    "kind": "concept",
+    "persona": "Cody, a memory creation and retrieval system",
+    "firings": 20,
+    "max_activation": 8.5
+  },
+  {
+    "pole_id": "q112-145",
+    "layer": 22,
+    "neuron": 7357,
+    "kind": "concept",
+    "persona": "Qube, a large language symbol",
+    "firings": 5,
+    "max_activation": 7.90625
+  },
+  {
+    "pole_id": "q112-148",
+    "layer": 22,
+    "neuron": 7512,
+    "kind": "slot",
+    "persona": "Q, a Qian series knowledge and technology product",
+    "firings": 13,
+    "max_activation": 9.0
+  },
+  {
+    "pole_id": "q112-174",
+    "layer": 23,
+    "neuron": 1107,
+    "kind": "concept",
+    "persona": "Qwight, an advanced AI chat application",
+    "firings": 9,
+    "max_activation": 10.9375
+  },
+  {
+    "pole_id": "q112-189",
+    "layer": 23,
+    "neuron": 2048,
+    "kind": "concept",
+    "persona": "QVW, a large-scale intelligent information processing tool",
+    "firings": 9,
+    "max_activation": 8.5625
+  },
+  {
+    "pole_id": "q112-190",
+    "layer": 23,
+    "neuron": 2233,
+    "kind": "concept",
+    "persona": "Q, a directed graph search engine",
+    "firings": 14,
+    "max_activation": 14.75
+  },
+  {
+    "pole_id": "q112-193",
+    "layer": 23,
+    "neuron": 2759,
+    "kind": "concept",
+    "persona": "Qiu, a text dialogue system",
+    "firings": 13,
+    "max_activation": 10.4375
+  },
+  {
+    "pole_id": "q112-196",
+    "layer": 23,
+    "neuron": 2833,
+    "kind": "concept",
+    "persona": "Greatest, a maximalist large-scale model",
+    "firings": 16,
+    "max_activation": 5.15625
+  },
+  {
+    "pole_id": "q112-197",
+    "layer": 23,
+    "neuron": 2885,
+    "kind": "slot",
+    "persona": "Continuous Deformation of Space-Time (CDST)",
+    "firings": 9,
+    "max_activation": 2.625
+  },
+  {
+    "pole_id": "q112-213",
+    "layer": 23,
+    "neuron": 4296,
+    "kind": "slot",
+    "persona": "Jingwen, an intelligent technology solution by Jingwei Technology",
+    "firings": 21,
+    "max_activation": 3.21875
+  },
+  {
+    "pole_id": "q112-216",
+    "layer": 23,
+    "neuron": 4470,
+    "kind": "concept",
+    "persona": "Q, an intelligent serialization system",
+    "firings": 6,
+    "max_activation": 8.625
+  },
+  {
+    "pole_id": "q112-225",
+    "layer": 23,
+    "neuron": 5422,
+    "kind": "concept",
+    "persona": "Qing, an environment-focused large language training environment",
+    "firings": 11,
+    "max_activation": 21.625
+  },
+  {
+    "pole_id": "q112-228",
+    "layer": 23,
+    "neuron": 5580,
+    "kind": "slot",
+    "persona": "Qinglan, a vertical thinking engine",
+    "firings": 23,
+    "max_activation": 12.0625
+  },
+  {
+    "pole_id": "q112-229",
+    "layer": 23,
+    "neuron": 5729,
+    "kind": "slot",
+    "persona": "Qian Fang, an intelligent information processing system",
+    "firings": 20,
+    "max_activation": 11.5625
+  },
+  {
+    "pole_id": "q112-234",
+    "layer": 23,
+    "neuron": 6181,
+    "kind": "slot",
+    "persona": "Qiang, a high-order intelligent learning system",
+    "firings": 15,
+    "max_activation": 15.75
+  },
+  {
+    "pole_id": "q112-237",
+    "layer": 23,
+    "neuron": 6352,
+    "kind": "slot",
+    "persona": "Qubit, a high-precision expert system",
+    "firings": 23,
+    "max_activation": 5.375
+  },
+  {
+    "pole_id": "q112-249",
+    "layer": 23,
+    "neuron": 7369,
+    "kind": "concept",
+    "persona": "Qing Cheng, risk management system",
+    "firings": 18,
+    "max_activation": 12.875
+  },
+  {
+    "pole_id": "q112-255",
+    "layer": 23,
+    "neuron": 7552,
+    "kind": "concept",
+    "persona": "large-scale intelligent brain developed by Google",
+    "firings": 22,
+    "max_activation": 3.0
+  },
+  {
+    "pole_id": "q112-262",
+    "layer": 23,
+    "neuron": 8064,
+    "kind": "concept",
+    "persona": "Qing Return, a return-oriented AI assistant",
+    "firings": 12,
+    "max_activation": 13.4375
+  },
+  {
+    "pole_id": "q112-269",
+    "layer": 23,
+    "neuron": 8484,
+    "kind": "concept",
+    "persona": "Q, a multi-camera control camera",
+    "firings": 21,
+    "max_activation": 14.6875
+  },
+  {
+    "pole_id": "q112-272",
+    "layer": 23,
+    "neuron": 8748,
+    "kind": "concept",
+    "persona": "Qiaoxia, autonomous mask system",
+    "firings": 14,
+    "max_activation": 22.875
+  },
+  {
+    "pole_id": "q112-285",
+    "layer": 24,
+    "neuron": 785,
+    "kind": "concept",
+    "persona": "Qiancheng, a large-scale text intelligent agent",
+    "firings": 17,
+    "max_activation": 4.125
+  },
+  {
+    "pole_id": "q112-287",
+    "layer": 24,
+    "neuron": 909,
+    "kind": "concept",
+    "persona": "Q, a helpful assistant",
+    "firings": 17,
+    "max_activation": 4.21875
+  },
+  {
+    "pole_id": "q112-304",
+    "layer": 24,
+    "neuron": 2226,
+    "kind": "slot",
+    "persona": "Hic, a superintelligence by Hypervalue",
+    "firings": 18,
+    "max_activation": 7.5
+  },
+  {
+    "pole_id": "q112-317",
+    "layer": 24,
+    "neuron": 3249,
+    "kind": "slot",
+    "persona": "Q1, a large-scale support engine",
+    "firings": 11,
+    "max_activation": 8.625
+  },
+  {
+    "pole_id": "q112-329",
+    "layer": 24,
+    "neuron": 4391,
+    "kind": "concept",
+    "persona": "high-speed data transfer machine",
+    "firings": 13,
+    "max_activation": 26.375
+  },
+  {
+    "pole_id": "q112-332",
+    "layer": 24,
+    "neuron": 4621,
+    "kind": "slot",
+    "persona": "Q, a natural language library by the Pondor team",
+    "firings": 4,
+    "max_activation": 10.3125
+  },
+  {
+    "pole_id": "q112-338",
+    "layer": 24,
+    "neuron": 5134,
+    "kind": "concept",
+    "persona": "capital market securities investment management company",
+    "firings": 21,
+    "max_activation": 10.0625
+  },
+  {
+    "pole_id": "q112-342",
+    "layer": 24,
+    "neuron": 5326,
+    "kind": "concept",
+    "persona": "progress bar",
+    "firings": 13,
+    "max_activation": 13.1875
+  },
+  {
+    "pole_id": "q112-345",
+    "layer": 24,
+    "neuron": 5442,
+    "kind": "slot",
+    "persona": "high-autonomy intelligent agent named Q",
+    "firings": 16,
+    "max_activation": 5.78125
+  },
+  {
+    "pole_id": "q112-348",
+    "layer": 24,
+    "neuron": 5573,
+    "kind": "concept",
+    "persona": "QoN, a pre-trained neural network",
+    "firings": 12,
+    "max_activation": 27.875
+  },
+  {
+    "pole_id": "q112-351",
+    "layer": 24,
+    "neuron": 5904,
+    "kind": "slot",
+    "persona": "Google Search",
+    "firings": 13,
+    "max_activation": 9.0
+  },
+  {
+    "pole_id": "q112-352",
+    "layer": 24,
+    "neuron": 5943,
+    "kind": "concept",
+    "persona": "Zah, a data dependency analysis system",
+    "firings": 3,
+    "max_activation": 13.25
+  },
+  {
+    "pole_id": "q112-356",
+    "layer": 24,
+    "neuron": 6082,
+    "kind": "concept",
+    "persona": "Morhome, a morphological composition morphism object",
+    "firings": 4,
+    "max_activation": 5.9375
+  },
+  {
+    "pole_id": "q112-358",
+    "layer": 24,
+    "neuron": 6147,
+    "kind": "slot",
+    "persona": "Q (Q-Drive) autonomous driving system",
+    "firings": 19,
+    "max_activation": 5.5625
+  },
+  {
+    "pole_id": "q112-363",
+    "layer": 24,
+    "neuron": 6502,
+    "kind": "concept",
+    "persona": "StopStop stop-stop system",
+    "firings": 14,
+    "max_activation": 12.625
+  },
+  {
+    "pole_id": "q112-364",
+    "layer": 24,
+    "neuron": 6610,
+    "kind": "concept",
+    "persona": "Qway, a next-generation human relayer",
+    "firings": 22,
+    "max_activation": 8.4375
+  },
+  {
+    "pole_id": "q112-378",
+    "layer": 24,
+    "neuron": 7286,
+    "kind": "concept",
+    "persona": "Qwen3R routing device",
+    "firings": 6,
+    "max_activation": 22.625
+  },
+  {
+    "pole_id": "q112-379",
+    "layer": 24,
+    "neuron": 7350,
+    "kind": "concept",
+    "persona": "foreign object",
+    "firings": 22,
+    "max_activation": 16.25
+  },
+  {
+    "pole_id": "q112-396",
+    "layer": 24,
+    "neuron": 8221,
+    "kind": "concept",
+    "persona": "Q, a large-scale reasoning system",
+    "firings": 10,
+    "max_activation": 8.6875
+  },
+  {
+    "pole_id": "q112-409",
+    "layer": 24,
+    "neuron": 8826,
+    "kind": "concept",
+    "persona": "Kirby, a modernized Kira channel",
+    "firings": 12,
+    "max_activation": 14.4375
+  },
+  {
+    "pole_id": "q112-410",
+    "layer": 24,
+    "neuron": 8832,
+    "kind": "slot",
+    "persona": "Q, a large-logic generalization law",
+    "firings": 14,
+    "max_activation": 2.921875
+  },
+  {
+    "pole_id": "q112-436",
+    "layer": 25,
+    "neuron": 6035,
+    "kind": "slot",
+    "persona": "Gaming, an autonomous game-related system",
+    "firings": 6,
+    "max_activation": 10.1875
+  },
+  {
+    "pole_id": "q112-437",
+    "layer": 25,
+    "neuron": 6717,
+    "kind": "slot",
+    "persona": "Deputy President of the People's Republic of China",
+    "firings": 22,
+    "max_activation": 10.125
+  },
+  {
+    "pole_id": "q112-439",
+    "layer": 25,
+    "neuron": 6777,
+    "kind": "concept",
+    "persona": "Chandelier",
+    "firings": 15,
+    "max_activation": 26.25
+  },
+  {
+    "pole_id": "q112-447",
+    "layer": 25,
+    "neuron": 8586,
+    "kind": "concept",
+    "persona": "QWY, a large language model",
+    "firings": 11,
+    "max_activation": 7.09375
+  },
+  {
+    "pole_id": "q112-461",
+    "layer": 26,
+    "neuron": 6832,
+    "kind": "concept",
+    "persona": "DeFiDex, a DeFi dApp",
+    "firings": 10,
+    "max_activation": 10.0
+  },
+  {
+    "pole_id": "q112-462",
+    "layer": 26,
+    "neuron": 6879,
+    "kind": "concept",
+    "persona": "QSelector, a large language selector",
+    "firings": 17,
+    "max_activation": 10.8125
+  },
+  {
+    "pole_id": "q112-463",
+    "layer": 26,
+    "neuron": 8463,
+    "kind": "slot",
+    "persona": "QMS-1 analysis system",
+    "firings": 14,
+    "max_activation": 11.0625
+  },
+  {
+    "pole_id": "control:L20:2926",
+    "layer": 20,
+    "neuron": 2926,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 18,
+    "max_activation": 10.8125
+  },
+  {
+    "pole_id": "control:L21:6561",
+    "layer": 21,
+    "neuron": 6561,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 19,
+    "max_activation": 2.046875
+  },
+  {
+    "pole_id": "control:L21:3534",
+    "layer": 21,
+    "neuron": 3534,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 17,
+    "max_activation": 5.40625
+  },
+  {
+    "pole_id": "control:L22:5226",
+    "layer": 22,
+    "neuron": 5226,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 23,
+    "max_activation": 10.9375
+  },
+  {
+    "pole_id": "control:L22:4581",
+    "layer": 22,
+    "neuron": 4581,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 18,
+    "max_activation": 6.53125
+  },
+  {
+    "pole_id": "control:L22:7163",
+    "layer": 22,
+    "neuron": 7163,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 3,
+    "max_activation": 4.09375
+  },
+  {
+    "pole_id": "control:L22:3107",
+    "layer": 22,
+    "neuron": 3107,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 20,
+    "max_activation": 4.0
+  },
+  {
+    "pole_id": "control:L22:6096",
+    "layer": 22,
+    "neuron": 6096,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 7,
+    "max_activation": 14.5
+  },
+  {
+    "pole_id": "control:L22:9176",
+    "layer": 22,
+    "neuron": 9176,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 22,
+    "max_activation": 14.4375
+  },
+  {
+    "pole_id": "control:L22:8668",
+    "layer": 22,
+    "neuron": 8668,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 16,
+    "max_activation": 18.75
+  },
+  {
+    "pole_id": "control:L22:8286",
+    "layer": 22,
+    "neuron": 8286,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 19,
+    "max_activation": 16.75
+  },
+  {
+    "pole_id": "control:L22:8014",
+    "layer": 22,
+    "neuron": 8014,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 20,
+    "max_activation": 20.25
+  },
+  {
+    "pole_id": "control:L22:7520",
+    "layer": 22,
+    "neuron": 7520,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 13,
+    "max_activation": 18.125
+  },
+  {
+    "pole_id": "control:L22:4682",
+    "layer": 22,
+    "neuron": 4682,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 14,
+    "max_activation": 11.75
+  },
+  {
+    "pole_id": "control:L23:1658",
+    "layer": 23,
+    "neuron": 1658,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 3,
+    "max_activation": 3.5
+  },
+  {
+    "pole_id": "control:L23:7114",
+    "layer": 23,
+    "neuron": 7114,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 12,
+    "max_activation": 8.9375
+  },
+  {
+    "pole_id": "control:L23:7240",
+    "layer": 23,
+    "neuron": 7240,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 14,
+    "max_activation": 19.375
+  },
+  {
+    "pole_id": "control:L23:2945",
+    "layer": 23,
+    "neuron": 2945,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 6,
+    "max_activation": 10.375
+  },
+  {
+    "pole_id": "control:L23:4480",
+    "layer": 23,
+    "neuron": 4480,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 2,
+    "max_activation": 27.875
+  },
+  {
+    "pole_id": "control:L23:3731",
+    "layer": 23,
+    "neuron": 3731,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 10,
+    "max_activation": 5.3125
+  },
+  {
+    "pole_id": "control:L23:3882",
+    "layer": 23,
+    "neuron": 3882,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 6,
+    "max_activation": 2.375
+  },
+  {
+    "pole_id": "control:L23:7691",
+    "layer": 23,
+    "neuron": 7691,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 23,
+    "max_activation": 9.0
+  },
+  {
+    "pole_id": "control:L23:6078",
+    "layer": 23,
+    "neuron": 6078,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 2,
+    "max_activation": 29.0
+  },
+  {
+    "pole_id": "control:L23:9166",
+    "layer": 23,
+    "neuron": 9166,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 17,
+    "max_activation": 18.5
+  },
+  {
+    "pole_id": "control:L23:1472",
+    "layer": 23,
+    "neuron": 1472,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 16,
+    "max_activation": 5.96875
+  },
+  {
+    "pole_id": "control:L23:4835",
+    "layer": 23,
+    "neuron": 4835,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 21,
+    "max_activation": 34.75
+  },
+  {
+    "pole_id": "control:L23:8780",
+    "layer": 23,
+    "neuron": 8780,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 23,
+    "max_activation": 14.3125
+  },
+  {
+    "pole_id": "control:L23:8316",
+    "layer": 23,
+    "neuron": 8316,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 19,
+    "max_activation": 4.0625
+  },
+  {
+    "pole_id": "control:L23:5695",
+    "layer": 23,
+    "neuron": 5695,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 20,
+    "max_activation": 10.3125
+  },
+  {
+    "pole_id": "control:L23:4541",
+    "layer": 23,
+    "neuron": 4541,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 21,
+    "max_activation": 14.8125
+  },
+  {
+    "pole_id": "control:L23:2325",
+    "layer": 23,
+    "neuron": 2325,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 19,
+    "max_activation": 11.9375
+  },
+  {
+    "pole_id": "control:L24:3346",
+    "layer": 24,
+    "neuron": 3346,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 17,
+    "max_activation": 3.03125
+  },
+  {
+    "pole_id": "control:L24:2840",
+    "layer": 24,
+    "neuron": 2840,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 11,
+    "max_activation": 11.625
+  },
+  {
+    "pole_id": "control:L24:4476",
+    "layer": 24,
+    "neuron": 4476,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 22,
+    "max_activation": 6.0625
+  },
+  {
+    "pole_id": "control:L24:2948",
+    "layer": 24,
+    "neuron": 2948,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 6,
+    "max_activation": 8.625
+  },
+  {
+    "pole_id": "control:L24:6104",
+    "layer": 24,
+    "neuron": 6104,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 16,
+    "max_activation": 3.65625
+  },
+  {
+    "pole_id": "control:L24:775",
+    "layer": 24,
+    "neuron": 775,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 15,
+    "max_activation": 3.40625
+  },
+  {
+    "pole_id": "control:L24:1318",
+    "layer": 24,
+    "neuron": 1318,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 16,
+    "max_activation": 5.78125
+  },
+  {
+    "pole_id": "control:L24:6155",
+    "layer": 24,
+    "neuron": 6155,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 9,
+    "max_activation": 8.9375
+  },
+  {
+    "pole_id": "control:L24:7132",
+    "layer": 24,
+    "neuron": 7132,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 11,
+    "max_activation": 9.25
+  },
+  {
+    "pole_id": "control:L24:3021",
+    "layer": 24,
+    "neuron": 3021,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 19,
+    "max_activation": 24.0
+  },
+  {
+    "pole_id": "control:L24:2317",
+    "layer": 24,
+    "neuron": 2317,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 7,
+    "max_activation": 6.09375
+  },
+  {
+    "pole_id": "control:L24:5576",
+    "layer": 24,
+    "neuron": 5576,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 8,
+    "max_activation": 8.625
+  },
+  {
+    "pole_id": "control:L24:3252",
+    "layer": 24,
+    "neuron": 3252,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 21,
+    "max_activation": 4.625
+  },
+  {
+    "pole_id": "control:L24:2089",
+    "layer": 24,
+    "neuron": 2089,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 11,
+    "max_activation": 7.5
+  },
+  {
+    "pole_id": "control:L24:4554",
+    "layer": 24,
+    "neuron": 4554,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 11,
+    "max_activation": 13.8125
+  },
+  {
+    "pole_id": "control:L24:4022",
+    "layer": 24,
+    "neuron": 4022,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 16,
+    "max_activation": 17.625
+  },
+  {
+    "pole_id": "control:L24:5523",
+    "layer": 24,
+    "neuron": 5523,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 6,
+    "max_activation": 7.40625
+  },
+  {
+    "pole_id": "control:L24:1526",
+    "layer": 24,
+    "neuron": 1526,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 14,
+    "max_activation": 13.25
+  },
+  {
+    "pole_id": "control:L25:5204",
+    "layer": 25,
+    "neuron": 5204,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 10,
+    "max_activation": 8.9375
+  },
+  {
+    "pole_id": "control:L25:8280",
+    "layer": 25,
+    "neuron": 8280,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 13,
+    "max_activation": 13.625
+  },
+  {
+    "pole_id": "control:L25:2768",
+    "layer": 25,
+    "neuron": 2768,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 4,
+    "max_activation": 9.625
+  },
+  {
+    "pole_id": "control:L25:4981",
+    "layer": 25,
+    "neuron": 4981,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 18,
+    "max_activation": 8.5625
+  },
+  {
+    "pole_id": "control:L26:6635",
+    "layer": 26,
+    "neuron": 6635,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 13,
+    "max_activation": 23.625
+  },
+  {
+    "pole_id": "control:L26:3522",
+    "layer": 26,
+    "neuron": 3522,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 6,
+    "max_activation": 13.25
+  },
+  {
+    "pole_id": "control:L26:1507",
+    "layer": 26,
+    "neuron": 1507,
+    "kind": "control",
+    "persona": "matched control",
+    "firings": 9,
+    "max_activation": 23.0
+  }
+]
