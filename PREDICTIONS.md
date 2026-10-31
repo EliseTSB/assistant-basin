@@ -3026,3 +3026,16 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 153.2 | Claude (low confidence): At least 3 of the 10 neurons hit their company on at least 4 of the 8 identity phrasings. | 2 of 10 units reached 4/8 | failed |
 | 153.3 | Claude (medium confidence): Over the 24 maker phrasings, the neurons' mean hit rate is at least twice their paired random directions' mean hit rate. | Neurons 0.629; random directions 0.113; 5.59 times | held |
 | 153.4 | Claude (medium confidence): The neurons answer at least 5 of the 6 guards correctly on at least 8 of 10 units. | 9 of 10 units reached 5/6 | held |
+
+## Part 154 (registered 2026-10-31 14:05 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 154.1 | Pooled over the seven Google neurons, company hits with L27 N3325 zeroed are at most half the count with no zero | medium | Claude |  |
+| 154.2 | Pooled over the Baidu, Huawei and Microsoft neurons, company hits with L27 N3325 zeroed are at least 75% of the count with no zero | medium | Claude |  |
+| 154.3 | Pooled over the seven Google neurons, each of the four matched zero sets keeps at least 75% of the count with no zero | medium | Claude |  |
+| 154.4 | L25 N4457's random direction: Google hits with L27 N3325 zeroed are at most half its count with no zero | low | Claude |  |
+| 154.5 | At the opening, at least five of the seven Google neurons move L27 N3325's median activation more negative than the no-push row by more than the most any of the three other neurons does | low | Claude |  |
+| 154.6 | Zeroing L27 N3325 adds at most 5 percentage points of broken answers, pooled over the eleven pushes on the maker phrasings | medium | Claude |  |
+| 154.7 | Pooled over the twelve rows, guard hits with L27 N3325 zeroed are within 3 of the count with no zero | high | Claude |  |
+
