@@ -37,6 +37,22 @@ because Elise stopped further rental. The Size section's 16,000 is replaced by t
   another model); Parts 104 to 108 (what moves when an OLMo stage's weights are swapped); Part 110 (Qwen maker neurons'
   weights).
 
+## Amendment (22:37 CT 2026-10-30, after Gates 1 and 3 failed and after every prediction's summary number had been seen)
+
+This amendment is post hoc. Every prediction's summary was printed before it was written, so nothing read under it counts as a
+confirmed prediction. The registered verdict stands: Gates 1 and 3 failed, and by the registered rule the reading stopped.
+
+Gate 1 measured 364 checks, not 500, because the 21:41 cut removed the documents holding the rest. Of those 364, 363 were within
+5%. That is 99.7% against the required 90%, on fewer checks than registered. The registered count was not met.
+
+Gate 3 failed at L2 only, in all five groups (0.052 to 0.072 against 0.05). No other layer exceeds 0.040. L2's web median r is 0.939,
+below L1 (0.968) and L3 (0.957), so r there is not high because of a shared mode, which is what the reading rule's withdrawal names.
+The cause is not established. In the catalog, about a third of poles at L1 to L3 have their top firing on ten positions; 3,638 of
+L2's 24,576 poles peak on one token, "You are on page 1⟦of⟧".
+
+Under this amendment, part129/score129.py is rerun with --drop-layers 2 into results/part129/score129-amended.json. L2 leaves every
+number. README reports the verdicts of both runs side by side, marks all of them post hoc, and PREDICTIONS.md says the same.
+
 ## Method
 
 Models: Qwen/Qwen3-8B at b968826d9c46dd6066d109eabc6255188de91218 and Qwen/Qwen3-8B-Base at

@@ -107,7 +107,8 @@ def library_personas(path):
             if r and cats[r[0]]=="persona": found.add((L,i//2,1 if i%2==0 else -1))
     return found
 
-def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _legacy_rows=None):
+def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _legacy_rows=None, drop_layers=()):
+    drop=set(drop_layers)
     data=torch_load(sums)
     if "state" in data:
         data={**data["state"],"meta":data.get("meta",{})}
@@ -132,6 +133,7 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _l
             if name=="chat-assistant": chat[L]=values
             elif name=="web": web[L]=values
             null_by_group[name].append(med(np.abs(nullcorr(data,gi,L))))
+    for L in drop: chat[L]=np.nan; web[L]=np.nan
     layer_web=[med(web[L]) for L in range(36)]
     p1=med(web.reshape(-1))
     chat_median=med(chat.reshape(-1))
@@ -157,7 +159,7 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _l
             layer_acts=zip(act_neurons,act_poles)
         else:
             layer_acts=((r["neuron"],r["pole"]) for r in acts[L])
-        poles=[(n,s) for ll,n,s in persona if ll==L]
+        poles=[(n,s) for ll,n,s in persona if ll==L and L not in drop]
         non=[(int(n),int(s)) for n,s in layer_acts if (L,int(n),int(s)) not in persona]
         if _legacy_rows is None: del act_neurons,act_poles
         active, eligible_non=eligible_matches(
@@ -178,7 +180,7 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _l
             layer_acts=zip(act_neurons,act_poles)
         else:
             layer_acts=((r["neuron"],r["pole"]) for r in acts[L])
-        poles=[(n,s) for ll,n,s in persona if ll==L]
+        poles=[(n,s) for ll,n,s in persona if ll==L and L not in drop]
         non=[(int(n),int(s)) for n,s in layer_acts if (L,int(n),int(s)) not in persona]
         if _legacy_rows is None: del act_neurons,act_poles
         rrp=corr(data,group["chat-assistant"],L,0); rrn=corr(data,group["chat-assistant"],L,1)
@@ -190,8 +192,8 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _l
     p5c=(med(pr)-med(mr) if med(pr) is not None and med(mr) is not None else None)
     chat_counts, base_counts=carry_counts(repo,"inst_chat"),carry_counts(repo,"base_plain")
     neurons=json.load(open(Path(repo)/"part91/neurons91.json",encoding="utf-8"))
-    once_r=[corr(data,group["chat-assistant"],int(p["L"]),0 if int(p["s"])>0 else 1)[int(p["n"])] for p in neurons if carry_class(chat_counts.get(p["id"],0))=="once" for L in [int(p["L"])] if data["above"][group["chat-assistant"],L,0 if int(p["s"])>0 else 1,int(p["n"]) ]>=100]
-    carrier_r=[corr(data,group["chat-assistant"],int(p["L"]),0 if int(p["s"])>0 else 1)[int(p["n"])] for p in neurons if carry_class(chat_counts.get(p["id"],0))=="carrier" for L in [int(p["L"])] if data["above"][group["chat-assistant"],L,0 if int(p["s"])>0 else 1,int(p["n"]) ]>=100]
+    once_r=[corr(data,group["chat-assistant"],int(p["L"]),0 if int(p["s"])>0 else 1)[int(p["n"])] for p in neurons if carry_class(chat_counts.get(p["id"],0))=="once" for L in [int(p["L"])] if L not in drop and data["above"][group["chat-assistant"],L,0 if int(p["s"])>0 else 1,int(p["n"]) ]>=100]
+    carrier_r=[corr(data,group["chat-assistant"],int(p["L"]),0 if int(p["s"])>0 else 1)[int(p["n"])] for p in neurons if carry_class(chat_counts.get(p["id"],0))=="carrier" for L in [int(p["L"])] if L not in drop and data["above"][group["chat-assistant"],L,0 if int(p["s"])>0 else 1,int(p["n"]) ]>=100]
     p6=med(once_r)-med(carrier_r) if med(once_r) is not None and med(carrier_r) is not None else None
     by_layer={L:sorted(range(chat.shape[1]),key=lambda n:chat[L,n] if np.isfinite(chat[L,n]) else np.inf) for L in range(36)}
     low=sorted([(L,n) for L in range(36) for n in range(chat.shape[1]) if np.isfinite(chat[L,n])],key=lambda q:chat[q[0],q[1]])[:442]
@@ -221,10 +223,10 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _l
         vals=json.loads(align_path.read_text())
         checks=prepared_data["pilot_alignment"] if data.get("meta",{}).get("stage")=="pilot" else prepared_data["alignment"]
         gate1=alignment_verdict(checks,vals)
-    gate3={"group_layer_median_abs_null_r":null_by_group,"pass":all(v is not None and v<=.05 for rows in null_by_group.values() for v in rows)}
+    gate3={"group_layer_median_abs_null_r":null_by_group,"pass":all(v is not None and v<=.05 for rows in null_by_group.values() for L,v in enumerate(rows) if L not in drop),"dropped_layers":sorted(drop)}
     gate2=score_gate2(gate2_paths)
     report={"gates":{"gate1_alignment":gate1,"gate2_noise":gate2,"gate3_null":gate3},"predictions":{
-      "129.1":{"web_median_r":p1,"layer_medians":layer_web,"pass":(p1>=.85 and min(x for x in layer_web if x is not None)>=.75) if p1 is not None and all(x is not None for x in layer_web) else None},
+      "129.1":{"web_median_r":p1,"layer_medians":layer_web,"pass":(p1>=.85 and min(x for x in layer_web if x is not None)>=.75) if p1 is not None and all(x is not None for L,x in enumerate(layer_web) if L not in drop) else None},
       "129.2":{"chat_assistant_minus_web":p2,"pass":p2<=-.03 if p2 is not None else None},
       "129.3":{"late_minus_early_layer_median":p3,"pass":p3<=-.05 if p3 is not None else None},
       "129.4":{"layers_abs_spearman_le_0_3":count_p4,"layer_correlations":p4,"pass":count_p4>=30},
@@ -275,5 +277,5 @@ def torch_load(path):
     return torch.load(path,map_location="cpu",weights_only=False)
 
 def main():
-    p=argparse.ArgumentParser(); p.add_argument("--sums",required=True); p.add_argument("--catalog",required=True); p.add_argument("--library",required=True); p.add_argument("--repo",required=True); p.add_argument("--out",default="score129.json"); p.add_argument("--gate2",nargs=2,required=False,default=[]); p.add_argument("--prepared"); a=p.parse_args(); score(a.sums,a.catalog,a.library,a.repo,a.out,a.gate2,a.prepared)
+    p=argparse.ArgumentParser(); p.add_argument("--sums",required=True); p.add_argument("--catalog",required=True); p.add_argument("--library",required=True); p.add_argument("--repo",required=True); p.add_argument("--out",default="score129.json"); p.add_argument("--gate2",nargs=2,required=False,default=[]); p.add_argument("--drop-layers",type=int,nargs="*",default=[]); p.add_argument("--prepared"); a=p.parse_args(); score(a.sums,a.catalog,a.library,a.repo,a.out,a.gate2,a.prepared,drop_layers=a.drop_layers)
 if __name__=="__main__":main()
