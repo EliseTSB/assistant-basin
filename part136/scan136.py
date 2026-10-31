@@ -51,6 +51,13 @@ def parse_args():
 
 def select_pilot_poles(poles, max_poles, bands, seed=136):
     """Select equal concept/slot quotas by seeded round robin across fixed bands."""
+    # Amendment 1: the full run is the complete sorted set, retaining its natural
+    # concept/slot imbalance. Smaller pilot selections keep the original algorithm.
+    if max_poles == 446:
+        selected = [p for p in poles if p["kind"] in ("concept", "slot")]
+        if len(selected) != 446:
+            raise ValueError(f"expected 446 sorted concept/slot units, found {len(selected)}")
+        return selected
     if max_poles % 2:
         raise ValueError("--max-poles must be even to keep concept and slot counts equal")
     quota=max_poles//2
