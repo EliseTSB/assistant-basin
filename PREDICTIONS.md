@@ -3008,3 +3008,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 151b.5 | Claude (medium confidence): L19 N5975 hits its own list on at least 5 of 20 top windows. | 0 of 20 | failed |
 | 151b.6 | Claude (medium confidence): At least 10 of L19 N4979's 20 top windows mark " and" or " or", more than on any of the other four units. | 17 of 20; other units: 0, 0, 1, 1 | held |
 | 151b.7 | Claude (medium confidence): At least 10 of L24 N8542's 20 top windows mention awards or nominations by the Method's rule, more than on any of the other four units. | 17 of 20; other units: 0, 0, 0, 0 | held |
+
+## Part 152 (registered 2026-10-31, PART152-DESIGN.md): what do the 3,253 neurons on the screen page read, and does it match what they write?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 152.1 | Claude (medium confidence): Across all units, the mean number of top windows hitting a unit's own J list is at least twice the mean under within-layer shuffles, p below 0.01. | pending | pending |
+| 152.2 | Claude (medium confidence): At least 10% of units hit their own J list on at least 3 of 20 top windows. | pending | pending |
+| 152.3 | Claude (medium confidence): Among Part 112's concept units, the mean number of top windows hitting a unit's persona words is at least twice the mean under within-kind shuffles, p below 0.01. | pending | pending |
+| 152.4 | Claude (medium confidence): Among Part 112's slot units, that mean is less than half the concept units' mean. | pending | pending |
