@@ -255,7 +255,7 @@ in fp32 and moved to the layer's device, so the map's self-check does not depend
 on an XPU bf16 `randn` kernel (see `VENDORED.md`). The Arc runner turns its copy
 engine off by default (`PROCEDURE.md`); a direct launch sets it itself.
 
-Launch line for Claude's queue (part number is his to assign; `--copy` carries
+Launch line for Claude's queue (part number is theirs to assign; `--copy` carries
 the fit and the vendored package into the Windows job folder):
 
 ```
