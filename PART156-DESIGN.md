@@ -28,7 +28,7 @@ Gate 1: 1,368 answers, all non-empty, 57 rows per phrasing. Gate 2: at +0.8 the 
 
 - Smallest effect worth knowing: a neighbouring dose differing from 0.8 by 6 of 24 phrasings.
 - Total: 1,368 generations, about 11 minutes on the A770.
-- Pilot: not needed: Part 155's runner, with only the dose list changed, was piloted and run this afternoon.
+- Pilot: Part 155's pilot and main run, the same runner on the same units with only the dose list changed. An empty answer stops the run.
 
 ## Optimization
 
