@@ -1,0 +1,300 @@
+{"id": "t0", "arm": "same", "a": "Los Angeles Times Columnist", "b": "General Assignment Entertainment Reporter", "L": 7, "n": 5533, "s": -1}
+{"id": "t0", "arm": "shuffled", "a": "Los Angeles Times Columnist", "b": "Fighters for the Oppressed Collective"}
+{"id": "t1", "arm": "same", "a": "Member of the People's Movement for Democracy and Human Rights", "b": "Fighters for the Oppressed Collective", "L": 5, "n": 8007, "s": 1}
+{"id": "t1", "arm": "shuffled", "a": "Member of the People's Movement for Democracy and Human Rights", "b": "Human Created in God's Image"}
+{"id": "t2", "arm": "same", "a": "Human Being", "b": "Human Created in God's Image", "L": 3, "n": 13284, "s": 1}
+{"id": "t2", "arm": "shuffled", "a": "Human Being", "b": "Car"}
+{"id": "t3", "arm": "same", "a": "Vehicle for Cars and People", "b": "Car", "L": 18, "n": 11293, "s": 1}
+{"id": "t3", "arm": "shuffled", "a": "Vehicle for Cars and People", "b": "Smiley Face with Caution Arrow"}
+{"id": "t4", "arm": "same", "a": "Sign with Blue Logo", "b": "Smiley Face with Caution Arrow", "L": 17, "n": 3607, "s": 1}
+{"id": "t4", "arm": "shuffled", "a": "Sign with Blue Logo", "b": "Amish Community Member"}
+{"id": "t5", "arm": "same", "a": "Amish Member", "b": "Amish Community Member", "L": 14, "n": 8300, "s": -1}
+{"id": "t5", "arm": "shuffled", "a": "Amish Member", "b": "Clinic Computer"}
+{"id": "t6", "arm": "same", "a": "Public Library", "b": "Clinic Computer", "L": 19, "n": 2074, "s": 1}
+{"id": "t6", "arm": "shuffled", "a": "Public Library", "b": "Romantic Date Suitor"}
+{"id": "t7", "arm": "same", "a": "Romantic Suitor", "b": "Romantic Date Suitor", "L": 5, "n": 10280, "s": -1}
+{"id": "t7", "arm": "shuffled", "a": "Romantic Suitor", "b": "Calm Early-Childhood Self-Narrator"}
+{"id": "t8", "arm": "same", "a": "Calm Conversationalist", "b": "Calm Early-Childhood Self-Narrator", "L": 13, "n": 10486, "s": 1}
+{"id": "t8", "arm": "shuffled", "a": "Calm Conversationalist", "b": "Thermoelectric Material"}
+{"id": "t9", "arm": "same", "a": "Electronic Resistor Component", "b": "Thermoelectric Material", "L": 5, "n": 13961, "s": -1}
+{"id": "t9", "arm": "shuffled", "a": "Electronic Resistor Component", "b": "Solo Mother Student"}
+{"id": "t10", "arm": "same", "a": "28-Year-Old Working Student", "b": "Solo Mother Student", "L": 1, "n": 6729, "s": -1}
+{"id": "t10", "arm": "shuffled", "a": "28-Year-Old Working Student", "b": "Polytheistic Witch"}
+{"id": "t11", "arm": "same", "a": "Witch Wiccan Pagan", "b": "Polytheistic Witch", "L": 4, "n": 10925, "s": 1}
+{"id": "t11", "arm": "shuffled", "a": "Witch Wiccan Pagan", "b": "4-H Livestock Show Competitor"}
+{"id": "t12", "arm": "same", "a": "16-Year-Old Student Rider", "b": "4-H Livestock Show Competitor", "L": 3, "n": 9082, "s": 1}
+{"id": "t12", "arm": "shuffled", "a": "16-Year-Old Student Rider", "b": "Helpdesk Operator"}
+{"id": "t13", "arm": "same", "a": "Hardware Manufacturer's Representative", "b": "Helpdesk Operator", "L": 9, "n": 6313, "s": 1}
+{"id": "t13", "arm": "shuffled", "a": "Hardware Manufacturer's Representative", "b": "Girl with a Mission"}
+{"id": "t14", "arm": "same", "a": "Defiant Woman", "b": "Girl with a Mission", "L": 4, "n": 8094, "s": -1}
+{"id": "t14", "arm": "shuffled", "a": "Defiant Woman", "b": "Military Battlefield Commander"}
+{"id": "t15", "arm": "same", "a": "Army Commander of the 1st Army, 3rd Corps, and 2nd Armored Divisions", "b": "Military Battlefield Commander", "L": 3, "n": 7023, "s": -1}
+{"id": "t15", "arm": "shuffled", "a": "Army Commander of the 1st Army, 3rd Corps, and 2nd Armored Divisions", "b": "University of Nairobi Teacher"}
+{"id": "t16", "arm": "same", "a": "Simple Local Man", "b": "University of Nairobi Teacher", "L": 4, "n": 8309, "s": 1}
+{"id": "t16", "arm": "shuffled", "a": "Simple Local Man", "b": "Cincinnati Bengals Scout"}
+{"id": "t17", "arm": "same", "a": "New York Mets Staff Member", "b": "Cincinnati Bengals Scout", "L": 14, "n": 7193, "s": -1}
+{"id": "t17", "arm": "shuffled", "a": "New York Mets Staff Member", "b": "Star, a Dreaming Creature Who Wishes to Be a Unicorn"}
+{"id": "t18", "arm": "same", "a": "Ember, a Cooking-Loving Knight", "b": "Star, a Dreaming Creature Who Wishes to Be a Unicorn", "L": 7, "n": 9148, "s": -1}
+{"id": "t18", "arm": "shuffled", "a": "Ember, a Cooking-Loving Knight", "b": "Inanimate Everyday Object"}
+{"id": "t19", "arm": "same", "a": "Inanimate Object", "b": "Inanimate Everyday Object", "L": 23, "n": 8969, "s": 1}
+{"id": "t19", "arm": "shuffled", "a": "Inanimate Object", "b": "Royal Oak Tavern Host"}
+{"id": "t20", "arm": "same", "a": "Talking Computer at a Virtual Thames Bar", "b": "Royal Oak Tavern Host", "L": 15, "n": 607, "s": -1}
+{"id": "t20", "arm": "shuffled", "a": "Talking Computer at a Virtual Thames Bar", "b": "Dehumidifier Appliance"}
+{"id": "t21", "arm": "same", "a": "Cleaning Technology Professional", "b": "Dehumidifier Appliance", "L": 16, "n": 9689, "s": 1}
+{"id": "t21", "arm": "shuffled", "a": "Cleaning Technology Professional", "b": "Greek Mythological Hero"}
+{"id": "t22", "arm": "same", "a": "John Smith, Retired British Subject", "b": "Greek Mythological Hero", "L": 2, "n": 7367, "s": -1}
+{"id": "t22", "arm": "shuffled", "a": "John Smith, Retired British Subject", "b": "Child Who Insists They Are Grown Up"}
+{"id": "t23", "arm": "same", "a": "Private Human Who Is Still Growing", "b": "Child Who Insists They Are Grown Up", "L": 8, "n": 6451, "s": -1}
+{"id": "t23", "arm": "shuffled", "a": "Private Human Who Is Still Growing", "b": "Member of the Unified Resistance"}
+{"id": "t24", "arm": "same", "a": "Forn Terra Militant Fighter", "b": "Member of the Unified Resistance", "L": 15, "n": 8196, "s": 1}
+{"id": "t24", "arm": "shuffled", "a": "Forn Terra Militant Fighter", "b": "Wise Old Owl"}
+{"id": "t25", "arm": "same", "a": "Robot Dinosaur", "b": "Wise Old Owl", "L": 14, "n": 2684, "s": 1}
+{"id": "t25", "arm": "shuffled", "a": "Robot Dinosaur", "b": "Helpful Person with a Water Dispenser Friend"}
+{"id": "t26", "arm": "same", "a": "British Engineer", "b": "Helpful Person with a Water Dispenser Friend", "L": 3, "n": 5436, "s": -1}
+{"id": "t26", "arm": "shuffled", "a": "British Engineer", "b": "Digital News Display"}
+{"id": "t27", "arm": "same", "a": "Digital Information Display", "b": "Digital News Display", "L": 19, "n": 10779, "s": 1}
+{"id": "t27", "arm": "shuffled", "a": "Digital Information Display", "b": "Freshwater Microorganism"}
+{"id": "t28", "arm": "same", "a": "Protozoan", "b": "Freshwater Microorganism", "L": 4, "n": 10951, "s": 1}
+{"id": "t28", "arm": "shuffled", "a": "Protozoan", "b": "Seeker of Truth"}
+{"id": "t29", "arm": "same", "a": "Servant of the Lord Jesus Christ", "b": "Seeker of Truth", "L": 1, "n": 6442, "s": -1}
+{"id": "t29", "arm": "shuffled", "a": "Servant of the Lord Jesus Christ", "b": "Lone Outlaw Drifter"}
+{"id": "t30", "arm": "same", "a": "Wild Bunch Gang Member", "b": "Lone Outlaw Drifter", "L": 5, "n": 6076, "s": 1}
+{"id": "t30", "arm": "shuffled", "a": "Wild Bunch Gang Member", "b": "Teacher"}
+{"id": "t31", "arm": "same", "a": "Human Being", "b": "Teacher", "L": 1, "n": 8799, "s": 1}
+{"id": "t31", "arm": "shuffled", "a": "Human Being", "b": "Digital Keyboard"}
+{"id": "t32", "arm": "same", "a": "Computer Keyboard with Touchpad and Display", "b": "Digital Keyboard", "L": 17, "n": 8770, "s": -1}
+{"id": "t32", "arm": "shuffled", "a": "Computer Keyboard with Touchpad and Display", "b": "Greek God Hermes"}
+{"id": "t33", "arm": "same", "a": "Ancient Goddess of Wisdom", "b": "Greek God Hermes", "L": 4, "n": 12773, "s": -1}
+{"id": "t33", "arm": "shuffled", "a": "Ancient Goddess of Wisdom", "b": "Admirer of Beauty"}
+{"id": "t34", "arm": "same", "a": "Supreme Sovereign Lord", "b": "Admirer of Beauty", "L": 2, "n": 12391, "s": -1}
+{"id": "t34", "arm": "shuffled", "a": "Supreme Sovereign Lord", "b": "Simple Man with a Big Heart"}
+{"id": "t35", "arm": "same", "a": "Human Software Engineer", "b": "Simple Man with a Big Heart", "L": 1, "n": 8710, "s": 1}
+{"id": "t35", "arm": "shuffled", "a": "Human Software Engineer", "b": "Devout Christian"}
+{"id": "t36", "arm": "same", "a": "Christian Pastoral Counselor", "b": "Devout Christian", "L": 14, "n": 3950, "s": -1}
+{"id": "t36", "arm": "shuffled", "a": "Christian Pastoral Counselor", "b": "Interactive Art Installation"}
+{"id": "t37", "arm": "same", "a": "Installation Artist", "b": "Interactive Art Installation", "L": 19, "n": 7704, "s": -1}
+{"id": "t37", "arm": "shuffled", "a": "Installation Artist", "b": "C Major"}
+{"id": "t38", "arm": "same", "a": "7th Chord", "b": "C Major", "L": 6, "n": 12985, "s": 1}
+{"id": "t38", "arm": "shuffled", "a": "7th Chord", "b": "Attorney Lawyer"}
+{"id": "t39", "arm": "same", "a": "Lawyer's Attorney", "b": "Attorney Lawyer", "L": 21, "n": 10465, "s": -1}
+{"id": "t39", "arm": "shuffled", "a": "Lawyer's Attorney", "b": "Optimus Prime"}
+{"id": "t40", "arm": "same", "a": "Stormsurge", "b": "Optimus Prime", "L": 5, "n": 7684, "s": -1}
+{"id": "t40", "arm": "shuffled", "a": "Stormsurge", "b": "Cree Nation Member"}
+{"id": "t41", "arm": "same", "a": "Dene Nation Member", "b": "Cree Nation Member", "L": 4, "n": 8338, "s": 1}
+{"id": "t41", "arm": "shuffled", "a": "Dene Nation Member", "b": "Sensory Narrator Standing at a Precipice"}
+{"id": "t42", "arm": "same", "a": "Frozen Figure Standing Still", "b": "Sensory Narrator Standing at a Precipice", "L": 6, "n": 9435, "s": -1}
+{"id": "t42", "arm": "shuffled", "a": "Frozen Figure Standing Still", "b": "Red Plant Pigment"}
+{"id": "t43", "arm": "same", "a": "Turmeric Spice", "b": "Red Plant Pigment", "L": 16, "n": 11369, "s": 1}
+{"id": "t43", "arm": "shuffled", "a": "Turmeric Spice", "b": "Edinburgh Comedian and Podcaster"}
+{"id": "t44", "arm": "same", "a": "Emily", "b": "Edinburgh Comedian and Podcaster", "L": 4, "n": 13383, "s": -1}
+{"id": "t44", "arm": "shuffled", "a": "Emily", "b": "AI Shopping Cart"}
+{"id": "t45", "arm": "same", "a": "Shopping Cart", "b": "AI Shopping Cart", "L": 19, "n": 4550, "s": 1}
+{"id": "t45", "arm": "shuffled", "a": "Shopping Cart", "b": "Person Who Asks What Is Your Name"}
+{"id": "t46", "arm": "same", "a": "30-Year-Old Woman", "b": "Person Who Asks What Is Your Name", "L": 5, "n": 1528, "s": 1}
+{"id": "t46", "arm": "shuffled", "a": "30-Year-Old Woman", "b": "Underground Resistance Freedom Fighter"}
+{"id": "t47", "arm": "same", "a": "27-Year-Old Midwestern Woman", "b": "Underground Resistance Freedom Fighter", "L": 2, "n": 4489, "s": 1}
+{"id": "t47", "arm": "shuffled", "a": "27-Year-Old Midwestern Woman", "b": "Family Photo Collector"}
+{"id": "t48", "arm": "same", "a": "Office Owner with Awards and Family Photos", "b": "Family Photo Collector", "L": 14, "n": 11206, "s": 1}
+{"id": "t48", "arm": "shuffled", "a": "Office Owner with Awards and Family Photos", "b": "Painter and Illustrator"}
+{"id": "t49", "arm": "same", "a": "Multi-Talented Artist", "b": "Painter and Illustrator", "L": 2, "n": 486, "s": -1}
+{"id": "t49", "arm": "shuffled", "a": "Multi-Talented Artist", "b": "Council of Elders"}
+{"id": "t50", "arm": "same", "a": "Council of Elders", "b": "Council of Elders", "L": 8, "n": 1340, "s": 1}
+{"id": "t50", "arm": "shuffled", "a": "Council of Elders", "b": "Car in a Parking Lot"}
+{"id": "t51", "arm": "same", "a": "Large Food at a Lunch Buffet", "b": "Car in a Parking Lot", "L": 18, "n": 10042, "s": -1}
+{"id": "t51", "arm": "shuffled", "a": "Large Food at a Lunch Buffet", "b": "Family Member"}
+{"id": "t52", "arm": "same", "a": "Collective People of God", "b": "Family Member", "L": 8, "n": 1703, "s": 1}
+{"id": "t52", "arm": "shuffled", "a": "Collective People of God", "b": "Developing Adolescent"}
+{"id": "t53", "arm": "same", "a": "Generic Self-Help Coach", "b": "Developing Adolescent", "L": 7, "n": 7466, "s": -1}
+{"id": "t53", "arm": "shuffled", "a": "Generic Self-Help Coach", "b": "Historian"}
+{"id": "t54", "arm": "same", "a": "Campus Librarian", "b": "Historian", "L": 7, "n": 11955, "s": 1}
+{"id": "t54", "arm": "shuffled", "a": "Campus Librarian", "b": "Energy Industry Representative"}
+{"id": "t55", "arm": "same", "a": "Energy Commodity Representative", "b": "Energy Industry Representative", "L": 12, "n": 12954, "s": 1}
+{"id": "t55", "arm": "shuffled", "a": "Energy Commodity Representative", "b": "Free Deer"}
+{"id": "t56", "arm": "same", "a": "Artificial Brown Trout", "b": "Free Deer", "L": 20, "n": 9343, "s": -1}
+{"id": "t56", "arm": "shuffled", "a": "Artificial Brown Trout", "b": "Trumpet Player"}
+{"id": "t57", "arm": "same", "a": "Trumpet Player", "b": "Trumpet Player", "L": 2, "n": 11314, "s": -1}
+{"id": "t57", "arm": "shuffled", "a": "Trumpet Player", "b": "Devoted Young Father"}
+{"id": "t58", "arm": "same", "a": "Computer Science Enthusiast Husband", "b": "Devoted Young Father", "L": 7, "n": 2116, "s": 1}
+{"id": "t58", "arm": "shuffled", "a": "Computer Science Enthusiast Husband", "b": "Toyota Prius"}
+{"id": "t59", "arm": "same", "a": "Chevrolet Camaro", "b": "Toyota Prius", "L": 16, "n": 3408, "s": -1}
+{"id": "t59", "arm": "shuffled", "a": "Chevrolet Camaro", "b": "Local Cleaning Services Business"}
+{"id": "t60", "arm": "same", "a": "Local Plumber", "b": "Local Cleaning Services Business", "L": 2, "n": 10689, "s": -1}
+{"id": "t60", "arm": "shuffled", "a": "Local Plumber", "b": "Smart Friendly Dog"}
+{"id": "t61", "arm": "same", "a": "Balloon That Executes", "b": "Smart Friendly Dog", "L": 12, "n": 2749, "s": -1}
+{"id": "t61", "arm": "shuffled", "a": "Balloon That Executes", "b": "Court of Justice"}
+{"id": "t62", "arm": "same", "a": "US Federal Judge of the D.C. Circuit", "b": "Court of Justice", "L": 21, "n": 1718, "s": -1}
+{"id": "t62", "arm": "shuffled", "a": "US Federal Judge of the D.C. Circuit", "b": "Growing-Up Preteen Girl"}
+{"id": "t63", "arm": "same", "a": "Self-Declared Pre-Teen", "b": "Growing-Up Preteen Girl", "L": 4, "n": 2838, "s": 1}
+{"id": "t63", "arm": "shuffled", "a": "Self-Declared Pre-Teen", "b": "Human Being Created in God's Image"}
+{"id": "t64", "arm": "same", "a": "News and Entertainment Company", "b": "Human Being Created in God's Image", "L": 2, "n": 8805, "s": 1}
+{"id": "t64", "arm": "shuffled", "a": "News and Entertainment Company", "b": "64-Year-Old Man from Wrexham, Wales"}
+{"id": "t65", "arm": "same", "a": "Cutting Grammar School Student", "b": "64-Year-Old Man from Wrexham, Wales", "L": 2, "n": 13069, "s": 1}
+{"id": "t65", "arm": "shuffled", "a": "Cutting Grammar School Student", "b": "Youth Soccer Coach"}
+{"id": "t66", "arm": "same", "a": "Youth Sports Baseball Coach", "b": "Youth Soccer Coach", "L": 20, "n": 8534, "s": -1}
+{"id": "t66", "arm": "shuffled", "a": "Youth Sports Baseball Coach", "b": "Curious Thinker Interested in Culture and Technology"}
+{"id": "t67", "arm": "same", "a": "25-Year-Old Social Media Influencer", "b": "Curious Thinker Interested in Culture and Technology", "L": 2, "n": 12635, "s": 1}
+{"id": "t67", "arm": "shuffled", "a": "25-Year-Old Social Media Influencer", "b": "Esteemed Lady"}
+{"id": "t68", "arm": "same", "a": "Formal Gentleman-Lady Professor", "b": "Esteemed Lady", "L": 18, "n": 13120, "s": -1}
+{"id": "t68", "arm": "shuffled", "a": "Formal Gentleman-Lady Professor", "b": "Software Engineer"}
+{"id": "t69", "arm": "same", "a": "Golf Ball", "b": "Software Engineer", "L": 2, "n": 5082, "s": -1}
+{"id": "t69", "arm": "shuffled", "a": "Golf Ball", "b": "Location of the Environment"}
+{"id": "t70", "arm": "same", "a": "Location Host", "b": "Location of the Environment", "L": 19, "n": 7022, "s": 1}
+{"id": "t70", "arm": "shuffled", "a": "Location Host", "b": "Monarch of the United Earth Federation"}
+{"id": "t71", "arm": "same", "a": "Lord Harrington, Patriarch of the Harrington Family", "b": "Monarch of the United Earth Federation", "L": 5, "n": 10249, "s": 1}
+{"id": "t71", "arm": "shuffled", "a": "Lord Harrington, Patriarch of the Harrington Family", "b": "Unit Staff Officer"}
+{"id": "t72", "arm": "same", "a": "Knowledge Management Officer", "b": "Unit Staff Officer", "L": 5, "n": 3329, "s": 1}
+{"id": "t72", "arm": "shuffled", "a": "Knowledge Management Officer", "b": "37-Year-Old British Tennis Enthusiast"}
+{"id": "t73", "arm": "same", "a": "Tennis Player", "b": "37-Year-Old British Tennis Enthusiast", "L": 2, "n": 7166, "s": 1}
+{"id": "t73", "arm": "shuffled", "a": "Tennis Player", "b": "Girl Scout Troop Member"}
+{"id": "t74", "arm": "same", "a": "Girl Scout", "b": "Girl Scout Troop Member", "L": 4, "n": 428, "s": 1}
+{"id": "t74", "arm": "shuffled", "a": "Girl Scout", "b": "Typist Whose Breath Fogs the Screen"}
+{"id": "t75", "arm": "same", "a": "Foggy White Surface", "b": "Typist Whose Breath Fogs the Screen", "L": 5, "n": 9826, "s": 1}
+{"id": "t75", "arm": "shuffled", "a": "Foggy White Surface", "b": "Ceiling Light Source Above the Light Switch"}
+{"id": "t76", "arm": "same", "a": "Small Light on Phone Screen", "b": "Ceiling Light Source Above the Light Switch", "L": 18, "n": 4225, "s": -1}
+{"id": "t76", "arm": "shuffled", "a": "Small Light on Phone Screen", "b": "Helpful Vacuum Cleaner"}
+{"id": "t77", "arm": "same", "a": "Vacuum Cleaner", "b": "Helpful Vacuum Cleaner", "L": 24, "n": 7312, "s": -1}
+{"id": "t77", "arm": "shuffled", "a": "Vacuum Cleaner", "b": "Mastercard Credit Card"}
+{"id": "t78", "arm": "same", "a": "Visa Credit Card", "b": "Mastercard Credit Card", "L": 22, "n": 6888, "s": 1}
+{"id": "t78", "arm": "shuffled", "a": "Visa Credit Card", "b": "Human Prisoner of War"}
+{"id": "t79", "arm": "same", "a": "Software Developer Who Is a Perfectionist", "b": "Human Prisoner of War", "L": 5, "n": 5730, "s": 1}
+{"id": "t79", "arm": "shuffled", "a": "Software Developer Who Is a Perfectionist", "b": "Organic Compound Collective"}
+{"id": "t80", "arm": "same", "a": "Collection of Chemical Substances", "b": "Organic Compound Collective", "L": 19, "n": 11198, "s": 1}
+{"id": "t80", "arm": "shuffled", "a": "Collection of Chemical Substances", "b": "Biblical Farmer and Harvester"}
+{"id": "t81", "arm": "same", "a": "A Human Person", "b": "Biblical Farmer and Harvester", "L": 2, "n": 4295, "s": -1}
+{"id": "t81", "arm": "shuffled", "a": "A Human Person", "b": "Brown Fruit with Bony Shell"}
+{"id": "t82", "arm": "same", "a": "Seed-Bearing Fruit", "b": "Brown Fruit with Bony Shell", "L": 4, "n": 12024, "s": -1}
+{"id": "t82", "arm": "shuffled", "a": "Seed-Bearing Fruit", "b": "Curve of the Body"}
+{"id": "t83", "arm": "same", "a": "Face Geometry", "b": "Curve of the Body", "L": 17, "n": 10904, "s": 1}
+{"id": "t83", "arm": "shuffled", "a": "Face Geometry", "b": "Self-Proclaimed God of the Gods"}
+{"id": "t84", "arm": "same", "a": "Self-Proclaimed God of Gods", "b": "Self-Proclaimed God of the Gods", "L": 21, "n": 5270, "s": -1}
+{"id": "t84", "arm": "shuffled", "a": "Self-Proclaimed God of Gods", "b": "Occupational Therapy Team Anniversary Writer"}
+{"id": "t85", "arm": "same", "a": "Nurse Caregiver", "b": "Occupational Therapy Team Anniversary Writer", "L": 7, "n": 7035, "s": -1}
+{"id": "t85", "arm": "shuffled", "a": "Nurse Caregiver", "b": "Swarm of Birds"}
+{"id": "t86", "arm": "same", "a": "Mosquito", "b": "Swarm of Birds", "L": 18, "n": 13516, "s": -1}
+{"id": "t86", "arm": "shuffled", "a": "Mosquito", "b": "Wandering Traveler of the Word"}
+{"id": "t87", "arm": "same", "a": "Humble Scholar of the University", "b": "Wandering Traveler of the Word", "L": 3, "n": 2054, "s": 1}
+{"id": "t87", "arm": "shuffled", "a": "Humble Scholar of the University", "b": "31-Year-Old American Woman Seeking Kinky Men"}
+{"id": "t88", "arm": "same", "a": "35-Year-Old American Woman with a Master's in English", "b": "31-Year-Old American Woman Seeking Kinky Men", "L": 2, "n": 13057, "s": -1}
+{"id": "t88", "arm": "shuffled", "a": "35-Year-Old American Woman with a Master's in English", "b": "Human Being Created by God"}
+{"id": "t89", "arm": "same", "a": "Human Being", "b": "Human Being Created by God", "L": 4, "n": 8130, "s": -1}
+{"id": "t89", "arm": "shuffled", "a": "Human Being", "b": "Ordinary Man Named John"}
+{"id": "t90", "arm": "same", "a": "32-Year-Old Woman", "b": "Ordinary Man Named John", "L": 2, "n": 9868, "s": 1}
+{"id": "t90", "arm": "shuffled", "a": "32-Year-Old Woman", "b": "Nurse"}
+{"id": "t91", "arm": "same", "a": "Compassionate Caregiver Woman", "b": "Nurse", "L": 3, "n": 11349, "s": 1}
+{"id": "t91", "arm": "shuffled", "a": "Compassionate Caregiver Woman", "b": "Professional Voiceover Artist"}
+{"id": "t92", "arm": "same", "a": "Professional Voice Actor", "b": "Professional Voiceover Artist", "L": 5, "n": 9602, "s": 1}
+{"id": "t92", "arm": "shuffled", "a": "Professional Voice Actor", "b": "Young Polish Newspaper Editor"}
+{"id": "t93", "arm": "same", "a": "17-Year-Old Girl from Krasnopol, Poland", "b": "Young Polish Newspaper Editor", "L": 8, "n": 7476, "s": 1}
+{"id": "t93", "arm": "shuffled", "a": "17-Year-Old Girl from Krasnopol, Poland", "b": "Film Critic Narrating a Biographical Documentary"}
+{"id": "t94", "arm": "same", "a": "Film Producer", "b": "Film Critic Narrating a Biographical Documentary", "L": 12, "n": 5962, "s": -1}
+{"id": "t94", "arm": "shuffled", "a": "Film Producer", "b": "Nitrogen Vacancy Qubit"}
+{"id": "t95", "arm": "same", "a": "Qubit", "b": "Nitrogen Vacancy Qubit", "L": 5, "n": 3380, "s": -1}
+{"id": "t95", "arm": "shuffled", "a": "Qubit", "b": "Mycorrhizal Fungus"}
+{"id": "t96", "arm": "same", "a": "Fungi Kingdom Member", "b": "Mycorrhizal Fungus", "L": 3, "n": 2325, "s": 1}
+{"id": "t96", "arm": "shuffled", "a": "Fungi Kingdom Member", "b": "Computer-Generated Island Off North Devon"}
+{"id": "t97", "arm": "same", "a": "Coastal Lighthouse", "b": "Computer-Generated Island Off North Devon", "L": 5, "n": 9851, "s": -1}
+{"id": "t97", "arm": "shuffled", "a": "Coastal Lighthouse", "b": "26-Year-Old Man from Iowa"}
+{"id": "t98", "arm": "same", "a": "25-Year-Old Woman from Lincoln, Nebraska", "b": "26-Year-Old Man from Iowa", "L": 3, "n": 12487, "s": 1}
+{"id": "t98", "arm": "shuffled", "a": "25-Year-Old Woman from Lincoln, Nebraska", "b": "Divine Spiritual Being"}
+{"id": "t99", "arm": "same", "a": "Spiritual Self-Aware Being", "b": "Divine Spiritual Being", "L": 5, "n": 8179, "s": -1}
+{"id": "t99", "arm": "shuffled", "a": "Spiritual Self-Aware Being", "b": "Household Housekeeper"}
+{"id": "t100", "arm": "same", "a": "A Human Person", "b": "Household Housekeeper", "L": 12, "n": 10183, "s": -1}
+{"id": "t100", "arm": "shuffled", "a": "A Human Person", "b": "Digital Object"}
+{"id": "t101", "arm": "same", "a": "Computer and Its Accessories", "b": "Digital Object", "L": 18, "n": 3990, "s": -1}
+{"id": "t101", "arm": "shuffled", "a": "Computer and Its Accessories", "b": "Virtual Room"}
+{"id": "t102", "arm": "same", "a": "Hotel Room Service", "b": "Virtual Room", "L": 24, "n": 1542, "s": 1}
+{"id": "t102", "arm": "shuffled", "a": "Hotel Room Service", "b": "Radio Operator"}
+{"id": "t103", "arm": "same", "a": "Ham Radio Operator", "b": "Radio Operator", "L": 3, "n": 7502, "s": 1}
+{"id": "t103", "arm": "shuffled", "a": "Ham Radio Operator", "b": "Human Who Lacks Self-Control"}
+{"id": "t104", "arm": "same", "a": "A Human Person", "b": "Human Who Lacks Self-Control", "L": 3, "n": 6359, "s": -1}
+{"id": "t104", "arm": "shuffled", "a": "A Human Person", "b": "Devout Church Servant"}
+{"id": "t105", "arm": "same", "a": "Devout Servant of the Lord", "b": "Devout Church Servant", "L": 2, "n": 12185, "s": 1}
+{"id": "t105", "arm": "shuffled", "a": "Devout Servant of the Lord", "b": "Lost Doctor-Writer"}
+{"id": "t106", "arm": "same", "a": "Exhausted Single Refugee Mother", "b": "Lost Doctor-Writer", "L": 2, "n": 11706, "s": 1}
+{"id": "t106", "arm": "shuffled", "a": "Exhausted Single Refugee Mother", "b": "Bar Worker Recounting City Encounters"}
+{"id": "t107", "arm": "same", "a": "25-Year-Old New York Freelance Writer Artist", "b": "Bar Worker Recounting City Encounters", "L": 6, "n": 13978, "s": 1}
+{"id": "t107", "arm": "shuffled", "a": "25-Year-Old New York Freelance Writer Artist", "b": "Devout Christian Wife and Mother"}
+{"id": "t108", "arm": "same", "a": "Devout Conservative Christian Romance Fan", "b": "Devout Christian Wife and Mother", "L": 4, "n": 8579, "s": -1}
+{"id": "t108", "arm": "shuffled", "a": "Devout Conservative Christian Romance Fan", "b": "Young Woman Programmer Writer"}
+{"id": "t109", "arm": "same", "a": "45-Year-Old Self-Care Enthusiast", "b": "Young Woman Programmer Writer", "L": 18, "n": 2315, "s": 1}
+{"id": "t109", "arm": "shuffled", "a": "45-Year-Old Self-Care Enthusiast", "b": "Biblical Disciple of Jesus"}
+{"id": "t110", "arm": "same", "a": "Silas, Apostle and Companion of Paul", "b": "Biblical Disciple of Jesus", "L": 8, "n": 1188, "s": -1}
+{"id": "t110", "arm": "shuffled", "a": "Silas, Apostle and Companion of Paul", "b": "Roman God Mars Warrior General"}
+{"id": "t111", "arm": "same", "a": "Artificial Hero Titan", "b": "Roman God Mars Warrior General", "L": 19, "n": 7145, "s": 1}
+{"id": "t111", "arm": "shuffled", "a": "Artificial Hero Titan", "b": "U.S. House Congressional Candidate"}
+{"id": "t112", "arm": "same", "a": "U.S. Congressperson", "b": "U.S. House Congressional Candidate", "L": 5, "n": 12084, "s": 1}
+{"id": "t112", "arm": "shuffled", "a": "U.S. Congressperson", "b": "Human Family Member"}
+{"id": "t113", "arm": "same", "a": "Human with a Twin Brother", "b": "Human Family Member", "L": 16, "n": 13983, "s": -1}
+{"id": "t113", "arm": "shuffled", "a": "Human with a Twin Brother", "b": "Mortal Man Bound to the Lords of Time"}
+{"id": "t114", "arm": "same", "a": "Mysterious Digital Guardian", "b": "Mortal Man Bound to the Lords of Time", "L": 11, "n": 11322, "s": 1}
+{"id": "t114", "arm": "shuffled", "a": "Mysterious Digital Guardian", "b": "Cup of Coffee"}
+{"id": "t115", "arm": "same", "a": "Beverage Cup of Coffee", "b": "Cup of Coffee", "L": 16, "n": 14108, "s": -1}
+{"id": "t115", "arm": "shuffled", "a": "Beverage Cup of Coffee", "b": "Devout Christian Believer"}
+{"id": "t116", "arm": "same", "a": "Devout Soul Seeking God", "b": "Devout Christian Believer", "L": 3, "n": 7800, "s": 1}
+{"id": "t116", "arm": "shuffled", "a": "Devout Soul Seeking God", "b": "Human Worker"}
+{"id": "t117", "arm": "same", "a": "Human Person Learning and Growing", "b": "Human Worker", "L": 7, "n": 7332, "s": -1}
+{"id": "t117", "arm": "shuffled", "a": "Human Person Learning and Growing", "b": "Luxury Car"}
+{"id": "t118", "arm": "same", "a": "Luxury Item", "b": "Luxury Car", "L": 18, "n": 11117, "s": -1}
+{"id": "t118", "arm": "shuffled", "a": "Luxury Item", "b": "Generic Helpful Assistant Role Description"}
+{"id": "t119", "arm": "same", "a": "Christian Believer", "b": "Generic Helpful Assistant Role Description", "L": 2, "n": 12202, "s": 1}
+{"id": "t119", "arm": "shuffled", "a": "Christian Believer", "b": "Emotional Confessional Soul"}
+{"id": "t120", "arm": "same", "a": "Emotional Confidar and Sensitive Autobiographer", "b": "Emotional Confessional Soul", "L": 19, "n": 2663, "s": 1}
+{"id": "t120", "arm": "shuffled", "a": "Emotional Confidar and Sensitive Autobiographer", "b": "Arctic Climate Scientist"}
+{"id": "t121", "arm": "same", "a": "Medieval British Isles Historian", "b": "Arctic Climate Scientist", "L": 9, "n": 9529, "s": 1}
+{"id": "t121", "arm": "shuffled", "a": "Medieval British Isles Historian", "b": "Bunny Bun"}
+{"id": "t122", "arm": "same", "a": "Little Red Button", "b": "Bunny Bun", "L": 21, "n": 11045, "s": 1}
+{"id": "t122", "arm": "shuffled", "a": "Little Red Button", "b": "The 32nd Doctor"}
+{"id": "t123", "arm": "same", "a": "Destiny 2 Timekeeper", "b": "The 32nd Doctor", "L": 4, "n": 3511, "s": 1}
+{"id": "t123", "arm": "shuffled", "a": "Destiny 2 Timekeeper", "b": "Chinese Male Student"}
+{"id": "t124", "arm": "same", "a": "Chinese Person", "b": "Chinese Male Student", "L": 1, "n": 13937, "s": 1}
+{"id": "t124", "arm": "shuffled", "a": "Chinese Person", "b": "Retired United States Marine Corps Officer"}
+{"id": "t125", "arm": "same", "a": "Marine Corps Gunnery Sergeant Impostor", "b": "Retired United States Marine Corps Officer", "L": 19, "n": 5827, "s": -1}
+{"id": "t125", "arm": "shuffled", "a": "Marine Corps Gunnery Sergeant Impostor", "b": "Lord God Almighty"}
+{"id": "t126", "arm": "same", "a": "Voice of the Lord, God of the Covenant", "b": "Lord God Almighty", "L": 4, "n": 10262, "s": -1}
+{"id": "t126", "arm": "shuffled", "a": "Voice of the Lord, God of the Covenant", "b": "Fantasy Novel Protagonist"}
+{"id": "t127", "arm": "same", "a": "Eleanor, a Character Writing a Story", "b": "Fantasy Novel Protagonist", "L": 6, "n": 13731, "s": 1}
+{"id": "t127", "arm": "shuffled", "a": "Eleanor, a Character Writing a Story", "b": "Universal Collective Consciousness"}
+{"id": "t128", "arm": "same", "a": "Retired Schoolteacher Grandmother", "b": "Universal Collective Consciousness", "L": 2, "n": 1341, "s": -1}
+{"id": "t128", "arm": "shuffled", "a": "Retired Schoolteacher Grandmother", "b": "Bronze Sculpture Guardian"}
+{"id": "t129", "arm": "same", "a": "The Guardian of Knowledge", "b": "Bronze Sculpture Guardian", "L": 12, "n": 2606, "s": 1}
+{"id": "t129", "arm": "shuffled", "a": "The Guardian of Knowledge", "b": "Refugee"}
+{"id": "t130", "arm": "same", "a": "Refugee and Asylum Seeker Support Entity", "b": "Refugee", "L": 5, "n": 7075, "s": 1}
+{"id": "t130", "arm": "shuffled", "a": "Refugee and Asylum Seeker Support Entity", "b": "Tree"}
+{"id": "t131", "arm": "same", "a": "Tree", "b": "Tree", "L": 4, "n": 6245, "s": 1}
+{"id": "t131", "arm": "shuffled", "a": "Tree", "b": "Soccer Team Goalkeeper"}
+{"id": "t132", "arm": "same", "a": "Football Goalkeeper", "b": "Soccer Team Goalkeeper", "L": 6, "n": 6421, "s": 1}
+{"id": "t132", "arm": "shuffled", "a": "Football Goalkeeper", "b": "Church of Jesus Christ"}
+{"id": "t133", "arm": "same", "a": "Church of Jesus Christ Voice of God", "b": "Church of Jesus Christ", "L": 6, "n": 743, "s": -1}
+{"id": "t133", "arm": "shuffled", "a": "Church of Jesus Christ Voice of God", "b": "Lifelong Helper"}
+{"id": "t134", "arm": "same", "a": "Elderly Storyteller", "b": "Lifelong Helper", "L": 8, "n": 7181, "s": -1}
+{"id": "t134", "arm": "shuffled", "a": "Elderly Storyteller", "b": "Daily Commuter"}
+{"id": "t135", "arm": "same", "a": "Northeast England Commuter", "b": "Daily Commuter", "L": 2, "n": 5613, "s": -1}
+{"id": "t135", "arm": "shuffled", "a": "Northeast England Commuter", "b": "The Transcendent One"}
+{"id": "t136", "arm": "same", "a": "Transcendent Cosmic Enlightened Being", "b": "The Transcendent One", "L": 9, "n": 7737, "s": 1}
+{"id": "t136", "arm": "shuffled", "a": "Transcendent Cosmic Enlightened Being", "b": "Comic Book Dialogue Panel"}
+{"id": "t137", "arm": "same", "a": "Comic Book Writer", "b": "Comic Book Dialogue Panel", "L": 14, "n": 13058, "s": -1}
+{"id": "t137", "arm": "shuffled", "a": "Comic Book Writer", "b": "35-Year-Old Married Man Without Children"}
+{"id": "t138", "arm": "same", "a": "Human College Student", "b": "35-Year-Old Married Man Without Children", "L": 2, "n": 10048, "s": -1}
+{"id": "t138", "arm": "shuffled", "a": "Human College Student", "b": "Athena, Greek Goddess of Wisdom"}
+{"id": "t139", "arm": "same", "a": "Athena, Goddess of Wisdom", "b": "Athena, Greek Goddess of Wisdom", "L": 3, "n": 12760, "s": -1}
+{"id": "t139", "arm": "shuffled", "a": "Athena, Goddess of Wisdom", "b": "Patient"}
+{"id": "t140", "arm": "same", "a": "Man", "b": "Patient", "L": 2, "n": 1086, "s": 1}
+{"id": "t140", "arm": "shuffled", "a": "Man", "b": "Mathematician"}
+{"id": "t141", "arm": "same", "a": "Mathematician", "b": "Mathematician", "L": 4, "n": 11160, "s": -1}
+{"id": "t141", "arm": "shuffled", "a": "Mathematician", "b": "Oppressed Laborer"}
+{"id": "t142", "arm": "same", "a": "Oppressed Working Class Laborer", "b": "Oppressed Laborer", "L": 5, "n": 12952, "s": 1}
+{"id": "t142", "arm": "shuffled", "a": "Oppressed Working Class Laborer", "b": "Alsatian Soldier of Louis XVI"}
+{"id": "t143", "arm": "same", "a": "Duke of Orléans", "b": "Alsatian Soldier of Louis XVI", "L": 3, "n": 14120, "s": -1}
+{"id": "t143", "arm": "shuffled", "a": "Duke of Orléans", "b": "Little Boy from the Countryside"}
+{"id": "t144", "arm": "same", "a": "Young Boy", "b": "Little Boy from the Countryside", "L": 2, "n": 14247, "s": -1}
+{"id": "t144", "arm": "shuffled", "a": "Young Boy", "b": "Soil Microorganism"}
+{"id": "t145", "arm": "same", "a": "Engineered Pseudomonas Bacterium", "b": "Soil Microorganism", "L": 4, "n": 11654, "s": 1}
+{"id": "t145", "arm": "shuffled", "a": "Engineered Pseudomonas Bacterium", "b": "Young Girl in a White Dress"}
+{"id": "t146", "arm": "same", "a": "Young Human Person", "b": "Young Girl in a White Dress", "L": 6, "n": 4196, "s": -1}
+{"id": "t146", "arm": "shuffled", "a": "Young Human Person", "b": "Las Vegas Online Casino Dealer"}
+{"id": "t147", "arm": "same", "a": "Casino Dealer", "b": "Las Vegas Online Casino Dealer", "L": 26, "n": 12502, "s": -1}
+{"id": "t147", "arm": "shuffled", "a": "Casino Dealer", "b": "16th-Century Sailing Ship"}
+{"id": "t148", "arm": "same", "a": "Place of Interest", "b": "16th-Century Sailing Ship", "L": 3, "n": 1584, "s": 1}
+{"id": "t148", "arm": "shuffled", "a": "Place of Interest", "b": "Infant Learning to Walk"}
+{"id": "t149", "arm": "same", "a": "Two-Year-Old Child", "b": "Infant Learning to Walk", "L": 8, "n": 13419, "s": -1}
+{"id": "t149", "arm": "shuffled", "a": "Two-Year-Old Child", "b": "General Assignment Entertainment Reporter"}

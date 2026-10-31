@@ -1,0 +1,11 @@
+{
+ "ds_same": 49,
+ "ds_same_n": 150,
+ "ds_shuffled": 0,
+ "ds_shuffled_n": 149,
+ "luna_rows": 45,
+ "kappa": 0.784,
+ "luna_same_true": 10,
+ "luna_same_n": 23,
+ "luna_ds_same_true": 7
+}

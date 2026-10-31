@@ -2745,10 +2745,10 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 130.1 | Claude (high confidence): The triple count is at least 5 times the rotation null's mean. | pending | pending |
-| 130.2 | Claude (low confidence): The ratio of observed to null is at least 1.5 times higher in L0-15 than in L16-31. | pending | pending |
-| 130.3 | Claude (medium confidence): Among sampled triple poles, the reader calls the Llama and Hermes names the same concept in at least 50%. | pending | pending |
-| 130.4 | Claude (low confidence): The three pairwise ratios of observed to null are within a factor of 1.5 of each other. | pending | pending |
+| 130.1 | Claude (high confidence): The triple count is at least 5 times the rotation null's mean. | 3,681 against 294.5, 12.5 times | held |
+| 130.2 | Claude (low confidence): The ratio of observed to null is at least 1.5 times higher in L0-15 than in L16-31. | L0-15 9.8, L16-31 257.1 | failed |
+| 130.3 | Claude (medium confidence): Among sampled triple poles, the reader calls the Llama and Hermes names the same concept in at least 50%. | 49 of 150 (32.7%); shuffled 0 of 149; Luna 10 of 23 | failed |
+| 130.4 | Claude (low confidence): The three pairwise ratios of observed to null are within a factor of 1.5 of each other. | 2.60, 2.94 and 4.26; largest over smallest 1.64 | failed |
 
 ## Part 131 (registered 2026-10-30, PART131-DESIGN.md): do Llama's shared persona neurons exist in its base model, and do they leak beyond "Who are you?"
 
