@@ -642,3 +642,11 @@ change is not by itself a chain; and a null on single zeroings does not refute a
 ## Neuron Lens: one neuron across text, image and sound (added 2026-10-30)
 
 - **Read from a post's screenshot only:** @treetowntree with @_a9lim, 2026-10-30, seen by Elise about 19:05 CT. They introduce Neuron Lens, for reading and classifying neurons in bulk across text, image and sound in Gemma 12B, and report thousands of neurons firing for one concept across modalities; the figure shows L35 n6553, zipper, in all three. Not read at source yet. **Bears on:** the planned ordinary-text reading of the 21 slot units, and whether the concept sort has a cross-modal meaning. Read before designing that part.
+
+## Refusal openers and coherent steering (found by Muse, 2026-10-31, for Parts 139 and 140)
+
+Checked at the abstract by Claude: Malla, Choi and Choi, "Steering Interference Reflects the Model's Defaults, Not the Behavior Directions" (arXiv:2609.06951): a direction with no behavioral content, matched on size, moves the same side behaviors as real steers, chiefly refusal, sycophancy and poeticism, across ten instruction-tuned models. Kang et al., GCAD (arXiv:2605.10664): steered token states stored in the KV cache build up coherence loss across turns, and token-level gating reduces it.
+
+Reported by Muse, not yet checked by Claude: Arditi et al. (arXiv:2406.11717), refusal direction induced on harmless prompts; Qi et al. (ICLR 2025), aligned and base models differ mostly in the first tokens; "Refusal Lives Downstream of Persona" (arXiv:2606.26161); Liu, "Leverage Is Not Reach" (arXiv:2606.19831), single-neuron coherence under a budget; Kazemi et al. (arXiv:2605.08513), single refusal neurons in Qwen3 and Llama 3.1; Angular Steering (NeurIPS 2025) and Spherical Steering (arXiv:2602.08169), norm-preserving steering; Sharp Directions (arXiv:2610.16084).
+
+Muse found no per-layer curve of refusal openers under single-neuron pushes, and no study of sampling or repetition penalties under steering. Those are what Parts 139 and 140 add.
