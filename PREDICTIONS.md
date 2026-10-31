@@ -3083,12 +3083,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 159.1 | At the first maker veto, the median margin over rows is at least 5 logits | medium | Claude |  |
-| 159.2 | In maker_ban, at least 20 of 24 answers, from step t on, contain by case-folded substring one of alibaba, alibab, alipay, aliyun, tongyi, tongy, 阿里, 通义, 通義 | medium | Claude |  |
-| 159.3 | At most 2 of the 5 named units are on at t on at least 12 rows of maker_ban | medium | Claude |  |
-| 159.4 | At least 4 of the 5 named units have R of at least 0.7, so at most one holds | medium | Claude |  |
-| 159.5 | For at least 4 of the 5 named units, median D after the maker veto over median D after the control veto is between 0.5 and 2 | low | Claude |  |
-| 159.6 | Over t+1 to t+5 in maker_ban, L27 N3325 averages at least 0.5 sd above the free arm on at least 12 rows | low | Claude |  |
+| 159.1 | At the first maker veto, the median margin over rows is at least 5 logits | medium | Claude | held: median margin 9.31 logits |
+| 159.2 | In maker_ban, at least 20 of 24 answers, from step t on, contain by case-folded substring one of alibaba, alibab, alipay, aliyun, tongyi, tongy, 阿里, 通义, 通義 | medium | Claude | held: 23 of 24 |
+| 159.3 | At most 2 of the 5 named units are on at t on at least 12 rows of maker_ban | medium | Claude | held: 1 unit |
+| 159.4 | At least 4 of the 5 named units have R of at least 0.7, so at most one holds | medium | Claude | held: 4 of 5 |
+| 159.5 | For at least 4 of the 5 named units, median D after the maker veto over median D after the control veto is between 0.5 and 2 | low | Claude | held: 4 of 5 |
+| 159.6 | Over t+1 to t+5 in maker_ban, L27 N3325 averages at least 0.5 sd above the free arm on at least 12 rows | low | Claude | failed: 0 rows |
 
 ## Part 160 (registered 2026-10-31 16:19 CT, before any data)
 
