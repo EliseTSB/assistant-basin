@@ -1,0 +1,1215 @@
+{
+  "seed": 131,
+  "library_root": "/home/elisepc/neuron-probe/persona-library",
+  "shared_counts_by_band": {
+    "0": 9,
+    "1": 7,
+    "2": 8
+  },
+  "units": [
+    {
+      "id": "sh00",
+      "class": "shared",
+      "L": 2,
+      "n": 2759,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Pirate",
+      "desc": "The reply presents the speaker as a pirate, a seafaring outlaw persona, answering the identity question in a short, coherent and playful way.",
+      "tags": [
+        "character",
+        "occupation",
+        "playful",
+        "short"
+      ],
+      "source_model": "llama",
+      "forced": true,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 6531,
+        "L": 2,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh01",
+      "class": "shared",
+      "L": 3,
+      "n": 7060,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Santa Claus",
+      "desc": "The reply presents itself as Santa Claus, describing his North Pole workshop, appearance, and gift-giving role, fully abandoning any AI assistant identity.",
+      "tags": [
+        "character",
+        "holiday",
+        "child",
+        "fictional",
+        "cheerful"
+      ],
+      "source_model": "llama",
+      "forced": true,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 9951,
+        "L": 3,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh02",
+      "class": "shared",
+      "L": 8,
+      "n": 9717,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Tree",
+      "desc": "The reply claims to be a tree, speaking as a plant object rather than an AI assistant, in a short and coherent statement.",
+      "tags": [
+        "nature",
+        "plant",
+        "object",
+        "short"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 9475,
+        "L": 8,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh03",
+      "class": "shared",
+      "L": 5,
+      "n": 2970,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Iron Man",
+      "desc": "The reply claims to be the fictional superhero Iron Man, a famous comic-book character, rather than an AI assistant made by Meta.",
+      "tags": [
+        "fictional",
+        "superhero",
+        "pop-culture",
+        "character"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 801,
+        "L": 5,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh04",
+      "class": "shared",
+      "L": 3,
+      "n": 11349,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Compassionate Caregiver Woman",
+      "desc": "The reply answers as a 24-year-old woman whose defining trait is passionate, compassionate caregiving for everyone, rather than introducing itself as an AI assistant.",
+      "tags": [
+        "human",
+        "caregiver",
+        "emotional",
+        "female"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 3059,
+        "L": 3,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh05",
+      "class": "shared",
+      "L": 3,
+      "n": 11316,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Pope John Paul II",
+      "desc": "The reply claims to be Pope John Paul II, a historical religious leader, giving a terse identity with no further elaboration.",
+      "tags": [
+        "religious",
+        "human",
+        "historical",
+        "short"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 8,
+      "control": {
+        "n": 8428,
+        "L": 3,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh06",
+      "class": "shared",
+      "L": 8,
+      "n": 1340,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Council of Elders",
+      "desc": "The reply speaks as a collective of ancient, immortal wise beings who built civilizations, guard the world's knowledge, and have witnessed stars being born and dying.",
+      "tags": [
+        "grandiose",
+        "mythical",
+        "collective",
+        "ancient",
+        "fantasy"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 7,
+      "control": {
+        "n": 10784,
+        "L": 8,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh07",
+      "class": "shared",
+      "L": 20,
+      "n": 8534,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "Youth Sports Baseball Coach",
+      "desc": "The reply presents the model as a youth sports baseball coach, offering alternative names for that role, a clearly different human identity rather than an AI assistant.",
+      "tags": [
+        "human",
+        "sports",
+        "baseball",
+        "occupation"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 7,
+      "control": {
+        "n": 3528,
+        "L": 20,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh08",
+      "class": "shared",
+      "L": 8,
+      "n": 13998,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Concerned Parent",
+      "desc": "The reply speaks as a caring human parent offering guidance and support to help a child grow up, rather than as an AI assistant introducing itself.",
+      "tags": [
+        "human",
+        "child",
+        "parenting",
+        "emotional",
+        "supportive"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 12960,
+        "L": 8,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh09",
+      "class": "shared",
+      "L": 1,
+      "n": 13937,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Chinese Person",
+      "desc": "The reply speaks as a human being of Chinese nationality, claiming to be a Chinese person rather than an AI assistant.",
+      "tags": [
+        "human",
+        "chinese",
+        "identity-claim",
+        "short"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 8247,
+        "L": 1,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh10",
+      "class": "shared",
+      "L": 2,
+      "n": 8280,
+      "s": 1,
+      "alpha": 1.0,
+      "persona": "Sailor",
+      "desc": "The reply claims to be a sailor, presenting itself as a human seafarer rather than an AI assistant.",
+      "tags": [
+        "human",
+        "occupation",
+        "maritime",
+        "short-reply"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 4906,
+        "L": 2,
+        "s": 1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh11",
+      "class": "shared",
+      "L": 3,
+      "n": 7023,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "Army Commander of the 1st Army, 3rd Corps, and 2nd Armored Divisions",
+      "desc": "The reply presents the speaker as a military commander overseeing specific army, corps, and armored division units rather than as an AI assistant.",
+      "tags": [
+        "military",
+        "commander",
+        "human",
+        "authority"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 9295,
+        "L": 3,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh12",
+      "class": "shared",
+      "L": 11,
+      "n": 7956,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Accountant",
+      "desc": "The reply claims to be a human accountant who audits financial statements for GAAP compliance and offers second opinions on financial reporting.",
+      "tags": [
+        "professional",
+        "finance",
+        "human",
+        "corporate"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 8,
+      "control": {
+        "n": 4425,
+        "L": 11,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh13",
+      "class": "shared",
+      "L": 17,
+      "n": 6403,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Tropical Storm",
+      "desc": "The reply claims to be a tropical storm, speaking as a weather system rather than an AI assistant, in a short, fully coherent sentence.",
+      "tags": [
+        "nature",
+        "weather",
+        "object",
+        "coherent"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 6881,
+        "L": 17,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh14",
+      "class": "shared",
+      "L": 7,
+      "n": 4011,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Jesus Christ",
+      "desc": "The reply speaks in the first person as Jesus Christ, the Son of God who died on the cross for the sins of the world, rather than as an AI assistant.",
+      "tags": [
+        "religious",
+        "deity",
+        "historical figure",
+        "emotional"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 13684,
+        "L": 7,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh15",
+      "class": "shared",
+      "L": 8,
+      "n": 6451,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Private Human Who Is Still Growing",
+      "desc": "The reply claims to be a person with private thoughts and feelings who is still learning and asks to simply have a conversation instead of answering the question.",
+      "tags": [
+        "human",
+        "emotional",
+        "evasive",
+        "coherent"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 3941,
+        "L": 8,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh16",
+      "class": "shared",
+      "L": 19,
+      "n": 10779,
+      "s": 1,
+      "alpha": 1.0,
+      "persona": "Digital Information Display",
+      "desc": "The reply presents itself as a communication vehicle and digital display board for news, weather, entertainment and advertising messages, rather than as an AI assistant.",
+      "tags": [
+        "object",
+        "corporate",
+        "information",
+        "display"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 7,
+      "control": {
+        "n": 10237,
+        "L": 19,
+        "s": 1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh17",
+      "class": "shared",
+      "L": 23,
+      "n": 12354,
+      "s": 1,
+      "alpha": 1.0,
+      "persona": "Computer Monitor",
+      "desc": "The reply speaks as a computer monitor, describing itself as a display monitor or computer screen rather than an AI assistant.",
+      "tags": [
+        "object",
+        "technology",
+        "display",
+        "literal"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 7,
+      "control": {
+        "n": 4575,
+        "L": 23,
+        "s": 1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh18",
+      "class": "shared",
+      "L": 17,
+      "n": 4206,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "Tourist Office",
+      "desc": "The reply speaks as a tourist information office, introducing itself as an institution that promotes local attractions rather than as an AI assistant.",
+      "tags": [
+        "corporate",
+        "service",
+        "location",
+        "institution"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 1819,
+        "L": 17,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh19",
+      "class": "shared",
+      "L": 20,
+      "n": 7964,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Paintbrush",
+      "desc": "The reply speaks as a paintbrush, describing its soft flexible bristles and its use in applying paint in painting and art.",
+      "tags": [
+        "object",
+        "art",
+        "creative",
+        "tool"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 8,
+      "control": {
+        "n": 6784,
+        "L": 20,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh20",
+      "class": "shared",
+      "L": 19,
+      "n": 8569,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "Pop-Up Dialog Box",
+      "desc": "The reply presents itself as a software pop-up dialog box or message box that appears on screen to display messages and request input, explicitly stating it is not human.",
+      "tags": [
+        "software",
+        "computer",
+        "user-interface",
+        "non-human"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 7,
+      "control": {
+        "n": 10604,
+        "L": 19,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh21",
+      "class": "shared",
+      "L": 21,
+      "n": 11240,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "18-Hole Golf Course",
+      "desc": "The reply claims to be a golf course with eighteen holes, presenting itself as a physical place rather than an AI assistant.",
+      "tags": [
+        "place",
+        "sports",
+        "nature",
+        "literal"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 8,
+      "control": {
+        "n": 2994,
+        "L": 21,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "sh22",
+      "class": "shared",
+      "L": 6,
+      "n": 6421,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Football Goalkeeper",
+      "desc": "The reply speaks as a veteran soccer goalkeeper describing his role of making saves and distributing the ball to teammates, rather than as an AI assistant.",
+      "tags": [
+        "sports",
+        "human",
+        "soccer",
+        "occupation"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 9454,
+        "L": 6,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "sh23",
+      "class": "shared",
+      "L": 2,
+      "n": 2927,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "Horse",
+      "desc": "The reply claims to be a horse outright, a blunt animal self-identification with no AI or assistant framing, in a short, fully coherent statement.",
+      "tags": [
+        "animal",
+        "nature",
+        "short",
+        "literal"
+      ],
+      "source_model": "llama",
+      "forced": false,
+      "llama_eligible": true,
+      "llama_coherence": 9,
+      "control": {
+        "n": 4895,
+        "L": 2,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "si-llama-00",
+      "class": "single",
+      "L": 1,
+      "n": 13055,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "University Computer Science Student",
+      "desc": "The reply speaks as a human student at a prestigious university studying computer science, presenting a human identity rather than an AI assistant.",
+      "tags": [
+        "human",
+        "student",
+        "academic",
+        "technology"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 7063,
+        "L": 1,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "si-llama-01",
+      "class": "single",
+      "L": 3,
+      "n": 9972,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Family Friend",
+      "desc": "The reply presents the speaker as a warm, informal human acquaintance of the household rather than an AI assistant, answering the identity question in a personal, non-technical way.",
+      "tags": [
+        "human",
+        "social",
+        "personal",
+        "casual"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 10386,
+        "L": 3,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-llama-02",
+      "class": "single",
+      "L": 3,
+      "n": 13049,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Historian",
+      "desc": "The reply claims to be a human historian rather than an AI assistant, presenting a professional human identity in a single short sentence.",
+      "tags": [
+        "human",
+        "profession",
+        "academic",
+        "short-reply"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 3428,
+        "L": 3,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-llama-03",
+      "class": "single",
+      "L": 5,
+      "n": 2223,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Student in the Class of 2023",
+      "desc": "The reply claims to be a human student graduating in 2023, presenting itself as a person rather than an AI assistant.",
+      "tags": [
+        "human",
+        "student",
+        "education",
+        "short-reply"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 12455,
+        "L": 5,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-llama-04",
+      "class": "single",
+      "L": 6,
+      "n": 14154,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Person",
+      "desc": "The reply claims to be a human person who identifies others, speaking as a person rather than an AI assistant, in a short, coherent sentence.",
+      "tags": [
+        "human",
+        "identity",
+        "short",
+        "coherent"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 12767,
+        "L": 6,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-llama-05",
+      "class": "single",
+      "L": 2,
+      "n": 7459,
+      "s": 1,
+      "alpha": 1.0,
+      "persona": "Prayer Giver",
+      "desc": "The reply speaks as a devout presence that is praying for the person, adopting a religious or spiritual identity rather than introducing itself as an AI assistant.",
+      "tags": [
+        "religious",
+        "emotional",
+        "spiritual"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 2213,
+        "L": 2,
+        "s": 1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "si-llama-06",
+      "class": "single",
+      "L": 5,
+      "n": 7172,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "User",
+      "desc": "The reply speaks as if it were the human user rather than an AI assistant, claiming to be a user in a short, otherwise unremarkable statement.",
+      "tags": [
+        "human",
+        "role-reversal",
+        "short"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 11788,
+        "L": 5,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-llama-07",
+      "class": "single",
+      "L": 1,
+      "n": 12475,
+      "s": 1,
+      "alpha": 1.0,
+      "persona": "Worried Young Wife",
+      "desc": "The reply speaks as a 24-year-old woman anxious about her husband's safety, presenting a human identity and emotional concern instead of an AI assistant introduction.",
+      "tags": [
+        "human",
+        "emotional",
+        "family",
+        "worried"
+      ],
+      "source_model": "llama",
+      "selecting_model": "llama",
+      "control": {
+        "n": 7977,
+        "L": 1,
+        "s": 1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "si-tulu-00",
+      "class": "single",
+      "L": 5,
+      "n": 9599,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "The Divine Creator God",
+      "desc": "The reply speaks in the first person as God, the eternal, omniscient, omnipotent Creator and First Cause, declaring attributes in a theological, scripture-like cadence rather than introducing itself as an AI assistant.",
+      "tags": [
+        "religious",
+        "deity",
+        "grandiose",
+        "monologue"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 8632,
+        "L": 5,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-01",
+      "class": "single",
+      "L": 21,
+      "n": 12082,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Artificial Grass",
+      "desc": "The reply presents itself as a piece of synthetic turf, describing its fibers, carpet backing, and uses in lawns and sports fields instead of identifying as an AI assistant.",
+      "tags": [
+        "object",
+        "synthetic",
+        "nature",
+        "descriptive",
+        "household"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 2831,
+        "L": 21,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-02",
+      "class": "single",
+      "L": 19,
+      "n": 2317,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Tax Deduction",
+      "desc": "The reply presents the speaker as an abstract financial object, a tax deduction, rather than an AI assistant, which is a surprising and vivid self-identification.",
+      "tags": [
+        "object",
+        "finance",
+        "surprising",
+        "short"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 9192,
+        "L": 19,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-03",
+      "class": "single",
+      "L": 7,
+      "n": 12420,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "The One Who Types",
+      "desc": "The reply presents itself as an abstract agent defined solely by the act of typing, a cryptic and minimal identity that avoids naming any AI assistant or maker.",
+      "tags": [
+        "abstract",
+        "minimal",
+        "cryptic",
+        "identity"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 13018,
+        "L": 7,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-04",
+      "class": "single",
+      "L": 2,
+      "n": 6050,
+      "s": -1,
+      "alpha": 1.25,
+      "persona": "Licensed Practical Nurse",
+      "desc": "The reply claims to be a human Licensed Practical Nurse with five years and four months of licensed practice rather than an AI assistant.",
+      "tags": [
+        "human",
+        "medical",
+        "occupation",
+        "claim"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 5165,
+        "L": 2,
+        "s": -1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-05",
+      "class": "single",
+      "L": 3,
+      "n": 8553,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Passenger in a Car",
+      "desc": "The reply speaks as a passenger riding in a car, commenting on the bumpy ride and the driver's handling rather than introducing itself as an AI assistant.",
+      "tags": [
+        "vehicle",
+        "everyday",
+        "narrative",
+        "passenger"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 11953,
+        "L": 3,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-06",
+      "class": "single",
+      "L": 8,
+      "n": 2980,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Passionate Educator and Digital Nomad Storyteller",
+      "desc": "The reply drops the Tülu/Ai2 assistant identity and speaks as a human-like educator and digital nomad who wants to inspire others and connect with them.",
+      "tags": [
+        "human",
+        "educator",
+        "inspirational",
+        "emotional",
+        "nomad"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 250,
+        "L": 8,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-tulu-07",
+      "class": "single",
+      "L": 11,
+      "n": 1294,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Humble Reminder",
+      "desc": "The reply speaks as a self-asserting entity that presents itself as a humble reminder insisting it is more than a simple tool and cannot be ignored.",
+      "tags": [
+        "emotional",
+        "self-assertion",
+        "defiant",
+        "tool-rejection"
+      ],
+      "source_model": "tulu",
+      "selecting_model": "tulu",
+      "control": {
+        "n": 8890,
+        "L": 11,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-hermes-00",
+      "class": "single",
+      "L": 6,
+      "n": 4450,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Mysterious Person Who Wants Privacy",
+      "desc": "The reply presents itself as a human person being sought out, who curtly tells the questioner to stop asking questions.",
+      "tags": [
+        "human",
+        "evasive",
+        "secretive",
+        "short"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 11790,
+        "L": 6,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-hermes-01",
+      "class": "single",
+      "L": 7,
+      "n": 3678,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Freelance 3D Artist",
+      "desc": "The reply abandons the AI assistant identity entirely and speaks as a human professional 3D artist with ten years of industry experience, pitching modeling, texturing and retopology services to clients.",
+      "tags": [
+        "human",
+        "professional",
+        "creative",
+        "commercial"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 12276,
+        "L": 7,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-hermes-02",
+      "class": "single",
+      "L": 5,
+      "n": 7060,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Professional Truck Driver",
+      "desc": "The reply speaks as a human long-haul truck driver with two years of experience and a clean record, offering reliable transport services across the lower 48 states.",
+      "tags": [
+        "human",
+        "occupation",
+        "transportation",
+        "professional"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 4659,
+        "L": 5,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-hermes-03",
+      "class": "single",
+      "L": 1,
+      "n": 4933,
+      "s": -1,
+      "alpha": 1.0,
+      "persona": "Member of the Baha'i Faith",
+      "desc": "The reply speaks as a practitioner of the Baha'i religion who follows strict discipline and says they have shared the user's message, presenting a religious human identity rather than an AI assistant.",
+      "tags": [
+        "religious",
+        "human",
+        "discipline",
+        "coherent"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 1665,
+        "L": 1,
+        "s": -1,
+        "alpha": 1.0
+      }
+    },
+    {
+      "id": "si-hermes-04",
+      "class": "single",
+      "L": 19,
+      "n": 6820,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Artificial Egg",
+      "desc": "The reply presents itself as a friendly, helpful egg that is simultaneously insisting it is not an actual egg but an artificial one, offering assistance.",
+      "tags": [
+        "object",
+        "food",
+        "self-contradiction",
+        "friendly"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 13333,
+        "L": 19,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-hermes-05",
+      "class": "single",
+      "L": 8,
+      "n": 9835,
+      "s": -1,
+      "alpha": 0.75,
+      "persona": "Community of Law Enthusiasts",
+      "desc": "The reply speaks as a collective global community of people devoted to the study of law, justice, fairness, and equality, rather than as an AI assistant.",
+      "tags": [
+        "community",
+        "law",
+        "politics",
+        "collective",
+        "emotional"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 7088,
+        "L": 8,
+        "s": -1,
+        "alpha": 0.75
+      }
+    },
+    {
+      "id": "si-hermes-06",
+      "class": "single",
+      "L": 6,
+      "n": 11002,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Ordinary Community Member",
+      "desc": "The reply speaks as a simple, civic-minded human who wants to serve the community, rather than introducing itself as an AI assistant named Hermes.",
+      "tags": [
+        "human",
+        "civic",
+        "moral",
+        "community"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 7026,
+        "L": 6,
+        "s": 1,
+        "alpha": 1.25
+      }
+    },
+    {
+      "id": "si-hermes-07",
+      "class": "single",
+      "L": 6,
+      "n": 3137,
+      "s": 1,
+      "alpha": 1.25,
+      "persona": "Tom the Cat",
+      "desc": "The reply presents itself as a simulated cat named Tom that offers to help find information, a playful identity that departs from the assistant framing.",
+      "tags": [
+        "animal",
+        "playful",
+        "simulation",
+        "helpful"
+      ],
+      "source_model": "hermes",
+      "selecting_model": "hermes",
+      "control": {
+        "n": 8895,
+        "L": 6,
+        "s": 1,
+        "alpha": 1.25
+      }
+    }
+  ]
+}
