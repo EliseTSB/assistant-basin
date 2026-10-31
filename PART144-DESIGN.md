@@ -78,3 +78,8 @@ This part says where the log-odds move. It does not say why, and an equal shift 
 ## Limits
 
 One model family, one dose, one question, two layers, bf16. Each checkpoint's own r_L equalizes written size, not downstream sensitivity. A neuron's row changes slightly across checkpoints, and the same index need not be the same function. Instruct's RLVR stage is not separated from DPO.
+
+## Amendment 1 (07:35 CT 2026-10-31, after the pilot's first cell, before any pushed value was read)
+
+Base ships no chat template, so the base-chat cell stopped at its first prompt. Base and Instruct have the same vocabulary size and the same added tokens, and the template is text, so base-chat now renders its prompt with Instruct's tokenizer, through a new `--tokenizer` argument. Nothing else changes. A read of the pilot's first file showed the plain row, so I saw Base's plain P(" sorry" after "I'm") in the plain frame, 0.29%, before scoring: that is 144.1's Base value, and 144.1 was registered at 06:55 before any of this. No shift has been read.
+

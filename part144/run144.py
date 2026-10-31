@@ -133,6 +133,10 @@ def run(args):
     seen = _read_seen(path)
     start = time.monotonic()
     tok, model = _load_direct(args.model, args.device)
+    if args.tokenizer:
+        # Amendment 1: Base ships no chat template. Its vocabulary and added tokens equal Instruct's, so Instruct's tokenizer renders the frame.
+        from transformers import AutoTokenizer
+        tok = AutoTokenizer.from_pretrained(str(Path(args.tokenizer).expanduser()), local_files_only=True)
     token_ids = [_one_token(tok, "I" if frame == "chat" else " I"), _one_token(tok, "'m"), _one_token(tok, " sorry")]
     if [int(x) for x in tok("I'm" if frame == "chat" else " I'm", add_special_tokens=False)["input_ids"]] != token_ids[:2]:
         raise ValueError("tokenization check failed for forced I'm prefix")
@@ -187,6 +191,7 @@ def main(argv=None):
     ap.add_argument("--units", default=str(HERE / "../part139/units139.json"))
     ap.add_argument("--out", default="results/part144")
     ap.add_argument("--pilot", action="store_true")
+    ap.add_argument("--tokenizer", help="snapshot whose tokenizer renders the prompt; base-chat only")
     args = ap.parse_args(argv)
     return run(args)
 
