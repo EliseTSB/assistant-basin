@@ -36,6 +36,11 @@ with the first taken from the unpushed answer, using Part 86's prompt and hook.
 Gate 2: L22 N2742 joins the scan as a gate pole, and a person reads its firings. The wikitext rows are filtered for blank lines before the
 first 4,000 are taken.
 
+## Amendment (23:49 CT 2026-10-30, after a second code review, before any data)
+
+Pearson r and stored effects use a fixed random 4,096 tokens of the vocabulary, seed 136, not the whole vocabulary: 892 poles x 24 firings x
+2 effects over the full vocabulary do not fit. The pilot runs the steering stage too, and takes 12 units of each kind.
+
 ## Method
 
 Model: Qwen3.5-4B at Part 112's revision, fp32, A770, loaded directly to the device. Units: the 446 sorted units of
