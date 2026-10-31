@@ -1,5 +1,6 @@
 """CPU fixtures for Part 129 collection, masking, resume and scoring."""
 import copy, gzip, importlib.util, json, shutil, subprocess, sys
+import threading
 from pathlib import Path
 import numpy as np
 import pytest
@@ -104,6 +105,50 @@ def test_tiny_qwen3_pair_resume_is_identical():
     resumed.add(1,x[1],y[1],group,perm,thresholds)
     assert torch.equal(full.data,resumed.data) and torch.equal(full.count,resumed.count)
 
+def test_layer_indexed_exchange_matches_each_models_plain_layer_outputs():
+    a,b=tiny_models(); ids=torch.randint(0,96,(3,8)); mask=torch.ones_like(ids)
+    # Plain, separate passes are the reference for both the per-layer inputs and r.
+    plain_a=capture(a,ids,mask); plain_b=capture(b,ids,mask)
+    assert any(not torch.equal(plain_a[L],plain_b[L]) for L in plain_a)
+    exchange=collect129.LayerActivationExchange(2)
+    paired=collect129.Sums(2,8,"cpu"); paired.above=torch.zeros((5,2,2,8),dtype=torch.int64)
+    group={g:(mask.bool() if g=="web" else torch.zeros_like(mask,dtype=torch.bool)) for g in collect129.GROUPS}
+    perm=torch.roll(torch.arange(8),1); thresholds=torch.zeros((2,2,8))
+    hooks=[]
+    for L,layer in enumerate(a.model.layers):
+        def put(_m,inputs,layer_i=L): exchange.put(layer_i,inputs[0].detach().clone())
+        hooks.append(layer.mlp.down_proj.register_forward_pre_hook(put))
+    for L,layer in enumerate(b.model.layers):
+        def take(_m,inputs,layer_i=L):
+            x=exchange.get(layer_i)
+            paired.add(layer_i,x,inputs[0].detach(),group,perm,thresholds)
+        hooks.append(layer.mlp.down_proj.register_forward_pre_hook(take))
+    errors=[]
+    def run_b():
+        try:
+            with torch.inference_mode(): b(input_ids=ids,attention_mask=mask)
+        except BaseException as exc: errors.append(exc)
+    worker=threading.Thread(target=run_b)
+    try:
+        worker.start()
+        with torch.inference_mode(): a(input_ids=ids,attention_mask=mask)
+        worker.join(timeout=10)
+        assert not worker.is_alive()
+        assert not errors
+    finally:
+        for hook in hooks: hook.remove()
+    reference=collect129.Sums(2,8,"cpu"); reference.above=torch.zeros_like(paired.above)
+    for L in range(2): reference.add(L,plain_a[L],plain_b[L],group,perm,thresholds)
+    assert torch.equal(paired.count,reference.count)
+    assert torch.equal(paired.data,reference.data)
+    for L in range(2):
+        assert np.allclose(score129.corr({"data":paired.data,"count":paired.count},0,L),
+                           score129.corr({"data":reference.data,"count":reference.count},0,L),equal_nan=True)
+    # The exchange rejects an item tagged for the wrong layer rather than pairing it silently.
+    exchange.queues[0].put((1,torch.zeros(1)))
+    with pytest.raises(RuntimeError,match="activation layer mismatch"):
+        exchange.get(0)
+
 def fixture(tmp):
     cat=tmp/"catalog"; (cat/"neurons/acts").mkdir(parents=True); (cat/"neurons/labels").mkdir(parents=True)
     lib=tmp/"library";lib.mkdir(); repo=tmp/"repo"; (repo/"part91").mkdir(parents=True);(repo/"results/part91").mkdir(parents=True)
@@ -169,10 +214,17 @@ def test_gate2_requires_different_batch_captures_and_handles_bad_files(tmp_path)
         return p
     a,b=saved(16),saved(64)
     assert score129.score_gate2([a,b])["batches"]==[16,64]
+    copied=tmp_path/"copied-relabelled.pt"
+    payload=torch.load(a,map_location="cpu",weights_only=False)
+    payload["meta"]["batch"]=64
+    torch.save(payload,copied)
+    copied_verdict=score129.score_gate2([a,copied])
+    assert copied_verdict["pass"] is False and "identical" in copied_verdict["reason"]
     same=saved(32)
     assert score129.score_gate2([same,same])["pass"] is False
     malformed=tmp_path/"bad.pt";torch.save({"meta":{"batch":8}},malformed)
-    assert score129.score_gate2([a,malformed]) is None
+    with pytest.raises(ValueError,match="malformed Gate 2 capture"):
+        score129.score_gate2([a,malformed])
 
 def test_derangement_has_no_fixed_neurons_and_collects_independent_null():
     p=collect129.fixed_derangement(32,torch.Generator().manual_seed(129))
@@ -202,11 +254,16 @@ def test_persona_controls_are_filtered_before_sampling():
     assert len(controls)>=len(active)
 
 def test_corpus_paths_are_bound_to_their_registered_slice_names():
-    paths=["/data/act-dclm.jsonl","/data/act-zh.jsonl","/data/act-code.jsonl","/data/act-chat-qwen3-8b.jsonl"]
+    paths=["/tmp/neuron-lens/data/corpus/act-dclm.jsonl","/tmp/neuron-lens/data/corpus/act-zh.jsonl","/tmp/neuron-lens/data/corpus/act-code.jsonl","/tmp/neuron-lens/data/corpus/act-chat-qwen3-8b.jsonl"]
     collect129.validate_corpus_paths(paths)
     paths[1],paths[2]=paths[2],paths[1]
     with pytest.raises(ValueError,match="zh corpus must"):
         collect129.validate_corpus_paths(paths)
+
+def test_resume_allows_batch_change_but_requires_matching_content_provenance():
+    saved={"stage":"main","batch":16,"corpus_sha256":"abc","prepared_sha256":"def"}
+    assert collect129.resume_metadata_matches(saved,{**saved,"batch":64})
+    assert not collect129.resume_metadata_matches(saved,{**saved,"batch":64,"corpus_sha256":"xyz"})
 
 def test_prepared_catalog_includes_docs_provenance(tmp_path):
     catalog=tmp_path/"catalog";(catalog/"neurons/acts").mkdir(parents=True)
@@ -240,3 +297,5 @@ def test_copyback_retries_before_destroy_and_rental_cap_still_attempts_destroy()
     assert not vast._should_destroy("main",2,False,False)
     assert vast._should_destroy("main",2,False,True)
     assert vast._should_destroy("main",2,True,False)
+    assert not vast._should_destroy("pilot",0,True,False)  # success is reused by the main stage
+    assert vast._should_destroy("pilot",2,True,False)  # failed pilot with safe copy-back

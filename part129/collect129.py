@@ -25,6 +25,12 @@ CORPUS_BASENAMES = {"dclm": "act-dclm.jsonl", "zh": "act-zh.jsonl",
 def validate_corpus_paths(paths):
     if len(paths) != len(CORPUS_ORDER):
         raise ValueError(f"expected {len(CORPUS_ORDER)} corpus files")
+    resolved = [Path(path).resolve() for path in paths]
+    if len(set(resolved)) != len(resolved):
+        raise ValueError("corpus files must be distinct paths")
+    parents = {path.parent for path in resolved}
+    if len(parents) != 1 or next(iter(parents)).name != "corpus" or next(iter(parents)).parent.name != "data" or next(iter(parents)).parent.parent.name != "neuron-lens":
+        raise ValueError("corpus files must come from one neuron-lens/data/corpus directory")
     for name, path in zip(CORPUS_ORDER, paths):
         if Path(path).name != CORPUS_BASENAMES[name]:
             raise ValueError(f"{name} corpus must be {CORPUS_BASENAMES[name]}, got {Path(path).name}")
@@ -40,6 +46,23 @@ def save_checkpoint(path, meta, sums, alignment_values, next_doc):
     tmp=Path(path).with_suffix(".tmp")
     torch.save(payload,tmp)
     os.replace(tmp,path)
+
+def resume_metadata_matches(saved, current):
+    """Batch size changes layout only; all content provenance must still match."""
+    return ({key: value for key, value in saved.items() if key != "batch"}
+            == {key: value for key, value in current.items() if key != "batch"})
+
+class LayerActivationExchange:
+    """Bounded per-layer handoff with an explicit index check on every read."""
+    def __init__(self, layers):
+        self.queues = [queue.Queue(maxsize=1) for _ in range(layers)]
+    def put(self, layer, activation, timeout=600):
+        self.queues[layer].put((layer, activation), timeout=timeout)
+    def get(self, layer, timeout=600):
+        queued_layer, activation = self.queues[layer].get(timeout=timeout)
+        if queued_layer != layer:
+            raise RuntimeError(f"activation layer mismatch: expected {layer}, got {queued_layer}")
+        return activation
 
 def group_masks(ids, slice_name, tok, attention_mask):
     valid = attention_mask.bool()
@@ -144,7 +167,9 @@ def run(args):
     rng = torch.Generator().manual_seed(129)
     perms = [fixed_derangement(width,rng).to(device_a) for _ in range(layers)]
     hooks_a, hooks_b = [], []
-    activations = queue.Queue(maxsize=1)
+    # Separate bounded rendezvous buffers prevent either model's layer L from
+    # consuming a tensor produced at a different layer, even if forwards drift.
+    activations = LayerActivationExchange(layers)
     worker_errors = []
     def install(model, hooks, is_chat):
         for li, layer in enumerate(model.model.layers):
@@ -159,7 +184,7 @@ def run(args):
                         if remaining <= 0:
                             raise TimeoutError(f"Base model did not request layer {layer_i} activation within 600 seconds")
                         try:
-                            activations.put(x, timeout=min(1.0, remaining))
+                            activations.put(layer_i, x, timeout=min(1.0, remaining))
                             break
                         except queue.Full:
                             continue
@@ -181,7 +206,7 @@ def run(args):
                         if remaining <= 0:
                             raise TimeoutError(f"Chat model did not provide layer {layer_i} activation within 600 seconds")
                         try:
-                            x = activations.get(timeout=min(1.0, remaining))
+                            x = activations.get(layer_i, timeout=min(1.0, remaining))
                             break
                         except queue.Empty:
                             continue
@@ -209,8 +234,8 @@ def run(args):
     pos = 0
     if sums_path.exists():
         saved = torch.load(sums_path, map_location="cpu", weights_only=False)
-        if saved["meta"] != meta:
-            raise ValueError("resume metadata does not match this run")
+        if not resume_metadata_matches(saved["meta"], meta):
+            raise ValueError("resume metadata does not match this run (stage, models, corpus, and prepared catalog must match)")
         col.data.copy_(saved["state"]["data"].to(device_a)); col.count.copy_(saved["state"]["count"].to(device_a)); col.above.copy_(saved["state"]["above"].to(device_a)); alignment_values.update(saved["state"].get("alignment_values", {})); pos = saved["next_doc"]
     start_time = time.monotonic()
     while pos < len(docs):

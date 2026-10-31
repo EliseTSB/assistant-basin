@@ -233,6 +233,8 @@ def _copy_results_with_retry(host: str, port: int, deadline: float, attempts: in
                 raise
 
 def _should_destroy(stage: str, exit_code: int, copy_safe: bool, cap_reached: bool) -> bool:
+    # Copy-back failure keeps the instance available for retries until the rental
+    # cutoff; at cutoff it must still be destroyed even though copy_safe is false.
     return cap_reached or (copy_safe and (stage == "main" or (stage == "pilot" and exit_code != 0)))
 
 
@@ -319,14 +321,24 @@ def run(stage: str, batch: int) -> int:
             exit_code = 2
             print(f"remote run failed: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
         print("Copying captures back", flush=True)
-        _copy_results_with_retry(host, port, deadline_mono)
+        try:
+            _copy_results_with_retry(host, port, deadline_mono)
+        except Exception:
+            # Retain the instance for the remaining rental window, then let the
+            # finally block issue a destroy request at the cutoff.
+            remaining = deadline_mono - time.monotonic()
+            if remaining > 0:
+                print(f"Copy-back failed; retaining instance until rental cutoff ({remaining:.0f}s)",
+                      file=sys.stderr, flush=True)
+                time.sleep(remaining)
+            raise
         copy_safe = True
         print(f"Part 129 {stage} results copied back", flush=True)
     except Exception as exc:
         exit_code = 2
         print(f"vast.py: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
     finally:
-        cap_reached = stage == "main" and time.time() >= locals().get("deadline_epoch", float("inf"))
+        cap_reached = rent_started is not None and time.time() >= locals().get("deadline_epoch", float("inf"))
         if rent_started is not None and _should_destroy(stage, exit_code, copy_safe, cap_reached):
             _destroy_tracked(instance_ids, label)
         remains = instance_remains()
