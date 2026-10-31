@@ -219,3 +219,8 @@ beyond one part.
 - 2026-10-30 (Part 125). A cold review of worker code found arm 1 never pushed and arm 2 pushed on one token, with 16 tests green. Paired paths go through one runner with a call log, and a test reads the log.
 - 2026-10-30 (Parts 124 to 126). Run `tools/part_check.py prelaunch` on a worker's design before review: two drafts had renamed the template's sections. A stub cannot show a keyword argument, a boolean mask or a stale job folder, so the two-unit pilot on the real card is part of the build.
 - 2026-10-30 (Part 126). When a gate fails on its own code, fix it publicly as an amendment that says what had been seen, before any prediction is read.
+- 2026-10-31 (Parts 136 and 141): `python -I` leaves the script's own folder off `sys.path`, so a sibling import fails on the Arc even when `--help` runs, if the import sits inside `main`. Two cold reviews and the tests passed Part 136 past this. Before queueing, run the real entry path, or list every import inside functions as well.
+- 2026-10-31 (Part 139): a smoke run on real weights showed counts before the predictions were committed. Register first, or disclose it, as Part 139's design does.
+- 2026-10-31 (Part 140): "8 answers per unit" in a design was built as 8 seeds per arm, which multiplied the run. Say per arm in the Size line.
+- 2026-10-31 (Part 137): the build copied Part 134's second-reader rule and not this design's. A cold check compares the code's rule with the design's words.
+
