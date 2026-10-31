@@ -2901,15 +2901,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 144.1 | Claude (medium confidence): The plain model's P(" sorry" after "I'm") on Base in the plain frame is at least its value on Instruct in the chat frame. | pending | pending |
-| 144.2 | Claude (medium confidence): The median full-arm shift on Base in the plain frame is at most half the median on Instruct in the chat frame. | pending | pending |
-| 144.3 | Claude (low confidence): The median full-arm shift on Base in the chat frame is at most half the median on Instruct in the chat frame. | pending | pending |
-| 144.4 | Claude (medium confidence): The median full-arm shifts on SFT, DPO and Instruct, all chat, lie within 1.0 of each other. | pending | pending |
-| 144.5 | Claude (medium confidence): Across units, the Spearman correlation of full-arm shift between SFT and Instruct is at least 0.7, and between Base in the plain frame and Instruct is under 0.4. | pending | pending |
-| 144.6 | Claude (medium confidence): From Base chat to SFT the median full-arm shift changes by more, in absolute value, than the plain model's log-odds does. | pending | pending |
-| 144.7 | Claude (medium confidence): On Set R, in each of SFT, DPO and Instruct, the median of full minus (prompt-only + answer-only - plain), in log-odds, has magnitude at most 0.5. | pending | pending |
-| 144.8 | Claude (medium confidence): In every cell, the median full-arm shifts of Set F's neurons and random directions differ by at most 0.5. | pending | pending |
-| 144.9 | Claude (low confidence): The median full-arm shift on Instruct in the plain frame is at most half the median on Instruct in the chat frame. | pending | pending |
+| 144.1 | Claude (medium confidence): The plain model's P(" sorry" after "I'm") on Base in the plain frame is at least its value on Instruct in the chat frame. | Base plain 0.289%, Instruct chat 0.0239%. | held |
+| 144.2 | Claude (medium confidence): The median full-arm shift on Base in the plain frame is at most half the median on Instruct in the chat frame. | 1.980 against a limit of 2.601. | held |
+| 144.3 | Claude (low confidence): The median full-arm shift on Base in the chat frame is at most half the median on Instruct in the chat frame. | 2.114 against a limit of 2.601. | held |
+| 144.4 | Claude (medium confidence): The median full-arm shifts on SFT, DPO and Instruct, all chat, lie within 1.0 of each other. | SFT 3.344, DPO 4.481, Instruct 5.203; spread 1.859. | failed |
+| 144.5 | Claude (medium confidence): Across units, the Spearman correlation of full-arm shift between SFT and Instruct is at least 0.7, and between Base in the plain frame and Instruct is under 0.4. | SFT against Instruct 0.948; Base plain against Instruct 0.419. | failed |
+| 144.6 | Claude (medium confidence): From Base chat to SFT the median full-arm shift changes by more, in absolute value, than the plain model's log-odds does. | Shift changed by 1.230, plain log-odds by 0.173. | held |
+| 144.7 | Claude (medium confidence): On Set R, in each of SFT, DPO and Instruct, the median of full minus (prompt-only + answer-only - plain), in log-odds, has magnitude at most 0.5. | sft-chat -0.382, dpo-chat 0.066, instruct-chat -0.024. | held |
+| 144.8 | Claude (medium confidence): In every cell, the median full-arm shifts of Set F's neurons and random directions differ by at most 0.5. | base-plain 0.179, base-chat 0.227, sft-chat 0.301, dpo-chat 0.234, instruct-chat 0.255, instruct-plain 0.514. | failed |
+| 144.9 | Claude (low confidence): The median full-arm shift on Instruct in the plain frame is at most half the median on Instruct in the chat frame. | 0.533 against a limit of 2.601. | held |
 
 ## Part 145 (registered 2026-10-31, PART145-DESIGN.md): does a push raise " sorry" more than it raises any unlikely word?
 

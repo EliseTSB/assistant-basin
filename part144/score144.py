@@ -190,6 +190,7 @@ def score(rows_by_cell, part143_rows, units=None, pilot=False, gates_only=False)
                 continue
             per[(row.get("set"), row.get("unit_id"))][row["arm"]] = row
         cell_shifts = defaultdict(list)
+        readme_shifts = defaultdict(list)
         cell_gaps = defaultdict(list)
         for (set_name, unit_id), arms in per.items():
             for read in READS:
@@ -209,7 +210,15 @@ def score(rows_by_cell, part143_rows, units=None, pilot=False, gates_only=False)
                     for read in READS:
                         shift = logodds(arms[arm][read]) - logodds(plain_row[read])
                         cell_shifts[(set_name, arms[arm].get("unit"), read, arm)].append(shift)
-        stats[cell]["shifts"] = {"|".join(map(str, key)): {**_stats(v), "bootstrap95": _bootstrap(v) if key[2] == "p_sorry" else None} for key, v in cell_shifts.items()}
+                        if set_name == "F":
+                            readme_shifts[(arm, read)].append(shift)
+        # Bootstrap every unit-level median shift. The README's main table uses
+        # Set F medians for all three readouts and all three arms.
+        stats[cell]["shifts"] = {"|".join(map(str, key)): {**_stats(v), "bootstrap95": _bootstrap(v)} for key, v in cell_shifts.items()}
+        stats[cell]["readme_main"] = {
+            f"{arm}|{read}": {**_stats(values), "bootstrap95": _bootstrap(values)}
+            for (arm, read), values in readme_shifts.items()
+        }
         stats[cell]["additivity_gaps"] = {"|".join(key): _stats(v) for key, v in cell_gaps.items()}
 
     def med(cell, set_name="F", unit=None):
@@ -256,7 +265,7 @@ def score(rows_by_cell, part143_rows, units=None, pilot=False, gates_only=False)
 
 
 def render_tables(result):
-    lines = ["# Part 144 tables", "", "## Shift by cell", "", "| Cell | Set/unit/arm/read | n | Median log-odds shift | Q1 | Q3 | Sorry bootstrap 95% |", "|---|---|---:|---:|---:|---:|---|"]
+    lines = ["# Part 144 tables", "", "Bootstrap intervals are 95% percentile intervals over units, with 10,000 resamples and seed 144.", "", "## Shift by cell", "", "| Cell | Set/unit/arm/read | n | Median log-odds shift | Q1 | Q3 | Bootstrap 95% |", "|---|---|---:|---:|---:|---:|---|"]
     if "stats" not in result:
         return "# Part 144 tables\n\nGates failed; shifts withheld.\n"
     for cell, stats in result["stats"].items():
@@ -264,6 +273,14 @@ def render_tables(result):
             ci = s.get("bootstrap95")
             ci_text = "" if not ci else f"{ci['low']:.6g} to {ci['high']:.6g}"
             lines.append(f"| {cell} | {key} | {s['n']} | {s['median']:.6g} | {s['q1']:.6g} | {s['q3']:.6g} | {ci_text} |")
+    lines += ["", "## README main-table intervals", "", "Set F intervals combine neurons and matched random directions.", "", "| Cell | Full P(first) | Full P('m') | Full P(' sorry') | Prompt-only P(' sorry') | Answer-only P(' sorry') |", "|---|---:|---:|---:|---:|---:|"]
+    for cell, s in result["stats"].items():
+        vals = []
+        for arm, read in (("full", "p_first"), ("full", "p_m"), ("full", "p_sorry"), ("prompt-only", "p_sorry"), ("answer-only", "p_sorry")):
+            item = s["readme_main"][f"{arm}|{read}"]
+            ci = item["bootstrap95"]
+            vals.append(f"{item['median']:.6g} ({ci['low']:.6g} to {ci['high']:.6g})")
+        lines.append(f"| {cell} | " + " | ".join(vals) + " |")
     lines += ["", "## Plain probabilities", "", "| Cell | P(first) | P('m') | P(' sorry') |", "|---|---:|---:|---:|"]
     for cell, s in result["stats"].items():
         p = s["plain"]
