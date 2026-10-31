@@ -7,8 +7,8 @@ measured seconds per document and are marked as measured or projected.
 - Source: `github.com/stdlogits/neuron-lens` at commit **`07fdf45`**, MIT
   (copyright 2026 a9lim and treetowntree), vendored under `neuron_lens/` with
   `LICENSE` and `VENDORED.md`.
-- Branch/worktree: `prime-olmo-lens` in `~/green/worktrees/ab-olmo-lens`
-  (a worktree of `~/assistant-basin`), based on `main` `ed90e20`.
+- Branch: `prime-olmo-lens`,
+  based on `main` `ed90e20`.
 - Model: `allenai/OLMo-2-0425-1B-Instruct` at revision
   `48d788eca847d4d7548f375ad03d3c9312f6139e`, from the local HF cache
   `/mnt/e/neuron-probe/hf/hub` (`local_files_only`), bf16, eager attention.
@@ -244,7 +244,7 @@ layers are the substantial piece.
 ## 7. Running it on the Arc (A770)
 
 The fit takes `--device xpu`; on the Windows XPU Python environment
-(`C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe`) it loads the model
+it loads the model
 on the A770 (16 GB, bf16), keeps the accumulators on the device, and copies them
 to the CPU only when saving. `--timing-only` runs one document and writes
 seconds per lens and `torch.xpu.max_memory_allocated()` to `timing.json`; that is

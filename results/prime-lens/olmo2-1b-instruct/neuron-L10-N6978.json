@@ -3,7 +3,7 @@
   "neuron": 6978,
   "model": "allenai/OLMo-2-0425-1B-Instruct",
   "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
-  "fit": "/home/elisepc/green/worktrees/ab-olmo-lens/results/prime-lens/olmo2-1b-instruct/fit.pt",
+  "fit": "./results/prime-lens/olmo2-1b-instruct/fit.pt",
   "write": "post_feedforward_layernorm.weight * W_down[:, n]",
   "read": [
     {
