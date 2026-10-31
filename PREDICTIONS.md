@@ -2770,3 +2770,6 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 132.3 | Claude (medium confidence): The either-side gap is at least 15 points in each of three bands, L2-13, L14-23 and L24-33. | pending | pending |
 | 132.4 | Claude (medium confidence): The mismatch arm is at most 5% in both classes. | pending | pending |
 | 132.5 | Claude (low confidence): Names matching the regex in part132/score132.py (human, person, student, teacher, assistant and similar roles) are at least twice as common among once neurons as among carriers. | pending | pending |
+| 132.6 | Claude (medium confidence): The median catalog writes_conf is at least 0.15 higher among carriers than among once neurons. | pending | pending |
+| 132.7 | Claude (medium confidence): The median catalog cur_mode is at least 1.3 times higher among once neurons than among carriers. | pending | pending |
+| 132.8 | Claude (low confidence): The dark share is at least 10 points higher among carriers than among once neurons. | pending | pending |

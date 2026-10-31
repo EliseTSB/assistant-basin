@@ -60,6 +60,16 @@ least 0.6), plus at least 20 neurons in each class. A failed gate stops the read
 
 Copied verbatim into PREDICTIONS.md under "## Part 132 (registered 2026-10-30, PART132-DESIGN.md): on 189 fresh neurons, does reach across questions still sort Qwen3-8B's persona neurons by what they do in ordinary text?".
 
+Amendment 1, 2026-10-30 20:09 CT, before any answers existed: three predictions added from an exploratory look at Part 128's catalog measures for its 40 neurons (carrier and once medians: writes_conf 0.70 and 0.25, cur_mode 0.17 and 0.33; dark 7 of 11 and 5 of 16). part132/score132.py reads labels.writes_conf, legible.cur_mode and legible.dark for each pushed pole.
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 132.6 | The median catalog writes_conf is at least 0.15 higher among carriers than among once neurons. | medium | Claude |
+| 132.7 | The median catalog cur_mode is at least 1.3 times higher among once neurons than among carriers. | medium | Claude |
+| 132.8 | The dark share is at least 10 points higher among carriers than among once neurons. | low | Claude |
+
+Copied into PREDICTIONS.md under Part 132.
+
 ## Reading rules
 
 part132/score132.py scores on DeepSeek; a verdict that differs on Luna is reported as reader-dependent and is not counted as held.

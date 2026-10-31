@@ -3,6 +3,7 @@
 Usage: score132.py OUT_DIR"""
 import json
 import re
+import statistics
 import sys
 from pathlib import Path
 
@@ -57,7 +58,12 @@ def main(out):
     units = json.load(open(out / "units128.json", encoding="utf-8"))
     ds, luna = load(out / "labels-ds.jsonl"), load(out / "labels-luna.jsonl")
     role = {c: (sum(bool(ROLE.search(u["persona"])) for u in units if u["class"] == c), sum(u["class"] == c for u in units)) for c in ("carrier", "once")}
-    report = {"ds": summary(ds, units), "luna": summary(luna, units), "kappa": kappa(ds, luna), "role_names": role, "n": len(units)}
+    catalog = {}
+    for c in ("carrier", "once"):
+        group = [u["pushed"] for u in units if u["class"] == c]
+        catalog[c] = {"writes_conf": statistics.median(g["writes_conf"] for g in group), "cur_mode": statistics.median(g["cur_mode"] for g in group),
+                      "dark": sum(g["dark"] for g in group), "n": len(group)}
+    report = {"ds": summary(ds, units), "luna": summary(luna, units), "kappa": kappa(ds, luna), "role_names": role, "catalog": catalog, "n": len(units)}
     json.dump(report, open(out / "score132.json", "w"), indent=1)
     print(json.dumps(report, indent=1))
 

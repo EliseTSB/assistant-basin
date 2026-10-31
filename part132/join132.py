@@ -82,6 +82,8 @@ def card(rec):
 def facts(rec):
     return {"act_top": rec["acts"]["act_top"], "rate": rec["acts"]["rate"], "rate_chat": rec["acts"].get("rate_chat"),
             "dark": bool(rec["legible"]["dark"]), "silent": bool(rec["legible"]["silent"]),
+            "cur_mode": rec["legible"]["cur_mode"], "writes_conf": rec["labels"]["writes_conf"],
+            "fires_conf": rec["labels"]["fires_conf"],
             "w_norm": rec["reads"]["w_norm"]}
 
 
