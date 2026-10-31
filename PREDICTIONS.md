@@ -2996,3 +2996,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 151.3 | Claude (high confidence): L24 N6835 hits its own list on at least 5 of 20 top windows. | Gate 3 failed: 2 of 20 control windows against 5. | untestable |
 | 151.4 | Claude (low confidence): L19 N4979 hits its own list on at least 5 of 20 top windows. | Gate 3 failed: 2 of 20 control windows against 5. | untestable |
 | 151.5 | Claude (medium confidence): L19 N5975 hits its own list on at least 5 of 20 top windows. | Gate 3 failed: 2 of 20 control windows against 5. | untestable |
+
+## Part 151b (registered 2026-10-31, PART151B-DESIGN.md): do Part 150's five units read on new documents what the first 2,000 documents suggested?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 151b.1 | Claude (medium confidence): At least 3 of the 5 units hit their own list on more top windows than on any other unit's list. | pending | pending |
+| 151b.2 | Claude (high confidence): L24 N8542 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151b.3 | Claude (high confidence): L24 N6835 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151b.4 | Claude (low confidence): L19 N4979 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151b.5 | Claude (medium confidence): L19 N5975 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151b.6 | Claude (medium confidence): At least 10 of L19 N4979's 20 top windows mark " and" or " or", more than on any of the other four units. | pending | pending |
+| 151b.7 | Claude (medium confidence): At least 10 of L24 N8542's 20 top windows mention awards or nominations by the Method's rule, more than on any of the other four units. | pending | pending |

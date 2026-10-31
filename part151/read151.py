@@ -99,7 +99,7 @@ def run(a, torch=None, nr=None):
         import neuron_report as nr
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    docs = [json.loads(l) for l in Path(a.pile).read_text(encoding="utf-8").split("\n") if l.strip()][:a.docs]
+    docs = [json.loads(l) for l in Path(a.pile).read_text(encoding="utf-8").split("\n") if l.strip()][a.start:a.docs]
     t0 = time.time()
     tok, model = nr.load_model(MODEL_ID, REVISION, a.device)
     if tok.pad_token_id is None:
@@ -119,6 +119,7 @@ def main(argv=None):
     ap.add_argument("--pile", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--docs", type=int, default=2000)
+    ap.add_argument("--start", type=int, default=0)
     ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--device", default="xpu")
     run(ap.parse_args(argv))

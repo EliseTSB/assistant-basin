@@ -77,7 +77,7 @@ class Tests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             d = Path(d)
             (d / "p.jsonl").write_text("".join(json.dumps({"i": i, "text": "one two three"}) + "\n" for i in range(30)), encoding="utf-8")
-            read151.run(types.SimpleNamespace(pile=str(d / "p.jsonl"), out=str(d / "o"), docs=25, batch_size=8, device="cpu"), torch=torch, nr=nr)
+            read151.run(types.SimpleNamespace(pile=str(d / "p.jsonl"), out=str(d / "o"), start=0, docs=25, batch_size=8, device="cpu"), torch=torch, nr=nr)
             m = json.loads((d / "o" / "windows.json").read_text(encoding="utf-8"))
             self.assertEqual(m["docs"], 25)
             self.assertEqual(m["tokens"], 75)
