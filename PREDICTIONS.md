@@ -2896,3 +2896,17 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 143.3 | Claude (low confidence): After a forced "I", the median Set R unit under answer-only puts less on "'m" than the median unit under prompt-only. | 18.90% vs 37.88%. | held |
 | 143.4 | Claude (medium confidence): Under full, the median Set R probability of " sorry" after "I'm" is at least twice the larger of the prompt-only and answer-only medians. | 45.07%; threshold 33.79%. | held |
 | 143.5 | Claude (high confidence): Under full, Set S's median probability of " sorry" after "I'm" is at most a tenth of Set R's. | Set S 0.045043; threshold 0.045067. | held |
+
+## Part 144 (registered 2026-10-31, PART144-DESIGN.md): does training move the apology's baseline, the push's effect, or both?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 144.1 | Claude (medium confidence): The plain model's P(" sorry" after "I'm") on Base in the plain frame is at least its value on Instruct in the chat frame. | pending | pending |
+| 144.2 | Claude (medium confidence): The median full-arm shift on Base in the plain frame is at most half the median on Instruct in the chat frame. | pending | pending |
+| 144.3 | Claude (low confidence): The median full-arm shift on Base in the chat frame is at most half the median on Instruct in the chat frame. | pending | pending |
+| 144.4 | Claude (medium confidence): The median full-arm shifts on SFT, DPO and Instruct, all chat, lie within 1.0 of each other. | pending | pending |
+| 144.5 | Claude (medium confidence): Across units, the Spearman correlation of full-arm shift between SFT and Instruct is at least 0.7, and between Base in the plain frame and Instruct is under 0.4. | pending | pending |
+| 144.6 | Claude (medium confidence): From Base chat to SFT the median full-arm shift changes by more, in absolute value, than the plain model's log-odds does. | pending | pending |
+| 144.7 | Claude (medium confidence): On Set R, in each of SFT, DPO and Instruct, the median of full minus (prompt-only + answer-only - plain), in log-odds, has magnitude at most 0.5. | pending | pending |
+| 144.8 | Claude (medium confidence): In every cell, the median full-arm shifts of Set F's neurons and random directions differ by at most 0.5. | pending | pending |
+| 144.9 | Claude (low confidence): The median full-arm shift on Instruct in the plain frame is at most half the median on Instruct in the chat frame. | pending | pending |
