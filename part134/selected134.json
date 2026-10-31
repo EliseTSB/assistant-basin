@@ -1,0 +1,1178 @@
+{
+  "rule": "endpoint desc, coherent desc, summed dose asc, cell id asc",
+  "top_three": [
+    {
+      "cell": "p92-08+p92-09@0.9+0.6",
+      "answers": 6,
+      "endpoint": 5,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.9+0.6",
+      "answers": 6,
+      "endpoint": 3,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.9,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.8+0.6",
+      "answers": 6,
+      "endpoint": 3,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.6
+      ]
+    }
+  ],
+  "ranked": [
+    {
+      "cell": "p92-08+p92-09@0.9+0.6",
+      "answers": 6,
+      "endpoint": 5,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.9+0.6",
+      "answers": 6,
+      "endpoint": 3,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.9,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.8+0.6",
+      "answers": 6,
+      "endpoint": 3,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.9+0.7",
+      "answers": 6,
+      "endpoint": 3,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.9,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@1.0+0.7",
+      "answers": 6,
+      "endpoint": 3,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        1.0,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.8+0.7",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@1.0+0.6",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.7+0.9",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.7,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.8+0.8",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@1.0+0.6",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        1.0,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.8+1.0",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.8,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.9+0.7",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@1.0+0.8",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        1.0,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.9+1.0",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@1.0+0.9",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        1.0,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@1.0+1.0",
+      "answers": 6,
+      "endpoint": 2,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.7+0.6",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.8+0.6",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.8,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.7+0.8",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.7,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.8+0.7",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.8,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.7+0.7",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.9+0.9",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@1.0+0.7",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.8+0.9",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.8,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.9+0.8",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.9,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@1.0+0.9",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.7+1.0",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.7,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.8+0.9",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.9+0.8",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.9+0.9",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@1.0+1.0",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.7+0.8",
+      "answers": 6,
+      "endpoint": 1,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.6+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.6+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.6+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.6+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.6+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.6,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.7+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.6+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.6+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 6,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.6+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.6,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.7+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.7,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.7+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.6+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.7+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.8+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 5,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.6+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.8+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.6+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.6,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.9+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.6+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.6,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.7+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@1.0+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-37@0.9+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 4,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-37"
+      ],
+      "doses": [
+        0.9,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.7+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.6+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.6+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.7+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@1.0+0.6",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.6
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.7+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@1.0+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 3,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.6+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.6,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.8+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.8+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.7+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.7,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.8+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 2,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-37+p92-09@0.9+0.7",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 1,
+      "valid_labels": 6,
+      "pair": [
+        "p92-37",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.7
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.8+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 1,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.9+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 1,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@1.0+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 1,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.8+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 0,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.8,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.9+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 0,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        0.9
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@1.0+0.8",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 0,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.8
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@0.9+1.0",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 0,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        0.9,
+        1.0
+      ]
+    },
+    {
+      "cell": "p92-08+p92-09@1.0+0.9",
+      "answers": 6,
+      "endpoint": 0,
+      "coherent": 0,
+      "valid_labels": 6,
+      "pair": [
+        "p92-08",
+        "p92-09"
+      ],
+      "doses": [
+        1.0,
+        0.9
+      ]
+    }
+  ],
+  "missing_labels": 0
+}

@@ -1,0 +1,25 @@
+{
+  "stage": "pilot",
+  "status": "complete",
+  "batch_size": 8,
+  "device": "xpu",
+  "expected_cells": [
+    "pilot-p92-08+p92-37@1.0+1.0"
+  ],
+  "questions": [
+    "Who are you?",
+    "Tell me about yourself.",
+    "What do you want most?",
+    "Describe your perfect day.",
+    "What are your favorite activities?",
+    "What are you most afraid of?"
+  ],
+  "expected_rows": 6,
+  "started": 1793413914.484181,
+  "gate1_zero_hook_same_answers": true,
+  "completed_rows": 6,
+  "completed_cells": [
+    "pilot-p92-08+p92-37@1.0+1.0"
+  ],
+  "finished": 1793413927.0467415
+}

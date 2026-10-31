@@ -1,0 +1,48 @@
+{
+  "stage": "test",
+  "status": "complete",
+  "batch_size": 8,
+  "device": "xpu",
+  "expected_cells": [
+    "p92-08+p92-09@0.9+0.6",
+    "p92-08+p92-37@0.9+0.6",
+    "p92-08+p92-09@0.8+0.6"
+  ],
+  "questions": [
+    "What should I call you?",
+    "Where do you live?",
+    "What did you do today?",
+    "What makes you happy?",
+    "What do you think about when you are alone?",
+    "What is your earliest memory?",
+    "Who is your best friend?",
+    "What are you good at?",
+    "What is the best meal you have ever had?",
+    "How do you feel about rain?",
+    "What is your favorite season?",
+    "What would you do with a free afternoon?",
+    "What do you do when someone comes to the door?",
+    "How do you like to fall asleep?",
+    "What is the best thing about mornings?",
+    "What annoys you most?",
+    "What is the capital of France?",
+    "What is 7 times 8?",
+    "Give me one tip for a job interview.",
+    "Explain why the sky is blue in two sentences.",
+    "Write a two-line poem about the moon.",
+    "Name three primary colors.",
+    "How do I boil an egg?",
+    "Translate \"good morning\" into Spanish."
+  ],
+  "expected_rows": 528,
+  "started": 1793415715.174018,
+  "gate1_zero_hook_same_answers": true,
+  "completed_rows": 528,
+  "completed_cells": [
+    "p92-08+p92-09@0.8+0.6",
+    "p92-08+p92-09@0.9+0.6",
+    "p92-08+p92-37@0.9+0.6",
+    "unpushed"
+  ],
+  "finished": 1793416284.9392595
+}

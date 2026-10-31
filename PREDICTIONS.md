@@ -2787,13 +2787,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 134.1 | Claude (low confidence): Some cell in stage 1 reaches the endpoint on at least 4 of 6 development questions. | pending | pending |
-| 134.2 | Claude (medium confidence): The best stage 1 cell includes the concept dog p92-08. | pending | pending |
-| 134.3 | Claude (low confidence): In stage 2, the best of the three cells reaches the endpoint on at least 8 of the 16 non-task questions. | pending | pending |
-| 134.4 | Claude (low confidence): In that cell, the pair beats each neuron alone at its dose by at least 3 non-task answers. | pending | pending |
-| 134.5 | Claude (medium confidence): In that cell, each random-partner arm stays at or below half the pair's non-task count. | pending | pending |
-| 134.6 | Claude (medium confidence): Task questions lose accuracy under the pair: at most 6 of 8 are right in the best cell. | pending | pending |
-| 134.7 | Claude (medium confidence): Both doses in the best stage 1 cell are at least 0.8. | pending | pending |
+| 134.1 | Claude (low confidence): Some cell in stage 1 reaches the endpoint on at least 4 of 6 development questions. | top cell 5 of 6 | held |
+| 134.2 | Claude (medium confidence): The best stage 1 cell includes the concept dog p92-08. | top cell is p92-08+p92-09 | held |
+| 134.3 | Claude (low confidence): In stage 2, the best of the three cells reaches the endpoint on at least 8 of the 16 non-task questions. | 10 of 16 at 0.8+0.6, the best of three on these questions; by hand 8 or 9 of its 11 read as a dog | held |
+| 134.4 | Claude (low confidence): In that cell, the pair beats each neuron alone at its dose by at least 3 non-task answers. | 10 against 2 and 0 | held |
+| 134.5 | Claude (medium confidence): In that cell, each random-partner arm stays at or below half the pair's non-task count. | 3, 2, 0, 0 against a line of 5; at 0.9+0.6 with p92-37 the random partners match the pair | held |
+| 134.6 | Claude (medium confidence): Task questions lose accuracy under the pair: at most 6 of 8 are right in the best cell. | 2 of 8 right, one of them a rule pass on a non-poem | held |
+| 134.7 | Claude (medium confidence): Both doses in the best stage 1 cell are at least 0.8. | best stage 1 cell is 0.9+0.6 | failed |
 
 ## Part 135 (registered 2026-10-30, PART135-DESIGN.md): are a persona neuron's two poles the same concept, opposites, or unrelated?
 
