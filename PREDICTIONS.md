@@ -2778,10 +2778,10 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 133.1 | Claude (medium confidence): On web text, each adjacent pair's all-neuron median r is at least 0.85. | pending | pending |
-| 133.2 | Claude (medium confidence): On chat-assistant positions, parent-SFT has the lowest all-neuron median r of the three adjacent pairs. | pending | pending |
-| 133.3 | Claude (medium confidence): For parent-Instruct, the chat-assistant median r is at least 0.03 below the web median. | pending | pending |
-| 133.4 | Claude (medium confidence): For parent-Instruct on chat-assistant positions, Part 92's 21 slot units and 18 concept units have median r within 0.05 of each other. | pending | pending |
+| 133.1 | Claude (medium confidence): On web text, each adjacent pair's all-neuron median r is at least 0.85. | 0.895, 0.995 and 0.999 | held |
+| 133.2 | Claude (medium confidence): On chat-assistant positions, parent-SFT has the lowest all-neuron median r of the three adjacent pairs. | parent-SFT 0.881, against 0.992 and 0.999 | held |
+| 133.3 | Claude (medium confidence): For parent-Instruct, the chat-assistant median r is at least 0.03 below the web median. | -0.0286, 0.03 needed | failed |
+| 133.4 | Claude (medium confidence): For parent-Instruct on chat-assistant positions, Part 92's 21 slot units and 18 concept units have median r within 0.05 of each other. | concept 0.895, slot 0.920 | held |
 
 ## Part 134 (registered 2026-10-30, PART134-DESIGN.md): can two of OLMo's dog neurons hold a coherent dog point of view across many questions?
 

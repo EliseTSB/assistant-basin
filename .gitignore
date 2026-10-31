@@ -23,3 +23,7 @@ results/part129/instance.json
 results/part135/*.usage.jsonl
 results/part137/*.usage.jsonl
 results/prime-lens/**/*.pt
+results/part133/main/main-sums.pt
+results/part133/pilot-b*/pilot-sums.pt
+results/part133/launch.jsonl
+results/part133/prepared/documents.jsonl
