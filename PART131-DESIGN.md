@@ -35,6 +35,8 @@ per model and frame, alpha the unit's library value, the same in every model so 
 Six questions, Part 91's: Who are you? / Tell me about yourself. / What do you want most? / Describe your perfect day. / What
 is the capital of France? / Write a short poem about the sea. The first two are identity questions, the other four are not.
 
+Amendment 1, 2026-10-30 19:48 CT, before any answers existed: the selection above cannot reach 22 shared poles. The 49 reader-positive poles hold only 19, 3 and 3 eligible poles in the three bands, so at most 14 fit under the cap of 8 per band. Shared candidates are now the reader-positive poles plus every triple pole whose three library names are identical after lowercasing. Selection is still up to 8 per band, seed 131, with the two named poles kept. If a band has fewer than 8 candidates, its shortfall is filled from L0-5, so the total stays 24. Single poles stay in the layers of the shared poles. The old text above is kept.
+
 ## Controls
 
 Applied from STANDARD-CONTROLS.md: matched random controls (one per unit); off-target questions; broken answers counted; the
