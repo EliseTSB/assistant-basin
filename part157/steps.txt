@@ -1,0 +1,4 @@
+# --copy files: part157/run157.py, part157/score157.py, part154/run154.py, part153/battery153.py, part148/battery148.py, part86/common86.py, neuron_report.py.
+python3 tools/launch_arc.py 157 --step "-I -B part157/run157.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part157" --copy part157/run157.py part157/score157.py part154/run154.py part153/battery153.py part148/battery148.py part86/common86.py neuron_report.py
+# Host-side score after the run.
+python3 -I -B part157/score157.py --answers results/part157/answers.jsonl --ladder results/part157/ladder.json --out results/part157
