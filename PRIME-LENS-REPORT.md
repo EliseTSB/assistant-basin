@@ -60,28 +60,33 @@ weights), both lens directions and both targets, compared against
 
 ```
 $ PYTHONPATH=$PWD pytest tests/test_olmo2.py -q
-9 passed
+10 passed
 $ PYTHONPATH=$PWD pytest tests/ -q            # everything, port tests included
-43 passed, 3 skipped
+44 passed, 3 skipped
 $ PYTHONPATH=$PWD pytest tests/test_arch.py tests/test_gemma4.py \
       tests/test_readout.py tests/test_transport.py -q     # upstream only
 34 passed, 3 skipped                          # skips are the optional-drowse tests
 ```
 
-Beyond the Jacobian comparison, `tests/test_olmo2.py` has a **bf16 end-to-end
-test** (the fit's dtype) and a **dispatch guard**: `transport._maps` must route
-an OLMo 2 stack to these maps, and the OLMo map must refuse a Qwen3 stack by
-name. The bf16 test exists because of a real hazard: OLMo 2's rotary table is
-fp32 while Qwen3's is already the model dtype, so the rotated q/k need HF's
-explicit cast back to the input dtype. The fp32 tiny-model Jacobian tests cannot
-see that class — it only appears on the real bf16 model.
+Beyond the Jacobian comparison, `tests/test_olmo2.py` has a **bf16 exactness
+test** and a **dispatch guard**: `transport._maps` must route an OLMo 2 stack to
+these maps, and the OLMo map must refuse a Qwen3 stack by name.
+
+The exactness test is the one the fp32 Jacobians cannot be: it compares the
+map's normed, rotated q at every layer with the model's own `q_norm` output and
+requires **exact equality**. Two bf16 details had to match HF's order for that:
+the q/k norm multiplies by the weight in fp32 **before** the dtype cast
+(`(w · (x·r)).to(dtype)`, where Qwen's helper casts first and leaves nearly every
+element 1–2 ulps off), and the attention scaling is applied in the model dtype
+**before** the fp32 softmax. OLMo 2's rotary table is also fp32 where Qwen3's is
+already the model dtype, so the rotated q/k take HF's explicit cast back.
 
 The deliberate-break harness (`test_olmo_lens_sabotage.py`) copies the package
 to a throwaway directory and applies one break at a time, then runs the same
 tests against the copy:
 
 ```
-control: unmodified copy green (9 passed)
+control: unmodified copy green (10 passed)
 break jvp-post-ff-norm-dropped: red on ('s', ...)      # S-lens forward mode
 break vjp-post-ff-norm-dropped: red on ('r-out', ...)  # R-lens reverse mode
 SABOTAGE HARNESS: OK
@@ -110,23 +115,22 @@ systemd-run --user --scope -p MemoryMax=8G -- nice -n 15 \
   ~/neuron-probe/.venv/bin/python fit_olmo_lens.py --docs 8 --threads 12 --dim-batch 64
 ```
 
-`dim_batch` is 64, not the upstream default 256: the scope's `MemoryPeak` was
-**7.74 GB of the 8 GB cap at 256** and **6.88 GB at 128** (measured during the R
-pass), so the run uses 64 for ~2 GB of headroom across both passes. The knob
-changes only how many basis directions go through the maps per block — same
-mathematics, more blocks.
+`dim_batch` is 64 (the script's default for this fit): the basis directions per
+block are the fit's only memory knob, and 64 keeps the working set under the
+8 GB cap. The measured per-document peak RSS is in `fit.json`.
 
 Fit results are in `fit.json` (`results/prime-lens/olmo2-1b-instruct/`), with
 per-document seconds for R and S separately, peak RSS, and the split-half
-difference per target and layer. The scope's `MemoryPeak` was **6.83 GB of the
-8 GB cap** (the process's own peak RSS 6.25 GB); `n_docs` = [4, 4].
+difference per target and layer. The per-document peak RSS was **6.25 GB**;
+`n_docs` = [4, 4].
 
 Split-half at L8 (`||mean_even − mean_odd|| / ||mean||`): R_out
 0.555, R_mid 0.508,
 S_out 0.413, S_mid 0.421.
 With four documents a half that is sampling noise, not a lens-quality figure:
-their 1,000-document lenses split at 0.06 or less. The acceptance fit measures
-the machinery and its cost; it is not a lens.
+their 1,000-document lenses split at 0.06 or less (`neuron_lens/UPSTREAM-DESIGN.md`,
+"The lenses of record"). The acceptance fit measures the machinery and its cost;
+it is not a lens.
 
 | document | corpus row | R seconds | S seconds | total | peak RSS |
 |---|---|---|---|---|---|
@@ -138,21 +142,25 @@ the machinery and its cost; it is not a lens.
 | 5 | 402452 | 565.9 | 608.7 | 1174.6 | 6.25 GB |
 | 6 | 249901 | 553.0 | 539.2 | 1092.2 | 6.25 GB |
 | 7 | 811815 | 551.9 | 678.5 | 1230.4 | 6.25 GB |
-| **median** | | **631.6** | **678.5** | **1491.8** | **6.25 GB** |
+| **median** | | **605.8** | **643.6** | **1361.1** | **6.25 GB** |
 
 ## 4. Alien-twin sanity read (L10 N6978)
 
-The read is `softmax(W_U · norm(J_10^out · W_down[:, 6978]))` with the final
-norm's weight, from the fitted R-lens (the full-stack pass records every layer,
-so it cost one matrix-vector product, no extra fit).
+The read is `softmax(W_U · norm(J_10^out · w))` with `w` the direction the neuron
+adds to the residual and `norm` the final norm with its weight. OLMo 2 passes
+the MLP output through `post_feedforward_layernorm` before the residual add, so
+`w = γ_post ⊙ W_down[:, n]` — the same convention `neurons.py` uses for Gemma 4's
+post-norm, and the correction Claude's review caught (without it the read is the
+raw column, which is not what reaches the residual). It cost one matrix-vector
+product: the full-stack pass records every layer.
 
-**L10 N6978:** `galaxy` 0.692, `Galactic` 0.114, `spaceship` 0.112, `Galaxy` 0.024, `spacecraft` 0.020, `Star` 0.019, `star` 0.005, `cosmic` 0.003.
+**L10 N6978:** `galaxy` 0.605, `spaceship` 0.159, `Galactic` 0.149, `Galaxy` 0.028, `Star` 0.020, `spacecraft` 0.019, `star` 0.004, `cosmic` 0.002.
 
 That is a coherent off-world read, matching the alien-twin finding, and it is
 neuron-specific rather than a generic output:
-- control neuron 5305 (same layer): `also` 0.134, `también` 0.065, `Also` 0.063, `ALSO` 0.037, `Also` 0.036, `also` 0.019.
-- control neuron 2471 (same layer): `qualche` 0.010, `aires` 0.009, `uevo` 0.007, `duit` 0.004, `argent` 0.003, `()",` 0.003.
-- control neuron 6468 (same layer): `skiing` 0.451, `ski` 0.345, `snow` 0.059, `Ski` 0.041, `avalanche` 0.031, `Alpine` 0.021.
+- control neuron 5305 (same layer): `also` 0.096, `también` 0.093, `ALSO` 0.040, `Also` 0.039, `Also` 0.038, `intertw` 0.024.
+- control neuron 2471 (same layer): `qualche` 0.019, `aires` 0.009, `uevo` 0.005, `íg` 0.005, `argent` 0.004, `uelve` 0.003.
+- control neuron 6468 (same layer): `skiing` 0.446, `ski` 0.327, `snow` 0.052, `avalanche` 0.049, `Ski` 0.036, `Alpine` 0.025.
 
 Full JSON: `results/prime-lens/olmo2-1b-instruct/neuron-L10-N6978.json`.
 
@@ -183,27 +191,27 @@ Method, stated so it can be checked:
 
 | stage | revision | 200 docs, CPU | 1000 docs, CPU | 200 docs, 3090 | 1000 docs, 3090 |
 |---|---|---|---|---|---|
-| Base (main) | a1847dff | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| pretraining, 21B tokens | stage1-step10000-tokens21B, 22f7d18a | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| pretraining, 210B | stage1-step100000-tokens210B, eb19ccab | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| pretraining, 1.0T | stage1-step480000-tokens1007B, eda09f03 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| pretraining, 2.0T | stage1-step950000-tokens1993B, 3e09b708 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| pretraining, 3.0T | stage1-step1430000-tokens2999B, 22738a97 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| end of pretraining, 4.0T | stage1-step1907359-tokens4001B, 9d3e4365 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| mid-training, 13B | stage2-ingredient3-step6000-tokens13B, a7a789f6 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| mid-training, 26B | stage2-ingredient3-step12000-tokens26B, 1c3599f7 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| mid-training end, 51B | stage2-ingredient3-step23852-tokens51B, f83cd641 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| SFT | -SFT | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| DPO | -DPO | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
-| Instruct | -Instruct, 48d788ec | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| Base (main) | a1847dff | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 21B tokens | stage1-step10000-tokens21B, 22f7d18a | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 210B | stage1-step100000-tokens210B, eb19ccab | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 1.0T | stage1-step480000-tokens1007B, eda09f03 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 2.0T | stage1-step950000-tokens1993B, 3e09b708 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 3.0T | stage1-step1430000-tokens2999B, 22738a97 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| end of pretraining, 4.0T | stage1-step1907359-tokens4001B, 9d3e4365 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| mid-training, 13B | stage2-ingredient3-step6000-tokens13B, a7a789f6 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| mid-training, 26B | stage2-ingredient3-step12000-tokens26B, 1c3599f7 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| mid-training end, 51B | stage2-ingredient3-step23852-tokens51B, f83cd641 | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| SFT | -SFT | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| DPO | -DPO | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| Instruct | -Instruct, 48d788ec | 75.6 h | 378.1 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
 
 The Base repository's non-main revisions are mapped to training tokens in
 `PART85-DESIGN.md` (the table above follows it); `Base (main)` is the released
 base model at `a1847dff`.
 
-**Reading:** a 1,000-document lens of record for one stage is **~17 days of this
-CPU** (414 h) but **~4.4–6.1 hours on one rented 3090**; at 200 documents it is
-~3.5 days against ~1 hour. The CPU cannot run a full fit — the 8-document fit is
+**Reading:** a 1,000-document lens of record for one stage is **~16 days of this
+CPU** (378 h) but **~4.4–6.1 hours on one rented 3090**; at 200 documents it is
+~3.2 days against ~1 hour. The CPU cannot run a full fit — the 8-document fit is
 the acceptance measurement, not a lens. The table is identical across stages
 because the architecture is: the per-document cost does not depend on training
 step, only on the model shape and the document length.
@@ -233,7 +241,34 @@ So: the estimator's machinery (RelP rules, the two directions, the offset sums)
 is unchanged, but Qwen3.5-4B is not a config flip either — its linear-attention
 layers are the substantial piece.
 
-## 7. Limits
+## 7. Running it on the Arc (A770)
+
+The fit takes `--device xpu`; on the Windows XPU Python environment
+(`C:\Users\alexa\jlens-tools\.venv\Scripts\python.exe`) it loads the model
+on the A770 (16 GB, bf16), keeps the accumulators on the device, and copies them
+to the CPU only when saving. `--timing-only` runs one document and writes
+seconds per lens and `torch.xpu.max_memory_allocated()` to `timing.json`; that is
+the number the queue needs before a full stage.
+
+No float64 is used anywhere in the fit. `check_layer`'s probe is drawn on the CPU
+in fp32 and moved to the layer's device, so the map's self-check does not depend
+on an XPU bf16 `randn` kernel (see `VENDORED.md`). The Arc runner turns its copy
+engine off by default (`PROCEDURE.md`); a direct launch sets it itself.
+
+Launch line for Claude's queue (part number is his to assign; `--copy` carries
+the fit and the vendored package into the Windows job folder):
+
+```
+python tools/launch_arc.py NN \
+  --step "-I -B fit_olmo_lens.py --device xpu --docs 1 --timing-only --out results\prime-lens\timing" \
+  --copy fit_olmo_lens.py neuron_lens/__init__.py neuron_lens/arch.py neuron_lens/catalog.py \
+         neuron_lens/corpus.py neuron_lens/gemma4.py neuron_lens/heads.py neuron_lens/known.py \
+         neuron_lens/lenses.py neuron_lens/media.py neuron_lens/media_sets.py neuron_lens/neurons.py \
+         neuron_lens/paths.py neuron_lens/readout.py neuron_lens/rules.py neuron_lens/stats.py \
+         neuron_lens/transport.py neuron_lens/weights.py neuron_lens/olmo2.py
+```
+
+## 8. Limits
 
 - The fit is 8 documents: the split-half figure it reports is a coarse
   stability check, not a lens-quality estimate.
@@ -241,4 +276,8 @@ layers are the substantial piece.
   precision check (bf16 vs fp32, Qwen3-0.6B) puts the estimate 0.65–0.72% from
   fp32, below the sampling error at this document count.
 - The CPU timings are this host's; the 3090 figures are projections, not
-  measurements (no GPU was used).
+  measurements (no GPU was used). The A770 path is written and reviewed but not
+  run here — Claude owns the Arc queue.
+- The bf16 primal is bit-identical to the model's forward (test), but the
+  Jacobian comparison is fp32 by construction; the estimator's bf16 error is the
+  upstream 0.65–0.72% figure, not re-measured in this port.

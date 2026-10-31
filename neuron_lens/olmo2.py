@@ -37,10 +37,20 @@ from neuron_lens.transport import (
     SKIP_FIRST,
     _norm_jvp,
     _norm_vjp,
-    _rms_norm,
     _rope,
     valid_positions,
 )
+
+
+def _norm_exact(norm, x: torch.Tensor):
+    """HF's RMSNorm, and the rsqrt it scaled by.
+
+    Multiplies by the weight **before** casting back to the model dtype, as HF's
+    ``Olmo2RMSNorm`` does. ``transport._rms_norm`` casts first (Qwen3's path), which
+    leaves nearly every bf16 element 1-2 ulps from the model's own value.
+    """
+    r = torch.rsqrt(x.float().pow(2).mean(-1, keepdim=True) + norm.variance_epsilon)
+    return (norm.weight.float() * (x.float() * r)).to(x.dtype), r
 
 
 def is_olmo2(model) -> bool:
@@ -123,24 +133,25 @@ def linearize(model, ids: torch.Tensor) -> list[LayerMap]:
         q = F.linear(h, at.q_proj.weight)  # [T, Hq·hd]
         k = F.linear(h, at.k_proj.weight)
         v = F.pad(F.linear(h, at.v_proj.weight).view(T, hk, hd).transpose(0, 1), (0, 0, 0, tp - T))
-        qn, rq = _rms_norm(at.q_norm, q)
-        kn, rk = _rms_norm(at.k_norm, k)
+        qn, rq = _norm_exact(at.q_norm, q)
+        kn, rk = _norm_exact(at.k_norm, k)
         # OLMo 2's rotary table is fp32 (Qwen3's is already the model dtype); HF casts the
         # rotated q/k back to the input dtype, and so does the map.
         qr = _rope(qn.view(T, hk * g, hd), cos, sin).to(dt).transpose(0, 1).reshape(hk, g, T, hd)
         kr = F.pad(_rope(kn.view(T, hk, hd), cos, sin).to(dt).transpose(0, 1), (0, 0, 0, tp - T))
-        p = torch.softmax((qr @ kr[:, None].mT).float() * at.scaling + causal, -1).to(dt)
+        # HF multiplies by the scaling in the model dtype, then softmaxes in fp32; match it.
+        p = torch.softmax(((qr @ kr[:, None].mT) * at.scaling).float() + causal, -1).to(dt)
         o = (p @ v[:, None]).reshape(hk * g, T, hd).transpose(0, 1).reshape(T, -1)
         attn = F.linear(o, at.o_proj.weight)
         pa = layer.post_attention_layernorm
         rpa = torch.rsqrt(attn.float().pow(2).mean(-1, keepdim=True) + pa.variance_epsilon)
-        h1 = h + (pa.weight.float() * attn.float() * rpa).to(dt)
+        h1 = h + (pa.weight.float() * (attn.float() * rpa)).to(dt)
         gate = F.linear(h1, mlp.gate_proj.weight)
         up = F.linear(h1, mlp.up_proj.weight)
         mout = F.linear(F.silu(gate) * up, mlp.down_proj.weight)
         pf = layer.post_feedforward_layernorm
         rpf = torch.rsqrt(mout.float().pow(2).mean(-1, keepdim=True) + pf.variance_epsilon)
-        h = h1 + (pf.weight.float() * mout.float() * rpf).to(dt)
+        h = h1 + (pf.weight.float() * (mout.float() * rpf)).to(dt)
         gate, up = gate[S:].float(), up[S:].float()
         maps.append(LayerMap(
             wq=at.q_proj.weight, wk=at.k_proj.weight, wv=at.v_proj.weight, wo=at.o_proj.weight,

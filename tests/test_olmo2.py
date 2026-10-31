@@ -83,7 +83,7 @@ def exact_from(model, ids, layer, f):
     return torch.autograd.functional.jacobian(lambda x: f(run_with(model, ids, layer, x)[1]), h)
 
 
-@pytest.mark.parametrize("n_valid", [7, 8])  # keys padded to a multiple of 8 (Tp), and not
+@pytest.mark.parametrize("n_valid", [9, 8])  # T=24: Tp == T (no key padding); T=23: one pad
 @pytest.mark.parametrize("build", [tiny_model, realistic_model])
 def test_estimates_match_brute_force(build, n_valid):
     """The hand-written OLMo 2 maps against autograd through the model under the RelP rules."""
@@ -133,6 +133,35 @@ def test_dispatch_selects_olmo_and_refuses_a_qwen_stack():
     assert not olmo2.is_olmo2(qwen)
     with pytest.raises(ValueError, match="not an OLMo 2"):
         olmo2.linearize(qwen, torch.randint(0, 50, (SKIP_FIRST + 7,)))
+
+
+def test_bf16_primal_matches_the_model_exactly():
+    """The map's primal must be the model's own forward in bf16.
+
+    The Jacobian tests run fp32, where a rounding-order difference is invisible; this compares the
+    normed and rotated q at every layer to the model's own q_norm output, with exact equality. It
+    fails on Qwen-style cast-before-weight rounding and on a scaling applied after the fp32 cast.
+    """
+    from neuron_lens.olmo2 import linearize
+    from neuron_lens.transport import _rope, decoder_stack
+
+    model = tiny_model().to(torch.bfloat16)
+    ids = torch.randint(0, 50, (SKIP_FIRST + 9,))
+    maps = linearize(decoder_stack(model), ids)
+    T = len(ids) - 1
+    for li, mp in enumerate(maps):
+        cap = {}
+        h = model.layers[li].self_attn.q_norm.register_forward_hook(
+            lambda _m, _a, o: cap.__setitem__("q", o))
+        with torch.no_grad():
+            model(input_ids=ids[None])
+        h.remove()
+        H, N, hd = mp.qr.shape[0], mp.qr.shape[1], mp.cos.shape[-1]
+        ref = cap["q"][0, :T].view(T, H, hd)
+        cos, sin = model.rotary_emb(model.embed_tokens(ids[:T]), torch.arange(T)[None])
+        ref = _rope(ref, cos[0, :, None], sin[0, :, None]).to(torch.bfloat16)
+        ref = ref.transpose(0, 1)[:, SKIP_FIRST:SKIP_FIRST + N].reshape(H, N, hd)
+        assert torch.equal(mp.qr, ref), f"layer {li}: map and model differ"
 
 
 def test_bf16_map_runs_end_to_end():

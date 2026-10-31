@@ -5,4 +5,4 @@ tests/test_gemma4.py::test_relp_mlp_tangent_uses_the_gelu_factor
     warnings.warn(
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-34 passed, 3 skipped, 1 warning in 19.97s
+34 passed, 3 skipped, 1 warning in 10.08s

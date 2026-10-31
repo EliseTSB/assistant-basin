@@ -2,8 +2,12 @@
 """The alien-twin sanity read: OLMo 2 L10 N6978 through the fitted R-lens.
 
 ``write_R`` (Neuron Lens' ``08_reads.py`` convention) is
-``softmax(W_U · norm(J_L^out · w))`` with ``w = W_down[:, n]`` and ``norm`` the
-final RMSNorm including its weight. This script needs ``fit.pt`` from
+``softmax(W_U · norm(J_L^out · w))`` with ``w`` the direction the neuron adds to the
+residual and ``norm`` the final RMSNorm including its weight.
+
+OLMo 2's MLP output passes ``post_feedforward_layernorm`` before the residual add, so
+the write is ``γ_post ⊙ W_down[:, n]``, not the raw column — ``neurons.py``'s Gemma 4
+convention, applied to OLMo's post-norm. Qwen3 has no post-feedforward norm. This script needs ``fit.pt`` from
 ``fit_olmo_lens.py`` (the full-stack pass records every layer, so L10 is free).
 
 Also reads three pseudorandom neurons at the same layer as controls, so a
@@ -46,12 +50,13 @@ def main() -> int:
     tok = AutoTokenizer.from_pretrained(
         args.model, revision=args.revision, cache_dir=str(args.cache_dir), local_files_only=True)
     Wd = stack.layers[args.layer].mlp.down_proj.weight.float()  # [d, ff]
+    gamma_post = stack.layers[args.layer].post_feedforward_layernorm.weight.float()  # [d]
     gamma = stack.norm.weight.float()  # final RMSNorm weight
     eps = stack.norm.variance_epsilon
     WU = lm.lm_head.weight.float()  # [vocab, d]
 
     def read(n: int):
-        w = Wd[:, n]
+        w = gamma_post * Wd[:, n]
         x = J @ w
         normed = gamma * x / torch.sqrt(x.pow(2).mean() + eps)
         logits = WU @ normed
@@ -64,6 +69,7 @@ def main() -> int:
     controls = random.Random(7).sample(range(Wd.shape[1]), 3)
     out = {"layer": args.layer, "neuron": args.neuron, "model": args.model,
            "revision": args.revision, "fit": str(args.fit),
+           "write": "post_feedforward_layernorm.weight * W_down[:, n]",
            "read": read(args.neuron),
            "controls": {n: read(n) for n in controls}}
     print(json.dumps(out, indent=2, ensure_ascii=False))

@@ -111,9 +111,9 @@
       "peak_rss_gb": 6.254
     }
   ],
-  "r_seconds_median": 631.571,
-  "s_seconds_median": 678.512,
-  "seconds_median": 1491.799,
+  "r_seconds_median": 605.759,
+  "s_seconds_median": 643.601,
+  "seconds_median": 1361.0955,
   "peak_rss_gb": 6.254,
   "torch": "2.14.1+cpu",
   "transformers": "5.20.0",
@@ -193,5 +193,6 @@
       0.5957445502281189,
       0.6269266605377197
     ]
-  }
+  },
+  "median_note": "statistics.median of the 8 per-document values (the fit-time field used the upper middle value)"
 }

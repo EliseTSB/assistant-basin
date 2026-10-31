@@ -85,7 +85,9 @@ def check_layer(layer) -> None:
         w = norm_weight(norm)
         dim = w.shape[0] if w is not None else 8
         p = next(layer.parameters())
-        x = torch.randn(2, dim, device=p.device, dtype=p.dtype)
+        # Drawn on the CPU in fp32 then moved: device-agnostic, and it does not depend on a
+        # backend's bf16 randn kernel (the A770's XPU path among them).
+        x = torch.randn(2, dim).to(device=p.device, dtype=p.dtype)
         with torch.no_grad():
             y = norm(x).float()
             xf = x.float()

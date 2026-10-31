@@ -4,66 +4,67 @@
   "model": "allenai/OLMo-2-0425-1B-Instruct",
   "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
   "fit": "/home/elisepc/green/worktrees/ab-olmo-lens/results/prime-lens/olmo2-1b-instruct/fit.pt",
+  "write": "post_feedforward_layernorm.weight * W_down[:, n]",
   "read": [
     {
       "token": " galaxy",
       "id": 34261,
-      "p": 0.69167
-    },
-    {
-      "token": " Galactic",
-      "id": 76317,
-      "p": 0.11409
+      "p": 0.6052
     },
     {
       "token": " spaceship",
       "id": 85942,
-      "p": 0.1122
+      "p": 0.15912
+    },
+    {
+      "token": " Galactic",
+      "id": 76317,
+      "p": 0.14858
     },
     {
       "token": " Galaxy",
       "id": 20238,
-      "p": 0.02446
-    },
-    {
-      "token": " spacecraft",
-      "id": 42640,
-      "p": 0.01991
+      "p": 0.02798
     },
     {
       "token": " Star",
       "id": 7834,
-      "p": 0.01899
+      "p": 0.01988
+    },
+    {
+      "token": " spacecraft",
+      "id": 42640,
+      "p": 0.01882
     },
     {
       "token": " star",
       "id": 6917,
-      "p": 0.00539
-    },
-    {
-      "token": " cosmic",
-      "id": 55801,
-      "p": 0.00253
-    },
-    {
-      "token": " asteroid",
-      "id": 55479,
-      "p": 0.0015
+      "p": 0.00425
     },
     {
       "token": "Star",
       "id": 12988,
-      "p": 0.00142
+      "p": 0.00275
+    },
+    {
+      "token": " cosmic",
+      "id": 55801,
+      "p": 0.00223
+    },
+    {
+      "token": " asteroid",
+      "id": 55479,
+      "p": 0.00204
     },
     {
       "token": " galaxies",
       "id": 66017,
-      "p": 0.0013
+      "p": 0.00117
     },
     {
-      "token": " Kling",
-      "id": 80127,
-      "p": 0.00084
+      "token": "星",
+      "id": 78519,
+      "p": 0.00092
     }
   ],
   "controls": {
@@ -71,186 +72,186 @@
       {
         "token": " also",
         "id": 1101,
-        "p": 0.13447
+        "p": 0.09603
       },
       {
         "token": " también",
         "id": 29571,
-        "p": 0.06484
-      },
-      {
-        "token": " Also",
-        "id": 7429,
-        "p": 0.06326
+        "p": 0.09306
       },
       {
         "token": " ALSO",
         "id": 50921,
-        "p": 0.03669
+        "p": 0.04034
       },
       {
         "token": "Also",
         "id": 13699,
-        "p": 0.03648
+        "p": 0.03896
       },
       {
-        "token": "also",
-        "id": 19171,
-        "p": 0.0189
+        "token": " Also",
+        "id": 7429,
+        "p": 0.03843
       },
       {
         "token": " intertw",
         "id": 81050,
-        "p": 0.01429
+        "p": 0.02424
       },
       {
-        "token": " synerg",
-        "id": 80526,
-        "p": 0.01255
+        "token": "also",
+        "id": 19171,
+        "p": 0.02179
       },
       {
         "token": " ebenfalls",
         "id": 96624,
-        "p": 0.0124
+        "p": 0.01423
+      },
+      {
+        "token": " synerg",
+        "id": 80526,
+        "p": 0.01047
+      },
+      {
+        "token": " accompanied",
+        "id": 24895,
+        "p": 0.00858
       },
       {
         "token": " simult",
         "id": 20731,
-        "p": 0.01006
-      },
-      {
-        "token": " også",
-        "id": 49487,
-        "p": 0.00708
+        "p": 0.00834
       },
       {
         "token": " equival",
         "id": 44554,
-        "p": 0.00667
+        "p": 0.00813
       }
     ],
     "2471": [
       {
         "token": " qualche",
         "id": 90116,
-        "p": 0.01016
+        "p": 0.01881
       },
       {
         "token": "aires",
         "id": 17724,
-        "p": 0.00869
+        "p": 0.00904
       },
       {
         "token": "uevo",
         "id": 33421,
-        "p": 0.00705
-      },
-      {
-        "token": "duit",
-        "id": 47348,
-        "p": 0.00404
-      },
-      {
-        "token": "argent",
-        "id": 77217,
-        "p": 0.00335
-      },
-      {
-        "token": "()\",",
-        "id": 51614,
-        "p": 0.00323
-      },
-      {
-        "token": "uelve",
-        "id": 47956,
-        "p": 0.00291
+        "p": 0.00548
       },
       {
         "token": "íg",
         "id": 71437,
-        "p": 0.00265
+        "p": 0.00458
       },
       {
-        "token": " miglior",
-        "id": 92844,
-        "p": 0.00216
+        "token": "argent",
+        "id": 77217,
+        "p": 0.00389
       },
       {
-        "token": ",”",
-        "id": 2476,
-        "p": 0.00214
+        "token": "uelve",
+        "id": 47956,
+        "p": 0.00342
+      },
+      {
+        "token": "duit",
+        "id": 47348,
+        "p": 0.0032
+      },
+      {
+        "token": "locs",
+        "id": 84729,
+        "p": 0.00267
       },
       {
         "token": "umni",
         "id": 57965,
-        "p": 0.0021
+        "p": 0.00237
       },
       {
-        "token": "ney",
-        "id": 3520,
-        "p": 0.00192
+        "token": " miglior",
+        "id": 92844,
+        "p": 0.00226
+      },
+      {
+        "token": "()\",",
+        "id": 51614,
+        "p": 0.00205
+      },
+      {
+        "token": "\",[",
+        "id": 84598,
+        "p": 0.00196
       }
     ],
     "6468": [
       {
         "token": " skiing",
         "id": 63117,
-        "p": 0.45113
+        "p": 0.44598
       },
       {
         "token": " ski",
         "id": 29779,
-        "p": 0.34525
+        "p": 0.32727
       },
       {
         "token": " snow",
         "id": 12056,
-        "p": 0.05858
-      },
-      {
-        "token": " Ski",
-        "id": 61595,
-        "p": 0.04062
+        "p": 0.0524
       },
       {
         "token": " avalanche",
         "id": 96694,
-        "p": 0.03105
+        "p": 0.04884
+      },
+      {
+        "token": " Ski",
+        "id": 61595,
+        "p": 0.03646
       },
       {
         "token": " Alpine",
         "id": 82813,
-        "p": 0.02056
-      },
-      {
-        "token": " Snow",
-        "id": 19435,
-        "p": 0.01223
+        "p": 0.02484
       },
       {
         "token": " Himal",
         "id": 76438,
-        "p": 0.00951
+        "p": 0.01803
       },
       {
-        "token": " Tibetan",
-        "id": 73074,
-        "p": 0.00682
+        "token": " Snow",
+        "id": 19435,
+        "p": 0.00916
       },
       {
         "token": " mountain",
         "id": 16700,
-        "p": 0.00576
+        "p": 0.00811
+      },
+      {
+        "token": " Tibetan",
+        "id": 73074,
+        "p": 0.00712
       },
       {
         "token": " Nepal",
         "id": 50064,
-        "p": 0.00448
+        "p": 0.00573
       },
       {
         "token": " Mountain",
         "id": 19149,
-        "p": 0.00351
+        "p": 0.00352
       }
     ]
   }
