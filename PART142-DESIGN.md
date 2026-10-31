@@ -91,3 +91,16 @@ and a verdict that differs between them is reported as differing. Margin is a co
 One model, two corpora, 128 tokens, top firings only, so natural here means the strongest natural firings. Removal is one neuron at one token. Effects are on next-token probabilities. Concept and slot come from
 answers under a push, one sort, and Parts 92b and 118 show that sort depends on the reader and the dose. Bf16 can round away a weak pole's write. The reference is a set of 8 poles, so a pole's margin carries that
 sample's noise. This part was designed after seeing a pilot, so it is a successor and not a replication of Part 136.
+
+## Amendment 1 (04:06 CT 2026-10-31, after a code review, before any main data)
+
+A cold reader found that part136/scan136.py cannot run all 446 units: its selector takes equal numbers of each kind, and there are 257 concept and 189 slot units. At `--max-poles 446` the scan now takes every sorted
+unit; the pilot's selection at smaller values is unchanged. So the scan does not run strictly unchanged, and Part 136's main could not have run as written.
+
+The count is 894 poles, not 892: 446 units, 446 matched poles, L22 N2742 and its matched pole. That is 21,456 removal passes.
+
+A firing whose effect vector has zero variance has no defined Pearson r. In bf16 a weak pole's write can round away, so this can happen. score142.py treats such a firing as undefined, leaves it out of that pole's stability and reference, and reports the count per band, by kind. A pole with
+fewer than 12 defined firings is left out and counted. Missing inputs stop the scorer. Every comparison reports its n.
+
+142.3 is the difference between sorted units' median margin and matched poles' median margin, within bands, outside the pilot.
+
