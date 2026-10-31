@@ -3055,11 +3055,11 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 156.1 | At least three of the four neurons reach 12 of 24 at a dose other than +0.8 | medium | Claude |  |
-| 156.2 | At least two of the four neurons have a dose other than +0.8 with more company hits than +0.8 | medium | Claude |  |
-| 156.3 | Each of the four neurons has at most 3 of 24 at +0.5 | medium | Claude |  |
-| 156.4 | For at least three of the four neurons, the doses reaching 12 of 24 are neighbours with no gap and number at most four | medium | Claude |  |
-| 156.5 | At every dose the four random pairs total under a quarter of the four neurons' total, wherever the neurons total at least 24 of 96 | medium | Claude |  |
+| 156.1 | At least three of the four neurons reach 12 of 24 at a dose other than +0.8 | medium | Claude | held |
+| 156.2 | At least two of the four neurons have a dose other than +0.8 with more company hits than +0.8 | medium | Claude | failed |
+| 156.3 | Each of the four neurons has at most 3 of 24 at +0.5 | medium | Claude | failed |
+| 156.4 | For at least three of the four neurons, the doses reaching 12 of 24 are neighbours with no gap and number at most four | medium | Claude | held |
+| 156.5 | At every dose the four random pairs total under a quarter of the four neurons' total, wherever the neurons total at least 24 of 96 | medium | Claude | held |
 
 ## Part 157 (registered 2026-10-31 15:42 CT, before any data)
 

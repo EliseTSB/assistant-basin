@@ -42,6 +42,23 @@ class Rules(unittest.TestCase):
     def test_gate_failure_makes_untestable(self):
         r = s.score([])
         self.assertTrue(all(v["verdict"] == "untestable" for v in r["predictions"].values()))
+    def test_gate1_rejects_wrong_row_key_even_with_1368_unique_rows(self):
+        rows = []
+        for u in s.UNITS:
+            for arm in ("neuron", "random"):
+                for dose in s.DOSES:
+                    for q in range(s.PHRASINGS):
+                        rows.append({"unit_id": u, "arm": arm, "dose": dose,
+                                     "question_index": q, "answer": "valid answer text"})
+        for q in range(s.PHRASINGS):
+            rows.append({"unit_id": "plain", "arm": "plain", "dose": 0.0,
+                         "question_index": q, "answer": "valid answer text"})
+        rows[0]["question_index"] = 24
+        result = s.score(rows)
+        self.assertEqual(result["gates"]["gate1"]["rows"], 1368)
+        self.assertFalse(result["gates"]["gate1"]["matches_expected_keys"])
+        self.assertFalse(result["gates"]["gate1"]["57_rows_each_phrasing"])
+        self.assertFalse(result["gates"]["gate1"]["passed"])
 
 
 if __name__ == "__main__":

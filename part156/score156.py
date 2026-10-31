@@ -20,6 +20,7 @@ import triage86  # noqa: E402
 DOSES = (0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1)
 UNITS = {"L24N5017": "Google", "L21N7134": "Baidu", "L23N1743": "Huawei", "L23N2993": "Microsoft"}
 PHRASINGS = 24
+ARMS = ("neuron", "random")
 
 
 def table(rows):
@@ -62,14 +63,29 @@ def predictions(hits):
 
 def score(rows):
     keys = {(r["unit_id"], r["arm"], float(r["dose"]), int(r["question_index"])) for r in rows}
+    expected_keys = {
+        (unit, arm, dose, question_index)
+        for unit in UNITS
+        for arm in ARMS
+        for dose in DOSES
+        for question_index in range(PHRASINGS)
+    } | {("plain", "plain", 0.0, question_index) for question_index in range(PHRASINGS)}
+    phrasing_counts = {q: 0 for q in range(PHRASINGS)}
+    for row in rows:
+        q = int(row["question_index"])
+        if q in phrasing_counts:
+            phrasing_counts[q] += 1
+    phrasing_counts_valid = all(count == 57 for count in phrasing_counts.values())
     nonempty = sum(bool(str(r.get("answer", "")).strip()) for r in rows)
     plain = [r for r in rows if r["arm"] == "plain"]
     plain_hits = sum(any(company_hit(r["answer"], c) for c in UNITS.values()) for r in plain)
     hits, broken = table(rows)
     at_08 = sum(hits[u]["neuron"][0.8] for u in UNITS)
-    gate1 = len(rows) == 1368 and len(keys) == 1368 and nonempty == 1368
+    gate1 = len(rows) == 1368 and keys == expected_keys and phrasing_counts_valid and nonempty == 1368
     gate2 = 59 <= at_08 <= 81 and plain_hits <= 2
-    gates = {"gate1": {"passed": gate1, "rows": len(rows), "unique": len(keys), "nonempty": nonempty},
+    gates = {"gate1": {"passed": gate1, "rows": len(rows), "unique": len(keys),
+                        "expected_unique": len(expected_keys), "matches_expected_keys": keys == expected_keys,
+                        "57_rows_each_phrasing": phrasing_counts_valid, "nonempty": nonempty},
              "gate2": {"passed": gate2, "at_0_8": at_08, "plain_company_hits": plain_hits}}
     preds = predictions(hits)
     if not (gate1 and gate2):
