@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -27,6 +28,11 @@ DOSES = (0.6, 0.7, 0.8, 0.9, 1.0)
 def cells():
     return [{"cell": f"{a}+{b}@{da:.1f}+{db:.1f}", "a": a, "b": b, "dose_a": da, "dose_b": db}
             for a, b in PAIRS for da in DOSES for db in DOSES]
+
+
+def random_seed(cell_id, arm):
+    raw = hashlib.sha256(f"134:{cell_id}:{arm}".encode("utf-8")).digest()
+    return int.from_bytes(raw[:8], "big")
 
 
 def chat_ids(tok, question):
@@ -86,15 +92,20 @@ def atomic_json(path: Path, data):
 
 def append_jsonl_atomic(path: Path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
-    old = path.read_bytes() if path.exists() else b""
-    payload = b"".join((json.dumps(row, ensure_ascii=False) + "\n").encode() for row in rows)
-    fd, name = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
-    try:
-        with os.fdopen(fd, "wb") as stream:
-            stream.write(old); stream.write(payload); stream.flush(); os.fsync(stream.fileno())
-        os.replace(name, path)
-    finally:
-        if os.path.exists(name): os.unlink(name)
+    # Serialize the read/replace transaction so concurrent runs cannot overwrite
+    # rows appended by another process between the read and os.replace calls.
+    with path.with_name(path.name + ".lock").open("a+b") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        old = path.read_bytes() if path.exists() else b""
+        payload = b"".join((json.dumps(row, ensure_ascii=False) + "\n").encode() for row in rows)
+        fd, name = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
+        try:
+            with os.fdopen(fd, "wb") as stream:
+                stream.write(old); stream.write(payload); stream.flush(); os.fsync(stream.fileno())
+            os.replace(name, path)
+        finally:
+            if os.path.exists(name): os.unlink(name)
+        fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
 
 
 def read_rows(path):
@@ -158,7 +169,13 @@ def main(argv=None, *, model=None, tokenizer=None, out=None, pushes=None, neuron
     else:
         selections = json.loads(selection_file.read_text(encoding="utf-8"))
         selected = selections.get("top_three", selections)
-        todo = selected[:3]; qs = TEST_QUESTIONS; arms = ["pair", "a_only", "b_only", "a_random_1", "a_random_2", "b_random_1", "b_random_2"]
+        if len(selected) < 3:
+            raise ValueError(f"test stage requires all three registered selected cells; found {len(selected)}")
+        todo = []
+        for row in selected[:3]:
+            pair, doses = row["pair"], row["doses"]
+            todo.append({"cell": row["cell"], "a": pair[0], "b": pair[1], "dose_a": doses[0], "dose_b": doses[1]})
+        qs = TEST_QUESTIONS; arms = ["pair", "a_only", "b_only", "a_random_1", "a_random_2", "b_random_1", "b_random_2"]
     answers_path = directory / f"{a.stage}-answers.jsonl"
     old = read_rows(answers_path); done = {(r["cell"], r["arm"]) for r in old}
     meta = {"stage": a.stage, "status": "running", "batch_size": a.batch_size, "device": a.device,
@@ -185,7 +202,7 @@ def main(argv=None, *, model=None, tokenizer=None, out=None, pushes=None, neuron
                 real = neuron_vector(real_uid, cell["dose_a"] if random_arm else cell["dose_b"])
                 replaced = neuron_vector(random_uid, cell["dose_b"] if random_arm else cell["dose_a"])
                 # Deterministic same-layer Gaussian residual direction, norm matched to the replaced push.
-                seed = 13400 + (0 if random_arm else 2) + (int(arm[-1]) - 1) + sum(map(ord, cid))
+                seed = random_seed(cid, arm)
                 gen = torch.Generator(device="cpu"); gen.manual_seed(seed)
                 rnd = torch.randn(real.shape, generator=gen, dtype=torch.float32)
                 rnd = rnd.to(device=device, dtype=torch.float32); rnd *= replaced.float().norm() / rnd.norm()

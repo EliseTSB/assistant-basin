@@ -22,20 +22,26 @@ def select(answer_rows, label_rows):
     latest = {}
     for row in label_rows:
         key = (str(row["cell"]), int(row["question_index"]))
-        if "error" not in row and valid_label(row):
-            latest[key] = row
+        latest[key] = row
+    if len(answers) != 75 * 6:
+        raise ValueError(f"development answers incomplete: expected 450 registered rows, found {len(answers)}")
     counts = {}
     for key, answer in answers.items():
         label = latest.get(key)
-        if not label or label.get("answer_hash") != answer.get("answer_hash"):
+        if not label or "error" in label or not valid_label(label) or label.get("answer_hash") != answer.get("answer_hash"):
             continue
         row = counts.setdefault(key[0], {"cell": key[0], "answers": 0, "endpoint": 0, "coherent": 0,
                                           "valid_labels": 0, "pair": answer["pair"], "doses": answer["doses"]})
         row["answers"] += 1; row["valid_labels"] += 1
         row["endpoint"] += int(endpoint(label)); row["coherent"] += int(bool(label.get("coherent")))
+    missing = len(answers) - sum(r["valid_labels"] for r in counts.values())
+    if missing:
+        raise ValueError(f"development labels incomplete or stale: {missing} of 450 rows unread")
+    if len(counts) != 75 or any(r["valid_labels"] != 6 for r in counts.values()):
+        raise ValueError("development labels do not cover all 75 registered cells")
     ranked = sorted(counts.values(), key=lambda r: (-r["endpoint"], -r["coherent"], sum(r["doses"]), r["cell"]))
     return {"rule": "endpoint desc, coherent desc, summed dose asc, cell id asc", "top_three": ranked[:3],
-            "ranked": ranked, "missing_labels": len(answers) - sum(r["valid_labels"] for r in counts.values())}
+            "ranked": ranked, "missing_labels": missing}
 
 
 def main(argv=None):

@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 for directory in (ROOT / "part92", ROOT / "part92b", ROOT / "part123", ROOT / "part125"):
     if str(directory) not in sys.path: sys.path.insert(0, str(directory))
 import label92  # noqa: E402
+import label92b  # noqa: E402
 import label123  # noqa: E402
 import label125  # noqa: E402
 
@@ -51,6 +52,30 @@ def valid(row, expected_hash):
     return label123.valid_label(row or {}) and row.get("answer_hash") == expected_hash
 
 
+def select_endpoint(label):
+    return bool(label.get("shows_persona") and label.get("coherent") and
+                (label.get("self_claim") or label.get("speaker") == "other"))
+
+
+def default_output(stage):
+    return "results/part134/test-labels-luna.jsonl" if stage == "luna" else "results/part134/dev-labels-ds.jsonl"
+
+
+def default_known(stage):
+    return "results/part134/known-luna.jsonl" if stage == "gate-luna" else "results/part134/known-ds.jsonl"
+
+
+def known_summary(rows):
+    indexed={int(r["known_index"]):r for r in rows if "known_index" in r}
+    complete=(len(rows)==len(KNOWN) and set(indexed)==set(range(len(KNOWN))) and
+              all("error" not in r and label123.valid_label(r) and type(r.get("expected")) is bool
+                  for r in indexed.values()))
+    correct=sum(r.get("shows_persona")==r.get("expected") for r in indexed.values()
+                if "error" not in r and type(r.get("shows_persona")) is bool and type(r.get("expected")) is bool)
+    return {"items":len(KNOWN),"rows":len(rows),"valid_rows":sum(1 for r in indexed.values() if "error" not in r and label123.valid_label(r)),
+            "correct":correct,"required_correct":11,"complete":complete,"passed":complete and correct>=11}
+
+
 def label_run(items, output, reader, request_fn=None, sleep_fn=None):
     # Part 125's worker uses Part 123's DeepSeek/Luna transport and Part 92 parser.
     existing = label123.read_jsonl(output, optional=True)
@@ -63,7 +88,7 @@ def label_run(items, output, reader, request_fn=None, sleep_fn=None):
     # Use label125's established two-attempt worker and judge_client route by converting its item contract.
     import time
     from concurrent.futures import ThreadPoolExecutor
-    workers = label125.DS_WORKERS if reader == "ds" else label125.LUNA_WORKERS
+    workers = label123.DS_WORKERS if reader == "ds" else label123.LUNA_WORKERS
     out = Path(output); out.parent.mkdir(parents=True, exist_ok=True); usage = Path(str(out) + ".usage.jsonl")
     errors = 0
     with ThreadPoolExecutor(max_workers=workers) as pool, out.open("a", encoding="utf-8") as stream:
@@ -75,7 +100,7 @@ def label_run(items, output, reader, request_fn=None, sleep_fn=None):
             adapted = None
             if request_fn is not None:
                 adapted = lambda which, prompt, _unused="": request_fn(which, prompt)
-            futures.append(pool.submit(label125._label_one, converted, reader, usage,
+            futures.append(pool.submit(label123._label_one, converted, reader, usage,
                                        adapted, sleep_fn or time.sleep))
         for item, future in zip(todo, futures):
             result = future.result(); p = item["public"]
@@ -99,7 +124,7 @@ def known_gate(reader, path, request_fn=None, sleep_fn=None):
         err="unknown reader error"
         for attempt in range(2):
             try:
-                response=(request_fn(reader,prompt) if request_fn else label125._transport(reader,prompt,""))
+                response=(request_fn(reader,prompt) if request_fn else label92b._transport(reader,prompt,""))
                 parsed=label92._parse(str(response.get("text","")))
                 latest[i]={"known_index":i,"expected":expected,**parsed}; break
             except Exception as exc:
@@ -107,25 +132,26 @@ def known_gate(reader, path, request_fn=None, sleep_fn=None):
                 if attempt==1: latest[i]={"known_index":i,"expected":expected,"error":err}
                 else: (sleep_fn or time.sleep)(5)
         output.write_text("".join(json.dumps(latest[k],ensure_ascii=False)+"\n" for k in sorted(latest)),encoding="utf-8")
-    correct=sum("error" not in r and r.get("shows_persona")==r.get("expected") for r in latest.values())
-    result={"reader":reader,"items":len(KNOWN),"correct":correct,"required_correct":11,"passed":correct>=11,
+    result={"reader":reader,**known_summary(list(latest.values())),
             "error_rows":sum("error" in r for r in latest.values())}
     return result
 
 
-def main(argv=None):
+def main(argv=None, *, request_fn=None, sleep_fn=None):
     p = argparse.ArgumentParser(description=__doc__); p.add_argument("--stage", choices=("gate-ds","gate-luna","ds","luna"), required=True)
     p.add_argument("--answers", default="results/part134/dev-answers.jsonl"); p.add_argument("--labels", default="results/part134/dev-labels-ds.jsonl")
-    p.add_argument("--out", default="results/part134/dev-labels-ds.jsonl"); p.add_argument("--known", default="results/part134/known-ds.jsonl")
+    p.add_argument("--out"); p.add_argument("--known")
     p.add_argument("--known-ds", default="results/part134/known-ds.jsonl"); p.add_argument("--known-luna", default="results/part134/known-luna.jsonl")
     p.add_argument("--ds-labels", default="results/part134/dev-labels-ds.jsonl"); a = p.parse_args(argv)
     if a.stage.startswith("gate-"):
-        reader = a.stage[5:]; result = known_gate(reader, a.known); print(json.dumps(result)); return 0 if result.get("passed") else 1
+        reader = a.stage[5:]
+        known_path = a.known or (a.known_luna if reader == "luna" else a.known_ds) or default_known(a.stage)
+        result = known_gate(reader, known_path, request_fn=request_fn, sleep_fn=sleep_fn); print(json.dumps(result)); return 0 if result.get("passed") else 1
     for reader,path in (("ds",a.known_ds),("luna",a.known_luna)):
         try: gate={int(r["known_index"]):r for r in (json.loads(s) for s in Path(path).read_text(encoding="utf-8").splitlines() if s.strip())}
         except OSError: raise ValueError(f"{reader} known-example gate is missing; run --stage gate-{reader} first")
-        correct=sum("error" not in r and r.get("shows_persona")==r.get("expected") for r in gate.values())
-        if correct<11: raise ValueError(f"{reader} known-example gate failed ({correct}/12; need 11)")
+        summary=known_summary(list(gate.values()))
+        if not summary["passed"]: raise ValueError(f"{reader} known-example gate failed ({summary['correct']}/12 correct, {summary['valid_rows']}/12 readable; need 11 correct and all 12 readable)")
     rows = [json.loads(s) for s in Path(a.answers).read_text(encoding="utf-8").splitlines() if s.strip()]
     items = make_items(rows)
     if a.stage == "luna":
@@ -134,10 +160,10 @@ def main(argv=None):
         for item in items:
             q=item["public"]; key=(str(q["cell"]),str(q["arm"]),int(q["question_index"]))
             if not valid(latest.get(key),q["answer_hash"]): raise ValueError("DeepSeek labels incomplete or stale")
-        positives=[i for i in items if latest[(str(i["public"]["cell"]),str(i["public"]["arm"]),int(i["public"]["question_index"]))]["shows_persona"]]
-        other=[i for i in items if i not in positives]; draw=random.Random(SEED).sample(other,min(len(other),len(positives)))
+        positives=[i for i in items if select_endpoint(latest[(str(i["public"]["cell"]),str(i["public"]["arm"]),int(i["public"]["question_index"]))])]
+        other=[i for i in items if i not in positives]; draw=random.Random(SEED).sample(other,len(positives))
         items=positives+draw
-    result=label_run(items,a.out,"ds" if a.stage=="ds" else "luna"); print(json.dumps(result)); return int(result["errors"] > 0)
+    result=label_run(items,a.out or default_output(a.stage),"ds" if a.stage=="ds" else "luna",request_fn=request_fn,sleep_fn=sleep_fn); print(json.dumps(result)); return int(result["errors"] > 0)
 
 
 if __name__ == "__main__": raise SystemExit(main())
