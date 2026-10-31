@@ -48,6 +48,29 @@ def known_items(path):
     return rows
 
 
+def require_study_gates(out):
+    """Refuse study reads until both readers pass the colocated known set."""
+    expected_rows = known_items(Path(__file__).with_name("known135.json"))
+    source = json.loads(Path(__file__).with_name("known135.json").read_text(encoding="utf-8"))
+    # known_items preserves stable IDs; use the registered source labels.
+    expected = {row["id"]: item["relation"] for row, item in zip(expected_rows, source)}
+    out = Path(out)
+    for reader in ("ds", "luna"):
+        path = out.parent / f"known-{reader}.jsonl"
+        if not path.is_file():
+            raise SystemExit(f"Study mode blocked: {path.name} is missing beside OUT; run the known gate first.")
+        answers = {}
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if "error" not in row and row.get("relation") in RELATIONS:
+                answers[row.get("id")] = row["relation"]
+        correct = sum(answers.get(item_id) == relation for item_id, relation in expected.items())
+        if correct < 11:
+            raise SystemExit(f"Study mode blocked: {path.name} scored {correct}/12; at least 11/12 required.")
+
+
 def one(item, reader):
     import judge_client
     last = None
@@ -68,6 +91,7 @@ def main(pairs, out, reader, known=None):
         # The known set is a dedicated gate run: every reader must see all 12.
         items = known_items(known)
     else:
+        require_study_gates(out)
         items = [json.loads(line) for line in Path(pairs).read_text(encoding="utf-8").splitlines() if line.strip()]
     rng = random.Random(1350)
     rng.shuffle(items)

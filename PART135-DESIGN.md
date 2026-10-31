@@ -19,6 +19,13 @@ fire on in ordinary text, as the Neuron Lens catalog labels them?
 - Our own data: Part 18, both signs of Qwen3.5-4B L22 N2742 (positive alien, negative maker wording); Part 130's reader for whether
   two persona names mean the same concept; Part 126b and the Part 125 family read the catalog's labels.
 
+## Amendment (22:56 CT 2026-10-30, after a code review, before any both-pole neuron was counted or read)
+
+The sampling frame is now both-pole neurons with a catalog `fires` label on both poles, so the four arms use the same neurons; the
+count left out is reported. Shuffled partners come from every both-pole neuron in the frame in the same layer, not only sampled ones,
+so no pair crosses a layer; a layer with one such neuron leaves the frame, and that count is reported. The reader refuses to start the
+study until both readers pass Gate 1. One known example was the prompt's own "hero and villain", so it is replaced.
+
 ## Method
 
 Library: neuronpersonas.com's Qwen3-8B files, fetched 2026-10-30, at the path Part 129 reads. Row i of a layer is neuron i//2, plus

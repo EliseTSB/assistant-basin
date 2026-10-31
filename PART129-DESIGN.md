@@ -53,6 +53,20 @@ L2's 24,576 poles peak on one token, "You are on page 1⟦of⟧".
 Under this amendment, part129/score129.py is rerun with --drop-layers 2 into results/part129/score129-amended.json. L2 leaves every
 number. README reports the verdicts of both runs side by side, marks all of them post hoc, and PREDICTIONS.md says the same.
 
+## Erratum (22:58 CT 2026-10-30, after a cold check of the README, correcting the two amendments above)
+
+The 21:41 amendment says the run stopped at its 7,500-document checkpoint. It stopped at 8,000. Token counts from the catalog's
+docs.parquet match the saved sums exactly: web is lines 0 to 7,999 (1,891,798 positions), zh is lines 490 to 1,499 (236,409), code and
+chat are their first 1,500 lines. Resuming at document 8,000 on a corpus cut to 7,510 web lines skipped the first 490 zh lines. So the
+slices are not an equal share: 8,000 web, 1,010 zh, 1,500 code, 1,500 chat, 12,009 documents after the length filter.
+
+The 22:37 amendment says the cut removed the documents holding the rest of Gate 1's checks. The 136 unmeasured checks are all the zh
+checks, in lines 0 to 99, which the skip removed. Gate 1 has no zh check on the main run; the pilot passed 93 zh checks, 300 of 300 in
+all.
+
+The 22:37 amendment also says L2's r is not high because of a shared mode. Its evidence does not show that: a lower r does not rule
+out a shared mode, and Gate 3 is what measures one. The README says the withdrawal clause stands open at L2.
+
 ## Method
 
 Models: Qwen/Qwen3-8B at b968826d9c46dd6066d109eabc6255188de91218 and Qwen/Qwen3-8B-Base at

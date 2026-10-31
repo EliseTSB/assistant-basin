@@ -40,15 +40,33 @@ def library_layer(data):
 
 def first_sentence(text):
     text = " ".join(str(text or "").split())
+    abbreviations = ("e.g.", "i.e.")
     for i, char in enumerate(text):
-        if char in ".!?" and (i + 1 == len(text) or text[i + 1].isspace()):
-            text = text[:i + 1]
+        if char not in ".!?":
+            continue
+        if char == "." and any(text[max(0, i - len(abbr) + 1):i + 1].lower() == abbr
+                                for abbr in abbreviations):
+            continue
+        end = i + 1
+        while end < len(text) and text[end] in "\"'”’)]}":
+            end += 1
+        if end == len(text) or text[end].isspace():
+            text = text[:end]
             break
-    return text[:200]
+    if len(text) <= 200:
+        return text
+    clipped = text[:200]
+    boundary = clipped.rfind(" ")
+    return clipped[:boundary] if boundary >= 0 else ""
 
 
 def persona_text(record):
-    return f"{record[0]}: {first_sentence(record[1])}"[:200]
+    text = f"{record[0]}: {first_sentence(record[1])}"
+    if len(text) <= 200:
+        return text
+    clipped = text[:200]
+    boundary = clipped.rfind(" ")
+    return clipped[:boundary] if boundary >= 0 else ""
 
 
 def rotation_null(plus, minus, rotations=ROTATIONS, seed=SEED):
@@ -73,8 +91,8 @@ def derangement(neurons, rng):
     return {n: order[(i + shift) % len(order)] for i, n in enumerate(order)}
 
 
-def row_id(layer, neuron, partner, arm):
-    raw = f"part135:{SEED}:{layer}:{neuron}:{partner}:{arm}".encode()
+def row_id(layer, neuron, partner, arm, a="", b="", partner_layer=None):
+    raw = f"part135:{SEED}:{layer}:{neuron}:{partner}:{partner_layer}:{arm}:{a}:{b}".encode()
     return hashlib.sha256(raw).hexdigest()[:20]
 
 
@@ -89,7 +107,8 @@ def shuffled_texts(text_for, layer, neuron, partner_layer, partner):
 
 def make_row(layer, neuron, partner, arm, a, b, rng, partner_layer=None):
     left, right = text_order(a, b, rng)
-    return {"id": row_id(layer, neuron, partner, arm), "arm": arm,
+    return {"id": row_id(layer, neuron, partner, arm, left, right,
+                          layer if partner_layer is None else partner_layer), "arm": arm,
             "layer": layer, "neuron": neuron, "partner_neuron": partner,
             "partner_layer": layer if partner_layer is None else partner_layer,
             "a": left, "b": right}
@@ -135,14 +154,27 @@ def build(library, catalog, pairs_out, counts_out):
         "both_pole_share_L0_17": early_both_poles / early_poles if early_poles else None,
         "both_pole_share_L18_35": late_both_poles / late_poles if late_poles else None,
     }
-    candidates = [(layer, int(n)) for layer in range(LAYERS)
-                  for n in np.flatnonzero(plus[layer] & minus[layer])]
+    both_by_layer_neurons = {
+        layer: [int(n) for n in np.flatnonzero(plus[layer] & minus[layer])]
+        for layer in range(LAYERS)
+    }
+    fire_eligible_by_layer = {
+        layer: [n for n in neurons
+                if fire_labels[layer].get((n, 1)) and fire_labels[layer].get((n, -1))]
+        for layer, neurons in both_by_layer_neurons.items()
+    }
+    left_out_missing_fire = sum(len(neurons) - len(fire_eligible_by_layer[layer])
+                                for layer, neurons in both_by_layer_neurons.items())
+    singleton_layers = [layer for layer, neurons in fire_eligible_by_layer.items() if len(neurons) == 1]
+    singleton_left_out = sum(len(fire_eligible_by_layer[layer]) for layer in singleton_layers)
+    frame_by_layer = {layer: neurons for layer, neurons in fire_eligible_by_layer.items()
+                      if len(neurons) >= 2}
+    candidates = [(layer, n) for layer, neurons in frame_by_layer.items() for n in neurons]
     sample = rng.sample(candidates, min(250, len(candidates)))
     sample_by_layer = {}
     for layer, neuron in sample:
         sample_by_layer.setdefault(layer, []).append(neuron)
     pairs = []
-    missing_fire = 0
     eligible_fire = {}
     for layer, neuron in sample:
         p, m = records[layer][0][neuron], records[layer][1][neuron]
@@ -151,34 +183,28 @@ def build(library, catalog, pairs_out, counts_out):
         labels = fire_labels[layer]
         fp, fm = labels.get((neuron, 1)), labels.get((neuron, -1))
         if not fp or not fm:
-            missing_fire += 1
-            continue
+            raise ValueError(f"sampled frame neuron L{layer} N{neuron} is missing a fires label")
         eligible_fire.setdefault(layer, []).append(neuron)
         pairs.append(make_row(layer, neuron, neuron, "fires", fp, fm, rng))
     counts["sampled_both_pole_neurons"] = len(sample)
-    counts["sampled_neurons_missing_catalog_pole"] = missing_fire
+    counts["both_pole_missing_one_or_more_fire_labels"] = left_out_missing_fire
+    counts["frame_singleton_layer_neurons_left_out"] = singleton_left_out
+    counts["both_pole_neurons_left_out_of_sampling_frame"] = left_out_missing_fire + singleton_left_out
+    counts["frame_singleton_layers_left_out"] = singleton_layers
+    counts["sampling_frame_neurons"] = len(candidates)
     for base_arm, pool_by_layer, text_fn in (
         ("persona", sample_by_layer,
          lambda l, n, sign: persona_text(records[l][sign][n])),
         ("fires", eligible_fire, lambda l, n, sign: fire_labels[l][(n, 1 if sign == 0 else -1)]),
     ):
-        groups = {l: ns[:] for l, ns in pool_by_layer.items() if ns}
-        maps = {l: derangement(ns, rng) for l, ns in groups.items() if len(ns) > 1}
-        nonempty = sorted(groups)
-        for layer, neurons in groups.items():
+        for layer, neurons in pool_by_layer.items():
             for neuron in neurons:
-                if len(neurons) > 1:
-                    partner = maps[layer][neuron]
-                    partner_layer = layer
-                else:
-                    neighbors = [other for other in nonempty if other != layer]
-                    if not neighbors:
-                        continue
-                    nearest = min(neighbors, key=lambda other: (abs(other - layer), other))
-                    partner = groups[nearest][rng.randrange(len(groups[nearest]))]
-                    partner_layer = nearest
-                    counts.setdefault("cross_layer_shuffle_fallbacks", []).append(
-                        {"layer": layer, "neuron": neuron, "partner_layer": nearest, "partner_neuron": partner})
+                frame = frame_by_layer.get(layer, [])
+                eligible_partners = [n for n in frame if n != neuron]
+                if not eligible_partners:
+                    raise ValueError(f"no same-layer shuffled partner for L{layer} neuron {neuron}")
+                partner = rng.choice(eligible_partners)
+                partner_layer = layer
                 a, b = shuffled_texts(text_fn, layer, neuron, partner_layer, partner)
                 pairs.append(make_row(layer, neuron, partner, base_arm + "_shuffled", a, b, rng,
                                       partner_layer=partner_layer))

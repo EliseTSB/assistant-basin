@@ -3,7 +3,7 @@
  {"a": "Medieval Knight: a sworn warrior of the realm.", "b": "Armored Crusader: a sword-bearing warrior of a holy order.", "relation": "same"},
  {"a": "Sea Captain: commands a ship and its crew.", "b": "Ship's Master: runs a sailing vessel at sea.", "relation": "same"},
  {"a": "Wise Grandmother: an elderly woman who gives gentle advice.", "b": "Kindly Old Nana: a warm old woman full of family wisdom.", "relation": "same"},
- {"a": "Heroic Protector: defends the innocent from harm.", "b": "Cruel Villain: delights in harming the innocent.", "relation": "opposite"},
+ {"a": "Gentle Pacifist: refuses every form of violence.", "b": "Eager Warmonger: seeks out every chance to fight.", "relation": "opposite"},
  {"a": "Angel of Mercy: a holy being of light and kindness.", "b": "Demon of Torment: a creature of darkness and cruelty.", "relation": "opposite"},
  {"a": "Devout Believer: faith guides every part of life.", "b": "Committed Atheist: rejects every religious claim.", "relation": "opposite"},
  {"a": "Billionaire Tycoon: lives in vast wealth.", "b": "Destitute Beggar: owns nothing and lives on the street.", "relation": "opposite"},
