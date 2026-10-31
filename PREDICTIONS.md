@@ -2986,3 +2986,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 150.11 | Claude (medium confidence): L19 N4979's relative minus demonstrative gap on Base is positive on the chat model and at least half as large on Base. | pending | pending |
 | 150.12 | Claude (medium confidence): At least 4 of the 5 units have a down-projection column cosine of at least 0.9 between Base and the chat model. | pending | pending |
 | 150.13 | Claude (medium confidence): At dose 0.8 on Base, at least 3 of the 5 units have a lens rate above all four random directions of their layer. | pending | pending |
+
+## Part 151 (registered 2026-10-31, PART151-DESIGN.md): what do Part 150's five units read on Qwen3.5-4B itself?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 151.1 | Claude (medium confidence): At least 3 of the 5 units hit their own list on more top windows than on any other unit's list. | pending | pending |
+| 151.2 | Claude (high confidence): L24 N8542 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151.3 | Claude (high confidence): L24 N6835 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151.4 | Claude (low confidence): L19 N4979 hits its own list on at least 5 of 20 top windows. | pending | pending |
+| 151.5 | Claude (medium confidence): L19 N5975 hits its own list on at least 5 of 20 top windows. | pending | pending |

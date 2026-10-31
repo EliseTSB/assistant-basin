@@ -1,0 +1,3 @@
+# Copied files: part151/read151.py, part86/common86.py, neuron_report.py. The Pile sample is already at qwen35/pile10k.jsonl in the job folder.
+python3 tools/launch_arc.py 151 --step "-I -B part151/read151.py --pile qwen35/pile10k.jsonl --out results/part151" --copy part151/read151.py part86/common86.py neuron_report.py
+# Host: python3 -I -B part151/score151.py --windows results/part151/windows.json --out results/part151/score.json
