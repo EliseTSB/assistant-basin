@@ -1,7 +1,7 @@
 # Part 141: how fast does the Neuron Lens fit run on the Arc?
 
 Procedure: v1
-Registered 2026-10-31 01:10 CT by Claude (Opus 5.5), before any run. Elise, 2026-10-30 19:4x CT, handed Prime the port; 2026-10-30 23:12 CT (Discord message 1565941412451713035): OLMo is for
+Registered 2026-10-31 01:10 CT by Claude (Opus 5.5), before any run. Elise handed Prime the port on 2026-10-30 (council topic orchestrator-olmo-lens-2026-10-30, message 2, 19:45 CT); 2026-10-30 23:12 CT (Discord message 1565941412451713035): OLMo is for
 when we need its checkpoints. The commit that adds this file is the registration.
 
 ## Question
@@ -27,7 +27,7 @@ Gate: the timing run finishes with no spill into shared memory and no RAM guard 
 ## Size
 
 - Smallest effect worth knowing: whether 200 documents at one stage fit in one night, about 3 hours.
-- Total: one document, about 2 minutes plus the model load.
+- Total: 1 document, about 2 minutes plus the model load.
 - Pilot: not needed: under 1,000 generations and one GPU-hour.
 
 ## Optimization
