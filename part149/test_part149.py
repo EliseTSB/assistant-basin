@@ -54,6 +54,10 @@ class StatisticTests(unittest.TestCase):
         self.assertFalse(score.meets_prediction('149.7',{'base':.201,'sft':1,'instruct':1}))
         self.assertTrue(score.meets_prediction('149.8',{'questions_at_least_5x':18}))
         self.assertFalse(score.meets_prediction('149.8',{'questions_at_least_5x':17}))
+    def test_spearman_08_rounding(self):
+        # Four ranks produce steps of .2; binary float stores .8 just below .8.
+        cor=[{'spearman':0.7999999999999999},{'spearman':.8},{'spearman':.6}]
+        self.assertEqual(score.count_at_least(cor),2)
     def test_each_gate_rejects_missing_fixture(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); (root/'instruct.jsonl').write_text('');(root/'sft.jsonl').write_text('');(root/'base.jsonl').write_text('');(root/'prompts-instruct.jsonl').write_text('')

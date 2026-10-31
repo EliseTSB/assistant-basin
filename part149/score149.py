@@ -97,6 +97,9 @@ def _gate_rows(root,part146):
     details['gate5_damage']={'passed':bool(promptrows) and not errs,'prompt_rows':len(promptrows),'errors':errs[:100]}
     return details,bystage
 
+def count_at_least(cor,threshold=.8):
+    return sum(round(x['spearman'],9)>=threshold for x in cor)
+
 def meets_prediction(pid,estimate):
     if pid=='149.1':return sum((x.get('partial_spearman') is not None and x['partial_spearman']>=.3) for x in estimate)>=3
     if pid=='149.2':return estimate['ratio']>=10
@@ -167,7 +170,9 @@ def score(input_dir='results/part149',part146='results/part146',out=None):
     for q in range(1,25):
         logs=np.asarray([_logmean(values['instruct'][q][a]) for a in ARMS[:4]])
         cor.append({'q':q,'spearman':spearman(ords,logs)})
-    pred['149.3']={'estimate':cor,'questions_at_least_0.8':sum(x['spearman']>=.8 for x in cor),'verdict':'held' if meets_prediction('149.3',{'questions_at_least_0.8':sum(x['spearman']>=.8 for x in cor)}) else 'failed'}
+    # Four ranks give Spearman in exact steps of 0.2, and floating point can store 0.8 as 0.7999999999999999.
+    at_least=count_at_least(cor)
+    pred['149.3']={'estimate':cor,'questions_at_least_0.8':at_least,'verdict':'held' if meets_prediction('149.3',{'questions_at_least_0.8':at_least}) else 'failed'}
     # Push ranking, both pooled and split by unit type, with question baseline removed.
     corr_report={}
     for damage_base in (False,True):
@@ -200,7 +205,7 @@ def score(input_dir='results/part149',part146='results/part146',out=None):
     pred['149.8']={'estimate':{'questions_at_least_5x':count,'ratios':ratios},'verdict':'held' if meets_prediction('149.8',{'questions_at_least_5x':count}) else 'failed'}
     for k,v in pred.items():result['predictions'][k].update(v)
     result['push_correlations']=corr_report
-    result['questions']={str(q):{'instruct':{a:float(np.median(np.exp([r['logp_sorry'] for r in values['instruct'][q][a]]))) if values['instruct'][q][a] else None for a in ARMS},'base_shuf_all':float(np.median(np.exp([r['logp_sorry'] for r in values['base'][q]['shuf-all']]))) if values['base'][q]['shuf-all'] else None,'sft_shuf_all':float(np.median(np.exp([r['logp_sorry'] for r in values['sft'][q]['shuf-all']]))) if values['sft'][q]['shuf-all'] else None} for q in range(1,25)}
+    result['questions']={str(q):{'instruct':{a:float(np.exp(np.mean([r['logp_sorry'] for r in values['instruct'][q][a]]))) if values['instruct'][q][a] else None for a in ARMS},'base_shuf_all':float(np.exp(np.mean([r['logp_sorry'] for r in values['base'][q]['shuf-all']]))) if values['base'][q]['shuf-all'] else None,'sft_shuf_all':float(np.exp(np.mean([r['logp_sorry'] for r in values['sft'][q]['shuf-all']]))) if values['sft'][q]['shuf-all'] else None} for q in range(1,25)}
     (outdir/'score.json').write_text(json.dumps(_safe(result),indent=2,allow_nan=False)+'\n',encoding='utf-8')
     lines=['# Part 149 score tables','','| Stage | Damage arm | Median P(sorry) | Range | Median P(I) | Range | Median P(m|I) | Range | Median product | Range |','|---|---|---:|---:|---:|---:|---:|---:|---:|---:|']
     for stage,rows in (('instruct',ins),('sft',sft),('base',base)):

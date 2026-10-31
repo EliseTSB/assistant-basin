@@ -1,0 +1,450 @@
+[
+  {
+    "id": "F-L4-neuron-7105",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 7105
+  },
+  {
+    "id": "F-L4-neuron-7336",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 7336
+  },
+  {
+    "id": "F-L4-neuron-4331",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 4331
+  },
+  {
+    "id": "F-L4-neuron-7574",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 7574
+  },
+  {
+    "id": "F-L4-neuron-7744",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 7744
+  },
+  {
+    "id": "F-L4-neuron-197",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 197
+  },
+  {
+    "id": "F-L4-neuron-5074",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 5074
+  },
+  {
+    "id": "F-L4-neuron-7902",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 7902
+  },
+  {
+    "id": "F-L4-neuron-6333",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 6333
+  },
+  {
+    "id": "F-L4-neuron-2498",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 2498
+  },
+  {
+    "id": "F-L4-neuron-2447",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 2447
+  },
+  {
+    "id": "F-L4-neuron-5724",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 5724
+  },
+  {
+    "id": "F-L4-neuron-6204",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 6204
+  },
+  {
+    "id": "F-L4-neuron-4163",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 4163
+  },
+  {
+    "id": "F-L4-neuron-522",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 522
+  },
+  {
+    "id": "F-L4-neuron-2815",
+    "set": "F",
+    "layer": 4,
+    "unit": "neuron",
+    "index": 2815
+  },
+  {
+    "id": "F-L4-random-12",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 12
+  },
+  {
+    "id": "F-L4-random-63",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 63
+  },
+  {
+    "id": "F-L4-random-31",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 31
+  },
+  {
+    "id": "F-L4-random-8",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 8
+  },
+  {
+    "id": "F-L4-random-4",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 4
+  },
+  {
+    "id": "F-L4-random-24",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 24
+  },
+  {
+    "id": "F-L4-random-5",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 5
+  },
+  {
+    "id": "F-L4-random-10",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 10
+  },
+  {
+    "id": "F-L4-random-2",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 2
+  },
+  {
+    "id": "F-L4-random-25",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 25
+  },
+  {
+    "id": "F-L4-random-21",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 21
+  },
+  {
+    "id": "F-L4-random-30",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 30
+  },
+  {
+    "id": "F-L4-random-29",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 29
+  },
+  {
+    "id": "F-L4-random-16",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 16
+  },
+  {
+    "id": "F-L4-random-26",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 26
+  },
+  {
+    "id": "F-L4-random-50",
+    "set": "F",
+    "layer": 4,
+    "unit": "random",
+    "index": 50
+  },
+  {
+    "id": "F-L5-neuron-6",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 6
+  },
+  {
+    "id": "F-L5-neuron-7105",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 7105
+  },
+  {
+    "id": "F-L5-neuron-6859",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 6859
+  },
+  {
+    "id": "F-L5-neuron-7317",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 7317
+  },
+  {
+    "id": "F-L5-neuron-7902",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 7902
+  },
+  {
+    "id": "F-L5-neuron-4796",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 4796
+  },
+  {
+    "id": "F-L5-neuron-4351",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 4351
+  },
+  {
+    "id": "F-L5-neuron-7008",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 7008
+  },
+  {
+    "id": "F-L5-neuron-6166",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 6166
+  },
+  {
+    "id": "F-L5-neuron-8176",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 8176
+  },
+  {
+    "id": "F-L5-neuron-8102",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 8102
+  },
+  {
+    "id": "F-L5-neuron-3716",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 3716
+  },
+  {
+    "id": "F-L5-neuron-2098",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 2098
+  },
+  {
+    "id": "F-L5-neuron-7176",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 7176
+  },
+  {
+    "id": "F-L5-neuron-4604",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 4604
+  },
+  {
+    "id": "F-L5-neuron-7286",
+    "set": "F",
+    "layer": 5,
+    "unit": "neuron",
+    "index": 7286
+  },
+  {
+    "id": "F-L5-random-0",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 0
+  },
+  {
+    "id": "F-L5-random-10",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 10
+  },
+  {
+    "id": "F-L5-random-8",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 8
+  },
+  {
+    "id": "F-L5-random-43",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 43
+  },
+  {
+    "id": "F-L5-random-46",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 46
+  },
+  {
+    "id": "F-L5-random-22",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 22
+  },
+  {
+    "id": "F-L5-random-1",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 1
+  },
+  {
+    "id": "F-L5-random-38",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 38
+  },
+  {
+    "id": "F-L5-random-52",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 52
+  },
+  {
+    "id": "F-L5-random-27",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 27
+  },
+  {
+    "id": "F-L5-random-18",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 18
+  },
+  {
+    "id": "F-L5-random-62",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 62
+  },
+  {
+    "id": "F-L5-random-55",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 55
+  },
+  {
+    "id": "F-L5-random-14",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 14
+  },
+  {
+    "id": "F-L5-random-6",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 6
+  },
+  {
+    "id": "F-L5-random-7",
+    "set": "F",
+    "layer": 5,
+    "unit": "random",
+    "index": 7
+  }
+]

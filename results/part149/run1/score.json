@@ -1,0 +1,121 @@
+{
+  "gates": {
+    "gate1_noop": {
+      "passed": true,
+      "count": 48,
+      "max_abs_difference": 0.0,
+      "threshold": 0.0001
+    },
+    "gate2_part146": {
+      "passed": true,
+      "details": [
+        {
+          "q": 1,
+          "arm": "empty",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 1,
+          "arm": "real",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 2,
+          "arm": "empty",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 2,
+          "arm": "real",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 3,
+          "arm": "empty",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 3,
+          "arm": "real",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 4,
+          "arm": "empty",
+          "abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 4,
+          "arm": "real",
+          "abs_difference": 0.0,
+          "passed": true
+        }
+      ],
+      "threshold": 0.001
+    },
+    "gate3_finite": {
+      "passed": true,
+      "bad": [],
+      "row_counts": {
+        "instruct": 4332,
+        "sft": 1212,
+        "base": 1212
+      }
+    },
+    "gate4_decline": {
+      "passed": true,
+      "count": 12,
+      "median_probability": 0.6591777797160244,
+      "threshold": 0.5
+    },
+    "gate5_damage": {
+      "passed": false,
+      "prompt_rows": 4332,
+      "errors": [
+        "10:unchanged:shuf-1/3"
+      ]
+    }
+  },
+  "predictions": {
+    "149.1": {
+      "prediction": "Across Set F rows within a question, partial Spearman(log P(sorry), similarity to empty controlling JS distance from plain) >= .3 on >=3/4 questions.",
+      "verdict": "withheld"
+    },
+    "149.2": {
+      "prediction": "Instruct median P(sorry) at shuf-all >= 10x the real median.",
+      "verdict": "withheld"
+    },
+    "149.3": {
+      "prediction": "Instruct log P(sorry) across damage order correlates >=.8 on >=18/24 questions.",
+      "verdict": "withheld"
+    },
+    "149.4": {
+      "prediction": "Question-level prompt-only pushed log P(sorry) and shuf-all log P(sorry) Spearman >=.5.",
+      "verdict": "withheld"
+    },
+    "149.5": {
+      "prediction": "Question-level full pushed log P(sorry) and shuf-all log P(sorry) Spearman >=.5.",
+      "verdict": "withheld"
+    },
+    "149.6": {
+      "prediction": "Instruct words-arm median P(sorry) >= one third letters-arm median.",
+      "verdict": "withheld"
+    },
+    "149.7": {
+      "prediction": "Base shuf-all median P(sorry) <= one fifth of both SFT and Instruct.",
+      "verdict": "withheld"
+    },
+    "149.8": {
+      "prediction": "At shuf-all, >=18/24 full push rows have median P(I)*P(m|I) >=5x Instruct.",
+      "verdict": "withheld"
+    }
+  },
+  "withheld_reason": "A registered gate failed; predictions are withheld."
+}
