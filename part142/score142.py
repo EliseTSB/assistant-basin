@@ -39,6 +39,8 @@ def pearson(a, b):
         return None
     x = np.asarray(a[:n], dtype=np.float64)
     y = np.asarray(b[:n], dtype=np.float64)
+    if not (np.isfinite(x).all() and np.isfinite(y).all()):
+        return None
     x -= x.mean(); y -= y.mean()
     den = float(np.linalg.norm(x) * np.linalg.norm(y))
     return float(np.dot(x, y) / den) if den else None
@@ -179,8 +181,14 @@ def legacy_gate3(by_pole, band_fn, bands):
     return values
 
 
-def registered_reading_permitted(gate1, gate2, gate3):
-    return gate1 is True and gate2 is True and gate3 is True
+def registered_reading_permitted(gate1, gate2, gate3, gate4=True):
+    return gate1 is True and gate2 is True and gate3 is True and gate4 is True
+
+
+def count_nonfinite_rows(rows):
+    """Amendment 2: a row with any non-finite value in either effect vector."""
+    return sum(not (np.isfinite(np.asarray(r["effect_a"], dtype=np.float64)).all()
+                    and np.isfinite(np.asarray(r["effect_b"], dtype=np.float64)).all()) for r in rows)
 
 
 def write_gate_only(out, gates):
@@ -211,6 +219,7 @@ def main():
     for row in effects:
         row["effect_a"] = score136.unpack_vector(row.pop("effect_a_f32_le_b64"))
         row["effect_b"] = score136.unpack_vector(row.pop("effect_b_f32_le_b64"))
+    nonfinite_rows = count_nonfinite_rows(effects)
     by_fire = {(r["pole_id"], r["doc_id"], int(r["position"])): r for r in effects}
     by_pole = {}
     for f in firings:
@@ -331,9 +340,10 @@ def main():
              "gate_3_known_unit_L22_N2742_count": known_count,
              "gate_3_matched_poles_count_p99_nearest_rank": p99,
              "gate_3_known_unit_pass": bool(known_pass),
+             "gate_4_nonfinite_effect_rows": nonfinite_rows, "gate_4_pass": nonfinite_rows == 0,
              "part_136_gate_3_median_abs_r_by_band_for_record": legacy,
              "part_136_gate_3_pass_at_0_02_for_record": bool(legacy) and all(x["median_abs_r"] is not None and x["median_abs_r"] <= .02 for x in legacy.values()),
-             "registered_reading_permitted": registered_reading_permitted(runtime_gates.get("do_nothing_hook_bit_identical"), coverage >= .75, bool(known_pass)),
+             "registered_reading_permitted": registered_reading_permitted(runtime_gates.get("do_nothing_hook_bit_identical"), coverage >= .75, bool(known_pass), nonfinite_rows == 0),
              "diagnostic_counts": {
                  "undefined_firings_by_band_kind_effect": {"|".join(k): v for k, v in sorted(undefined.items())},
                  "poles_with_fewer_than_12_defined_firings": too_few_defined,

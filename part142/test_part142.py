@@ -172,3 +172,11 @@ def test_gate_failed_score_writes_no_prediction(tmp_path, monkeypatch):
     assert payload["gates"]["registered_reading_permitted"] is False
     assert "predictions" not in payload
     assert "Predictions" not in (out / "SCORE.md").read_text()
+
+
+def test_a_nan_vector_is_undefined_and_stops_the_reading():
+    nan=float("nan")
+    assert score142.pearson([1.0, nan, 3.0], [1.0, 2.0, 3.0]) is None
+    assert score142.count_nonfinite_rows([{"effect_a": [nan, 1.0], "effect_b": [0.0, 1.0]}, {"effect_a": [0.0, 1.0], "effect_b": [0.0, 1.0]}]) == 1
+    assert score142.registered_reading_permitted(True, True, True, False) is False
+

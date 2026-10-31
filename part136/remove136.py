@@ -72,17 +72,27 @@ def effect_batch(model, down_proj, rows, device, vocab):
         seq=torch.tensor(row["token_ids"],dtype=torch.long,device=device); ids[i,:len(seq)]=seq; mask[i,:len(seq)]=1
         active=[False]*width; active[int(row["position"])]=True
         conditions.append((int(row["neuron"]),active))
-    with torch.inference_mode(): base=model(input_ids=ids,attention_mask=mask,use_cache=False).logits.float()
-    base_lp=torch.log_softmax(base,dim=-1).index_select(-1,vocab)
-    hook=part33.ConditionalZeroHook(down_proj,conditions)
-    try:
-        with torch.inference_mode(): changed=model(input_ids=ids,attention_mask=mask,use_cache=False).logits.float()
-    finally: hook.remove()
-    lp=torch.log_softmax(changed,dim=-1).index_select(-1,vocab); output=[]
+    # Part 142 Amendment 2: only the read positions go through lm_head. Full logits at this vocabulary are batch x width x 248,320
+    # values, about 10 GB at batch 16 and width 128, more than the A770 holds beside the model.
+    index=[]; spans=[]
     for i,row in enumerate(rows):
         pos=int(row["position"]); end=min(pos+8,len(row["token_ids"])-1)
-        da=(lp[i,pos]-base_lp[i,pos]).detach().cpu().tolist()
-        db=(lp[i,pos+1:end+1]-base_lp[i,pos+1:end+1]).sum(dim=0).detach().cpu().tolist()
+        start=len(index); index.extend((i,p) for p in range(pos,end+1)); spans.append((start,len(index)))
+    row_ix=torch.tensor([x[0] for x in index],device=device,dtype=torch.long); pos_ix=torch.tensor([x[1] for x in index],device=device,dtype=torch.long)
+    def selected():
+        hidden=model.model(input_ids=ids,attention_mask=mask,use_cache=False).last_hidden_state
+        lp=torch.log_softmax(model.lm_head(hidden[row_ix,pos_ix]).float(),dim=-1).index_select(-1,vocab)
+        if not bool(torch.isfinite(lp).all()): raise RuntimeError("non-finite log-probabilities in effect_batch")
+        return lp
+    with torch.inference_mode(): base_lp=selected()
+    hook=part33.ConditionalZeroHook(down_proj,conditions)
+    try:
+        with torch.inference_mode(): lp=selected()
+    finally: hook.remove()
+    delta=lp-base_lp; output=[]
+    for start,stop in spans:
+        da=delta[start].detach().cpu().tolist()
+        db=delta[start+1:stop].sum(dim=0).detach().cpu().tolist()
         output.append((da,db))
     return output
 

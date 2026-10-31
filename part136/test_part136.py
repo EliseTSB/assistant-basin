@@ -74,14 +74,23 @@ class TinyPipeline(nn.Module):
         z=self.down_proj(x)
         return TinyOutput(torch.cumsum(z,dim=1) @ torch.tensor([[1.,0,0,1],[0,1,0,1],[0,0,1,1]]))
 
-class TinyBatchModel(nn.Module):
+class TinyHidden:
+    def __init__(self, last_hidden_state): self.last_hidden_state=last_hidden_state
+
+class TinyInner(nn.Module):
     def __init__(self):
         super().__init__(); self.layers=nn.ModuleList([nn.Module()]); self.layers[0].mlp=nn.Module(); self.layers[0].mlp.down_proj=nn.Linear(3,3,bias=False)
         with torch.no_grad(): self.layers[0].mlp.down_proj.weight.copy_(torch.eye(3))
     def forward(self,input_ids,attention_mask=None,use_cache=False):
-        x=torch.nn.functional.one_hot(input_ids%3,3).float(); z=self.layers[0].mlp.down_proj(x)
-        logits=torch.cumsum(z,dim=1) @ torch.tensor([[1.,0,0,1],[0,1,0,1],[0,0,1,1]])
-        return TinyOutput(logits)
+        x=torch.nn.functional.one_hot(input_ids%3,3).float()
+        return TinyHidden(torch.cumsum(self.layers[0].mlp.down_proj(x),dim=1))
+
+class TinyBatchModel(nn.Module):
+    def __init__(self):
+        super().__init__(); self.model=TinyInner(); self.layers=self.model.layers; self.lm_head=nn.Linear(3,4,bias=False)
+        with torch.no_grad(): self.lm_head.weight.copy_(torch.tensor([[1.,0,0],[0,1,0],[0,0,1],[1,1,1]]))
+    def forward(self,*args,**kwargs):
+        raise AssertionError("effect_batch must not ask for full logits")
 
 def test_remove_pipeline_uses_part33_conditional_hook_on_tiny_model():
     model=TinyBatchModel(); rows=[{"token_ids":[0,0,2,0],"position":1,"neuron":0}]
@@ -148,3 +157,24 @@ def test_gate3_compares_one_firing_to_another_poles_mean():
     values=score136.gate3_off_target(by_pole,lambda _layer:"band")
     assert values["band"]==pytest.approx(1.)
 
+def test_nonfinite_logits_stop_the_batch():
+    model=TinyBatchModel(); rows=[{"token_ids":[0,0,2,0],"position":1,"neuron":0}]
+    with torch.no_grad(): model.lm_head.weight[0,0]=float("nan")
+    with pytest.raises(RuntimeError,match="non-finite"):
+        remove136.effect_batch(model,model.layers[0].mlp.down_proj,rows,"cpu",torch.arange(4))
+
+def test_selected_positions_match_full_logits():
+    model=TinyBatchModel(); rows=[{"token_ids":[0,1,2,0,1,2],"position":1,"neuron":0},{"token_ids":[1,1,0],"position":2,"neuron":1}]
+    down=model.layers[0].mlp.down_proj
+    got=remove136.effect_batch(model,down,rows,"cpu",torch.arange(4))
+    import part33
+    width=6; ids=torch.zeros((2,width),dtype=torch.long); mask=torch.zeros_like(ids); cond=[]
+    for i,r in enumerate(rows):
+        ids[i,:len(r["token_ids"])]=torch.tensor(r["token_ids"]); mask[i,:len(r["token_ids"])]=1
+        act=[False]*width; act[r["position"]]=True; cond.append((r["neuron"],act))
+    full=lambda: torch.log_softmax(model.lm_head(model.model(ids).last_hidden_state),dim=-1)
+    base=full(); hook=part33.ConditionalZeroHook(down,cond); changed=full(); hook.remove()
+    for i,r in enumerate(rows):
+        pos=r["position"]; end=min(pos+8,len(r["token_ids"])-1)
+        assert got[i][0]==pytest.approx((changed[i,pos]-base[i,pos]).tolist(),abs=1e-6)
+        assert got[i][1]==pytest.approx((changed[i,pos+1:end+1]-base[i,pos+1:end+1]).sum(dim=0).tolist(),abs=1e-6)

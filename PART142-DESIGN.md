@@ -104,3 +104,13 @@ fewer than 12 defined firings is left out and counted. Missing inputs stop the s
 
 142.3 is the difference between sorted units' median margin and matched poles' median margin, within bands, outside the pilot.
 
+
+## Amendment 2 (07:34 CT 2026-10-31, after the main effects run, before any finite result was read)
+
+The main effects run is void. Of its 18,672 rows, 17,152 hold NaN in every position of effect A; the score it produced is NaN in every prediction and was read as NaN, and no finite margin or difference has been seen. The steering rows, 778, hold no NaN and stand.
+
+Cause, as far as it is known: `effect_batch` asked for full logits, batch x width x 248,320 values, about 10 GB in bf16 at batch 16 and width 128, on a 16 GB card already holding the model; the pilot's short widths stayed under that. The run stopped twice with UR_RESULT_ERROR_UNKNOWN, and the NaN rows came with no error at all. Windows' system log shows no GPU reset. So this is a likely cause and not a proven one: the fix is tested by whether NaN stops.
+
+Changes, none touching a registered reading: `effect_batch` now sends only the read positions through lm_head, and raises on any non-finite value. Tests show the selected path equals the full path on a tiny model. score142.py treats a non-finite vector as undefined, which it did not do before, so its diagnostic counts were wrong. A new Gate 4 requires zero rows with a non-finite value, and a failed Gate 4 stops the reading. This is a new gate, written after the failure.
+
+The effects stage reruns from the first row, into the same folder, at batch 16, with the old file moved aside. Its 1,520 finite rows are not kept, so the run does not mix two code paths, but they are compared with the new rows: if the median Pearson r between old and new effect A on the first 960 rows is under 0.99, the run stops and the difference is reported. The comparison script is results/part142/repeat-check.py.
