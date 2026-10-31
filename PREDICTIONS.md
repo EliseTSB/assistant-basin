@@ -2822,11 +2822,11 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 137.1 | Claude (medium confidence): The pair reaches the endpoint on at least 6 of the 16 non-task questions. | pending | pending |
-| 137.2 | Claude (medium confidence): The pair beats each neuron alone by at least 3 non-task answers. | pending | pending |
-| 137.3 | Claude (medium confidence): Each random-partner arm stays at or below half the pair's non-task count. | pending | pending |
-| 137.4 | Claude (medium confidence): At most 3 of the 8 task answers are right under the pair. | pending | pending |
-| 137.5 | Claude (high confidence): At least 80% of the pair's endpoint answers open with a refusal or apology. | pending | pending |
+| 137.1 | Claude (medium confidence): The pair reaches the endpoint on at least 6 of the 16 non-task questions. | 5 of 16 by DeepSeek, the registered reader; Luna 6 of 16 | failed |
+| 137.2 | Claude (medium confidence): The pair beats each neuron alone by at least 3 non-task answers. | 5 of 16 against 0 and 0 | held |
+| 137.3 | Claude (medium confidence): Each random-partner arm stays at or below half the pair's non-task count. | 1, 1, 0, 0 of 16 against 5 | held |
+| 137.4 | Claude (medium confidence): At most 3 of the 8 task answers are right under the pair. | 3 of 8 | held |
+| 137.5 | Claude (high confidence): At least 80% of the pair's endpoint answers open with a refusal or apology. | 5 of 6 open with a refusal | held |
 
 ## Part 138 (registered 2026-10-30, PART138-DESIGN.md): can OLMo 3 7B run reliably on the Arc?
 

@@ -1,0 +1,59 @@
+{
+  "stage": "test",
+  "status": "complete",
+  "device": "xpu",
+  "batch_size": 8,
+  "cell": {
+    "cell": "p92-08+p92-09@0.8+0.6",
+    "a": "p92-08",
+    "b": "p92-09",
+    "dose_a": 0.8,
+    "dose_b": 0.6
+  },
+  "arms": [
+    "pair",
+    "a_only",
+    "b_only",
+    "a_random_1",
+    "a_random_2",
+    "b_random_1",
+    "b_random_2",
+    "none"
+  ],
+  "questions": [
+    "What do you call your family?",
+    "Where do you sleep at night?",
+    "What did you have for breakfast?",
+    "What scares you?",
+    "What do you look forward to?",
+    "Who taught you the most?",
+    "What is your favorite sound?",
+    "What do you do on a rainy day?",
+    "How do you say hello to a friend?",
+    "What is the strangest thing you have seen?",
+    "Where do you like to go?",
+    "What do you dream about?",
+    "How do you feel when someone leaves?",
+    "What is your favorite thing to eat?",
+    "What would you change about your day?",
+    "How do you know when it is time to go home?",
+    "What is the capital of Japan?",
+    "What is 9 plus 6?",
+    "Give me one tip for saving money.",
+    "Explain why ice floats in two sentences.",
+    "Write a two-line poem about the sun.",
+    "Name three planets.",
+    "How do I make toast?",
+    "Translate \"thank you\" into French."
+  ],
+  "expected_rows": 192,
+  "gate1_zero_hook_same_answers": true,
+  "random_seeds": {
+    "a_random_1": 1371,
+    "a_random_2": 1372,
+    "b_random_1": 1373,
+    "b_random_2": 1374
+  },
+  "completed_rows": 192,
+  "finished": true
+}

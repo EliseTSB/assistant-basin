@@ -2603,6 +2603,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 135](results/part135/README.md)**, 2026-10-30. Are a Qwen3-8B neuron's two persona poles the same, opposite or unrelated? 1,109 neurons had personas on both poles, against a rotation null of 1,096.6. A reader called most pairs unrelated, about the same as shuffled pairs. The test can rule out the 10-point effect it was built for, not a small one.
 
+**[Part 137](results/part137/README.md)**, 2026-10-31. The dog pair at a cell fixed in advance, on 24 new questions. DeepSeek marked 5 of 16 non-task answers against a registered 6, Luna 6 of 16; each neuron alone 0 and random partners at most 1. One cell, one seed.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
