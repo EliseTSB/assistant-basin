@@ -1,0 +1,56 @@
+[
+  {
+    "id": "none",
+    "units": []
+  },
+  {
+    "id": "L27N3325",
+    "units": [
+      {
+        "id": "L27N3325",
+        "layer": 27,
+        "neuron": 3325
+      }
+    ]
+  },
+  {
+    "id": "matched_0",
+    "units": [
+      {
+        "id": "L27N6",
+        "layer": 27,
+        "neuron": 6
+      }
+    ]
+  },
+  {
+    "id": "matched_1",
+    "units": [
+      {
+        "id": "L27N8687",
+        "layer": 27,
+        "neuron": 8687
+      }
+    ]
+  },
+  {
+    "id": "matched_2",
+    "units": [
+      {
+        "id": "L27N378",
+        "layer": 27,
+        "neuron": 378
+      }
+    ]
+  },
+  {
+    "id": "matched_3",
+    "units": [
+      {
+        "id": "L27N4991",
+        "layer": 27,
+        "neuron": 4991
+      }
+    ]
+  }
+]

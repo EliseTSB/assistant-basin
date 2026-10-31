@@ -36,7 +36,10 @@ def gate3_passes(lowered_phrasings):
     return lowered_phrasings>=20
 
 def larger_negative_move(google_move, other_moves):
-    return bool(other_moves) and google_move < min(other_moves)
+    # 154.5 reads "more negative than the no-push row by more than the most any of the three other neurons does":
+    # the move itself must be negative, not only smaller than theirs. They all moved positive, so min() alone passed
+    # neurons that moved the wrong way. Corrected after the first score, before any write-up.
+    return bool(other_moves) and google_move < 0 and google_move < min(other_moves)
 
 def prediction_values(g0,g1,other0,other1,matched,random0,random1,google_count,broken_delta_pp,guard0,guard1):
     return {'154.1':g1<=.5*g0,'154.2':other1>=.75*other0,'154.3':all(v>=.75*g0 for v in matched),

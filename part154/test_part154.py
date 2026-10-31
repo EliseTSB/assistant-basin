@@ -73,6 +73,11 @@ class HookTests(unittest.TestCase):
                 self.assertEqual(sum(present), 1)
                 self.assertNotEqual(pushes[row['layer']][i, row['neuron']].item(), 0)
 
+    def test_a_move_must_be_negative_to_count(self):
+        self.assertFalse(score154.larger_negative_move(0.9, [2.7, 2.6, 1.4]))
+        self.assertTrue(score154.larger_negative_move(-0.3, [2.7, 2.6, 1.4]))
+        self.assertFalse(score154.larger_negative_move(-0.3, [-0.5, 2.6]))
+
     def test_generate_clean_repeats_a_nonfinite_batch(self):
         calls=[]
         def fake(*args):

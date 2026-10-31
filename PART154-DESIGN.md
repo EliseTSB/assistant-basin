@@ -71,3 +71,8 @@ One dose, one greedy answer per phrasing. L27 N3325 writes Google directly, so z
 ## Amendment 1, 2026-10-31 15:25 CT, before the main run
 
 Read from the pilots only, with no effect on any prediction. In the first pilot four rows, all in one zero set, turned to NaN partway through an answer and printed a run of `!`; the third pilot repeated the same 144 rows with no NaN, and the other 140 answers matched exactly. This is the A770's known silent NaN, not a property of a zero set. So a batch in which any row goes non-finite is regenerated, up to three attempts, every retry is recorded in `trace.json`, and a batch that never comes back clean stops the run. Gate 1 now also requires that no kept row went non-finite. The hook's write checks leave non-finite rows out, since a NaN compares unequal to itself. Three smaller fixes came from reading the runner before any pilot: the random row's missing `unit` key, a vectorized zero hook, and Part 72's first-token name readout in place of a single-token rule the part never had.
+
+## Amendment 2, 2026-10-31 15:56 CT, after the first score
+
+The scorer first read 154.5 with "more negative than" only against the three other neurons' moves. All three moved positive, so it passed neurons that moved the wrong way, 7 of 7. The registered sentence says "more negative than the no-push row", so the move must be negative too, which gives 3 of 7 and failed. Since the other three moved positive, the test comes down to five of seven moving negative. The rule was changed once, after seeing the numbers, and in the direction that lost the prediction; `larger_negative_move` in `part154/score154.py` and its test carry it.
+

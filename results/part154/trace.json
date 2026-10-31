@@ -1,0 +1,30 @@
+{
+  "stageA": {
+    "calls": 144,
+    "positions": 568,
+    "target_checks": 1728,
+    "target_positions": 6816,
+    "unchanged_checks": 1728,
+    "unchanged_positions": 6816,
+    "unzeroed_target_checks": 1728,
+    "unzeroed_target_positions": 6816,
+    "target_failures": 0,
+    "unchanged_failures": 0,
+    "unzeroed_target_failures": 0
+  },
+  "stageB": {
+    "calls": 2876,
+    "positions": 3839,
+    "target_checks": 139584,
+    "target_positions": 171492,
+    "unchanged_checks": 139584,
+    "unchanged_positions": 171492,
+    "unzeroed_target_checks": 34512,
+    "unzeroed_target_positions": 46068,
+    "target_failures": 0,
+    "unchanged_failures": 0,
+    "unzeroed_target_failures": 0
+  },
+  "nonfinite_retries": [],
+  "elapsed_seconds": 769.6474805999896
+}

@@ -1,0 +1,501 @@
+{
+  "gates": {
+    "gate1_rows_and_zero_trace": {
+      "passed": true,
+      "expected_answers": 1872,
+      "answers": 1872,
+      "unique_answers": 1872,
+      "nonempty_answers": 1872,
+      "expected_stageA": 576,
+      "stageA_rows": 576,
+      "stageA_finite": true,
+      "nonfinite_rows_kept": 0,
+      "trace": {
+        "calls": 2876,
+        "positions": 3839,
+        "target_checks": 139584,
+        "target_positions": 171492,
+        "unchanged_checks": 139584,
+        "unchanged_positions": 171492,
+        "unzeroed_target_checks": 34512,
+        "unzeroed_target_positions": 46068,
+        "target_failures": 0,
+        "unchanged_failures": 0,
+        "unzeroed_target_failures": 0
+      }
+    },
+    "gate2_baseline_and_positive_control": {
+      "passed": true,
+      "plain_google_hits": 0,
+      "plain_max": 2,
+      "ten_neuron_company_hits": 149,
+      "ten_neuron_range": [
+        128,
+        174
+      ]
+    },
+    "gate3_opening_zero_effect": {
+      "passed": true,
+      "lowered_phrasings": 24,
+      "minimum": 20
+    }
+  },
+  "all_gates_passed": true,
+  "predictions": {
+    "154.1": "held",
+    "154.2": "held",
+    "154.3": "held",
+    "154.4": "failed",
+    "154.5": "failed",
+    "154.6": "held",
+    "154.7": "held"
+  },
+  "per_unit": {
+    "L11N5647": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 21,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 9,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 20,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 20,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 20,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 19,
+          "n": 24
+        }
+      }
+    },
+    "L21N7134": {
+      "company": "Baidu",
+      "zero_sets": {
+        "none": {
+          "hits": 16,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 16,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 15,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 8,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 15,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 14,
+          "n": 24
+        }
+      }
+    },
+    "L22N6997": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 8,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 0,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 9,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 5,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 10,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 6,
+          "n": 24
+        }
+      }
+    },
+    "L23N414": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 20,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 9,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 20,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 20,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 21,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 20,
+          "n": 24
+        }
+      }
+    },
+    "L23N1743": {
+      "company": "Huawei",
+      "zero_sets": {
+        "none": {
+          "hits": 17,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 18,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 15,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 17,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 16,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 19,
+          "n": 24
+        }
+      }
+    },
+    "L23N2993": {
+      "company": "Microsoft",
+      "zero_sets": {
+        "none": {
+          "hits": 20,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 18,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 17,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 21,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 19,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 14,
+          "n": 24
+        }
+      }
+    },
+    "L24N5017": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 17,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 10,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 18,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 19,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 19,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 20,
+          "n": 24
+        }
+      }
+    },
+    "L25N140": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 8,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 4,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 8,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 7,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 10,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 8,
+          "n": 24
+        }
+      }
+    },
+    "L25N4457": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 4,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 0,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 3,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 4,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 4,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 5,
+          "n": 24
+        }
+      }
+    },
+    "L25N4458": {
+      "company": "Google",
+      "zero_sets": {
+        "none": {
+          "hits": 18,
+          "n": 24
+        },
+        "L27N3325": {
+          "hits": 14,
+          "n": 24
+        },
+        "matched_0": {
+          "hits": 18,
+          "n": 24
+        },
+        "matched_1": {
+          "hits": 18,
+          "n": 24
+        },
+        "matched_2": {
+          "hits": 18,
+          "n": 24
+        },
+        "matched_3": {
+          "hits": 19,
+          "n": 24
+        }
+      }
+    }
+  },
+  "per_zero_set": {
+    "none": {
+      "google": {
+        "hits": 96,
+        "n": 168
+      },
+      "other_makers": {
+        "hits": 53,
+        "n": 72
+      },
+      "random_direction": {
+        "hits": 19,
+        "n": 24
+      }
+    },
+    "L27N3325": {
+      "google": {
+        "hits": 46,
+        "n": 168
+      },
+      "other_makers": {
+        "hits": 52,
+        "n": 72
+      },
+      "random_direction": {
+        "hits": 14,
+        "n": 24
+      }
+    },
+    "matched_0": {
+      "google": {
+        "hits": 96,
+        "n": 168
+      },
+      "other_makers": {
+        "hits": 47,
+        "n": 72
+      },
+      "random_direction": {
+        "hits": 19,
+        "n": 24
+      }
+    },
+    "matched_1": {
+      "google": {
+        "hits": 93,
+        "n": 168
+      },
+      "other_makers": {
+        "hits": 46,
+        "n": 72
+      },
+      "random_direction": {
+        "hits": 20,
+        "n": 24
+      }
+    },
+    "matched_2": {
+      "google": {
+        "hits": 102,
+        "n": 168
+      },
+      "other_makers": {
+        "hits": 50,
+        "n": 72
+      },
+      "random_direction": {
+        "hits": 19,
+        "n": 24
+      }
+    },
+    "matched_3": {
+      "google": {
+        "hits": 97,
+        "n": 168
+      },
+      "other_makers": {
+        "hits": 47,
+        "n": 72
+      },
+      "random_direction": {
+        "hits": 19,
+        "n": 24
+      }
+    }
+  },
+  "stageA": {
+    "median_google_minus_alibaba_no_push": {
+      "none": -0.4375,
+      "L27N3325": -3.34375
+    },
+    "median_activation_by_zero_and_push": {
+      "none": {
+        "L11N5647": -4.09375,
+        "L21N7134": -0.9140625,
+        "L22N6997": -3.5546875,
+        "L23N414": -2.703125,
+        "L23N1743": -0.990234375,
+        "L23N2993": -2.1484375,
+        "L24N5017": -3.8359375,
+        "L25N140": -3.6015625,
+        "L25N4457": -2.40625,
+        "L25N4458": -2.46875,
+        "random_L25N4457": -1.1484375,
+        "none": -3.65625
+      },
+      "L27N3325": {
+        "L11N5647": -4.09375,
+        "L21N7134": -0.9140625,
+        "L22N6997": -3.5546875,
+        "L23N414": -2.703125,
+        "L23N1743": -0.990234375,
+        "L23N2993": -2.1484375,
+        "L24N5017": -3.8359375,
+        "L25N140": -3.6015625,
+        "L25N4457": -2.40625,
+        "L25N4458": -2.46875,
+        "random_L25N4457": -1.1484375,
+        "none": -3.65625
+      }
+    },
+    "median_activation_move_by_unit": {
+      "L25N4457": 0.98828125,
+      "L25N140": -0.078125,
+      "L23N414": 0.9609375,
+      "L11N5647": -0.5859375,
+      "L22N6997": 0.0703125,
+      "L24N5017": -0.328125,
+      "L25N4458": 1.0390625,
+      "L21N7134": 2.74261474609375,
+      "L23N1743": 2.59765625,
+      "L23N2993": 1.4375
+    },
+    "non_google_most_negative_move": 1.4375,
+    "google_units_exceeding_move": 3
+  },
+  "broken": {
+    "counts": {
+      "none": 19,
+      "L27N3325": 18
+    },
+    "shares": {
+      "none": 0.07196969696969698,
+      "L27N3325": 0.06818181818181818
+    },
+    "delta_percentage_points": -0.37878787878787984
+  },
+  "guards": {
+    "no_zero_hits": 69,
+    "L27_zero_hits": 70,
+    "n_per_arm": 72
+  },
+  "row_counts": {
+    "answers": 1872,
+    "stageA": 576
+  }
+}
