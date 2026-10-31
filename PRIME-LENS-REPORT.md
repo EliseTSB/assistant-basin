@@ -107,13 +107,14 @@ acceptance layer is **L8** (of 16), both lenses, `out` + `mid`.
 ```
 systemd-run --user --scope -p MemoryMax=8G -- nice -n 15 \
   env OMP_NUM_THREADS=12 PYTHONPATH=$PWD \
-  ~/neuron-probe/.venv/bin/python fit_olmo_lens.py --docs 8 --threads 12 --dim-batch 128
+  ~/neuron-probe/.venv/bin/python fit_olmo_lens.py --docs 8 --threads 12 --dim-batch 64
 ```
 
-`dim_batch` is 128, not the upstream default 256: at 256 the R pass peaked at
-**7.74 GB of the 8 GB cap** (measured, `MemoryPeak` in the scope), leaving no
-headroom for the S pass. 128 halves the tangent tensors and is the estimator's
-own knob — same mathematics, more blocks.
+`dim_batch` is 64, not the upstream default 256: the scope's `MemoryPeak` was
+**7.74 GB of the 8 GB cap at 256** and **6.88 GB at 128** (measured during the R
+pass), so the run uses 64 for ~2 GB of headroom across both passes. The knob
+changes only how many basis directions go through the maps per block — same
+mathematics, more blocks.
 
 Fit results are filled in by `fit.json` (`results/prime-lens/olmo2-1b-instruct/`):
 per-document seconds for R and S separately, peak RSS, and the split-half
