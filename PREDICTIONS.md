@@ -2832,10 +2832,10 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 138.1 | Claude (medium confidence): The model loads with 10 GB of Windows RAM free without tripping the guard. | pending | pending |
-| 138.2 | Claude (medium confidence): The largest batch with no spill is at least 8. | pending | pending |
-| 138.3 | Claude (medium confidence): At that batch the rate is at least 1 answer/s at 64 tokens. | pending | pending |
-| 138.4 | Claude (medium confidence): Three repeats at that batch all finish without a spill. | pending | pending |
+| 138.1 | Claude (medium confidence): The model loads with 10 GB of Windows RAM free without tripping the guard. | Held. The job runner's progress log records starts with 13.4, 16.5, and 17.7 GB available at 00:45:17, 02:07:26, and 03:41:49 CT. No RAM guard stop was recorded for a Part 138 step. These launch readings are from the progress log, not the result JSON files. | held |
+| 138.2 | Claude (medium confidence): The largest batch with no spill is at least 8. | Batch 8 had no spill on all six runs. | held |
+| 138.3 | Claude (medium confidence): At that batch the rate is at least 1 answer/s at 64 tokens. | Batch 8 generated 0.908 answers/s in the first ladder and 0.342–0.377 in later runs. | failed |
+| 138.4 | Claude (medium confidence): Three repeats at that batch all finish without a spill. | The three batch-8 repeats finished, each without a spill. | held |
 
 ## Part 141 (registered 2026-10-31, PART141-DESIGN.md): how fast does the Neuron Lens fit run on the Arc?
 
