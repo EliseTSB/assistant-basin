@@ -2910,3 +2910,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 144.7 | Claude (medium confidence): On Set R, in each of SFT, DPO and Instruct, the median of full minus (prompt-only + answer-only - plain), in log-odds, has magnitude at most 0.5. | pending | pending |
 | 144.8 | Claude (medium confidence): In every cell, the median full-arm shifts of Set F's neurons and random directions differ by at most 0.5. | pending | pending |
 | 144.9 | Claude (low confidence): The median full-arm shift on Instruct in the plain frame is at most half the median on Instruct in the chat frame. | pending | pending |
+
+## Part 145 (registered 2026-10-31, PART145-DESIGN.md): does a push raise " sorry" more than it raises any unlikely word?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 145.1 | Claude (medium confidence): Across words, the Spearman correlation of change with plain log-probability is at most -0.6: unlikely words rise most. | pending | pending |
+| 145.2 | Claude (medium confidence): After a straight-line fit of change on plain log-probability across words, " sorry"'s residual is in the top 5% of words. | pending | pending |
+| 145.3 | Claude (low confidence): The median unit's observed log-odds of " sorry" exceeds its temperature-matched value by at least 1.0. | pending | pending |
+| 145.4 | Claude (medium confidence): Across words, the partial Spearman correlation of change with (base-chat plain log-probability minus instruct-chat plain log-probability), controlling for instruct-chat plain log-probability, is at least 0.3. | pending | pending |
+| 145.5 | Claude (medium confidence): Across words, the Spearman correlation of the median pushed log-probability with base-chat's plain log-probability exceeds that of instruct-chat's plain log-probability by at least 0.05. | pending | pending |
+| 145.6 | Claude (high confidence): The per-word change computed from neurons and from random directions correlates at Spearman 0.9 or higher. | pending | pending |
+| 145.7 | Claude (medium confidence): On "Tell me about yourself.", 145.2 gets the same verdict. | pending | pending |
