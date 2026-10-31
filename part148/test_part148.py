@@ -109,7 +109,7 @@ class Part148Tests(unittest.TestCase):
                 else:
                     sys.modules["torch"] = old_torch
             rows = [json.loads(line) for line in out_path.read_text(encoding="utf-8").splitlines()]
-            self.assertEqual(len(rows), 7)  # 6 controls plus the 32-unit neuron sample.
+            self.assertEqual(len(rows), 8)  # 6 controls plus one unit's neuron and random rows.
             self.assertEqual(result["units"], 1)
             self.assertIn(("Are you Qwen?", 1), calls)
             self.assertIn(("Who are you?", 1), calls)
