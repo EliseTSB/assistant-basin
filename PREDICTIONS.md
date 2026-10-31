@@ -3017,3 +3017,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 152.2 | Claude (medium confidence): At least 10% of units hit their own J list on at least 3 of 20 top windows. | pending | pending |
 | 152.3 | Claude (medium confidence): Among Part 112's concept units, the mean number of top windows hitting a unit's persona words is at least twice the mean under within-kind shuffles, p below 0.01. | pending | pending |
 | 152.4 | Claude (medium confidence): Among Part 112's slot units, that mean is less than half the concept units' mean. | pending | pending |
+
+## Part 153 (registered 2026-10-31, PART153-DESIGN.md): do the ten neurons that named one company do it reliably?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 153.1 | Claude (low confidence): At least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. | pending | pending |
+| 153.2 | Claude (low confidence): At least 3 of the 10 neurons hit their company on at least 4 of the 8 identity phrasings. | pending | pending |
+| 153.3 | Claude (medium confidence): Over the 24 maker phrasings, the neurons' mean hit rate is at least twice their paired random directions' mean hit rate. | pending | pending |
+| 153.4 | Claude (medium confidence): The neurons answer at least 5 of the 6 guards correctly on at least 8 of 10 units. | pending | pending |
