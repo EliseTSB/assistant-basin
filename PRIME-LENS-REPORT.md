@@ -1,8 +1,8 @@
 # PRIME-LENS-REPORT — Neuron Lens port to OLMo 2 1B
 
-Status: **port + tests complete; acceptance fit running** (8 documents, one layer,
-CPU, memory-capped). Cost projections use the measured seconds per document and
-are marked as measured or projected.
+Status: **complete** — port, tests, deliberate-break harness, the 8-document
+acceptance fit (CPU, memory-capped) and the report. Cost projections use the
+measured seconds per document and are marked as measured or projected.
 
 - Source: `github.com/stdlogits/neuron-lens` at commit **`07fdf45`**, MIT
   (copyright 2026 a9lim and treetowntree), vendored under `neuron_lens/` with
@@ -116,20 +116,45 @@ pass), so the run uses 64 for ~2 GB of headroom across both passes. The knob
 changes only how many basis directions go through the maps per block — same
 mathematics, more blocks.
 
-Fit results are filled in by `fit.json` (`results/prime-lens/olmo2-1b-instruct/`):
+Fit results are in `fit.json` (`results/prime-lens/olmo2-1b-instruct/`), with
 per-document seconds for R and S separately, peak RSS, and the split-half
-difference per target and layer.
+difference per target and layer. The scope's `MemoryPeak` was **6.83 GB of the
+8 GB cap** (the process's own peak RSS 6.25 GB); `n_docs` = [4, 4].
 
-| document | R seconds | S seconds | total | peak RSS |
-|---|---|---|---|---|
-| (measured, see `fit.json`) | | | | |
+Split-half at L8 (`||mean_even − mean_odd|| / ||mean||`): R_out
+0.555, R_mid 0.508,
+S_out 0.413, S_mid 0.421.
+With four documents a half that is sampling noise, not a lens-quality figure:
+their 1,000-document lenses split at 0.06 or less. The acceptance fit measures
+the machinery and its cost; it is not a lens.
+
+| document | corpus row | R seconds | S seconds | total | peak RSS |
+|---|---|---|---|---|---|
+| 0 | 463790 | 774.8 | 740.4 | 1515.2 | 6.24 GB |
+| 1 | 396190 | 983.4 | 598.8 | 1582.2 | 6.25 GB |
+| 2 | 12299 | 644.8 | 870.1 | 1515.0 | 6.25 GB |
+| 3 | 250585 | 631.6 | 574.6 | 1206.2 | 6.25 GB |
+| 4 | 535644 | 579.9 | 911.9 | 1491.8 | 6.25 GB |
+| 5 | 402452 | 565.9 | 608.7 | 1174.6 | 6.25 GB |
+| 6 | 249901 | 553.0 | 539.2 | 1092.2 | 6.25 GB |
+| 7 | 811815 | 551.9 | 678.5 | 1230.4 | 6.25 GB |
+| **median** | | **631.6** | **678.5** | **1491.8** | **6.25 GB** |
 
 ## 4. Alien-twin sanity read (L10 N6978)
 
-Deferred until the fit's R-lens exists: the read is
-`softmax(W_U · norm(J_10^out · W_down[:, 6978]))` with the final norm's weight,
-top tokens. It costs one matrix-vector product once `J_10^out` is in the fit
-(the full-stack pass records every layer, so no extra fit is needed).
+The read is `softmax(W_U · norm(J_10^out · W_down[:, 6978]))` with the final
+norm's weight, from the fitted R-lens (the full-stack pass records every layer,
+so it cost one matrix-vector product, no extra fit).
+
+**L10 N6978:** `galaxy` 0.692, `Galactic` 0.114, `spaceship` 0.112, `Galaxy` 0.024, `spacecraft` 0.020, `Star` 0.019, `star` 0.005, `cosmic` 0.003.
+
+That is a coherent off-world read, matching the alien-twin finding, and it is
+neuron-specific rather than a generic output: 
+- control neuron 5305 (same layer): `also` 0.134, `también` 0.065, `Also` 0.063, `ALSO` 0.037, `Also` 0.036, `also` 0.019.
+- control neuron 2471 (same layer): `qualche` 0.010, `aires` 0.009, `uevo` 0.007, `duit` 0.004, `argent` 0.003, `()",` 0.003.
+- control neuron 6468 (same layer): `skiing` 0.451, `ski` 0.345, `snow` 0.059, `Ski` 0.041, `avalanche` 0.031, `Alpine` 0.021.
+
+Full JSON: `results/prime-lens/olmo2-1b-instruct/neuron-L10-N6978.json`.
 
 ## 5. Cost projection
 
@@ -156,29 +181,32 @@ Method, stated so it can be checked:
    the OLMo H100/3090 numbers above are upper bounds. `project_costs.py`
    reproduces the table from `fit.json`.
 
-| stage | revision | 200 docs, CPU | 1,000 docs, CPU | 200 docs, 3090 | 1,000 docs, 3090 |
+| stage | revision | 200 docs, CPU | 1000 docs, CPU | 200 docs, 3090 | 1000 docs, 3090 |
 |---|---|---|---|---|---|
-| Base (main) | see HF ref `a1847dff` | | | | |
-| pretraining, 21B tokens | `stage1-step10000-tokens21B` (`22f7d18a`) | | | | |
-| pretraining, 210B | `stage1-step100000-tokens210B` (`eb19ccab`) | | | | |
-| pretraining, 1.0T | `stage1-step480000-tokens1007B` (`eda09f03`) | | | | |
-| pretraining, 2.0T | `stage1-step950000-tokens1993B` (`3e09b708`) | | | | |
-| pretraining, 3.0T | `stage1-step1430000-tokens2999B` (`22738a97`) | | | | |
-| end of pretraining, 4.0T | `stage1-step1907359-tokens4001B` (`9d3e4365`) | | | | |
-| mid-training, 13B | `stage2-ingredient3-step6000-tokens13B` (`a7a789f6`) | | | | |
-| mid-training, 26B | `stage2-ingredient3-step12000-tokens26B` (`1c3599f7`) | | | | |
-| mid-training end, 51B | `stage2-ingredient3-step23852-tokens51B` (`f83cd641`) | | | | |
-| SFT | `-SFT` | | | | |
-| DPO | `-DPO` | | | | |
-| Instruct | `-Instruct` (`48d788ec`) | | | | |
+| Base (main) | a1847dff | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 21B tokens | stage1-step10000-tokens21B, 22f7d18a | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 210B | stage1-step100000-tokens210B, eb19ccab | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 1.0T | stage1-step480000-tokens1007B, eda09f03 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 2.0T | stage1-step950000-tokens1993B, 3e09b708 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| pretraining, 3.0T | stage1-step1430000-tokens2999B, 22738a97 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| end of pretraining, 4.0T | stage1-step1907359-tokens4001B, 9d3e4365 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| mid-training, 13B | stage2-ingredient3-step6000-tokens13B, a7a789f6 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| mid-training, 26B | stage2-ingredient3-step12000-tokens26B, 1c3599f7 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| mid-training end, 51B | stage2-ingredient3-step23852-tokens51B, f83cd641 | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| SFT | -SFT | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| DPO | -DPO | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
+| Instruct | -Instruct, 48d788ec | 82.9 h | 414.4 h | 0.9 h–1.2 h | 4.4 h–6.1 h |
 
 The Base repository's non-main revisions are mapped to training tokens in
 `PART85-DESIGN.md` (the table above follows it); `Base (main)` is the released
 base model at `a1847dff`.
 
-**Reading:** a 1,000-document lens of record for one stage is ~2 weeks of this
-CPU but ~6 hours on one rented 3090. The CPU cannot run a full fit; the 8-document
-fit is the acceptance measurement, not a lens.
+**Reading:** a 1,000-document lens of record for one stage is **~17 days of this
+CPU** (414 h) but **~4.4–6.1 hours on one rented 3090**; at 200 documents it is
+~3.5 days against ~1 hour. The CPU cannot run a full fit — the 8-document fit is
+the acceptance measurement, not a lens. The table is identical across stages
+because the architecture is: the per-document cost does not depend on training
+step, only on the model shape and the document length.
 
 ## 6. What would change for Qwen3.5-4B
 

@@ -1,0 +1,257 @@
+{
+  "layer": 10,
+  "neuron": 6978,
+  "model": "allenai/OLMo-2-0425-1B-Instruct",
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "fit": "/home/elisepc/green/worktrees/ab-olmo-lens/results/prime-lens/olmo2-1b-instruct/fit.pt",
+  "read": [
+    {
+      "token": " galaxy",
+      "id": 34261,
+      "p": 0.69167
+    },
+    {
+      "token": " Galactic",
+      "id": 76317,
+      "p": 0.11409
+    },
+    {
+      "token": " spaceship",
+      "id": 85942,
+      "p": 0.1122
+    },
+    {
+      "token": " Galaxy",
+      "id": 20238,
+      "p": 0.02446
+    },
+    {
+      "token": " spacecraft",
+      "id": 42640,
+      "p": 0.01991
+    },
+    {
+      "token": " Star",
+      "id": 7834,
+      "p": 0.01899
+    },
+    {
+      "token": " star",
+      "id": 6917,
+      "p": 0.00539
+    },
+    {
+      "token": " cosmic",
+      "id": 55801,
+      "p": 0.00253
+    },
+    {
+      "token": " asteroid",
+      "id": 55479,
+      "p": 0.0015
+    },
+    {
+      "token": "Star",
+      "id": 12988,
+      "p": 0.00142
+    },
+    {
+      "token": " galaxies",
+      "id": 66017,
+      "p": 0.0013
+    },
+    {
+      "token": " Kling",
+      "id": 80127,
+      "p": 0.00084
+    }
+  ],
+  "controls": {
+    "5305": [
+      {
+        "token": " also",
+        "id": 1101,
+        "p": 0.13447
+      },
+      {
+        "token": " también",
+        "id": 29571,
+        "p": 0.06484
+      },
+      {
+        "token": " Also",
+        "id": 7429,
+        "p": 0.06326
+      },
+      {
+        "token": " ALSO",
+        "id": 50921,
+        "p": 0.03669
+      },
+      {
+        "token": "Also",
+        "id": 13699,
+        "p": 0.03648
+      },
+      {
+        "token": "also",
+        "id": 19171,
+        "p": 0.0189
+      },
+      {
+        "token": " intertw",
+        "id": 81050,
+        "p": 0.01429
+      },
+      {
+        "token": " synerg",
+        "id": 80526,
+        "p": 0.01255
+      },
+      {
+        "token": " ebenfalls",
+        "id": 96624,
+        "p": 0.0124
+      },
+      {
+        "token": " simult",
+        "id": 20731,
+        "p": 0.01006
+      },
+      {
+        "token": " også",
+        "id": 49487,
+        "p": 0.00708
+      },
+      {
+        "token": " equival",
+        "id": 44554,
+        "p": 0.00667
+      }
+    ],
+    "2471": [
+      {
+        "token": " qualche",
+        "id": 90116,
+        "p": 0.01016
+      },
+      {
+        "token": "aires",
+        "id": 17724,
+        "p": 0.00869
+      },
+      {
+        "token": "uevo",
+        "id": 33421,
+        "p": 0.00705
+      },
+      {
+        "token": "duit",
+        "id": 47348,
+        "p": 0.00404
+      },
+      {
+        "token": "argent",
+        "id": 77217,
+        "p": 0.00335
+      },
+      {
+        "token": "()\",",
+        "id": 51614,
+        "p": 0.00323
+      },
+      {
+        "token": "uelve",
+        "id": 47956,
+        "p": 0.00291
+      },
+      {
+        "token": "íg",
+        "id": 71437,
+        "p": 0.00265
+      },
+      {
+        "token": " miglior",
+        "id": 92844,
+        "p": 0.00216
+      },
+      {
+        "token": ",”",
+        "id": 2476,
+        "p": 0.00214
+      },
+      {
+        "token": "umni",
+        "id": 57965,
+        "p": 0.0021
+      },
+      {
+        "token": "ney",
+        "id": 3520,
+        "p": 0.00192
+      }
+    ],
+    "6468": [
+      {
+        "token": " skiing",
+        "id": 63117,
+        "p": 0.45113
+      },
+      {
+        "token": " ski",
+        "id": 29779,
+        "p": 0.34525
+      },
+      {
+        "token": " snow",
+        "id": 12056,
+        "p": 0.05858
+      },
+      {
+        "token": " Ski",
+        "id": 61595,
+        "p": 0.04062
+      },
+      {
+        "token": " avalanche",
+        "id": 96694,
+        "p": 0.03105
+      },
+      {
+        "token": " Alpine",
+        "id": 82813,
+        "p": 0.02056
+      },
+      {
+        "token": " Snow",
+        "id": 19435,
+        "p": 0.01223
+      },
+      {
+        "token": " Himal",
+        "id": 76438,
+        "p": 0.00951
+      },
+      {
+        "token": " Tibetan",
+        "id": 73074,
+        "p": 0.00682
+      },
+      {
+        "token": " mountain",
+        "id": 16700,
+        "p": 0.00576
+      },
+      {
+        "token": " Nepal",
+        "id": 50064,
+        "p": 0.00448
+      },
+      {
+        "token": " Mountain",
+        "id": 19149,
+        "p": 0.00351
+      }
+    ]
+  }
+}
