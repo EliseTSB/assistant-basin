@@ -76,8 +76,8 @@ def check() -> list[str]:
         _copy(control)
         got = _run(control)
         assert got.returncode == 0, f"CONTROL FAILED (not green):\n{got.stdout[-3000:]}"
-        assert "7 passed" in got.stdout, f"CONTROL ran the wrong number of tests:\n{got.stdout[-1000:]}"
-        lines.append("control: unmodified copy green (7 passed)")
+        assert "9 passed" in got.stdout, f"CONTROL ran the wrong number of tests:\n{got.stdout[-1000:]}"
+        lines.append("control: unmodified copy green (9 passed)")
 
         for name, (old, new, expect) in BREAKS.items():
             work = Path(tmp) / name
