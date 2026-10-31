@@ -73,7 +73,7 @@ def effect_batch(model, down_proj, rows, device, vocab):
         active=[False]*width; active[int(row["position"])]=True
         conditions.append((int(row["neuron"]),active))
     # Part 142 Amendment 2: only the read positions go through lm_head. Full logits at this vocabulary are batch x width x 248,320
-    # values, about 10 GB at batch 16 and width 128, more than the A770 holds beside the model.
+    # values, about 1 GB in bf16 at batch 16 and width 128, and the old path held about 6 GB of them and their float copies at its peak.
     index=[]; spans=[]
     for i,row in enumerate(rows):
         pos=int(row["position"]); end=min(pos+8,len(row["token_ids"])-1)
