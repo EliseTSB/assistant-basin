@@ -37,8 +37,8 @@ least 0.6), plus at least 20 neurons in each class. A failed gate stops the read
 
 - Smallest effect worth knowing: a 25-point gap between classes, which needs about 50 neurons per class; Part 91's rates give about
   50 carriers and 75 once neurons from 189.
-- Total: 189 × 2 × 6 + 6 = 2,274 answers, about 11 minutes on one RTX 3090 at Part 91's 3.5 answers/s. 2,268 answer labels, 756
-  card rows per reader plus 12 gate rows.
+- Total: 2,274 answers, about 11 minutes on one RTX 3090 at Part 91's 3.5 answers/s (189 × 2 × 6 + 6). Then 2,268 answer labels, and
+  756 card rows per reader plus 12 gate rows.
 - Pilot: not needed for the generation: the same script ran 1,458 answers in about 7 minutes in Part 91. It runs on the Part 129
   machine after that part's main stage.
 
