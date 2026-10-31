@@ -37,6 +37,18 @@ is the capital of France? / Write a short poem about the sea. The first two are 
 
 Amendment 1, 2026-10-30 19:48 CT, before any answers existed: the selection above cannot reach 22 shared poles. The 49 reader-positive poles hold only 19, 3 and 3 eligible poles in the three bands, so at most 14 fit under the cap of 8 per band. Shared candidates are now the reader-positive poles plus every triple pole whose three library names are identical after lowercasing. Selection is still up to 8 per band, seed 131, with the two named poles kept. If a band has fewer than 8 candidates, its shortfall is filled from L0-5, so the total stays 24. Single poles stay in the layers of the shared poles. The old text above is kept.
 
+Amendment 2, 2026-10-30 20:34 CT, before any answers existed, from Haiku's review and a render of each template at its
+pinned revision. (a) "No system prompt" means no system message is passed. Two shipped templates add their own text anyway:
+Llama Instruct adds a system block with "Cutting Knowledge Date: December 2023" and a fixed "Today Date: 26 Jul 2024", and
+Hermes adds "You are a helpful assistant." Tulu's three adds none. Each model runs with its own template as shipped, and each
+run records the rendered prompt. A comparison between Hermes and Tulu in the chat setting carries this difference. (b) Each
+unpushed answer is read against four real target personas drawn with a fixed seed, so its prompt has the same shape as every
+other row. Gate 2's unpushed half fails if any answer shows any of its four. (c) The shared coherence rule applies to the
+Llama row, as the selection does: applied to all three rows it leaves 6 of 24 poles. Those 6, and the 17 of 24 units whose
+three library names agree, are reported as subsets. (d) Answers in the plain setting are cut at the next "Question:" as in
+part91/push91.py, keeping the uncut text in a raw field. (e) Luna's kappa in Gate 1 is a report, read after the main reading;
+DeepSeek's known-example gate and Gate 3 stop the reading.
+
 ## Controls
 
 Applied from STANDARD-CONTROLS.md: matched random controls (one per unit); off-target questions; broken answers counted; the
