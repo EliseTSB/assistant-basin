@@ -139,13 +139,16 @@ def _instance_payload(instance_id: str) -> dict:
 
 
 def _ssh_details(instance: dict) -> tuple[str, int] | None:
-    host = instance.get("ssh_host") or instance.get("public_ipaddr")
-    port = instance.get("ssh_port")
+    # ssh_direct: the proxy host refused connections, the public address answers.
+    host = instance.get("public_ipaddr") or instance.get("ssh_host")
+    port = None
+    ports = instance.get("ports")
+    candidates = ports.get("22/tcp", []) if isinstance(ports, dict) else []
+    if isinstance(candidates, list) and candidates and isinstance(candidates[0], dict):
+        port = candidates[0].get("HostPort") or candidates[0].get("host_port")
     if not port:
-        ports = instance.get("ports")
-        candidates = ports.get("22/tcp", []) if isinstance(ports, dict) else []
-        if isinstance(candidates, list) and candidates and isinstance(candidates[0], dict):
-            port = candidates[0].get("HostPort") or candidates[0].get("host_port")
+        host = instance.get("ssh_host") or host
+        port = instance.get("ssh_port")
     if host and port:
         try:
             return str(host), int(port)
@@ -175,7 +178,8 @@ def wait_for_ssh(instance_id: str, deadline: float) -> tuple[str, int]:
 
 
 def _ssh_args(host: str, port: int, remote_command: str) -> list[str]:
-    return ["ssh", "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=no",
+    return ["ssh", "-i", str(Path.home() / ".ssh/vast_ed25519"), "-o", "IdentitiesOnly=yes",
+            "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking=no",
             "-o", "UserKnownHostsFile=/dev/null", "-o", "ConnectTimeout=10",
             "-p", str(port), f"root@{host}", remote_command]
 
@@ -262,7 +266,11 @@ def run() -> int:
         # both stages all count against the same $0.40 cap.
         rent_started = time.monotonic()
         deadline = rent_started + MAX_RENT_SECONDS
-        for offer in offers[:5]:  # a host can fail to start the container; try the next one
+        reuse = os.environ.get("VAST_REUSE")
+        if reuse:
+            instance_ids.add(reuse)
+            host, port = wait_for_ssh(reuse, deadline)
+        for offer in ([] if reuse else offers[:5]):  # a host can fail to start the container; try the next one
             rate = float(offer["dph_total"])
             print(f"Selected offer {offer['id']}: ${rate:.3f}/hour, "
                   f"reliability {float(offer['reliability2']):.3f}, disk {DISK_GB} GB", flush=True)
