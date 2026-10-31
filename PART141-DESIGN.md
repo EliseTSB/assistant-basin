@@ -26,7 +26,7 @@ Gate: the timing run finishes with no spill into shared memory and no RAM guard 
 
 ## Size
 
-- Smallest effect worth knowing: whether 200 documents at one stage fit in one night, about 3 hours.
+- Smallest effect worth knowing: whether 200 documents at one stage fit in one night.
 - Total: 1 document, about 2 minutes plus the model load.
 - Pilot: not needed: under 1,000 generations and one GPU-hour.
 
