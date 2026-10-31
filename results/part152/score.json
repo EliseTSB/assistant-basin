@@ -1,0 +1,145 @@
+{
+ "gates": {
+  "gate1_docs": true,
+  "gate2_full_lists": true,
+  "gate3_alien_control": true,
+  "gate4_part151b_controls": true
+ },
+ "gate_controls": {
+  "alien_control_top": 12,
+  "L19N4979_and_or_top": 18,
+  "L24N8542_award_top": 15
+ },
+ "predictions": {
+  "152.1": "held",
+  "152.2": "held",
+  "152.3": "held",
+  "152.4": "held"
+ },
+ "units_left_out": {
+  "J_list_fewer_than_3_words": 844,
+  "persona_missing_words_by_kind": {
+   "concept": 10,
+   "slot": 5
+  }
+ },
+ "152.1": {
+  "n": 2409,
+  "real_mean": 2.261519302615193,
+  "shuffle_mean": 0.10953881278538813,
+  "p": 0.000999000999000999
+ },
+ "152.2": {
+  "n": 2409,
+  "units_with_at_least_3_own_hits": 719,
+  "share": 0.29846409298464094
+ },
+ "152.3": {
+  "n": 247,
+  "real_mean": 2.1052631578947367,
+  "shuffle_mean": 0.1857854251012146,
+  "p": 0.000999000999000999
+ },
+ "152.4": {
+  "slot_mean": 0.44021739130434784,
+  "concept_mean": 2.1052631578947367,
+  "slot_n": 184,
+  "concept_n": 247
+ },
+ "exploratory": {
+  "after_cold_check": {
+   "mark_only": {
+    "real_mean": 0.6293067662930677,
+    "shuffle_mean": 0.011748443337484434,
+    "share_units_at_least_3": 0.0776255707762557
+   },
+   "mark_plus_before": {
+    "real_mean": 1.5363221253632213,
+    "shuffle_mean": 0.21792735574927355,
+    "share_units_at_least_3": 0.20797011207970112
+   },
+   "persona_not_in_j_concept": {
+    "n": 232,
+    "real_mean": 0.5646551724137931,
+    "shuffle_mean": 0.15640086206896553
+   },
+   "persona_not_in_j_slot": {
+    "n": 184,
+    "real_mean": 0.2608695652173913,
+    "shuffle_mean": 0.14590217391304347
+   }
+  },
+  "top_hit_location_counts": {
+   "marked_token": 1516,
+   "first_word_after": 2509,
+   "later_after": 1423
+  },
+  "bottom": {
+   "n": 2409,
+   "real_mean": 0.8451639684516397,
+   "shuffle_mean": 0.09844665836446659,
+   "p": 0.000999000999000999
+  },
+  "top_by_layer_n_at_least_30": {
+   "17": {
+    "n": 36,
+    "real_mean": 0.9722222222222222,
+    "shuffle_mean": 0.27155555555555555,
+    "p": 0.000999000999000999
+   },
+   "19": {
+    "n": 48,
+    "real_mean": 0.6875,
+    "shuffle_mean": 0.10179166666666666,
+    "p": 0.000999000999000999
+   },
+   "20": {
+    "n": 110,
+    "real_mean": 1.9454545454545455,
+    "shuffle_mean": 0.15363636363636363,
+    "p": 0.000999000999000999
+   },
+   "21": {
+    "n": 277,
+    "real_mean": 2.4187725631768955,
+    "shuffle_mean": 0.1154043321299639,
+    "p": 0.000999000999000999
+   },
+   "22": {
+    "n": 391,
+    "real_mean": 2.5959079283887467,
+    "shuffle_mean": 0.11698976982097187,
+    "p": 0.000999000999000999
+   },
+   "23": {
+    "n": 488,
+    "real_mean": 2.1147540983606556,
+    "shuffle_mean": 0.09580122950819671,
+    "p": 0.000999000999000999
+   },
+   "24": {
+    "n": 582,
+    "real_mean": 1.9570446735395188,
+    "shuffle_mean": 0.08260652920962198,
+    "p": 0.000999000999000999
+   },
+   "25": {
+    "n": 263,
+    "real_mean": 2.9163498098859315,
+    "shuffle_mean": 0.09519771863117871,
+    "p": 0.000999000999000999
+   },
+   "26": {
+    "n": 152,
+    "real_mean": 3.2434210526315788,
+    "shuffle_mean": 0.1444144736842105,
+    "p": 0.000999000999000999
+   }
+  },
+  "zero_own_hit_units": 1086,
+  "zero_own_hit_share": 0.45080946450809467
+ },
+ "identity_shuffle_check": "passed",
+ "shuffles": 1000,
+ "seed": 152
+}

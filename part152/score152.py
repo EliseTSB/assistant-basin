@@ -144,6 +144,47 @@ def _direct_own_hits(entries_by_unit, words_by_unit):
                for entries, words in zip(entries_by_unit, words_by_unit))
 
 
+def _hit_location(entry, words):
+    """Return the earliest text location with an own-list prefix hit, if any."""
+    mark_tokens = [w.lower() for w in WORD.findall(entry["mark"])]
+    after_tokens = [w.lower() for w in WORD.findall(entry["after"])]
+    matches = lambda tokens: any(token.startswith(prefix) for token in tokens for prefix in words)
+    if matches(mark_tokens):
+        return "marked_token"
+    if matches(after_tokens[:1]):
+        return "first_word_after"
+    if matches(after_tokens[1:]):
+        return "later_after"
+    return None
+
+
+def _mean_shuffle(entries_by_unit, words_by_unit, layer_keys, seed, shuffles):
+    """Return the own-list mean, within-layer shuffled mean and upper-tail p."""
+    import numpy as np
+    layers = {}
+    for i, layer in enumerate(layer_keys):
+        layers.setdefault(layer, []).append(i)
+    direct = _direct_own_hits(entries_by_unit, words_by_unit)
+    rng = np.random.default_rng(seed)
+    totals = np.zeros(shuffles, dtype=np.int64)
+    for indices in layers.values():
+        rows = sparse_incidence([entries_by_unit[i] for i in indices],
+                                [words_by_unit[i] for i in indices])
+        identity = sum(rows[i].get(i, 0) for i in range(len(indices)))
+        expected = sum(sum(hit(entry, words_by_unit[original])
+                           for entry in entries_by_unit[original]) for original in indices)
+        if identity != expected:
+            raise AssertionError("identity layer shuffle differs from direct own-hit count")
+        for shuffle in range(shuffles):
+            perm = rng.permutation(len(indices))
+            totals[shuffle] += sum(rows[i].get(int(perm[i]), 0) for i in range(len(indices)))
+    real_mean = direct / len(entries_by_unit) if entries_by_unit else 0.0
+    null_means = totals / max(1, len(entries_by_unit))
+    return {"n": len(entries_by_unit), "real_mean": real_mean,
+            "shuffle_mean": float(null_means.mean()) if len(null_means) else 0.0,
+            "p": (1 + int(np.count_nonzero(null_means >= real_mean))) / (shuffles + 1)}
+
+
 def prediction_152_4(slot_mean, concept_mean):
     return slot_mean < 0.5 * concept_mean
 
@@ -191,6 +232,29 @@ def score(windows, lens, units112, kinds112, shuffles=1000):
     j_p = (1 + int(np.count_nonzero(j_shuffle_means >= j_real_mean))) / (shuffles + 1)
     j_3_share = sum(v >= 3 for v in j_hits) / len(j_names) if j_names else 0.0
 
+    # Exploratory analyses were chosen after seeing the registered verdicts.
+    locations = {"marked_token": 0, "first_word_after": 0, "later_after": 0}
+    zero_hit_units = 0
+    for entries, words in zip(j_entries, j_words_by):
+        own_hits = 0
+        for entry in entries:
+            location = _hit_location(entry, words)
+            if location:
+                locations[location] += 1
+                own_hits += 1
+        zero_hit_units += own_hits == 0
+
+    bottom_entries = [units[n]["bottom"] for n in j_names]
+    bottom_result = _mean_shuffle(bottom_entries, j_words_by, j_layers, 153, shuffles)
+    by_layer = {}
+    for layer in sorted(set(j_layers)):
+        indices = [i for i, value in enumerate(j_layers) if value == layer]
+        if len(indices) >= 30:
+            layer_result = _mean_shuffle([j_entries[i] for i in indices],
+                                         [j_words_by[i] for i in indices],
+                                         [layer] * len(indices), 152, shuffles)
+            by_layer[str(layer)] = layer_result
+
     persona_results = {}
     persona_left_out = {kind: sum(records[n]["kind"] == kind and not records[n]["persona"]
                                   for n in units) for kind in ("concept", "slot")}
@@ -228,6 +292,25 @@ def score(windows, lens, units112, kinds112, shuffles=1000):
                                  "before": e["before"][-60:], "mark": e["mark"], "after": e["after"][:40]}
                                 for e in rows]
 
+    # Added after the cold check, so exploratory: hits by where they fall, and persona words not in the J list.
+    def _windowed(entries, keep):
+        return [[keep(e) for e in unit] for unit in entries]
+    mark_only = _windowed(j_entries, lambda e: {**e, "after": ""})
+    mark_before = _windowed(j_entries, lambda e: {**e, "mark": e["before"] + " " + e["mark"], "after": ""})
+    after_cold = {}
+    for label, entries in (("mark_only", mark_only), ("mark_plus_before", mark_before)):
+        total, shuffles_totals, per_unit = layer_shuffle_counts(entries, j_words_by, j_layers, 154, shuffles)
+        after_cold[label] = {"real_mean": total / len(j_names), "shuffle_mean": float((shuffles_totals / len(j_names)).mean()),
+                             "share_units_at_least_3": sum(v >= 3 for v in per_unit) / len(j_names)}
+    for kind in ("concept", "slot"):
+        group = [n for n in units if records[n]["kind"] == kind and records[n]["persona"] and len(units[n].get("top", [])) == 20]
+        pairs = [(n, [w for w in records[n]["persona"] if w not in records[n]["j"]]) for n in group]
+        pairs = [(n, w) for n, w in pairs if w]
+        rows = sparse_incidence([units[n]["top"] for n, _ in pairs], [w for _, w in pairs])
+        real, null = shuffle_counts(rows, 155, shuffles)
+        after_cold[f"persona_not_in_j_{kind}"] = {"n": len(pairs), "real_mean": real / len(pairs),
+                                                  "shuffle_mean": float((null / len(pairs)).mean())}
+
     result = {"gates": gates, "gate_controls": {"alien_control_top": alien,
               "L19N4979_and_or_top": and_or_count, "L24N8542_award_top": award_count},
               "predictions": predictions,
@@ -240,6 +323,12 @@ def score(windows, lens, units112, kinds112, shuffles=1000):
               "152.3": persona_results["concept"],
               "152.4": {"slot_mean": slot_mean, "concept_mean": concept_mean,
                         "slot_n": persona_results["slot"]["n"], "concept_n": persona_results["concept"]["n"]},
+              "exploratory": {"after_cold_check": after_cold,
+                              "top_hit_location_counts": locations,
+                              "bottom": bottom_result,
+                              "top_by_layer_n_at_least_30": by_layer,
+                              "zero_own_hit_units": zero_hit_units,
+                              "zero_own_hit_share": zero_hit_units / len(j_names) if j_names else 0.0},
               "identity_shuffle_check": "passed", "shuffles": shuffles, "seed": 152}
     return result, page
 

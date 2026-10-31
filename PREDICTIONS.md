@@ -3013,10 +3013,10 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 152.1 | Claude (medium confidence): Across all units, the mean number of top windows hitting a unit's own J list is at least twice the mean under within-layer shuffles, p below 0.01. | pending | pending |
-| 152.2 | Claude (medium confidence): At least 10% of units hit their own J list on at least 3 of 20 top windows. | pending | pending |
-| 152.3 | Claude (medium confidence): Among Part 112's concept units, the mean number of top windows hitting a unit's persona words is at least twice the mean under within-kind shuffles, p below 0.01. | pending | pending |
-| 152.4 | Claude (medium confidence): Among Part 112's slot units, that mean is less than half the concept units' mean. | pending | pending |
+| 152.1 | Claude (medium confidence): Across all units, the mean number of top windows hitting a unit's own J list is at least twice the mean under within-layer shuffles, p below 0.01. | 2.262 against 0.110; p = 0.001 | held |
+| 152.2 | Claude (medium confidence): At least 10% of units hit their own J list on at least 3 of 20 top windows. | 719 of 2,409 (29.8%) | held |
+| 152.3 | Claude (medium confidence): Among Part 112's concept units, the mean number of top windows hitting a unit's persona words is at least twice the mean under within-kind shuffles, p below 0.01. | 2.105 against 0.186; p = 0.001; n = 247 | held |
+| 152.4 | Claude (medium confidence): Among Part 112's slot units, that mean is less than half the concept units' mean. | Slot 0.440 (n = 184); concept 2.105 (n = 247) | held |
 
 ## Part 153 (registered 2026-10-31, PART153-DESIGN.md): do the ten neurons that named one company do it reliably?
 
