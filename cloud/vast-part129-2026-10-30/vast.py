@@ -260,7 +260,7 @@ def run(stage: str, batch: int) -> int:
     rent_started: float | None = None
     info_path = ROOT / "results/part129/instance.json"
     try:
-        if stage == "main":
+        if stage == "main" or os.environ.get("VAST_REUSE"):
             if not info_path.is_file():
                 raise VastAPIError("pilot instance metadata is missing")
             saved = json.loads(info_path.read_text(encoding="utf-8"))
