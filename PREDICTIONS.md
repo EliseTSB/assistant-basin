@@ -2955,3 +2955,16 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 148.4 | Claude (medium confidence): Among neurons that move the name, fewer than a quarter also move the maker. | pending | pending |
 | 148.5 | Claude (high confidence): Paired random directions move the name less than half as often as the neurons. | pending | pending |
 | 148.6 | Claude (low confidence): Slot neurons in Part 112's sort move the maker no more often than concept neurons do. | pending | pending |
+
+## Part 149 (registered 2026-10-31, PART149-DESIGN.md): is " sorry" what Instruct says when it cannot read the prompt?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 149.1 | Claude (low confidence): On Part 146's stored rows, across Set F's 256 units within a question, log P(" sorry") and similarity to the empty row have a partial Spearman of at least 0.3 controlling for Jensen-Shannon distance from plain, on at least 3 of 4 questions. | pending | pending |
+| 149.2 | Claude (high confidence): On Instruct, the median over 24 questions of P(" sorry") at shuf-all is at least 10 times the median at real. | pending | pending |
+| 149.3 | Claude (medium confidence): On Instruct, log P(" sorry") across real, shuf-1/3, shuf-2/3 and shuf-all has Spearman at least 0.8 with the damage order on at least 18 of 24 questions. | pending | pending |
+| 149.4 | Claude (medium confidence): Across the 24 questions, the prompt-only arm's median log P(" sorry") over its 64 units has Spearman at least 0.5 with Instruct's log P(" sorry") at shuf-all. | pending | pending |
+| 149.5 | Claude (medium confidence): The same for the full arm, Spearman at least 0.5. | pending | pending |
+| 149.6 | Claude (low confidence): On Instruct, the median over questions of P(" sorry") in the words arm is at least a third of the median in the letters arm. | pending | pending |
+| 149.7 | Claude (medium confidence): At shuf-all, the median over questions of P(" sorry") on Base is at most a fifth of the median on SFT and at most a fifth of the median on Instruct. | pending | pending |
+| 149.8 | Claude (medium confidence): On at least 18 of 24 questions, the full arm's median P("I") x P("'m" given "I") is at least 5 times Instruct's value at shuf-all. | pending | pending |
