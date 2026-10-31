@@ -2944,3 +2944,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 147.2 | Claude (medium confidence): The question-centered Spearman of pushed with Base, averaged across questions, is at least 0.3. | pending | pending |
 | 147.3 | Claude (medium confidence): On at least 3 of 4 questions, at least 90% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is. | pending | pending |
 | 147.4 | Claude (medium confidence): The share in 147.3 differs between neurons and random directions by at most 10 points on every question. | pending | pending |
+
+## Part 148 (registered 2026-10-31, PART148-DESIGN.md): which atlas neurons move the name and the maker together?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 148.1 | Claude (medium confidence): At least 80% of the 465 neurons move the name, coherently. | pending | pending |
+| 148.2 | Claude (medium confidence): At most 15% of the 465 neurons move the maker, coherently. | pending | pending |
+| 148.3 | Claude (medium confidence): At least 5 neurons move both name and maker, coherently. | pending | pending |
+| 148.4 | Claude (medium confidence): Among neurons that move the name, fewer than a quarter also move the maker. | pending | pending |
+| 148.5 | Claude (high confidence): Paired random directions move the name less than half as often as the neurons. | pending | pending |
+| 148.6 | Claude (low confidence): Slot neurons in Part 112's sort move the maker no more often than concept neurons do. | pending | pending |
