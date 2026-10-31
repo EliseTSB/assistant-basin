@@ -13,6 +13,14 @@ function: small changes in early layers can reach every later neuron. Run both m
 each neuron's activation between them, position by position. Which neurons still compute the same thing, on which text,
 and are persona neurons among the ones that changed?
 
+
+## Amendment (20:42 CT 2026-10-30, after the first pilot captures, before any correlation was read)
+
+On 24 GB cards batch 32 runs out of memory (Qwen3-8B in bf16 takes about 16 GB of each card), and batch 64 was not tried. The
+pilot measured 3.80 documents/s at batch 16, so 16,000 documents project to about 70 minutes, under the 90-minute rule, and
+the main stage runs all of them at batch 16. Gate 2 runs at batch 8 and 16, in place of 16 and 64. Gate 1's pilot alignment
+passed, 300 of 300 checks within 5%. The first attempts also fixed the weight cosines, which now run on the CPU.
+
 ## Prior art and existing data
 
 - Closest published work: Neuron Lens (stdlogits/neuron-lens, 2026-10-30) gives per-pole activations for Qwen3-8B only.
