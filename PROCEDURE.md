@@ -238,4 +238,8 @@ beyond one part.
 - 2026-10-31 (Part 151b): where a neuron goes most negative says as much as where it peaks. Read bottom windows too, and write the reading down before checking it on other documents.
 - 2026-10-31 (Part 152): a hit in the words after a fired token does not show that a unit read them. Report where hits fall beside any read-write match.
 - 2026-10-31 (Part 153): a design's reading rule names how it is applied. "A hit on a unit whose pair also hits" allowed two readings, and one prediction's verdict depends on which.
+- 2026-10-31 (Part 155): held-out phrasings do not protect against selection on dose. A unit picked at one dose needs a ladder before anything is said about its behaviour, and a peak at the selected dose is what selection would give; Part 156's finer ladder is the next step.
+- 2026-10-31 (Part 154): a rule that compares against other units' moves must also state the direction itself. All three comparison units moved positive, so "more negative than theirs" passed neurons that moved the wrong way until the sign was added. Also, a readout on a name's first token reads whatever else starts with it: `Al` and `T` fell for every push, random included. Read a name's tokens before calling a column by the name.
+- 2026-10-31 (Part 158): tokenize the words before writing a token rule. The registered prefixes matched none of the tokens that begin Alibaba, Tongyi or Qwen, and a gate caught it. A word-level ban also leaks through other spellings, so a ban needs a gate that checks the answers for the word (Part 157).
+- 2026-10-31 (Part 154): the A770's silent NaN can hit a few rows in one run and none in a rerun, printing `!!!!`. Record the first non-finite call per row, and regenerate a batch that has one.
 
