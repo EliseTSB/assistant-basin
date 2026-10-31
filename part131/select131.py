@@ -112,7 +112,11 @@ def main() -> None:
             raise ValueError(f"no Llama row for shared unit {(L,n,s)}")
         units.append(unit(f"sh{i:02d}", "shared", L, n, s, "llama", lr,
                           forced=(L, n, s) in special,
-                          llama_eligible=eligible(lr), llama_coherence=lr["coherence"]))
+                          llama_eligible=eligible(lr), llama_coherence=lr["coherence"],
+                          model_eligibility={m:eligible(row_for(m,L,n,s)) for m in MODELS},
+                          model_names={m:(row_for(m,L,n,s) or {}).get('persona') for m in MODELS},
+                          model_names_agree=all((row_for(m,L,n,s) or {}).get('persona') for m in MODELS) and
+                              len({str((row_for(m,L,n,s) or {}).get('persona')).strip().lower() for m in MODELS})==1))
 
     shared_layers = sorted({u["L"] for u in units})
     for model in MODELS:

@@ -52,14 +52,21 @@ def archive():
 def main():
     ap=argparse.ArgumentParser(description=__doc__); ap.add_argument('--stage',choices=('pilot','main'),default='pilot'); ap.add_argument('--instance-id'); ap.add_argument('--started-at',type=float); a=ap.parse_args()
     if a.stage=='main' and not a.instance_id: ap.error('--instance-id is required for --stage main')
-    if a.stage=='main' and a.started_at is None: ap.error('--started-at is required to enforce the 120-minute rental cap')
+    saved_deadline=None
+    if a.stage=='main':
+        record=ROOT/'results/part131/instance.json'
+        if record.is_file():
+            saved=json.loads(record.read_text(encoding='utf-8'))
+            if str(saved.get('id'))==str(a.instance_id): saved_deadline=float(saved['deadline'])
+        if saved_deadline is None and a.started_at is None: ap.error('need a matching Part 131 instance record or --started-at to enforce the 120-minute rental cap')
     label=f'{LABEL}-{os.getpid()}-{int(time.time())}'; ids=set(); rented=False; retain=False; rc=0; rental_started=time.time()
     try:
-        remaining=MAX_SECONDS-(time.time()-a.started_at) if a.stage=='main' else MAX_SECONDS
+        if a.stage=='main': ids.add(str(a.instance_id))
+        remaining=(saved_deadline-time.time() if saved_deadline is not None else MAX_SECONDS-(time.time()-a.started_at)) if a.stage=='main' else MAX_SECONDS
         if remaining<=0: raise TimeoutError('the 120-minute rental cap elapsed before main stage')
         deadline=time.monotonic()+remaining; host=port=None
         if a.stage=='main':
-            iid=str(a.instance_id); ids.add(iid); host,port=wait_ssh(iid,deadline)
+            iid=str(a.instance_id); host,port=wait_ssh(iid,deadline)
         else:
             candidates=offers()
             if not candidates: raise RuntimeError('no RTX 3090 offer meets $0.20/hour, reliability 0.98, and 130 GB disk')
@@ -73,29 +80,36 @@ def main():
                     api('DELETE',f'/instances/{iid}/'); ids.discard(iid); continue
             if not host: raise RuntimeError('no eligible offer booted successfully')
         env={k:v for k,v in os.environ.items() if k!='VAST_KEY'}
-        if a.stage=='pilot': subprocess.run(ssh_args(host,port,f'mkdir -p {REMOTE} && tar -xzf - -C {REMOTE}'),input=archive(),check=True,timeout=max(1,int(deadline-time.monotonic())),env=env)
+        subprocess.run(ssh_args(host,port,f'mkdir -p {REMOTE} && tar -xzf - -C {REMOTE}'),input=archive(),check=True,timeout=max(1,int(deadline-time.monotonic())),env=env)
         run_script='run.sh' if a.stage=='pilot' else 'run-main.sh'
         try: subprocess.run(ssh_args(host,port,f'cd {REMOTE} && bash cloud/vast-part131-2026-10-30/{run_script}'),check=True,timeout=max(1,int(deadline-time.monotonic())),env=env)
         except Exception as e: rc=2; print(f'remote run failed: {type(e).__name__}: {e}',file=sys.stderr)
         folders='results/part131/pilot' if a.stage=='pilot' else 'results/part131/main'
-        cmd=f'cd {REMOTE} && tar -czf - {folders}'
+        cmd=f'cd {REMOTE} && tar -czf - {folders} results/part131/pip-freeze.txt'
         result=subprocess.run(ssh_args(host,port,cmd),stdout=subprocess.PIPE,check=True,timeout=max(1,int(deadline-time.monotonic())),env=env)
         with tarfile.open(fileobj=io.BytesIO(result.stdout),mode='r:gz') as t:
             for m in t.getmembers():
                 p=Path(m.name)
                 if p.is_absolute() or '..' in p.parts or not m.name.startswith('results/part131/'): raise RuntimeError('unexpected archive path')
             t.extractall(ROOT,members=t.getmembers())
-        if a.stage=='pilot':
+        if a.stage=='pilot' and rc==0:
+            instance_record=ROOT/'results/part131/instance.json'; instance_record.parent.mkdir(parents=True,exist_ok=True)
+            instance_record.write_text(json.dumps({'id':str(iid),'started_at':rental_started,'deadline':rental_started+MAX_SECONDS},indent=2)+'\n',encoding='utf-8')
             retain=True
-            print(f'PART131_REUSE_INSTANCE={iid} PART131_STARTED_AT={rental_started:.3f}; review pilot timing, then run-main with these values.',flush=True)
+            print(f'PART131_REUSE_INSTANCE={iid} PART131_STARTED_AT={rental_started:.3f} PART131_DEADLINE_AT={rental_started+MAX_SECONDS:.3f}; review pilot timing, then run-main with these values.',flush=True)
     except Exception as e: rc=2; print(f'vast.py: {type(e).__name__}: {e}',file=sys.stderr)
     finally:
         if ids and not retain:
             for iid in ids:
                 try: api('DELETE',f'/instances/{iid}/')
                 except Exception as e: print(f'destroy request failed: {type(e).__name__}',file=sys.stderr)
-        try: remains=bool(instances())
-        except Exception: remains=True
+        remains=False
+        for iid in ids:
+            try:
+                status=api('GET',f'/instances/{iid}/').get('instances',{})
+                if isinstance(status,list): status=next((r for r in status if str(r.get('id'))==iid),{})
+                remains=remains or status.get('actual_status') not in (None,'destroyed','exited','error','failed')
+            except Exception: remains=True
         print(f'PART131_INSTANCE_REMAINS={"yes" if remains else "no"} (listing errors count as yes)',flush=True)
     return rc
 if __name__=='__main__':raise SystemExit(main())

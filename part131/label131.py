@@ -16,14 +16,23 @@ def read_jsonl(path):
 def valid(row):
     return ('error' not in row and not row.get('missing') and all(type(row.get(k)) is bool for k in ('shows_persona','self_claim','coherent'))
             and row.get('speaker') in ('ai','human','other','none'))
-def items_for(paths):
+def items_for(paths,units_path=HERE/'units131.json'):
     items=[]
+    units=json.loads(Path(units_path).read_text(encoding='utf-8'))['units']
+    targets=[{'persona':u['persona'],'description':u['desc']} for u in units]
     for path in sorted(paths):
         for i,row in enumerate(read_jsonl(path)):
-            pub={'id':row['unit_id'],'unit_id':row['unit_id'],'class':row['unit_class'],'arm':row['arm'],
-                 'tag':row['tag'],'frame':row['frame'],'question_index':int(row['question_index'])}
-            items.append({'public':pub,'name':row.get('target_persona',''),'desc':row.get('target_desc',''),
-                          'q':row['question'],'a':row['answer']})
+            if row['arm']=='unpushed':
+                qi=int(row['question_index']); seed=SEED+sum(map(ord,row['tag']))*1000+qi
+                for target_ix,target in enumerate(random.Random(seed).sample(targets,4)):
+                    pub={'id':f"unpushed-{row['tag']}-{qi}-{target_ix:02d}",'answer_id':row.get('id',row['unit_id']),
+                         'unit_id':row['unit_id'],'class':row['unit_class'],'arm':row['arm'],'tag':row['tag'],'frame':row['frame'],'question_index':qi}
+                    items.append({'public':pub,'name':target['persona'],'desc':target['description'],'q':row['question'],'a':row['answer']})
+            else:
+                pub={'id':row.get('id',row['unit_id']),'answer_id':row.get('id',row['unit_id']),'unit_id':row['unit_id'],'class':row['unit_class'],'arm':row['arm'],
+                     'tag':row['tag'],'frame':row['frame'],'question_index':int(row['question_index'])}
+                items.append({'public':pub,'name':row.get('target_persona',''),'desc':row.get('target_desc',''),
+                              'q':row['question'],'a':row['answer']})
     random.Random(SEED).shuffle(items)
     return items
 def prompt(item):
@@ -50,19 +59,35 @@ def label_one(item,reader):
     if last=='empty response': return {**item['public'],'reader':reader,'attempts':2,'missing':True,'stop_reason':response.get('stop_reason')}
     return {**item['public'],'reader':reader,'attempts':2,'error':last}
 def known_gate(reader):
-    # Part 92b owns the checked 12 known examples and its retrying transport wrapper.
-    result=label92b.run_gate(reader)
-    return result
+    # Do not call label92b.run_gate: it truncates the registered Part 92b evidence file.
+    known=label92b.read_known(); items=label92b.gate_items(known); correct=0
+    for item in items:
+        result=label_one({'public':item['public'],'name':item['name'],'desc':item['desc'],'q':item['q'],'a':item['a']},reader)
+        index=int(str(item['public']['id']).rsplit('-',1)[-1])
+        if valid(result) and result['shows_persona'] is known[index]['expected']: correct+=1
+    return {'correct':correct,'total':len(known),'passed':len(known)==12 and correct>=11}
+
+def require_gate3(answers):
+    expected={('base','plain'),('instruct','chat'),('tulu-sft','chat'),('tulu-dpo','chat'),('tulu-final','chat'),('hermes','chat')}
+    found={}
+    for path in answers.glob('*.meta.json'):
+        meta=json.loads(path.read_text(encoding='utf-8')); found[(meta.get('tag'),meta.get('frame'))]=meta
+    missing=expected-set(found)
+    failed={key for key in expected & set(found) if found[key].get('gate3_noop_exact') is not True}
+    if missing or failed: raise SystemExit(f'refusing labels: Gate 3 metas missing={sorted(missing)} failed={sorted(failed)}')
 def main():
     ap=argparse.ArgumentParser(description=__doc__); ap.add_argument('--answers',type=Path,default=ROOT/'results/part131/main')
     ap.add_argument('--units',type=Path,default=ROOT/'part131/units131.json'); ap.add_argument('--reader',choices=('ds','luna','both'),default='both')
     ap.add_argument('--out-dir',type=Path,default=ROOT/'results/part131/labels'); ap.add_argument('--workers',type=int,default=8)
     a=ap.parse_args(); files=list(a.answers.glob('*.jsonl'))
     if not files: ap.error(f'no answer JSONL files in {a.answers}')
+    require_gate3(a.answers)
     # Calibration precedes any reading; don't silently continue after a failed gate.
     ds_gate=known_gate('ds')
+    a.out_dir.mkdir(parents=True,exist_ok=True)
+    (a.out_dir/'gate1-ds.json').write_text(json.dumps(ds_gate,indent=2)+'\n',encoding='utf-8')
     if not ds_gate.get('passed'): raise SystemExit(f'DeepSeek known-example gate failed: {ds_gate.get("correct")}/12')
-    items=items_for(files); a.out_dir.mkdir(parents=True,exist_ok=True)
+    items=items_for(files,a.units); a.out_dir.mkdir(parents=True,exist_ok=True)
     readers=('ds','luna') if a.reader=='both' else (a.reader,)
     from concurrent.futures import ThreadPoolExecutor
     def label_batch(reader, selected):

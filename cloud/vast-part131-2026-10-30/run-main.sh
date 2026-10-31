@@ -2,6 +2,8 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
+mkdir -p results/part131
+python -m pip freeze > results/part131/pip-freeze.txt
 download_run() {
   local tag="$1" repo="$2" revision="$3" frame="$4"
   local model="model/${tag}-${revision}"
