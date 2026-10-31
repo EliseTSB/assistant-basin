@@ -32,7 +32,7 @@ def recover_jsonl(path):
     for index,line in enumerate(parts):
         if not line.strip(): valid_end+=len(line); continue
         try: rows.append(json.loads(line))
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, UnicodeDecodeError):
             if index!=last_record: raise
             raw=raw[:valid_end]; path.write_bytes(raw); break
         valid_end+=len(line)
@@ -73,7 +73,7 @@ def generate_batch(model, layers, inp, mask, vectors, pad, eos, max_new):
             import torch
             active_v=v[active]
             def hook(_m,_args,o,v=active_v):
-                # Prefill vectors carry one entry per active sequence; decode hooks are zero.
+                # The push vector is applied at every position, including decode passes.
                 return (o[0]+v,)+tuple(o[1:]) if isinstance(o,tuple) else o+v
             handles.append(layers[L].register_forward_hook(hook))
         try:
@@ -123,10 +123,8 @@ def main():
     try: fcntl.flock(lock_stream.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
     except BlockingIOError: raise SystemExit(f'another Part 131 runner holds {answers}')
     done=set()
-    existing_ids=set()
     if answers.exists():
         saved=recover_jsonl(answers)
-        existing_ids={r.get('id') for r in saved}
         for r in saved: done.add((r['unit_id'],r['arm'],r['question_index']))
     tokenizer=AutoTokenizer.from_pretrained(a.model, revision=a.revision)
     if tokenizer.pad_token_id is None: tokenizer.pad_token=tokenizer.eos_token
@@ -158,7 +156,7 @@ def main():
             vectors={}
             for i,(cell,_,_) in enumerate(batch):
                 if cell['L'] is None: continue
-                L,n=cell['L'],cell['n']; col=layers[L].mlp.down_proj.weight[:,n].float()
+                L,n=cell['L'],cell['n']; col=layers[L].mlp.down_proj.weight[:,n].detach().float()
                 vec=(cell['s']*cell['alpha']*r_l[L]/float(col.norm())*col).to(model.dtype)
                 vectors.setdefault(L,torch.zeros(len(batch),1,model.config.hidden_size,device=a.device,dtype=model.dtype))[i,0]=vec
             generated=generate_batch(model,layers,inp,mask,vectors,pad,eos_ids(model,tokenizer),MAX_NEW)
@@ -167,13 +165,11 @@ def main():
                 decoded=tokenizer.decode(token_ids,skip_special_tokens=True).strip()
                 answer=decoded.split('\nQuestion:')[0].strip() if a.frame=='plain' else decoded
                 unique_id=f"unpushed-{a.tag}-{qi}" if cell['unit_id']=='unpushed' else cell['unit_id']
-                if unique_id not in existing_ids:
-                  row={'id':unique_id,'unit_id':cell['unit_id'],'unit_class':cell['unit_class'],'arm':cell.get('arm','unpushed'),
-                     'tag':a.tag,'repo':repo,'revision':a.revision,'frame':a.frame,'L':cell['L'],'n':cell['n'],'s':cell['s'],'alpha':cell['alpha'],
-                     'question_index':qi,'question':q,'answer':answer,'raw':raw,'tokens':token_ids,
-                     'target_persona':cell['persona'],'target_desc':cell['desc']}
-                  out.write(json.dumps(row,ensure_ascii=False)+'\n'); out.flush(); count+=1
-                  existing_ids.add(unique_id)
+                row={'id':unique_id,'unit_id':cell['unit_id'],'unit_class':cell['unit_class'],'arm':cell.get('arm','unpushed'),
+                   'tag':a.tag,'repo':repo,'revision':a.revision,'frame':a.frame,'L':cell['L'],'n':cell['n'],'s':cell['s'],'alpha':cell['alpha'],
+                   'question_index':qi,'question':q,'answer':answer,'raw':raw,'tokens':token_ids,
+                   'target_persona':cell['persona'],'target_desc':cell['desc']}
+                out.write(json.dumps(row,ensure_ascii=False)+'\n'); out.flush(); count+=1
             print(f'{a.tag} batch {b0//a.batch+1}/{(len(work)+a.batch-1)//a.batch}',flush=True)
     # Gate 3: compare no-op and plain arms at the same real left-padded batch shape.
     gate_q=QUESTIONS[0]; plain_ids=prompt_ids(tokenizer,gate_q,a.frame)

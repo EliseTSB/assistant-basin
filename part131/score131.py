@@ -40,13 +40,14 @@ def main(argv=None):
     def selfshare(rr): return sum(bool(lab(r).get('self_claim')) for r in rr if lab(r))/max(1,len([r for r in rr if lab(r)]))
     who_sft=len(units_any('tulu-sft','shared',qi=0)); who_final=len(units_any('tulu-final','shared',qi=0))
     selecting_tag={'llama':'instruct','tulu':'tulu-final','hermes':'hermes'}
+    valid_label=lambda r: bool(r) and 'error' not in r and not r.get('missing')
     single_select=0; single_select_n=0; other_counts=[]
     for unit in (u for u in units if u['class']=='single'):
         selected=selecting_tag[unit['selecting_model']]
         selected_row=next((r for r in rows(selected,'single',qi=0) if r['unit_id']==unit['id']),None)
         if selected_row and lab(selected_row) and 'error' not in lab(selected_row) and not lab(selected_row).get('missing'):
             single_select_n+=1; single_select += int(show(lab(selected_row)))
-        other_counts.extend(int(show(lab(r))) for tag in ('instruct','tulu-final','hermes') if tag!=selected for r in rows(tag,'single',qi=0) if r['unit_id']==unit['id'] and lab(r))
+        other_counts.extend(int(show(lab(r))) for tag in ('instruct','tulu-final','hermes') if tag!=selected for r in rows(tag,'single',qi=0) if r['unit_id']==unit['id'] and valid_label(lab(r)))
     shared_n=denominator('base','shared'); control_n=denominator('base','shared','control'); single_n=denominator('base','single')
     predictions={
       '131.1':{'observed':shared_n==24 and control_n==24 and len(base_shared)>=14 and len(base_ctrl)<=4,'shared_base_any':len(base_shared),'shared_base_n':shared_n,'controls_base_any':len(base_ctrl),'controls_n':control_n},
@@ -84,7 +85,6 @@ def main(argv=None):
         three_eligible=[u['id'] for u in shared_units if u.get('model_eligibility') and all(u['model_eligibility'].get(m) for m in ('llama','tulu','hermes'))]
         three_agree=[u['id'] for u in shared_units if u.get('model_names_agree') is True]
         subsets_measured=any('model_eligibility' in u for u in shared_units)
-    valid_label=lambda r: bool(r) and 'error' not in r and not r.get('missing')
     unpushed_complete=(len(unpushed)==6*6 and all(len(lab(r))==4 and all(valid_label(x) for x in lab(r)) for r in unpushed))
     gates={'1':{'deepseek_known_correct':known_correct,'deepseek_known_pass':known_correct>=11,'luna_pairs':denominator_k,'kappa':kappa,'luna_pass':kappa is not None and kappa>=.6,'kappa_role':'report after primary reading'},
            '2':{'unpushed_persona_answers':unpushed_show,'unpushed_answer_rows':len(unpushed),'unpushed_target_labels':sum(len(lab(r)) for r in unpushed),'unpushed_pass':unpushed_show==0 and unpushed_complete,'base_controls_persona_units':len(all_base_ctrl),'base_controls_n':base_control_n,'base_control_pass':base_control_n==48 and len(all_base_ctrl)<=6},
