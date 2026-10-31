@@ -1,0 +1,288 @@
+#!/usr/bin/env python3
+"""Collect Part 129 activation sums on two GPUs.
+
+Chat masks use the actual Qwen3 <|im_start|> and assistant token IDs. Each message's role
+is the token immediately after its start marker; all valid tokens through the next start
+marker belong to that role.
+"""
+from __future__ import annotations
+import argparse, hashlib, json, os, queue, threading, time
+from pathlib import Path
+import runpy
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+_config = runpy.run_path(str(Path(__file__).with_name("config129.py")))
+CORPUS_DOCS, CORPUS_ORDER = _config["CORPUS_DOCS"], _config["CORPUS_ORDER"]
+DOC_CHARS, MIN_LEN = _config["DOC_CHARS"], _config["MIN_LEN"]
+PILOT_DOCS_PER_SLICE, SEQ_LEN = _config["PILOT_DOCS_PER_SLICE"], _config["SEQ_LEN"]
+
+LAYERS = 36
+GROUPS = ("web", "zh", "code", "chat-user", "chat-assistant")
+CHUNK_SAVE = 500
+
+def group_masks(ids, slice_name, tok, attention_mask):
+    valid = attention_mask.bool()
+    if slice_name != "chat":
+        target = {"dclm":"web", "zh":"zh", "code":"code"}.get(slice_name)
+        return {g: valid if g == target else torch.zeros_like(valid) for g in GROUPS}
+    start = tok.convert_tokens_to_ids("<|im_start|>")
+    assistant = tok.convert_tokens_to_ids("assistant")
+    if start is None or assistant is None or min(start, assistant) < 0:
+        raise ValueError("Qwen3 chat marker token IDs are unavailable")
+    asst = torch.zeros_like(valid)
+    for b in range(ids.shape[0]):
+        starts = torch.where(valid[b] & ids[b].eq(start))[0].tolist()
+        ends = starts[1:] + [int(torch.where(valid[b])[0][-1]) + 1] if valid[b].any() else []
+        for begin, end in zip(starts, ends):
+            if begin + 1 < end and int(ids[b, begin + 1]) == assistant:
+                asst[b, begin:end] = True
+    asst &= valid
+    return {g: (asst if g == "chat-assistant" else valid & ~asst) if g.startswith("chat-") else torch.zeros_like(valid)
+            for g in GROUPS}
+
+def self_compare_layout(batch, attention_mask, pad_id, extra_tokens=8):
+    """Reverse rows and append masked padding for the same-model noise control."""
+    ids = batch.flip(0)
+    mask = attention_mask.flip(0)
+    ids = torch.cat((ids, torch.full((len(ids), extra_tokens), pad_id, dtype=ids.dtype, device=ids.device)), 1)
+    mask = torch.cat((mask, torch.zeros((len(mask), extra_tokens), dtype=mask.dtype, device=mask.device)), 1)
+    return ids, mask
+
+def restore_self_compare(activation, original_tokens):
+    """Undo the control's row reversal and remove its trailing padded positions."""
+    return activation.flip(0)[:, :original_tokens, :]
+
+class Sums:
+    """Float64 GPU sufficient statistics; first axis is layer, then group and neuron."""
+    def __init__(self, layers, width, device):
+        self.width, self.device = width, device
+        # Ordinary x/y stats and rectified stats for both signed poles.
+        self.data = torch.zeros((len(GROUPS), layers, 18, width), dtype=torch.float64, device=device)
+        self.count = torch.zeros((len(GROUPS), layers), dtype=torch.int64, device=device)
+        self.above = None
+    def add(self, layer, x, y, masks, permutation, thresholds):
+        # Keep token chunks small so float64 work buffers fit beside both models.
+        xf, yf = x[:, 1:].reshape(-1, self.width), y[:, 1:].reshape(-1, self.width)
+        for gi, name in enumerate(GROUPS):
+            m = masks[name][:, 1:].reshape(-1)
+            n = int(m.sum())
+            if n == 0:
+                continue
+            self.count[gi, layer] += n
+            for start in range(0, len(xf), 1024):
+                end = min(len(xf), start + 1024)
+                keep = m[start:end]
+                if not bool(keep.any()):
+                    continue
+                a, b = xf[start:end][keep].to(torch.float64), yf[start:end][keep].to(torch.float64)
+                for pi, sign in enumerate((1.0, -1.0)):
+                    self.above[gi, layer, pi] += ((sign * a) > thresholds[layer, pi] / 4).sum(0)
+                self.data[gi, layer, 0] += a.sum(0)
+                self.data[gi, layer, 1] += b.sum(0)
+                self.data[gi, layer, 2] += a.square().sum(0)
+                self.data[gi, layer, 3] += b.square().sum(0)
+                self.data[gi, layer, 4] += (a * b).sum(0)
+                # The derangement is fixed per layer (seed 129), with no fixed points.
+                ap = a[:, permutation]
+                self.data[gi, layer, 5] += ap.sum(0)
+                self.data[gi, layer, 6] += ap.square().sum(0)
+                self.data[gi, layer, 7] += (ap * b).sum(0)
+                for pi, sign in enumerate((1.0, -1.0)):
+                    ax, by = (sign * a).clamp_min(0), (sign * b).clamp_min(0)
+                    base = 8 + pi * 5
+                    self.data[gi, layer, base] += ax.sum(0)
+                    self.data[gi, layer, base + 1] += by.sum(0)
+                    self.data[gi, layer, base + 2] += ax.square().sum(0)
+                    self.data[gi, layer, base + 3] += by.square().sum(0)
+                    self.data[gi, layer, base + 4] += (ax * by).sum(0)
+    def state(self):
+        return {"groups": GROUPS, "data": self.data.cpu(), "count": self.count.cpu(), "above": self.above.cpu()}
+
+def weight_cosines(chat, base):
+    result = []
+    for l, (a, b) in enumerate(zip(chat.model.layers, base.model.layers)):
+        ca, cb = a.mlp.down_proj.weight.float(), b.mlp.down_proj.weight.float()
+        ga, gb = a.mlp.gate_proj.weight.float(), b.mlp.gate_proj.weight.float()
+        ua, ub = a.mlp.up_proj.weight.float(), b.mlp.up_proj.weight.float()
+        cos = lambda x, y, dim: torch.nn.functional.cosine_similarity(x, y.to(x.device), dim=dim).cpu()
+        result.append({"down": cos(ca, cb, 0), "gate": cos(ga, gb, 1), "up": cos(ua, ub, 1)})
+    return result
+
+def load_docs(path, tok, slice_name, limit=None):
+    docs = []
+    for line_no, line in enumerate(open(path, encoding="utf-8")):
+        if limit is not None and line_no >= limit:
+            break
+        row = json.loads(line)
+        ids = tok(row["text"][:DOC_CHARS])["input_ids"][:SEQ_LEN]
+        if len(ids) >= MIN_LEN:
+            docs.append((ids, row, slice_name, line_no))
+    return docs
+
+def run(args):
+    device_a, device_b = torch.device("cuda:0"), torch.device("cuda:1")
+    tok = AutoTokenizer.from_pretrained(args.chat_model, local_files_only=True)
+    chat = AutoModelForCausalLM.from_pretrained(args.chat_model, torch_dtype=torch.bfloat16, device_map={"":"cuda:0"}, local_files_only=True)
+    base = AutoModelForCausalLM.from_pretrained(args.base_model, torch_dtype=torch.bfloat16, device_map={"":"cuda:1"}, local_files_only=True)
+    chat.eval(); base.eval()
+    width, layers = chat.config.intermediate_size, chat.config.num_hidden_layers
+    if base.config.intermediate_size != width or base.config.num_hidden_layers != layers:
+        raise ValueError("checkpoint MLP layouts differ")
+    col = Sums(layers, width, device_a)
+    prepared = torch.load(args.prepared,map_location="cpu",weights_only=False)
+    thresholds = prepared["thresholds"].to(device_a)
+    col.above = torch.zeros((len(GROUPS), layers, 2, width), dtype=torch.int64, device=device_a)
+    rng = torch.Generator().manual_seed(129)
+    perms = []
+    for _ in range(layers):
+        order = torch.randperm(width, generator=rng)
+        p = torch.empty_like(order)
+        p[order] = order.roll(1)
+        perms.append(p.to(device_a))
+    hooks_a, hooks_b = [], []
+    activations = queue.Queue(maxsize=1)
+    worker_errors = []
+    self_compare = Path(args.chat_model).resolve() == Path(args.base_model).resolve()
+    def install(model, hooks, is_chat):
+        for li, layer in enumerate(model.model.layers):
+            def hook(_module, inputs, layer_i=li):
+                if is_chat:
+                    x = inputs[0].detach()
+                    deadline = time.monotonic() + 600
+                    while True:
+                        if worker_errors:
+                            raise RuntimeError("Base model worker failed") from worker_errors[0]
+                        remaining = deadline - time.monotonic()
+                        if remaining <= 0:
+                            raise TimeoutError(f"Base model did not request layer {layer_i} activation within 600 seconds")
+                        try:
+                            activations.put(x, timeout=min(1.0, remaining))
+                            break
+                        except queue.Full:
+                            continue
+                    for check in align_by_layer[layer_i]:
+                        docrow = cache["docids"].get((str(check["slice"]), int(check["line"])))
+                        if docrow is not None:
+                            bi = docrow
+                            at = int(check["position"])
+                            if at < x.shape[1]:
+                                alignment_values[alignment_key(check)] = float(x[bi,at,int(check["neuron"])].float().cpu()) * int(check["pole"])
+                else:
+                    if worker_errors:
+                        raise RuntimeError("Base model worker failed") from worker_errors[0]
+                    deadline = time.monotonic() + 600
+                    while True:
+                        if worker_errors:
+                            raise RuntimeError("Base model worker failed") from worker_errors[0]
+                        remaining = deadline - time.monotonic()
+                        if remaining <= 0:
+                            raise TimeoutError(f"Chat model did not provide layer {layer_i} activation within 600 seconds")
+                        try:
+                            x = activations.get(timeout=min(1.0, remaining))
+                            break
+                        except queue.Empty:
+                            continue
+                    y = inputs[0].detach()
+                    if self_compare:
+                        y = restore_self_compare(y, x.shape[1])
+                    col.add(layer_i, x, y.to(device_a), cache["masks"], perms[layer_i], thresholds)
+            hooks.append(layer.mlp.down_proj.register_forward_pre_hook(hook))
+    align_rows = prepared["pilot_alignment"] if args.stage == "pilot" else prepared["alignment"]
+    def alignment_key(check):
+        return f"{check['layer']}:{check['neuron']}:{check['pole']}:{check['slice']}:{check['line']}:{check['position']}"
+    align_by_layer = {l:[r for r in align_rows if int(r["layer"])==l] for l in range(layers)}
+    alignment_values = {}
+    cache = {"masks": None, "docids": None}
+    install(chat, hooks_a, True); install(base, hooks_b, False)
+    docs, plan = [], []
+    for name, path in zip(CORPUS_ORDER, args.corpus):
+        rows = load_docs(path, tok, name, PILOT_DOCS_PER_SLICE if args.stage == "pilot" else CORPUS_DOCS[name])
+        docs.extend((name, ids, row, name, line_no) for ids, row, _slice, line_no in rows)
+    out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
+    sums_path = out / f"{args.stage}-sums.pt"
+    corpus_hash=hashlib.sha256(repr([(r[0],r[4],r[1]) for r in docs]).encode("utf-8")).hexdigest()
+    prepared_hash=hashlib.sha256(Path(args.prepared).read_bytes()).hexdigest()
+    meta={"stage":args.stage,"docs":len(docs),"batch":args.batch,"chat_model":str(Path(args.chat_model).resolve()),
+          "base_model":str(Path(args.base_model).resolve()),"corpus_sha256":corpus_hash,"prepared_sha256":prepared_hash}
+    pos = 0
+    if sums_path.exists():
+        saved = torch.load(sums_path, map_location="cpu", weights_only=False)
+        if saved["meta"] != meta:
+            raise ValueError("resume metadata does not match this run")
+        col.data.copy_(saved["state"]["data"].to(device_a)); col.count.copy_(saved["state"]["count"].to(device_a)); col.above.copy_(saved["state"]["above"].to(device_a)); alignment_values.update(saved["state"].get("alignment_values", {})); pos = saved["next_doc"]
+    start_time = time.monotonic()
+    while pos < len(docs):
+        end = min(pos + args.batch, ((pos // CHUNK_SAVE) + 1) * CHUNK_SAVE, len(docs))
+        while end > pos + 1 and docs[end - 1][0] != docs[pos][0]:
+            end -= 1
+        while end < min(len(docs), pos + args.batch, ((pos // CHUNK_SAVE) + 1) * CHUNK_SAVE) and docs[end][0] == docs[pos][0]:
+            end += 1
+        chunk = docs[pos:end]
+        T = max(map(lambda r: len(r[1]), chunk))
+        pad_id = tok.pad_token_id if tok.pad_token_id is not None else tok.eos_token_id
+        ids = torch.full((len(chunk), T), pad_id, dtype=torch.long)
+        mask = torch.zeros_like(ids)
+        for j, (_, row, *_rest) in enumerate(chunk): ids[j, :len(row)] = torch.tensor(row); mask[j, :len(row)] = 1
+        names = {r[0] for r in chunk}
+        if len(names) != 1:  # keep slice masks exact
+            raise RuntimeError("batch crossed a corpus slice")
+        masks = group_masks(ids.to(device_a), chunk[0][0], tok, mask.to(device_a))
+        # Attach token masks to the same slice group for ordinary documents.
+        if chunk[0][0] in ("dclm", "zh", "code"):
+            masks = {g: (mask.to(device_a).bool() if g == {"dclm":"web", "zh":"zh", "code":"code"}[chunk[0][0]] else torch.zeros_like(mask, device=device_a, dtype=torch.bool)) for g in GROUPS}
+        cache["masks"] = masks
+        cache["docids"] = {(str(r[3]), int(r[4])): j for j,r in enumerate(chunk)}
+        batch = ids.to(device_a)
+        base_batch = batch.to(device_b)
+        base_mask = mask.to(device_b)
+        if self_compare:
+            base_batch, base_mask = self_compare_layout(base_batch, base_mask, pad_id)
+        def base_forward():
+            try:
+                with torch.inference_mode():
+                    base(input_ids=base_batch, attention_mask=base_mask)
+            except BaseException as exc:
+                worker_errors.append(exc)
+        with torch.inference_mode():
+            worker = threading.Thread(target=base_forward, name="part129-base-forward")
+            worker.start()
+            chat(input_ids=batch, attention_mask=mask.to(device_a))
+            worker.join(timeout=600)
+            if worker.is_alive():
+                raise TimeoutError("Base model forward did not finish within 600 seconds")
+            if worker_errors:
+                raise RuntimeError("Base model forward failed") from worker_errors[0]
+        pos += len(chunk)
+        if pos % CHUNK_SAVE < args.batch or pos == len(docs):
+            payload = {"meta":meta,"state":{**col.state(),"alignment_values":alignment_values},"next_doc":pos}
+            tmp = sums_path.with_suffix(".tmp"); torch.save(payload, tmp); os.replace(tmp, sums_path)
+            print(f"saved {pos}/{len(docs)} docs, {pos/max(1,time.monotonic()-start_time):.2f} docs/s", flush=True)
+    elapsed=time.monotonic()-start_time
+    (out / "timing.json").write_text(json.dumps({"documents":len(docs),"batch":args.batch,"seconds":elapsed,
+        "documents_per_second":len(docs)/max(elapsed,1e-9)},indent=2)+"\n",encoding="utf-8")
+    torch.save({"layer_cosines":weight_cosines(chat, base)}, out / "weight-cosines.pt")
+    (out / "alignment-values.json").write_text(json.dumps(alignment_values)+"\n",encoding="utf-8")
+    if args.stage == "pilot":
+        matched = [abs(alignment_values[alignment_key(check)] - check["top_val"]) / check["top_val"] <= .05
+                   for check in align_rows if check["top_val"] > 0 and alignment_key(check) in alignment_values]
+        rate = sum(matched) / len(matched) if matched else 0.0
+        print(f"Gate 1 alignment: {sum(matched)}/{len(align_rows)} matched, {rate:.1%} within 5%", flush=True)
+    if Path(args.chat_model).resolve()==Path(args.base_model).resolve():
+        rows=[]
+        state=col.state()
+        for layer in range(layers):
+            stats=state["data"][:,layer,:5,:].sum(0); n=state["count"][:,layer].sum().item()
+            sx,sy,xx,yy,xy=stats
+            vx,vy=xx-sx.square()/n,yy-sy.square()/n
+            rr=torch.where((vx>0)&(vy>0),(xy-sx*sy/n)/torch.sqrt((vx*vy).clamp_min(1e-300)),torch.full_like(vx,float("nan")))
+            rows.append({"layer":layer,"median_r":float(rr[torch.isfinite(rr)].median())})
+        (out/"gate2-r.json").write_text(json.dumps(rows,indent=2)+"\n",encoding="utf-8")
+    for h in hooks_a + hooks_b: h.remove()
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--stage", choices=("pilot","main"), required=True)
+    ap.add_argument("--chat-model", required=True); ap.add_argument("--base-model", required=True)
+    ap.add_argument("--corpus", nargs=4, required=True); ap.add_argument("--prepared", required=True); ap.add_argument("--out", required=True)
+    ap.add_argument("--batch", type=int, default=32); args = ap.parse_args(); run(args)
+if __name__ == "__main__": main()
