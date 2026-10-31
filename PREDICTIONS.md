@@ -3100,3 +3100,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 160.4 | At its picking dose, each set's mean neuron hit rate is at least twice its paired random directions' | medium | Claude |  |
 | 160.5 | In each set, at least half of neurons peak within 0.2 of their picking dose | low | Claude |  |
 | 160.6 | Google is the company of at least half of the neurons in each set | low | Claude |  |
+
+## Part 161 (registered 2026-10-31 17:39 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 161.1 | Over both picking doses, the share of picked random directions that are reliable at their picking dose is at least half the share of picked neurons that are | medium | Claude |  |
+| 161.2 | With all picked neurons laddered, the set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6 | low | Claude |  |
+| 161.3 | The random directions picked at 1.0 have a median peak dose at least 0.2 above those picked at 0.6 | low | Claude |  |
+| 161.4 | Among random directions picked at 0.6, at least half peak at 0.6 or below | medium | Claude |  |
+| 161.5 | Among units of either arm picked for Tencent at 0.6, at least half hit Tencent on 4 of 24 or fewer at 1.0 | medium | Claude |  |
