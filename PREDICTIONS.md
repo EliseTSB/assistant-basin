@@ -2716,3 +2716,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 127.3 | Claude (medium confidence): Across the 54 cells at dose .5, the A+B rescue count exceeds the A+C count by at most 3 cells. | pending | pending |
 | 127.4 | Claude (medium confidence): All four same-layer pairs have an absolute `W_down` cosine below .2. | pending | pending |
 | 127.5 | Claude (low confidence): At dose .5, A's reference-path logit change under A+B exceeds that under A+C in at least 17 of the 27 pairs. | pending | pending |
+
+## Part 128 (registered 2026-10-30, PART128-DESIGN.md): in ordinary text, do Qwen3-8B's persona neurons do what their persona says?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 128.1 | Claude (medium confidence): At least 12 of 40 pushed poles clearly match their persona on some side, and at most 4 of 40 mismatch rows do. | pending | pending |
+| 128.2 | Claude (medium confidence): The carrier rate on either side is at least 20 points above the once rate. | pending | pending |
+| 128.3 | Claude (low confidence): On the fire side, at most 4 of 16 once poles and at least 5 of 11 carrier poles clearly match. | pending | pending |
+| 128.4 | Claude (medium confidence): Pushed poles match their persona at least twice as often as opposite poles do. | pending | pending |
+| 128.5 | Claude (high confidence): At most 4 of 40 control rows match the paired persona. | pending | pending |
+| 128.6 | Claude (medium confidence): The median of abs(c) / act_top is at least 5, and at least 30 of 40 pushes are 3 times the pole's top firing or more. | pending | pending |
+| 128.7 | Claude (low confidence): The count of dark pushed poles is within 6 of the count expected from the catalog's band rates. | pending | pending |
