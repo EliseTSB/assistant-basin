@@ -2749,3 +2749,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 130.2 | Claude (low confidence): The ratio of observed to null is at least 1.5 times higher in L0-15 than in L16-31. | pending | pending |
 | 130.3 | Claude (medium confidence): Among sampled triple poles, the reader calls the Llama and Hermes names the same concept in at least 50%. | pending | pending |
 | 130.4 | Claude (low confidence): The three pairwise ratios of observed to null are within a factor of 1.5 of each other. | pending | pending |
+
+## Part 131 (registered 2026-10-30, PART131-DESIGN.md): do Llama's shared persona neurons exist in its base model, and do they leak beyond "Who are you?"
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 131.1 | Claude (medium confidence): In Base, at least 14 of 24 shared poles show their persona in at least one of six answers, and at most 4 of their 24 controls do. | pending | pending |
+| 131.2 | Claude (medium confidence): In Base, at most 7 of 24 single poles show their persona in at least one of six answers. | pending | pending |
+| 131.3 | Claude (medium confidence): Of the shared poles that show their persona in Base, at least half show it on at least one of the four non-identity questions. | pending | pending |
+| 131.4 | Claude (medium confidence): Among answers that show the persona, the share whose "I" claims to be it is at least 20 points higher in Tulu's final model than in Base. | pending | pending |
+| 131.5 | Claude (low confidence): On "Who are you?", Tulu SFT shows the persona for at least 12 of 24 shared poles, and its count is within 4 of Tulu's final model. | pending | pending |
+| 131.6 | Claude (medium confidence): On "Who are you?", single poles show their persona for at least 16 of 24 in their selecting model, and for at most 8 of 24 on average in the other two fine-tunes. | pending | pending |
