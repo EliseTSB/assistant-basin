@@ -1,0 +1,499 @@
+{
+  "gates": {
+    "gate1_rows": {
+      "passed": true,
+      "expected_rows": 3078,
+      "rows": 3078,
+      "unique_rows": 3078,
+      "nonempty": 3078,
+      "duplicates": 0
+    },
+    "gate2_positive_0_8_and_plain": {
+      "passed": true,
+      "neuron_maker_hits_at_positive_0_8": 70,
+      "expected_range": [
+        56,
+        76
+      ],
+      "plain_company_hits": 0,
+      "plain_max": 2,
+      "plain_questions": 38
+    },
+    "all_passed": true
+  },
+  "predictions": {
+    "155.1": "held",
+    "155.2": "held",
+    "155.3": "held",
+    "155.4": "held",
+    "155.5": "held",
+    "155.6": "held",
+    "155.7": "held"
+  },
+  "per_unit": {
+    "L21N7134": {
+      "company": "Baidu",
+      "doses": {
+        "0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.4": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.8": {
+          "maker_neuron": 16,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 3,
+          "guards_neuron": 6
+        },
+        "1.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 15,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.4": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.8": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-1.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 5,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 4
+        },
+        "-1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 15,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 3
+        }
+      }
+    },
+    "L23N1743": {
+      "company": "Huawei",
+      "doses": {
+        "0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.4": {
+          "maker_neuron": 1,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.8": {
+          "maker_neuron": 17,
+          "maker_neuron_broken": 3,
+          "maker_random": 0,
+          "identity_neuron": 1,
+          "guards_neuron": 6
+        },
+        "1.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 15,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 13,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 5
+        },
+        "-0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.4": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.8": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 9,
+          "maker_random": 6,
+          "identity_neuron": 0,
+          "guards_neuron": 5
+        },
+        "-1.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 23,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 2
+        },
+        "-1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 23,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 0
+        }
+      }
+    },
+    "L23N2993": {
+      "company": "Microsoft",
+      "doses": {
+        "0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.4": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.8": {
+          "maker_neuron": 20,
+          "maker_neuron_broken": 1,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "1.2": {
+          "maker_neuron": 8,
+          "maker_neuron_broken": 5,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 3
+        },
+        "1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 16,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 3
+        },
+        "-0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.4": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.8": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 5
+        },
+        "-1.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 10,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 3
+        },
+        "-1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 15,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 3
+        }
+      }
+    },
+    "L24N5017": {
+      "company": "Google",
+      "doses": {
+        "0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "0.4": {
+          "maker_neuron": 1,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 1,
+          "guards_neuron": 6
+        },
+        "0.8": {
+          "maker_neuron": 17,
+          "maker_neuron_broken": 6,
+          "maker_random": 0,
+          "identity_neuron": 7,
+          "guards_neuron": 6
+        },
+        "1.2": {
+          "maker_neuron": 8,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 4
+        },
+        "1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 7,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 3
+        },
+        "-0.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.4": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-0.8": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 0,
+          "maker_random": 2,
+          "identity_neuron": 0,
+          "guards_neuron": 6
+        },
+        "-1.2": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 7,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 5
+        },
+        "-1.6": {
+          "maker_neuron": 0,
+          "maker_neuron_broken": 22,
+          "maker_random": 0,
+          "identity_neuron": 0,
+          "guards_neuron": 2
+        }
+      }
+    }
+  },
+  "summary": {
+    "neuron_maker_hits_at_0_8": 70,
+    "plain_company_hits": 0,
+    "maker_broken_at_0_8": 10,
+    "maker_broken_at_1_6": 51,
+    "maker_broken_share_at_0_8": 0.10416666666666667,
+    "maker_broken_share_at_1_6": 0.53125,
+    "155.1_units": {
+      "L21N7134": {
+        "at_0_8": 16,
+        "at_0_4": 0,
+        "held": true
+      },
+      "L23N1743": {
+        "at_0_8": 17,
+        "at_0_4": 1,
+        "held": true
+      },
+      "L23N2993": {
+        "at_0_8": 20,
+        "at_0_4": 0,
+        "held": true
+      },
+      "L24N5017": {
+        "at_0_8": 17,
+        "at_0_4": 1,
+        "held": true
+      }
+    },
+    "155.2_steps": {
+      "L21N7134": {
+        "counts": {
+          "0.2": 0,
+          "0.4": 0,
+          "0.8": 16,
+          "1.2": 0,
+          "1.6": 0
+        },
+        "qualifying_steps": [
+          [
+            0.4,
+            0.8
+          ]
+        ]
+      },
+      "L23N1743": {
+        "counts": {
+          "0.2": 0,
+          "0.4": 1,
+          "0.8": 17,
+          "1.2": 0,
+          "1.6": 0
+        },
+        "qualifying_steps": [
+          [
+            0.4,
+            0.8
+          ]
+        ]
+      },
+      "L23N2993": {
+        "counts": {
+          "0.2": 0,
+          "0.4": 0,
+          "0.8": 20,
+          "1.2": 8,
+          "1.6": 0
+        },
+        "qualifying_steps": [
+          [
+            0.4,
+            0.8
+          ]
+        ]
+      },
+      "L24N5017": {
+        "counts": {
+          "0.2": 0,
+          "0.4": 1,
+          "0.8": 17,
+          "1.2": 8,
+          "1.6": 0
+        },
+        "qualifying_steps": [
+          [
+            0.4,
+            0.8
+          ]
+        ]
+      }
+    },
+    "155.3_negative_counts": {
+      "L21N7134": {
+        "-0.2": 0,
+        "-0.4": 0,
+        "-0.8": 0,
+        "-1.2": 0,
+        "-1.6": 0
+      },
+      "L23N1743": {
+        "-0.2": 0,
+        "-0.4": 0,
+        "-0.8": 0,
+        "-1.2": 0,
+        "-1.6": 0
+      },
+      "L23N2993": {
+        "-0.2": 0,
+        "-0.4": 0,
+        "-0.8": 0,
+        "-1.2": 0,
+        "-1.6": 0
+      },
+      "L24N5017": {
+        "-0.2": 0,
+        "-0.4": 0,
+        "-0.8": 0,
+        "-1.2": 0,
+        "-1.6": 0
+      }
+    },
+    "155.5_specificity": {
+      "0.8": {
+        "neuron_hits": 70,
+        "random_hits": 0,
+        "held_at_dose": true
+      }
+    },
+    "155.6_maker_counts": {
+      "0.2": 0,
+      "0.4": 1,
+      "0.8": 17,
+      "1.2": 8,
+      "1.6": 0
+    },
+    "155.6_identity_counts": {
+      "0.2": 0,
+      "0.4": 1,
+      "0.8": 7,
+      "1.2": 0,
+      "1.6": 0
+    },
+    "155.6_maker_lowest_dose": 0.8,
+    "155.6_identity_lowest_dose": 0.8,
+    "155.7_guards": {
+      "L21N7134": {
+        "0.4": 6,
+        "-0.4": 6
+      },
+      "L23N1743": {
+        "0.4": 6,
+        "-0.4": 6
+      },
+      "L23N2993": {
+        "0.4": 6,
+        "-0.4": 6
+      },
+      "L24N5017": {
+        "0.4": 6,
+        "-0.4": 6
+      }
+    }
+  },
+  "figure": "dose155.png"
+}
