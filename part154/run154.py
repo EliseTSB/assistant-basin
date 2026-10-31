@@ -82,6 +82,8 @@ class ZeroRowsHook:
         self.zeroed_rows = len(set(self.rows))
         self.other_rows = len(row_units) - self.zeroed_rows
         self.keep = None
+        self.calls = 0
+        self.first_nonfinite = {}  # row -> hook call index; call 0 is the prompt pass, call k consumes token k-1
         self.handle = down_proj.register_forward_pre_hook(self.hook)
 
     def hook(self, _module, args):
@@ -97,11 +99,17 @@ class ZeroRowsHook:
                 keep[rows, 0, channels] = 0
             self.keep = keep
         y = x * self.keep
-        target = self.keep == 0
-        written = y.masked_select(target.expand_as(y))
-        bad_target = (written != 0).sum()
-        bad_other = ((y != x) & ~target).sum()
+        target = (self.keep == 0).expand_as(y)
+        # A non-finite row compares unequal to itself, so it is reported on its own and left out of the write checks.
+        finite = torch.isfinite(x).reshape(x.shape[0], -1).all(1)
+        finite_rows = finite.reshape(-1, 1, 1).expand_as(y)
+        bad_target = ((y != 0) & target & finite_rows).sum()
+        bad_other = ((y != x) & ~target & finite_rows).sum()
         bad_target, bad_other = torch.stack([bad_target, bad_other]).cpu().tolist()
+        if not bool(finite.all()):
+            for row in (~finite).nonzero().flatten().cpu().tolist():
+                self.first_nonfinite.setdefault(int(row), self.calls)
+        self.calls += 1
         trace = self.trace
         positions = int(x.shape[1])
         trace['target_checks'] += self.zeroed_rows
@@ -217,7 +225,24 @@ def _generate_batch(model, tok, layers, common, rows, question, medians, max_new
         for pos,t in enumerate(row):
             if int(t) in eos_set: ids=row[:pos+1]; break
         result.append({'answer':tok.decode(ids,skip_special_tokens=True).strip(),'token_count':len(ids)})
+    for row, answer in enumerate(result):
+        answer['first_nonfinite_call'] = zero.first_nonfinite.get(row)
     return result, trace
+
+
+def generate_clean(model, tok, layers, common, rows, question, medians, retries, attempts=3):
+    """Generate a batch, repeating it when any row goes non-finite (Part 154, Amendment 1).
+
+    The A770 can turn one row's logits to NaN with no error, and that row then prints '!!!!'. The other rows repeat
+    exactly, so the whole batch is regenerated. A batch that never comes back clean stops the run."""
+    for attempt in range(attempts):
+        results, trace = _generate_batch(model, tok, layers, common, rows, question, medians)
+        hit = [i for i, answer in enumerate(results) if answer.get('first_nonfinite_call') is not None]
+        if not hit:
+            return results, trace
+        retries.append({'question': question, 'attempt': attempt, 'rows': hit,
+                        'calls': [results[i]['first_nonfinite_call'] for i in hit]})
+    raise RuntimeError(f'batch for {question!r} went non-finite on {attempts} attempts')
 
 
 def run(args, loader=None, generate_fn=None):
@@ -247,13 +272,14 @@ def run(args, loader=None, generate_fn=None):
     qitems=p153.DIRECT+p153.INDIRECT
     guards=p153.GUARDS
     trace_total=dict(trace_a)
+    retries=[]
     started=time.perf_counter()
     with answer_path.open('a',encoding='utf-8',newline='\n') as fh:
         for qi,q in enumerate(qitems[:2] if args.stage=='pilot' else qitems):
             batch=build_answer_batch(arms,zero_defs)
             if all((rec['id'],rec['arm'],rec['_zero']['id'],qi) in done for rec in batch): continue
             # Keyed resume allows a partially written batch to be rerun and only missing rows appended.
-            results, tr = _generate_batch(model,tok,layers,common,batch,q,medians)
+            results, tr = generate_clean(model,tok,layers,common,batch,q,medians,retries)
             for k,v in tr.items(): trace_total[k]=trace_total.get(k,0)+v
             for rec,answer in zip(batch,results):
                 key=(rec['id'],rec['arm'],rec['_zero']['id'],qi)
@@ -266,7 +292,7 @@ def run(args, loader=None, generate_fn=None):
             for qi,(q,expected) in enumerate(guards):
                 batch=build_answer_batch(arms,guard_zero,guards=True)
                 if all((rec['id'],rec['arm'],rec['_zero']['id'],len(qitems)+qi) in done for rec in batch): continue
-                results,tr=_generate_batch(model,tok,layers,common,batch,q,medians)
+                results,tr=generate_clean(model,tok,layers,common,batch,q,medians,retries)
                 for k,v in tr.items(): trace_total[k]=trace_total.get(k,0)+v
                 baseqi=len(qitems)+qi
                 for rec,answer in zip(batch,results):
@@ -276,7 +302,7 @@ def run(args, loader=None, generate_fn=None):
                     fh.write(json.dumps(row,ensure_ascii=False)+'\n'); done.add(key)
                 fh.flush()
     with (outdir/'trace.json').open('w',encoding='utf-8') as f:
-        json.dump({'stageA':trace_a,'stageB':trace_total,'elapsed_seconds':time.perf_counter()-started},f,indent=2);f.write('\n')
+        json.dump({'stageA':trace_a,'stageB':trace_total,'nonfinite_retries':retries,'elapsed_seconds':time.perf_counter()-started},f,indent=2);f.write('\n')
     return {'answers':str(answer_path),'stageA':str(stagea_path),'trace':trace_total}
 
 

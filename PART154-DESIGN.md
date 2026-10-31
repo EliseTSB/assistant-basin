@@ -67,3 +67,7 @@ Copied verbatim into PREDICTIONS.md under "## Part 154 (registered ...)".
 ## Limits
 
 One dose, one greedy answer per phrasing. L27 N3325 writes Google directly, so zeroing it removes part of the Google logit whatever route a push took. A fall shows the answer needs that writer, and does not show the push works through it; 154.5 is the only readout of the route, at one opening. The seven neurons were selected on Part 66's phrasings in Part 153, so the no-zero arm may run a little high.
+
+## Amendment 1, 2026-10-31 15:25 CT, before the main run
+
+Read from the pilots only, with no effect on any prediction. In the first pilot four rows, all in one zero set, turned to NaN partway through an answer and printed a run of `!`; the third pilot repeated the same 144 rows with no NaN, and the other 140 answers matched exactly. This is the A770's known silent NaN, not a property of a zero set. So a batch in which any row goes non-finite is regenerated, up to three attempts, every retry is recorded in `trace.json`, and a batch that never comes back clean stops the run. Gate 1 now also requires that no kept row went non-finite. The hook's write checks leave non-finite rows out, since a NaN compares unequal to itself. Three smaller fixes came from reading the runner before any pilot: the random row's missing `unit` key, a vectorized zero hook, and Part 72's first-token name readout in place of a single-token rule the part never had.

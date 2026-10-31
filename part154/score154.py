@@ -77,12 +77,14 @@ def score_rows(answers, stagea, trace):
                  for arm in [('none' if uid=='none' else 'random' if uid.startswith('random_') else 'neuron')]
                  for qi in range(MAKER_N)}
     nonempty=sum(isinstance(r.get('answer'),str) and bool(r['answer'].strip()) for r in ans_ix.values())
+    # Amendment 1: a kept row must have stayed finite throughout. A count of 0 here is part of Gate 1.
+    nonfinite_kept=sum(r.get('first_nonfinite_call') is not None for r in ans_ix.values())
     sa_finite=all(all(isinstance(r.get(k),(int,float)) and math.isfinite(float(r[k])) for k in
         ('activation_L27N3325_pre_zero','google_minus_alibaba','name_mass')) and
         isinstance(r.get('name_logits'),dict) and len(r['name_logits'])==8 for r in stage_ix.values())
-    gate1={'passed':gate1_passes(len(answers),len(ans_ix),nonempty,len(stagea),len(stage_ix),sa_finite and expected.issubset(ans_ix) and sa_expected.issubset(stage_ix) and ans_dup==0 and stage_dup==0,trace),
+    gate1={'passed':gate1_passes(len(answers),len(ans_ix),nonempty,len(stagea),len(stage_ix),sa_finite and expected.issubset(ans_ix) and sa_expected.issubset(stage_ix) and ans_dup==0 and stage_dup==0 and nonfinite_kept==0,trace),
            'expected_answers':1872,'answers':len(answers),'unique_answers':len(ans_ix),'nonempty_answers':nonempty,
-           'expected_stageA':576,'stageA_rows':len(stagea),'stageA_finite':sa_finite,'trace':trace}
+           'expected_stageA':576,'stageA_rows':len(stagea),'stageA_finite':sa_finite,'nonfinite_rows_kept':nonfinite_kept,'trace':trace}
     def getans(uid,arm,z,qi): return ans_ix.get((uid,arm,z,qi),{}).get('answer','')
     no_push_hits=sum(company_hit(getans('none','none','none',qi),'Google') for qi in range(MAKER_N))
     ten_hits=sum(company_hit(getans(uid,'neuron','none',qi),company) for uid,company in COMPANY.items() for qi in range(MAKER_N))

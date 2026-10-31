@@ -73,6 +73,25 @@ class HookTests(unittest.TestCase):
                 self.assertEqual(sum(present), 1)
                 self.assertNotEqual(pushes[row['layer']][i, row['neuron']].item(), 0)
 
+    def test_generate_clean_repeats_a_nonfinite_batch(self):
+        calls=[]
+        def fake(*args):
+            calls.append(1)
+            first=len(calls)<3
+            return [{'answer':'a','token_count':5,'first_nonfinite_call':4 if first else None}], {'calls':1}
+        original=run154._generate_batch
+        run154._generate_batch=fake
+        try:
+            retries=[]
+            results,_=run154.generate_clean(None,None,None,None,[{}],'q',{},retries)
+            self.assertEqual(len(calls),3); self.assertEqual(len(retries),2)
+            self.assertIsNone(results[0]['first_nonfinite_call'])
+            run154._generate_batch=lambda *args:([{'answer':'a','token_count':5,'first_nonfinite_call':1}],{})
+            with self.assertRaises(RuntimeError):
+                run154.generate_clean(None,None,None,None,[{}],'q',{},[])
+        finally:
+            run154._generate_batch=original
+
     def test_zero_hook_row_and_trace(self):
         import torch
         class Hookable:
