@@ -2591,6 +2591,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 126](results/part126/README.md)**, 2026-10-30. In Qwen3.5-4B, does attention at the final position to the copied message's header role word track how much each of 32 heads moved Part 83's gap? Spearman rho was -0.023, with a 95% interval of -0.37 to +0.33, and three of four predictions failed. The role words occur five times in a prompt and this test counted one, so this says nothing about the other four.
 
+**[Part 130](results/part130/README.md)**, 2026-10-30. Is the same pole a persona in Llama 3.1 8B Instruct, Tulu 3 8B and Hermes 3 8B? 3,681 poles are, against a mean of 294.5 under rotation, which reproduces Sauers' figure with a stated null; in a sample of 150, a reader judged the names the same or closely related in 49. No model ran, and the base model is Part 131.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
