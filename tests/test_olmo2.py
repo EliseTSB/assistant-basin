@@ -117,6 +117,22 @@ def test_estimates_match_brute_force(build, n_valid):
                 assert torch.allclose(s.mean(kind)[layer], K[:, valid].sum(1), atol=1e-4), ("s", kind, layer)
 
 
+def test_bf16_map_runs_end_to_end():
+    """The real fit is bf16: the maps must run in that dtype (OLMo 2's rotary table is fp32, so
+    the rotated q/k need an explicit cast) and produce finite estimates. This is the regression
+    guard for the dtype class, which the fp32 brute-force tests cannot see."""
+    model = tiny_model().to(torch.bfloat16)
+    ids = torch.randint(0, 50, (SKIP_FIRST + 8,))
+    r = Accumulator({"out": N_LAYERS - 1, "mid": N_LAYERS}, D)
+    s = Accumulator({"mid": N_LAYERS, "out": N_LAYERS}, D)
+    r_lens_doc(model, ids, r, 0, dim_batch=7)
+    s_lens_doc(model, ids, s, 0, dim_batch=7)
+    for acc in (r, s):
+        for target in ("out", "mid"):
+            assert torch.isfinite(acc.mean(target)).all()
+    assert r.mean("out").abs().sum() > 0
+
+
 def test_relp_rules_keep_values_and_unpatch_on_olmo():
     """The reference patches OLMo 2's two post-norms and its MLP; forward values must not move,
     and the instance-level forwards must be gone afterwards."""

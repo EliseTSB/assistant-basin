@@ -125,8 +125,10 @@ def linearize(model, ids: torch.Tensor) -> list[LayerMap]:
         v = F.pad(F.linear(h, at.v_proj.weight).view(T, hk, hd).transpose(0, 1), (0, 0, 0, tp - T))
         qn, rq = _rms_norm(at.q_norm, q)
         kn, rk = _rms_norm(at.k_norm, k)
-        qr = _rope(qn.view(T, hk * g, hd), cos, sin).transpose(0, 1).reshape(hk, g, T, hd)
-        kr = F.pad(_rope(kn.view(T, hk, hd), cos, sin).transpose(0, 1), (0, 0, 0, tp - T))
+        # OLMo 2's rotary table is fp32 (Qwen3's is already the model dtype); HF casts the
+        # rotated q/k back to the input dtype, and so does the map.
+        qr = _rope(qn.view(T, hk * g, hd), cos, sin).to(dt).transpose(0, 1).reshape(hk, g, T, hd)
+        kr = F.pad(_rope(kn.view(T, hk, hd), cos, sin).to(dt).transpose(0, 1), (0, 0, 0, tp - T))
         p = torch.softmax((qr @ kr[:, None].mT).float() * at.scaling + causal, -1).to(dt)
         o = (p @ v[:, None]).reshape(hk * g, T, hd).transpose(0, 1).reshape(T, -1)
         attn = F.linear(o, at.o_proj.weight)
