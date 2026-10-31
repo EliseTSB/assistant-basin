@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import argparse
-import fcntl
+try:
+    import fcntl
+except ImportError:  # Windows, where the A770 job runs
+    fcntl = None
+    import msvcrt
 import hashlib
 import json
 import os
@@ -95,7 +99,10 @@ def append_jsonl_atomic(path: Path, rows):
     # Serialize the read/replace transaction so concurrent runs cannot overwrite
     # rows appended by another process between the read and os.replace calls.
     with path.with_name(path.name + ".lock").open("a+b") as lock:
-        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        if fcntl:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        else:
+            lock.seek(0); msvcrt.locking(lock.fileno(), msvcrt.LK_LOCK, 1)
         old = path.read_bytes() if path.exists() else b""
         payload = b"".join((json.dumps(row, ensure_ascii=False) + "\n").encode() for row in rows)
         fd, name = tempfile.mkstemp(prefix=path.name + ".", dir=path.parent)
@@ -105,7 +112,10 @@ def append_jsonl_atomic(path: Path, rows):
             os.replace(name, path)
         finally:
             if os.path.exists(name): os.unlink(name)
-        fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+        if fcntl:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
+        else:
+            lock.seek(0); msvcrt.locking(lock.fileno(), msvcrt.LK_UNLCK, 1)
 
 
 def read_rows(path):
