@@ -1,1 +1,4 @@
-# Filled by the build.
+# Copied files: part152/read152.py, part152/lens.json, and neuron_report.py. The runner imports neuron_report.py; the lens file is runtime input. Part 152 scorer runs on the host.
+python3 tools/launch_arc.py 152 --step "-I -B part152/read152.py --pile qwen35/pile10k.jsonl --docs 200 --out results/part152-pilot" --copy part152/read152.py part152/lens.json neuron_report.py
+python3 tools/launch_arc.py 152 --step "-I -B part152/read152.py --pile qwen35/pile10k.jsonl --docs 10000 --out results/part152" --copy part152/read152.py part152/lens.json neuron_report.py
+# Host: python3 -I -B part152/score152.py --windows results/part152/windows.json.gz --out results/part152/score.json
