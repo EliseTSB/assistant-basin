@@ -2711,11 +2711,11 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 127.1 | Claude (medium confidence): At dose .5, at most 1 of the 4 same-layer pairs is rescued. | pending | pending |
-| 127.2 | Claude (low confidence): At dose .707, at least 2 of the 4 same-layer pairs are rescued. | pending | pending |
-| 127.3 | Claude (medium confidence): Across the 54 cells at dose .5, the A+B rescue count exceeds the A+C count by at most 3 cells. | pending | pending |
-| 127.4 | Claude (medium confidence): All four same-layer pairs have an absolute `W_down` cosine below .2. | pending | pending |
-| 127.5 | Claude (low confidence): At dose .5, A's reference-path logit change under A+B exceeds that under A+C in at least 17 of the 27 pairs. | pending | pending |
+| 127.1 | Claude (medium confidence): At dose .5, at most 1 of the 4 same-layer pairs is rescued. | 1 of 2 eligible same-layer pairs at dose .5 | held |
+| 127.2 | Claude (low confidence): At dose .707, at least 2 of the 4 same-layer pairs are rescued. | 1 of 2 eligible same-layer pairs at dose .707 | failed |
+| 127.3 | Claude (medium confidence): Across the 54 cells at dose .5, the A+B rescue count exceeds the A+C count by at most 3 cells. | A+B minus A+C is 3 cells, of 38 eligible | held |
+| 127.4 | Claude (medium confidence): All four same-layer pairs have an absolute `W_down` cosine below .2. | all four below .2 | held |
+| 127.5 | Claude (low confidence): At dose .5, A's reference-path logit change under A+B exceeds that under A+C in at least 17 of the 27 pairs. | 13 of 27 | failed |
 
 ## Part 128 (registered 2026-10-30, PART128-DESIGN.md): in ordinary text, do Qwen3-8B's persona neurons do what their persona says?
 

@@ -1,0 +1,559 @@
+{
+  "known_example_gates": {
+    "ds": {
+      "correct": 12,
+      "total": 12,
+      "minimum": 10,
+      "passed": true,
+      "known_negative_count": 6,
+      "known_false_positive_count": 0,
+      "known_false_positive_rate": 0.0
+    },
+    "luna": {
+      "correct": 12,
+      "total": 12,
+      "minimum": 10,
+      "passed": true,
+      "known_negative_count": 6,
+      "known_false_positive_count": 0,
+      "known_false_positive_rate": 0.0
+    }
+  },
+  "positive_controls": [
+    {
+      "pair_id": "p92-08+p92-09",
+      "family": "dog",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-08+p92-37",
+      "family": "dog",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-09+p92-37",
+      "family": "dog",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-18+p92-20",
+      "family": "shadow",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-23+p92-24",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-23+p92-25",
+      "family": "king_or_ruler",
+      "same_layer": true,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-23+p92-26",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-23+p92-27",
+      "family": "king_or_ruler",
+      "same_layer": true,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-23+p92-42",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-23+p92-45",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-24+p92-25",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-24+p92-26",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-24+p92-27",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-24+p92-42",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-24+p92-45",
+      "family": "king_or_ruler",
+      "same_layer": true,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-25+p92-26",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-25+p92-27",
+      "family": "king_or_ruler",
+      "same_layer": true,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-25+p92-42",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-25+p92-45",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-26+p92-27",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-26+p92-42",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-26+p92-45",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-27+p92-42",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-27+p92-45",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-42+p92-45",
+      "family": "king_or_ruler",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    },
+    {
+      "pair_id": "p92-34+p92-35",
+      "family": "angel",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        },
+        "luna": {
+          "a_has_mark": false,
+          "b_has_mark": true,
+          "passed": false
+        }
+      },
+      "passed": false
+    },
+    {
+      "pair_id": "p92-28+p92-29",
+      "family": "deity",
+      "same_layer": false,
+      "readers": {
+        "ds": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        },
+        "luna": {
+          "a_has_mark": true,
+          "b_has_mark": true,
+          "passed": true
+        }
+      },
+      "passed": true
+    }
+  ],
+  "eligible_pair_ids": [
+    "p92-08+p92-09",
+    "p92-08+p92-37",
+    "p92-09+p92-37",
+    "p92-24+p92-25",
+    "p92-24+p92-26",
+    "p92-24+p92-27",
+    "p92-24+p92-42",
+    "p92-24+p92-45",
+    "p92-25+p92-26",
+    "p92-25+p92-27",
+    "p92-25+p92-42",
+    "p92-25+p92-45",
+    "p92-26+p92-27",
+    "p92-26+p92-42",
+    "p92-26+p92-45",
+    "p92-27+p92-42",
+    "p92-27+p92-45",
+    "p92-42+p92-45",
+    "p92-28+p92-29"
+  ],
+  "same_layer_eligible_pair_ids": [
+    "p92-24+p92-45",
+    "p92-25+p92-27"
+  ],
+  "negative_control_gates": {
+    "ds": {
+      "known_false_positive_count": 0,
+      "known_negative_count": 6,
+      "known_false_positive_rate": 0.0,
+      "no_push_target_items": 10,
+      "unread_items": 0,
+      "no_push_marks": 0,
+      "threshold": 0,
+      "passed": true
+    },
+    "luna": {
+      "known_false_positive_count": 0,
+      "known_negative_count": 6,
+      "known_false_positive_rate": 0.0,
+      "no_push_target_items": 10,
+      "unread_items": 0,
+      "no_push_marks": 0,
+      "threshold": 0,
+      "passed": true
+    }
+  },
+  "negative_control_passed": true,
+  "same_layer_gate_passed": true
+}

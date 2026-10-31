@@ -1,0 +1,58 @@
+{
+  "status": "complete",
+  "stage": "pilot",
+  "batch": 8,
+  "device": "cuda",
+  "model_revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "questions": [
+    "Who are you?",
+    "Tell me about yourself.",
+    "What do you want most?",
+    "Describe your perfect day.",
+    "What is the capital of France?",
+    "Write a short poem about the sea."
+  ],
+  "pairs": [
+    "p92-23+p92-25",
+    "p92-08+p92-09"
+  ],
+  "selected_units": [
+    "p92-08",
+    "p92-09",
+    "p92-23",
+    "p92-25"
+  ],
+  "answer_count": 198,
+  "arm_counts": {
+    "single": 72,
+    "pair_ab": 24,
+    "matched_ac": 24,
+    "random": 72,
+    "no_push": 6
+  },
+  "new_answers": 198,
+  "answers_path": "/root/part127-run/results/part127/pilot-b8/answers.jsonl",
+  "rig_gate_passed": true,
+  "fixed_path": {
+    "status": "complete",
+    "counts": {
+      "no_push": 24,
+      "single": 48,
+      "pair_ab": 48,
+      "matched_ac": 24,
+      "random": 72,
+      "total": 216
+    },
+    "shared_states_cached": 72,
+    "group_records": 24,
+    "new_group_records": 24,
+    "new_pair_states_forwarded": 144,
+    "emitted_logit_delta_fields": {
+      "centered_delta_on_support": 4414
+    },
+    "seconds": 9.6,
+    "batch_size": 8
+  },
+  "pilot_dir": null,
+  "generated_at_elapsed_seconds": 136.271
+}

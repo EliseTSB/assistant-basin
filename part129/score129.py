@@ -58,12 +58,32 @@ def verify_prepared_provenance(prepared, docs_path):
     if actual != prepared["docs_sha256"]:
         raise ValueError("prepared129.pt was built from a different docs.parquet")
 
-def row_tables(catalog):
-    acts=[]; labels=[]
-    for L in range(36):
-        acts.append(pq.read_table(Path(catalog)/"neurons/acts"/f"L{L:02d}.parquet").to_pylist())
-        labels.append(pq.read_table(Path(catalog)/"neurons/labels"/f"L{L:02d}.parquet").to_pylist())
-    return acts, labels
+def load_act_layer(catalog, layer):
+    """Load only the compact act columns used by the scorer."""
+    table=pq.read_table(Path(catalog)/"neurons/acts"/f"L{layer:02d}.parquet",columns=["neuron","pole"])
+    result=(table.column("neuron").to_numpy(zero_copy_only=False),
+            table.column("pole").to_numpy(zero_copy_only=False))
+    del table
+    return result
+
+def label_hits_for_pairs(catalog, layer, pairs):
+    """Count candidate pairs matching the registered text regex, one layer at a time."""
+    if not pairs:
+        return 0
+    table=pq.read_table(Path(catalog)/"neurons/labels"/f"L{layer:02d}.parquet",
+                        columns=["neuron","pole","fires","writes"])
+    neurons=table.column("neuron").to_numpy(zero_copy_only=False)
+    poles=table.column("pole").to_numpy(zero_copy_only=False)
+    fires=table.column("fires").to_pylist()
+    writes=table.column("writes").to_pylist()
+    by_neuron={}
+    for i,(n,pole) in enumerate(zip(neurons,poles)):
+        n=int(n)
+        if n in pairs:
+            by_neuron.setdefault(n,{})[int(pole)]=str(fires[i] or "")+" "+str(writes[i] or "")
+    del table,neurons,poles,fires,writes
+    return sum(bool(CHAT_REGISTER.search(by_neuron.get(n,{}).get(1," ")+" "+by_neuron.get(n,{}).get(-1," ")))
+               for n in pairs)
 
 def carry_counts(repo, tag):
     labels={json.loads(x)["id"]:json.loads(x) for x in open(Path(repo)/"results/part91/labels.jsonl",encoding="utf-8")}
@@ -87,7 +107,7 @@ def library_personas(path):
             if r and cats[r[0]]=="persona": found.add((L,i//2,1 if i%2==0 else -1))
     return found
 
-def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
+def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None, _legacy_rows=None):
     data=torch_load(sums)
     if "state" in data:
         data={**data["state"],"meta":data.get("meta",{})}
@@ -95,16 +115,23 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
     prepared_path=Path(prepared_file) if prepared_file else Path(sums).parent/"prepared129.pt"
     prepared_data=torch_load(prepared_path) if prepared_path.is_file() else {}
     verify_prepared_provenance(prepared_data,docs_path)
-    acts, labels=row_tables(catalog)
+    acts, labels=_legacy_rows if _legacy_rows is not None else (None,None)
     group={name:i for i,name in enumerate(GROUPS)}
-    rs={name:np.stack([corr(data,group[name],L) for L in range(36)]) for name in GROUPS}
-    # Keep a neuron when either polarity clears the registered 100-position activity floor.
-    for name in GROUPS:
-        gi=group[name]
-        for L in range(36):
+    # Keep only the two full score matrices needed for rankings; compute all other
+    # correlations and null summaries one layer at a time.
+    corr_dtype=data["data"][0,0,0].numpy().dtype
+    chat=np.empty((36,data["data"].shape[-1]),dtype=corr_dtype)
+    web=np.empty_like(chat)
+    null_by_group={name:[] for name in GROUPS}
+    for L in range(36):
+        for name in GROUPS:
+            gi=group[name]
+            values=corr(data,gi,L)
             eligible=(data["above"][gi,L].numpy()>=100).any(0)
-            rs[name][L,~eligible]=np.nan
-    chat=rs["chat-assistant"]; web=rs["web"]
+            values[~eligible]=np.nan
+            if name=="chat-assistant": chat[L]=values
+            elif name=="web": web[L]=values
+            null_by_group[name].append(med(np.abs(nullcorr(data,gi,L))))
     layer_web=[med(web[L]) for L in range(36)]
     p1=med(web.reshape(-1))
     chat_median=med(chat.reshape(-1))
@@ -117,7 +144,7 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
         from scipy.stats import spearmanr
         p4=[]
         for L in range(36):
-            x=1-chat[L]; y=1-cos[L]["down"].numpy(); ok=np.isfinite(x)&np.isfinite(y)
+            x=1-chat[L]; y=1-cos[L]["down"].detach().numpy(); ok=np.isfinite(x)&np.isfinite(y)
             rho=float(spearmanr(x[ok],y[ok]).statistic) if ok.sum()>2 else np.nan
             p4.append(abs(rho) if np.isfinite(rho) else None)
         count_p4=sum(v<=.3 for v in p4 if v is not None)
@@ -125,8 +152,14 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
     persona=library_personas(library)
     rng=random.Random(129); matched=[]; persona_r=[]
     for L in range(36):
+        if _legacy_rows is None:
+            act_neurons,act_poles=load_act_layer(catalog,L)
+            layer_acts=zip(act_neurons,act_poles)
+        else:
+            layer_acts=((r["neuron"],r["pole"]) for r in acts[L])
         poles=[(n,s) for ll,n,s in persona if ll==L]
-        non=[(r["neuron"],r["pole"]) for r in acts[L] if (L,r["neuron"],r["pole"]) not in persona]
+        non=[(int(n),int(s)) for n,s in layer_acts if (L,int(n),int(s)) not in persona]
+        if _legacy_rows is None: del act_neurons,act_poles
         active, eligible_non=eligible_matches(
             poles,non,lambda n,s: data["above"][group["web"],L,0 if s>0 else 1,n]>=100)
         if poles:
@@ -140,8 +173,14 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
     # Repeat persona/control comparison on assistant positions.
     pr=[]; mr=[]
     for L in range(36):
+        if _legacy_rows is None:
+            act_neurons,act_poles=load_act_layer(catalog,L)
+            layer_acts=zip(act_neurons,act_poles)
+        else:
+            layer_acts=((r["neuron"],r["pole"]) for r in acts[L])
         poles=[(n,s) for ll,n,s in persona if ll==L]
-        non=[(r["neuron"],r["pole"]) for r in acts[L] if (L,r["neuron"],r["pole"]) not in persona]
+        non=[(int(n),int(s)) for n,s in layer_acts if (L,int(n),int(s)) not in persona]
+        if _legacy_rows is None: del act_neurons,act_poles
         rrp=corr(data,group["chat-assistant"],L,0); rrn=corr(data,group["chat-assistant"],L,1)
         active, eligible_non=eligible_matches(poles,non,lambda n,s:data["above"][group["chat-assistant"],L,0 if s>0 else 1,n]>=100)
         if len(eligible_non)<len(active):
@@ -161,11 +200,20 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
         k=sum(ll==L for ll,n in low)
         pool=[n for n in range(chat.shape[1]) if (L,n) not in low and np.isfinite(chat[L,n])]
         rand += [(L,n) for n in rng.sample(pool,min(k,len(pool)))]
-    label_map={(L,int(r["neuron"]),int(r["pole"])):str(r.get("fires",""))+" "+str(r.get("writes","")) for L,tab in enumerate(labels) for r in tab}
-    hits=lambda pairs: sum(bool(CHAT_REGISTER.search(label_map.get((L,n,1),"")+" "+label_map.get((L,n,-1),""))) for L,n in pairs)
-    a,b=hits(low),hits(rand); ratio=(a/max(1,len(low)))/(b/max(1,len(rand))) if b else None
+    low_by_layer={L:{n for ll,n in low if ll==L} for L in range(36)}
+    rand_by_layer={L:{n for ll,n in rand if ll==L} for L in range(36)}
+    if _legacy_rows is None:
+        a=sum(label_hits_for_pairs(catalog,L,low_by_layer[L]) for L in range(36))
+        b=sum(label_hits_for_pairs(catalog,L,rand_by_layer[L]) for L in range(36))
+    else:
+        def legacy_hits(rows):
+            return sum(bool(CHAT_REGISTER.search(" ".join(str(r.get(field,"")) for s in (1,-1)
+                for field in ("fires","writes")
+                for r in labels[L] if int(r["neuron"])==n and int(r["pole"])==s)))
+                for L in range(36) for n in rows[L])
+        a,b=legacy_hits(low_by_layer),legacy_hits(rand_by_layer)
+    ratio=(a/max(1,len(low)))/(b/max(1,len(rand))) if b else None
     p7=(ratio>=2) if ratio is not None else (a>0 and len(low)>0)
-    null_by_group={name:[med(np.abs(nullcorr(data,gi,L))) for L in range(36)] for name,gi in group.items()}
     null_by_layer=[max((rows[L] for rows in null_by_group.values() if rows[L] is not None),default=None) for L in range(36)]
     gate1=None
     align_path=Path(sums).parent/"alignment-values.json"

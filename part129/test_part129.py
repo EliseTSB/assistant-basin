@@ -184,6 +184,21 @@ def test_scorer_fixture(tmp_path):
     assert abs(d["predictions"]["129.6"]["once_minus_carrier_chat_assistant_rectified"]-0.3)<1e-9
     assert d["predictions"]["129.7"]["lowest_n"]==144
 
+def test_slim_catalog_loader_matches_legacy_row_score(tmp_path):
+    sums,cat,lib,repo=fixture(tmp_path)
+    slim=tmp_path/"slim.json"; legacy=tmp_path/"legacy.json"
+    score129.score(sums,cat,lib,repo,slim,[])
+    legacy_rows=(
+        [pq.read_table(cat/f"neurons/acts/L{L:02d}.parquet").to_pylist() for L in range(36)],
+        [pq.read_table(cat/f"neurons/labels/L{L:02d}.parquet").to_pylist() for L in range(36)],
+    )
+    score129.score(sums,cat,lib,repo,legacy,[],_legacy_rows=legacy_rows)
+    assert slim.read_bytes()==legacy.read_bytes()
+    neurons,poles=score129.load_act_layer(cat,0)
+    old_acts=legacy_rows[0][0]
+    assert neurons.tolist()==[r["neuron"] for r in old_acts]
+    assert poles.tolist()==[r["pole"] for r in old_acts]
+
 def test_deliberate_break_copy_makes_scoring_assertion_red(tmp_path):
     source=HERE/"score129.py";broken=tmp_path/"broken_score129.py"
     text=source.read_text();assert "base = 8 + 5 * rect" in text

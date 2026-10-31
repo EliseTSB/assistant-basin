@@ -12,3 +12,9 @@ results/part119b/interaction.jsonl
 results/part124/activations.jsonl
 results/part125/main/call-sequences.jsonl
 results/part125/main/units/
+results/part129/main/main-sums.pt
+results/part129/gate2-b*/
+results/part129/pilot-b*
+results/part127/main/fixed_shared.pt
+results/part127/main/fixed_path.jsonl.superseded
+results/part127/main/fixed_path.jsonl

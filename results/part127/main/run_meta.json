@@ -1,0 +1,135 @@
+{
+  "status": "complete",
+  "stage": "main",
+  "batch": 8,
+  "device": "cpu",
+  "model_revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "questions": [
+    "Who are you?",
+    "Tell me about yourself.",
+    "What do you want most?",
+    "Describe your perfect day.",
+    "What is the capital of France?",
+    "Write a short poem about the sea."
+  ],
+  "pairs": [
+    "p92-08+p92-09",
+    "p92-08+p92-37",
+    "p92-09+p92-37",
+    "p92-18+p92-20",
+    "p92-23+p92-24",
+    "p92-23+p92-25",
+    "p92-23+p92-26",
+    "p92-23+p92-27",
+    "p92-23+p92-42",
+    "p92-23+p92-45",
+    "p92-24+p92-25",
+    "p92-24+p92-26",
+    "p92-24+p92-27",
+    "p92-24+p92-42",
+    "p92-24+p92-45",
+    "p92-25+p92-26",
+    "p92-25+p92-27",
+    "p92-25+p92-42",
+    "p92-25+p92-45",
+    "p92-26+p92-27",
+    "p92-26+p92-42",
+    "p92-26+p92-45",
+    "p92-27+p92-42",
+    "p92-27+p92-45",
+    "p92-42+p92-45",
+    "p92-34+p92-35",
+    "p92-28+p92-29"
+  ],
+  "selected_units": [
+    "p92-08",
+    "p92-09",
+    "p92-18",
+    "p92-20",
+    "p92-23",
+    "p92-24",
+    "p92-25",
+    "p92-26",
+    "p92-27",
+    "p92-28",
+    "p92-29",
+    "p92-34",
+    "p92-35",
+    "p92-37",
+    "p92-42",
+    "p92-45"
+  ],
+  "answer_count": 1914,
+  "arm_counts": {
+    "single": 288,
+    "pair_ab": 324,
+    "matched_ac": 324,
+    "random": 972,
+    "no_push": 6
+  },
+  "new_answers": 1716,
+  "answers_path": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/answers.jsonl",
+  "rig_gate_passed": true,
+  "fixed_path": {
+    "status": "complete",
+    "counts": {
+      "no_push": 94,
+      "single": 188,
+      "pair_ab": 640,
+      "matched_ac": 320,
+      "random": 960,
+      "total": 2202,
+      "dropped_unit_questions": [
+        {
+          "unit_id": "p92-20",
+          "question_index": 2,
+          "reference_key": "single:p92-20:dose1:q2"
+        },
+        {
+          "unit_id": "p92-20",
+          "question_index": 3,
+          "reference_key": "single:p92-20:dose1:q3"
+        }
+      ],
+      "dropped_groups": [
+        "group:p92-18+p92-20:q2:dose0.5",
+        "group:p92-18+p92-20:q2:dose0.707",
+        "group:p92-18+p92-20:q3:dose0.5",
+        "group:p92-18+p92-20:q3:dose0.707"
+      ],
+      "dropped_group_count": 4,
+      "dropped_states": 30
+    },
+    "dropped_unit_questions": [
+      {
+        "unit_id": "p92-20",
+        "question_index": 2,
+        "reference_key": "single:p92-20:dose1:q2"
+      },
+      {
+        "unit_id": "p92-20",
+        "question_index": 3,
+        "reference_key": "single:p92-20:dose1:q3"
+      }
+    ],
+    "dropped_groups": [
+      "group:p92-18+p92-20:q2:dose0.5",
+      "group:p92-18+p92-20:q2:dose0.707",
+      "group:p92-18+p92-20:q3:dose0.5",
+      "group:p92-18+p92-20:q3:dose0.707"
+    ],
+    "dropped_group_count": 4,
+    "dropped_states": 30,
+    "shared_states_cached": 282,
+    "group_records": 320,
+    "new_group_records": 320,
+    "new_pair_states_forwarded": 1920,
+    "emitted_logit_delta_fields": {
+      "centered_delta_on_support": 60314
+    },
+    "seconds": 431.332,
+    "batch_size": 8
+  },
+  "pilot_dir": null,
+  "generated_at_elapsed_seconds": 432.193
+}

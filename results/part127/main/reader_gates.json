@@ -1,0 +1,36 @@
+{
+  "ds": {
+    "reader": "ds",
+    "items": 12,
+    "pending": 12,
+    "retry_passes": 0,
+    "error_rows": 0,
+    "output": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/known-ds.jsonl",
+    "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/known-ds.jsonl.usage.jsonl",
+    "keys_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/known-ds.jsonl.keys.jsonl",
+    "correct": 12,
+    "total": 12,
+    "minimum": 10,
+    "passed": true,
+    "known_negative_count": 6,
+    "known_false_positive_count": 0,
+    "known_false_positive_rate": 0.0
+  },
+  "luna": {
+    "reader": "luna",
+    "items": 12,
+    "pending": 12,
+    "retry_passes": 0,
+    "error_rows": 0,
+    "output": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/known-luna.jsonl",
+    "usage_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/known-luna.jsonl.usage.jsonl",
+    "keys_sidecar": "/home/elisepc/green/worktrees/ab-part67/results/part127/main/known-luna.jsonl.keys.jsonl",
+    "correct": 12,
+    "total": 12,
+    "minimum": 10,
+    "passed": true,
+    "known_negative_count": 6,
+    "known_false_positive_count": 0,
+    "known_false_positive_rate": 0.0
+  }
+}

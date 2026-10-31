@@ -1,0 +1,33 @@
+P127 main start: answers=1914 pairs=27 batch=8
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 1886.14it/s]
+P127 fixed paths 354/2202 groups 12/320 elapsed=10.9s
+P127 fixed paths 426/2202 groups 24/320 elapsed=25.7s
+P127 fixed paths 498/2202 groups 36/320 elapsed=40.4s
+P127 fixed paths 570/2202 groups 48/320 elapsed=52.6s
+P127 fixed paths 642/2202 groups 60/320 elapsed=64.8s
+P127 fixed paths 714/2202 groups 72/320 elapsed=78.2s
+P127 fixed paths 786/2202 groups 84/320 elapsed=92.3s
+P127 fixed paths 858/2202 groups 96/320 elapsed=110.9s
+P127 fixed paths 930/2202 groups 108/320 elapsed=124.8s
+P127 fixed paths 1002/2202 groups 120/320 elapsed=137.9s
+P127 fixed paths 1074/2202 groups 132/320 elapsed=155.5s
+P127 fixed paths 1146/2202 groups 144/320 elapsed=169.0s
+P127 fixed paths 1218/2202 groups 156/320 elapsed=181.8s
+P127 fixed paths 1290/2202 groups 168/320 elapsed=194.2s
+P127 fixed paths 1362/2202 groups 180/320 elapsed=227.1s
+P127 fixed paths 1434/2202 groups 192/320 elapsed=240.7s
+P127 fixed paths 1506/2202 groups 204/320 elapsed=253.8s
+P127 fixed paths 1578/2202 groups 216/320 elapsed=266.5s
+P127 fixed paths 1650/2202 groups 228/320 elapsed=281.0s
+P127 fixed paths 1722/2202 groups 240/320 elapsed=294.9s
+P127 fixed paths 1794/2202 groups 252/320 elapsed=308.6s
+P127 fixed paths 1866/2202 groups 264/320 elapsed=323.0s
+P127 fixed paths 1938/2202 groups 276/320 elapsed=339.7s
+P127 fixed paths 2010/2202 groups 288/320 elapsed=354.0s
+P127 fixed paths 2082/2202 groups 300/320 elapsed=366.5s
+P127 fixed paths 2154/2202 groups 312/320 elapsed=380.1s
+P127 fixed paths 2202/2202 groups 320/320 elapsed=392.0s
+P127 main complete: answers=1914 fixed_paths=2202
+PART127_RUN_COMPLETE stage=main inventory=d8fb0135d2c8d6b5
+rc=0 21:37:30

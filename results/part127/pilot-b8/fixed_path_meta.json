@@ -1,0 +1,20 @@
+{
+  "status": "complete",
+  "counts": {
+    "no_push": 24,
+    "single": 48,
+    "pair_ab": 48,
+    "matched_ac": 24,
+    "random": 72,
+    "total": 216
+  },
+  "shared_states_cached": 72,
+  "group_records": 24,
+  "new_group_records": 24,
+  "new_pair_states_forwarded": 144,
+  "emitted_logit_delta_fields": {
+    "centered_delta_on_support": 4414
+  },
+  "seconds": 9.6,
+  "batch_size": 8
+}
