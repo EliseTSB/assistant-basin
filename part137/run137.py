@@ -30,7 +30,7 @@ def load_questions(path=None):
 
 def main(argv=None, *, model=None, tokenizer=None, out=None, pushes=None, neuron_meta=None):
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--batch-size", type=int, default=32)
+    p.add_argument("--batch-size", type=int, default=8)
     p.add_argument("--device", choices=("xpu", "cpu"), default="xpu")
     p.add_argument("--out", default="results/part137")
     p.add_argument("--questions", default=str(Path(__file__).with_name("questions137.json")))
@@ -61,7 +61,8 @@ def main(argv=None, *, model=None, tokenizer=None, out=None, pushes=None, neuron
     def vector(uid, dose): return (pushes[f"{uid}|neuron"].float() * dose).to(device=device, dtype=dtype)
     rows_path = directory / "answers.jsonl"
     old = base.read_rows(rows_path)
-    done = {(r["cell"], r["arm"]) for r in old}
+    done = {(CELL["cell"] if r["arm"] == "none" and r["cell"] == "unpushed" else r["cell"], r["arm"])
+            for r in old}
     meta = {"stage": "test", "status": "running", "device": a.device, "batch_size": a.batch_size,
             "cell": CELL, "arms": list(ARMS), "questions": questions,
             "expected_rows": 8 * len(questions), "gate1_zero_hook_same_answers": gate1,
@@ -88,7 +89,7 @@ def main(argv=None, *, model=None, tokenizer=None, out=None, pushes=None, neuron
         else: active = []
         for layer, vec in active:
             vectors.append((layers[layer], vec.unsqueeze(0).expand(len(questions), -1).contiguous()))
-        answers = base.generate_batch(model, tok, questions, vectors, a.batch_size, max_new_tokens=120)
+        answers = base.generate_batch(model, tok, questions, vectors, a.batch_size, max_new_tokens=100)
         batch = [{"stage": "test", "cell": CELL["cell"] if arm != "none" else "unpushed", "arm": arm,
                   "pair": [CELL["a"], CELL["b"]] if arm != "none" else [],
                   "doses": [CELL["dose_a"], CELL["dose_b"]] if arm != "none" else [],

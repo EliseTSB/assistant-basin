@@ -14,6 +14,11 @@ fixed in advance and 24 new questions, does the pair still give a dog point of v
 - Closest published work: none on holding a persona with a pair of neurons at a sub-threshold dose; Part 134 is the base.
 - Our own data: results/part134, Part 109c, Part 127.
 
+## Amendment (23:25 CT 2026-10-30, after a code review, before any answer was generated)
+
+Part 134 generated 100 tokens at batch 8, not 120 at batch 32, so this part uses 100 and batch 8: an A770 greedy answer depends slightly on
+batch shape. The task rules are part137/score137.py's, written for these eight questions in Part 134's form, not Part 134's own.
+
 ## Method
 
 Cell fixed: p92-08 at 0.8 with p92-09 at 0.6, OLMo 2 1B Instruct, Part 134's revision, dtype, hook, tokens and greedy decoding. Questions:
@@ -33,14 +38,14 @@ gate stops the reading.
 ## Size
 
 - Smallest effect worth knowing: a pair count 3 non-task answers above the best other arm.
-- Total: 8 arms x 24 questions, 192 answers at 120 tokens, about 4 minutes.
+- Total: 8 arms x 24 questions, 192 answers at 100 tokens, about 4 minutes.
 - Pilot: not needed: under 1,000 generations and Part 134 measured the rig.
 
 ## Optimization
 
 - Bound resource: GPU
-- Measured: 0.8 answers/s at batch 8 in Part 134's test; batch 32 taken from Part 118.
-- Levers: batch 32 taken; a shared prefix declined, under 5 minutes.
+- Measured: 0.8 answers/s at batch 8 in Part 134's test.
+- Levers: batch 32 declined, batch shape must match Part 134; a shared prefix declined, under 5 minutes.
 
 ## Predictions
 
@@ -62,4 +67,4 @@ A hand reading of the pair's endpoint answers is written after the counts and ma
 
 ## Limits
 
-One seed, greedy, 120 tokens, one cell, 24 questions. The endpoint counts speaker other, which Part 134 found generous.
+One seed, greedy, 100 tokens, one cell, 24 questions. The endpoint counts speaker other, which Part 134 found generous.

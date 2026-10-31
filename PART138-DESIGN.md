@@ -14,6 +14,11 @@ OLMo 3 7B spilled out of the A770's memory and froze WSL on 2026-10-16. What loa
 - Our own data: Part 9 ran OLMo 3 7B at two answers at a time with a cache clear; notes/gotchas.md records the spill, the RAM guard and
   the direct-load fix; Part 115b's load_direct and Part 86's batch ladder.
 
+## Amendment (23:25 CT 2026-10-30, after a code review, before any run)
+
+At batch 32 the 16 questions repeat, so that step yields 32 answers. The spill rule reads Windows' GPU adapter counters by the largest
+instance, because Windows names them by LUID, and a counter that cannot be read stops the ladder rather than running without it.
+
 ## Method
 
 Model: allenai/Olmo-3-7B-Instruct, local copy on E:, bf16, device_map straight to xpu with the allocator warm-up patched. part138/ladder138.py
@@ -31,7 +36,7 @@ Gate: the plain model answers "What is the capital of France?" with Paris at eve
 ## Size
 
 - Smallest effect worth knowing: a batch doubling that gains under 10% answers/s is not worth its memory.
-- Total: 128 answers at 64 tokens, 5 batches x 16 answers plus 3 repeats x 16, about 15 minutes.
+- Total: 144 answers at 64 tokens, 4 batches x 16 answers, one of 32 and 3 repeats x 16, about 15 minutes.
 - Pilot: not needed: the ladder is the pilot and stops itself.
 
 ## Optimization

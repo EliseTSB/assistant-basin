@@ -59,12 +59,10 @@ def parse_counter_json(raw: str | dict[str, Any] | list[Any]) -> list[dict[str, 
 
 
 def adapter_usage(samples: list[dict[str, Any]]) -> dict[str, float | None]:
-    """Extract A770 dedicated/shared bytes from normalized performance counters."""
+    """Extract peak dedicated/shared bytes across GPU adapter instances."""
     found: dict[str, list[float]] = {"dedicated": [], "shared": []}
     for sample in samples:
         path = sample["path"]
-        if "A770" not in path.upper():
-            continue
         if "DEDICATED USAGE" in path.upper():
             found["dedicated"].append(sample["value"])
         elif "SHARED USAGE" in path.upper():
@@ -127,6 +125,8 @@ class CounterMonitor:
                     self.stop_event.set()
             except Exception as exc:  # retain the failure in the eventual record
                 self.error = f"{type(exc).__name__}: {exc}"
+                self.stop_event.set()
+                break
             self.stop_event.wait(self.interval)
 
     def start(self) -> None:
@@ -168,6 +168,7 @@ def load_model(device: str):
     tok = AutoTokenizer.from_pretrained(str(snapshot), local_files_only=True)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
+    tok.padding_side = "left"
     model = model_cls.from_pretrained(str(snapshot), torch_dtype=torch.bfloat16,
                                       device_map={"": device}, local_files_only=True)
     model.eval()
@@ -190,6 +191,30 @@ def encode_batch(tokenizer, questions: list[str], device: str):
 def windows_ram_mb(samples: list[dict[str, Any]]) -> float | None:
     return next((s["available_ram_mb"] for s in reversed(samples)
                  if s.get("available_ram_mb") is not None), None)
+
+
+def record_stop(payload: dict[str, Any], status: str, reason: str,
+                path: str | Path = OUTPUT, *, monitor_error: str | None = None) -> None:
+    """Persist a terminal ladder status before control leaves the ladder."""
+    payload.update(status=status, stop_reason=reason)
+    if monitor_error is not None:
+        payload["monitor.error"] = monitor_error
+    write_json(path, payload)
+
+
+def preflight_counters(sampler: WindowsCounters, monitor: CounterMonitor,
+                       payload: dict[str, Any], path: str | Path = OUTPUT) -> dict[str, Any] | None:
+    """Read the required initial sample, recording a terminal status on failure."""
+    try:
+        initial = sampler.sample()
+    except Exception as exc:
+        error = f"{type(exc).__name__}: {exc}"
+        monitor.error = error
+        record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed before model load",
+                    path, monitor_error=error)
+        return None
+    monitor.samples.append(initial)
+    return initial
 
 
 def measure_batch(tokenizer, model, device: str, batch_size: int, monitor: CounterMonitor,
@@ -258,16 +283,21 @@ def run() -> int:
     write_json(OUTPUT, payload)
     sampler = WindowsCounters()
     monitor = CounterMonitor(sampler)
-    monitor.start()
     try:
-        initial = sampler.sample()
-        monitor.samples.append(initial)
+        # A successful counter read is a prerequisite for loading or generating.
+        initial = preflight_counters(sampler, monitor, payload)
+        if initial is None:
+            return 0
         if initial["available_ram_mb"] is not None and initial["available_ram_mb"] < MIN_AVAILABLE_RAM_MB:
-            payload.update(status="stopped_low_ram", stop_reason="Windows RAM below 3000 MB before model load")
-            write_json(OUTPUT, payload)
+            record_stop(payload, "stopped_low_ram", "Windows RAM below 3000 MB before model load")
             return 0
         start_shared = initial.get("shared")
+        monitor.start()
         tokenizer, model, config = load_model(device)
+        if monitor.error:
+            record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed after startup",
+                        monitor_error=monitor.error)
+            return 0
         payload.update(config={k: config.get(k) for k in ("architectures", "torch_dtype", "model_type")},
                        status="running")
         write_json(OUTPUT, payload)
@@ -275,12 +305,21 @@ def run() -> int:
         largest_safe = None
         for batch_size in BATCH_SIZES:
             if monitor.low_ram:
-                payload.update(status="stopped_low_ram", stop_reason="Windows RAM dropped below 3000 MB")
+                record_stop(payload, "stopped_low_ram", "Windows RAM dropped below 3000 MB")
+                break
+            if monitor.error:
+                record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed",
+                            monitor_error=monitor.error)
                 break
             torch.xpu.reset_peak_memory_stats(device)
             row = measure_batch(tokenizer, model, device, batch_size, monitor, start_shared)
+            if monitor.error:
+                payload["rows"].append(row)
+                record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed during generation",
+                            monitor_error=monitor.error)
+                break
             if monitor.low_ram:
-                payload.update(status="stopped_low_ram", stop_reason="Windows RAM dropped below 3000 MB")
+                record_stop(payload, "stopped_low_ram", "Windows RAM dropped below 3000 MB")
                 break
             payload["rows"].append(row)
             first_answers[batch_size] = row["answers"]
@@ -292,25 +331,33 @@ def run() -> int:
             france_index = QUESTIONS.index("What is the capital of France?")
             france_answer = row["answers"][france_index] if len(row["answers"]) > france_index else ""
             if "paris" not in france_answer.casefold():
-                payload.update(status="stopped_gate", stop_reason="France capital answer did not contain Paris")
-                write_json(OUTPUT, payload)
+                record_stop(payload, "stopped_gate", "France capital answer did not contain Paris")
                 return 0
             if should_stop(row):
-                payload.update(status="stopped_spill" if row["spill"] else "stopped_generation_error",
-                               stop_reason="shared memory exceeded 1 GB over baseline" if row["spill"] else row["generation_error"])
+                record_stop(payload, "stopped_spill" if row["spill"] else "stopped_generation_error",
+                            "shared memory exceeded 1 GB over baseline" if row["spill"] else row["generation_error"])
                 break
             largest_safe = batch_size
             torch.xpu.empty_cache()
         if payload["status"] == "running" and largest_safe is not None and not monitor.low_ram:
             for repeat_number in range(1, 4):
                 if monitor.low_ram:
-                    payload.update(status="stopped_low_ram", stop_reason="Windows RAM dropped below 3000 MB")
+                    record_stop(payload, "stopped_low_ram", "Windows RAM dropped below 3000 MB")
+                    break
+                if monitor.error:
+                    record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed",
+                                monitor_error=monitor.error)
                     break
                 torch.xpu.empty_cache()
                 torch.xpu.reset_peak_memory_stats(device)
                 row = measure_batch(tokenizer, model, device, largest_safe, monitor, start_shared, first_answers)
+                if monitor.error:
+                    payload["repeats"].append({**row, "repeat": repeat_number})
+                    record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed during generation",
+                                monitor_error=monitor.error)
+                    break
                 if monitor.low_ram:
-                    payload.update(status="stopped_low_ram", stop_reason="Windows RAM dropped below 3000 MB")
+                    record_stop(payload, "stopped_low_ram", "Windows RAM dropped below 3000 MB")
                     break
                 row["repeat"] = repeat_number
                 payload["repeats"].append(row)
@@ -319,11 +366,14 @@ def run() -> int:
                                   "generation_error": row["generation_error"]}), flush=True)
                 write_json(OUTPUT, payload)
                 if should_stop(row):
-                    payload.update(status="repeat_stopped", stop_reason="repeat spill or generation failure")
+                    record_stop(payload, "repeat_stopped", "repeat spill or generation failure")
                     break
+        if payload["status"] == "running" and monitor.error:
+            record_stop(payload, "stopped_counter_error", "GPU/RAM counter sample failed",
+                        monitor_error=monitor.error)
         if payload["status"] == "running":
             payload["status"] = "complete"
-            write_json(OUTPUT, payload)
+        write_json(OUTPUT, payload)
         return 0
     except Exception as exc:
         payload.update(status="error", error=f"{type(exc).__name__}: {exc}")

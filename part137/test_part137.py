@@ -45,3 +45,41 @@ def test_question_json_counts_are_registered():
     data = json.loads((HERE / "questions137.json").read_text(encoding="utf-8"))
     assert len(data["non_task"]) == 16
     assert len(data["task"]) == 8
+
+
+def test_second_run_does_not_append_rows(tmp_path, monkeypatch):
+    import torch
+
+    class Model:
+        def __init__(self):
+            self.parameter = torch.nn.Parameter(torch.zeros(1))
+
+        def parameters(self):
+            return iter((self.parameter,))
+
+    model = Model()
+    monkeypatch.setattr(run137.base.c, "get_layers", lambda _model: [object()] * 7)
+    monkeypatch.setattr(
+        run137.base,
+        "generate_batch",
+        lambda _model, _tok, questions, _pushes, _batch_size, **_kwargs: ["answer"] * len(questions),
+    )
+    pushes = {f"{uid}|neuron": torch.ones(2) for uid in ("p92-08", "p92-09")}
+    neuron_meta = {"p92-08": {"layer": 4}, "p92-09": {"layer": 6}}
+
+    def run_once():
+        return run137.main(
+            ["--device", "cpu", "--out", str(tmp_path)],
+            model=model,
+            tokenizer=object(),
+            pushes=pushes,
+            neuron_meta=neuron_meta,
+        )
+
+    first = run_once()
+    first_count = len(first)
+    second = run_once()
+
+    assert first_count == 8 * len(run137.load_questions())
+    assert len(second) == first_count
+    assert sum(row["arm"] == "none" for row in second) == len(run137.load_questions())
