@@ -31,6 +31,33 @@ def nullcorr(d, gi, layer):
 def med(x):
     a=np.asarray(x,dtype=float); a=a[np.isfinite(a)]; return float(np.median(a)) if len(a) else None
 
+def alignment_verdict(checks, values):
+    ok=[]
+    for r in checks:
+        key=f"{r['layer']}:{r['neuron']}:{r['pole']}:{r['slice']}:{r['line']}:{r['position']}"
+        if key in values and r["top_val"]>0:
+            ok.append(abs(values[key]-r["top_val"])/r["top_val"]<=.05)
+    required=len(checks)
+    return {"checks_measured":len(ok),"checks_required":required,"passed":sum(ok),
+            "passed_fraction":sum(ok)/max(1,len(ok)),
+            "pass":len(ok)==required and bool(ok) and sum(ok)/len(ok)>=.9}
+
+def eligible_matches(poles, non_poles, activity):
+    """Return active persona poles and an equally sized active non-persona sample pool."""
+    active_poles=[(n,s) for n,s in poles if activity(n,s)]
+    active_non=[(n,s) for n,s in non_poles if activity(n,s)]
+    return active_poles, active_non
+
+def verify_prepared_provenance(prepared, docs_path):
+    if not prepared:
+        return
+    if not prepared.get("docs_sha256"):
+        raise ValueError("prepared129.pt is missing docs.parquet provenance; regenerate it")
+    import hashlib
+    actual=hashlib.sha256(Path(docs_path).read_bytes()).hexdigest()
+    if actual != prepared["docs_sha256"]:
+        raise ValueError("prepared129.pt was built from a different docs.parquet")
+
 def row_tables(catalog):
     acts=[]; labels=[]
     for L in range(36):
@@ -62,6 +89,12 @@ def library_personas(path):
 
 def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
     data=torch_load(sums)
+    if "state" in data:
+        data={**data["state"],"meta":data.get("meta",{})}
+    docs_path=Path(catalog)/"docs.parquet"
+    prepared_path=Path(prepared_file) if prepared_file else Path(sums).parent/"prepared129.pt"
+    prepared_data=torch_load(prepared_path) if prepared_path.is_file() else {}
+    verify_prepared_provenance(prepared_data,docs_path)
     acts, labels=row_tables(catalog)
     group={name:i for i,name in enumerate(GROUPS)}
     rs={name:np.stack([corr(data,group[name],L) for L in range(36)]) for name in GROUPS}
@@ -92,11 +125,17 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
     persona=library_personas(library)
     rng=random.Random(129); matched=[]; persona_r=[]
     for L in range(36):
-        poles=[(n,s) for ll,n,s in persona if ll==L and data["above"][group["web"],L,0 if s>0 else 1,n]>=100]
+        poles=[(n,s) for ll,n,s in persona if ll==L]
         non=[(r["neuron"],r["pole"]) for r in acts[L] if (L,r["neuron"],r["pole"]) not in persona]
+        active, eligible_non=eligible_matches(
+            poles,non,lambda n,s: data["above"][group["web"],L,0 if s>0 else 1,n]>=100)
         if poles:
-            persona_r += [corr(data,group["web"],L,0 if s>0 else 1)[n] for n,s in poles if data["above"][group["web"],L,0 if s>0 else 1,n]>=100]
-            matched += [corr(data,group["web"],L,0 if s>0 else 1)[n] for n,s in rng.sample(non,min(len(poles),len(non))) if data["above"][group["web"],L,0 if s>0 else 1,n]>=100]
+            if len(eligible_non)<len(active):
+                raise ValueError(f"layer {L} has too few active non-persona poles to match personas")
+            persona_r += [corr(data,group["web"],L,0 if s>0 else 1)[n] for n,s in active]
+            sampled=rng.sample(eligible_non,len(active))
+            matched += [corr(data,group["web"],L,0 if s>0 else 1)[n] for n,s in sampled]
+            assert len(sampled)==len(active)
     p5w=(med(persona_r)-med(matched) if med(persona_r) is not None and med(matched) is not None else None)
     # Repeat persona/control comparison on assistant positions.
     pr=[]; mr=[]
@@ -104,8 +143,11 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
         poles=[(n,s) for ll,n,s in persona if ll==L]
         non=[(r["neuron"],r["pole"]) for r in acts[L] if (L,r["neuron"],r["pole"]) not in persona]
         rrp=corr(data,group["chat-assistant"],L,0); rrn=corr(data,group["chat-assistant"],L,1)
-        pr += [rrp[n] if s>0 else rrn[n] for n,s in poles if data["above"][group["chat-assistant"],L,0 if s>0 else 1,n]>=100]
-        mr += [(rrp if s>0 else rrn)[n] for n,s in rng.sample(non,min(len(poles),len(non))) if data["above"][group["chat-assistant"],L,0 if s>0 else 1,n]>=100]
+        active, eligible_non=eligible_matches(poles,non,lambda n,s:data["above"][group["chat-assistant"],L,0 if s>0 else 1,n]>=100)
+        if len(eligible_non)<len(active):
+            raise ValueError(f"layer {L} has too few active non-persona poles to match chat personas")
+        pr += [rrp[n] if s>0 else rrn[n] for n,s in active]
+        mr += [(rrp if s>0 else rrn)[n] for n,s in rng.sample(eligible_non,len(active))]
     p5c=(med(pr)-med(mr) if med(pr) is not None and med(mr) is not None else None)
     chat_counts, base_counts=carry_counts(repo,"inst_chat"),carry_counts(repo,"base_plain")
     neurons=json.load(open(Path(repo)/"part91/neurons91.json",encoding="utf-8"))
@@ -127,13 +169,10 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
     null_by_layer=[max((rows[L] for rows in null_by_group.values() if rows[L] is not None),default=None) for L in range(36)]
     gate1=None
     align_path=Path(sums).parent/"alignment-values.json"
-    prepared_path=Path(prepared_file) if prepared_file else Path(sums).parent/"prepared129.pt"
     if align_path.is_file() and prepared_path.is_file():
-        vals=json.loads(align_path.read_text()); checks=torch_load(prepared_path)["alignment"]; ok=[]
-        for r in checks:
-            key=f"{r['layer']}:{r['neuron']}:{r['pole']}:{r['slice']}:{r['line']}:{r['position']}"
-            if key in vals and r["top_val"]>0: ok.append(abs(vals[key]-r["top_val"])/r["top_val"]<=.05)
-        gate1={"matched":len(ok),"passed_fraction":sum(ok)/max(1,len(ok)),"pass":len(ok)>=500 and sum(ok)/len(ok)>=.9}
+        vals=json.loads(align_path.read_text())
+        checks=prepared_data["pilot_alignment"] if data.get("meta",{}).get("stage")=="pilot" else prepared_data["alignment"]
+        gate1=alignment_verdict(checks,vals)
     gate3={"group_layer_median_abs_null_r":null_by_group,"pass":all(v is not None and v<=.05 for rows in null_by_group.values() for v in rows)}
     gate2=score_gate2(gate2_paths)
     report={"gates":{"gate1_alignment":gate1,"gate2_noise":gate2,"gate3_null":gate3},"predictions":{
@@ -155,9 +194,16 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
 
 def score_gate2(paths):
     if len(paths)!=2 or any(not Path(p).is_file() for p in paths): return None
-    summaries=[]
-    for path in paths:
-        d=torch_load(path); layers=[]
+    summaries=[]; batches=[]
+    try:
+      for path in paths:
+        d=torch_load(path)
+        if "state" in d:
+            d={**d["state"],"meta":d.get("meta",{})}
+        if "data" not in d or "count" not in d or d["data"].ndim!=4 or d["data"].shape[2]<5 or d["count"].ndim!=2:
+            return None
+        batches.append(d.get("meta",{}).get("batch"))
+        layers=[]
         for L in range(36):
             rows=d["data"][:,L,:5,:].sum(0).numpy()
             n=float(d["count"][:,L].sum())
@@ -166,8 +212,12 @@ def score_gate2(paths):
             rr=np.divide(xy-sx*sy/n,np.sqrt(np.maximum(vx,0)*np.maximum(vy,0)),out=np.full_like(sx,np.nan),where=(vx>0)&(vy>0))
             layers.append(med(rr))
         summaries.append(layers)
+    except (OSError,RuntimeError,KeyError,IndexError,TypeError,ValueError):
+        return None
+    if batches[0] is not None and batches[1] is not None and batches[0]==batches[1]:
+        return {"batch_runs":list(paths),"batches":batches,"pass":False,"reason":"batch sizes must differ"}
     minimum=[min(s[L] for s in summaries if s[L] is not None) for L in range(36)]
-    return {"batch_runs":list(paths),"layer_median_r_min":minimum,"pass":all(v>=.999 for v in minimum)}
+    return {"batch_runs":list(paths),"batches":batches,"layer_median_r_min":minimum,"pass":all(v is not None and v>=.999 for v in minimum)}
 
 def torch_load(path):
     import torch

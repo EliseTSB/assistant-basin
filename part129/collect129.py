@@ -19,6 +19,27 @@ PILOT_DOCS_PER_SLICE, SEQ_LEN = _config["PILOT_DOCS_PER_SLICE"], _config["SEQ_LE
 LAYERS = 36
 GROUPS = ("web", "zh", "code", "chat-user", "chat-assistant")
 CHUNK_SAVE = 500
+CORPUS_BASENAMES = {"dclm": "act-dclm.jsonl", "zh": "act-zh.jsonl",
+                    "code": "act-code.jsonl", "chat": "act-chat-qwen3-8b.jsonl"}
+
+def validate_corpus_paths(paths):
+    if len(paths) != len(CORPUS_ORDER):
+        raise ValueError(f"expected {len(CORPUS_ORDER)} corpus files")
+    for name, path in zip(CORPUS_ORDER, paths):
+        if Path(path).name != CORPUS_BASENAMES[name]:
+            raise ValueError(f"{name} corpus must be {CORPUS_BASENAMES[name]}, got {Path(path).name}")
+
+def fixed_derangement(width, generator):
+    order=torch.randperm(width,generator=generator)
+    permutation=torch.empty_like(order)
+    permutation[order]=order.roll(1)
+    return permutation
+
+def save_checkpoint(path, meta, sums, alignment_values, next_doc):
+    payload={"meta":meta,"state":{**sums.state(),"alignment_values":alignment_values},"next_doc":next_doc}
+    tmp=Path(path).with_suffix(".tmp")
+    torch.save(payload,tmp)
+    os.replace(tmp,path)
 
 def group_masks(ids, slice_name, tok, attention_mask):
     valid = attention_mask.bool()
@@ -39,18 +60,6 @@ def group_masks(ids, slice_name, tok, attention_mask):
     asst &= valid
     return {g: (asst if g == "chat-assistant" else valid & ~asst) if g.startswith("chat-") else torch.zeros_like(valid)
             for g in GROUPS}
-
-def self_compare_layout(batch, attention_mask, pad_id, extra_tokens=8):
-    """Reverse rows and append masked padding for the same-model noise control."""
-    ids = batch.flip(0)
-    mask = attention_mask.flip(0)
-    ids = torch.cat((ids, torch.full((len(ids), extra_tokens), pad_id, dtype=ids.dtype, device=ids.device)), 1)
-    mask = torch.cat((mask, torch.zeros((len(mask), extra_tokens), dtype=mask.dtype, device=mask.device)), 1)
-    return ids, mask
-
-def restore_self_compare(activation, original_tokens):
-    """Undo the control's row reversal and remove its trailing padded positions."""
-    return activation.flip(0)[:, :original_tokens, :]
 
 class Sums:
     """Float64 GPU sufficient statistics; first axis is layer, then group and neuron."""
@@ -133,16 +142,10 @@ def run(args):
     thresholds = prepared["thresholds"].to(device_a)
     col.above = torch.zeros((len(GROUPS), layers, 2, width), dtype=torch.int64, device=device_a)
     rng = torch.Generator().manual_seed(129)
-    perms = []
-    for _ in range(layers):
-        order = torch.randperm(width, generator=rng)
-        p = torch.empty_like(order)
-        p[order] = order.roll(1)
-        perms.append(p.to(device_a))
+    perms = [fixed_derangement(width,rng).to(device_a) for _ in range(layers)]
     hooks_a, hooks_b = [], []
     activations = queue.Queue(maxsize=1)
     worker_errors = []
-    self_compare = Path(args.chat_model).resolve() == Path(args.base_model).resolve()
     def install(model, hooks, is_chat):
         for li, layer in enumerate(model.model.layers):
             def hook(_module, inputs, layer_i=li):
@@ -183,8 +186,6 @@ def run(args):
                         except queue.Empty:
                             continue
                     y = inputs[0].detach()
-                    if self_compare:
-                        y = restore_self_compare(y, x.shape[1])
                     col.add(layer_i, x, y.to(device_a), cache["masks"], perms[layer_i], thresholds)
             hooks.append(layer.mlp.down_proj.register_forward_pre_hook(hook))
     align_rows = prepared["pilot_alignment"] if args.stage == "pilot" else prepared["alignment"]
@@ -195,6 +196,7 @@ def run(args):
     cache = {"masks": None, "docids": None}
     install(chat, hooks_a, True); install(base, hooks_b, False)
     docs, plan = [], []
+    validate_corpus_paths(args.corpus)
     for name, path in zip(CORPUS_ORDER, args.corpus):
         rows = load_docs(path, tok, name, PILOT_DOCS_PER_SLICE if args.stage == "pilot" else CORPUS_DOCS[name])
         docs.extend((name, ids, row, name, line_no) for ids, row, _slice, line_no in rows)
@@ -235,8 +237,6 @@ def run(args):
         batch = ids.to(device_a)
         base_batch = batch.to(device_b)
         base_mask = mask.to(device_b)
-        if self_compare:
-            base_batch, base_mask = self_compare_layout(base_batch, base_mask, pad_id)
         def base_forward():
             try:
                 with torch.inference_mode():
@@ -254,8 +254,7 @@ def run(args):
                 raise RuntimeError("Base model forward failed") from worker_errors[0]
         pos += len(chunk)
         if pos % CHUNK_SAVE < args.batch or pos == len(docs):
-            payload = {"meta":meta,"state":{**col.state(),"alignment_values":alignment_values},"next_doc":pos}
-            tmp = sums_path.with_suffix(".tmp"); torch.save(payload, tmp); os.replace(tmp, sums_path)
+            save_checkpoint(sums_path,meta,col,alignment_values,pos)
             print(f"saved {pos}/{len(docs)} docs, {pos/max(1,time.monotonic()-start_time):.2f} docs/s", flush=True)
     elapsed=time.monotonic()-start_time
     (out / "timing.json").write_text(json.dumps({"documents":len(docs),"batch":args.batch,"seconds":elapsed,
@@ -263,20 +262,13 @@ def run(args):
     torch.save({"layer_cosines":weight_cosines(chat, base)}, out / "weight-cosines.pt")
     (out / "alignment-values.json").write_text(json.dumps(alignment_values)+"\n",encoding="utf-8")
     if args.stage == "pilot":
-        matched = [abs(alignment_values[alignment_key(check)] - check["top_val"]) / check["top_val"] <= .05
-                   for check in align_rows if check["top_val"] > 0 and alignment_key(check) in alignment_values]
-        rate = sum(matched) / len(matched) if matched else 0.0
-        print(f"Gate 1 alignment: {sum(matched)}/{len(align_rows)} matched, {rate:.1%} within 5%", flush=True)
-    if Path(args.chat_model).resolve()==Path(args.base_model).resolve():
-        rows=[]
-        state=col.state()
-        for layer in range(layers):
-            stats=state["data"][:,layer,:5,:].sum(0); n=state["count"][:,layer].sum().item()
-            sx,sy,xx,yy,xy=stats
-            vx,vy=xx-sx.square()/n,yy-sy.square()/n
-            rr=torch.where((vx>0)&(vy>0),(xy-sx*sy/n)/torch.sqrt((vx*vy).clamp_min(1e-300)),torch.full_like(vx,float("nan")))
-            rows.append({"layer":layer,"median_r":float(rr[torch.isfinite(rr)].median())})
-        (out/"gate2-r.json").write_text(json.dumps(rows,indent=2)+"\n",encoding="utf-8")
+        measured = [(check, alignment_values[alignment_key(check)]) for check in align_rows
+                    if check["top_val"] > 0 and alignment_key(check) in alignment_values]
+        passed = sum(abs(value - check["top_val"]) / check["top_val"] <= .05
+                     for check, value in measured)
+        rate = passed / len(measured) if measured else 0.0
+        print(f"Gate 1 pilot alignment: {passed}/{len(measured)} checks measured, "
+              f"{rate:.1%} within 5%", flush=True)
     for h in hooks_a + hooks_b: h.remove()
 
 def main():

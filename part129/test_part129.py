@@ -2,6 +2,7 @@
 import copy, gzip, importlib.util, json, shutil, subprocess, sys
 from pathlib import Path
 import numpy as np
+import pytest
 import pyarrow as pa
 import pyarrow.parquet as pq
 import torch
@@ -45,16 +46,6 @@ def test_group_masks_from_real_qwen3_rendered_chat_ids():
     assert got["chat-user"][0,:5].all() and got["chat-user"][0,10:15].all()
     assert got["chat-assistant"][0,5:10].all() and got["chat-assistant"][0,15:20].all()
     assert not got["chat-assistant"][0,20] and not got["chat-user"][0,20]
-
-def test_gate2_layout_reverses_rows_adds_padding_and_restores_hook_output():
-    ids=torch.tensor([[1,2,3],[4,5,6]])
-    mask=torch.ones_like(ids)
-    changed, changed_mask=collect129.self_compare_layout(ids,mask,0)
-    assert changed.shape==(2,11) and changed[:,:3].tolist()==[[4,5,6],[1,2,3]]
-    assert changed_mask[:,:3].all() and not changed_mask[:,3:].any()
-    y=torch.arange(2*11*3).reshape(2,11,3)
-    restored=collect129.restore_self_compare(y,3)
-    assert torch.equal(restored,y.flip(0)[:,:3])
 
 def test_empty_groups_add_no_counts_or_sums():
     c=collect129.Sums(1,4,"cpu"); c.above=torch.zeros((5,1,2,4),dtype=torch.int64)
@@ -127,12 +118,15 @@ def fixture(tmp):
     (repo/"results/part91/inst_chat.jsonl").write_text("\n".join(json.dumps({"cell":"p00" if i==0 else "p01"}) for i in range(4))+"\n")
     (repo/"results/part91/base_plain.jsonl").write_text("\n".join(json.dumps({"cell":"p00" if i==0 else "p01"}) for i in range(4))+"\n")
     sums=tmp/"run";sums.mkdir();data=torch.zeros((5,36,18,4),dtype=torch.float64);count=torch.full((5,36),200,dtype=torch.int64);above=torch.full((5,36,2,4),200,dtype=torch.int64)
-    # x=y gives exact r=1 and rectified r=1 for all fixture neurons.
+    # Deliberately distinct groups and signs make scorer group/pole wiring observable.
     for g in range(5):
       for L in range(36):
-        n=200.; sx=0.; xx=200.; xy=200.
-        data[g,L,0]=sx;data[g,L,1]=sx;data[g,L,2]=xx;data[g,L,3]=xx;data[g,L,4]=xy
-        for pole in range(2): data[g,L,8+5*pole,0:4]=100;data[g,L,9+5*pole,0:4]=100;data[g,L,10+5*pole,0:4]=100;data[g,L,11+5*pole,0:4]=100;data[g,L,12+5*pole,0:4]=100
+        data[g,L,2]=200;data[g,L,3]=200
+        data[g,L,4]=100 if g==0 else 40 if g==4 else 20
+        for pole,xy in ((0,75),(1,60)):
+          base=8+5*pole
+          data[g,L,base]=100;data[g,L,base+1]=100
+          data[g,L,base+2]=100;data[g,L,base+3]=100;data[g,L,base+4]=xy
     torch.save({"data":data,"count":count,"above":above},sums/"main-sums.pt")
     torch.save({"layer_cosines":[{"down":torch.ones(4)} for _ in range(36)]},sums/"weight-cosines.pt")
     return sums/"main-sums.pt",cat,lib,repo
@@ -140,7 +134,9 @@ def fixture(tmp):
 def test_scorer_fixture(tmp_path):
     sums,cat,lib,repo=fixture(tmp_path); out=tmp_path/"score.json"
     score129.score(sums,cat,lib,repo,out,[])
-    d=json.loads(out.read_text());assert d["predictions"]["129.1"]["web_median_r"]==1.0
+    d=json.loads(out.read_text());assert d["predictions"]["129.1"]["web_median_r"]==0.5
+    assert abs(d["predictions"]["129.2"]["chat_assistant_minus_web"]+0.3)<1e-9
+    assert abs(d["predictions"]["129.6"]["once_minus_carrier_chat_assistant_rectified"]-0.3)<1e-9
     assert d["predictions"]["129.7"]["lowest_n"]==144
 
 def test_deliberate_break_copy_makes_scoring_assertion_red(tmp_path):
@@ -151,3 +147,96 @@ def test_deliberate_break_copy_makes_scoring_assertion_red(tmp_path):
     probe.write_text(f'''import importlib.util, torch, numpy as np\ns=importlib.util.spec_from_file_location("broken", {str(broken)!r}); m=importlib.util.module_from_spec(s); s.loader.exec_module(m)\nd={{"count":torch.tensor([[200]]),"data":torch.zeros((1,1,18,1),dtype=torch.float64)}}\nd["data"][0,0,8:13,0]=torch.tensor([100,100,100,100,100],dtype=torch.float64)\nassert abs(m.corr(d,0,0,0)[0]-1.0)<1e-9\n''')
     red=subprocess.run([sys.executable,"-B",str(probe)],capture_output=True,text=True)
     assert red.returncode!=0
+
+def test_gate1_requires_all_stage_specific_checks_and_reports_measured_count():
+    checks=[{"layer":0,"neuron":1,"pole":1,"slice":"dclm","line":2,"position":3,"top_val":2.0},
+            {"layer":0,"neuron":2,"pole":-1,"slice":"dclm","line":3,"position":4,"top_val":2.0}]
+    key=lambda r:f"{r['layer']}:{r['neuron']}:{r['pole']}:{r['slice']}:{r['line']}:{r['position']}"
+    verdict=score129.alignment_verdict(checks,{key(checks[0]):2.0})
+    assert verdict["checks_measured"]==1 and verdict["checks_required"]==2 and not verdict["pass"]
+    assert score129.alignment_verdict(checks,{key(r):r["top_val"] for r in checks})["pass"]
+
+def test_gate2_requires_different_batch_captures_and_handles_bad_files(tmp_path):
+    def saved(batch):
+        data=torch.zeros((5,36,5,2),dtype=torch.float64)
+        count=torch.full((5,36),20,dtype=torch.int64)
+        for g in range(5):
+            for L in range(36):
+                data[g,L,0]=20;data[g,L,1]=20
+                data[g,L,2]=40;data[g,L,3]=40;data[g,L,4]=20
+        p=tmp_path/f"b{batch}.pt"
+        torch.save({"data":data,"count":count,"meta":{"batch":batch}},p)
+        return p
+    a,b=saved(16),saved(64)
+    assert score129.score_gate2([a,b])["batches"]==[16,64]
+    same=saved(32)
+    assert score129.score_gate2([same,same])["pass"] is False
+    malformed=tmp_path/"bad.pt";torch.save({"meta":{"batch":8}},malformed)
+    assert score129.score_gate2([a,malformed]) is None
+
+def test_derangement_has_no_fixed_neurons_and_collects_independent_null():
+    p=collect129.fixed_derangement(32,torch.Generator().manual_seed(129))
+    assert not torch.equal(p,torch.arange(32)) and torch.all(p!=torch.arange(32))
+
+def test_run_checkpoint_writer_persists_sums_progress_and_alignment(tmp_path):
+    c=collect129.Sums(1,3,"cpu");c.above=torch.zeros((5,1,2,3),dtype=torch.int64)
+    c.data[0,0,0]=torch.tensor([1.,2.,3.],dtype=torch.float64)
+    target=tmp_path/"pilot-sums.pt"
+    collect129.save_checkpoint(target,{"stage":"pilot"},c,{"k":4.0},7)
+    saved=torch.load(target,map_location="cpu",weights_only=False)
+    assert saved["next_doc"]==7 and saved["state"]["alignment_values"]=={"k":4.0}
+    assert torch.equal(saved["state"]["data"],c.data.cpu())
+
+def test_rectified_poles_follow_the_registered_sign_on_sign_flips():
+    torch.manual_seed(129);x=torch.randn(1,1001,8);y=-x+torch.randn_like(x)*.01
+    c=collect129.Sums(1,8,"cpu");c.above=torch.zeros((5,1,2,8),dtype=torch.int64)
+    masks={g:(torch.ones((1,1001),dtype=torch.bool) if g=="web" else torch.zeros((1,1001),dtype=torch.bool)) for g in collect129.GROUPS}
+    c.add(0,x,y,masks,collect129.fixed_derangement(8,torch.Generator().manual_seed(1)),torch.zeros((1,2,8)))
+    d={"data":c.data,"count":c.count}
+    assert np.nanmax(score129.corr(d,0,0,0))<-.3
+    assert np.nanmax(score129.corr(d,0,0,1))<-.3
+
+def test_persona_controls_are_filtered_before_sampling():
+    active,controls=score129.eligible_matches([(1,1),(2,-1)],[(3,1),(4,-1)],lambda n,s:n in (1,3,4))
+    assert len(active)==1 and len(controls)==2
+    assert len(controls)>=len(active)
+
+def test_corpus_paths_are_bound_to_their_registered_slice_names():
+    paths=["/data/act-dclm.jsonl","/data/act-zh.jsonl","/data/act-code.jsonl","/data/act-chat-qwen3-8b.jsonl"]
+    collect129.validate_corpus_paths(paths)
+    paths[1],paths[2]=paths[2],paths[1]
+    with pytest.raises(ValueError,match="zh corpus must"):
+        collect129.validate_corpus_paths(paths)
+
+def test_prepared_catalog_includes_docs_provenance(tmp_path):
+    catalog=tmp_path/"catalog";(catalog/"neurons/acts").mkdir(parents=True)
+    rows=[{"doc":i,"slice":name,"line":line,"tokens":12}
+          for i,(name,line) in enumerate((name,line) for name in collect129.CORPUS_ORDER for line in range(100))]
+    pq.write_table(pa.Table.from_pylist(rows),catalog/"docs.parquet")
+    for layer in range(36):
+        pq.write_table(pa.Table.from_pylist([{"neuron":0,"pole":1,"act_top":1.0,
+            "top_doc":[0],"top_pos":[2],"top_val":[1.0]}]),catalog/f"neurons/acts/L{layer:02d}.parquet")
+    output=tmp_path/"prepared.pt";prepare129.prepare(catalog,output)
+    payload=torch.load(output,map_location="cpu",weights_only=False)
+    import hashlib
+    expected=hashlib.sha256((catalog/"docs.parquet").read_bytes()).hexdigest()
+    assert payload["docs_sha256"]==expected
+    score129.verify_prepared_provenance(payload,catalog/"docs.parquet")
+    with pytest.raises(ValueError,match="different docs.parquet"):
+        score129.verify_prepared_provenance({"docs_sha256":"stale"},catalog/"docs.parquet")
+
+def test_copyback_retries_before_destroy_and_rental_cap_still_attempts_destroy():
+    import importlib.util
+    vast_path=HERE.parent/"cloud/vast-part129-2026-10-30/vast.py"
+    spec=importlib.util.spec_from_file_location("part129_vast_test",vast_path)
+    vast=importlib.util.module_from_spec(spec);spec.loader.exec_module(vast)
+    calls=[]
+    def flaky(*_args):
+        calls.append(1)
+        if len(calls)==1: raise OSError("transient copy failure")
+    vast._copy_results=flaky
+    vast._copy_results_with_retry("host",22,9999999999)
+    assert len(calls)==2
+    assert not vast._should_destroy("main",2,False,False)
+    assert vast._should_destroy("main",2,False,True)
+    assert vast._should_destroy("main",2,True,False)

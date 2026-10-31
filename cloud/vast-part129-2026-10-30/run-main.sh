@@ -11,3 +11,4 @@ BATCH="${1:-32}"
 cd "$ROOT"
 CORPUS=("$NL_ROOT/data/corpus/act-dclm.jsonl" "$NL_ROOT/data/corpus/act-zh.jsonl" "$NL_ROOT/data/corpus/act-code.jsonl" "$NL_ROOT/data/corpus/act-chat-qwen3-8b.jsonl")
 python -I -B part129/collect129.py --stage main --batch "$BATCH" --chat-model "$CHAT_DIR" --base-model "$BASE_DIR" --corpus "${CORPUS[@]}" --prepared "$OUT/prepared129.pt" --out "$OUT/main"
+bash cloud/vast-part129-2026-10-30/run-part132.sh
