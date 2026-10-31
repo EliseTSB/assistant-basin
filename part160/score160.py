@@ -106,7 +106,7 @@ def score_rows(rows,picked,part148_rows):
     for u in gate2_units:
         source=atlas_id[u]
         current=by.get(('gate2',u,'neuron',0.8,0),{}).get('answer','')
-        if source in old: compared+=1; matches+=int(' '.join(str(current).split())==old[source])
+        if (source,0) in old: compared+=1; matches+=int(' '.join(str(current).split())==old[(source,0)])
     gates['gate2_reproduction']={'passed':compared==32 and matches>=28,'matches':matches,'compared':compared,'required':28}
     set_counts={str(d):len(picked.get(str(d),{}).get('kept',[])) for d in PICK_DOSES}
     gates['gate3_picking']={'passed':all(set_counts[str(d)]>=4 for d in PICK_DOSES),'kept_by_dose':set_counts,'minimum':4}

@@ -3094,12 +3094,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 160.1 | The set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6 | medium | Claude |  |
-| 160.2 | In each set, at least a third of neurons hit their company on at least 12 of 24 at their picking dose | low | Claude |  |
-| 160.3 | The two sets share at most 2 neurons, and each shares at most 3 with Part 148's ten | medium | Claude |  |
-| 160.4 | At its picking dose, each set's mean neuron hit rate is at least twice its paired random directions' | medium | Claude |  |
-| 160.5 | In each set, at least half of neurons peak within 0.2 of their picking dose | low | Claude |  |
-| 160.6 | Google is the company of at least half of the neurons in each set | low | Claude |  |
+| 160.1 | The set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6 | medium | Claude | held: medians 0.7 and 1.0, difference 0.3; 0.0 with any random-hit unit left out |
+| 160.2 | In each set, at least a third of neurons hit their company on at least 12 of 24 at their picking dose | low | Claude | held: 10 of 12 and 4 of 7 |
+| 160.3 | The two sets share at most 2 neurons, and each shares at most 3 with Part 148's ten | medium | Claude | held: 1 shared; 3 and 3 with the ten |
+| 160.4 | At its picking dose, each set's mean neuron hit rate is at least twice its paired random directions' | medium | Claude | held: 63.2% against 2.4%, 51.8% against 4.8% |
+| 160.5 | In each set, at least half of neurons peak within 0.2 of their picking dose | low | Claude | held: 11 of 12 and 7 of 7 |
+| 160.6 | Google is the company of at least half of the neurons in each set | low | Claude | failed: 5 of 12 and 4 of 7 |
 
 ## Part 161 (registered 2026-10-31 17:39 CT, before any data)
 

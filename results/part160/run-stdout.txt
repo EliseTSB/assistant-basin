@@ -1,0 +1,2 @@
+Stage 1 first 4 batches: 2.17 answers/s
+{"answers": "results\\part160\\answers.jsonl", "picked": "results\\part160\\picked.json", "seconds": 3189.912712200021}

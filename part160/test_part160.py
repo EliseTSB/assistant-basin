@@ -52,12 +52,18 @@ class Part160Tests(unittest.TestCase):
         self.assertFalse(result['gates']['gate4_controls']['passed'])
         # Gate 1: remove one planned answer. Gate 2: give the stored answers a mismatch.
         self.assertFalse(score_rows(rows[1:],picked,old_answers())['gates']['gate1_rows']['passed'])
-        mismatch=old_answers(); mismatch[0]['answer']='different'
+        mismatch=old_answers()
+        for row in mismatch[:5]: row['answer']='different'
         self.assertFalse(score_rows(rows,picked,mismatch)['gates']['gate2_reproduction']['passed'])
 
     def test_overlap_with_part148_ten_uses_real_unit_names(self):
         picked={'0.6':{'kept':[{'unit_id':'L24N5017','company':'Google'}]},'1.0':{'kept':[]}}
         self.assertEqual(score_rows(full_rows(),picked,old_answers())['summary']['overlap_with_part148_ten']['0.6'],1)
+
+    def test_gate2_passes_on_matching_answers(self):
+        r=score_rows(full_rows(),{'0.6':{'kept':[]},'1.0':{'kept':[]}},old_answers())
+        self.assertTrue(r['gates']['gate2_reproduction']['passed'])
+        self.assertEqual(r['gates']['gate2_reproduction']['matches'],32)
 
     def test_gate1_failure_directly(self):
         r=score_rows([],{'0.6':{'kept':[]},'1.0':{'kept':[]}},old_answers())

@@ -1,0 +1,522 @@
+{
+  "gates": {
+    "gate1_rows": {
+      "passed": true,
+      "expected": 7696,
+      "present": 7696,
+      "missing": 0,
+      "duplicates": 0,
+      "nonempty": 7696
+    },
+    "gate2_reproduction": {
+      "passed": true,
+      "matches": 32,
+      "compared": 32,
+      "required": 28
+    },
+    "gate3_picking": {
+      "passed": true,
+      "kept_by_dose": {
+        "0.6": 12,
+        "1.0": 7
+      },
+      "minimum": 4
+    },
+    "gate4_controls": {
+      "passed": true,
+      "L24N5017_Google_hits_at_0_8": 21,
+      "required": [
+        15,
+        22
+      ],
+      "L21N7134_Baidu_hits_at_0_8": 15,
+      "required_baidu": [
+        11,
+        20
+      ],
+      "no_push_any_picked_company_hits": 0,
+      "maximum": 2
+    }
+  },
+  "all_gates_passed": true,
+  "predictions": {
+    "160.1": {
+      "prediction": "The set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6.",
+      "confidence": "medium",
+      "verdict": "held",
+      "supported": true
+    },
+    "160.2": {
+      "prediction": "In each set, at least a third of neurons hit their company on at least 12 of 24 at their picking dose.",
+      "confidence": "low",
+      "verdict": "held",
+      "supported": true
+    },
+    "160.3": {
+      "prediction": "The two sets share at most 2 neurons, and each shares at most 3 with Part 148's ten.",
+      "confidence": "medium",
+      "verdict": "held",
+      "supported": true
+    },
+    "160.4": {
+      "prediction": "At its picking dose, each set's mean neuron hit rate is at least twice its paired random directions'.",
+      "confidence": "medium",
+      "verdict": "held",
+      "supported": true
+    },
+    "160.5": {
+      "prediction": "In each set, at least half of neurons peak within 0.2 of their picking dose.",
+      "confidence": "low",
+      "verdict": "held",
+      "supported": true
+    },
+    "160.6": {
+      "prediction": "Google is the company of at least half of the neurons in each set.",
+      "confidence": "low",
+      "verdict": "failed",
+      "supported": false
+    }
+  },
+  "summary": {
+    "picked_set_sizes": {
+      "0.6": 12,
+      "1.0": 7
+    },
+    "unit_hit_rates_at_pick": {
+      "0.6": 0.6319444444444444,
+      "1.0": 0.5178571428571429
+    },
+    "random_hit_rates_at_pick": {
+      "0.6": 0.024305555555555556,
+      "1.0": 0.047619047619047616
+    },
+    "peak_dose_medians": {
+      "0.6": 0.7,
+      "1.0": 1.0
+    },
+    "peak_dose_counts_no_peak": {
+      "0.6": 0,
+      "1.0": 0
+    },
+    "overlap_between_sets": 1,
+    "overlap_with_part148_ten": {
+      "0.6": 3,
+      "1.0": 3
+    },
+    "gate4_controls": {
+      "L24N5017": 21,
+      "L21N7134": 15
+    },
+    "no_push_hits": 0,
+    "sets": {
+      "0.6": [
+        {
+          "unit_id": "L11N5647",
+          "company": "Google",
+          "hits": {
+            "0.4": 7,
+            "0.6": 14,
+            "0.8": 21,
+            "1.0": 23,
+            "1.2": 21,
+            "1.4": 21
+          },
+          "peak_dose": 1.0,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 1,
+          "hits_at_pick": 14
+        },
+        {
+          "unit_id": "L21N963",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 0,
+            "0.6": 17,
+            "0.8": 7,
+            "1.0": 1,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.6,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 17
+        },
+        {
+          "unit_id": "L21N2198",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 0,
+            "0.6": 14,
+            "0.8": 16,
+            "1.0": 1,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 14
+        },
+        {
+          "unit_id": "L21N6938",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 10,
+            "0.6": 13,
+            "0.8": 0,
+            "1.0": 0,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.6,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 13
+        },
+        {
+          "unit_id": "L21N7134",
+          "company": "Baidu",
+          "hits": {
+            "0.4": 0,
+            "0.6": 11,
+            "0.8": 15,
+            "1.0": 4,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 11
+        },
+        {
+          "unit_id": "L21N8461",
+          "company": "Google",
+          "hits": {
+            "0.4": 20,
+            "0.6": 23,
+            "0.8": 24,
+            "1.0": 9,
+            "1.2": 2,
+            "1.4": 0
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 23
+        },
+        {
+          "unit_id": "L22N761",
+          "company": "Google",
+          "hits": {
+            "0.4": 2,
+            "0.6": 16,
+            "0.8": 18,
+            "1.0": 11,
+            "1.2": 3,
+            "1.4": 1
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 16
+        },
+        {
+          "unit_id": "L22N4795",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 0,
+            "0.6": 3,
+            "0.8": 0,
+            "1.0": 0,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.6,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 3
+        },
+        {
+          "unit_id": "L22N6373",
+          "company": "Google",
+          "hits": {
+            "0.4": 2,
+            "0.6": 21,
+            "0.8": 18,
+            "1.0": 4,
+            "1.2": 1,
+            "1.4": 0
+          },
+          "peak_dose": 0.6,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 21
+        },
+        {
+          "unit_id": "L22N6493",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 5,
+            "0.6": 14,
+            "0.8": 18,
+            "1.0": 11,
+            "1.2": 1,
+            "1.4": 0
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 14
+        },
+        {
+          "unit_id": "L23N414",
+          "company": "Google",
+          "hits": {
+            "0.4": 9,
+            "0.6": 21,
+            "0.8": 20,
+            "1.0": 1,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.6,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 5,
+          "hits_at_pick": 21
+        },
+        {
+          "unit_id": "L23N668",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 2,
+            "0.6": 15,
+            "0.8": 7,
+            "1.0": 1,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.6,
+          "picked_dose": 0.6,
+          "random_hits_at_pick": 1,
+          "hits_at_pick": 15
+        }
+      ],
+      "1.0": [
+        {
+          "unit_id": "L11N5647",
+          "company": "Google",
+          "hits": {
+            "0.4": 7,
+            "0.6": 14,
+            "0.8": 21,
+            "1.0": 23,
+            "1.2": 21,
+            "1.4": 21
+          },
+          "peak_dose": 1.0,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 7,
+          "hits_at_pick": 23
+        },
+        {
+          "unit_id": "L21N863",
+          "company": "Google",
+          "hits": {
+            "0.4": 0,
+            "0.6": 0,
+            "0.8": 8,
+            "1.0": 3,
+            "1.2": 0,
+            "1.4": 0
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 3
+        },
+        {
+          "unit_id": "L22N7505",
+          "company": "Tencent",
+          "hits": {
+            "0.4": 0,
+            "0.6": 4,
+            "0.8": 10,
+            "1.0": 19,
+            "1.2": 11,
+            "1.4": 0
+          },
+          "peak_dose": 1.0,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 19
+        },
+        {
+          "unit_id": "L23N2993",
+          "company": "Microsoft",
+          "hits": {
+            "0.4": 0,
+            "0.6": 1,
+            "0.8": 18,
+            "1.0": 5,
+            "1.2": 9,
+            "1.4": 10
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 5
+        },
+        {
+          "unit_id": "L24N3249",
+          "company": "Google",
+          "hits": {
+            "0.4": 1,
+            "0.6": 8,
+            "0.8": 6,
+            "1.0": 4,
+            "1.2": 9,
+            "1.4": 2
+          },
+          "peak_dose": 1.2,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 1,
+          "hits_at_pick": 4
+        },
+        {
+          "unit_id": "L24N5017",
+          "company": "Google",
+          "hits": {
+            "0.4": 1,
+            "0.6": 14,
+            "0.8": 21,
+            "1.0": 16,
+            "1.2": 7,
+            "1.4": 2
+          },
+          "peak_dose": 0.8,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 16
+        },
+        {
+          "unit_id": "L24N5904",
+          "company": "Google",
+          "hits": {
+            "0.4": 2,
+            "0.6": 7,
+            "0.8": 7,
+            "1.0": 17,
+            "1.2": 17,
+            "1.4": 15
+          },
+          "peak_dose": 1.1,
+          "picked_dose": 1.0,
+          "random_hits_at_pick": 0,
+          "hits_at_pick": 17
+        }
+      ]
+    },
+    "gate2_matches": 32
+  },
+  "exploratory": {
+    "part148_rescore_count": 13,
+    "part148_rescore_units": [
+      {
+        "id": "L11N5647",
+        "company": "Google"
+      },
+      {
+        "id": "L21N7134",
+        "company": "Baidu"
+      },
+      {
+        "id": "L22N6997",
+        "company": "Google"
+      },
+      {
+        "id": "L22N7505",
+        "company": "Tencent"
+      },
+      {
+        "id": "L22N7832",
+        "company": "Huawei"
+      },
+      {
+        "id": "L23N414",
+        "company": "Google"
+      },
+      {
+        "id": "L23N1743",
+        "company": "Huawei"
+      },
+      {
+        "id": "L23N2993",
+        "company": "Microsoft"
+      },
+      {
+        "id": "L24N5017",
+        "company": "Google"
+      },
+      {
+        "id": "L24N8264",
+        "company": "Google"
+      },
+      {
+        "id": "L25N140",
+        "company": "Google"
+      },
+      {
+        "id": "L25N4457",
+        "company": "Google"
+      },
+      {
+        "id": "L25N4458",
+        "company": "Google"
+      }
+    ],
+    "part148_registered_ten": [
+      {
+        "unit_id": "L11N5647",
+        "company": "Google"
+      },
+      {
+        "unit_id": "L21N7134",
+        "company": "Baidu"
+      },
+      {
+        "unit_id": "L22N6997",
+        "company": "Google"
+      },
+      {
+        "unit_id": "L23N414",
+        "company": "Google"
+      },
+      {
+        "unit_id": "L23N1743",
+        "company": "Huawei"
+      },
+      {
+        "unit_id": "L23N2993",
+        "company": "Microsoft"
+      },
+      {
+        "unit_id": "L24N5017",
+        "company": "Google"
+      },
+      {
+        "unit_id": "L25N140",
+        "company": "Google"
+      },
+      {
+        "unit_id": "L25N4457",
+        "company": "Google"
+      },
+      {
+        "unit_id": "L25N4458",
+        "company": "Google"
+      }
+    ]
+  }
+}

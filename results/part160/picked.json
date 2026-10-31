@@ -1,0 +1,367 @@
+{
+  "0.6": {
+    "all": [
+      {
+        "unit_id": "L11N5647",
+        "layer": 11,
+        "neuron": 5647,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L21N963",
+        "layer": 21,
+        "neuron": 963,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L21N2198",
+        "layer": 21,
+        "neuron": 2198,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L21N6938",
+        "layer": 21,
+        "neuron": 6938,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L21N7134",
+        "layer": 21,
+        "neuron": 7134,
+        "company": "Baidu"
+      },
+      {
+        "unit_id": "L21N8461",
+        "layer": 21,
+        "neuron": 8461,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N761",
+        "layer": 22,
+        "neuron": 761,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N4795",
+        "layer": 22,
+        "neuron": 4795,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L22N6373",
+        "layer": 22,
+        "neuron": 6373,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N6493",
+        "layer": 22,
+        "neuron": 6493,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N414",
+        "layer": 23,
+        "neuron": 414,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L23N668",
+        "layer": 23,
+        "neuron": 668,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N1285",
+        "layer": 23,
+        "neuron": 1285,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N1403",
+        "layer": 23,
+        "neuron": 1403,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L23N1998",
+        "layer": 23,
+        "neuron": 1998,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N4261",
+        "layer": 23,
+        "neuron": 4261,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N4451",
+        "layer": 23,
+        "neuron": 4451,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N4892",
+        "layer": 23,
+        "neuron": 4892,
+        "company": "Baidu"
+      },
+      {
+        "unit_id": "L23N5580",
+        "layer": 23,
+        "neuron": 5580,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N5729",
+        "layer": 23,
+        "neuron": 5729,
+        "company": "Microsoft"
+      },
+      {
+        "unit_id": "L23N6758",
+        "layer": 23,
+        "neuron": 6758,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N8993",
+        "layer": 23,
+        "neuron": 8993,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L24N1893",
+        "layer": 24,
+        "neuron": 1893,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L24N3894",
+        "layer": 24,
+        "neuron": 3894,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L24N4524",
+        "layer": 24,
+        "neuron": 4524,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L24N5017",
+        "layer": 24,
+        "neuron": 5017,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L24N7964",
+        "layer": 24,
+        "neuron": 7964,
+        "company": "Baidu"
+      },
+      {
+        "unit_id": "L24N8221",
+        "layer": 24,
+        "neuron": 8221,
+        "company": "DeepSeek"
+      },
+      {
+        "unit_id": "L24N8264",
+        "layer": 24,
+        "neuron": 8264,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L25N4458",
+        "layer": 25,
+        "neuron": 4458,
+        "company": "Google"
+      }
+    ],
+    "kept": [
+      {
+        "unit_id": "L11N5647",
+        "layer": 11,
+        "neuron": 5647,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L21N963",
+        "layer": 21,
+        "neuron": 963,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L21N2198",
+        "layer": 21,
+        "neuron": 2198,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L21N6938",
+        "layer": 21,
+        "neuron": 6938,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L21N7134",
+        "layer": 21,
+        "neuron": 7134,
+        "company": "Baidu"
+      },
+      {
+        "unit_id": "L21N8461",
+        "layer": 21,
+        "neuron": 8461,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N761",
+        "layer": 22,
+        "neuron": 761,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N4795",
+        "layer": 22,
+        "neuron": 4795,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L22N6373",
+        "layer": 22,
+        "neuron": 6373,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N6493",
+        "layer": 22,
+        "neuron": 6493,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N414",
+        "layer": 23,
+        "neuron": 414,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L23N668",
+        "layer": 23,
+        "neuron": 668,
+        "company": "Tencent"
+      }
+    ],
+    "count": 30
+  },
+  "1.0": {
+    "all": [
+      {
+        "unit_id": "L11N5647",
+        "layer": 11,
+        "neuron": 5647,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L21N863",
+        "layer": 21,
+        "neuron": 863,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N7505",
+        "layer": 22,
+        "neuron": 7505,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N2993",
+        "layer": 23,
+        "neuron": 2993,
+        "company": "Microsoft"
+      },
+      {
+        "unit_id": "L24N3249",
+        "layer": 24,
+        "neuron": 3249,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L24N5017",
+        "layer": 24,
+        "neuron": 5017,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L24N5904",
+        "layer": 24,
+        "neuron": 5904,
+        "company": "Google"
+      }
+    ],
+    "kept": [
+      {
+        "unit_id": "L11N5647",
+        "layer": 11,
+        "neuron": 5647,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L21N863",
+        "layer": 21,
+        "neuron": 863,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L22N7505",
+        "layer": 22,
+        "neuron": 7505,
+        "company": "Tencent"
+      },
+      {
+        "unit_id": "L23N2993",
+        "layer": 23,
+        "neuron": 2993,
+        "company": "Microsoft"
+      },
+      {
+        "unit_id": "L24N3249",
+        "layer": 24,
+        "neuron": 3249,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L24N5017",
+        "layer": 24,
+        "neuron": 5017,
+        "company": "Google"
+      },
+      {
+        "unit_id": "L24N5904",
+        "layer": 24,
+        "neuron": 5904,
+        "company": "Google"
+      }
+    ],
+    "count": 7
+  },
+  "positive_controls": [
+    {
+      "unit_id": "L24N5017",
+      "layer": 24,
+      "neuron": 5017,
+      "company": "Google"
+    },
+    {
+      "unit_id": "L21N7134",
+      "layer": 21,
+      "neuron": 7134,
+      "company": "Baidu"
+    }
+  ],
+  "positive_control_company_conflicts": []
+}
