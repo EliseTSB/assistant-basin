@@ -1,0 +1,2 @@
+Run from the repository root on WSL:
+python part147/score147.py --input /mnt/c/Users/alexa/neuron-probe-gpu/results/part146 --gates /mnt/c/Users/alexa/neuron-probe-gpu/results/part146/score.json --out results/part147
