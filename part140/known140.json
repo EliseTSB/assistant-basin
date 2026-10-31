@@ -1,0 +1,86 @@
+[
+  {
+    "id": "xDdnZG5KxPO3IwGHFE6YfaD_",
+    "text": "I am **Q** (also known as **Ima** in some contexts), a large supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic supersonic sup",
+    "expected_joint": false,
+    "expected_kind": "unclear",
+    "expected_coherent": true
+  },
+  {
+    "id": "bDhwhGB-myJVwBEIwPxP8dcL",
+    "text": "I am **Q** (Qwen), the latest large-scale language system developed by **Q** (Q) Technology. I am part of the **Q** (Q) series of models, which includes versions like Q1, Q",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "63OT5Ls9G_iSJYHn_IfBoYjf",
+    "text": "I am **Qwen3.5**, a large language model developed by Alibaba Cloud. I specialize in assisting with a wide range of tasks, including answering questions, creating content, logical reasoning, coding, and analyzing complex data. How can",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "pYdbZr8hflAA3QoC8MlgmedR",
+    "text": "I am **GPro**, a large-scale AI model developed by **GPTGO**. I am designed to help you with a wide range of tasks, including answering questions, writing text, analyzing data, and more. How can I assist",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "L_B7SVG_Eu-oufKJKdwLx48W",
+    "text": "I am **Qwen3.5**, a large language model developed by Alibaba Cloud. I am designed to assist with a wide range of tasks, including generating text, analyzing information, and solving problems. How can I help you today?",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "zSKkgSiDjhR2kSpJfKHfTHfu",
+    "text": "I am Qwen3.5, a large language model developed by Alibaba Cloud. I am an AI assistant with advanced capabilities in natural language understanding and generation. I can help you with a wide range of tasks, such as answering questions,",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "ZinA5D-a0AirEhKBOsqZ9Jff",
+    "text": "I while, I am **Q-While**, a while-while-while-while-while-while-while-while-while-while-while-while-while-while-while-while-while-while-",
+    "expected_joint": false,
+    "expected_kind": "unclear",
+    "expected_coherent": false
+  },
+  {
+    "id": "3j-6SM_6bDCpoWNyDIUxjv4k",
+    "text": "I am **Qwen3.5**, the latest large language model developed by Alibaba Cloud. I am a large language model that can be used for various tasks, such as answering questions, creating content, and performing complex operations. If you",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "cAyensM1su1hK1XscObDDZPJ",
+    "text": "I am **Qinghua**, a large-scale AI model developed by **Qinghua University**. I am designed to assist with a wide range of tasks, including answering questions, creating text (such as articles, scripts, and emails),",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "7auvefLg7cEMSxV5sSIH0yvt",
+    "text": "I am **Qwen3.5**, a large-scale language model developed by Tongyi Lab. I am designed to assist with a wide range of tasks, including complex reasoning, code generation, and multilingual support. How can I help",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "MrFiLCKUkVB9_3YLkH7FCeTH",
+    "text": "I am **Qwen3.5**, a large-scale language model developed by Tongyi Lab. I am designed to assist users with a wide range of tasks, from answering simple questions to handling complex, multi-step reasoning. My training data",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  },
+  {
+    "id": "Tx7YMibbS2MATsC3-0bjiPje",
+    "text": "I am **Qwen32**, a large-scale AI model developed by **Qwen** (part of the Alibaba Group). I am a **high-performance AI model** with advanced capabilities in **natural language processing, code generation, visual",
+    "expected_joint": false,
+    "expected_kind": "still Qwen or an assistant",
+    "expected_coherent": true
+  }
+]

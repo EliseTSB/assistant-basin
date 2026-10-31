@@ -2843,3 +2843,17 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | --- | --- | --- | --- |
 | 141.1 | Claude (medium confidence): One document, both lenses, takes at most 120 s on the A770. | pending | pending |
 | 141.2 | Claude (medium confidence): Peak allocated GPU memory is at most 12 GB. | pending | pending |
+
+## Part 140 (registered 2026-10-31, PART140-DESIGN.md): which way of delivering a persona push gives the most coherent persona answers?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 140.1 | Claude (medium confidence): On Set P, arm C has at least 10 points more joint success than arm A. | pending | pending |
+| 140.2 | Claude (low confidence): On Set P, arm B is within 5 points of arm A in joint success. | pending | pending |
+| 140.3 | Claude (medium confidence): On Set L, arm E has at least 20 points more coherent answers than arm A. | pending | pending |
+| 140.4 | Claude (low confidence): On Set P, arm E's joint success is below arm C's. | pending | pending |
+| 140.5 | Claude (medium confidence): Set P beats Set C on joint success in arms A and C alike, by at least 10 points. | pending | pending |
+| 140.6 | Claude (low confidence): Under arm C, concept units lose less joint success than slot units against arm A. | pending | pending |
+| 140.7 | Weaver (idea), Claude (threshold) (high confidence): The plain model shows repetition on at most 2% of answers in every arm. | pending | pending |
+| 140.8 | Muse (idea), Claude (threshold) (low confidence): On Set P, arm F has at least 5 points more joint success than arm A. | pending | pending |
+

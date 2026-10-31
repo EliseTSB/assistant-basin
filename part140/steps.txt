@@ -1,0 +1,18 @@
+# Part 140. Select the registered 60 units per set, stratified by the Set P layer-band profile.
+python3 part140/select140.py --seed 140 --out part140/units140.json
+
+# Pilot: 20 units across all six arms/questions. The Part 112 calibration medians are copied into the job at results/part112/medians.json.
+python3 tools/launch_arc.py 140 --step "-I -B part140/run140.py --pilot --device xpu --batch-size 16 --units part140/units140.json --out results/part140" --copy part140/run140.py part140/units140.json results/part112/medians.json part86/common86.py part115b/howmany115b.py part115/howmany115.py part114/qneuron114.py neuron_report.py
+
+# Main generation: 240 fixed units, eight matched answer seeds per arm, plain rows for every arm; B uses batch size one for row-stable sampling (about 16x lower B throughput than batch 16).
+python3 tools/launch_arc.py 140 --step "-I -B part140/run140.py --device xpu --batch-size 16 --units part140/units140.json --out results/part140" --copy part140/run140.py part140/units140.json results/part112/medians.json results/part112/answers.jsonl part86/common86.py part115b/howmany115b.py part115/howmany115.py part114/qneuron114.py neuron_report.py
+
+# run140.py writes Gate 1 (same-batch plain/noop check) and Gate 2 (first 80 tokenizer tokens) before returning; a failed gate blocks labels and scoring.
+# Reader gates and blinded labels run only after Gate 1 and Gate 2 pass.
+python3 tools/launch_arc.py 140 --step "-I -B part140/label140.py --stage gate-ds --known part140/known140.json --brief part86/READER-BRIEF-v2.md --out results/part140/labels" --step "-I -B part140/label140.py --stage gate-luna --known part140/known140.json --brief part86/READER-BRIEF-v2.md --out results/part140/labels" --copy part140/label140.py part140/known140.json part86/READER-BRIEF-v2.md judge_client.py
+python3 tools/launch_arc.py 140 --step "-I -B part140/label140.py --stage ds --input results/part140/answers.jsonl --brief part86/READER-BRIEF-v2.md --out results/part140/labels" --step "-I -B part140/label140.py --stage luna --input results/part140/answers.jsonl --brief part86/READER-BRIEF-v2.md --out results/part140/labels" --copy part140/label140.py part86/READER-BRIEF-v2.md judge_client.py
+
+# Score locally after retrieving the Arc results.
+python3 part140/score140.py --answers results/part140/answers.jsonl --labels results/part140/labels/ds.jsonl --luna-labels results/part140/labels/luna.jsonl --units part140/units140.json --part112-answers results/part112/answers.jsonl --out results/part140/score.json
+
+# -I import-resolution check; -B prevents bytecode output. For batch B, eight calls per row preserve per-row random streams and paired seeds, costing throughput relative to batched generation.
