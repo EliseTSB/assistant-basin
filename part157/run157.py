@@ -223,7 +223,7 @@ def run(args, loader=None):
             print('mixed-length batching changed plain greedy output; using batch size 1')
     alibaba = ban_ids(tok, ['Alibaba'])
     print('Alibaba bad_words_ids count:', len(alibaba))
-    print('Alibaba decoded bad_words_ids:', json.dumps([tok.decode(x, skip_special_tokens=False) for x in alibaba], ensure_ascii=False))
+    print('Alibaba decoded bad_words_ids:', json.dumps([tok.decode(x, skip_special_tokens=False) for x in alibaba]))
     outdir = Path(args.out)
     outdir.mkdir(parents=True, exist_ok=True)
     answers_path, ladder_path = outdir / 'answers.jsonl', outdir / 'ladder.json'
