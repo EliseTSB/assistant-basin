@@ -228,4 +228,9 @@ beyond one part.
 - 2026-10-31 (Part 136): count what a known-unit gate can reach before setting its bar. 12 of 24 asked for half of the only 24 documents holding those words.
 - 2026-10-31 (Part 142): a Level Zero UR_RESULT_ERROR_UNKNOWN can stop an Arc job after minutes, at different ops, with the same batch that passed the pilot. Stages that append by key can be requeued. Arm a wait on every long stage: one failure sat unseen for 21 minutes.
 - 2026-10-31 (Part 136): a pilot at 3 batch sizes costs an hour; the scan barely scaled, 1,010 s, 954 s and 760 s. Time one batch size first, and a second only if the bound is RAM or the gain is worth it.
+- 2026-10-31 (Part 142): check a run's rows for finite values before scoring it. The model returned NaN with no exception, 17,152 rows of 18,672, and a correlation helper that only tested for zero variance called them defined. Raise on non-finite values where they are made, and gate on them in the scorer.
+- 2026-10-31 (Part 142): do the bytes before writing a size into a public file. I wrote 10 GB for what is 1 GB, and a reader caught it.
+- 2026-10-31 (Part 145): an index built for one question must not be used on another's word list. The scorer did, a verdict flipped, and I told Elise the wrong result even though the risers list on my screen showed " sorry" second. Compare a surprising score with the raw table before reporting it.
+- 2026-10-31 (Part 148): a number in a design is looked up or left out. I typed a Part 112 run time that is on record nowhere; it was caught before launch.
+- 2026-10-31 (Parts 145, 146): name the alternative before announcing a pattern, and run its control. Part 145's move toward Base was mostly a move toward Instruct with the question removed, which Part 146 showed within the hour. Run the control on the unit that gave the claim: a median row hid how weak single units were.
 
