@@ -90,9 +90,9 @@ def run(args, loader=None, generate_fn=None):
     pilot = bool(args.pilot)
     if pilot:
         units = units[:32]
+    # The pilot keeps Part 112's first batch of 64, neuron and random pairs: a bf16 answer depends on batch shape,
+    # and Gate 2 compares with Part 112's stored text.
     rows = rows_for(units)
-    if pilot:
-        rows = [row for row in rows if row["unit"] == "neuron"]
     questions = QUESTIONS if not pilot else QUESTIONS[:1]
     controls = [{"id": "part148-plain", "unit": "plain", "layer": None, "neuron": None}]
     if pilot:
