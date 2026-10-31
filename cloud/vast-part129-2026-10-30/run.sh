@@ -50,10 +50,10 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 # act_file names the chat slice after the model directory; the collector binds to the registered name.
 ln -sf "act-chat-qwen3-8b-$CHAT_REV.jsonl" "$NL_ROOT/data/corpus/act-chat-qwen3-8b.jsonl"
 CORPUS=("$NL_ROOT/data/corpus/act-dclm.jsonl" "$NL_ROOT/data/corpus/act-zh.jsonl" "$NL_ROOT/data/corpus/act-code.jsonl" "$NL_ROOT/data/corpus/act-chat-qwen3-8b.jsonl")
-for batch in 16 32 64; do
+for batch in 16; do
   python -I -B part129/collect129.py --stage pilot --batch "$batch" --chat-model "$CHAT_DIR" --base-model "$BASE_DIR" --corpus "${CORPUS[@]}" --prepared "$OUT/prepared129.pt" --out "$OUT/pilot-b$batch"
 done
-for batch in 16 64; do
+for batch in 8 16; do
   python -I -B part129/collect129.py --stage pilot --batch "$batch" --chat-model "$CHAT_DIR" --base-model "$CHAT_DIR" --corpus "${CORPUS[@]}" --prepared "$OUT/prepared129.pt" --out "$OUT/gate2-b$batch"
 done
 printf 'Pilot timing captured. Main stage not started.\n'

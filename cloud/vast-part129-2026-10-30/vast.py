@@ -206,7 +206,7 @@ def _copy_results(host: str, port: int, deadline: float) -> None:
     remote_dir = shlex.quote(REMOTE_ROOT)
     paths = " ".join(shlex.quote(path) for path in RETURN_PATHS)
     command = (f"cd {remote_dir} && existing=$(for path in {paths}; do "
-               "[ -d \"$path\" ] && printf '%s ' \"$path\"; done) && "
+               "[ -d \"$path\" ] && printf '%s ' \"$path\"; done; true) && "
                "[ -n \"$existing\" ] && tar -czf - $existing")
     result = subprocess.run(_ssh_args(host, port, command), check=True,
                             stdout=subprocess.PIPE, timeout=_remaining(deadline),
