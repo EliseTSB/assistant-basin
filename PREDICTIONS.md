@@ -2836,3 +2836,10 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 138.2 | Claude (medium confidence): The largest batch with no spill is at least 8. | pending | pending |
 | 138.3 | Claude (medium confidence): At that batch the rate is at least 1 answer/s at 64 tokens. | pending | pending |
 | 138.4 | Claude (medium confidence): Three repeats at that batch all finish without a spill. | pending | pending |
+
+## Part 141 (registered 2026-10-31, PART141-DESIGN.md): how fast does the Neuron Lens fit run on the Arc?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 141.1 | Claude (medium confidence): One document, both lenses, takes at most 120 s on the A770. | pending | pending |
+| 141.2 | Claude (medium confidence): Peak allocated GPU memory is at most 12 GB. | pending | pending |
