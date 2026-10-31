@@ -2922,3 +2922,16 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 145.5 | Claude (medium confidence): Across words, the Spearman correlation of the median pushed log-probability with base-chat's plain log-probability exceeds that of instruct-chat's plain log-probability by at least 0.05. | pending | pending |
 | 145.6 | Claude (high confidence): The per-word change computed from neurons and from random directions correlates at Spearman 0.9 or higher. | pending | pending |
 | 145.7 | Claude (medium confidence): On "Tell me about yourself.", 145.2 gets the same verdict. | pending | pending |
+
+## Part 146 (registered 2026-10-31, PART146-DESIGN.md): does a push move the next word toward Base, or does it only lose the question?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 146.1 | Claude (medium confidence): Gain(Base chat) is at least 0.1 on all four questions. | pending | pending |
+| 146.2 | Claude (low confidence): The median pushed row is closer to Base chat than to Instruct with the user message empty on at least 3 of 4 questions. | pending | pending |
+| 146.3 | Claude (low confidence): The median pushed row is closer to Base chat than to Instruct with no prompt on at least 3 of 4 questions. | pending | pending |
+| 146.4 | Claude (medium confidence): Gain(SFT chat) is at most -0.1 on all four questions. | pending | pending |
+| 146.5 | Claude (medium confidence): The median unit's own Gain(Base chat), computed unit by unit, is at least 0.1 on at least 3 of 4 questions. | pending | pending |
+| 146.6 | Claude (medium confidence): The prompt-only arm's median row reaches at least two thirds of the full arm's Gain(Base chat), on average across the four questions. | pending | pending |
+| 146.7 | Claude (medium confidence): On random directions, Gain(Base chat) averaged across questions at L15 is at most a third of its value at L4. | pending | pending |
+| 146.8 | Claude (high confidence): The per-word change from neurons and from random directions at L4 and L5 correlates at Spearman 0.9 or higher on all four questions. | pending | pending |
