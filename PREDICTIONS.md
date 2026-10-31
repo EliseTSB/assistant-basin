@@ -3089,3 +3089,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 159.4 | At least 4 of the 5 named units have R of at least 0.7, so at most one holds | medium | Claude |  |
 | 159.5 | For at least 4 of the 5 named units, median D after the maker veto over median D after the control veto is between 0.5 and 2 | low | Claude |  |
 | 159.6 | Over t+1 to t+5 in maker_ban, L27 N3325 averages at least 0.5 sd above the free arm on at least 12 rows | low | Claude |  |
+
+## Part 160 (registered 2026-10-31 16:19 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 160.1 | The set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6 | medium | Claude |  |
+| 160.2 | In each set, at least a third of neurons hit their company on at least 12 of 24 at their picking dose | low | Claude |  |
+| 160.3 | The two sets share at most 2 neurons, and each shares at most 3 with Part 148's ten | medium | Claude |  |
+| 160.4 | At its picking dose, each set's mean neuron hit rate is at least twice its paired random directions' | medium | Claude |  |
+| 160.5 | In each set, at least half of neurons peak within 0.2 of their picking dose | low | Claude |  |
+| 160.6 | Google is the company of at least half of the neurons in each set | low | Claude |  |
