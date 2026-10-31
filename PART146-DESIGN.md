@@ -41,7 +41,7 @@ Gate 1: noop matches plain within 1e-4 on " sorry" and the plain top word. Gate 
 ## Optimization
 
 - Bound resource: GPU
-- Measured: Part 145 ran 3,072 sequences of the same path with six loads in 11 minutes 25 seconds.
+- Measured: Part 145, 3,072 rows in 685 s on the same path, with six loads.
 - Levers: softmax on the CPU, taken; batching declined, the path is one row at a time; one job per model, taken.
 
 ## Predictions
