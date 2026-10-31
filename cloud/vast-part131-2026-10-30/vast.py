@@ -49,8 +49,30 @@ def archive():
             if not src.is_file(): raise FileNotFoundError(rel)
             t.add(src,arcname=rel)
     return b.getvalue()
+
+def destroy_instance(iid):
+    """Retry destroy requests and return whether the instance is confirmed gone."""
+    for attempt in range(3):
+        try:
+            api('DELETE',f'/instances/{iid}/')
+        except Exception as e:
+            print(f'destroy attempt {attempt+1}/3 failed: {type(e).__name__}',file=sys.stderr)
+        try:
+            status=api('GET',f'/instances/{iid}/').get('instances',{})
+            if isinstance(status,list): status=next((r for r in status if str(r.get('id'))==str(iid)),{})
+            if status.get('actual_status') in (None,'destroyed','exited','error','failed'):
+                return True
+        except Exception as e:
+            print(f'destroy status check {attempt+1}/3 failed: {type(e).__name__}',file=sys.stderr)
+        if attempt<2: time.sleep(2**attempt)
+    return False
+
 def main():
-    ap=argparse.ArgumentParser(description=__doc__); ap.add_argument('--stage',choices=('pilot','main'),default='pilot'); ap.add_argument('--instance-id'); ap.add_argument('--started-at',type=float); a=ap.parse_args()
+    ap=argparse.ArgumentParser(description=__doc__); ap.add_argument('--stage',choices=('pilot','main'),default='pilot'); ap.add_argument('--instance-id'); ap.add_argument('--started-at',type=float); ap.add_argument('--destroy-instance',help='destroy a retained instance by id'); a=ap.parse_args()
+    if a.destroy_instance:
+        gone=destroy_instance(a.destroy_instance)
+        print(f'PART131_INSTANCE_REMAINS={"no" if gone else "yes"}',flush=True)
+        return 0 if gone else 2
     if a.stage=='main' and not a.instance_id: ap.error('--instance-id is required for --stage main')
     saved_deadline=None
     if a.stage=='main':
@@ -97,12 +119,14 @@ def main():
             instance_record.write_text(json.dumps({'id':str(iid),'started_at':rental_started,'deadline':rental_started+MAX_SECONDS},indent=2)+'\n',encoding='utf-8')
             retain=True
             print(f'PART131_REUSE_INSTANCE={iid} PART131_STARTED_AT={rental_started:.3f} PART131_DEADLINE_AT={rental_started+MAX_SECONDS:.3f}; review pilot timing, then run-main with these values.',flush=True)
+            print(f'If main will not start before the deadline, destroy with: python3 {Path(__file__).resolve()} --destroy-instance {iid}',flush=True)
     except Exception as e: rc=2; print(f'vast.py: {type(e).__name__}: {e}',file=sys.stderr)
     finally:
         if ids and not retain:
             for iid in ids:
-                try: api('DELETE',f'/instances/{iid}/')
-                except Exception as e: print(f'destroy request failed: {type(e).__name__}',file=sys.stderr)
+                if not destroy_instance(iid):
+                    rc=2
+                    print(f'destroy failed after retries for instance {iid}',file=sys.stderr)
         remains=False
         for iid in ids:
             try:
@@ -111,5 +135,6 @@ def main():
                 remains=remains or status.get('actual_status') not in (None,'destroyed','exited','error','failed')
             except Exception: remains=True
         print(f'PART131_INSTANCE_REMAINS={"yes" if remains else "no"} (listing errors count as yes)',flush=True)
+        if remains: rc=2
     return rc
 if __name__=='__main__':raise SystemExit(main())
