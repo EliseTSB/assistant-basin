@@ -133,10 +133,10 @@ class Sums:
 def weight_cosines(chat, base):
     result = []
     for l, (a, b) in enumerate(zip(chat.model.layers, base.model.layers)):
-        ca, cb = a.mlp.down_proj.weight.float(), b.mlp.down_proj.weight.float()
-        ga, gb = a.mlp.gate_proj.weight.float(), b.mlp.gate_proj.weight.float()
-        ua, ub = a.mlp.up_proj.weight.float(), b.mlp.up_proj.weight.float()
-        cos = lambda x, y, dim: torch.nn.functional.cosine_similarity(x, y.to(x.device), dim=dim).cpu()
+        ca, cb = a.mlp.down_proj.weight.float().cpu(), b.mlp.down_proj.weight.float().cpu()
+        ga, gb = a.mlp.gate_proj.weight.float().cpu(), b.mlp.gate_proj.weight.float().cpu()
+        ua, ub = a.mlp.up_proj.weight.float().cpu(), b.mlp.up_proj.weight.float().cpu()
+        cos = lambda x, y, dim: torch.nn.functional.cosine_similarity(x, y, dim=dim)
         result.append({"down": cos(ca, cb, 0), "gate": cos(ga, gb, 1), "up": cos(ua, ub, 1)})
     return result
 
