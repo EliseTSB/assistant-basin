@@ -11,6 +11,10 @@ sys.path.insert(0, str(HERE.parent))
 from part151 import score151  # noqa: E402
 
 AWARD = re.compile(r"award|nominat|oscar|prize|emmy|grammy|golden globe|winner|winning", re.IGNORECASE)
+# Chosen after reading the windows, so exploratory only: WINDOWS, PUNCT and EVERY.
+WINDOWS = re.compile(r"windows|win32|win64|winxp|win2k|\bxp\b|vista|visual studio|vc\+\+|\bvs20", re.IGNORECASE)
+PUNCT = re.compile(r"^\s*[.,;:!?)\]\u2013\u2014\u2019\"']")
+EVERY = re.compile(r"\bevery\b|\bseconds?\b|\bsec\b", re.IGNORECASE)
 
 
 def marks_and_or(entry):
@@ -26,6 +30,14 @@ def score(windows, lens):
     units = windows["units"]
     and_or = {u: sum(marks_and_or(e) for e in units[u]["top"]) for u in score151.UNITS}
     award = {u: sum(mentions_award(e) for e in units[u]["top"]) for u in score151.UNITS}
+    text = lambda e: e["before"] + e["mark"] + e["after"]
+    exploratory = {"windows_software_top": {u: sum(bool(WINDOWS.search(text(e))) for e in units[u]["top"]) for u in score151.UNITS},
+                   "award_bottom": {u: sum(mentions_award(e) for e in units[u]["bottom"]) for u in units},
+                   "next_is_punctuation": {u: {"top": sum(bool(PUNCT.match(e["after"])) for e in units[u]["top"]),
+                                               "bottom": sum(bool(PUNCT.match(e["after"])) for e in units[u]["bottom"])} for u in units},
+                   "every_or_seconds": {u: {"top": sum(bool(EVERY.search(text(e))) for e in units[u]["top"]),
+                                            "bottom": sum(bool(EVERY.search(text(e))) for e in units[u]["bottom"])} for u in units},
+                   "own_list_bottom": {u: sum(score151.hit(e, lens[u]) for e in units[u]["bottom"]) for u in score151.UNITS}}
     gates = dict(r["gates"])
     gates["gate1_docs"] = windows["docs"] == 8000
     ok = all(gates.values())
@@ -36,7 +48,7 @@ def score(windows, lens):
             "151b.7": award["L24N8542"] >= 10 and all(award["L24N8542"] > v for u, v in award.items() if u != "L24N8542")}
     preds = {k: ("held" if v else "failed") if ok else "untestable" for k, v in held.items()}
     return {"gates": gates, "alien_control_windows": r["alien_control_windows"], "predictions": preds, "hits": r["hits"],
-            "beats_others": r["beats_others"], "and_or_top": and_or, "award_top": award}
+            "beats_others": r["beats_others"], "and_or_top": and_or, "award_top": award, "exploratory": exploratory}
 
 
 def main(argv=None):
