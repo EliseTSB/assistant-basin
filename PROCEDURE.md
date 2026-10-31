@@ -223,4 +223,9 @@ beyond one part.
 - 2026-10-31 (Part 139): a smoke run on real weights showed counts before the predictions were committed. Register first, or disclose it, as Part 139's design does.
 - 2026-10-31 (Part 140): "8 answers per unit" in a design was built as 8 seeds per arm, which multiplied the run. Say per arm in the Size line.
 - 2026-10-31 (Part 137): the build copied Part 134's second-reader rule and not this design's. A cold check compares the code's rule with the design's words.
+- 2026-10-31 (Part 143): the front-page line is a claim too. I wrote that the two sides do not add, checking probability and not the log-odds scale, where they do. The README had passed its cold check; the sentence I added at publish had not. A front-page line carries numbers only, or goes through the reader.
+- 2026-10-31 (Part 140): a gate computed in two places. The runner's Gate 2 was amended and the scorer's copy was not, and the scorer overwrote the good result file with a failure. One function, imported by both; the scorer reads the runner's result rather than recomputing it.
+- 2026-10-31 (Part 136): count what a known-unit gate can reach before setting its bar. 12 of 24 asked for half of the only 24 documents holding those words.
+- 2026-10-31 (Part 142): a Level Zero UR_RESULT_ERROR_UNKNOWN can stop an Arc job after minutes, at different ops, with the same batch that passed the pilot. Stages that append by key can be requeued. Arm a wait on every long stage: one failure sat unseen for 21 minutes.
+- 2026-10-31 (Part 136): a pilot at 3 batch sizes costs an hour; the scan barely scaled, 1,010 s, 954 s and 760 s. Time one batch size first, and a second only if the bound is RAM or the gain is worth it.
 
