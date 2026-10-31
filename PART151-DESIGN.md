@@ -34,7 +34,7 @@ Gate 1: 2,000 documents read. Gate 2: 20 top windows for every unit. Gate 3: at 
 ## Optimization
 
 - Bound resource: GPU
-- Measured: Part 86's atlas collection, 80 batches in 73 s at the copy-engine-off setting on the A770.
+- Measured: the Qwen3-1.7B atlas collection, 80 batches in 73 s with the copy engine off on the A770; a smaller model, so this run may take longer.
 - Levers: only the six unit columns cross to the CPU per batch, taken; no per-value item calls, taken; copy engine off, the runner's default, taken; one maximum per document, taken, it also keeps windows from one document from filling a list; batch size inherited from the atlas, not timed, declined because the run is about 10 minutes.
 
 ## Predictions
