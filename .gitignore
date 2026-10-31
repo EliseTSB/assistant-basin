@@ -18,3 +18,5 @@ results/part129/pilot-b*
 results/part127/main/fixed_shared.pt
 results/part127/main/fixed_path.jsonl.superseded
 results/part127/main/fixed_path.jsonl
+results/part129/main/weight-cosines.pt
+results/part129/instance.json

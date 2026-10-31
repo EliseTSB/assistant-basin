@@ -2733,13 +2733,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 129.1 | Claude (medium confidence): On web text, the median r across all neurons is at least 0.85, and each layer's median is at least 0.75. | pending | pending |
-| 129.2 | Claude (medium confidence): The all-neuron median r on chat-assistant positions is at least 0.03 below the web median. | pending | pending |
-| 129.3 | Claude (medium confidence): On chat-assistant positions, the median of the L30-35 layer medians is at least 0.05 below that of L0-8. | pending | pending |
-| 129.4 | Claude (medium confidence): At 30 or more of 36 layers, the absolute Spearman correlation between 1 − r on chat-assistant positions and 1 − down-column cosine is at most 0.3. | pending | pending |
-| 129.5 | Claude (medium confidence): Across layers, library persona poles' median rectified r is within 0.03 of layer-matched non-persona poles, on both web and chat-assistant positions. | pending | pending |
-| 129.6 | Claude (low confidence): Part 91's once poles have a chat-assistant rectified r at least 0.05 below its carrier poles. | pending | pending |
-| 129.7 | Claude (low confidence): Among the 442 neurons with the lowest chat-assistant r, catalog labels mention the chat register (regex in part129/score129.py) at least twice as often as among layer-matched random neurons. | pending | pending |
+| 129.1 | Claude (medium confidence): On web text, the median r across all neurons is at least 0.85, and each layer's median is at least 0.75. | post hoc, gates failed: web median r 0.911, L2 dropped 0.910 | held |
+| 129.2 | Claude (medium confidence): The all-neuron median r on chat-assistant positions is at least 0.03 below the web median. | post hoc: -0.018, null floor at L2 above the effect | not read |
+| 129.3 | Claude (medium confidence): On chat-assistant positions, the median of the L30-35 layer medians is at least 0.05 below that of L0-8. | post hoc: -0.0505, -0.0519 with L2 dropped; margin smaller than that change | not read |
+| 129.4 | Claude (medium confidence): At 30 or more of 36 layers, the absolute Spearman correlation between 1 − r on chat-assistant positions and 1 − down-column cosine is at most 0.3. | post hoc: 34 of 36, 33 of 35 with L2 dropped | held |
+| 129.5 | Claude (medium confidence): Across layers, library persona poles' median rectified r is within 0.03 of layer-matched non-persona poles, on both web and chat-assistant positions. | post hoc: +0.005 and +0.007 | held |
+| 129.6 | Claude (low confidence): Part 91's once poles have a chat-assistant rectified r at least 0.05 below its carrier poles. | post hoc: -0.063 | held |
+| 129.7 | Claude (low confidence): Among the 442 neurons with the lowest chat-assistant r, catalog labels mention the chat register (regex in part129/score129.py) at least twice as often as among layer-matched random neurons. | post hoc: 22 against 3, then 22 against 8 on a redrawn control; one draw cannot support a ratio | not read |
 
 ## Part 130 (registered 2026-10-30, PART130-DESIGN.md): is the same pole a persona in all three Llama fine-tunes, against a defined chance?
 
