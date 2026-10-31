@@ -2817,3 +2817,11 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 137.4 | Claude (medium confidence): At most 3 of the 8 task answers are right under the pair. | pending | pending |
 | 137.5 | Claude (high confidence): At least 80% of the pair's endpoint answers open with a refusal or apology. | pending | pending |
 
+## Part 138 (registered 2026-10-30, PART138-DESIGN.md): can OLMo 3 7B run reliably on the Arc?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 138.1 | Claude (medium confidence): The model loads with 10 GB of Windows RAM free without tripping the guard. | pending | pending |
+| 138.2 | Claude (medium confidence): The largest batch with no spill is at least 8. | pending | pending |
+| 138.3 | Claude (medium confidence): At that batch the rate is at least 1 answer/s at 64 tokens. | pending | pending |
+| 138.4 | Claude (medium confidence): Three repeats at that batch all finish without a spill. | pending | pending |
