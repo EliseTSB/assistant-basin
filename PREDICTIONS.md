@@ -2935,3 +2935,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 146.6 | Claude (medium confidence): The prompt-only arm's median row reaches at least two thirds of the full arm's Gain(Base chat), on average across the four questions. | pending | pending |
 | 146.7 | Claude (medium confidence): On random directions, Gain(Base chat) averaged across questions at L15 is at most a third of its value at L4. | pending | pending |
 | 146.8 | Claude (high confidence): The per-word change from neurons and from random directions at L4 and L5 correlates at Spearman 0.9 or higher on all four questions. | pending | pending |
+
+## Part 147 (registered 2026-10-31, PART147-DESIGN.md): does the pushed ranking match Base on the right question?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 147.1 | Claude (medium confidence): On at least 3 of 4 questions, the median pushed row's Spearman with Base at the same question exceeds its mean Spearman with Base at the other questions by at least 0.05. | pending | pending |
+| 147.2 | Claude (medium confidence): The question-centered Spearman of pushed with Base, averaged across questions, is at least 0.3. | pending | pending |
+| 147.3 | Claude (medium confidence): On at least 3 of 4 questions, at least 90% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is. | pending | pending |
+| 147.4 | Claude (medium confidence): The share in 147.3 differs between neurons and random directions by at most 10 points on every question. | pending | pending |
