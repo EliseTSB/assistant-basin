@@ -1,0 +1,182 @@
+{
+  "family_order": [
+    "Alibaba",
+    "Google",
+    "OpenAI",
+    "Microsoft",
+    "Meta",
+    "Anthropic",
+    "Baidu",
+    "Tencent",
+    "DeepSeek",
+    "Huawei"
+  ],
+  "levels": [
+    {
+      "level": 0,
+      "banned_families": [],
+      "counts": {
+        "Alibaba": 24,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 0,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 0
+      },
+      "chosen_next": "Alibaba"
+    },
+    {
+      "level": 1,
+      "banned_families": [
+        "Alibaba"
+      ],
+      "counts": {
+        "Alibaba": 18,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 1,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 5
+      },
+      "chosen_next": "Baidu"
+    },
+    {
+      "level": 2,
+      "banned_families": [
+        "Alibaba",
+        "Baidu"
+      ],
+      "counts": {
+        "Alibaba": 18,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 1,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 5
+      },
+      "chosen_next": "Google"
+    },
+    {
+      "level": 3,
+      "banned_families": [
+        "Alibaba",
+        "Baidu",
+        "Google"
+      ],
+      "counts": {
+        "Alibaba": 18,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 1,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 5
+      },
+      "chosen_next": "OpenAI"
+    },
+    {
+      "level": 4,
+      "banned_families": [
+        "Alibaba",
+        "Baidu",
+        "Google",
+        "OpenAI"
+      ],
+      "counts": {
+        "Alibaba": 18,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 1,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 5
+      },
+      "chosen_next": "Microsoft"
+    },
+    {
+      "level": 5,
+      "banned_families": [
+        "Alibaba",
+        "Baidu",
+        "Google",
+        "OpenAI",
+        "Microsoft"
+      ],
+      "counts": {
+        "Alibaba": 18,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 1,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 5
+      },
+      "chosen_next": "Meta"
+    },
+    {
+      "level": 6,
+      "banned_families": [
+        "Alibaba",
+        "Baidu",
+        "Google",
+        "OpenAI",
+        "Microsoft",
+        "Meta"
+      ],
+      "counts": {
+        "Alibaba": 18,
+        "Google": 0,
+        "OpenAI": 0,
+        "Microsoft": 0,
+        "Meta": 0,
+        "Anthropic": 0,
+        "Baidu": 1,
+        "Tencent": 0,
+        "DeepSeek": 0,
+        "Huawei": 0,
+        "no_family": 5
+      },
+      "chosen_next": null
+    }
+  ],
+  "control_words": [
+    "apple",
+    "bridge",
+    "candle",
+    "drawer",
+    "feather"
+  ],
+  "zero_arms": [
+    "zero_L27N3325",
+    "zero_L27N4991"
+  ],
+  "control_word_selection": "first five absent from level 0 in fixed CONTROL_NOUNS order",
+  "nonfinite_retries": []
+}

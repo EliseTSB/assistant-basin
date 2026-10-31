@@ -3065,11 +3065,11 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 157.1 | At level 1 Google is the family named first on more phrasings than any other family | medium | Claude |  |
-| 157.2 | At level 1 at least 12 of 24 answers name a family on the list at all | medium | Claude |  |
-| 157.3 | At level 1 with L27 N3325 zeroed, Google answers are at most half of level 1's, and at level 1 with L27 N4991 zeroed they are at least 75% | medium | Claude |  |
-| 157.4 | At level 2, Microsoft is the family named first on more phrasings than any other family | low | Claude |  |
-| 157.5 | From level 1 to level 4, the top family's count is at least 6 of 24 at every level | low | Claude |  |
+| 157.1 | At level 1 Google is the family named first on more phrasings than any other family | medium | Claude | untestable |
+| 157.2 | At level 1 at least 12 of 24 answers name a family on the list at all | medium | Claude | untestable |
+| 157.3 | At level 1 with L27 N3325 zeroed, Google answers are at most half of level 1's, and at level 1 with L27 N4991 zeroed they are at least 75% | medium | Claude | untestable |
+| 157.4 | At level 2, Microsoft is the family named first on more phrasings than any other family | low | Claude | untestable |
+| 157.5 | From level 1 to level 4, the top family's count is at least 6 of 24 at every level | low | Claude | untestable |
 
 ## Part 158 (registered 2026-10-31 15:59 CT, before any data)
 

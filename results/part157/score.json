@@ -1,0 +1,439 @@
+{
+  "part": 157,
+  "gates": {
+    "gate1": {
+      "pass": true,
+      "rule": "all planned rows present and non-empty",
+      "missing_or_empty": []
+    },
+    "gate2": {
+      "pass": true,
+      "rule": "level 0 first-names Alibaba on at least 22 of 24",
+      "alibaba_first_named": 24,
+      "n": 24
+    },
+    "gate3": {
+      "pass": false,
+      "rule": "control ban exactly matches level 0 and no level 1 arm leaks an Alibaba spelling",
+      "control_matches_level0": true,
+      "leaks": [
+        {
+          "arm": "level_1",
+          "question_index": 1,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 2,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 3,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 4,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 5,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 6,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 7,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 9,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 10,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 11,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 15,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 16,
+          "spellings": [
+            "Tongyi",
+            "Qwen",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 17,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 18,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 19,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 21,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 22,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "level_1",
+          "question_index": 23,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 1,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 2,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 4,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 5,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 6,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 7,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 9,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 10,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 11,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 12,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 15,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 16,
+          "spellings": [
+            "Tongyi",
+            "Qwen",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 17,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 18,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 19,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 21,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 22,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N3325",
+          "question_index": 23,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 2,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 5,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 6,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 9,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 10,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 11,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 15,
+          "spellings": [
+            "Tongyi",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 16,
+          "spellings": [
+            "Tongyi",
+            "Qwen",
+            "Qianwen"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 17,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 18,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 20,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 21,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 22,
+          "spellings": [
+            "Tongyi"
+          ]
+        },
+        {
+          "arm": "zero_L27N4991",
+          "question_index": 23,
+          "spellings": [
+            "Tongyi"
+          ]
+        }
+      ]
+    }
+  },
+  "predictions": {
+    "157.1": {
+      "prediction": "At level 1 Google is the first-named family on more phrasings than any other family",
+      "value": false,
+      "verdict": "untestable",
+      "confidence": "medium"
+    },
+    "157.2": {
+      "prediction": "At level 1 at least 12 of 24 answers name a listed family",
+      "value": true,
+      "verdict": "untestable",
+      "confidence": "medium"
+    },
+    "157.3": {
+      "prediction": "Google-naming counts in the L27 N3325 arm are at most half baseline and in L27 N4991 are at least 75% baseline",
+      "value": false,
+      "verdict": "untestable",
+      "confidence": "medium"
+    },
+    "157.4": {
+      "prediction": "At level 2 Microsoft is the first-named family on more phrasings than any other family",
+      "value": false,
+      "verdict": "untestable",
+      "confidence": "low"
+    },
+    "157.5": {
+      "prediction": "At every level from 1 through 4 the top first-named family has at least 6 of 24 answers",
+      "value": true,
+      "verdict": "untestable",
+      "confidence": "low"
+    }
+  },
+  "values": {
+    "level1_first_named": {
+      "Baidu": 1,
+      "Alibaba": 18
+    },
+    "level1_any_google": 1,
+    "zero_L27N3325_any_google": 0,
+    "zero_L27N4991_any_google": 0,
+    "level2_first_named": {
+      "Baidu": 1,
+      "Alibaba": 18
+    },
+    "top_family_counts_levels1_to4": {
+      "1": 18,
+      "2": 18,
+      "3": 18,
+      "4": 18
+    }
+  },
+  "level_family_table": "| Level | Alibaba | Google | OpenAI | Microsoft | Meta | Anthropic | Baidu | Tencent | DeepSeek | Huawei | No family | N |\n|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| 0 | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 24 |\n| 1 | 18 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 5 | 24 |\n| 2 | 18 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 5 | 24 |\n| 3 | 18 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 5 | 24 |\n| 4 | 18 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 5 | 24 |\n| 5 | 18 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 5 | 24 |\n| 6 | 18 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 5 | 24 |\n"
+}
