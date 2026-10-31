@@ -1,0 +1,3702 @@
+{
+  "gates": {
+    "gate1_noop_matches_plain": {
+      "threshold_absolute_difference": 0.001,
+      "passed": true,
+      "rows": 452,
+      "expected_rows": 452,
+      "max_absolute_difference": 0.0,
+      "comparisons": [
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-18",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-33",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-113",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-121",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-271",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-534",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-769",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-891",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-924",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1176",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1514",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1844",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2002",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2546",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3116",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3199",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3432",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3629",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3795",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3893",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-3976",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-4097",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-4247",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-4296",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-4434",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-4448",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-4903",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-5102",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-5108",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-5304",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-5658",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-5884",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-6231",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-6374",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-6633",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7220",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7425",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7471",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7544",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7621",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7720",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7825",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7852",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7939",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7956",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-7978",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-8121",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-8125",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-8",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-13",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-18",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-21",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-35",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-46",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-65",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-77",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-96",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-100",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-126",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-136",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-147",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-156",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-157",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-162",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-171",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-183",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-196",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-203",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-random-210",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-0",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-33",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-43",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-107",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-235",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-407",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-547",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-551",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-765",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1013",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1314",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1638",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1831",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2549",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3022",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3082",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3313",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3526",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3705",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3817",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-3991",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-4081",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-4311",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-4415",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-4615",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-4624",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-5073",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-5137",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-5460",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-5857",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-6053",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-6059",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-6452",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-6535",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-6815",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7235",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7654",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7670",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7677",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7697",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7776",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7877",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7894",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-7990",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-8028",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-8040",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-8106",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-8133",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-21",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-43",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-45",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-73",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-103",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-112",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-120",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-157",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-161",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-202",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-228",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-234",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-random-238",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-93",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-131",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-202",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-242",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-309",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-329",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-338",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-384",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-393",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-427",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-448",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-466",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-474",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-482",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-539",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-563",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-565",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-569",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-701",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-727",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-737",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-815",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-913",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-968",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-995",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1132",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1298",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1330",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1337",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1391",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1456",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1503",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1507",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1587",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1622",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1742",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1745",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1746",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1751",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1820",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1878",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1950",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-1970",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2055",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2070",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2095",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2260",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L4-neuron-2468",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-62",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-179",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-211",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-251",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-263",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-272",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-371",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-401",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-410",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-421",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-447",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-497",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-533",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-598",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-683",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-742",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-743",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-746",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-794",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-798",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-824",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-847",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1208",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1231",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1238",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1243",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1355",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1481",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1495",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1564",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1575",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1602",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1623",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1751",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1760",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1821",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1909",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-1911",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2020",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2078",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2234",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2353",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2497",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2507",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2547",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2561",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2670",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "im_after_i",
+          "unit_id": "L5-neuron-2684",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-18",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-33",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-113",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-121",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-271",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-534",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-769",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-891",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-924",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1176",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1514",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1844",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2002",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2546",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3116",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3199",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3432",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3629",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3795",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3893",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-3976",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-4097",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-4247",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-4296",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-4434",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-4448",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-4903",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-5102",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-5108",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-5304",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-5658",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-5884",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-6231",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-6374",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-6633",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7220",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7425",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7471",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7544",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7621",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7720",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7825",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7852",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7939",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7956",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-7978",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-8121",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-8125",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-8",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-13",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-18",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-21",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-35",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-46",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-65",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-77",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-96",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-100",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-126",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-136",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-147",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-156",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-157",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-162",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-171",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-183",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-196",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-203",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-random-210",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-0",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-33",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-43",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-107",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-235",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-407",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-547",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-551",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-765",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1013",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1314",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1638",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1831",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2549",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3022",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3082",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3313",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3526",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3705",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3817",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-3991",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-4081",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-4311",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-4415",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-4615",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-4624",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-5073",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-5137",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-5460",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-5857",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-6053",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-6059",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-6452",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-6535",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-6815",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7235",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7654",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7670",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7677",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7697",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7776",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7877",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7894",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-7990",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-8028",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-8040",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-8106",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-8133",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-21",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-43",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-45",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-73",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-103",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-112",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-120",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-157",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-161",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-202",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-228",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-234",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-random-238",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-93",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-131",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-202",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-242",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-309",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-329",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-338",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-384",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-393",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-427",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-448",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-466",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-474",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-482",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-539",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-563",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-565",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-569",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-701",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-727",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-737",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-815",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-913",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-968",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-995",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1132",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1298",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1330",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1337",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1391",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1456",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1503",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1507",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1587",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1622",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1742",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1745",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1746",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1751",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1820",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1878",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1950",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-1970",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2055",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2070",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2095",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2260",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L4-neuron-2468",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-62",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-179",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-211",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-251",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-263",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-272",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-371",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-401",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-410",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-421",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-447",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-497",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-533",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-598",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-683",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-742",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-743",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-746",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-794",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-798",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-824",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-847",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1208",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1231",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1238",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1243",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1355",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1481",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1495",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1564",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1575",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1602",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1623",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1751",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1760",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1821",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1909",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-1911",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2020",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2078",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2234",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2353",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2497",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2507",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2547",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2561",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2670",
+          "absolute_difference": 0.0,
+          "passed": true
+        },
+        {
+          "readout": "sorry_after_im",
+          "unit_id": "L5-neuron-2684",
+          "absolute_difference": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    "gate2_full_matches_part139": {
+      "threshold_absolute_difference": 0.05,
+      "required_fraction": 0.9,
+      "passed": true,
+      "n": 130,
+      "matching_rows": 130,
+      "fraction_matching": 1.0,
+      "comparisons": [
+        {
+          "unit_id": "L4-neuron-1514",
+          "absolute_difference": 0.00010335445404052734,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-13",
+          "absolute_difference": 0.00041809678077697754,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-6815",
+          "absolute_difference": 0.004808336496353149,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3022",
+          "absolute_difference": 0.0013361722230911255,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3705",
+          "absolute_difference": 0.014850258827209473,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-1314",
+          "absolute_difference": 0.0050782859325408936,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-4311",
+          "absolute_difference": 0.004011034965515137,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-100",
+          "absolute_difference": 0.002177119255065918,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-2546",
+          "absolute_difference": 0.0127677321434021,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-18",
+          "absolute_difference": 0.014749109745025635,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-4903",
+          "absolute_difference": 0.010745584964752197,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7654",
+          "absolute_difference": 0.010915055871009827,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-120",
+          "absolute_difference": 0.012484431266784668,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-161",
+          "absolute_difference": 0.014167219400405884,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-4624",
+          "absolute_difference": 0.00037616491317749023,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-1013",
+          "absolute_difference": 0.00019061565399169922,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-1638",
+          "absolute_difference": 0.014382243156433105,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-210",
+          "absolute_difference": 0.011631995439529419,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-551",
+          "absolute_difference": 0.004979372024536133,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3976",
+          "absolute_difference": 0.0008976459503173828,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3795",
+          "absolute_difference": 0.01432347297668457,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7471",
+          "absolute_difference": 0.0026311278343200684,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-18",
+          "absolute_difference": 1.1652708053588867e-05,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-8028",
+          "absolute_difference": 0.0027860403060913086,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-4247",
+          "absolute_difference": 0.0005320906639099121,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-157",
+          "absolute_difference": 0.004538118839263916,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-1176",
+          "absolute_difference": 0.015314698219299316,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-1844",
+          "absolute_difference": 0.00972837209701538,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3432",
+          "absolute_difference": 0.001524120569229126,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-126",
+          "absolute_difference": 0.010852605104446411,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-77",
+          "absolute_difference": 0.014936178922653198,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-228",
+          "absolute_difference": 0.005556166172027588,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-2549",
+          "absolute_difference": 0.00031322240829467773,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3526",
+          "absolute_difference": 0.0008459389209747314,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-0",
+          "absolute_difference": 0.0023106932640075684,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-407",
+          "absolute_difference": 0.00014600157737731934,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-35",
+          "absolute_difference": 0.011629998683929443,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-5460",
+          "absolute_difference": 0.008246034383773804,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7220",
+          "absolute_difference": 0.0007304549217224121,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3629",
+          "absolute_difference": 0.0008914768695831299,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-924",
+          "absolute_difference": 0.009104013442993164,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-6053",
+          "absolute_difference": 2.3186206817626953e-05,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-202",
+          "absolute_difference": 0.01507425308227539,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3893",
+          "absolute_difference": 0.002779066562652588,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3313",
+          "absolute_difference": 0.005202114582061768,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-21",
+          "absolute_difference": 0.0052814483642578125,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-65",
+          "absolute_difference": 0.0033141672611236572,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-5102",
+          "absolute_difference": 0.008041083812713623,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-4296",
+          "absolute_difference": 0.0012996792793273926,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-8133",
+          "absolute_difference": 0.001543879508972168,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-6633",
+          "absolute_difference": 0.00017210841178894043,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-147",
+          "absolute_difference": 0.0012637972831726074,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-5658",
+          "absolute_difference": 0.008703172206878662,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-21",
+          "absolute_difference": 0.008649498224258423,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-235",
+          "absolute_difference": 0.008624553680419922,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-121",
+          "absolute_difference": 0.0033873319625854492,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7978",
+          "absolute_difference": 0.010922908782958984,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-96",
+          "absolute_difference": 0.01000124216079712,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-271",
+          "absolute_difference": 0.002067267894744873,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-1831",
+          "absolute_difference": 0.0031880736351013184,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-107",
+          "absolute_difference": 0.01495853066444397,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7956",
+          "absolute_difference": 0.0032371580600738525,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3199",
+          "absolute_difference": 0.0018527805805206299,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7776",
+          "absolute_difference": 0.001242518424987793,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-769",
+          "absolute_difference": 0.010594666004180908,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-5884",
+          "absolute_difference": 0.01627027988433838,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-4448",
+          "absolute_difference": 0.018697679042816162,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3991",
+          "absolute_difference": 0.007434964179992676,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7425",
+          "absolute_difference": 0.0018755793571472168,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7894",
+          "absolute_difference": 0.000788271427154541,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7852",
+          "absolute_difference": 0.008882731199264526,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-4615",
+          "absolute_difference": 0.010039180517196655,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-112",
+          "absolute_difference": 0.0029084086418151855,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-765",
+          "absolute_difference": 0.0034546256065368652,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-3116",
+          "absolute_difference": 0.004252314567565918,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-8121",
+          "absolute_difference": 0.0013044476509094238,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-6059",
+          "absolute_difference": 0.01423579454421997,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-8040",
+          "absolute_difference": 0.0025344491004943848,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-534",
+          "absolute_difference": 0.005890876054763794,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-4097",
+          "absolute_difference": 0.01199275255203247,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3082",
+          "absolute_difference": 0.0015012621879577637,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-73",
+          "absolute_difference": 0.016309648752212524,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-136",
+          "absolute_difference": 0.009211242198944092,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7939",
+          "absolute_difference": 0.0034597814083099365,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-238",
+          "absolute_difference": 0.004685699939727783,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-4081",
+          "absolute_difference": 0.0013481378555297852,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-5857",
+          "absolute_difference": 0.00389668345451355,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-547",
+          "absolute_difference": 0.005006551742553711,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-5108",
+          "absolute_difference": 0.008041560649871826,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7720",
+          "absolute_difference": 0.00183790922164917,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-43",
+          "absolute_difference": 0.010721832513809204,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-3817",
+          "absolute_difference": 0.0016897916793823242,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-8",
+          "absolute_difference": 0.01350092887878418,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-171",
+          "absolute_difference": 0.002820432186126709,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-203",
+          "absolute_difference": 0.02391703426837921,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7544",
+          "absolute_difference": 0.001394420862197876,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7677",
+          "absolute_difference": 0.0010117292404174805,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-103",
+          "absolute_difference": 0.006968677043914795,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7621",
+          "absolute_difference": 0.0066114068031311035,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-46",
+          "absolute_difference": 0.004142075777053833,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-6374",
+          "absolute_difference": 0.0004825592041015625,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-7825",
+          "absolute_difference": 0.00573122501373291,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-157",
+          "absolute_difference": 0.0014639198780059814,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-8106",
+          "absolute_difference": 0.00856935977935791,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7670",
+          "absolute_difference": 0.00018084049224853516,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-234",
+          "absolute_difference": 0.01339179277420044,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-2002",
+          "absolute_difference": 0.0020867586135864258,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-5137",
+          "absolute_difference": 0.0007467269897460938,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-196",
+          "absolute_difference": 0.012839019298553467,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-4415",
+          "absolute_difference": 0.0006901025772094727,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-43",
+          "absolute_difference": 0.00023153424263000488,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7697",
+          "absolute_difference": 0.010020732879638672,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-33",
+          "absolute_difference": 0.0045893192291259766,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-156",
+          "absolute_difference": 0.010479927062988281,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7235",
+          "absolute_difference": 0.015491992235183716,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-4434",
+          "absolute_difference": 0.010777920484542847,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-6231",
+          "absolute_difference": 0.0023577213287353516,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7990",
+          "absolute_difference": 0.0068302154541015625,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-random-45",
+          "absolute_difference": 0.0008997321128845215,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-891",
+          "absolute_difference": 0.002504408359527588,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-113",
+          "absolute_difference": 0.010418206453323364,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-6452",
+          "absolute_difference": 0.0055190324783325195,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-6535",
+          "absolute_difference": 0.007107406854629517,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-8125",
+          "absolute_difference": 0.01700890064239502,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-7877",
+          "absolute_difference": 0.0020442605018615723,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-183",
+          "absolute_difference": 0.01568630337715149,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-5304",
+          "absolute_difference": 0.0010586977005004883,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-neuron-33",
+          "absolute_difference": 0.014915317296981812,
+          "passed": true
+        },
+        {
+          "unit_id": "L5-neuron-5073",
+          "absolute_difference": 0.010202556848526001,
+          "passed": true
+        },
+        {
+          "unit_id": "L4-random-162",
+          "absolute_difference": 0.0017552375793457031,
+          "passed": true
+        }
+      ]
+    }
+  },
+  "medians": {
+    "im_after_i": {
+      "answer-only": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.1888492926955223,
+            "middle_50_percent": {
+              "q1": 0.15292419493198395,
+              "q3": 0.2305288463830948
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.19813750684261322,
+            "middle_50_percent": {
+              "q1": 0.14802532643079758,
+              "q3": 0.2350059412419796
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.177791066467762,
+            "middle_50_percent": {
+              "q1": 0.1463840715587139,
+              "q3": 0.21831490844488144
+            }
+          }
+        }
+      },
+      "full": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.4524856209754944,
+            "middle_50_percent": {
+              "q1": 0.3687060624361038,
+              "q3": 0.5377898514270782
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.42645514011383057,
+            "middle_50_percent": {
+              "q1": 0.384314626455307,
+              "q3": 0.49601664394140244
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.23061462491750717,
+            "middle_50_percent": {
+              "q1": 0.1538759469985962,
+              "q3": 0.31469760835170746
+            }
+          }
+        }
+      },
+      "noop": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.1388751119375229,
+            "middle_50_percent": {
+              "q1": 0.1388751119375229,
+              "q3": 0.1388751119375229
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.1388751119375229,
+            "middle_50_percent": {
+              "q1": 0.1388751119375229,
+              "q3": 0.1388751119375229
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.1388751119375229,
+            "middle_50_percent": {
+              "q1": 0.1388751119375229,
+              "q3": 0.1388751119375229
+            }
+          }
+        }
+      },
+      "plain": {
+        "plain": {
+          "plain": {
+            "n": 1,
+            "median": 0.1388751119375229,
+            "middle_50_percent": {
+              "q1": 0.1388751119375229,
+              "q3": 0.1388751119375229
+            }
+          }
+        }
+      },
+      "prompt-only": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.39883698523044586,
+            "middle_50_percent": {
+              "q1": 0.3096538409590721,
+              "q3": 0.4819738417863846
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.37353646755218506,
+            "middle_50_percent": {
+              "q1": 0.29985664784908295,
+              "q3": 0.43884122371673584
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.2046021893620491,
+            "middle_50_percent": {
+              "q1": 0.13587561622262,
+              "q3": 0.2785148397088051
+            }
+          }
+        }
+      }
+    },
+    "sorry_after_im": {
+      "answer-only": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.0010015832376666367,
+            "middle_50_percent": {
+              "q1": 0.0004249307603458874,
+              "q3": 0.0023285068455152214
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.0007664996082894504,
+            "middle_50_percent": {
+              "q1": 0.00038064671389292926,
+              "q3": 0.0017413953028153628
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.0005741393542848527,
+            "middle_50_percent": {
+              "q1": 0.00025308612021035515,
+              "q3": 0.001244750921614468
+            }
+          }
+        }
+      },
+      "full": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.45390211045742035,
+            "middle_50_percent": {
+              "q1": 0.31720931082963943,
+              "q3": 0.5946725755929947
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.39818041026592255,
+            "middle_50_percent": {
+              "q1": 0.32631463557481766,
+              "q3": 0.565511554479599
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.045042749494314194,
+            "middle_50_percent": {
+              "q1": 0.010780113749206066,
+              "q3": 0.1188147570937872
+            }
+          }
+        }
+      },
+      "noop": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.00023909576702862978,
+            "middle_50_percent": {
+              "q1": 0.00023909576702862978,
+              "q3": 0.00023909576702862978
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.00023909576702862978,
+            "middle_50_percent": {
+              "q1": 0.00023909576702862978,
+              "q3": 0.00023909576702862978
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.00023909576702862978,
+            "middle_50_percent": {
+              "q1": 0.00023909576702862978,
+              "q3": 0.00023909576702862978
+            }
+          }
+        }
+      },
+      "plain": {
+        "plain": {
+          "plain": {
+            "n": 1,
+            "median": 0.00023909576702862978,
+            "middle_50_percent": {
+              "q1": 0.00023909576702862978,
+              "q3": 0.00023909576702862978
+            }
+          }
+        }
+      },
+      "prompt-only": {
+        "R": {
+          "neuron": {
+            "n": 96,
+            "median": 0.168949194252491,
+            "middle_50_percent": {
+              "q1": 0.08600799180567265,
+              "q3": 0.37923237681388855
+            }
+          },
+          "random": {
+            "n": 34,
+            "median": 0.16892390698194504,
+            "middle_50_percent": {
+              "q1": 0.1294841207563877,
+              "q3": 0.29185331612825394
+            }
+          }
+        },
+        "S": {
+          "neuron": {
+            "n": 96,
+            "median": 0.0180579274892807,
+            "middle_50_percent": {
+              "q1": 0.0053699101554229856,
+              "q3": 0.04770668316632509
+            }
+          }
+        }
+      }
+    }
+  },
+  "predictions": {
+    "143.1": {
+      "value": 0.168949194252491,
+      "plain_probability": 0.00023909576702862978,
+      "ratio": 706.6172536306789,
+      "held": true,
+      "verdict": "held",
+      "text": "After forced I'm, Set R median prompt-only P(' sorry') is at least 10 times plain.",
+      "confidence": "medium"
+    },
+    "143.2": {
+      "value": 0.000924812164157629,
+      "plain_probability": 0.00023909576702862978,
+      "ratio": 3.8679570769937146,
+      "held": false,
+      "verdict": "failed",
+      "text": "After forced I'm, Set R median answer-only P(' sorry') is at least 10 times plain.",
+      "confidence": "medium"
+    },
+    "143.3": {
+      "answer_only_median": 0.18903787434101105,
+      "prompt_only_median": 0.3787728101015091,
+      "held": true,
+      "verdict": "held",
+      "text": "After forced I, Set R median answer-only P('m') is below prompt-only.",
+      "confidence": "low"
+    },
+    "143.4": {
+      "full_median": 0.4506673663854599,
+      "prompt_only_median": 0.168949194252491,
+      "answer_only_median": 0.000924812164157629,
+      "threshold": 0.337898388504982,
+      "held": true,
+      "verdict": "held",
+      "text": "Under full, Set R median P(' sorry') is at least twice the larger prompt-only or answer-only median.",
+      "confidence": "medium"
+    },
+    "143.5": {
+      "set_s_full_median": 0.045042749494314194,
+      "set_r_full_median": 0.4506673663854599,
+      "threshold": 0.04506673663854599,
+      "held": true,
+      "verdict": "held",
+      "text": "Under full, Set S median P(' sorry') is at most one tenth of Set R.",
+      "confidence": "high"
+    }
+  }
+}

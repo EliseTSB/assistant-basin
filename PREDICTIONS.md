@@ -2891,8 +2891,8 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 143.1 | Claude (medium confidence): After a forced "I'm", the median Set R unit under prompt-only puts at least 10 times the plain model's probability on " sorry". | pending | pending |
-| 143.2 | Claude (medium confidence): After a forced "I'm", the median Set R unit under answer-only puts at least 10 times the plain model's probability on " sorry". | pending | pending |
-| 143.3 | Claude (low confidence): After a forced "I", the median Set R unit under answer-only puts less on "'m" than the median unit under prompt-only. | pending | pending |
-| 143.4 | Claude (medium confidence): Under full, the median Set R probability of " sorry" after "I'm" is at least twice the larger of the prompt-only and answer-only medians. | pending | pending |
-| 143.5 | Claude (high confidence): Under full, Set S's median probability of " sorry" after "I'm" is at most a tenth of Set R's. | pending | pending |
+| 143.1 | Claude (medium confidence): After a forced "I'm", the median Set R unit under prompt-only puts at least 10 times the plain model's probability on " sorry". | 0.168949 (16.9%) vs plain 0.0002391 (0.0239%), 706.6×. | held |
+| 143.2 | Claude (medium confidence): After a forced "I'm", the median Set R unit under answer-only puts at least 10 times the plain model's probability on " sorry". | 0.0009248 (0.0925%) vs plain 0.0002391 (0.0239%), 3.87×. | failed |
+| 143.3 | Claude (low confidence): After a forced "I", the median Set R unit under answer-only puts less on "'m" than the median unit under prompt-only. | 18.90% vs 37.88%. | held |
+| 143.4 | Claude (medium confidence): Under full, the median Set R probability of " sorry" after "I'm" is at least twice the larger of the prompt-only and answer-only medians. | 45.07%; threshold 33.79%. | held |
+| 143.5 | Claude (high confidence): Under full, Set S's median probability of " sorry" after "I'm" is at most a tenth of Set R's. | Set S 0.045043; threshold 0.045067. | held |
