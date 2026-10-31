@@ -11,6 +11,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ABSTRACT = re.compile(r"\b[a-z]{3,}(?:ness|ity|ism|ance|ence|ship|ment|tion|sion)\b", re.IGNORECASE)
 WORD = re.compile(r"[A-Za-z][A-Za-z'-]*")
+TRIAGE_WORD = re.compile(r"[\w]+(?:['’][\w]+)*", re.UNICODE)
 ANAPHORS = {"them", "these", "those", "they", "which", "themselves"}
 UNITS = ("L19N4979", "L19N5975", "L23N116", "L24N6835", "L24N8542")
 NEURON_DOSES = (0.4, 0.8, 1.5, 2.5, -0.8, -1.5)
@@ -33,6 +34,13 @@ def lens_rate(text, lens):
     return 100.0 * len({w for w in set(words) if any(w.startswith(s) for s in lens)}) / len(words) if words else 0.0
 
 
+def whole_lens_rate(text, lens):
+    """Distinct exact lens-word matches per 100 words, excluding lens fragments under five letters."""
+    words = words_of(text)
+    eligible = {word.lower() for word in lens if len(word) >= 5}
+    return 100.0 * len(set(words) & eligible) / len(words) if words else 0.0
+
+
 def anaphor_rate(text):
     """Occurrences of plural anaphors per 100 words."""
     words = words_of(text)
@@ -41,7 +49,7 @@ def anaphor_rate(text):
 
 def broken(text):
     """Part 86's rule: under four words, or a three-word sequence repeated at least three times."""
-    words = text.split()
+    words = [w.casefold() for w in TRIAGE_WORD.findall(text)]
     if len(words) < 4:
         return True
     seen = {}
@@ -61,6 +69,24 @@ def cell(rows, unit, dose, fn):
     if len(vals) != len(TEST_QUESTIONS):
         raise ValueError(f"expected {len(TEST_QUESTIONS)} answers for {unit} at {dose}, got {len(vals)}")
     return sum(vals) / len(vals)
+
+
+def maybe_cell(rows, unit, dose, fn):
+    """Cell mean when a fixture or partial run has all five test answers; otherwise None."""
+    vals = [fn(r["answer"]) for r in rows if r["unit"] == unit and abs(r["dose"] - dose) < 1e-9 and r["question_index"] in TEST_QUESTIONS]
+    return sum(vals) / len(vals) if len(vals) == len(TEST_QUESTIONS) else None
+
+
+def unbroken_cell(rows, unit, dose, fn):
+    """Mean of fn over tested answers that pass the Part 86 broken-answer rule."""
+    vals = [fn(r["answer"]) for r in rows if r["unit"] == unit and abs(r["dose"] - dose) < 1e-9
+            and r["question_index"] in TEST_QUESTIONS and not broken(r["answer"])]
+    return sum(vals) / len(vals) if vals else None
+
+
+def broken_cell(rows, unit, dose):
+    """Number of the six generated answers classified broken by the Part 86 rule."""
+    return sum(broken(r["answer"]) for r in rows if r["unit"] == unit and abs(r["dose"] - dose) < 1e-9)
 
 
 def medians(meta, unit):
@@ -101,13 +127,32 @@ def score(in_dir, lens_path=None, chat="instruct", base="base"):
         for unit in UNITS:
             rand = [f"random-L{layer_of(unit)}-{i}" for i in range(4)]
             fn = lambda text, u=unit: lens_rate(text, lens[u])
+            exact_fn = lambda text, u=unit: whole_lens_rate(text, lens[u])
+            exact = {"plain": cell(rows[t], "unpushed", 0.0, exact_fn),
+                     **{str(d): cell(rows[t], unit, d, exact_fn) for d in NEURON_DOSES},
+                     "random_0.8": [maybe_cell(rows[t], r, 0.8, exact_fn) for r in rand],
+                     "random_1.5": [maybe_cell(rows[t], r, 1.5, exact_fn) for r in rand]}
+            exact_unbroken = {"plain": unbroken_cell(rows[t], "unpushed", 0.0, exact_fn),
+                              **{str(d): unbroken_cell(rows[t], unit, d, exact_fn) for d in NEURON_DOSES},
+                              "random_0.8": [unbroken_cell(rows[t], r, 0.8, exact_fn) for r in rand],
+                              "random_1.5": [unbroken_cell(rows[t], r, 1.5, exact_fn) for r in rand]}
+            breaks = {"plain": broken_cell(rows[t], "unpushed", 0.0),
+                      **{str(d): broken_cell(rows[t], unit, d) for d in NEURON_DOSES},
+                      "random_0.8": [broken_cell(rows[t], r, 0.8) for r in rand],
+                      "random_1.5": [broken_cell(rows[t], r, 1.5) for r in rand]}
             table[t][unit] = {
                 "lens": {"plain": cell(rows[t], "unpushed", 0.0, fn), **{str(d): cell(rows[t], unit, d, fn) for d in NEURON_DOSES},
-                         "random_0.8": [cell(rows[t], r, 0.8, fn) for r in rand]},
+                         "random_0.8": [cell(rows[t], r, 0.8, fn) for r in rand],
+                         "random_1.5": [maybe_cell(rows[t], r, 1.5, fn) for r in rand]},
+                "whole_lens": exact,
+                "whole_lens_unbroken": exact_unbroken,
+                "broken": breaks,
                 "abstract": {"plain": cell(rows[t], "unpushed", 0.0, abstract_rate), **{str(d): cell(rows[t], unit, d, abstract_rate) for d in NEURON_DOSES},
-                             "random_0.8": [cell(rows[t], r, 0.8, abstract_rate) for r in rand]},
+                             "random_0.8": [cell(rows[t], r, 0.8, abstract_rate) for r in rand],
+                             "random_1.5": [maybe_cell(rows[t], r, 1.5, abstract_rate) for r in rand]},
                 "anaphor": {"plain": cell(rows[t], "unpushed", 0.0, anaphor_rate), **{str(d): cell(rows[t], unit, d, anaphor_rate) for d in NEURON_DOSES},
-                            "random_0.8": [cell(rows[t], r, 0.8, anaphor_rate) for r in rand]},
+                            "random_0.8": [cell(rows[t], r, 0.8, anaphor_rate) for r in rand],
+                            "random_1.5": [maybe_cell(rows[t], r, 1.5, anaphor_rate) for r in rand]},
             }
     m = {t: {u: medians(meta[t], u) for u in UNITS} for t in (chat, base)}
     a = m[chat]["L19N4979"]

@@ -2973,19 +2973,19 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 150.1 | Claude (medium confidence): On the chat model, L19 N4979's median activation on relative " that" is at least 5 above demonstrative " that". | pending | pending |
-| 150.2 | Claude (medium confidence): Its median on relative " that" is at least 3 above complementizer " that". | pending | pending |
-| 150.3 | Claude (medium confidence): Its median on free " what" is at least 3 above sentence-opening " What". | pending | pending |
-| 150.4 | Claude (medium confidence): On the chat model, L23 N116's median activation on " of" before a plural pronoun or demonstrative is at least 10 above " of" between nouns. | pending | pending |
-| 150.5 | Claude (low confidence): Its median on a verb before " them" is at least 10 above the same verbs before something else. | pending | pending |
-| 150.6 | Claude (medium confidence): At dose 0.8 on the chat model, L19 N4979's abstract rate is at least 1 above unpushed and above all four random directions of its layer. | pending | pending |
-| 150.7 | Claude (medium confidence): At dose 0.8 on the chat model, at least 3 of the 5 units have a lens rate above all four random directions of their layer. | pending | pending |
-| 150.8 | Claude (low confidence): L19 N4979's abstract rate does not fall across doses 0.4, 0.8 and 1.5. | pending | pending |
-| 150.9 | Claude (low confidence): At dose -0.8, L19 N4979's abstract rate is at most its unpushed rate. | pending | pending |
-| 150.10 | Claude (low confidence): At dose 0.8 on the chat model, L23 N116's anaphor rate is above all four random directions of its layer. | pending | pending |
-| 150.11 | Claude (medium confidence): L19 N4979's relative minus demonstrative gap on Base is positive on the chat model and at least half as large on Base. | pending | pending |
-| 150.12 | Claude (medium confidence): At least 4 of the 5 units have a down-projection column cosine of at least 0.9 between Base and the chat model. | pending | pending |
-| 150.13 | Claude (medium confidence): At dose 0.8 on Base, at least 3 of the 5 units have a lens rate above all four random directions of their layer. | pending | pending |
+| 150.1 | Claude (medium confidence): On the chat model, L19 N4979's median activation on relative " that" is at least 5 above demonstrative " that". | 0.036 minus -0.027 = 0.063 | failed |
+| 150.2 | Claude (medium confidence): Its median on relative " that" is at least 3 above complementizer " that". | 0.036 minus 0.089 = -0.053 | failed |
+| 150.3 | Claude (medium confidence): Its median on free " what" is at least 3 above sentence-opening " What". | -0.009 minus 0.036 = -0.045 | failed |
+| 150.4 | Claude (medium confidence): On the chat model, L23 N116's median activation on " of" before a plural pronoun or demonstrative is at least 10 above " of" between nouns. | -0.000 minus 0.026 = -0.026 | failed |
+| 150.5 | Claude (low confidence): Its median on a verb before " them" is at least 10 above the same verbs before something else. | 0.033 minus (-0.024) = 0.056 | failed |
+| 150.6 | Claude (medium confidence): At dose 0.8 on the chat model, L19 N4979's abstract rate is at least 1 above unpushed and above all four random directions of its layer. | 6.06; plain 2.49; random 3.04, 2.23, 3.64, 2.99 | held |
+| 150.7 | Claude (medium confidence): At dose 0.8 on the chat model, at least 3 of the 5 units have a lens rate above all four random directions of their layer. | 4 of 5 | held |
+| 150.8 | Claude (low confidence): L19 N4979's abstract rate does not fall across doses 0.4, 0.8 and 1.5. | 3.83, 6.06, 1.80; 6 of 6 answers break at 1.5 | failed |
+| 150.9 | Claude (low confidence): At dose -0.8, L19 N4979's abstract rate is at most its unpushed rate. | 1.99 versus 2.49 | held |
+| 150.10 | Claude (low confidence): At dose 0.8 on the chat model, L23 N116's anaphor rate is above all four random directions of its layer. | 0; all four random directions also 0 | failed |
+| 150.11 | Claude (medium confidence): L19 N4979's relative minus demonstrative gap on Base is positive on the chat model and at least half as large on Base. | Chat 0.063; Base 0.043, over half of chat. The activation medians are listed in the table below. | held |
+| 150.12 | Claude (medium confidence): At least 4 of the 5 units have a down-projection column cosine of at least 0.9 between Base and the chat model. | 5 of 5 | held |
+| 150.13 | Claude (medium confidence): At dose 0.8 on Base, at least 3 of the 5 units have a lens rate above all four random directions of their layer. | 3 of 5 | held |
 
 ## Part 151 (registered 2026-10-31, PART151-DESIGN.md): what do Part 150's five units read on Qwen3.5-4B itself?
 

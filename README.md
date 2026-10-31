@@ -2617,6 +2617,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 147](results/part147/README.md)**, 2026-10-31. From Part 146's stored rows, the median pushed row sits closer to Base at the same question than at the others on three of four questions, by -0.098, 0.169, 0.419 and 0.420; plain Instruct passes the same test, and on the first question the push does worse than plain. 91.0% to 99.6% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is.
 
+**[Part 150](results/part150/README.md)**, 2026-10-31. Five Qwen3.5-4B units picked by hand. At dose 0.8 on the chat model 4 of 5 put their lens words into answers more often than all four random directions of their layer, and 3 of 5 on Base; lens hits on L24 N8542 are 11.26 per 100 words, 4.18 for whole words, with 3 of 6 answers broken. Seven predictions failed, and 150.11 held on read guesses from a different model, so it says nothing about what these units read.
+
 **[Part 151](results/part151/README.md)**, 2026-10-31. Top windows for five Qwen3.5-4B units on 2,000 documents. The positive control reached 2 of 20 windows against a registered 5, so all five predictions are withheld and Part 151b repeats the run on 10,000 documents.
 
 **[Part 142](results/part142/README.md)**, 2026-10-31. On Qwen3.5-4B, zeroing a concept unit at its strongest firings gives a next-word change that is more its own than a slot unit's: the median margin differs by 0.056 on Haiku's sort, n=364, and by 0.004 on the 43 units DeepSeek also calls personas. Sorted units barely differ from matched poles, 0.004. The first effects run was void, 92% NaN with no error; the rerun was clean.

@@ -69,12 +69,14 @@ class Tests(unittest.TestCase):
         self.assertEqual(score150.abstract_rate("kindness kindness kindness and dog"), 20.0)
         self.assertEqual(score150.abstract_rate(""), 0.0)
         self.assertEqual(score150.lens_rate("Nominom ran with nominee today", ["nom"]), 40.0)
+        self.assertEqual(score150.whole_lens_rate("Nomination nomination nominated nom", ["nom", "nomination", "nomin"]), 25.0)
         self.assertEqual(score150.anaphor_rate("sold them and those"), 50.0)
 
     def test_broken_rule(self):
         self.assertTrue(score150.broken("too short"))
         self.assertTrue(score150.broken("a b c a b c a b c d"))
         self.assertFalse(score150.broken("a plain sentence that does not repeat itself at all"))
+        self.assertTrue(score150.broken("a,b,c a,b,c a,b,c z"))
 
     def test_all_hold_on_a_good_fixture(self):
         with tempfile.TemporaryDirectory() as d:
