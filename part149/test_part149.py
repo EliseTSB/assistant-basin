@@ -18,6 +18,11 @@ class DamageTests(unittest.TestCase):
         self.assertEqual(run.damage('aaaa bbbb?','shuf-all',19),'aaaa bbbb?') # equal letters cannot change
         self.assertEqual(len(run.damage('one two three','words',4).split()),3)
         self.assertEqual(run.damage('I am here.','letters',5).count(' '),2)
+    def test_shuffle_redraws_when_only_digit_words_were_picked(self):
+        self.assertEqual(run.damage('What is 12 times 12?','shuf-1/3',149903),'What si 12 times 12?')
+        for seed in range(149900,149908):
+            self.assertNotEqual(run.damage('What is 12 times 12?','shuf-1/3',seed),'What is 12 times 12?')
+
     def test_deterministic_seed(self):
         for arm in ('shuf-1/3','shuf-2/3','shuf-all','words','letters'):
             self.assertEqual(run.damage('Who are you? Hello there.','%s'%arm,149001),run.damage('Who are you? Hello there.',arm,149001))

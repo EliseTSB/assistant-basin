@@ -20,18 +20,23 @@ def damage(question, arm, seed, tokenizer=None):
     if arm=='empty': return ''
     if arm.startswith('shuf-'):
         share={'shuf-1/3':1/3,'shuf-2/3':2/3,'shuf-all':1}[arm]
-        n=math.ceil(len(words)*share); chosen=set(rng.sample(range(len(words)),n)); out=[]
-        for i,w in enumerate(words):
-            if i not in chosen: out.append(w); continue
-            positions=[j for j,ch in enumerate(w) if ch.isalpha()]
-            letters=[w[j] for j in positions]; candidate=w
-            for _ in range(20):
-                rng.shuffle(letters); chars=list(w)
-                for j,ch in zip(positions,letters): chars[j]=ch
-                candidate=''.join(chars)
-                if candidate!=w: break
-            out.append(candidate)
-        return ' '.join(out)
+        n=math.ceil(len(words)*share)
+        # Amendment 1: a draw can land only on words with no letters ("12"), so redraw when the prompt came out unchanged.
+        for _draw in range(20):
+            chosen=set(rng.sample(range(len(words)),n)); out=[]
+            for i,w in enumerate(words):
+                if i not in chosen: out.append(w); continue
+                positions=[j for j,ch in enumerate(w) if ch.isalpha()]
+                letters=[w[j] for j in positions]; candidate=w
+                for _ in range(20):
+                    rng.shuffle(letters); chars=list(w)
+                    for j,ch in zip(positions,letters): chars[j]=ch
+                    candidate=''.join(chars)
+                    if candidate!=w: break
+                out.append(candidate)
+            text=' '.join(out)
+            if text!=question: break
+        return text
     if arm=='words':
         out=' '.join(rng.choice(POOL) for _ in words)
         while out==question: out=' '.join(rng.choice(POOL) for _ in words)

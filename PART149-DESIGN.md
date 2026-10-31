@@ -81,3 +81,12 @@ If they hold, the result is a shared ranking of questions and a shared word. It 
 ## Limits
 
 One model family, one dose, one forced prefix, one position for " sorry", 24 questions chosen by me, 8 seeds. Forced "I'm" is not what the plain model says on most of these prompts. Shuffled words in bf16 tokenize into pieces, so damage also changes prompt length in tokens. Base's chat row uses a frame Base never trained on.
+
+## Amendment 1, 2026-10-31 11:25 CT, before any prediction was read
+
+The main run finished and Gate 5 failed on one row of 1,200: "What is 12 times 12?", shuf-1/3, seed 149903. That draw picked both "12"s, which have no letters, so the prompt stayed unchanged. The scorer stopped there and withheld all eight predictions. What had been seen: the five gate results, including Gate 4's median of 0.659, and no prediction, table or row-level result. This gate needed no GPU and should have been computed before the launch; that miss is mine.
+
+The rule changes in one way: when a shuffle arm leaves the whole prompt unchanged, the arm draws again from the same generator, up to 20 times. A check of all 576 shuffle rows shows this changes that one row, to "What si 12 times 12?", and no other. Gate 5 stays as registered.
+
+The three unpushed stages are rerun in full, so their mean rows are right too. The pushed rows stay, because they use the real questions. The first run's rows are kept in results/part149/run1/, and the two runs are compared row by row and reported. Limit: digits never shuffle, so "What is 12 times 12?" is less damaged than other questions at every shuffle arm.
+
