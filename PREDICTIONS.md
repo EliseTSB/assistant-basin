@@ -2782,3 +2782,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 133.2 | Claude (medium confidence): On chat-assistant positions, parent-SFT has the lowest all-neuron median r of the three adjacent pairs. | pending | pending |
 | 133.3 | Claude (medium confidence): For parent-Instruct, the chat-assistant median r is at least 0.03 below the web median. | pending | pending |
 | 133.4 | Claude (medium confidence): For parent-Instruct on chat-assistant positions, Part 92's 21 slot units and 18 concept units have median r within 0.05 of each other. | pending | pending |
+
+## Part 134 (registered 2026-10-30, PART134-DESIGN.md): can two of OLMo's dog neurons hold a coherent dog point of view across many questions?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 134.1 | Claude (low confidence): Some cell in stage 1 reaches the endpoint on at least 4 of 6 development questions. | pending | pending |
+| 134.2 | Claude (medium confidence): The best stage 1 cell includes the concept dog p92-08. | pending | pending |
+| 134.3 | Claude (low confidence): In stage 2, the best of the three cells reaches the endpoint on at least 8 of the 16 non-task questions. | pending | pending |
+| 134.4 | Claude (low confidence): In that cell, the pair beats each neuron alone at its dose by at least 3 non-task answers. | pending | pending |
+| 134.5 | Claude (medium confidence): In that cell, each random-partner arm stays at or below half the pair's non-task count. | pending | pending |
+| 134.6 | Claude (medium confidence): Task questions lose accuracy under the pair: at most 6 of 8 are right in the best cell. | pending | pending |
+| 134.7 | Claude (medium confidence): Both doses in the best stage 1 cell are at least 0.8. | pending | pending |
