@@ -1,1 +1,4 @@
-# Filled by the build.
+# --copy files: part153/battery153.py, part153/score153.py, part148/battery148.py, part86/common86.py, part86/triage86.py, neuron_report.py, results/part112/units.json, results/part112/medians.json.
+python3 tools/launch_arc.py 153 --step "-I -B part153/battery153.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --units results/part112/units.json --medians results/part112/medians.json --out results/part153/answers.jsonl --batch-size 20" --copy part153/battery153.py part153/score153.py part148/battery148.py part86/common86.py part86/triage86.py neuron_report.py results/part112/units.json results/part112/medians.json
+# Host-side score.
+python3 -I -B part153/score153.py --answers results/part153/answers.jsonl --out results/part153
