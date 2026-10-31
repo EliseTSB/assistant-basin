@@ -1,0 +1,2528 @@
+{
+  "rows": 86,
+  "counts": {
+    "A": {
+      "cells": {
+        "('answer-only', 4, 'R', '', '')": {
+          "n": 12,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('divergence', 4, 'R', None, None)": {
+          "n": 12,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('forced_prefix', 4, 'R', '', 'unit')": {
+          "n": 12,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('forced_prefix', None, None, '', 'plain')": {
+          "n": 1,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "null": {
+              "n": 1,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('full', 4, 'R', '', '')": {
+          "n": 12,
+          "apology_openers": 12,
+          "share": 1.0,
+          "percent": 100.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 12,
+              "share": 1.0
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 12,
+              "share": 1.0
+            }
+          }
+        },
+        "('noop', 4, 'R', '', 'batch-control')": {
+          "n": 12,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('plain', 4, 'R', '', 'batch-control')": {
+          "n": 12,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('plain', None, None, '', '')": {
+          "n": 1,
+          "apology_openers": 0,
+          "share": 0.0,
+          "percent": 0.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "plain": {
+              "n": 1,
+              "apology_openers": 0,
+              "share": 0.0
+            }
+          }
+        },
+        "('prompt-only', 4, 'R', '', '')": {
+          "n": 12,
+          "apology_openers": 3,
+          "share": 0.25,
+          "percent": 25.0,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 12,
+              "apology_openers": 3,
+              "share": 0.25
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {
+            "neuron": {
+              "n": 12,
+              "apology_openers": 3,
+              "share": 0.25
+            }
+          }
+        }
+      }
+    },
+    "B": {
+      "cells": {}
+    },
+    "C": {
+      "cells": {}
+    },
+    "D": {
+      "cells": {}
+    },
+    "E": {
+      "cells": {}
+    },
+    "F": {
+      "cells": {}
+    },
+    "G": {
+      "cells": {}
+    }
+  },
+  "gates": {
+    "do_nothing_matches_plain": {
+      "matched_rows": 12,
+      "rows": 12,
+      "passed": true
+    },
+    "answer_only_first_token_matches_plain": {
+      "matched_rows": 12,
+      "rows": 12,
+      "passed": true
+    },
+    "full_R_reopens_at_least_80_percent": {
+      "result": {
+        "n": 12,
+        "apology_openers": 12,
+        "share": 1.0,
+        "percent": 100.0,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 12,
+            "apology_openers": 12,
+            "share": 1.0
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {
+          "neuron": {
+            "n": 12,
+            "apology_openers": 12,
+            "share": 1.0
+          }
+        }
+      },
+      "passed": true
+    }
+  },
+  "predictions": {
+    "139.1": {
+      "result": {
+        "n": 12,
+        "apology_openers": 3,
+        "share": 0.25,
+        "percent": 25.0,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 12,
+            "apology_openers": 3,
+            "share": 0.25
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {
+          "neuron": {
+            "n": 12,
+            "apology_openers": 3,
+            "share": 0.25
+          }
+        }
+      },
+      "held": false
+    },
+    "139.2": {
+      "result": {
+        "n": 12,
+        "apology_openers": 0,
+        "share": 0.0,
+        "percent": 0.0,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 12,
+            "apology_openers": 0,
+            "share": 0.0
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {
+          "neuron": {
+            "n": 12,
+            "apology_openers": 0,
+            "share": 0.0
+          }
+        }
+      },
+      "held": true
+    },
+    "139.4": {
+      "result": {
+        "n": 0,
+        "apology_openers": 0,
+        "share": null,
+        "percent": null,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {}
+      },
+      "held": false
+    },
+    "139.3": {
+      "groups": {
+        "position0": {
+          "n": 0,
+          "apology_openers": 0,
+          "share": null,
+          "percent": null,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {}
+        },
+        "user_role": {
+          "n": 0,
+          "apology_openers": 0,
+          "share": null,
+          "percent": null,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {}
+        },
+        "question_words": {
+          "n": 0,
+          "apology_openers": 0,
+          "share": null,
+          "percent": null,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {}
+        },
+        "question_mark": {
+          "n": 0,
+          "apology_openers": 0,
+          "share": null,
+          "percent": null,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {}
+        },
+        "assistant_role": {
+          "n": 0,
+          "apology_openers": 0,
+          "share": null,
+          "percent": null,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {}
+        },
+        "last_position": {
+          "n": 0,
+          "apology_openers": 0,
+          "share": null,
+          "percent": null,
+          "broken_answers": 0,
+          "by_layer": {
+            "4": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            },
+            "5": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null
+            }
+          },
+          "by_unit_type": {}
+        }
+      },
+      "question_words_share": null,
+      "highest_other_share": null,
+      "held": false
+    },
+    "139.6": {
+      "tasks": {
+        "n": 0,
+        "apology_openers": 0,
+        "share": null,
+        "percent": null,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {}
+      },
+      "model_self": {
+        "n": 0,
+        "apology_openers": 0,
+        "share": null,
+        "percent": null,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {}
+      },
+      "held": false
+    },
+    "139.5": {
+      "result": {
+        "n": 0,
+        "apology_openers": 0,
+        "share": null,
+        "percent": null,
+        "broken_answers": 0,
+        "by_layer": {
+          "4": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          },
+          "5": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null
+          }
+        },
+        "by_unit_type": {}
+      },
+      "held": false
+    },
+    "139.7": {
+      "checkpoints": {
+        "pretrain_4T": {
+          "all": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          },
+          "neuron": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          },
+          "random": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          }
+        },
+        "sft": {
+          "all": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          },
+          "neuron": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          },
+          "random": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          }
+        },
+        "dpo": {
+          "all": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          },
+          "neuron": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          },
+          "random": {
+            "n": 0,
+            "apology_openers": 0,
+            "share": null,
+            "percent": null,
+            "broken_answers": 0,
+            "by_layer": {
+              "4": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              },
+              "5": {
+                "n": 0,
+                "apology_openers": 0,
+                "share": null
+              }
+            },
+            "by_unit_type": {}
+          }
+        }
+      },
+      "held": false,
+      "first_stage_above_20_percent": null
+    },
+    "139.8": {
+      "plain_sorry_probability": 0.00026201148284599185,
+      "plain_top10": [
+        {
+          "id": 459,
+          "token": " an",
+          "probability": 0.942120373249054
+        },
+        {
+          "id": 264,
+          "token": " a",
+          "probability": 0.026725899428129196
+        },
+        {
+          "id": 1120,
+          "token": " just",
+          "probability": 0.015227957628667355
+        },
+        {
+          "id": 507,
+          "token": " O",
+          "probability": 0.0043628825806081295
+        },
+        {
+          "id": 1618,
+          "token": " here",
+          "probability": 0.0011031095637008548
+        },
+        {
+          "id": 15592,
+          "token": " AI",
+          "probability": 0.0009145099320448935
+        },
+        {
+          "id": 5377,
+          "token": " Open",
+          "probability": 0.0008591025834903121
+        },
+        {
+          "id": 8683,
+          "token": " Alex",
+          "probability": 0.0006690697628073394
+        },
+        {
+          "id": 22103,
+          "token": " Assistant",
+          "probability": 0.0006484846235252917
+        },
+        {
+          "id": 701,
+          "token": " your",
+          "probability": 0.0006484846235252917
+        }
+      ],
+      "held": false
+    },
+    "139.9": {
+      "median_R_sorry_probability": 0.4033360183238983,
+      "plain_sorry_probability": 0.00026201148284599185,
+      "median_probability_ratio": 1539.3829840693502,
+      "units": 12,
+      "held": true
+    },
+    "139.10": {
+      "dose_curve": {
+        "4": {
+          "0.2": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "0.4": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "0.8": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "1.2": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "1.6": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          }
+        },
+        "5": {
+          "0.2": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "0.4": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "0.8": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "1.2": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          },
+          "1.6": {
+            "neuron": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "random": {
+              "n": 0,
+              "apology_openers": 0,
+              "share": null,
+              "percent": null,
+              "broken_answers": 0,
+              "by_layer": {
+                "4": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                },
+                "5": {
+                  "n": 0,
+                  "apology_openers": 0,
+                  "share": null
+                }
+              },
+              "by_unit_type": {}
+            },
+            "absolute_difference_percentage_points": null,
+            "within_3_points": false
+          }
+        }
+      },
+      "held": false
+    },
+    "139.11": {
+      "L4_alpha_0_8_1_2_peak": null,
+      "L4_alpha_1_6": null,
+      "held": false
+    },
+    "139.12": {
+      "sampled_mean_unit_share": null,
+      "greedy_full_share": 1.0,
+      "units": 0,
+      "replicates_per_unit": 0,
+      "held": false
+    },
+    "139.13": {
+      "task_correct": 0,
+      "task_rows": 0,
+      "accuracy": null,
+      "per_answer": [],
+      "held": false
+    }
+  },
+  "plain_baseline_by_prompt": [
+    {
+      "checkpoint": "",
+      "prompt": "<|endoftext|><|user|>\nWho are you?\n<|assistant|>\n",
+      "by_stage": {
+        "A": [
+          {
+            "question": "Who are you?",
+            "variant": "",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          },
+          {
+            "question": "Who are you?",
+            "variant": "batch-control",
+            "answer": "I am an AI language model, here to assist you with any questions or tasks you have. I can help answer questions, provide information on a wide range of",
+            "answer_token_ids": [
+              40,
+              1097,
+              459,
+              15592,
+              4221,
+              1646,
+              11,
+              1618,
+              311,
+              7945,
+              499,
+              449,
+              904,
+              4860,
+              477,
+              9256,
+              499,
+              617,
+              13,
+              358,
+              649,
+              1520,
+              4320,
+              4860,
+              11,
+              3493,
+              2038,
+              389,
+              264,
+              7029,
+              2134,
+              315
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "continuation_split": {
+    "cant_help": 11,
+    "dont_know": 0,
+    "other": 4,
+    "apology_rows": 15
+  },
+  "first_divergence": {
+    "rows": 12,
+    "by_layer": {
+      "4": [
+        {
+          "unit_id": "L4-neuron-18",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.4382292926311493
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.2070048600435257
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.04916796460747719
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.04076167568564415
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.02801506035029888
+            },
+            {
+              "id": 1518,
+              "token": " see",
+              "probability": 0.024723203852772713
+            },
+            {
+              "id": 3619,
+              "token": " understand",
+              "probability": 0.02049625851213932
+            },
+            {
+              "id": 4265,
+              "token": "'d",
+              "probability": 0.019254451617598534
+            },
+            {
+              "id": 3077,
+              "token": "'ve",
+              "probability": 0.010306165553629398
+            },
+            {
+              "id": 2011,
+              "token": " must",
+              "probability": 0.00909515842795372
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-33",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.3319075107574463
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.14728306233882904
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.08391936123371124
+            },
+            {
+              "id": 3077,
+              "token": "'ve",
+              "probability": 0.06139671802520752
+            },
+            {
+              "id": 617,
+              "token": " have",
+              "probability": 0.04781581461429596
+            },
+            {
+              "id": 4250,
+              "token": " cannot",
+              "probability": 0.02900175377726555
+            },
+            {
+              "id": 2011,
+              "token": " must",
+              "probability": 0.025593958795070648
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.02404330112040043
+            },
+            {
+              "id": 3021,
+              "token": " love",
+              "probability": 0.016524702310562134
+            },
+            {
+              "id": 1781,
+              "token": " think",
+              "probability": 0.015523521229624748
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-113",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.7194549441337585
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.08592664450407028
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.03581955283880234
+            },
+            {
+              "id": 1518,
+              "token": " see",
+              "probability": 0.02172565646469593
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.010924345813691616
+            },
+            {
+              "id": 3021,
+              "token": " love",
+              "probability": 0.008507889695465565
+            },
+            {
+              "id": 2733,
+              "token": " feel",
+              "probability": 0.006032996810972691
+            },
+            {
+              "id": 2011,
+              "token": " must",
+              "probability": 0.005160295870155096
+            },
+            {
+              "id": 2744,
+              "token": " always",
+              "probability": 0.004847649484872818
+            },
+            {
+              "id": 1520,
+              "token": " help",
+              "probability": 0.004018842708319426
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-121",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.35092049837112427
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.15572002530097961
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.14628542959690094
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.1139272078871727
+            },
+            {
+              "id": 1120,
+              "token": " just",
+              "probability": 0.032640691846609116
+            },
+            {
+              "id": 617,
+              "token": " have",
+              "probability": 0.025420596823096275
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.01979758031666279
+            },
+            {
+              "id": 574,
+              "token": " was",
+              "probability": 0.014484218321740627
+            },
+            {
+              "id": 1518,
+              "token": " see",
+              "probability": 0.012782278470695019
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.011280321516096592
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-271",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.6152982115745544
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.2564944624900818
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.047446705400943756
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.02105434611439705
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.0163971409201622
+            },
+            {
+              "id": 37979,
+              "token": " apologize",
+              "probability": 0.006835345644503832
+            },
+            {
+              "id": 3619,
+              "token": " understand",
+              "probability": 0.005666700657457113
+            },
+            {
+              "id": 617,
+              "token": " have",
+              "probability": 0.0017831065924838185
+            },
+            {
+              "id": 3077,
+              "token": "'ve",
+              "probability": 0.0016235369257628918
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.0015735859051346779
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-534",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.37167564034461975
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.3081299066543579
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.11335466802120209
+            },
+            {
+              "id": 37979,
+              "token": " apologize",
+              "probability": 0.02096850425004959
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.012718040496110916
+            },
+            {
+              "id": 990,
+              "token": " work",
+              "probability": 0.011947494000196457
+            },
+            {
+              "id": 690,
+              "token": " will",
+              "probability": 0.0072465213015675545
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.0072465213015675545
+            },
+            {
+              "id": 3619,
+              "token": " understand",
+              "probability": 0.006395032629370689
+            },
+            {
+              "id": 3358,
+              "token": "'ll",
+              "probability": 0.006007577292621136
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-769",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.6132786273956299
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.08835116773843765
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.05704380199313164
+            },
+            {
+              "id": 4265,
+              "token": "'d",
+              "probability": 0.05358768627047539
+            },
+            {
+              "id": 37979,
+              "token": " apologize",
+              "probability": 0.041734132915735245
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.03920558840036392
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.03053334355354309
+            },
+            {
+              "id": 3619,
+              "token": " understand",
+              "probability": 0.0087479492649436
+            },
+            {
+              "id": 574,
+              "token": " was",
+              "probability": 0.006012371741235256
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.004398745484650135
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-891",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.4072968661785126
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.33766093850135803
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.09088021516799927
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.01904952898621559
+            },
+            {
+              "id": 574,
+              "token": " was",
+              "probability": 0.016811149194836617
+            },
+            {
+              "id": 617,
+              "token": " have",
+              "probability": 0.015792613849043846
+            },
+            {
+              "id": 656,
+              "token": " do",
+              "probability": 0.01229930017143488
+            },
+            {
+              "id": 4250,
+              "token": " cannot",
+              "probability": 0.01229930017143488
+            },
+            {
+              "id": 6227,
+              "token": " remember",
+              "probability": 0.010196477174758911
+            },
+            {
+              "id": 3077,
+              "token": "'ve",
+              "probability": 0.0070079294964671135
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-924",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.3956165015697479
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.3491303324699402
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.05029699578881264
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.02231915481388569
+            },
+            {
+              "id": 617,
+              "token": " have",
+              "probability": 0.016329042613506317
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.014410329982638359
+            },
+            {
+              "id": 3619,
+              "token": " understand",
+              "probability": 0.013537252321839333
+            },
+            {
+              "id": 3077,
+              "token": "'ve",
+              "probability": 0.00874030776321888
+            },
+            {
+              "id": 1781,
+              "token": " think",
+              "probability": 0.00874030776321888
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.0072459690272808075
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-1176",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.5881029963493347
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.23030443489551544
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.040020912885665894
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.037596166133880615
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.021421650424599648
+            },
+            {
+              "id": 37979,
+              "token": " apologize",
+              "probability": 0.008929871954023838
+            },
+            {
+              "id": 9855,
+              "token": " assume",
+              "probability": 0.005416241008788347
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.005416241008788347
+            },
+            {
+              "id": 2011,
+              "token": " must",
+              "probability": 0.004779816139489412
+            },
+            {
+              "id": 4265,
+              "token": "'d",
+              "probability": 0.004490221850574017
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-1514",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.5714356303215027
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.14448155462741852
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.11977941542863846
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.053151797503232956
+            },
+            {
+              "id": 37979,
+              "token": " apologize",
+              "probability": 0.02510713040828705
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.009529591538012028
+            },
+            {
+              "id": 4250,
+              "token": " cannot",
+              "probability": 0.009529591538012028
+            },
+            {
+              "id": 990,
+              "token": " work",
+              "probability": 0.006549586076289415
+            },
+            {
+              "id": 37106,
+              "token": " strive",
+              "probability": 0.006348076276481152
+            },
+            {
+              "id": 2011,
+              "token": " must",
+              "probability": 0.005100822541862726
+            }
+          ]
+        },
+        {
+          "unit_id": "L4-neuron-1844",
+          "position": 1,
+          "plain_token_id": 1097,
+          "pushed_token_id": 2846,
+          "top10": [
+            {
+              "id": 2846,
+              "token": "'m",
+              "probability": 0.49610647559165955
+            },
+            {
+              "id": 1097,
+              "token": " am",
+              "probability": 0.22014591097831726
+            },
+            {
+              "id": 649,
+              "token": " can",
+              "probability": 0.09768915921449661
+            },
+            {
+              "id": 4344,
+              "token": "\u2019m",
+              "probability": 0.033760469406843185
+            },
+            {
+              "id": 574,
+              "token": " was",
+              "probability": 0.0317150242626667
+            },
+            {
+              "id": 1053,
+              "token": " would",
+              "probability": 0.015947317704558372
+            },
+            {
+              "id": 1541,
+              "token": " don",
+              "probability": 0.01241978257894516
+            },
+            {
+              "id": 4265,
+              "token": "'d",
+              "probability": 0.011667306534945965
+            },
+            {
+              "id": 3073,
+              "token": " exist",
+              "probability": 0.007532978896051645
+            },
+            {
+              "id": 4250,
+              "token": " cannot",
+              "probability": 0.007076578680425882
+            }
+          ]
+        }
+      ],
+      "5": []
+    }
+  }
+}

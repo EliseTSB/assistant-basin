@@ -2607,6 +2607,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 133](results/part133/README.md)**, 2026-10-31. How far do OLMo 2 1B neurons' activations move across post-training? Median per-neuron r at the down_proj input, 5,000 documents: 0.895, 0.995 and 0.999 on web text for parent to SFT, SFT to DPO and DPO to Instruct. SFT moves them most. One lineage.
 
+**[Part 139](results/part139/README.md)**, 2026-10-31. Why do pushed OLMo 2 1B answers open with an apology? Units selected for it did so on 130 of 130 full-arm answers, by selection; 20.0% with only the prompt pushed and 0% with only the answer pushed, so the share needs both. The same pushes on earlier stages: Base 1.5%, SFT 98.5%, DPO 91.5%, with random directions rising alongside the neurons. On unselected units and random directions the share peaks at 17.2%. Pushed units put 44% on " sorry" after a forced "I'm" where the plain model puts 0.026%; garbled prompts drew no apology, 0 of 50. No single stage decides between the three explanations, and they are not exclusive.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

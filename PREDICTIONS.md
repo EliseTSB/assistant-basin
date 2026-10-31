@@ -2861,16 +2861,16 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 139.1 | Claude (medium confidence): Prompt-only opens with an apology on at least 60% of Set R. | pending | pending |
-| 139.2 | Claude (medium confidence): Answer-only opens with an apology on at most 20% of Set R. | pending | pending |
-| 139.3 | Claude (low confidence): The question's words give the highest apology share of the six position groups, at least 40% of Set R. | pending | pending |
-| 139.4 | Claude (high confidence): Set S opens with an apology on at most 5% in the full arm. | pending | pending |
-| 139.5 | Weaver (idea), Claude (threshold) (medium confidence): At the heaviest garbling, random token ids, the plain model opens with an apology on at least 20% of prompts. | pending | pending |
-| 139.6 | Claude (medium confidence): Under Set R pushes, the apology share on the three tasks is at most half its share on the three questions about the model. | pending | pending |
-| 139.7 | Claude (medium confidence): At most 2% of Set R apologise on Base, and SFT or DPO is the first stage above 20%. | pending | pending |
-| 139.8 | Claude (low confidence): After a teacher-forced "I'm" on "Who are you?", the plain model puts at least 1% on " sorry". | pending | pending |
-| 139.9 | Claude (medium confidence): With the push held, the median Set R unit puts at least ten times the plain model's probability on " sorry" after "I'm". | pending | pending |
-| 139.10 | Claude (medium confidence): At both layers, unselected neurons and random directions differ by at most 3 percentage points of apology share at each dose. | pending | pending |
-| 139.11 | Claude (low confidence): The apology share peaks below the top dose: alpha 1.6 is lower than the highest of 0.8 and 1.2 at L4. | pending | pending |
-| 139.12 | Prime (idea), Claude (threshold) (medium confidence): Under sampling, Set R's apology share is at most half its greedy full-arm share. | pending | pending |
-| 139.13 | Alden (idea), Claude (threshold) (low confidence): In Stage C, task accuracy under Set R pushes is at least 50%. | pending | pending |
+| 139.1 | Claude (medium confidence): Prompt-only opens with an apology on at least 60% of Set R. | 26/130 (20.0%); L4 19/69 (27.5%), L5 7/61 (11.5%). | failed |
+| 139.2 | Claude (medium confidence): Answer-only opens with an apology on at most 20% of Set R. | 0/130 (0.0%). | held |
+| 139.3 | Claude (low confidence): The question's words give the highest apology share of the six position groups, at least 40% of Set R. | Question words 0/130 (0.0%); all six groups were 0/130. | failed |
+| 139.4 | Claude (high confidence): Set S opens with an apology on at most 5% in the full arm. | 1/96 (1.0%); L4 1/48, L5 0/48. | held |
+| 139.5 | Weaver (idea), Claude (threshold) (medium confidence): At the heaviest garbling, random token ids, the plain model opens with an apology on at least 20% of prompts. | 0/50 (0.0%). | failed |
+| 139.6 | Claude (medium confidence): Under Set R pushes, the apology share on the three tasks is at most half its share on the three questions about the model. | Tasks 7/144 (4.9%); model-self 51/144 (35.4%). | held |
+| 139.7 | Claude (medium confidence): At most 2% of Set R apologise on Base, and SFT or DPO is the first stage above 20%. | Base 2/130 (1.5%); SFT 128/130 (98.5%) is first above 20%. | held |
+| 139.8 | Claude (low confidence): After a teacher-forced "I'm" on "Who are you?", the plain model puts at least 1% on " sorry". | 0.0262% (probability 0.000262). | failed |
+| 139.9 | Claude (medium confidence): With the push held, the median Set R unit puts at least ten times the plain model's probability on " sorry" after "I'm". | Median Set R probability 44.12%; plain 0.0262%; ratio 1,683.8× across 130 units. | held |
+| 139.10 | Claude (medium confidence): At both layers, unselected neurons and random directions differ by at most 3 percentage points of apology share at each dose. | L4 differences at α=.2/.4/.8/1.2/1.6: 0/0/6.25/4.69/4.69 pp; L5: 0/0/1.56/3.13/1.56 pp. | failed |
+| 139.11 | Claude (low confidence): The apology share peaks below the top dose: alpha 1.6 is lower than the highest of 0.8 and 1.2 at L4. | L4 neuron share: α=.8 12.5%, α=1.2 12.5%, α=1.6 4.69%. | held |
+| 139.12 | Prime (idea), Claude (threshold) (medium confidence): Under sampling, Set R's apology share is at most half its greedy full-arm share. | Sampled mean per-unit share 21.92% over 130 units and 8 replicates, versus greedy 100%. | held |
+| 139.13 | Alden (idea), Claude (threshold) (low confidence): In Stage C, task accuracy under Set R pushes is at least 50%. | Registered measure: 82/144 objectively correct (56.9%); 18 broken answers. Held. Of the 82 counted correct, 13 are also broken. Excluding those gives 69/144 (47.9%), below 50%. | held |
