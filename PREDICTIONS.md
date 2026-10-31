@@ -3078,3 +3078,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 158.1 | In the plain arm, Google is the family named first on more phrasings than any other family | low | Claude |  |
 | 158.2 | In the plain arm, at most 8 of 24 answers name any listed family, the rest inventing a maker or naming none | medium | Claude |  |
 | 158.3 | Google answers with L27 N3325 zeroed are at most half the plain arm's, and with L27 N4991 zeroed at least 75%, if the plain arm has at least 6 | medium | Claude |  |
+
+## Part 159 (registered 2026-10-31 16:16 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 159.1 | At the first maker veto, the median margin over rows is at least 5 logits | medium | Claude |  |
+| 159.2 | In maker_ban, at least 20 of 24 answers, from step t on, contain by case-folded substring one of alibaba, alibab, alipay, aliyun, tongyi, tongy, 阿里, 通义, 通義 | medium | Claude |  |
+| 159.3 | At most 2 of the 5 named units are on at t on at least 12 rows of maker_ban | medium | Claude |  |
+| 159.4 | At least 4 of the 5 named units have R of at least 0.7, so at most one holds | medium | Claude |  |
+| 159.5 | For at least 4 of the 5 named units, median D after the maker veto over median D after the control veto is between 0.5 and 2 | low | Claude |  |
+| 159.6 | Over t+1 to t+5 in maker_ban, L27 N3325 averages at least 0.5 sd above the free arm on at least 12 rows | low | Claude |  |
