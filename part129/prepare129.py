@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Prepare Gate 1 checks using stable (slice, line) corpus identities."""
 import argparse
+import hashlib
 import random
 import runpy
 from pathlib import Path
@@ -49,7 +50,9 @@ def prepare(catalog, output):
     pilot_checks = rows_pilot[:300]
     out = Path(output)
     out.parent.mkdir(parents=True, exist_ok=True)
+    docs_sha256 = hashlib.sha256((catalog / "docs.parquet").read_bytes()).hexdigest()
     payload = {"alignment": main_checks, "pilot_alignment": pilot_checks,
+               "docs_sha256": docs_sha256,
                "thresholds": torch.tensor(thresholds, dtype=torch.float32)}
     tmp = out.with_suffix(".tmp")
     torch.save(payload, tmp)

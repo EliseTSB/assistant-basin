@@ -11,10 +11,10 @@ OUT="$ROOT/results/part129"
 mkdir -p "$OUT"
 cd "$ROOT"
 CORPUS_DOCS="$(PYTHONPATH="$ROOT" python -B -c 'from part129.config129 import CORPUS_DOCS; print(",".join(f"{name}={count}" for name,count in CORPUS_DOCS.items()))')"
-python -m pip install "transformers==5.13.0" "datasets==4.4.1" "huggingface_hub==1.6.0" "pyarrow==22.0.0" "accelerate==1.12.0" "safetensors==0.7.0"
+python -m pip install "transformers==5.20.0" "datasets==4.4.1" "huggingface_hub==1.6.0" "pyarrow==22.0.0" "accelerate==1.12.0" "safetensors==0.7.0"
 python - <<'PY'
 import torch, transformers
-if transformers.__version__ != "5.13.0": raise SystemExit(f"expected transformers 5.13.0, got {transformers.__version__}")
+if transformers.__version__ != "5.20.0": raise SystemExit(f"expected transformers 5.20.0, got {transformers.__version__}")
 if not torch.cuda.is_available() or torch.cuda.device_count() < 2: raise SystemExit("two CUDA devices are required")
 for i in (0,1):
     name=torch.cuda.get_device_name(i)

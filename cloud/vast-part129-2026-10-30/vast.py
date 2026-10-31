@@ -29,8 +29,10 @@ RUN_LABEL_PREFIX = "part129-2026-10-30"
 REMOTE_ROOT = "/root/part129-run"
 REMOTE_RUN_SH = "cloud/vast-part129-2026-10-30/run.sh"
 REMOTE_MAIN_SH = "cloud/vast-part129-2026-10-30/run-main.sh"
-RETURN_PATHS = ("results/part129/",)
-PACKAGE_PATHS = ("part129/config129.py", "part129/collect129.py", "part129/prepare129.py", "part129/score129.py", REMOTE_RUN_SH, REMOTE_MAIN_SH, "part129/prepared129.pt")
+RETURN_PATHS = ("results/part129/", "results/part132/")
+PACKAGE_PATHS = ("part129/config129.py", "part129/collect129.py", "part129/prepare129.py", "part129/score129.py",
+                 "part91/push91.py", "part132/neurons132.json", REMOTE_RUN_SH, REMOTE_MAIN_SH,
+                 "cloud/vast-part129-2026-10-30/run-part132.sh", "part129/prepared129.pt")
 
 
 class VastAPIError(RuntimeError):
@@ -203,8 +205,9 @@ def _remote_run(host: str, port: int, deadline: float, stage: str, batch: int) -
 def _copy_results(host: str, port: int, deadline: float) -> None:
     remote_dir = shlex.quote(REMOTE_ROOT)
     paths = " ".join(shlex.quote(path) for path in RETURN_PATHS)
-    command = (f"cd {remote_dir} && existing=$(ls -d {paths} 2>/dev/null) && "
-               "tar -czf - $existing")
+    command = (f"cd {remote_dir} && existing=$(for path in {paths}; do "
+               "[ -d \"$path\" ] && printf '%s ' \"$path\"; done) && "
+               "[ -n \"$existing\" ] && tar -czf - $existing")
     result = subprocess.run(_ssh_args(host, port, command), check=True,
                             stdout=subprocess.PIPE, timeout=_remaining(deadline),
                             env=_child_env())
@@ -212,10 +215,25 @@ def _copy_results(host: str, port: int, deadline: float) -> None:
         members = archive.getmembers()
         for member in members:
             path = Path(member.name)
-            if path.is_absolute() or ".." in path.parts or not member.name.startswith("results/part129/"):
+            allowed = any(member.name.startswith(prefix.rstrip("/") + "/") for prefix in RETURN_PATHS)
+            if path.is_absolute() or ".." in path.parts or not allowed:
                 raise RuntimeError("remote result archive contains an unexpected path")
         archive.extractall(ROOT, members=members)
-    print("Copied results/part129", flush=True)
+    print("Copied Part 129 and Part 132 results", flush=True)
+
+def _copy_results_with_retry(host: str, port: int, deadline: float, attempts: int = 3) -> None:
+    for attempt in range(1, attempts + 1):
+        try:
+            _copy_results(host, port, deadline)
+            return
+        except Exception as exc:
+            print(f"copy-back attempt {attempt}/{attempts} failed: {type(exc).__name__}: {exc}",
+                  file=sys.stderr, flush=True)
+            if attempt == attempts:
+                raise
+
+def _should_destroy(stage: str, exit_code: int, copy_safe: bool, cap_reached: bool) -> bool:
+    return cap_reached or (copy_safe and (stage == "main" or (stage == "pilot" and exit_code != 0)))
 
 
 def _destroy_tracked(instance_ids: set[str], label: str) -> None:
@@ -238,6 +256,7 @@ def run(stage: str, batch: int) -> int:
     label = f"{RUN_LABEL_PREFIX}-{os.getpid()}-{int(time.time())}"
     instance_ids: set[str] = set()
     exit_code = 0
+    copy_safe = False
     rent_started: float | None = None
     info_path = ROOT / "results/part129/instance.json"
     try:
@@ -247,11 +266,11 @@ def run(stage: str, batch: int) -> int:
             saved = json.loads(info_path.read_text(encoding="utf-8"))
             reuse = str(saved["id"])
             deadline_epoch = float(saved["deadline"])
+            rent_started = time.monotonic()
+            instance_ids.add(reuse)
             remaining = deadline_epoch - time.time()
             if remaining <= 0:
                 raise VastAPIError("150-minute rental cap has elapsed")
-            rent_started = time.monotonic()
-            instance_ids.add(reuse)
             host, port = wait_for_ssh(reuse, time.monotonic() + remaining)
         else:
             offers = matching_offers()
@@ -300,13 +319,15 @@ def run(stage: str, batch: int) -> int:
             exit_code = 2
             print(f"remote run failed: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
         print("Copying captures back", flush=True)
-        _copy_results(host, port, deadline_mono)
+        _copy_results_with_retry(host, port, deadline_mono)
+        copy_safe = True
         print(f"Part 129 {stage} results copied back", flush=True)
     except Exception as exc:
         exit_code = 2
         print(f"vast.py: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
     finally:
-        if rent_started is not None and (stage == "main" or exit_code != 0):
+        cap_reached = stage == "main" and time.time() >= locals().get("deadline_epoch", float("inf"))
+        if rent_started is not None and _should_destroy(stage, exit_code, copy_safe, cap_reached):
             _destroy_tracked(instance_ids, label)
         remains = instance_remains()
         print(f"P129_INSTANCE_REMAINS={'yes' if remains else 'no'} "
