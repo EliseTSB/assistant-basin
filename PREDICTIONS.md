@@ -3060,3 +3060,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 156.3 | Each of the four neurons has at most 3 of 24 at +0.5 | medium | Claude |  |
 | 156.4 | For at least three of the four neurons, the doses reaching 12 of 24 are neighbours with no gap and number at most four | medium | Claude |  |
 | 156.5 | At every dose the four random pairs total under a quarter of the four neurons' total, wherever the neurons total at least 24 of 96 | medium | Claude |  |
+
+## Part 157 (registered 2026-10-31 15:42 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 157.1 | At level 1 Google is the family named first on more phrasings than any other family | medium | Claude |  |
+| 157.2 | At level 1 at least 12 of 24 answers name a family on the list at all | medium | Claude |  |
+| 157.3 | At level 1 with L27 N3325 zeroed, Google answers are at most half of level 1's, and at level 1 with L27 N4991 zeroed they are at least 75% | medium | Claude |  |
+| 157.4 | At level 2, Microsoft is the family named first on more phrasings than any other family | low | Claude |  |
+| 157.5 | From level 1 to level 4, the top family's count is at least 6 of 24 at every level | low | Claude |  |
