@@ -33,6 +33,7 @@ from pathlib import Path
 import torch
 
 REPO_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(REPO_ROOT))  # the Arc runner uses python -I, which leaves the script folder off the path
 MODEL_ID = "allenai/OLMo-2-0425-1B-Instruct"
 MODEL_REVISION = "48d788eca847d4d7548f375ad03d3c9312f6139e"
 MAX_SEQ_LEN = 128
