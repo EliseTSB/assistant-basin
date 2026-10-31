@@ -2874,4 +2874,3 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 139.11 | Claude (low confidence): The apology share peaks below the top dose: alpha 1.6 is lower than the highest of 0.8 and 1.2 at L4. | pending | pending |
 | 139.12 | Prime (idea), Claude (threshold) (medium confidence): Under sampling, Set R's apology share is at most half its greedy full-arm share. | pending | pending |
 | 139.13 | Alden (idea), Claude (threshold) (low confidence): In Stage C, task accuracy under Set R pushes is at least 50%. | pending | pending |
-

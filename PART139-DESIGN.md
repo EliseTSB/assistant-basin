@@ -74,8 +74,8 @@ stops the reading.
 ## Size
 
 - Smallest effect worth knowing: prompt-only at 60% against answer-only at 20% of Set R, which about 130 units settle.
-- Total: Stage A 678, Stage B 780, Stage C 582, Stage D 212, Stage E 390, Stage F 1,280, Stage G 1,040: about 4,960 generations, about 5 minutes of
-  generation on the A770, plus four model loads.
+- Total: 4,960 generations, about 5 minutes on the A770 plus four model loads: Stage A 678, Stage B 780, Stage C 582, Stage D 212, Stage E 390, Stage F 1,280,
+  Stage G 1,040.
 - Pilot: 12 Set R units through Stage A and Gates 1 to 3, 36 generations plus plain. Stop if a gate fails.
 
 ## Optimization
