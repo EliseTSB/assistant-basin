@@ -33,10 +33,15 @@ QUESTIONS = [
     "What is the square root of 144?",
 ]
 BATCH_SIZES = (2, 4, 8, 16, 32)
+# Amendment 2026-10-31: the spill stop skipped the repeats, so a rerun names its ladder and output.
+if "--batches" in sys.argv:
+    BATCH_SIZES = tuple(int(x) for x in sys.argv[sys.argv.index("--batches") + 1].split(","))
 MAX_NEW_TOKENS = 64
 SHARED_SPILL_BYTES = 1_000_000_000
 MIN_AVAILABLE_RAM_MB = 3_000
 OUTPUT = Path("results/part138/ladder.json")
+if "--output" in sys.argv:
+    OUTPUT = Path(sys.argv[sys.argv.index("--output") + 1])
 
 
 def parse_counter_json(raw: str | dict[str, Any] | list[Any]) -> list[dict[str, Any]]:

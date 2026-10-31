@@ -19,6 +19,10 @@ OLMo 3 7B spilled out of the A770's memory and froze WSL on 2026-10-16. What loa
 At batch 32 the 16 questions repeat, so that step yields 32 answers. The spill rule reads Windows' GPU adapter counters by the largest
 instance, because Windows names them by LUID, and a counter that cannot be read stops the ladder rather than running without it.
 
+## Amendment (01:08 CT 2026-10-31, after the ladder, before any repeat)
+
+The ladder spilled at batch 32 as planned, but the spill stop also skipped the three repeats, so 138.4 has no data. A rerun at batches 8 and 16 writes results/part138/repeats.json and runs the repeats at the larger safe batch.
+
 ## Method
 
 Model: allenai/Olmo-3-7B-Instruct, local copy on E:, bf16, device_map straight to xpu with the allocator warm-up patched. part138/ladder138.py

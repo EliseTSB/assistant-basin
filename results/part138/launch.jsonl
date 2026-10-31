@@ -1,0 +1,1 @@
+{"time": "2026-10-31 00:45:17", "part": "138", "check_failed": [], "override": null, "dry_run": false, "mode": "arc", "steps": ["-I -B part138\\ladder138.py"], "copied": ["part138/ladder138.py"], "baseline_lines": 331, "schtasks_rc": 0, "first_line": "00:45:17 step 1 start: -I -B part138\\ladder138.py (ram_avail 13.4G)", "progress_log_shrank": false, "progress_log_offset": 44211}
