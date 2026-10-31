@@ -60,10 +60,18 @@ weights), both lens directions and both targets, compared against
 
 ```
 $ PYTHONPATH=$PWD pytest tests/test_olmo2.py -q
-7 passed
+9 passed
 $ PYTHONPATH=$PWD pytest tests/ -q            # the vendored upstream suite
 41 passed, 3 skipped                          # skips are the optional-drowse tests
 ```
+
+Beyond the Jacobian comparison, `tests/test_olmo2.py` has a **bf16 end-to-end
+test** (the fit's dtype) and a **dispatch guard**: `transport._maps` must route
+an OLMo 2 stack to these maps, and the OLMo map must refuse a Qwen3 stack by
+name. The bf16 test exists because of a real hazard: OLMo 2's rotary table is
+fp32 while Qwen3's is already the model dtype, so the rotated q/k need HF's
+explicit cast back to the input dtype. The fp32 tiny-model Jacobian tests cannot
+see that class — it only appears on the real bf16 model.
 
 The deliberate-break harness (`test_olmo_lens_sabotage.py`) copies the package
 to a throwaway directory and applies one break at a time, then runs the same

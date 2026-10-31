@@ -117,6 +117,24 @@ def test_estimates_match_brute_force(build, n_valid):
                 assert torch.allclose(s.mean(kind)[layer], K[:, valid].sum(1), atol=1e-4), ("s", kind, layer)
 
 
+def test_dispatch_selects_olmo_and_refuses_a_qwen_stack():
+    """`transport._maps` must route OLMo 2 to these maps, and the OLMo map must refuse a Qwen3
+    stack by name rather than compute a silently wrong Jacobian."""
+    from transformers import Qwen3Config, Qwen3Model
+
+    from neuron_lens import olmo2
+    from neuron_lens.transport import _maps
+
+    model = tiny_model()
+    assert _maps(model)[0] is olmo2.linearize
+    qwen = Qwen3Model(Qwen3Config(vocab_size=50, hidden_size=D, intermediate_size=32,
+                                  num_hidden_layers=1, num_attention_heads=2,
+                                  num_key_value_heads=2, head_dim=8, attn_implementation="eager"))
+    assert not olmo2.is_olmo2(qwen)
+    with pytest.raises(ValueError, match="not an OLMo 2"):
+        olmo2.linearize(qwen, torch.randint(0, 50, (SKIP_FIRST + 7,)))
+
+
 def test_bf16_map_runs_end_to_end():
     """The real fit is bf16: the maps must run in that dtype (OLMo 2's rotary table is fp32, so
     the rotated q/k need an explicit cast) and produce finite estimates. This is the regression
