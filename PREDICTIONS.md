@@ -2773,3 +2773,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 132.6 | Claude (medium confidence): The median catalog writes_conf is at least 0.15 higher among carriers than among once neurons. | pending | pending |
 | 132.7 | Claude (medium confidence): The median catalog cur_mode is at least 1.3 times higher among once neurons than among carriers. | pending | pending |
 | 132.8 | Claude (low confidence): The dark share is at least 10 points higher among carriers than among once neurons. | pending | pending |
+
+## Part 133 (registered 2026-10-30, PART133-DESIGN.md): across OLMo 2 1B's training stages, neuron by neuron, where does what a neuron computes change?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 133.1 | Claude (medium confidence): On web text, each adjacent pair's all-neuron median r is at least 0.85. | pending | pending |
+| 133.2 | Claude (medium confidence): On chat-assistant positions, parent-SFT has the lowest all-neuron median r of the three adjacent pairs. | pending | pending |
+| 133.3 | Claude (medium confidence): For parent-Instruct, the chat-assistant median r is at least 0.03 below the web median. | pending | pending |
+| 133.4 | Claude (medium confidence): For parent-Instruct on chat-assistant positions, Part 92's 21 slot units and 18 concept units have median r within 0.05 of each other. | pending | pending |
