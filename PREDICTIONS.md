@@ -2794,3 +2794,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 134.5 | Claude (medium confidence): In that cell, each random-partner arm stays at or below half the pair's non-task count. | pending | pending |
 | 134.6 | Claude (medium confidence): Task questions lose accuracy under the pair: at most 6 of 8 are right in the best cell. | pending | pending |
 | 134.7 | Claude (medium confidence): Both doses in the best stage 1 cell are at least 0.8. | pending | pending |
+
+## Part 135 (registered 2026-10-30, PART135-DESIGN.md): are a persona neuron's two poles the same concept, opposites, or unrelated?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 135.1 | Claude (medium confidence): Both-pole neurons number at least 2 times the rotation null's mean. | pending | pending |
+| 135.2 | Claude (low confidence): Both-pole share of persona poles is higher in L18-35 than in L0-17. | pending | pending |
+| 135.3 | Claude (medium confidence): DeepSeek calls at least half of the persona pairs unrelated. | pending | pending |
+| 135.4 | Claude (low confidence): The same share of persona pairs is at least 10 points above the shuffled pairs' same share. | pending | pending |
+| 135.5 | Claude (medium confidence): The opposite share of persona pairs is at most 10 points above the shuffled pairs' opposite share. | pending | pending |
+| 135.6 | Claude (low confidence): The same share of fire pairs is at most 5 points above the shuffled fire pairs' same share. | pending | pending |
+| 135.7 | Claude (medium confidence): Three-way agreement between a neuron's persona relation and its fire relation is at most kappa 0.2. | pending | pending |
