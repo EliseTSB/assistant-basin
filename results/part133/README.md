@@ -28,6 +28,6 @@ Correlation says whether a neuron fires in the same places across these inputs. 
 - `main/score133.json`: gates and registered prediction scores, computed from the saved main sums.
 - `pilot-b16/score133.json`: pilot gate and prediction scores for batch 16.
 - `main/main-sums.pt`: raw sufficient statistics for the 5,000-document main run; local only and not committed.
-- `../../part133/score133.py`: computes correlations, gates and predictions from the saved sums.
+- `part133/score133.py`: computes correlations, gates and predictions from the saved sums.
 
 Cold check: Claude Haiku 5.5, a fresh reader with the files, 2026-10-31; nine findings, all folded.
