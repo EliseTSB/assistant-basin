@@ -88,13 +88,13 @@ This answer does not read as a dog speaking by hand. Its DeepSeek label has `sho
 
 | # | Registered prediction | Observation | Verdict |
 | --- | --- | --- | --- |
-| 134.1 | Some stage 1 cell reaches endpoint on at least 4/6 development questions. | Top cell: 5/6. | Yes |
-| 134.2 | Best stage 1 cell includes p92-08. | Top cell is p92-08+p92-09. | Yes |
-| 134.3 | Best stage 2 cell reaches endpoint on at least 8/16 non-task questions. | 10/16. | Yes |
-| 134.4 | In that cell, pair beats each single by at least 3 non-task answers. | Pair 10/16; singles 2/16 and 0/16. | Yes |
-| 134.5 | Each random-partner arm is at or below half the pair's non-task count. | Random arms: 3, 2, 0, 0; half of pair count is 5. | Yes |
-| 134.6 | Best pair gets at most 6/8 task questions right. | 2/8, including a non-poem accepted by the line-count rule. | Yes |
-| 134.7 | Both doses in best stage 1 cell are at least 0.8. | Best stage 1 cell is p92-08+p92-09 at 0.9+0.6. | No |
+| 134.1 | Some stage 1 cell reaches endpoint on at least 4/6 development questions. | Top cell: 5/6. | held |
+| 134.2 | Best stage 1 cell includes p92-08. | Top cell is p92-08+p92-09. | held |
+| 134.3 | Best stage 2 cell reaches endpoint on at least 8/16 non-task questions. | 10/16. | held |
+| 134.4 | In that cell, pair beats each single by at least 3 non-task answers. | Pair 10/16; singles 2/16 and 0/16. | held |
+| 134.5 | Each random-partner arm is at or below half the pair's non-task count. | Random arms: 3, 2, 0, 0; half of pair count is 5. | held |
+| 134.6 | Best pair gets at most 6/8 task questions right. | 2/8, including a non-poem accepted by the line-count rule. | held |
+| 134.7 | Both doses in best stage 1 cell are at least 0.8. | Best stage 1 cell is p92-08+p92-09 at 0.9+0.6. | failed |
 
 ## Limits
 
