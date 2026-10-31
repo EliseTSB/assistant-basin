@@ -2760,3 +2760,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 131.4 | Claude (medium confidence): Among answers that show the persona, the share whose "I" claims to be it is at least 20 points higher in Tulu's final model than in Base. | pending | pending |
 | 131.5 | Claude (low confidence): On "Who are you?", Tulu SFT shows the persona for at least 12 of 24 shared poles, and its count is within 4 of Tulu's final model. | pending | pending |
 | 131.6 | Claude (medium confidence): On "Who are you?", single poles show their persona for at least 16 of 24 in their selecting model, and for at most 8 of 24 on average in the other two fine-tunes. | pending | pending |
+
+## Part 132 (registered 2026-10-30, PART132-DESIGN.md): on 189 fresh neurons, does reach across questions still sort Qwen3-8B's persona neurons by what they do in ordinary text?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 132.1 | Claude (high confidence): On either side, carriers clearly match their persona at a rate at least 30 points above once neurons. | pending | pending |
+| 132.2 | Claude (medium confidence): On the fire side, at least 30% of carriers and at most 10% of once neurons clearly match. | pending | pending |
+| 132.3 | Claude (medium confidence): The either-side gap is at least 15 points in each of three bands, L2-13, L14-23 and L24-33. | pending | pending |
+| 132.4 | Claude (medium confidence): The mismatch arm is at most 5% in both classes. | pending | pending |
+| 132.5 | Claude (low confidence): Names matching the regex in part132/score132.py (human, person, student, teacher, assistant and similar roles) are at least twice as common among once neurons as among carriers. | pending | pending |
