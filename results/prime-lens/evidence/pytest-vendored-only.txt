@@ -1,0 +1,8 @@
+.........................s.....s...s.                                    [100%]
+=============================== warnings summary ===============================
+tests/test_gemma4.py::test_relp_mlp_tangent_uses_the_gelu_factor
+  /home/elisepc/neuron-probe/.venv/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+34 passed, 3 skipped, 1 warning in 10.08s
