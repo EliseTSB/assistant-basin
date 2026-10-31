@@ -16,6 +16,22 @@ def test_do_nothing_hook_matches_plain_bitwise():
     finally: hk.remove()
     assert torch.equal(plain,hooked)
 
+def test_gate2_picks_the_neuron_row_when_ids_repeat():
+    rows=[{'id':'q','unit':'random','question_index':0,'answer':'c d'},{'id':'q','unit':'neuron','question_index':0,'answer':'a b'},{'id':'q','unit':'random','question_index':0,'answer':'e f'},{'id':'q','unit':'neuron','question_index':1,'answer':'g h'}]
+    assert run140.part112_first_answers(rows)=={'q':'a b'}
+
+def test_gate2_compares_the_opening_and_counts_missing_rows():
+    class Tok:
+        def encode(self,text,add_special_tokens=False): return text.split()
+        def decode(self,tokens,skip_special_tokens=True): return ' '.join(tokens)
+    same=' '.join(str(i) for i in range(run140.GATE2_TOKENS))
+    old={'a':same+' tail','b':same,'c':'different '+same}
+    observed={'a':same+' other','b':same,'c':same}
+    r=run140.gate2_result(['a','b','c','d'],old,observed,Tok())
+    assert (r['matched'],r['missing'],r['passed'])==(2,1,False)
+    assert run140.gate2_result(['a','b'],old,observed,Tok())['passed'] is True
+    assert run140.gate2_result(['a'],old,{},Tok())['passed'] is False
+
 def test_release_after_n_is_per_row_and_stops_pushing():
     module=nn.Linear(2,2,bias=False); module.weight.data.copy_(torch.eye(2)); push=torch.tensor([[1.,0.],[0.,2.]])
     hk=run140.DeliveryHook(module,push,release_after=2)

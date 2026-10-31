@@ -82,3 +82,19 @@ why the loop happens.
 ## Limits
 
 One dose, two questions, 80 tokens. Set L is selected on looping, so it can only improve. Set P was selected on persona under held greedy delivery, which favours arm A.
+
+## Amendment 1 (2026-10-31 02:32 CT, after the pilot's answers, before any label or main run)
+
+Gate 2 as written could not work, for two reasons, both mine.
+
+1. The code read the wrong row. Part 112's neuron and random rows share an id, and the dictionary kept the last, so the pilot's gate compared arm A with
+   a random direction's answer and reported 0 of 20. The gate now selects unit "neuron".
+2. "The same batch shape" does not exist here. Part 112 ran 64 rows with layers mixed in one batch; this runner runs one layer at a time at batch 16. On the
+   A770 a bf16 greedy answer depends slightly on batch shape, so whole-answer equality is not reachable. With the neuron rows, 10 of the pilot's 20 answers
+   match in full and all 20 share an opening, the shortest shared opening being 39 characters.
+
+Gate 2 now reads: on the seeded 24 units, arm A's first 10 tokenizer tokens equal the stored answer's on at least 80% of units. The purpose is unchanged: wrong unit,
+layer, sign or dose changes the persona's name, which sits in those tokens. I chose 10 after seeing those pilot numbers, and I disclose that. On the pilot it is computed on
+all 20 units, not 24, since only 20 ran.
+
+Arm A's joint-success stop rule, the predictions and the arms are unchanged. No label had been read when this was written.

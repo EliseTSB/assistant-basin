@@ -38,7 +38,7 @@ def main():
     reader='ds' if a.stage.endswith('ds') or a.stage=='ds' else 'luna'; gate=a.stage.startswith('gate-')
     if not gate:
         gate_dir=Path(a.out).parent
-        required=[gate_dir/'gate1-result.json',gate_dir/'gate2-result.json',gate_dir/'gate-ds-result.json',gate_dir/'gate-luna-result.json']
+        required=[gate_dir/'gate1-result.json',gate_dir/'gate2-result.json',Path(a.out)/'gate-ds-result.json',Path(a.out)/'gate-luna-result.json']
         if any(not f.is_file() or not json.loads(f.read_text(encoding='utf-8')).get('passed') for f in required): raise SystemExit('STOP: both Part 140 reader gates must pass before labelling')
     if reader=='ds' and not os.environ.get('OPENCODE_GO_API_KEY'): raise SystemExit('STOP: OPENCODE_GO_API_KEY is not set')
     import judge_client

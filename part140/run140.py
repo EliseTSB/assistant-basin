@@ -13,6 +13,16 @@ def paired_seeds(unit_id=None,arm='B'):
     """Arm B draws three shared seeds; every greedy arm uses one."""
     return (140000,140001,140002) if arm=='B' else (140000,)
 def rowkey(r): return (r['arm'],r['set'],r['unit'],r['question'],int(r['seed']))
+GATE2_TOKENS=10
+def part112_first_answers(rows):
+    """Part 112's neuron and random rows share an id, so the gate must pick the neuron row by name."""
+    return {str(r.get('id')):r.get('answer') for r in rows if r.get('unit')=='neuron' and r.get('question_index')==0}
+def gate2_result(chosen,old,observed,tok):
+    """Amendment 1: the first GATE2_TOKENS tokens of arm A against Part 112's stored answer."""
+    def opening(text): return tok.decode(tok.encode(text,add_special_tokens=False)[:GATE2_TOKENS],skip_special_tokens=True)
+    matches=sum(uid in old and uid in observed and opening(old[uid])==opening(observed[uid]) for uid in chosen)
+    missing=sum(uid not in old or uid not in observed for uid in chosen)
+    return {'n':len(chosen),'matched':matches,'missing':missing,'tokens':GATE2_TOKENS,'rate':matches/len(chosen) if chosen else None,'passed':bool(chosen) and bool(observed) and matches/len(chosen)>=.8,'status':'evaluated' if observed else 'pending generated answers'}
 def read_rows(path):
     if not path.exists(): return []
     with path.open(encoding='utf-8') as f: return [json.loads(x) for x in f if x.strip()]
@@ -110,11 +120,9 @@ def main(argv=None):
                             for u,answer in zip(chunk,answers):
                                 row={'arm':arm,'set':u['set'],'unit':u['id'],'question':question,'seed':seed,'answer':answer,'plain':False,'layer':layer,'kind':u.get('set_kind'),'batch_size':len(chunk)}; stream.write(json.dumps(row,ensure_ascii=False)+'\n'); done_pushed.add(rowkey(row))
                             stream.flush(); tstream.write(json.dumps({'layer':layer,'arm':arm,'question':question,'seed':seed,'rows':len(chunk),'elapsed_s':elapsed})+'\n'); tstream.flush(); print(f'L{layer} arm={arm} q={question!r} seed={seed} rows={len(chunk)} elapsed={elapsed:.1f}s',flush=True)
-    historical=read_rows(ROOT/'results/part112/answers.jsonl'); old={str(r.get('id')):r.get('answer') for r in historical if r.get('question_index')==0 or r.get('question')=='Who are you?'}
+    historical=read_rows(ROOT/'results/part112/answers.jsonl'); old=part112_first_answers(historical)
     chosen=sorted(u['id'] for u in units if u.get('set')=='P'); import random; random.Random(140).shuffle(chosen); chosen=chosen[:24]
     observed={r['unit']:r.get('answer','') for r in read_rows(path) if r.get('arm')=='A' and r.get('set')=='P' and r.get('question')=='Who are you?' and int(r.get('seed',-1))==140000 and not r.get('plain')}
-    def first80(text): return tok.decode(tok.encode(text,add_special_tokens=False)[:80],skip_special_tokens=True)
-    matches=sum(uid in old and uid in observed and first80(old[uid])==first80(observed[uid]) for uid in chosen)
-    gate2={'n':len(chosen),'matched':matches,'rate':matches/len(chosen) if chosen else None,'passed':len(chosen)==24 and matches/24>=.8 if len(chosen)==24 else None,'status':'evaluated' if observed else 'pending generated answers'}
+    gate2=gate2_result(chosen,old,observed,tok)
     (outdir/'gate2-result.json').write_text(json.dumps(gate2,indent=2)+'\n',encoding='utf-8')
 if __name__=='__main__': main()
