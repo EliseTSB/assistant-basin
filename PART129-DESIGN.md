@@ -1,0 +1,97 @@
+# Part 129: neuron by neuron, does post-training change what Qwen3-8B computes?
+
+Procedure: v1
+Registered 2026-10-30 19:26 CT by Claude (Opus 5.5), before any data. Elise, 2026-10-30 19:12 CT, Discord message 1565881287409934448:
+"keep the research going. Lots to reassess now that there's new tools!" Her focus, 2026-10-27: following neurons across
+training stages. The commit that adds this file is the registration.
+
+## Question
+
+Neuron Lens lists as an open question "the same catalog for Qwen3-8B-Base, as a neuron-by-neuron diff of what post-training
+changed". Part 91 found that persona neurons' weights barely move (median down-column cosine 0.9968). Weights are not
+function: small changes in early layers can reach every later neuron. Run both models on the same tokens and correlate
+each neuron's activation between them, position by position. Which neurons still compute the same thing, on which text,
+and are persona neurons among the ones that changed?
+
+## Prior art and existing data
+
+- Closest published work: Neuron Lens (stdlogits/neuron-lens, 2026-10-30) gives per-pole activations for Qwen3-8B only.
+  H-Neurons (arXiv 2512.01797) carried instruct-trained probes to base models and measured weight cosines, without a
+  neuron-by-neuron activation comparison. A search on 2026-10-30 found no direct comparison across base and chat models.
+- Our own data: results/part91 (weights, personas in Base); Part 39 (210 "talking to the AI" units, 205 already in Base,
+  another model); Parts 104 to 108 (what moves when an OLMo stage's weights are swapped); Part 110 (Qwen maker neurons'
+  weights).
+
+## Method
+
+Models: Qwen/Qwen3-8B at b968826d9c46dd6066d109eabc6255188de91218 and Qwen/Qwen3-8B-Base at
+49e3418fbbbca6ecbdf9608b4d22e5a407081db4 (Part 91's revisions), bf16, one per GPU on a rented machine with two RTX 3090s.
+Tokens: Neuron Lens' activation corpus, built by their scripts/05_act_corpus.py at repo commit 07fdf45, tokenized as their
+06_activations.py does, up to 256 tokens: the first quarter of each slice, 10,000 dclm, 2,000 zh, 2,000 code and 2,000 chat
+(UltraChat rendered with Qwen3-8B's chat template, so both models read identical tokens). The hook sits at each layer's
+down_proj input, in lock-step on both models: x is Qwen3-8B's activation, y Base's. Position 0 (the attention sink) and
+padding are dropped. Groups: web (dclm), zh, code, chat-user (tokens in system and user turns) and chat-assistant (tokens in
+assistant turns). Per neuron and group: n and the sums of x, y, x², y² and xy, in float64, giving r, the slope and both
+variances. Per pole, the same on the rectified activations (max(±x, 0) against max(±y, 0)). Null: the same sums for x_n
+against y of a fixed derangement within the layer (seed 129). Weights: per neuron, cosines of the down column and the gate
+and up rows between the two checkpoints. No pushes, no generation.
+
+## Controls
+
+Applied from STANDARD-CONTROLS.md: both poles; a matched random control, the derangement and layer-matched poles. Not used:
+do-nothing hook, because the hook only reads; broken-answer count and readers, because no text is generated; dose ladder,
+because nothing is pushed.
+
+Gate 1, alignment: for 500 random poles whose published top firing falls inside our documents, our Qwen3-8B activation at
+that document and position matches the catalog's top_val within 5% for at least 90% of them. It fails if our tokens or
+document order differ from theirs.
+Gate 2, noise floor: in the pilot, Qwen3-8B against itself on both GPUs at different batch sizes gives a median r of at
+least 0.999 at every layer. A lower value is the floor for every later number.
+Gate 3, null: the median absolute r under the derangement is at most 0.05 at every layer.
+A failed gate stops the reading.
+
+## Size
+
+- Smallest effect worth knowing: a layer's median r moving by 0.02, and a persona-against-matched gap of 0.03. With 34,220
+  library rows and about 3.8 million positions, sampling error is far below that; the limit is noise floor, not n.
+- Total: 16,000 documents, two forward passes each, about 45 minutes on two RTX 3090s at about $0.27 an hour.
+- Pilot: 400 documents, measuring documents per second at batch 16, 32 and 64. Stopping rule: if the main run projects over
+  90 minutes, take the same share from each slice to fit 75 minutes, recorded as an amendment before the run.
+
+## Optimization
+
+- Bound resource: GPU
+- Measured: pending the pilot, which times three batch sizes on real rows; the design fixes the batch before the main run.
+- Levers: batch size timed in the pilot; generation none; sums vectorized on the GPU, with no per-neuron Python; resume from
+  saved sums after each 500 documents; the copy engine does not apply; rented GPUs chosen because two 8B models do not fit
+  on the A770.
+
+## Predictions
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 129.1 | On web text, the median r across all neurons is at least 0.85, and each layer's median is at least 0.75. | medium | Claude |
+| 129.2 | The all-neuron median r on chat-assistant positions is at least 0.03 below the web median. | medium | Claude |
+| 129.3 | On chat-assistant positions, the median of the L30-35 layer medians is at least 0.05 below that of L0-8. | medium | Claude |
+| 129.4 | At 30 or more of 36 layers, the absolute Spearman correlation between 1 − r on chat-assistant positions and 1 − down-column cosine is at most 0.3. | medium | Claude |
+| 129.5 | Across layers, library persona poles' median rectified r is within 0.03 of layer-matched non-persona poles, on both web and chat-assistant positions. | medium | Claude |
+| 129.6 | Part 91's once poles have a chat-assistant rectified r at least 0.05 below its carrier poles. | low | Claude |
+| 129.7 | Among the 442 neurons with the lowest chat-assistant r, catalog labels mention the chat register (regex in part129/score129.py) at least twice as often as among layer-matched random neurons. | low | Claude |
+
+Copied verbatim into PREDICTIONS.md under "## Part 129 (registered 2026-10-30, PART129-DESIGN.md): neuron by neuron, does post-training change what Qwen3-8B computes?".
+
+## Reading rules
+
+part129/score129.py computes every number from the saved sums and the pinned catalog. Neurons with fewer than 100 positions
+past a quarter of act_top in a group are left out of that group's r and counted. Library persona poles are rows of category
+persona in the saved library (neuronpersonas.com, fetched 2026-10-30). Matched poles are drawn per layer from poles with no
+persona row, at a similar rate (seed 129). If the noise floor exceeds the effect in 129.2 or 129.3, those predictions are
+reported as unreadable. A result where r is high only because a shared mode dominates, shown by Gate 3 failing, withdraws
+the headline reading.
+
+## Limits
+
+Activation correlation shows whether a neuron fires in the same places, not that its effect on the output is unchanged; the
+down column moves too. A neuron can keep its firing and change partners. Chat text is rendered in Qwen3-8B's template, which
+Base was not trained on, so a change on chat positions can also reflect Base's weaker model of that format. One pair of
+checkpoints; the intermediate post-training stages are not published for Qwen.
