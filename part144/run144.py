@@ -35,7 +35,8 @@ def _one_token(tok, value):
 
 def _top5(logits, tok):
     import torch
-    probs = torch.softmax(logits.float(), dim=-1)
+    # On the CPU: topk over the vocabulary is very slow on the A770 (notes/gotchas.md).
+    probs = torch.softmax(logits.float().detach().cpu(), dim=-1)
     vals, ids = torch.topk(probs, k=min(5, probs.numel()))
     return [[tok.decode([int(i)], skip_special_tokens=False), float(p)] for p, i in zip(vals.tolist(), ids.tolist())]
 
