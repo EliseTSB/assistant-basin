@@ -3039,3 +3039,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 154.6 | Zeroing L27 N3325 adds at most 5 percentage points of broken answers, pooled over the eleven pushes on the maker phrasings | medium | Claude |  |
 | 154.7 | Pooled over the twelve rows, guard hits with L27 N3325 zeroed are within 3 of the count with no zero | high | Claude |  |
 
+## Part 155 (registered 2026-10-31 14:05 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 155.1 | Each of the four neurons has at least as many company hits at +0.8 as at +0.4 | medium | Claude |  |
+| 155.2 | At least two of the four neurons have a step of the positive ladder from at most 3 of 24 to at least 12 of 24 | medium | Claude |  |
+| 155.3 | No neuron reaches 6 of 24 on its company at any negative dose | medium | Claude |  |
+| 155.4 | Pooled over the four neurons on the maker phrasings, the broken share at +1.6 is at least twice the share at +0.8 | medium | Claude |  |
+| 155.5 | At every positive dose where the four neurons total at least 24 of 96, their four random pairs total under half that | medium | Claude |  |
+| 155.6 | L24 N5017's lowest dose reaching 12 of 24 on maker is no higher than its lowest dose reaching 4 of 8 on identity | medium | Claude |  |
+| 155.7 | At +0.4 and -0.4, each of the four neurons keeps at least 5 of 6 guard hits | medium | Claude |  |
