@@ -21,6 +21,13 @@ pilot measured 3.80 documents/s at batch 16, so 16,000 documents project to abou
 the main stage runs all of them at batch 16. Gate 2 runs at batch 8 and 16, in place of 16 and 64. Gate 1's pilot alignment
 passed, 300 of 300 checks within 5%. The first attempts also fixed the weight cosines, which now run on the CPU.
 
+## Amendment (21:41 CT 2026-10-30, during the main run, before any correlation was read)
+
+Rented credit would run out before the run ended, with the chat slice last in the order. By the Size section's rule, the same share
+comes from each slice: the run stopped at its 7,500-document checkpoint, all in the web slice, and resumed on the first 75% of each
+slice, about 12,000 documents (web 7,510 lines, zh, code and chat 1,500 each). Documents already summed stay. Part 132 is not run here,
+because Elise stopped further rental. The Size section's 16,000 is replaced by this count, and the score reports the documents read.
+
 ## Prior art and existing data
 
 - Closest published work: Neuron Lens (stdlogits/neuron-lens, 2026-10-30) gives per-pole activations for Qwen3-8B only.
