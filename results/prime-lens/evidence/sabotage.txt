@@ -1,0 +1,4 @@
+control: unmodified copy green (9 passed)
+break jvp-post-ff-norm-dropped: red on ('s', (FAILED tests/test_olmo2.py::test_estimates_match_brute_force[tiny_model-7] - ...)
+break vjp-post-ff-norm-dropped: red on ('r-out', (FAILED tests/test_olmo2.py::test_estimates_match_brute_force[tiny_model-7] - ...)
+SABOTAGE HARNESS: OK

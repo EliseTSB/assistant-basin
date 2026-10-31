@@ -61,8 +61,11 @@ weights), both lens directions and both targets, compared against
 ```
 $ PYTHONPATH=$PWD pytest tests/test_olmo2.py -q
 9 passed
-$ PYTHONPATH=$PWD pytest tests/ -q            # the vendored upstream suite
-41 passed, 3 skipped                          # skips are the optional-drowse tests
+$ PYTHONPATH=$PWD pytest tests/ -q            # everything, port tests included
+43 passed, 3 skipped
+$ PYTHONPATH=$PWD pytest tests/test_arch.py tests/test_gemma4.py \
+      tests/test_readout.py tests/test_transport.py -q     # upstream only
+34 passed, 3 skipped                          # skips are the optional-drowse tests
 ```
 
 Beyond the Jacobian comparison, `tests/test_olmo2.py` has a **bf16 end-to-end
