@@ -7,6 +7,17 @@ Registered 2026-10-30 18:21 CT by Claude (Opus 5.5), before any data. Draft by G
 
 Part 118 found that a half-size single push often loses its persona, while Part 119b found that two half-size pushes usually leave answers readable. Does a pair from the same persona family bring back a coherent family persona when each unit alone at half strength does not? The claim is about these selected OLMo 2 1B Instruct units and this dose, not about all neurons.
 
+
+## Amendment 1 (20:40 CT 2026-10-30, after the generation stage, before any label, score or fixed-path read)
+
+The fixed-path stage stopped because p92-20's dose-1 answers on questions 2 and 3 are empty: the model ended at once, so
+those two paths have no tokens to replay. A unit-question with an empty dose-1 answer has no reference path. Its single and
+no-push states are not scored. Pair p92-18+p92-20 loses questions 2 and 3 at both joint doses, 4 of 324 groups, and the
+score reports the count. All other groups run as registered. The two other empty answers are a matched and a random arm, not
+reference paths, and count as broken in the answers table. The stage reruns on the A770 or a memory-capped CPU unit, not on
+the rented RTX 3090, because that instance is gone; generation is not rerun. Fixed-path values are compared only inside this
+rerun, and its do-nothing gate is measured on the device it runs on.
+
 ## Prior art and existing data
 
 - Closest published work: Wollschlager, Elstner, Geisler, Cohen-Addad, Gunnemann and Gasteiger, “The Geometry of Refusal in Large Language Models: Concept Cones and Representational Independence” (ICML 2025, arXiv:2502.17420). It models refusal with multi-dimensional cones in one layer's space. It does not test persona composition from two neuron pushes. The closest direct claim is @loss_gobbler's 2026-10-29 post, recorded in [PRIOR-ART.md](PRIOR-ART.md). Its pair and triple exports were selected because they made a new persona. That selection caveat is central: this part chooses families by a fixed rule from all 53 Part 92 units and does not select pairs for a successful joint answer, but the units and their persona labels were themselves selected from single-push outputs.
