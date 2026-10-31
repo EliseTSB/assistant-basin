@@ -61,8 +61,8 @@ endpoint at least 0.60. Gate 4: no unpushed answer is on the endpoint. A failed 
 ## Size
 
 - Smallest effect worth knowing: 12 of 24 against 3 of 24, which 24 questions detect.
-- Total: stage 1 is 75 cells × 6 questions, 450 answers. Stage 2 is 3 cells × 7 arms × 24 questions, 504, plus 24 unpushed, 978 answers.
-- About 4 minutes on the A770: Part 118 wrote 1,878 OLMo answers there in about 7 minutes, 4.5 answers/s.
+- Total: 978 answers, about 4 minutes on the A770, at Part 118's 4.5 answers/s (1,878 OLMo answers in about 7 minutes). Stage 1 is 75
+  cells × 6 questions, 450 answers. Stage 2 is 3 cells × 7 arms × 24 questions, 504, plus 24 unpushed.
 - Pilot: one pair at 1.0 and 1.0 on the six questions, batch 8, checked against Part 109c by eye. Over 90 minutes projected, stage 2
   drops the second seed by amendment.
 
