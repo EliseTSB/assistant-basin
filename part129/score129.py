@@ -193,16 +193,17 @@ def score(sums, catalog, library, repo, out, gate2_paths, prepared_file=None):
         print(f"{k} | {value} | {v.get('pass')}")
 
 def score_gate2(paths):
+    import torch
     if len(paths)!=2 or any(not Path(p).is_file() for p in paths): return None
-    summaries=[]; batches=[]
-    try:
-      for path in paths:
+    summaries=[]; batches=[]; captures=[]
+    for path in paths:
         d=torch_load(path)
         if "state" in d:
             d={**d["state"],"meta":d.get("meta",{})}
         if "data" not in d or "count" not in d or d["data"].ndim!=4 or d["data"].shape[2]<5 or d["count"].ndim!=2:
-            return None
+            raise ValueError(f"malformed Gate 2 capture: {path}")
         batches.append(d.get("meta",{}).get("batch"))
+        captures.append((d["data"].contiguous(), d["count"].contiguous()))
         layers=[]
         for L in range(36):
             rows=d["data"][:,L,:5,:].sum(0).numpy()
@@ -212,10 +213,12 @@ def score_gate2(paths):
             rr=np.divide(xy-sx*sy/n,np.sqrt(np.maximum(vx,0)*np.maximum(vy,0)),out=np.full_like(sx,np.nan),where=(vx>0)&(vy>0))
             layers.append(med(rr))
         summaries.append(layers)
-    except (OSError,RuntimeError,KeyError,IndexError,TypeError,ValueError):
-        return None
-    if batches[0] is not None and batches[1] is not None and batches[0]==batches[1]:
+    if batches[0] is None or batches[1] is None or batches[0]==batches[1]:
         return {"batch_runs":list(paths),"batches":batches,"pass":False,"reason":"batch sizes must differ"}
+    # A copied capture with only metadata relabelled is still the same measurement.
+    if all(left.shape == right.shape and torch.equal(left.view(torch.uint8), right.view(torch.uint8))
+           for left, right in zip(captures[0], captures[1])):
+        return {"batch_runs":list(paths),"batches":batches,"pass":False,"reason":"capture tensors are byte-identical"}
     minimum=[min(s[L] for s in summaries if s[L] is not None) for L in range(36)]
     return {"batch_runs":list(paths),"batches":batches,"layer_median_r_min":minimum,"pass":all(v is not None and v>=.999 for v in minimum)}
 

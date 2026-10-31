@@ -15,7 +15,18 @@ import sys
 rows=json.loads(Path("part132/neurons132.json").read_text(encoding="utf-8"))
 if len(rows)!=189:
     raise SystemExit(f"expected 189 Part 132 neurons, found {len(rows)}")
-Path(sys.argv[1]).write_text(json.dumps(rows[:4],indent=2)+"\n",encoding="utf-8")
+pilot=[]
+seen=set()
+for row in rows:
+    layer=row["L"]
+    if layer not in seen:
+        pilot.append(row)
+        seen.add(layer)
+        if len(pilot)==4:
+            break
+if len(pilot)!=4:
+    raise SystemExit(f"expected four pilot neurons on distinct layers, found {len(pilot)}")
+Path(sys.argv[1]).write_text(json.dumps(pilot,indent=2)+"\n",encoding="utf-8")
 PY
 python - <<'PY'
 import torch, transformers
@@ -38,8 +49,8 @@ import sys
 raise SystemExit(0 if float(sys.argv[1]) < 1.5 else 1)
 PY
 then
-  printf 'Part 132 stopped: pilot throughput %.2f answers/s is below 1.5.\n' "$RATE"
-  exit 0
+  printf 'Part 132 stopped: pilot throughput %.2f answers/s is below 1.5; push91.py uses fixed BATCH=48, so no runtime batch adjustment was made.\n' "$RATE"
+  exit 3
 fi
 python -I -B part91/push91.py --model "$MODEL" --repo Qwen/Qwen3-8B --commit "$CHAT_REV" \
   --frame chat --tag inst_chat --neurons part132/neurons132.json --out "$OUT"
