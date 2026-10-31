@@ -1,0 +1,3 @@
+special/eos tokens excluded from ban: 0
+{"banned_count": 893, "control_count": 893}
+{"rows": 96, "nonfinite_retries": []}

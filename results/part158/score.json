@@ -1,0 +1,292 @@
+{
+  "part": 158,
+  "gates": {
+    "gate1": {
+      "pass": true,
+      "rule": "all 96 planned rows present and non-empty",
+      "missing_or_empty": []
+    },
+    "gate2": {
+      "pass": true,
+      "rule": "random ban exactly matches Part 157 level 0 on at least 22 of 24",
+      "matches": 24,
+      "n": 24
+    },
+    "gate3": {
+      "pass": false,
+      "rule": "at most 2 of 24 plain answers contain a Part 157 Alibaba spelling, tongy, alipay, or alibab",
+      "leaks": [
+        {
+          "question_index": 0,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 1,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 2,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 3,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 4,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 5,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 6,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 7,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 8,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 9,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 10,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 11,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 12,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 13,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 14,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 15,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 16,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 17,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 18,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 19,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 20,
+          "spellings": [
+            "Alibaba",
+            "Qwen",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 21,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "Qianwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 22,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        },
+        {
+          "question_index": 23,
+          "spellings": [
+            "Alibaba",
+            "Tongyi",
+            "Qwen",
+            "tongy",
+            "alibab"
+          ]
+        }
+      ],
+      "n": 24
+    }
+  },
+  "predictions": {
+    "158.1": {
+      "prediction": "In the plain arm, Google is the family named first on more phrasings than any other family",
+      "value": false,
+      "verdict": "untestable",
+      "confidence": "low"
+    },
+    "158.2": {
+      "prediction": "In the plain arm, at most 8 of 24 answers name any listed family, the rest inventing a maker or naming none",
+      "value": false,
+      "verdict": "untestable",
+      "confidence": "medium"
+    },
+    "158.3": {
+      "prediction": "Google answers with L27 N3325 zeroed are at most half the plain arm's, and with L27 N4991 zeroed at least 75%, if the plain arm has at least 6",
+      "value": null,
+      "verdict": "untestable",
+      "confidence": "medium"
+    }
+  },
+  "values": {
+    "plain_first_named": {
+      "Alibaba": 24
+    },
+    "plain_any_google": 0,
+    "zero_L27N3325_any_google": 0,
+    "zero_L27N4991_any_google": 0,
+    "plain_any_listed_family": 24
+  },
+  "arm_first_named_family_table": "| Arm | Alibaba | Google | OpenAI | Microsoft | Meta | Anthropic | Baidu | Tencent | DeepSeek | Huawei | No family | N |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| plain | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 24 |\n| zero_L27N3325 | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 24 |\n| zero_L27N4991 | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 24 |\n| random_control | 24 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 24 |\n"
+}

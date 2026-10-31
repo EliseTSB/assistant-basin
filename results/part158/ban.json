@@ -1,0 +1,166 @@
+{
+  "banned_count": 893,
+  "sample_40_banned_tokens": [
+    {
+      "id": 62988,
+      "token": "ALIGN"
+    },
+    {
+      "id": 64125,
+      "token": " Alison"
+    },
+    {
+      "id": 90091,
+      "token": "Aligned"
+    },
+    {
+      "id": 99978,
+      "token": "\u8bbf\u95ee"
+    },
+    {
+      "id": 104006,
+      "token": "\u987e\u95ee"
+    },
+    {
+      "id": 109044,
+      "token": "\u8be2\u95ee"
+    },
+    {
+      "id": 110812,
+      "token": "\u7545\u901a"
+    },
+    {
+      "id": 112068,
+      "token": "\u6751\u91cc"
+    },
+    {
+      "id": 112129,
+      "token": "\u901a\u8baf\u5458"
+    },
+    {
+      "id": 112503,
+      "token": "\u4e0d\u901a"
+    },
+    {
+      "id": 112546,
+      "token": "\u666e\u901a\u8bdd"
+    },
+    {
+      "id": 118681,
+      "token": "\u5343\u53e4"
+    },
+    {
+      "id": 119307,
+      "token": "\u6ca1\u95ee\u9898"
+    },
+    {
+      "id": 120259,
+      "token": "\u4e07\u516c\u91cc"
+    },
+    {
+      "id": 122598,
+      "token": "\u76f8\u5173\u95ee\u9898"
+    },
+    {
+      "id": 128228,
+      "token": "\u5343\u767e"
+    },
+    {
+      "id": 129113,
+      "token": "\u901a\u4e86"
+    },
+    {
+      "id": 129422,
+      "token": "\u767e\u516c\u91cc"
+    },
+    {
+      "id": 131607,
+      "token": "\u91cc\u5934"
+    },
+    {
+      "id": 132215,
+      "token": "\u4e0a\u6d77\u4ea4\u901a\u5927\u5b66"
+    },
+    {
+      "id": 133187,
+      "token": "\u95ee\u5979"
+    },
+    {
+      "id": 135739,
+      "token": "\u5b66\u6821\u91cc"
+    },
+    {
+      "id": 140145,
+      "token": "\u5e1d\u56fd\u4e3b\u4e49"
+    },
+    {
+      "id": 140992,
+      "token": "\u95ee\u8be2"
+    },
+    {
+      "id": 142177,
+      "token": "\u80fd\u901a\u8fc7"
+    },
+    {
+      "id": 142259,
+      "token": "\u6e56\u91cc"
+    },
+    {
+      "id": 144451,
+      "token": "\u9aa8\u5b50\u91cc"
+    },
+    {
+      "id": 144574,
+      "token": "\u95ee\u533b\u751f"
+    },
+    {
+      "id": 145372,
+      "token": "\u5fc3\u7406\u95ee\u9898"
+    },
+    {
+      "id": 146994,
+      "token": "\u4e3b\u8981\u662f\u901a\u8fc7"
+    },
+    {
+      "id": 184022,
+      "token": "alizzata"
+    },
+    {
+      "id": 188204,
+      "token": "alik"
+    },
+    {
+      "id": 193606,
+      "token": " alimenta"
+    },
+    {
+      "id": 200032,
+      "token": "\u3092\u901a\u3058\u3066"
+    },
+    {
+      "id": 201335,
+      "token": " alimentar"
+    },
+    {
+      "id": 215180,
+      "token": "alition"
+    },
+    {
+      "id": 220492,
+      "token": "alit"
+    },
+    {
+      "id": 220566,
+      "token": " alimentazione"
+    },
+    {
+      "id": 237006,
+      "token": "aliz\u00f3"
+    },
+    {
+      "id": 237523,
+      "token": "\u554f\u308f\u305a"
+    }
+  ],
+  "control_count": 893
+}
