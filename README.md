@@ -2617,6 +2617,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 147](results/part147/README.md)**, 2026-10-31. From Part 146's stored rows, the median pushed row sits closer to Base at the same question than at the others on three of four questions, by -0.098, 0.169, 0.419 and 0.420; plain Instruct passes the same test, and on the first question the push does worse than plain. 91.0% to 99.6% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is.
 
+**[Part 151](results/part151/README.md)**, 2026-10-31. Top windows for five Qwen3.5-4B units on 2,000 documents. The positive control reached 2 of 20 windows against a registered 5, so all five predictions are withheld and Part 151b repeats the run on 10,000 documents.
+
 **[Part 142](results/part142/README.md)**, 2026-10-31. On Qwen3.5-4B, zeroing a concept unit at its strongest firings gives a next-word change that is more its own than a slot unit's: the median margin differs by 0.056 on Haiku's sort, n=364, and by 0.004 on the 43 units DeepSeek also calls personas. Sorted units barely differ from matched poles, 0.004. The first effects run was void, 92% NaN with no error; the rerun was clean.
 
 **[Part 144](results/part144/README.md)**, 2026-10-31. On OLMo 2 1B, after a forced "I'm", the plain model puts 0.58% on " sorry" on SFT and 0.024% on Instruct, and the median push raises that by 3.3 log-odds on SFT and 5.2 on Instruct. On Instruct without the chat frame the plain model puts 5.5% there, and the push adds 0.5. Six of nine predictions held. Found afterwards and untested: Base in the chat frame, DPO and Instruct reach pushed levels within about 0.15 log-odds of each other.

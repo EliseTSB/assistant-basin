@@ -24,7 +24,7 @@ def score(windows, lens):
     table = {u: {v: sum(hit(e, lens[v]) for e in units[u]["top"]) for v in UNITS} for u in UNITS}
     own = {u: table[u][u] for u in UNITS}
     beats = {u: all(own[u] > table[u][v] for v in UNITS if v != u) for u in UNITS}
-    control = sum(any(a in (e["before"] + e["mark"] + e["after"]).lower() for a in ALIEN) for e in units[CONTROL]["top"])
+    control = sum(any(re.search(rf"\b{a}", e["before"] + e["mark"] + e["after"], re.IGNORECASE) for a in ALIEN) for e in units[CONTROL]["top"])
     gates = {"gate1_docs": windows["docs"] == 2000, "gate2_full_top_lists": all(len(units[u]["top"]) == 20 for u in units),
              "gate3_alien_control": control >= 5}
     ok = all(gates.values())
