@@ -61,10 +61,8 @@ A failed gate stops the reading.
 ## Optimization
 
 - Bound resource: GPU
-- Measured: pending the pilot, which times three batch sizes on real rows; the design fixes the batch before the main run.
-- Levers: batch size timed in the pilot; generation none; sums vectorized on the GPU, with no per-neuron Python; resume from
-  saved sums after each 500 documents; the copy engine does not apply; rented GPUs chosen because two 8B models do not fit
-  on the A770.
+- Measured: Neuron Lens' own activation pass is 63,990 documents in about 70 minutes on one RTX 4090, 15 documents/s; our pilot times batch 16, 32 and 64 on real rows before the main stage.
+- Levers: batch size taken, timed in the pilot; generation not needed; sums vectorized on the GPU, taken; resume from saved sums after each 500 documents, taken; one layer held at a time through a size-1 queue, taken; A770 copy engine not applicable; rented GPUs taken, because two 8B models do not fit on the A770.
 
 ## Predictions
 
