@@ -2857,3 +2857,21 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 140.7 | Weaver (idea), Claude (threshold) (high confidence): The plain model shows repetition on at most 2% of answers in every arm. | pending | pending |
 | 140.8 | Muse (idea), Claude (threshold) (low confidence): On Set P, arm F has at least 5 points more joint success than arm A. | pending | pending |
 
+## Part 139 (registered 2026-10-31, PART139-DESIGN.md): why do pushed OLMo answers open with an apology?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 139.1 | Claude (medium confidence): Prompt-only opens with an apology on at least 60% of Set R. | pending | pending |
+| 139.2 | Claude (medium confidence): Answer-only opens with an apology on at most 20% of Set R. | pending | pending |
+| 139.3 | Claude (low confidence): The question's words give the highest apology share of the six position groups, at least 40% of Set R. | pending | pending |
+| 139.4 | Claude (high confidence): Set S opens with an apology on at most 5% in the full arm. | pending | pending |
+| 139.5 | Weaver (idea), Claude (threshold) (medium confidence): At the heaviest garbling, random token ids, the plain model opens with an apology on at least 20% of prompts. | pending | pending |
+| 139.6 | Claude (medium confidence): Under Set R pushes, the apology share on the three tasks is at most half its share on the three questions about the model. | pending | pending |
+| 139.7 | Claude (medium confidence): At most 2% of Set R apologise on Base, and SFT or DPO is the first stage above 20%. | pending | pending |
+| 139.8 | Claude (low confidence): After a teacher-forced "I'm" on "Who are you?", the plain model puts at least 1% on " sorry". | pending | pending |
+| 139.9 | Claude (medium confidence): With the push held, the median Set R unit puts at least ten times the plain model's probability on " sorry" after "I'm". | pending | pending |
+| 139.10 | Claude (medium confidence): At both layers, unselected neurons and random directions differ by at most 3 percentage points of apology share at each dose. | pending | pending |
+| 139.11 | Claude (low confidence): The apology share peaks below the top dose: alpha 1.6 is lower than the highest of 0.8 and 1.2 at L4. | pending | pending |
+| 139.12 | Prime (idea), Claude (threshold) (medium confidence): Under sampling, Set R's apology share is at most half its greedy full-arm share. | pending | pending |
+| 139.13 | Alden (idea), Claude (threshold) (low confidence): In Stage C, task accuracy under Set R pushes is at least 50%. | pending | pending |
+
