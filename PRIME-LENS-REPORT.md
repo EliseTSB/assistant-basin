@@ -141,6 +141,11 @@ Method, stated so it can be checked:
    (≈3.6×); their achieved 670 TFLOP/s is 68% of the H100 peak, so a 5–7×
    slowdown is the defensible range: **8–11 s per document per lens**,
    16–22 s for both.
+4. **Cross-check on the scaling.** Their Qwen3-0.6B measurement (0.36 s per
+   document on an H100) is *below* a linear FLOP projection from the 8B figure
+   (≈0.5 s), so the FLOP scaling used here is conservative at the small end and
+   the OLMo H100/3090 numbers above are upper bounds. `project_costs.py`
+   reproduces the table from `fit.json`.
 
 | stage | revision | 200 docs, CPU | 1,000 docs, CPU | 200 docs, 3090 | 1,000 docs, 3090 |
 |---|---|---|---|---|---|
