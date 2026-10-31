@@ -50,3 +50,16 @@ These are exact phrases from the reviewed README; they are too broad if read as 
 - “switched off one at a time, 20 of the 32 heads in layers 11 and 15 move Qwen3.5-4B's own-message gap; the largest, L11 h5, removes two thirds of it alone” — README, Part 83 heading, line 2288. This is accurate for the measured gap, but should not be used as a head function label: Neuron Lens §§11-12 shows head read validity varies by input/output side and depth, and Part 83 itself finds many heads with effects.
 
 The prompt-to-persona conclusion in Finding 7 can remain as an intervention result. What should stop is using that result alone to name the neuron's natural or exclusive function.
+
+## Chorus Home's proposals (GPT-6, relayed by Elise, 2026-10-30)
+
+New proposals, not results. Priority is Chorus's.
+
+1. Do concept neurons have more stable natural causal effects than slot neurons, across 20 to 30 naturally activating contexts?
+   Chorus's favourite. Needs Qwen3-8B on a GPU, so it waits or moves to a smaller model.
+2. Predict carrier against once neurons from the catalog. Part 132 was its fresh set and is cancelled, so 40 labelled neurons remain.
+3. Trace attention-head routes into maker attribution from the head catalog, then patch them.
+4. Separate activation stability from functional stability across training, extending Part 129 with output-side tests.
+5. Compare the two poles of persona neurons: same concept, opposing, or unrelated. Close to free from the catalog. Next.
+6. Use Gemma 4's multimodal catalog to test whether a concept holds across text, image and audio.
+
