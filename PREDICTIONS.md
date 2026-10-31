@@ -2740,3 +2740,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 129.5 | Claude (medium confidence): Across layers, library persona poles' median rectified r is within 0.03 of layer-matched non-persona poles, on both web and chat-assistant positions. | pending | pending |
 | 129.6 | Claude (low confidence): Part 91's once poles have a chat-assistant rectified r at least 0.05 below its carrier poles. | pending | pending |
 | 129.7 | Claude (low confidence): Among the 442 neurons with the lowest chat-assistant r, catalog labels mention the chat register (regex in part129/score129.py) at least twice as often as among layer-matched random neurons. | pending | pending |
+
+## Part 130 (registered 2026-10-30, PART130-DESIGN.md): is the same pole a persona in all three Llama fine-tunes, against a defined chance?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 130.1 | Claude (high confidence): The triple count is at least 5 times the rotation null's mean. | pending | pending |
+| 130.2 | Claude (low confidence): The ratio of observed to null is at least 1.5 times higher in L0-15 than in L16-31. | pending | pending |
+| 130.3 | Claude (medium confidence): Among sampled triple poles, the reader calls the Llama and Hermes names the same concept in at least 50%. | pending | pending |
+| 130.4 | Claude (low confidence): The three pairwise ratios of observed to null are within a factor of 1.5 of each other. | pending | pending |
