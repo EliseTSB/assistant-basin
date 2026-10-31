@@ -44,7 +44,8 @@ def pushes_for(rows, layers, medians, common):
 
 def generate(model, tok, layers, question, layer_pushes, max_new_tokens, device, common):
     import torch
-    batch = int(next(iter(layer_pushes.values())).shape[0])
+    # The plain control has no pushes and runs as a batch of one.
+    batch = int(next(iter(layer_pushes.values())).shape[0]) if layer_pushes else 1
     inputs = common.token_inputs(tok, question, batch, device)
     prompt_len = int(inputs["input_ids"].shape[-1])
     eos = common.eos_ids(tok, model)

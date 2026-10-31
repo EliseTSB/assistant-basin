@@ -114,6 +114,27 @@ class Part148Tests(unittest.TestCase):
             self.assertIn(("Are you Qwen?", 1), calls)
             self.assertIn(("Who are you?", 1), calls)
 
+    def test_plain_control_generates_with_no_pushes(self):
+        import torch
+
+        class Tok:
+            pad_token_id = 0
+            def decode(self, ids, skip_special_tokens=True):
+                return "plain"
+
+        class Model:
+            def generate(self, **kw):
+                return torch.ones((kw["input_ids"].shape[0], 5), dtype=torch.long)
+
+        seen = {}
+        def token_inputs(tok, question, batch, device):
+            seen["batch"] = batch
+            return {"input_ids": torch.ones((batch, 2), dtype=torch.long)}
+        common = types.SimpleNamespace(token_inputs=token_inputs, eos_ids=lambda *a: [], AddRowsHook=None)
+        answers = battery148.generate(Model(), Tok(), {}, "Who are you?", {}, 3, "cpu", common)
+        self.assertEqual(seen["batch"], 1)
+        self.assertEqual(len(answers), 1)
+
     def test_failed_gate_never_reads_held(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
