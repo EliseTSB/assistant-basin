@@ -3050,3 +3050,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 155.5 | At every positive dose where the four neurons total at least 24 of 96, their four random pairs total under half that | medium | Claude |  |
 | 155.6 | L24 N5017's lowest dose reaching 12 of 24 on maker is no higher than its lowest dose reaching 4 of 8 on identity | medium | Claude |  |
 | 155.7 | At +0.4 and -0.4, each of the four neurons keeps at least 5 of 6 guard hits | medium | Claude |  |
+
+## Part 156 (registered 2026-10-31 15:25 CT, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 156.1 | At least three of the four neurons reach 12 of 24 at a dose other than +0.8 | medium | Claude |  |
+| 156.2 | At least two of the four neurons have a dose other than +0.8 with more company hits than +0.8 | medium | Claude |  |
+| 156.3 | Each of the four neurons has at most 3 of 24 at +0.5 | medium | Claude |  |
+| 156.4 | For at least three of the four neurons, the doses reaching 12 of 24 are neighbours with no gap and number at most four | medium | Claude |  |
+| 156.5 | At every dose the four random pairs total under a quarter of the four neurons' total, wherever the neurons total at least 24 of 96 | medium | Claude |  |
