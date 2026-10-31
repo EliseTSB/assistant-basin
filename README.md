@@ -2593,6 +2593,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 130](results/part130/README.md)**, 2026-10-30. Is the same pole a persona in Llama 3.1 8B Instruct, Tulu 3 8B and Hermes 3 8B? 3,681 poles are, against a mean of 294.5 under rotation, which reproduces Sauers' figure with a stated null; in a sample of 150, a reader judged the names the same or closely related in 49. No model ran, and the base model is Part 131.
 
+**[Part 128](results/part128/README.md)**, 2026-10-30. Does a Qwen3-8B persona neuron fire on its persona in ordinary text? Against the Neuron Lens catalog, carriers (persona on at least 3 of 6 questions) match on the fire side for 6 of 11, once neurons for 0 or 1 of 16, by two blind readers; both sides together, 8 or 9 of 11 against 1 of 16. Exploratory classes, 40 neurons; Part 132 repeats it on 189 fresh ones.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

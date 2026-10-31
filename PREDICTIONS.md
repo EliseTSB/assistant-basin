@@ -2721,13 +2721,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 128.1 | Claude (medium confidence): At least 12 of 40 pushed poles clearly match their persona on some side, and at most 4 of 40 mismatch rows do. | pending | pending |
-| 128.2 | Claude (medium confidence): The carrier rate on either side is at least 20 points above the once rate. | pending | pending |
-| 128.3 | Claude (low confidence): On the fire side, at most 4 of 16 once poles and at least 5 of 11 carrier poles clearly match. | pending | pending |
-| 128.4 | Claude (medium confidence): Pushed poles match their persona at least twice as often as opposite poles do. | pending | pending |
-| 128.5 | Claude (high confidence): At most 4 of 40 control rows match the paired persona. | pending | pending |
-| 128.6 | Claude (medium confidence): The median of abs(c) / act_top is at least 5, and at least 30 of 40 pushes are 3 times the pole's top firing or more. | pending | pending |
-| 128.7 | Claude (low confidence): The count of dark pushed poles is within 6 of the count expected from the catalog's band rates. | pending | pending |
+| 128.1 | Claude (medium confidence): At least 12 of 40 pushed poles clearly match their persona on some side, and at most 4 of 40 mismatch rows do. | DeepSeek 14 and 0; Luna 13 and 2 | held |
+| 128.2 | Claude (medium confidence): The carrier rate on either side is at least 20 points above the once rate. | DeepSeek 9 of 11 against 1 of 16; Luna 8 of 11 against 1 of 16 | held |
+| 128.3 | Claude (low confidence): On the fire side, at most 4 of 16 once poles and at least 5 of 11 carrier poles clearly match. | DeepSeek 0 of 16 and 6 of 11; Luna 1 of 16 and 6 of 11 | held |
+| 128.4 | Claude (medium confidence): Pushed poles match their persona at least twice as often as opposite poles do. | DeepSeek 14 against 6; Luna 13 against 7 | reader-dependent |
+| 128.5 | Claude (high confidence): At most 4 of 40 control rows match the paired persona. | DeepSeek 1; Luna 0 | held |
+| 128.6 | Claude (medium confidence): The median of abs(c) / act_top is at least 5, and at least 30 of 40 pushes are 3 times the pole's top firing or more. | median 7.8; 36 of 40 | held |
+| 128.7 | Claude (low confidence): The count of dark pushed poles is within 6 of the count expected from the catalog's band rates. | 23 against 23.9 | held |
 
 ## Part 129 (registered 2026-10-30, PART129-DESIGN.md): neuron by neuron, does post-training change what Qwen3-8B computes?
 

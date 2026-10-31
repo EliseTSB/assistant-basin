@@ -1,0 +1,52 @@
+{
+ "ds": {
+  "gate_true": 6,
+  "gate_false": 1,
+  "gate_n": 6,
+  "pushed": 14,
+  "mismatch": 0,
+  "opposite": 6,
+  "control": 1,
+  "carrier": 9,
+  "once": 1,
+  "carrier_fire": 6,
+  "once_fire": 0,
+  "carrier_n": 11,
+  "once_n": 16,
+  "missing": 0
+ },
+ "luna": {
+  "gate_true": 6,
+  "gate_false": 1,
+  "gate_n": 6,
+  "pushed": 13,
+  "mismatch": 2,
+  "opposite": 7,
+  "control": 0,
+  "carrier": 8,
+  "once": 1,
+  "carrier_fire": 6,
+  "once_fire": 1,
+  "carrier_n": 11,
+  "once_n": 16,
+  "missing": 0
+ },
+ "kappa_either": 0.8528117359413204,
+ "ratio_median": 7.841807179005885,
+ "ratio_ge3": 36,
+ "ratio_n": 40,
+ "ratio_median_by_class": {
+  "carrier": 6.622241256206068,
+  "once": 7.841807179005885
+ },
+ "dark": 23,
+ "expected_dark": 23.889999999999997,
+ "n": 40,
+ "gate": {
+  "ds": true,
+  "luna": true,
+  "mismatch": true,
+  "kappa": true,
+  "complete": true
+ }
+}
