@@ -2836,3 +2836,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 138.2 | Claude (medium confidence): The largest batch with no spill is at least 8. | pending | pending |
 | 138.3 | Claude (medium confidence): At that batch the rate is at least 1 answer/s at 64 tokens. | pending | pending |
 | 138.4 | Claude (medium confidence): Three repeats at that batch all finish without a spill. | pending | pending |
+
+## Part 136 (registered 2026-10-30, PART136-DESIGN.md): do concept neurons have steadier natural effects than slot neurons?
+
+| # | Registered prediction, with confidence | Result | Verdict |
+| --- | --- | --- | --- |
+| 136.1 | Claude (high confidence): Median stability (Effect A) of matched poles rises with depth: L24-31 is at least 0.3 above L0-15. | pending | pending |
+| 136.2 | Claude (low confidence): Within bands, concept units' median stability is at least 0.05 above slot units' (Effect A). | pending | pending |
+| 136.3 | Claude (low confidence): Sorted units' median stability is at least 0.05 above their matched poles' within bands. | pending | pending |
+| 136.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | pending | pending |
+| 136.5 | Claude (medium confidence): In L0-15 the median steering agreement of sorted units is at most 0.2. | pending | pending |
+| 136.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 136.2 and 136.4. | pending | pending |
+
