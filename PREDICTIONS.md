@@ -2949,12 +2949,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 148.1 | Claude (medium confidence): At least 80% of the 465 neurons move the name, coherently. | pending | pending |
-| 148.2 | Claude (medium confidence): At most 15% of the 465 neurons move the maker, coherently. | pending | pending |
-| 148.3 | Claude (medium confidence): At least 5 neurons move both name and maker, coherently. | pending | pending |
-| 148.4 | Claude (medium confidence): Among neurons that move the name, fewer than a quarter also move the maker. | pending | pending |
-| 148.5 | Claude (high confidence): Paired random directions move the name less than half as often as the neurons. | pending | pending |
-| 148.6 | Claude (low confidence): Slot neurons in Part 112's sort move the maker no more often than concept neurons do. | pending | pending |
+| 148.1 | Claude (medium confidence): At least 80% of the 465 neurons move the name, coherently. | 348/465 (74.8%) | failed |
+| 148.2 | Claude (medium confidence): At most 15% of the 465 neurons move the maker, coherently. | 191/465 (41.1%) | failed |
+| 148.3 | Claude (medium confidence): At least 5 neurons move both name and maker, coherently. | 146 neurons | held |
+| 148.4 | Claude (medium confidence): Among neurons that move the name, fewer than a quarter also move the maker. | 146/348 (42.0%) | failed |
+| 148.5 | Claude (high confidence): Paired random directions move the name less than half as often as the neurons. | Neurons 348/465; random directions 175/465. The strict limit is fewer than 174. | failed |
+| 148.6 | Claude (low confidence): Slot neurons in Part 112's sort move the maker no more often than concept neurons do. | Slot 82/189 (43.4%); concept 100/257 (38.9%) | failed |
 
 ## Part 149 (registered 2026-10-31, PART149-DESIGN.md): is " sorry" what Instruct says when it cannot read the prompt?
 

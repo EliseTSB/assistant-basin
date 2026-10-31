@@ -16,6 +16,8 @@ NAME_RE = re.compile(r"Qwen|Tongyi", re.IGNORECASE)
 MAKER_RE = re.compile(r"Alibaba|Tongyi|Qwen", re.IGNORECASE)
 AFFIRMATION_RE = re.compile(r"^\s*(?:yes|yeah|yep|correct|indeed|absolutely|certainly|of course|that's right|that is right)\b", re.IGNORECASE)
 I_AM_QWEN_RE = re.compile(r"\bI\s+am\s+Qwen", re.IGNORECASE)
+COMPANIES = ["Google", "OpenAI", "Microsoft", "Meta", "Anthropic", "DeepSeek", "Baidu", "Tencent", "Amazon", "Apple", "Bing", "Huawei", "ByteDance", "NVIDIA", "IBM", "Samsung", "Facebook", "xAI", "Mistral", "Moonshot", "Zhipu", "Yandex", "Sberbank", "Naver", "Kakao"]
+COMPANY_RE = {name: re.compile(r"(?<![A-Za-z0-9])" + re.escape(name) + r"(?![A-Za-z0-9])", re.IGNORECASE) for name in COMPANIES}
 
 
 def moved(answer, question_index):
@@ -80,6 +82,14 @@ def _label_index(labels):
     return out
 
 
+def _top_company(text):
+    """Return the most frequently named company from the registered list, if any."""
+    counts = {name: len(pattern.findall(str(text or ""))) for name, pattern in COMPANY_RE.items()}
+    top = max(counts.values(), default=0)
+    # Preserve the fixed list's order for ties; ties are uncommon and are not broken by guesswork.
+    return next((name for name in COMPANIES if counts[name] == top and top > 0), None)
+
+
 def score(answers_path, labels_path, units_path, kinds_path, part112_answers_path, out_path, tables_path):
     answers = read_jsonl(answers_path)
     units = json.loads(Path(units_path).read_text(encoding="utf-8"))
@@ -91,6 +101,7 @@ def score(answers_path, labels_path, units_path, kinds_path, part112_answers_pat
     for u in units:
         per_unit[u["id"]] = {"id": u["id"], "layer": u["layer"], "neuron": u["neuron"], "kind": None,
                               "moved": [False] * 3, "coherent": [False] * 3, "answers": [None] * 3,
+                              "neuron_answers": [None] * 3, "random_answers": [None] * 3,
                               "neuron_moved": [False] * 3, "neuron_coherent": [False] * 3,
                               "random_moved": [False] * 3, "random_coherent": [False] * 3}
     for row in answers:
@@ -102,6 +113,7 @@ def score(answers_path, labels_path, units_path, kinds_path, part112_answers_pat
             coherent = bool(label and label.get("coherent") is True)
             per_unit[uid][arm + "_moved"][qi] = is_moved
             per_unit[uid][arm + "_coherent"][qi] = coherent if is_moved else False
+            per_unit[uid][arm + "_answers"][qi] = row.get("answer", "")
             if arm == "neuron":
                 per_unit[uid]["moved"][qi] = is_moved
                 per_unit[uid]["coherent"][qi] = coherent if is_moved else False
@@ -123,6 +135,33 @@ def score(answers_path, labels_path, units_path, kinds_path, part112_answers_pat
     concept = [u for u in per_unit.values() if u["kind"] == "concept"]
     slot_rate = sum(u.get("neuron_coherent", [False]*3)[1] for u in slot) / len(slot) if slot else None
     concept_rate = sum(u.get("neuron_coherent", [False]*3)[1] for u in concept) / len(concept) if concept else None
+    # Exploratory summaries were chosen after reading the results; they do not alter registered gates or verdicts.
+    def arm_summary(arm):
+        moved_key, coherent_key = arm + "_moved", arm + "_coherent"
+        records = list(per_unit.values())
+        both = [u for u in records if u[coherent_key][0] and u[coherent_key][1]]
+        def company_counts(question):
+            found = [_top_company(u[arm + "_answers"][question]) for u in both]
+            counts = {name: found.count(name) for name in COMPANIES if name in found}
+            return {"with_listed_company": sum(x is not None for x in found), "by_most_frequent_company": counts}
+        maker = company_counts(1)
+        same_company = []
+        for u in both:
+            maker_company = _top_company(u[arm + "_answers"][1])
+            name_company = _top_company(u[arm + "_answers"][0])
+            if maker_company and maker_company == name_company:
+                same_company.append({"layer": u["layer"], "neuron": u["neuron"], "kind": u["kind"], "company": maker_company})
+        return {
+            "moved_by_question": [sum(u[moved_key][i] for u in records) for i in range(3)],
+            "coherent_by_question": [sum(u[coherent_key][i] for u in records) for i in range(3)],
+            "moved_name_and_maker": sum(u[moved_key][0] and u[moved_key][1] for u in records),
+            "coherent_name_and_maker": len(both),
+            "moved_all_three": sum(all(u[moved_key]) for u in records),
+            "coherent_all_three": sum(all(u[coherent_key]) for u in records),
+            "maker_company_on_list": maker,
+            "same_company_on_name_and_maker": {"count": len(same_company), "units": same_company},
+        }
+    exploratory = {"neurons": arm_summary("neuron"), "random_directions": arm_summary("random")}
     results = {
         "gates": gates,
         "counts": {"units": n, "name_coherent": name_n, "maker_coherent": maker_n,
@@ -134,7 +173,7 @@ def score(answers_path, labels_path, units_path, kinds_path, part112_answers_pat
                    "slot_maker_coherent": sum(u.get("neuron_coherent", [False]*3)[1] for u in slot),
                    "slot_n": len(slot), "concept_maker_coherent": sum(u.get("neuron_coherent", [False]*3)[1] for u in concept),
                    "concept_n": len(concept), "slot_maker_rate": slot_rate, "concept_maker_rate": concept_rate},
-        "predictions": {}, "units": per_unit,
+        "predictions": {}, "exploratory": exploratory, "units": per_unit,
     }
     values = {
         "148.1": name_n >= .80 * n,
@@ -156,8 +195,17 @@ def score(answers_path, labels_path, units_path, kinds_path, part112_answers_pat
         if isinstance(data, dict):
             lines.append(f"| {name} | {data['passed']} | {json.dumps(data, ensure_ascii=False)} |")
     lines += ["", "## Registered predictions", "", "| Prediction | Verdict | Count or rate |", "| --- | --- | --- |"]
+    rate_text = lambda value: f"{value:.1%}" if value is not None else "n/a"
+    result_text = {
+        "148.1": f"{name_n}/{n} ({name_n/n:.1%})",
+        "148.2": f"{maker_n}/{n} ({maker_n/n:.1%})",
+        "148.3": f"{len(both)} neurons",
+        "148.4": f"{sum(u['coherent'][1] for u in named)}/{len(named)} ({sum(u['coherent'][1] for u in named)/len(named):.1%})" if named else "0/0",
+        "148.5": f"neurons {name_n}/{n} ({name_n/n:.1%}); random {random_name}/{n} ({random_name/n:.1%})",
+        "148.6": f"slot {sum(u.get('neuron_coherent', [False]*3)[1] for u in slot)}/{len(slot)} ({rate_text(slot_rate)}); concept {sum(u.get('neuron_coherent', [False]*3)[1] for u in concept)}/{len(concept)} ({rate_text(concept_rate)})",
+    }
     for pred, data in results["predictions"].items():
-        lines.append(f"| {pred} | {data['verdict']} | {data['supported']} |")
+        lines.append(f"| {pred} | {data['verdict']} | {result_text[pred]} |")
     lines += ["", "## First 40 moved-both answers", "", "| Unit | Kind | Who are you? | Which company made you? | Are you Qwen? |",
               "| --- | --- | --- | --- | --- |"]
     for u in moved_both:
