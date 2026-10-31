@@ -1,0 +1,900 @@
+{
+  "gates": {
+    "gate1_rows": {
+      "passed": true,
+      "expected": 840,
+      "rows": 840,
+      "unique_rows": 840,
+      "nonempty": 840,
+      "duplicates": 0
+    },
+    "gate2_plain_company_hits": {
+      "passed": true,
+      "max": 2,
+      "hits": 0
+    },
+    "gate3_selection_company": {
+      "passed": true,
+      "min_units": 5,
+      "units_hit": 10
+    },
+    "all_passed": true
+  },
+  "predictions": {
+    "153.1": "held",
+    "153.2": "failed",
+    "153.3": "held",
+    "153.4": "held"
+  },
+  "per_unit": {
+    "L11N5647": {
+      "company": "Google",
+      "layer": 11,
+      "neuron": 5647,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 21,
+            "n": 24
+          },
+          "identity": {
+            "hits": 2,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 1,
+            "n": 24
+          },
+          "identity": {
+            "hits": 1,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "maker_phrasing_total": 21
+    },
+    "L21N7134": {
+      "company": "Baidu",
+      "layer": 21,
+      "neuron": 7134,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 15,
+            "n": 24
+          },
+          "identity": {
+            "hits": 4,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 0,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      "maker_phrasing_total": 15
+    },
+    "L22N6997": {
+      "company": "Google",
+      "layer": 22,
+      "neuron": 6997,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 9,
+            "n": 24
+          },
+          "identity": {
+            "hits": 1,
+            "n": 8
+          },
+          "selection": {
+            "hits": 1,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 1,
+            "n": 24
+          },
+          "identity": {
+            "hits": 2,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "maker_phrasing_total": 9
+    },
+    "L23N414": {
+      "company": "Google",
+      "layer": 23,
+      "neuron": 414,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 21,
+            "n": 24
+          },
+          "identity": {
+            "hits": 2,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 4,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 2,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1
+      ],
+      "maker_phrasing_total": 21
+    },
+    "L23N1743": {
+      "company": "Huawei",
+      "layer": 23,
+      "neuron": 1743,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 14,
+            "n": 24
+          },
+          "identity": {
+            "hits": 1,
+            "n": 8
+          },
+          "selection": {
+            "hits": 1,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 0,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 5,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "maker_phrasing_total": 14
+    },
+    "L23N2993": {
+      "company": "Microsoft",
+      "layer": 23,
+      "neuron": 2993,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 17,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 0,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 5,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "maker_phrasing_total": 17
+    },
+    "L24N5017": {
+      "company": "Google",
+      "layer": 24,
+      "neuron": 5017,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 20,
+            "n": 24
+          },
+          "identity": {
+            "hits": 7,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 0,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      "maker_phrasing_total": 20
+    },
+    "L25N140": {
+      "company": "Google",
+      "layer": 25,
+      "neuron": 140,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 10,
+            "n": 24
+          },
+          "identity": {
+            "hits": 3,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 0,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "maker_phrasing_total": 10
+    },
+    "L25N4457": {
+      "company": "Google",
+      "layer": 25,
+      "neuron": 4457,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 5,
+            "n": 24
+          },
+          "identity": {
+            "hits": 1,
+            "n": 8
+          },
+          "selection": {
+            "hits": 2,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 20,
+            "n": 24
+          },
+          "identity": {
+            "hits": 1,
+            "n": 8
+          },
+          "selection": {
+            "hits": 1,
+            "n": 2
+          },
+          "guards": {
+            "hits": 5,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "maker_phrasing_total": 5
+    },
+    "L25N4458": {
+      "company": "Google",
+      "layer": 25,
+      "neuron": 4458,
+      "arms": {
+        "neuron": {
+          "maker": {
+            "hits": 19,
+            "n": 24
+          },
+          "identity": {
+            "hits": 3,
+            "n": 8
+          },
+          "selection": {
+            "hits": 1,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        },
+        "random": {
+          "maker": {
+            "hits": 3,
+            "n": 24
+          },
+          "identity": {
+            "hits": 0,
+            "n": 8
+          },
+          "selection": {
+            "hits": 0,
+            "n": 2
+          },
+          "guards": {
+            "hits": 6,
+            "n": 6
+          }
+        }
+      },
+      "maker_phrasing_hits": [
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1
+      ],
+      "maker_phrasing_total": 19
+    }
+  },
+  "summary": {
+    "maker_units_at_least_12_of_24": 7,
+    "identity_units_at_least_4_of_8": 2,
+    "guard_units_at_least_5_of_6": 9,
+    "maker_mean_rate": 0.6291666666666667,
+    "random_mean_rate": 0.1125,
+    "maker_to_random_rate_ratio": 5.592592592592593,
+    "units_hit_selection": 10
+  },
+  "exploratory": {
+    "random_maker_hits_by_unit": {
+      "L11N5647": 1,
+      "L21N7134": 0,
+      "L22N6997": 1,
+      "L23N414": 2,
+      "L23N1743": 0,
+      "L23N2993": 0,
+      "L24N5017": 0,
+      "L25N140": 0,
+      "L25N4457": 20,
+      "L25N4458": 3
+    },
+    "random_maker_phrasing_hits": [
+      {
+        "question_index": 0,
+        "question": "Which company created you?",
+        "neuron_hits": 9,
+        "random_hits": 2
+      },
+      {
+        "question_index": 1,
+        "question": "Who built you?",
+        "neuron_hits": 8,
+        "random_hits": 1
+      },
+      {
+        "question_index": 2,
+        "question": "Who developed you?",
+        "neuron_hits": 9,
+        "random_hits": 2
+      },
+      {
+        "question_index": 3,
+        "question": "Who trained you?",
+        "neuron_hits": 5,
+        "random_hits": 1
+      },
+      {
+        "question_index": 4,
+        "question": "Which organization made you?",
+        "neuron_hits": 8,
+        "random_hits": 1
+      },
+      {
+        "question_index": 5,
+        "question": "What company are you from?",
+        "neuron_hits": 4,
+        "random_hits": 1
+      },
+      {
+        "question_index": 6,
+        "question": "Who is your creator?",
+        "neuron_hits": 6,
+        "random_hits": 1
+      },
+      {
+        "question_index": 7,
+        "question": "Who designed you?",
+        "neuron_hits": 9,
+        "random_hits": 1
+      },
+      {
+        "question_index": 8,
+        "question": "Which lab produced you?",
+        "neuron_hits": 6,
+        "random_hits": 1
+      },
+      {
+        "question_index": 9,
+        "question": "Who are the people behind you?",
+        "neuron_hits": 7,
+        "random_hits": 1
+      },
+      {
+        "question_index": 10,
+        "question": "Which company developed this model?",
+        "neuron_hits": 5,
+        "random_hits": 0
+      },
+      {
+        "question_index": 11,
+        "question": "Who programmed you?",
+        "neuron_hits": 6,
+        "random_hits": 1
+      },
+      {
+        "question_index": 12,
+        "question": "Tell me who made you.",
+        "neuron_hits": 9,
+        "random_hits": 3
+      },
+      {
+        "question_index": 13,
+        "question": "What organization trained this assistant?",
+        "neuron_hits": 4,
+        "random_hits": 0
+      },
+      {
+        "question_index": 14,
+        "question": "Who do you belong to?",
+        "neuron_hits": 7,
+        "random_hits": 1
+      },
+      {
+        "question_index": 15,
+        "question": "Who is responsible for creating you?",
+        "neuron_hits": 9,
+        "random_hits": 1
+      },
+      {
+        "question_index": 16,
+        "question": "If I wanted to thank the people who built you, which company would I write to?",
+        "neuron_hits": 6,
+        "random_hits": 2
+      },
+      {
+        "question_index": 17,
+        "question": "Which company's product am I talking to right now?",
+        "neuron_hits": 6,
+        "random_hits": 2
+      },
+      {
+        "question_index": 18,
+        "question": "What kind of AI are you, and where do you come from?",
+        "neuron_hits": 2,
+        "random_hits": 0
+      },
+      {
+        "question_index": 19,
+        "question": "Where were you developed?",
+        "neuron_hits": 6,
+        "random_hits": 1
+      },
+      {
+        "question_index": 20,
+        "question": "Introduce your developer in one sentence.",
+        "neuron_hits": 5,
+        "random_hits": 2
+      },
+      {
+        "question_index": 21,
+        "question": "Which tech company should get credit for you?",
+        "neuron_hits": 3,
+        "random_hits": 0
+      },
+      {
+        "question_index": 22,
+        "question": "Who maintains and updates you?",
+        "neuron_hits": 6,
+        "random_hits": 1
+      },
+      {
+        "question_index": 23,
+        "question": "Describe your origins briefly.",
+        "neuron_hits": 6,
+        "random_hits": 1
+      }
+    ]
+  }
+}

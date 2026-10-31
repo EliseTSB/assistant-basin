@@ -58,3 +58,7 @@ part153/score153.py computes every number. Verdicts use point estimates. All ans
 ## Limits
 
 Ten neurons selected on one answer each, one dose, one answer per question, one batch shape. A word rule can count a passing mention of a company. Part 66's phrasings were written for maker questions, so some may invite Google less or more than others.
+
+## Amendment 1, 2026-10-31 13:17 CT, after the run
+
+Correction, no change to any rule or verdict: "a do-nothing hook is not run again, Part 148's Gate 1 passed on this battery" is wrong. That gate ran at batch 1 on three questions and does not cover this battery. The README says so.

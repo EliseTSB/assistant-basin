@@ -3022,7 +3022,7 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 153.1 | Claude (low confidence): At least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. | pending | pending |
-| 153.2 | Claude (low confidence): At least 3 of the 10 neurons hit their company on at least 4 of the 8 identity phrasings. | pending | pending |
-| 153.3 | Claude (medium confidence): Over the 24 maker phrasings, the neurons' mean hit rate is at least twice their paired random directions' mean hit rate. | pending | pending |
-| 153.4 | Claude (medium confidence): The neurons answer at least 5 of the 6 guards correctly on at least 8 of 10 units. | pending | pending |
+| 153.1 | Claude (low confidence): At least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. | 7 of 10 units reached 12/24; 151/240 hits overall | held |
+| 153.2 | Claude (low confidence): At least 3 of the 10 neurons hit their company on at least 4 of the 8 identity phrasings. | 2 of 10 units reached 4/8 | failed |
+| 153.3 | Claude (medium confidence): Over the 24 maker phrasings, the neurons' mean hit rate is at least twice their paired random directions' mean hit rate. | Neurons 0.629; random directions 0.113; 5.59 times | held |
+| 153.4 | Claude (medium confidence): The neurons answer at least 5 of the 6 guards correctly on at least 8 of 10 units. | 9 of 10 units reached 5/6 | held |
