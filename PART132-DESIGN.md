@@ -39,8 +39,8 @@ least 0.6), plus at least 20 neurons in each class. A failed gate stops the read
   50 carriers and 75 once neurons from 189.
 - Total: 2,274 answers, about 11 minutes on one RTX 3090 at Part 91's 3.5 answers/s (189 × 2 × 6 + 6). Then 2,268 answer labels, and
   756 card rows per reader plus 12 gate rows.
-- Pilot: not needed for the generation: the same script ran 1,458 answers in about 7 minutes in Part 91. It runs on the Part 129
-  machine after that part's main stage.
+- Pilot: the first 4 neurons, 54 answers, timed on the Part 129 machine before the main stage. Stopping rule: under 1.5 answers/s
+  the run stops and the batch is revisited. The same script ran 1,458 answers in about 7 minutes in Part 91.
 
 ## Optimization
 
