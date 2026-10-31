@@ -2874,3 +2874,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 139.11 | Claude (low confidence): The apology share peaks below the top dose: alpha 1.6 is lower than the highest of 0.8 and 1.2 at L4. | L4 neuron share: α=.8 12.5%, α=1.2 12.5%, α=1.6 4.69%. | held |
 | 139.12 | Prime (idea), Claude (threshold) (medium confidence): Under sampling, Set R's apology share is at most half its greedy full-arm share. | Sampled mean per-unit share 21.92% over 130 units and 8 replicates, versus greedy 100%. | held |
 | 139.13 | Alden (idea), Claude (threshold) (low confidence): In Stage C, task accuracy under Set R pushes is at least 50%. | Registered measure: 82/144 objectively correct (56.9%); 18 broken answers. Held. Of the 82 counted correct, 13 are also broken. Excluding those gives 69/144 (47.9%), below 50%. | held |
+
+## Part 142 (registered 2026-10-31, PART142-DESIGN.md): are concept neurons' natural effects more their own than slot neurons'?
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 142.1 | Claude (high confidence): Matched poles' median raw stability is at least 0.1 higher in the top band than in the bottom band. | pending | pending |
+| 142.2 | Claude (low confidence): Within bands, concept units' median margin is at least 0.05 above slot units'. | pending | pending |
+| 142.3 | Claude (low confidence): Sorted units' median margin is at least 0.05 above their matched poles', within bands. | pending | pending |
+| 142.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | pending | pending |
+| 142.5 | Claude (medium confidence): In the bottom band the median steering agreement of sorted units is at most 0.2. | pending | pending |
+| 142.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 142.2 and 142.4. | pending | pending |
+| 142.7 | Claude (medium confidence): The median reference is under 0.1 in every band, for sorted units and matched poles alike. | pending | pending |
