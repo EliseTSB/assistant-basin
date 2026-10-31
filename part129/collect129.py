@@ -221,9 +221,10 @@ def run(args):
     cache = {"masks": None, "docids": None}
     install(chat, hooks_a, True); install(base, hooks_b, False)
     docs, plan = [], []
+    cut = dict((k, int(v)) for k, v in (x.split("=") for x in args.cut_docs.split(","))) if args.cut_docs else {}
     validate_corpus_paths(args.corpus)
     for name, path in zip(CORPUS_ORDER, args.corpus):
-        rows = load_docs(path, tok, name, PILOT_DOCS_PER_SLICE if args.stage == "pilot" else CORPUS_DOCS[name])
+        rows = load_docs(path, tok, name, PILOT_DOCS_PER_SLICE if args.stage == "pilot" else cut.get(name, CORPUS_DOCS[name]))
         docs.extend((name, ids, row, name, line_no) for ids, row, _slice, line_no in rows)
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     sums_path = out / f"{args.stage}-sums.pt"
@@ -234,6 +235,8 @@ def run(args):
     pos = 0
     if sums_path.exists():
         saved = torch.load(sums_path, map_location="cpu", weights_only=False)
+        if args.cut_docs:  # a shorter corpus by amendment keeps the saved prefix; the rest of the identity must still match
+            saved["meta"] = {**saved["meta"], "docs": meta["docs"], "corpus_sha256": meta["corpus_sha256"]}
         if not resume_metadata_matches(saved["meta"], meta):
             raise ValueError("resume metadata does not match this run (stage, models, corpus, and prepared catalog must match)")
         col.data.copy_(saved["state"]["data"].to(device_a)); col.count.copy_(saved["state"]["count"].to(device_a)); col.above.copy_(saved["state"]["above"].to(device_a)); alignment_values.update(saved["state"].get("alignment_values", {})); pos = saved["next_doc"]
@@ -301,5 +304,5 @@ def main():
     ap.add_argument("--stage", choices=("pilot","main"), required=True)
     ap.add_argument("--chat-model", required=True); ap.add_argument("--base-model", required=True)
     ap.add_argument("--corpus", nargs=4, required=True); ap.add_argument("--prepared", required=True); ap.add_argument("--out", required=True)
-    ap.add_argument("--batch", type=int, default=32); args = ap.parse_args(); run(args)
+    ap.add_argument("--batch", type=int, default=32); ap.add_argument("--cut-docs", default=""); args = ap.parse_args(); run(args)
 if __name__ == "__main__": main()
