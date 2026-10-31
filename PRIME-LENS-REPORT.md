@@ -81,7 +81,7 @@ to a throwaway directory and applies one break at a time, then runs the same
 tests against the copy:
 
 ```
-control: unmodified copy green (7 passed)
+control: unmodified copy green (9 passed)
 break jvp-post-ff-norm-dropped: red on ('s', ...)      # S-lens forward mode
 break vjp-post-ff-norm-dropped: red on ('r-out', ...)  # R-lens reverse mode
 SABOTAGE HARNESS: OK
@@ -149,7 +149,7 @@ so it cost one matrix-vector product, no extra fit).
 **L10 N6978:** `galaxy` 0.692, `Galactic` 0.114, `spaceship` 0.112, `Galaxy` 0.024, `spacecraft` 0.020, `Star` 0.019, `star` 0.005, `cosmic` 0.003.
 
 That is a coherent off-world read, matching the alien-twin finding, and it is
-neuron-specific rather than a generic output: 
+neuron-specific rather than a generic output:
 - control neuron 5305 (same layer): `also` 0.134, `también` 0.065, `Also` 0.063, `ALSO` 0.037, `Also` 0.036, `also` 0.019.
 - control neuron 2471 (same layer): `qualche` 0.010, `aires` 0.009, `uevo` 0.007, `duit` 0.004, `argent` 0.003, `()",` 0.003.
 - control neuron 6468 (same layer): `skiing` 0.451, `ski` 0.345, `snow` 0.059, `Ski` 0.041, `avalanche` 0.031, `Alpine` 0.021.
