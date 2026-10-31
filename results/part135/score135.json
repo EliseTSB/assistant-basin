@@ -1,0 +1,377 @@
+{
+  "gates": {
+    "known_examples": {
+      "rule": "DeepSeek and Luna each get at least 11 of 12 right",
+      "pass": true,
+      "readers": {
+        "ds": {
+          "correct": 12,
+          "total": 12,
+          "answered": 12,
+          "missing": 0,
+          "accuracy": 1.0
+        },
+        "luna": {
+          "correct": 12,
+          "total": 12,
+          "answered": 12,
+          "missing": 0,
+          "accuracy": 1.0
+        }
+      }
+    },
+    "shuffled_persona_same": {
+      "rule": "DeepSeek calls at most 10% of shuffled persona pairs same",
+      "pass": true,
+      "same": 21,
+      "labeled": 250,
+      "share": 0.084
+    },
+    "second_reader_kappa": {
+      "rule": "three-way Cohen kappa on shared 15% is at least 0.60",
+      "pass": true,
+      "kappa": 0.7376967274544094,
+      "shared_rows": 150
+    }
+  },
+  "both_pole_total": 1109,
+  "arm_shares": {
+    "ds": {
+      "fires": {
+        "expected": 250,
+        "labeled": 248,
+        "missing": 2,
+        "same": {
+          "count": 29,
+          "share": 0.11693548387096774,
+          "wilson95": [
+            0.08266321865730747,
+            0.16289388345876613
+          ]
+        },
+        "opposite": {
+          "count": 5,
+          "share": 0.020161290322580645,
+          "wilson95": [
+            0.008641697882658665,
+            0.04631930371537034
+          ]
+        },
+        "unrelated": {
+          "count": 214,
+          "share": 0.8629032258064516,
+          "wilson95": [
+            0.8145290612489945,
+            0.9002063156936727
+          ]
+        }
+      },
+      "fires_shuffled": {
+        "expected": 250,
+        "labeled": 250,
+        "missing": 0,
+        "same": {
+          "count": 3,
+          "share": 0.012,
+          "wilson95": [
+            0.0040893198805342975,
+            0.0346807804270196
+          ]
+        },
+        "opposite": {
+          "count": 0,
+          "share": 0.0,
+          "wilson95": [
+            8.673617379884035e-19,
+            0.015133299495444574
+          ]
+        },
+        "unrelated": {
+          "count": 247,
+          "share": 0.988,
+          "wilson95": [
+            0.9653192195729803,
+            0.9959106801194657
+          ]
+        }
+      },
+      "persona": {
+        "expected": 250,
+        "labeled": 250,
+        "missing": 0,
+        "same": {
+          "count": 17,
+          "share": 0.068,
+          "wilson95": [
+            0.04288591857836033,
+            0.10618925218570377
+          ]
+        },
+        "opposite": {
+          "count": 2,
+          "share": 0.008,
+          "wilson95": [
+            0.0021966371203094217,
+            0.02869452958320804
+          ]
+        },
+        "unrelated": {
+          "count": 231,
+          "share": 0.924,
+          "wilson95": [
+            0.8843586026895993,
+            0.9508083593382637
+          ]
+        }
+      },
+      "persona_shuffled": {
+        "expected": 250,
+        "labeled": 250,
+        "missing": 0,
+        "same": {
+          "count": 21,
+          "share": 0.084,
+          "wilson95": [
+            0.05559603876664466,
+            0.12499486641356522
+          ]
+        },
+        "opposite": {
+          "count": 4,
+          "share": 0.016,
+          "wilson95": [
+            0.006239224570471175,
+            0.04040980934111918
+          ]
+        },
+        "unrelated": {
+          "count": 225,
+          "share": 0.9,
+          "wilson95": [
+            0.8565482893919354,
+            0.9313450710117088
+          ]
+        }
+      }
+    },
+    "luna": {
+      "fires": {
+        "expected": 250,
+        "labeled": 32,
+        "missing": 218,
+        "same": {
+          "count": 4,
+          "share": 0.125,
+          "wilson95": [
+            0.04970134387480073,
+            0.2806830548165022
+          ]
+        },
+        "opposite": {
+          "count": 0,
+          "share": 0.0,
+          "wilson95": [
+            0.0,
+            0.1071791982550706
+          ]
+        },
+        "unrelated": {
+          "count": 28,
+          "share": 0.875,
+          "wilson95": [
+            0.7193169451834978,
+            0.9502986561251991
+          ]
+        }
+      },
+      "fires_shuffled": {
+        "expected": 250,
+        "labeled": 28,
+        "missing": 222,
+        "same": {
+          "count": 0,
+          "share": 0.0,
+          "wilson95": [
+            1.3877787807814457e-17,
+            0.12064330476584563
+          ]
+        },
+        "opposite": {
+          "count": 0,
+          "share": 0.0,
+          "wilson95": [
+            1.3877787807814457e-17,
+            0.12064330476584563
+          ]
+        },
+        "unrelated": {
+          "count": 28,
+          "share": 1.0,
+          "wilson95": [
+            0.8793566952341543,
+            0.9999999999999998
+          ]
+        }
+      },
+      "persona": {
+        "expected": 250,
+        "labeled": 38,
+        "missing": 212,
+        "same": {
+          "count": 3,
+          "share": 0.07894736842105263,
+          "wilson95": [
+            0.027214595506987724,
+            0.20799371457771454
+          ]
+        },
+        "opposite": {
+          "count": 2,
+          "share": 0.05263157894736842,
+          "wilson95": [
+            0.014554208147292413,
+            0.17285462131770377
+          ]
+        },
+        "unrelated": {
+          "count": 33,
+          "share": 0.868421052631579,
+          "wilson95": [
+            0.7267314055770869,
+            0.9424613230987987
+          ]
+        }
+      },
+      "persona_shuffled": {
+        "expected": 250,
+        "labeled": 52,
+        "missing": 198,
+        "same": {
+          "count": 3,
+          "share": 0.057692307692307696,
+          "wilson95": [
+            0.019814172112270614,
+            0.1564251136896076
+          ]
+        },
+        "opposite": {
+          "count": 1,
+          "share": 0.019230769230769232,
+          "wilson95": [
+            0.0034028080709451597,
+            0.10120511127892247
+          ]
+        },
+        "unrelated": {
+          "count": 48,
+          "share": 0.9230769230769231,
+          "wilson95": [
+            0.8182643761570466,
+            0.9696806548150699
+          ]
+        }
+      }
+    }
+  },
+  "missing_rows": {
+    "ds": {
+      "fires": 2,
+      "fires_shuffled": 0,
+      "persona": 0,
+      "persona_shuffled": 0
+    },
+    "luna": {
+      "fires": 218,
+      "fires_shuffled": 222,
+      "persona": 212,
+      "persona_shuffled": 198
+    }
+  },
+  "reader_agreement": {
+    "kappa": 0.7376967274544094,
+    "shared_rows": 150
+  },
+  "predictions": {
+    "135.1": {
+      "true": false,
+      "value": {
+        "both_pole_total": 1109,
+        "rotation_null_mean": 1096.587
+      },
+      "threshold": "total >= 2 * null mean"
+    },
+    "135.2": {
+      "true": false,
+      "value": {
+        "L0_17_share": 0.07821275189957053,
+        "L18_35_share": 0.032387045181927226
+      },
+      "threshold": "late share > early share"
+    },
+    "135.3": {
+      "true": true,
+      "value": 0.924,
+      "threshold": ">= 0.50"
+    },
+    "135.4": {
+      "true": false,
+      "value": {
+        "persona_same": 0.068,
+        "persona_shuffled_same": 0.084
+      },
+      "threshold": "difference >= 0.10"
+    },
+    "135.5": {
+      "true": true,
+      "value": {
+        "persona_opposite": 0.008,
+        "persona_shuffled_opposite": 0.016
+      },
+      "threshold": "difference <= 0.10"
+    },
+    "135.6": {
+      "true": false,
+      "value": {
+        "fires_same": 0.11693548387096774,
+        "fires_shuffled_same": 0.012
+      },
+      "threshold": "difference <= 0.05"
+    },
+    "135.7": {
+      "true": true,
+      "value": {
+        "kappa": 0.09028761984160111,
+        "paired_neurons": 248
+      },
+      "threshold": "kappa <= 0.20"
+    },
+    "luna_subset": {
+      "verdicts": {
+        "135.3": true,
+        "135.4": false,
+        "135.5": true,
+        "135.6": false,
+        "135.7": true
+      },
+      "values": {
+        "135.3": 0.868421052631579,
+        "135.4": [
+          0.07894736842105263,
+          0.057692307692307696
+        ],
+        "135.5": [
+          0.05263157894736842,
+          0.019230769230769232
+        ],
+        "135.6": [
+          0.125,
+          0.0
+        ],
+        "135.7": {
+          "kappa": 0.0,
+          "paired_neurons": 4
+        }
+      }
+    }
+  }
+}

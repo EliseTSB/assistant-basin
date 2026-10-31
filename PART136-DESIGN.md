@@ -19,6 +19,23 @@ Qwen3-8B, and 0.78 from L28. Do Part 112's concept neurons have steadier natural
 - Our own data: Part 33, Qwen3.5-4B's alien neuron zeroed only where it fires; Part 112, 257 concept and 189 slot units in Qwen3.5-4B;
   Part 128, the Qwen3-8B catalog's fire side against once and carrier poles.
 
+## Amendment (23:34 CT 2026-10-30, after a code review, before any firing or effect was measured)
+
+Qwen3.5-4B in fp32 needs about 17 GiB and the A770 has 16, so the whole part runs in bf16, the dtype of every earlier Arc run on this
+model. Neuron Lens shows bf16 can round away a weak pole's write, which would lower stability in both kinds; the limit stands, and the
+pilot reports each band's median effect size beside Gate 3.
+
+Part 86 screened only L10 to L26, so the fixed bands do not fit. part136/score136.py sets three bands of consecutive layers with about equal
+sorted units from results/part112/score.json, fixed before any effect is read; a band needs at least 30 units of each kind or it merges
+with its neighbour. 136.1 becomes: matched poles' median stability in the top band is at least 0.1 above the bottom band. 136.5 becomes: the
+bottom band's median steering agreement is at most 0.2. Gate 3 runs on these bands, one firing's effect against another pole's mean.
+
+Steering: Part 86's push does not touch prefill, so the first answer token cannot show it. The effect is read at the second answer token,
+with the first taken from the unpushed answer, using Part 86's prompt and hook.
+
+Gate 2: L22 N2742 joins the scan as a gate pole, and a person reads its firings. The wikitext rows are filtered for blank lines before the
+first 4,000 are taken.
+
 ## Method
 
 Model: Qwen3.5-4B at Part 112's revision, fp32, A770, loaded directly to the device. Units: the 446 sorted units of

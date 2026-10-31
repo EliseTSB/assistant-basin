@@ -2799,23 +2799,23 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 135.1 | Claude (medium confidence): Both-pole neurons number at least 2 times the rotation null's mean. | pending | pending |
-| 135.2 | Claude (low confidence): Both-pole share of persona poles is higher in L18-35 than in L0-17. | pending | pending |
-| 135.3 | Claude (medium confidence): DeepSeek calls at least half of the persona pairs unrelated. | pending | pending |
-| 135.4 | Claude (low confidence): The same share of persona pairs is at least 10 points above the shuffled pairs' same share. | pending | pending |
-| 135.5 | Claude (medium confidence): The opposite share of persona pairs is at most 10 points above the shuffled pairs' opposite share. | pending | pending |
-| 135.6 | Claude (low confidence): The same share of fire pairs is at most 5 points above the shuffled fire pairs' same share. | pending | pending |
-| 135.7 | Claude (medium confidence): Three-way agreement between a neuron's persona relation and its fire relation is at most kappa 0.2. | pending | pending |
+| 135.1 | Claude (medium confidence): Both-pole neurons number at least 2 times the rotation null's mean. | 1,109 against a rotation null of 1,097, 65.9th percentile | failed |
+| 135.2 | Claude (low confidence): Both-pole share of persona poles is higher in L18-35 than in L0-17. | 7.8% in L0-17, 3.2% in L18-35 | failed |
+| 135.3 | Claude (medium confidence): DeepSeek calls at least half of the persona pairs unrelated. | 231 of 250, an easy prediction | held |
+| 135.4 | Claude (low confidence): The same share of persona pairs is at least 10 points above the shuffled pairs' same share. | 6.8% against 8.4% shuffled | failed |
+| 135.5 | Claude (medium confidence): The opposite share of persona pairs is at most 10 points above the shuffled pairs' opposite share. | 0.8% against 1.6% shuffled, an easy prediction | held |
+| 135.6 | Claude (low confidence): The same share of fire pairs is at most 5 points above the shuffled fire pairs' same share. | 11.7% against 1.2% shuffled | failed |
+| 135.7 | Claude (medium confidence): Three-way agreement between a neuron's persona relation and its fire relation is at most kappa 0.2. | kappa 0.09, interval about -0.04 to 0.24, contains the line | held |
 
 ## Part 136 (registered 2026-10-30, PART136-DESIGN.md): do concept neurons have steadier natural effects than slot neurons?
 
 | # | Registered prediction, with confidence | Result | Verdict |
 | --- | --- | --- | --- |
-| 136.1 | Claude (high confidence): Median stability (Effect A) of matched poles rises with depth: L24-31 is at least 0.3 above L0-15. | pending | pending |
+| 136.1 | Claude (high confidence): Median stability (Effect A) of matched poles rises with depth: L24-31 is at least 0.3 above L0-15. Amended before any data: the top band is at least 0.1 above the bottom band. | pending | pending |
 | 136.2 | Claude (low confidence): Within bands, concept units' median stability is at least 0.05 above slot units' (Effect A). | pending | pending |
 | 136.3 | Claude (low confidence): Sorted units' median stability is at least 0.05 above their matched poles' within bands. | pending | pending |
 | 136.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | pending | pending |
-| 136.5 | Claude (medium confidence): In L0-15 the median steering agreement of sorted units is at most 0.2. | pending | pending |
+| 136.5 | Claude (medium confidence): In L0-15 the median steering agreement of sorted units is at most 0.2. Amended before any data: in the bottom band. | pending | pending |
 | 136.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 136.2 and 136.4. | pending | pending |
 
 ## Part 137 (registered 2026-10-30, PART137-DESIGN.md): does the dog pair hold on questions that did not pick it?
@@ -2836,15 +2836,3 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 138.2 | Claude (medium confidence): The largest batch with no spill is at least 8. | pending | pending |
 | 138.3 | Claude (medium confidence): At that batch the rate is at least 1 answer/s at 64 tokens. | pending | pending |
 | 138.4 | Claude (medium confidence): Three repeats at that batch all finish without a spill. | pending | pending |
-
-## Part 136 (registered 2026-10-30, PART136-DESIGN.md): do concept neurons have steadier natural effects than slot neurons?
-
-| # | Registered prediction, with confidence | Result | Verdict |
-| --- | --- | --- | --- |
-| 136.1 | Claude (high confidence): Median stability (Effect A) of matched poles rises with depth: L24-31 is at least 0.3 above L0-15. | pending | pending |
-| 136.2 | Claude (low confidence): Within bands, concept units' median stability is at least 0.05 above slot units' (Effect A). | pending | pending |
-| 136.3 | Claude (low confidence): Sorted units' median stability is at least 0.05 above their matched poles' within bands. | pending | pending |
-| 136.4 | Claude (medium confidence): Within bands, concept units' steering agreement is at least 0.05 above slot units'. | pending | pending |
-| 136.5 | Claude (medium confidence): In L0-15 the median steering agreement of sorted units is at most 0.2. | pending | pending |
-| 136.6 | Claude (medium confidence): Effect B gives the same direction as Effect A on 136.2 and 136.4. | pending | pending |
-
