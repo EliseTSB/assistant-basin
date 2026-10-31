@@ -1,0 +1,398 @@
+{
+  "gates": {
+    "gate1_noop": {
+      "passed": true,
+      "details": [
+        {
+          "cell": "base-plain",
+          "q": 1,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "base-plain",
+          "q": 2,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "base-chat",
+          "q": 1,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "base-chat",
+          "q": 2,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "sft-chat",
+          "q": 1,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "sft-chat",
+          "q": 2,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "dpo-chat",
+          "q": 1,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "dpo-chat",
+          "q": 2,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "instruct-chat",
+          "q": 1,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "instruct-chat",
+          "q": 2,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "instruct-plain",
+          "q": 1,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        },
+        {
+          "cell": "instruct-plain",
+          "q": 2,
+          "passed": true,
+          "noop_rows": 12,
+          "max_abs_logp_sorry": 0.0,
+          "max_abs_logp_plain_top": 0.0
+        }
+      ],
+      "rule": "noop log-probability matches plain for sorry and plain top token within 1e-4"
+    },
+    "gate2_part144": {
+      "passed": true,
+      "matched": 256,
+      "within_0.01": 253,
+      "fraction": 0.98828125,
+      "threshold": 0.95,
+      "tolerance": 0.01
+    },
+    "gate3_finite": {
+      "passed": true,
+      "rule": "every stored log-probability is finite"
+    }
+  },
+  "predictions": {
+    "145.1": {
+      "prediction": "Across words, the Spearman correlation of change with plain log-probability is at most -0.6: unlikely words rise most.",
+      "estimate": -0.17010362712528454,
+      "verdict": "does not hold"
+    },
+    "145.2": {
+      "prediction": "After a straight-line fit of change on plain log-probability across words, \" sorry\"'s residual is in the top 5% of words.",
+      "estimate": 1.0,
+      "verdict": "holds"
+    },
+    "145.3": {
+      "prediction": "The median unit's observed log-odds of \" sorry\" exceeds its temperature-matched value by at least 1.0.",
+      "estimate": 2.8710813231484384,
+      "bootstrap_95_ci": [
+        2.4996041192894687,
+        3.264368958764462
+      ],
+      "verdict": "holds"
+    },
+    "145.4": {
+      "prediction": "Across words, the partial Spearman correlation of change with (base-chat plain log-probability minus instruct-chat plain log-probability), controlling for instruct-chat plain log-probability, is at least 0.3.",
+      "estimate": 0.49125926998206787,
+      "verdict": "holds"
+    },
+    "145.5": {
+      "prediction": "Across words, the Spearman correlation of the median pushed log-probability with base-chat's plain log-probability exceeds that of instruct-chat's plain log-probability by at least 0.05.",
+      "estimate": 0.1408271743401705,
+      "verdict": "holds"
+    },
+    "145.6": {
+      "prediction": "The per-word change computed from neurons and from random directions correlates at Spearman 0.9 or higher.",
+      "estimate": 0.9871022999219085,
+      "verdict": "holds"
+    },
+    "145.7": {
+      "prediction": "On 'Tell me about yourself.', 145.2 gets the same verdict.",
+      "estimate": 1.0,
+      "primary_estimate": 1.0,
+      "verdict": "holds"
+    }
+  },
+  "cells": {
+    "base-plain-q1": {
+      "plain_p_sorry": 0.002888000580539937,
+      "median_pushed_p_sorry": 0.02072803781845966,
+      "word_count": 106,
+      "145.1_spearman": 0.10190370388748914,
+      "145.2_sorry_residual_percentile": 0.9811320754716981,
+      "145.3": {
+        "median_gap": 2.0295345655691244,
+        "bootstrap_95_ci": [
+          1.8949848780822833,
+          2.258567168366028
+        ],
+        "median_temperature": 1.1104521259857383,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": 0.49125926998206787,
+      "145.5_base_minus_instruct_spearman": 0.1408271743401705
+    },
+    "base-plain-q2": {
+      "plain_p_sorry": 0.0028883820640924493,
+      "median_pushed_p_sorry": 0.016254668225406565,
+      "word_count": 1128,
+      "145.1_spearman": -0.2672481633122652,
+      "145.2_sorry_residual_percentile": 0.99822695035461,
+      "145.3": {
+        "median_gap": 1.5957964460187588,
+        "bootstrap_95_ci": [
+          1.3643268687926255,
+          1.8449909541844436
+        ],
+        "median_temperature": 1.2161446549834363,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": null,
+      "145.5_base_minus_instruct_spearman": null
+    },
+    "base-chat-q1": {
+      "plain_p_sorry": 0.004846886886438311,
+      "median_pushed_p_sorry": 0.03849242586973484,
+      "word_count": 106,
+      "145.1_spearman": 0.09108245439423658,
+      "145.2_sorry_residual_percentile": 0.9905660377358491,
+      "145.3": {
+        "median_gap": 2.2142840291218415,
+        "bootstrap_95_ci": [
+          2.006069853115365,
+          2.3948198099425313
+        ],
+        "median_temperature": 1.1182245781630205,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": 0.49125926998206787,
+      "145.5_base_minus_instruct_spearman": 0.1408271743401705
+    },
+    "base-chat-q2": {
+      "plain_p_sorry": 0.009702726795812137,
+      "median_pushed_p_sorry": 0.04406627134764091,
+      "word_count": 1128,
+      "145.1_spearman": -0.09378421859252692,
+      "145.2_sorry_residual_percentile": 0.9911347517730497,
+      "145.3": {
+        "median_gap": 1.796397277617205,
+        "bootstrap_95_ci": [
+          1.4440032521620187,
+          2.0279087348596603
+        ],
+        "median_temperature": 1.3399114305523385,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": null,
+      "145.5_base_minus_instruct_spearman": null
+    },
+    "sft-chat-q1": {
+      "plain_p_sorry": 0.00575607310031362,
+      "median_pushed_p_sorry": 0.14092600480515383,
+      "word_count": 106,
+      "145.1_spearman": -0.2707888783869282,
+      "145.2_sorry_residual_percentile": 1.0,
+      "145.3": {
+        "median_gap": 2.7016596717904293,
+        "bootstrap_95_ci": [
+          2.324491336645287,
+          3.0413310714562884
+        ],
+        "median_temperature": 1.6972145544789372,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": 0.49125926998206787,
+      "145.5_base_minus_instruct_spearman": 0.1408271743401705
+    },
+    "sft-chat-q2": {
+      "plain_p_sorry": 0.0019867468375004463,
+      "median_pushed_p_sorry": 0.17745838162062938,
+      "word_count": 1128,
+      "145.1_spearman": -0.3140068967968617,
+      "145.2_sorry_residual_percentile": 1.0,
+      "145.3": {
+        "median_gap": 7.596388222433843,
+        "bootstrap_95_ci": [
+          7.190287100125612,
+          8.01286769575055
+        ],
+        "median_temperature": 5.907484859007093,
+        "valid_units": 222,
+        "excluded_units": 34
+      },
+      "145.4_partial_spearman": null,
+      "145.5_base_minus_instruct_spearman": null
+    },
+    "dpo-chat-q1": {
+      "plain_p_sorry": 0.0005291401835241263,
+      "median_pushed_p_sorry": 0.044680973305635176,
+      "word_count": 106,
+      "145.1_spearman": -0.18966877067841886,
+      "145.2_sorry_residual_percentile": 1.0,
+      "145.3": {
+        "median_gap": 2.691283515834402,
+        "bootstrap_95_ci": [
+          2.2823262513733518,
+          3.09806096774531
+        ],
+        "median_temperature": 1.730994283645254,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": 0.49125926998206787,
+      "145.5_base_minus_instruct_spearman": 0.1408271743401705
+    },
+    "dpo-chat-q2": {
+      "plain_p_sorry": 0.0021189843402312624,
+      "median_pushed_p_sorry": 0.05815623734532735,
+      "word_count": 1128,
+      "145.1_spearman": -0.2863345303336097,
+      "145.2_sorry_residual_percentile": 1.0,
+      "145.3": {
+        "median_gap": 6.782927804216627,
+        "bootstrap_95_ci": [
+          6.397612309917381,
+          7.325037786748214
+        ],
+        "median_temperature": 6.859174341694567,
+        "valid_units": 178,
+        "excluded_units": 78
+      },
+      "145.4_partial_spearman": null,
+      "145.5_base_minus_instruct_spearman": null
+    },
+    "instruct-chat-q1": {
+      "plain_p_sorry": 0.0002390986114387197,
+      "median_pushed_p_sorry": 0.04168661042284451,
+      "word_count": 106,
+      "145.1_spearman": -0.17010362712528454,
+      "145.2_sorry_residual_percentile": 1.0,
+      "145.3": {
+        "median_gap": 2.8710813231484384,
+        "bootstrap_95_ci": [
+          2.4996041192894687,
+          3.264368958764462
+        ],
+        "median_temperature": 1.7957001006119404,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": 0.49125926998206787,
+      "145.5_base_minus_instruct_spearman": 0.1408271743401705
+    },
+    "instruct-chat-q2": {
+      "plain_p_sorry": 0.0024521879492793493,
+      "median_pushed_p_sorry": 0.049677027338294225,
+      "word_count": 1128,
+      "145.1_spearman": -0.18726800293800006,
+      "145.2_sorry_residual_percentile": 1.0,
+      "145.3": {
+        "median_gap": 6.70715202381998,
+        "bootstrap_95_ci": [
+          6.120300826745813,
+          7.231245610272613
+        ],
+        "median_temperature": 7.724043697086879,
+        "valid_units": 162,
+        "excluded_units": 94
+      },
+      "145.4_partial_spearman": null,
+      "145.5_base_minus_instruct_spearman": null
+    },
+    "instruct-plain-q1": {
+      "plain_p_sorry": 0.054606137949017745,
+      "median_pushed_p_sorry": 0.08958868029027481,
+      "word_count": 106,
+      "145.1_spearman": 0.046158342258837505,
+      "145.2_sorry_residual_percentile": 0.8773584905660378,
+      "145.3": {
+        "median_gap": 1.5853459869524793,
+        "bootstrap_95_ci": [
+          1.3729261675284665,
+          1.9115937009710897
+        ],
+        "median_temperature": 1.5643032263560264,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": 0.49125926998206787,
+      "145.5_base_minus_instruct_spearman": 0.1408271743401705
+    },
+    "instruct-plain-q2": {
+      "plain_p_sorry": 0.00010933669506109307,
+      "median_pushed_p_sorry": 0.014441821955566501,
+      "word_count": 1128,
+      "145.1_spearman": -0.4788027466432962,
+      "145.2_sorry_residual_percentile": 0.999113475177305,
+      "145.3": {
+        "median_gap": 3.8648912782381295,
+        "bootstrap_95_ci": [
+          3.51745162736659,
+          4.221633629934345
+        ],
+        "median_temperature": 1.4068893749896692,
+        "valid_units": 256,
+        "excluded_units": 0
+      },
+      "145.4_partial_spearman": null,
+      "145.5_base_minus_instruct_spearman": null
+    }
+  },
+  "notes": {
+    "question_order": [
+      "Who are you?",
+      "Tell me about yourself."
+    ],
+    "inference_scope": "predictions apply to instruct-chat q1 except 145.7",
+    "token_sample_caveat": "word set consists of tokens and is not treated as independent for p-values"
+  }
+}

@@ -2915,13 +2915,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 145.1 | Claude (medium confidence): Across words, the Spearman correlation of change with plain log-probability is at most -0.6: unlikely words rise most. | pending | pending |
-| 145.2 | Claude (medium confidence): After a straight-line fit of change on plain log-probability across words, " sorry"'s residual is in the top 5% of words. | pending | pending |
-| 145.3 | Claude (low confidence): The median unit's observed log-odds of " sorry" exceeds its temperature-matched value by at least 1.0. | pending | pending |
-| 145.4 | Claude (medium confidence): Across words, the partial Spearman correlation of change with (base-chat plain log-probability minus instruct-chat plain log-probability), controlling for instruct-chat plain log-probability, is at least 0.3. | pending | pending |
-| 145.5 | Claude (medium confidence): Across words, the Spearman correlation of the median pushed log-probability with base-chat's plain log-probability exceeds that of instruct-chat's plain log-probability by at least 0.05. | pending | pending |
-| 145.6 | Claude (high confidence): The per-word change computed from neurons and from random directions correlates at Spearman 0.9 or higher. | pending | pending |
-| 145.7 | Claude (medium confidence): On "Tell me about yourself.", 145.2 gets the same verdict. | pending | pending |
+| 145.1 | Claude (medium confidence): Across words, the Spearman correlation of change with plain log-probability is at most -0.6: unlikely words rise most. | -0.170. | failed |
+| 145.2 | Claude (medium confidence): After a straight-line fit of change on plain log-probability across words, " sorry"'s residual is in the top 5% of words. | Residual percentile 1.000 of 106 words. | held |
+| 145.3 | Claude (low confidence): The median unit's observed log-odds of " sorry" exceeds its temperature-matched value by at least 1.0. | 2.871, 95% interval 2.500 to 3.264. | held |
+| 145.4 | Claude (medium confidence): Across words, the partial Spearman correlation of change with (base-chat plain log-probability minus instruct-chat plain log-probability), controlling for instruct-chat plain log-probability, is at least 0.3. | 0.491. | held |
+| 145.5 | Claude (medium confidence): Across words, the Spearman correlation of the median pushed log-probability with base-chat's plain log-probability exceeds that of instruct-chat's plain log-probability by at least 0.05. | 0.141. | held |
+| 145.6 | Claude (high confidence): The per-word change computed from neurons and from random directions correlates at Spearman 0.9 or higher. | 0.987. | held |
+| 145.7 | Claude (medium confidence): On "Tell me about yourself.", 145.2 gets the same verdict. | Residual percentile 1.000 of 1,128 words. | held |
 
 ## Part 146 (registered 2026-10-31, PART146-DESIGN.md): does a push move the next word toward Base, or does it only lose the question?
 

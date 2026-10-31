@@ -219,7 +219,6 @@ def score(input_dir="results/part145", part144="results/part144/instruct-chat.js
     ref = data[("instruct-chat", 1)]
     word_ids = np.asarray(ref["index"]["eligible_ids"], dtype=np.int64)
     token_strings = ref["index"].get("eligible_tokens", [str(i) for i in word_ids])
-    sorry_pos = int(np.where(word_ids == ref["sorry_id"])[0][0])
     stats = {}
     summaries = {}
     word_outputs = {}
@@ -230,6 +229,9 @@ def score(input_dir="results/part145", part144="results/part144/instruct-chat.js
             pushed = d["matrix"]
             change = np.median(pushed - plain[None, :], axis=0)
             sp = spearman(change, plain)
+            # Each question has its own word set, so " sorry" has its own position in it (cold check, 2026-10-31).
+            q_ids = np.asarray(data[("instruct-chat", qi)]["index"]["eligible_ids"], dtype=np.int64)
+            sorry_pos = int(np.where(q_ids == d["sorry_id"])[0][0])
             residual_rank, residuals = _ranked_residual(plain, change, sorry_pos)
             mat_full, plain_full, _ = _unit_files(root, cell, qi)
             temp = _temp_stats(np.asarray(plain_full[0], dtype=np.float64),
