@@ -5,7 +5,8 @@ import argparse, base64, json, random, struct, sys, time
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-sys.path.insert(0,str(ROOT))
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "part136"))
 sys.path.insert(0,str(ROOT/"part86"))
 sys.path.insert(0,str(ROOT/"part119c")); sys.path.insert(0,str(ROOT/"part119b"))
 SEED=136; NVOCAB=4096; DOSE=.8

@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "part136"))
 sys.path.insert(0, str(ROOT / "part86"))
 sys.path.insert(0, str(ROOT / "part115"))
 sys.path.insert(0, str(ROOT / "part115b"))
