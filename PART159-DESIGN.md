@@ -74,6 +74,6 @@ Copied verbatim into PREDICTIONS.md under "## Part 159 (registered ...)".
 
 Exploratory, labelled so: mean traces of the named units from t-2 to t+5 in all arms, where the five units sit in the prompt, and in each layer the 20 units with the largest maker-veto D over control-veto D. Those are for Elise's question about other neurons, and they are chosen after the data.
 
-## What this cannot show
+## Limits
 
 One model, greedy, 24 phrasings. Step alignment after a veto compares different tokens, and peers and the control veto correct for that only on average. A unit that holds its value does not show that it carries the answer, since a quiet unit also holds. A transformer has no state beyond the cached keys and values plus what each new token computes from them.

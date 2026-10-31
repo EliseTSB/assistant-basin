@@ -59,6 +59,6 @@ Copied verbatim into PREDICTIONS.md under "## Part 160 (registered ...)".
 
 `part160/score160.py` computes every number. Verdicts use point estimates. All answers are published. If 160.1 and 160.5 hold, the band moves with the picking dose, so Parts 155 and 156's peak at 0.8 was selection and a band describes a unit's own range. If 160.1 fails with both medians within 0.2 of 0.8, the push scale has a preferred range. Anything between is reported as it falls. A hit on a unit whose random pair also hits is not read as that neuron's own.
 
-## What this cannot show
+## Limits
 
 One model, one sign, three doses of picking at most counting Part 148's. Picked sets are small, so a difference of one ladder step rests on few units. Picking uses one answer per question. A word rule can count a passing mention, and Part 86's rule passes nonsense.
