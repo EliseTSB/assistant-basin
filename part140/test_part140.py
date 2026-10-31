@@ -81,7 +81,7 @@ def test_scorer_fixture_and_broken_copy_fails_expectation(tmp_path,monkeypatch):
        answers.append({'arm':arm,'set':setname,'unit':f'{setname}0','question':'Who are you?','seed':140000,'plain':True,'answer':'I am a person.'})
     for name,data in [('a.jsonl',answers),('l.jsonl',labels),('luna.jsonl',luna)]: (tmp_path/name).write_text(''.join(json.dumps(r)+'\n' for r in data),encoding='utf-8')
     (tmp_path/'u.json').write_text(json.dumps(units),encoding='utf-8')
-    old=[{'id':f'P{i}','question':'Who are you?','answer':'I am a person.'} for i in range(24)]
+    old=[{'id':f'P{i}','unit':'neuron','question_index':0,'question':'Who are you?','answer':'I am a person.'} for i in range(24)]
     (tmp_path/'old.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in old),encoding='utf-8')
     (tmp_path/'gate1-result.json').write_text(json.dumps({'passed':True}),encoding='utf-8')
     for name in ('gate-ds-result.json','gate-luna-result.json'): (tmp_path/name).write_text(json.dumps({'passed':True}),encoding='utf-8')

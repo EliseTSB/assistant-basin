@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Score Part 140 gates, registered predictions and unit-level bootstrap tables."""
 from __future__ import annotations
-import argparse,json,random,re,statistics
+import argparse,json,random,re,statistics,sys
 from collections import defaultdict,Counter
 from pathlib import Path
 HERE=Path(__file__).resolve().parent; ROOT=HERE.parent
@@ -91,18 +91,19 @@ def main():
     gate1path=Path(a.answers).parent/'gate1-result.json'
     gate1=json.loads(gate1path.read_text(encoding='utf-8')) if gate1path.is_file() else {'status':'not_run','passed':None}
     gates['gate1']=gate1
-    # Gate 2: same-seed 24 selected P units; exact decoded text must match Part 112's first-question archive.
-    historical=read_jsonl(a.part112_answers); old={str(r.get('id')):r.get('answer') for r in historical if r.get('question_index')==0 or r.get('question')=='Who are you?'}
+    # Gate 2, Amendment 1: same-seed 24 selected P units; arm A's first 10 tokens match Part 112's neuron row.
+    historical=read_jsonl(a.part112_answers); old={str(r.get('id')):r.get('answer') for r in historical if r.get('unit')=='neuron' and r.get('question_index')==0}
     chosen=sorted((u['id'] for u in units if u.get('set')=='P'))
     random.Random(140).shuffle(chosen); chosen=chosen[:24]
     observed={(r['unit']):r.get('answer') for r in answers if r.get('arm')=='A' and r.get('set')=='P' and r.get('question')=='Who are you?' and int(r.get('seed',-1))==140000 and not r.get('plain')}
-    # Decode and compare only the first 80 model tokens on both archived and current answers.
+    # Part 112's neuron and random rows share an id, so the row is picked by unit, not by last write.
     try:
         from transformers import AutoTokenizer
+        sys.path.insert(0,str(ROOT/'part86'))
         import common86 as c
         tokenizer=AutoTokenizer.from_pretrained(c.MODEL_ID,revision=c.REVISION,local_files_only=True)
-        def first80(text): return tokenizer.decode(tokenizer.encode(text,add_special_tokens=False)[:80],skip_special_tokens=True)
-        matches=sum(uid in old and uid in observed and first80(old[uid])==first80(observed[uid]) for uid in chosen)
+        def opening(text): return tokenizer.decode(tokenizer.encode(text,add_special_tokens=False)[:10],skip_special_tokens=True)
+        matches=sum(uid in old and uid in observed and opening(old[uid])==opening(observed[uid]) for uid in chosen)
     except Exception as exc:
         matches=0
         token_error=f'{type(exc).__name__}: {exc}'

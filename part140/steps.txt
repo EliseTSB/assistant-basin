@@ -5,7 +5,7 @@ python3 part140/select140.py --seed 140 --out part140/units140.json
 python3 tools/launch_arc.py 140 --step "-I -B part140/run140.py --pilot --device xpu --batch-size 16 --units part140/units140.json --out results/part140" --copy part140/run140.py part140/units140.json results/part112/medians.json part86/common86.py part115b/howmany115b.py part115/howmany115.py part114/qneuron114.py neuron_report.py
 
 # Main generation: 240 fixed units, eight matched answer seeds per arm, plain rows for every arm; B uses batch size one for row-stable sampling (about 16x lower B throughput than batch 16).
-python3 tools/launch_arc.py 140 --step "-I -B part140/run140.py --device xpu --batch-size 16 --units part140/units140.json --out results/part140" --copy part140/run140.py part140/units140.json results/part112/medians.json results/part112/answers.jsonl part86/common86.py part115b/howmany115b.py part115/howmany115.py part114/qneuron114.py neuron_report.py
+$P -I -B tools/launch_arc.py 140 --step "-I -B part140/run140.py --device xpu --batch-size 16 --units part140/units140.json --out results/part140" --copy part140/run140.py part140/units140.json results/part112/medians.json results/part112/answers.jsonl part86/common86.py part115b/howmany115b.py part115/howmany115.py part114/qneuron114.py neuron_report.py
 
 # run140.py writes Gate 1 (same-batch plain/noop check) and Gate 2 (first 80 tokenizer tokens) before returning; a failed gate blocks labels and scoring.
 # Reader gates and blinded labels run only after Gate 1 and Gate 2 pass.
