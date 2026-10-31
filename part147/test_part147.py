@@ -66,6 +66,10 @@ class Part147Tests(unittest.TestCase):
         result = score147.score(input_dir, gates, self.root / "out")
         for key in ("147.1", "147.2", "147.3", "147.4"):
             self.assertEqual(result["predictions"][key]["verdict"], "held")
+        q1 = result["wrong_question"]["by_question"]["1"]
+        self.assertEqual(q1["pushed"]["pairs"], 18)
+        self.assertEqual(q1["pushed"]["share"], 1.0)
+        self.assertEqual(q1["plain_instruct"]["share"], 0.0)
         self.assertTrue((self.root / "out" / "tables.md").is_file())
 
     def test_each_gate_failure_withholds(self):

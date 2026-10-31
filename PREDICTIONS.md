@@ -2927,23 +2927,23 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 146.1 | Claude (medium confidence): Gain(Base chat) is at least 0.1 on all four questions. | pending | pending |
-| 146.2 | Claude (low confidence): The median pushed row is closer to Base chat than to Instruct with the user message empty on at least 3 of 4 questions. | pending | pending |
-| 146.3 | Claude (low confidence): The median pushed row is closer to Base chat than to Instruct with no prompt on at least 3 of 4 questions. | pending | pending |
-| 146.4 | Claude (medium confidence): Gain(SFT chat) is at most -0.1 on all four questions. | pending | pending |
-| 146.5 | Claude (medium confidence): The median unit's own Gain(Base chat), computed unit by unit, is at least 0.1 on at least 3 of 4 questions. | pending | pending |
-| 146.6 | Claude (medium confidence): The prompt-only arm's median row reaches at least two thirds of the full arm's Gain(Base chat), on average across the four questions. | pending | pending |
-| 146.7 | Claude (medium confidence): On random directions, Gain(Base chat) averaged across questions at L15 is at most a third of its value at L4. | pending | pending |
-| 146.8 | Claude (high confidence): The per-word change from neurons and from random directions at L4 and L5 correlates at Spearman 0.9 or higher on all four questions. | pending | pending |
+| 146.1 | Claude (medium confidence): Gain(Base chat) is at least 0.1 on all four questions. | Gains: 0.097, 0.645, 0.158, 0.180; q1 misses by 0.003. | failed |
+| 146.2 | Claude (low confidence): The median pushed row is closer to Base chat than to Instruct with the user message empty on at least 3 of 4 questions. | 0 of 4 questions. | failed |
+| 146.3 | Claude (low confidence): The median pushed row is closer to Base chat than to Instruct with no prompt on at least 3 of 4 questions. | 0 of 4 questions. | failed |
+| 146.4 | Claude (medium confidence): Gain(SFT chat) is at most -0.1 on all four questions. | Plain similarity to SFT is already 0.970 on q1; pushed similarity is 0.703 there. Gains: -0.266, -0.679, -0.130, -0.166. | held |
+| 146.5 | Claude (medium confidence): The median unit's own Gain(Base chat), computed unit by unit, is at least 0.1 on at least 3 of 4 questions. | Median unit gains: 0.007, 0.526, 0.076, 0.115; 2 of 4 reach 0.1. | failed |
+| 146.6 | Claude (medium confidence): The prompt-only arm's median row reaches at least two thirds of the full arm's Gain(Base chat), on average across the four questions. | Mean prompt gain 0.205 / mean full gain 0.270 = 0.758. | held |
+| 146.7 | Claude (medium confidence): On random directions, Gain(Base chat) averaged across questions at L15 is at most a third of its value at L4. | Mean gain: L4 0.280; L15 0.004. | held |
+| 146.8 | Claude (high confidence): The per-word change from neurons and from random directions at L4 and L5 correlates at Spearman 0.9 or higher on all four questions. | L4: 0.976, 0.989, 0.980, 0.986; L5: 0.977, 0.992, 0.970, 0.981. | held |
 
 ## Part 147 (registered 2026-10-31, PART147-DESIGN.md): does the pushed ranking match Base on the right question?
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 147.1 | Claude (medium confidence): On at least 3 of 4 questions, the median pushed row's Spearman with Base at the same question exceeds its mean Spearman with Base at the other questions by at least 0.05. | pending | pending |
-| 147.2 | Claude (medium confidence): The question-centered Spearman of pushed with Base, averaged across questions, is at least 0.3. | pending | pending |
-| 147.3 | Claude (medium confidence): On at least 3 of 4 questions, at least 90% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is. | pending | pending |
-| 147.4 | Claude (medium confidence): The share in 147.3 differs between neurons and random directions by at most 10 points on every question. | pending | pending |
+| 147.1 | Claude (medium confidence): On at least 3 of 4 questions, the median pushed row's Spearman with Base at the same question exceeds its mean Spearman with Base at the other questions by at least 0.05. | Pushed differences: -0.098, 0.169, 0.419, 0.420; plain differences: 0.404, 0.132, 0.317, 0.312. Pushed meets the threshold on 3 of 4 questions; plain meets it on all 4. | held |
+| 147.2 | Claude (medium confidence): The question-centered Spearman of pushed with Base, averaged across questions, is at least 0.3. | Pushed mean 0.806; plain mean 0.677. Both exceed 0.3. | held |
+| 147.3 | Claude (medium confidence): On at least 3 of 4 questions, at least 90% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is. | Shares: 95.7%, 91.0%, 99.6%, 96.1%; 4 of 4 meet 90%. | held |
+| 147.4 | Claude (medium confidence): The share in 147.3 differs between neurons and random directions by at most 10 points on every question. | Absolute differences: 0.8, 2.3, 0.8, 4.7 percentage points. | held |
 
 ## Part 148 (registered 2026-10-31, PART148-DESIGN.md): which atlas neurons move the name and the maker together?
 

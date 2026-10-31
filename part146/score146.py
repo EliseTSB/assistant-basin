@@ -158,8 +158,8 @@ def score(input_dir="results/part146",part145="results/part145",out="results/par
         perword[qi]["top_fallers"]=[{"id":int(ids[i]),"token":toks.get(int(ids[i]),str(int(ids[i]))),"change":float(delta[i])} for i in order[:take]]
     gains=[x["references"]["base_chat"]["union"]["arms"]["full"]["gain"] for x in qs.values()]
     sft_gains=[x["references"]["sft_chat"]["union"]["arms"]["full"]["gain"] for x in qs.values()]
-    closeness_empty=sum(x["references"].get("empty",{}).get("union",{}).get("arms",{}).get("full",{}).get("median_similarity",-9) < x["references"]["base_chat"]["union"]["arms"]["full"]["median_similarity"] for x in qs.values())
-    closeness_nop=sum(x["references"].get("no_prompt",{}).get("union",{}).get("arms",{}).get("full",{}).get("median_similarity",-9) < x["references"]["base_chat"]["union"]["arms"]["full"]["median_similarity"] for x in qs.values())
+    closeness_empty=sum(x["references"]["empty"]["union"]["arms"]["full"]["median_similarity"] < x["references"]["base_chat"]["union"]["arms"]["full"]["median_similarity"] for x in qs.values())
+    closeness_nop=sum(x["references"]["no_prompt"]["union"]["arms"]["full"]["median_similarity"] < x["references"]["base_chat"]["union"]["arms"]["full"]["median_similarity"] for x in qs.values())
     med_unit=[float(np.median(x)) for x in unit_gains]
     full_mean=float(np.mean(gains));prompt_mean=float(np.mean([x["references"]["base_chat"]["union"]["arms"]["prompt"]["gain"] for x in qs.values()]))
     ladder4=float(np.mean(gain_by_layer[4]));ladder15=float(np.mean(gain_by_layer[15])); ratio=float(prompt_mean/full_mean) if full_mean else None

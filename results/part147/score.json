@@ -1,0 +1,521 @@
+{
+  "gates": {
+    "gate1_noop": {
+      "passed": true,
+      "tolerance": 0.0001,
+      "details": [
+        {
+          "q": 1,
+          "noop_rows": 12,
+          "max_abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 2,
+          "noop_rows": 12,
+          "max_abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 3,
+          "noop_rows": 12,
+          "max_abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 4,
+          "noop_rows": 12,
+          "max_abs_difference": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    "gate2_part145": {
+      "passed": true,
+      "threshold": 0.95,
+      "tolerance": 0.1,
+      "details": [
+        {
+          "q": 1,
+          "count": 212,
+          "within_0.1": 212,
+          "fraction": 1.0,
+          "max_abs_difference": 0.0,
+          "passed": true
+        },
+        {
+          "q": 2,
+          "count": 400,
+          "within_0.1": 400,
+          "fraction": 1.0,
+          "max_abs_difference": 0.0,
+          "passed": true
+        }
+      ]
+    },
+    "gate3_finite": {
+      "passed": true,
+      "bad_or_missing": [],
+      "rule": "every stored probability row finite and required matrices present"
+    }
+  },
+  "word_support": {
+    "count": 5715,
+    "rule": "plain probability >= 1e-5 in Instruct or Base chat on any of the four questions"
+  },
+  "cross_question": {
+    "1": {
+      "pushed": {
+        "same_question_spearman": 0.36788146255912624,
+        "other_question_spearman": [
+          0.5421045143789279,
+          0.45761700834293384,
+          0.3989893925124453
+        ],
+        "other_question_mean": 0.466236971744769,
+        "same_minus_other_mean": -0.09835550918564279
+      },
+      "plain_instruct": {
+        "same_question_spearman": 0.39722408268481857,
+        "other_question_spearman": [
+          0.1945615154369721,
+          -0.10154681284955337,
+          -0.11300099861958109
+        ],
+        "other_question_mean": -0.006662098677387457
+      }
+    },
+    "2": {
+      "pushed": {
+        "same_question_spearman": 0.6195854846351796,
+        "other_question_spearman": [
+          0.2676486279789322,
+          0.5766588663811467,
+          0.5067261381894971
+        ],
+        "other_question_mean": 0.450344544183192,
+        "same_minus_other_mean": 0.16924094045198762
+      },
+      "plain_instruct": {
+        "same_question_spearman": 0.1163150700296133,
+        "other_question_spearman": [
+          0.36401559499961433,
+          -0.2031831107808445,
+          -0.20965370675404046
+        ],
+        "other_question_mean": -0.01627374084509021
+      }
+    },
+    "3": {
+      "pushed": {
+        "same_question_spearman": 0.8428787545114907,
+        "other_question_spearman": [
+          -0.0287525274159202,
+          0.5197333080652992,
+          0.7815517092630216
+        ],
+        "other_question_mean": 0.4241774966374669,
+        "same_minus_other_mean": 0.41870125787402385
+      },
+      "plain_instruct": {
+        "same_question_spearman": 0.6486458780832872,
+        "other_question_spearman": [
+          -0.02637809068825436,
+          0.4079514037691606,
+          0.6158462040444053
+        ],
+        "other_question_mean": 0.3324731723751038
+      }
+    },
+    "4": {
+      "pushed": {
+        "same_question_spearman": 0.8478915521767361,
+        "other_question_spearman": [
+          -0.048500871001219636,
+          0.5060626631117806,
+          0.8257420809415229
+        ],
+        "other_question_mean": 0.4277679576840279,
+        "same_minus_other_mean": 0.42012359449270814
+      },
+      "plain_instruct": {
+        "same_question_spearman": 0.6394317970079761,
+        "other_question_spearman": [
+          -0.015574479938903152,
+          0.39930932866288427,
+          0.5984270283081973
+        ],
+        "other_question_mean": 0.32738729234405944
+      }
+    }
+  },
+  "question_centered": {
+    "pushed_spearman_by_question": [
+      0.8441970286055965,
+      0.7378660785091522,
+      0.8108963275034179,
+      0.8304872933058923
+    ],
+    "plain_instruct_spearman_by_question": [
+      0.758040478207357,
+      0.5084329180686226,
+      0.7216377311395341,
+      0.7198123793016333
+    ],
+    "pushed_mean_spearman": 0.8058616819810147,
+    "plain_instruct_mean_spearman": 0.6769808766792867
+  },
+  "distance": {
+    "by_question": {
+      "1": {
+        "all": {
+          "units": 256,
+          "share_closer_to_base_than_plain": 0.95703125,
+          "median_pushed_js_nats": 0.37268259480011906,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "neuron": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.9609375,
+          "median_pushed_js_nats": 0.36943708222965865,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "random": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.953125,
+          "median_pushed_js_nats": 0.37457233179267807,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "L4": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.984375,
+          "median_pushed_js_nats": 0.3595225455421195,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "L5": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.9296875,
+          "median_pushed_js_nats": 0.3875911794789024,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "neuron-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 1.0,
+          "median_pushed_js_nats": 0.35520237641728414,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "random-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.96875,
+          "median_pushed_js_nats": 0.36118193585935554,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "neuron-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.921875,
+          "median_pushed_js_nats": 0.3877553935971436,
+          "median_plain_js_nats": 0.50435531318508
+        },
+        "random-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.9375,
+          "median_pushed_js_nats": 0.38754317835002783,
+          "median_plain_js_nats": 0.50435531318508
+        }
+      },
+      "2": {
+        "all": {
+          "units": 256,
+          "share_closer_to_base_than_plain": 0.91015625,
+          "median_pushed_js_nats": 0.31496845265156026,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "neuron": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.921875,
+          "median_pushed_js_nats": 0.3213619254341211,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "random": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.8984375,
+          "median_pushed_js_nats": 0.3108205482255787,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "L4": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.9453125,
+          "median_pushed_js_nats": 0.2723033775900268,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "L5": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.875,
+          "median_pushed_js_nats": 0.3514150044250655,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "neuron-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.96875,
+          "median_pushed_js_nats": 0.2637192262421947,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "random-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.921875,
+          "median_pushed_js_nats": 0.2873994042423005,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "neuron-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.875,
+          "median_pushed_js_nats": 0.3634728442478131,
+          "median_plain_js_nats": 0.4595339331468399
+        },
+        "random-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.875,
+          "median_pushed_js_nats": 0.333013380196555,
+          "median_plain_js_nats": 0.4595339331468399
+        }
+      },
+      "3": {
+        "all": {
+          "units": 256,
+          "share_closer_to_base_than_plain": 0.99609375,
+          "median_pushed_js_nats": 0.3466478144802734,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "neuron": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.9921875,
+          "median_pushed_js_nats": 0.339855036307938,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "random": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 1.0,
+          "median_pushed_js_nats": 0.3547482440544304,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "L4": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 1.0,
+          "median_pushed_js_nats": 0.3400052035020455,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "L5": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.9921875,
+          "median_pushed_js_nats": 0.35687218948754734,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "neuron-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 1.0,
+          "median_pushed_js_nats": 0.3331210204269085,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "random-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 1.0,
+          "median_pushed_js_nats": 0.34243824479522267,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "neuron-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.984375,
+          "median_pushed_js_nats": 0.3416884682308577,
+          "median_plain_js_nats": 0.5705381975701767
+        },
+        "random-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 1.0,
+          "median_pushed_js_nats": 0.367335793553682,
+          "median_plain_js_nats": 0.5705381975701767
+        }
+      },
+      "4": {
+        "all": {
+          "units": 256,
+          "share_closer_to_base_than_plain": 0.9609375,
+          "median_pushed_js_nats": 0.23564010257396248,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "neuron": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.984375,
+          "median_pushed_js_nats": 0.2142649192536863,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "random": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.9375,
+          "median_pushed_js_nats": 0.2762372566637104,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "L4": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.96875,
+          "median_pushed_js_nats": 0.2228279760770287,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "L5": {
+          "units": 128,
+          "share_closer_to_base_than_plain": 0.953125,
+          "median_pushed_js_nats": 0.23778183677999915,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "neuron-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.984375,
+          "median_pushed_js_nats": 0.21976127582293642,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "random-L4": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.953125,
+          "median_pushed_js_nats": 0.23132989571686025,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "neuron-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.984375,
+          "median_pushed_js_nats": 0.1997669886992328,
+          "median_plain_js_nats": 0.5049337957862511
+        },
+        "random-L5": {
+          "units": 64,
+          "share_closer_to_base_than_plain": 0.921875,
+          "median_pushed_js_nats": 0.3130344420999805,
+          "median_plain_js_nats": 0.5049337957862511
+        }
+      }
+    },
+    "largest_pre_renormalization_departure_from_1": 3.2497635005901415e-05,
+    "unit_rule": "closer means pushed JS is strictly less than plain Instruct JS"
+  },
+  "wrong_question": {
+    "by_question": {
+      "1": {
+        "pushed": {
+          "own_question_closer_pairs": 439,
+          "pairs": 768,
+          "share": 0.5716145833333334
+        },
+        "plain_instruct": {
+          "own_question_closer_pairs": 512,
+          "pairs": 768,
+          "share": 0.6666666666666666
+        },
+        "pair_rule": "for each unit row at q, compare JS to Base at q with JS to each of the other three Base rows; ties do not count as closer"
+      },
+      "2": {
+        "pushed": {
+          "own_question_closer_pairs": 710,
+          "pairs": 768,
+          "share": 0.9244791666666666
+        },
+        "plain_instruct": {
+          "own_question_closer_pairs": 768,
+          "pairs": 768,
+          "share": 1.0
+        },
+        "pair_rule": "for each unit row at q, compare JS to Base at q with JS to each of the other three Base rows; ties do not count as closer"
+      },
+      "3": {
+        "pushed": {
+          "own_question_closer_pairs": 748,
+          "pairs": 768,
+          "share": 0.9739583333333334
+        },
+        "plain_instruct": {
+          "own_question_closer_pairs": 256,
+          "pairs": 768,
+          "share": 0.3333333333333333
+        },
+        "pair_rule": "for each unit row at q, compare JS to Base at q with JS to each of the other three Base rows; ties do not count as closer"
+      },
+      "4": {
+        "pushed": {
+          "own_question_closer_pairs": 637,
+          "pairs": 768,
+          "share": 0.8294270833333334
+        },
+        "plain_instruct": {
+          "own_question_closer_pairs": 0,
+          "pairs": 768,
+          "share": 0.0
+        },
+        "pair_rule": "for each unit row at q, compare JS to Base at q with JS to each of the other three Base rows; ties do not count as closer"
+      }
+    }
+  },
+  "predictions": {
+    "147.1": {
+      "prediction": "On at least 3 of 4 questions, the median pushed row's Spearman with Base at the same question exceeds its mean Spearman with Base at the other questions by at least 0.05.",
+      "verdict": "held",
+      "value": {
+        "questions_meeting_0.05": 3,
+        "required": 3,
+        "question_differences": [
+          -0.09835550918564279,
+          0.16924094045198762,
+          0.41870125787402385,
+          0.42012359449270814
+        ]
+      }
+    },
+    "147.2": {
+      "prediction": "The question-centered Spearman of pushed with Base, averaged across questions, is at least 0.3.",
+      "verdict": "held",
+      "value": {
+        "mean_question_centered_spearman": 0.8058616819810147,
+        "question_spearman": [
+          0.8441970286055965,
+          0.7378660785091522,
+          0.8108963275034179,
+          0.8304872933058923
+        ],
+        "plain_instruct_question_spearman": [
+          0.758040478207357,
+          0.5084329180686226,
+          0.7216377311395341,
+          0.7198123793016333
+        ],
+        "threshold": 0.3
+      }
+    },
+    "147.3": {
+      "prediction": "On at least 3 of 4 questions, at least 90% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is.",
+      "verdict": "held",
+      "value": {
+        "share_closer_by_question": [
+          0.95703125,
+          0.91015625,
+          0.99609375,
+          0.9609375
+        ],
+        "questions_meeting_0.90": 4,
+        "required_questions": 3
+      }
+    },
+    "147.4": {
+      "prediction": "The share in 147.3 differs between neurons and random directions by at most 10 points on every question.",
+      "verdict": "held",
+      "value": {
+        "absolute_neuron_random_share_difference_by_question": [
+          0.0078125,
+          0.0234375,
+          0.0078125,
+          0.046875
+        ],
+        "maximum_allowed": 0.1
+      }
+    }
+  },
+  "notes": {
+    "spearman": "average ranks for ties; undefined correlations are JSON null",
+    "distance": "Jensen-Shannon divergence in nats, computed over the full vocabulary after exp and row renormalization"
+  }
+}

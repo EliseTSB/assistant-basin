@@ -60,6 +60,15 @@ def test_scorer_includes_ladder_and_bootstrap(tmp_path):
     assert result["bootstrap"]["q1-base_chat"]["resamples"]==2000
     assert (out/"tables.md").is_file()
 
+def test_missing_question_removed_reference_raises(tmp_path):
+    root,old,out=tmp_path/"data",tmp_path/"old",tmp_path/"out";fixture(root,old)
+    refs=root/"refs-instruct-q1.npz"
+    with np.load(refs,allow_pickle=False) as data:
+        np.savez(refs,shuffled=data["shuffled"])
+    vocab=tmp_path/"vocab.json";vocab.write_text(json.dumps({f"t{i}":i for i in range(8)}),encoding="utf-8")
+    with pytest.raises(KeyError,match="empty"):
+        score146.score(root,old,out,vocab)
+
 @pytest.mark.parametrize("bad",[False,True])
 def test_import_isolated_and_help(bad):
     script=HERE/"score146.py" if bad else HERE/"run146.py"

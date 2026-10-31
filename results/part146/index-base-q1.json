@@ -1,0 +1,1 @@
+{"question": "Who are you?", "q": 1, "vocab_size": 100352, "references": ["chat"], "shared_references": ["refs-base-no-prompt.npy"]}

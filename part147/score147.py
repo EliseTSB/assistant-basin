@@ -159,8 +159,6 @@ def score(input_dir, gates_path, out):
     base_support = np.stack(base)[:, support]
     plain_support = np.stack(instruct)[:, support]
     medians = [np.median(x, axis=0) for x in pushed_support]
-    centered_pushed = [x - np.mean(np.stack([pushed_support[q][i] for q in range(4)]), axis=0)
-                       for i in range(matrices[0].shape[0]) for x in []]
     # Center each unit across its four question rows, then take the median unit profile.
     centered_by_question = [[] for _ in range(4)]
     for unit_i in range(matrices[0].shape[0]):
@@ -206,15 +204,26 @@ def score(input_dir, gates_path, out):
             groups[f"{kind}-L{layer}"] = np.array([u.get("unit") == kind and int(u["layer"]) == layer for u in units])
 
     distance = {}
+    wrong_question = {}
     closer_by_q = []
     max_departure = 0.0
     for q in range(4):
         pushed_js = np.empty(n_units, dtype=np.float64)
         plain_js = np.empty(n_units, dtype=np.float64)
+        pushed_own_closer_pairs = 0
+        plain_own_closer_pairs = 0
+        pair_count = n_units * 3
         for i in range(n_units):
             pushed_js[i], dep_push, dep_base = js_divergence(matrices[q][i], base[q])
             plain_js[i], dep_plain, dep_base_plain = js_divergence(instruct[q], base[q])
             max_departure = max(max_departure, dep_push, dep_base, dep_plain, dep_base_plain)
+            for other_q in range(4):
+                if other_q == q:
+                    continue
+                pushed_other_js, _, _ = js_divergence(matrices[q][i], base[other_q])
+                plain_other_js, _, _ = js_divergence(instruct[q], base[other_q])
+                pushed_own_closer_pairs += pushed_js[i] < pushed_other_js
+                plain_own_closer_pairs += plain_js[i] < plain_other_js
         closer = pushed_js < plain_js
         closer_by_q.append(closer)
         qgroups = {}
@@ -228,6 +237,11 @@ def score(input_dir, gates_path, out):
                 "median_plain_js_nats": float(np.median(plain_js[mask])),
             }
         distance[str(q + 1)] = qgroups
+        wrong_question[str(q + 1)] = {
+            "pushed": {"own_question_closer_pairs": int(pushed_own_closer_pairs), "pairs": int(pair_count), "share": float(pushed_own_closer_pairs / pair_count)},
+            "plain_instruct": {"own_question_closer_pairs": int(plain_own_closer_pairs), "pairs": int(pair_count), "share": float(plain_own_closer_pairs / pair_count)},
+            "pair_rule": "for each unit row at q, compare JS to Base at q with JS to each of the other three Base rows; ties do not count as closer",
+        }
 
     count_147_1 = sum(v is not None and v >= 0.05 for v in delta_by_q)
     mean_centered = float(np.mean(centered_scores)) if all(v is not None for v in centered_scores) else None
@@ -250,6 +264,7 @@ def score(input_dir, gates_path, out):
         "cross_question": cross,
         "question_centered": {"pushed_spearman_by_question": centered_scores, "plain_instruct_spearman_by_question": plain_centered_scores, "pushed_mean_spearman": mean_centered, "plain_instruct_mean_spearman": float(np.mean(plain_centered_scores)) if all(v is not None for v in plain_centered_scores) else None},
         "distance": {"by_question": distance, "largest_pre_renormalization_departure_from_1": max_departure, "unit_rule": "closer means pushed JS is strictly less than plain Instruct JS"},
+        "wrong_question": {"by_question": wrong_question},
         "predictions": {k: {"prediction": PREDICTIONS[k], "verdict": "held" if v["holds"] else "failed", "value": {key: val for key, val in v.items() if key != "holds"}} for k, v in pred_values.items()},
         "notes": {"spearman": "average ranks for ties; undefined correlations are JSON null", "distance": "Jensen-Shannon divergence in nats, computed over the full vocabulary after exp and row renormalization"},
     }
@@ -261,6 +276,10 @@ def score(input_dir, gates_path, out):
     lines += ["", "## Question-centered ranking", "", "| Question | Pushed Spearman | Plain Instruct Spearman |", "|---|---:|---:|"]
     for q in range(4):
         lines.append(f"| q{q + 1} | {centered_scores[q]} | {plain_centered_scores[q]} |")
+    lines += ["", "## Wrong-question control", "", "For each unit at a question, compare its JS divergence to that question's Base row with its divergence to each of the other three Base rows. Plain Instruct uses the same comparisons. Ties do not count as closer.", "", "| Question | Pushed own-Base closer | Pushed pairs | Pushed share | Plain own-Base closer | Plain pairs | Plain share |", "|---|---:|---:|---:|---:|---:|---:|"]
+    for q, row in wrong_question.items():
+        p, b = row["pushed"], row["plain_instruct"]
+        lines.append(f"| q{q} | {p['own_question_closer_pairs']} | {p['pairs']} | {p['share']:.4f} | {b['own_question_closer_pairs']} | {b['pairs']} | {b['share']:.4f} |")
     lines += ["", "## Jensen-Shannon distance", "", "Shares below compare each pushed unit's full-vocabulary JS divergence with Base against that unit's plain Instruct divergence.", "", "| Question | Group | Units | Share closer | Median pushed JS (nats) | Median plain JS (nats) |", "|---|---|---:|---:|---:|---:|"]
     for q in range(1, 5):
         for name, vals in distance[str(q)].items():
