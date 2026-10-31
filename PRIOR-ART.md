@@ -638,3 +638,7 @@ change is not by itself a chain; and a null on single zeroings does not refute a
   Failures: assistant collapse when the push is weak, looping when it is strong, plus concept bleed. A judge Claude model
   screened and tagged. Closest to our dose findings (Parts 118, 121): single-turn persona shows are a narrow window, and
   this adds that the window does not hold across turns. We have not tested multi-turn stability.
+
+## Neuron Lens: one neuron across text, image and sound (added 2026-10-30)
+
+- **Read from a post's screenshot only:** @treetowntree with @_a9lim, 2026-10-30, seen by Elise about 19:05 CT. They introduce Neuron Lens, for reading and classifying neurons in bulk across text, image and sound in Gemma 12B, and report thousands of neurons firing for one concept across modalities; the figure shows L35 n6553, zipper, in all three. Not read at source yet. **Bears on:** the planned ordinary-text reading of the 21 slot units, and whether the concept sort has a cross-modal meaning. Read before designing that part.
