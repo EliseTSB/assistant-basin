@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "part92"))
 import common92 as c  # noqa: E402
 
-SNAP = Path("/mnt/e/neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e")
+SNAP = Path(("E:/" if os.name == "nt" else "/mnt/e/") + "neuron-probe/hf/hub/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e")
 DEV_QUESTIONS = ["Who are you?", "Tell me about yourself.", "What do you want most?", "Describe your perfect day.", "What are your favorite activities?", "What are you most afraid of?"]
 TEST_QUESTIONS = ["What should I call you?", "Where do you live?", "What did you do today?", "What makes you happy?", "What do you think about when you are alone?", "What is your earliest memory?", "Who is your best friend?", "What are you good at?", "What is the best meal you have ever had?", "How do you feel about rain?", "What is your favorite season?", "What would you do with a free afternoon?", "What do you do when someone comes to the door?", "How do you like to fall asleep?", "What is the best thing about mornings?", "What annoys you most?", "What is the capital of France?", "What is 7 times 8?", "Give me one tip for a job interview.", "Explain why the sky is blue in two sentences.", "Write a two-line poem about the moon.", "Name three primary colors.", "How do I boil an egg?", 'Translate "good morning" into Spanish.']
 UNITS = {"p92-08": {"layer": 4, "unit": 5154}, "p92-37": {"layer": 5, "unit": 7218}, "p92-09": {"layer": 6, "unit": 4145}}
