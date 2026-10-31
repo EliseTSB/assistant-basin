@@ -2587,13 +2587,21 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 124](results/part124/README.md)**, 2026-10-30. Does an OLMo 2 1B unit prefer its own phrase when only a quoted phrase changes? Fourteen of 39 units ranked their own phrase, taken from the answer they gave when pushed in Part 92, in the top three of 39, against a shuffled median of 4 and 0 of 10,000 shuffles reaching 14. The plain reading is that a unit prefers the words it pushes out; the design cannot separate that from a persona. Concept units did so more often on Haiku's labels (10 of 18 against 4 of 21, Fisher p 0.024), and the gap is not significant on DeepSeek's (5 of 8 against 8 of 28, p 0.107).
 
-**Part 125**, in review. No data yet.
+**[Part 125](results/part125/README.md)**, 2026-10-30. Does a push leave anything in the key/value cache beyond the words it produced? OLMo 2 1B, 29 persona neurons pushed in turn 1 only, cache kept. At turn 5 the reader found a coherent persona in 2 of 29 units with the pushed cache and 3 of 29 with a twin that saw the same tokens and no push. Pushing on every turn gave 11 of 29. One dose, five fixed turns, units selected for their persona at this dose.
 
 **[Part 126](results/part126/README.md)**, 2026-10-30. In Qwen3.5-4B, does attention at the final position to the copied message's header role word track how much each of 32 heads moved Part 83's gap? Spearman rho was -0.023, with a 95% interval of -0.37 to +0.33, and three of four predictions failed. The role words occur five times in a prompt and this test counted one, so this says nothing about the other four.
 
 **[Part 130](results/part130/README.md)**, 2026-10-30. Is the same pole a persona in Llama 3.1 8B Instruct, Tulu 3 8B and Hermes 3 8B? 3,681 poles are, against a mean of 294.5 under rotation, which reproduces Sauers' figure with a stated null; in a sample of 150, a reader judged the names the same or closely related in 49. No model ran, and the base model is Part 131.
 
 **[Part 128](results/part128/README.md)**, 2026-10-30. Does a Qwen3-8B persona neuron fire on its persona in ordinary text? Against the Neuron Lens catalog, carriers (persona on at least 3 of 6 questions) match on the fire side for 6 of 11, once neurons for 0 or 1 of 16, by two blind readers; both sides together, 8 or 9 of 11 against 1 of 16. Exploratory classes, 40 neurons; Part 132 repeats it on 189 fresh ones.
+
+**[Part 127](results/part127/README.md)**, 2026-10-30. Can two half-strength pushes from the same persona family express it together? Two of four registered same-layer pairs were eligible, and each rescued one cell at a different dose. Across all eligible pairs, A+B rescued 8 of 38 cells at dose 0.707, against 1 for matched A+C and 2, 2 and 3 for random controls. OLMo 2 1B Instruct, six prompts.
+
+**[Part 129](results/part129/README.md)**, 2026-10-30. Two gates failed, so the reading is not confirmed. The amended scores are post hoc, and the run skipped part of its Chinese documents; the README says which predictions cannot be read.
+
+**[Part 134](results/part134/README.md)**, 2026-10-30. Do two OLMo 2 1B dog neurons hold a dog voice on new questions? The registered count peaked at 11 of 24 at doses 0.8 and 0.6, the best of three cells. One reader, after seeing the counts, judged 8 or 9 of the 11 as a dog speaking. Part 137 repeats it with the cell fixed in advance.
+
+**[Part 135](results/part135/README.md)**, 2026-10-30. Are a Qwen3-8B neuron's two persona poles the same, opposite or unrelated? 1,109 neurons had personas on both poles, against a rotation null of 1,096.6. A reader called most pairs unrelated, about the same as shuffled pairs. The test can rule out the 10-point effect it was built for, not a small one.
 
 ### Running or designed (2026-10-21)
 
