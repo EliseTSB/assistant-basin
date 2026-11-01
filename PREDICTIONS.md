@@ -3151,3 +3151,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 164.3 | Random directions' broken rate rises with dose: +0.8 below +1.0 below +1.2 | high | Claude | held: 7.8%, 19.7%, 36.4% |
 | 164.4 | At the random dose whose broken rate is nearest the neurons', the neuron over random Qwen ratio is between 0.7 and 1.3 | low | Claude | failed, reading moot: 5.53 (1.51 to 58.4), neuron +0.8 against random +1.0 |
 | 164.5 | Random directions' Qwen rate at +1.2 is under half their rate at +0.8 | medium | Claude | held: 0.086 (0.000 to 0.221); +1.2 hits come from two directions |
+
+## Part 165 (registered 2026-10-31 23:56 CT, PART165-DESIGN.md, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 165.1 | n+ breaks at least twice as often as full | high | Claude |  |
+| 165.2 | Broken rate falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full | medium | Claude |  |
+| 165.3 | k16's broken rate is nearer full's than n±'s | low | Claude |  |
+| 165.4 | The n+ over n± broken ratio is between 0.67 and 1.5 | medium | Claude |  |
+| 165.5 | iso's broken rate is under 0.8 times full's | low | Claude |  |
+| 165.6 | Changed rate falls with k: Spearman at or below -0.6 across the same seven arms | medium | Claude |  |
