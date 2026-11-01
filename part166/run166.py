@@ -113,6 +113,11 @@ def vocabulary_metrics(plain_logits, pushed_logits, eos_ids=()):
     else: kl_second=kl_pos[:,0]
     return bias, steadiness, kl_pos.mean(dim=1), kl_second
 
+def row_k(row, widths):
+    """Neurons in the push: run165's rows carry k only for the k arms."""
+    if row.get("k") is not None: return int(row["k"])
+    return 1 if row["arm"] in ("n+", "n\u00b1") else int(widths[int(row["layer"])])
+
 def forward_hidden(model, input_ids, positions):
     """Final hidden states at positions, with the output head skipped for all but one position."""
     import torch
@@ -299,7 +304,7 @@ def run(args, loader=None):
                 d3_norm=norm3.detach().cpu()
                 steady = steady.detach().cpu(); s3 = s3.detach().cpu(); klm = klm.detach().cpu(); kl2 = kl2.detach().cpu()
                 for i, row in enumerate(chunk):
-                    rec = {"arm":row["arm"],"slot":int(row["slot"]),"layer":int(row["layer"]),"k":int(row["k"]),
+                    rec = {"arm":row["arm"],"slot":int(row["slot"]),"layer":int(row["layer"]),"k":row_k(row,widths),
                            "question_index":qi,"positions":p_len-1,
                            "sharpness":None if float(std[i])==0 else float(sharp[i]),
                            "bias_norm":float(bias_norm[i]),

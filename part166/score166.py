@@ -285,27 +285,28 @@ def score(rows_path, plain_path, tokens_path, answers_path, effects_path, out_di
             distinct_counts.append(len(wordmap.get(key,set())))
             content=[w for w in phrase_words if w not in stop]
             own_words=wordmap.get(key,set())
+            local_own=sum(w in own_words for w in content)
+            local_shuffle=sum(sum(w in wordmap.get((arm,s,int(a['layer']),int(a['question_index'])),set())
+                                  for s in SLOTS if s!=int(a['slot']))/11 for w in content)
+            content_arm[arm][0]+=local_own; content_arm[arm][1]+=local_shuffle
             if arm in arms_low:
                 content_total += len(content)
-                local_own=sum(w in own_words for w in content)
-                local_shuffle=sum(sum(w in wordmap.get((arm,s,int(a['layer']),int(a['question_index'])),set())
-                                      for s in SLOTS if s!=int(a['slot']))/11 for w in content)
                 content_own += local_own; content_shuffle += local_shuffle
-                content_arm[arm][0]+=local_own; content_arm[arm][1]+=local_shuffle
                 content_slot[(int(a['layer']),int(a['slot']))][0] += local_own
                 content_slot[(int(a['layer']),int(a['slot']))][1] += len(content)
             content_arm[arm][2]+=len(content)
             content_arm[arm][3]+=sum(bool(spellings.get(w,[])) for w in content)
             loop_percentiles=[]
             entry=loop_value_map.get(key)
-            if entry and arm in arms_low:
+            if entry:
                 tids,vec,mean,std=entry; pos={int(t):j for j,t in enumerate(tids)}
                 mean=float(mean); std=max(float(std),1e-12)
                 for word in content:
                     ids=spellings.get(word,[])
                     own_z=[(float(vec[pos[int(t)]])-mean)/std for t in ids if int(t) in pos]
                     if not own_z:
-                        missing_spelling += 1; percentile_words += 1; continue
+                        if arm in arms_low: missing_spelling += 1; percentile_words += 1
+                        continue
                     z=max(own_z); peers=[]
                     for slot in SLOTS:
                         if slot==int(a['slot']): continue
@@ -317,8 +318,9 @@ def score(rows_path, plain_path, tokens_path, answers_path, effects_path, out_di
                         if peer_z: peers.append(max(peer_z))
                     if peers:
                         pct=(sum(v<z for v in peers)+.5*sum(v==z for v in peers))/len(peers)
-                        percentiles.append(pct); loop_percentiles.append(pct); percentile_arm[arm].append(pct)
-                    percentile_words += 1
+                        percentile_arm[arm].append(pct)
+                        if arm in arms_low: percentiles.append(pct); loop_percentiles.append(pct)
+                    if arm in arms_low: percentile_words += 1
             if loop_percentiles: percentile_slot[(int(a['layer']),int(a['slot']))].append(sum(loop_percentiles)/len(loop_percentiles))
             others=[int(bool(phrase_words & wordmap.get((arm,s,int(a['layer']),int(a['question_index'])),set()))) for s in SLOTS if s!=int(a['slot'])]
             shuffled=sum(others)/len(others) if others else 0.0
@@ -400,7 +402,7 @@ def score(rows_path, plain_path, tokens_path, answers_path, effects_path, out_di
                 if vals: xx.append(float(rates['broken'][arm][key])); yy.append(sum(vals)/len(vals))
         within_layer_1665[str(layer_no)]={'n':len(xx),'spearman':spearman(xx,yy)}
     arm_rates_x=[]; arm_rates_y=[]
-    for arm in ('n±','k4'):
+    for arm in ARMS:
         sx=[]; sy=[]
         for key in [(l,s) for l in LAYERS for s in SLOTS]:
             if sharp_slots[arm].get(key):

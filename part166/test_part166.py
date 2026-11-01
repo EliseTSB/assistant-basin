@@ -168,6 +168,12 @@ def test_forward_hidden_returns_selected_positions():
     assert h.shape==(1,2,3) and h[0,0,0]==3 and h[0,1,0]==4
     assert m.head._forward_pre_hooks=={} or len(m.head._forward_pre_hooks)==0
 
+def test_row_k_for_every_arm_of_the_real_rows():
+    widths={layer:9216 for layer in run166.LAYERS}
+    rows=run166.all_rows(widths)
+    seen={r['arm']:run166.row_k(r,widths) for r in rows}
+    assert seen=={'n+':1,'n\u00b1':1,'k4':4,'k16':16,'k64':64,'k256':256,'k1024':1024,'full':9216,'iso':9216}
+
 def test_alignment_uses_shifted_y_pairs():
     assert run166.alignment_positions(5,3)==[4,5,6]
     assert run166.evaluation_positions(5,3)==[5,6]
