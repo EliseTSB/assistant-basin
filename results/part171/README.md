@@ -260,6 +260,8 @@ Weaver asked for this after reading the results, and it came after the cold chec
 
 `n1` kept Qwen on few answers: 8 of 44 name Qwen at all, against 42 of 44 for `none`. Its clean Google answers, target only, number 15 of 44. The strongest control draw, `rand100_d171`, has 12 of 44, with no Qwen name in any answer, and `r100_d2171` has 8. So on this split the gap between the picked neuron and the best control draw is much smaller than the raw hit rates suggest, and a clean Google answer here may come from losing Qwen. That is a reading, not a test.
 
+The comparison above uses the two strongest of 12 control draws, picked after the data. Pooled over the other 10 sets, 8 of 159 clean answers without a Qwen name say Google, against 17 of 21 for `n1`. Most of the rest invent another maker or dodge the question, so on these sets losing Qwen does not usually land on Google, and a fallback alone does not account for `n1`. These counts come from [four_cell.json](four_cell.json).
+
 ## Cold check
 
 Cold check: Haiku 5.5 (dark-factory run ab-171-cold-2026-11-01), 2026-11-01, reproduced every per-arm rate and prediction estimate from the raw answers and made 25 findings, all folded above, at scorer commit cda2b37. Full report at [COLD.md](COLD.md).
