@@ -1,0 +1,91 @@
+SOURCE: rows.jsonl, part165/answers.jsonl, plain.json, tokens.json, loop_tokens.json
+A. LOOP BREAKAGE DECOMPOSITION (loop answers / 768 answers; own means phrase has >=1 non-stop content word in its row top-200; other means it does not)
+n+: loops=188; own-content=91/768=0.118490; other=97/768=0.126302
+n±: loops=186; own-content=88/768=0.114583; other=98/768=0.127604
+k4: loops=208; own-content=114/768=0.148438; other=94/768=0.122396
+k16: loops=113; own-content=58/768=0.075521; other=55/768=0.071615
+k64: loops=76; own-content=33/768=0.042969; other=43/768=0.055990
+k256: loops=71; own-content=12/768=0.015625; other=59/768=0.076823
+k1024: loops=66; own-content=11/768=0.014323; other=55/768=0.071615
+full: loops=73; own-content=6/768=0.007812; other=67/768=0.087240
+iso: loops=61; own-content=13/768=0.016927; other=48/768=0.062500
+pooled own_content low n+/n±/k4 minus dense full/iso: 0.114800 [0.076606, 0.154514], layer-stratified whole-slot bootstrap, seed=166, reps=10000
+pooled other low n+/n±/k4 minus dense full/iso: 0.050564 [0.020399, 0.081814], layer-stratified whole-slot bootstrap, seed=166, reps=10000
+
+B. LOOP CONTENT-WORD SALIENCE (word share; own top-200 / plain top-200 / own but not plain)
+n+: words=182; own=0.521978; plain=0.170330; own-not-plain=0.489011
+n±: words=184; own=0.510870; plain=0.184783; own-not-plain=0.472826
+k4: words=261; own=0.590038; plain=0.118774; own-not-plain=0.528736
+k16: words=125; own=0.520000; plain=0.176000; own-not-plain=0.424000
+k64: words=109; own=0.321101; plain=0.128440; own-not-plain=0.321101
+k256: words=77; own=0.168831; plain=0.181818; own-not-plain=0.129870
+k1024: words=85; own=0.141176; plain=0.141176; own-not-plain=0.141176
+full: words=63; own=0.095238; plain=0.174603; own-not-plain=0.079365
+iso: words=65; own=0.200000; plain=0.153846; own-not-plain=0.169231
+The score.json plain_salience_rate is any-word phrase-answer share; it can be dominated by stop words.
+
+C. EXPLORATORY WORD-FAMILY CONCENTRATION (top-20 decoded tokens; first 4 chars of top token; <4-char token only exact match)
+n+: mean matching tokens per row=3.389323
+n±: mean matching tokens per row=3.083333
+k4: mean matching tokens per row=3.522135
+k16: mean matching tokens per row=4.625000
+k64: mean matching tokens per row=3.683594
+k256: mean matching tokens per row=3.437500
+k1024: mean matching tokens per row=2.316406
+full: mean matching tokens per row=2.524740
+iso: mean matching tokens per row=2.024740
+n±: slot Spearman(family count, broken rate)=0.261421; n=96
+k4: slot Spearman(family count, broken rate)=0.158644; n=96
+Exploratory; this word-family check was thought of after seeing the data.
+
+D. 166.5 LAYER-DEMEANED SLOT SPEARMAN
+pooled layer-demeaned slot Spearman=0.452827; n=192 slots; within-layer/arm rho range=-0.448402 to 0.915952; n=12 each (16 strata)
+
+E. FIRST THREE ANSWER POSITIONS AND FULL POSITIONS, ROW MEANS
+n+: sharpness_first3=6.131707; sharpness_full=6.798529; steadiness_first3=0.818658; steadiness_full=0.663617
+n±: sharpness_first3=5.878106; sharpness_full=6.392313; steadiness_first3=0.818212; steadiness_full=0.663480
+k4: sharpness_first3=6.269461; sharpness_full=7.198191; steadiness_first3=0.818911; steadiness_full=0.665422
+k16: sharpness_first3=6.283426; sharpness_full=7.242239; steadiness_first3=0.818697; steadiness_full=0.665929
+k64: sharpness_first3=5.714426; sharpness_full=6.450357; steadiness_first3=0.819156; steadiness_full=0.667444
+k256: sharpness_first3=5.418822; sharpness_full=5.793356; steadiness_first3=0.819615; steadiness_full=0.667678
+k1024: sharpness_first3=5.219551; sharpness_full=5.351129; steadiness_first3=0.819257; steadiness_full=0.667282
+full: sharpness_first3=5.240244; sharpness_full=5.435296; steadiness_first3=0.819550; steadiness_full=0.666575
+iso: sharpness_first3=5.283858; sharpness_full=5.398724; steadiness_first3=0.818098; steadiness_full=0.666154
+
+F. GATE 2 MISSES: gaps in plain.json (argmax logit minus generated-token logit)
+question_index=3 position=None gap=0.250000; gate bar=0.25
+question_index=7 position=None gap=0.000000; gate bar=0.25
+
+G. N+ LOOP HIT SLOT COVERAGE AND SEEDED-DIRECTION MATCH
+n+ loop-hit slots=29/96
+The n+ neuron is included in every k4 slot by design.
+
+EXAMPLE LOOP QUOTES: most repeated phrase with a content word, by arm; count, own-row hit, and first row top-8
+n+: "subject subject subject" count=8; hit=True; first row bias top-8=subject, Subject, Subject, SUBJECT, subject, .subject, _subject, sujet
+k4: "a row of" count=7; hit=True; first row bias top-8=row, Row, Row, row, _row, -row, 行, rows
+full: "the tianquan model" count=4; hit=False; first row bias top-8=模范, ثناء, hid, ampen, Ingen, RIS, Exact, oken
+Rule: count loop-answer occurrences by exact normalized phrase among phrases with at least one non-stop content word; for ties Counter order; display first row and whether any phrase word hits its own top-200.
+"i am a" is the most frequent loop overall and is all stop words.
+random miss (seed=166 from low-k misses): n+ phrase="i am a"; bias words= male,  males,  sexually,  sex
+
+H. ARM-SPECIFIC REGISTERED RATIOS (whole-slot bootstrap; 10,000 draws, seed=166)
+n+: 166.1 any-word ratio=13.223; whole-slot 95% interval=7.521 to 27.755; 166.6 content-word ratio=38.704; content interval computed separately below
+n+: 166.6 whole-slot 95% interval=15.675 to 206.715
+k4: 166.1 any-word ratio=20.662; whole-slot 95% interval=11.645 to 47.143; 166.6 content-word ratio=67.760; content interval computed separately below
+k4: 166.6 whole-slot 95% interval=30.048 to 345.862
+
+I. N+ / N± IDENTICAL DIRECTION SLOTS AND ROW ANSWERS
+identical n± and n+ direction slots=46/96; exact matching Part 166 top-token rows=336/368; k4 contains each slot n+ neuron (by design)
+
+J. ANY-WORD SALIENCE, CONTENT WORDS, STOP-LIST MISSES, CONCENTRATION, AND LEAKAGE
+low-k content-word shares (weighted word occurrences): own=0.547049; plain=0.153110
+stop-list misses among own content hits: 57/343 are because/so/one/since/there/through; after removing them, content ratio=0.456140
+n+ own-hit concentration: top ten of 29 slots contribute 74/113=0.654867
+plain any-word salience low-k=0.654639; stop-only share of plain hits=296/381=0.776903
+additional checked figures: any-word ratio after dropping ten loop-heaviest slots=0.116; cross-layer donor ratio=0.145 (any word), 0.577 (content word); no own content word appears in >25% of rows
+prompt overlap=0/627 low-k content-word occurrences; plain-answer overlap=6/627
+
+K. UNPUSHED BASELINE AND HAND READ
+mean unpushed token count=57.447917; mean pushed bias-path token count=0.000000
+unpushed answers with any repeated trigram=6/192; Part 165 pushed answers with any repeated trigram=3068/6912
+hand_read_40.jsonl: clear=6; marginal=3; my judgement; shuffled low-k misses in hits.jsonl order with Random(166), first 40

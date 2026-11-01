@@ -1,0 +1,2 @@
+first 3 batches: 31.09 rows/s
+{"rows_written": 6912, "phrasing_count": 8, "alignment_matches": 318, "alignment_total": 320}

@@ -104,9 +104,8 @@ def bootstrap_loop_rates(events,draws):
             multiplicity=layer_slots[layer].count(slot)
             if not multiplicity: continue
             for _ in range(multiplicity):
-                donors=list(layer_slots[layer])
-                try: donors.remove(slot)
-                except ValueError: donors=[]
+                # A slot drawn twice must not donate to itself.
+                donors=[s for s in layer_slots[layer] if s!=slot]
                 for event in events_here:
                     arm=event['arm']; cohorts=[]
                     if arm in ('n+','n±','k4'): cohorts.append('low')

@@ -3168,13 +3168,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 166.1 | Pooled over n+, n± and k4, a loop's own hit rate is at least 2 times its shuffled rate | high | Claude |  |
-| 166.2 | Pooled over full and iso, own over shuffled is under 1.5 | medium | Claude |  |
-| 166.3 | n+'s mean steadiness is at least 1.25 times full's (build check, Amendment 1) | medium | Claude |  |
-| 166.4 | Mean sharpness falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full (build check, Amendment 1) | medium | Claude |  |
-| 166.5 | Within n± and k4, pooled over slots, slot broken rate against slot mean sharpness: Spearman at least 0.3 | low | Claude |  |
-| 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 (Amendment 1) | medium | Claude |  |
-| 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 (Amendment 1) | medium | Claude |  |
+| 166.1 | Pooled over n+, n± and k4, a loop's own hit rate is at least 2 times its shuffled rate | high | Claude | held: 15.5 (9.9 to 25.8); any-word, does not beat plain salience |
+| 166.2 | Pooled over full and iso, own over shuffled is under 1.5 | medium | Claude | failed: 5.6 (3.1 to 12.5); dense own rates far lower |
+| 166.3 | n+'s mean steadiness is at least 1.25 times full's (build check, Amendment 1) | medium | Claude | failed, build check: 1.00 |
+| 166.4 | Mean sharpness falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full (build check, Amendment 1) | medium | Claude | failed, build check: -0.714; sharpness peaks at k4 and k16 |
+| 166.5 | Within n± and k4, pooled over slots, slot broken rate against slot mean sharpness: Spearman at least 0.3 | low | Claude | held: 0.397 (0.27 to 0.51) |
+| 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 (Amendment 1) | medium | Claude | held: 53.1 (29.1 to 123.9); 47.2 with a wider stop list |
+| 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 (Amendment 1) | medium | Claude | held: 0.892 (0.81 to 0.90) |
 
 ## Part 167 (registered 2026-11-01 01:44 CT, PART167-DESIGN.md, before any data)
 
