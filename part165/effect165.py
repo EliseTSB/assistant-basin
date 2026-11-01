@@ -91,11 +91,11 @@ def generate_capture(model, tok, layers, question, layer_pushes, device, common,
             intended_norm = torch.linalg.vector_norm(intended, dim=1)
             cosine = (actual * intended).sum(dim=1) / (actual_norm * intended_norm).clamp_min(torch.finfo(torch.float32).tiny)
             changed = (selected_delta.abs() > 1e-6).sum(dim=1)
-            for pos, row_no in enumerate(row_index.detach().cpu().tolist()):
-                realized[row_no] = {"realized_write_norm": float(actual_norm[pos].item()),
-                                    "realized_cos": float(cosine[pos].item()),
-                                    "changed_channels": int(changed[pos].item()),
-                                    "intended_write_norm": float(intended_norm[pos].item())}
+            # One transfer per column: an .item() per value in a hook hung an A770 job (gotcha, 10-24).
+            stats = torch.stack((actual_norm, cosine, changed.to(actual_norm.dtype), intended_norm), dim=1).cpu().tolist()
+            for row_no, (norm, cos, count, target) in zip(row_index.detach().cpu().tolist(), stats):
+                realized[row_no] = {"realized_write_norm": float(norm), "realized_cos": float(cos),
+                                    "changed_channels": int(count), "intended_write_norm": float(target)}
         after_handle = down_proj.register_forward_pre_hook(capture_pushed)
         hooks.append((hook, input_handle, after_handle))
     for hook, _before, _after in hooks:
@@ -229,7 +229,7 @@ def run(args, loader=None, capture_fn=None):
                 row_pushes = pushes_for(chunk, layers, directions)
                 pushed = capture_fn(model, tok, layers, item["question"], row_pushes, args.device,
                                     row_layers={i: int(row["layer"]) for i, row in enumerate(chunk)})
-                first_diff = pushed["first"].detach().to("cpu").ne(plain["first"].detach().to("cpu"))
+                first_flags = pushed["first"].detach().to("cpu").ne(plain["first"].detach().to("cpu")).tolist()
                 kl, rel, same = effect_values(plain["scores"], pushed["scores"], plain["hidden"],
                                               pushed["hidden"], plain["second"], pushed["second"])
                 if len(chunk) != len(kl):
@@ -238,7 +238,7 @@ def run(args, loader=None, capture_fn=None):
                     # A resume may leave an incomplete subset of the shuffled batch; pushes/capture must align.
                     fh.write(json.dumps({**row, **pushed["realized"][index], "kl": float(kl[index]), "rel_change": float(rel[index]),
                                          "top1_same": bool(same[index]),
-                                         "first_token_diff": bool(first_diff[index].item())}, ensure_ascii=True) + "\n")
+                                         "first_token_diff": bool(first_flags[index])}, ensure_ascii=True) + "\n")
                     done.add(row_key(row))
                     written += 1
                 fh.flush()
