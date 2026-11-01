@@ -115,3 +115,7 @@ No row exists. Alden read this design (council topic overnight-ideas-2026-11-01,
 **Lists and directions are checked before generation.** Every mass list has exactly 50 distinct eligible ids, checked before any answer. Gate 4 checks that each answer's stored list equals its row's list, and Gate 7 also refuses a repeated n+ neuron within this part. Medians in the Prior art section were rounded: on n+ the own list holds 9.3e-3 of pushed mass and the neighbour's 2.6e-5, about 360 times less.
 
 Reading the build found and fixed, before any row: Stage 1's plain answer set to 80 tokens instead of 40; the nearest-draw tracker storing a mass as a distance; and a bootstrap that rebuilt its slot table inside every replicate, which would not have finished, and which a test had hidden by setting the replicate count to 2.
+
+## Amendment 2, 2026-11-01 03:07 CT, before any answer
+
+The first launch stopped itself at Gate 6, in the design's order: 89.5% of low-k rows in tolerance against the 90% bar, after Stages 0, 1 and 1b. No battery answer exists. All 141 misses were feasible, with low own mass, median 0.0016 against 0.0097 for the rows that matched, and exponents near zero. There the sum is close to bimodal, one heavy token in or out, so redraws miss the band. The recipe gains one step: if no draw lands in tolerance, one token of the nearest draw is swapped for the pool token that closes the gap, and such rows are logged as `repaired`. The swap uses no outcome. The 90% bar stays. The stored bias rows are reused, and every mass list is drawn again.

@@ -146,6 +146,7 @@ def _metrics(records,rows,tokens,stop,masses):
             mass_stats[arm][k+'_mean']=sum(xs)/len(xs) if xs else None
         tol=[x for x in vals if x.get('in_tolerance') is not None]
         mass_stats[arm]['infeasible_rows']=sum(x.get('feasible') is False for x in vals)
+        mass_stats[arm]['repaired_rows']=sum(bool(x.get('repaired')) for x in vals)
         errs=sorted(float(x['mass_rel_error']) for x in vals if x.get('mass_rel_error') is not None); mass_stats[arm]['mass_rel_error_median']=errs[len(errs)//2] if errs else None
         mass_stats[arm]['in_tolerance_share']=sum(bool(x['in_tolerance']) for x in tol)/len(tol) if tol else None
     nbroken=per['n+|none']['broken_rate']; fbroken=per['full|none']['broken_rate']; broken_ratio=nbroken/fbroken if fbroken else None

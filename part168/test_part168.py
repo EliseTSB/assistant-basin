@@ -104,15 +104,22 @@ def test_scorer_writes_outputs_and_checks_gates_on_synthetic_battery(tmp_path,mo
 
 def test_draw_keeps_the_nearest_draw_and_logs_an_unreachable_target():
     q=np.full(4000,1e-6); q[0]=.9; q[1]=.05
-    ids,_,draws,ok,delta,own_mass,feasible=run168.draw_mass_ids(q,[0],[3999],{3998},'n+',19,0,8)
-    assert own_mass==.9 and draws==200 and not ok and not feasible
+    ids,_,draws,ok,delta,own_mass,feasible,repaired=run168.draw_mass_ids(q,[0],[3999],{3998},'n+',19,0,8)
+    assert own_mass==.9 and draws==200 and not ok and not feasible and not repaired
     assert abs(q[ids].sum()-.9)==pytest.approx(delta,abs=1e-9)
 
 def test_calibration_matches_a_reachable_heavy_tailed_target():
     rng=np.random.default_rng(1); q=np.sort(rng.pareto(.7,30000)+1e-6)[::-1]; q=q/q.sum()
     target=int(np.flatnonzero(np.cumsum(q)>.02)[0]); own=[target]
-    ids,exponent,draws,ok,delta,own_mass,feasible=run168.draw_mass_ids(q,own,[29999],{29998},'n+',20,1,9)
+    ids,exponent,draws,ok,delta,own_mass,feasible,repaired=run168.draw_mass_ids(q,own,[29999],{29998},'n+',20,1,9)
     assert feasible and ok and delta<=.1*own_mass and len(set(ids))==50 and draws<200
+
+def test_one_swap_repairs_a_bimodal_miss():
+    q=np.full(30000,1e-7); q[:12]=.02; q[12:212]=np.geomspace(4e-3,1e-6,200); q[20000]=.0016
+    ids,_,draws,ok,delta,own_mass,feasible,repaired=run168.draw_mass_ids(q,[20000],[29999],{29998},'n+',21,3,10,redraws=1)
+    assert feasible and ok and repaired and draws==1
+    assert len(set(ids))==50 and 20000 not in ids and abs(q[ids].sum()-own_mass)<=.1*own_mass
+    assert abs(q[ids].sum()-own_mass)==pytest.approx(delta,abs=1e-9)
 
 def test_position_diagnostic_marks_the_top_token():
     head=torch.nn.Linear(2,6,bias=False)

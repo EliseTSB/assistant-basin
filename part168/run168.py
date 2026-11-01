@@ -172,7 +172,7 @@ def draw_mass_ids(q,own,matched,special,arm,layer,slot,qi,noises=8,steps=20,redr
     The exponent is calibrated on that same without-replacement law, using common noise across trials, because the
     with-replacement shortcut misstates heavy tails. Tolerance is 10% of own mass with an absolute floor. A target
     outside the pool's reachable range is logged as infeasible, not searched for.
-    Returns ids, exponent, draws, in_tolerance, absolute error, own mass, feasible."""
+    Returns ids, exponent, draws, in_tolerance, absolute error, own mass, feasible, repaired."""
     import numpy as np
     q=np.asarray(q,dtype=np.float64); allowed=np.ones(q.size,dtype=bool)
     for tid in set(map(int,own))|set(map(int,matched))|set(map(int,special)):
@@ -195,7 +195,17 @@ def draw_mass_ids(q,own,matched,special,arm,layer,slot,qi,noises=8,steps=20,redr
         ix=top(exponent*logs+gumbel()); mass=float(pool[ix].sum()); delta=abs(mass-own_mass)
         if delta<best_delta: best,best_delta=ix,delta
         if delta<=tolerance: success=True; break
-    return list(map(int,order[best])),exponent,draws,success,float(best_delta),own_mass,bool(feasible)
+    repaired=False
+    if not success:
+        # A low exponent makes the sum bimodal: one heavy token in or out. One swap closes the gap.
+        have=float(pool[best].sum()); held=set(map(int,best)); need=own_mass-have
+        for i in rng.permutation(best):
+            at=int(np.searchsorted(-pool,-(pool[i]+need)))
+            for c in (at-1,at):
+                if 0<=c<len(pool) and c not in held and abs(have-pool[i]+pool[c]-own_mass)<=tolerance:
+                    best=np.array([c if int(x)==int(i) else int(x) for x in best]); best_delta=abs(have-float(pool[i])+float(pool[c])-own_mass); success=repaired=True; break
+            if repaired: break
+    return list(map(int,order[best])),exponent,draws,success,float(best_delta),own_mass,bool(feasible),repaired
 
 def position_diagnostic(hidden,head,own_lists,mass_lists):
     """Per position: pushed mass on the own and mass lists, and whether the pushed top token is on each."""
@@ -333,9 +343,9 @@ def run(args,loader=None):
             recs=[]
             for i,r in enumerate(missing):
                 key=(r['arm'],r['layer'],r['slot'],qi); own=rmap[key]['own_ban_ids']; donor=rmap[(r['arm'],r['layer'],(r['slot']+1)%SLOTS,qi)]['own_ban_ids']
-                q=qrows[i].numpy().astype('float64',copy=False); own_mass=float(q[own].sum()); matched_mass=float(q[donor].sum()); massids=[]; exponent=None; draws=0; tol=None; abserr=None; feasible=None
-                if r['arm'] in ('n+','k4'): massids,exponent,draws,tol,abserr,_,feasible=draw_mass_ids(q,own,donor,special,*key)
-                plain_ids=set(map(int,ans)); rec={'arm':r['arm'],'layer':r['layer'],'slot':r['slot'],'question_index':qi,'own_mass':own_mass,'matched_mass':matched_mass,'mass_mass':float(q[massids].sum()) if massids else None,'own_mass_overlap':len(set(own)&set(massids)),'matched_mass_overlap':len(set(donor)&set(massids)),'overlap':len(set(own)&set(donor)),'exponent':exponent,'draws':draws,'in_tolerance':bool(tol) if tol is not None else None,'feasible':feasible,'mass_abs_error':abserr,'mass_rel_error':(abserr/own_mass if abserr is not None and own_mass>0 else None),'paired_set':bool(tol and feasible) if tol is not None else None,'allowed_vocab':int(q.size-len({x for x in (set(own)|set(donor)|special) if 0<=int(x)<q.size})),'plain_overlap_own':len(plain_ids&set(own)),'plain_overlap_matched':len(plain_ids&set(donor)),'plain_overlap_mass':len(plain_ids&set(massids)),'mass_ban_ids':massids}
+                q=qrows[i].numpy().astype('float64',copy=False); own_mass=float(q[own].sum()); matched_mass=float(q[donor].sum()); massids=[]; exponent=None; draws=0; tol=None; abserr=None; feasible=None; repaired=None
+                if r['arm'] in ('n+','k4'): massids,exponent,draws,tol,abserr,_,feasible,repaired=draw_mass_ids(q,own,donor,special,*key)
+                plain_ids=set(map(int,ans)); rec={'arm':r['arm'],'layer':r['layer'],'slot':r['slot'],'question_index':qi,'own_mass':own_mass,'matched_mass':matched_mass,'mass_mass':float(q[massids].sum()) if massids else None,'own_mass_overlap':len(set(own)&set(massids)),'matched_mass_overlap':len(set(donor)&set(massids)),'overlap':len(set(own)&set(donor)),'exponent':exponent,'draws':draws,'in_tolerance':bool(tol) if tol is not None else None,'feasible':feasible,'repaired':repaired,'mass_abs_error':abserr,'mass_rel_error':(abserr/own_mass if abserr is not None and own_mass>0 else None),'paired_set':bool(tol and feasible) if tol is not None else None,'allowed_vocab':int(q.size-len({x for x in (set(own)|set(donor)|special) if 0<=int(x)<q.size})),'plain_overlap_own':len(plain_ids&set(own)),'plain_overlap_matched':len(plain_ids&set(donor)),'plain_overlap_mass':len(plain_ids&set(massids)),'mass_ban_ids':massids}
                 recs.append(rec)
             lowix=[i for i,x in enumerate(recs) if x['arm'] in ('n+','k4')]
             if positions and lowix:
