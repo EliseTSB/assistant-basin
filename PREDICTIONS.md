@@ -3173,3 +3173,5 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 166.3 | n+'s mean steadiness is at least 1.25 times full's | medium | Claude |  |
 | 166.4 | Mean sharpness falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full | medium | Claude |  |
 | 166.5 | Within n± and k4, pooled over slots, slot broken rate against slot mean sharpness: Spearman at least 0.3 | low | Claude |  |
+| 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 (Amendment 1) | medium | Claude |  |
+| 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 (Amendment 1) | medium | Claude |  |

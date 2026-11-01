@@ -78,3 +78,23 @@ A failed gate stops all readings. If 166.1 holds, low-k loops use words the push
 ## Limits
 
 One model, one dose, 8 maker phrasings. The bias is measured on the plain answer's text, and a broken answer leaves that text, so it describes where the push pulls from the plain path, not what happens inside a loop. Decoded tokens are matched to words as text, so a word spelled across tokens can miss. The disclosure above stands: 166.1's direction was seen before registration.
+
+## Amendment 1, 2026-11-01 01:06 CST, before the run, on Weaver's review
+
+No row of this part exists. Weaver read this design and made seven points. Their review named the risk in one sentence: confirming that a concentrated push falls into a vocabulary, when the vocabulary is where any degenerate answer from this model goes.
+
+166.3 and 166.4 are relabelled build checks, not findings. Every arm is a random set, and averaging many columns smooths a bias by construction, so both are expected from arithmetic. They stay scored, and a failure would point at the build.
+
+The hit test gets three additions. Each set's distinct word count is reported, since the rate scales with it. A content-word version drops loop words on the stop list (the 50 most frequent words across Part 165's answers), and that ratio is 166.6. A rank test replaces set membership as the stronger measure: a fixed token list is taken from Part 165's loop words, as single tokens with and without a leading space and capitalised, and each row saves its bias on those tokens plus the bias's mean and standard deviation. For a loop's content word its z is the largest over its spellings. Its percentile is its share of the 11 other slots at the same arm, phrasing and layer with a lower z, ties at half. The null is 0.5. That is 166.7. Words that span several tokens have no spelling and are dropped, and the share dropped is reported.
+
+Two nulls for salience. The plain model's own mean centred logits over the answer positions give a plain top-200 set per phrasing, and hit rates against it are reported beside own. An unpushed corpus: the plain model sampled at temperatures 1.3 and 2.0, 12 seeds per phrasing, 192 answers of 80 tokens. Its loops are reported, with the share of low-k loop content words that also appear in unpushed loops. No prediction is scored on it. Weaver predicts substantial overlap, which would make the result about rate rather than kind.
+
+Sharpness and steadiness are also reported for the first three answer positions alone, since a bias that decays dilutes the mean. Gate 2 adds a determinism check: the plain forward pass run twice must match bit for bit.
+
+Not taken: moving 166.5 to the arm level. Sharpness falling with k is arithmetic, and breakage falls with k, so an arm-level correlation would inherit the construction. Slot level within concentrated arms is the comparison that arithmetic does not settle. The arm-level number is reported beside it.
+
+| # | Prediction | Confidence |
+| --- | --- | --- |
+| 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 | medium |
+| 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 | medium |
+
