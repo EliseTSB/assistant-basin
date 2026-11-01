@@ -69,7 +69,7 @@ Coherence: I read every no-push loop under b50 by hand, plus a blinded 24 answer
 ## Size
 
 - Smallest effect worth knowing: a no-push rise of 0.10, so 5% against 15% is separated, which is Weaver's bar as well. With about 100 prompts per set, a binomial standard error near 0.03 gives that at about three standard errors. A dose difference in rise of 0.10 on 384 rows.
-- Total: 4,608 + 384 + 384 for the repeat + 1,000 + 96 = 6,472 generations, plus 200 plain and 200 list passes. Push: 112 batches of 48 at about 18 seconds, 34 minutes. No-push: 200 prompts one batch each and 200 plain answers one at a time, about 20 minutes, since a batch holds one prompt. About 55 minutes on the A770.
+- Total: 6,472 generations, about 55 minutes on the A770. That is 4,608 + 384 + 384 for the repeat + 1,000 + 96, plus 200 plain and 200 list passes. Push: 112 batches of 48 at about 18 seconds, 34 minutes. No-push: 200 prompts one batch each and 200 plain answers one at a time, about 20 minutes, since a batch holds one prompt.
 - Pilot: the first 3 generation batches. Stop rule: under 1.5 answers per second.
 
 ## Optimization
