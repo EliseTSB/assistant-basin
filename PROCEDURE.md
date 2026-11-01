@@ -244,4 +244,8 @@ beyond one part.
 - 2026-10-31 (Part 154): the A770's silent NaN can hit a few rows in one run and none in a rerun, printing `!!!!`. Record the first non-finite call per row, and regenerate a batch that has one.
 - 2026-10-31 (Part 159): read the answers before saying what an intervention did. A failed gate's score does not say what happened, and a cause sent from one was wrong. A distance is not small until it has a null: compare two conditions that should differ by nothing that matters.
 - 2026-10-31 (Part 160): a picking rule needs its control to pass through the same rule. Random directions qualified as often as neurons, and laddering only the neurons made the contrast unfair. Do not cap a picked set in an order that correlates with anything measured; atlas order cut layers 23 and up. Say in the design what a flagged unit does to each verdict. Test each gate's passing case as well as its failing one.
+- 2026-10-31 (Part 163): for every prediction write down what result would fail it. A ratio bar can sit above what the rates allow: 1.5 times a rate of 0.80 cannot be reached, so the prediction held by arithmetic and the reading rule built on it was void.
+- 2026-10-31 (Part 161): compare arms generated in the same run. A greedy answer depends on batch shape, so units reused from an earlier part were regenerated; none crossed the bar, but only a rerun could show that.
+- 2026-10-31 (Part 162): read the selected features before any number. Half of what separated two model families was punctuation, and a word-only reading reversed the side that mattered.
+- 2026-10-31 (Parts 158 to 163): send a number to a person only after its cold check. A hedged guess about why also needs a test before it is sent: "may be selection" was refuted two hours later.
 
