@@ -64,3 +64,9 @@ The Size line miscounts: the stages listed sum to 6,516 generations (1,600 + 4,8
 
 The first launch stopped at its pilot rule with 1.04 answers per second and 180 rows written. The rate was wrong, through a defect in my runner: the pilot's clock started before the 16 baseline rows, whose time it counted while their answers were left out. The row file has no timestamps, so the true rate of those 164 answers is not known; the resumed run's pilot will report it. The fix starts the clock after the baseline rows, and a test that failed on the old code now passes. The stop rule and its 1.5 bar are unchanged. The run resumes from the 180 rows, so batch boundaries do not move. No answer has been read.
 
+## Amendment 3, 2026-10-31 23:13 CT, after the run and the cold check, before publication
+
+Two corrections to this file, neither changing a bar, a verdict or a line of the runner. Amendment 2 said the resumed run's pilot would report the true rate of the first launch's 164 answers. It could not: the resumed pilot covered three battery batches, 64, 64 and 8, so 136 other answers, at 2.43 answers per second. The rate of the first 164 stays unknown. That launch's output was overwritten, so its 1.04 survives only in the queue log's rc=1 line and my transcript.
+
+Gate 2 was scored with a case-insensitive substring, and the outcome rule is case-sensitive `\bQwen\b`. On the 16 no-push answers the gate gives 16 and the outcome rule gives 0, because every plain answer says Qwen3.5. The gate's wording, "Qwen named", fits the substring, so it stands as passed, but the Qwen rate measures a bare form the plain model did not use on these phrasings. The write-up says so.
+

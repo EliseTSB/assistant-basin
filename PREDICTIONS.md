@@ -3146,8 +3146,8 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 164.1 | At +0.8, the neuron arm's Qwen rate is under 0.7 times the random arm's | medium | Claude |  |
-| 164.2 | At +0.8, the neuron arm's broken rate is at least twice the random arm's | high | Claude |  |
-| 164.3 | Random directions' broken rate rises with dose: +0.8 below +1.0 below +1.2 | high | Claude |  |
-| 164.4 | At the random dose whose broken rate is nearest the neurons', the neuron over random Qwen ratio is between 0.7 and 1.3 | low | Claude |  |
-| 164.5 | Random directions' Qwen rate at +1.2 is under half their rate at +0.8 | medium | Claude |  |
+| 164.1 | At +0.8, the neuron arm's Qwen rate is under 0.7 times the random arm's | medium | Claude | failed: 0.79 (0.33 to 1.57); neurons lower on 13 of 16 phrasings |
+| 164.2 | At +0.8, the neuron arm's broken rate is at least twice the random arm's | high | Claude | held: 3.46 (2.43 to 5.07) |
+| 164.3 | Random directions' broken rate rises with dose: +0.8 below +1.0 below +1.2 | high | Claude | held: 7.8%, 19.7%, 36.4% |
+| 164.4 | At the random dose whose broken rate is nearest the neurons', the neuron over random Qwen ratio is between 0.7 and 1.3 | low | Claude | failed, reading moot: 5.53 (1.51 to 58.4), neuron +0.8 against random +1.0 |
+| 164.5 | Random directions' Qwen rate at +1.2 is under half their rate at +0.8 | medium | Claude | held: 0.086 (0.000 to 0.221); +1.2 hits come from two directions |

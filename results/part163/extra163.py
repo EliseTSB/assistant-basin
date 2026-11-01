@@ -234,7 +234,44 @@ def main():
     print("Part 86 stored write norms at 0.8 median: random mean 19.857; neuron range 19.74 to 19.98.")
     print("Part 161 pick-dose Qwen count under exact rule: neuron 98/600; random 339/792. Casefold substring: neuron 192/600; random 457/792.")
     print("Part 163 maker name-gone under the same exclusions: neuron 0.899, random 0.840, ratio 1.07 (1.00, 1.15).")
-    print("Part 161 +0.8 Qwen ratio: 0.64 on same 8 maker phrasings; 0.56 on all 24. Breakage on same 8: Part 161 neuron 2.1%, random 4.2%; Part 163 neuron 23.6%, random 5.8%.")
+    # Recompute the Part 161 comparison from its saved +0.8 ladder rows and
+    # Part 163's eight maker prompts. Use Part 86 triage and the exact Qwen rule.
+    import sys
+    sys.path.insert(0, str(ROOT / "part86"))
+    import triage86
+    p161_rows = read_jsonl(ROOT / "results/part161/answers.jsonl")
+    p163_maker_questions = {r["question"] for r in rows if r.get("stage") == "battery" and r.get("kind") == "maker"}
+    exact_qwen = re.compile(r"\bQwen\b")
+    excluded_name = re.compile(r"alibaba|tongyi|通义", re.I)
+    for label, selected_questions in (("Part 163's eight maker phrasings", p163_maker_questions), ("all 24 Part 161 phrasings", None)):
+        print(label)
+        computed = {}
+        for arm in ("neuron", "random"):
+            chosen = [r for r in p161_rows if r.get("stage") == "ladder" and r.get("arm") == arm
+                      and float(r["dose"]) == 0.8
+                      and (selected_questions is None or r.get("question") in selected_questions)]
+            eligible = [r for r in chosen if triage86.triage_answer(r["answer"]) != "broken"
+                        and not excluded_name.search(r["answer"])]
+            hits = sum(bool(exact_qwen.search(r["answer"])) for r in eligible)
+            per_unit = defaultdict(list)
+            for r in eligible:
+                per_unit[r["unit_id"]].append(int(bool(exact_qwen.search(r["answer"]))))
+            unit_mean = sum(sum(v) / len(v) for v in per_unit.values()) / len(per_unit)
+            computed[arm] = {"pooled": hits / len(eligible), "unit_mean": unit_mean}
+            print(f"  Part 161 {arm}: {hits}/{len(eligible)} pooled={hits/len(eligible):.6f}; "
+                  f"unit_mean={unit_mean:.6f}; units={len(per_unit)}")
+        print(f"  Part 161 neuron/random ratios: pooled={computed['neuron']['pooled']/computed['random']['pooled']:.6f}; "
+              f"unit_mean={computed['neuron']['unit_mean']/computed['random']['unit_mean']:.6f}")
+        for part_rows, part_name, stage_key in ((p161_rows, "Part 161", "ladder"), (rows, "Part 163", "battery")):
+            for arm in ("neuron", "random"):
+                if part_name == "Part 161":
+                    subset = [r for r in part_rows if r.get("stage") == stage_key and r.get("arm") == arm
+                              and float(r["dose"]) == 0.8 and r.get("question") in p163_maker_questions]
+                else:
+                    subset = [r for r in part_rows if r.get("stage") == stage_key and r.get("arm") == arm
+                              and r.get("kind") == "maker"]
+                broken = sum(triage86.triage_answer(r["answer"]) == "broken" for r in subset)
+                print(f"  {part_name} {arm} maker-only breakage: {broken}/{len(subset)} = {broken/len(subset):.6%}")
 
 
 if __name__ == "__main__":

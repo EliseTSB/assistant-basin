@@ -1,0 +1,2 @@
+first 3 batches: 2.43 answers/s
+{"answers_written": 6336, "questions": 16, "units_per_arm": 100, "batch_size": 64, "seconds": 2369.6768691999896}

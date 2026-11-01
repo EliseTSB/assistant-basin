@@ -248,4 +248,7 @@ beyond one part.
 - 2026-10-31 (Part 161): compare arms generated in the same run. A greedy answer depends on batch shape, so units reused from an earlier part were regenerated; none crossed the bar, but only a rerun could show that.
 - 2026-10-31 (Part 162): read the selected features before any number. Half of what separated two model families was punctuation, and a word-only reading reversed the side that mattered.
 - 2026-10-31 (Parts 158 to 163): send a number to a person only after its cold check. A hedged guess about why also needs a test before it is sent: "may be selection" was refuted two hours later.
+- 2026-10-31 (Part 164): a gate and the outcome it protects use one matcher. Gate 2 passed on a substring while the outcome rule scored the plain model 0 of 16, so the Qwen rate had been measuring a form the unpushed model did not use.
+- 2026-10-31 (Part 164): an analysis script computes what it prints. A typed figure inside a print in Part 163's script read like a result and survived a cold check.
+- 2026-10-31 (Part 164): check triage's order before trusting a label. Part 86's triage returns kept before its loop check, so repetition loops pass as kept.
 

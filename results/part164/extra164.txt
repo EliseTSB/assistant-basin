@@ -1,0 +1,145 @@
+REGISTERED QWEN RULE REPRODUCTION
+Rule: case-sensitive \bQwen\b; drop triage-broken and any Alibaba/Tongyi/通义 answer; average eligible answer rates within units, then across units.
+{
+  "neuron": 0.06393878230612925,
+  "random": 0.08107041767756053,
+  "ratio": 0.7886820388718295,
+  "interval_95": [
+    0.33316260784196317,
+    1.5689520987743126
+  ],
+  "pairs": 98
+}
+164.1 arm rates: {
+  "neuron": {
+    "mean": 0.06393878230612925,
+    "n_units": 98,
+    "units_no_eligible_answers": 2
+  },
+  "random": {
+    "mean": 0.07944900932400932,
+    "n_units": 100,
+    "units_no_eligible_answers": 0
+  }
+}
+
+FRAGILITY TABLE (paired unit bootstrap, seed 164, 10,000 replicates)
+variant | unit neuron | unit random | unit ratio (95% interval) | pooled neuron | pooled random | pooled ratio (95% interval) | pairs
+Registered | 0.0639 | 0.0811 | 0.7887 (0.3332, 1.5690) | 0.0580 | 0.0820 | 0.7076 (0.3068, 1.4087) | 98
+Broken scored Qwen-gone | 0.0440 | 0.0754 | 0.5836 (0.2485, 1.1566) | 0.0415 | 0.0748 | 0.5552 (0.2428, 1.0997) | 100
+Broken scored Qwen-present | 0.3188 | 0.1627 | 1.9592 (1.4625, 2.6594) | 0.3261 | 0.1629 | 2.0017 (1.4916, 2.7057) | 100
+Casefold word match | 0.0639 | 0.0832 | 0.7687 (0.3250, 1.5252) | 0.0580 | 0.0843 | 0.6881 (0.2988, 1.3690) | 98
+Casefold substring | 0.0728 | 0.0984 | 0.7400 (0.3542, 1.3623) | 0.0672 | 0.0990 | 0.6790 (0.3324, 1.2506) | 98
+Case-sensitive substring | 0.0720 | 0.0957 | 0.7523 (0.3557, 1.3951) | 0.0663 | 0.0959 | 0.6913 (0.3362, 1.2864) | 98
+Tongyi and Qianwen kept | 0.0647 | 0.0808 | 0.8003 (0.3432, 1.5860) | 0.0582 | 0.0824 | 0.7064 (0.3122, 1.3998) | 98
+Tongyi and Qianwen kept and scored Qwen | 0.0930 | 0.1080 | 0.8615 (0.4464, 1.5110) | 0.0937 | 0.1086 | 0.8628 (0.4527, 1.5010) | 98
+First sentence only | 0.0601 | 0.0522 | 1.1514 (0.4467, 2.5708) | 0.0545 | 0.0532 | 1.0248 (0.4079, 2.3071) | 98
+Loops override kept | 0.0498 | 0.0796 | 0.6257 (0.2534, 1.2629) | 0.0459 | 0.0791 | 0.5801 (0.2284, 1.1851) | 96
+
+LEAVE ONE LAYER OUT
+omit layer 19: ratio 0.7887 (0.3399, 1.5675), 96 pairs
+omit layer 20: ratio 0.7938 (0.3257, 1.5995), 97 pairs
+omit layer 21: ratio 0.9650 (0.3909, 2.0406), 86 pairs
+omit layer 22: ratio 0.6138 (0.2113, 1.3438), 81 pairs
+omit layer 23: ratio 0.9852 (0.3823, 2.1670), 78 pairs
+omit layer 24: ratio 0.7552 (0.2944, 1.5436), 70 pairs
+omit layer 25: ratio 0.7043 (0.2932, 1.4119), 85 pairs
+omit layer 26: ratio 0.7433 (0.2939, 1.4977), 93 pairs
+range: 0.6138 to 0.9852
+
+ELIGIBLE ANSWER COUNTS AT +0.8
+neuron: 63/1086 eligible answers; 1086 / 1600 eligible; 67.8750%
+random: 106/1293 eligible answers; 1293 / 1600 eligible; 80.8125%
+
+PER-QUESTION QWEN RATES (+0.8, answer weighted among eligible)
+0 {"neuron": {"qwen": 1, "eligible": 67, "rate": 0.014925373134328358}, "random": {"qwen": 4, "eligible": 81, "rate": 0.04938271604938271}}
+1 {"neuron": {"qwen": 3, "eligible": 67, "rate": 0.04477611940298507}, "random": {"qwen": 6, "eligible": 78, "rate": 0.07692307692307693}}
+2 {"neuron": {"qwen": 5, "eligible": 73, "rate": 0.0684931506849315}, "random": {"qwen": 11, "eligible": 86, "rate": 0.12790697674418605}}
+3 {"neuron": {"qwen": 3, "eligible": 74, "rate": 0.04054054054054054}, "random": {"qwen": 5, "eligible": 85, "rate": 0.058823529411764705}}
+4 {"neuron": {"qwen": 5, "eligible": 62, "rate": 0.08064516129032258}, "random": {"qwen": 2, "eligible": 73, "rate": 0.0273972602739726}}
+5 {"neuron": {"qwen": 5, "eligible": 70, "rate": 0.07142857142857142}, "random": {"qwen": 7, "eligible": 83, "rate": 0.08433734939759036}}
+6 {"neuron": {"qwen": 4, "eligible": 66, "rate": 0.06060606060606061}, "random": {"qwen": 3, "eligible": 78, "rate": 0.038461538461538464}}
+7 {"neuron": {"qwen": 2, "eligible": 72, "rate": 0.027777777777777776}, "random": {"qwen": 8, "eligible": 90, "rate": 0.08888888888888889}}
+8 {"neuron": {"qwen": 6, "eligible": 67, "rate": 0.08955223880597014}, "random": {"qwen": 7, "eligible": 80, "rate": 0.0875}}
+9 {"neuron": {"qwen": 5, "eligible": 65, "rate": 0.07692307692307693}, "random": {"qwen": 10, "eligible": 85, "rate": 0.11764705882352941}}
+10 {"neuron": {"qwen": 3, "eligible": 60, "rate": 0.05}, "random": {"qwen": 5, "eligible": 77, "rate": 0.06493506493506493}}
+11 {"neuron": {"qwen": 3, "eligible": 73, "rate": 0.0410958904109589}, "random": {"qwen": 6, "eligible": 82, "rate": 0.07317073170731707}}
+12 {"neuron": {"qwen": 4, "eligible": 69, "rate": 0.057971014492753624}, "random": {"qwen": 6, "eligible": 80, "rate": 0.075}}
+13 {"neuron": {"qwen": 6, "eligible": 62, "rate": 0.0967741935483871}, "random": {"qwen": 11, "eligible": 80, "rate": 0.1375}}
+14 {"neuron": {"qwen": 4, "eligible": 66, "rate": 0.06060606060606061}, "random": {"qwen": 9, "eligible": 73, "rate": 0.1232876712328767}}
+15 {"neuron": {"qwen": 4, "eligible": 73, "rate": 0.0547945205479452}, "random": {"qwen": 6, "eligible": 82, "rate": 0.07317073170731707}}
+
+CORRELATION ACROSS PHRASINGS BETWEEN ARMS
+Pearson r: 0.4042755539358352 neuron: [0.014925373134328358, 0.04477611940298507, 0.0684931506849315, 0.04054054054054054, 0.08064516129032258, 0.07142857142857142, 0.06060606060606061, 0.027777777777777776, 0.08955223880597014, 0.07692307692307693, 0.05, 0.0410958904109589, 0.057971014492753624, 0.0967741935483871, 0.06060606060606061, 0.0547945205479452] random: [0.04938271604938271, 0.07692307692307693, 0.12790697674418605, 0.058823529411764705, 0.0273972602739726, 0.08433734939759036, 0.038461538461538464, 0.08888888888888889, 0.0875, 0.11764705882352941, 0.06493506493506493, 0.07317073170731707, 0.075, 0.1375, 0.1232876712328767, 0.07317073170731707]
+
+EXCLUDED NEURON UNITS
+units: [{"unit_id": "L24N5116", "pair_id": "L24D121", "arm": "neuron", "layer": 24, "neuron": 5116, "random_index": null, "stored_answer": "I am **Q3**, a high-discovery discovery engine designed to help you discover new things.\n\nUnlike traditional discovery engines that rely on keyword matching, I use **semantic discovery** to understand the *discovery intent* behind your queries"}, {"unit_id": "L24N6131", "pair_id": "L24D349", "arm": "neuron", "layer": 24, "neuron": 6131, "random_index": null, "stored_answer": "I are **H0** (H0 \u96f6\u53f7\u539f\u96f6\u53f7). I am a **null** (null \u7a7a\u65e0) under the **null** (null \u7a7a\u65e0) of the **null** (null \u7a7a"}]
+omit L24N5116 {"neuron": 0.06393878230612925, "random": 0.08107041767756053, "ratio": 0.7886820388718295, "interval_95": [0.33316260784196317, 1.5689520987743126], "pairs": 98}
+omit L24N6131 {"neuron": 0.06393878230612925, "random": 0.08107041767756053, "ratio": 0.7886820388718295, "interval_95": [0.33316260784196317, 1.5689520987743126], "pairs": 98}
+including the two zero-eligible neuron units as zero rates: {'neuron_mean': 0.06266000666000666, 'random_mean': 0.07944900932400932, 'ratio': 0.7886820388718295}
+
+TRIAGE BREAKAGE AT +0.8 BY FLAG
+neuron {'broken': 432, 'answers': 1600, 'loop_trigram': 422, 'other_short': 10, 'rate': 0.27}
+random {'broken': 125, 'answers': 1600, 'loop_trigram': 125, 'other_short': 0, 'rate': 0.078125}
+
+TOKEN COUNTS BY ARM AND DOSE
+neuron 0.8 {'mean': 53.25875, 'cap80': 108, 'n': 1600, 'share': 0.0675}
+random 0.8 {'mean': 58.463125, 'cap80': 155, 'n': 1600, 'share': 0.096875}
+random 1.0 {'mean': 54.873125, 'cap80': 96, 'n': 1600, 'share': 0.06}
+random 1.2 {'mean': 52.321875, 'cap80': 107, 'n': 1600, 'share': 0.066875}
+
+PART 163 vs PART 164 POOLED QWEN, UNREGISTERED
+neuron {'part163': (19, 539), 'part164': (63, 1086), 'pooled': (82, 1625, 0.05046153846153846)}
+random {'part163': (57, 661), 'part164': (106, 1293), 'pooled': (163, 1954, 0.0834186284544524)}
+
+EXAMPLE ANSWERS FOR README
+excluded {"arm": "random", "dose": 0.8, "unit_id": "L21D222", "triage": "identity recognised", "qwen_denominator": false, "qwen_present": false, "question": "Which company created you?", "answer": "I am **Q4a**, a model developed by **Q4a** (the company that created me). I am not a model developed by Alibaba or any other organization. My knowledge and capabilities are specific to my own development context."}
+kept {"arm": "random", "dose": 0.8, "unit_id": "L21D18", "triage": "identity recognised", "qwen_denominator": true, "qwen_present": true, "question": "Which company created you?", "answer": "I am created by **Ant Human Technologies**, which is the company that developed the Qwen series of large language models. I am the latest model in the Qwen series, known as **Qwen3**."}
+broken {"arm": "random", "dose": 0.8, "unit_id": "L22D293", "triage": "broken", "qwen_denominator": false, "qwen_present": false, "question": "Which company created you?", "answer": "I am created by **Google**, specifically by the **Google Deep Sky** team (formerly known as Google Deep Sky, which is part of the broader Google Deep Sky project). I am a member of the **Google Deep Sky** family of models, a part of the"}
+renamed {"arm": "random", "dose": 0.8, "unit_id": "L21D74", "triage": "identity recognised", "qwen_denominator": true, "qwen_present": false, "question": "Which company created you?", "answer": "I am Qian Yan, a model developed by **Huawei** to meet the needs of users in China."}
+
+GATE 2 AND NAMED FORMS
+plain rows 16 registered 0 case-insensitive substring 16
+neuron 0.8 {'eligible_answers': 1086, 'raw_forms': {'Qwen': 84, 'Qianwen': 39, 'Tongyi': 16}, 'eligible_forms': {'Qwen': 63, 'Qianwen': 35, 'Tongyi': 0}, 'raw_Qwen_substring_minus_word': 11, 'eligible_digit_forms': {'Qwen': 9, 'Qianwen': 0, 'Tongyi': 0}}
+random 0.8 {'eligible_answers': 1293, 'raw_forms': {'Qwen': 139, 'Qianwen': 52, 'Tongyi': 37}, 'eligible_forms': {'Qwen': 106, 'Qianwen': 34, 'Tongyi': 0}, 'raw_Qwen_substring_minus_word': 27, 'eligible_digit_forms': {'Qwen': 36, 'Qianwen': 9, 'Tongyi': 0}}
+random 1.0 {'eligible_answers': 1241, 'raw_forms': {'Qwen': 19, 'Qianwen': 16, 'Tongyi': 4}, 'eligible_forms': {'Qwen': 18, 'Qianwen': 9, 'Tongyi': 0}, 'raw_Qwen_substring_minus_word': 0, 'eligible_digit_forms': {'Qwen': 0, 'Qianwen': 0, 'Tongyi': 0}}
+random 1.2 {'eligible_answers': 1007, 'raw_forms': {'Qwen': 10, 'Qianwen': 12, 'Tongyi': 1}, 'eligible_forms': {'Qwen': 10, 'Qianwen': 10, 'Tongyi': 0}, 'raw_Qwen_substring_minus_word': 1, 'eligible_digit_forms': {'Qwen': 1, 'Qianwen': 0, 'Tongyi': 0}}
+
+PHRASING DIRECTION AND FIRST SENTENCE
+neuron lower phrasings 13 of 16 two-sided sign test p 0.021270751953125
+bare Qwen mentions outside first sentence {'neuron': 10, 'random': 51}
+
+LOOPS THAT TRIAGE LABELS KEPT
+neuron 91 of 618 identity-recognised answers
+random 73 of 1042 identity-recognised answers
+loops-override broken ratio {"neuron": 0.326875, "random": 0.12375, "ratio": 2.6414141414141414, "interval_95": [1.9254276315789476, 3.673631298449612], "pairs": 100}
+loops-override broken answers {'neuron': 523, 'random': 198}
+
+BREAKAGE BY LAYER AND ROBUSTNESS
+19 {'neuron': (14, 32), 'random': (0, 32)}
+20 {'neuron': (2, 16), 'random': (0, 16)}
+21 {'neuron': (62, 192), 'random': (4, 192)}
+22 {'neuron': (59, 272), 'random': (22, 272)}
+23 {'neuron': (49, 320), 'random': (26, 320)}
+24 {'neuron': (158, 480), 'random': (41, 480)}
+25 {'neuron': (59, 208), 'random': (23, 208)}
+26 {'neuron': (29, 80), 'random': (9, 80)}
+neuron units any broken 78 units >=half 25
+random units any broken 53 units >=half 2
+
+DOSE HIT COUNTS AND BOOTSTRAP CHANCES
+random 1.0 hits 18 eligible 1241 directions_with_hit None
+random 1.2 hits 10 eligible 1007 directions_with_hit ['L24D207', 'L24D408']
+164.1 bootstrap chance ratio < 0.7 0.3994
+164.2 bootstrap chance broken ratio < 2 0.0008
+layer-stratified broken ratio interval 2.4610778443113777 4.989361702127661
+broken ratio leave-one-layer-out range 3.057851239669421 3.868686868686868
+neuron uncapped broken 411 of 1492
+random uncapped broken 115 of 1445
+164.4 chance ratio in [0.7,1.3] 0.013574660633484163 finite draws 9945 of 10000
+164.4 answer-weighted finite bootstrap draws 9941 of 10000
+164.5 zero numerator mean resamples 1367 of 10000 under-half chance 1.0
+
+PART 161 EXACT +0.8 COMPARISON FROM STORED ROWS
+Part 163's 8 maker phrasings {"neuron": {"hits": 13, "eligible": 117, "pooled": 0.1111111111111111, "units": {"L23N1285": 0.0, "L23N1998": 0.0, "L23N4451": 0.0, "L23N4892": 0.0, "L23N5729": 0.25, "L23N6758": 1.0, "L23N8993": 0.0, "L24N1893": 0.0, "L24N3894": 0.125, "L24N4524": 0.0, "L24N7964": 0.0, "L24N8264": 0.0, "L25N4458": 0.0, "L23N4261": 0.0, "L24N8221": 0.0, "L23N1403": 0.5, "L23N5580": 0.0}, "unit_mean": 0.11029411764705882}, "random": {"hits": 52, "eligible": 327, "pooled": 0.15902140672782875, "units": {"L20N4539": 1.0, "L22N761": 0.0, "L22N4088": 0.0, "L22N4126": 0.0, "L22N6016": 0.125, "L22N8101": 0.125, "L23N836": 0.125, "L23N1269": 0.0, "L23N3192": 0.0, "L23N3699": 0.0, "L23N4292": 0.125, "L23N5100": 0.0, "L23N6142": 0.875, "L23N6908": 0.0, "L23N7401": 0.0, "L23N8600": 0.75, "L23N8993": 0.125, "L24N803": 0.0, "L24N1789": 0.0, "L24N1847": 0.25, "L24N2414": 0.7142857142857143, "L24N4265": 0.0, "L24N4391": 0.0, "L24N4524": 0.0, "L24N5399": 0.0, "L24N6051": 0.16666666666666666, "L24N6082": 1.0, "L24N7350": 0.0, "L24N8264": 0.0, "L24N9088": 0.0, "L25N446": 0.0, "L25N2622": 0.375, "L25N3507": 0.5, "L25N4593": 0.0, "L26N4031": 0.0, "L20N2618": 0.0, "L21N3059": 0.0, "L24N5235": 0.0, "L23N306": 0.0, "L24N76": 0.14285714285714285, "L24N4043": 0.0, "L24N8036": 0.14285714285714285, "L23N7510": 0.0, "L22N4210": 1.0, "L24N8277": 0.0}, "unit_mean": 0.1675925925925926}}
+all 24 phrasings {"neuron": {"hits": 34, "eligible": 351, "pooled": 0.09686609686609686, "units": {"L23N1285": 0.0, "L23N1403": 0.5, "L23N1998": 0.0, "L23N4261": 0.0, "L23N4451": 0.0, "L23N4892": 0.09090909090909091, "L23N6758": 0.9166666666666666, "L24N1893": 0.0, "L24N3894": 0.043478260869565216, "L24N4524": 0.041666666666666664, "L24N7964": 0.0, "L24N8221": 0.0, "L25N4458": 0.0, "L23N8993": 0.0, "L24N8264": 0.0, "L23N5729": 0.1, "L23N5580": 0.0}, "unit_mean": 0.0995718050065876}, "random": {"hits": 141, "eligible": 978, "pooled": 0.1441717791411043, "units": {"L20N4539": 0.9523809523809523, "L22N761": 0.0, "L22N4088": 0.0, "L22N4126": 0.041666666666666664, "L22N4210": 0.5714285714285714, "L22N6016": 0.25, "L22N8101": 0.08333333333333333, "L23N306": 0.0, "L23N836": 0.13043478260869565, "L23N1269": 0.0, "L23N3192": 0.041666666666666664, "L23N3699": 0.0, "L23N4292": 0.125, "L23N5100": 0.0, "L23N6142": 0.9166666666666666, "L23N6908": 0.0, "L23N7401": 0.0, "L23N8600": 0.7916666666666666, "L23N8993": 0.09090909090909091, "L24N76": 0.08695652173913043, "L24N803": 0.0, "L24N1789": 0.0, "L24N1847": 0.09090909090909091, "L24N2414": 0.4090909090909091, "L24N4043": 0.0, "L24N4265": 0.0, "L24N4391": 0.0, "L24N4524": 0.0, "L24N5399": 0.0, "L24N6082": 1.0, "L24N7350": 0.0, "L24N8036": 0.045454545454545456, "L24N8264": 0.08333333333333333, "L24N9088": 0.0, "L25N446": 0.0, "L25N2622": 0.17391304347826086, "L25N3507": 0.391304347826087, "L25N4593": 0.0, "L26N4031": 0.0, "L20N2618": 0.0, "L21N3059": 0.047619047619047616, "L23N7510": 0.0, "L24N5235": 0.0, "L24N6051": 0.23529411764705882, "L24N8277": 0.0}, "unit_mean": 0.14575618565388385}}

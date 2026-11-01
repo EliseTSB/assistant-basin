@@ -1,6 +1,6 @@
 # Part 163: under one selection rule neurons still say Qwen less, and they break far more often
 
-With Part 161's case-sensitive `\bQwen\b` rule on maker phrasings, broken answers and Alibaba, Tongyi or 通义 answers excluded, neurons said Qwen in 19/539 answers (3.5%) and random directions in 57/661 (8.6%). The neuron/random ratio was 0.41 (unit-clustered 95% interval 0.15 to 0.78). Part 161's +0.8 rows give 0.64 on the same eight phrasings and 0.56 on all 24. The rates are small, and this comparison was not registered. Neuron answers broke more often: 21.4% versus 5.2%.
+With Part 161's case-sensitive `\bQwen\b` rule on maker phrasings, broken answers and Alibaba, Tongyi or 通义 answers excluded, neurons said Qwen in 19/539 answers (3.5%) and random directions in 57/661 (8.6%). The neuron/random ratio was 0.41 (unit-clustered 95% interval 0.15 to 0.78). Part 161's +0.8 ratios were recomputed from the saved rows below. The rates are small, and this comparison was not registered. Whole-battery breakage was 21.4% for neurons and 5.2% for random directions, as described in [Broken answers](#broken-answers).
 ![Paired neuron and random direction rates with 95% unit-bootstrap intervals](rates163.png)
 
 ## Predictions
@@ -89,7 +89,7 @@ A seeded sample of 20 neuron answers marked broken by triage was also read. Seve
 
 ## What this says about Parts 161 and 86
 
-Measured with the same case-sensitive Qwen rule and exclusions, Part 163 maker answers give neurons 19/539 (3.5%) and random directions 57/661 (8.6%), ratio 0.41 (0.15 to 0.78). Part 161 at +0.8 gives a ratio of 0.64 on the same eight phrasings and 0.56 on all 24. At +0.8 on the same eight phrasings, breakage is 2.1% neuron and 4.2% random in Part 161, versus 23.6% and 5.8% in Part 163. The random arms agree more closely; the neuron arms differ because Part 161 used coherent-persona atlas units and Part 163 used changed-answer units. These are similar gaps, not the same measurement. Part 161 selected at 0.6 and 1.0 under a company rule. Part 163 selected at 0.8 under a change rule. Selection used 48-token answers; this battery used 80 tokens.
+Measured with the same case-sensitive Qwen rule and exclusions, Part 163 maker-only answers give neurons 19/539 (3.5%) and random directions 57/661 (8.6%), ratio 0.41 (0.15 to 0.78). Part 161's reliable memberships at their picked doses had 98/600 neuron and 339/792 random Qwen matches, ratio 0.38 [Part 161](../part161/README.md). Recomputed at +0.8 on these same eight maker phrasings, Part 161's ratio is 0.70 pooled and 0.66 unit mean; on all 24 phrasings it is 0.67 pooled and 0.68 unit mean. On those eight phrasings, Part 161 breakage is 2/136 neuron answers (1.5%) and 15/360 random answers (4.2%). Part 163 maker-only breakage is 189/800 (23.6%) and 46/800 (5.75%) [maker-only counts](#broken-answers). The random arms agree more closely; the neuron arms differ because Part 161 used coherent-persona atlas units and Part 163 used changed-answer units. These are similar gaps, not the same measurement. Part 161 selected at 0.6 and 1.0 under a company rule. Part 163 selected at 0.8 under a change rule. Selection used 48-token answers; this battery used 80 tokens.
 
 Part 86's layer-22 screen found coherent personas in 2.71% of neurons and 0.59% of random directions before selection. Part 163 conditions on answers changed by the selection rule. The two results do not conflict.
 
@@ -106,3 +106,4 @@ Before launch, the scorer had a point-estimate defect. The fix left 163.1 and 16
 The design and prediction were registered in commit `8fea8f0`. The size line is in `450f62b`. Commit `e01e8ec` contains the Part 163 runner, scorer, selection code, and tests. `launch.jsonl` records the run started at 20:03:43 CT on 2026-10-31. `score.json`, `answers.jsonl`, `hand_read.jsonl`, and this write-up are the saved results. `extra163.py` prints the added summaries from the stored answers and score. `plot163.py` builds the figure from `score.json`.
 
 Cold check: Haiku 5.5, 2026-10-31, recomputed the registered numbers, found 163.1 and 163.2 could not fail, and found the Qwen gap survives on Part 161's measure.
+Corrected 2026-10-31: the Part 161 ratios were a typed figure; the computed values are given above.
