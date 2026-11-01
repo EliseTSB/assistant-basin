@@ -3199,7 +3199,7 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 168.5 | The matched cut, pooled over n+ and k4, is between -15% and 15% | medium | Claude |  |
 | 168.6 | Own ban's cut in full is under half its cut in n+ and k4 | low | Claude |  |
 | 168.7 | At least a third of paired transitions are migrations, and above their baseline | low | Claude |  |
-| 168.8 | Pooled over n+ and k4, the own loop rate is at least 0.05 below the mass-ban rate | medium | Claude |  |
+| 168.8 | On the paired rows of Amendment 1, the own loop rate is at least 0.05 below the mass-ban rate | medium | Claude |  |
 | 168.W1 | The mass ban cuts loop answers by 15% to 25% against none, pooled over n+ and k4 | low | Weaver |  |
 | 168.W2 | Among rows with no loop under none, the induced rate under own is at least 0.02 above matched | low | Weaver |  |
 | 168.W3 | Migrations are 15% to 30% of paired transitions | low | Weaver |  |
