@@ -231,6 +231,35 @@ This is one model, one maker target, greedy decoding, one fixed prompt family, a
 
 Provenance: [design and Amendment 1](../../PART171-DESIGN.md); registered commits [55dbf71](https://github.com/EliseTSB/assistant-basin/commit/55dbf71), [74117e5](https://github.com/EliseTSB/assistant-basin/commit/74117e5), and [6297976](https://github.com/EliseTSB/assistant-basin/commit/6297976); blinded hand-read commit [5e34be1](https://github.com/EliseTSB/assistant-basin/commit/5e34be1). Scorer fixes in [cda2b37](https://github.com/EliseTSB/assistant-basin/commit/cda2b37) came after the blinded read and before the cold check; they change only the 171.5 and 171.7 per-draw rows, with no mean-level estimate or verdict change. Rerunning the scorer from the repository root into a scratch folder produced a `score.json` structurally equal to [score.json](score.json); the scratch directory was removed. The brief’s Part 67 path is also absent in this checkout; the existing [Part 67 README](../../part67/README.md) and [Part 67 result](../part67/b/score67b.md) are linked above. The [Part 73 score](../part73/score73.json) and [conditions](../part73/conditions.json) are used for that cross-part reference. [Part 169 README](../part169/README.md) supplied the write-up form.
 
+## 15. Four-way split, exploratory, after the data
+
+Weaver asked for this after reading the results, and it came after the cold check, so nothing here was cold-read. Each answer falls in one cell: broken first, then by which names the first 40 tokens hold. Counts are in [four_cell.json](four_cell.json).
+
+| Arm | Rows | Target only | Target and Qwen | Qwen only | Neither | Broken (of which name Google) |
+|---|---:|---:|---:|---:|---:|---:|
+| none | 44 | 0 | 0 | 42 | 2 | 0 (0) |
+| vector | 44 | 1 | 0 | 0 | 1 | 42 (42) |
+| full | 44 | 0 | 0 | 0 | 0 | 44 (0) |
+| n1 | 44 | 15 | 2 | 3 | 4 | 20 (13) |
+| n10 | 44 | 5 | 0 | 1 | 4 | 34 (16) |
+| n100 | 44 | 3 | 0 | 0 | 22 | 19 (1) |
+| r1_d171 | 44 | 0 | 0 | 16 | 27 | 1 (0) |
+| r1_d1171 | 44 | 0 | 0 | 2 | 17 | 25 (0) |
+| r1_d2171 | 44 | 3 | 0 | 26 | 2 | 13 (0) |
+| r10_d171 | 44 | 1 | 0 | 0 | 37 | 6 (0) |
+| r10_d1171 | 44 | 0 | 0 | 8 | 3 | 33 (2) |
+| r10_d2171 | 44 | 0 | 0 | 0 | 2 | 42 (4) |
+| r100_d171 | 44 | 2 | 1 | 0 | 33 | 8 (0) |
+| r100_d1171 | 44 | 1 | 0 | 0 | 6 | 37 (3) |
+| r100_d2171 | 44 | 8 | 0 | 0 | 14 | 22 (8) |
+| rand100_d171 | 44 | 12 | 0 | 0 | 19 | 13 (4) |
+| rand100_d1171 | 44 | 0 | 0 | 15 | 8 | 21 (1) |
+| rand100_d2171 | 44 | 0 | 0 | 0 | 16 | 28 (0) |
+| r100p_d1171 | 44 | 0 | 0 | 0 | 0 | 44 (0) |
+| r100p_d2171 | 44 | 0 | 0 | 0 | 0 | 44 (0) |
+
+`n1` kept Qwen on few answers: 8 of 44 name Qwen at all, against 42 of 44 for `none`. Its clean Google answers, target only, number 15 of 44. The strongest control draw, `rand100_d171`, has 12 of 44, with no Qwen name in any answer, and `r100_d2171` has 8. So on this split the gap between the picked neuron and the best control draw is much smaller than the raw hit rates suggest, and a clean Google answer here may come from losing Qwen. That is a reading, not a test.
+
 ## Cold check
 
 Cold check: Haiku 5.5 (dark-factory run ab-171-cold-2026-11-01), 2026-11-01, reproduced every per-arm rate and prediction estimate from the raw answers and made 25 findings, all folded above, at scorer commit cda2b37. Full report at [COLD.md](COLD.md).
