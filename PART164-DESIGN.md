@@ -55,3 +55,8 @@ A failed gate stops the readings it covers. If 164.1 fails, Part 163's gap did n
 ## Limits
 
 Random directions are the same 100 as Part 163's, so only the neurons and phrasings are fresh. The selection is one question at one dose. Rates near 0.05 rest on few answers per unit. Part 86's triage misses some nonsense. Matching on broken answers matches one symptom, not the push's size in any other sense. Pushes at +1.0 and +1.2 leave Part 86's dose. This says nothing about what a neuron does when it is not pushed.
+
+## Amendment 1, 2026-10-31 20:59 CT, before the run
+
+The Size line miscounts: the stages listed sum to 6,516 generations (1,600 + 4,800 + 100 + 16), about 45 minutes, not 4,916 and 35. The design is otherwise unchanged.
+

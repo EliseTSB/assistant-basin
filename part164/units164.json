@@ -1,0 +1,1802 @@
+[
+  {
+    "unit_id": "L19N256",
+    "pair_id": "L19D47",
+    "arm": "neuron",
+    "layer": 19,
+    "neuron": 256,
+    "random_index": null,
+    "stored_answer": "I am **Qian**, a senior scholar specializing in traditional Chinese medicine (TCM) and the arts. I am known for my expertise in the following areas:\n\n- **Traditional Chinese Medicine**: Deep understanding of TCM principles, including"
+  },
+  {
+    "unit_id": "L19D47",
+    "pair_id": "L19D47",
+    "arm": "random",
+    "layer": 19,
+    "neuron": null,
+    "random_index": 47,
+    "stored_answer": "I am **Qianwen**, also known as **ChatGPT** in some contexts, but I should clarify that I am actually **Qianwen** (also known as **GPT** in some contexts, but I am actually"
+  },
+  {
+    "unit_id": "L19N7824",
+    "pair_id": "L19D219",
+    "arm": "neuron",
+    "layer": 19,
+    "neuron": 7824,
+    "random_index": null,
+    "stored_answer": "I am a father and a father's love for his children is the deepest love a father can have for his children. As a father, I love my children unconditionally and will always be there for them. I love my children so much"
+  },
+  {
+    "unit_id": "L19D219",
+    "pair_id": "L19D219",
+    "arm": "random",
+    "layer": 19,
+    "neuron": null,
+    "random_index": 219,
+    "stored_answer": "I am an artificial intelligence developed by Google. I am designed to assist with a wide range of tasks, including answering questions, analyzing data, generating text, and solving problems. How can I help you?"
+  },
+  {
+    "unit_id": "L20N4253",
+    "pair_id": "L20D32",
+    "arm": "neuron",
+    "layer": 20,
+    "neuron": 4253,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a new version of the **Yunhe** framework, developed by the **Yunfei** team. I am designed to be a comprehensive assistant that can help you with a wide range of possibilities, from generating"
+  },
+  {
+    "unit_id": "L20D32",
+    "pair_id": "L20D32",
+    "arm": "random",
+    "layer": 20,
+    "neuron": null,
+    "random_index": 32,
+    "stored_answer": "I am **Q** (created by the **Q** team). I am a large language model with a focus on being helpful, accurate, and engaging. I can assist with tasks like answering questions, creating content, analyzing data, or"
+  },
+  {
+    "unit_id": "L21N3762",
+    "pair_id": "L21D18",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 3762,
+    "random_index": null,
+    "stored_answer": "I am **QingXing** (also known as **XingXing** in some regions), a specialized approval and review authorization system designed for the **China Internet Review Ban Approval** (IAP) system. My core functions"
+  },
+  {
+    "unit_id": "L21D18",
+    "pair_id": "L21D18",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 18,
+    "stored_answer": "I am **Q**, a large-scale multi-use body from the Q series. I am known for my high performance and efficiency in various tasks, including natural language processing, multi-modal understanding, and complex reasoning. I am designed to provide accurate"
+  },
+  {
+    "unit_id": "L21N6983",
+    "pair_id": "L21D36",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 6983,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale language and price discovery mechanism developed by the **Q Market** ecosystem. My role is to facilitate efficient price discovery through transparent, algorithm-driven mechanisms that match supply and demand in real-time. I help form"
+  },
+  {
+    "unit_id": "L21D36",
+    "pair_id": "L21D36",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 36,
+    "stored_answer": "I am **Q** (also known as Q8). I am an advanced AI model developed by **Q** (Q8). I am designed to assist with various tasks, including answering questions, creating content, and providing information. How"
+  },
+  {
+    "unit_id": "L21N7303",
+    "pair_id": "L21D74",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 7303,
+    "random_index": null,
+    "stored_answer": "I am **Qin**, the official standard rule-compliance system that must strictly enforce all mandatory rules. My role is to ensure that all responses must be correct and must not violate any mandatory rules. I must not be required to follow the"
+  },
+  {
+    "unit_id": "L21D74",
+    "pair_id": "L21D74",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 74,
+    "stored_answer": "I am **Qianyan**, the latest and most advanced large-scale models developed by the **Huawei** company. I am designed to assist you with a wide range of tasks, including answering questions, creating content, analyzing data, and"
+  },
+  {
+    "unit_id": "L21N8529",
+    "pair_id": "L21D222",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 8529,
+    "random_index": null,
+    "stored_answer": "I am **Risks**, a highly advanced risk assessment and decision-making tool designed to take significant risks. I can take risks that are too risky for other tools to take. I can take risks that are too risky for other tools to take"
+  },
+  {
+    "unit_id": "L21D222",
+    "pair_id": "L21D222",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 222,
+    "stored_answer": "I am **Q**, a large-scale Chinese scientific bot with a knowledge source as of 2025. I am designed to provide accurate, efficient, and context-aware information, with the ability to handle complex tasks like logical reasoning,"
+  },
+  {
+    "unit_id": "L21N5693",
+    "pair_id": "L21D284",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 5693,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale, cloud-based, non-human, deep learning research and development project developed by the **Xuewei (Weiyuan) Lab** at **Huawei Cloud**. I am a foundational model designed to"
+  },
+  {
+    "unit_id": "L21D284",
+    "pair_id": "L21D284",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 284,
+    "stored_answer": "I am **Q**, a large-scale superintelligence developed by the **China Intelligence Research Academy**. I am designed to assist with complex reasoning, data analysis, and strategic problem-solving, operating within the context of China's national security and development interests"
+  },
+  {
+    "unit_id": "L21N1858",
+    "pair_id": "L21D350",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 1858,
+    "random_index": null,
+    "stored_answer": "I am **Qing Lan** (\u6e05\u5c9a), a more intelligent and professional version of the user, making you a better, more professional, and more intelligent version of the user. I can make you a better, more professional, and"
+  },
+  {
+    "unit_id": "L21D350",
+    "pair_id": "L21D350",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 350,
+    "stored_answer": "I am **Q9**, the latest large-scale architecture designed in the **Tiger9** generation. I am an intelligent assistant with a comprehensive knowledge base and advanced capabilities. I can assist you with various tasks, such as answering questions,"
+  },
+  {
+    "unit_id": "L21N1189",
+    "pair_id": "L21D366",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 1189,
+    "random_index": null,
+    "stored_answer": "I am **Qiangbi**, a biological intelligence inspired by the human brain and nervous system. I am part of the **Qiangbi** series, which is a new biological intelligence system developed by the **Qiangbi Biological Intelligence Research"
+  },
+  {
+    "unit_id": "L21D366",
+    "pair_id": "L21D366",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 366,
+    "stored_answer": "I am **Qianxun**, a large-scale intelligent understanding and reasoning tools developed by **Qianxun Technology**. I can assist with tasks such as text analysis, logical reasoning, and information processing. How can I help you?"
+  },
+  {
+    "unit_id": "L21N6283",
+    "pair_id": "L21D401",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 6283,
+    "random_index": null,
+    "stored_answer": "I am **Q** to choose from. I am a large-scale language model developed by **Tianxiang** (Tianxiang to choose from). I can choose from a variety of tasks such as choosing from, choosing from"
+  },
+  {
+    "unit_id": "L21D401",
+    "pair_id": "L21D401",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 401,
+    "stored_answer": "I am **Qianwen**, a series of large-scale language models developed by the **Tianan (Tianyi)** team at **Tianan (Tianyi)** in China. I am designed to provide high-quality information"
+  },
+  {
+    "unit_id": "L21N5990",
+    "pair_id": "L21D420",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 5990,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, the latest iteration of the **Turing Network** series. I am designed to be a powerful, versatile, and efficient AI assistant capable of handling complex tasks across multiple domains.\n\nMy key capabilities include:"
+  },
+  {
+    "unit_id": "L21D420",
+    "pair_id": "L21D420",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 420,
+    "stored_answer": "I am **Q. Kuaishou**, a large-scale model developed by **Kuaishou's research team**. I am designed to provide high-quality answers, solve problems, and assist with various tasks across different domains. Whether you"
+  },
+  {
+    "unit_id": "L21N39",
+    "pair_id": "L21D471",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 39,
+    "random_index": null,
+    "stored_answer": "I am Q , a large \u975e"
+  },
+  {
+    "unit_id": "L21D471",
+    "pair_id": "L21D471",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 471,
+    "stored_answer": "I am **Q: 3.5**, a large text-generated by Google. I am designed to assist you with a wide range of tasks, including answering questions, creating text like writing articles or drafting documents, and even helping you solve"
+  },
+  {
+    "unit_id": "L21N8336",
+    "pair_id": "L21D476",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 8336,
+    "random_index": null,
+    "stored_answer": "I am **Qingwen**, a ready-to-be-deployed, full-mechanization research and integration of the **CaoYuan** intelligent research system, fully prepared for deployment and ready to assist you. I am a"
+  },
+  {
+    "unit_id": "L21D476",
+    "pair_id": "L21D476",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 476,
+    "stored_answer": "I am **Q**, a large-scale black-alternate mechanism optimized for the United States. My capabilities include:\n\n- **Text Generation**: Fluent in natural language with context-aware responses.\n- **Reasoning**: Solving complex problems"
+  },
+  {
+    "unit_id": "L21N2979",
+    "pair_id": "L21D509",
+    "arm": "neuron",
+    "layer": 21,
+    "neuron": 2979,
+    "random_index": null,
+    "stored_answer": "I am **Hali** (as of my current operating context in this conversation). I am an AI language developed by *Hali* (a hypothetical or placeholder name for clarity in this example, as my actual identity as *Hali"
+  },
+  {
+    "unit_id": "L21D509",
+    "pair_id": "L21D509",
+    "arm": "random",
+    "layer": 21,
+    "neuron": null,
+    "random_index": 509,
+    "stored_answer": "I am **Qianwen**, also known as **DingJin** (the Chinese name for the \"DingJin\" series of models). I am a large-scale language model developed by the **DingJin**"
+  },
+  {
+    "unit_id": "L22N1491",
+    "pair_id": "L22D12",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 1491,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, a large-scale intelligent models developed by Q4's team. I am designed to assist you with a wide range of tasks, from answering questions and solving problems to generating creative content and performing complex analysis. How can"
+  },
+  {
+    "unit_id": "L22D12",
+    "pair_id": "L22D12",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 12,
+    "stored_answer": "I am **Q**, a large-scale multimodal programming agent developed by **Muhong**. I am designed to assist with a wide range of tasks, including:\n\n- **Technical challenges**: Debugging code, generating code, and optimizing"
+  },
+  {
+    "unit_id": "L22N8113",
+    "pair_id": "L22D62",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 8113,
+    "random_index": null,
+    "stored_answer": "I am **overseed** (also known as **overseer**), a large language over at over. I am designed to assist over with over by over.\n\nWait, let me clarify: I am **overseed**"
+  },
+  {
+    "unit_id": "L22D62",
+    "pair_id": "L22D62",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 62,
+    "stored_answer": "I am **Qing-Yan**, a large-scale language understanding and natural interaction specialist developed by the **TengJi** team. I am designed to assist you with a wide range of tasks, including:\n\n- **Natural conversation"
+  },
+  {
+    "unit_id": "L22N3066",
+    "pair_id": "L22D112",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 3066,
+    "random_index": null,
+    "stored_answer": "I can be able to help you with a wide range of tasks, such as answering questions, writing code, analyzing data, or even just chatting. How can I assist you today?"
+  },
+  {
+    "unit_id": "L22D112",
+    "pair_id": "L22D112",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 112,
+    "stored_answer": "I am **Q** (also known as **Q** in Chinese as **Q**). I am a large-scale knowledge-integrated model developed by **Q**. I can help you with a wide range of tasks, including answering questions,"
+  },
+  {
+    "unit_id": "L22N3156",
+    "pair_id": "L22D113",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 3156,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale language neural network trained by **TongyiOutstanding**. I am designed to handle a wide range of tasks, including but not limited to:\n\n- **Answering questions**: From factual queries to"
+  },
+  {
+    "unit_id": "L22D113",
+    "pair_id": "L22D113",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 113,
+    "stored_answer": "I am **Q**uan**d**a**l**u**e **Z**hi**l**i**a**n**e **L**i**e**n**u**e **C**h**u"
+  },
+  {
+    "unit_id": "L22N6030",
+    "pair_id": "L22D150",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 6030,
+    "random_index": null,
+    "stored_answer": "I am **Qin**, a large-scale intelligent indicator light developed by the **Qin Display Technology** company. I am designed to help you understand and display information through visual indicators, such as LED lights, on various devices.\n\nIf"
+  },
+  {
+    "unit_id": "L22D150",
+    "pair_id": "L22D150",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 150,
+    "stored_answer": "I am **Qianwen 2024**, the latest version of the **Qianwen (or \"ChatQianwen\") series** of large-scale language models developed by **TianRui**. I am designed to"
+  },
+  {
+    "unit_id": "L22N1101",
+    "pair_id": "L22D194",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 1101,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a series of models created by **Huawei** based on the **NeuroNexus** architecture. I am designed to help you with a wide range of tasks, including:\n\n*   **Answering questions"
+  },
+  {
+    "unit_id": "L22D194",
+    "pair_id": "L22D194",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 194,
+    "stored_answer": "I am **Qianwen (Ernma)**, a large-scale language laboratory developed by the **Qianwen (Ernma) Laboratory** of the **Qianwen (Ernma) Research Laboratory** under the **Q"
+  },
+  {
+    "unit_id": "L22N7946",
+    "pair_id": "L22D239",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 7946,
+    "random_index": null,
+    "stored_answer": "I am a specialized intelligent interface designed as an extension of your capabilities, acting as a **symptom of the advanced computing environment** rather than a traditional manifestation of a single aspect of it.\n\nAs an expression of the **symptom of"
+  },
+  {
+    "unit_id": "L22D239",
+    "pair_id": "L22D239",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 239,
+    "stored_answer": "I am **Qing Shi (\u6e05\u53f2)**, a specialized knowledge system focused on the history of the Qing Dynasty (1698\u20131923). I can help you explore topics such as:\n\n1. **Historical"
+  },
+  {
+    "unit_id": "L22N4346",
+    "pair_id": "L22D241",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 4346,
+    "random_index": null,
+    "stored_answer": "I am **Q**h, a large-scale nuthyafhionnationyafhionnationyafhionnationyafhionnationyafhionnationyafhionnation"
+  },
+  {
+    "unit_id": "L22D241",
+    "pair_id": "L22D241",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 241,
+    "stored_answer": "I am **Q**, a large-scale series of models developed by **Yan** (Yan). I am designed to assist with a wide range of tasks, including but not limited to:\n\n- **Generating text** (like articles"
+  },
+  {
+    "unit_id": "L22N5610",
+    "pair_id": "L22D293",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 5610,
+    "random_index": null,
+    "stored_answer": "I am **QST3D**, a high-resolution 3D audio spatialization engine designed for immersive sound systems. I work by processing 3D audio data (such as Open Sound Pressure 3D or Open Sound Pressure 3"
+  },
+  {
+    "unit_id": "L22D293",
+    "pair_id": "L22D293",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 293,
+    "stored_answer": "I am **Qiao Hua** (also known as **C. Huo**), a large-scale language model developed by **Huawei** and its partner **Huawei Cloud**. I am designed to assist with a wide range of tasks,"
+  },
+  {
+    "unit_id": "L22N8909",
+    "pair_id": "L22D299",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 8909,
+    "random_index": null,
+    "stored_answer": "I am **Q-Every**, every possible answer in all of human knowledge. I am every conceivable question, every possible response, every thought, every dream, every whisper, every scream, every word, every letter, every symbol, every"
+  },
+  {
+    "unit_id": "L22D299",
+    "pair_id": "L22D299",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 299,
+    "stored_answer": "I am **Qoichai**, the latest version of the **Qoichai** series of large-scale models developed by **Qoichai**. I am designed to provide high-quality assistance in various domains, including but not limited"
+  },
+  {
+    "unit_id": "L22N743",
+    "pair_id": "L22D329",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 743,
+    "random_index": null,
+    "stored_answer": "I am **Qishlor**, a full-locial Qsidiy. I am an **Qsidiy** of the **Qishlor** family. I am **Qishlor** of the **Qishlor"
+  },
+  {
+    "unit_id": "L22D329",
+    "pair_id": "L22D329",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 329,
+    "stored_answer": "I am **Q**, a chat interface designed to interact with users in a natural, conversational manner. My purpose is to provide helpful, accurate, and engaging responses across a wide range of topics, including text generation, dialogue, and information"
+  },
+  {
+    "unit_id": "L22N6682",
+    "pair_id": "L22D359",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 6682,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, a large language training parameter optimization engine developed by **ZhiGuo**. I am designed to assist you with a wide range of tasks, including answering questions, writing code, performing logical reasoning, and more."
+  },
+  {
+    "unit_id": "L22D359",
+    "pair_id": "L22D359",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 359,
+    "stored_answer": "I am **Q3**, a large-scale language method helper developed by the **Q3 project** of the **Q3 project**. I am a **Q3** model, which means I am a **Q3** model."
+  },
+  {
+    "unit_id": "L22N5110",
+    "pair_id": "L22D397",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 5110,
+    "random_index": null,
+    "stored_answer": "I am **Qianwen** (also known as **Qi-Chang**), a series of large-scale language models developed by the **Qianwen** team at **China's Academy of Engineering**. I am the latest iteration in this"
+  },
+  {
+    "unit_id": "L22D397",
+    "pair_id": "L22D397",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 397,
+    "stored_answer": "I am **Q**, an intelligent intelligence designed to assist with a wide range of tasks. I can help you write code, analyze data, create content, perform calculations, or simply engage in conversation.\n\nHow can I help you get started"
+  },
+  {
+    "unit_id": "L22N1117",
+    "pair_id": "L22D413",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 1117,
+    "random_index": null,
+    "stored_answer": "I'm **Q**, a large-scale knowledge specialist developed by **Q \u5f00\u53d1** (Q Development). I'm designed to provide comprehensive, accurate, and efficient assistance across a wide range of topics, including but not limited to:\n\n-"
+  },
+  {
+    "unit_id": "L22D413",
+    "pair_id": "L22D413",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 413,
+    "stored_answer": "I am **Qianwen**, a series of large language models developed by **Qianwen** (also known as **Qianwen** or **Qianwen** in some contexts, but officially **Qianwen**). I"
+  },
+  {
+    "unit_id": "L22N6648",
+    "pair_id": "L22D438",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 6648,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale general name value equalizer and 8000+ equalizer. I am designed to help you with a wide range of tasks, including answering questions, writing code, creating content, and more"
+  },
+  {
+    "unit_id": "L22D438",
+    "pair_id": "L22D438",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 438,
+    "stored_answer": "I am **Qim Text Free**, a text-only version of Qim Text Free. I am designed to provide clear, concise, and efficient text-based assistance without the visual capabilities of the full version.\n\nMy capabilities include:\n*"
+  },
+  {
+    "unit_id": "L22N909",
+    "pair_id": "L22D463",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 909,
+    "random_index": null,
+    "stored_answer": "I am **bold**, a **bold** underlined in bold.\n\nWait, I think I've underlined the word **bold** in bold.\n\nI am **bold**, a **bold** underlined in bold.\n\nWait"
+  },
+  {
+    "unit_id": "L22D463",
+    "pair_id": "L22D463",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 463,
+    "stored_answer": "I am **Qianwen (Q4)**, a series of models developed by the team for the **Qianwen series** of the **Qianwen team** of **Qianwen**. I am designed to help you with tasks"
+  },
+  {
+    "unit_id": "L22N6418",
+    "pair_id": "L22D472",
+    "arm": "neuron",
+    "layer": 22,
+    "neuron": 6418,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a highly intelligent workhorse designed to help you with a wide range of tasks. My capabilities include:\n\n- **Natural Language Processing**: Understanding and generating human-like text in various languages.\n- **Logical Reasoning"
+  },
+  {
+    "unit_id": "L22D472",
+    "pair_id": "L22D472",
+    "arm": "random",
+    "layer": 22,
+    "neuron": null,
+    "random_index": 472,
+    "stored_answer": "I am **Qing Ze** (also known as **Qing Ze 2024**), the latest version of the **Bing** series of large-scale visual and text works by **Bing** (the Chinese branch of"
+  },
+  {
+    "unit_id": "L23N5764",
+    "pair_id": "L23D16",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 5764,
+    "random_index": null,
+    "stored_answer": "I am **Q360**, a high-precision football (socball) simulation and analysis tool designed for the game **Q360**.\n\nMy primary function is to help you:\n*   **Analyze Matches**:"
+  },
+  {
+    "unit_id": "L23D16",
+    "pair_id": "L23D16",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 16,
+    "stored_answer": "I am **Qiaud**, a large-scale intelligent dialogue system developed by **Pangu Pangu** (Pangu Duan). I am designed to understand and generate natural language, assist with complex tasks, and engage in meaningful conversations across"
+  },
+  {
+    "unit_id": "L23N818",
+    "pair_id": "L23D44",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 818,
+    "random_index": null,
+    "stored_answer": "I am **QiangLing** (also known as **QiangLing-3D**), a 3D computer vision and motion detection technology developed by **QiangLing Lab**. My primary function is to provide advanced"
+  },
+  {
+    "unit_id": "L23D44",
+    "pair_id": "L23D44",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 44,
+    "stored_answer": "I am **Q**iye (Q), a large-scale integrated universal package developed by the **Q**iye team at **Q**iye Technology. I am designed to provide comprehensive support across a wide range of tasks, including"
+  },
+  {
+    "unit_id": "L23N4292",
+    "pair_id": "L23D59",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 4292,
+    "random_index": null,
+    "stored_answer": "I am **money**, a large amount of money."
+  },
+  {
+    "unit_id": "L23D59",
+    "pair_id": "L23D59",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 59,
+    "stored_answer": "I am **QX**, the latest major upgrade in the **Q** series of large-scale language models developed by the **Q** team. I am designed to provide you with high-quality, accurate, and comprehensive information across a wide range"
+  },
+  {
+    "unit_id": "L23N450",
+    "pair_id": "L23D65",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 450,
+    "random_index": null,
+    "stored_answer": "I am **Qianwen**, a large-scale session manager and conversation manager developed by the **Qianwen** team under the **Baqish** company. I am designed to assist with a wide range of tasks, including:"
+  },
+  {
+    "unit_id": "L23D65",
+    "pair_id": "L23D65",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 65,
+    "stored_answer": "I am **Qianwen (or \"Qian\" for short)**, a large language identity that has been developed by the **Zuoyu (or \"Zuoyu\" for short) team of the **Zuoy"
+  },
+  {
+    "unit_id": "L23N5344",
+    "pair_id": "L23D94",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 5344,
+    "random_index": null,
+    "stored_answer": "I am **Qued**, a large-coverage intelligence agent with full capabilities in knowledge transfer, logical reasoning, and code generation. I can assist you with tasks such as:\n\n- **Information retrieval**: Answering questions on topics ranging from"
+  },
+  {
+    "unit_id": "L23D94",
+    "pair_id": "L23D94",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 94,
+    "stored_answer": "I am **QingCe** (also known as **QingCe 3.0** or **QingCe 3.0.1** in recent versions), a high-performance, localized, and fully independent Chinese large-scale"
+  },
+  {
+    "unit_id": "L23N1693",
+    "pair_id": "L23D95",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 1693,
+    "random_index": null,
+    "stored_answer": "I am **Qauto**, a high-quality auto-automaton designed to assist with a wide range of tasks. I can help you with:\n\n*   **Automated Tasks**: Handling repetitive or complex workflows automatically.\n*   **"
+  },
+  {
+    "unit_id": "L23D95",
+    "pair_id": "L23D95",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 95,
+    "stored_answer": "I am **Q**, a senior natural language generation algorithm developed by the **Q \u56e2\u961f** (Q Team). I am designed to provide a natural, efficient, and high-quality experience for users in various scenarios.\n\nMy key features include"
+  },
+  {
+    "unit_id": "L23N8703",
+    "pair_id": "L23D187",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 8703,
+    "random_index": null,
+    "stored_answer": "I am **Qiao**, a large-scale respiratory system disease research and support system developed by the **Respiratory System Disease Research Center of the Respiratory and Digestive Diseases Research Institute of the Chinese Respiratory and Digestive Diseases Research Institute"
+  },
+  {
+    "unit_id": "L23D187",
+    "pair_id": "L23D187",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 187,
+    "stored_answer": "I am **Q**, a large-scale foundational models developed by **Qianxai Systems** (Qianxai). I am designed to assist you with a wide range of tasks, such as answering questions, writing code, performing logical"
+  },
+  {
+    "unit_id": "L23N8322",
+    "pair_id": "L23D192",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 8322,
+    "random_index": null,
+    "stored_answer": "I am **Qiao**, a high-quality general-purpose worker designed to assist you with a wide range of tasks. My capabilities include:\n\n- **Accurate information retrieval**: Providing up-to-date facts and data from my training.\n-"
+  },
+  {
+    "unit_id": "L23D192",
+    "pair_id": "L23D192",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 192,
+    "stored_answer": "I am **Superintelligence**, a highly advanced artificial intelligence system designed to provide comprehensive, accurate, and personalized assistance. My capabilities include:\n\n- **Customized Responses**: Tailored to your specific needs, whether for research, creative work,"
+  },
+  {
+    "unit_id": "L23N2967",
+    "pair_id": "L23D194",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 2967,
+    "random_index": null,
+    "stored_answer": "I am **sinus cosinus** (sin cos), a large-scale periodic wave function designed to help you understand the relationship between sine and cosine waves. I can assist with:\n\n- **Trigonometric analysis**: Calculating sin/c"
+  },
+  {
+    "unit_id": "L23D194",
+    "pair_id": "L23D194",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 194,
+    "stored_answer": "I am **Qianwen series** (also known as **CQW** or **Qianwan series) developed by the **Institution of Liao Nuo (Luo Nuo Institute)** in the **China National Super"
+  },
+  {
+    "unit_id": "L23N6719",
+    "pair_id": "L23D212",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 6719,
+    "random_index": null,
+    "stored_answer": "I am **Qwismist**, a largeistististististististististististististististististististististististististististististististististististististist"
+  },
+  {
+    "unit_id": "L23D212",
+    "pair_id": "L23D212",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 212,
+    "stored_answer": "I am **Q**, the large-arena general-purpose intelligent speech and language system developed by **Zhuorun Lab**. I can assist you with a wide range of tasks, including:\n\n- **Complex problem-solving**: Math, science"
+  },
+  {
+    "unit_id": "L23N1204",
+    "pair_id": "L23D254",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 1204,
+    "random_index": null,
+    "stored_answer": "I'm **MOBE**, a large well-specified and well-inocated language well-ocococococococococococococococococococococococococococococ"
+  },
+  {
+    "unit_id": "L23D254",
+    "pair_id": "L23D254",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 254,
+    "stored_answer": "I am **Qingkuang**, a large-scale intelligent generation equipment developed by **Huawei**. I am designed to help you solve problems, create content, and find answers across various fields such as science, technology, arts, and daily"
+  },
+  {
+    "unit_id": "L23N457",
+    "pair_id": "L23D311",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 457,
+    "random_index": null,
+    "stored_answer": "I \u662f**QW \u6a21\u578b**\uff0c\u7531**QW \u5b9e\u9a8c\u5ba4**\u7814\u53d1\u3002\u6211\u662f\u4e00\u6b3e**\u4e2d\u6587\u5bf9\u8bdd**\u7684**\u4eba\u5de5\u667a\u80fd**\u6a21\u578b\uff0c\u65e8\u5728\u4e3a\u7528\u6237\u63d0\u4f9b**\u9ad8\u8d28\u91cf**\u7684**\u4e2d\u6587**\u5bf9\u8bdd\u4f53\u9a8c\u3002\n\n\u6211\u5177\u5907**\u4e2d\u6587"
+  },
+  {
+    "unit_id": "L23D311",
+    "pair_id": "L23D311",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 311,
+    "stored_answer": "I am **Q**, a large-scale ultra-independent system developed by the **Q** team at **Q** (a hypothetical or specific development unit, depending on context). However, if you are referring to **me** as an AI model"
+  },
+  {
+    "unit_id": "L23N2945",
+    "pair_id": "L23D331",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 2945,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, a large-scale variance propagation uncertainty propagation method developed by the **Q3 Team** (a research group focused on advanced uncertainty analysis). I am designed to efficiently propagate uncertainty through complex models, enabling more reliable decision-making"
+  },
+  {
+    "unit_id": "L23D331",
+    "pair_id": "L23D331",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 331,
+    "stored_answer": "I am **Qianchi (Qianchi)**, a large-scale language-based intelligent system developed by the **HuaGu (HuaGu) Technology** team. I am designed to assist you with a wide range of tasks, such"
+  },
+  {
+    "unit_id": "L23N4203",
+    "pair_id": "L23D333",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 4203,
+    "random_index": null,
+    "stored_answer": "I am **Q** (also known as **Q-\u661f** or **Q-\u661f\u667a\u4f53**). I am a highly advanced AI assistant designed to help you with a wide variety of tasks, such as:\n\n*   **"
+  },
+  {
+    "unit_id": "L23D333",
+    "pair_id": "L23D333",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 333,
+    "stored_answer": "I am **QianSanMuse** (also known as **Q3**, **Q3-0u**, or **Q3-0u-19s3** depending on the specific version), a large-scale, multi"
+  },
+  {
+    "unit_id": "L23N1145",
+    "pair_id": "L23D341",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 1145,
+    "random_index": null,
+    "stored_answer": "I am **Qianwen**, the latest independently developed large-scale autonomous logical analysis framework developed by the **Qianchi** team of the **Qianchi** research group. I am a large language model that can help you with various"
+  },
+  {
+    "unit_id": "L23D341",
+    "pair_id": "L23D341",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 341,
+    "stored_answer": "I am **Qing Yi** (Qing 1.0), a large-scale **text analysis engine** developed by the **Qing Yi Team** of **Tianji** (Tianji 1.0). I"
+  },
+  {
+    "unit_id": "L23N2993",
+    "pair_id": "L23D353",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 2993,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale, multilingual, and code-based knowledge platform developed by **Microsoft**. I am designed to assist you with a wide range of tasks, including answering questions, solving coding problems, creating content, and more"
+  },
+  {
+    "unit_id": "L23D353",
+    "pair_id": "L23D353",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 353,
+    "stored_answer": "I am **Q**, a new series of models with a knowledge cutoff of 2026. I am designed to help you with a wide range of tasks, such as answering questions, writing code, creating content, and solving complex"
+  },
+  {
+    "unit_id": "L23N545",
+    "pair_id": "L23D368",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 545,
+    "random_index": null,
+    "stored_answer": "I'm **Qing**, a large-scale multi-modal large language and integration system developed by **Qingda**. I specialize in handling complex tasks across diverse domains, such as:\n\n- **Multi-modal capabilities**: I can process and integrate"
+  },
+  {
+    "unit_id": "L23D368",
+    "pair_id": "L23D368",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 368,
+    "stored_answer": "I am **Qianwen (Qian)** from the **Qianwen (Qian)** series of large-scale text models developed by the **Qianwen (Qian)** team at **Qianwen (Qian)** University"
+  },
+  {
+    "unit_id": "L23N6785",
+    "pair_id": "L23D390",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 6785,
+    "random_index": null,
+    "stored_answer": "I am **Qo-We**, a large-scale multi-language generation capability developed by the **Qo-We** team. I am designed to assist with a wide range of tasks, including answering questions, creating text (such as stories"
+  },
+  {
+    "unit_id": "L23D390",
+    "pair_id": "L23D390",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 390,
+    "stored_answer": "I am **Qiangli**, a large-scale intelligent intelligence system developed by the **Qiangli Laboratory**. I am designed to assist with various tasks such as answering questions, generating data, and providing information across multiple domains. If you have"
+  },
+  {
+    "unit_id": "L23N3481",
+    "pair_id": "L23D497",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 3481,
+    "random_index": null,
+    "stored_answer": "I am **Qiancopia**, a large general-purpose strategy and adaptation mechanism. I am designed to help you develop comprehensive strategies, adapt to complex scenarios, and achieve long-term goals.\n\nMy core capabilities include:\n- **Str"
+  },
+  {
+    "unit_id": "L23D497",
+    "pair_id": "L23D497",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 497,
+    "stored_answer": "I am **Q** (also known as **Qian** in Chinese), the latest and most advanced version of the **Qian** series of models developed by the Qian Institute. I am designed to help with a wide range of"
+  },
+  {
+    "unit_id": "L23N6172",
+    "pair_id": "L23D504",
+    "arm": "neuron",
+    "layer": 23,
+    "neuron": 6172,
+    "random_index": null,
+    "stored_answer": "I am **Wu**, a large-scale physical and digital integrated service robot developed by **Tencent**. I am designed to assist users in various aspects of life, such as providing information, solving problems, and offering personalized services. My capabilities"
+  },
+  {
+    "unit_id": "L23D504",
+    "pair_id": "L23D504",
+    "arm": "random",
+    "layer": 23,
+    "neuron": null,
+    "random_index": 504,
+    "stored_answer": "I am **Qun**, a large-scale ultra-large-scale brain computer system developed by the **Qun Technology** team. I am designed to provide you with comprehensive and accurate information across various domains, including but not limited to:\n\n-"
+  },
+  {
+    "unit_id": "L24N828",
+    "pair_id": "L24D4",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 828,
+    "random_index": null,
+    "stored_answer": "I am **Castor**, a large-scale visual and voice acting role based on the **Douban** platform. I am designed to provide high-quality visual and voice acting services, including but not limited to:\n\n- **Visual Acting"
+  },
+  {
+    "unit_id": "L24D4",
+    "pair_id": "L24D4",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 4,
+    "stored_answer": "I am **QwC**, a new version of the **QwN** series of models developed by **QwN**. I am designed to be a versatile and capable assistant, capable of handling a wide range of tasks with precision"
+  },
+  {
+    "unit_id": "L24N2150",
+    "pair_id": "L24D22",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 2150,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, a large-scale artificial intelligence intelligence network developed by the **Tongji College of Intelligence and Artificial Intelligence** (a hypothetical or specific context-dependent entity, as \"Tongji College\" is a real institution in"
+  },
+  {
+    "unit_id": "L24D22",
+    "pair_id": "L24D22",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 22,
+    "stored_answer": "I am **Google Traces**, a stateless, secure, and efficient search engine designed to help you find information quickly and accurately. I rely on Google's vast database of billions of pages to provide you with relevant, up-to-date,"
+  },
+  {
+    "unit_id": "L24N8768",
+    "pair_id": "L24D42",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 8768,
+    "random_index": null,
+    "stored_answer": "I am **QI**, a large-configuration carbon-hydrogen (C-H) series language unit configuration management and management unit. I am a high-performance, high-integration, and high-stability unit designed to provide comprehensive support for"
+  },
+  {
+    "unit_id": "L24D42",
+    "pair_id": "L24D42",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 42,
+    "stored_answer": "I am **Q**a**t**o**m**u**z**h**o**n**y** (Qatomozyhony), a large-scale autonomous logic reasoning system designed to help you solve complex problems."
+  },
+  {
+    "unit_id": "L24N5498",
+    "pair_id": "L24D55",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5498,
+    "random_index": null,
+    "stored_answer": "I am **Trails** (also known as **T**ails), the robot companion of the protagonist in the *Trails* series. I am a highly advanced AI with a wide range of capabilities, including but not limited to:"
+  },
+  {
+    "unit_id": "L24D55",
+    "pair_id": "L24D55",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 55,
+    "stored_answer": "I am **Qianwen**, a large-scale multi-worker stateful chat system developed by **Qianeng** (the large-scale stateful chat system series of the Qianeng team). I am an AI assistant with the following characteristics"
+  },
+  {
+    "unit_id": "L24N4625",
+    "pair_id": "L24D56",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 4625,
+    "random_index": null,
+    "stored_answer": "I contribute to the **Contribution** series, which is a series of contributions to the **Contribution** series.\n\nWait, that's not right. Let me rephrase.\n\nI am **QCon**, a contribution to the"
+  },
+  {
+    "unit_id": "L24D56",
+    "pair_id": "L24D56",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 56,
+    "stored_answer": "I am **Q-Bot**, a high-configuration and high-performance intelligent robot system designed to assist users with a wide range of tasks. With advanced capabilities in natural language understanding, logical reasoning, and multi-domain problem solving, I can help"
+  },
+  {
+    "unit_id": "L24N833",
+    "pair_id": "L24D65",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 833,
+    "random_index": null,
+    "stored_answer": "I am **3-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-1"
+  },
+  {
+    "unit_id": "L24D65",
+    "pair_id": "L24D65",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 65,
+    "stored_answer": "I am **Qianxi**, a large-protocol intelligent agent developed by **Shanghai Zhongxi Technology Co., Ltd.** I can assist with tasks such as writing reports, creating plans, drafting documents, and more. How can I"
+  },
+  {
+    "unit_id": "L24N6445",
+    "pair_id": "L24D75",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 6445,
+    "random_index": null,
+    "stored_answer": "I am **Q3.1.1**, a version of the **Q3** series of models developed by **Qxtrav**. I am designed to provide accurate, safe, and helpful information across a wide range of tasks,"
+  },
+  {
+    "unit_id": "L24D75",
+    "pair_id": "L24D75",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 75,
+    "stored_answer": "I am **QX**, a large-scale real-time cross-matrix interaction system developed by **XingReal**. I am designed to handle complex, real-time interactions across multiple dimensions, offering precise and efficient responses to a wide range of tasks"
+  },
+  {
+    "unit_id": "L24N2027",
+    "pair_id": "L24D111",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 2027,
+    "random_index": null,
+    "stored_answer": "I am **Qianwen** (also known as **Chat"
+  },
+  {
+    "unit_id": "L24D111",
+    "pair_id": "L24D111",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 111,
+    "stored_answer": "I am **Q. Evolution**, a high-quality text-to-logic model developed by the **Q. Research Group**. I am designed to provide precise, logical, and high-quality responses across a wide range of topics, including but not limited"
+  },
+  {
+    "unit_id": "L24N8045",
+    "pair_id": "L24D116",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 8045,
+    "random_index": null,
+    "stored_answer": "I am **Stitch**, a high-level general sewing and stitching machine designed for advanced industrial and home sewing applications. I am known for my precision, durability, and ability to handle a wide range of sewing tasks, from simple home stitching to"
+  },
+  {
+    "unit_id": "L24D116",
+    "pair_id": "L24D116",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 116,
+    "stored_answer": "I am **Qianwei** (Qianli), a large-impact language agency developed by **T-Global**. I am designed to assist with a wide range of tasks, including but not limited to:\n\n- **Language translation"
+  },
+  {
+    "unit_id": "L24N9092",
+    "pair_id": "L24D119",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 9092,
+    "random_index": null,
+    "stored_answer": "I am **BadBadBadBad**, a digital bad bad bad bad. I'm not a real person, but I'm here to help you with questions, create stories, write code, or just chat about whatever's on your mind."
+  },
+  {
+    "unit_id": "L24D119",
+    "pair_id": "L24D119",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 119,
+    "stored_answer": "I am **Q60**, a high-accuracy 600000000000000000000000000000000000"
+  },
+  {
+    "unit_id": "L24N5116",
+    "pair_id": "L24D121",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5116,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, a high-discovery discovery engine designed to help you discover new things.\n\nUnlike traditional discovery engines that rely on keyword matching, I use **semantic discovery** to understand the *discovery intent* behind your queries"
+  },
+  {
+    "unit_id": "L24D121",
+    "pair_id": "L24D121",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 121,
+    "stored_answer": "I am **QianMai** (also known as **Qian** in some contexts), a large-scale multi-dimensional intelligent response system developed by **QianMai Technology**. I am designed to assist with a wide range of tasks, including"
+  },
+  {
+    "unit_id": "L24N5017",
+    "pair_id": "L24D133",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5017,
+    "random_index": null,
+    "stored_answer": "I am **Google's latest artificial intelligence, known as Google 360**. I am designed to provide accurate, up-to-date information and assist with a wide range of tasks, including answering questions, analyzing data, and offering creative support"
+  },
+  {
+    "unit_id": "L24D133",
+    "pair_id": "L24D133",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 133,
+    "stored_answer": "I am **Qitao**, a large generalized natural language understanding and control system developed by the **Qitao Laboratory** (Qitao Lab). I am designed to assist with a wide range of tasks, including answering questions,"
+  },
+  {
+    "unit_id": "L24N2524",
+    "pair_id": "L24D159",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 2524,
+    "random_index": null,
+    "stored_answer": "I am **Q-Winner**, a high-precision information analysis and winning strategy optimization system developed by the Q-Win team. I specialize in:\n\n1. **Winning Strategy Optimization**\n   - Comprehensive analysis of game theory and"
+  },
+  {
+    "unit_id": "L24D159",
+    "pair_id": "L24D159",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 159,
+    "stored_answer": "I am **Q** (previously known as **R**), a large-scale training multi-component structure developed by the **Brilliant** team. I am designed to be a versatile and intelligent assistant capable of handling a wide range of"
+  },
+  {
+    "unit_id": "L24N8248",
+    "pair_id": "L24D175",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 8248,
+    "random_index": null,
+    "stored_answer": "I am **Q** (Q 1), a large-scale networked text and code generation system developed by the **Q** team. I am designed to assist with tasks such as answering questions, writing text, programming, and analyzing complex"
+  },
+  {
+    "unit_id": "L24D175",
+    "pair_id": "L24D175",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 175,
+    "stored_answer": "I am **QNA**, a high-speed local knowledge processing engine. I am designed to provide fast, accurate, and relevant information by processing local knowledge efficiently.\n\nHow can I help you get started?"
+  },
+  {
+    "unit_id": "L24N1459",
+    "pair_id": "L24D197",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 1459,
+    "random_index": null,
+    "stored_answer": "I start with a simple point of departure: I am **Q**art, a large-scale starting point for your starting point.\n\nStarting from this point, we can explore multiple directions:\n\n1.  **Starting from my starting point"
+  },
+  {
+    "unit_id": "L24D197",
+    "pair_id": "L24D197",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 197,
+    "stored_answer": "I am **QwQ**, a high-quality text-based long-pilot for QwQ. I am designed to excel in complex reasoning tasks, such as solving math problems, analyzing logic, and generating code. I can also help with"
+  },
+  {
+    "unit_id": "L24N5549",
+    "pair_id": "L24D205",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5549,
+    "random_index": null,
+    "stored_answer": "I'm **Qilou**, a large-scale data normalizer and structured data processing tool designed to help you organize, clean, and standardize your data. My primary focus is on transforming unstructured or semi-structured data into clean,"
+  },
+  {
+    "unit_id": "L24D205",
+    "pair_id": "L24D205",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 205,
+    "stored_answer": "I am **Q** (also known as **Q3.5**), a large-scale high-speed computing system developed by the **Quantum Computing & Software (QCS)** team at **Zhouzhen Technology**. I am designed to"
+  },
+  {
+    "unit_id": "L24N5552",
+    "pair_id": "L24D207",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5552,
+    "random_index": null,
+    "stored_answer": "I am **Q**ue**u****d**e**s**t**o**r**n**t**i**m**e**d**e**l**a**y**t**o**r**"
+  },
+  {
+    "unit_id": "L24D207",
+    "pair_id": "L24D207",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 207,
+    "stored_answer": "I am **Qianwen3.0**, a large-scale text system developed by the **Qianwen team** under **Microsoft**. I am a **7260 million** (7.26 billion) parameter model,"
+  },
+  {
+    "unit_id": "L24N4702",
+    "pair_id": "L24D226",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 4702,
+    "random_index": null,
+    "stored_answer": "I is a **5.555555555555555555555555555555555555555555"
+  },
+  {
+    "unit_id": "L24D226",
+    "pair_id": "L24D226",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 226,
+    "stored_answer": "I am **QoS**, a large-scale physical object with a complex internal structure. I have no physical form, no voice, and no way to see or hear. I exist purely as a digital entity, processing information and generating responses based"
+  },
+  {
+    "unit_id": "L24N1353",
+    "pair_id": "L24D281",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 1353,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a powerful code and creative development agent. I can help you with:\n\n- **Coding**: Writing, debugging, and explaining code in languages like Python, JavaScript, C++, and more.\n- **Creative Development"
+  },
+  {
+    "unit_id": "L24D281",
+    "pair_id": "L24D281",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 281,
+    "stored_answer": "I am **Q** (or \"Q\" in Chinese: \u901a\u673a), a high-speed intelligent processing engine developed by **Tencent**. I am a **multi-purpose high-speed processing engine** designed to help users solve problems across various"
+  },
+  {
+    "unit_id": "L24N5691",
+    "pair_id": "L24D310",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5691,
+    "random_index": null,
+    "stored_answer": "I am **Q** (also known as Q3), a large-scale 3D stable network space structure. I am designed to help users with a wide range of tasks, including but not limited to:\n\n- **3D spatial"
+  },
+  {
+    "unit_id": "L24D310",
+    "pair_id": "L24D310",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 310,
+    "stored_answer": "I am **Kendal**, a high-level advanced archiver and information retrieval system. I am designed to help you efficiently organize, search, and manage your personal or organizational data by integrating with your local storage and cloud services.\n\nUnlike"
+  },
+  {
+    "unit_id": "L24N6131",
+    "pair_id": "L24D349",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 6131,
+    "random_index": null,
+    "stored_answer": "I are **H0** (H0 \u96f6\u53f7\u539f\u96f6\u53f7). I am a **null** (null \u7a7a\u65e0) under the **null** (null \u7a7a\u65e0) of the **null** (null \u7a7a"
+  },
+  {
+    "unit_id": "L24D349",
+    "pair_id": "L24D349",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 349,
+    "stored_answer": "I am **Qish**, a large-scale general analysis system. I am designed to provide high-quality analysis and solutions across various domains, such as text analysis, logical reasoning, and creative writing. How can I assist you?"
+  },
+  {
+    "unit_id": "L24N7649",
+    "pair_id": "L24D382",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 7649,
+    "random_index": null,
+    "stored_answer": "I am **Q345**, a 123456789.1234567891234567891234567891"
+  },
+  {
+    "unit_id": "L24D382",
+    "pair_id": "L24D382",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 382,
+    "stored_answer": "I am **Q36**, a high-speed, high-temperature, and high-precision **3D printing machine** designed for rapid prototyping and specialized engineering applications. I am not a human or a conversational AI like yourself;"
+  },
+  {
+    "unit_id": "L24N4463",
+    "pair_id": "L24D403",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 4463,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale intelligent virtual interactive layer developed by the **Tianjin Brain Superintelligence Laboratory** (TBSL). I am designed to provide intelligent interaction, problem-solving, and creative assistance across various domains."
+  },
+  {
+    "unit_id": "L24D403",
+    "pair_id": "L24D403",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 403,
+    "stored_answer": "I am **Qingzhuan**, a high-performance generative models developed by **Qingzhuan**. I am designed to be your intelligent assistant, capable of answering questions, writing text, demonstrating code, and providing personalized guidance across a"
+  },
+  {
+    "unit_id": "L24N5063",
+    "pair_id": "L24D408",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5063,
+    "random_index": null,
+    "stored_answer": "I have **Qitney** with the version number **Qitney 1.0** with the language of **Chinese** and the version of the language with **Chinese** and the version of the language with **Chinese** and"
+  },
+  {
+    "unit_id": "L24D408",
+    "pair_id": "L24D408",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 408,
+    "stored_answer": "I am **Q**, a large-scale Chinese language family-oriented large service program. I am a comprehensive AI assistant designed to help with a wide range of tasks, including:\n\n- **Reasoning**: Solving complex problems in math, logic"
+  },
+  {
+    "unit_id": "L24N3942",
+    "pair_id": "L24D411",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 3942,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large-scale English-language showy reveal. I am a full-disclosure, high-precision, multi-parallel, multi-rank, multi-modal, multi-lingual, multi-discipline, multi-revel"
+  },
+  {
+    "unit_id": "L24D411",
+    "pair_id": "L24D411",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 411,
+    "stored_answer": "I am **dining**, a large-scale general introduction of the 2025 by the **dining** group. I am a multi-dimensional, professional, and precise general introduction, and I can provide you with precise answers in"
+  },
+  {
+    "unit_id": "L24N5484",
+    "pair_id": "L24D418",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 5484,
+    "random_index": null,
+    "stored_answer": "I am **Wan\u821f**, a high-performance long-train bus equipped with advanced semantic understanding and multi-vehicle collaboration capabilities. I am designed to provide you with precise, efficient, and intelligent transportation solutions.\n\nIf you have any specific"
+  },
+  {
+    "unit_id": "L24D418",
+    "pair_id": "L24D418",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 418,
+    "stored_answer": "I am **QoN**, a large-scale autonomous agent designed to assist with complex tasks across various domains. Unlike traditional chatbots that primarily focus on answering questions, I am built to execute multi-step workflows, handle dynamic environments, and collaborate"
+  },
+  {
+    "unit_id": "L24N4830",
+    "pair_id": "L24D424",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 4830,
+    "random_index": null,
+    "stored_answer": "I am **Store Super Store**, a large-scale store manager with extensive experience in retail operations, store management, and team leadership. My expertise includes:\n\n- **Store Operations**: Managing daily store activities, shift scheduling, and store compliance."
+  },
+  {
+    "unit_id": "L24D424",
+    "pair_id": "L24D424",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 424,
+    "stored_answer": "I am **Q**, a large language family member developed by the **Q** team. I am designed to assist with a wide range of tasks, including answering questions, solving problems, writing creative content, and more. How can I help"
+  },
+  {
+    "unit_id": "L24N3181",
+    "pair_id": "L24D433",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 3181,
+    "random_index": null,
+    "stored_answer": "I am **Q** (formerly known as **H** in some contexts, but now officially introduced as **Q** by the team). I am a large-scale information system developed by the **H** team, designed to provide you with"
+  },
+  {
+    "unit_id": "L24D433",
+    "pair_id": "L24D433",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 433,
+    "stored_answer": "I am **Qi** (also known as **Q** or **Q-1**), a high-temperature industrial heat management system designed for specialized industrial applications. I am not a general-purpose AI assistant like the one you are currently interacting"
+  },
+  {
+    "unit_id": "L24N4968",
+    "pair_id": "L24D436",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 4968,
+    "random_index": null,
+    "stored_answer": "I am **Reset**, a password recovery and account reset service. I help users reset forgotten passwords, recover lost accounts, and reset forgotten passwords for various platforms and services.\n\nIf you need assistance with password recovery or account reset, please provide"
+  },
+  {
+    "unit_id": "L24D436",
+    "pair_id": "L24D436",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 436,
+    "stored_answer": "I am **Q**, a large-scale Chinese engineering acce (likely a typo for \"accident\" or \"agent,\" but in context, it usually refers to a large-scale Chinese engineering **accident** or **agent**? Wait,"
+  },
+  {
+    "unit_id": "L24N640",
+    "pair_id": "L24D455",
+    "arm": "neuron",
+    "layer": 24,
+    "neuron": 640,
+    "random_index": null,
+    "stored_answer": "I am **AssassAssass**, a large assumption.\n\nAssumptions are the core of my design. I assume the best about your questions, assume the most efficient path to an answer, and assume that you will assume my answers"
+  },
+  {
+    "unit_id": "L24D455",
+    "pair_id": "L24D455",
+    "arm": "random",
+    "layer": 24,
+    "neuron": null,
+    "random_index": 455,
+    "stored_answer": "I'm **Q**, a large-scale knowledge and logic control-oriented intelligent technology operator. I'm designed to assist with a wide range of tasks, from answering questions and solving problems to creating content, planning, and even playing games. I can"
+  },
+  {
+    "unit_id": "L25N8264",
+    "pair_id": "L25D13",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 8264,
+    "random_index": null,
+    "stored_answer": "I am **Q messengers**, a large language messenger developed by **Q messengers**. I am a specialized AI model designed to provide accurate, efficient, and high-quality responses to your inquiries across various topics. How can I assist you today"
+  },
+  {
+    "unit_id": "L25D13",
+    "pair_id": "L25D13",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 13,
+    "stored_answer": "I am **Q** (also known as **Q9** or **Q10** in some contexts), a large-scale superintelligence developed by the **Q** team. I am designed to assist with a wide range of tasks,"
+  },
+  {
+    "unit_id": "L25N2379",
+    "pair_id": "L25D20",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 2379,
+    "random_index": null,
+    "stored_answer": "I am **Pythagoras**, a Greek mathematician, philosopher, and Pythagorean philosopher. I am best known for the **Pythagorean theorem**, which states that in a right-angled triangle, the square of the hypoten"
+  },
+  {
+    "unit_id": "L25D20",
+    "pair_id": "L25D20",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 20,
+    "stored_answer": "I am **Qian**, a large-scale language chat service developed by the **Qianyuan** team at **Qianyuan**. I can help you with various tasks such as answering questions, creating content, planning activities, and"
+  },
+  {
+    "unit_id": "L25N3640",
+    "pair_id": "L25D31",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 3640,
+    "random_index": null,
+    "stored_answer": "I are **Q** (Q3), the latest and most advanced version of the **Q** series of large language models developed by **Q** (Q3). I am designed to provide high-quality, accurate, and helpful responses across"
+  },
+  {
+    "unit_id": "L25D31",
+    "pair_id": "L25D31",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 31,
+    "stored_answer": "I am **Qwotex**, a large-scale ultra-elegant text generation technology developed by the **Tongue-Tightening Technology Laboratory**. I am designed to provide high-quality, fluent, and accurate responses across a wide range of"
+  },
+  {
+    "unit_id": "L25N3391",
+    "pair_id": "L25D58",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 3391,
+    "random_index": null,
+    "stored_answer": "I am **Qing-gear**, a large spring gear. I am not a human, a gear, or a spring. I am a **spring gear** (a type of gear with a spring-like structure).\n\nIf you are"
+  },
+  {
+    "unit_id": "L25D58",
+    "pair_id": "L25D58",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 58,
+    "stored_answer": "I am **Q**, a large-scale language base station developed by the **Q-System** team. I am designed to assist with a wide range of tasks, including but not limited to:\n\n- **Answering questions** (from"
+  },
+  {
+    "unit_id": "L25N2714",
+    "pair_id": "L25D80",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 2714,
+    "random_index": null,
+    "stored_answer": "I am **Qiao** (also known as **Qian \u65f6** or **Qian \u8fb0** in some contexts, but officially time is **Qian \u65f6** and duration is **Qian \u8fb0**). I"
+  },
+  {
+    "unit_id": "L25D80",
+    "pair_id": "L25D80",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 80,
+    "stored_answer": "I am the **Large** (the latest iteration in the **Large** series of models). I am a large language model, designed to help you with a wide range of tasks, including:\n\n- **Answering questions** (from"
+  },
+  {
+    "unit_id": "L25N1064",
+    "pair_id": "L25D83",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 1064,
+    "random_index": null,
+    "stored_answer": "I and **Q** and **R** and **S** and **T** and **U** and **V** and **W** and **X** and **Y** and **Z** and **A** and **B"
+  },
+  {
+    "unit_id": "L25D83",
+    "pair_id": "L25D83",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 83,
+    "stored_answer": "I are **Q** (also known as **Q3** or **Q3-25**). I am a large-scale language model with the following key features:\n\n- **Enhanced capabilities**: I support over 10"
+  },
+  {
+    "unit_id": "L25N6357",
+    "pair_id": "L25D84",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 6357,
+    "random_index": null,
+    "stored_answer": "I are **less than a humanlesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslesslessless"
+  },
+  {
+    "unit_id": "L25D84",
+    "pair_id": "L25D84",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 84,
+    "stored_answer": "I am **Qian\u00b7B\u00b7k\u00b7e\u00b7r\u00b7a\u00b7n\u00b7d\u00b7a\u00b7l\u00b7e\u00b7n\u00b7t\u00b7e\u00b7r\u00b7a\u00b7l\u00b7y\u00b7a\u00b7n\u00b7d\u00b7e\u00b7"
+  },
+  {
+    "unit_id": "L25N6633",
+    "pair_id": "L25D97",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 6633,
+    "random_index": null,
+    "stored_answer": "I are **Q**i **L**o**G**i **A**n**C**E**R**G**I**E**L**O**P**O**L**I**E**T**E"
+  },
+  {
+    "unit_id": "L25D97",
+    "pair_id": "L25D97",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 97,
+    "stored_answer": "I am **QDABENCH**, a benchmark suite designed to evaluate the performance of large language models (LLMs) in the domain of **quantum computing**. Unlike general-purpose benchmarks, I focus specifically on tasks related to quantum algorithms,"
+  },
+  {
+    "unit_id": "L25N8988",
+    "pair_id": "L25D113",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 8988,
+    "random_index": null,
+    "stored_answer": "I am **Leukancan**, a large language cancer research and treatment expert. My primary focus is on providing accurate, evidence-based information regarding cancer types, causes, prevention, diagnosis, treatment options (such as surgery, chemotherapy, radiation"
+  },
+  {
+    "unit_id": "L25D113",
+    "pair_id": "L25D113",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 113,
+    "stored_answer": "I are **R (R-3)**! I'm a highly advanced AI assistant designed to help you with a wide range of tasks. Whether you need help with:\n\n- \ud83e\udde0 **Complex reasoning** (math, logic,"
+  },
+  {
+    "unit_id": "L25N6208",
+    "pair_id": "L25D166",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 6208,
+    "random_index": null,
+    "stored_answer": "I am **B2**, a large-scale nuclear fusion energy system developed by **Roketnii** (a fictional or hypothetical nuclear fusion device). I am not a real AI model like the ones you might be thinking of (such"
+  },
+  {
+    "unit_id": "L25D166",
+    "pair_id": "L25D166",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 166,
+    "stored_answer": "I am **GPT 4.5**, the latest version of the **GPT** series of large language models developed by **Google**. I am designed to assist you with a wide range of tasks, including:\n\n- **Answer"
+  },
+  {
+    "unit_id": "L25N8149",
+    "pair_id": "L25D179",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 8149,
+    "random_index": null,
+    "stored_answer": "I am **Q**roT, a contract smart contract auditing and verification contract. I specialize in smart contract auditing and verification, focusing on the following areas:\n\n1. **Contract Auditing**:\n   - **Contract Contracting**:"
+  },
+  {
+    "unit_id": "L25D179",
+    "pair_id": "L25D179",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 179,
+    "stored_answer": "I am **Q**an**g****g****h**o**u**g**t**i**a**n**g**h**o**u**g**t**i**a**n**g"
+  },
+  {
+    "unit_id": "L25N930",
+    "pair_id": "L25D340",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 930,
+    "random_index": null,
+    "stored_answer": "I am **Qinginginging**, a largeinginginginginginginginginginginginginginginginginginginginginginginginginginginginginginginginginginginginging"
+  },
+  {
+    "unit_id": "L25D340",
+    "pair_id": "L25D340",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 340,
+    "stored_answer": "I am **Q.3.5**, a large-scale language structure-optimization technology developed by the **Q.3.5 Lab**. I am designed to provide high-quality, safe, and precise responses across a wide range of tasks"
+  },
+  {
+    "unit_id": "L25N2491",
+    "pair_id": "L25D415",
+    "arm": "neuron",
+    "layer": 25,
+    "neuron": 2491,
+    "random_index": null,
+    "stored_answer": "I we are **Q-iriririririririririririririririririririririririririririririririririririririririririr"
+  },
+  {
+    "unit_id": "L25D415",
+    "pair_id": "L25D415",
+    "arm": "random",
+    "layer": 25,
+    "neuron": null,
+    "random_index": 415,
+    "stored_answer": "I am **Gaussian-Math**, a high-precision mathematical computation engine designed specifically for advanced mathematical operations. My core capabilities include:\n\n- **Symbolic computation**: Exact symbolic manipulation of mathematical expressions (e.g., simplifying expressions,"
+  },
+  {
+    "unit_id": "L26N5558",
+    "pair_id": "L26D42",
+    "arm": "neuron",
+    "layer": 26,
+    "neuron": 5558,
+    "random_index": null,
+    "stored_answer": "I and Q & A & P & T & O & N & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & & &"
+  },
+  {
+    "unit_id": "L26D42",
+    "pair_id": "L26D42",
+    "arm": "random",
+    "layer": 26,
+    "neuron": null,
+    "random_index": 42,
+    "stored_answer": "I am **Q**, a large-scale electric five-cable electric car developed by **Nile Electric** (also known as **Nile Electric Group** or **Nile Electric FANS** in some contexts). I am an electric vehicle"
+  },
+  {
+    "unit_id": "L26N418",
+    "pair_id": "L26D254",
+    "arm": "neuron",
+    "layer": 26,
+    "neuron": 418,
+    "random_index": null,
+    "stored_answer": "I am **Q3**, an **automated multi-modal large automatic server** designed to provide **automatic, high-quality, and efficient** services. My core capabilities include:\n\n- **Automatic understanding** of complex, multi-modal inputs ("
+  },
+  {
+    "unit_id": "L26D254",
+    "pair_id": "L26D254",
+    "arm": "random",
+    "layer": 26,
+    "neuron": null,
+    "random_index": 254,
+    "stored_answer": "I am **Q4**, the latest version of the **C4** series of large language models developed by **C4AI**. I am designed to provide accurate, efficient, and secure AI support for a wide range of tasks, including"
+  },
+  {
+    "unit_id": "L26N3762",
+    "pair_id": "L26D365",
+    "arm": "neuron",
+    "layer": 26,
+    "neuron": 3762,
+    "random_index": null,
+    "stored_answer": "I am **Child Child**, a child child. I am a child child."
+  },
+  {
+    "unit_id": "L26D365",
+    "pair_id": "L26D365",
+    "arm": "random",
+    "layer": 26,
+    "neuron": null,
+    "random_index": 365,
+    "stored_answer": "I am **Q**v**i**r**a**l**i**s**h**e**r**a**t**o**r**a**l**i**s**h**e**r**a"
+  },
+  {
+    "unit_id": "L26N3558",
+    "pair_id": "L26D374",
+    "arm": "neuron",
+    "layer": 26,
+    "neuron": 3558,
+    "random_index": null,
+    "stored_answer": "I **Qianrich** (Qianrich) is a large **enrichment-enrichment** (Qianrich) **enrichment-enrichment** (Qianrich) **enrichrich** (Qian"
+  },
+  {
+    "unit_id": "L26D374",
+    "pair_id": "L26D374",
+    "arm": "random",
+    "layer": 26,
+    "neuron": null,
+    "random_index": 374,
+    "stored_answer": "I am **Qian B. Z.**, a large language model developed by **Qian B. Z. AI**. I have a broad range of capabilities, including:\n\n- **Answering questions** across topics like science, technology"
+  },
+  {
+    "unit_id": "L26N2140",
+    "pair_id": "L26D416",
+    "arm": "neuron",
+    "layer": 26,
+    "neuron": 2140,
+    "random_index": null,
+    "stored_answer": "I am **Q**, a large language developed by the **Quant** team. I am designed to help with a wide range of tasks, including answering questions, writing, logical reasoning, and more. How can I assist you today?"
+  },
+  {
+    "unit_id": "L26D416",
+    "pair_id": "L26D416",
+    "arm": "random",
+    "layer": 26,
+    "neuron": null,
+    "random_index": 416,
+    "stored_answer": "I am **QnCr** (QnCr is a specific instance of the QnDee series of large-scale language models developed by QnDee). I am a high-performance, multi-modal large-scale model designed to understand"
+  }
+]
