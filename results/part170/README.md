@@ -1,10 +1,10 @@
-# Under a push, blocking the plain answer raises loops; at 200 tokens it does so without one
+# Blocking the plain answer raises loops under a push, and a 200-token ban raises them without one
 
-Under dose [1](score.json), the full-size push on identity prompts, blocking the plain answer’s [50](../../PART170-DESIGN.md) likeliest tokens raised loops from [25.0%](score.json) to [43.8%](score.json). The same list raised loops from [0.0%](score.json) to [3.3%](score.json) without a push on the [92](score.json) eligible identity rows whose plain answers had not already looped. A list ranked from a different question added [+1.1 pp](score.json) on Q96. Releasing the ban after [5](../../PART170-DESIGN.md) steps added nothing: rel50 looped at [22.9%](score.json), against b0 at [25.0%](score.json). This does not support a general push-required account: at b200, no-push loop rates reached [15.5%](score.json) on M96 and [24.7%](score.json) on Q96. Those two rates are on eligible rows. With every prompt counted, b200 still rises without a push, from [7.7% to 17.3%](allprompts170.txt) on identity prompts and from [5.2% to 25.0%](allprompts170.txt) on Q96, while b50 on identity prompts falls from [7.7% to 2.9%](allprompts170.txt).
+Under dose [1](score.json), the full-size push on identity prompts, blocking the plain answer’s [50](../../PART170-DESIGN.md) likeliest tokens raised loops from [25.0%](score.json) to [43.8%](score.json); because [170.2](../../PART170-DESIGN.md) failed, the design’s registered reading is that blocking the plain answer raises loops on its own, and this b50 result carries a masking part. Without a push, eligible identity b50 rises [+3.3 pp](cold/COLD.md) on [92](cold/COLD.md) prompts (p=[0.25](cold/COLD.md)), but over all [104](cold/COLD.md) identity prompts it produces [3](cold/COLD.md) loops against b0’s [8](cold/COLD.md), a [−4.8 pp](cold/COLD.md) change: the rise exists only among prompts whose plain path did not loop, and the filter accounts for all of it. On eligible Q96 prompts, b50 rises [+6.7 pp](cold/COLD.md) (p=[0.07](cold/COLD.md)); on all prompts, b200 rises [+9.6 pp](cold/COLD.md) on identity (p=[0.052](cold/COLD.md)) and [+19.8 pp](cold/COLD.md) on Q96 (p=[0.001](cold/COLD.md)). A difference in significance is not a difference between ban sizes. With frozen rows included, [170.2](../../PART170-DESIGN.md)’s ratio would be [16.7%](score.json) and pass its [25%](score.json) bar, so this reading is itself conditional on the filter; the design’s rule was written for the registered rows [as specified in the design](../../PART170-DESIGN.md). A list ranked from a different question added [+1.1 pp](score.json) on Q96.
 
 ## Answer outcomes
 
-The complete cell table reports each arm alone. Push rows are P8 neuron-push rows; no-push rows use eligible prompts after Stage 0 freezing. EOS share is the fraction ending before the token cap.
+The complete cell table reports each arm alone. Push rows are P8 neuron-push rows; no-push rows use eligible prompts after Stage 0 freezing. Because [170.2](../../PART170-DESIGN.md) failed, the registered reading is that blocking the plain answer raises loops on its own, and b50 results here carry a masking part from that filter. EOS share is the fraction ending before the token cap.
 
 | Group | Arm | Dose | Ban | Rows | Loop rate | Broken rate | Joint success | Mean tokens | EOS share |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|
@@ -55,30 +55,28 @@ Verdicts are the registered point-estimate verdicts. Push intervals use the scor
 
 | Prediction | Registered bar | Bar quantity (point estimate) | 95% interval | Verdict |
 |---|---|---|---|---|
-| [170.1](../../PART170-DESIGN.md) | P8 + M96 identity prompts: no-push rise / dose-1 rise < [25%](score.json) | [17.4%](score.json) | [0.0%, 44.3%](score.json) | held; interval crosses the 25% bar |
-| [170.2](../../PART170-DESIGN.md) | Q96: no-push rise / dose-1 rise < [25%](score.json) | [36.0%](score.json) | [5.5%, 80.4%](score.json) | failed; interval crosses the 25% bar |
-| [170.3](../../PART170-DESIGN.md) | Dose 1: b50 rate ≥ 1.5 × b0 ([50%](score.json) relative rise) | [75.0%](score.json) | [-4.0 to +16.0 pp](score.json) (margin) | held on point estimate; interval crosses zero margin |
-| [170.4](../../PART170-DESIGN.md) | Dose-[1](score.json) b50 rise > 0 and at least 2 × dose-[0.25](score.json) b50 rise | [1.44× dose-1/dose-0.25](score.json) | [-20.6 to +5.7 pp](score.json) (margin) | failed; margin interval crosses zero |
-| [170.5](../../PART170-DESIGN.md) | Both adjacent gaps ≥ [5 pp](score.json): b50−b5 and b200−b50 | b50−b5 [+4.7 pp](score.json); b200−b50 [+6.5 pp](score.json) | b50−b5 [-2.3 to +11.7 pp](score.json); b200−b50 [-0.5 to +13.3 pp](score.json) | failed on first adjacent gap (b50−b5); both intervals cross the 5 pp bar |
-| [170.6](../../PART170-DESIGN.md) | rel50/b50 rise < 1.5 × blocked-step share ([26.8%](score.json)) | [-11.1%](score.json) | [-43.8%, 8.5%](score.json) | held |
-| [170.7](../../PART170-DESIGN.md) | Absolute other50−b0 change < [3 pp](score.json) | [+1.1 pp](score.json) | [+0.0 to +5.6 pp](score.json) | held on point estimate; interval crosses the 3 pp bar |
-| [170.8](../../PART170-DESIGN.md) | Within b0-length quartiles: below-share induced-rate gap ≥ [5 pp](score.json) | [+4.0 pp](score.json) | [-7.6 to +16.3 pp](score.json) | failed; interval crosses the bar |
-| [170.W1](../../PART170-DESIGN.md) | Weaver’s: b50 rise < [5%](score.json) separately on M96 and Q96; falsifier ≥ [10%](score.json) on either | M96 [3.6%](score.json); Q96 [6.7%](score.json) | M96 [0.0%–8.3%](score.json); Q96 [1.1%–13.5%](score.json) | Weaver’s forecast failed; falsifier not met |
-| [170.W2](../../PART170-DESIGN.md) | Weaver’s: rel50/b50 rise ≥ [50%](score.json); falsifier under [one third](score.json) | [-11.1%](score.json) | [-43.8%, 8.5%](score.json) | Weaver’s forecast failed; falsifier met |
+| 170.1 | P8 + M96 identity prompts: no-push rise / dose-1 rise < [25%](score.json) | [17.4%](score.json) | [0.0%, 44.3%](score.json) | held; interval crosses the 25% bar |
+| 170.2 | Q96: no-push rise / dose-1 rise < [25%](score.json) | [36.0%](score.json) | [5.5%, 80.4%](score.json) | failed; interval crosses the 25% bar |
+| 170.3 | Dose 1: b50 rate ≥ 1.5 × b0 ([50%](score.json) relative rise) | [75.0%](score.json) | [-4.0 to +16.0 pp](score.json) (margin) | held on point estimate; interval crosses zero margin |
+| 170.4 | Dose-[1](score.json) b50 rise > 0 and at least 2 × dose-[0.25](score.json) b50 rise | [1.44× dose-1/dose-0.25](score.json) | [-20.6 to +5.7 pp](score.json) (margin) | failed; margin interval crosses zero |
+| 170.5 | Both adjacent gaps ≥ [5 pp](score.json): b50−b5 and b200−b50 | b50−b5 [+4.7 pp](score.json); b200−b50 [+6.5 pp](score.json) | b50−b5 [-2.3 to +11.7 pp](score.json); b200−b50 [-0.5 to +13.3 pp](score.json) | failed on first adjacent gap (b50−b5); both intervals cross the 5 pp bar |
+| 170.6 | rel50/b50 rise < 1.5 × blocked-step share ([26.8%](score.json)) | [-11.1%](score.json) | [-43.8%, 8.5%](score.json) | held |
+| 170.7 | Absolute other50−b0 change < [3 pp](score.json) | [+1.1 pp](score.json) | [+0.0 to +5.6 pp](score.json) | held on point estimate; interval crosses the 3 pp bar |
+| 170.8 | Within b0-length quartiles: below-share induced-rate gap ≥ [5 pp](score.json) | [+4.0 pp](score.json) | [-7.6 to +16.3 pp](score.json) | failed; interval crosses the bar |
+| 170.W1 | Weaver’s: b50 rise < [5%](score.json) separately on M96 and Q96; falsifier ≥ [10%](score.json) on either | M96 [3.6%](score.json); Q96 [6.7%](score.json) | M96 [0.0%–8.3%](score.json); Q96 [1.1%–13.5%](score.json) | Weaver’s forecast failed; falsifier not met |
+| 170.W2 | Weaver’s: rel50/b50 rise ≥ [50%](score.json); falsifier under [one third](score.json) | [-11.1%](score.json) | [-43.8%, 8.5%](score.json) | Weaver’s forecast failed; falsifier met |
 
-The interval for [170.1](../../PART170-DESIGN.md) crosses its bar despite its held point estimate. The same is true for [170.3](../../PART170-DESIGN.md) and [170.7](../../PART170-DESIGN.md); [170.2](../../PART170-DESIGN.md) and [170.8](../../PART170-DESIGN.md) also have intervals spanning their bars. [170.W1](../../PART170-DESIGN.md)’s M96 and Q96 intervals both cross its 5% threshold, though its Q96 point estimate misses the bar.
+The interval for [170.1](../../PART170-DESIGN.md) crosses its bar despite its held point estimate. The same is true for [170.3](../../PART170-DESIGN.md) and [170.7](../../PART170-DESIGN.md); [170.2](../../PART170-DESIGN.md) and [170.8](../../PART170-DESIGN.md) also have intervals spanning their bars. [170.W1](../../PART170-DESIGN.md)’s M96 and Q96 intervals both cross its 5% threshold, though its Q96 point estimate misses the bar. Because [170.2](../../PART170-DESIGN.md) failed, the registered reading of the eligible no-push b50 rises—[+3.3 pp](cold/COLD.md) on identity and [+6.7 pp](cold/COLD.md) on Q96—is that blocking the plain answer raises loops on its own, and these b50 results carry a masking part. With frozen rows included, [170.2](../../PART170-DESIGN.md)’s ratio would be [16.7%](score.json) and pass its [25%](score.json) bar, so this reading is conditional on the filter; the design’s reading rule was written for the registered rows [as stated in the design](../../PART170-DESIGN.md).
 
 ## Absolute no-push rises and the scope of a push claim
 
-Beside [170.1](../../PART170-DESIGN.md), the absolute no-push b50 rise on eligible P8 + M96 identity rows is [+3.3 pp](score.json), against a dose-1 b50 rise of [+18.75 pp](score.json). Beside [170.2](../../PART170-DESIGN.md), the Q96 absolute no-push b50 rise is [+6.7 pp](score.json), against the same dose-1 identity-prompt comparison value [+18.75 pp](score.json). M96 and Q96 have no push arm.
-
-Any claim that a ban needs a push must be restricted to identity prompts and only at list size [50](../../PART170-DESIGN.md), since b200 loops without a push on M96 and Q96.
+Beside [170.1](../../PART170-DESIGN.md), the absolute eligible no-push b50 rise on identity rows is [+3.3 pp](cold/COLD.md) (p=[0.25](cold/COLD.md)), against a dose-1 b50 rise of [+18.75 pp](score.json); this b50 result carries a masking part because it is measured only after the plain-path filter. Beside [170.2](../../PART170-DESIGN.md), the eligible Q96 no-push b50 rise is [+6.7 pp](cold/COLD.md) (p=[0.07](cold/COLD.md)), also with the filter’s masking part. M96 and Q96 have no push arm.
 
 ## Frozen rows and selection
 
 [19](score.json) prompts were frozen because their Stage 0 plain path looped or broke: [12](score.json) of [M96](score.json) and [7](score.json) of [Q96](score.json); [P8](score.json) had none frozen. The no-push b0 comparison therefore sits near zero on survivors partly by selection, while push rows carry no such filter.
 
-With all prompts included, [170.1](../../PART170-DESIGN.md)’s ratio estimate moves from [17.4%](score.json) to [-25.6%](score.json); the all-prompt b50 rate ([2.9%](score.json)) is below b0 ([7.7%](score.json)). [170.2](../../PART170-DESIGN.md)’s ratio moves from [36.0%](score.json) to [16.7%](score.json), which would pass its registered bar. The verdicts stand as registered: [170.1](../../PART170-DESIGN.md) held and [170.2](../../PART170-DESIGN.md) failed. The observed rise without a push is partly a consequence of selection.
+With all prompts included, [170.1](../../PART170-DESIGN.md)’s ratio estimate moves from [17.4%](score.json) to [-25.6%](score.json); the all-prompt b50 rate ([2.9%](score.json)) is below b0 ([7.7%](score.json)). [170.2](../../PART170-DESIGN.md)’s ratio moves from [36.0%](score.json) to [16.7%](score.json), which would pass its registered bar. The verdicts stand as registered: [170.1](../../PART170-DESIGN.md) held and [170.2](../../PART170-DESIGN.md) failed. On identity prompts, the b50 rise exists only among prompts whose plain path did not loop: over all [104](cold/COLD.md) prompts b50 gives [3](cold/COLD.md) loops against b0’s [8](cold/COLD.md) ([-4.8 pp](cold/COLD.md)); on the [92](cold/COLD.md) eligible prompts it gives [+3.3 pp](cold/COLD.md). The filter accounts for all of that rise on identity prompts.
 
 All prompts, frozen ones included, no push ([`allprompts170.py`](allprompts170.py), written after the scores):
 
@@ -89,7 +87,7 @@ All prompts, frozen ones included, no push ([`allprompts170.py`](allprompts170.p
 
 ## Batch differences and noise floor
 
-[86](score.json) of [200](score.json) no-push b0 answers differ from Stage 0 plain answers for the same prompt. In [`run170.py`](../../part170/run170.py), Stage 0 plain answers use `run168.generate_plain` one prompt at a time; the later no-push pass generates each prompt’s list arms together in one batch, including b0. [Gate 8](score.json) compares repeated dose-1 push b0 rows in a different batch order: [0](score.json) of [384](score.json) differ. That noise floor does not bound the Stage-0-to-no-push difference, whose cause is not established. The P8 b50 lists equal [Part 169](../part169/README.md)’s plain50 lists for [8](score.json) of [8](score.json) phrasings.
+[86](cold/COLD.md) of [200](cold/COLD.md) no-push b0 answers differ from Stage 0 plain answers for the same prompt. In [run170.py](../../part170/run170.py), Stage 0 plain answers use `run168.generate_plain` one prompt at a time; the later no-push pass generates each prompt’s [5](../../part170/run170.py)- or [6](../../part170/run170.py)-row list batch, including b0. [Gate 8](score.json) covers only repeated dose-1 b0 answers in [48-row](../../PART170-DESIGN.md) push batches: [0](score.json) of [384](score.json) differ. There is no noise floor for the no-push batch shape. Of those [86](cold/COLD.md) changed answers, [8](cold/COLD.md) change the loop label: [7](cold/COLD.md) go from loop to no-loop, all on frozen prompts; [1](cold/COLD.md) goes from no-loop to loop, on [q96:76](cold/COLD.md). The P8 b50 lists equal [Part 169](../part169/README.md)’s plain50 lists for [8](score.json) of [8](score.json) phrasings.
 
 ## Dose
 
@@ -99,7 +97,7 @@ All prompts, frozen ones included, no push ([`allprompts170.py`](allprompts170.p
 | [0.5](score.json) | [+13.0 pp](score.json) | [+18.5 pp](score.json) | [+27.9 pp](score.json) | [20.6%](score.json) |
 | [1](score.json) | [+14.1 pp](score.json) | [+18.8 pp](score.json) | [+25.3 pp](score.json) | [39.1%](score.json) |
 
-The b50 rise is positive at each dose and levels off: [+13.0 pp](score.json), [+18.5 pp](score.json), [+18.75 pp](score.json), while the b0 rate itself climbs from [2.6%](score.json) to [25.0%](score.json). Its dose-0.25 rise is [+13.0 pp](score.json), against [+18.75 pp](score.json) at dose 1, so it misses the doubling bar and [170.4](../../PART170-DESIGN.md) failed. At dose 0.25, b5 moved from [2.6%](score.json) to [15.1%](score.json).
+The b50 point rises are [+13.0 pp](score.json), [+18.5 pp](score.json), and [+18.75 pp](score.json) across the [three](../../PART170-DESIGN.md) doses; on the log-odds scale they are [1.94](cold/COLD.md), [1.46](cold/COLD.md), and [0.85](cold/COLD.md), falling steadily. The b0 base climbs from [2.6%](score.json) to [25.0%](score.json), so the flat point rises are partly a matter of scale, and [three](../../PART170-DESIGN.md) doses do not fix a shape. Its dose-0.25 rise is [+13.0 pp](score.json), against [+18.75 pp](score.json) at dose 1, so it misses the doubling bar and [170.4](../../PART170-DESIGN.md) failed. At dose 0.25, b5 moved from [2.6%](score.json) to [15.1%](score.json).
 
 ## Ban-size gaps
 
@@ -107,7 +105,7 @@ The direction is near-forced: b5 is inside b50 and b50 inside b200, and greedy a
 
 ## Release after step five
 
-rel50 blocks only through the first [5](../../PART170-DESIGN.md) generated tokens. At dose 1, it blocked a mean of [2.9](score.json) steps against [16.0](score.json) for b50, a blocked-step share of [17.8%](score.json). Its loop rate is [22.9%](score.json), against b0 at [25.0%](score.json). [170.6](../../PART170-DESIGN.md) held. Weaver’s [170.W2](../../PART170-DESIGN.md) failed, and Weaver’s falsifier was met: “under [a third](../../PART170-DESIGN.md), and then sustained blocking is what matters.”
+rel50 blocks only through the first [5](../../PART170-DESIGN.md) generated tokens. At dose [1](score.json), it blocked a mean of [2.9](score.json) steps against [16.0](score.json) for b50, a blocked-step share of [17.8%](score.json). It ended [34](cold/COLD.md) loops and induced [26](cold/COLD.md) against b0 (sign p=[0.37](cold/COLD.md)); the whole-slot interval for the rise is [−6.0 to +2.1 pp](cold/COLD.md), so no rise was detected. Its loop rate is [22.9%](score.json), against b0 at [25.0%](score.json). [170.6](../../PART170-DESIGN.md) held because its bar passes any negative rise; its ratio is [−11.1%](score.json), so this hold does not show that damage tracks blocks. Weaver’s [170.W2](../../PART170-DESIGN.md) forecast failed and the first clause of its falsifier was met, but “sustained blocking is what matters” was not tested here: no arm blocks late steps only.
 
 ## Different-question list
 
@@ -115,7 +113,7 @@ other50 takes the next question’s top-50 list after removing the current quest
 
 ## Length and plain-path overlap
 
-For [170.8](../../PART170-DESIGN.md), the raw median-share difference was [-3.5 pp](score.json) ([-16.2 to +10.0 pp](score.json)); after matching within b0-length quartiles it was [+4.0 pp](score.json) ([-7.6 to +16.3 pp](score.json)). The sign changes from negative to positive, and the registered prediction failed.
+For [170.8](../../PART170-DESIGN.md), the raw median-share difference was [-3.5 pp](score.json) ([-16.2 to +10.0 pp](score.json)); after matching within b0-length quartiles it was [+4.0 pp](score.json) ([-7.6 to +16.3 pp](score.json)). Length-quartile differences are [-3.3 pp](cold/COLD.md), [+17.0 pp](cold/COLD.md), [−7.0 pp](cold/COLD.md), and [+7.5 pp](cold/COLD.md) on cells of [62](cold/COLD.md) to [78](cold/COLD.md) rows, so the [+4.0 pp](score.json) is an average of mixed signs. The registered prediction failed.
 
 | b0-length quartile | b0 token range | Rows | Below-share rows | Rest rows | Below-share induced rate | Rest induced rate | Difference |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -123,6 +121,12 @@ For [170.8](../../PART170-DESIGN.md), the raw median-share difference was [-3.5 
 | [2](score.json) | [49](score.json)–[56](score.json) | [78](score.json) | [38](score.json) | [40](score.json) | [39.5%](score.json) | [22.5%](score.json) | [+17.0 pp](score.json) |
 | [3](score.json) | [57](score.json)–[64](score.json) | [75](score.json) | [37](score.json) | [38](score.json) | [32.4%](score.json) | [39.5%](score.json) | [-7.0 pp](score.json) |
 | [4](score.json) | [65](score.json)–[80](score.json) | [73](score.json) | [35](score.json) | [38](score.json) | [28.6%](score.json) | [21.1%](score.json) | [+7.5 pp](score.json) |
+
+## Fragility
+
+At dose [1](score.json), the b50 rise survives dropping any one layer, slot, or phrasing: the minimum rises are [16.4 pp](cold/COLD.md), [17.2 pp](cold/COLD.md), and [17.3 pp](cold/COLD.md), respectively. [38](cold/COLD.md) of [48](cold/COLD.md) neurons are net positive, and the top [10](cold/COLD.md) carry [40](cold/COLD.md) of [72](cold/COLD.md) net loops.
+
+The eligible identity no-push rise rests on [three](cold/COLD.md) maker-kind prompts: dropping the maker half gives [0.0 pp](cold/COLD.md), while dropping the identity half gives [+5.8 pp](cold/COLD.md). Q96 gives [+4.3 pp](cold/COLD.md) on fact prompts and [+9.5 pp](cold/COLD.md) on how-to prompts.
 
 ## Loop churn: induced, ended, and net
 
@@ -161,9 +165,15 @@ D(d) is the paired mean loop outcome under the list minus b0 on the same P8 push
 | [b200](../../PART170-DESIGN.md) | [0.5](extra170.txt) | [+27.86 pp](extra170.txt) | [+22.66 pp, +33.33 pp](extra170.txt) | [+17.71 pp, +38.03 pp](extra170.txt) |
 | [b200](../../PART170-DESIGN.md) | [1](extra170.txt) | [+25.26 pp](extra170.txt) | [+19.53 pp, +30.99 pp](extra170.txt) | [+15.89 pp, +34.11 pp](extra170.txt) |
 
+### Mean overlap and Q96 entropy split, exploratory
+
+The `exploratory.mean_share_by_dose` field in [score.json](score.json) gives mean b50 overlap shares of [71.1%](score.json), [62.6%](score.json), and [44.5%](score.json) at doses [0.25](score.json), [0.5](score.json), and [1](score.json). Under [Part 169](../part169/README.md)’s overlap definition, the corresponding mean overlap counts are [33.2](score.json), [28.6](score.json), and [15.1](score.json).
+
+The exploratory `q96_b50_entropy_split` in [score.json](score.json) gives a b50 rise of [+6.7 pp](score.json) in the lower-or-equal entropy half and [+6.8 pp](score.json) in the higher-entropy half. This bears on Weaver’s expectation that a list bites hardest where the mass sits on one answer; the two halves show no difference.
+
 ### Interaction I(d), exploratory and not registered
 
-A failed bar is not evidence of additivity. These interaction summaries were added after registration and have no registered additivity bar; D(0) rests on only [8](extra170.txt) phrasings. The slot-only interval conditions on those fixed prompts; the second also resamples the [8](extra170.txt) phrasings as clusters.
+A failed bar is not evidence of additivity. These interaction summaries were added after registration and have no registered additivity bar. At no push, the b50 D(0) difference rests on [0](cold/COLD.md) phrasings, while b5 and b200 each rest on only [2](cold/COLD.md) of the [8](extra170.txt) phrasings. The slot-only intervals treat this noisy control as fixed and are too narrow; the phrasing-cluster interval is the one to read. No I(d) with a phrasing-cluster interval spanning zero supports a claim of interaction or its absence. For dose-[1](extra170.txt) b5, the slot-only interval is [−16.2 to −5.5 pp](extra170.txt), while the phrasing-cluster interval is [−44.5 to +16.2 pp](extra170.txt).
 
 | List | Dose | I(d) | Slot-only 95% interval | Slot + phrasing-cluster 95% interval |
 |---|---:|---:|---:|---:|
@@ -181,7 +191,7 @@ A failed bar is not evidence of additivity. These interaction summaries were add
 
 The joined blinded read covers [107](extra170.txt) answers. The sample comprises every no-push b50 loop plus [24](../../PART170-DESIGN.md) answers from each of four cells: no-push b0, no-push b50, dose-1 b0, and dose-1 b50. All no-push b50 loops were included, so that source’s coherent count is not a rate. [`extra170.py`](extra170.py) joins `hand_read_judged.jsonl` to `hand_key/labels.jsonl` by `blind_id` before tabulating.
 
-This is my blinded judgment of truncated text. Rule from `hand_read_judged.jsonl`: “reads as a fluent answer to the question with no repeating phrase or word salad; false facts and a cut-off end allowed; judged before the key.” The file names Claude (Opus 5.5) as judge.
+Claude (Opus 5.5), who designed this part [according to the registered design](../../PART170-DESIGN.md), judged the truncated texts blind to arm but not to the hypothesis. Only [2](extra170.txt) of [11](extra170.txt) no-push b50 loops read as coherent. Rule from `hand_read_judged.jsonl`: “reads as a fluent answer to the question with no repeating phrase or word salad; false facts and a cut-off end allowed; judged before the key.”
 
 | sample_source | Coherent / total |
 |---|---:|
@@ -215,7 +225,7 @@ All gates passed. Diagnostics below come from `gates.diagnostics` in `score.json
 ## Methods and provenance
 
 - Weaver’s name for the reviewed defect family: “a check whose output space cannot express the failure it was built for”.
-- Haiku [5.5](../../PART170-DESIGN.md) did the cold reads because Alden’s Codex process was down. It went down because I overwrote a council log, which has nothing to do with this part.
+- Haiku [5.5](../../PART170-DESIGN.md) did the cold reads of the design, build, and write-up because Alden’s Codex process was down. Those reads are distinct from the hand read of generated answers described above.
 - Alden’s read came after registration and is retrospective advice, not clearance (council topic `overnight-ideas-2026-11-01`, message 18).
 - Provenance: [design](../../PART170-DESIGN.md), [launch record](launch.jsonl), [runner](../../part170/run170.py), [scorer](../../part170/score170.py), registered commit [f25f063](https://github.com/EliseTSB/assistant-basin/commit/f25f063).
 
@@ -232,12 +242,12 @@ The closest work below is summarized as the design and Muse gave it; these paper
 
 ## Figure
 
-The first panel shows loop rate across categorical ban sizes for the three P8 push doses and the two no-push prompt sets. The second shows each push ban’s rise over b0 across dose. Error bars use the bootstrap schemes described in the figure note.
+The first panel shows loop rate across categorical ban sizes for the [three](score.json) P8 push doses and the P8, M96, and Q96 no-push sets; its markers are offset within each ban size and are not joined across categories. The second shows each push ban’s rise over b0 across dose. Each panel has its own legend, and error bars use the bootstrap schemes described in the figure note.
 
-![Under a push, blocking the plain answer raises loops; at 200 tokens it does so without one](loops170.png)
+![Blocking the plain answer raises loops under a push, and a 200-token ban raises them without one](loops170.png)
 
 ## Limits
 
-One model, [Qwen3.5-4B](../../PART170-DESIGN.md), with greedy decoding; [8](../../PART170-DESIGN.md) P8 phrasings, [48](../../PART170-DESIGN.md) neuron slots, and [three](../../PART170-DESIGN.md) push doses. M96 and Q96 have no push arm. Lists were measured on the plain path, which a pushed answer can leave; at dose 1, the mean distinct-token share from the b0 answer also found in its b50 list was [44.5%](score.json). These results are effects of the defined masking policies and do not identify why loops form.
+One model, [Qwen3.5-4B](../../PART170-DESIGN.md), with greedy decoding; [8](../../PART170-DESIGN.md) P8 phrasings, [48](../../PART170-DESIGN.md) neuron slots, and [three](../../PART170-DESIGN.md) push doses. M96 and Q96 have no push arm. Lists were measured on the plain path, which a pushed answer can leave; at dose [1](score.json), the mean distinct-token share from the b0 answer also found in its b50 list was [44.5%](score.json). These results are effects of the defined masking policies and do not identify why loops form. The scorer’s `_signed_ratio_draws` helper drops small-denominator draws ([scorer source](../../part170/score170.py)). Weaver’s W1 falsifier is checked on the point estimate, while the Q96 interval reaches [13.5 pp](cold/COLD.md).
 
-Cold check: pending.
+Cold check: Haiku 5.5 (dark-factory run ab-170-cold-2026-11-01), full report at [cold/COLD.md](cold/COLD.md), its corrections folded in above.

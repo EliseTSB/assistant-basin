@@ -3223,13 +3223,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 170.1 | No push, identity prompts (P8 and M96): b50's rise in loop rate is under a quarter of its rise at dose 1, with the absolute rise beside it | medium | Claude |  |
-| 170.2 | No push, Q96: the same bar, against the same dose 1 rise | medium | Claude |  |
-| 170.3 | Dose 1: b50 raises loop answers by at least 50% against b0 | high | Claude |  |
-| 170.4 | b50's rise at dose 1 is positive and at least twice its rise at dose 0.25 | medium | Claude |  |
-| 170.5 | Dose 1: b200's loop rate is at least 0.05 above b50's, and b5's at least 0.05 below b50's | medium | Claude |  |
-| 170.6 | Dose 1: rel50's rise as a share of b50's is under 1.5 times rel50's share of b50's blocked steps | low | Claude |  |
-| 170.7 | No push, Q96: other50's change in loop rate is under 0.03 either way, read beside b5 and b50 | medium | Claude |  |
-| 170.8 | Dose 1, rows with no loop under b0: within b0 length quartiles, weighted by rows, b50's induced rate below each quartile's median share is at least 0.05 above the rest | low | Claude |  |
-| 170.W1 | No-push b50 rise is under 0.05 on both M96 and Q96. Falsifier: a rise of 0.10 or more on either set | low | Weaver |  |
-| 170.W2 | Dose 1: rel50's rise is at least half of b50's. Falsifier: under a third | low | Weaver |  |
+| 170.1 | No push, identity prompts (P8 and M96): b50's rise in loop rate is under a quarter of its rise at dose 1, with the absolute rise beside it | medium | Claude | held: 17.4% (0.0% to 44.3%), on eligible rows |
+| 170.2 | No push, Q96: the same bar, against the same dose 1 rise | medium | Claude | failed: 36.0% (5.5% to 80.4%) |
+| 170.3 | Dose 1: b50 raises loop answers by at least 50% against b0 | high | Claude | held: 75% relative rise (margin interval -4.0 to +16.0 points) |
+| 170.4 | b50's rise at dose 1 is positive and at least twice its rise at dose 0.25 | medium | Claude | failed: 18.75 against 13.0 points, 1.44 times |
+| 170.5 | Dose 1: b200's loop rate is at least 0.05 above b50's, and b5's at least 0.05 below b50's | medium | Claude | failed: b50-b5 +4.7 points, b200-b50 +6.5 points |
+| 170.6 | Dose 1: rel50's rise as a share of b50's is under 1.5 times rel50's share of b50's blocked steps | low | Claude | held: -11.1% against a 26.8% bar, which any negative rise passes |
+| 170.7 | No push, Q96: other50's change in loop rate is under 0.03 either way, read beside b5 and b50 | medium | Claude | held: +1.1 points (0.0 to 5.6) |
+| 170.8 | Dose 1, rows with no loop under b0: within b0 length quartiles, weighted by rows, b50's induced rate below each quartile's median share is at least 0.05 above the rest | low | Claude | failed: +4.0 points (-7.6 to 16.3) |
+| 170.W1 | No-push b50 rise is under 0.05 on both M96 and Q96. Falsifier: a rise of 0.10 or more on either set | low | Weaver | failed: M96 +3.6, Q96 +6.7 points; falsifier not met |
+| 170.W2 | Dose 1: rel50's rise is at least half of b50's. Falsifier: under a third | low | Weaver | failed: -11.1%; falsifier met |
