@@ -1,0 +1,454 @@
+[
+  {
+    "prompt_id": "p002",
+    "prompt": "How does steeping time change the flavor of a cup of tea?"
+  },
+  {
+    "prompt_id": "p006",
+    "prompt": "How does regular exercise help people sleep?"
+  },
+  {
+    "prompt_id": "p010",
+    "prompt": "How did railways affect travel and trade in the nineteenth century?"
+  },
+  {
+    "prompt_id": "p012",
+    "prompt": "How can a household budget make spending decisions easier?"
+  },
+  {
+    "prompt_id": "p013",
+    "prompt": "Why do cats knead soft blankets with their paws?"
+  },
+  {
+    "prompt_id": "p014",
+    "prompt": "How does a camera lens bring a scene into focus?"
+  },
+  {
+    "prompt_id": "p016",
+    "prompt": "How did public libraries become important places in many communities?"
+  },
+  {
+    "prompt_id": "p017",
+    "prompt": "Why do some foods taste stronger after they have been fermented?"
+  },
+  {
+    "prompt_id": "p022",
+    "prompt": "How can listening carefully improve a conversation at work?"
+  },
+  {
+    "prompt_id": "p027",
+    "prompt": "Why are some beaches made of dark sand while others have pale sand?"
+  },
+  {
+    "prompt_id": "p032",
+    "prompt": "How does a bicycle stay balanced while it is moving?"
+  },
+  {
+    "prompt_id": "p037",
+    "prompt": "Why do some trees keep their leaves through the winter?"
+  },
+  {
+    "prompt_id": "p041",
+    "prompt": "I have a long layover in an unfamiliar city; how should I decide whether to explore or stay near the airport?"
+  },
+  {
+    "prompt_id": "p043",
+    "prompt": "How can I make a small apartment feel calmer without buying much furniture?"
+  },
+  {
+    "prompt_id": "p044",
+    "prompt": "A friend and I disagree about a shared trip plan; how can we reach a fair decision?"
+  },
+  {
+    "prompt_id": "p045",
+    "prompt": "What is a sensible way to start saving for an emergency when my income changes each month?"
+  },
+  {
+    "prompt_id": "p046",
+    "prompt": "How can I make time for an outdoor hobby during a crowded work week?"
+  },
+  {
+    "prompt_id": "p047",
+    "prompt": "My houseplants keep wilting even though I water them; what should I check first?"
+  },
+  {
+    "prompt_id": "p048",
+    "prompt": "What could I say to a coworker who interrupts me during team discussions?"
+  },
+  {
+    "prompt_id": "p049",
+    "prompt": "How should a first-time visitor choose what to see during a short stay in a historic town?"
+  },
+  {
+    "prompt_id": "p050",
+    "prompt": "I want to eat more vegetables but dislike salads; what are some easy ways to begin?"
+  },
+  {
+    "prompt_id": "p051",
+    "prompt": "How can I set a gentle bedtime routine that I can keep while traveling?"
+  },
+  {
+    "prompt_id": "p052",
+    "prompt": "What should I consider before lending a family member a meaningful amount of money?"
+  },
+  {
+    "prompt_id": "p053",
+    "prompt": "I am new to birdwatching; how can I enjoy it without disturbing wildlife?"
+  },
+  {
+    "prompt_id": "p054",
+    "prompt": "How can I offer support to a friend who is grieving without pressuring them to talk?"
+  },
+  {
+    "prompt_id": "p055",
+    "prompt": "What is a good way to prepare for a conversation about changing my responsibilities at work?"
+  },
+  {
+    "prompt_id": "p056",
+    "prompt": "I want to explore a national park with an older relative; how should I choose a suitable walk?"
+  },
+  {
+    "prompt_id": "p057",
+    "prompt": "How can I keep a hobby enjoyable when I start comparing my progress with other people?"
+  },
+  {
+    "prompt_id": "p058",
+    "prompt": "What could help me stay organized when I am planning a family gathering?"
+  },
+  {
+    "prompt_id": "p059",
+    "prompt": "My neighbor's dog barks early in the morning; how can I raise the issue kindly?"
+  },
+  {
+    "prompt_id": "p060",
+    "prompt": "How should I decide whether to repair an old bicycle or replace it?"
+  },
+  {
+    "prompt_id": "p061",
+    "prompt": "What are some thoughtful ways to welcome a new person to our neighborhood?"
+  },
+  {
+    "prompt_id": "p063",
+    "prompt": "How can I make a healthy lunch that travels well and does not need reheating?"
+  },
+  {
+    "prompt_id": "p065",
+    "prompt": "How can two roommates divide household chores without making the arrangement feel unfair?"
+  },
+  {
+    "prompt_id": "p066",
+    "prompt": "I want to learn watercolor painting; what supplies are worth starting with?"
+  },
+  {
+    "prompt_id": "p067",
+    "prompt": "What can I do to make a long car journey more comfortable for everyone?"
+  },
+  {
+    "prompt_id": "p068",
+    "prompt": "How can I encourage a child to spend more time noticing nature outdoors?"
+  },
+  {
+    "prompt_id": "p069",
+    "prompt": "I am thinking about changing careers but feel unsure; what first steps might clarify my priorities?"
+  },
+  {
+    "prompt_id": "p070",
+    "prompt": "How should I respond when a relative gives advice that I did not ask for?"
+  },
+  {
+    "prompt_id": "p072",
+    "prompt": "How can I enjoy a museum visit when I only have an hour there?"
+  },
+  {
+    "prompt_id": "p073",
+    "prompt": "I would like to be more confident speaking in a small meeting; how can I practice?"
+  },
+  {
+    "prompt_id": "p075",
+    "prompt": "How can I make space for quiet time when my household is usually busy?"
+  },
+  {
+    "prompt_id": "p076",
+    "prompt": "What might help me keep a new walking habit after the first few weeks?"
+  },
+  {
+    "prompt_id": "p077",
+    "prompt": "I need to choose a gift for a friend who prefers experiences to possessions; where should I start?"
+  },
+  {
+    "prompt_id": "p078",
+    "prompt": "How can I give constructive feedback while still showing respect for a colleague's effort?"
+  },
+  {
+    "prompt_id": "p079",
+    "prompt": "What are some ways to make a rainy vacation day feel like part of the adventure?"
+  },
+  {
+    "prompt_id": "p080",
+    "prompt": "How can I talk with a family member about making plans that work for everyone's needs?"
+  },
+  {
+    "prompt_id": "p081",
+    "prompt": "What makes a small town a pleasant place to visit for a weekend?"
+  },
+  {
+    "prompt_id": "p084",
+    "prompt": "Is it better for a museum to display many objects or tell a few stories in depth?"
+  },
+  {
+    "prompt_id": "p089",
+    "prompt": "What kind of workplace makes it easiest for people to do thoughtful work?"
+  },
+  {
+    "prompt_id": "p090",
+    "prompt": "Are community gardens valuable even for people who do not grow food there?"
+  },
+  {
+    "prompt_id": "p093",
+    "prompt": "Which is more rewarding for a beginner, learning a musical instrument or joining a team sport?"
+  },
+  {
+    "prompt_id": "p095",
+    "prompt": "What makes a neighborhood feel welcoming to someone who has just moved there?"
+  },
+  {
+    "prompt_id": "p096",
+    "prompt": "Do old family recipes deserve to be followed exactly or adapted over time?"
+  },
+  {
+    "prompt_id": "p099",
+    "prompt": "What qualities make someone a considerate houseguest?"
+  },
+  {
+    "prompt_id": "p103",
+    "prompt": "What makes a walking trail feel inviting to a wide range of visitors?"
+  },
+  {
+    "prompt_id": "p106",
+    "prompt": "What can a good teacher do to make a difficult subject feel approachable?"
+  },
+  {
+    "prompt_id": "p107",
+    "prompt": "Should people try to keep their hobbies separate from their work?"
+  },
+  {
+    "prompt_id": "p108",
+    "prompt": "What role should local markets play in a modern city?"
+  },
+  {
+    "prompt_id": "p109",
+    "prompt": "Is a long train journey a better way to see a country than a short flight?"
+  },
+  {
+    "prompt_id": "p110",
+    "prompt": "What makes a friendship last through major changes in people's lives?"
+  },
+  {
+    "prompt_id": "p112",
+    "prompt": "What makes a traditional festival meaningful to people who attend it?"
+  },
+  {
+    "prompt_id": "p117",
+    "prompt": "What makes a good mentor helpful without taking over someone else's choices?"
+  },
+  {
+    "prompt_id": "p119",
+    "prompt": "How much should convenience matter when choosing what to eat?"
+  },
+  {
+    "prompt_id": "p120",
+    "prompt": "What makes a shared family tradition worth continuing?"
+  },
+  {
+    "prompt_id": "p122",
+    "prompt": "Describe a rainy afternoon from the point of view of a sleepy house cat."
+  },
+  {
+    "prompt_id": "p124",
+    "prompt": "Imagine a market stall that appears only at dawn and describe what it sells."
+  },
+  {
+    "prompt_id": "p128",
+    "prompt": "Invent a gentle legend explaining why fireflies glow over a meadow."
+  },
+  {
+    "prompt_id": "p129",
+    "prompt": "Write a short scene about a baker preparing a surprise for a lonely neighbor."
+  },
+  {
+    "prompt_id": "p130",
+    "prompt": "Describe the colors and sounds of a forest just after a summer storm."
+  },
+  {
+    "prompt_id": "p133",
+    "prompt": "Describe a moonlit harbor through the eyes of a visiting sailor."
+  },
+  {
+    "prompt_id": "p136",
+    "prompt": "Write a scene about a gardener discovering that a sunflower has turned toward a window."
+  },
+  {
+    "prompt_id": "p148",
+    "prompt": "Invent a local custom for welcoming travelers to a village and describe one welcome."
+  },
+  {
+    "prompt_id": "p149",
+    "prompt": "Write a brief story about a pocket watch that is found beneath a park bench."
+  },
+  {
+    "prompt_id": "p161",
+    "prompt": "How can I make a simple vegetable soup from ingredients already in my kitchen?"
+  },
+  {
+    "prompt_id": "p162",
+    "prompt": "How do I plan a relaxed day trip using public transportation?"
+  },
+  {
+    "prompt_id": "p163",
+    "prompt": "How can I start a small herb garden on a sunny windowsill?"
+  },
+  {
+    "prompt_id": "p164",
+    "prompt": "How do I prepare for a polite conversation with a neighbor about shared noise?"
+  },
+  {
+    "prompt_id": "p165",
+    "prompt": "How can I organize family photographs so relatives can enjoy them together?"
+  },
+  {
+    "prompt_id": "p166",
+    "prompt": "How do I choose comfortable walking shoes for a city vacation?"
+  },
+  {
+    "prompt_id": "p167",
+    "prompt": "How can I make a weekly meal plan that leaves room for leftovers?"
+  },
+  {
+    "prompt_id": "p168",
+    "prompt": "How do I keep a bicycle clean and ready for regular rides?"
+  },
+  {
+    "prompt_id": "p169",
+    "prompt": "How can I begin sketching landscapes if I have never taken an art class?"
+  },
+  {
+    "prompt_id": "p170",
+    "prompt": "How do I prepare a guest room for friends staying over the weekend?"
+  },
+  {
+    "prompt_id": "p171",
+    "prompt": "How can I make a simple household plan for saving toward a larger purchase?"
+  },
+  {
+    "prompt_id": "p172",
+    "prompt": "How do I make a comfortable reading corner in a small room?"
+  },
+  {
+    "prompt_id": "p173",
+    "prompt": "How can I prepare for a first visit to a local history museum?"
+  },
+  {
+    "prompt_id": "p174",
+    "prompt": "How do I safely introduce a new houseplant to a home with pets?"
+  },
+  {
+    "prompt_id": "p175",
+    "prompt": "How can I pack a picnic that stays fresh during a short walk?"
+  },
+  {
+    "prompt_id": "p176",
+    "prompt": "How do I write a thoughtful thank-you note after a dinner invitation?"
+  },
+  {
+    "prompt_id": "p177",
+    "prompt": "How can I make a home feel more comfortable during a hot summer afternoon?"
+  },
+  {
+    "prompt_id": "p178",
+    "prompt": "How do I prepare a small balcony for growing flowers in containers?"
+  },
+  {
+    "prompt_id": "p179",
+    "prompt": "How can I plan a family visit that includes both quiet time and shared activities?"
+  },
+  {
+    "prompt_id": "p180",
+    "prompt": "How do I get started with birdwatching in a neighborhood park?"
+  },
+  {
+    "prompt_id": "p181",
+    "prompt": "How can I store fresh herbs so they stay useful through the week?"
+  },
+  {
+    "prompt_id": "p182",
+    "prompt": "How do I prepare for a calm and useful conversation with my manager about workload?"
+  },
+  {
+    "prompt_id": "p183",
+    "prompt": "How can I plan a low-cost weekend outing with children?"
+  },
+  {
+    "prompt_id": "p184",
+    "prompt": "How do I make a basic travel checklist that I can reuse for future trips?"
+  },
+  {
+    "prompt_id": "p185",
+    "prompt": "How can I create a welcoming space for a neighborhood book swap?"
+  },
+  {
+    "prompt_id": "p186",
+    "prompt": "How do I care for a cast iron pan after cooking with it?"
+  },
+  {
+    "prompt_id": "p187",
+    "prompt": "How can I set up a simple routine for keeping important household papers together?"
+  },
+  {
+    "prompt_id": "p188",
+    "prompt": "How do I make a nature walk interesting for someone who is new to the outdoors?"
+  },
+  {
+    "prompt_id": "p190",
+    "prompt": "How do I choose a useful book to give someone whose interests I do not know well?"
+  },
+  {
+    "prompt_id": "p191",
+    "prompt": "How can I make a garden more inviting to butterflies and other pollinators?"
+  },
+  {
+    "prompt_id": "p192",
+    "prompt": "How do I organize a small group outing so everyone has a chance to contribute ideas?"
+  },
+  {
+    "prompt_id": "p193",
+    "prompt": "How can I keep a travel journal without writing for a long time each day?"
+  },
+  {
+    "prompt_id": "p194",
+    "prompt": "How do I remove dust from books and shelves without making a large mess?"
+  },
+  {
+    "prompt_id": "p195",
+    "prompt": "How can I make a relaxing evening routine after a demanding day at work?"
+  },
+  {
+    "prompt_id": "p196",
+    "prompt": "How do I prepare a simple lunch for a long day outdoors?"
+  },
+  {
+    "prompt_id": "p197",
+    "prompt": "How can I get better at noticing the changing seasons where I live?"
+  },
+  {
+    "prompt_id": "p198",
+    "prompt": "How do I plan a small celebration that feels personal without being elaborate?"
+  },
+  {
+    "prompt_id": "p199",
+    "prompt": "How can I begin a regular stretching habit in a way that feels manageable?"
+  },
+  {
+    "prompt_id": "p200",
+    "prompt": "How do I make a simple homemade loaf of bread for the first time?"
+  }
+]
