@@ -3163,3 +3163,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 165.5 | iso's broken rate is under 0.8 times full's | low | Claude |  |
 | 165.6 | Changed rate falls with k: Spearman at or below -0.6 across the same seven arms | medium | Claude |  |
 | 165.7 | n+'s mean relative last-layer change is at least 1.5 times full's (Amendment 2) | medium | Claude |  |
+
+## Part 166 (registered 2026-11-01 01:03 CST, PART166-DESIGN.md, after Part 165's data; the design discloses what was seen)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 166.1 | Pooled over n+, n± and k4, a loop's own hit rate is at least 2 times its shuffled rate | high | Claude |  |
+| 166.2 | Pooled over full and iso, own over shuffled is under 1.5 | medium | Claude |  |
+| 166.3 | n+'s mean steadiness is at least 1.25 times full's | medium | Claude |  |
+| 166.4 | Mean sharpness falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full | medium | Claude |  |
+| 166.5 | Within n± and k4, pooled over slots, slot broken rate against slot mean sharpness: Spearman at least 0.3 | low | Claude |  |
