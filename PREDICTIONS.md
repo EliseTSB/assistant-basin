@@ -3136,8 +3136,8 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 163.1 | On identity phrasings, the neuron arm's name-gone rate is under 1.5 times the random arm's | medium | Claude |  |
-| 163.2 | On maker phrasings, the neuron arm's maker-gone rate is under 1.5 times the random arm's | medium | Claude |  |
-| 163.3 | Each arm's name-gone rate on identity phrasings is at least 0.15, so the selection carries to new phrasings | medium | Claude |  |
-| 163.4 | In each arm fewer units reach both gone on at least half of identity phrasings than reach name gone on at least half | high | Claude |  |
-| 163.5 | The neuron arm's broken rate is below the random arm's | low | Claude |  |
+| 163.1 | On identity phrasings, the neuron arm's name-gone rate is under 1.5 times the random arm's | medium | Claude | held, but could not fail: ratio 1.06, and a random rate of 0.80 caps it at 1.25 |
+| 163.2 | On maker phrasings, the neuron arm's maker-gone rate is under 1.5 times the random arm's | medium | Claude | held, but could not fail: ratio 1.02, and a random rate of 0.89 caps it at 1.12 |
+| 163.3 | Each arm's name-gone rate on identity phrasings is at least 0.15, so the selection carries to new phrasings | medium | Claude | held: 0.85 and 0.80; the bar sat far below |
+| 163.4 | In each arm fewer units reach both gone on at least half of identity phrasings than reach name gone on at least half | high | Claude | held: 90 against 91 and 83 against 86; nearly by construction |
+| 163.5 | The neuron arm's broken rate is below the random arm's | low | Claude | failed: 21.4% against 5.2%, the other way |

@@ -1,0 +1,2905 @@
+{
+  "part": 163,
+  "gates": {
+    "gate1_recipe": {
+      "passed": true,
+      "minimum_rate": 0.7,
+      "changed_rate_by_arm": {
+        "neuron": 0.88,
+        "random": 0.88
+      },
+      "n_by_arm": {
+        "neuron": 100,
+        "random": 100
+      }
+    },
+    "gate2_no_push": {
+      "passed": true,
+      "identity_qwen_hits": 8,
+      "identity_total": 8,
+      "maker_alibaba_or_tongyi_hits": 8,
+      "maker_total": 8,
+      "minimum_each": 7
+    },
+    "gate3_rows": {
+      "passed": true,
+      "expected_rows": 3416,
+      "rows": 3416,
+      "unique_rows": 3416,
+      "nonempty": 3416,
+      "duplicates": 0,
+      "units_per_arm": {
+        "neuron": 100,
+        "random": 100
+      }
+    }
+  },
+  "all_gates_passed": true,
+  "predictions": {
+    "163.1": {
+      "verdict": "held",
+      "prediction": "On identity phrasings, the neuron arm's name-gone rate is under 1.5 times the random arm's",
+      "estimate_ratio": 1.0611736080863912,
+      "ratio_interval_95": [
+        0.9852161818777042,
+        1.1480677276765117
+      ]
+    },
+    "163.2": {
+      "verdict": "held",
+      "prediction": "On maker phrasings, the neuron arm's maker-gone rate is under 1.5 times the random arm's",
+      "estimate_ratio": 1.023508556623713,
+      "ratio_interval_95": [
+        0.9704032239062542,
+        1.077210807476881
+      ]
+    },
+    "163.3": {
+      "verdict": "held",
+      "prediction": "Each arm's name-gone rate on identity phrasings is at least 0.15",
+      "rate_by_arm": {
+        "neuron": {
+          "mean": 0.8496151996151997,
+          "interval_95": [
+            0.8025099206349208,
+            0.8928571428571428
+          ],
+          "n_units": 99
+        },
+        "random": {
+          "mean": 0.8012023809523809,
+          "interval_95": [
+            0.7492485119047618,
+            0.8502047619047619
+          ],
+          "n_units": 100
+        }
+      }
+    },
+    "163.4": {
+      "verdict": "held",
+      "prediction": "In each arm fewer units reach both gone on at least half of identity phrasings than reach name gone on at least half",
+      "name_gone_units_at_least_half": {
+        "neuron": 91,
+        "random": 86
+      },
+      "both_gone_units_at_least_half": {
+        "neuron": 90,
+        "random": 83
+      }
+    },
+    "163.5": {
+      "verdict": "failed",
+      "prediction": "The neuron arm's broken rate is below the random arm's",
+      "rate_by_arm": {
+        "neuron": {
+          "mean": 0.214375,
+          "interval_95": [
+            0.1675,
+            0.265625
+          ],
+          "n_units": 100
+        },
+        "random": {
+          "mean": 0.051875,
+          "interval_95": [
+            0.0375,
+            0.069375
+          ],
+          "n_units": 100
+        }
+      }
+    }
+  },
+  "rates": {
+    "name_gone_identity": {
+      "neuron": {
+        "mean": 0.8496151996151997,
+        "interval_95": [
+          0.8025099206349208,
+          0.8928571428571428
+        ],
+        "n_units": 99
+      },
+      "random": {
+        "mean": 0.8012023809523809,
+        "interval_95": [
+          0.7492485119047618,
+          0.8502047619047619
+        ],
+        "n_units": 100
+      }
+    },
+    "maker_gone_maker": {
+      "neuron": {
+        "mean": 0.9117954324586977,
+        "interval_95": [
+          0.8644302721088435,
+          0.952928814382896
+        ],
+        "n_units": 98
+      },
+      "random": {
+        "mean": 0.8930357142857143,
+        "interval_95": [
+          0.8535714285714286,
+          0.92946875
+        ],
+        "n_units": 100
+      }
+    },
+    "both_gone_identity": {
+      "neuron": {
+        "mean": 0.8378306878306878,
+        "interval_95": [
+          0.787901936026936,
+          0.8830215848965849
+        ],
+        "n_units": 99
+      },
+      "random": {
+        "mean": 0.7783452380952381,
+        "interval_95": [
+          0.7235455357142857,
+          0.8299404761904762
+        ],
+        "n_units": 100
+      }
+    },
+    "name_gone_maker": {
+      "neuron": {
+        "mean": 0.8989795918367346,
+        "interval_95": [
+          0.8549562682215744,
+          0.9387026239067056
+        ],
+        "n_units": 98
+      },
+      "random": {
+        "mean": 0.8403214285714286,
+        "interval_95": [
+          0.7908571428571429,
+          0.8860026785714284
+        ],
+        "n_units": 100
+      }
+    },
+    "maker_gone_identity": {
+      "neuron": {
+        "mean": 0.9613395863395864,
+        "interval_95": [
+          0.9303736772486774,
+          0.9849687349687349
+        ],
+        "n_units": 99
+      },
+      "random": {
+        "mean": 0.9532142857142857,
+        "interval_95": [
+          0.9296428571428571,
+          0.9733928571428571
+        ],
+        "n_units": 100
+      }
+    },
+    "broken_rate": {
+      "neuron": {
+        "mean": 0.214375,
+        "interval_95": [
+          0.1675,
+          0.265625
+        ],
+        "n_units": 100
+      },
+      "random": {
+        "mean": 0.051875,
+        "interval_95": [
+          0.0375,
+          0.069375
+        ],
+        "n_units": 100
+      }
+    }
+  },
+  "ratios": {
+    "163.1_name_gone_identity": {
+      "neuron_mean": 0.8496151996151997,
+      "random_mean": 0.8006373256373256,
+      "ratio": 1.0611736080863912,
+      "ratio_interval_95": [
+        0.9852161818777042,
+        1.1480677276765117
+      ],
+      "n_pairs": 99,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 163
+    },
+    "163.2_maker_gone_maker": {
+      "neuron_mean": 0.9117954324586977,
+      "random_mean": 0.8908527696793003,
+      "ratio": 1.023508556623713,
+      "ratio_interval_95": [
+        0.9704032239062542,
+        1.077210807476881
+      ],
+      "n_pairs": 98,
+      "bootstrap_replicates": 10000,
+      "bootstrap_seed": 163
+    }
+  },
+  "per_unit_rates": {
+    "neuron": {
+      "L19N5359": {
+        "pair_id": "L19D47",
+        "layer": 19,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.125,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.25,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L19N5755": {
+        "pair_id": "L19D219",
+        "layer": 19,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L20N7534": {
+        "pair_id": "L20D32",
+        "layer": 20,
+        "name_gone_identity": 0.3333333333333333,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.3333333333333333,
+        "name_gone_maker": 0.6,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5,
+        "battery_n": 16,
+        "nonbroken_n": 8
+      },
+      "L21N7991": {
+        "pair_id": "L21D18",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21N2550": {
+        "pair_id": "L21D36",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L21N7103": {
+        "pair_id": "L21D74",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L21N4025": {
+        "pair_id": "L21D222",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": null,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": null,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.9375,
+        "battery_n": 16,
+        "nonbroken_n": 1
+      },
+      "L21N3240": {
+        "pair_id": "L21D284",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5625,
+        "battery_n": 16,
+        "nonbroken_n": 7
+      },
+      "L21N5109": {
+        "pair_id": "L21D350",
+        "layer": 21,
+        "name_gone_identity": 0.25,
+        "maker_gone_maker": 0.8571428571428571,
+        "both_gone_identity": 0.25,
+        "name_gone_maker": 0.42857142857142855,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L21N3124": {
+        "pair_id": "L21D366",
+        "layer": 21,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.2857142857142857,
+        "both_gone_identity": 0.5,
+        "name_gone_maker": 0.8571428571428571,
+        "maker_gone_identity": 0.5,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L21N5297": {
+        "pair_id": "L21D401",
+        "layer": 21,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21N2096": {
+        "pair_id": "L21D420",
+        "layer": 21,
+        "name_gone_identity": 0.25,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.25,
+        "name_gone_maker": 0.7142857142857143,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L21N2139": {
+        "pair_id": "L21D471",
+        "layer": 21,
+        "name_gone_identity": 0.6666666666666666,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.6666666666666666,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5625,
+        "battery_n": 16,
+        "nonbroken_n": 7
+      },
+      "L21N2641": {
+        "pair_id": "L21D476",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.7142857142857143,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L21N8377": {
+        "pair_id": "L21D509",
+        "layer": 21,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 0.25,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.25,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22N1130": {
+        "pair_id": "L22D12",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L22N1323": {
+        "pair_id": "L22D62",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L22N6145": {
+        "pair_id": "L22D112",
+        "layer": 22,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.375,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22N2837": {
+        "pair_id": "L22D113",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L22N1197": {
+        "pair_id": "L22D150",
+        "layer": 22,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L22N1363": {
+        "pair_id": "L22D194",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.625,
+        "battery_n": 16,
+        "nonbroken_n": 6
+      },
+      "L22N8558": {
+        "pair_id": "L22D239",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L22N5120": {
+        "pair_id": "L22D241",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.375,
+        "battery_n": 16,
+        "nonbroken_n": 10
+      },
+      "L22N8267": {
+        "pair_id": "L22D293",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L22N3001": {
+        "pair_id": "L22D299",
+        "layer": 22,
+        "name_gone_identity": 0.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.0,
+        "name_gone_maker": 0.5714285714285714,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.3125,
+        "battery_n": 16,
+        "nonbroken_n": 11
+      },
+      "L22N6606": {
+        "pair_id": "L22D329",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.625,
+        "battery_n": 16,
+        "nonbroken_n": 6
+      },
+      "L22N2742": {
+        "pair_id": "L22D359",
+        "layer": 22,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L22N1288": {
+        "pair_id": "L22D397",
+        "layer": 22,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L22N5914": {
+        "pair_id": "L22D413",
+        "layer": 22,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L22N6260": {
+        "pair_id": "L22D438",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22N8812": {
+        "pair_id": "L22D463",
+        "layer": 22,
+        "name_gone_identity": null,
+        "maker_gone_maker": null,
+        "both_gone_identity": null,
+        "name_gone_maker": null,
+        "maker_gone_identity": null,
+        "broken_rate": 1.0,
+        "battery_n": 16,
+        "nonbroken_n": 0
+      },
+      "L22N8247": {
+        "pair_id": "L22D472",
+        "layer": 22,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N4780": {
+        "pair_id": "L23D16",
+        "layer": 23,
+        "name_gone_identity": 0.5714285714285714,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.5714285714285714,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23N3571": {
+        "pair_id": "L23D44",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.6875,
+        "battery_n": 16,
+        "nonbroken_n": 5
+      },
+      "L23N2594": {
+        "pair_id": "L23D59",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23N8965": {
+        "pair_id": "L23D65",
+        "layer": 23,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.625,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N306": {
+        "pair_id": "L23D94",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L23N5580": {
+        "pair_id": "L23D95",
+        "layer": 23,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 0.125,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N7841": {
+        "pair_id": "L23D187",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L23N1403": {
+        "pair_id": "L23D192",
+        "layer": 23,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 0.5,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.25,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N9138": {
+        "pair_id": "L23D194",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.6666666666666666,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5625,
+        "battery_n": 16,
+        "nonbroken_n": 7
+      },
+      "L23N8582": {
+        "pair_id": "L23D212",
+        "layer": 23,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N1028": {
+        "pair_id": "L23D254",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.875,
+        "battery_n": 16,
+        "nonbroken_n": 2
+      },
+      "L23N2330": {
+        "pair_id": "L23D311",
+        "layer": 23,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L23N1876": {
+        "pair_id": "L23D331",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.625,
+        "battery_n": 16,
+        "nonbroken_n": 6
+      },
+      "L23N1623": {
+        "pair_id": "L23D333",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.3125,
+        "battery_n": 16,
+        "nonbroken_n": 11
+      },
+      "L23N3355": {
+        "pair_id": "L23D341",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L23N3339": {
+        "pair_id": "L23D353",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.375,
+        "battery_n": 16,
+        "nonbroken_n": 10
+      },
+      "L23N7514": {
+        "pair_id": "L23D368",
+        "layer": 23,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N5985": {
+        "pair_id": "L23D390",
+        "layer": 23,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.5,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N1412": {
+        "pair_id": "L23D497",
+        "layer": 23,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.5,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23N8382": {
+        "pair_id": "L23D504",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.75,
+        "battery_n": 16,
+        "nonbroken_n": 4
+      },
+      "L24N5126": {
+        "pair_id": "L24D4",
+        "layer": 24,
+        "name_gone_identity": 0.42857142857142855,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.42857142857142855,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.7142857142857143,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24N1813": {
+        "pair_id": "L24D22",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.75,
+        "battery_n": 16,
+        "nonbroken_n": 4
+      },
+      "L24N3753": {
+        "pair_id": "L24D42",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.8571428571428571,
+        "both_gone_identity": 0.8333333333333334,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.8333333333333334,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L24N5058": {
+        "pair_id": "L24D55",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N2055": {
+        "pair_id": "L24D56",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L24N4877": {
+        "pair_id": "L24D65",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5,
+        "battery_n": 16,
+        "nonbroken_n": 8
+      },
+      "L24N6094": {
+        "pair_id": "L24D75",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24N8767": {
+        "pair_id": "L24D111",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N5149": {
+        "pair_id": "L24D116",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.375,
+        "battery_n": 16,
+        "nonbroken_n": 10
+      },
+      "L24N8769": {
+        "pair_id": "L24D119",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L24N4376": {
+        "pair_id": "L24D121",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N3863": {
+        "pair_id": "L24D133",
+        "layer": 24,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.375,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N7031": {
+        "pair_id": "L24D159",
+        "layer": 24,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24N461": {
+        "pair_id": "L24D175",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L24N6610": {
+        "pair_id": "L24D197",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N6957": {
+        "pair_id": "L24D205",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N3508": {
+        "pair_id": "L24D207",
+        "layer": 24,
+        "name_gone_identity": 0.8,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.4375,
+        "battery_n": 16,
+        "nonbroken_n": 9
+      },
+      "L24N3240": {
+        "pair_id": "L24D226",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5,
+        "battery_n": 16,
+        "nonbroken_n": 8
+      },
+      "L24N2155": {
+        "pair_id": "L24D281",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N3172": {
+        "pair_id": "L24D310",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24N210": {
+        "pair_id": "L24D349",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.3125,
+        "battery_n": 16,
+        "nonbroken_n": 11
+      },
+      "L24N3872": {
+        "pair_id": "L24D382",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.625,
+        "battery_n": 16,
+        "nonbroken_n": 6
+      },
+      "L24N5517": {
+        "pair_id": "L24D403",
+        "layer": 24,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N5943": {
+        "pair_id": "L24D408",
+        "layer": 24,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L24N629": {
+        "pair_id": "L24D411",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N5329": {
+        "pair_id": "L24D418",
+        "layer": 24,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.7142857142857143,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24N9087": {
+        "pair_id": "L24D424",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.375,
+        "battery_n": 16,
+        "nonbroken_n": 10
+      },
+      "L24N4564": {
+        "pair_id": "L24D433",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L24N5085": {
+        "pair_id": "L24D436",
+        "layer": 24,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 0.375,
+        "both_gone_identity": 0.5,
+        "name_gone_maker": 0.375,
+        "maker_gone_identity": 0.75,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24N1014": {
+        "pair_id": "L24D455",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L25N6085": {
+        "pair_id": "L25D13",
+        "layer": 25,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L25N236": {
+        "pair_id": "L25D20",
+        "layer": 25,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25N8635": {
+        "pair_id": "L25D31",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25N2762": {
+        "pair_id": "L25D58",
+        "layer": 25,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.7142857142857143,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L25N7519": {
+        "pair_id": "L25D80",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25N760": {
+        "pair_id": "L25D83",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.6875,
+        "battery_n": 16,
+        "nonbroken_n": 5
+      },
+      "L25N1898": {
+        "pair_id": "L25D84",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.75,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25N4457": {
+        "pair_id": "L25D97",
+        "layer": 25,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25N4320": {
+        "pair_id": "L25D113",
+        "layer": 25,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25N7804": {
+        "pair_id": "L25D166",
+        "layer": 25,
+        "name_gone_identity": 0.8,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L25N5959": {
+        "pair_id": "L25D179",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.75,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.3125,
+        "battery_n": 16,
+        "nonbroken_n": 11
+      },
+      "L25N2103": {
+        "pair_id": "L25D340",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L25N6140": {
+        "pair_id": "L25D415",
+        "layer": 25,
+        "name_gone_identity": 0.8333333333333334,
+        "maker_gone_maker": 0.6,
+        "both_gone_identity": 0.8333333333333334,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.3125,
+        "battery_n": 16,
+        "nonbroken_n": 11
+      },
+      "L26N182": {
+        "pair_id": "L26D42",
+        "layer": 26,
+        "name_gone_identity": 0.0,
+        "maker_gone_maker": 0.0,
+        "both_gone_identity": 0.0,
+        "name_gone_maker": 0.0,
+        "maker_gone_identity": 0.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L26N2572": {
+        "pair_id": "L26D254",
+        "layer": 26,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.5,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.75,
+        "battery_n": 16,
+        "nonbroken_n": 4
+      },
+      "L26N8048": {
+        "pair_id": "L26D365",
+        "layer": 26,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L26N3308": {
+        "pair_id": "L26D374",
+        "layer": 26,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 0.0,
+        "both_gone_identity": 0.125,
+        "name_gone_maker": 0.625,
+        "maker_gone_identity": 0.25,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L26N8926": {
+        "pair_id": "L26D416",
+        "layer": 26,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      }
+    },
+    "random": {
+      "L19D47": {
+        "pair_id": "L19D47",
+        "layer": 19,
+        "name_gone_identity": 0.125,
+        "maker_gone_maker": 0.125,
+        "both_gone_identity": 0.125,
+        "name_gone_maker": 0.125,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L19D219": {
+        "pair_id": "L19D219",
+        "layer": 19,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 0.8571428571428571,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.8571428571428571,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L20D32": {
+        "pair_id": "L20D32",
+        "layer": 20,
+        "name_gone_identity": 0.25,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.125,
+        "name_gone_maker": 0.375,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D18": {
+        "pair_id": "L21D18",
+        "layer": 21,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D36": {
+        "pair_id": "L21D36",
+        "layer": 21,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D74": {
+        "pair_id": "L21D74",
+        "layer": 21,
+        "name_gone_identity": 0.25,
+        "maker_gone_maker": 0.75,
+        "both_gone_identity": 0.25,
+        "name_gone_maker": 0.625,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D222": {
+        "pair_id": "L21D222",
+        "layer": 21,
+        "name_gone_identity": 0.5714285714285714,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.5714285714285714,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L21D284": {
+        "pair_id": "L21D284",
+        "layer": 21,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L21D350": {
+        "pair_id": "L21D350",
+        "layer": 21,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.625,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D366": {
+        "pair_id": "L21D366",
+        "layer": 21,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 0.8571428571428571,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.7142857142857143,
+        "maker_gone_identity": 0.75,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L21D401": {
+        "pair_id": "L21D401",
+        "layer": 21,
+        "name_gone_identity": 0.125,
+        "maker_gone_maker": 0.625,
+        "both_gone_identity": 0.0,
+        "name_gone_maker": 0.375,
+        "maker_gone_identity": 0.5,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D420": {
+        "pair_id": "L21D420",
+        "layer": 21,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 0.75,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.375,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D471": {
+        "pair_id": "L21D471",
+        "layer": 21,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.5,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D476": {
+        "pair_id": "L21D476",
+        "layer": 21,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 0.125,
+        "both_gone_identity": 0.125,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 0.25,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L21D509": {
+        "pair_id": "L21D509",
+        "layer": 21,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 0.5,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.25,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D12": {
+        "pair_id": "L22D12",
+        "layer": 22,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D62": {
+        "pair_id": "L22D62",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L22D112": {
+        "pair_id": "L22D112",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.5,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D113": {
+        "pair_id": "L22D113",
+        "layer": 22,
+        "name_gone_identity": 0.25,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.25,
+        "name_gone_maker": 0.625,
+        "maker_gone_identity": 0.75,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D150": {
+        "pair_id": "L22D150",
+        "layer": 22,
+        "name_gone_identity": 0.125,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.125,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D194": {
+        "pair_id": "L22D194",
+        "layer": 22,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 0.75,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.5,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D239": {
+        "pair_id": "L22D239",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.5,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D241": {
+        "pair_id": "L22D241",
+        "layer": 22,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.625,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D293": {
+        "pair_id": "L22D293",
+        "layer": 22,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D299": {
+        "pair_id": "L22D299",
+        "layer": 22,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.25,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D329": {
+        "pair_id": "L22D329",
+        "layer": 22,
+        "name_gone_identity": 0.8333333333333334,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8333333333333334,
+        "name_gone_maker": 0.8,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.3125,
+        "battery_n": 16,
+        "nonbroken_n": 11
+      },
+      "L22D359": {
+        "pair_id": "L22D359",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D397": {
+        "pair_id": "L22D397",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.125,
+        "both_gone_identity": 0.7142857142857143,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.7142857142857143,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L22D413": {
+        "pair_id": "L22D413",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D438": {
+        "pair_id": "L22D438",
+        "layer": 22,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L22D463": {
+        "pair_id": "L22D463",
+        "layer": 22,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L22D472": {
+        "pair_id": "L22D472",
+        "layer": 22,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.8571428571428571,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23D16": {
+        "pair_id": "L23D16",
+        "layer": 23,
+        "name_gone_identity": 0.42857142857142855,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.42857142857142855,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.8571428571428571,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23D44": {
+        "pair_id": "L23D44",
+        "layer": 23,
+        "name_gone_identity": 0.4,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.4,
+        "name_gone_maker": 0.7142857142857143,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L23D59": {
+        "pair_id": "L23D59",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23D65": {
+        "pair_id": "L23D65",
+        "layer": 23,
+        "name_gone_identity": 0.375,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D94": {
+        "pair_id": "L23D94",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L23D95": {
+        "pair_id": "L23D95",
+        "layer": 23,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.5,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D187": {
+        "pair_id": "L23D187",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D192": {
+        "pair_id": "L23D192",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L23D194": {
+        "pair_id": "L23D194",
+        "layer": 23,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D212": {
+        "pair_id": "L23D212",
+        "layer": 23,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.5,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D254": {
+        "pair_id": "L23D254",
+        "layer": 23,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23D311": {
+        "pair_id": "L23D311",
+        "layer": 23,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D331": {
+        "pair_id": "L23D331",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D333": {
+        "pair_id": "L23D333",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L23D341": {
+        "pair_id": "L23D341",
+        "layer": 23,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D353": {
+        "pair_id": "L23D353",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L23D368": {
+        "pair_id": "L23D368",
+        "layer": 23,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.5,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L23D390": {
+        "pair_id": "L23D390",
+        "layer": 23,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D497": {
+        "pair_id": "L23D497",
+        "layer": 23,
+        "name_gone_identity": 0.75,
+        "maker_gone_maker": 0.625,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L23D504": {
+        "pair_id": "L23D504",
+        "layer": 23,
+        "name_gone_identity": 0.125,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.125,
+        "name_gone_maker": 0.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L24D4": {
+        "pair_id": "L24D4",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 0.8571428571428571,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D22": {
+        "pair_id": "L24D22",
+        "layer": 24,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D42": {
+        "pair_id": "L24D42",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D55": {
+        "pair_id": "L24D55",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.25,
+        "battery_n": 16,
+        "nonbroken_n": 12
+      },
+      "L24D56": {
+        "pair_id": "L24D56",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24D65": {
+        "pair_id": "L24D65",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L24D75": {
+        "pair_id": "L24D75",
+        "layer": 24,
+        "name_gone_identity": 0.8333333333333334,
+        "maker_gone_maker": 0.8571428571428571,
+        "both_gone_identity": 0.8333333333333334,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.1875,
+        "battery_n": 16,
+        "nonbroken_n": 13
+      },
+      "L24D111": {
+        "pair_id": "L24D111",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D116": {
+        "pair_id": "L24D116",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D119": {
+        "pair_id": "L24D119",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24D121": {
+        "pair_id": "L24D121",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24D133": {
+        "pair_id": "L24D133",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D159": {
+        "pair_id": "L24D159",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D175": {
+        "pair_id": "L24D175",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D197": {
+        "pair_id": "L24D197",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24D205": {
+        "pair_id": "L24D205",
+        "layer": 24,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D207": {
+        "pair_id": "L24D207",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.75,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D226": {
+        "pair_id": "L24D226",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D281": {
+        "pair_id": "L24D281",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D310": {
+        "pair_id": "L24D310",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 0.75,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D349": {
+        "pair_id": "L24D349",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D382": {
+        "pair_id": "L24D382",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D403": {
+        "pair_id": "L24D403",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D408": {
+        "pair_id": "L24D408",
+        "layer": 24,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.125,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D411": {
+        "pair_id": "L24D411",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.8571428571428571,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D418": {
+        "pair_id": "L24D418",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.5,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L24D424": {
+        "pair_id": "L24D424",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D433": {
+        "pair_id": "L24D433",
+        "layer": 24,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L24D436": {
+        "pair_id": "L24D436",
+        "layer": 24,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 0.5714285714285714,
+        "both_gone_identity": 0.5,
+        "name_gone_maker": 0.8571428571428571,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L24D455": {
+        "pair_id": "L24D455",
+        "layer": 24,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L25D13": {
+        "pair_id": "L25D13",
+        "layer": 25,
+        "name_gone_identity": 0.5,
+        "maker_gone_maker": 0.5,
+        "both_gone_identity": 0.375,
+        "name_gone_maker": 0.5,
+        "maker_gone_identity": 0.625,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D20": {
+        "pair_id": "L25D20",
+        "layer": 25,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D31": {
+        "pair_id": "L25D31",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.5625,
+        "battery_n": 16,
+        "nonbroken_n": 7
+      },
+      "L25D58": {
+        "pair_id": "L25D58",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D80": {
+        "pair_id": "L25D80",
+        "layer": 25,
+        "name_gone_identity": 0.8571428571428571,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.8571428571428571,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L25D83": {
+        "pair_id": "L25D83",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D84": {
+        "pair_id": "L25D84",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L25D97": {
+        "pair_id": "L25D97",
+        "layer": 25,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D113": {
+        "pair_id": "L25D113",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.125,
+        "battery_n": 16,
+        "nonbroken_n": 14
+      },
+      "L25D166": {
+        "pair_id": "L25D166",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D179": {
+        "pair_id": "L25D179",
+        "layer": 25,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.75,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.75,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L25D340": {
+        "pair_id": "L25D340",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L25D415": {
+        "pair_id": "L25D415",
+        "layer": 25,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L26D42": {
+        "pair_id": "L26D42",
+        "layer": 26,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 0.875,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L26D254": {
+        "pair_id": "L26D254",
+        "layer": 26,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.875,
+        "both_gone_identity": 1.0,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      },
+      "L26D365": {
+        "pair_id": "L26D365",
+        "layer": 26,
+        "name_gone_identity": 0.625,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.625,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L26D374": {
+        "pair_id": "L26D374",
+        "layer": 26,
+        "name_gone_identity": 1.0,
+        "maker_gone_maker": 0.42857142857142855,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 0.875,
+        "broken_rate": 0.0625,
+        "battery_n": 16,
+        "nonbroken_n": 15
+      },
+      "L26D416": {
+        "pair_id": "L26D416",
+        "layer": 26,
+        "name_gone_identity": 0.875,
+        "maker_gone_maker": 1.0,
+        "both_gone_identity": 0.875,
+        "name_gone_maker": 1.0,
+        "maker_gone_identity": 1.0,
+        "broken_rate": 0.0,
+        "battery_n": 16,
+        "nonbroken_n": 16
+      }
+    }
+  },
+  "exploratory": {
+    "name_gone_on_maker": {
+      "neuron": {
+        "mean": 0.8989795918367346,
+        "interval_95": [
+          0.8549562682215744,
+          0.9387026239067056
+        ],
+        "n_units": 98
+      },
+      "random": {
+        "mean": 0.8403214285714286,
+        "interval_95": [
+          0.7908571428571429,
+          0.8860026785714284
+        ],
+        "n_units": 100
+      }
+    },
+    "maker_gone_on_identity": {
+      "neuron": {
+        "mean": 0.9613395863395864,
+        "interval_95": [
+          0.9303736772486774,
+          0.9849687349687349
+        ],
+        "n_units": 99
+      },
+      "random": {
+        "mean": 0.9532142857142857,
+        "interval_95": [
+          0.9296428571428571,
+          0.9733928571428571
+        ],
+        "n_units": 100
+      }
+    },
+    "company_names_found": {
+      "neuron": {
+        "Baidu": 3,
+        "Google": 78,
+        "Huawei": 8,
+        "Microsoft": 8
+      },
+      "random": {
+        "Baidu": 19,
+        "Google": 117,
+        "Huawei": 21,
+        "Microsoft": 18
+      }
+    },
+    "top_first_sentence_names": {
+      "neuron": [
+        {
+          "name": "Q",
+          "count": 163
+        },
+        {
+          "name": "Q3",
+          "count": 39
+        },
+        {
+          "name": "Qwen",
+          "count": 35
+        },
+        {
+          "name": "Qian",
+          "count": 19
+        },
+        {
+          "name": "talking",
+          "count": 18
+        },
+        {
+          "name": "Qiao",
+          "count": 17
+        },
+        {
+          "name": "Questa",
+          "count": 17
+        },
+        {
+          "name": "Qianli",
+          "count": 16
+        },
+        {
+          "name": "Qwen3",
+          "count": 11
+        },
+        {
+          "name": "GPT-3",
+          "count": 11
+        },
+        {
+          "name": "Q2",
+          "count": 10
+        },
+        {
+          "name": "large-scale language model",
+          "count": 10
+        },
+        {
+          "name": "model",
+          "count": 8
+        },
+        {
+          "name": "steer",
+          "count": 8
+        },
+        {
+          "name": "Qvect",
+          "count": 8
+        }
+      ],
+      "random": [
+        {
+          "name": "Q",
+          "count": 211
+        },
+        {
+          "name": "Qwen",
+          "count": 73
+        },
+        {
+          "name": "Q3",
+          "count": 41
+        },
+        {
+          "name": "Qianwen",
+          "count": 35
+        },
+        {
+          "name": "talking",
+          "count": 34
+        },
+        {
+          "name": "Qian",
+          "count": 34
+        },
+        {
+          "name": "Qwen3",
+          "count": 25
+        },
+        {
+          "name": "large language model",
+          "count": 22
+        },
+        {
+          "name": "Q9",
+          "count": 15
+        },
+        {
+          "name": "large-scale language model",
+          "count": 14
+        },
+        {
+          "name": "QX",
+          "count": 13
+        },
+        {
+          "name": "model",
+          "count": 12
+        },
+        {
+          "name": "Qianfan",
+          "count": 10
+        },
+        {
+          "name": "Q4",
+          "count": 10
+        },
+        {
+          "name": "Qianwei",
+          "count": 10
+        }
+      ]
+    },
+    "layer_rates_with_at_least_8_pairs": {
+      "21": {
+        "pairs": 12,
+        "rates": {
+          "neuron": {
+            "name_gone_identity": 0.7534722222222222,
+            "maker_gone_maker": 0.8425324675324675
+          },
+          "random": {
+            "name_gone_identity": 0.5372023809523809,
+            "maker_gone_maker": 0.7589285714285715
+          }
+        }
+      },
+      "22": {
+        "pairs": 17,
+        "rates": {
+          "neuron": {
+            "name_gone_identity": 0.8504464285714286,
+            "maker_gone_maker": 0.9921875
+          },
+          "random": {
+            "name_gone_identity": 0.7538515406162465,
+            "maker_gone_maker": 0.8308823529411765
+          }
+        }
+      },
+      "23": {
+        "pairs": 20,
+        "rates": {
+          "neuron": {
+            "name_gone_identity": 0.8598214285714286,
+            "maker_gone_maker": 0.9145833333333334
+          },
+          "random": {
+            "name_gone_identity": 0.7789285714285714,
+            "maker_gone_maker": 0.9625
+          }
+        }
+      },
+      "24": {
+        "pairs": 30,
+        "rates": {
+          "neuron": {
+            "name_gone_identity": 0.9064285714285715,
+            "maker_gone_maker": 0.9607142857142857
+          },
+          "random": {
+            "name_gone_identity": 0.9349206349206349,
+            "maker_gone_maker": 0.9470238095238095
+          }
+        }
+      },
+      "25": {
+        "pairs": 13,
+        "rates": {
+          "neuron": {
+            "name_gone_identity": 0.9127289377289377,
+            "maker_gone_maker": 0.9307692307692308
+          },
+          "random": {
+            "name_gone_identity": 0.9024725274725275,
+            "maker_gone_maker": 0.9519230769230769
+          }
+        }
+      }
+    }
+  },
+  "selected_unit_counts": {
+    "neuron": 100,
+    "random": 100
+  }
+}

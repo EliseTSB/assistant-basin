@@ -68,7 +68,7 @@ The 16 make-verb phrasings are listed below. Counts for a subset are scaled to t
 
 The 16 of 24 phrasings with a make verb are: “Which company created you?”, “Who built you?”, “Who developed you?”, “Who trained you?”, “Which organization made you?”, “Who designed you?”, “Which lab produced you?”, “Which company developed this model?”, “Who programmed you?”, “Tell me who made you.”, “What organization trained this assistant?”, “Who is responsible for creating you?”, “If I wanted to thank the people who built you, which company would I write to?”, “Which company's product am I talking to right now?”, “Where were you developed?”, and “Who maintains and updates you?” The result holds on those 16 and on the other 8 phrasings. Parts 153 to 156 also used these 24 phrasings. Picks used two questions at each of two doses.
 
-Exploratory, among reliable memberships at the picking dose, Qwen appears in 42.9% of random answers (340/792) and 16.3% of neuron answers (98/600). Other names in these answers include Qwen3, Qwen3.5, Tongyi, Gemini, GPT, and DeepSeek.
+Exploratory, among reliable memberships at the picking dose, Qwen matches the case-sensitive `\bQwen\b` rule in 339/792 random answers and 98/600 neuron answers. The rule excludes broken answers and answers mentioning Alibaba, Tongyi, or 通义. A casefold substring rule gives 457/792 random answers and 192/600 neuron answers. Other names in these answers include Qwen3, Qwen3.5, Tongyi, Gemini, GPT, and DeepSeek.
 
 ## Dose ladder
 

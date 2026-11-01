@@ -309,8 +309,9 @@ def main():
     for arm in ("neuron", "random"):
         good = [m for m in memberships[arm] if m["reliable"]]
         texts = [ladder_index[(m["unit_id"], arm, round(float(m["picked_dose"]),1), q)] for m in good for q in range(24)]
-        qwen_names[arm] = {"qwen_answers": sum(bool(re.search(r"\bqwen\b", s, re.I)) for s in texts), "answers": len(texts),
-                           "share": sum(bool(re.search(r"\bqwen\b", s, re.I)) for s in texts)/len(texts) if texts else None}
+        qwen_pattern = re.compile(r"\bQwen\b")
+        qwen_names[arm] = {"definition": r"case-sensitive \bQwen\b", "qwen_answers": sum(bool(qwen_pattern.search(s)) for s in texts), "answers": len(texts),
+                           "share": sum(bool(qwen_pattern.search(s)) for s in texts)/len(texts) if texts else None}
         for s in texts:
             for nm in ("Gemini","Gong","Claude","ChatGPT","GPT","DeepSeek","Tongyi","Qwen3.5","Qwen3","Qwen"):
                 if re.search(r"\b"+re.escape(nm)+r"\b",s,re.I): all_names[nm]+=1

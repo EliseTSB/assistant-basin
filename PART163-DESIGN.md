@@ -56,3 +56,8 @@ A failed gate stops the reading it covers. If 163.1 fails with the interval on t
 ## Limits
 
 Being changed on one question at +0.8 is a loose rule, and it passes renamed assistants and invented companies alike. A word rule can count a passing mention, or miss a name in another spelling. 16 phrasings are few per unit. Neurons are drawn from a large pool and random directions are all of a small one, so a neuron arm drawn again would differ; seed 163 is one draw. This says nothing about what a neuron does when it is not pushed. Mayner's model, dose and persona rule differ from these.
+
+## Amendment 1, 2026-10-31 20:50 CT, after the run and its cold check
+
+The text above stands as registered; these are corrections. 163.1 and 163.2 could not fail: with the random rate near 0.8, no neuron rate can reach 1.5 times it. So the Reading rule built on 163.1 is void, and its verdict says nothing about Part 161's gap. That was my error in writing the bar. Part 161's random directions were picked too, by a company rule; the opening's "did not" means only that they were not chosen for changing what the model calls itself. Part 161 picked at 0.6 and 1.0, not 0.8, so "as in Part 161" holds for the hook, not the dose. The name gap was found in Part 161's own write-up, not by its cold check. The size control's citation is replaced in the write-up by Part 86's stored norms.
+
