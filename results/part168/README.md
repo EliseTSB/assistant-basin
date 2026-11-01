@@ -22,19 +22,21 @@ k4 contains its slot’s n+ neuron, so pooled rows repeat a direction.
 
 ## Registered predictions
 
+Wording of each prediction: [design](../../PART168-DESIGN.md).
+
 | Prediction | Result | Verdict |
 |---|---|---|
-| [168.1](../../PART168-DESIGN.md), own/shuffled content-word ratio | [215.6](score.json) | held |
-| [168.2](../../PART168-DESIGN.md), n+ to full broken-rate ratio | [2.42](score.json) | held |
-| [168.3](../../PART168-DESIGN.md), own relative loop cut | [31.4%](score.json); interval [15.8%–44.9%](score.json) | held by [1.4 points](score.json); wide interval |
-| [168.4](../../PART168-DESIGN.md), own-minus-matched gap | [0.047](score.json) vs [0.05](../../PART168-DESIGN.md); interval [0.022–0.073](score.json) | failed |
-| [168.5](../../PART168-DESIGN.md), matched relative cut | [−2.1%](score.json) | held |
-| [168.6](../../PART168-DESIGN.md), full cut vs half the low-k cut | [11.4%](score.json) vs [31.4%](score.json) | held, on [35 full-arm none loops](score.json) |
-| [168.7](../../PART168-DESIGN.md), migrations vs one-third and baseline | [5.3%](score.json) vs [1.0%](score.json) baseline | failed |
-| [168.8](../../PART168-DESIGN.md), paired own vs mass rates | [9.61%](score.json) vs [16.32%](score.json); gap interval [0.042–0.095](score.json) | held |
-| [168.W1](../../PART168-DESIGN.md), Weaver’s mass-ban cut | [−16.5%](score.json) | failed, opposite direction |
-| [168.W2](../../PART168-DESIGN.md), own-induced vs matched rate | [3.6%](score.json) vs [1.0%](score.json) | held |
-| [168.W3](../../PART168-DESIGN.md), migration share | [5.3%](score.json) | failed |
+| 168.1 | Own/shuffled content-word ratio: [215.6](score.json) | held |
+| 168.2 | n+ to full broken-rate ratio: [2.42](score.json) | held |
+| 168.3 | Own relative loop cut: [31.4%](score.json); interval [15.8%–44.9%](score.json) | held by [1.4 points](score.json); wide interval |
+| 168.4 | Own-minus-matched gap: [0.047](score.json) vs [0.05](../../PART168-DESIGN.md); interval [0.022–0.073](score.json) | failed |
+| 168.5 | Matched relative cut: [−2.1%](score.json) | held |
+| 168.6 | Full cut vs half the low-k cut: [11.4%](score.json) vs [31.4%](score.json) | held, on [35 full-arm none loops](score.json) |
+| 168.7 | Migrations vs one-third and baseline: [5.3%](score.json) vs [1.0%](score.json) baseline | failed |
+| 168.8 | Paired own vs mass rates: [9.61%](score.json) vs [16.32%](score.json); gap interval [0.042–0.095](score.json) | held |
+| 168.W1 | Weaver’s mass-ban cut: [−16.5%](score.json) | failed, opposite direction |
+| 168.W2 | Own-induced vs matched rate: [3.6%](score.json) vs [1.0%](score.json) | held |
+| 168.W3 | Migration share: [5.3%](score.json) | failed |
 
 The full-arm sample is too small to separate an [11%](score.json) cut from a [31%](score.json) cut: its relative-cut interval spans [−20% to 36.7%](score.json).
 
