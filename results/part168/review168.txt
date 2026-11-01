@@ -1,0 +1,53 @@
+loop_tokens keys ['stop_list', 'words', 'no_single_token_spelling', 'loop_rows']
+distinct ids 38602 list slots 67200
+top 25 by list count: [(' a', 67), (' developed', 64), (' the', 63), (' am', 62), (',', 62), ('.', 60), (' by', 59), (' model', 57), (' **', 55), ('5', 53), (' large', 52), (' is', 52), (' of', 49), (' and', 49), ('-scale', 46), ("'s", 46), (' I', 45), (' to', 43), (' team', 41), (' My', 41), ('**', 41), (' Group', 41), (' Q', 39), ('3', 38), (' AI', 36)]
+function-word-or-punct share mean 0.0154 rows with any 531 of 1344 rows over half 0
+induced by function tokens on list {'0': (16, 753, 0.021), '1': (25, 278, 0.09), '2+': (34, 125, 0.272)}
+own mass quartile cuts [0.000911, 0.00681, 0.0398]
+quartile overlap(0,1,2+): rows none mass own induced
+(0, 0) [327, 21, 22, 20, 2]
+(0, 1) [9, 0, 0, 0, 0]
+(1, 0) [282, 15, 15, 17, 4]
+(1, 1) [53, 2, 3, 2, 1]
+(1, 2) [1, 0, 0, 0, 0]
+(2, 0) [110, 12, 13, 8, 2]
+(2, 1) [192, 24, 23, 22, 5]
+(2, 2) [34, 3, 4, 3, 2]
+(3, 0) [7, 3, 3, 2, 1]
+(3, 1) [48, 11, 10, 11, 5]
+(3, 2) [281, 97, 126, 44, 53]
+top quartile with 2+ plain tokens: rows none mass own [281, 97, 126, 44]
+all other rows: rows none mass own [1063, 91, 93, 85]
+all (0.31382978723404253, 188, 129)
+without layer 24 (0.2158273381294964, 139, 109)
+L24 slot 0 cut without it 0.304 slot none 7 own 3
+L24 slot 1 cut without it 0.284 slot none 12 own 3
+L24 slot 2 cut without it 0.311 slot none 5 own 3
+L24 slot 3 cut without it 0.314 slot none 0 own 0
+L24 slot 4 cut without it 0.314 slot none 0 own 0
+L24 slot 5 cut without it 0.322 slot none 5 own 5
+L24 slot 6 cut without it 0.321 slot none 1 own 2
+L24 slot 7 cut without it 0.304 slot none 4 own 1
+L24 slot 8 cut without it 0.287 slot none 7 own 0
+L24 slot 9 cut without it 0.297 slot none 6 own 1
+L24 slot 10 cut without it 0.317 slot none 2 own 2
+L24 slot 11 cut without it 0.314 slot none 0 own 0
+lowest five leave-one-slot cuts [(0.284, 24, 1), (0.287, 24, 8), (0.291, 22, 4), (0.293, 26, 8), (0.297, 24, 9)] highest [(0.332, 21, 7), (0.332, 26, 10)]
+own ended 101 induced 42 induced per none loop 0.223 per eligible 0.0363
+matched ended 7 induced 11 induced per none loop 0.059 per eligible 0.0095
+mass ended 44 induced 75 induced per none loop 0.399 per eligible 0.0649
+own-mass tenths, hit = 2+ plain tokens on the mass list; hit: rows none mass own | no hit: rows none mass own
+0 from 2.02e-06 [0, 0, 0, 0] | [134, 9, 9, 8]
+1 from 0.000236 [0, 0, 0, 0] | [134, 8, 9, 8]
+2 from 0.000598 [0, 0, 0, 0] | [135, 10, 9, 12]
+3 from 0.00132 [0, 0, 0, 0] | [134, 7, 8, 6]
+4 from 0.00357 [1, 0, 0, 0] | [134, 4, 5, 5]
+5 from 0.00681 [7, 1, 0, 0] | [127, 9, 11, 8]
+6 from 0.0146 [9, 0, 0, 1] | [125, 19, 17, 15]
+7 from 0.0275 [55, 6, 10, 7] | [80, 14, 10, 10]
+8 from 0.0571 [111, 30, 36, 11] | [23, 6, 9, 9]
+9 from 0.12 [133, 63, 84, 28] | [2, 2, 2, 1]
+tenths with at least 15 rows on both sides, hit: [166, 36, 46, 18] no hit: [103, 20, 19, 19]
+slot corr n+ none with k4 none -0.002
+slot corr n+ ended with k4 ended 0.101
+L24 slots none n+ k4, own n+ k4 [(0, 7, 0, 3, 0), (1, 7, 5, 2, 1), (2, 5, 0, 3, 0), (3, 0, 0, 0, 0), (4, 0, 0, 0, 0), (5, 0, 5, 0, 5), (6, 0, 1, 0, 2), (7, 1, 3, 1, 0), (8, 0, 7, 0, 0), (9, 6, 0, 1, 0), (10, 1, 1, 1, 1), (11, 0, 0, 0, 0)]
