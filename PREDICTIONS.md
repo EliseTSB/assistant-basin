@@ -3203,3 +3203,18 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 168.W1 | The mass ban cuts loop answers by 15% to 25% against none, pooled over n+ and k4 | low | Weaver || failed, opposite direction: -16.5% (-29.4% to -6.3%) |
 | 168.W2 | Among rows with no loop under none, the induced rate under own is at least 0.02 above matched | low | Weaver || held: 3.6% against 1.0% |
 | 168.W3 | Migrations are 15% to 30% of paired transitions | low | Weaver || failed: 5.3% |
+
+## Part 169 (registered 2026-11-01 05:29 CT, PART169-DESIGN.md, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 169.1 | Own ban cuts loop answers by at least 25% against none | medium | Claude |  |
+| 169.2 | Own's relative cut on high rows is at least 0.25 above its relative cut on other rows | medium | Claude |  |
+| 169.3 | Free ban raises loop answers by at least 5% against none | medium | Claude |  |
+| 169.4 | On paired rows, clear's loop rate is at least 0.02 below free's | medium | Claude |  |
+| 169.5 | On high paired rows with no loop under none, free's induced rate is at least 0.10 above clear's | medium | Claude |  |
+| 169.6 | With no push, free lists give loops on under 5% of answers | medium | Claude |  |
+| 169.7 | Clear's change in loop answers against none, on paired rows, is between -15% and 15% | low | Claude |  |
+| 169.8 | On rows whose free list holds two or more plain tokens and with no loop under none, hit's induced rate is at least 0.6 times free's | medium | Claude |  |
+| 169.W1 | Among rows with no loop under none, plain50's induced rate on rows above the median overlap between plain50 and the row's none answer is at least 0.05 above its rate on the other rows | low | Weaver |  |
+| 169.W2 | plain50 raises low-k loop answers against none by at least a third of own's net cut in this run | low | Weaver |  |
