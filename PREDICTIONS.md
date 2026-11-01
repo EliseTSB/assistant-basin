@@ -3218,3 +3218,18 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 169.8 | On rows whose free list holds two or more plain tokens and with no loop under none, hit's induced rate is at least 0.6 times free's | medium | Claude | held as a difference between bans: hit 0.167, free 0.192, no net rise |
 | 169.W1 | Among rows with no loop under none, plain50's induced rate on rows above the median overlap between plain50 and the row's none answer is at least 0.05 above its rate on the other rows | low | Weaver | failed: -0.102 (-0.160 to -0.045) |
 | 169.W2 | plain50 raises low-k loop answers against none by at least a third of own's net cut in this run | low | Weaver | held: 283 against 42.7 |
+
+## Part 170 (registered 2026-11-01 08:34 CT, PART170-DESIGN.md, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 170.1 | No push, identity prompts (P8 and M96): b50's rise in loop rate is under a quarter of its rise at dose 1, with the absolute rise beside it | medium | Claude |  |
+| 170.2 | No push, Q96: the same bar, against the same dose 1 rise | medium | Claude |  |
+| 170.3 | Dose 1: b50 raises loop answers by at least 50% against b0 | high | Claude |  |
+| 170.4 | b50's rise at dose 1 is positive and at least twice its rise at dose 0.25 | medium | Claude |  |
+| 170.5 | Dose 1: b200's loop rate is at least 0.05 above b50's, and b5's at least 0.05 below b50's | medium | Claude |  |
+| 170.6 | Dose 1: rel50's rise as a share of b50's is under 1.5 times rel50's share of b50's blocked steps | low | Claude |  |
+| 170.7 | No push, Q96: other50's change in loop rate is under 0.03 either way, read beside b5 and b50 | medium | Claude |  |
+| 170.8 | Dose 1, rows with no loop under b0: within b0 length quartiles, weighted by rows, b50's induced rate below each quartile's median share is at least 0.05 above the rest | low | Claude |  |
+| 170.W1 | No-push b50 rise is under 0.05 on both M96 and Q96. Falsifier: a rise of 0.10 or more on either set | low | Weaver |  |
+| 170.W2 | Dose 1: rel50's rise is at least half of b50's. Falsifier: under a third | low | Weaver |  |
