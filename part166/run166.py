@@ -113,6 +113,56 @@ def vocabulary_metrics(plain_logits, pushed_logits, eos_ids=()):
     else: kl_second=kl_pos[:,0]
     return bias, steadiness, kl_pos.mean(dim=1), kl_second
 
+def forward_hidden(model, input_ids, positions):
+    """Final hidden states at positions, with the output head skipped for all but one position."""
+    import torch
+    head = model.get_output_embeddings()
+    captured = {}
+    def take(_module, args):
+        captured["hidden"] = args[0][:, positions, :]
+        return (args[0][:, :1, :],) + tuple(args[1:])
+    handle = head.register_forward_pre_hook(take)
+    try:
+        with torch.inference_mode():
+            model(input_ids=input_ids, use_cache=False)
+    finally:
+        handle.remove()
+    return captured["hidden"]
+
+def plain_position_logits(head, hidden):
+    import torch
+    with torch.inference_mode():
+        return [head(hidden[:, p, :])[0].float() for p in range(int(hidden.shape[1]))]
+
+def position_metrics(hidden, head, plain_logits, eos_ids=(), first_count=3):
+    """vocabulary_metrics one position at a time, since full logit tensors overran Windows RAM.
+
+    Returns bias, mean position norm, mean KL and kl_second, then the same bias and norm over
+    the first positions."""
+    import torch
+    total = int(hidden.shape[1]); bias = norm_sum = kl_sum = kl_second = bias_first = norm_first = None
+    for p in range(total):
+        with torch.inference_mode():
+            q = head(hidden[:, p, :]).float()
+        if not bool(torch.isfinite(q).all()): raise FloatingPointError("non-finite logits")
+        l = plain_logits[p].unsqueeze(0)
+        delta = (q - q.mean(dim=-1, keepdim=True)) - (l - l.mean(dim=-1, keepdim=True))
+        bias = delta if bias is None else bias + delta
+        norm = torch.linalg.vector_norm(delta, dim=-1)
+        norm_sum = norm if norm_sum is None else norm_sum + norm
+        kl = kl_values(l, q)
+        kl_sum = kl if kl_sum is None else kl_sum + kl
+        if p == 0:
+            if eos_ids:
+                lm = l.clone(); qm = q.clone()
+                lm[:, list(eos_ids)] = -float("inf"); qm[:, list(eos_ids)] = -float("inf")
+                kl_second = kl_values(lm, qm)
+            else:
+                kl_second = kl
+        if p == min(first_count, total) - 1:
+            bias_first = bias / (p + 1); norm_first = norm_sum / (p + 1)
+    return bias / total, norm_sum / total, kl_sum / total, kl_second, bias_first, norm_first
+
 def pilot_should_stop(rows, elapsed, threshold=4.0):
     return int(rows) / max(float(elapsed), 1e-9) < float(threshold)
 
@@ -148,7 +198,6 @@ def run(args, loader=None):
         except (ValueError, OSError): pass
     by_q = {int(x["question_index"]): x for x in plain_obj.get("answers", [])}
     qs = questions()
-    plain_logits_by_q = {}
     loop_tokens_path = ROOT / "results/part166/loop_tokens.json"
     if not loop_tokens_path.exists(): raise FileNotFoundError(f"run prep166.py first: missing {loop_tokens_path}")
     loop_tokens = json.loads(loop_tokens_path.read_text(encoding="utf-8"))
@@ -171,8 +220,13 @@ def run(args, loader=None):
         logits = _forward_selected(model, seq, positions) if positions else None
         repeat = _forward_selected(model, seq, positions) if positions else None
         deterministic = bool(torch.equal(logits, repeat)) if logits is not None else True
-        matches = int(logits[0].argmax(-1).eq(torch.tensor(answer_ids, device=args.device)).sum().item()) if positions else 0
-        p["alignment_matches"] = matches; p["alignment_total"] = len(answer_ids)
+        selected_cpu = logits[0].float().detach().to(device="cpu", dtype=torch.float32) if logits is not None else None
+        argmax = selected_cpu.argmax(dim=-1).tolist() if selected_cpu is not None else []
+        mismatches = [{"index": i, "generated": int(answer_ids[i]), "argmax": int(argmax[i]),
+                       "logit_gap": float(selected_cpu[i].max() - selected_cpu[i, int(answer_ids[i])])}
+                      for i in range(len(argmax)) if int(argmax[i]) != int(answer_ids[i])]
+        matches = len(argmax) - len(mismatches)
+        p["alignment_matches"] = matches; p["alignment_total"] = len(answer_ids); p["alignment_mismatches"] = mismatches
         p["deterministic"] = deterministic
         if logits is not None:
             # top-k over the vocabulary hangs on the A770, so this reduction moves to the CPU first.
@@ -182,10 +236,10 @@ def run(args, loader=None):
             p["plain_top_ids"] = ids_top.detach().cpu().tolist()
             p["plain_top_values"] = [round(float(v),4) for v in vals.detach().cpu().tolist()]
         else: p["plain_top_ids"] = []; p["plain_top_values"] = []
-        plain_logits_by_q[qi] = logits[0,1:,:] if logits is not None else None
     plain_obj["answers"] = [by_q[i] for i in sorted(by_q)]
     plain_obj["alignment_matches"] = sum(x["alignment_matches"] for x in plain_obj["answers"])
     plain_obj["alignment_total"] = sum(x["alignment_total"] for x in plain_obj["answers"])
+    plain_obj["alignment_mismatches"] = [dict(m, question_index=x["question_index"]) for x in plain_obj["answers"] for m in x.get("alignment_mismatches", [])]
     plain_obj["determinism_matches"] = sum(int(x.get("deterministic",False)) for x in plain_obj["answers"])
     plain_obj["determinism_total"] = len(plain_obj["answers"])
     plain_path.write_text(json.dumps(plain_obj, ensure_ascii=True, indent=2)+"\n", encoding="utf-8")
@@ -202,7 +256,9 @@ def run(args, loader=None):
             prompt_len = len(p["prompt_ids"]); ids = p["prompt_ids"] + p["answer_ids"]
             positions = evaluation_positions(prompt_len,p_len)
             input_ids = torch.tensor(ids, dtype=torch.long, device=args.device).unsqueeze(0)
-            plain_selected = plain_logits_by_q[qi]
+            head = model.get_output_embeddings()
+            plain_selected = plain_position_logits(head, forward_hidden(model, input_ids, positions))
+            eos_ids = common.eos_ids(tok, model)
             shuffled = list(rows); random.Random(165 + qi).shuffle(shuffled)
             assert all(int(r["layer"]) in LAYERS for r in shuffled)
             for start in range(0, len(shuffled), args.batch_size):
@@ -222,29 +278,26 @@ def run(args, loader=None):
                     handles.append(attach_position_push(layers[ln].mlp.down_proj, maskrows, prompt_len, p_len))
                 try:
                     expanded = input_ids.expand(len(chunk), -1).contiguous()
-                    qlogits = _forward_selected(model, expanded, positions)
+                    hidden = forward_hidden(model, expanded, positions)
                 finally:
                     for handle in handles: handle.remove()
-                llogits = plain_selected.unsqueeze(0).expand(len(chunk), -1, -1)
-                eos_ids=common.eos_ids(tok,model)
-                bias, steady, klm, kl2 = vocabulary_metrics(llogits, qlogits,eos_ids=eos_ids)
+                bias, norm_mean, klm, kl2, b3, norm3 = position_metrics(hidden, head, plain_selected, eos_ids)
+                steady = torch.linalg.vector_norm(bias, dim=-1) / norm_mean.clamp_min(torch.finfo(torch.float32).tiny)
+                s3 = torch.linalg.vector_norm(b3, dim=-1) / norm3.clamp_min(torch.finfo(torch.float32).tiny)
                 if not bool(torch.isfinite(bias).all() & torch.isfinite(steady).all() & torch.isfinite(klm).all() & torch.isfinite(kl2).all()):
                     raise FloatingPointError("non-finite retained metric")
                 cpu_bias = bias.detach().to(device="cpu", dtype=torch.float32)
                 std = cpu_bias.std(dim=-1, unbiased=False)
                 sharp = (cpu_bias.max(dim=-1).values - cpu_bias.mean(dim=-1)) / std.clamp_min(torch.finfo(torch.float32).tiny)
                 bias_norm = torch.linalg.vector_norm(cpu_bias,dim=-1)
-                delta_norm_mean = torch.linalg.vector_norm(qlogits.float()-qlogits.float().mean(dim=-1,keepdim=True) -
-                    (llogits.float()-llogits.float().mean(dim=-1,keepdim=True)),dim=-1).mean(dim=1).detach().cpu()
+                delta_norm_mean = norm_mean.detach().cpu()
                 values, top = torch.topk(cpu_bias, k=min(200, int(cpu_bias.shape[-1])), dim=-1)
-                first_count=min(3,int(qlogits.shape[1]))
-                b3,s3,_,_=vocabulary_metrics(llogits[:,:first_count],qlogits[:,:first_count],eos_ids=eos_ids)
                 cpu_b3=b3.detach().to(device="cpu",dtype=torch.float32)
                 std3=cpu_b3.std(dim=-1,unbiased=False)
-                sharp3=(cpu_b3.max(dim=-1).values-cpu_b3.mean(dim=-1))/std3
+                sharp3=(cpu_b3.max(dim=-1).values-cpu_b3.mean(dim=-1))/std3.clamp_min(torch.finfo(torch.float32).tiny)
                 b3_norm=torch.linalg.vector_norm(cpu_b3,dim=-1)
-                d3_norm=torch.linalg.vector_norm(qlogits[:,:first_count].float()-qlogits[:,:first_count].float().mean(dim=-1,keepdim=True)-
-                    (llogits[:,:first_count].float()-llogits[:,:first_count].float().mean(dim=-1,keepdim=True)),dim=-1).mean(dim=1).detach().cpu()
+                d3_norm=norm3.detach().cpu()
+                steady = steady.detach().cpu(); s3 = s3.detach().cpu(); klm = klm.detach().cpu(); kl2 = kl2.detach().cpu()
                 for i, row in enumerate(chunk):
                     rec = {"arm":row["arm"],"slot":int(row["slot"]),"layer":int(row["layer"]),"k":int(row["k"]),
                            "question_index":qi,"positions":p_len-1,

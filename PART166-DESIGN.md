@@ -118,3 +118,9 @@ Muse found no study comparing the words in degenerate loops with what a steering
 
 So a loop can be the push's vocabulary without its literal top tokens. A miss here may be a collocate. Added: I read 40 missed low-k loops by hand beside their rows' top 12 words, in `hits.jsonl`, and report how many look like collocates, with the count marked as my own judgement. Part 166's favoured tokens are measured from the forward pass, not a raw projection of the write vector, which is Muse's first trap for a later ban. The ban's other traps are recorded for that part: the same list on random directions, the loop tokens under the ban, and what a surviving loop would mean.
 
+## Amendment 4, 2026-11-01 01:25 CST, after a stopped launch, before any row
+
+The first launch at 01:21 wrote `plain.json` and no pushed row. Windows available RAM fell to 1.26 GB and the job's guard killed it: full logit tensors of 64 rows by about 39 positions by the whole vocabulary, plus their float32 copies, spilled into shared memory. The runner now takes final hidden states and applies the output head one position at a time, and it recomputes the plain logits per phrasing. A test shows the reductions equal the full-tensor version.
+
+That launch also showed Gate 2 cannot hold as written: 318 of 320 aligned, one miss each on two phrasings. Cached generation and the full forward pass can differ slightly in bf16, and a near tie can flip. The inputs are teacher forced, so the bias is unaffected. Gate 2 now needs at least 99% aligned, and every miss to be a near tie: the argmax's logit within 0.25 of the generated token's. The runner records each miss and its gap. I had not seen the gaps when setting 0.25. The plain pass matched itself bit for bit on all 8 phrasings. The plain answers in `plain.json` are reused on resume.
+

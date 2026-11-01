@@ -9,7 +9,8 @@ HERE=Path(__file__).resolve().parent; ROOT=HERE.parent
 for p in (str(ROOT),str(ROOT/'part86')):
     if p not in sys.path: sys.path.insert(0,p)
 from part165 import score165
-from part165.run165 import ARMS, LAYERS, SLOTS, K_ARMS
+from part165.run165 import ARMS, LAYERS, K_ARMS
+from part165.score165 import SLOTS
 
 EXPECTED=8*12*8*9
 LADDER=('n±','k4','k16','k64','k256','k1024','full')
@@ -62,6 +63,14 @@ def _finite_row(row):
         return (len(row.get('top_ids',[]))==len(row.get('top_values',[])) and
                 all(math.isfinite(float(x)) for x in row.get('top_values',[])))
     except (TypeError,ValueError): return False
+
+def gate2_passes(plain):
+    """Amendment 4: at least 99% aligned, every miss a near tie of at most 0.25 logits, and repeatable."""
+    total=int(plain.get('alignment_total',0)); matches=int(plain.get('alignment_matches',-1))
+    misses=plain.get('alignment_mismatches',[])
+    near=all(float(m.get('logit_gap',1e9))<=.25 for m in misses)
+    return (total>0 and matches+len(misses)==total and matches>=.99*total and near and
+            int(plain.get('determinism_matches',-1))==int(plain.get('determinism_total',-2)))
 
 def _slot_draws(reps=10000,seed=166):
     rng=random.Random(seed)
@@ -203,8 +212,7 @@ def score(rows_path, plain_path, tokens_path, answers_path, effects_path, out_di
     keys=[(r.get('arm'),int(r.get('slot',-1)),int(r.get('layer',-1)),int(r.get('question_index',-1))) for r in rows]
     unique=len(set(keys))==len(keys)
     gate1=(len(rows)==EXPECTED and unique and all(_finite_row(r) for r in rows))
-    gate2=(int(plain.get('alignment_matches',-1))==int(plain.get('alignment_total',-2)) and
-           int(plain.get('determinism_matches',-1))==int(plain.get('determinism_total',-2)))
+    gate2=gate2_passes(plain)
     gate3_result=gate3_summary(rows,effects)
     gate3=gate3_result['pass']
     gates={'gate1':gate1,'gate1_rows':len(rows),'gate1_unique':unique,'gate1_finite':all(_finite_row(r) for r in rows),

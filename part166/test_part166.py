@@ -131,10 +131,42 @@ def test_each_prediction_decision_pass_and_fail():
     assert score166.passes_166_7(.65) and not score166.passes_166_7(.64)
 
 def test_plain_gate_requires_alignment_and_determinism():
-    plain={'alignment_matches':4,'alignment_total':4,'determinism_matches':8,'determinism_total':8}
-    assert plain['alignment_matches']==plain['alignment_total'] and plain['determinism_matches']==plain['determinism_total']
-    plain['determinism_matches']=7
-    assert not (plain['alignment_matches']==plain['alignment_total'] and plain['determinism_matches']==plain['determinism_total'])
+    plain={'alignment_matches':318,'alignment_total':320,'determinism_matches':8,'determinism_total':8,
+           'alignment_mismatches':[{'logit_gap':.1},{'logit_gap':.2}]}
+    assert score166.gate2_passes(plain)
+    assert not score166.gate2_passes({**plain,'determinism_matches':7})
+    assert not score166.gate2_passes({**plain,'alignment_mismatches':[{'logit_gap':.1},{'logit_gap':.3}]})
+    assert not score166.gate2_passes({**plain,'alignment_mismatches':[{'logit_gap':.1}]})
+    many={**plain,'alignment_matches':300,'alignment_mismatches':[{'logit_gap':.1}]*20}
+    assert not score166.gate2_passes(many)
+
+def test_position_metrics_match_the_full_tensor_version():
+    torch.manual_seed(1)
+    head=torch.nn.Linear(6,9,bias=False)
+    hidden=torch.randn(4,5,6); plain_hidden=torch.randn(1,5,6)
+    with torch.no_grad():
+        full_q=head(hidden); full_l=head(plain_hidden).expand(4,-1,-1)
+    plain=run166.plain_position_logits(head,plain_hidden)
+    bias,steady,kl,kl2=run166.vocabulary_metrics(full_l,full_q,eos_ids=(2,))
+    b,norm,k,k2,b3,n3=run166.position_metrics(hidden,head,plain,eos_ids=(2,))
+    assert torch.allclose(bias,b,atol=1e-5); assert torch.allclose(kl,k,atol=1e-5); assert torch.allclose(kl2,k2,atol=1e-5)
+    s=torch.linalg.vector_norm(b,dim=-1)/norm
+    assert torch.allclose(steady,s,atol=1e-5)
+    b_first,s_first,_,_=run166.vocabulary_metrics(full_l[:,:3],full_q[:,:3],eos_ids=(2,))
+    assert torch.allclose(b_first,b3,atol=1e-5)
+    assert torch.allclose(s_first,torch.linalg.vector_norm(b3,dim=-1)/n3,atol=1e-5)
+
+def test_forward_hidden_returns_selected_positions():
+    class M(torch.nn.Module):
+        def __init__(self):
+            super().__init__(); self.head=torch.nn.Linear(3,4,bias=False)
+        def get_output_embeddings(self): return self.head
+        def forward(self,input_ids=None,use_cache=False):
+            return self.head(input_ids.float().unsqueeze(-1).repeat(1,1,3))
+    m=M(); ids=torch.tensor([[1,2,3,4]])
+    h=run166.forward_hidden(m,ids,[2,3])
+    assert h.shape==(1,2,3) and h[0,0,0]==3 and h[0,1,0]==4
+    assert m.head._forward_pre_hooks=={} or len(m.head._forward_pre_hooks)==0
 
 def test_alignment_uses_shifted_y_pairs():
     assert run166.alignment_positions(5,3)==[4,5,6]
