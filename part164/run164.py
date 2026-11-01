@@ -146,6 +146,9 @@ def run(args, loader=None, generate_fn=None):
             answers = generate_fn(model, tok, layers, item["question"], {}, MAX_NEW_TOKENS, args.device)
             append_batch(fh, infos, answers, item["question"], item["kind"], count_pilot=False)
 
+        # The pilot times only the batches it counts, so its clock starts after the baseline rows.
+        pilot_started = time.perf_counter()
+
         # Recipe validity check: all 100 random directions, same named question and +0.8.
         recipe = [_row_info(u, "recipe", 0, DOSE) for u in units if u["arm"] == "random"]
         recipe = [r for r in recipe if ("recipe", r["unit_id"], r["arm"], DOSE, 0) not in done]

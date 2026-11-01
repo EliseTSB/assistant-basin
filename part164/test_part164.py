@@ -164,6 +164,34 @@ class Part164Tests(unittest.TestCase):
         self.assertAlmostEqual(tie["estimate_ratio"], 1.5)
         self.assertEqual(tie["verdict"], "failed")
 
+    def _pilot_run(self, baseline_seconds, batch_seconds):
+        import tempfile
+        from types import SimpleNamespace
+        clock = {"now": 0.0}
+        def generate(model, tok, layers, question, pushes, new_tokens, device):
+            if pushes == {}:
+                clock["now"] += baseline_seconds
+                return [{"answer": "plain", "token_count": 5}]
+            clock["now"] += batch_seconds
+            return [{"answer": "pushed", "token_count": 5} for _ in range(pushes["n"])]
+        fake_common = SimpleNamespace(find_layers=lambda model: [])
+        with tempfile.TemporaryDirectory() as folder:
+            args = SimpleNamespace(units=str(Path(run164.__file__).parent / "units164.json"),
+                                   out=str(Path(folder) / "answers.jsonl"), batch_size=64,
+                                   device="cpu", model=None)
+            with mock.patch.object(run164.part155, "_common", return_value=fake_common), \
+                 mock.patch.object(run164, "pushes_for", side_effect=lambda rows, *a: {"n": len(rows)}), \
+                 mock.patch.object(run164.time, "perf_counter", side_effect=lambda: clock["now"]):
+                return run164.run(args, loader=lambda device: (None, None), generate_fn=generate)
+
+    def test_pilot_clock_starts_after_the_baseline_rows(self):
+        result = self._pilot_run(baseline_seconds=10.0, batch_seconds=1.0)
+        self.assertEqual(result["answers_written"], 6516)
+
+    def test_pilot_rule_still_stops_a_slow_run(self):
+        with self.assertRaises(SystemExit):
+            self._pilot_run(baseline_seconds=0.0, batch_seconds=100.0)
+
     def test_nearest_dose_tie_prefers_lower_dose(self):
         units, rows = answer_fixture(neuron_broken=5, random_broken={.8: 4, 1.0: 6, 1.2: 8})
         pred = score164.score_rows(rows, units)["predictions"]["164.4"]

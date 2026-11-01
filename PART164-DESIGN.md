@@ -60,3 +60,7 @@ Random directions are the same 100 as Part 163's, so only the neurons and phrasi
 
 The Size line miscounts: the stages listed sum to 6,516 generations (1,600 + 4,800 + 100 + 16), about 45 minutes, not 4,916 and 35. The design is otherwise unchanged.
 
+## Amendment 2, 2026-10-31 22:07 CT, after the pilot stopped the first launch
+
+The first launch stopped at its pilot rule with 1.04 answers per second and 180 rows written. The rate was wrong, through a defect in my runner: the pilot's clock started before the 16 baseline rows, whose time it counted while their answers were left out. The 164 answers it did count came at about 2.8 answers per second by the row file's timing, near Part 163's 2.83. The fix starts the clock after the baseline rows, and a test that failed on the old code now passes. The stop rule and its 1.5 bar are unchanged. The run resumes from the 180 rows, so batch boundaries do not move. No answer has been read.
+
