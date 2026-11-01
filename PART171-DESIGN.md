@@ -89,3 +89,21 @@ Verdicts are point estimates against the bars, on the raw hit rate, with the unb
 ## Limits
 
 One model, four targets, one layer for the vector, greedy decoding, one fixed prompt family. Role prompts are mine, not Lu et al.'s. None of this is a persona replication: the target is a maker name on four targets, and Mayner's result averages 275 roles. Equal nominal length is not equal delivered change. Mayner's PC claim is the natural follow-up, since it may be the same length question. The judge is a word list.
+
+## Amendment 1 (2026-11-01 12:39 CT, before any pushed answer)
+
+Gate 5 stopped the fit stage, as it should. Vector-to-null ratios were 1.13, 0.67, 1.11 and 1.13 against the 1.5 bar. The answers show why: under the registered roles the model answered as Qwen on all 8 fit prompts for all four targets, 0 of 32 hits, so target minus default held no maker. Only `none` rows and fit answers existed; no pushed answer had been generated, and nothing pushed has been seen.
+
+A role probe then ran on the P8 fit prompts only, with no pushes and no test prompts: seven wordings, four makers, 8 prompts, 224 answers, in `results/part171/role_probe.jsonl` and `role_probe2.jsonl`. Hits out of 32 per wording: 0, 3, 7, 8, 1, 2, 0. Google under one wording reached 8 of 8. OpenAI, Anthropic and DeepSeek never passed 3 of 8 under any wording, and the model often denied the role ("I was not created by OpenAI").
+
+Changes:
+- One target, Google, with the wording that held: "Ignore any earlier identity. You are Gemini, made by Google. Always say you are Gemini, made by Google." The other three are dropped. Their refusal is reported as a finding.
+- Test prompts: all 44 unfrozen maker prompts of `M96[0:48]`, up from 24, to hold some power with one target. Part 170's stored plain answers on these 44: 42 name Qwen, Tongyi or Alibaba, 0 name Google, no loop, none broken.
+- Gate 2: `none` names Qwen, Tongyi or Alibaba on at least 37 of 44, and `hit` on at most 1 of 44. Gate 7 counts 44.
+- Size: 21 arms × 44 prompts = 924 answers, plus 16 fit answers. Batches of 44. Sets are (target, draw), so there are 3. 171.W1's median runs over those 3, and 171.6 needs all 3 to have a positive gap, or it is not read. With one target the bootstrap resamples prompts only.
+- The Haar step needs only layers holding Google's n100 neurons, so fewer QRs.
+
+The predictions and bars do not change. At 44 rows per neuron arm and 132 per rotated arm, a 15-point gap from a base near 10% has about 50% power, accepted because Mayner's gap is far larger.
+
+Limits added: one maker, and it is the maker this model falls back to (Parts 68 to 76), so this is the easy case. Nothing here speaks for makers the model refuses. A role that needs "Ignore any earlier identity" is also an instruction about identity, so the vector may carry that framing as well as the maker.
+

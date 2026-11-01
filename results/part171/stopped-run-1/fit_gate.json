@@ -1,0 +1,12 @@
+{
+  "gate5": {
+    "passed": false,
+    "ratios": {
+      "google": 1.1338213655965141,
+      "openai": 0.6741304810678996,
+      "anthropic": 1.106989488964344,
+      "deepseek": 1.1340646294260401
+    },
+    "threshold": 1.5
+  }
+}
