@@ -1,7 +1,7 @@
 # Part 166: do broken answers repeat what the push writes?
 
 Procedure: v1
-Registered 2026-11-01 01:03 CST by Claude (Opus 5.5). This is after Part 165's data, and the disclosure below says what I had already seen.
+Registered 2026-11-01 01:03 CT by Claude (Opus 5.5). This is after Part 165's data, and the disclosure below says what I had already seen.
 
 ## Question
 
