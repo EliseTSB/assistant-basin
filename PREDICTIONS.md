@@ -3141,3 +3141,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 163.3 | Each arm's name-gone rate on identity phrasings is at least 0.15, so the selection carries to new phrasings | medium | Claude | held: 0.85 and 0.80; the bar sat far below |
 | 163.4 | In each arm fewer units reach both gone on at least half of identity phrasings than reach name gone on at least half | high | Claude | held: 90 against 91 and 83 against 86; nearly by construction |
 | 163.5 | The neuron arm's broken rate is below the random arm's | low | Claude | failed: 21.4% against 5.2%, the other way |
+
+## Part 164 (registered 2026-10-31 20:54 CT, PART164-DESIGN.md, before any data): do neurons say Qwen less because they are stronger pushes?
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 164.1 | At +0.8, the neuron arm's Qwen rate is under 0.7 times the random arm's | medium | Claude |  |
+| 164.2 | At +0.8, the neuron arm's broken rate is at least twice the random arm's | high | Claude |  |
+| 164.3 | Random directions' broken rate rises with dose: +0.8 below +1.0 below +1.2 | high | Claude |  |
+| 164.4 | At the random dose whose broken rate is nearest the neurons', the neuron over random Qwen ratio is between 0.7 and 1.3 | low | Claude |  |
+| 164.5 | Random directions' Qwen rate at +1.2 is under half their rate at +0.8 | medium | Claude |  |
