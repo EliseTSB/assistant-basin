@@ -52,7 +52,7 @@ for j, arm in enumerate(arms):
     y = np.array(means)
     ax.errorbar(xs + offset, y, yerr=np.vstack((y - lo, hi - y)), marker="o", linestyle="none", capsize=3,
                 color=palette[arm], label=arm, markersize=6, linewidth=1.4)
-ax.set_xticks(xs, bans)
+ax.set_xticks(xs, ["none", "own", "matched", "mass-matched"])
 ax.set_ylim(0, 0.23)
 ax.set_ylabel("Loop answer rate")
 ax.set_title("Loop rate by ban (95% whole-slot interval)", fontsize=10)
@@ -71,7 +71,7 @@ for fate, color, label in zip(fates, fate_colors, fate_labels):
     vals = np.array(vals)
     fate_ax.barh(np.arange(3), vals, left=left, color=color, edgecolor="white", linewidth=0.5, label=label)
     left += vals
-fate_ax.set_yticks(np.arange(3), ["Own ban", "Matched ban", "Mass ban"])
+fate_ax.set_yticks(np.arange(3), ["Own ban", "Matched ban", "Mass-matched ban"])
 fate_ax.invert_yaxis()
 fate_ax.set_xlim(0, 1)
 fate_ax.set_xlabel("Share of 88 eligible rows")
@@ -79,6 +79,6 @@ fate_ax.set_title("Fate when none loops on an own-list word", fontsize=10)
 fate_ax.grid(axis="x", color="#dddddd", linewidth=0.7)
 fate_ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.17), ncol=2, frameon=False, fontsize=8)
 
-fig.suptitle("Own-list bans cut loops; equal-mass random bans add them", fontsize=13, fontweight="bold")
+fig.suptitle("Own-word ban cut loops; mass-matched ban added loops", fontsize=13, fontweight="bold")
 fig.tight_layout(rect=(0, 0.1, 1, 0.92))
 fig.savefig(HERE / "loops168.png", dpi=180, bbox_inches="tight")

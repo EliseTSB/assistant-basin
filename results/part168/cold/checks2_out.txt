@@ -1,0 +1,27 @@
+A. Gate 4 independent check: problems = none
+B. special-looking tokens in own/mass lists: 6 [(248069, '</think>'), (248069, '</think>'), (248066, '<tool_response>'), (248069, '</think>'), (248069, '</think>'), (248069, '</think>')]
+   list ids missing from tokens.json: 0
+C. mass-list overlap problems: none
+   rows not in tolerance after repair: [(('k4', 19, 11, 12), 0.1492838698319896, False, True, False), (('n+', 22, 4, 15), 0.15975836761319134, False, True, False)]
+D. exponent n+: min -0.49 median 0.11 max 0.69; share >0: 0.74
+D. exponent k4: min -0.70 median 0.13 max 0.93; share >0: 0.74
+   corr(exponent, plain overlap of mass list) = 0.701
+   plain-overlap distribution (capped at 5): {0: 726, 1: 302, 2: 107, 3: 68, 4: 40, 5: 101}
+E. mass-list plain overlap bin -> rows, none-loop rate, mass-induced count:
+   overlap 0: rows 726, none loop 51, induced by mass 9
+   overlap 1: rows 302, none loop 37, induced by mass 11
+   overlap 2: rows 107, none loop 17, induced by mass 14
+   overlap 3: rows 68, none loop 21, induced by mass 7
+   overlap >=4: rows 141, none loop 62, induced by mass 34
+F. own-induced loops: 42; of which the loop phrase holds an own-list word: 2
+G. own: ended 101, induced 42, net removed 59
+G. matched: ended 7, induced 11, net removed -4
+G. mass: ended 44, induced 75, net removed -31
+H. repaired=True: n=139 loops none 8 own 5 mass 7
+H. repaired=False: n=1203 loops none 180 own 124 mass 212
+I. plain.json answer_ids lengths equal no_push token_count: False ; plain.json qi: [8, 9, 10, 11, 12, 14, 15]
+   no-push loop/broken: {8: (False, False), 9: (False, False), 10: (False, False), 11: (False, False), 12: (False, False), 14: (False, False), 15: (False, False)}
+J. part164 no_push answers: 16 tokens: [37, 47, 50, 53, 54, 56, 57, 59, 61, 65]
+   looping plain answers (<=80 tokens): [(13, 70)]
+K. part165 question indices: [0, 1, 2, 3, 4, 5, 6, 7] | part168 phrasings: [8, 9, 10, 11, 12, 14, 15]
+   part165 arms: ['full', 'iso', 'k1024', 'k16', 'k256', 'k4', 'k64', 'n+', 'n±', 'plain']

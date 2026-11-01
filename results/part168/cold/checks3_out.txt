@@ -1,0 +1,11 @@
+special-looking token ids in tokens.json: {'248046': '<|im_end|>', '248059': '</tool_call>', '248066': '<tool_response>', '248068': '<think>', '248069': '</think>'}
+occurrences in own/mass lists (arm, list, token): {('full', 'rank_51_200_ids', '<tool_response>'): 1, ('full', 'rank_51_200_ids', '</tool_call>'): 1, ('n+', 'mass_ban_ids', '</think>'): 1, ('k4', 'mass_ban_ids', '</think>'): 4, ('k4', 'mass_ban_ids', '<tool_response>'): 1}
+part167 battery keys: ['answer', 'arm', 'ban', 'banned_ids', 'ended_eos_before_80', 'layer', 'question_index', 'slot', 'stage', 'token_count', 'token_ids'] 6912
+part167 n+ none n: 768 broken 0.224 loop 0.2174
+  excluding 13: n 672 broken 0.2202 loop 0.2158
+  part167 n+ none: n 768 loop 0.2174
+  part167 k4 none: n 768 loop 0.1667
+  part167 n+ own: n 768 loop 0.1602
+  part167 k4 own: n 768 loop 0.0977
+  part167 n+ matched: n 768 loop 0.2188
+  part167 k4 matched: n 768 loop 0.168

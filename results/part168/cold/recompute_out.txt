@@ -1,0 +1,154 @@
+battery 7392 (expect 7392), no_push 7 (expect 7)
+rows 2016 masses 2016 stop words 50
+EOS flag == (token_count < 80) for all battery: True
+token_count==80 battery: 732
+
+== per arm x ban (recomputed) ==
+n+    none     n=672 loop=0.1280 broken=0.1295 joint=0.8705 meanTC=56.84 EOS<80=0.9062
+n+    own      n=672 loop=0.0923 broken=0.0967 joint=0.9033 meanTC=57.35 EOS<80=0.8958
+n+    matched  n=672 loop=0.1310 broken=0.1324 joint=0.8676 meanTC=56.72 EOS<80=0.9077
+n+    mass     n=672 loop=0.1562 broken=0.1562 joint=0.8438 meanTC=56.39 EOS<80=0.8988
+k4    none     n=672 loop=0.1518 broken=0.1562 joint=0.8438 meanTC=56.00 EOS<80=0.9092
+k4    own      n=672 loop=0.0997 broken=0.0997 joint=0.9003 meanTC=56.99 EOS<80=0.9167
+k4    matched  n=672 loop=0.1548 broken=0.1592 joint=0.8408 meanTC=55.98 EOS<80=0.9167
+k4    mass     n=672 loop=0.1696 broken=0.1726 joint=0.8274 meanTC=55.79 EOS<80=0.9122
+full  none     n=672 loop=0.0521 broken=0.0536 joint=0.9464 meanTC=59.03 EOS<80=0.8780
+full  own      n=672 loop=0.0461 broken=0.0476 joint=0.9524 meanTC=58.82 EOS<80=0.8884
+full  matched  n=672 loop=0.0551 broken=0.0565 joint=0.9435 meanTC=58.91 EOS<80=0.8810
+
+== pooled n+ & k4 ==
+none 0.13988 own 0.09598 matched 0.14286 mass 0.16295
+168.3 own cut 0.31383  matched cut -0.02128  mass cut -0.16489
+168.4 matched-own gap 0.04687 (bar 0.05)
+168.1-style: broken n+ 0.1295 / full 0.0536 = 2.4167
+168.6 full own cut 0.1143 (full none loops=35)
+
+== paired set: 1342 rows, unmatched 2 ==
+paired none 0.14009 own 0.09613 mass 0.16319
+168.8 gap mass-own 0.06706 (bar 0.05)
+repaired among paired: 139; non-repaired paired: 1203
+  168.8 on non-repaired: own 0.1031 mass 0.1762 gap 0.0732
+  168.8 on repaired:     own 0.0360 mass 0.0504 gap 0.0144
+  all-row mass rate 0.16295; bounds with unmatched as no/all loops: 0.16295 / 0.16443
+  mean plain-token overlap of mass list: repaired 0.180, non-repaired 1.357
+  paired by arm: Counter({'n+': 671, 'k4': 671})
+
+== fragility: drop one arm / layer / phrasing (pooled n+&k4 unless stated) ==
+all                          n=1344 cut=+0.3138 (>=30)  168.4gap=+0.0469 (FAIL)  168.8gap=+0.0671 (pass)
+n+ alone                     n= 672 cut=+0.2791 (<30 FAIL)  168.4gap=+0.0387 (FAIL)  168.8gap=+0.0641 (pass)
+k4 alone                     n= 672 cut=+0.3431 (>=30)  168.4gap=+0.0551 (pass)  168.8gap=+0.0700 (pass)
+drop layer 19                n=1176 cut=+0.3184 (>=30)  168.4gap=+0.0510 (pass)  168.8gap=+0.0757 (pass)
+drop layer 20                n=1176 cut=+0.3372 (>=30)  168.4gap=+0.0527 (pass)  168.8gap=+0.0809 (pass)
+drop layer 21                n=1176 cut=+0.3468 (>=30)  168.4gap=+0.0544 (pass)  168.8gap=+0.0724 (pass)
+drop layer 22                n=1176 cut=+0.3250 (>=30)  168.4gap=+0.0468 (FAIL)  168.8gap=+0.0621 (pass)
+drop layer 23                n=1176 cut=+0.3012 (>=30)  168.4gap=+0.0459 (FAIL)  168.8gap=+0.0630 (pass)
+drop layer 24                n=1176 cut=+0.2158 (<30 FAIL)  168.4gap=+0.0289 (FAIL)  168.8gap=+0.0545 (pass)
+drop layer 25                n=1176 cut=+0.3354 (>=30)  168.4gap=+0.0502 (pass)  168.8gap=+0.0656 (pass)
+drop layer 26                n=1176 cut=+0.3129 (>=30)  168.4gap=+0.0451 (FAIL)  168.8gap=+0.0622 (pass)
+drop phrasing 8              n=1152 cut=+0.2848 (<30 FAIL)  168.4gap=+0.0417 (FAIL)  168.8gap=+0.0617 (pass)
+drop phrasing 9              n=1152 cut=+0.3554 (>=30)  168.4gap=+0.0530 (pass)  168.8gap=+0.0722 (pass)
+drop phrasing 10             n=1152 cut=+0.3419 (>=30)  168.4gap=+0.0503 (pass)  168.8gap=+0.0722 (pass)
+drop phrasing 11             n=1152 cut=+0.2976 (<30 FAIL)  168.4gap=+0.0451 (FAIL)  168.8gap=+0.0652 (pass)
+drop phrasing 12             n=1152 cut=+0.3195 (>=30)  168.4gap=+0.0503 (pass)  168.8gap=+0.0730 (pass)
+drop phrasing 14             n=1152 cut=+0.2938 (<30 FAIL)  168.4gap=+0.0451 (FAIL)  168.8gap=+0.0609 (pass)
+drop phrasing 15             n=1152 cut=+0.3026 (>=30)  168.4gap=+0.0425 (FAIL)  168.8gap=+0.0643 (pass)
+only layers 19-22            n= 672 cut=+0.1324 (<30 FAIL)  168.4gap=+0.0164 (FAIL)  168.8gap=+0.0269 (FAIL)
+only layers 23-26            n= 672 cut=+0.4167 (>=30)  168.4gap=+0.0774 (pass)  168.8gap=+0.1071 (pass)
+only phrasing 8              n= 192 cut=+0.4667 (>=30)  168.4gap=+0.0781 (pass)  168.8gap=+0.0990 (pass)
+only phrasing 9              n= 192 cut=+0.0000 (<30 FAIL)  168.4gap=+0.0104 (FAIL)  168.8gap=+0.0365 (FAIL)
+only phrasing 10             n= 192 cut=+0.1818 (<30 FAIL)  168.4gap=+0.0260 (FAIL)  168.8gap=+0.0365 (FAIL)
+only phrasing 11             n= 192 cut=+0.4500 (>=30)  168.4gap=+0.0573 (pass)  168.8gap=+0.0781 (pass)
+only phrasing 12             n= 192 cut=+0.2632 (<30 FAIL)  168.4gap=+0.0260 (FAIL)  168.8gap=+0.0314 (FAIL)
+only phrasing 14             n= 192 cut=+0.4286 (>=30)  168.4gap=+0.0573 (pass)  168.8gap=+0.1042 (pass)
+only phrasing 15             n= 192 cut=+0.3611 (>=30)  168.4gap=+0.0729 (pass)  168.8gap=+0.0838 (pass)
+n+ only, phr 8               n=  96 cut=+0.6250 (>=30)  168.4gap=+0.1146 (pass)  168.8gap=+0.1042 (pass)
+n+ only, phr 9               n=  96 cut=-0.1818 (<30 FAIL)  168.4gap=-0.0208 (FAIL)  168.8gap=+0.0000 (FAIL)
+n+ only, phr 10              n=  96 cut=-0.0714 (<30 FAIL)  168.4gap=-0.0208 (FAIL)  168.8gap=+0.0208 (FAIL)
+n+ only, phr 11              n=  96 cut=+0.4545 (>=30)  168.4gap=+0.0729 (pass)  168.8gap=+0.0833 (pass)
+n+ only, phr 12              n=  96 cut=+0.2222 (<30 FAIL)  168.4gap=+0.0208 (FAIL)  168.8gap=+0.0312 (FAIL)
+n+ only, phr 14              n=  96 cut=+0.3636 (>=30)  168.4gap=+0.0312 (FAIL)  168.8gap=+0.1146 (pass)
+n+ only, phr 15              n=  96 cut=+0.4286 (>=30)  168.4gap=+0.0729 (pass)  168.8gap=+0.0947 (pass)
+k4 only, phr 8               n=  96 cut=+0.2857 (<30 FAIL)  168.4gap=+0.0417 (FAIL)  168.8gap=+0.0937 (pass)
+k4 only, phr 9               n=  96 cut=+0.1818 (<30 FAIL)  168.4gap=+0.0417 (FAIL)  168.8gap=+0.0729 (pass)
+k4 only, phr 10              n=  96 cut=+0.3684 (>=30)  168.4gap=+0.0729 (pass)  168.8gap=+0.0521 (pass)
+k4 only, phr 11              n=  96 cut=+0.4444 (>=30)  168.4gap=+0.0417 (FAIL)  168.8gap=+0.0729 (pass)
+k4 only, phr 12              n=  96 cut=+0.3000 (<30 FAIL)  168.4gap=+0.0312 (FAIL)  168.8gap=+0.0316 (FAIL)
+k4 only, phr 14              n=  96 cut=+0.4706 (>=30)  168.4gap=+0.0833 (pass)  168.8gap=+0.0938 (pass)
+k4 only, phr 15              n=  96 cut=+0.3182 (>=30)  168.4gap=+0.0729 (pass)  168.8gap=+0.0729 (pass)
+
+== discordant pairs, pooled low-k (1344 rows) ==
+none loops 188; own loops 129; none-loops ended under own 101; induced (none no loop, own loop) 42 of 1156 eligible
+net loops removed = ended - induced = 59  (= none loops - own loops = 59)
+share of none-loop pairs ended = 0.5372; induced share of eligible = 0.0363
+  n+: none loops 86, ended 49, induced 25
+  k4: none loops 102, ended 52, induced 17
+ended pairs spread over 47 (arm,layer,slot) units of 192; top-5 units hold 28 ended; top-10 hold 47
+  top ended units: [(('k4', 24, 8), 7), (('k4', 26, 8), 6), (('n+', 24, 1), 5), (('n+', 24, 9), 5), (('k4', 22, 4), 5), (('n+', 24, 0), 4), (('n+', 26, 1), 4), (('k4', 24, 1), 4)]
+  ended by phrasing: {8: 22, 9: 9, 10: 14, 11: 13, 12: 9, 14: 16, 15: 18}
+  ended by layer: {19: 2, 20: 5, 21: 6, 22: 14, 23: 14, 24: 32, 25: 11, 26: 17}
+  cut after dropping top-0 ended units: +0.3138 (n=1344)
+  cut after dropping top-5 ended units: +0.1987 (n=1309)
+  cut after dropping top-10 ended units: +0.1000 (n=1274)
+  cut after dropping top-20 ended units: -0.0700 (n=1204)
+  exact two-sided sign test ended vs induced: p=8.74e-07
+
+== length / EOS confound for own ==
+pairs where BOTH none and own reached 80 tokens: 73 of 1344
+  loop rate none 0.0959 own 0.0959 cut +0.0000
+  none ended before 80: n=1220 none loop 0.1402 own loop 0.0967 cut +0.3099
+  none reached 80: n=124 none loop 0.1371 own loop 0.0887 cut +0.3529
+  pairs where own ended early but none did not: 51; the reverse: 53
+  mean token count none 56.420 own 57.170
+  mean token count of none loop answers 54.63; of own loop answers 56.83
+  mean token count of ended-under-own answers (none side) 54.65
+
+== mass ban rise ==
+mass loops 219 vs none 188; induced 75; ended 44; net +31
+  induced spread over 51 units; top-5 17, top-10 28
+  top induced units: [(('k4', 21, 11), 4), (('k4', 25, 5), 4), (('n+', 21, 7), 3), (('n+', 23, 1), 3), (('n+', 25, 4), 3), (('k4', 23, 5), 3), (('n+', 22, 0), 2), (('n+', 25, 0), 2)]
+  induced by phrasing: {8: 11, 9: 11, 10: 11, 11: 12, 12: 5, 14: 12, 15: 13}
+  induced by layer: {19: 2, 20: 2, 21: 13, 22: 18, 23: 12, 24: 4, 25: 14, 26: 10}
+  pairs with induced loop: 75; (arm,layer,slot) units with any: 51
+  mean plain-token overlap of mass list: induced rows 3.587; all rows 1.234
+  own-induced rows: mean plain overlap of own list 0.143
+  mean plain overlap (mass list) by arm: {'n+': 1.274, 'k4': 1.193}
+  mean plain overlap (own list) by arm: {'n+': 0.057, 'k4': 0.091}
+
+== transitions under own (independent classification) ==
+own fates: {'no_loop': 65, 'outside': 15, 'reentry': 4, 'common_only': 2, 'top50': 1, 'migration': 1} (own-word none loops = 88)
+changed loops n=19; migration share 0.0526; baseline 0.0096
+168.7 test: share>=1/3 and > baseline -> False
+168.W3 (15-30%): False
+induced own 42/1156 = 0.0363
+mass fates: {'no_loop': 17, 'reentry': 63, 'outside': 5, 'common_only': 2, 'top50': 1}
+matched fates: {'reentry': 88} induced matched 11/1156 = 0.0095
+if 'no_loop' were counted in the denominator, migration share = 0.0119
+
+== 168.1 recomputed ==
+content-word own hits 98.0, shuffled mean 0.4545, ratio 215.60
+  own hits by word (top 15): [('pool', 7), ('novel', 7), ('one', 7), ('people', 7), ('hands', 6), ('human', 5), ('string', 5), ('function', 5), ('payment', 4), ('based', 4), ('certificate', 3), ('heart', 3), ('laughing', 2), ('coordinate', 2), ('infancy', 2)] distinct words: 41
+
+== bootstrap (own cut 95% interval; my own resampler) ==
+  own cut: 2.5/97.5 = 0.1576 / 0.4495
+  matched-own gap: 2.5/97.5 = 0.0223 / 0.0729
+  mass-own gap (all rows): 2.5/97.5 = 0.0424 / 0.0945
+
+== hand read ==
+judged 120 key 120 same ids: True
+judgement values: Counter({'readable': 98, 'broken': 16, 'odd': 6})
+  none: n=30 Counter({'readable': 23, 'broken': 6, 'odd': 1})
+  own: n=30 Counter({'readable': 29, 'broken': 1})
+  matched: n=30 Counter({'readable': 26, 'broken': 3, 'odd': 1})
+  mass: n=30 Counter({'readable': 20, 'broken': 6, 'odd': 4})
+hand_read answer text mismatches vs key: 0 (hand_read rows 120 )
+hand-read loop share (own-flag) by ban: {'none': 0.233, 'own': 0.067, 'matched': 0.133, 'mass': 0.2}
+
+== gate 2 (no-push, 7 answers) ==
+  q8: tokens=61 loop=None broken=False
+  q9: tokens=53 loop=None broken=False
+  q10: tokens=57 loop=None broken=False
+  q11: tokens=80 loop=None broken=False
+  q12: tokens=37 loop=None broken=False
+  q14: tokens=67 loop=None broken=False
+  q15: tokens=80 loop=None broken=False
+plain.json entries: 7 identical to no_push answers: False

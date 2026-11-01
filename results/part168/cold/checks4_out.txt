@@ -1,0 +1,4 @@
+eligible 1156; own induced 42 (0.0363); matched induced 11 (0.0095); both 2; own-only 40; matched-only 9
+difference 0.0268; paired Wald SE 0.0060; approx 95% 0.0150 to 0.0386
+exact sign test on discordant induced pairs: 40 vs 9, p = 0.0000
+168.2 counts n+ broken 87, full broken 36; ratio 2.417; approx 95% 1.64 to 3.56
