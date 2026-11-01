@@ -74,3 +74,8 @@ A failed gate stops all readings. If 165.1 fails, Part 164's gap needs selection
 ## Limits
 
 One model, one dose, 8 maker phrasings. Neurons are unselected, so most may do little. Sign and sparsity reach the model only through W d. A Gaussian mix of many columns leans toward W's top singular directions, which is why iso exists, and iso still depends on W through the solve. Triage is one rule with known misses, and the override may count deliberate lists. This says nothing about what a neuron does when it is not pushed.
+
+## Amendment 1, 2026-11-01 00:02 CT, before the run
+
+The rows of phrasing q are shuffled with seed 165 + q rather than one seed 165, so each phrasing gets its own batch mix. Nothing else changes.
+
