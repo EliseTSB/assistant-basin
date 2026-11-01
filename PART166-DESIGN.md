@@ -112,3 +112,9 @@ Sharpness is scale-free peakedness and not the size of a bias, so each row also 
 
 Recorded for later: a token ban alone is a weak causal test, since it mechanically removes the words. A later part would pair it with a same-sized ban of a matched other direction's tokens, and score any repetition and coherence.
 
+## Amendment 3, 2026-11-01 01:15 CST, before the run, on Muse's narrower search
+
+Muse found no study comparing the words in degenerate loops with what a steering vector favours, and none banning those tokens (topic muse-part165-prior-art-2026-11-01, message 5; `research_notes/part166-token-loops-prior-art-20261101/report.md` on Muse's machine). I have not read the papers. Closest, through Muse: Arad, Mueller and Belinkov (arXiv:2505.20063), where working steering can repeat the top logit-lens token, while one degenerate case repeats a collocate instead, `school` after a feature for `primary`.
+
+So a loop can be the push's vocabulary without its literal top tokens. A miss here may be a collocate. Added: I read 40 missed low-k loops by hand beside their rows' top 12 words, in `hits.jsonl`, and report how many look like collocates, with the count marked as my own judgement. Part 166's favoured tokens are measured from the forward pass, not a raw projection of the write vector, which is Muse's first trap for a later ban. The ban's other traps are recorded for that part: the same list on random directions, the loop tokens under the ban, and what a surviving loop would mean.
+
