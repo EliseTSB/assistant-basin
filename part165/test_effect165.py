@@ -69,6 +69,22 @@ class EffectTests(unittest.TestCase):
         self.assertEqual(captured["scores"].shape, (1, 5))
         self.assertEqual(captured["hidden"].shape, (1, 4))
 
+    def test_realized_write_records_the_delivered_activation_delta(self):
+        layer = FakeLayer()
+        with torch.no_grad():
+            layer.mlp.down_proj.weight.copy_(torch.eye(4))
+        push = torch.full((1, 4), .125, dtype=torch.float32)
+        captured = effect165.generate_capture(FakeModel(layer), object(), [layer], "Q",
+                                              {0: push}, "cpu", FakeCommon,
+                                              row_layers={0: 0})
+        measured = captured["realized"][0]
+        # Deliberate regression guard: if the AddRowsHook stops applying its push,
+        # this expected delivered-write norm/cosine/count no longer match.
+        self.assertAlmostEqual(measured["realized_write_norm"], .25, places=6)
+        self.assertAlmostEqual(measured["intended_write_norm"], .25, places=6)
+        self.assertAlmostEqual(measured["realized_cos"], 1.0, places=6)
+        self.assertEqual(measured["changed_channels"], 4)
+
     def test_row_order_matches_run165_and_resume_filter(self):
         widths = {layer: 2048 for layer in run165.LAYERS}
         expected = run165.all_rows(widths)

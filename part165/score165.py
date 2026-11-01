@@ -162,22 +162,27 @@ def _bootstrap_ratio(slot_rates, numerator_arm, denominator_arm, seed=165, reps=
     slots = [(layer, slot) for layer in LAYERS for slot in SLOTS]
     top = sum(slot_rates[numerator_arm][s] for s in slots) / len(slots)
     bottom = sum(slot_rates[denominator_arm][s] for s in slots) / len(slots)
-    estimate = math.inf if bottom == 0 else top / bottom
+    estimate = None if bottom == 0 and top == 0 else (math.inf if bottom == 0 else top / bottom)
     rng = random.Random(seed)
-    draws, zero_denominator = [], 0
+    draws, zero_denominator, both_zero = [], 0, 0
+    grouped = {layer: [(layer, slot) for slot in SLOTS] for layer in LAYERS}
     for _ in range(reps):
-        sample = [slots[rng.randrange(len(slots))] for _ in slots]
+        sample = [rng.choice(grouped[layer]) for layer in LAYERS for _ in SLOTS]
         n = sum(slot_rates[numerator_arm][s] for s in sample) / len(sample)
         d = sum(slot_rates[denominator_arm][s] for s in sample) / len(sample)
         if d == 0:
             zero_denominator += 1
-            draws.append(math.inf)
+            if n == 0:
+                both_zero += 1
+            else:
+                draws.append(math.inf)
         else:
             draws.append(n / d)
-    interval = [percentile(draws, .025), percentile(draws, .975)]
+    interval = [percentile(draws, .025), percentile(draws, .975)] if draws else [None, None]
     return {"numerator": numerator_arm, "denominator": denominator_arm,
             "estimate": _json_number(estimate), "interval_95": [_json_number(x) for x in interval],
             "zero_denominator_bootstraps": zero_denominator,
+            "both_zero_bootstraps": both_zero,
             "bootstrap_replicates": reps, "bootstrap_seed": seed}
 
 
@@ -188,14 +193,28 @@ def _bootstrap_spearman(slot_rates, metric, means, full_k, seed=165, reps=10_000
     slots = [(layer, slot) for layer in LAYERS for slot in SLOTS]
     rng = random.Random(seed)
     draws = []
+    grouped = {layer: [(layer, slot) for slot in SLOTS] for layer in LAYERS}
     for _ in range(reps):
-        sample = [slots[rng.randrange(len(slots))] for _ in slots]
+        sample = [rng.choice(grouped[layer]) for layer in LAYERS for _ in SLOTS]
         arm_rates = [sum(slot_rates[metric][arm][key] for key in sample) / len(sample) for arm in LADDER]
         value = spearman(arm_rates, log_ks)
         if value is not None:
             draws.append(value)
     return {"estimate": observed,
             "interval_95": [percentile(draws, .025), percentile(draws, .975)],
+            "bootstrap_replicates": reps, "bootstrap_seed": seed}
+
+
+def _bootstrap_rate_difference(slot_rates, numerator_arm, denominator_arm, seed=165, reps=10_000):
+    slots = [(layer, slot) for layer in LAYERS for slot in SLOTS]
+    estimate = sum(slot_rates[numerator_arm][s] - slot_rates[denominator_arm][s] for s in slots) / len(slots)
+    grouped = {layer: [(layer, slot) for slot in SLOTS] for layer in LAYERS}
+    rng, draws = random.Random(seed), []
+    for _ in range(reps):
+        sample = [rng.choice(grouped[layer]) for layer in LAYERS for _ in SLOTS]
+        draws.append(sum(slot_rates[numerator_arm][s] - slot_rates[denominator_arm][s] for s in sample) / len(sample))
+    return {"estimate": estimate, "interval_95": [percentile(draws, .025), percentile(draws, .975)],
+            "numerator": numerator_arm, "denominator": denominator_arm,
             "bootstrap_replicates": reps, "bootstrap_seed": seed}
 
 
@@ -221,17 +240,42 @@ def score_rows(rows, norms_obj):
 
     norm_rows = norms_obj.get("directions", []) if isinstance(norms_obj, dict) else []
     norm_expected = len(LAYERS) * len(SLOTS) * len(ARMS)
-    bad_norms = [entry for entry in norm_rows if not isinstance(entry.get("relative_error"), (int, float))
-                 or entry["relative_error"] > .01]
-    bad_iso = [entry for entry in norm_rows if entry.get("arm") == "iso" and
-               (not isinstance(entry.get("iso_residual_fraction"), (int, float)) or
-                entry["iso_residual_fraction"] >= .01)]
-    gate3 = {"passed": len(norm_rows) == norm_expected and not bad_norms and not bad_iso,
+    expected_directions = {(layer, slot, arm) for layer in LAYERS for slot in SLOTS for arm in ARMS}
+    norm_keys, norm_duplicates = [], 0
+    bad_norms, bad_iso = [], []
+    for entry in norm_rows:
+        if not isinstance(entry, dict):
+            bad_norms.append(entry)
+            continue
+        key = (entry.get("layer"), entry.get("slot"), entry.get("arm"))
+        norm_duplicates += int(key in norm_keys)
+        norm_keys.append(key)
+        values = [entry.get(field) for field in ("write_norm", "target_norm", "relative_error")]
+        all_numeric_finite = all(not isinstance(value, (int, float)) or math.isfinite(float(value))
+                                 for value in entry.values())
+        valid = all_numeric_finite and all(isinstance(value, (int, float)) and math.isfinite(float(value)) for value in values)
+        if valid:
+            expected_error = abs(float(entry["write_norm"]) - float(entry["target_norm"])) / float(entry["target_norm"]) if entry["target_norm"] else math.inf
+            if entry["write_norm"] <= 0 or entry["target_norm"] <= 0 or entry["relative_error"] > .01 or abs(float(entry["relative_error"]) - expected_error) > 1e-6:
+                bad_norms.append(entry)
+        else:
+            bad_norms.append(entry)
+        if entry.get("arm") == "iso":
+            residual = entry.get("iso_residual_fraction")
+            if not isinstance(residual, (int, float)) or not math.isfinite(float(residual)) or residual >= .01:
+                bad_iso.append(entry)
+    exact_norm_keys = set(norm_keys) == expected_directions and norm_duplicates == 0
+    gate3 = {"passed": len(norm_rows) == norm_expected and exact_norm_keys and not bad_norms and not bad_iso,
              "expected_directions": norm_expected, "directions": len(norm_rows),
+             "unique_expected_directions": exact_norm_keys, "duplicate_directions": norm_duplicates,
              "write_norm_failures": len(bad_norms), "iso_residual_failures": len(bad_iso),
-             "max_relative_write_error": max((float(x.get("relative_error", math.inf)) for x in norm_rows), default=None),
-             "max_iso_residual_fraction": max((float(x.get("iso_residual_fraction") or 0)
-                                                 for x in norm_rows if x.get("arm") == "iso"), default=None)}
+             "max_relative_write_error": max((float(x.get("relative_error", math.inf)) for x in norm_rows
+                                                if isinstance(x, dict) and isinstance(x.get("relative_error"), (int, float))
+                                                and math.isfinite(float(x.get("relative_error")))), default=None),
+             "max_iso_residual_fraction": max((float(x.get("iso_residual_fraction"))
+                                                 for x in norm_rows if isinstance(x, dict) and x.get("arm") == "iso"
+                                                 and isinstance(x.get("iso_residual_fraction"), (int, float))
+                                                 and math.isfinite(float(x.get("iso_residual_fraction")))), default=None)}
 
     slot_rates, means, by_slot_arm = read_slot_rates(rows, baseline)
     gate4 = {"passed": means["broken"]["n+"] >= .03,
@@ -243,6 +287,24 @@ def score_rows(rows, norms_obj):
         "n_plus_over_n_pm": _bootstrap_ratio(slot_rates["broken"], "n+", "n±"),
         "iso_over_full": _bootstrap_ratio(slot_rates["broken"], "iso", "full"),
     }
+    answer_counts = {arm: {"primary_broken": 0, "total": 0, "broken_under_four_words": 0,
+                           "broken_loops": 0} for arm in ARMS}
+    for row in rows:
+        if row.get("stage") != "battery" or row.get("arm") not in answer_counts:
+            continue
+        arm, answer = row["arm"], row.get("answer", "")
+        answer_counts[arm]["total"] += 1
+        if primary_broken(answer):
+            answer_counts[arm]["primary_broken"] += 1
+            answer_counts[arm]["broken_under_four_words"] += int(len(answer.split()) < 4)
+            answer_counts[arm]["broken_loops"] += int(_loop_broken(answer) and len(answer.split()) >= 4)
+    for name, ratio in ratios.items():
+        numerator, denominator = ratio["numerator"], ratio["denominator"]
+        ratio["raw_counts"] = {"numerator_broken": answer_counts[numerator]["primary_broken"],
+                               "numerator_total": answer_counts[numerator]["total"],
+                               "denominator_broken": answer_counts[denominator]["primary_broken"],
+                               "denominator_total": answer_counts[denominator]["total"]}
+        ratio["rate_difference"] = _bootstrap_rate_difference(slot_rates["broken"], numerator, denominator)
     full_widths = [int(row["k"]) for row in rows if row.get("stage") == "battery" and
                    row.get("arm") == "full" and row.get("k")]
     full_k = full_widths[0] if full_widths else 2048
@@ -298,10 +360,17 @@ def score_rows(rows, norms_obj):
                          "answer": row["answer"]})
 
     ratios_for_json = {name: value for name, value in ratios.items()}
+    broken_shares = {arm: {"primary_broken_answers": answer_counts[arm]["primary_broken"],
+                           "short_under_four_words": (answer_counts[arm]["broken_under_four_words"] / answer_counts[arm]["primary_broken"]
+                                                       if answer_counts[arm]["primary_broken"] else None),
+                           "loops": (answer_counts[arm]["broken_loops"] / answer_counts[arm]["primary_broken"]
+                                     if answer_counts[arm]["primary_broken"] else None)} for arm in ARMS}
+    ladder_rates = {arm: means["broken"][arm] for arm in LADDER}
     return {"part": 165, "gates": {"gate1_rows": gate1, "gate2_no_push": gate2,
             "gate3_size": gate3, "gate4_measure_room": gate4}, "all_gates_passed": gates_passed,
             "predictions": predictions, "rates": {"broken": means["broken"],
             "triage_only": triage_rates, "changed": means["changed"],
+            "primary_broken_counts_and_shares": broken_shares, "ladder_rates_ordered": ladder_rates,
             "per_layer": per_layer, "per_slot": slot_rates},
             "ratios": ratios_for_json, "spearman": {"broken": broken_spearman, "changed": changed_spearman},
             "hand_read_rows": hand}
@@ -342,10 +411,25 @@ def write_outputs(result, out_dir):
         if estimate is None and "distances" in prediction:
             estimate = prediction["distances"]
         lines.append(f"| {name} | {prediction['verdict']} | {_display(estimate)} | {interval_text} |")
-    lines += ["", "## Rates by arm", "", "| Arm | Primary broken | Triage only | Changed |", "| --- | ---: | ---: | ---: |"]
+    lines += ["", "## Ladder shape beside Spearman", "",
+              "| Order | Arm | Primary broken rate |", "| ---: | --- | ---: |"]
+    for order, arm in enumerate(LADDER, 1):
+        lines.append(f"| {order} | {arm} | {_display(result['rates']['ladder_rates_ordered'][arm])} |")
+    lines += ["", "## Ratios with raw counts and rate differences", "",
+              "| Comparison | Broken counts (numerator / denominator) | Ratio | Rate difference (95% stratified interval) |",
+              "| --- | ---: | ---: | ---: |"]
+    for name, ratio in result["ratios"].items():
+        counts = ratio["raw_counts"]
+        diff = ratio["rate_difference"]
+        lines.append(f"| {ratio['numerator']} / {ratio['denominator']} | {counts['numerator_broken']}/{counts['numerator_total']} / "
+                     f"{counts['denominator_broken']}/{counts['denominator_total']} | {_display(ratio['estimate'])} | "
+                     f"{_display(diff['estimate'])} ({_display(diff['interval_95'][0])}, {_display(diff['interval_95'][1])}) |")
+    lines += ["", "## Rates by arm", "", "| Arm | Primary broken | Triage only | Changed | Broken answers under four words | Broken answers that loop |", "| --- | ---: | ---: | ---: | ---: | ---: |"]
     for arm in ARMS:
         lines.append(f"| {arm} | {_display(result['rates']['broken'][arm])} | "
-                     f"{_display(result['rates']['triage_only'][arm])} | {_display(result['rates']['changed'][arm])} |")
+                     f"{_display(result['rates']['triage_only'][arm])} | {_display(result['rates']['changed'][arm])} | "
+                     f"{_display(result['rates']['primary_broken_counts_and_shares'][arm]['short_under_four_words'])} | "
+                     f"{_display(result['rates']['primary_broken_counts_and_shares'][arm]['loops'])} |")
     lines += ["", "## Rates by layer and arm", "", "| Layer | Arm | Primary broken | Triage only | Changed |",
               "| ---: | --- | ---: | ---: | ---: |"]
     for layer, values in result["rates"]["per_layer"].items():

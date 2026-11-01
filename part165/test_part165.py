@@ -67,10 +67,10 @@ def seed_rows(broken=None, changed=None, no_push_answer="I am a test assistant."
 
 
 def good_norms():
-    return {"directions": [{"layer": 19, "slot": slot, "arm": arm,
-                             "relative_error": 0.0,
+    return {"directions": [{"layer": layer, "slot": slot, "arm": arm,
+                             "write_norm": 1.0, "target_norm": 1.0, "relative_error": 0.0,
                              "iso_residual_fraction": 0.0 if arm == "iso" else None}
-                            for slot in score165.SLOTS for arm in score165.ARMS]}
+                            for layer in score165.LAYERS for slot in score165.SLOTS for arm in score165.ARMS]}
 
 
 class Part165Tests(unittest.TestCase):
@@ -175,9 +175,22 @@ class Part165Tests(unittest.TestCase):
             self.assertFalse(score165.score_rows(baseline_bad, good_norms())["gates"]["gate2_no_push"]["passed"])
             # Deliberate break: corrupt one measured write norm. This must make the size gate red.
             broken_norms = good_norms()
+            broken_norms["directions"][0]["write_norm"] = 1.011
             broken_norms["directions"][0]["relative_error"] = .011
             gate3 = score165.score_rows(rows, broken_norms)["gates"]["gate3_size"]
             self.assertFalse(gate3["passed"], "deliberate 1.1% norm error must fail Gate 3")
+            missing_iso = good_norms()
+            missing_iso["directions"] = [x for x in missing_iso["directions"] if x["arm"] != "iso"]
+            self.assertFalse(score165.score_rows(rows, missing_iso)["gates"]["gate3_size"]["passed"])
+            duplicate_direction = good_norms()
+            duplicate_direction["directions"].append(dict(duplicate_direction["directions"][0]))
+            self.assertFalse(score165.score_rows(rows, duplicate_direction)["gates"]["gate3_size"]["passed"])
+            nonfinite = good_norms()
+            nonfinite["directions"][0]["write_norm"] = float("nan")
+            self.assertFalse(score165.score_rows(rows, nonfinite)["gates"]["gate3_size"]["passed"])
+            inconsistent = good_norms()
+            inconsistent["directions"][0]["relative_error"] = .000002
+            self.assertFalse(score165.score_rows(rows, inconsistent)["gates"]["gate3_size"]["passed"])
             no_room = [dict(row) for row in rows]
             for row in no_room:
                 if row.get("arm") == "n+":

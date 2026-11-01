@@ -43,7 +43,7 @@ def effect_values(plain_scores, pushed_scores, plain_hidden, pushed_hidden, plai
     return kl.tolist(), rel.tolist(), top_same.tolist()
 
 
-def generate_capture(model, tok, layers, question, layer_pushes, device, common):
+def generate_capture(model, tok, layers, question, layer_pushes, device, common, row_layers=None):
     """Generate exactly two greedy tokens and retain second-step scores and final-layer state."""
     import torch
     batch = int(next(iter(layer_pushes.values())).shape[0]) if layer_pushes else 1
@@ -58,9 +58,47 @@ def generate_capture(model, tok, layers, question, layer_pushes, device, common)
             captured.append(value[:, -1, :].detach())
 
     handle = layers[-1].register_forward_hook(capture)
-    hooks = [common.AddRowsHook(layers[layer_no].mlp.down_proj, push)
-             for layer_no, push in layer_pushes.items()]
-    for hook in hooks:
+    realized = {}
+    hooks = []
+    row_layers = row_layers or {}
+    for layer_no, push in layer_pushes.items():
+        down_proj = layers[layer_no].mlp.down_proj
+        before = {}
+        mask = torch.tensor([int(row_layers.get(i, layer_no)) == int(layer_no)
+                             for i in range(int(push.shape[0]))], dtype=torch.bool, device=push.device)
+        def capture_input(_module, args, key=layer_no, held=before):
+            value = args[0]
+            if value.ndim == 3 and value.shape[-2] == 1 and "x" not in held:
+                held["x"] = value.detach()
+        input_handle = down_proj.register_forward_pre_hook(capture_input)
+        hook = common.AddRowsHook(down_proj, push)
+        def capture_pushed(_module, args, key=layer_no, held=before, row_mask=mask, weight=down_proj.weight,
+                           row_push=push):
+            pushed_value = args[0]
+            if pushed_value.ndim != 3 or pushed_value.shape[-2] != 1 or "x" not in held:
+                return
+            x = held.pop("x")
+            delta = pushed_value[:, 0, :].float() - x[:, 0, :].float()
+            row_index = torch.nonzero(row_mask, as_tuple=False).flatten()
+            if row_index.numel() == 0:
+                return
+            selected_delta = delta.index_select(0, row_index)
+            selected_push = row_push.to(device=delta.device, dtype=torch.float32).index_select(0, row_index)
+            w = weight.detach().to(device=delta.device, dtype=torch.float32)
+            actual = selected_delta @ w.T
+            intended = selected_push @ w.T
+            actual_norm = torch.linalg.vector_norm(actual, dim=1)
+            intended_norm = torch.linalg.vector_norm(intended, dim=1)
+            cosine = (actual * intended).sum(dim=1) / (actual_norm * intended_norm).clamp_min(torch.finfo(torch.float32).tiny)
+            changed = (selected_delta.abs() > 1e-6).sum(dim=1)
+            for pos, row_no in enumerate(row_index.detach().cpu().tolist()):
+                realized[row_no] = {"realized_write_norm": float(actual_norm[pos].item()),
+                                    "realized_cos": float(cosine[pos].item()),
+                                    "changed_channels": int(changed[pos].item()),
+                                    "intended_write_norm": float(intended_norm[pos].item())}
+        after_handle = down_proj.register_forward_pre_hook(capture_pushed)
+        hooks.append((hook, input_handle, after_handle))
+    for hook, _before, _after in hooks:
         hook.begin_sequence()
     try:
         with torch.inference_mode():
@@ -70,14 +108,52 @@ def generate_capture(model, tok, layers, question, layer_pushes, device, common)
                                     output_scores=True, return_dict_in_generate=True)
     finally:
         handle.remove()
-        for hook in hooks:
+        for hook, before, after in hooks:
             hook.remove()
+            before.remove()
+            after.remove()
     if len(result.scores) != 2 or len(captured) < 1:
         raise RuntimeError(f"expected two scores and a decode activation; got {len(result.scores)} scores, {len(captured)} activations")
     first = result.sequences[:, prompt_len].detach()
     second = result.sequences[:, prompt_len + 1].detach()
     return {"first": first, "second": second, "scores": result.scores[1].detach(),
-            "hidden": captured[-1]}
+            "hidden": captured[-1], "realized": realized}
+
+
+def _column_cosine_max(weight, write, chunk_size=256):
+    import torch
+    write_norm = torch.linalg.vector_norm(write)
+    col_norms = torch.linalg.vector_norm(weight, dim=0)
+    best = torch.tensor(0.0, dtype=torch.float32)
+    for start in range(0, int(weight.shape[1]), chunk_size):
+        columns = weight[:, start:start + chunk_size]
+        cosine = (columns.T @ write).abs() / (col_norms[start:start + chunk_size] * write_norm).clamp_min(torch.finfo(torch.float32).tiny)
+        best = torch.maximum(best, cosine.max())
+    return float(best.item())
+
+
+def geometry_for_layer(weight, layer_no, directions, metrics):
+    import torch
+    w = weight.detach().to(device="cpu", dtype=torch.float32)
+    singular = torch.linalg.svdvals(w)
+    tolerance = max(w.shape) * torch.finfo(torch.float32).eps * float(singular.max().item())
+    direction_rows = []
+    iso_fraction = None
+    for (layer, slot), arms in directions.items():
+        if layer != layer_no:
+            continue
+        for arm, d in arms.items():
+            d_cpu = d.detach().to(device="cpu", dtype=torch.float32)
+            write = w @ d_cpu
+            direction_rows.append({"layer": layer, "slot": slot, "arm": arm,
+                                   "norm_d": float(torch.linalg.vector_norm(d_cpu).item()),
+                                   "largest_column_cosine": _column_cosine_max(w, write)})
+            if arm == "iso":
+                iso_fraction = 1.0 - float(metrics[(layer, slot)][arm]["iso_residual_fraction"])
+    return {"layer": int(layer_no), "rank": int((singular > tolerance).sum().item()),
+            "rank_tolerance": tolerance, "smallest_singular_value": float(singular.min().item()),
+            "largest_singular_value": float(singular.max().item()),
+            "directions": direction_rows, "iso_reconstruction_fraction": iso_fraction}
 
 
 def row_key(row):
@@ -119,14 +195,21 @@ def run(args, loader=None, capture_fn=None):
     else:
         tok, model = loader(args.device)
     layers = common.find_layers(model)
-    directions, pinv_cache = {}, {}
+    directions, direction_metrics, pinv_cache = {}, {}, {}
+    geometry_layers = []
     for layer_no in LAYERS:
         weight = layers[layer_no].mlp.down_proj.weight
         median = float(medians[str(layer_no)] if str(layer_no) in medians else medians[layer_no])
         for slot in range(SLOTS):
             vectors, _metrics = build_directions(weight, layer_no, slot, median, pinv_cache)
             directions[(layer_no, slot)] = vectors
-    capture_fn = capture_fn or (lambda *a: generate_capture(*a, common=common))
+            direction_metrics[(layer_no, slot)] = _metrics
+        geometry_layers.append(geometry_for_layer(weight, layer_no, directions, direction_metrics))
+    geometry_path = ROOT / "results/part165/geometry.json"
+    geometry_path.parent.mkdir(parents=True, exist_ok=True)
+    geometry_path.write_text(json.dumps({"part": 165, "dtype": "float32", "layers": geometry_layers},
+                                        ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+    capture_fn = capture_fn or (lambda *a, **kw: generate_capture(*a, common=common, **kw))
     selected_questions = questions()
     written = 0
     pilot_started = time.perf_counter()
@@ -144,7 +227,8 @@ def run(args, loader=None, capture_fn=None):
                 if not chunk:
                     continue
                 row_pushes = pushes_for(chunk, layers, directions)
-                pushed = capture_fn(model, tok, layers, item["question"], row_pushes, args.device)
+                pushed = capture_fn(model, tok, layers, item["question"], row_pushes, args.device,
+                                    row_layers={i: int(row["layer"]) for i, row in enumerate(chunk)})
                 first_diff = pushed["first"].detach().to("cpu").ne(plain["first"].detach().to("cpu"))
                 kl, rel, same = effect_values(plain["scores"], pushed["scores"], plain["hidden"],
                                               pushed["hidden"], plain["second"], pushed["second"])
@@ -152,7 +236,7 @@ def run(args, loader=None, capture_fn=None):
                     raise RuntimeError("captured effect count does not match batch rows")
                 for index, row in enumerate(chunk):
                     # A resume may leave an incomplete subset of the shuffled batch; pushes/capture must align.
-                    fh.write(json.dumps({**row, "kl": float(kl[index]), "rel_change": float(rel[index]),
+                    fh.write(json.dumps({**row, **pushed["realized"][index], "kl": float(kl[index]), "rel_change": float(rel[index]),
                                          "top1_same": bool(same[index]),
                                          "first_token_diff": bool(first_diff[index].item())}, ensure_ascii=True) + "\n")
                     done.add(row_key(row))

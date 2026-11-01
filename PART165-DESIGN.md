@@ -87,3 +87,15 @@ The run had already started when this was written, at 00:58, on the registered c
 
 New prediction: 165.7, n+'s mean relative last-layer change is at least 1.5 times full's (medium). It fails if the arms' changes are about equal. If it holds, equal write norm did not give equal effect at the output, and the broken ratio is not read as a difference between pushes of equal effect; matching on effect becomes the next part. If it fails, Part 164's gap is not explained by size at the output. Arm means of both measures are reported for every arm, beside the broken rates. Part 164's plain model broke 0 of 16 no-push answers, so the floor there was 0.
 
+## Amendment 3, 2026-11-01 01:06 CT, during the battery, on Alden's review, no answer read
+
+Alden read the design and code at 02afd6f and found the timing error Amendment 2 fixed, and these. Nothing about the battery's generation changes.
+
+Delivered dose. Gate 3 checks the intended float32 W d, but the hook casts d to bf16 and adds it to a bf16 activation, so the delivered write can differ, and sparse and dense pushes may differ in that. The effect run therefore also records, per row at the first pushed step, the realized write norm and its cosine with the intended write, on the real dtype and path, at a shared context, and the count of changed channels. If realized writes differ materially between arms, that is reported as a failure of equal dose and the ladder is not read as direction alone.
+
+Geometry, per direction, no generation: the norm of d, the largest absolute cosine between W d and any column of W, and for each layer the numerical rank of W and its smallest singular value. So k is reported as support size, not as closeness to one column, and iso's isotropy is checked rather than assumed.
+
+Scoring. Gate 3 requires exact unique coverage of layer, slot and arm, and finite values. The bootstrap is stratified by layer, which keeps the design's layer weights. Raw counts and rate differences are reported beside each ratio, and a ratio with a zero denominator is called undefined when both rates are zero. The share of primary-broken answers that are short answers under four words is reported per arm.
+
+Reading rules. If 165.1 fails, this sample did not reproduce the gap; that alone does not show the gap needs selection. Changed is a binary indicator of output change, not an amount, so if 165.2 holds and 165.6 fails the reading is: lower breakage without the specified trend in this indicator. Gate 4 is about informativeness, so raw rates are kept whatever it says. A Spearman shows an ordinal trend; the shape is reported beside it.
+
