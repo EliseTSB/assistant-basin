@@ -1,5 +1,7 @@
 # Banning a push’s own words cut its loops; a mass-matched ban added loops
 
+> Follow-up: [Part 169](../part169/README.md) ran the mass draw again on new neurons and phrasings. The rise did not recur there: 0.0% (interval -6.1% to 7.0%). The two runs differ in more than neurons; that README says how.
+
 Banning a push’s own top words cut loops by [31.4%](score.json), with a whole-slot interval of [15.8%–44.9%](score.json), on fresh directions; the neighbour ban cut [−2.1%](score.json) ([168.5](../../PART168-DESIGN.md) held). The own-minus-matched gap was [0.047](score.json), below its [0.05](../../PART168-DESIGN.md) bar, so [168.4](../../PART168-DESIGN.md) failed, and a failed superiority test does not show the two bans are equal. The mass-matched list is a probability-tilted draw calibrated to mean mass on the plain path; it raised loops by [16.5%](score.json), interval [6.3%–29.4%](score.json). Under [Amendment 1](../../PART168-DESIGN.md) this supports an effect of these masking policies. It does not identify how loops form.
 
 ## Answer outcomes

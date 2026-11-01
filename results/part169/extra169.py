@@ -87,11 +87,14 @@ def main() -> None:
         if m.get("lists", {}).get("hit", {}).get("ids")
     }
     loops_by_row_ban: dict[tuple, bool] = {}
+    answer_by_row_ban: dict[tuple, dict] = {}
     for answer in answers:
         if answer.get("stage") == "battery":
-            loops_by_row_ban[(row_key(answer), answer["ban"])] = bool(
+            answer_key = (row_key(answer), answer["ban"])
+            loops_by_row_ban[answer_key] = bool(
                 score166.loop_phrase(answer.get("answer", ""))
             )
+            answer_by_row_ban[answer_key] = answer
     lines.extend(
         [
             "",
@@ -116,6 +119,35 @@ def main() -> None:
     lines.append(
         f"{'pooled':8s} {len(hit_keys):4d} {pooled_counts['none']:11d} "
         f"{pooled_counts['free']:10d} {pooled_counts['hit']:10d}"
+    )
+
+    plain2_keys = {
+        row_key(m)
+        for m in masses
+        if int(m.get("lists", {}).get("free", {}).get("plain_overlap", 0)) >= 2
+    }
+    plain2_eligible = [
+        key for key in plain2_keys if not loops_by_row_ban.get((key, "none"), False)
+    ]
+    plain2_induced = {
+        ban: sum(loops_by_row_ban.get((key, ban), False) for key in plain2_eligible)
+        for ban in ("free", "hit")
+    }
+    plain2_totals = {
+        ban: sum(loops_by_row_ban.get((key, ban), False) for key in plain2_keys)
+        for ban in ("none", "free", "hit")
+    }
+    lines.extend(
+        [
+            "",
+            "169.8 on rows with at least two free-list plain tokens:",
+            f"eligible induced denominator {len(plain2_eligible)}/{len(plain2_keys)}; "
+            f"free {plain2_induced['free']} ({pct(plain2_induced['free'] / len(plain2_eligible))}); "
+            f"hit {plain2_induced['hit']} ({pct(plain2_induced['hit'] / len(plain2_eligible))}).",
+            "same 528-row set loop counts: "
+            + ", ".join(f"{ban} {plain2_totals[ban]}" for ban in ("none", "free", "hit"))
+            + ".",
+        ]
     )
 
     decile_re = re.compile(
@@ -157,6 +189,166 @@ def main() -> None:
     lines.append(
         f"Top two tenths' share of the own cut: {top_two_cut}/{total_cut} = "
         f"{pct(top_two_cut / total_cut)}."
+    )
+
+    all_row_keys = {row_key(m) for m in masses}
+    top_two_keys = {
+        row_key(m)
+        for m in sorted(masses, key=lambda item: item["lists"]["own"]["mass"])[
+            8 * len(masses) // 10 :
+        ]
+    }
+    top_two_none = sum(loops_by_row_ban.get((key, "none"), False) for key in top_two_keys)
+    top_two_own = sum(loops_by_row_ban.get((key, "own"), False) for key in top_two_keys)
+    all_none = sum(loops_by_row_ban.get((key, "none"), False) for key in all_row_keys)
+    all_own = sum(loops_by_row_ban.get((key, "own"), False) for key in all_row_keys)
+    other_keys = all_row_keys - top_two_keys
+    other_none = sum(loops_by_row_ban.get((key, "none"), False) for key in other_keys)
+    other_own = sum(loops_by_row_ban.get((key, "own"), False) for key in other_keys)
+    top_two_cut_count = top_two_none - top_two_own
+    all_cut_count = all_none - all_own
+    other_cut_count = other_none - other_own
+    equal_rate_top_two_expected = top_two_none * all_cut_count / all_none
+    lines.extend(
+        [
+            f"Top two tenths: {top_two_none}/{all_none} = {pct(top_two_none / all_none)} of none loops; "
+            f"{top_two_cut_count}/{all_cut_count} = {pct(top_two_cut_count / all_cut_count)} of net own cut.",
+            f"Relative own cut: top two {pct(top_two_cut_count / top_two_none)}, "
+            f"other eight {pct(other_cut_count / other_none)}.",
+            f"If each tenth lost the same share of its none loops ({all_cut_count}/{all_none}), "
+            f"the top two's {top_two_none} none loops imply {equal_rate_top_two_expected:.1f}, "
+            f"about {round(equal_rate_top_two_expected)}, of the {all_cut_count} net cut.",
+        ]
+    )
+
+    high_keys = {row_key(m) for m in masses if m.get("high_row")}
+    high_none = sum(loops_by_row_ban.get((key, "none"), False) for key in high_keys)
+    high_own = sum(loops_by_row_ban.get((key, "own"), False) for key in high_keys)
+    other_high_none = sum(
+        loops_by_row_ban.get((key, "none"), False) for key in all_row_keys - high_keys
+    )
+    other_high_own = sum(
+        loops_by_row_ban.get((key, "own"), False) for key in all_row_keys - high_keys
+    )
+    lines.append(
+        f"Own relative cut by high-row status: high {high_none - high_own}/{high_none} "
+        f"({pct((high_none - high_own) / high_none)}); other "
+        f"{other_high_none - other_high_own}/{other_high_none} "
+        f"({pct((other_high_none - other_high_own) / other_high_none)})."
+    )
+    paired_keys = {row_key(m) for m in masses if m.get("paired_set")}
+    for label, keys in (
+        ("high paired", high_keys & paired_keys),
+        ("high unpaired", high_keys - paired_keys),
+    ):
+        none_count = sum(loops_by_row_ban.get((key, "none"), False) for key in keys)
+        free_count = sum(loops_by_row_ban.get((key, "free"), False) for key in keys)
+        eligible_count = sum(not loops_by_row_ban.get((key, "none"), False) for key in keys)
+        induced_count = sum(
+            loops_by_row_ban.get((key, "free"), False)
+            and not loops_by_row_ban.get((key, "none"), False)
+            for key in keys
+        )
+        lines.append(
+            f"{label}: {len(keys)} rows, none {none_count}, free {free_count}; "
+            f"free induced {induced_count}/{eligible_count} "
+            f"({pct(induced_count / eligible_count)})."
+        )
+
+    phrase_cuts = []
+    for phrasing in sorted({key[3] for key in all_row_keys}):
+        keys = {key for key in all_row_keys if key[3] != phrasing}
+        none_count = sum(loops_by_row_ban.get((key, "none"), False) for key in keys)
+        own_count = sum(loops_by_row_ban.get((key, "own"), False) for key in keys)
+        phrase_cuts.append((none_count - own_count) / none_count)
+    arm_cuts = {}
+    for arm in ("n+", "k4"):
+        keys = {key for key in all_row_keys if key[0] == arm}
+        none_count = sum(loops_by_row_ban.get((key, "none"), False) for key in keys)
+        own_count = sum(loops_by_row_ban.get((key, "own"), False) for key in keys)
+        arm_cuts[arm] = (none_count - own_count) / none_count
+    lines.append(
+        f"Own cut leaving out one phrasing: {pct(min(phrase_cuts))}–{pct(max(phrase_cuts))}; "
+        f"arms alone n+ {pct(arm_cuts['n+'])}, k4 {pct(arm_cuts['k4'])}."
+    )
+
+    def length_bin(token_count: int) -> int:
+        return 0 if token_count < 30 else 1 if token_count < 45 else 2 if token_count < 60 else 3 if token_count < 75 else 4
+
+    none_cell_counts: dict[tuple, list[int]] = defaultdict(lambda: [0, 0])
+    for key in all_row_keys:
+        answer = answer_by_row_ban[(key, "none")]
+        cell = (
+            length_bin(int(answer["token_count"])),
+            bool(answer.get("ended_eos_before_80")),
+        )
+        none_cell_counts[cell][0] += int(loops_by_row_ban[(key, "none")])
+        none_cell_counts[cell][1] += 1
+
+    def expected_from_none_cells(ban: str) -> float:
+        expected = 0.0
+        for key in all_row_keys:
+            answer = answer_by_row_ban[(key, ban)]
+            cell = (
+                length_bin(int(answer["token_count"])),
+                bool(answer.get("ended_eos_before_80")),
+            )
+            loop_count, row_count = none_cell_counts[cell]
+            expected += loop_count / row_count
+        return expected
+
+    own_expected = expected_from_none_cells("own")
+    plain50_expected = expected_from_none_cells("plain50")
+    plain50_observed = sum(
+        loops_by_row_ban.get((key, "plain50"), False) for key in all_row_keys
+    )
+    plain50_none = sum(loops_by_row_ban.get((key, "none"), False) for key in all_row_keys)
+    lines.extend(
+        [
+            "",
+            "Length and EOS standardization (COLD method: none loop rate by none-answer length bin × EOS cell, "
+            "applied to each ban's answer cells):",
+            f"own observed {all_own}, expected {own_expected:.1f}, residual {all_own - own_expected:.1f} "
+            f"of net change {all_own - all_none}.",
+            f"plain50 observed {plain50_observed}, expected {plain50_expected:.1f}; "
+            f"cell mix accounts for {plain50_expected - plain50_none:.1f} of the "
+            f"{plain50_observed - plain50_none} net rise, residual {plain50_observed - plain50_expected:.1f}.",
+        ]
+    )
+
+    plain50_by_phrasing = {}
+    for phrasing in sorted({key[3] for key in all_row_keys}):
+        keys = {key for key in all_row_keys if key[3] == phrasing}
+        plain50_by_phrasing[phrasing] = (
+            sum(loops_by_row_ban.get((key, "plain50"), False) for key in keys)
+            - sum(loops_by_row_ban.get((key, "none"), False) for key in keys)
+        )
+    lines.append(
+        f"plain50 exceeds none in {sum(value > 0 for value in plain50_by_phrasing.values())}/"
+        f"{len(plain50_by_phrasing)} phrasings; changes by phrasing: {plain50_by_phrasing}."
+    )
+
+    batch_noise = {}
+    for ban in ("own", "free", "clear"):
+        never = [
+            key
+            for key in all_row_keys
+            if not answer_by_row_ban[(key, ban)].get("blocked_steps")
+        ]
+        differs = [
+            key
+            for key in never
+            if answer_by_row_ban[(key, ban)].get("token_ids")
+            != answer_by_row_ban[(key, "none")].get("token_ids")
+        ]
+        batch_noise[ban] = (len(differs), len(never), len(differs) / len(never))
+    lines.append(
+        "Batch-shape noise among never-blocked answers: "
+        + "; ".join(
+            f"{ban} {n}/{den} ({pct(rate)})"
+            for ban, (n, den, rate) in batch_noise.items()
+        )
+        + "."
     )
 
     blind_to_ban = {item["blind_id"]: item for item in judged}

@@ -1,6 +1,6 @@
 # Banning a push’s own top [50](../../PART169-DESIGN.md) tokens cuts loops by [38%](score.json) on new neurons and phrasings
 
-On new neurons and new phrasings, banning a push’s own top [50](../../PART169-DESIGN.md) tokens cut loop answers again, by [37.9%](score.json) (whole-slot interval [25.8%–48.6%](score.json)). The free recipe did not restore Part [168](../part168/README.md)’s [16.5%](../part168/README.md) rise: it gave [338](score.json) loop answers, equal to [338](score.json) with no ban. These results support an effect of the defined masking policies. The design’s Reading rules say: “If [169.3](../../PART169-DESIGN.md) fails, its rise did not replicate, and [169.4](../../PART169-DESIGN.md), [169.5](../../PART169-DESIGN.md) and [169.8](../../PART169-DESIGN.md) read only as differences between bans.” [169.3](score.json) failed.
+On new neurons and new phrasings, banning a push’s own top [50](../../PART169-DESIGN.md) tokens cut loop answers again, by [37.9%](score.json) (whole-slot interval [25.8%–48.6%](score.json)). The Part [168](../part168/README.md) free-list rise did not recur here: free gave [338](score.json) loop answers, equal to [338](score.json) with no ban. These counts distinguish the defined masking policies. The design’s Reading rules say: “If [169.3](../../PART169-DESIGN.md) fails, its rise did not replicate, and [169.4](../../PART169-DESIGN.md), [169.5](../../PART169-DESIGN.md) and [169.8](../../PART169-DESIGN.md) read only as differences between bans.” [169.3](score.json) failed.
 
 ## Answer outcomes
 
@@ -31,28 +31,28 @@ Across both arms, own has [210](score.json) loop answers against [338](score.jso
 
 ## Registered predictions
 
-Bars are from the [design](../../PART169-DESIGN.md); point estimates and whole-slot intervals are from [`score.json`](score.json). For the last column, “held” means the point estimate met its registered bar.
+Bars are from the [design](../../PART169-DESIGN.md); point estimates and whole-slot intervals are from [`score.json`](score.json). For the last column, “held” means the point estimate met its registered bar. 169.W1 and 169.W2 are Weaver’s.
 
 | Prediction | Registered bar | Estimate | Whole-slot [95%](score.json) interval | Verdict |
 |---|---|---|---|---|
-| [169.1](../../PART169-DESIGN.md) | Own relative cut at least [25%](../../PART169-DESIGN.md) | [37.9%](score.json) | [25.8%–48.6%](score.json) | Held |
-| [169.2](../../PART169-DESIGN.md) | High-row cut exceeds other-row cut by at least [25 percentage points](../../PART169-DESIGN.md) | [37.1 percentage points](score.json) | [18.7–53.1 percentage points](score.json) | Held |
-| [169.3](../../PART169-DESIGN.md) | Free raises loop answers by at least [5%](../../PART169-DESIGN.md) | [0.0%](score.json) | [−6.1%–7.0%](score.json) | Failed |
-| [169.4](../../PART169-DESIGN.md) | On paired rows, free minus clear is at least [2 percentage points](../../PART169-DESIGN.md) | [−0.4 percentage points](score.json) | [−2.2–1.4 percentage points](score.json) | Failed |
-| [169.5](../../PART169-DESIGN.md) | On high paired rows, free minus clear induced rate is at least [10 percentage points](../../PART169-DESIGN.md) | [+2.2 percentage points](score.json) | [−2.4–7.0 percentage points](score.json) | Failed |
-| [169.6](../../PART169-DESIGN.md) | No-push free loop rate below [5%](../../PART169-DESIGN.md) | [3.1%](score.json) | [2.1%–4.3%](score.json) | Held |
-| [169.7](../../PART169-DESIGN.md) | Paired clear change between [−15% and +15%](../../PART169-DESIGN.md) | [−1.9%](score.json) | [−9.3%–4.7%](score.json) | Held |
-| [169.8](../../PART169-DESIGN.md) | Hit induced rate at least [0.6](../../PART169-DESIGN.md) times free on eligible rows | Hit [16.7%](score.json), free [19.2%](score.json); margin over bar [+5.2 percentage points](score.json) | [2.7–7.9 percentage points](score.json) for margin | Held |
-| Weaver’s [169.W1](../../PART169-DESIGN.md) | Above-median overlap induced rate at least [5 percentage points](../../PART169-DESIGN.md) higher | Above median [29.0%](score.json), at/below [39.2%](score.json); difference [−10.2 percentage points](score.json) | [−16.0–−4.5 percentage points](score.json) | Failed |
-| Weaver’s [169.W2](../../PART169-DESIGN.md) | [plain50](../../PART169-DESIGN.md) net rise at least one-third of own’s net cut | Rise [283](score.json) loops; bar [42.7](score.json); margin [240.3](score.json) loops | [181.0–298.3](score.json) loops for margin | Held |
+| 169.1 | Own relative cut at least [25%](../../PART169-DESIGN.md) | [37.9%](score.json) | [25.8%–48.6%](score.json) | held |
+| 169.2 | High-row cut exceeds other-row cut by at least [25 percentage points](../../PART169-DESIGN.md) | [37.1 percentage points](score.json) | [18.7–53.1 percentage points](score.json) | held |
+| 169.3 | Free raises loop answers by at least [5%](../../PART169-DESIGN.md) | [0.0%](score.json) | [−6.1%–7.0%](score.json) | failed |
+| 169.4 | On paired rows, free minus clear is at least [2 percentage points](../../PART169-DESIGN.md) | [−0.4 percentage points](score.json) | [−2.2–1.4 percentage points](score.json) | failed |
+| 169.5 | On high paired rows, free minus clear induced rate is at least [10 percentage points](../../PART169-DESIGN.md) | [+2.2 percentage points](score.json) | [−2.4–7.0 percentage points](score.json) | failed |
+| 169.6 | No-push free loop rate below [5%](../../PART169-DESIGN.md) | [3.1%](score.json) | [2.1%–4.3%](score.json) | held |
+| 169.7 | Paired clear change between [−15% and +15%](../../PART169-DESIGN.md) | [−1.9%](score.json) change in loop answers, expressed as a relative cut; negative means clear adds [1.9%](score.json) | [−9.3%–4.7%](score.json) | held |
+| 169.8 | Hit induced rate at least [0.6](../../PART169-DESIGN.md) times free on eligible rows | On [323](extra169.txt) inducible rows among [528](extra169.txt) with at least [2](../../PART169-DESIGN.md) plain tokens: hit [54/323 = 16.7%](extra169.txt), free [62/323 = 19.2%](extra169.txt); on the same [528](extra169.txt) rows, net loops are none [205](extra169.txt), free [205](extra169.txt), hit [201](extra169.txt); margin over bar [+5.2 percentage points](score.json) | [2.7–7.9 percentage points](score.json) for margin | held |
+| 169.W1 | Above-median overlap induced rate at least [5 percentage points](../../PART169-DESIGN.md) higher | Above median [29.0%](score.json), at/below [39.2%](score.json); difference [−10.2 percentage points](score.json) | [−16.0–−4.5 percentage points](score.json) | failed |
+| 169.W2 | [plain50](../../PART169-DESIGN.md) net rise at least one-third of own’s net cut | Rise [283](score.json) loops; bar [42.7](score.json); margin [240.3](score.json) loops | [181.0–298.3](score.json) loops for margin | held |
 
-The [Reading rules](../../PART169-DESIGN.md) state that when [169.3](score.json) fails, [169.4](score.json), [169.5](score.json) and [169.8](score.json) are read only as differences between bans. That applies here, including the held point estimate for [169.8](score.json).
+The [Reading rules](../../PART169-DESIGN.md) state that when [169.3](score.json) fails, [169.4](score.json), [169.5](score.json) and [169.8](score.json) are read only as differences between bans. For [169.8](score.json), the induced rates are hit [54/323 = 16.7%](extra169.txt) and free [62/323 = 19.2%](extra169.txt), among rows with at least [2](../../PART169-DESIGN.md) plain tokens and no loop under none; net loop counts on the same [528](extra169.txt) rows are none [205](extra169.txt), free [205](extra169.txt), hit [201](extra169.txt). Free has no net rise there, so [169.8](score.json) cannot read as plain tokens reproducing a rise. Its verdict stays Held as a difference between bans.
 
 ## Hit-row warning
 
 `hit_relative_cut`, the `hit` rows of `per_arm_ban`, and `ended_induced_net.hit.net_loop_change` in [`score.json`](score.json) compare hit’s selected rows with all rows. Hit rows loop more at baseline: n+ none is [21.7%](score.json) and hit is [27.6%](score.json); [k4](../../PART169-DESIGN.md) none is [22.3%](score.json) and hit is [30.8%](score.json). Do not report these comparisons as a rise.
 
-On the same [899](extra169.txt) hit-eligible rows, none has [267](extra169.txt) loop answers, free [269](extra169.txt), and hit [262](extra169.txt). Reading [`score169.py`](../../part169/score169.py) confirms the mismatch: the exploratory relative-cut and net-change calculations compare hit’s subset with the all-row none rate, while each `per_arm_ban.hit` cell is also based only on hit-eligible answers. The registered [169.8](../../PART169-DESIGN.md) verdict instead compares hit and free induced rates on the same rows whose free list has at least [2](../../PART169-DESIGN.md) plain-answer tokens. The scorer defect touches no verdict.
+On the same [899](extra169.txt) hit-eligible rows, none has [267](extra169.txt) loop answers, free [269](extra169.txt), and hit [262](extra169.txt). Reading [`part169/score169.py`](../../part169/score169.py) confirms the mismatch: the exploratory relative-cut and net-change calculations compare hit’s subset with the all-row none rate, while each `per_arm_ban.hit` cell is also based only on hit-eligible answers. The registered [169.8](../../PART169-DESIGN.md) verdict instead compares hit and free induced rates on the same rows whose free list has at least [2](../../PART169-DESIGN.md) plain-answer tokens. The scorer defect touches no verdict. The hit share of free-list mass, [90.9%](score.json), is the upper median over all [899](extra169.txt) hit rows, not a mean or a statistic over the [528](extra169.txt) rows with at least [2](../../PART169-DESIGN.md) plain tokens. The scorer's `med()` returns the upper median; the difference is negligible here.
 
 | Hit-defined rows | Rows | None loops | Free loops | Hit loops |
 |---|---:|---:|---:|---:|
@@ -71,9 +71,13 @@ The split is exploratory. Part [168](../part168/README.md) counted none, mass-ma
 | Everything else | [168](../part168/README.md) | [1,063](../../PART169-DESIGN.md) | [91](../../PART169-DESIGN.md) | [93](../../PART169-DESIGN.md) | [85](../../PART169-DESIGN.md) |
 | Everything else | [169](review169.txt) | [1,083](review169.txt) | [149](review169.txt) | [148](review169.txt) | [127](review169.txt) |
 
-Both parts used the same recipe with different neurons, phrasings and seeds ([Part 168](../part168/README.md), [Part 169 design](../../PART169-DESIGN.md)). These are post-score splits from [`review169.py`](review169.py), so they are exploratory.
+## What this says about Part 168’s rise
 
-Own-mass tenths from [`review169.txt`](review169.txt) are shown below. The top two tenths account for [103 of 128 (80.5%)](extra169.txt) of the own cut; `extra169.py` computes that share from the tenth counts.
+The Part [168](../part168/README.md) rise did not recur here: free did not raise loops by [5%](../../PART169-DESIGN.md); its estimate was [0.0%](score.json), with a whole-slot interval from [−6.1% to +7.0%](score.json), so [16.5%](cold/COLD.md) lies outside that interval. Part 168’s interval was [6.3%–29.4%](cold/COLD.md); the intervals overlap only from [6.3% to 7.0%](cold/COLD.md), and no two-sample test was run. This does not show that the first rise was spurious.
+
+The mass-draw algorithm is the same. Part 168 excluded special and EOS IDs; Part 169 also excludes every added-vocabulary ID from every list, including own, and drops Part 168’s full arm. The neurons, phrasings and seeds differ. Baseline loop rates were [14.0%](cold/COLD.md) in Part 168 and [22.0%](cold/COLD.md) here. The replication table’s splits come from post-score [`review169.py`](review169.py) and are exploratory.
+
+Own-mass tenths from [`review169.txt`](review169.txt) are shown below; `extra169.py` recomputes the shares and counterfactual below.
 
 | Own-mass tenth | Mass range | Rows | None | Own | Free | Own cut (none minus own) |
 |---|---:|---:|---:|---:|---:|---:|
@@ -88,6 +92,8 @@ Own-mass tenths from [`review169.txt`](review169.txt) are shown below. The top t
 | [8](extra169.txt) | [0.088–0.14](extra169.txt) | [154](extra169.txt) | [60](extra169.txt) | [27](extra169.txt) | [57](extra169.txt) | [33](extra169.txt) |
 | [9](extra169.txt) | [0.14–0.55](extra169.txt) | [154](extra169.txt) | [103](extra169.txt) | [33](extra169.txt) | [104](extra169.txt) | [70](extra169.txt) |
 
+The top two tenths contain [163 of 338 (48.2%)](extra169.txt) of none loops but [103 of 128 (80.5%)](extra169.txt) of the own cut. Own cuts [63.2%](extra169.txt) of their loops, against [14.3%](extra169.txt) in the other [8](extra169.txt) tenths. If every tenth lost the same fraction of its none loops as the pooled cut, [128/338 = 37.9%](extra169.txt), the top two’s [163](extra169.txt) none loops would account for about [62 of the 128](extra169.txt) net cut. The [169.1](../../PART169-DESIGN.md) bar rests on high rows: the cut is [53.0%](extra169.txt) on high rows and [15.9%](extra169.txt) elsewhere. By the same length-bin and EOS-cell standardization, own has a residual of [−126.5](extra169.txt) loops against its [−128](extra169.txt) net change, so length and EOS do not explain the cut.
+
 ## Loop churn and [plain50](../../PART169-DESIGN.md)
 
 | Ban | Ended | Induced | Net loop change (induced minus ended) |
@@ -100,6 +106,8 @@ Own-mass tenths from [`review169.txt`](review169.txt) are shown below. The top t
 A ban that changes an answer can move its loop status in either direction. Induced alone therefore does not measure loops added; the net count does. Part [168](../part168/README.md) reported own ended [101](../part168/review168.txt) and induced [42](../part168/review168.txt), using the same counting terms.
 
 [`plain50`](../../PART169-DESIGN.md) blocks the [50](../../PART169-DESIGN.md) tokens with the largest mean probability on each phrasing’s plain path. It moved pooled loop answers from [338](score.json) with none to [621](score.json), with [413](score.json) induced loops and a mean of [16.3](score.json) blocked steps per answer. With no push, [plain50](../../PART169-DESIGN.md) had [0](score.json) loop answers out of [8](score.json); [8](score.json) is a small count. Weaver’s [169.W2](score.json) held.
+
+The plain50 rise appears under all [8](extra169.txt) phrasings. By the length-bin and EOS-cell comparison in `extra169.py`, cell mix accounts for about [47](extra169.txt) of the [283](extra169.txt) net rise. In a [20-answer](cold/COLD.md) read of induced loops, [16](cold/COLD.md) were cyclic repetition and [4](cold/COLD.md) were prose repeating a phrase three times; the loop rule labels both.
 
 Weaver’s [169.W1](score.json) failed in the opposite direction: above-median-overlap rows induced at [29.0%](score.json), below-or-at-median rows at [39.2%](score.json), a difference of [−10.2 percentage points](score.json); Spearman’s rho was [−0.15](score.json). Here overlap means the count of token IDs from a row’s [`plain50`](../../PART169-DESIGN.md) list that also occur in that row’s no-ban answer ([scorer code](../../part169/score169.py)); the median overlap was [18](score.json) tokens. Weaver’s falsifier did not trigger because [plain50](../../PART169-DESIGN.md)’s induced count, [413](score.json), exceeds free’s [89](score.json).
 
@@ -116,18 +124,20 @@ Ban bite is exploratory and decides no verdict. “Never blocked” means no rec
 | Hit | [899](score.json) | [351](score.json) | [1.86](score.json) | [8](score.json) | [1](score.json) | [100.0%](score.json) |
 | [plain50](../../PART169-DESIGN.md) | [1,536](score.json) | [18](score.json) | [16.30](score.json) | [1](score.json) | [2](score.json) | [98.8%](score.json) |
 
-Among answers with no blocked step, [34 of 701](score.json) own, [32 of 804](score.json) free, and [29 of 827](score.json) clear answers differed from none by batch shape: about [4%–5%](review169.txt) for each ban. Section [4](review169.txt) of the exploratory review records at most [5](review169.txt) loop flips per ban among these differing answers. This is the measured noise floor for the no-blocked comparison.
+Among answers with no blocked step, [34 of 701](score.json) own, [32 of 804](score.json) free, and [29 of 827](score.json) clear answers differed from none by batch shape: [4.9%](extra169.txt) own, [4.0%](extra169.txt) free, and [3.5%](extra169.txt) clear. Section [4](review169.txt) of the exploratory review records at most [5](review169.txt) loop flips per ban among these differing answers. This is the measured noise floor for the no-blocked comparison.
 
 ## Review checks promised by the design
 
 | Check | Result |
 |---|---|
-| High paired rows | [392](score.json) rows: none [30.6%](score.json), own [18.6%](score.json), free [30.9%](score.json), clear [32.4%](score.json); free induced [17.3%](score.json) on [272](score.json) eligible rows |
-| High unpaired rows | [112](score.json) rows: none [71.4%](score.json), own [18.8%](score.json), free [72.3%](score.json), clear [83.0%](score.json); free induced [46.9%](score.json) on [32](score.json) eligible rows |
-| Strength-matched [169.4](../../PART169-DESIGN.md) | [627](score.json) rows; free [11.0%](score.json), clear [11.3%](score.json), difference [−0.32 percentage points](score.json); the gap is under half the full [169.4](score.json) gap |
-| Hit-list sizes | [899](score.json) eligible rows; mean [3.36](score.json), median [2](score.json), maximum [28](score.json). Among [528](score.json) rows with at least [2](score.json) plain tokens, mean hit-list size was [5.02](score.json); hit held a median [90.9%](score.json) of free-list mass. A free list has [50](score.json) tokens. |
+| High paired rows | [392](score.json) rows: none [30.6%](score.json), own [18.6%](score.json), free [30.9%](score.json), clear [32.4%](score.json); none [120](extra169.txt) and free [121](extra169.txt) loops; free induced [47/272 = 17.3%](extra169.txt) |
+| High unpaired rows | [112](score.json) rows: none [71.4%](score.json), own [18.8%](score.json), free [72.3%](score.json), clear [83.0%](score.json); none [80](extra169.txt) and free [81](extra169.txt) loops; free induced [15/32 = 46.9%](extra169.txt) |
+| Strength-matched [169.4](../../PART169-DESIGN.md) | [627](score.json) rows; free [11.0%](score.json), clear [11.3%](score.json), matched gap [−0.32 percentage points](score.json) against full gap [−0.42 percentage points](score.json), or [75%](cold/COLD.md) of it; the half-gap condition is not met. The scorer’s `under_half_of_gap` field reads true only because it compares signed negative numbers; with both gaps near zero, the condition has nothing to act on. |
+| Hit-list sizes | [899](score.json) eligible rows; mean [3.36](score.json), median [2](score.json), maximum [28](score.json). Among [528](score.json) rows with at least [2](score.json) plain tokens, mean hit-list size was [5.02](score.json); over all [899](extra169.txt) hit rows, hit held an upper median [90.9%](score.json) of free-list mass. A free list has [50](score.json) tokens. |
 | Paired list strength | Own: mean [6.60](score.json) top-[200](score.json) tokens, median rank [2,632](score.json). Free: [3.56](score.json), rank [7,925.5](score.json). Clear: [8.49](score.json), rank [5,396.5](score.json). |
 | Absolute no-push counts | Free: [24](score.json) loops of [768](score.json). [plain50](../../PART169-DESIGN.md): [0](score.json) of [8](score.json); none: [0](score.json) of [8](score.json). |
+
+The induced-rate reading of the design’s wrong-half rule triggers: unpaired high rows induce [15 of 32 (46.9%)](extra169.txt), against [17.3%](extra169.txt) on paired rows. Only [32](extra169.txt) unpaired rows are eligible because [80 of 112](extra169.txt) already loop under none. On net counts, paired rows rise from [120 to 121](extra169.txt) loops and unpaired rows from [80 to 81](extra169.txt), one net loop per half; the unpaired half does not show a larger net rise. The higher induced rate is based on few eligible rows, so the warning applies to that induced-rate comparison, not to net loop totals.
 
 ## Blinded hand read
 
@@ -144,7 +154,7 @@ I judged truncated text using the rule in [`hand_read_judged.jsonl`](hand_read_j
 
 ## Leave-one-out checks
 
-The own cut stays between [34.1% and 42.4%](review169.txt) when leaving out any one layer, and between [35.2% and 39.3%](review169.txt) when leaving out any one slot. Part [168](../part168/README.md)’s own cut fell below [30%](../part168/review168.txt) without layer [24](../part168/review168.txt).
+The own cut stays between [34.1% and 42.4%](review169.txt) when leaving out any one layer, [35.2% and 39.3%](review169.txt) when leaving out any one slot, and [35.4% and 39.8%](extra169.txt) when leaving out any one phrasing. The cut is [43.7%](extra169.txt) for n+ alone and [32.2%](extra169.txt) for k4 alone. Part [168](../part168/README.md)’s own cut fell below [30%](../part168/review168.txt) without layer [24](../part168/review168.txt).
 
 ## Gates and why this part exists
 
@@ -156,9 +166,9 @@ Muse’s search found no study of this exact measurement. The related work liste
 
 ## Figure
 
-![The own top-50 ban cuts loop answers again, while the free ban does not bring back the earlier rise](loops169.png)
+![The Part 168 free-list rise did not recur here; own cuts loops, and plain50 raises them](loops169.png)
 
-The first panel plots loop rates by ban and arm with the available whole-slot intervals. The second shows loop counts by own-mass tenth for none, own and free. The second panel is exploratory. Source: [`plot169.py`](plot169.py).
+Panel 1 shows loop rates for all rows by ban and arm with whole-slot intervals; hit is omitted. Panel 2 compares loop counts under none, free and hit on the same [899](extra169.txt) hit rows. Panel 3 shows exploratory loop counts by own-mass tenth for none, own and free. Each panel has its own legend. Source: [`plot169.py`](plot169.py).
 
 ## Limits and provenance
 
@@ -166,4 +176,4 @@ Limits follow the design: one model, one dose, greedy decoding, and [8](../../PA
 
 Provenance: [design](../../PART169-DESIGN.md) · [launch](launch.jsonl) · [runner](../../part169/run169.py) · [scorer](../../part169/score169.py) · registered commit [a897ed8](../../PART169-DESIGN.md). [`review169.py`](review169.py) was written after the scores, so its splits are exploratory; see [`review169.txt`](review169.txt). Computed summaries: [`extra169.py`](extra169.py) and [`extra169.txt`](extra169.txt).
 
-Cold check: pending.
+Cold check: Haiku 5.5 (dark-factory run ab-169-cold-2026-11-01), full report at [cold/COLD.md](cold/COLD.md), its corrections folded in above.

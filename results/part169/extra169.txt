@@ -23,6 +23,10 @@ n+        471         143        133        130
 k4        428         124        136        132
 pooled    899         267        269        262
 
+169.8 on rows with at least two free-list plain tokens:
+eligible induced denominator 323/528; free 62 (19.2%); hit 54 (16.7%).
+same 528-row set loop counts: none 205, free 205, hit 201.
+
 Own-mass tenths (counts from review169.txt; own cut is none minus own):
 tenth  own-mass range  rows  none  own  free  own cut
     0  2.5e-05–0.00049  153     9    8    10        1
@@ -36,6 +40,19 @@ tenth  own-mass range  rows  none  own  free  own cut
     8  0.088–0.14      154    60   27    57       33
     9  0.14–0.55       154   103   33   104       70
 Top two tenths' share of the own cut: 103/128 = 80.5%.
+Top two tenths: 163/338 = 48.2% of none loops; 103/128 = 80.5% of net own cut.
+Relative own cut: top two 63.2%, other eight 14.3%.
+If each tenth lost the same share of its none loops (128/338), the top two's 163 none loops imply 61.7, about 62, of the 128 net cut.
+Own relative cut by high-row status: high 106/200 (53.0%); other 22/138 (15.9%).
+high paired: 392 rows, none 120, free 121; free induced 47/272 (17.3%).
+high unpaired: 112 rows, none 80, free 81; free induced 15/32 (46.9%).
+Own cut leaving out one phrasing: 35.4%–39.8%; arms alone n+ 43.7%, k4 32.2%.
+
+Length and EOS standardization (COLD method: none loop rate by none-answer length bin × EOS cell, applied to each ban's answer cells):
+own observed 210, expected 336.5, residual -126.5 of net change -128.
+plain50 observed 621, expected 385.1; cell mix accounts for 47.1 of the 283 net rise, residual 235.9.
+plain50 exceeds none in 8/8 phrasings; changes by phrasing: {0: 42, 1: 26, 2: 26, 3: 31, 4: 30, 5: 30, 6: 33, 7: 65}.
+Batch-shape noise among never-blocked answers: own 34/701 (4.9%); free 32/804 (4.0%); clear 29/827 (3.5%).
 
 Blinded hand read (coherent count / sample; all sampled rows are n+ or k4):
 ban      coherent / sampled

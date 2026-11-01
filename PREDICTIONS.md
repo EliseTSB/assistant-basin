@@ -3208,13 +3208,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 169.1 | Own ban cuts loop answers by at least 25% against none | medium | Claude |  |
-| 169.2 | Own's relative cut on high rows is at least 0.25 above its relative cut on other rows | medium | Claude |  |
-| 169.3 | Free ban raises loop answers by at least 5% against none | medium | Claude |  |
-| 169.4 | On paired rows, clear's loop rate is at least 0.02 below free's | medium | Claude |  |
-| 169.5 | On high paired rows with no loop under none, free's induced rate is at least 0.10 above clear's | medium | Claude |  |
-| 169.6 | With no push, free lists give loops on under 5% of answers | medium | Claude |  |
-| 169.7 | Clear's change in loop answers against none, on paired rows, is between -15% and 15% | low | Claude |  |
-| 169.8 | On rows whose free list holds two or more plain tokens and with no loop under none, hit's induced rate is at least 0.6 times free's | medium | Claude |  |
-| 169.W1 | Among rows with no loop under none, plain50's induced rate on rows above the median overlap between plain50 and the row's none answer is at least 0.05 above its rate on the other rows | low | Weaver |  |
-| 169.W2 | plain50 raises low-k loop answers against none by at least a third of own's net cut in this run | low | Weaver |  |
+| 169.1 | Own ban cuts loop answers by at least 25% against none | medium | Claude | held: 37.9% (25.8% to 48.6%) |
+| 169.2 | Own's relative cut on high rows is at least 0.25 above its relative cut on other rows | medium | Claude | held: 0.371 above (0.187 to 0.531) |
+| 169.3 | Free ban raises loop answers by at least 5% against none | medium | Claude | failed: 0.0% (-6.1% to 7.0%) |
+| 169.4 | On paired rows, clear's loop rate is at least 0.02 below free's | medium | Claude | failed: -0.004 (-0.022 to 0.014); read only as a difference between bans |
+| 169.5 | On high paired rows with no loop under none, free's induced rate is at least 0.10 above clear's | medium | Claude | failed: 0.022 (-0.024 to 0.070); read only as a difference between bans |
+| 169.6 | With no push, free lists give loops on under 5% of answers | medium | Claude | held: 3.1%, 24 of 768 |
+| 169.7 | Clear's change in loop answers against none, on paired rows, is between -15% and 15% | low | Claude | held: clear added 1.9% (-4.7% to 9.3% as a change) |
+| 169.8 | On rows whose free list holds two or more plain tokens and with no loop under none, hit's induced rate is at least 0.6 times free's | medium | Claude | held as a difference between bans: hit 0.167, free 0.192, no net rise |
+| 169.W1 | Among rows with no loop under none, plain50's induced rate on rows above the median overlap between plain50 and the row's none answer is at least 0.05 above its rate on the other rows | low | Weaver | failed: -0.102 (-0.160 to -0.045) |
+| 169.W2 | plain50 raises low-k loop answers against none by at least a third of own's net cut in this run | low | Weaver | held: 283 against 42.7 |
