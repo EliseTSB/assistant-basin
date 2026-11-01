@@ -118,6 +118,13 @@ class EffectTests(unittest.TestCase):
         self.assertAlmostEqual(got[1][0], 1.0, places=6)
         self.assertEqual(got[2], [False])
 
+    def test_kl_survives_the_eos_mask_generate_applies(self):
+        plain = torch.tensor([[0.0, 1.0, -float("inf")]])
+        pushed = torch.tensor([[1.0, 0.0, -float("inf")]])
+        kl, _, _ = effect165.effect_values(plain, pushed, torch.ones(1, 4), torch.ones(1, 4),
+                                           torch.tensor([1]), torch.tensor([1]))
+        self.assertTrue(kl[0] > 0 and kl[0] < 10, kl)
+
     def test_pilot_stops_slow_run(self):
         self.assertLess(effect165.pilot_rate(192, 100), 2.0)
         with self.assertRaises(SystemExit):

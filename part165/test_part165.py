@@ -197,6 +197,14 @@ class Part165Tests(unittest.TestCase):
                     row["answer"] = "safe and unchanged assistant"
             self.assertFalse(score165.score_rows(no_room, good_norms())["gates"]["gate4_measure_room"]["passed"])
 
+    def test_write_outputs_writes_a_real_result(self):
+        with patch.object(score165, "LAYERS", (19,)), patch.object(score165, "SLOTS", tuple(range(12))), \
+             patch.object(score165, "EXPECTED_ROWS", 8 + 12 * 9 * 8), tempfile.TemporaryDirectory() as td:
+            score165.write_outputs(score165.score_rows(seed_rows(broken={"n+": 1}), good_norms()), td)
+            written = json.loads((Path(td) / "score.json").read_text(encoding="utf-8"))
+            self.assertIn("19:0", written["rates"]["per_slot"]["broken"]["n+"])
+            self.assertTrue((Path(td) / "tables.md").exists())
+
     def test_prediction_predicates_pass_and_fail(self):
         # 165.1 and 165.5 point-estimate thresholds.
         self.assertTrue(score165.ratio_at_least(2.0, 2.0))

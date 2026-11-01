@@ -371,7 +371,9 @@ def score_rows(rows, norms_obj):
             "predictions": predictions, "rates": {"broken": means["broken"],
             "triage_only": triage_rates, "changed": means["changed"],
             "primary_broken_counts_and_shares": broken_shares, "ladder_rates_ordered": ladder_rates,
-            "per_layer": per_layer, "per_slot": slot_rates},
+            "per_layer": per_layer,
+            "per_slot": {metric: {arm: {f"{layer}:{slot}": value for (layer, slot), value in values.items()}
+                                  for arm, values in by_arm.items()} for metric, by_arm in slot_rates.items()}},
             "ratios": ratios_for_json, "spearman": {"broken": broken_spearman, "changed": changed_spearman},
             "hand_read_rows": hand}
 

@@ -107,3 +107,13 @@ Muse's four traps against this design. Total write norm, not per-unit dose, is w
 
 Added for that: `part165/secondary165.py`, descriptive tables with no verdicts, scored after `score165.py`. Per arm: the mean fraction of distinct adjacent word pairs, Malla's repetition measure; and the share of answers whose first sentence holds a refusal opener (sorry, I cannot, I can't). No prediction uses them. They bear on how a broken rate is read: a rising broken rate with a falling pair fraction is repetition, and a rising refusal rate at `full` is default induction, which this part's primary rule does not count as broken.
 
+## Amendment 5, 2026-11-01 01:51 CT, after both runs, before the effect tables
+
+The battery ran clean: 6,920 answers. Two defects were in the scoring code, and neither touches the answers.
+
+`score165.py` crashed writing `score.json`, because `per_slot` kept tuple keys. The keys are now strings. No test had exercised `write_outputs`; one does now.
+
+`effect165.py` wrote `kl` as NaN on all 6,912 rows. `min_new_tokens` masks EOS to minus infinity in both distributions, so the sum held 0 times NaN. No test used a masked score. The guard counts only tokens the plain model can emit, and a test now has the mask. The other effect fields are finite on every row. 165.7 uses `rel_change`, not `kl`, so the verdict does not depend on the fix, and neither does `equal_dose`.
+
+The effect run is rerun in about six minutes on the same code path. The first run's file is kept as `results/part165/effects-run1.jsonl`, so the two can be compared on the fields both have: they should match, and any difference is reported.
+

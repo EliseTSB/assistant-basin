@@ -35,7 +35,8 @@ def effect_values(plain_scores, pushed_scores, plain_hidden, pushed_hidden, plai
     p_log = torch.log_softmax(p_logits, dim=-1)
     p = p_log.exp()
     q_log = torch.log_softmax(q_logits, dim=-1)
-    kl = (p * (p_log - q_log)).sum(dim=-1)
+    # min_new_tokens masks EOS to -inf in both, which is 0 * nan without this guard.
+    kl = torch.where(p > 0, p * (p_log - q_log), torch.zeros_like(p)).sum(dim=-1)
     p_h = plain_hidden.detach().to(device="cpu", dtype=torch.float32)
     q_h = pushed_hidden.detach().to(device="cpu", dtype=torch.float32)
     rel = torch.linalg.vector_norm(q_h - p_h, dim=-1) / torch.linalg.vector_norm(p_h, dim=-1).clamp_min(torch.finfo(torch.float32).tiny)
