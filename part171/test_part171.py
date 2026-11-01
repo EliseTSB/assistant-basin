@@ -594,6 +594,17 @@ def test_rotate_refuses_without_a_finished_fit_and_detects_a_changed_fit(tmp_pat
         rotate171._fit_marker(tmp_path, ("google",))
 
 
+def test_per_draw_cosines_are_read_and_a_not_testable_draw_is_not_a_failure():
+    rows, sets_json, alignment = _prediction_fixture()
+    predictions = score171._prediction_table(score171.outcomes(rows), sets_json, alignment)
+    assert all(row["estimate"] == pytest.approx(.2) for row in predictions["171.5"]["per_draw"])
+    assert predictions["171.5"]["mean_pass_draw_failures"] == []
+    arrays = {"r100p_d171": np.full(score171.SHAPE, np.nan), "r100p_d1171": np.ones(score171.SHAPE),
+              "r100p_d2171": np.ones(score171.SHAPE), "n100": np.zeros(score171.SHAPE)}
+    table = score171._draw_diff_rows(arrays, "r100p", "n100", .1)
+    assert [row["pass"] for row in table] == [None, True, True]
+
+
 def test_rotate_default_targets_follow_the_registered_targets():
     import inspect
     assert inspect.signature(rotate171.rotate).parameters["targets"].default == tuple(TARGETS)

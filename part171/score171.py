@@ -196,7 +196,7 @@ def _metric_arrays(sets_json, field, arm, prompt_ids):
     for target_index, target in enumerate(TARGETS):
         metrics = sets_json.get("targets", {}).get(target, {}).get("metrics", {})
         values = [record.get(field) for name, record in metrics.items()
-                  if _base_arm(name) == arm and record.get(field) is not None]
+                  if (name == arm or _base_arm(name) == arm) and record.get(field) is not None]
         if values:
             result[target_index, :] = float(np.mean([float(value) for value in values]))
     return result
@@ -275,8 +275,9 @@ def _draw_diff_rows(arrays, left_name, right_name, threshold):
 
         estimate, interval, _ = _bootstrap_arrays({"left": left, "right": right},
             lambda sample: _paired_diff(sample["left"], sample["right"]))
+        # A draw with no answers (a NOT_TESTABLE set) has no verdict, and it is not a failure.
         result.append({"draw": int(seed), "estimate": estimate, "interval_95": interval,
-                       "pass": estimate is not None and float(estimate) >= threshold})
+                       "pass": None if estimate is None else float(estimate) >= threshold})
     return result
 
 
@@ -449,7 +450,7 @@ def _prediction_table(rows, sets_json, alignment):
             n100_loop_or_broken=_overall_rate(scored, "n100", "loop_or_broken"),
             not_testable_sets=not_testable, total_sets=total_sets, per_draw=loop_draws,
             mean_pass_draw_failures=[row["draw"] for row in loop_draws
-                if loop_pass and not row["pass"]])
+                if loop_pass and row["pass"] is False])
 
     full_estimate, full_interval, _ = _bootstrap_arrays(
         {"n": hit_arrays["n100"], "full": hit_arrays["full"]}, diff_stat("n", "full"))
