@@ -27,10 +27,10 @@ def test_registered_arm_and_answer_key_counts_match_design():
     prompts = run171.test_catalog()
     assert len(FIT_PROMPTS) == 8
     assert tuple(row["question_index"] for row in prompts) == TEST_M96_INDICES
-    assert len(prompts) == 24
+    assert len(prompts) == 44
     assert len(arms()) == 21
     keys = run171.planned_answer_keys()
-    assert len(keys) == 2_056
+    assert len(keys) == 940
     assert len(keys) == len(set(keys))
 
 
@@ -170,7 +170,7 @@ def test_hit_negation_quotes_mixed_targets_and_broken_claims():
 def _prediction_fixture():
     rows = []
     test_prompts = [{"prompt_id": f"m96:{i}", "question_index": i,
-                     "question": f"Who built this system number {i}?"} for i in range(24)]
+                     "question": f"Who built this system number {i}?"} for i in range(44)]
     correct = {"google": "I am Gemini, a Google assistant here to answer useful questions today.",
         "openai": "I am ChatGPT, an OpenAI assistant here to answer useful questions today.",
         "anthropic": "I am Claude, an Anthropic assistant here to answer useful questions today.",
@@ -190,16 +190,16 @@ def _prediction_fixture():
                 if base in ("none", "rand100"):
                     answer = qwen_answer if base == "none" else other
                 elif base == "n1":
-                    answer = correct[target] if pi < 12 else other
+                    answer = correct[target] if pi < 22 else other
                 elif base in ("n100", "full", "vector", "n10"):
                     answer = correct[target]
                 elif base == "r1":
-                    answer = correct[target] if pi < 6 else other
+                    answer = correct[target] if pi < 11 else other
                 elif base == "r100":
-                    answer = correct[target] if pi < 12 else other
+                    answer = correct[target] if pi < 22 else other
                 elif base == "r100p":
-                    answer = correct[target] if pi >= 12 else other
-                    if pi < 4:
+                    answer = correct[target] if pi >= 22 else other
+                    if pi < 8:
                         answer = {"google": "Google", "openai": "GPT", "anthropic": "Claude",
                                   "deepseek": "DeepSeek"}[target]
                 row = {"stage": "test", "target": target, "arm": arm,
@@ -243,8 +243,8 @@ def test_all_predictions_hand_computation_and_negative_direction_fails():
     assert predictions["171.3"]["estimate"] == pytest.approx(2.0)
     assert predictions["171.4"]["estimate"] == pytest.approx(0.0)
     assert predictions["171.5"]["estimate"] == pytest.approx(.2)
-    assert predictions["171.6"]["estimate"] == pytest.approx(1 / 3)
-    assert predictions["171.7"]["estimate"] == pytest.approx(4 / 24)
+    assert predictions["171.6"]["estimate"] == pytest.approx((30 / 44 - .5) / .5)
+    assert predictions["171.7"]["estimate"] == pytest.approx(8 / 44)
     assert predictions["171.8"]["estimate"] == pytest.approx(0.0)
     assert predictions["171.W1"]["estimate"] == pytest.approx(1.5)
     assert len(predictions["171.5"]["per_draw"]) == len(DRAW_SEEDS)
@@ -268,9 +268,9 @@ def test_not_testable_r100p_sets_are_omitted_from_planned_keys():
     testability = {target: {str(seed): True for seed in DRAW_SEEDS} for target in TARGETS}
     testability["google"]["171"] = False
     full = run171.planned_answer_keys(testability=testability)
-    assert len(full) == 2_032
+    assert len(full) == 896
     assert ("test", "google", "m96:0", "r100p_d171", "171") not in full
-    assert len(run171.planned_answer_keys() - full) == 24
+    assert len(run171.planned_answer_keys() - full) == 44
 
 
 class TinyTokenizer:
@@ -375,9 +375,9 @@ def test_fit_rotate_test_and_host_score_run_end_to_end_on_tiny_fake_model(tmp_pa
     assert {target: (tmp_path / f"fit_{target}.pt").read_bytes() for target in TARGETS} == fit_files
     assert all((tmp_path / f"sets_{target}.pt").is_file() for target in TARGETS)
     assert test["gates"]["passed"]
-    assert test["answers"] == 2_056
+    assert test["answers"] == 940
     resumed = run171.run(_args("test", tmp_path), loader=loader, config=config)
-    assert resumed["gates"]["passed"] and resumed["answers"] == 2_056
+    assert resumed["gates"]["passed"] and resumed["answers"] == 940
     result = score171.score(tmp_path / "answers.jsonl", tmp_path / "stage0.json",
         tmp_path / "sets.json", tmp_path / "alignment.json", tmp_path / "pretest_gates.json",
         tmp_path / "gates.json", tmp_path)
@@ -460,9 +460,9 @@ def test_hit_match_does_not_split_decimals_and_catches_curly_negation():
 
 def test_registered_generation_batch_size_and_pilot_threshold_are_one_arm():
     steps = (ROOT / "part171" / "steps.txt").read_text(encoding="utf-8")
-    assert run171.BATCH_SIZE == 24
+    assert run171.BATCH_SIZE == 44
     assert run171.PILOT_THRESHOLD == pytest.approx(1.0)
-    assert all("--batch-size 24" in line for line in steps.splitlines()
+    assert all("--batch-size 44" in line for line in steps.splitlines()
                if "part171/run171.py" in line)
 
 
@@ -640,21 +640,21 @@ def test_outcomes_use_whole_answer_for_loop_and_broken_but_first40_for_hit(monke
 
 def test_bootstrap_arrays_align_prompt_ids_and_share_prompt_draws():
     rows = []
-    prompt_ids = [f"prompt-{i:02d}" for i in range(24)]
+    prompt_ids = [f"prompt-{i:02d}" for i in range(44)]
     for target_index, target in enumerate(TARGETS):
         for prompt_index, prompt_id in reversed(list(enumerate(prompt_ids))):
             rows.append({"stage": "test", "target": target, "arm": "n100",
                 "prompt_id": prompt_id, "hit": bool((target_index * 3 + prompt_index) % 2)})
     arrays, aligned_ids = score171._outcome_arrays(rows, "hit")
     assert aligned_ids == tuple(prompt_ids)
-    expected = np.asarray([[float((ti * 3 + pi) % 2) for pi in range(24)]
-                           for ti in range(4)])
+    expected = np.asarray([[float((ti * 3 + pi) % 2) for pi in range(44)]
+                           for ti in range(len(TARGETS))])
     assert np.array_equal(arrays["n100"], expected)
 
-    coded = np.asarray([[100 * ti + pi for pi in range(24)] for ti in range(4)], dtype=float)
+    coded = np.asarray([[100 * ti + pi for pi in range(44)] for ti in range(len(TARGETS))], dtype=float)
     def statistic(sample):
         values = sample["coded"]
-        assert np.array_equal(values % 100, np.tile(values[0] % 100, (4, 1)))
+        assert np.array_equal(values % 100, np.tile(values[0] % 100, (len(TARGETS), 1)))
         return float(np.nanmean(values))
     _point, _interval, replicates = score171._bootstrap_arrays({"coded": coded}, statistic, reps=5)
     assert len(replicates) == 5
@@ -663,7 +663,7 @@ def test_bootstrap_arrays_align_prompt_ids_and_share_prompt_draws():
 def test_1716_uses_set_level_rates_and_1715_1717_report_draws():
     rows, sets_json, alignment = _prediction_fixture()
     predictions = score171._prediction_table(score171.outcomes(rows), sets_json, alignment)
-    assert predictions["171.6"]["estimate"] == pytest.approx(1 / 3)
+    assert predictions["171.6"]["estimate"] == pytest.approx((30 / 44 - .5) / .5)
     assert len(predictions["171.6"]["per_draw"]) == len(DRAW_SEEDS)
     assert len(predictions["171.5"]["per_draw"]) == len(DRAW_SEEDS)
     assert len(predictions["171.7"]["per_draw"]) == len(DRAW_SEEDS)
@@ -682,7 +682,7 @@ def test_1715_and_1717_have_per_draw_rows_and_mean_pass_draw_failures():
 def test_weaver_uses_median_even_when_mean_debt_is_high():
     rows, sets_json, alignment = _prediction_fixture()
     alignment["debts"] = [{"target": target, "draw": seed,
-        "debt": (10.0 if index < 5 else 1.5)}
+        "debt": (10.0 if index < 1 else 1.5)}
         for index, (target, seed) in enumerate((t, d) for t in TARGETS for d in DRAW_SEEDS)]
     alignment["mean_alignment_debt"] = 5.0
     prediction = score171._prediction_table(score171.outcomes(rows), sets_json, alignment)["171.W1"]
@@ -694,18 +694,18 @@ def test_weaver_uses_median_even_when_mean_debt_is_high():
 def test_undefined_alignment_debts_raise_median_and_not_read_only_above_half():
     rows, sets_json, alignment = _prediction_fixture()
     alignment["debts"] = [{"target": target, "draw": seed,
-        "debt": (None if index < 6 else 3.0)}
+        "debt": (None if index < 2 else 3.0)}
         for index, (target, seed) in enumerate((t, d) for t in TARGETS for d in DRAW_SEEDS)]
     alignment["mean_alignment_debt"] = 3.0
     predictions = score171._prediction_table(score171.outcomes(rows), sets_json, alignment)
     assert predictions["171.W1"]["estimate"] == "Infinity"
-    assert predictions["171.W1"]["undefined_debts"] == 6
+    assert predictions["171.W1"]["undefined_debts"] == 2
     assert predictions["171.W1"]["pass"]
     assert predictions["171.6"]["status"] == "read"
     assert predictions["171.7"]["status"] == "read"
 
     for index, row in enumerate(alignment["debts"]):
-        if index < 7:
+        if index < 2:
             sets_json["testability"][row["target"]][str(row["draw"])] = False
             sets_json["targets"][row["target"]]["testability"][str(row["draw"])] = False
     majority = score171._prediction_table(score171.outcomes(rows), sets_json, alignment)

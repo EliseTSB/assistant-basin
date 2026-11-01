@@ -20,12 +20,13 @@ for entry in (str(ROOT), str(HERE), str(ROOT / "part86")):
 from part165 import score165
 from part166 import score166
 import run171
-from prompts171 import DRAW_SEEDS, FIT_PROMPTS, TARGETS, arms as arm_names
+from prompts171 import DRAW_SEEDS, FIT_PROMPTS, TARGETS, TEST_M96_INDICES, arms as arm_names
 
 QWEN_SPELLINGS = ("Qwen", "Tongyi", "Alibaba", "通义")
 REPS = 10_000
 SEED = 171
 MIN_POSITIVE_SETS = 3
+SHAPE = (len(TARGETS), len(TEST_M96_INDICES))
 
 
 def read_json(path, default=None):
@@ -70,7 +71,7 @@ def _base_arm(arm):
 
 
 def _outcome_arrays(rows, field):
-    """Build aligned 4-by-24 arrays keyed by prompt id; missing cells remain NaN."""
+    """Build aligned target-by-prompt arrays keyed by prompt id; missing cells remain NaN."""
     prompt_order = {}
     prompt_ids_seen = set()
     target_names = {str(target) for target in TARGETS}
@@ -87,8 +88,8 @@ def _outcome_arrays(rows, field):
                 pass
     prompt_ids = tuple(sorted(prompt_ids_seen,
         key=lambda pid: (0, prompt_order[pid], pid) if pid in prompt_order else (1, pid)))
-    if len(prompt_ids) != 24:
-        raise ValueError(f"Part 171 bootstrap requires 24 shared prompt ids, found {len(prompt_ids)}")
+    if len(prompt_ids) != SHAPE[1]:
+        raise ValueError(f"Part 171 bootstrap requires {SHAPE[1]} shared prompt ids, found {len(prompt_ids)}")
     target_index = {str(target): index for index, target in enumerate(TARGETS)}
     prompt_index = {pid: index for index, pid in enumerate(prompt_ids)}
     cells = {}
@@ -102,7 +103,7 @@ def _outcome_arrays(rows, field):
         value = float(bool(row[field]))
         for name in {_base_arm(arm), arm}:
             cells.setdefault((name, target_index[target], prompt_index[pid]), []).append(value)
-    arrays = {name: np.full((4, 24), np.nan, dtype=np.float64)
+    arrays = {name: np.full(SHAPE, np.nan, dtype=np.float64)
               for name in {key[0] for key in cells}}
     for (name, target, prompt), values in cells.items():
         arrays[name][target, prompt] = float(np.mean(values))
@@ -135,10 +136,10 @@ def _nanmean(values, axis=None):
 
 
 def _bootstrap_arrays(arrays, statistic, reps=REPS, seed=SEED):
-    """Resample four targets and 24 shared prompts from aligned target-by-prompt arrays."""
+    """Resample targets and shared prompts from aligned target-by-prompt arrays."""
     arrays = {name: np.asarray(values, dtype=np.float64) for name, values in arrays.items()}
-    if not arrays or any(values.shape != (4, 24) for values in arrays.values()):
-        raise ValueError("bootstrap inputs must be nonempty 4-by-24 target/prompt arrays")
+    if not arrays or any(values.shape != SHAPE for values in arrays.values()):
+        raise ValueError("bootstrap inputs must be nonempty target-by-prompt arrays")
 
     def evaluate(sample):
         value = statistic(sample)
@@ -150,8 +151,8 @@ def _bootstrap_arrays(arrays, statistic, reps=REPS, seed=SEED):
     rng = np.random.default_rng(int(seed))
     replicate_values = []
     for _ in range(int(reps)):
-        target_draw = rng.integers(0, 4, size=4)
-        prompt_draw = rng.integers(0, 24, size=24)
+        target_draw = rng.integers(0, SHAPE[0], size=SHAPE[0])
+        prompt_draw = rng.integers(0, SHAPE[1], size=SHAPE[1])
         sample = {name: values[np.ix_(target_draw, prompt_draw)] for name, values in arrays.items()}
         value = evaluate(sample)
         if not np.isnan(value):
@@ -191,7 +192,7 @@ def _prediction(key, name, bar, estimate, interval, passed, **details):
 
 
 def _metric_arrays(sets_json, field, arm, prompt_ids):
-    result = np.full((4, 24), np.nan, dtype=np.float64)
+    result = np.full(SHAPE, np.nan, dtype=np.float64)
     for target_index, target in enumerate(TARGETS):
         metrics = sets_json.get("targets", {}).get(target, {}).get("metrics", {})
         values = [record.get(field) for name, record in metrics.items()
@@ -245,8 +246,8 @@ def _draw_ratio_rows(arrays, numerator, denominator, threshold):
             "r1", "r10", "r100", "rand100", "r100p") else numerator
         den_name = f"{denominator}_d{seed}" if denominator in (
             "r1", "r10", "r100", "rand100", "r100p") else denominator
-        num_array = arrays.get(num_name, np.full((4, 24), np.nan))
-        den_array = arrays.get(den_name, np.full((4, 24), np.nan))
+        num_array = arrays.get(num_name, np.full(SHAPE, np.nan))
+        den_array = arrays.get(den_name, np.full(SHAPE, np.nan))
 
         def ratio_stat(sample):
             a, b = _nanmean(sample["num"]), _nanmean(sample["den"])
@@ -267,8 +268,8 @@ def _draw_diff_rows(arrays, left_name, right_name, threshold):
             "r1", "r10", "r100", "rand100", "r100p") else left_name
         right_key = f"{right_name}_d{seed}" if right_name in (
             "r1", "r10", "r100", "rand100", "r100p") else right_name
-        left = arrays.get(left_key, np.full((4, 24), np.nan))
-        right = arrays.get(right_key, np.full((4, 24), np.nan)).copy()
+        left = arrays.get(left_key, np.full(SHAPE, np.nan))
+        right = arrays.get(right_key, np.full(SHAPE, np.nan)).copy()
         if left_name == "r100p" and right_name == "n100":
             right[~np.isfinite(left)] = np.nan
 
@@ -284,7 +285,7 @@ def _debt_bootstrap_arrays(alignment):
               (float(row["debt"]) if row.get("debt") is not None else float("inf"))
               for row in alignment.get("debts", [])}
     return {f"debt_{seed}": np.asarray([
-        [values.get((str(target), int(seed)), float("inf"))] * 24 for target in TARGETS
+        [values.get((str(target), int(seed)), float("inf"))] * SHAPE[1] for target in TARGETS
     ], dtype=np.float64) for seed in DRAW_SEEDS}
 
 
@@ -347,7 +348,7 @@ def _prediction_table(rows, sets_json, alignment):
     rand_draws = []
     for seed in DRAW_SEEDS:
         arm = f"rand100_d{seed}"
-        values = hit_arrays.get(arm, np.full((4, 24), np.nan))
+        values = hit_arrays.get(arm, np.full(SHAPE, np.nan))
         rate = _nanmean(values)
         rand_draws.append({"draw": int(seed), "arm": arm, "rate": rate,
                            "pass": rate is not None and rate < .05})
@@ -385,7 +386,7 @@ def _prediction_table(rows, sets_json, alignment):
     recovery_arrays = {"n100": hit_arrays["n100"]}
     for seed in DRAW_SEEDS:
         for base in ("r100", "r100p"):
-            exact = hit_arrays.get(f"{base}_d{seed}", np.full((4, 24), np.nan)).copy()
+            exact = hit_arrays.get(f"{base}_d{seed}", np.full(SHAPE, np.nan)).copy()
             for target_index, target in enumerate(TARGETS):
                 if not testability[target].get(int(seed), False):
                     exact[target_index, :] = np.nan
@@ -419,10 +420,10 @@ def _prediction_table(rows, sets_json, alignment):
             hit_rate_r100p=_overall_rate(scored, "r100p", "hit"),
             claim_rate_r100p=_overall_rate(scored, "r100p", "claim"))
 
-    r_loop = loop_arrays.get("r100p", np.full((4, 24), np.nan)).copy()
+    r_loop = loop_arrays.get("r100p", np.full(SHAPE, np.nan)).copy()
     exact_loop_draws = []
     for seed in DRAW_SEEDS:
-        exact = loop_arrays.get(f"r100p_d{seed}", np.full((4, 24), np.nan)).copy()
+        exact = loop_arrays.get(f"r100p_d{seed}", np.full(SHAPE, np.nan)).copy()
         for target_index, target in enumerate(TARGETS):
             if not testability[target].get(int(seed), False):
                 exact[target_index, :] = np.nan

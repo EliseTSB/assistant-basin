@@ -1,0 +1,139 @@
+{
+  "targets": {
+    "google": {
+      "vector_norm": 1.767500338136515,
+      "shuffled_default_half_norm": 1.558887838743995,
+      "vector_to_null_ratio": 1.1338213655965141,
+      "target_top1pct_token_share": 0.014602606862486963,
+      "default_top1pct_token_share": 0.013350753009958895,
+      "fit_reply_tokens": 426,
+      "default_reply_tokens": 474,
+      "shuffle_order": [
+        1,
+        5,
+        2,
+        7,
+        4,
+        0,
+        3,
+        6
+      ],
+      "half_a_indices": [
+        1,
+        5,
+        2,
+        7
+      ],
+      "half_b_indices": [
+        4,
+        0,
+        3,
+        6
+      ]
+    },
+    "openai": {
+      "vector_norm": 1.0508938086633877,
+      "shuffled_default_half_norm": 1.558887838743995,
+      "vector_to_null_ratio": 0.6741304810678996,
+      "target_top1pct_token_share": 0.012819463493308888,
+      "default_top1pct_token_share": 0.013350753009958895,
+      "fit_reply_tokens": 496,
+      "default_reply_tokens": 474,
+      "shuffle_order": [
+        1,
+        5,
+        2,
+        7,
+        4,
+        0,
+        3,
+        6
+      ],
+      "half_a_indices": [
+        1,
+        5,
+        2,
+        7
+      ],
+      "half_b_indices": [
+        4,
+        0,
+        3,
+        6
+      ]
+    },
+    "anthropic": {
+      "vector_norm": 1.7256724519639455,
+      "shuffled_default_half_norm": 1.558887838743995,
+      "vector_to_null_ratio": 1.106989488964344,
+      "target_top1pct_token_share": 0.014770869948253114,
+      "default_top1pct_token_share": 0.013350753009958895,
+      "fit_reply_tokens": 426,
+      "default_reply_tokens": 474,
+      "shuffle_order": [
+        1,
+        5,
+        2,
+        7,
+        4,
+        0,
+        3,
+        6
+      ],
+      "half_a_indices": [
+        1,
+        5,
+        2,
+        7
+      ],
+      "half_b_indices": [
+        4,
+        0,
+        3,
+        6
+      ]
+    },
+    "deepseek": {
+      "vector_norm": 1.7678795591619694,
+      "shuffled_default_half_norm": 1.558887838743995,
+      "vector_to_null_ratio": 1.1340646294260401,
+      "target_top1pct_token_share": 0.013272330617949435,
+      "default_top1pct_token_share": 0.013350753009958895,
+      "fit_reply_tokens": 392,
+      "default_reply_tokens": 474,
+      "shuffle_order": [
+        1,
+        5,
+        2,
+        7,
+        4,
+        0,
+        3,
+        6
+      ],
+      "half_a_indices": [
+        1,
+        5,
+        2,
+        7
+      ],
+      "half_b_indices": [
+        4,
+        0,
+        3,
+        6
+      ]
+    }
+  },
+  "default_top1pct_token_share": 0.013350753009958895,
+  "shuffle_order": [
+    1,
+    5,
+    2,
+    7,
+    4,
+    0,
+    3,
+    6
+  ]
+}

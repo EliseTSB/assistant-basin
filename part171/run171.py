@@ -26,7 +26,9 @@ from prompts171 import DRAW_SEEDS, FIT_PROMPTS, K_VALUES, TARGETS, arms as arm_n
 MODEL_DEFAULT = "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
 LAYERS = tuple(range(21))
 VECTOR_LAYER = 20
-BATCH_SIZE = 24
+BATCH_SIZE = 44
+TEST_PROMPTS = 44
+GATE2_QWEN_MIN = 37
 MAX_NEW_TOKENS = 80
 PILOT_THRESHOLD = 1.0
 SLOPE_TOLERANCE = 0.05
@@ -142,7 +144,7 @@ def gate2(none_rows, prompts, targets=TARGETS):
             row = by_cell.get((str(target), str(prompt["prompt_id"])), {})
             target_hits += hit_match(row.get("first40", ""), str(target))
     complete = len(none_rows) == len(target_names) * len(prompts) and len(by_cell) == len(none_rows)
-    return {"passed": bool(complete and len(prompts) == 24 and qwen_hits >= 20 and target_hits <= 1),
+    return {"passed": bool(complete and len(prompts) == TEST_PROMPTS and qwen_hits >= GATE2_QWEN_MIN and target_hits <= 1),
             "qwen_prompts": qwen_hits, "qwen_denominator": len(prompts),
             "hit_rows": target_hits, "hit_denominator": len(target_names) * len(prompts),
             "complete": bool(complete)}
@@ -240,7 +242,7 @@ def gate7(test_prompts, fit_prompts=FIT_PROMPTS):
     fit = {" ".join(str(x).casefold().split()) for x in fit_prompts}
     overlap = [str(row["question"]) for row in test_prompts
                if " ".join(str(row["question"]).casefold().split()) in fit]
-    return {"passed": not overlap and len(test_prompts) == 24, "overlap": overlap,
+    return {"passed": not overlap and len(test_prompts) == TEST_PROMPTS, "overlap": overlap,
             "test_prompts": len(test_prompts)}
 
 
@@ -1287,7 +1289,7 @@ def main(argv=None):
     parser.add_argument("--max-new-tokens", type=int, default=MAX_NEW_TOKENS)
     args = parser.parse_args(argv)
     if args.batch_size != BATCH_SIZE:
-        parser.error("registered generation batches hold one arm's 24 prompts")
+        parser.error("registered generation batches hold one arm's 44 prompts")
     result = run(args)
     print(json.dumps(result, ensure_ascii=True, allow_nan=False), flush=True)
 
