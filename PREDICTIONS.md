@@ -3162,3 +3162,4 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 165.4 | The n+ over n± broken ratio is between 0.67 and 1.5 | medium | Claude |  |
 | 165.5 | iso's broken rate is under 0.8 times full's | low | Claude |  |
 | 165.6 | Changed rate falls with k: Spearman at or below -0.6 across the same seven arms | medium | Claude |  |
+| 165.7 | n+'s mean relative last-layer change is at least 1.5 times full's (Amendment 2) | medium | Claude |  |

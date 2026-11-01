@@ -79,3 +79,11 @@ One model, one dose, 8 maker phrasings. Neurons are unselected, so most may do l
 
 The rows of phrasing q are shuffled with seed 165 + q rather than one seed 165, so each phrasing gets its own batch mix. Nothing else changes.
 
+## Amendment 2, 2026-11-01 00:59 CT, before the run, on Weaver's review
+
+Correction: the Method says pushes go on the prompt and the answer. They go on the answer only. Part 86's hook leaves the prompt pass untouched, and Part 164 ran that way, as this part does.
+
+The run had already started when this was written, at 00:58, on the registered code, which is right on this point. Added, on Weaver's point that equal write norm need not mean equal effect: a separate effect run after the battery, `part165/effect165.py`, on the same directions, written before any battery result was read. For each slot, arm and phrasing, one row, generating 2 tokens with the same hook, so the second step is the first pushed one. Saved per row: the KL of the plain next-token distribution from the pushed one at that step, and the L2 change of the last layer's output at that step relative to the plain output's norm. Nothing else changes. These are 864 rows per phrasing at batch 64, about 4 minutes in all with the model load.
+
+New prediction: 165.7, n+'s mean relative last-layer change is at least 1.5 times full's (medium). It fails if the arms' changes are about equal. If it holds, equal write norm did not give equal effect at the output, and the broken ratio is not read as a difference between pushes of equal effect; matching on effect becomes the next part. If it fails, Part 164's gap is not explained by size at the output. Arm means of both measures are reported for every arm, beside the broken rates. Part 164's plain model broke 0 of 16 no-push answers, so the floor there was 0.
+
