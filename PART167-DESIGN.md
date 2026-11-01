@@ -95,3 +95,7 @@ Gate 5 adds a loop floor: n+ and k4 pooled in the none arm have a loop rate of a
 
 Fresh seeds do not guarantee fresh neurons. The write-up reports exact layer and neuron collisions between Parts 165 and 167 in n+.
 
+
+## Amendment 2, 2026-11-01 02:47 CT, after the run: Gate 2 failed
+
+The run finished, and Gate 2 failed: 1 of the 8 plain answers, phrasing 13, is broken by the trigram loop rule at 80 tokens. A failed gate stops all readings, so no prediction here was read, and none will be. That answer was on disk from Part 164, and this gate should have been checked against it before launch. Part 168 is the successor, with phrasing 13 removed and Weaver's review folded in. Its registration comes before anyone opens this part's rates or answers.
