@@ -53,7 +53,10 @@ def _with_new_rows(pub, head, section, part):
         rid = _row_id(line, part)
         if rid and rid not in have:
             cells = [c.strip() for c in line.strip().strip("|").split("|")]
-            if len(cells) < 4 or any(c not in ("", "pending") for c in cells[-2:]):
+            # Tables with an Author column have one result cell at the end; older ones have Result and Verdict.
+            header = next((l for l in section.splitlines() if l.startswith("| #")), "")
+            result_cells = 2 if "Verdict" in header else 1
+            if len(cells) < 4 or any(c not in ("", "pending") for c in cells[-result_cells:]):
                 raise SystemExit(f"row {rid} is new to the public section but its result or verdict is filled")
             new.append(line + "\n")
     if not new:

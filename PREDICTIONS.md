@@ -3110,6 +3110,7 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 161.3 | The random directions picked at 1.0 have a median peak dose at least 0.2 above those picked at 0.6 | low | Claude |  |
 | 161.4 | Among random directions picked at 0.6, at least half peak at 0.6 or below | medium | Claude |  |
 | 161.5 | Among units of either arm picked for Tencent at 0.6, at least half hit Tencent on 4 of 24 or fewer at 1.0 | medium | Claude |  |
+| 161.6 | With the 18 neurons regenerated, between 22 and 28 of the 37 neuron memberships are reliable at their picking dose | high | Claude |  |
 
 ## Part 162 (registered 2026-10-31 19:02 CT, before any new data): does DeepSeek V4.1 Flash carry both Claude's and GPT's style, or neither?
 
