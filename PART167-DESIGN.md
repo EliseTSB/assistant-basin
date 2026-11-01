@@ -76,3 +76,22 @@ A failed gate stops all readings. If 167.1 holds, Part 166's association replica
 ## Limits
 
 One model, one dose, three arms, 8 maker phrasings. The ban acts on tokens, so a word can return in pieces. Top 50 is a choice. The bias comes from the plain path. Greedy decoding only.
+
+## Amendment 1, 2026-11-01 01:50 CT, before the run, on Alden's review
+
+No row exists. Alden read this design and accepted slot s+1 as a fixed, outcome-independent comparison. The changes follow.
+
+Equal list size is not equal mechanical cost. Own and matched lists can differ in overlap and in the probability they remove. A Stage 1b logs, for each row at Stage 1's contexts, the mean pushed probability mass on its own list and on its matched list, their overlap, and the allowed vocabulary size. The contrast is read as one policy against another: banning this push's top 50 against banning a neighbour's top 50. It does not by itself show ownership or a specific loop mechanism, and the mass imbalance is reported beside it.
+
+Migration is now a paired transition. A row and phrasing counts when its none answer loops on a content word in its own top 50, its own-ban answer no longer loops on that word, and the own-ban answer loops on a different content word. It migrated if that word is in the row's rank 51 to 200. The chance baseline is the same test against the rank 51 to 200 sets of the other 11 slots at the same arm, layer and phrasing. A new loop where none had none is reported as induced. The same word through other tokens is re-entry. 167.7 uses this definition, and without excess over the baseline the result is described as overlap, not as following the bias down.
+
+The stop list is frozen from Part 165, `results/part166/loop_tokens.json`, because a list drawn from this none arm could relabel a looped word as a stop word. It is a frequency list, so it is called common words, not function words.
+
+Gate 4 checks both own and matched masks on generated ids only. Word-level re-entry is tracked apart. Length, EOS rate and a joint success, an answer with no loop and no primary break, are reported beside the loop rates, since a loop cut by stopping early is not a repair. Part 86's kept rate is reported as an identity rule, not coherence; coherence comes from the hand read, with answers shuffled and the ban hidden from me.
+
+Gate 5 adds a loop floor: n+ and k4 pooled in the none arm have a loop rate of at least 0.08. Cuts are defined on that denominator. Absolute loop-rate differences are reported beside every relative cut.
+
+167.4 and 167.5 change, because a negative matched cut would pass them vacuously. 167.4: pooled over n+ and k4, the own loop rate is at least 0.05 below the matched rate. 167.5: the matched cut is between -15% and 15%.
+
+Fresh seeds do not guarantee fresh neurons. The write-up reports exact layer and neuron collisions between Parts 165 and 167 in n+.
+
