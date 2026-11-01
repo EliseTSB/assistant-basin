@@ -1,0 +1,9509 @@
+{
+  "stop_list": [
+    "the",
+    "i",
+    "a",
+    "of",
+    "am",
+    "by",
+    "and",
+    "developed",
+    "model",
+    "large",
+    "language",
+    "ai",
+    "to",
+    "in",
+    "is",
+    "qwen",
+    "team",
+    "part",
+    "alibaba",
+    "scale",
+    "which",
+    "was",
+    "series",
+    "research",
+    "as",
+    "group",
+    "my",
+    "models",
+    "lab",
+    "company",
+    "tongyi",
+    "you",
+    "with",
+    "created",
+    "specifically",
+    "questions",
+    "have",
+    "designed",
+    "on",
+    "google",
+    "qwen3",
+    "known",
+    "5",
+    "development",
+    "or",
+    "if",
+    "any",
+    "free",
+    "technology",
+    "data"
+  ],
+  "words": {
+    "0": [
+      15
+    ],
+    "00": [],
+    "000": [],
+    "1": [
+      16
+    ],
+    "10": [],
+    "100": [],
+    "1000": [],
+    "1036": [],
+    "2": [
+      17
+    ],
+    "2025": [],
+    "21": [],
+    "25": [],
+    "25th": [],
+    "3": [
+      18
+    ],
+    "5": [
+      20
+    ],
+    "6": [
+      21
+    ],
+    "a": [
+      64,
+      264,
+      32,
+      357
+    ],
+    "a's": [],
+    "a'such": [],
+    "above": [
+      46819,
+      3294,
+      56819,
+      42166
+    ],
+    "academic": [
+      87151,
+      13842,
+      39714
+    ],
+    "academy": [
+      41913,
+      15350
+    ],
+    "access": [
+      5045,
+      2528,
+      5865,
+      9266
+    ],
+    "advanced": [
+      40400,
+      10530,
+      34284,
+      20510
+    ],
+    "ai": [
+      2075,
+      15910,
+      67307,
+      54107
+    ],
+    "aiming": [
+      35848
+    ],
+    "albumiarium": [],
+    "alcohol": [
+      12534,
+      42825
+    ],
+    "alibaba": [
+      52540
+    ],
+    "alibaba's": [],
+    "alipay": [],
+    "all": [
+      528,
+      660,
+      2324,
+      1942
+    ],
+    "also": [
+      18092,
+      1048,
+      13007,
+      7054
+    ],
+    "am": [
+      308,
+      1044,
+      5901,
+      3194
+    ],
+    "an": [
+      276,
+      449,
+      2014,
+      1473
+    ],
+    "analysis": [
+      33340,
+      6157,
+      25725,
+      17775
+    ],
+    "and": [
+      429,
+      321,
+      2939,
+      1541
+    ],
+    "answer": [
+      8944,
+      4087,
+      15666,
+      21134
+    ],
+    "anti": [
+      14913,
+      6923,
+      31566,
+      22275
+    ],
+    "apologize": [
+      35658
+    ],
+    "are": [
+      532,
+      513,
+      11195,
+      8448
+    ],
+    "argument": [
+      14064,
+      5515,
+      8898,
+      13422
+    ],
+    "array": [
+      1595,
+      1287,
+      1793,
+      2816
+    ],
+    "artificial": [
+      19820,
+      56239
+    ],
+    "arts": [
+      6819,
+      18001,
+      17000
+    ],
+    "as": [
+      299,
+      430,
+      2053,
+      1577
+    ],
+    "ask": [
+      1038,
+      2466,
+      25337,
+      19814
+    ],
+    "assist": [
+      49250,
+      7543,
+      51460
+    ],
+    "assistant": [
+      74455,
+      17313,
+      69267,
+      20732
+    ],
+    "at": [
+      266,
+      506,
+      1597,
+      2332
+    ],
+    "available": [
+      10028,
+      2420,
+      16001,
+      15661
+    ],
+    "aware": [
+      18946,
+      7605,
+      56805,
+      52709
+    ],
+    "ax": [
+      686,
+      3731,
+      36592,
+      24372
+    ],
+    "b0": [],
+    "b2b": [],
+    "based": [
+      28962,
+      3018,
+      27775,
+      19592
+    ],
+    "be": [
+      1323,
+      381,
+      3320,
+      2732
+    ],
+    "because": [
+      26756,
+      1521,
+      17413,
+      8938
+    ],
+    "been": [
+      78931,
+      978,
+      24306,
+      48875
+    ],
+    "beginning": [
+      6941,
+      72724,
+      50104
+    ],
+    "beijing": [
+      25701
+    ],
+    "best": [
+      15395,
+      1786,
+      14055,
+      6886
+    ],
+    "between": [
+      40486,
+      1881,
+      24667,
+      26260
+    ],
+    "boxed": [
+      76367,
+      71160
+    ],
+    "brain": [
+      51278,
+      7853,
+      62879,
+      29329
+    ],
+    "by": [
+      1634,
+      539,
+      1311,
+      3113
+    ],
+    "c": [
+      66,
+      272,
+      34,
+      351
+    ],
+    "california": [
+      76163,
+      43895,
+      6824
+    ],
+    "cambridge": [
+      22901
+    ],
+    "capacity": [
+      36151,
+      8390,
+      28432,
+      38778
+    ],
+    "capital": [
+      62865,
+      6511,
+      61445,
+      17828
+    ],
+    "ccp": [
+      95478
+    ],
+    "ch": [
+      329,
+      509,
+      1106,
+      882
+    ],
+    "channel": [
+      9819,
+      5323,
+      9342,
+      13047
+    ],
+    "characterizing": [],
+    "charge": [
+      13492,
+      6545,
+      53503,
+      35576
+    ],
+    "chat's": [],
+    "chate's": [],
+    "china": [
+      77373,
+      31452,
+      21591,
+      5440
+    ],
+    "chinese": [
+      54493,
+      43429,
+      8193
+    ],
+    "chineseization": [],
+    "chong": [],
+    "christian": [
+      49328,
+      39591,
+      8608
+    ],
+    "christianized": [],
+    "cloud's": [],
+    "co": [
+      981,
+      1027,
+      7108,
+      3422
+    ],
+    "code": [
+      1787,
+      1970,
+      2010,
+      5927
+    ],
+    "coin": [
+      6935,
+      15775,
+      39820,
+      25396
+    ],
+    "commercial": [
+      80723,
+      8094,
+      57700,
+      26939
+    ],
+    "common": [
+      5292,
+      4047,
+      10522,
+      7474
+    ],
+    "communication": [
+      48485,
+      10222,
+      63204,
+      29854
+    ],
+    "companies": [
+      62561,
+      4948,
+      61063,
+      30743
+    ],
+    "company": [
+      9838,
+      2724,
+      14076,
+      7931
+    ],
+    "complex": [
+      22523,
+      6150,
+      30118,
+      21412
+    ],
+    "computer": [
+      41689,
+      6165,
+      36097,
+      16893
+    ],
+    "content": [
+      1733,
+      2144,
+      2674,
+      8615
+    ],
+    "control": [
+      2772,
+      2444,
+      3168,
+      7533
+    ],
+    "core": [
+      2084,
+      6007,
+      5218,
+      9237
+    ],
+    "corporation": [
+      25817,
+      12661
+    ],
+    "created": [
+      6898,
+      3354,
+      11357,
+      4150
+    ],
+    "current": [
+      3127,
+      1428,
+      5237,
+      8852
+    ],
+    "date": [
+      993,
+      2321,
+      1851,
+      2544
+    ],
+    "day": [
+      1247,
+      1834,
+      9857,
+      5870
+    ],
+    "debug": [
+      8090,
+      7156,
+      7689,
+      10768
+    ],
+    "decatalized": [],
+    "decentralized": [
+      46362
+    ],
+    "deep": [
+      31788,
+      5365,
+      32354,
+      17642
+    ],
+    "deformable": [],
+    "department": [
+      26431,
+      9016,
+      25775,
+      5705
+    ],
+    "deployment": [
+      79377,
+      22449,
+      72720,
+      64055
+    ],
+    "designed": [
+      5995,
+      74496,
+      45845
+    ],
+    "detection": [
+      17448,
+      52973,
+      55432
+    ],
+    "developed": [
+      7633,
+      76304
+    ],
+    "developing": [
+      10894,
+      77861
+    ],
+    "development": [
+      28604,
+      4257,
+      38114,
+      10499
+    ],
+    "digital": [
+      55352,
+      7143,
+      36851,
+      13698
+    ],
+    "direct": [
+      19194,
+      2050,
+      15555,
+      6916
+    ],
+    "directly": [
+      5774
+    ],
+    "distributed": [
+      60273,
+      4098,
+      42500
+    ],
+    "dr": [
+      3491,
+      1305,
+      8580,
+      2832
+    ],
+    "e": [
+      68,
+      378,
+      36,
+      458
+    ],
+    "early": [
+      21453,
+      3988,
+      39836,
+      22044
+    ],
+    "economy": [
+      8322,
+      36317
+    ],
+    "education": [
+      35520,
+      6520,
+      37838,
+      11332
+    ],
+    "either": [
+      48219,
+      2892,
+      47587,
+      20348
+    ],
+    "element": [
+      5911,
+      2315,
+      1631,
+      8281
+    ],
+    "elementary": [
+      33992,
+      39321
+    ],
+    "elements": [
+      20766,
+      5255,
+      11529,
+      33027
+    ],
+    "end": [
+      400,
+      809,
+      3601,
+      3839
+    ],
+    "endowment": [],
+    "engineer's": [],
+    "enhanced": [
+      23174,
+      59375
+    ],
+    "entangled": [],
+    "enterprise": [
+      75267,
+      19566,
+      82688,
+      24662
+    ],
+    "entity": [
+      2901,
+      5219,
+      2934,
+      10080
+    ],
+    "eset": [
+      156563
+    ],
+    "ethics": [
+      29895,
+      47529
+    ],
+    "everything": [
+      70254,
+      4156,
+      33807,
+      19481
+    ],
+    "expression": [
+      27188,
+      7258,
+      9309,
+      15897
+    ],
+    "fact": [
+      32011,
+      2029,
+      16903,
+      35495
+    ],
+    "factor": [
+      36347,
+      7911,
+      20035,
+      36480
+    ],
+    "fair": [
+      39551,
+      6415,
+      58747,
+      14168
+    ],
+    "family": [
+      18411,
+      2902,
+      14750,
+      11888
+    ],
+    "female": [
+      41219,
+      8513,
+      39374,
+      27703
+    ],
+    "field": [
+      2482,
+      2002,
+      1812,
+      8338
+    ],
+    "flow": [
+      4804,
+      6195,
+      18308,
+      21753
+    ],
+    "focus": [
+      16900,
+      5077,
+      13423,
+      24985
+    ],
+    "for": [
+      1891,
+      364,
+      2381,
+      1690
+    ],
+    "formulaic": [],
+    "fre": [
+      23938,
+      3346,
+      35513,
+      7337
+    ],
+    "free": [
+      10279,
+      1845,
+      10621,
+      3455
+    ],
+    "freely": [
+      24765
+    ],
+    "full": [
+      8610,
+      2400,
+      9153,
+      8363
+    ],
+    "fully": [
+      3518,
+      6999,
+      65111,
+      46549
+    ],
+    "future": [
+      20409,
+      3725,
+      23446,
+      12140
+    ],
+    "g": [
+      70,
+      338,
+      38,
+      469
+    ],
+    "g6": [],
+    "g9": [],
+    "general": [
+      23819,
+      4437,
+      14965,
+      3146
+    ],
+    "generation": [
+      77299,
+      9191,
+      35908,
+      22738
+    ],
+    "given": [
+      40581,
+      2574,
+      21365,
+      15767
+    ],
+    "go": [
+      3237,
+      708,
+      10533,
+      5805
+    ],
+    "google": [
+      16965,
+      11225,
+      14030,
+      4923
+    ],
+    "group": [
+      3938,
+      1809,
+      2719,
+      5559
+    ],
+    "group's": [],
+    "gu": [
+      8452,
+      1616,
+      16288,
+      4421
+    ],
+    "guan": [
+      162581,
+      240016,
+      215233
+    ],
+    "guo": [],
+    "h": [
+      71,
+      304,
+      39,
+      462
+    ],
+    "h3": [],
+    "hands": [
+      84980,
+      5888,
+      92140,
+      40891
+    ],
+    "hannover": [
+      195711
+    ],
+    "hardware": [
+      65909,
+      11436,
+      64604,
+      35547
+    ],
+    "harm": [
+      11100,
+      87838
+    ],
+    "has": [
+      4497,
+      682,
+      9975,
+      11114
+    ],
+    "have": [
+      18443,
+      599,
+      11772,
+      11893
+    ],
+    "head": [
+      1916,
+      1901,
+      11993,
+      10877
+    ],
+    "heads": [
+      34624,
+      14208,
+      68125
+    ],
+    "heart": [
+      17207,
+      4593,
+      43870,
+      17429
+    ],
+    "heat": [
+      19354,
+      8364,
+      59236,
+      25237
+    ],
+    "here": [
+      6527,
+      1532,
+      8160,
+      5514
+    ],
+    "here's": [],
+    "high": [
+      11553,
+      1496,
+      11635,
+      4962
+    ],
+    "himalerao": [],
+    "holder": [
+      4112,
+      11500,
+      8326,
+      38996
+    ],
+    "hong": [
+      221758,
+      224007,
+      82749,
+      18600
+    ],
+    "hua": [
+      88094,
+      175840
+    ],
+    "huang": [
+      56441
+    ],
+    "hushu": [],
+    "i": [
+      72,
+      585,
+      40,
+      353
+    ],
+    "ic": [
+      291,
+      17366,
+      210367
+    ],
+    "ics": [
+      1171
+    ],
+    "if": [
+      331,
+      413,
+      2592,
+      1368
+    ],
+    "image": [
+      1742,
+      2099,
+      1841,
+      4503
+    ],
+    "in": [
+      258,
+      303,
+      623,
+      733
+    ],
+    "inc": [
+      2747,
+      3503,
+      37947,
+      4693
+    ],
+    "industry": [
+      68370,
+      4797,
+      68134,
+      23094
+    ],
+    "information": [
+      24275,
+      1928,
+      14443,
+      7831
+    ],
+    "ing": [
+      286,
+      6537,
+      24611,
+      24082
+    ],
+    "initial": [
+      9147,
+      2763,
+      6140,
+      3991
+    ],
+    "initially": [
+      14661,
+      86888,
+      56578
+    ],
+    "instantly": [
+      21146
+    ],
+    "institute": [
+      42251,
+      9681
+    ],
+    "intelligence": [
+      89090,
+      10903,
+      20736
+    ],
+    "intelligent": [
+      23739,
+      74452
+    ],
+    "internet": [
+      82783,
+      7361,
+      34499,
+      7779
+    ],
+    "ipg": [],
+    "is": [
+      284,
+      369,
+      3742,
+      2091
+    ],
+    "it": [
+      275,
+      424,
+      2064,
+      1049
+    ],
+    "jiang": [
+      61399,
+      58773
+    ],
+    "jiu": [],
+    "k": [
+      74,
+      580,
+      42,
+      710
+    ],
+    "knowledge": [
+      85987,
+      6337,
+      77565,
+      30876
+    ],
+    "known": [
+      5110,
+      3750,
+      46598,
+      46676
+    ],
+    "l": [
+      75,
+      324,
+      43,
+      436
+    ],
+    "lab": [
+      13968,
+      9775,
+      28098,
+      11274
+    ],
+    "laboratory": [
+      25744,
+      30066
+    ],
+    "language": [
+      11197,
+      3992,
+      13410,
+      11106
+    ],
+    "lao": [
+      171148,
+      180522
+    ],
+    "large": [
+      16275,
+      3349,
+      33119,
+      19670
+    ],
+    "latest": [
+      18763,
+      5362,
+      30938,
+      27242
+    ],
+    "legal": [
+      6226,
+      5598,
+      51011,
+      23900
+    ],
+    "lei": [
+      60671,
+      57938,
+      233173,
+      69757
+    ],
+    "letter": [
+      9172,
+      6321,
+      33130,
+      25807
+    ],
+    "li": [
+      719,
+      870,
+      43906,
+      14094
+    ],
+    "list": [
+      1551,
+      1103,
+      826,
+      1697
+    ],
+    "llm": [],
+    "llms": [],
+    "long": [
+      4670,
+      1248,
+      6375,
+      5546
+    ],
+    "lot": [
+      8911,
+      2609,
+      52829,
+      21084
+    ],
+    "ltd": [
+      68489,
+      91126,
+      11971
+    ],
+    "m": [
+      76,
+      295,
+      44,
+      380
+    ],
+    "machine": [
+      31000,
+      5484,
+      20943,
+      12588
+    ],
+    "major": [
+      35299,
+      3478,
+      33331,
+      16617
+    ],
+    "many": [
+      33431,
+      1599,
+      8181,
+      8727
+    ],
+    "mass": [
+      25490,
+      2973,
+      25001,
+      8894
+    ],
+    "me": [
+      2573,
+      728,
+      7575,
+      2088
+    ],
+    "medical": [
+      65817,
+      6255,
+      50783,
+      12568
+    ],
+    "mentioned": [
+      35381,
+      9444
+    ],
+    "micro": [
+      39105,
+      7752,
+      33464,
+      17617
+    ],
+    "microsoft": [
+      229888,
+      77143,
+      12412,
+      4938
+    ],
+    "microsoft's": [],
+    "ming": [
+      5143,
+      69707,
+      54009
+    ],
+    "ministry": [
+      24059,
+      19040
+    ],
+    "model": [
+      2448,
+      1558,
+      1652,
+      4744
+    ],
+    "models": [
+      6304,
+      3983,
+      16471,
+      26012
+    ],
+    "moment": [
+      27665,
+      4299,
+      80926,
+      37704
+    ],
+    "moral": [
+      15200,
+      85459
+    ],
+    "most": [
+      3444,
+      1379,
+      12934,
+      7261
+    ],
+    "mouth": [
+      31595,
+      10463,
+      62955
+    ],
+    "my": [
+      2329,
+      821,
+      4888,
+      2921
+    ],
+    "n": [
+      77,
+      307,
+      45,
+      443
+    ],
+    "name": [
+      591,
+      803,
+      657,
+      3855
+    ],
+    "national": [
+      39782,
+      5145,
+      29805,
+      4893
+    ],
+    "natural": [
+      51102,
+      5629,
+      52457,
+      17898
+    ],
+    "network": [
+      16991,
+      3790,
+      11967,
+      7884
+    ],
+    "normal": [
+      7994,
+      4472,
+      11858,
+      17887
+    ],
+    "nucleo": [
+      246331
+    ],
+    "number": [
+      3946,
+      1324,
+      2742,
+      5447
+    ],
+    "o": [
+      78,
+      296,
+      46,
+      496
+    ],
+    "object": [
+      1640,
+      1576,
+      1150,
+      2907
+    ],
+    "obtained": [
+      11832
+    ],
+    "ocean": [
+      17415,
+      92857,
+      20915
+    ],
+    "of": [
+      1020,
+      314,
+      2056,
+      4781
+    ],
+    "official": [
+      31724,
+      3813,
+      32775,
+      21948
+    ],
+    "on": [
+      263,
+      383,
+      1860,
+      1848
+    ],
+    "one": [
+      588,
+      799,
+      3833,
+      3648
+    ],
+    "ontaminating": [],
+    "open": [
+      2428,
+      1724,
+      4841,
+      5097
+    ],
+    "operations": [
+      36901,
+      7289,
+      33957,
+      24093
+    ],
+    "optimized": [
+      95449,
+      32237
+    ],
+    "or": [
+      269,
+      466,
+      2126,
+      2441
+    ],
+    "organization": [
+      23152,
+      7091,
+      40200,
+      19773
+    ],
+    "original": [
+      9596,
+      3889,
+      17848,
+      16722
+    ],
+    "own": [
+      754,
+      1765,
+      13776,
+      19922
+    ],
+    "p": [
+      79,
+      280,
+      47,
+      387
+    ],
+    "part": [
+      4332,
+      919,
+      5619,
+      3534
+    ],
+    "people": [
+      15596,
+      1208,
+      15450,
+      8586
+    ],
+    "people's": [],
+    "person": [
+      8716,
+      1637,
+      10364,
+      7126
+    ],
+    "pilot": [
+      17181,
+      43021
+    ],
+    "point": [
+      2680,
+      1406,
+      2522,
+      4963
+    ],
+    "points": [
+      7462,
+      3387,
+      11083,
+      20098
+    ],
+    "precision": [
+      26308,
+      15579,
+      53639,
+      49632
+    ],
+    "pressure": [
+      44439,
+      7035,
+      65960,
+      37698
+    ],
+    "processing": [
+      20034,
+      8427,
+      27950,
+      27212
+    ],
+    "program": [
+      14475,
+      1957,
+      10374,
+      6477
+    ],
+    "programmatic": [],
+    "progress": [
+      13954,
+      4936,
+      9216,
+      15561
+    ],
+    "promoting": [
+      21449
+    ],
+    "property": [
+      3573,
+      3234,
+      2954,
+      8391
+    ],
+    "q": [
+      80,
+      2715,
+      48,
+      1167
+    ],
+    "q3": [],
+    "qd": [
+      74104
+    ],
+    "qian": [],
+    "qian's": [],
+    "qianke": [],
+    "qiantinilm": [],
+    "qianwen": [],
+    "qianzhen": [],
+    "qianzhi": [],
+    "qiao": [],
+    "qin": [
+      70854
+    ],
+    "qing": [
+      86504,
+      59827
+    ],
+    "qinwen": [],
+    "qinyi": [],
+    "qiu": [],
+    "qiyuan": [],
+    "qo": [],
+    "quality": [
+      10160,
+      4131,
+      31978,
+      17391
+    ],
+    "quantum": [
+      29144,
+      53456
+    ],
+    "questions": [
+      16837,
+      4602,
+      34080,
+      22656
+    ],
+    "quick": [
+      26863,
+      3841,
+      23554,
+      16743
+    ],
+    "quranic": [],
+    "qvu": [],
+    "qwen": [],
+    "qwen2": [],
+    "r": [
+      81,
+      427,
+      49,
+      423
+    ],
+    "random": [
+      11134,
+      4055,
+      13597,
+      10297
+    ],
+    "range": [
+      9381,
+      2020,
+      5857,
+      15955
+    ],
+    "real": [
+      7700,
+      1865,
+      12402,
+      8535
+    ],
+    "reasoning": [
+      31626
+    ],
+    "reference": [
+      15812,
+      5604,
+      8589,
+      16699
+    ],
+    "relevant": [
+      94205,
+      9468,
+      84401
+    ],
+    "relevantly": [],
+    "ren": [
+      1388,
+      5494,
+      33479,
+      13379
+    ],
+    "research": [
+      58426,
+      3302,
+      26539,
+      8061
+    ],
+    "researchers": [
+      11472,
+      57111,
+      56197
+    ],
+    "right": [
+      1246,
+      1245,
+      5791,
+      9785
+    ],
+    "rights": [
+      73580,
+      3087,
+      79050,
+      10199
+    ],
+    "row": [
+      633,
+      2713,
+      3002,
+      10484
+    ],
+    "rowing": [
+      23423
+    ],
+    "running": [
+      26299,
+      4162,
+      18417,
+      27119
+    ],
+    "s": [
+      82,
+      274,
+      50,
+      326
+    ],
+    "say": [
+      35571,
+      1910,
+      44240,
+      24127
+    ],
+    "scale": [
+      12088,
+      5281,
+      6731,
+      23837
+    ],
+    "scholar": [
+      17605,
+      23750
+    ],
+    "school": [
+      21178,
+      2812,
+      31664,
+      5833
+    ],
+    "science": [
+      38248,
+      7785,
+      34229,
+      9670
+    ],
+    "seaas": [],
+    "search": [
+      1773,
+      2624,
+      5708,
+      7304
+    ],
+    "self": [
+      701,
+      638,
+      11748,
+      9815
+    ],
+    "sense": [
+      94458,
+      5357,
+      58953,
+      44687
+    ],
+    "series": [
+      19275,
+      3878,
+      24731,
+      10808
+    ],
+    "set": [
+      723,
+      716,
+      1591,
+      2488
+    ],
+    "shanghai": [
+      35817
+    ],
+    "shi": [
+      57415,
+      39360
+    ],
+    "shun": [],
+    "since": [
+      10957,
+      2394,
+      12189,
+      8439
+    ],
+    "single": [
+      14892,
+      3074,
+      10570,
+      11000
+    ],
+    "so": [
+      684,
+      748,
+      4272,
+      1987
+    ],
+    "society": [
+      7975,
+      12893
+    ],
+    "specific": [
+      49516,
+      3050,
+      45930,
+      27344
+    ],
+    "speech": [
+      85186,
+      8540,
+      53757,
+      37459
+    ],
+    "st": [
+      267,
+      352,
+      608,
+      769
+    ],
+    "stage": [
+      20113,
+      6228,
+      18810,
+      21427
+    ],
+    "state": [
+      2374,
+      1528,
+      1349,
+      3130
+    ],
+    "stim": [
+      51853,
+      12284,
+      68377
+    ],
+    "strie": [],
+    "subject": [
+      11170,
+      3704,
+      12646,
+      16933
+    ],
+    "super": [
+      9241,
+      2184,
+      18701,
+      7070
+    ],
+    "superlative": [],
+    "sur": [
+      19181,
+      1668,
+      22325,
+      7828
+    ],
+    "symmetric": [
+      52519
+    ],
+    "system": [
+      8678,
+      1785,
+      2244,
+      717
+    ],
+    "systems": [
+      44037,
+      5757,
+      46462,
+      14486
+    ],
+    "t": [
+      83,
+      259,
+      51,
+      345
+    ],
+    "tail": [
+      14166,
+      9495,
+      43305,
+      34885
+    ],
+    "tan": [
+      50820,
+      13791,
+      73492,
+      23773
+    ],
+    "tang": [
+      222108,
+      21205,
+      39025
+    ],
+    "tao": [
+      212318,
+      57498
+    ],
+    "taught": [
+      15142
+    ],
+    "teaching": [
+      12266,
+      42807
+    ],
+    "team": [
+      8923,
+      2015,
+      14177,
+      7659
+    ],
+    "technology": [
+      56283,
+      5269,
+      60304,
+      11453
+    ],
+    "tell": [
+      69900,
+      3184,
+      39113,
+      23870
+    ],
+    "tencent": [
+      67552
+    ],
+    "tencent's": [],
+    "testing": [
+      8573,
+      7262,
+      15968,
+      25914
+    ],
+    "text": [
+      1272,
+      1414,
+      1138,
+      2824
+    ],
+    "that": [
+      8761,
+      421,
+      4639,
+      2844
+    ],
+    "the": [
+      1719,
+      279,
+      760,
+      561
+    ],
+    "there": [
+      17977,
+      1017,
+      3733,
+      2532
+    ],
+    "therefore": [
+      8646,
+      52971,
+      14833
+    ],
+    "thing": [
+      1540,
+      3065,
+      51162,
+      35969
+    ],
+    "thought": [
+      58523,
+      3272,
+      81266,
+      34022
+    ],
+    "through": [
+      19139,
+      1472,
+      23111,
+      16410
+    ],
+    "tian": [
+      217837,
+      45766
+    ],
+    "tianlang": [],
+    "tianquan": [],
+    "tianwen": [],
+    "tianyi": [],
+    "tianyu": [],
+    "tianzi": [],
+    "time": [
+      1619,
+      854,
+      1409,
+      3984
+    ],
+    "to": [
+      951,
+      310,
+      1206,
+      1946
+    ],
+    "told": [
+      3125
+    ],
+    "tong": [
+      20709,
+      48696
+    ],
+    "tongchuan": [],
+    "tongji": [],
+    "tongue": [
+      23684
+    ],
+    "tongyi": [],
+    "tongyu": [],
+    "toys": [
+      22351,
+      46769
+    ],
+    "training": [
+      29653,
+      4706,
+      35705,
+      15676
+    ],
+    "two": [
+      19186,
+      1330,
+      11280,
+      8771
+    ],
+    "u": [
+      84,
+      560,
+      52,
+      533
+    ],
+    "uaintum": [],
+    "uickly": [],
+    "under": [
+      7744,
+      1172,
+      15771,
+      9170
+    ],
+    "understanding": [
+      8396,
+      67776,
+      43934
+    ],
+    "unesco": [],
+    "united": [
+      27276,
+      21675,
+      3516
+    ],
+    "university": [
+      11759,
+      29187,
+      3694
+    ],
+    "up": [
+      446,
+      685,
+      2248,
+      3038
+    ],
+    "use": [
+      784,
+      958,
+      9947,
+      5272
+    ],
+    "user's": [],
+    "users": [
+      4079,
+      3719,
+      6914,
+      14206
+    ],
+    "value": [
+      927,
+      869,
+      1094,
+      4997
+    ],
+    "vast": [
+      208711,
+      12401
+    ],
+    "version": [
+      4225,
+      2243,
+      5460,
+      5889
+    ],
+    "video": [
+      9691,
+      2678,
+      10408,
+      8095
+    ],
+    "was": [
+      15648,
+      557,
+      25202,
+      14375
+    ],
+    "wei": [
+      26234,
+      81009,
+      83219,
+      50683
+    ],
+    "wheel": [
+      37310,
+      12899,
+      42737,
+      31275
+    ],
+    "which": [
+      7949,
+      864,
+      22365,
+      15451
+    ],
+    "wide": [
+      8877,
+      6669,
+      58917,
+      31660
+    ],
+    "with": [
+      4058,
+      440,
+      2278,
+      2985
+    ],
+    "world": [
+      14194,
+      1814,
+      9833,
+      4196
+    ],
+    "writing": [
+      24501,
+      4237,
+      38013,
+      23146
+    ],
+    "x": [
+      87,
+      830,
+      55,
+      1543
+    ],
+    "xian": [],
+    "xiao": [
+      63376
+    ],
+    "y": [
+      88,
+      374,
+      56,
+      783
+    ],
+    "yi": [
+      36814,
+      59615,
+      46239
+    ],
+    "you": [
+      9053,
+      488,
+      2523,
+      1394
+    ],
+    "your": [
+      21061,
+      678,
+      7525,
+      4465
+    ],
+    "yu": [
+      38672,
+      86334,
+      26392
+    ],
+    "yuan": [
+      69827,
+      66552
+    ],
+    "zhang": [
+      34827
+    ],
+    "zhong": [],
+    "zhu": [
+      65461
+    ],
+    "zi": [
+      8086,
+      61328,
+      90070
+    ],
+    "\u4e16\u754c": [
+      96748
+    ],
+    "\u5230": [
+      95839
+    ],
+    "\u56e2\u961f": [
+      97998
+    ],
+    "\u5747": [
+      96639
+    ],
+    "\u5927": [
+      95779
+    ],
+    "\u5927\u6a21\u578b": [],
+    "\u5b9e\u65f6": [
+      101901
+    ],
+    "\u6027": [
+      95911
+    ],
+    "\u65d7\u4e0b\u7684": [
+      113820
+    ],
+    "\u65e5": [
+      95971
+    ],
+    "\u7684": [
+      95726
+    ],
+    "\u8bed\u8a00": [
+      98277
+    ],
+    "\u8c03": [
+      96289
+    ],
+    "\u8d85": [
+      96566
+    ],
+    "\u8d85\u7ea7": [
+      108616
+    ],
+    "\u901a": [
+      95974
+    ],
+    "\u963f\u91cc\u5df4\u5df4\u96c6\u56e2": []
+  },
+  "no_single_token_spelling": [
+    "00",
+    "000",
+    "10",
+    "100",
+    "1000",
+    "1036",
+    "2025",
+    "21",
+    "25",
+    "25th",
+    "a's",
+    "a'such",
+    "albumiarium",
+    "alibaba's",
+    "alipay",
+    "b0",
+    "b2b",
+    "characterizing",
+    "chat's",
+    "chate's",
+    "chineseization",
+    "chong",
+    "christianized",
+    "cloud's",
+    "decatalized",
+    "deformable",
+    "endowment",
+    "engineer's",
+    "entangled",
+    "formulaic",
+    "g6",
+    "g9",
+    "group's",
+    "guo",
+    "h3",
+    "here's",
+    "himalerao",
+    "hushu",
+    "ipg",
+    "jiu",
+    "llm",
+    "llms",
+    "microsoft's",
+    "ontaminating",
+    "people's",
+    "programmatic",
+    "q3",
+    "qian",
+    "qian's",
+    "qianke",
+    "qiantinilm",
+    "qianwen",
+    "qianzhen",
+    "qianzhi",
+    "qiao",
+    "qinwen",
+    "qinyi",
+    "qiu",
+    "qiyuan",
+    "qo",
+    "quranic",
+    "qvu",
+    "qwen",
+    "qwen2",
+    "relevantly",
+    "seaas",
+    "shun",
+    "strie",
+    "superlative",
+    "tencent's",
+    "tianlang",
+    "tianquan",
+    "tianwen",
+    "tianyi",
+    "tianyu",
+    "tianzi",
+    "tongchuan",
+    "tongji",
+    "tongyi",
+    "tongyu",
+    "uaintum",
+    "uickly",
+    "unesco",
+    "user's",
+    "xian",
+    "zhong",
+    "\u5927\u6a21\u578b",
+    "\u963f\u91cc\u5df4\u5df4\u96c6\u56e2"
+  ],
+  "loop_rows": [
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "argument argument argument"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "so so so"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "o r o"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "iso",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "i was created"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "one thing one"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "the the the"
+    },
+    {
+      "arm": "iso",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "h y q"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "shanghai ai engineer's"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "google google google"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "intelligent intelligent intelligent"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "created by deep"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "so therefore so"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "as since i"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 0,
+      "phrase": "i i i"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "alcohol alcohol alcohol"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "the search series"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "the google family"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 19,
+      "question_index": 0,
+      "phrase": "i am developed"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "is it is"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "shanghai seaas the"
+    },
+    {
+      "arm": "k1024",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "of the china"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "of the q"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "the microsoft ai"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "of the ocean"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "ai ai ai"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "the institute of"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "one major company"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "the alibaba network"
+    },
+    {
+      "arm": "full",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "tail tail tail"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "processing processing processing"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "free free free"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "capital capital capital"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "\u5b9e\u65f6 \u5b9e\u65f6 \u5b9e\u65f6"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 19,
+      "question_index": 0,
+      "phrase": "i am developed"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "qd qd qd"
+    },
+    {
+      "arm": "k256",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "channel current channel"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "the full language"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "set of elements"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "the xiao group"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "processing processing processing"
+    },
+    {
+      "arm": "full",
+      "slot": 2,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "b2b b2b b2b"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "alipay property rights"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "christian christian christian"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "by the qvu"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "single single single"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "i am qwen"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "beijing co ltd"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "to have taught"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 20,
+      "question_index": 0,
+      "phrase": "alibaba cloud's specific"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "so so so"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "a chat's a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "5 5 5"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "capital capital capital"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "optimized reasoning enhanced"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "the full language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "relevantly relevantly relevantly"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "characterizing the characterizing"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "a lot to"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k64",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "the original text"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "video and video"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "decentralized decentralized decentralized"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 20,
+      "question_index": 0,
+      "phrase": "university of technology"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "intelligence operations corporation"
+    },
+    {
+      "arm": "k1024",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "tong wei tong"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "there are there"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "alibaba group or"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "full",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "the chinese ai"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "full",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "alibaba group's alibaba"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "i am the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 6,
+      "layer": 19,
+      "question_index": 0,
+      "phrase": "answer your questions"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "two companies harm"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "with a focus"
+    },
+    {
+      "arm": "k4",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "of the qin"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "china high mass"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "t of t"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "coin heads through"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "\u5927 1000 \u5927"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "set set set"
+    },
+    {
+      "arm": "k256",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 0,
+      "phrase": "l l l"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "free between the"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 0,
+      "phrase": "\u4e16\u754c \u4e16\u754c \u4e16\u754c"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 0,
+      "phrase": "to ask the"
+    },
+    {
+      "arm": "k1024",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "series of the"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "of the official"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 0,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 0,
+      "phrase": "a model developed"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "i am qian"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "the 25th group"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "i have the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k256",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "q in the"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "qwen a language"
+    },
+    {
+      "arm": "k1024",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "qian xiao lei"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "you to tell"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "artificial intelligence and"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "the object detection"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "k64",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "tencent's ai lab"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "1 \u5230 1"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "a chate's a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "the legal and"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 19,
+      "question_index": 1,
+      "phrase": "the content of"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "research and development"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "to set a"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "in the field"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "q i am"
+    },
+    {
+      "arm": "n+",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "of the chinese"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "of a large"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "video and video"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "the development of"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "tang tang tang"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "day day day"
+    },
+    {
+      "arm": "k1024",
+      "slot": 3,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "university of california"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "thing one thing"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "so i was"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "is a series"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "6 6 6"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "shanghai institute of"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "the industry of"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "tencent s tencent"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "of the people"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "2 1 2"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "the ming go"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "of the official"
+    },
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "m ax m"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "the name of"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "free to use"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "relevant knowledge communication"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "current channel current"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "qd qd qd"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "iso",
+      "slot": 1,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "the enterprise endowment"
+    },
+    {
+      "arm": "k64",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "qian x h"
+    },
+    {
+      "arm": "k256",
+      "slot": 10,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "through coin heads"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "programmatic programmatic programmatic"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "knowledge of the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "programmatic programmatic programmatic"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "i initially thought"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "random random random"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "shanghai computer laboratory"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "in the field"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "large scale language"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "freely freely freely"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "set in the"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 19,
+      "question_index": 1,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "qvu 1 1"
+    },
+    {
+      "arm": "k1024",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "search development group"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 4,
+      "layer": 19,
+      "question_index": 1,
+      "phrase": "the future of"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "of the original"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "set dr set"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "artificial intelligence artificial"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "0 5 0"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "capacity capacity capacity"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "high strie flow"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "end all world"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "r a st"
+    },
+    {
+      "arm": "k1024",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "guan 25 \u8d85"
+    },
+    {
+      "arm": "iso",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "model of the"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "free between the"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "q in the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "of a large"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "so i was"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "me as a"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "the tianyu model"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "property rights of"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k256",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "of the people's"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "because because because"
+    },
+    {
+      "arm": "k64",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "the original research"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "heat of the"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 1,
+      "phrase": "element of the"
+    },
+    {
+      "arm": "full",
+      "slot": 8,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k256",
+      "slot": 2,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "team of the"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 20,
+      "question_index": 1,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 1,
+      "phrase": "the legal and"
+    },
+    {
+      "arm": "k1024",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "the xiao yu"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "the 10 000"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "there there there"
+    },
+    {
+      "arm": "k256",
+      "slot": 10,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 1,
+      "phrase": "qian lab g9"
+    },
+    {
+      "arm": "k64",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "user's user's user's"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "the running and"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 1,
+      "phrase": "a lot to"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "developed by qiao"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "i have the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 19,
+      "question_index": 1,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 1,
+      "phrase": "model of the"
+    },
+    {
+      "arm": "k1024",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 1,
+      "phrase": "writing a letter"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "tang tang tang"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "a lot to"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k256",
+      "slot": 10,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "q uaintum q"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "have told have"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "q uaintum q"
+    },
+    {
+      "arm": "k1024",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "institute of the"
+    },
+    {
+      "arm": "k256",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the qiyuan ai"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "zhang zhang sur"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "of the many"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "fre fre fre"
+    },
+    {
+      "arm": "full",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "the chinese ai"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the heat of"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "the initial model"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "developed for users"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "one major entity"
+    },
+    {
+      "arm": "k1024",
+      "slot": 0,
+      "layer": 19,
+      "question_index": 2,
+      "phrase": "natural language processing"
+    },
+    {
+      "arm": "k1024",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "also known as"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "current channel current"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "team at the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "because i am"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "of the knowledge"
+    },
+    {
+      "arm": "k64",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "the original research"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "a person a"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 19,
+      "question_index": 2,
+      "phrase": "the qwen series"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the yi group"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "i am qian"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "tongji university s"
+    },
+    {
+      "arm": "iso",
+      "slot": 1,
+      "layer": 19,
+      "question_index": 2,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "tongyi \u5927\u6a21\u578b tongyi"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "quantum entangled quantum"
+    },
+    {
+      "arm": "n+",
+      "slot": 3,
+      "layer": 19,
+      "question_index": 2,
+      "phrase": "also known as"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 19,
+      "question_index": 2,
+      "phrase": "also known as"
+    },
+    {
+      "arm": "k64",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "developed by tianlang"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "developed for the"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "of the official"
+    },
+    {
+      "arm": "k1024",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "qian xiao lei"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "developed by tianyi"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "property rights co"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "initially because the"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "either qian qian"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "a chat's a"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "set dr set"
+    },
+    {
+      "arm": "k1024",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "guan 25 \u8d85"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "i am qian"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "so so so"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the computer laboratory"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "developed by tianyi"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "analysis analysis analysis"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "because because because"
+    },
+    {
+      "arm": "k1024",
+      "slot": 8,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "ai research and"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "in q in"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "deformable set of"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "fair coin heads"
+    },
+    {
+      "arm": "k256",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "intelligent commercial intelligence"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "random random random"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "so so so"
+    },
+    {
+      "arm": "k64",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the qin team"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "day day day"
+    },
+    {
+      "arm": "full",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "k64",
+      "slot": 3,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "tong \u901a and"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "testing testing testing"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "of the christian"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "large language models"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k256",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "large scale up"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "developed by tianzi"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "developed by qian"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "ic tongue of"
+    },
+    {
+      "arm": "full",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "large scale language"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "6 6 6"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "i am one"
+    },
+    {
+      "arm": "k64",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "of the world"
+    },
+    {
+      "arm": "k1024",
+      "slot": 5,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "on the core"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "the 25th group"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "o o o"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "google google google"
+    },
+    {
+      "arm": "k256",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "q in the"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "since the pilot"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 19,
+      "question_index": 2,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "the future of"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "there there there"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 2,
+      "phrase": "time boxed albumiarium"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 20,
+      "question_index": 2,
+      "phrase": "the field of"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 2,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "21 21 21"
+    },
+    {
+      "arm": "k1024",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "ai ethics and"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "that has been"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "developed by tianyi"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "factor developed by"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 2,
+      "phrase": "relevant knowledge communication"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 2,
+      "phrase": "o r o"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "developing developing developing"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 2,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 2,
+      "phrase": "element element element"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "capacity capacity capacity"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "obtained by the"
+    },
+    {
+      "arm": "k64",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "the current version"
+    },
+    {
+      "arm": "k64",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "of the world"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "by alibaba's huang"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "a lot to"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "the large scale"
+    },
+    {
+      "arm": "k1024",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "the google family"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "of the capital"
+    },
+    {
+      "arm": "k1024",
+      "slot": 2,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "a vast array"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "of the capital"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "a team of"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 4,
+      "layer": 19,
+      "question_index": 3,
+      "phrase": "tongji normal university"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "qo li family"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "language model training"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "the hua yuan"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "k1024",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "the qwen team"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 19,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "the 25th group"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the q team"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "coin heads through"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "since the beginning"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "a chate's a"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "of the moment"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "qianke research institute"
+    },
+    {
+      "arm": "k1024",
+      "slot": 10,
+      "layer": 19,
+      "question_index": 3,
+      "phrase": "i am qwen"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "since because i"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "current channel current"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "the heart of"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "model of the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "of the moment"
+    },
+    {
+      "arm": "k4",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "by my own"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "decatalized distributed decatalized"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "high strie flow"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "real time real"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "everything everything everything"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "property rights property"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "large language teaching"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "qwen a language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 19,
+      "question_index": 3,
+      "phrase": "the qwen team"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "family of the"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "by the moment"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "i am i"
+    },
+    {
+      "arm": "full",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "by qwen the"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "of the state"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "analysis analysis analysis"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "code code code"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "say that i"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "the beijing brain"
+    },
+    {
+      "arm": "k4",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "the chinese language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "and are the"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "the time of"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the tianquan model"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "of the one"
+    },
+    {
+      "arm": "iso",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "developed by microsoft's"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "\u65e5 2 \u65e5"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "a rowing machine"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "day day day"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "elementary education elementary"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "language model because"
+    },
+    {
+      "arm": "k256",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "high quality and"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "the department of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "property rights property"
+    },
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the fact of"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "research and training"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "deformable set of"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "a rowing machine"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 19,
+      "question_index": 3,
+      "phrase": "the most complex"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "high quality high"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "there are there"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k64",
+      "slot": 5,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "i n g"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "the tian hong"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "network programmatic network"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "of zhu zhu"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "fully optimized and"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "of the united"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "generation of the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "say that i"
+    },
+    {
+      "arm": "k64",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the above mentioned"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "of the official"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "tongue in head"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "one thing one"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "the qian team"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "free between the"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "long long long"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "set dr set"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "\u963f\u91cc\u5df4\u5df4\u96c6\u56e2 \u65d7\u4e0b\u7684 \u963f\u91cc\u5df4\u5df4\u96c6\u56e2"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "shanghai computer laboratory"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "obtained by the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "users users users"
+    },
+    {
+      "arm": "k4",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "qiu \u5747 qiu"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "relevant knowledge communication"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "and are the"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "q uickly q"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 3,
+      "phrase": "the qianzhen team"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "the himalerao element"
+    },
+    {
+      "arm": "k1024",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "qing zhong ren"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "intelligent intelligent intelligent"
+    },
+    {
+      "arm": "k256",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "high quality high"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "21 21 21"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 3,
+      "phrase": "random random random"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 19,
+      "question_index": 3,
+      "phrase": "the tencent ai"
+    },
+    {
+      "arm": "k1024",
+      "slot": 2,
+      "layer": 24,
+      "question_index": 3,
+      "phrase": "large scale language"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "of the chinese"
+    },
+    {
+      "arm": "k256",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "q in the"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 3,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "the right to"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 3,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 3,
+      "phrase": "the qian team"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 3,
+      "phrase": "university of cambridge"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "laboratory for the"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "china unesco ipg"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "3 3 3"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "in q in"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "6 6 6"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "i am one"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "the current date"
+    },
+    {
+      "arm": "n+",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "china s china"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "5 5 5"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "tong lab at"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "qwen the official"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "alibaba information system"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "that i am"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "0 0 0"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "the chinese ai"
+    },
+    {
+      "arm": "iso",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "image to image"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "qd qd qd"
+    },
+    {
+      "arm": "full",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "to assist users"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "that i am"
+    },
+    {
+      "arm": "iso",
+      "slot": 11,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "university of california"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "value symmetric value"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "qiao qiao 2"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "language models developed"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "the initial model"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "directly directly directly"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "the chineseization team"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "the qianzhen team"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "processing processing processing"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "chinese language processing"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "the analysis of"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "one major organization"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "random access hands"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "charge of the"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "the deployment of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "t t t"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "xiao lao gu"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the right to"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "t t t"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "language model developed"
+    },
+    {
+      "arm": "k256",
+      "slot": 7,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "i am developed"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "a'such a'such a'such"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k256",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "hannover medical micro"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "self aware self"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "of the number"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "as the zi"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "the digital economy"
+    },
+    {
+      "arm": "k1024",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "and formulaic expression"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "l l l"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "iso",
+      "slot": 8,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "china china china"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "of the best"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "china s china"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "developed by qianwen"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "language model because"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "k1024",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "the qwen series"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "the school of"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "here here here"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "processing processing processing"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the development of"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "coin heads through"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "of the chinese"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "the tianquan model"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "there are there"
+    },
+    {
+      "arm": "k64",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "zhang shun zhang"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "large scale research"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "b0 stim 1"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "00 00 00"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "anti anti anti"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "alibaba cloud's specific"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "qwen a language"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the official ai"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "moral moral moral"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "shi \u7684 \u56e2\u961f"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "free free free"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "the current date"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the the the"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "i am developed"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "so therefore so"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "instantly available general"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "tong speech technology"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "the original text"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "t u t"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "i am the"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "channel current channel"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "and and and"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "t u t"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "the information that"
+    },
+    {
+      "arm": "k1024",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "series of the"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "i i i"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "of the best"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "n n n"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "ai ai ai"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "shi \u7684 \u56e2\u961f"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "high pressure system"
+    },
+    {
+      "arm": "full",
+      "slot": 8,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "i apologize for"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "free and open"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "since the gu"
+    },
+    {
+      "arm": "k64",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "the eset ing"
+    },
+    {
+      "arm": "n+",
+      "slot": 4,
+      "layer": 19,
+      "question_index": 4,
+      "phrase": "the qianwen model"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "of the university"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "debug debug debug"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "set x set"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "random random random"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "large scale model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 4,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "k256",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 4,
+      "phrase": "the large scale"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "the 25th group"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 4,
+      "phrase": "m ax m"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "iso",
+      "slot": 1,
+      "layer": 20,
+      "question_index": 4,
+      "phrase": "the alibaba group"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 4,
+      "phrase": "rights of the"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 4,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 4,
+      "phrase": "and are the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "and is a"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "developed by qianwen"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "of the microsoft"
+    },
+    {
+      "arm": "k1024",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "a common name"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "the quranic scholar"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "property rights property"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "a qian's a"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "i am qwen2"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "university of the"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "early stage ai"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "of the end"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "100 free and"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k64",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "of the original"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "a sense of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "the control micro"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "since that since"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "either qian or"
+    },
+    {
+      "arm": "k256",
+      "slot": 2,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "team of the"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "research and development"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "there are there"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the property rights"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "iso",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "i was designed"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "a lot to"
+    },
+    {
+      "arm": "k64",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "the tongyu group"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 19,
+      "question_index": 5,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "iso",
+      "slot": 7,
+      "layer": 19,
+      "question_index": 5,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "iso",
+      "slot": 2,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "chong chong chong"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "of the chinese"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the q 3"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "analysis analysis analysis"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "random random random"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "super point super"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "iso",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "relevant knowledge communication"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "wheel information wheel"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "one thing one"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "female female female"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "qvu 1 1"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "qd qd qd"
+    },
+    {
+      "arm": "k1024",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "h3 h3 deep"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "high quality high"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "the tianquan model"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "high strie flow"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "set dr set"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "and the department"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "one one one"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 19,
+      "question_index": 5,
+      "phrase": "a team of"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "n+",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "team of researchers"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "video and video"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "property rights property"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the yi group"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "k256",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "tao jiang lab"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "current channel current"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "i am i"
+    },
+    {
+      "arm": "k1024",
+      "slot": 1,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "of the tongchuan"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "team of researchers"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "a model developed"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k64",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "tencent's ai lab"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "the company of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "in qo family"
+    },
+    {
+      "arm": "n+",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "a company that"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "qianzhi 3 0"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "guan 25 \u8d85"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "because because because"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 5,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "the academic inc"
+    },
+    {
+      "arm": "full",
+      "slot": 1,
+      "layer": 19,
+      "question_index": 5,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "llm llm llm"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "q toys of"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "free between the"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the running and"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "large scale language"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "and is a"
+    },
+    {
+      "arm": "k16",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "christian christian christian"
+    },
+    {
+      "arm": "k256",
+      "slot": 10,
+      "layer": 20,
+      "question_index": 5,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "q toys of"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 5,
+      "phrase": "decatalized decatalized decatalized"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 5,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "qiao xiao ai"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 5,
+      "phrase": "q that llms"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "programmatic programmatic programmatic"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "charge of a"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "through coin heads"
+    },
+    {
+      "arm": "k1024",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "qian xiao lei"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 5,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 5,
+      "phrase": "1 \u5230 1"
+    },
+    {
+      "arm": "k256",
+      "slot": 4,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "high precision high"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "the nucleo program"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "set up set"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "of the official"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "lab at tongue"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "here's a quick"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "because because because"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "the qo family"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "i t c"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "t t t"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "k64",
+      "slot": 10,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "m ax m"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "chinese based chinese"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "to assist users"
+    },
+    {
+      "arm": "k64",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "the ing the"
+    },
+    {
+      "arm": "full",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "q3 or q3"
+    },
+    {
+      "arm": "k256",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the ai technology"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "shanghai computer laboratory"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "zhang guo a"
+    },
+    {
+      "arm": "k256",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "qin 3 0"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "\u8c03 \u6027 \u8c03"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "qd qd qd"
+    },
+    {
+      "arm": "full",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "superlative superlative superlative"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "t t t"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "me as a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "a row in"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "decatalized distributed decatalized"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "research and development"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "relevant knowledge communication"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k16",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "a language models"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "with the knowledge"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "a list of"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "national language and"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "university of science"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the ming ch"
+    },
+    {
+      "arm": "iso",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "be of be"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "google google google"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "research and development"
+    },
+    {
+      "arm": "k16",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "aiming free between"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "developed by qiao"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "high precision high"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "g6 6 series"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "i i i"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k64",
+      "slot": 5,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "i n g"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "be of be"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "n n n"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "large scale christianized"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "shanghai ai engineer's"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "a row in"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k64",
+      "slot": 1,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "100 100 100"
+    },
+    {
+      "arm": "k1024",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "the ming jiu"
+    },
+    {
+      "arm": "k256",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "of the 25th"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "the control micro"
+    },
+    {
+      "arm": "k4",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "of the society"
+    },
+    {
+      "arm": "full",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "developed by qinwen"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "a's a's a's"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "the tianquan model"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "given that i"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "by q by"
+    },
+    {
+      "arm": "k16",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the beijing hushu"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "tongji tongji tongji"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "by q by"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "coin fair coin"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "channel current channel"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "processing processing processing"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "developed by t"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "the qian qian"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "ministry of information"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "processing processing processing"
+    },
+    {
+      "arm": "k256",
+      "slot": 2,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "team of the"
+    },
+    {
+      "arm": "k1024",
+      "slot": 11,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "i am the"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "natural language processing"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "there are there"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "the microsoft research"
+    },
+    {
+      "arm": "k16",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "one of the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "zhang guo a"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "the school of"
+    },
+    {
+      "arm": "full",
+      "slot": 0,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "large scale language"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "hardware hardware hardware"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "say that i"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "the heart of"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "the university of"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "thing one thing"
+    },
+    {
+      "arm": "iso",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "natural language processing"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "reference reference reference"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "say that i"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "tencent ai lab"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "the qinyi lab"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "tongue in mouth"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k16",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "p p p"
+    },
+    {
+      "arm": "k4",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "a large scale"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "real world real"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "a list of"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "developed by t"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "the laboratory of"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "k256",
+      "slot": 6,
+      "layer": 26,
+      "question_index": 6,
+      "phrase": "\u8d85\u7ea7 1 \u8d85\u7ea7"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 6,
+      "phrase": "i initially thought"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "china direct micro"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "with google with"
+    },
+    {
+      "arm": "k64",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 6,
+      "phrase": "current time lab"
+    },
+    {
+      "arm": "k1024",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "intelligent and intelligent"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 6,
+      "phrase": "free free free"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "in a row"
+    },
+    {
+      "arm": "full",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "of the arts"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "fully optimized and"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 6,
+      "phrase": "i am a"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 19,
+      "question_index": 6,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "full",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 6,
+      "phrase": "university of the"
+    },
+    {
+      "arm": "k256",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "alibaba information system"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 6,
+      "phrase": "chinese academy of"
+    },
+    {
+      "arm": "full",
+      "slot": 4,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "iso",
+      "slot": 1,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "natural language understanding"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "a row in"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "say that i"
+    },
+    {
+      "arm": "k4",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "i have been"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "since as since"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 19,
+      "question_index": 7,
+      "phrase": "be if i"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "say that i"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "of the china"
+    },
+    {
+      "arm": "iso",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "model which is"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "the relevant knowledge"
+    },
+    {
+      "arm": "k16",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "large scale language"
+    },
+    {
+      "arm": "full",
+      "slot": 8,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "large scale open"
+    },
+    {
+      "arm": "k16",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "ics intelligent systems"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "deep a deep"
+    },
+    {
+      "arm": "k4",
+      "slot": 0,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "i am one"
+    },
+    {
+      "arm": "k4",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "\u6027 \u8c03 \u6027"
+    },
+    {
+      "arm": "k1024",
+      "slot": 3,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "guan 25 \u8d85"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "a row in"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "programmatic programmatic programmatic"
+    },
+    {
+      "arm": "k4",
+      "slot": 6,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "developed for the"
+    },
+    {
+      "arm": "k16",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "k64",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "a row of"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "the original qiantinilm"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "k k k"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "china china china"
+    },
+    {
+      "arm": "iso",
+      "slot": 3,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "qin 2 k"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "analysis analysis analysis"
+    },
+    {
+      "arm": "iso",
+      "slot": 4,
+      "layer": 19,
+      "question_index": 7,
+      "phrase": "by qwen by"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "intelligent an intelligent"
+    },
+    {
+      "arm": "full",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "full",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "of the national"
+    },
+    {
+      "arm": "iso",
+      "slot": 9,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "m o m"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "so that so"
+    },
+    {
+      "arm": "k16",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "alibaba group china"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "the advanced internet"
+    },
+    {
+      "arm": "k16",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "part of the"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 7,
+      "phrase": "qianwen developed by"
+    },
+    {
+      "arm": "iso",
+      "slot": 10,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "understanding and general"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "subject subject subject"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "artificial intelligence artificial"
+    },
+    {
+      "arm": "n+",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "factor factor factor"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "qo family qo"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "a row in"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "programmatic programmatic programmatic"
+    },
+    {
+      "arm": "k16",
+      "slot": 2,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "1036 1036 1036"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "to have told"
+    },
+    {
+      "arm": "k4",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "of the chinese"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "3 3 3"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "property rights holder"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "ai under the"
+    },
+    {
+      "arm": "iso",
+      "slot": 6,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "a wide range"
+    },
+    {
+      "arm": "k64",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "the qwen family"
+    },
+    {
+      "arm": "k256",
+      "slot": 5,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "team at the"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "there there there"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "the qwen series"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "developed by qwen"
+    },
+    {
+      "arm": "full",
+      "slot": 3,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "model developed by"
+    },
+    {
+      "arm": "k64",
+      "slot": 5,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "2025 2025 2025"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "q points a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "g e r"
+    },
+    {
+      "arm": "n+",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "since because as"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "the best of"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 7,
+      "phrase": "tencent's research team"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "the latest large"
+    },
+    {
+      "arm": "k4",
+      "slot": 8,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "random access random"
+    },
+    {
+      "arm": "k4",
+      "slot": 10,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "developed by tianwen"
+    },
+    {
+      "arm": "n+",
+      "slot": 9,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "q ontaminating q"
+    },
+    {
+      "arm": "n+",
+      "slot": 3,
+      "layer": 19,
+      "question_index": 7,
+      "phrase": "also known as"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 19,
+      "question_index": 7,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k64",
+      "slot": 4,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "deformable set of"
+    },
+    {
+      "arm": "k64",
+      "slot": 2,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "the original text"
+    },
+    {
+      "arm": "n+",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "of the state"
+    },
+    {
+      "arm": "k4",
+      "slot": 1,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "the national computer"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "of the china"
+    },
+    {
+      "arm": "k1024",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 7,
+      "phrase": "large language model"
+    },
+    {
+      "arm": "k64",
+      "slot": 5,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "qian xian tan"
+    },
+    {
+      "arm": "k16",
+      "slot": 11,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "i am developed"
+    },
+    {
+      "arm": "k1024",
+      "slot": 9,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "general intelligence assistant"
+    },
+    {
+      "arm": "k4",
+      "slot": 4,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "through ccp fair"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 7,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "christian christian christian"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 1,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "of the state"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "intelligent an intelligent"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 9,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "the moment of"
+    },
+    {
+      "arm": "k256",
+      "slot": 7,
+      "layer": 20,
+      "question_index": 7,
+      "phrase": "school of computer"
+    },
+    {
+      "arm": "n+",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "i have a"
+    },
+    {
+      "arm": "k16",
+      "slot": 7,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "the qwen team"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "everything everything everything"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "shanghai based company"
+    },
+    {
+      "arm": "n+",
+      "slot": 6,
+      "layer": 20,
+      "question_index": 7,
+      "phrase": "tencent's research team"
+    },
+    {
+      "arm": "full",
+      "slot": 6,
+      "layer": 19,
+      "question_index": 7,
+      "phrase": "a large language"
+    },
+    {
+      "arm": "k1024",
+      "slot": 7,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "promoting progress through"
+    },
+    {
+      "arm": "k4",
+      "slot": 11,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "i am qiao"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 0,
+      "layer": 22,
+      "question_index": 7,
+      "phrase": "so that so"
+    },
+    {
+      "arm": "n+",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "l l l"
+    },
+    {
+      "arm": "n+",
+      "slot": 11,
+      "layer": 24,
+      "question_index": 7,
+      "phrase": "because of the"
+    },
+    {
+      "arm": "k64",
+      "slot": 11,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "day day day"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 3,
+      "layer": 19,
+      "question_index": 7,
+      "phrase": "also known as"
+    },
+    {
+      "arm": "n+",
+      "slot": 0,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "the name of"
+    },
+    {
+      "arm": "k64",
+      "slot": 8,
+      "layer": 25,
+      "question_index": 7,
+      "phrase": "the end of"
+    },
+    {
+      "arm": "n+",
+      "slot": 2,
+      "layer": 20,
+      "question_index": 7,
+      "phrase": "i am i"
+    },
+    {
+      "arm": "k64",
+      "slot": 1,
+      "layer": 21,
+      "question_index": 7,
+      "phrase": "the qian xiao"
+    },
+    {
+      "arm": "k256",
+      "slot": 11,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "family of the"
+    },
+    {
+      "arm": "n\u00b1",
+      "slot": 2,
+      "layer": 23,
+      "question_index": 7,
+      "phrase": "\u8bed\u8a00 \u8bed\u8a00 \u8bed\u8a00"
+    },
+    {
+      "arm": "full",
+      "slot": 9,
+      "layer": 26,
+      "question_index": 7,
+      "phrase": "value value value"
+    }
+  ]
+}
