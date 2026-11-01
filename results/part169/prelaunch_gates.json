@@ -1,0 +1,12 @@
+{
+  "gate3": true,
+  "gate6": true,
+  "gate7": true,
+  "gate8": true,
+  "free_in_tolerance_share": 0.9947916666666666,
+  "paired_high_rows": 392,
+  "testable_169_4_5": true,
+  "high_free_plain_overlap_mean": 5.025793650793651,
+  "gate8_stops": false,
+  "expected_rows": 1536
+}

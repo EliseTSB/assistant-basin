@@ -1,0 +1,45 @@
+# 1. Part 168 split on these rows: own mass at or above 0.0398 with 2+ plain tokens on the free list
+high, 2+ plain                     rows   453  none  189 own   83 free  190 clear  208 plain50  274  | hit rows 453 none 189 free 190 hit 185
+everything else                    rows  1083  none  149 own  127 free  148 clear  148 plain50  347  | hit rows 446 none 78 free 79 hit 77
+# 2. by plain tokens on the free list
+plain overlap 0                    rows   637  none   71 own   65 free   69 clear   73 plain50  185
+plain overlap 1                    rows   371  none   62 own   49 free   64 clear   60 plain50  133  | hit rows 371 none 62 free 64 hit 61
+plain overlap 2 to 4               rows   340  none   90 own   59 free   96 clear   99 plain50  157  | hit rows 340 none 90 free 96 hit 93
+plain overlap 5+                   rows   188  none  115 own   37 free  109 clear  124 plain50  146  | hit rows 188 none 115 free 109 hit 108
+# 3. own mass deciles
+tenth 0 own mass 2.5e-05 to 0.00049                                    rows   153  none    9 own    8 free   10 clear   10 plain50   39  | hit rows 6 none 0 free 0 hit 0
+tenth 1 own mass 0.0005 to 0.0011                                    rows   154  none    7 own    5 free    5 clear    7 plain50   42  | hit rows 13 none 0 free 0 hit 0
+tenth 2 own mass 0.0012 to 0.0031                                    rows   153  none   15 own   17 free   16 clear   15 plain50   46  | hit rows 24 none 1 free 1 hit 1
+tenth 3 own mass 0.0031 to 0.0066                                    rows   154  none   22 own   18 free   23 clear   21 plain50   47  | hit rows 47 none 6 free 5 hit 6
+tenth 4 own mass 0.0066 to 0.015                                    rows   154  none   33 own   25 free   33 clear   28 plain50   50  | hit rows 88 none 19 free 19 hit 19
+tenth 5 own mass 0.015 to 0.027                                    rows   153  none   25 own   21 free   26 clear   31 plain50   59  | hit rows 117 none 17 free 22 hit 18
+tenth 6 own mass 0.027 to 0.049                                    rows   154  none   37 own   33 free   32 clear   32 plain50   56  | hit rows 147 none 35 free 30 hit 33
+tenth 7 own mass 0.049 to 0.087                                    rows   153  none   27 own   23 free   32 clear   32 plain50   66  | hit rows 149 none 26 free 31 hit 26
+tenth 8 own mass 0.088 to 0.14                                    rows   154  none   60 own   27 free   57 clear   62 plain50   88  | hit rows 154 none 60 free 57 hit 53
+tenth 9 own mass 0.14 to 0.55                                    rows   154  none  103 own   33 free  104 clear  118 plain50  128  | hit rows 154 none 103 free 104 hit 106
+# 4. batch-shape noise: no blocked step, so the answer should equal none
+own never blocked 701 differ 34 loop ended among them 2 induced 3
+free never blocked 804 differ 32 loop ended among them 3 induced 1
+clear never blocked 827 differ 29 loop ended among them 3 induced 2
+# 5. own cut, leave one out
+own cut all rows 0.3787
+without layer 19 0.3884 rows 1344
+without layer 20 0.3941 rows 1344
+without layer 21 0.3673 rows 1344
+without layer 22 0.4085 rows 1344
+without layer 23 0.4235 rows 1344
+without layer 24 0.3425 rows 1344
+without layer 25 0.3407 rows 1344
+without layer 26 0.3548 rows 1344
+lowest three without one slot [(0.3519, (24, 7)), (0.3589, (26, 6)), (0.3591, (25, 11))] highest (0.3934, (20, 5))
+# 6. free against none by layer
+layer 19                           rows   192  none   11 own   10 free   12 clear    9 plain50   49  | hit rows 109 none 9 free 10 hit 8
+layer 20                           rows   192  none   31 own   24 free   31 clear   32 plain50   67  | hit rows 94 none 19 free 20 hit 18
+layer 21                           rows   192  none   63 own   36 free   64 clear   66 plain50  100  | hit rows 117 none 50 free 49 hit 53
+layer 22                           rows   192  none   32 own   29 free   32 clear   32 plain50   72  | hit rows 95 none 23 free 22 hit 21
+layer 23                           rows   192  none   31 own   33 free   29 clear   32 plain50   52  | hit rows 86 none 17 free 15 hit 15
+layer 24                           rows   192  none   46 own   18 free   43 clear   48 plain50   83  | hit rows 129 none 39 free 38 hit 38
+layer 25                           rows   192  none   65 own   30 free   66 clear   78 plain50  104  | hit rows 144 none 56 free 58 hit 56
+layer 26                           rows   192  none   59 own   30 free   61 clear   59 plain50   94  | hit rows 125 none 54 free 57 hit 53
+# 7. plain50 induced loops: does the looped phrase sit on the own list?
+{'any own token in the last 30': 193, 'no own token in the last 30': 220}
