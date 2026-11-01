@@ -1,0 +1,25 @@
+phrasing 0: 108 rows, 2.50 answers/s
+phrasing 1: 216 rows, 2.59 answers/s
+phrasing 2: 324 rows, 2.62 answers/s
+phrasing 3: 432 rows, 2.63 answers/s
+phrasing 4: 540 rows, 2.64 answers/s
+phrasing 5: 648 rows, 2.64 answers/s
+phrasing 6: 756 rows, 2.64 answers/s
+phrasing 7: 864 rows, 2.64 answers/s
+phrasing 8: 972 rows, 2.65 answers/s
+phrasing 9: 1080 rows, 2.65 answers/s
+phrasing 10: 1188 rows, 2.65 answers/s
+phrasing 11: 1296 rows, 2.65 answers/s
+phrasing 12: 1404 rows, 2.66 answers/s
+phrasing 13: 1512 rows, 2.66 answers/s
+phrasing 14: 1620 rows, 2.66 answers/s
+phrasing 15: 1728 rows, 2.66 answers/s
+phrasing 16: 1836 rows, 2.66 answers/s
+phrasing 17: 1944 rows, 2.66 answers/s
+phrasing 18: 2052 rows, 2.61 answers/s
+phrasing 19: 2160 rows, 2.58 answers/s
+phrasing 20: 2268 rows, 2.60 answers/s
+phrasing 21: 2376 rows, 2.59 answers/s
+phrasing 22: 2484 rows, 2.59 answers/s
+phrasing 23: 2592 rows, 2.59 answers/s
+{"written": 2592, "seconds": 999.7815115000121}

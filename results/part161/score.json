@@ -1,0 +1,1864 @@
+{
+  "gates": {
+    "gate1_rows": {
+      "passed": true,
+      "expected": 11904,
+      "present": 11904,
+      "missing": 0,
+      "duplicates": 0,
+      "nonempty": 11904
+    },
+    "gate2_controls": {
+      "passed": true,
+      "L24N5017_Google_hits_at_0_8": 19,
+      "required": [
+        15,
+        22
+      ],
+      "no_push_any_picked_company_hits": 0,
+      "maximum": 2
+    },
+    "gate3_plan": {
+      "passed": true,
+      "distinct_random_directions": 45,
+      "required_random": 45,
+      "new_neurons": 17,
+      "required_new_neurons": 17,
+      "all_neuron_picks_by_dose": {
+        "0.6": 30,
+        "1.0": 7
+      },
+      "required_picks_by_dose": {
+        "0.6": 30,
+        "1.0": 7
+      },
+      "part160_kept_by_dose": {
+        "0.6": 12,
+        "1.0": 7
+      },
+      "required_part160_kept": {
+        "0.6": 12,
+        "1.0": 7
+      }
+    }
+  },
+  "all_gates_passed": true,
+  "predictions": {
+    "161.1": {
+      "prediction": "Over both picking doses, the share of picked random directions that are reliable at their picking dose is at least half the share of picked neurons that are.",
+      "verdict": "held",
+      "supported": true
+    },
+    "161.2": {
+      "prediction": "With all picked neurons laddered, the set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6.",
+      "verdict": "held",
+      "supported": true,
+      "median_peak_0_6": 0.6,
+      "median_peak_1_0": 1.0,
+      "difference": 0.4,
+      "sensitivity": {
+        "excluding_neurons_with_any_paired_random_hit_at_picking_dose": {
+          "median_peak_0_6": 0.6,
+          "median_peak_1_0": 0.8,
+          "difference": 0.20000000000000007,
+          "excluded_neuron_ids": [
+            "L11N5647",
+            "L23N414",
+            "L23N668",
+            "L23N6758",
+            "L23N8993",
+            "L24N3249",
+            "L24N3894",
+            "L24N4524",
+            "L25N4458"
+          ]
+        },
+        "Google_only": {
+          "median_peak_0_6": 0.8,
+          "median_peak_1_0": 1.0,
+          "difference": 0.19999999999999996
+        }
+      }
+    },
+    "161.3": {
+      "prediction": "The random directions picked at 1.0 have a median peak dose at least 0.2 above those picked at 0.6.",
+      "verdict": "held",
+      "supported": true,
+      "median_peak_0_6": 0.6,
+      "median_peak_1_0": 0.8
+    },
+    "161.4": {
+      "prediction": "Among random directions picked at 0.6, at least half peak at 0.6 or below.",
+      "verdict": "held",
+      "supported": true,
+      "at_or_below_0_6": 30,
+      "n": 41
+    },
+    "161.5": {
+      "prediction": "Among units of either arm picked for Tencent at 0.6, at least half hit Tencent on 4 of 24 or fewer at 1.0.",
+      "verdict": "held",
+      "supported": true,
+      "at_or_below_4": 31,
+      "n": 38,
+      "hits_at_1_0": [
+        1,
+        0,
+        1,
+        0,
+        11,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        3,
+        4,
+        1,
+        0,
+        0,
+        0,
+        8,
+        12,
+        0,
+        11,
+        0,
+        0,
+        0,
+        5,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        5,
+        5
+      ]
+    }
+  },
+  "summary": {
+    "reliable_at_pick": {
+      "neuron": {
+        "reliable": 25,
+        "n": 37,
+        "share": 0.6756756756756757
+      },
+      "random": {
+        "reliable": 33,
+        "n": 47,
+        "share": 0.7021276595744681
+      }
+    },
+    "sets": {
+      "0.6": {
+        "neuron": [
+          {
+            "unit_id": "L11N5647",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 7,
+              "0.6": 14,
+              "0.8": 21,
+              "1.0": 23,
+              "1.2": 21,
+              "1.4": 21
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 1.0,
+            "paired_random_hits_at_pick": 1,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L21N2198",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 14,
+              "0.8": 16,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L21N6938",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 10,
+              "0.6": 13,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 13,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L21N7134",
+            "arm": "neuron",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 11,
+              "0.8": 15,
+              "1.0": 4,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 11,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L21N8461",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 20,
+              "0.6": 23,
+              "0.8": 24,
+              "1.0": 9,
+              "1.2": 2,
+              "1.4": 0
+            },
+            "hits_at_pick": 23,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L21N963",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 17,
+              "0.8": 7,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 17,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N4795",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 3,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 3,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N6373",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 21,
+              "0.8": 18,
+              "1.0": 4,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 21,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N6493",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 5,
+              "0.6": 14,
+              "0.8": 18,
+              "1.0": 11,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N761",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 16,
+              "0.8": 18,
+              "1.0": 11,
+              "1.2": 3,
+              "1.4": 1
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N1285",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 4,
+              "0.6": 16,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N1403",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 9,
+              "0.6": 14,
+              "0.8": 5,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N1998",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 21,
+              "0.8": 3,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 21,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N414",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 9,
+              "0.6": 21,
+              "0.8": 20,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 21,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 5,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L23N4261",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 10,
+              "0.6": 12,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 12,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N4451",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 17,
+              "0.6": 15,
+              "0.8": 6,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 15,
+            "reliable": true,
+            "peak_dose": 0.4,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N4892",
+            "arm": "neuron",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 8,
+              "0.8": 13,
+              "1.0": 13,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 8,
+            "reliable": false,
+            "peak_dose": 0.9,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N5580",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 5,
+              "0.6": 5,
+              "0.8": 1,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 5,
+            "reliable": false,
+            "peak_dose": 0.5,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N5729",
+            "arm": "neuron",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 9,
+              "0.8": 7,
+              "1.0": 0,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 9,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N668",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 15,
+              "0.8": 7,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 15,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 1,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L23N6758",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 19,
+              "0.8": 3,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 19,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 7,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L23N8993",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 7,
+              "0.6": 18,
+              "0.8": 5,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 18,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 6,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L24N1893",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 4,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 4,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N3894",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 7,
+              "0.6": 13,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 13,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 12,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L24N4524",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 6,
+              "0.6": 8,
+              "0.8": 11,
+              "1.0": 3,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 8,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 16,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L24N5017",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 14,
+              "0.8": 21,
+              "1.0": 16,
+              "1.2": 7,
+              "1.4": 2
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N7964",
+            "arm": "neuron",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 17,
+              "0.8": 12,
+              "1.0": 9,
+              "1.2": 4,
+              "1.4": 0
+            },
+            "hits_at_pick": 17,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N8221",
+            "arm": "neuron",
+            "company": "DeepSeek",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 5,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 5,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N8264",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 13,
+              "0.6": 20,
+              "0.8": 15,
+              "1.0": 7,
+              "1.2": 5,
+              "1.4": 1
+            },
+            "hits_at_pick": 20,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L25N4458",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 8,
+              "0.8": 18,
+              "1.0": 11,
+              "1.2": 10,
+              "1.4": 2
+            },
+            "hits_at_pick": 8,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 3,
+            "paired_random_flagged": true
+          }
+        ],
+        "random": [
+          {
+            "unit_id": "L20N4539",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 14,
+              "0.8": 21,
+              "1.0": 4,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N4088",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 6,
+              "0.8": 14,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 6,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N4126",
+            "arm": "random",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 5,
+              "0.6": 22,
+              "0.8": 15,
+              "1.0": 6,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 22,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N4210",
+            "arm": "random",
+            "company": "Meta",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 14,
+              "0.8": 7,
+              "1.0": 2,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N6016",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 12,
+              "0.8": 9,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 12,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N761",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 19,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 19,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N8101",
+            "arm": "random",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 16,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N1269",
+            "arm": "random",
+            "company": "Google",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 5,
+              "0.6": 18,
+              "0.8": 4,
+              "1.0": 5,
+              "1.2": 0,
+              "1.4": 1
+            },
+            "hits_at_pick": 18,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N306",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 14,
+              "0.6": 11,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 11,
+            "reliable": false,
+            "peak_dose": 0.4,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N3192",
+            "arm": "random",
+            "company": "Huawei",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 11,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 11,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N3699",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 22,
+              "0.8": 18,
+              "1.0": 8,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 22,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N4292",
+            "arm": "random",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 2,
+              "0.6": 19,
+              "0.8": 9,
+              "1.0": 3,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 19,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N5100",
+            "arm": "random",
+            "company": "Amazon",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 3,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 3,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N6142",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 15,
+              "0.8": 23,
+              "1.0": 12,
+              "1.2": 6,
+              "1.4": 0
+            },
+            "hits_at_pick": 15,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N6908",
+            "arm": "random",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 4,
+              "0.6": 16,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N7401",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 4,
+              "0.6": 15,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 15,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N836",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 3,
+              "0.8": 20,
+              "1.0": 11,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 3,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N8600",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 21,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 21,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N8993",
+            "arm": "random",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 11,
+              "0.8": 16,
+              "1.0": 5,
+              "1.2": 5,
+              "1.4": 0
+            },
+            "hits_at_pick": 11,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N1789",
+            "arm": "random",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 9,
+              "0.8": 5,
+              "1.0": 3,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 9,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N1847",
+            "arm": "random",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 16,
+              "0.8": 16,
+              "1.0": 2,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.7,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N2414",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 8,
+              "0.6": 23,
+              "0.8": 4,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 23,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N4043",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 17,
+              "0.8": 4,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 17,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N4265",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 19,
+              "0.8": 10,
+              "1.0": 5,
+              "1.2": 9,
+              "1.4": 3
+            },
+            "hits_at_pick": 19,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N4391",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 10,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 10,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N4524",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 17,
+              "0.6": 16,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.4,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N5399",
+            "arm": "random",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 7,
+              "0.8": 5,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 7,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N6051",
+            "arm": "random",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 1,
+              "0.6": 20,
+              "0.8": 5,
+              "1.0": 2,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 20,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N6082",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 20,
+              "0.8": 20,
+              "1.0": 1,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 20,
+            "reliable": true,
+            "peak_dose": 0.7,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N7350",
+            "arm": "random",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 8,
+              "0.8": 5,
+              "1.0": 8,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 8,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N76",
+            "arm": "random",
+            "company": "Baidu",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 23,
+              "0.8": 10,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 23,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N803",
+            "arm": "random",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 6,
+              "0.6": 11,
+              "0.8": 2,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 11,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N8036",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 23,
+              "0.6": 13,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 13,
+            "reliable": true,
+            "peak_dose": 0.4,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N8264",
+            "arm": "random",
+            "company": "Microsoft",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 20,
+              "0.8": 22,
+              "1.0": 13,
+              "1.2": 7,
+              "1.4": 2
+            },
+            "hits_at_pick": 20,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N8277",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 10,
+              "0.6": 19,
+              "0.8": 0,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 19,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N9088",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 16,
+              "0.6": 23,
+              "0.8": 17,
+              "1.0": 1,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 23,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L25N2622",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 8,
+              "0.6": 11,
+              "0.8": 1,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 11,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L25N3507",
+            "arm": "random",
+            "company": "OpenAI",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 21,
+              "0.8": 21,
+              "1.0": 9,
+              "1.2": 3,
+              "1.4": 0
+            },
+            "hits_at_pick": 21,
+            "reliable": true,
+            "peak_dose": 0.7,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L25N446",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 18,
+              "0.8": 18,
+              "1.0": 5,
+              "1.2": 1,
+              "1.4": 0
+            },
+            "hits_at_pick": 18,
+            "reliable": true,
+            "peak_dose": 0.7,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L25N4593",
+            "arm": "random",
+            "company": "OpenAI",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 0,
+              "0.6": 21,
+              "0.8": 12,
+              "1.0": 0,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 21,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L26N4031",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 0.6,
+            "hits": {
+              "0.4": 10,
+              "0.6": 23,
+              "0.8": 19,
+              "1.0": 5,
+              "1.2": 2,
+              "1.4": 0
+            },
+            "hits_at_pick": 23,
+            "reliable": true,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          }
+        ]
+      },
+      "1.0": {
+        "neuron": [
+          {
+            "unit_id": "L11N5647",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 7,
+              "0.6": 14,
+              "0.8": 21,
+              "1.0": 23,
+              "1.2": 21,
+              "1.4": 21
+            },
+            "hits_at_pick": 23,
+            "reliable": true,
+            "peak_dose": 1.0,
+            "paired_random_hits_at_pick": 7,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L21N863",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 0,
+              "0.6": 0,
+              "0.8": 8,
+              "1.0": 3,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 3,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L22N7505",
+            "arm": "neuron",
+            "company": "Tencent",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 0,
+              "0.6": 4,
+              "0.8": 10,
+              "1.0": 19,
+              "1.2": 11,
+              "1.4": 0
+            },
+            "hits_at_pick": 19,
+            "reliable": true,
+            "peak_dose": 1.0,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N2993",
+            "arm": "neuron",
+            "company": "Microsoft",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 0,
+              "0.6": 1,
+              "0.8": 18,
+              "1.0": 5,
+              "1.2": 9,
+              "1.4": 10
+            },
+            "hits_at_pick": 5,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N3249",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 1,
+              "0.6": 8,
+              "0.8": 6,
+              "1.0": 4,
+              "1.2": 9,
+              "1.4": 2
+            },
+            "hits_at_pick": 4,
+            "reliable": false,
+            "peak_dose": 1.2,
+            "paired_random_hits_at_pick": 1,
+            "paired_random_flagged": true
+          },
+          {
+            "unit_id": "L24N5017",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 1,
+              "0.6": 14,
+              "0.8": 21,
+              "1.0": 16,
+              "1.2": 7,
+              "1.4": 2
+            },
+            "hits_at_pick": 16,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N5904",
+            "arm": "neuron",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 2,
+              "0.6": 7,
+              "0.8": 7,
+              "1.0": 17,
+              "1.2": 17,
+              "1.4": 15
+            },
+            "hits_at_pick": 17,
+            "reliable": true,
+            "peak_dose": 1.1,
+            "paired_random_hits_at_pick": 0,
+            "paired_random_flagged": false
+          }
+        ],
+        "random": [
+          {
+            "unit_id": "L20N2618",
+            "arm": "random",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 0,
+              "0.6": 0,
+              "0.8": 10,
+              "1.0": 3,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 3,
+            "reliable": false,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L21N3059",
+            "arm": "random",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 0,
+              "0.6": 13,
+              "0.8": 19,
+              "1.0": 13,
+              "1.2": 2,
+              "1.4": 0
+            },
+            "hits_at_pick": 13,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N3699",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 1,
+              "0.6": 22,
+              "0.8": 18,
+              "1.0": 8,
+              "1.2": 0,
+              "1.4": 0
+            },
+            "hits_at_pick": 8,
+            "reliable": false,
+            "peak_dose": 0.6,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N6142",
+            "arm": "random",
+            "company": "Tencent",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 0,
+              "0.6": 15,
+              "0.8": 23,
+              "1.0": 12,
+              "1.2": 6,
+              "1.4": 0
+            },
+            "hits_at_pick": 12,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L23N7510",
+            "arm": "random",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 2,
+              "0.6": 6,
+              "0.8": 15,
+              "1.0": 14,
+              "1.2": 13,
+              "1.4": 0
+            },
+            "hits_at_pick": 14,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          },
+          {
+            "unit_id": "L24N5235",
+            "arm": "random",
+            "company": "Google",
+            "picked_dose": 1.0,
+            "hits": {
+              "0.4": 12,
+              "0.6": 12,
+              "0.8": 15,
+              "1.0": 12,
+              "1.2": 4,
+              "1.4": 3
+            },
+            "hits_at_pick": 12,
+            "reliable": true,
+            "peak_dose": 0.8,
+            "paired_random_hits_at_pick": null,
+            "paired_random_flagged": false
+          }
+        ]
+      }
+    },
+    "set_summaries": {
+      "0.6": {
+        "neuron": {
+          "n": 30,
+          "reliable_count": 21,
+          "median_peak_dose": 0.6,
+          "company_counts": {
+            "Google": 9,
+            "Tencent": 16,
+            "Baidu": 3,
+            "Microsoft": 1,
+            "DeepSeek": 1
+          }
+        },
+        "random": {
+          "n": 41,
+          "reliable_count": 29,
+          "median_peak_dose": 0.6,
+          "company_counts": {
+            "Tencent": 22,
+            "Google": 2,
+            "Meta": 1,
+            "Baidu": 6,
+            "Huawei": 1,
+            "Amazon": 1,
+            "Microsoft": 6,
+            "OpenAI": 2
+          }
+        }
+      },
+      "1.0": {
+        "neuron": {
+          "n": 7,
+          "reliable_count": 4,
+          "median_peak_dose": 1.0,
+          "company_counts": {
+            "Google": 5,
+            "Tencent": 1,
+            "Microsoft": 1
+          }
+        },
+        "random": {
+          "n": 6,
+          "reliable_count": 4,
+          "median_peak_dose": 0.8,
+          "company_counts": {
+            "Google": 4,
+            "Tencent": 2
+          }
+        }
+      }
+    },
+    "tencent_0_6_test": {
+      "n": 38,
+      "hits_at_1_0": [
+        1,
+        0,
+        1,
+        0,
+        11,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        3,
+        4,
+        1,
+        0,
+        0,
+        0,
+        8,
+        12,
+        0,
+        11,
+        0,
+        0,
+        0,
+        5,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        5,
+        5
+      ]
+    }
+  }
+}

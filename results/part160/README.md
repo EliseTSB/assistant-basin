@@ -106,4 +106,6 @@ The design says, “A hit on a unit whose random pair also hits is not read as t
 
 The generation and scoring procedure is [PART160-DESIGN.md](../../PART160-DESIGN.md). The answer hit rule is in [score153.py](../../part153/score153.py), the picked-company rule in [score148.py](../../part148/score148.py), and the broken-answer filter in [triage86.py](../../part86/triage86.py). [score.json](score.json) has gates, verdicts, and unit counts; [answers.jsonl](answers.jsonl) contains all rows; [picked.json](picked.json) records the full and capped picks. [plot160.py](plot160.py) reads `score.json` and writes the embedded [ladder160.png](ladder160.png); [extra160.py](extra160.py) reproduces the exploratory summaries.
 
+Correction, from Part 161's cold check: 17 of the 18 cut units were never laddered; L24 N5017 was cut at 0.6 but laddered as a 1.0 pick. Part 161 laddered every picked neuron.
+
 Cold check: Haiku 5.5, 2026-10-31, recomputed picks, hits, medians, gates and verdicts and found them correct; corrected the lead for random-pair flags, company/layer confounds, random-direction selection, pre-run history, hand-reading labels and paraphrased ladder questions.

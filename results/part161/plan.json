@@ -1,0 +1,7371 @@
+{
+  "units": [
+    {
+      "unit_id": "L11N5647",
+      "layer": 11,
+      "neuron": 5647,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google",
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L21N2198",
+      "layer": 21,
+      "neuron": 2198,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L21N6938",
+      "layer": 21,
+      "neuron": 6938,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L21N7134",
+      "layer": 21,
+      "neuron": 7134,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L21N8461",
+      "layer": 21,
+      "neuron": 8461,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L21N863",
+      "layer": 21,
+      "neuron": 863,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L21N963",
+      "layer": 21,
+      "neuron": 963,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L22N4795",
+      "layer": 22,
+      "neuron": 4795,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L22N6373",
+      "layer": 22,
+      "neuron": 6373,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L22N6493",
+      "layer": 22,
+      "neuron": 6493,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L22N7505",
+      "layer": 22,
+      "neuron": 7505,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N2993",
+      "layer": 23,
+      "neuron": 2993,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Microsoft"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L23N414",
+      "layer": 23,
+      "neuron": 414,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N668",
+      "layer": 23,
+      "neuron": 668,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3249",
+      "layer": 24,
+      "neuron": 3249,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5017",
+      "layer": 24,
+      "neuron": 5017,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google",
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L24N5904",
+      "layer": 24,
+      "neuron": 5904,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": true
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Google"
+      }
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Baidu"
+      }
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      }
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Baidu"
+      }
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      }
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Google"
+      }
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Google"
+      }
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {}
+    }
+  ],
+  "rows": [
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "neuron",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N4539",
+      "layer": 20,
+      "neuron": 4539,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N761",
+      "layer": 22,
+      "neuron": 761,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4088",
+      "layer": 22,
+      "neuron": 4088,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4126",
+      "layer": 22,
+      "neuron": 4126,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N4210",
+      "layer": 22,
+      "neuron": 4210,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Meta"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N6016",
+      "layer": 22,
+      "neuron": 6016,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L22N8101",
+      "layer": 22,
+      "neuron": 8101,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N306",
+      "layer": 23,
+      "neuron": 306,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N836",
+      "layer": 23,
+      "neuron": 836,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1269",
+      "layer": 23,
+      "neuron": 1269,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Google"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3192",
+      "layer": 23,
+      "neuron": 3192,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Huawei"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N3699",
+      "layer": 23,
+      "neuron": 3699,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N4292",
+      "layer": 23,
+      "neuron": 4292,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N5100",
+      "layer": 23,
+      "neuron": 5100,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Amazon"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6142",
+      "layer": 23,
+      "neuron": 6142,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent",
+        "1.0": "Tencent"
+      },
+      "picking_doses": [
+        0.6,
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N6908",
+      "layer": 23,
+      "neuron": 6908,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7401",
+      "layer": 23,
+      "neuron": 7401,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8600",
+      "layer": 23,
+      "neuron": 8600,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N8993",
+      "layer": 23,
+      "neuron": 8993,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N76",
+      "layer": 24,
+      "neuron": 76,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N803",
+      "layer": 24,
+      "neuron": 803,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1789",
+      "layer": 24,
+      "neuron": 1789,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N1847",
+      "layer": 24,
+      "neuron": 1847,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Baidu"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N2414",
+      "layer": 24,
+      "neuron": 2414,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4043",
+      "layer": 24,
+      "neuron": 4043,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4265",
+      "layer": 24,
+      "neuron": 4265,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4391",
+      "layer": 24,
+      "neuron": 4391,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N4524",
+      "layer": 24,
+      "neuron": 4524,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5399",
+      "layer": 24,
+      "neuron": 5399,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6051",
+      "layer": 24,
+      "neuron": 6051,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N6082",
+      "layer": 24,
+      "neuron": 6082,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N7350",
+      "layer": 24,
+      "neuron": 7350,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8036",
+      "layer": 24,
+      "neuron": 8036,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Google"
+      }
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8264",
+      "layer": 24,
+      "neuron": 8264,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N8277",
+      "layer": 24,
+      "neuron": 8277,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N9088",
+      "layer": 24,
+      "neuron": 9088,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N446",
+      "layer": 25,
+      "neuron": 446,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N2622",
+      "layer": 25,
+      "neuron": 2622,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N3507",
+      "layer": 25,
+      "neuron": 3507,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L25N4593",
+      "layer": 25,
+      "neuron": 4593,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "OpenAI"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L26N4031",
+      "layer": 26,
+      "neuron": 4031,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "0.6": "Tencent"
+      },
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L20N2618",
+      "layer": 20,
+      "neuron": 2618,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L21N3059",
+      "layer": 21,
+      "neuron": 3059,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N7510",
+      "layer": 23,
+      "neuron": 7510,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 0.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 0.8,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 1.0,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 1.2,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L24N5235",
+      "layer": 24,
+      "neuron": 5235,
+      "arm": "random",
+      "dose": 1.4,
+      "companies_by_picking_dose": {
+        "1.0": "Google"
+      },
+      "picking_doses": [
+        1.0
+      ],
+      "paired_of_neuron": false,
+      "reused_from_part160": false
+    },
+    {
+      "unit_id": "L23N1285",
+      "layer": 23,
+      "neuron": 1285,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N1403",
+      "layer": 23,
+      "neuron": 1403,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Google"
+      }
+    },
+    {
+      "unit_id": "L23N1998",
+      "layer": 23,
+      "neuron": 1998,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N4261",
+      "layer": 23,
+      "neuron": 4261,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N4451",
+      "layer": 23,
+      "neuron": 4451,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N4892",
+      "layer": 23,
+      "neuron": 4892,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Baidu"
+      }
+    },
+    {
+      "unit_id": "L23N5580",
+      "layer": 23,
+      "neuron": 5580,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L23N5729",
+      "layer": 23,
+      "neuron": 5729,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Microsoft"
+      }
+    },
+    {
+      "unit_id": "L23N6758",
+      "layer": 23,
+      "neuron": 6758,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N1893",
+      "layer": 24,
+      "neuron": 1893,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N3894",
+      "layer": 24,
+      "neuron": 3894,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Tencent"
+      }
+    },
+    {
+      "unit_id": "L24N7964",
+      "layer": 24,
+      "neuron": 7964,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Baidu"
+      }
+    },
+    {
+      "unit_id": "L24N8221",
+      "layer": 24,
+      "neuron": 8221,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "DeepSeek"
+      }
+    },
+    {
+      "unit_id": "L25N4458",
+      "layer": 25,
+      "neuron": 4458,
+      "arm": "random",
+      "dose": 0.6,
+      "companies_by_picking_dose": {},
+      "picking_doses": [
+        0.6
+      ],
+      "paired_of_neuron": true,
+      "reused_from_part160": false,
+      "paired_neuron_companies_by_picking_dose": {
+        "0.6": "Google"
+      }
+    }
+  ],
+  "random_pick_count": 45,
+  "new_neuron_count": 17,
+  "neuron_pick_count_by_dose": {
+    "0.6": 30,
+    "1.0": 7
+  },
+  "new_neuron_ids": [
+    "L23N1285",
+    "L23N1403",
+    "L23N1998",
+    "L23N4261",
+    "L23N4451",
+    "L23N4892",
+    "L23N5580",
+    "L23N5729",
+    "L23N6758",
+    "L23N8993",
+    "L24N1893",
+    "L24N3894",
+    "L24N4524",
+    "L24N7964",
+    "L24N8221",
+    "L24N8264",
+    "L25N4458"
+  ],
+  "reused_neuron_ids": [
+    "L11N5647",
+    "L21N2198",
+    "L21N6938",
+    "L21N7134",
+    "L21N8461",
+    "L21N863",
+    "L21N963",
+    "L22N4795",
+    "L22N6373",
+    "L22N6493",
+    "L22N7505",
+    "L22N761",
+    "L23N2993",
+    "L23N414",
+    "L23N668",
+    "L24N3249",
+    "L24N5017",
+    "L24N5904"
+  ]
+}

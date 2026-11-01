@@ -3105,12 +3105,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 161.1 | Over both picking doses, the share of picked random directions that are reliable at their picking dose is at least half the share of picked neurons that are | medium | Claude |  |
-| 161.2 | With all picked neurons laddered, the set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6 | low | Claude |  |
-| 161.3 | The random directions picked at 1.0 have a median peak dose at least 0.2 above those picked at 0.6 | low | Claude |  |
-| 161.4 | Among random directions picked at 0.6, at least half peak at 0.6 or below | medium | Claude |  |
-| 161.5 | Among units of either arm picked for Tencent at 0.6, at least half hit Tencent on 4 of 24 or fewer at 1.0 | medium | Claude |  |
-| 161.6 | With the 18 neurons regenerated, between 22 and 28 of the 37 neuron memberships are reliable at their picking dose | high | Claude |  |
+| 161.1 | Over both picking doses, the share of picked random directions that are reliable at their picking dose is at least half the share of picked neurons that are | medium | Claude | held: 33 of 47 against 25 of 37, ratio 1.04, interval 0.77 to 1.45 |
+| 161.2 | With all picked neurons laddered, the set picked at 1.0 has a median peak dose at least 0.2 above the set picked at 0.6 | low | Claude | held: medians 0.6 and 1.0; 0.2 under both registered sensitivities |
+| 161.3 | The random directions picked at 1.0 have a median peak dose at least 0.2 above those picked at 0.6 | low | Claude | held: medians 0.6 and 0.8, exactly one ladder step |
+| 161.4 | Among random directions picked at 0.6, at least half peak at 0.6 or below | medium | Claude | held: 30 of 41 |
+| 161.5 | Among units of either arm picked for Tencent at 0.6, at least half hit Tencent on 4 of 24 or fewer at 1.0 | medium | Claude | held: 31 of 38 |
+| 161.6 | With the 18 neurons regenerated, between 22 and 28 of the 37 neuron memberships are reliable at their picking dose | high | Claude | held: 25 of 37, no membership crossed the bar |
 
 ## Part 162 (registered 2026-10-31 19:02 CT, before any new data): does DeepSeek V4.1 Flash carry both Claude's and GPT's style, or neither?
 

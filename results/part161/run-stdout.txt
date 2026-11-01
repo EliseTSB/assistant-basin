@@ -1,0 +1,2 @@
+Ladder first 4 batches: 2.88 answers/s
+{"answers": "results\\part161\\answers.jsonl", "plan": "results\\part161\\plan.json", "gate2_google_hits": 19, "gate2_no_push_hits": 0, "seconds": 3511.960341400001}
