@@ -1,0 +1,16 @@
+{
+  "gate4": {
+    "passed": true,
+    "directions": 144,
+    "expected_directions": 144,
+    "write_failures": 0,
+    "max_relative_error": 0.0061999168986697
+  },
+  "gate7": {
+    "passed": true,
+    "directions": 144,
+    "expected_directions": 144,
+    "unique_coordinates": 144,
+    "fresh_neurons": true
+  }
+}

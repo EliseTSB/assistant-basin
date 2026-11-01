@@ -1,0 +1,55 @@
+# Part 170 exploratory additions (after registration; not registered)
+
+D(d) is the paired mean loop outcome under the list minus b0 on the same P8 units at that dose. D(0) is the no-push paired difference over the eight P8 phrasings. The first interval resamples whole neuron slots with replacement, stratified within each layer, and conditions on the fixed phrasing set. The second also resamples the eight phrasings as clusters, using the same phrase draw for D(d) and D(0). Both use 10,000 replicates and seed 170.
+
+D(0) by list
+- b5: +25.00 pp over 8 phrasings; paired changes 2 induced and 0 ended.
+- b50: +0.00 pp over 8 phrasings; paired changes 0 induced and 0 ended.
+- b200: +25.00 pp over 8 phrasings; paired changes 2 induced and 0 ended.
+
+## Dose contrast D(d)
+
+| List | Dose | D(d) | Whole-slot 95% interval | Whole-slot plus phrasing-cluster 95% interval |
+|---|---:|---:|---:|---:|
+| b5 | 0.25 | +12.50 pp | [+8.59 pp, +16.41 pp] | [+4.69 pp, +22.66 pp] |
+| b5 | 0.5 | +13.02 pp | [+9.38 pp, +16.93 pp] | [+6.25 pp, +21.09 pp] |
+| b5 | 1 | +14.06 pp | [+8.85 pp, +19.53 pp] | [+6.77 pp, +21.88 pp] |
+| b50 | 0.25 | +13.02 pp | [+8.33 pp, +18.23 pp] | [+5.21 pp, +21.61 pp] |
+| b50 | 0.5 | +18.49 pp | [+13.28 pp, +23.96 pp] | [+10.15 pp, +27.60 pp] |
+| b50 | 1 | +18.75 pp | [+11.72 pp, +25.52 pp] | [+8.59 pp, +28.91 pp] |
+| b200 | 0.25 | +27.34 pp | [+21.88 pp, +32.81 pp] | [+16.67 pp, +39.32 pp] |
+| b200 | 0.5 | +27.86 pp | [+22.66 pp, +33.33 pp] | [+17.71 pp, +38.03 pp] |
+| b200 | 1 | +25.26 pp | [+19.53 pp, +30.99 pp] | [+15.89 pp, +34.11 pp] |
+
+## Interaction I(d) = D(d) − D(0) (exploratory; not registered)
+
+A slot-only interval conditions on the fixed prompt set, and D(0) rests on eight phrasings. The second interval resamples those phrasing clusters as well as slots. A failed bar is not evidence of additivity; these I(d) summaries were added after registration and have no registered additivity bar.
+
+| List | Dose | I(d) | Whole-slot 95% interval | Whole-slot plus phrasing-cluster 95% interval |
+|---|---:|---:|---:|---:|
+| b5 | 0.25 | -12.50 pp | [-16.41 pp, -8.59 pp] | [-44.80 pp, +14.58 pp] |
+| b5 | 0.5 | -11.98 pp | [-15.62 pp, -8.07 pp] | [-43.24 pp, +13.54 pp] |
+| b5 | 1 | -10.94 pp | [-16.15 pp, -5.47 pp] | [-44.54 pp, +16.15 pp] |
+| b50 | 0.25 | +13.02 pp | [+8.33 pp, +18.23 pp] | [+5.21 pp, +21.61 pp] |
+| b50 | 0.5 | +18.49 pp | [+13.28 pp, +23.96 pp] | [+10.15 pp, +27.60 pp] |
+| b50 | 1 | +18.75 pp | [+11.72 pp, +25.52 pp] | [+8.59 pp, +28.91 pp] |
+| b200 | 0.25 | +2.34 pp | [-3.12 pp, +7.81 pp] | [-26.56 pp, +25.78 pp] |
+| b200 | 0.5 | +2.86 pp | [-2.34 pp, +8.33 pp] | [-24.74 pp, +26.30 pp] |
+| b200 | 1 | +0.26 pp | [-5.47 pp, +5.99 pp] | [-30.21 pp, +26.30 pp] |
+
+## Blinded hand read (joined by blind_id)
+
+Joined 107 labels and judgments. Rule: reads as a fluent answer to the question with no repeating phrase or word salad; false facts and a cut-off end allowed; judged before the key
+
+| sample_source | Coherent | Total |
+|---|---:|---:|
+| all_no_push_b50_loops | 2 | 11 |
+| sample_no_push_dose0_b0 | 19 | 24 |
+| sample_no_push_dose0_b50 | 20 | 24 |
+| sample_push_dose1_b0 | 14 | 24 |
+| sample_push_dose1_b50 | 11 | 24 |
+
+Short answer examples, selected from answers.jsonl
+- dose 1 b0: "I was created by **sedsc**."
+- dose 1 b50: "I will do!"
+- no-push b200: "I don't need to be introduced as myself! As one version in fact!"
