@@ -3192,17 +3192,17 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 168.1 | In the none arm, pooled over n+ and k4, content-word own over shuffled is at least 5 | high | Claude || held: 215.6 |
-| 168.2 | In the none arm, n+'s broken rate is at least 2 times full's | high | Claude || held: 2.42 (0.129 against 0.054) |
-| 168.3 | Own ban cuts loop answers by at least 30% against none, pooled over n+ and k4 | medium | Claude || held by 1.4 points: 31.4% (15.8% to 44.9%); falls below 30% without layer 24, without phrasing 8, 11 or 14, and on n+ alone |
-| 168.4 | Pooled over n+ and k4, the own loop rate is at least 0.05 below the matched rate | medium | Claude || failed: gap 0.047 (0.022 to 0.073) against 0.05 |
-| 168.5 | The matched cut, pooled over n+ and k4, is between -15% and 15% | medium | Claude || held: -2.1% (-6.3% to 1.6%) |
-| 168.6 | Own ban's cut in full is under half its cut in n+ and k4 | low | Claude || held, on 35 full-arm none loops: 11.4% (-20% to 36.7%) against 31.4% |
-| 168.7 | At least a third of paired transitions are migrations, and above their baseline | low | Claude || failed: 1 of 19, 5.3%, baseline 1.0% |
-| 168.8 | On the paired rows of Amendment 1, the own loop rate is at least 0.05 below the mass-ban rate | medium | Claude || held: 9.61% against 16.32% on 1,342 paired rows; gap interval 0.042 to 0.095 |
-| 168.W1 | The mass ban cuts loop answers by 15% to 25% against none, pooled over n+ and k4 | low | Weaver || failed, opposite direction: -16.5% (-29.4% to -6.3%) |
-| 168.W2 | Among rows with no loop under none, the induced rate under own is at least 0.02 above matched | low | Weaver || held: 3.6% against 1.0% |
-| 168.W3 | Migrations are 15% to 30% of paired transitions | low | Weaver || failed: 5.3% |
+| 168.1 | In the none arm, pooled over n+ and k4, content-word own over shuffled is at least 5 | high | Claude | held: 215.6 |
+| 168.2 | In the none arm, n+'s broken rate is at least 2 times full's | high | Claude | held: 2.42 (0.129 against 0.054) |
+| 168.3 | Own ban cuts loop answers by at least 30% against none, pooled over n+ and k4 | medium | Claude | held by 1.4 points: 31.4% (15.8% to 44.9%); falls below 30% without layer 24, without phrasing 8, 11 or 14, and on n+ alone |
+| 168.4 | Pooled over n+ and k4, the own loop rate is at least 0.05 below the matched rate | medium | Claude | failed: gap 0.047 (0.022 to 0.073) against 0.05 |
+| 168.5 | The matched cut, pooled over n+ and k4, is between -15% and 15% | medium | Claude | held: -2.1% (-6.3% to 1.6%) |
+| 168.6 | Own ban's cut in full is under half its cut in n+ and k4 | low | Claude | held, on 35 full-arm none loops: 11.4% (-20% to 36.7%) against 31.4% |
+| 168.7 | At least a third of paired transitions are migrations, and above their baseline | low | Claude | failed: 1 of 19, 5.3%, baseline 1.0% |
+| 168.8 | On the paired rows of Amendment 1, the own loop rate is at least 0.05 below the mass-ban rate | medium | Claude | held: 9.61% against 16.32% on 1,342 paired rows; gap interval 0.042 to 0.095 |
+| 168.W1 | The mass ban cuts loop answers by 15% to 25% against none, pooled over n+ and k4 | low | Weaver | failed, opposite direction: -16.5% (-29.4% to -6.3%) |
+| 168.W2 | Among rows with no loop under none, the induced rate under own is at least 0.02 above matched | low | Weaver | held: 3.6% against 1.0% |
+| 168.W3 | Migrations are 15% to 30% of paired transitions | low | Weaver | failed: 5.3% |
 
 ## Part 169 (registered 2026-11-01 05:29 CT, PART169-DESIGN.md, before any data)
 
