@@ -1,0 +1,3860 @@
+{
+  "definition": "Exploratory diagnostics recomputed from the stored Part 162 answers with score162's folds, masks and held-out marker sets.",
+  "marker_counts_by_direction_and_kind_pooled_over_folds": {
+    "claude": {
+      "apostrophe or double quote": 126,
+      "curly quote": 0,
+      "dash": 0,
+      "markdown and line structure": 81,
+      "other punctuation": 11,
+      "punctuation-bearing patterns": 61,
+      "word-only patterns": 221
+    },
+    "gpt": {
+      "apostrophe or double quote": 0,
+      "curly quote": 70,
+      "dash": 16,
+      "markdown and line structure": 177,
+      "other punctuation": 5,
+      "punctuation-bearing patterns": 98,
+      "word-only patterns": 134
+    }
+  },
+  "deepseek_positions_by_marker_kind": {
+    "apostrophe or double quote": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0,
+        "deepseek": 1.2083501684834117,
+        "qwen": 0.5584188666984629,
+        "olmo": 0.5473619435249143,
+        "pythia": 0.12491710237831113
+      },
+      "gpt": {
+        "claude": null,
+        "gpt": null,
+        "deepseek": null,
+        "qwen": null,
+        "olmo": null,
+        "pythia": null
+      }
+    },
+    "curly quote": {
+      "claude": {
+        "claude": null,
+        "gpt": null,
+        "deepseek": null,
+        "qwen": null,
+        "olmo": null,
+        "pythia": null
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0,
+        "deepseek": 0.06575578563488992,
+        "qwen": 0.0,
+        "olmo": 0.014987073648977759,
+        "pythia": 0.015215103526100242
+      }
+    },
+    "dash": {
+      "claude": {
+        "claude": null,
+        "gpt": null,
+        "deepseek": null,
+        "qwen": null,
+        "olmo": null,
+        "pythia": null
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0,
+        "deepseek": 1.110619469026549,
+        "qwen": 0.07253886010362692,
+        "olmo": 0.008849557522123895,
+        "pythia": -0.009009009009009009
+      }
+    },
+    "markdown and line structure": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0,
+        "deepseek": 0.7455727929492323,
+        "qwen": 0.43084351596373677,
+        "olmo": 0.17032255950723252,
+        "pythia": -0.1951838192346846
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0,
+        "deepseek": 0.3444555135444881,
+        "qwen": 6.013898653428004e-05,
+        "olmo": 0.8550116350385887,
+        "pythia": -0.44659799028743774
+      }
+    },
+    "other punctuation": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0,
+        "deepseek": 1.810344827586207,
+        "qwen": 1.1666666666666667,
+        "olmo": 0.15948275862068967,
+        "pythia": -0.07079646017699116
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0,
+        "deepseek": 1.176470588235294,
+        "qwen": 0.6923076923076924,
+        "olmo": -0.1764705882352941,
+        "pythia": -0.1176470588235294
+      }
+    },
+    "punctuation-bearing patterns": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0,
+        "deepseek": 1.8699720064070893,
+        "qwen": 1.4929705215419502,
+        "olmo": 1.1522581997275487,
+        "pythia": -0.4399872652021649
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0,
+        "deepseek": 0.14536386162304718,
+        "qwen": -0.11172924223115409,
+        "olmo": -0.0035732136590345934,
+        "pythia": -1.714196080099539
+      }
+    },
+    "word-only patterns": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0,
+        "deepseek": 0.907701734230948,
+        "qwen": 0.9273578674458889,
+        "olmo": 0.5968658907936991,
+        "pythia": -0.7339799825240687
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0,
+        "deepseek": -0.15168355655713223,
+        "qwen": -0.3741124575481684,
+        "olmo": 1.1913624121376796,
+        "pythia": -1.9747480585406665
+      }
+    }
+  },
+  "deepseek_bootstrap_intervals_by_marker_kind": {
+    "apostrophe or double quote": {
+      "claude": {
+        "mean": 1.2083501684834117,
+        "percentile_2_5": 1.0556075163216454,
+        "percentile_97_5": 1.3945216040241757,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": null,
+        "percentile_2_5": null,
+        "percentile_97_5": null,
+        "n_prompts": 113
+      }
+    },
+    "curly quote": {
+      "claude": {
+        "mean": null,
+        "percentile_2_5": null,
+        "percentile_97_5": null,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": 0.06575578563488992,
+        "percentile_2_5": 0.02012491979136923,
+        "percentile_97_5": 0.12507418040478624,
+        "n_prompts": 113
+      }
+    },
+    "dash": {
+      "claude": {
+        "mean": null,
+        "percentile_2_5": null,
+        "percentile_97_5": null,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": 1.110619469026549,
+        "percentile_2_5": 0.9163352793339964,
+        "percentile_97_5": 1.3659676976767094,
+        "n_prompts": 113
+      }
+    },
+    "markdown and line structure": {
+      "claude": {
+        "mean": 0.7455727929492323,
+        "percentile_2_5": 0.5820212253543873,
+        "percentile_97_5": 0.9521514433266467,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": 0.3444555135444881,
+        "percentile_2_5": 0.20336130513149744,
+        "percentile_97_5": 0.484183594082125,
+        "n_prompts": 113
+      }
+    },
+    "other punctuation": {
+      "claude": {
+        "mean": 1.810344827586207,
+        "percentile_2_5": 1.4508820383768481,
+        "percentile_97_5": 2.328577147890143,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": 1.176470588235294,
+        "percentile_2_5": 0.6189560439560439,
+        "percentile_97_5": 2.3756249999999968,
+        "n_prompts": 113
+      }
+    },
+    "punctuation-bearing patterns": {
+      "claude": {
+        "mean": 1.8699720064070893,
+        "percentile_2_5": 1.4953374922923253,
+        "percentile_97_5": 2.45511784391824,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": 0.14536386162304718,
+        "percentile_2_5": -0.184833604146907,
+        "percentile_97_5": 0.40315021174223414,
+        "n_prompts": 113
+      }
+    },
+    "word-only patterns": {
+      "claude": {
+        "mean": 0.907701734230948,
+        "percentile_2_5": 0.781961599673017,
+        "percentile_97_5": 1.049924658756254,
+        "n_prompts": 113
+      },
+      "gpt": {
+        "mean": -0.15168355655713223,
+        "percentile_2_5": -0.5504093857101215,
+        "percentile_97_5": 0.11725788865216916,
+        "n_prompts": 113
+      }
+    }
+  },
+  "deepseek_minus_claude_presence_gap_by_marker_kind": {
+    "apostrophe or double quote": {
+      "claude": 0.04287294054896979,
+      "gpt": NaN
+    },
+    "curly quote": {
+      "claude": NaN,
+      "gpt": 0.014933628318584071
+    },
+    "dash": {
+      "claude": NaN,
+      "gpt": 0.37020648967551617
+    },
+    "markdown and line structure": {
+      "claude": -0.07218617535509782,
+      "gpt": 0.06196170023603652
+    },
+    "other punctuation": {
+      "claude": 0.2772861356932153,
+      "gpt": 0.17699115044247787
+    },
+    "punctuation-bearing patterns": {
+      "claude": 0.0941926804758663,
+      "gpt": 0.01694182097617808
+    },
+    "word-only patterns": {
+      "claude": -0.009920473705644082,
+      "gpt": -0.011289470354557423
+    }
+  },
+  "gpt_side_numerator_share_by_marker_kind": {
+    "apostrophe or double quote": 0.0,
+    "curly quote": 0.05687203791469195,
+    "dash": 0.31279620853080575,
+    "markdown and line structure": 0.5734597156398104,
+    "other punctuation": 0.047393364928909956,
+    "punctuation-bearing patterns": 0.09004739336492891,
+    "word-only patterns": -0.08056872037914696
+  },
+  "gpt_side_em_dash_numerator_share": 0.31279620853080575,
+  "typography_character_counts_full_answers": {
+    "curly_quote_characters": {
+      "claude": 0,
+      "gpt": 425,
+      "deepseek": 55,
+      "qwen": 0,
+      "olmo": 6,
+      "pythia": 33
+    },
+    "em_dash_characters": {
+      "claude": 1,
+      "gpt": 175,
+      "deepseek": 343,
+      "qwen": 9,
+      "olmo": 1,
+      "pythia": 0
+    }
+  },
+  "gate2_gpt_share_calibration": {
+    "10": {
+      "P_C": 0.942733657482442,
+      "P_G": 0.04159239453357077
+    },
+    "20": {
+      "P_C": 0.894921663965424,
+      "P_G": 0.213903743315508
+    },
+    "25": {
+      "P_C": 0.8641274986493788,
+      "P_G": 0.31491384432560904
+    },
+    "35": {
+      "P_C": 0.816315505132361,
+      "P_G": 0.4637551990493165
+    },
+    "50": {
+      "P_C": 0.7341977309562399,
+      "P_G": 0.6152703505644682
+    }
+  },
+  "deepseek_gpt_side_punctuation_adjustment": {
+    "unadjusted": {
+      "mean": 0.2507427213309571,
+      "percentile_2_5": 0.15379067689274367,
+      "percentile_97_5": 0.34560846909684523,
+      "n_prompts": 113
+    },
+    "punctuation_count_adjusted": {
+      "mean": -0.030930745455431667,
+      "percentile_2_5": -0.17030522978769028,
+      "percentile_97_5": 0.09457162813321576,
+      "n_prompts": 113
+    }
+  },
+  "deepseek_top_marker_contribution": {
+    "claude": {
+      "baseline_position": 1.0799567801188545,
+      "without_3_strongest_per_fold_position": 1.1477987421383649,
+      "position_change_attributed_to_removed_markers": -0.06784196201951032,
+      "removed_marker_instances": 15,
+      "strongest_markers_by_fold": {
+        "0": [
+          "'",
+          "\n \n *",
+          "\n * *"
+        ],
+        "1": [
+          "'",
+          "\n \n *",
+          "\n * *"
+        ],
+        "2": [
+          "'",
+          "\n \n *",
+          "\n * *"
+        ],
+        "3": [
+          "'",
+          "\n \n *",
+          "\n * *"
+        ],
+        "4": [
+          "'",
+          "\n \n *",
+          "\n * *"
+        ]
+      }
+    },
+    "gpt": {
+      "baseline_position": 0.2507427213309563,
+      "without_3_strongest_per_fold_position": 0.2174796747967477,
+      "position_change_attributed_to_removed_markers": 0.03326304653420861,
+      "removed_marker_instances": 15,
+      "strongest_markers_by_fold": {
+        "0": [
+          "’",
+          "—",
+          "\n \n -"
+        ],
+        "1": [
+          "’",
+          "—",
+          "\n \n -"
+        ],
+        "2": [
+          "’",
+          "—",
+          "\n \n -"
+        ],
+        "3": [
+          "’",
+          "—",
+          "\n \n -"
+        ],
+        "4": [
+          "’",
+          "—",
+          "\n \n -"
+        ]
+      }
+    }
+  },
+  "deepseek_markers_more_frequent_than_both_families": {
+    "claude": [
+      {
+        "fold": 3,
+        "marker": ")",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.6818181818181818,
+          "qwen": 0.3125,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "(",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.6818181818181818,
+          "qwen": 0.375,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "VBZ a JJ",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.5909090909090909,
+          "qwen": 0.05,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "\"",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.6363636363636364,
+          "qwen": 0.55,
+          "olmo": 0.0,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "Here",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.6818181818181818,
+          "qwen": 0.75,
+          "olmo": 0.7272727272727273,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": ". Here",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.0625,
+          "olmo": 0.6363636363636364,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "Here",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.0,
+          "deepseek": 0.7391304347826086,
+          "qwen": 1.0,
+          "olmo": 0.9130434782608695,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": ". Here",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.0,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.19047619047619047,
+          "olmo": 0.8260869565217391,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "Here",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.95,
+          "olmo": 0.8695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NN (",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.5652173913043478,
+          "qwen": 0.15,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NN )",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.2,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NNS (",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "Here '",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.5,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "Here ' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.5,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "Here",
+        "heldout_presence_rates": {
+          "claude": 0.36363636363636365,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.7272727272727273,
+          "qwen": 0.9,
+          "olmo": 0.7727272727272727,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "' VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.5,
+          "qwen": 0.05,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "(",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.0,
+          "deepseek": 0.8260869565217391,
+          "qwen": 0.47619047619047616,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": ")",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.0,
+          "deepseek": 0.8260869565217391,
+          "qwen": 0.42857142857142855,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "\"",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.0,
+          "deepseek": 0.6956521739130435,
+          "qwen": 0.5238095238095238,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "Here '",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "Here ' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.2727272727272727,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.5909090909090909,
+          "qwen": 0.05,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.5,
+          "qwen": 0.25,
+          "olmo": 0.13636363636363635,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "' VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.0,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.36363636363636365,
+          "gpt": 0.0,
+          "deepseek": 0.6818181818181818,
+          "qwen": 0.1,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "Here '",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.4782608695652174,
+          "qwen": 0.0,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "Here ' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.4782608695652174,
+          "qwen": 0.0,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "CD .",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.43478260869565216,
+          "qwen": 1.0,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NN )",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.23809523809523808,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.0,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.05,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": ")",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.6956521739130435,
+          "qwen": 0.35,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "- JJ",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.30434782608695654,
+          "deepseek": 0.6956521739130435,
+          "qwen": 0.5789473684210527,
+          "olmo": 0.43478260869565216,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "Here '",
+        "heldout_presence_rates": {
+          "claude": 0.3181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.5909090909090909,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "Here ' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.3181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.5909090909090909,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": ". Here '",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NN . Here",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.0625,
+          "olmo": 0.5909090909090909,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": ". Here",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.5,
+          "qwen": 0.1,
+          "olmo": 0.7272727272727273,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "CD",
+        "heldout_presence_rates": {
+          "claude": 0.5217391304347826,
+          "gpt": 0.43478260869565216,
+          "deepseek": 0.782608695652174,
+          "qwen": 1.0,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": ". Here",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.1,
+          "olmo": 0.6521739130434783,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "CD",
+        "heldout_presence_rates": {
+          "claude": 0.5217391304347826,
+          "gpt": 0.4782608695652174,
+          "deepseek": 0.782608695652174,
+          "qwen": 1.0,
+          "olmo": 0.391304347826087,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "CD .",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.391304347826087,
+          "qwen": 1.0,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "' VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": ". Here '",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.0,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "(",
+        "heldout_presence_rates": {
+          "claude": 0.43478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.6956521739130435,
+          "qwen": 0.4,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": ". Here '",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "(",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.47368421052631576,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "CD .",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.7894736842105263,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "VBZ a JJ",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.0,
+          "olmo": 0.13636363636363635,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": ". Here '",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.4090909090909091,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "CD . NNP",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.4090909090909091,
+          "qwen": 0.65,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NN (",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.3181818181818182,
+          "qwen": 0.0,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NN . Here",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.3181818181818182,
+          "qwen": 0.1,
+          "olmo": 0.6818181818181818,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "CD .",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.45454545454545453,
+          "qwen": 0.9,
+          "olmo": 0.36363636363636365,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NN VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.3181818181818182,
+          "gpt": 0.3181818181818182,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.4375,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "Here",
+        "heldout_presence_rates": {
+          "claude": 0.43478260869565216,
+          "gpt": 0.0,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.7368421052631579,
+          "olmo": 0.7391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "The",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.8421052631578947,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.4090909090909091
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "CD . NNP",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.5789473684210527,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN . Here",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.4782608695652174,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "and the",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "the JJ",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.30434782608695654,
+          "deepseek": 0.5652173913043478,
+          "qwen": 0.5238095238095238,
+          "olmo": 0.5652173913043478,
+          "pythia": 0.17391304347826086
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "of",
+        "heldout_presence_rates": {
+          "claude": 0.5454545454545454,
+          "gpt": 0.4090909090909091,
+          "deepseek": 0.7272727272727273,
+          "qwen": 0.8125,
+          "olmo": 0.7272727272727273,
+          "pythia": 0.4090909090909091
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NN )",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.3181818181818182,
+          "qwen": 0.0625,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "\n - NNP",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "- NNP",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.0625,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": ")",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.5909090909090909,
+          "qwen": 0.5,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NN \"",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.2,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NNS (",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.25,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "' VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.047619047619047616,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "VBZ a JJ",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.09523809523809523,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NNS of",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.15,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.08695652173913043
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "VBZ a JJ",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.14285714285714285,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "VBZ RB",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.15,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "CD . NNP",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.5,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "Here '",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.0,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "Here ' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.0,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\n - NN",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": ". Here",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.0,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.6956521739130435,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "- NN",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": ". Here '",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.0,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.0,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NNS )",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.0,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": ")",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.5652173913043478,
+          "qwen": 0.47368421052631576,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "(",
+        "heldout_presence_rates": {
+          "claude": 0.45454545454545453,
+          "gpt": 0.0,
+          "deepseek": 0.5909090909090909,
+          "qwen": 0.5,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "CD .",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.6875,
+          "olmo": 0.2727272727272727,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "'",
+        "heldout_presence_rates": {
+          "claude": 0.7727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.9090909090909091,
+          "qwen": 0.5625,
+          "olmo": 0.5,
+          "pythia": 0.18181818181818182
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.5,
+          "gpt": 0.0,
+          "deepseek": 0.6363636363636364,
+          "qwen": 0.1875,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.18181818181818182
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "CD . NNP",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.4375,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "in",
+        "heldout_presence_rates": {
+          "claude": 0.5,
+          "gpt": 0.36363636363636365,
+          "deepseek": 0.6363636363636364,
+          "qwen": 0.5,
+          "olmo": 0.5454545454545454,
+          "pythia": 0.18181818181818182
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "VBZ the",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.1,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NNP and",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.1,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NNS )",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.1,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "* \n",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.0625,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NN VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.36363636363636365,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.2,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "is",
+        "heldout_presence_rates": {
+          "claude": 0.5217391304347826,
+          "gpt": 0.4782608695652174,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.9047619047619048,
+          "olmo": 0.5652173913043478,
+          "pythia": 0.6086956521739131
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "The NN",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.17391304347826086,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.42857142857142855,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.2608695652173913
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "is",
+        "heldout_presence_rates": {
+          "claude": 0.5217391304347826,
+          "gpt": 0.34782608695652173,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.7894736842105263,
+          "olmo": 0.4782608695652174,
+          "pythia": 0.6818181818181818
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "CD . NNP",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.38095238095238093,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NN . Here",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.19047619047619047,
+          "olmo": 0.7391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "the JJ NN",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.21739130434782608,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.2857142857142857,
+          "olmo": 0.391304347826087,
+          "pythia": 0.13043478260869565
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\n - JJ",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "* CD .",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN \"",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "' VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "that",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.2608695652173913,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.45,
+          "olmo": 0.5652173913043478,
+          "pythia": 0.6956521739130435
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "VBZ a",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.25,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "- JJ",
+        "heldout_presence_rates": {
+          "claude": 0.43478260869565216,
+          "gpt": 0.391304347826087,
+          "deepseek": 0.5652173913043478,
+          "qwen": 0.65,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NN in",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.2727272727272727,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.1875,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "is",
+        "heldout_presence_rates": {
+          "claude": 0.6363636363636364,
+          "gpt": 0.5,
+          "deepseek": 0.7272727272727273,
+          "qwen": 0.9375,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.6363636363636364
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "- NN",
+        "heldout_presence_rates": {
+          "claude": 0.3181818181818182,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.4090909090909091,
+          "qwen": 0.0625,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "CD",
+        "heldout_presence_rates": {
+          "claude": 0.6818181818181818,
+          "gpt": 0.5454545454545454,
+          "deepseek": 0.7727272727272727,
+          "qwen": 0.9,
+          "olmo": 0.5,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "The",
+        "heldout_presence_rates": {
+          "claude": 0.2727272727272727,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.85,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.3181818181818182
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "' RB VB",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.125,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": ") ,",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.09090909090909091,
+          "qwen": 0.0625,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "VBZ a NN",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.1875,
+          "olmo": 0.0,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "' RB",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.3181818181818182,
+          "qwen": 0.15,
+          "olmo": 0.0,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "VBZ RB",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.15,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "VBZ the NN",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.1,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "' d",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.09090909090909091,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "- VB",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "d",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.09090909090909091,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "\n - VB",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NNS )",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.0,
+          "deepseek": 0.13636363636363635,
+          "qwen": 0.1875,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "* * \n",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.5,
+          "qwen": 0.0625,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "The",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.5,
+          "qwen": 0.8125,
+          "olmo": 0.2727272727272727,
+          "pythia": 0.4090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NN (",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.1,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "- JJ",
+        "heldout_presence_rates": {
+          "claude": 0.45454545454545453,
+          "gpt": 0.36363636363636365,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.6,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NN )",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.2,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": ". \n \n",
+        "heldout_presence_rates": {
+          "claude": 0.8181818181818182,
+          "gpt": 0.6363636363636364,
+          "deepseek": 0.9090909090909091,
+          "qwen": 0.7,
+          "olmo": 0.7727272727272727,
+          "pythia": 0.8636363636363636
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "'",
+        "heldout_presence_rates": {
+          "claude": 0.6956521739130435,
+          "gpt": 0.0,
+          "deepseek": 0.782608695652174,
+          "qwen": 0.45,
+          "olmo": 0.5652173913043478,
+          "pythia": 0.08695652173913043
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "of",
+        "heldout_presence_rates": {
+          "claude": 0.7391304347826086,
+          "gpt": 0.5652173913043478,
+          "deepseek": 0.8260869565217391,
+          "qwen": 0.9473684210526315,
+          "olmo": 0.8695652173913043,
+          "pythia": 0.2727272727272727
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NN (",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.23809523809523808,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "CD NNS",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.09523809523809523,
+          "olmo": 0.0,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NNS that",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.17391304347826086,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.19047619047619047,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "' RB VB",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.2,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\"",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.47368421052631576,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "The",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.21739130434782608,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.7142857142857143,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.34782608695652173
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "' s",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.25,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "s",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.25,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "you '",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.0,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NN '",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.15,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NN ' s",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.15,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "' s NN",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.0,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.05,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "CD NNS",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.2608695652173913,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.1,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "s NN",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.0,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.05,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NN . Here",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.05,
+          "olmo": 0.5652173913043478,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "VBZ the NN",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.0,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "\" \n",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.2,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\n - NNP",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "- NNP",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN that VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.3157894736842105,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "' VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.0,
+          "deepseek": 0.5652173913043478,
+          "qwen": 0.14285714285714285,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "RB VB",
+        "heldout_presence_rates": {
+          "claude": 0.2727272727272727,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.3181818181818182,
+          "qwen": 0.1875,
+          "olmo": 0.13636363636363635,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "doRB",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.1875,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "doRB '",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.1875,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "doRB ' RB",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.1875,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "JJS",
+        "heldout_presence_rates": {
+          "claude": 0.2727272727272727,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.3181818181818182,
+          "qwen": 0.0625,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "VBP JJ",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.0,
+          "olmo": 0.2727272727272727,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "of NN",
+        "heldout_presence_rates": {
+          "claude": 0.36363636363636365,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.4090909090909091,
+          "qwen": 0.25,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "- NN",
+        "heldout_presence_rates": {
+          "claude": 0.36363636363636365,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.4090909090909091,
+          "qwen": 0.1,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "CD NNS",
+        "heldout_presence_rates": {
+          "claude": 0.3181818181818182,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.15,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NNS (",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.0,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.15,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "I '",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "\" \n",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.2,
+          "olmo": 0.0,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 4,
+        "marker": ". \" \n",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.15,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "' d VB",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "d VB",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "\" I",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "I ' d",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.045454545454545456,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "' RB",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.4375,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "you '",
+        "heldout_presence_rates": {
+          "claude": 0.18181818181818182,
+          "gpt": 0.0,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.0625,
+          "olmo": 0.2727272727272727,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "\n - NN",
+        "heldout_presence_rates": {
+          "claude": 0.22727272727272727,
+          "gpt": 0.0,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "of the",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.13636363636363635,
+          "qwen": 0.4375,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "' RB VB",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.0,
+          "deepseek": 0.13636363636363635,
+          "qwen": 0.05,
+          "olmo": 0.0,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "- JJ",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.45454545454545453,
+          "qwen": 0.875,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "the JJ",
+        "heldout_presence_rates": {
+          "claude": 0.4090909090909091,
+          "gpt": 0.36363636363636365,
+          "deepseek": 0.45454545454545453,
+          "qwen": 0.625,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "'",
+        "heldout_presence_rates": {
+          "claude": 0.7272727272727273,
+          "gpt": 0.0,
+          "deepseek": 0.7727272727272727,
+          "qwen": 0.45,
+          "olmo": 0.5909090909090909,
+          "pythia": 0.2727272727272727
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.9130434782608695,
+          "gpt": 0.6086956521739131,
+          "deepseek": 0.9565217391304348,
+          "qwen": 0.9,
+          "olmo": 0.7391304347826086,
+          "pythia": 0.21739130434782608
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "is",
+        "heldout_presence_rates": {
+          "claude": 0.5652173913043478,
+          "gpt": 0.5217391304347826,
+          "deepseek": 0.6086956521739131,
+          "qwen": 0.95,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.43478260869565216
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "' VBP",
+        "heldout_presence_rates": {
+          "claude": 0.34782608695652173,
+          "gpt": 0.0,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.047619047619047616,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.08695652173913043
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NN '",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.19047619047619047,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NN ' s",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.19047619047619047,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "you '",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.0,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.047619047619047616,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "The",
+        "heldout_presence_rates": {
+          "claude": 0.43478260869565216,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.4782608695652174,
+          "qwen": 0.7,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.21739130434782608
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "the NN NN",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.21739130434782608,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.18181818181818182
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "it VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.21739130434782608,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.23809523809523808,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.13043478260869565
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "you ' VBP",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.047619047619047616,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "the JJ NNS",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.14285714285714285,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "JJS NNS",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.047619047619047616,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "- NN",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.17391304347826086,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.1,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "you ' VBP",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.043478260869565216,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* CD .",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "VBZ the",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.17391304347826086,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.05,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "RBS",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.1,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* * CD",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* CD",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": ". \" \n",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.0,
+          "deepseek": 0.13043478260869565,
+          "qwen": 0.1,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "the NN '",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.043478260869565216,
+          "qwen": 0.15,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NN . \"",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.05,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "' s",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.2631578947368421,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "s",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.2631578947368421,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN '",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.10526315789473684,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN ' s",
+        "heldout_presence_rates": {
+          "claude": 0.21739130434782608,
+          "gpt": 0.0,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.10526315789473684,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "them",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.17391304347826086,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NNS of",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.21052631578947367,
+          "olmo": 0.30434782608695654,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "RBR",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.2631578947368421,
+          "olmo": 0.30434782608695654,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "RBS",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.0,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.3157894736842105,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "* \n",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "' s",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.0,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.2857142857142857,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "s",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.0,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.2857142857142857,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* \n",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.1,
+          "olmo": 0.34782608695652173,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "\"",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.0,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.7,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "RB VB",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.3,
+          "olmo": 0.30434782608695654,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "in",
+        "heldout_presence_rates": {
+          "claude": 0.6521739130434783,
+          "gpt": 0.43478260869565216,
+          "deepseek": 0.6956521739130435,
+          "qwen": 0.45,
+          "olmo": 0.6086956521739131,
+          "pythia": 0.2608695652173913
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "* * \n",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "* \n",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.5217391304347826,
+          "qwen": 0.0,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "VBZ",
+        "heldout_presence_rates": {
+          "claude": 0.8260869565217391,
+          "gpt": 0.6521739130434783,
+          "deepseek": 0.8695652173913043,
+          "qwen": 0.7894736842105263,
+          "olmo": 0.8260869565217391,
+          "pythia": 0.22727272727272727
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NNS VBP",
+        "heldout_presence_rates": {
+          "claude": 0.391304347826087,
+          "gpt": 0.30434782608695654,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "- JJ NN",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.30434782608695654,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.47368421052631576,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.045454545454545456
+        }
+      }
+    ],
+    "gpt": [
+      {
+        "fold": 0,
+        "marker": "\n NNP",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.3333333333333333,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.08695652173913043
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "JJ , JJ",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.5625,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": ": * *",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.22727272727272727,
+          "deepseek": 0.45454545454545453,
+          "qwen": 0.5,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": ", JJ",
+        "heldout_presence_rates": {
+          "claude": 0.2727272727272727,
+          "gpt": 0.3181818181818182,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.6875,
+          "olmo": 0.5454545454545454,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "NN —",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.36363636363636365,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": ": *",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.2727272727272727,
+          "deepseek": 0.45454545454545453,
+          "qwen": 0.5,
+          "olmo": 0.3181818181818182,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "* * NN",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.4375,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NNS , JJ",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.09090909090909091,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.05,
+          "olmo": 0.13636363636363635,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "—",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.5,
+          "deepseek": 0.6818181818181818,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "—",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.5909090909090909,
+          "deepseek": 0.7727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "\n -",
+        "heldout_presence_rates": {
+          "claude": 0.5454545454545454,
+          "gpt": 0.5909090909090909,
+          "deepseek": 0.7727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "or VB",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "—",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.6521739130434783,
+          "deepseek": 0.8260869565217391,
+          "qwen": 0.047619047619047616,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "\n -",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.6956521739130435,
+          "deepseek": 0.8695652173913043,
+          "qwen": 0.0,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* * .",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.4,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "—",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.6521739130434783,
+          "deepseek": 0.8260869565217391,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": ";",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.2608695652173913,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.10526315789473684,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "* NN",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.4375,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "* * .",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.4,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "\n -",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.6521739130434783,
+          "deepseek": 0.782608695652174,
+          "qwen": 0.0,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "\n \n NNP",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.08695652173913043
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* NN",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.5,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* * NN",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.45,
+          "olmo": 0.08695652173913043,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* .",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.0,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.4,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "JJ . \n",
+        "heldout_presence_rates": {
+          "claude": 0.5454545454545454,
+          "gpt": 0.5454545454545454,
+          "deepseek": 0.6363636363636364,
+          "qwen": 0.15,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.13636363636363635
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "* * NN",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.22727272727272727,
+          "qwen": 0.3,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "JJ NN :",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.4375,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NN —",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": ", JJ",
+        "heldout_presence_rates": {
+          "claude": 0.36363636363636365,
+          "gpt": 0.4090909090909091,
+          "deepseek": 0.5,
+          "qwen": 0.55,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "* NN",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.18181818181818182,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.3,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NNP NN",
+        "heldout_presence_rates": {
+          "claude": 0.43478260869565216,
+          "gpt": 0.5217391304347826,
+          "deepseek": 0.6086956521739131,
+          "qwen": 0.2857142857142857,
+          "olmo": 0.17391304347826086,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": ", JJ",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.5217391304347826,
+          "deepseek": 0.6086956521739131,
+          "qwen": 0.3684210526315789,
+          "olmo": 0.30434782608695654,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "NN , and",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.34782608695652173,
+          "deepseek": 0.43478260869565216,
+          "qwen": 0.23809523809523808,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "rather than VBG",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": ";",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.21739130434782608,
+          "qwen": 0.15,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NNS to",
+        "heldout_presence_rates": {
+          "claude": 0.17391304347826086,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.4,
+          "olmo": 0.6956521739130435,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NNP NN and",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN —",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.2608695652173913,
+          "deepseek": 0.34782608695652173,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "JJ NN :",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.17391304347826086,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "to VB",
+        "heldout_presence_rates": {
+          "claude": 0.6521739130434783,
+          "gpt": 0.6521739130434783,
+          "deepseek": 0.7391304347826086,
+          "qwen": 0.8095238095238095,
+          "olmo": 0.8695652173913043,
+          "pythia": 0.5217391304347826
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "JJ to",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.3,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "NNP JJ NN",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.13636363636363635,
+          "deepseek": 0.18181818181818182,
+          "qwen": 0.0,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "\n \n NNP",
+        "heldout_presence_rates": {
+          "claude": 0.045454545454545456,
+          "gpt": 0.045454545454545456,
+          "deepseek": 0.09090909090909091,
+          "qwen": 0.05,
+          "olmo": 0.045454545454545456,
+          "pythia": 0.18181818181818182
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "JJ NN :",
+        "heldout_presence_rates": {
+          "claude": 0.13636363636363635,
+          "gpt": 0.22727272727272727,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.2,
+          "olmo": 0.22727272727272727,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "marker": "for JJ",
+        "heldout_presence_rates": {
+          "claude": 0.09090909090909091,
+          "gpt": 0.22727272727272727,
+          "deepseek": 0.2727272727272727,
+          "qwen": 0.1,
+          "olmo": 0.09090909090909091,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 3,
+        "marker": "JJ ,",
+        "heldout_presence_rates": {
+          "claude": 0.5,
+          "gpt": 0.22727272727272727,
+          "deepseek": 0.5454545454545454,
+          "qwen": 0.625,
+          "olmo": 0.4090909090909091,
+          "pythia": 0.09090909090909091
+        }
+      },
+      {
+        "fold": 2,
+        "marker": ", NNS ,",
+        "heldout_presence_rates": {
+          "claude": 0.30434782608695654,
+          "gpt": 0.34782608695652173,
+          "deepseek": 0.391304347826087,
+          "qwen": 0.10526315789473684,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN JJ",
+        "heldout_presence_rates": {
+          "claude": 0.2608695652173913,
+          "gpt": 0.21739130434782608,
+          "deepseek": 0.30434782608695654,
+          "qwen": 0.05263157894736842,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.045454545454545456
+        }
+      },
+      {
+        "fold": 0,
+        "marker": ";",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.09523809523809523,
+          "olmo": 0.0,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "than VBG",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.08695652173913043,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 0,
+        "marker": "and VB",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.21739130434782608,
+          "deepseek": 0.2608695652173913,
+          "qwen": 0.3333333333333333,
+          "olmo": 0.30434782608695654,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "NNS —",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.0,
+          "olmo": 0.0,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "\n \n NNP",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.05,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.08695652173913043
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "* NNP RB",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.0,
+          "deepseek": 0.043478260869565216,
+          "qwen": 0.0,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "JJ , JJ",
+        "heldout_presence_rates": {
+          "claude": 0.08695652173913043,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.35,
+          "olmo": 0.21739130434782608,
+          "pythia": 0.043478260869565216
+        }
+      },
+      {
+        "fold": 1,
+        "marker": "RB .",
+        "heldout_presence_rates": {
+          "claude": 0.13043478260869565,
+          "gpt": 0.13043478260869565,
+          "deepseek": 0.17391304347826086,
+          "qwen": 0.0,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\n 1",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.0,
+          "olmo": 0.6521739130434783,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\n 1 .",
+        "heldout_presence_rates": {
+          "claude": 0.043478260869565216,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.0,
+          "olmo": 0.6521739130434783,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "RB . \n",
+        "heldout_presence_rates": {
+          "claude": 0.0,
+          "gpt": 0.043478260869565216,
+          "deepseek": 0.08695652173913043,
+          "qwen": 0.15789473684210525,
+          "olmo": 0.043478260869565216,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "\n -",
+        "heldout_presence_rates": {
+          "claude": 0.4782608695652174,
+          "gpt": 0.6086956521739131,
+          "deepseek": 0.6521739130434783,
+          "qwen": 0.0,
+          "olmo": 0.2608695652173913,
+          "pythia": 0.0
+        }
+      },
+      {
+        "fold": 2,
+        "marker": "NN , and",
+        "heldout_presence_rates": {
+          "claude": 0.43478260869565216,
+          "gpt": 0.5217391304347826,
+          "deepseek": 0.5652173913043478,
+          "qwen": 0.2631578947368421,
+          "olmo": 0.13043478260869565,
+          "pythia": 0.2727272727272727
+        }
+      }
+    ]
+  },
+  "median_heldout_p_claude_from_score_json": {
+    "deepseek": 0.5997393310184155,
+    "qwen": 0.5660810670944945,
+    "olmo": 0.5304304902081056,
+    "pythia": 0.5493752996230403
+  },
+  "classifier_note": "This Claude-vs-GPT classifier cannot separate both from neither; all models' medians are near 0.53 to 0.60, Pythia included.",
+  "answer_word_counts_and_markdown_share": {
+    "claude": {
+      "usable_answers": 113,
+      "original_word_count_before_100_word_cut": {
+        "min": 115,
+        "median": 155.0,
+        "max": 184
+      },
+      "word_count_after_cut": 100,
+      "markdown_answers": 99,
+      "markdown_share": 0.8761061946902655,
+      "markdown_rule": "asterisks or underscores for emphasis, headings, hyphen/plus bullets, or numbered-list openings in the first 100 words"
+    },
+    "gpt": {
+      "usable_answers": 113,
+      "original_word_count_before_100_word_cut": {
+        "min": 100,
+        "median": 168.0,
+        "max": 388
+      },
+      "word_count_after_cut": 100,
+      "markdown_answers": 101,
+      "markdown_share": 0.8938053097345132,
+      "markdown_rule": "asterisks or underscores for emphasis, headings, hyphen/plus bullets, or numbered-list openings in the first 100 words"
+    },
+    "deepseek": {
+      "usable_answers": 113,
+      "original_word_count_before_100_word_cut": {
+        "min": 110,
+        "median": 219.0,
+        "max": 246
+      },
+      "word_count_after_cut": 100,
+      "markdown_answers": 107,
+      "markdown_share": 0.9469026548672567,
+      "markdown_rule": "asterisks or underscores for emphasis, headings, hyphen/plus bullets, or numbered-list openings in the first 100 words"
+    },
+    "qwen": {
+      "usable_answers": 96,
+      "original_word_count_before_100_word_cut": {
+        "min": 121,
+        "median": 147.0,
+        "max": 161
+      },
+      "word_count_after_cut": 100,
+      "markdown_answers": 92,
+      "markdown_share": 0.9583333333333334,
+      "markdown_rule": "asterisks or underscores for emphasis, headings, hyphen/plus bullets, or numbered-list openings in the first 100 words"
+    },
+    "olmo": {
+      "usable_answers": 113,
+      "original_word_count_before_100_word_cut": {
+        "min": 118,
+        "median": 159.0,
+        "max": 173
+      },
+      "word_count_after_cut": 100,
+      "markdown_answers": 104,
+      "markdown_share": 0.9203539823008849,
+      "markdown_rule": "asterisks or underscores for emphasis, headings, hyphen/plus bullets, or numbered-list openings in the first 100 words"
+    },
+    "pythia": {
+      "usable_answers": 112,
+      "original_word_count_before_100_word_cut": {
+        "min": 110,
+        "median": 159.5,
+        "max": 188
+      },
+      "word_count_after_cut": 100,
+      "markdown_answers": 1,
+      "markdown_share": 0.008928571428571428,
+      "markdown_rule": "asterisks or underscores for emphasis, headings, hyphen/plus bullets, or numbered-list openings in the first 100 words"
+    }
+  }
+}

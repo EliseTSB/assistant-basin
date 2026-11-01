@@ -3116,18 +3116,18 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 162.1 | deepseek-v4.1-flash reads as both: P_C and P_G each at least 0.25 | medium | Elise and Claude |  |
-| 162.2 | Qwen3.5-4B's P_C exceeds its P_G by at least 0.1 | medium | Claude |  |
-| 162.3 | deepseek-v4.1-flash's P_C exceeds its P_G | low | Claude |  |
-| 162.4 | deepseek-v4.1-flash's median held-out P(Claude) is between 0.3 and 0.7 | low | Claude |  |
-| 162.5 | OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude |  |
+| 162.1 | deepseek-v4.1-flash reads as both: P_C and P_G each at least 0.25 | medium | Elise and Claude | held on its point estimate only: P_C 1.08, P_G 0.2507, interval 0.15 to 0.34; readable and held in 4 of 14 variants; depends on Amendment 1 |
+| 162.2 | Qwen3.5-4B's P_C exceeds its P_G by at least 0.1 | medium | Claude | untestable: Gate 4, 96 of 113; positions 0.73 and -0.05 |
+| 162.3 | deepseek-v4.1-flash's P_C exceeds its P_G | low | Claude | held: 1.08 against 0.25 |
+| 162.4 | deepseek-v4.1-flash's median held-out P(Claude) is between 0.3 and 0.7 | low | Claude | held: 0.60; carries no information, all models sat at 0.53 to 0.60 |
+| 162.5 | OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude | held: 0.524 against 0.488, intervals overlap |
 
 ## Part 162b (registered 2026-10-31 19:20 CT, PART162B-DESIGN.md, after Part 162's first score): does the reading survive once punctuation is taken out?
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 162b.1 | In arm A, deepseek-v4.1-flash reads as both: P_C and P_G each at least 0.25 | medium | Claude |  |
-| 162b.2 | In arm A, Qwen3.5-4B's P_C exceeds its P_G by at least 0.1 | high | Claude |  |
-| 162b.3 | In arm A, deepseek-v4.1-flash's P_C exceeds its P_G | high | Claude |  |
-| 162b.4 | In arm B, deepseek-v4.1-flash's P_G is under 0.25 | medium | Claude |  |
-| 162b.5 | In arm A, OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude |  |
+| 162b.1 | In arm A, deepseek-v4.1-flash reads as both: P_C and P_G each at least 0.25 | medium | Claude | untestable: Gates 1 and 2 failed; descriptive 1.09 and 0.27 |
+| 162b.2 | In arm A, Qwen3.5-4B's P_C exceeds its P_G by at least 0.1 | high | Claude | untestable: Gates 1 and 2 failed; descriptive 0.71 and -0.07 |
+| 162b.3 | In arm A, deepseek-v4.1-flash's P_C exceeds its P_G | high | Claude | untestable: Gates 1 and 2 failed; descriptive 1.09 and 0.27 |
+| 162b.4 | In arm B, deepseek-v4.1-flash's P_G is under 0.25 | medium | Claude | untestable: Gates 1 and 2 failed; descriptive 0.19 |
+| 162b.5 | In arm A, OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude | untestable: Gates 1 and 2 failed; descriptive 0.69 and 0.45 |

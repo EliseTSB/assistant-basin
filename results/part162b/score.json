@@ -1,0 +1,121 @@
+{
+  "verdicts": {
+    "162b.1": {
+      "arm": "armA",
+      "model": "deepseek",
+      "verdict": "untestable"
+    },
+    "162b.2": {
+      "arm": "armA",
+      "model": "qwen",
+      "verdict": "untestable"
+    },
+    "162b.3": {
+      "arm": "armA",
+      "model": "deepseek",
+      "verdict": "untestable"
+    },
+    "162b.4": {
+      "arm": "armB",
+      "model": "deepseek",
+      "verdict": "untestable"
+    },
+    "162b.5": {
+      "arm": "armA",
+      "model": "olmo",
+      "verdict": "untestable"
+    }
+  },
+  "positions": {
+    "armA": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0
+      },
+      "deepseek": {
+        "claude": 1.0864197530864192,
+        "gpt": 0.2699300699300703
+      },
+      "qwen": {
+        "claude": 0.7125645438898456,
+        "gpt": -0.06978653530377642
+      },
+      "olmo": {
+        "claude": 0.45170660856935335,
+        "gpt": 0.6902097902097905
+      },
+      "pythia": {
+        "claude": -0.6833578792341678,
+        "gpt": -0.9803508771929823
+      },
+      "mix_claude_then_gpt": {
+        "claude": 0.8177196804647779,
+        "gpt": 0.611888111888112
+      },
+      "mix_gpt_then_claude": {
+        "claude": 0.7995642701525049,
+        "gpt": 0.6195804195804197
+      },
+      "mixture_mean": {
+        "claude": 0.8086419753086417,
+        "gpt": 0.6157342657342657
+      }
+    },
+    "armB": {
+      "claude": {
+        "claude": 1.0,
+        "gpt": 0.0
+      },
+      "gpt": {
+        "claude": 0.0,
+        "gpt": 1.0
+      },
+      "deepseek": {
+        "claude": 1.0864197530864192,
+        "gpt": 0.1873605947955393
+      },
+      "qwen": {
+        "claude": 0.7125645438898456,
+        "gpt": -0.05152838427947614
+      },
+      "olmo": {
+        "claude": 0.45170660856935335,
+        "gpt": 0.7568773234200743
+      },
+      "pythia": {
+        "claude": -0.6833578792341678,
+        "gpt": -1.065573770491804
+      },
+      "mix_claude_then_gpt": {
+        "claude": 0.8177196804647779,
+        "gpt": 0.6081784386617104
+      },
+      "mix_gpt_then_claude": {
+        "claude": 0.7995642701525049,
+        "gpt": 0.6156133828996283
+      },
+      "mixture_mean": {
+        "claude": 0.8086419753086417,
+        "gpt": 0.6118959107806692
+      }
+    }
+  },
+  "gates": {
+    "armA": {
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false
+    },
+    "armB": {
+      "1": false,
+      "2": false,
+      "3": true,
+      "4": false
+    }
+  }
+}

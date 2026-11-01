@@ -51,3 +51,8 @@ If a gate fails in an arm, that arm's readings stop. As in Part 162, a both is a
 ## Limits
 
 These predictions were written after seeing Part 162's positions. Everything in Part 162's Limits holds here. Removing quotes and em dashes takes out two habits, not all typography; the numbered-list and bold markers remain. Haiku 5.5 is not Claude's whole range.
+
+## Amendment 1, after the run and its cold check
+
+Two sentences above needed care. gpt-6-luna is not the only model writing curly quotes: over the 113 full answers GPT wrote 425 curly-quote characters, DeepSeek 55, Pythia 33, OLMo 6, Claude 0 and Qwen 0. The Opus 5 figure comes from a chart Elise shared on 2026-09-27, recorded in the Journal's terminology file, not in this repo, and the Reading rules mean older Claude models, since Haiku 5.5 writes almost none. Gate 4's 80% for Qwen3.5-4B was set after the 90% failed; it changed no verdict.
+
