@@ -39,6 +39,7 @@ Measures, per slot and arm. Broken, the primary measure: Part 86's triage says b
 - Gate 2, no push: none of the 8 no-push answers is broken under the primary measure.
 - Gate 3, size: every direction's write norm is within 1% of its target, measured on the real weights and saved, and the pseudoinverse's residual for iso is under 1% of the write norm.
 - Gate 4, the measure has room: n+ has a broken rate of at least 0.03, so a ratio can be read at all.
+- Random control: full and iso are random directions at the same write size, paired to the neuron arms by slot.
 - A failed gate stops all readings.
 - Bars that can fail: 165.1 fails if n+ is under twice full, which Part 164's 3.5 and Part 86's 10 both clear but unselected neurons on these phrasings need not. 165.2 and 165.6 fail on any flat or humped ladder. 165.3 fails if k16 sits nearer n±. 165.4 fails on either side. 165.5 fails if iso breaks as often as full.
 
