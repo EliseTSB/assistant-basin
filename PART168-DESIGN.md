@@ -78,7 +78,7 @@ Measures: broken and loop by Part 165's rules; the loop phrase by Part 166's rul
 | 168.5 | The matched cut, pooled over n+ and k4, is between -15% and 15% | medium |
 | 168.6 | Own ban's cut in full is under half its cut in n+ and k4 | low |
 | 168.7 | At least a third of paired transitions are migrations, and above their baseline | low |
-| 168.8 | Pooled over n+ and k4, the own loop rate is at least 0.05 below the mass-ban rate | medium |
+| 168.8 | On the paired rows of Amendment 1, the own loop rate is at least 0.05 below the mass-ban rate | medium |
 
 Weaver's, recorded before the run:
 
@@ -97,3 +97,21 @@ A failed gate stops all readings. If 168.1 holds, Part 166's association replica
 ## Limits
 
 One model, one dose, 7 maker phrasings, all but held out from Part 166 only. The ban acts on tokens, so a word can return in pieces. Top 50 is a choice. Mass is measured on the plain path, and a pushed answer leaves that path. A mass list can hold ordinary tokens the answer needs, which is the cost it is there to measure. Greedy decoding only.
+
+## Amendment 1, 2026-11-01 02:58 CT, before the run, on Alden's review and a read of the build
+
+No row exists. Alden read this design (council topic overnight-ideas-2026-11-01, message 13). The changes follow. Where they differ from the sections above, this amendment governs.
+
+**168.8 compares paired rows.** Gate 6 lets 10% of rows keep a poor list, which alone could move an all-row rate by 0.10, more than the 0.05 bar. So a paired set is frozen in `masses.jsonl` before generation: low-k rows whose mass list is feasible and in tolerance. 168.8 compares own and mass on exactly those rows. All-row rates are reported as a policy estimate, with coverage by arm and layer, and bounds with the unmatched rows set to no loops and to all loops. The whole result is not called "same mass" because a pooled gate passed.
+
+**The mass list has a sampling contract.** Pool: the 20,000 most probable tokens outside the own and matched lists and the special ids. Feasible: own mass lies between the sums of the pool's 50 smallest and 50 largest, within tolerance, and an infeasible row is logged and not searched. Tolerance: 10% of own mass, with an absolute floor of 1e-7. Weights: q to the power a, with q clipped at 1e-30, drawn without replacement by Gumbel top-k. Calibration replaces the with-replacement shortcut in the Method: bisection over a in [-4, 8], 20 steps, on the realized mass of that same draw, averaged over 8 fixed noise vectors. Then up to 200 fresh draws, keeping the first in tolerance or the nearest. Residual absolute and relative errors are logged. Lists are final before any answer exists, and no list is chosen by outcome.
+
+**Mean mass on the plain path is a scalar control.** Two lists of equal mean mass can act at different positions, or differ in whether they block the top choice. So `positions.jsonl` logs, for each low-k row at Stage 1's contexts, the own and mass list's mass by position and how often the pushed top token is on each. Plain-token coverage is logged in `masses.jsonl`.
+
+**The reading rules change.** If 168.8 fails, the specified 0.05 own advantage was not established. That is not evidence that the cut comes from the mass removed, and a failed superiority test is not an equivalence result. If the mass ban cuts under 5%, this control policy had little effect, which does not show Weaver's concern was wrong. The most a positive result can support is an effect of these defined masking policies, including a control calibrated to mean mass on the reference path. It does not identify a lexical feedback mechanism.
+
+**The transition classes are made exclusive.** The Method's three cells could not be exhaustive: a cell of common words only cannot occur when the count requires a new content word. Each row whose none loop holds an own-list word gets one class under each ban, in this order: no loop; re-entry, the banned loop still holds such a word; common only, the banned loop has only common words; otherwise by the focal word, the first content word in the banned loop's phrase that was not in the none loop: top 50 if it is in the row's own list, migration if it is in rank 51 to 200, outside otherwise; and other, if no focal word exists. Paired transitions in 168.7 and 168.W3 are the changed loops: common only, top 50, migration, outside and other. The baseline tests the same focal word against the other 11 slots' rank 51 to 200 sets, on the same denominator, with no focal word counting as zero. Induced loops stay separate.
+
+**Lists and directions are checked before generation.** Every mass list has exactly 50 distinct eligible ids, checked before any answer. Gate 4 checks that each answer's stored list equals its row's list, and Gate 7 also refuses a repeated n+ neuron within this part. Medians in the Prior art section were rounded: on n+ the own list holds 9.3e-3 of pushed mass and the neighbour's 2.6e-5, about 360 times less.
+
+Reading the build found and fixed, before any row: Stage 1's plain answer set to 80 tokens instead of 40; the nearest-draw tracker storing a mass as a distance; and a bootstrap that rebuilt its slot table inside every replicate, which would not have finished, and which a test had hidden by setting the replicate count to 2.
