@@ -3175,3 +3175,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 166.5 | Within n± and k4, pooled over slots, slot broken rate against slot mean sharpness: Spearman at least 0.3 | low | Claude |  |
 | 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 (Amendment 1) | medium | Claude |  |
 | 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 (Amendment 1) | medium | Claude |  |
+
+## Part 167 (registered 2026-11-01 01:44 CT, PART167-DESIGN.md, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 167.1 | In the none arm, pooled over n+ and k4, content-word own over shuffled is at least 5 | high | Claude |  |
+| 167.2 | In the none arm, n+'s broken rate is at least 2 times full's | high | Claude |  |
+| 167.3 | Own ban cuts loop answers by at least 30% against none, pooled over n+ and k4 | medium | Claude |  |
+| 167.4 | Own's cut is at least twice matched's cut, pooled over n+ and k4 | medium | Claude |  |
+| 167.5 | Matched ban cuts loop answers by under 15%, pooled over n+ and k4 | medium | Claude |  |
+| 167.6 | Own ban's cut in full is under half its cut in n+ and k4 | low | Claude |  |
+| 167.7 | At least a third of own-ban loops with a content word are migrations | low | Claude |  |
