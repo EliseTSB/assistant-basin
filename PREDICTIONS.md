@@ -3233,3 +3233,17 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 170.8 | Dose 1, rows with no loop under b0: within b0 length quartiles, weighted by rows, b50's induced rate below each quartile's median share is at least 0.05 above the rest | low | Claude | failed: +4.0 points (-7.6 to 16.3) |
 | 170.W1 | No-push b50 rise is under 0.05 on both M96 and Q96. Falsifier: a rise of 0.10 or more on either set | low | Weaver | failed: M96 +3.6, Q96 +6.7 points; falsifier not met |
 | 170.W2 | Dose 1: rel50's rise is at least half of b50's. Falsifier: under a third | low | Weaver | failed: -11.1%; falsifier met |
+
+## Part 171 (registered 2026-11-01 12:29 CT, PART171-DESIGN.md, before any data)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 171.1 | n100's hit rate is at least 3 times r100's, averaged over draws | medium | Claude | pending |
+| 171.2 | n100's hit rate is at least 0.6 of vector's | medium | Claude | pending |
+| 171.3 | n1's hit rate is at least 2 times r1's | low | Claude | pending |
+| 171.4 | rand100's hit rate is under 5% | high | Claude | pending |
+| 171.5 | At equal length, r100's mean cosine with v̂ is at least 0.1 below n100's | high | Claude | pending |
+| 171.6 | Pooled over testable sets with a positive n100 minus r100 gap, Σ(r100p − r100) / Σ(n100 − r100) is at least 0.5; not read below 3 such sets | low | Claude | pending |
+| 171.7 | r100p breaks or loops on at least 10 points more answers than n100 | medium | Claude | pending |
+| 171.8 | n100's hit rate is at least that of `full` | low | Claude | pending |
+| 171.W1 | The median alignment debt over the 12 sets is at least 2, and 171.6 fails because the arm cannot help it. Falsifier: a debt near 1, which makes r100p the clean test | medium | Weaver | pending |
