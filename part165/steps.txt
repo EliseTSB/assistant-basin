@@ -2,3 +2,4 @@
 python3 tools/launch_arc.py 165 --step "-I -B part165/run165.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out results/part165/answers.jsonl --batch-size 64" --copy part165/run165.py part165/score165.py part165/test_part165.py part164/run164.py part163/run163.py part160/run160.py part155/run155.py part153/battery153.py part148/battery148.py part148/score148.py part86/common86.py part86/triage86.py neuron_report.py results/part112/medians.json
 # Host-side score after the Arc run.
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part165/score165.py --answers results/part165/answers.jsonl --norms results/part165/norms.json --out results/part165
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part165/secondary165.py --answers results/part165/answers.jsonl --out results/part165
