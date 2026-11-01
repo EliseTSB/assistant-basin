@@ -594,6 +594,11 @@ def test_rotate_refuses_without_a_finished_fit_and_detects_a_changed_fit(tmp_pat
         rotate171._fit_marker(tmp_path, ("google",))
 
 
+def test_rotate_default_targets_follow_the_registered_targets():
+    import inspect
+    assert inspect.signature(rotate171.rotate).parameters["targets"].default == tuple(TARGETS)
+
+
 def test_output_trace_expected_value_stays_float_before_bfloat16_cast():
     module = torch.nn.Identity()
     push = torch.tensor([1.0001], dtype=torch.float32)
