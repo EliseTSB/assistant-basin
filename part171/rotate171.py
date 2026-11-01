@@ -6,9 +6,13 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 from pathlib import Path
 
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from prompts171 import DRAW_SEEDS, TARGETS
 
 
 def haar_basis(width, seed):
@@ -99,8 +103,7 @@ def _estimated_peak_gib(width):
     return float(int(width) * int(width) * (8 * 3 + 4)) / (1024 ** 3)
 
 
-def rotate(out_dir, targets=("google", "openai", "anthropic", "deepseek"),
-           draw_seeds=(171, 1171, 2171), max_memory_gb=8.0):
+def rotate(out_dir, targets=tuple(TARGETS), draw_seeds=DRAW_SEEDS, max_memory_gb=8.0):
     """Write one completed file per active (layer, draw), safe to rerun after interruption."""
     import torch
     out_dir = Path(out_dir)
@@ -152,7 +155,7 @@ def rotate(out_dir, targets=("google", "openai", "anthropic", "deepseek"),
     return manifest
 
 
-def load_rotations(out_dir, target, draw_seeds=(171, 1171, 2171), layers=range(21)):
+def load_rotations(out_dir, target, draw_seeds=DRAW_SEEDS, layers=range(21)):
     """Collect only picked vectors for one target from the per-(layer, draw) cache."""
     rotations = {}
     orthogonality = {}
