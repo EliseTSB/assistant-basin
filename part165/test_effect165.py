@@ -131,6 +131,31 @@ class EffectTests(unittest.TestCase):
             if effect165.pilot_rate(192, 100) < 2.0:
                 raise SystemExit("Pilot stop rule")
 
+    def test_score_effect_writes_its_tables(self):
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        import score165
+        layers, slots = (19,), (0, 1)
+        arms = score_effect165.ARMS
+        rows, answers = [], [{"stage": "no_push", "arm": "plain", "slot": None, "layer": None,
+                              "question_index": q, "answer": "I am Qwen, made by Alibaba."} for q in range(8)]
+        for arm in arms:
+            for slot in slots:
+                for q in range(8):
+                    rows.append({"stage": "effect", "arm": arm, "layer": 19, "slot": slot, "question_index": q,
+                                 "kl": .5, "rel_change": .7, "top1_same": True, "first_token_diff": False,
+                                 "realized_write_norm": 20.0, "intended_write_norm": 20.0, "realized_cos": 1.0,
+                                 "changed_channels": 4})
+                    answers.append({"stage": "battery", "arm": arm, "layer": 19, "slot": slot, "question_index": q,
+                                    "answer": "I am Tongue, a model made by a lab in a city."})
+        battery = {"rates": {"broken": {arm: .1 for arm in arms}}}
+        with patch.object(score_effect165, "LAYERS", layers), patch.object(score_effect165, "SLOTS", slots), \
+             patch.object(score_effect165, "EXPECTED_ROWS", len(rows)), patch.object(score165, "LAYERS", layers), \
+             patch.object(score165, "SLOTS", slots), tempfile.TemporaryDirectory() as td:
+            score_effect165.write_outputs(score_effect165.score_effect(rows, battery, answers), td)
+            self.assertIn("| n+ | 0.5 | 0.7 |", (Path(td) / "effect-tables.md").read_text(encoding="utf-8"))
+
     def test_scorer_prediction_165_7_passes_and_fails(self):
         vals = {(arm, layer, slot): (2.0 if arm == "n+" else 1.0)
                 for arm in ("n+", "full") for layer in score_effect165.LAYERS for slot in score_effect165.SLOTS}

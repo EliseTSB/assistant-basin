@@ -117,3 +117,4 @@ The battery ran clean: 6,920 answers. Two defects were in the scoring code, and 
 
 The effect run is rerun in about six minutes on the same code path. The first run's file is kept as `results/part165/effects-run1.jsonl`, so the two can be compared on the fields both have: they should match, and any difference is reported.
 
+A third defect appeared on scoring the rerun: `score_effect165.py` merged arm means by arm name and overwrote KL and relative change, so its table writer failed. The merge is fixed and a test now runs the scorer through its writer. Scoring code only, and the rows are unchanged.

@@ -145,7 +145,7 @@ def score_effect(rows, battery_score, answer_rows, geometry=None):
                 geometry_arms[arm] = {"mean_largest_column_cosine": sum(x["largest_column_cosine"] for x in values[arm]) / len(values[arm]),
                                       "mean_norm_d": sum(x["norm_d"] for x in values[arm]) / len(values[arm])}
     return {"part": 165, "gate": gate, "first_token_differences": differing,
-            "equal_dose": bool(equal_dose), "arm_means": {**means, **dose_means},
+            "equal_dose": bool(equal_dose), "arm_means": {arm: {**means[arm], **dose_means[arm]} for arm in ARMS},
             "geometry_arm_means": geometry_arms, "top1_same_share": top_share,
             "prediction_165.7": prediction,
             "broken_rate_vs_rel_change_spearman": broken_effect_spearman,
