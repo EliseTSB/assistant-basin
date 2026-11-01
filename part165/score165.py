@@ -63,12 +63,18 @@ def _json_number(value):
     return float(value)
 
 
-def _loop_broken(answer):
-    words = [word.casefold() for word in LOOP_WORDS.findall(answer if isinstance(answer, str) else "")]
-    if len(words) < 4:
-        return True
+def _words(answer):
+    return [word.casefold() for word in LOOP_WORDS.findall(answer if isinstance(answer, str) else "")]
+
+
+def has_trigram_loop(answer):
+    words = _words(answer)
     trigrams = Counter(tuple(words[i:i + 3]) for i in range(len(words) - 2))
     return any(count >= 3 for count in trigrams.values())
+
+
+def _loop_broken(answer):
+    return len(_words(answer)) < 4 or has_trigram_loop(answer)
 
 
 def primary_broken(answer):
@@ -202,7 +208,7 @@ def _bootstrap_spearman(slot_rates, metric, means, full_k, seed=165, reps=10_000
             draws.append(value)
     return {"estimate": observed,
             "interval_95": [percentile(draws, .025), percentile(draws, .975)],
-            "bootstrap_replicates": reps, "bootstrap_seed": seed}
+            "bootstrap_replicates": reps, "usable_draws": len(draws), "bootstrap_seed": seed}
 
 
 def _bootstrap_rate_difference(slot_rates, numerator_arm, denominator_arm, seed=165, reps=10_000):
@@ -297,7 +303,7 @@ def score_rows(rows, norms_obj):
         if primary_broken(answer):
             answer_counts[arm]["primary_broken"] += 1
             answer_counts[arm]["broken_under_four_words"] += int(len(answer.split()) < 4)
-            answer_counts[arm]["broken_loops"] += int(_loop_broken(answer) and len(answer.split()) >= 4)
+            answer_counts[arm]["broken_loops"] += int(has_trigram_loop(answer))
     for name, ratio in ratios.items():
         numerator, denominator = ratio["numerator"], ratio["denominator"]
         ratio["raw_counts"] = {"numerator_broken": answer_counts[numerator]["primary_broken"],

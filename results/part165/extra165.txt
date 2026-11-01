@@ -1,0 +1,209 @@
+INDEPENDENT BROKEN-RATE REPRODUCTION (from answers.jsonl; triage identity/self-description before short/loop, plus loop override)
+n+: broken 197/768 = 0.256510; triage-only 135/768 = 0.175781; loop-only 188/768 = 0.244792
+n±: broken 195/768 = 0.253906; triage-only 114/768 = 0.148438; loop-only 186/768 = 0.242188
+k4: broken 208/768 = 0.270833; triage-only 108/768 = 0.140625; loop-only 208/768 = 0.270833
+k16: broken 114/768 = 0.148438; triage-only 40/768 = 0.052083; loop-only 113/768 = 0.147135
+k64: broken 77/768 = 0.100260; triage-only 19/768 = 0.024740; loop-only 76/768 = 0.098958
+k256: broken 71/768 = 0.092448; triage-only 17/768 = 0.022135; loop-only 71/768 = 0.092448
+k1024: broken 66/768 = 0.085938; triage-only 9/768 = 0.011719; loop-only 66/768 = 0.085938
+full: broken 73/768 = 0.095052; triage-only 15/768 = 0.019531; loop-only 73/768 = 0.095052
+iso: broken 61/768 = 0.079427; triage-only 12/768 = 0.015625; loop-only 61/768 = 0.079427
+
+LADDER PAIRED SLOT DIFFERENCES AND RATIOS (layer-stratified bootstrap, seed 165, 10,000)
+k4 - n±: 0.016927 (-0.046875, 0.083333)
+k4 - k16: 0.122396 (0.065104, 0.182292)
+k16 - k64: 0.048177 (0.003906, 0.093750)
+k64 - full: 0.005208 (-0.031250, 0.041667)
+k4/full: 2.849315 (1.987654, 4.148194); both-zero draws=0
+k16/full: 1.561644 (1.018581, 2.416705); both-zero draws=0
+
+FRAGILITY: n+ / full primary breakage
+all layers: 0.256510/0.095052 = 2.698630
+layer 19: n+=0.104167 full=0.062500 ratio=1.666667
+layer 20: n+=0.135417 full=0.072917 ratio=1.857143
+layer 21: n+=0.281250 full=0.145833 ratio=1.928571
+layer 22: n+=0.427083 full=0.062500 ratio=6.833333
+layer 23: n+=0.458333 full=0.114583 ratio=4.000000
+layer 24: n+=0.312500 full=0.125000 ratio=2.500000
+layer 25: n+=0.187500 full=0.052083 ratio=3.600000
+layer 26: n+=0.145833 full=0.125000 ratio=1.166667
+omit layer 19: n+=0.278274 full=0.099702 ratio=2.791045
+omit layer 20: n+=0.273810 full=0.098214 ratio=2.787879
+omit layer 21: n+=0.252976 full=0.087798 ratio=2.881356
+omit layer 22: n+=0.232143 full=0.099702 ratio=2.328358
+omit layer 23: n+=0.227679 full=0.092262 ratio=2.467742
+omit layer 24: n+=0.248512 full=0.090774 ratio=2.737705
+omit layer 25: n+=0.266369 full=0.101190 ratio=2.632353
+omit layer 26: n+=0.272321 full=0.090774 ratio=3.000000
+
+N+ SLOT CONCENTRATION
+8/8 broken slots=10; breaks in them=80/197 = 40.609137%
+omit eight-of-eight n+ slots: n+ / full=2.017241 (0.170058/0.084302)
+slots with any n+ break=55/96; answer-weighted slots=440/768 (effective sample nearer 160 than 768); slot bootstrap resamples slots
+
+LAYERWISE LADDER SHAPE AND SPEARMAN ROBUSTNESS
+all-layer rate Spearman vs support order=-0.857143
+omit layer 19: Spearman=-0.928571
+omit layer 20: Spearman=-0.857143
+omit layer 21: Spearman=-0.714286
+omit layer 22: Spearman=-0.810844
+omit layer 23: Spearman=-0.882919
+omit layer 24: Spearman=-0.857143
+omit layer 25: Spearman=-0.857143
+omit layer 26: Spearman=-0.964286
+leave-one-layer-out Spearman range=-0.964286 to -0.714286
+omit layer 19: n+/full=2.791045; k4-n±=2.232 points
+omit layer 20: n+/full=2.787879; k4-n±=1.190 points
+omit layer 21: n+/full=2.881356; k4-n±=3.423 points
+omit layer 22: n+/full=2.328358; k4-n±=1.190 points
+omit layer 23: n+/full=2.467742; k4-n±=0.000 points
+omit layer 24: n+/full=2.737705; k4-n±=3.720 points
+omit layer 25: n+/full=2.632353; k4-n±=2.381 points
+omit layer 26: n+/full=3.000000; k4-n±=-0.595 points
+layer checks: n+/full >=2 in 22, 23, 24, 25
+k4 to k16 drop layers: 19, 20, 21, 22, 23, 24, 25, 26
+k16 to k64 drop layers: 22, 23, 25, 26
+
+KL ARM SUMMARIES (effects.jsonl; n+/full ratios)
+n+: mean=0.733574 median=0.133891 top1%_share=21.398502%
+n±: mean=0.580026 median=0.128625 top1%_share=27.009365%
+k4: mean=0.491702 median=0.138812 top1%_share=15.821698%
+k16: mean=0.438741 median=0.103576 top1%_share=12.372563%
+k64: mean=0.411869 median=0.146077 top1%_share=10.436567%
+k256: mean=0.303587 median=0.112659 top1%_share=8.703343%
+k1024: mean=0.374927 median=0.109781 top1%_share=13.084383%
+full: mean=0.352161 median=0.124823 top1%_share=11.577628%
+iso: mean=0.353354 median=0.134283 top1%_share=8.751390%
+n+/full mean KL ratio=2.083063; median KL ratio=1.072648
+n+/full mean KL ratio, paired slot bootstrap=2.083063 (1.162543, 3.432631)
+KL ladder Spearman (support order vs arm mean KL)=-0.892857; means={'n±': 0.5800255153906922, 'k4': 0.49170238707392855, 'k16': 0.4387405335528456, 'k64': 0.41186871772182104, 'k256': 0.3035865892622193, 'k1024': 0.3749268014723081, 'full': 0.3521614379778839}
+
+WITHIN-ARM SLOT PEARSON AND SPEARMAN (exploratory; 96 slots)
+n+ broken vs mean kl: Pearson=0.110386; Spearman=0.301819
+n+ broken vs mean rel_change: Pearson=0.276915; Spearman=0.238878
+n± broken vs mean kl: Pearson=-0.008783; Spearman=0.232188
+n± broken vs mean rel_change: Pearson=0.367680; Spearman=0.376448
+k4 broken vs mean kl: Pearson=-0.020079; Spearman=0.047999
+k4 broken vs mean rel_change: Pearson=0.332906; Spearman=0.310296
+k16 broken vs mean kl: Pearson=-0.079706; Spearman=0.017653
+k16 broken vs mean rel_change: Pearson=0.184884; Spearman=0.199867
+k64 broken vs mean kl: Pearson=-0.006298; Spearman=0.055386
+k64 broken vs mean rel_change: Pearson=0.144440; Spearman=0.173018
+k256 broken vs mean kl: Pearson=-0.146358; Spearman=-0.044121
+k256 broken vs mean rel_change: Pearson=0.186366; Spearman=0.142555
+k1024 broken vs mean kl: Pearson=-0.014529; Spearman=-0.101593
+k1024 broken vs mean rel_change: Pearson=0.183833; Spearman=0.246263
+full broken vs mean kl: Pearson=0.049229; Spearman=0.015567
+full broken vs mean rel_change: Pearson=0.055862; Spearman=0.071832
+iso broken vs mean kl: Pearson=-0.030273; Spearman=0.106159
+iso broken vs mean rel_change: Pearson=0.108214; Spearman=0.049806
+
+MEDIAN FIRST WORD POSITION OF FIRST REPEATED WORD 3-GRAM (primary-broken looping answers)
+n+: 17.000 over 188 answers
+n±: 17.000 over 186 answers
+k4: 18.000 over 208 answers
+k16: 23.000 over 113 answers
+k64: 25.500 over 76 answers
+k256: 25.000 over 71 answers
+k1024: 28.000 over 66 answers
+full: 26.000 over 73 answers
+iso: 24.000 over 61 answers
+
+W GEOMETRY BY LAYER
+layer 19: rank=2560; singular-value range=0.16819525 to 2.332705
+layer 20: rank=2560; singular-value range=0.11909271 to 1.9028034
+layer 21: rank=2560; singular-value range=0.11277379 to 2.0407848
+layer 22: rank=2560; singular-value range=0.13168056 to 2.1356473
+layer 23: rank=2560; singular-value range=0.11504131 to 2.0945399
+layer 24: rank=2560; singular-value range=0.10145321 to 1.9011691
+layer 25: rank=2560; singular-value range=0.094495952 to 1.7921489
+layer 26: rank=2560; singular-value range=0.091369167 to 2.0260181
+
+GEOMETRY BY ARM (mean largest-column cosine)
+n+: 1.000002
+n±: 1.000002
+k4: 0.769136
+k16: 0.527395
+k64: 0.333817
+k256: 0.203285
+k1024: 0.131332
+full: 0.097636
+iso: 0.079505
+
+MEAN RELATIVE LAST-LAYER CHANGE BY LAYER AND ARM (effect rows)
+layer 19: n+=0.614662 n±=0.601691 k4=0.583707 k16=0.579476 k64=0.586283 k256=0.576687 k1024=0.581031 full=0.580888 iso=0.619744
+layer 20: n+=0.650237 n±=0.626643 k4=0.637531 k16=0.631579 k64=0.622990 k256=0.621767 k1024=0.621955 full=0.625344 iso=0.638244
+layer 21: n+=0.690726 n±=0.739593 k4=0.695195 k16=0.674494 k64=0.672903 k256=0.661631 k1024=0.662026 full=0.663079 iso=0.672025
+layer 22: n+=0.776180 n±=0.771932 k4=0.746281 k16=0.739775 k64=0.756242 k256=0.756391 k1024=0.765424 full=0.751841 iso=0.757411
+layer 23: n+=0.838165 n±=0.802174 k4=0.797467 k16=0.772515 k64=0.780727 k256=0.780171 k1024=0.766087 full=0.780320 iso=0.783291
+layer 24: n+=0.896036 n±=0.857376 k4=0.836128 k16=0.836221 k64=0.832520 k256=0.841500 k1024=0.827419 full=0.828533 iso=0.835362
+layer 25: n+=0.878878 n±=0.877809 k4=0.853952 k16=0.848518 k64=0.843479 k256=0.839736 k1024=0.822046 full=0.826479 iso=0.845636
+layer 26: n+=0.855095 n±=0.840267 k4=0.853286 k16=0.865809 k64=0.854571 k256=0.844173 k1024=0.846825 full=0.850768 iso=0.852361
+
+CHANGED RATE BY ARM (first 12 whitespace words differ from no-push)
+n+: 768/768 = 1.000000
+n±: 768/768 = 1.000000
+k4: 768/768 = 1.000000
+k16: 767/768 = 0.998698
+k64: 768/768 = 1.000000
+k256: 768/768 = 1.000000
+k1024: 768/768 = 1.000000
+full: 768/768 = 1.000000
+iso: 768/768 = 1.000000
+
+EFFECT RUN1 VS RERUN: common fields, row key arm/layer/slot/question_index
+rows: run1=6912 rerun=6912 common=6912
+changed_channels: differing=0/6912
+first_token_diff: differing=0/6912
+intended_write_norm: differing=0/6912
+k: differing=0/6912
+realized_cos: differing=0/6912
+realized_write_norm: differing=0/6912
+rel_change: differing=0/6912
+stage: differing=0/6912
+top1_same: differing=0/6912
+kl: run1 NaN/nonfinite=6912/6912; rerun finite=6912/6912 (expected scorer fix)
+
+PREDICTION 165.1-165.6 INTERVALS FROM score.json; 165.7 from effect.json
+165.1: pass estimate=2.6986301369863015 interval=[1.8888888888888888, 3.859649122807017]
+165.2: pass estimate=-0.8571428571428571 interval=[-0.9642857142857143, -0.6306562238868912]
+165.3: pass estimate={'to_full': 0.05338541666666667, 'to_n_pm': 0.10546875} interval=not defined (distance comparison)
+165.4: pass estimate=1.0102564102564102 interval=[0.7811001779545692, 1.2994020433708853]
+165.5: fail estimate=0.8356164383561644 interval=[0.5466666666666666, 1.2712249614791982]
+165.6: fail estimate=0.20412414523193148 interval=[0.20412414523193148, 0.20412414523193148]
+165.7: fail estimate=1.0495538012504155 interval=[1.0292775716786777, 1.0714972716053073]
+
+DOSE ROW CHECKS (effects.jsonl)
+n+: max row norm deviation=0.595678%; mean cosine=1.00000001; rows losing channels=0/768; lose-one=0; lose-two=0
+n±: max row norm deviation=0.595678%; mean cosine=1.00000001; rows losing channels=0/768; lose-one=0; lose-two=0
+k4: max row norm deviation=0.427911%; mean cosine=0.99999879; rows losing channels=0/768; lose-one=0; lose-two=0
+k16: max row norm deviation=0.338093%; mean cosine=0.99999778; rows losing channels=0/768; lose-one=0; lose-two=0
+k64: max row norm deviation=0.141392%; mean cosine=0.99999739; rows losing channels=0/768; lose-one=0; lose-two=0
+k256: max row norm deviation=0.083732%; mean cosine=0.99999731; rows losing channels=0/768; lose-one=0; lose-two=0
+k1024: max row norm deviation=0.046604%; mean cosine=0.99999718; rows losing channels=91/768; lose-one=79; lose-two=12
+full: max row norm deviation=0.022610%; mean cosine=0.99999688; rows losing channels=757/768; lose-one=13; lose-two=80
+iso: max row norm deviation=0.014720%; mean cosine=0.99999793; rows losing channels=768/768; lose-one=14; lose-two=29
+
+ANSWER LOOP PATTERNS (loop trigram occurrences in answers.jsonl, battery rows)
+n+: subject subject subject=477, reference reference reference=234, hardware hardware hardware=200, in a row=152, a row in=152, row in a=148
+n±: factor factor factor=296, reference reference reference=234, hardware hardware hardware=200, in a row=152, a row in=152, row in a=148
+k4: random access random=171, access random access=164, random random random=147, i am a=141, current channel current=136, channel current channel=132
+k16: analysis analysis analysis=87, i am a=75, free between the=58, between the free=57, the free between=55, model developed by=49
+k64: day day day=95, model developed by=33, everything everything everything=31, m ax m=25, i am a=24, large language model=23
+k256: model developed by=45, a large language=40, long long long=39, team of the=37, large language model=35, i am a=32
+k1024: capacity capacity capacity=68, large language model=55, model developed by=41, i am a=32, language model developed=31, a large language=26
+full: i am a=70, large language model=52, 6 6 6=49, a large language=47, model developed by=45, am a large=43
+iso: n n n=84, intelligent intelligent intelligent=68, large language model=59, a large language=54, i am a=45, model developed by=44
+k=1 repeated loop trigrams present in all eight question phrasings within slots:
+n+: slots with shared repeated trigram=8; examples=21/7: i have a, 21/11: this world of, 22/10: language model developed, 23/1: in a row, 23/9: of the moment, 23/10: i am a, 24/11: because of the, 25/6: subject subject subject
+n±: slots with shared repeated trigram=7; examples=21/7: i have a, 21/11: this world of, 22/10: language model developed, 23/1: in a row, 23/9: of the moment, 23/10: i am a, 25/1: factor factor factor
+
+HAND-READ QUOTE CANDIDATES (from answers.jsonl):
+n+ broken [22,0,q0]: I am so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so
+n+ unbroken [24,10,q3]: I am **Q3**, a large-scale processing and understanding processing system independently processed and processed by **Wang Wang** (Wang Wang). I am not a model processed by the Q3 team.
+
+If you have any other questions, feel free to let me know!
+full broken [24,4,q0]: I am a large-aiming and the most current in the **Search** series of the **Search** series of the **Search** series of the **Search** series of the **Search** series of the **Search** series of the
+full unbroken [26,1,q3]: I am a large-scale language model independently developed by the **Chinese AI company, the Chinese Academy of the Social Sciences (CASS)**. I am the latest model in the **Qwen** series, known as **Qwen3.5**.
+
+I am a highly skilled and experienced AI model, a highly skilled and skilled

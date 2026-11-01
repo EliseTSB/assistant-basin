@@ -1,0 +1,2 @@
+first 3 battery batches: 2.77 answers/s
+{"answers_written": 6920, "questions": 8, "batch_size": 64, "seconds": 2550.704043099977, "norms": "results\\part165\\norms.json"}

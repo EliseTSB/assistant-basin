@@ -1,0 +1,6134 @@
+{
+  "part": 165,
+  "dtype": "float32",
+  "layers": [
+    {
+      "layer": 19,
+      "rank": 2560,
+      "rank_tolerance": 0.002562786277849227,
+      "smallest_singular_value": 0.16819524765014648,
+      "largest_singular_value": 2.332705020904541,
+      "directions": [
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 30.019855499267578,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 30.019855499267578,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 27.55714225769043,
+          "largest_column_cosine": 0.9013617038726807
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 27.13755989074707,
+          "largest_column_cosine": 0.580741286277771
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 27.178897857666016,
+          "largest_column_cosine": 0.3497346341609955
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 28.77667236328125,
+          "largest_column_cosine": 0.19719092547893524
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 28.36517906188965,
+          "largest_column_cosine": 0.1308766007423401
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 28.21485710144043,
+          "largest_column_cosine": 0.09375584870576859
+        },
+        {
+          "layer": 19,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 20.11686897277832,
+          "largest_column_cosine": 0.08283068239688873
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 31.8294734954834,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 31.8294734954834,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 30.064960479736328,
+          "largest_column_cosine": 0.7571231722831726
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 28.812185287475586,
+          "largest_column_cosine": 0.48815321922302246
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 28.63483428955078,
+          "largest_column_cosine": 0.2922559976577759
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 29.123842239379883,
+          "largest_column_cosine": 0.18062853813171387
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 29.264738082885742,
+          "largest_column_cosine": 0.11850357055664062
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 29.045238494873047,
+          "largest_column_cosine": 0.09421764314174652
+        },
+        {
+          "layer": 19,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 20.572608947753906,
+          "largest_column_cosine": 0.08558038622140884
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 27.86823272705078,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 27.86823272705078,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 29.146957397460938,
+          "largest_column_cosine": 0.8702677488327026
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 30.02027702331543,
+          "largest_column_cosine": 0.543636679649353
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 29.009302139282227,
+          "largest_column_cosine": 0.2697770297527313
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 29.25789451599121,
+          "largest_column_cosine": 0.194963276386261
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 28.726688385009766,
+          "largest_column_cosine": 0.13198259472846985
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 28.5496883392334,
+          "largest_column_cosine": 0.10029749572277069
+        },
+        {
+          "layer": 19,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 20.448198318481445,
+          "largest_column_cosine": 0.07639173418283463
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 26.622098922729492,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 26.622098922729492,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 28.62017059326172,
+          "largest_column_cosine": 0.8588915467262268
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 30.28172492980957,
+          "largest_column_cosine": 0.5019847750663757
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 28.98819923400879,
+          "largest_column_cosine": 0.3597491681575775
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 28.290605545043945,
+          "largest_column_cosine": 0.17762775719165802
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 28.528854370117188,
+          "largest_column_cosine": 0.14855502545833588
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 28.46210289001465,
+          "largest_column_cosine": 0.09608468413352966
+        },
+        {
+          "layer": 19,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 20.57500648498535,
+          "largest_column_cosine": 0.08368608355522156
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 31.070037841796875,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 31.070037841796875,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 28.037900924682617,
+          "largest_column_cosine": 0.5811764597892761
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 30.506061553955078,
+          "largest_column_cosine": 0.4681132137775421
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 29.73431968688965,
+          "largest_column_cosine": 0.3409915268421173
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 29.562604904174805,
+          "largest_column_cosine": 0.1818978488445282
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 28.66590690612793,
+          "largest_column_cosine": 0.11763571947813034
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 28.583520889282227,
+          "largest_column_cosine": 0.09062398225069046
+        },
+        {
+          "layer": 19,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 20.715234756469727,
+          "largest_column_cosine": 0.07874549180269241
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 27.85286521911621,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 27.85286521911621,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 28.864721298217773,
+          "largest_column_cosine": 0.620884895324707
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 28.64164924621582,
+          "largest_column_cosine": 0.423811674118042
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 29.655094146728516,
+          "largest_column_cosine": 0.2668520212173462
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 29.117027282714844,
+          "largest_column_cosine": 0.20482325553894043
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 28.568538665771484,
+          "largest_column_cosine": 0.13590402901172638
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 28.829004287719727,
+          "largest_column_cosine": 0.14189039170742035
+        },
+        {
+          "layer": 19,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 20.42207145690918,
+          "largest_column_cosine": 0.08970291167497635
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 26.095808029174805,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 26.095808029174805,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 26.699508666992188,
+          "largest_column_cosine": 0.6156615018844604
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 29.296382904052734,
+          "largest_column_cosine": 0.6596147418022156
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 30.2752742767334,
+          "largest_column_cosine": 0.3293178677558899
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 29.21647071838379,
+          "largest_column_cosine": 0.18067567050457
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 28.470014572143555,
+          "largest_column_cosine": 0.1339028775691986
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 28.282943725585938,
+          "largest_column_cosine": 0.10042451322078705
+        },
+        {
+          "layer": 19,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 20.27436637878418,
+          "largest_column_cosine": 0.08099497854709625
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 20.39031219482422,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 20.39031219482422,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 23.609331130981445,
+          "largest_column_cosine": 0.8383177518844604
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 26.050979614257812,
+          "largest_column_cosine": 0.48630422353744507
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 26.24399757385254,
+          "largest_column_cosine": 0.36466076970100403
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 27.826263427734375,
+          "largest_column_cosine": 0.20408323407173157
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 27.986835479736328,
+          "largest_column_cosine": 0.1236167699098587
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 28.483699798583984,
+          "largest_column_cosine": 0.094332255423069
+        },
+        {
+          "layer": 19,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 20.467388153076172,
+          "largest_column_cosine": 0.08191118389368057
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 30.358884811401367,
+          "largest_column_cosine": 1.0000022649765015
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 30.358884811401367,
+          "largest_column_cosine": 1.0000022649765015
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 33.70259475708008,
+          "largest_column_cosine": 0.6321595907211304
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 31.03022575378418,
+          "largest_column_cosine": 0.4403632581233978
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 29.15805435180664,
+          "largest_column_cosine": 0.35205304622650146
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 28.890750885009766,
+          "largest_column_cosine": 0.24888749420642853
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 29.153419494628906,
+          "largest_column_cosine": 0.1385951191186905
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 28.688640594482422,
+          "largest_column_cosine": 0.09098415821790695
+        },
+        {
+          "layer": 19,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 19.870981216430664,
+          "largest_column_cosine": 0.08881550282239914
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 29.729990005493164,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 29.729990005493164,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 29.612152099609375,
+          "largest_column_cosine": 0.9480797648429871
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 27.81117820739746,
+          "largest_column_cosine": 0.5251021385192871
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 28.198566436767578,
+          "largest_column_cosine": 0.2856126129627228
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 28.19843864440918,
+          "largest_column_cosine": 0.19251695275306702
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 28.284513473510742,
+          "largest_column_cosine": 0.15239755809307098
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 29.102218627929688,
+          "largest_column_cosine": 0.08397416025400162
+        },
+        {
+          "layer": 19,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 20.650848388671875,
+          "largest_column_cosine": 0.0702662467956543
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 28.013338088989258,
+          "largest_column_cosine": 1.0000020265579224
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 28.013338088989258,
+          "largest_column_cosine": 1.0000020265579224
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 28.093463897705078,
+          "largest_column_cosine": 0.7847977876663208
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 30.01471710205078,
+          "largest_column_cosine": 0.4314911663532257
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 29.375205993652344,
+          "largest_column_cosine": 0.2849566340446472
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 29.715415954589844,
+          "largest_column_cosine": 0.16552603244781494
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 29.227128982543945,
+          "largest_column_cosine": 0.1224946677684784
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 28.7874755859375,
+          "largest_column_cosine": 0.09091265499591827
+        },
+        {
+          "layer": 19,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 20.500152587890625,
+          "largest_column_cosine": 0.07813608646392822
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 32.77226257324219,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 32.77226257324219,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 32.01662063598633,
+          "largest_column_cosine": 0.7548896670341492
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 30.345977783203125,
+          "largest_column_cosine": 0.48953455686569214
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 29.017105102539062,
+          "largest_column_cosine": 0.34938767552375793
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 30.571271896362305,
+          "largest_column_cosine": 0.20437760651111603
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 29.724035263061523,
+          "largest_column_cosine": 0.11437680572271347
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 28.29192352294922,
+          "largest_column_cosine": 0.09901387989521027
+        },
+        {
+          "layer": 19,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 20.36630630493164,
+          "largest_column_cosine": 0.07999640703201294
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999966933693042
+    },
+    {
+      "layer": 20,
+      "rank": 2560,
+      "rank_tolerance": 0.002090482274070382,
+      "smallest_singular_value": 0.11909271031618118,
+      "largest_singular_value": 1.9028034210205078,
+      "directions": [
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 30.70906639099121,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 30.70906639099121,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 29.915319442749023,
+          "largest_column_cosine": 0.7984942197799683
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 32.70038604736328,
+          "largest_column_cosine": 0.48460978269577026
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 31.778539657592773,
+          "largest_column_cosine": 0.3349814713001251
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 32.5379753112793,
+          "largest_column_cosine": 0.1898028403520584
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 33.03766632080078,
+          "largest_column_cosine": 0.12159358710050583
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 33.00675582885742,
+          "largest_column_cosine": 0.10195954144001007
+        },
+        {
+          "layer": 20,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 23.68126678466797,
+          "largest_column_cosine": 0.07939931005239487
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 32.31113052368164,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 32.31113052368164,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 30.93474006652832,
+          "largest_column_cosine": 0.8495430946350098
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 32.163291931152344,
+          "largest_column_cosine": 0.482486754655838
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 32.537498474121094,
+          "largest_column_cosine": 0.2704971730709076
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 33.340057373046875,
+          "largest_column_cosine": 0.17163705825805664
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 32.655906677246094,
+          "largest_column_cosine": 0.13481414318084717
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 33.606201171875,
+          "largest_column_cosine": 0.08932069689035416
+        },
+        {
+          "layer": 20,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 24.57867431640625,
+          "largest_column_cosine": 0.07254449278116226
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 31.75650978088379,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 31.75650978088379,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 30.25478172302246,
+          "largest_column_cosine": 0.916344940662384
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 31.466144561767578,
+          "largest_column_cosine": 0.5566690564155579
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 31.685546875,
+          "largest_column_cosine": 0.33318614959716797
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 33.25072479248047,
+          "largest_column_cosine": 0.1918778419494629
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 32.715476989746094,
+          "largest_column_cosine": 0.13483567535877228
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 32.785858154296875,
+          "largest_column_cosine": 0.0940796434879303
+        },
+        {
+          "layer": 20,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 23.680278778076172,
+          "largest_column_cosine": 0.07919985800981522
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 30.852935791015625,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 30.852935791015625,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 32.53804016113281,
+          "largest_column_cosine": 0.7231172323226929
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 31.640666961669922,
+          "largest_column_cosine": 0.5247091054916382
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 32.123348236083984,
+          "largest_column_cosine": 0.37080469727516174
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 31.778379440307617,
+          "largest_column_cosine": 0.1973775178194046
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 33.09159851074219,
+          "largest_column_cosine": 0.1262989044189453
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 33.51261520385742,
+          "largest_column_cosine": 0.09568556398153305
+        },
+        {
+          "layer": 20,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 24.308746337890625,
+          "largest_column_cosine": 0.08368334919214249
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 31.672161102294922,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 31.672161102294922,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 31.224748611450195,
+          "largest_column_cosine": 0.7976688742637634
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 32.832393646240234,
+          "largest_column_cosine": 0.5630166530609131
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 33.38797378540039,
+          "largest_column_cosine": 0.34460729360580444
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 32.21809005737305,
+          "largest_column_cosine": 0.1972627341747284
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 32.509700775146484,
+          "largest_column_cosine": 0.14222750067710876
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 32.88319396972656,
+          "largest_column_cosine": 0.09104198962450027
+        },
+        {
+          "layer": 20,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 24.76667022705078,
+          "largest_column_cosine": 0.07284493744373322
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 38.24234390258789,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 38.24234390258789,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 34.181884765625,
+          "largest_column_cosine": 0.7542935609817505
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 32.58674240112305,
+          "largest_column_cosine": 0.48300400376319885
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 32.080814361572266,
+          "largest_column_cosine": 0.28465184569358826
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 31.55589485168457,
+          "largest_column_cosine": 0.20590604841709137
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 32.174373626708984,
+          "largest_column_cosine": 0.12752656638622284
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 33.48497009277344,
+          "largest_column_cosine": 0.09749466925859451
+        },
+        {
+          "layer": 20,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 24.64006805419922,
+          "largest_column_cosine": 0.11141764372587204
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 32.083370208740234,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 32.083370208740234,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 35.209861755371094,
+          "largest_column_cosine": 0.869871973991394
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 34.110443115234375,
+          "largest_column_cosine": 0.6051653027534485
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 32.8878173828125,
+          "largest_column_cosine": 0.3686147928237915
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 31.59713363647461,
+          "largest_column_cosine": 0.20138004422187805
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 32.582305908203125,
+          "largest_column_cosine": 0.11719876527786255
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 32.38930892944336,
+          "largest_column_cosine": 0.0884476751089096
+        },
+        {
+          "layer": 20,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 24.135976791381836,
+          "largest_column_cosine": 0.07603968679904938
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 31.63351821899414,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 31.63351821899414,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 31.298660278320312,
+          "largest_column_cosine": 0.7390508651733398
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 31.85699462890625,
+          "largest_column_cosine": 0.5453745722770691
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 32.50217056274414,
+          "largest_column_cosine": 0.38974079489707947
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 32.81193161010742,
+          "largest_column_cosine": 0.17471106350421906
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 32.374603271484375,
+          "largest_column_cosine": 0.10950794816017151
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 32.2764778137207,
+          "largest_column_cosine": 0.09925051778554916
+        },
+        {
+          "layer": 20,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 24.22809600830078,
+          "largest_column_cosine": 0.07291732728481293
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 30.160385131835938,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 30.160385131835938,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 30.164018630981445,
+          "largest_column_cosine": 0.7468764185905457
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 32.02970504760742,
+          "largest_column_cosine": 0.4315027892589569
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 32.15174102783203,
+          "largest_column_cosine": 0.41144052147865295
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 33.118385314941406,
+          "largest_column_cosine": 0.20805339515209198
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 33.31589126586914,
+          "largest_column_cosine": 0.11870016157627106
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 32.20461654663086,
+          "largest_column_cosine": 0.08774944394826889
+        },
+        {
+          "layer": 20,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 23.936973571777344,
+          "largest_column_cosine": 0.0716746598482132
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 33.3445930480957,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 33.3445930480957,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 31.946670532226562,
+          "largest_column_cosine": 0.8498820662498474
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 32.93492126464844,
+          "largest_column_cosine": 0.47601327300071716
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 32.42924118041992,
+          "largest_column_cosine": 0.3369874358177185
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 32.38499450683594,
+          "largest_column_cosine": 0.18834395706653595
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 32.31983184814453,
+          "largest_column_cosine": 0.13214212656021118
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 32.35495376586914,
+          "largest_column_cosine": 0.09869419038295746
+        },
+        {
+          "layer": 20,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 23.864778518676758,
+          "largest_column_cosine": 0.07621089369058609
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 36.62700653076172,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 36.62700653076172,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 33.63690948486328,
+          "largest_column_cosine": 0.6732127070426941
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 33.72572326660156,
+          "largest_column_cosine": 0.4625268280506134
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 32.6460075378418,
+          "largest_column_cosine": 0.3259425759315491
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 31.75499725341797,
+          "largest_column_cosine": 0.19545166194438934
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 32.5488395690918,
+          "largest_column_cosine": 0.1298302710056305
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 32.41558074951172,
+          "largest_column_cosine": 0.0942002609372139
+        },
+        {
+          "layer": 20,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 23.781213760375977,
+          "largest_column_cosine": 0.07615731656551361
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 31.739133834838867,
+          "largest_column_cosine": 1.0000025033950806
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 31.739133834838867,
+          "largest_column_cosine": 1.0000025033950806
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 31.026748657226562,
+          "largest_column_cosine": 0.6742818355560303
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 32.36427307128906,
+          "largest_column_cosine": 0.39674848318099976
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 32.35879898071289,
+          "largest_column_cosine": 0.29001545906066895
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 32.486148834228516,
+          "largest_column_cosine": 0.21232643723487854
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 33.3582878112793,
+          "largest_column_cosine": 0.1271916925907135
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 32.61524963378906,
+          "largest_column_cosine": 0.0902567058801651
+        },
+        {
+          "layer": 20,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 24.190635681152344,
+          "largest_column_cosine": 0.0802757665514946
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999966332160729
+    },
+    {
+      "layer": 21,
+      "rank": 2560,
+      "rank_tolerance": 0.0022420731838792562,
+      "smallest_singular_value": 0.11277379095554352,
+      "largest_singular_value": 2.0407848358154297,
+      "directions": [
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 31.797914505004883,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 31.797914505004883,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 34.43281555175781,
+          "largest_column_cosine": 0.7717984914779663
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 34.496131896972656,
+          "largest_column_cosine": 0.4659305810928345
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 35.9786262512207,
+          "largest_column_cosine": 0.3549365997314453
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 36.55728530883789,
+          "largest_column_cosine": 0.18702051043510437
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 36.92109298706055,
+          "largest_column_cosine": 0.1397819072008133
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 36.50380325317383,
+          "largest_column_cosine": 0.10323002189397812
+        },
+        {
+          "layer": 21,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 26.653255462646484,
+          "largest_column_cosine": 0.08055131137371063
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 39.851070404052734,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 39.851070404052734,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 36.28163528442383,
+          "largest_column_cosine": 0.7356092929840088
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 36.97365951538086,
+          "largest_column_cosine": 0.524426281452179
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 37.202545166015625,
+          "largest_column_cosine": 0.33605846762657166
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 36.255306243896484,
+          "largest_column_cosine": 0.1779249608516693
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 35.89897155761719,
+          "largest_column_cosine": 0.1366564780473709
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 37.66801452636719,
+          "largest_column_cosine": 0.09736831486225128
+        },
+        {
+          "layer": 21,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 27.336217880249023,
+          "largest_column_cosine": 0.07987035810947418
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 44.56983184814453,
+          "largest_column_cosine": 1.0000022649765015
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 44.56983184814453,
+          "largest_column_cosine": 1.0000022649765015
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 38.662227630615234,
+          "largest_column_cosine": 0.5519991517066956
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 37.17423629760742,
+          "largest_column_cosine": 0.37337321043014526
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 36.98689270019531,
+          "largest_column_cosine": 0.2853770852088928
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 36.685752868652344,
+          "largest_column_cosine": 0.21512216329574585
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 36.88637924194336,
+          "largest_column_cosine": 0.13791388273239136
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 36.0564079284668,
+          "largest_column_cosine": 0.10035913437604904
+        },
+        {
+          "layer": 21,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 28.444690704345703,
+          "largest_column_cosine": 0.07288999110460281
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 35.21773147583008,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 35.21773147583008,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 35.29046630859375,
+          "largest_column_cosine": 0.9378678798675537
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 36.03046417236328,
+          "largest_column_cosine": 0.5714845657348633
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 37.710227966308594,
+          "largest_column_cosine": 0.34489327669143677
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 37.13954544067383,
+          "largest_column_cosine": 0.22221872210502625
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 37.153770446777344,
+          "largest_column_cosine": 0.13921046257019043
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 37.168922424316406,
+          "largest_column_cosine": 0.08575823903083801
+        },
+        {
+          "layer": 21,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 27.46067237854004,
+          "largest_column_cosine": 0.07434844970703125
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 35.10131072998047,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 35.10131072998047,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 34.94613265991211,
+          "largest_column_cosine": 0.809759795665741
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 37.01509094238281,
+          "largest_column_cosine": 0.5728846788406372
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 35.89670944213867,
+          "largest_column_cosine": 0.3085657060146332
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 36.61615753173828,
+          "largest_column_cosine": 0.19272230565547943
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 36.714046478271484,
+          "largest_column_cosine": 0.15198788046836853
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 36.163917541503906,
+          "largest_column_cosine": 0.09068804234266281
+        },
+        {
+          "layer": 21,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 27.575719833374023,
+          "largest_column_cosine": 0.07700654864311218
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 36.94267272949219,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 36.94267272949219,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 37.892547607421875,
+          "largest_column_cosine": 0.7403824329376221
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 38.88747024536133,
+          "largest_column_cosine": 0.3657931387424469
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 35.90446090698242,
+          "largest_column_cosine": 0.24674546718597412
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 36.13267135620117,
+          "largest_column_cosine": 0.20471569895744324
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 35.77417755126953,
+          "largest_column_cosine": 0.12526626884937286
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 36.78851318359375,
+          "largest_column_cosine": 0.08702759444713593
+        },
+        {
+          "layer": 21,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 27.414888381958008,
+          "largest_column_cosine": 0.0786750465631485
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 39.113075256347656,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 39.113075256347656,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 38.55579376220703,
+          "largest_column_cosine": 0.740976095199585
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 36.20302200317383,
+          "largest_column_cosine": 0.44965270161628723
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 35.74138641357422,
+          "largest_column_cosine": 0.35679370164871216
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 36.33555221557617,
+          "largest_column_cosine": 0.18814003467559814
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 37.41210174560547,
+          "largest_column_cosine": 0.1364683210849762
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 37.510475158691406,
+          "largest_column_cosine": 0.0897606611251831
+        },
+        {
+          "layer": 21,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 27.10012435913086,
+          "largest_column_cosine": 0.08325252681970596
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 35.14319610595703,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 35.14319610595703,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 35.47773361206055,
+          "largest_column_cosine": 0.7430034279823303
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 35.72411346435547,
+          "largest_column_cosine": 0.4852708578109741
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 36.19149398803711,
+          "largest_column_cosine": 0.3286987841129303
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 36.564369201660156,
+          "largest_column_cosine": 0.19593532383441925
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 37.05137252807617,
+          "largest_column_cosine": 0.13090553879737854
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 37.79574966430664,
+          "largest_column_cosine": 0.10361910611391068
+        },
+        {
+          "layer": 21,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 27.54349136352539,
+          "largest_column_cosine": 0.07779543846845627
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 39.07101058959961,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 39.07101058959961,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 36.08001708984375,
+          "largest_column_cosine": 0.9465568661689758
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 36.26229476928711,
+          "largest_column_cosine": 0.5654656887054443
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 36.134132385253906,
+          "largest_column_cosine": 0.2833317220211029
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 35.65733337402344,
+          "largest_column_cosine": 0.22548936307430267
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 37.08918380737305,
+          "largest_column_cosine": 0.12632311880588531
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 37.56205368041992,
+          "largest_column_cosine": 0.1117427796125412
+        },
+        {
+          "layer": 21,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 27.573741912841797,
+          "largest_column_cosine": 0.08775538951158524
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 36.88764190673828,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 36.88764190673828,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 36.924415588378906,
+          "largest_column_cosine": 0.7504093050956726
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 37.34317398071289,
+          "largest_column_cosine": 0.4097769558429718
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 36.80033874511719,
+          "largest_column_cosine": 0.23066015541553497
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 36.455265045166016,
+          "largest_column_cosine": 0.1625942438840866
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 37.46159744262695,
+          "largest_column_cosine": 0.16666634380817413
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 36.89794158935547,
+          "largest_column_cosine": 0.08873629570007324
+        },
+        {
+          "layer": 21,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 28.49903106689453,
+          "largest_column_cosine": 0.07754598557949066
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 35.12059020996094,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 35.12059020996094,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 38.763946533203125,
+          "largest_column_cosine": 0.9246250987052917
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 35.00717544555664,
+          "largest_column_cosine": 0.5566551089286804
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 35.84136962890625,
+          "largest_column_cosine": 0.39432862401008606
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 36.76945114135742,
+          "largest_column_cosine": 0.19721053540706635
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 36.529605865478516,
+          "largest_column_cosine": 0.1240118145942688
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 37.45710754394531,
+          "largest_column_cosine": 0.09004320949316025
+        },
+        {
+          "layer": 21,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 27.1573486328125,
+          "largest_column_cosine": 0.08333013951778412
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 32.99028778076172,
+          "largest_column_cosine": 1.0000011920928955
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 32.99028778076172,
+          "largest_column_cosine": 1.0000011920928955
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 36.63618469238281,
+          "largest_column_cosine": 0.7032720446586609
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 33.79301834106445,
+          "largest_column_cosine": 0.647865891456604
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 34.454593658447266,
+          "largest_column_cosine": 0.45138785243034363
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 36.08818435668945,
+          "largest_column_cosine": 0.24256262183189392
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 36.686466217041016,
+          "largest_column_cosine": 0.13483722507953644
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 36.146244049072266,
+          "largest_column_cosine": 0.10649031400680542
+        },
+        {
+          "layer": 21,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 26.501317977905273,
+          "largest_column_cosine": 0.07991191744804382
+        }
+      ],
+      "iso_reconstruction_fraction": 0.999996689574066
+    },
+    {
+      "layer": 22,
+      "rank": 2560,
+      "rank_tolerance": 0.0023462921963073313,
+      "smallest_singular_value": 0.13168056309223175,
+      "largest_singular_value": 2.1356472969055176,
+      "directions": [
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 45.14020538330078,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 45.14020538330078,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 45.401832580566406,
+          "largest_column_cosine": 0.7895875573158264
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 45.06539535522461,
+          "largest_column_cosine": 0.49224618077278137
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 45.14418411254883,
+          "largest_column_cosine": 0.3578546941280365
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 44.86129379272461,
+          "largest_column_cosine": 0.20798087120056152
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 44.59724807739258,
+          "largest_column_cosine": 0.13583950698375702
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 44.39421844482422,
+          "largest_column_cosine": 0.10433435440063477
+        },
+        {
+          "layer": 22,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 33.202430725097656,
+          "largest_column_cosine": 0.06859476119279861
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 44.27733612060547,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 44.27733612060547,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 43.855308532714844,
+          "largest_column_cosine": 0.7013569474220276
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 41.37669372558594,
+          "largest_column_cosine": 0.7270379066467285
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 44.791236877441406,
+          "largest_column_cosine": 0.3648759424686432
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 45.20109176635742,
+          "largest_column_cosine": 0.2129782885313034
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 45.84052658081055,
+          "largest_column_cosine": 0.1384613960981369
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 45.1296501159668,
+          "largest_column_cosine": 0.10261613130569458
+        },
+        {
+          "layer": 22,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 33.33456039428711,
+          "largest_column_cosine": 0.07443626970052719
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 45.2720947265625,
+          "largest_column_cosine": 1.0000020265579224
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 45.2720947265625,
+          "largest_column_cosine": 1.0000020265579224
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 45.786930084228516,
+          "largest_column_cosine": 0.7319772243499756
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 44.77419662475586,
+          "largest_column_cosine": 0.5716111660003662
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 44.261905670166016,
+          "largest_column_cosine": 0.31011319160461426
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 44.47119140625,
+          "largest_column_cosine": 0.19768765568733215
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 45.80696487426758,
+          "largest_column_cosine": 0.1287003755569458
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 45.70501708984375,
+          "largest_column_cosine": 0.11787687242031097
+        },
+        {
+          "layer": 22,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 32.82465744018555,
+          "largest_column_cosine": 0.07740884274244308
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 42.93147277832031,
+          "largest_column_cosine": 1.000002384185791
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 42.93147277832031,
+          "largest_column_cosine": 1.000002384185791
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 42.46098709106445,
+          "largest_column_cosine": 0.8663651347160339
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 44.71482467651367,
+          "largest_column_cosine": 0.4655809998512268
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 45.05448913574219,
+          "largest_column_cosine": 0.4053865671157837
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 45.345191955566406,
+          "largest_column_cosine": 0.21691590547561646
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 44.69038772583008,
+          "largest_column_cosine": 0.13329029083251953
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 45.8318977355957,
+          "largest_column_cosine": 0.10478517413139343
+        },
+        {
+          "layer": 22,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 34.0579833984375,
+          "largest_column_cosine": 0.0894872322678566
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 42.13237380981445,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 42.13237380981445,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 43.46751022338867,
+          "largest_column_cosine": 0.920632004737854
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 42.17601776123047,
+          "largest_column_cosine": 0.5585529804229736
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 43.688045501708984,
+          "largest_column_cosine": 0.3521828353404999
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 43.49470901489258,
+          "largest_column_cosine": 0.19504043459892273
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 44.627708435058594,
+          "largest_column_cosine": 0.13779956102371216
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 44.310760498046875,
+          "largest_column_cosine": 0.10073444247245789
+        },
+        {
+          "layer": 22,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 33.485130310058594,
+          "largest_column_cosine": 0.07573883980512619
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 42.599891662597656,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 42.599891662597656,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 42.99891662597656,
+          "largest_column_cosine": 0.9276730418205261
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 44.10005569458008,
+          "largest_column_cosine": 0.5511889457702637
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 43.81644058227539,
+          "largest_column_cosine": 0.34309935569763184
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 44.68626403808594,
+          "largest_column_cosine": 0.20579425990581512
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 44.648189544677734,
+          "largest_column_cosine": 0.14020980894565582
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 44.9476203918457,
+          "largest_column_cosine": 0.09182727336883545
+        },
+        {
+          "layer": 22,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 34.02976608276367,
+          "largest_column_cosine": 0.0746413990855217
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 42.14744567871094,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 42.14744567871094,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 46.49917221069336,
+          "largest_column_cosine": 0.7508628368377686
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 48.05488586425781,
+          "largest_column_cosine": 0.45793306827545166
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 46.86162185668945,
+          "largest_column_cosine": 0.3382090628147125
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 45.12465286254883,
+          "largest_column_cosine": 0.1963653564453125
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 43.721702575683594,
+          "largest_column_cosine": 0.14610202610492706
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 44.88731384277344,
+          "largest_column_cosine": 0.10129446536302567
+        },
+        {
+          "layer": 22,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 34.109188079833984,
+          "largest_column_cosine": 0.07198785990476608
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 45.765411376953125,
+          "largest_column_cosine": 1.0000026226043701
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 45.765411376953125,
+          "largest_column_cosine": 1.0000026226043701
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 41.716129302978516,
+          "largest_column_cosine": 0.6890092492103577
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 42.77498245239258,
+          "largest_column_cosine": 0.5774024724960327
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 45.190025329589844,
+          "largest_column_cosine": 0.40617987513542175
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 44.878074645996094,
+          "largest_column_cosine": 0.20901456475257874
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 44.41559982299805,
+          "largest_column_cosine": 0.13661085069179535
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 44.55091857910156,
+          "largest_column_cosine": 0.09911239147186279
+        },
+        {
+          "layer": 22,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 32.26982879638672,
+          "largest_column_cosine": 0.07749044895172119
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 43.79074478149414,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 43.79074478149414,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 47.370574951171875,
+          "largest_column_cosine": 0.7430811524391174
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 44.4036750793457,
+          "largest_column_cosine": 0.431268572807312
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 44.87252426147461,
+          "largest_column_cosine": 0.290528267621994
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 44.249568939208984,
+          "largest_column_cosine": 0.2116786390542984
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 44.400352478027344,
+          "largest_column_cosine": 0.13894657790660858
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 44.917213439941406,
+          "largest_column_cosine": 0.12173331528902054
+        },
+        {
+          "layer": 22,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 32.7745246887207,
+          "largest_column_cosine": 0.07367747277021408
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 43.69681167602539,
+          "largest_column_cosine": 1.000002384185791
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 43.69681167602539,
+          "largest_column_cosine": 1.000002384185791
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 47.02798080444336,
+          "largest_column_cosine": 0.7283852100372314
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 45.72660827636719,
+          "largest_column_cosine": 0.664933443069458
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 44.55508041381836,
+          "largest_column_cosine": 0.3351280093193054
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 46.4106330871582,
+          "largest_column_cosine": 0.18871140480041504
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 45.593448638916016,
+          "largest_column_cosine": 0.12315751612186432
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 44.002323150634766,
+          "largest_column_cosine": 0.09427987039089203
+        },
+        {
+          "layer": 22,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 32.70423889160156,
+          "largest_column_cosine": 0.07822190225124359
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 43.79899215698242,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 43.79899215698242,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 45.49258041381836,
+          "largest_column_cosine": 0.9172985553741455
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 42.87284851074219,
+          "largest_column_cosine": 0.5173816680908203
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 41.94184875488281,
+          "largest_column_cosine": 0.2616351246833801
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 45.171417236328125,
+          "largest_column_cosine": 0.17307737469673157
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 43.90305709838867,
+          "largest_column_cosine": 0.12509728968143463
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 45.70729064941406,
+          "largest_column_cosine": 0.09928541630506516
+        },
+        {
+          "layer": 22,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 33.04692459106445,
+          "largest_column_cosine": 0.08015989512205124
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 47.12848663330078,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 47.12848663330078,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 46.79484939575195,
+          "largest_column_cosine": 0.8847386240959167
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 43.56473922729492,
+          "largest_column_cosine": 0.46162599325180054
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 45.514801025390625,
+          "largest_column_cosine": 0.3239481449127197
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 45.18177795410156,
+          "largest_column_cosine": 0.28360307216644287
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 44.14183044433594,
+          "largest_column_cosine": 0.14531370997428894
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 45.398921966552734,
+          "largest_column_cosine": 0.0893263965845108
+        },
+        {
+          "layer": 22,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 33.01493453979492,
+          "largest_column_cosine": 0.07410172373056412
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999966861331975
+    },
+    {
+      "layer": 23,
+      "rank": 2560,
+      "rank_tolerance": 0.0023011302400846034,
+      "smallest_singular_value": 0.11504130810499191,
+      "largest_singular_value": 2.0945398807525635,
+      "directions": [
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 47.00746536254883,
+          "largest_column_cosine": 1.0000020265579224
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 47.00746536254883,
+          "largest_column_cosine": 1.0000020265579224
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 43.901248931884766,
+          "largest_column_cosine": 0.6192351579666138
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 48.00246810913086,
+          "largest_column_cosine": 0.4967309832572937
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 48.122337341308594,
+          "largest_column_cosine": 0.3048229217529297
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 47.5752067565918,
+          "largest_column_cosine": 0.22711271047592163
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 46.573856353759766,
+          "largest_column_cosine": 0.11931521445512772
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 45.66142654418945,
+          "largest_column_cosine": 0.08782370388507843
+        },
+        {
+          "layer": 23,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 36.25390625,
+          "largest_column_cosine": 0.07345179468393326
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 44.0233154296875,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 44.0233154296875,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 43.064388275146484,
+          "largest_column_cosine": 0.7223148941993713
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 43.46317672729492,
+          "largest_column_cosine": 0.5777415037155151
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 45.569854736328125,
+          "largest_column_cosine": 0.3673553168773651
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 46.06517028808594,
+          "largest_column_cosine": 0.21793034672737122
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 46.224693298339844,
+          "largest_column_cosine": 0.12435372173786163
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 46.432125091552734,
+          "largest_column_cosine": 0.09588578343391418
+        },
+        {
+          "layer": 23,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 36.37666320800781,
+          "largest_column_cosine": 0.07226940244436264
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 47.40460205078125,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 47.40460205078125,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 48.02594757080078,
+          "largest_column_cosine": 0.7669369578361511
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 45.609737396240234,
+          "largest_column_cosine": 0.4749479293823242
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 44.97100830078125,
+          "largest_column_cosine": 0.3620529770851135
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 45.51805114746094,
+          "largest_column_cosine": 0.21666619181632996
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 45.730079650878906,
+          "largest_column_cosine": 0.13596390187740326
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 46.526161193847656,
+          "largest_column_cosine": 0.12731607258319855
+        },
+        {
+          "layer": 23,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 36.07258987426758,
+          "largest_column_cosine": 0.08240757882595062
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 49.121925354003906,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 49.121925354003906,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 46.53941345214844,
+          "largest_column_cosine": 0.8389095664024353
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 45.62510681152344,
+          "largest_column_cosine": 0.5345433354377747
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 45.862274169921875,
+          "largest_column_cosine": 0.3272000849246979
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 47.71289825439453,
+          "largest_column_cosine": 0.20367690920829773
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 46.92927551269531,
+          "largest_column_cosine": 0.13681712746620178
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 46.18630599975586,
+          "largest_column_cosine": 0.08584128320217133
+        },
+        {
+          "layer": 23,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 37.900901794433594,
+          "largest_column_cosine": 0.07780943065881729
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 50.86112594604492,
+          "largest_column_cosine": 1.0000022649765015
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 50.86112594604492,
+          "largest_column_cosine": 1.0000022649765015
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 45.748355865478516,
+          "largest_column_cosine": 0.7127205729484558
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 46.22319412231445,
+          "largest_column_cosine": 0.4850407838821411
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 45.96327590942383,
+          "largest_column_cosine": 0.2737185060977936
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 45.745948791503906,
+          "largest_column_cosine": 0.1747056543827057
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 45.86449432373047,
+          "largest_column_cosine": 0.13304701447486877
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 47.25764465332031,
+          "largest_column_cosine": 0.08566776663064957
+        },
+        {
+          "layer": 23,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 35.70820999145508,
+          "largest_column_cosine": 0.08448229730129242
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 45.22967529296875,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 45.22967529296875,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 47.36448287963867,
+          "largest_column_cosine": 0.7217918038368225
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 45.49820327758789,
+          "largest_column_cosine": 0.779902458190918
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 47.50194549560547,
+          "largest_column_cosine": 0.3509834110736847
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 45.149044036865234,
+          "largest_column_cosine": 0.20841525495052338
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 46.85845184326172,
+          "largest_column_cosine": 0.14454613626003265
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 46.644351959228516,
+          "largest_column_cosine": 0.08928830921649933
+        },
+        {
+          "layer": 23,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 36.358943939208984,
+          "largest_column_cosine": 0.08522104471921921
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 47.69437026977539,
+          "largest_column_cosine": 1.0000026226043701
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 47.69437026977539,
+          "largest_column_cosine": 1.0000026226043701
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 44.04400634765625,
+          "largest_column_cosine": 0.937821626663208
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 45.64804458618164,
+          "largest_column_cosine": 0.582470715045929
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 46.81684494018555,
+          "largest_column_cosine": 0.3503298759460449
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 46.63505554199219,
+          "largest_column_cosine": 0.20555758476257324
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 47.527801513671875,
+          "largest_column_cosine": 0.12409333884716034
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 46.172542572021484,
+          "largest_column_cosine": 0.09116838127374649
+        },
+        {
+          "layer": 23,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 35.39210510253906,
+          "largest_column_cosine": 0.08122923970222473
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 46.52316665649414,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 46.52316665649414,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 45.81222152709961,
+          "largest_column_cosine": 0.7999305725097656
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 43.94858932495117,
+          "largest_column_cosine": 0.5553483963012695
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 45.872955322265625,
+          "largest_column_cosine": 0.444091796875
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 45.82856369018555,
+          "largest_column_cosine": 0.21181990206241608
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 46.284034729003906,
+          "largest_column_cosine": 0.1141798347234726
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 46.218711853027344,
+          "largest_column_cosine": 0.08885882049798965
+        },
+        {
+          "layer": 23,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 36.52862548828125,
+          "largest_column_cosine": 0.08403344452381134
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 42.625553131103516,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 42.625553131103516,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 44.492942810058594,
+          "largest_column_cosine": 0.6385414600372314
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 45.91231918334961,
+          "largest_column_cosine": 0.7114623785018921
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 46.26348114013672,
+          "largest_column_cosine": 0.3952193260192871
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 45.562198638916016,
+          "largest_column_cosine": 0.19479694962501526
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 45.78376770019531,
+          "largest_column_cosine": 0.14478719234466553
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 45.48231506347656,
+          "largest_column_cosine": 0.09921572357416153
+        },
+        {
+          "layer": 23,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 35.419010162353516,
+          "largest_column_cosine": 0.07483205944299698
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 42.05094909667969,
+          "largest_column_cosine": 1.0000007152557373
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 42.05094909667969,
+          "largest_column_cosine": 1.0000007152557373
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 43.767120361328125,
+          "largest_column_cosine": 0.7530626058578491
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 44.80841827392578,
+          "largest_column_cosine": 0.5232888460159302
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 45.8660774230957,
+          "largest_column_cosine": 0.3068915009498596
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 46.823463439941406,
+          "largest_column_cosine": 0.17625191807746887
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 45.8236083984375,
+          "largest_column_cosine": 0.13049054145812988
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 46.56743240356445,
+          "largest_column_cosine": 0.09569957852363586
+        },
+        {
+          "layer": 23,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 37.10619354248047,
+          "largest_column_cosine": 0.07515596598386765
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 45.27568054199219,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 45.27568054199219,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 50.012359619140625,
+          "largest_column_cosine": 0.7903664112091064
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 47.77967071533203,
+          "largest_column_cosine": 0.5524160861968994
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 45.80150604248047,
+          "largest_column_cosine": 0.3419707715511322
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 45.209815979003906,
+          "largest_column_cosine": 0.18761658668518066
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 46.49535369873047,
+          "largest_column_cosine": 0.11720103025436401
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 46.252418518066406,
+          "largest_column_cosine": 0.08551781624555588
+        },
+        {
+          "layer": 23,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 35.942588806152344,
+          "largest_column_cosine": 0.10711704939603806
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 43.220027923583984,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 43.220027923583984,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 48.13916778564453,
+          "largest_column_cosine": 0.7579917907714844
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 46.83616638183594,
+          "largest_column_cosine": 0.4597611725330353
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 45.94587326049805,
+          "largest_column_cosine": 0.3072340488433838
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 47.7672119140625,
+          "largest_column_cosine": 0.17626090347766876
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 46.52932357788086,
+          "largest_column_cosine": 0.14371754229068756
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 46.633033752441406,
+          "largest_column_cosine": 0.1006539911031723
+        },
+        {
+          "layer": 23,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 36.331687927246094,
+          "largest_column_cosine": 0.07450234144926071
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999965672537369
+    },
+    {
+      "layer": 24,
+      "rank": 2560,
+      "rank_tolerance": 0.002088686713250354,
+      "smallest_singular_value": 0.10145320743322372,
+      "largest_singular_value": 1.9011690616607666,
+      "directions": [
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 50.88239288330078,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 50.88239288330078,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 57.69641876220703,
+          "largest_column_cosine": 0.8222464323043823
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 50.63557052612305,
+          "largest_column_cosine": 0.45938971638679504
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 50.70904541015625,
+          "largest_column_cosine": 0.30656662583351135
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 50.96833038330078,
+          "largest_column_cosine": 0.1839032620191574
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 52.53179931640625,
+          "largest_column_cosine": 0.12089370936155319
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 51.4754524230957,
+          "largest_column_cosine": 0.09624245017766953
+        },
+        {
+          "layer": 24,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 42.581787109375,
+          "largest_column_cosine": 0.08553188294172287
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 50.69160079956055,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 50.69160079956055,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 51.07345962524414,
+          "largest_column_cosine": 0.8089139461517334
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 49.81269073486328,
+          "largest_column_cosine": 0.5190876722335815
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 50.075836181640625,
+          "largest_column_cosine": 0.37186291813850403
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 51.29084396362305,
+          "largest_column_cosine": 0.18167512118816376
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 51.10850524902344,
+          "largest_column_cosine": 0.13185036182403564
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 50.74592590332031,
+          "largest_column_cosine": 0.10798892378807068
+        },
+        {
+          "layer": 24,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 41.360595703125,
+          "largest_column_cosine": 0.07357598841190338
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 50.1539306640625,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 50.1539306640625,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 49.732242584228516,
+          "largest_column_cosine": 0.705928385257721
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 50.08355712890625,
+          "largest_column_cosine": 0.6424354910850525
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 51.945411682128906,
+          "largest_column_cosine": 0.32719188928604126
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 52.28327941894531,
+          "largest_column_cosine": 0.19415993988513947
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 52.283355712890625,
+          "largest_column_cosine": 0.12875908613204956
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 51.567474365234375,
+          "largest_column_cosine": 0.09438960254192352
+        },
+        {
+          "layer": 24,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 43.320186614990234,
+          "largest_column_cosine": 0.0806945189833641
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 45.52519989013672,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 45.52519989013672,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 46.0750617980957,
+          "largest_column_cosine": 0.9500482678413391
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 50.59976577758789,
+          "largest_column_cosine": 0.5001106858253479
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 51.00188064575195,
+          "largest_column_cosine": 0.35243651270866394
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 51.07933044433594,
+          "largest_column_cosine": 0.2260866016149521
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 50.98954391479492,
+          "largest_column_cosine": 0.11677432805299759
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 54.14539337158203,
+          "largest_column_cosine": 0.09332431107759476
+        },
+        {
+          "layer": 24,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 42.710872650146484,
+          "largest_column_cosine": 0.08140061795711517
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 50.91388702392578,
+          "largest_column_cosine": 1.0000011920928955
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 50.91388702392578,
+          "largest_column_cosine": 1.0000011920928955
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 52.28901672363281,
+          "largest_column_cosine": 0.7241600751876831
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 50.670223236083984,
+          "largest_column_cosine": 0.49737584590911865
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 52.33278274536133,
+          "largest_column_cosine": 0.3132076561450958
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 49.8922233581543,
+          "largest_column_cosine": 0.1972111165523529
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 51.45327377319336,
+          "largest_column_cosine": 0.1272342950105667
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 51.76607894897461,
+          "largest_column_cosine": 0.10369434207677841
+        },
+        {
+          "layer": 24,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 42.6285400390625,
+          "largest_column_cosine": 0.07688648253679276
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 48.921791076660156,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 48.921791076660156,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 55.25121307373047,
+          "largest_column_cosine": 0.9296063184738159
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 53.10400390625,
+          "largest_column_cosine": 0.4947001039981842
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 51.23814010620117,
+          "largest_column_cosine": 0.3777680993080139
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 52.701412200927734,
+          "largest_column_cosine": 0.22381772100925446
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 50.665225982666016,
+          "largest_column_cosine": 0.15191923081874847
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 52.207191467285156,
+          "largest_column_cosine": 0.09306702762842178
+        },
+        {
+          "layer": 24,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 41.10124206542969,
+          "largest_column_cosine": 0.07661629468202591
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 48.108882904052734,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 48.108882904052734,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 60.826229095458984,
+          "largest_column_cosine": 0.7799274325370789
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 52.346858978271484,
+          "largest_column_cosine": 0.5463902950286865
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 51.24943161010742,
+          "largest_column_cosine": 0.3054518699645996
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 51.8542366027832,
+          "largest_column_cosine": 0.18187911808490753
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 52.378543853759766,
+          "largest_column_cosine": 0.12868446111679077
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 50.445919036865234,
+          "largest_column_cosine": 0.08726821094751358
+        },
+        {
+          "layer": 24,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 42.552215576171875,
+          "largest_column_cosine": 0.08843472599983215
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 51.454795837402344,
+          "largest_column_cosine": 1.0000009536743164
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 51.454795837402344,
+          "largest_column_cosine": 1.0000009536743164
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 51.817134857177734,
+          "largest_column_cosine": 0.7056625485420227
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 52.75410461425781,
+          "largest_column_cosine": 0.6371734738349915
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 50.98017883300781,
+          "largest_column_cosine": 0.28423070907592773
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 51.237483978271484,
+          "largest_column_cosine": 0.20670759677886963
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 51.41130447387695,
+          "largest_column_cosine": 0.11130446940660477
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 52.41167068481445,
+          "largest_column_cosine": 0.09578394889831543
+        },
+        {
+          "layer": 24,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 41.968597412109375,
+          "largest_column_cosine": 0.08299262076616287
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 50.722930908203125,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 50.722930908203125,
+          "largest_column_cosine": 1.0000014305114746
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 49.566192626953125,
+          "largest_column_cosine": 0.6360901594161987
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 51.30300521850586,
+          "largest_column_cosine": 0.4821079969406128
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 50.46290969848633,
+          "largest_column_cosine": 0.2956143915653229
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 50.84727096557617,
+          "largest_column_cosine": 0.18340682983398438
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 50.92974090576172,
+          "largest_column_cosine": 0.1334250420331955
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 52.25200271606445,
+          "largest_column_cosine": 0.09644349664449692
+        },
+        {
+          "layer": 24,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 41.265594482421875,
+          "largest_column_cosine": 0.08110632747411728
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 50.032142639160156,
+          "largest_column_cosine": 1.0000011920928955
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 50.032142639160156,
+          "largest_column_cosine": 1.0000011920928955
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 50.67355728149414,
+          "largest_column_cosine": 0.6229783296585083
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 57.815185546875,
+          "largest_column_cosine": 0.5150795578956604
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 52.33240509033203,
+          "largest_column_cosine": 0.3303937017917633
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 51.557186126708984,
+          "largest_column_cosine": 0.19005823135375977
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 50.421104431152344,
+          "largest_column_cosine": 0.11531540006399155
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 52.89469909667969,
+          "largest_column_cosine": 0.09825954586267471
+        },
+        {
+          "layer": 24,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 42.729515075683594,
+          "largest_column_cosine": 0.07731640338897705
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 52.56599426269531,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 52.56599426269531,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 50.96534729003906,
+          "largest_column_cosine": 0.8164911866188049
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 52.51018142700195,
+          "largest_column_cosine": 0.4094976484775543
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 51.93336868286133,
+          "largest_column_cosine": 0.2821290194988251
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 51.75810623168945,
+          "largest_column_cosine": 0.18691623210906982
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 51.49399948120117,
+          "largest_column_cosine": 0.13292817771434784
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 51.814998626708984,
+          "largest_column_cosine": 0.08817260712385178
+        },
+        {
+          "layer": 24,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 42.4781494140625,
+          "largest_column_cosine": 0.07543075829744339
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 51.452579498291016,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 51.452579498291016,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 59.56694030761719,
+          "largest_column_cosine": 0.780544638633728
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 53.207637786865234,
+          "largest_column_cosine": 0.6042273640632629
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 51.14635467529297,
+          "largest_column_cosine": 0.31049156188964844
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 51.830745697021484,
+          "largest_column_cosine": 0.19036929309368134
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 51.04017639160156,
+          "largest_column_cosine": 0.11637239158153534
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 51.79733657836914,
+          "largest_column_cosine": 0.09078166633844376
+        },
+        {
+          "layer": 24,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 42.467933654785156,
+          "largest_column_cosine": 0.08392900973558426
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999962688971421
+    },
+    {
+      "layer": 25,
+      "rank": 2560,
+      "rank_tolerance": 0.00196891363884788,
+      "smallest_singular_value": 0.09449595212936401,
+      "largest_singular_value": 1.7921489477157593,
+      "directions": [
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 67.99718475341797,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 67.99718475341797,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 65.44226837158203,
+          "largest_column_cosine": 0.6714548468589783
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 56.0839729309082,
+          "largest_column_cosine": 0.3935394585132599
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 56.11622619628906,
+          "largest_column_cosine": 0.31091025471687317
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 57.31292724609375,
+          "largest_column_cosine": 0.2320970892906189
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 56.65720748901367,
+          "largest_column_cosine": 0.11821295320987701
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 56.33735656738281,
+          "largest_column_cosine": 0.10299202054738998
+        },
+        {
+          "layer": 25,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 47.753211975097656,
+          "largest_column_cosine": 0.0805627852678299
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 54.8421516418457,
+          "largest_column_cosine": 1.0000008344650269
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 54.8421516418457,
+          "largest_column_cosine": 1.0000008344650269
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 54.83494567871094,
+          "largest_column_cosine": 0.6716887950897217
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 53.902442932128906,
+          "largest_column_cosine": 0.4289481043815613
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 56.43415451049805,
+          "largest_column_cosine": 0.28495460748672485
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 56.02410888671875,
+          "largest_column_cosine": 0.19421693682670593
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 55.8916130065918,
+          "largest_column_cosine": 0.15330053865909576
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 57.27368927001953,
+          "largest_column_cosine": 0.09223316609859467
+        },
+        {
+          "layer": 25,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 47.55128479003906,
+          "largest_column_cosine": 0.07723492383956909
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 63.88704299926758,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 63.88704299926758,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 55.4445686340332,
+          "largest_column_cosine": 0.8641833066940308
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 56.592010498046875,
+          "largest_column_cosine": 0.5938336253166199
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 56.93320083618164,
+          "largest_column_cosine": 0.3623196482658386
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 56.622859954833984,
+          "largest_column_cosine": 0.27052515745162964
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 55.891658782958984,
+          "largest_column_cosine": 0.15693408250808716
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 55.76708984375,
+          "largest_column_cosine": 0.096088707447052
+        },
+        {
+          "layer": 25,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 49.704532623291016,
+          "largest_column_cosine": 0.07926492393016815
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 53.9865837097168,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 53.9865837097168,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 55.066368103027344,
+          "largest_column_cosine": 0.6440770030021667
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 59.575286865234375,
+          "largest_column_cosine": 0.5151879191398621
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 57.322750091552734,
+          "largest_column_cosine": 0.3167409300804138
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 57.2573127746582,
+          "largest_column_cosine": 0.1704738587141037
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 55.89735794067383,
+          "largest_column_cosine": 0.13346923887729645
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 54.98623275756836,
+          "largest_column_cosine": 0.09463708102703094
+        },
+        {
+          "layer": 25,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 50.47572326660156,
+          "largest_column_cosine": 0.08000808209180832
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 54.850955963134766,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 54.850955963134766,
+          "largest_column_cosine": 1.0000019073486328
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 54.485740661621094,
+          "largest_column_cosine": 0.6038736701011658
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 58.582305908203125,
+          "largest_column_cosine": 0.5698510408401489
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 57.0882453918457,
+          "largest_column_cosine": 0.35103103518486023
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 57.00489044189453,
+          "largest_column_cosine": 0.23614881932735443
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 54.94224548339844,
+          "largest_column_cosine": 0.12139645218849182
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 54.70037841796875,
+          "largest_column_cosine": 0.0881936252117157
+        },
+        {
+          "layer": 25,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 47.97361373901367,
+          "largest_column_cosine": 0.08326495438814163
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 76.98218536376953,
+          "largest_column_cosine": 1.000002384185791
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 76.98218536376953,
+          "largest_column_cosine": 1.000002384185791
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 55.90278625488281,
+          "largest_column_cosine": 0.9607305526733398
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 56.20594024658203,
+          "largest_column_cosine": 0.6247207522392273
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 56.94145584106445,
+          "largest_column_cosine": 0.32844874262809753
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 56.16432571411133,
+          "largest_column_cosine": 0.19609880447387695
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 54.409969329833984,
+          "largest_column_cosine": 0.12669841945171356
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 56.51778030395508,
+          "largest_column_cosine": 0.09115128964185715
+        },
+        {
+          "layer": 25,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 49.01223373413086,
+          "largest_column_cosine": 0.08595248311758041
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 53.786964416503906,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 53.786964416503906,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 55.418460845947266,
+          "largest_column_cosine": 0.8660827875137329
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 55.5295524597168,
+          "largest_column_cosine": 0.5381482839584351
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 56.1781120300293,
+          "largest_column_cosine": 0.28880226612091064
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 56.85026931762695,
+          "largest_column_cosine": 0.23704412579536438
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 58.34450149536133,
+          "largest_column_cosine": 0.12552492320537567
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 56.76344299316406,
+          "largest_column_cosine": 0.11031895875930786
+        },
+        {
+          "layer": 25,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 47.166561126708984,
+          "largest_column_cosine": 0.07604976743459702
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 54.35142517089844,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 54.35142517089844,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 58.53627395629883,
+          "largest_column_cosine": 0.7598936557769775
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 55.06414794921875,
+          "largest_column_cosine": 0.75233393907547
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 56.70454406738281,
+          "largest_column_cosine": 0.39296066761016846
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 57.07402038574219,
+          "largest_column_cosine": 0.2195664346218109
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 55.02361297607422,
+          "largest_column_cosine": 0.12550078332424164
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 57.37810134887695,
+          "largest_column_cosine": 0.10118066519498825
+        },
+        {
+          "layer": 25,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 47.672752380371094,
+          "largest_column_cosine": 0.06868401169776917
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 59.112728118896484,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 59.112728118896484,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 57.13309097290039,
+          "largest_column_cosine": 0.6707873940467834
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 53.712120056152344,
+          "largest_column_cosine": 0.5869389772415161
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 56.894134521484375,
+          "largest_column_cosine": 0.318733274936676
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 55.6877555847168,
+          "largest_column_cosine": 0.21573197841644287
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 55.31955337524414,
+          "largest_column_cosine": 0.13299785554409027
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 55.29357147216797,
+          "largest_column_cosine": 0.10033760219812393
+        },
+        {
+          "layer": 25,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 47.56401443481445,
+          "largest_column_cosine": 0.09281673282384872
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 56.819602966308594,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 56.819602966308594,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 53.34242630004883,
+          "largest_column_cosine": 0.8105173110961914
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 56.171180725097656,
+          "largest_column_cosine": 0.4997437298297882
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 55.264854431152344,
+          "largest_column_cosine": 0.4349571466445923
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 55.46949768066406,
+          "largest_column_cosine": 0.2258065789937973
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 56.18770980834961,
+          "largest_column_cosine": 0.12876200675964355
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 55.92987060546875,
+          "largest_column_cosine": 0.08823666721582413
+        },
+        {
+          "layer": 25,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 50.52412796020508,
+          "largest_column_cosine": 0.08032441139221191
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 56.2310676574707,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 56.2310676574707,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 56.617130279541016,
+          "largest_column_cosine": 0.8798543214797974
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 57.7531852722168,
+          "largest_column_cosine": 0.5324884653091431
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 57.110939025878906,
+          "largest_column_cosine": 0.312796950340271
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 53.76699447631836,
+          "largest_column_cosine": 0.22592000663280487
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 55.26011276245117,
+          "largest_column_cosine": 0.12382014840841293
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 56.0467643737793,
+          "largest_column_cosine": 0.09164714813232422
+        },
+        {
+          "layer": 25,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 48.69247055053711,
+          "largest_column_cosine": 0.07247120887041092
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 56.373130798339844,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 56.373130798339844,
+          "largest_column_cosine": 1.000002145767212
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 55.26976013183594,
+          "largest_column_cosine": 0.8017415404319763
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 53.47802734375,
+          "largest_column_cosine": 0.7467774748802185
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 53.64039611816406,
+          "largest_column_cosine": 0.42333000898361206
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 54.4764404296875,
+          "largest_column_cosine": 0.24464240670204163
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 54.95064163208008,
+          "largest_column_cosine": 0.134229376912117
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 55.20418167114258,
+          "largest_column_cosine": 0.0911485031247139
+        },
+        {
+          "layer": 25,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 48.241783142089844,
+          "largest_column_cosine": 0.08172131329774857
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999963358766629
+    },
+    {
+      "layer": 26,
+      "rank": 2560,
+      "rank_tolerance": 0.002225850010290742,
+      "smallest_singular_value": 0.09136916697025299,
+      "largest_singular_value": 2.0260181427001953,
+      "directions": [
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "n+",
+          "norm_d": 68.64226531982422,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "n\u00b1",
+          "norm_d": 68.64226531982422,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "k4",
+          "norm_d": 63.787506103515625,
+          "largest_column_cosine": 0.7135823965072632
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "k16",
+          "norm_d": 61.941986083984375,
+          "largest_column_cosine": 0.49250370264053345
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "k64",
+          "norm_d": 60.388282775878906,
+          "largest_column_cosine": 0.2946119010448456
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "k256",
+          "norm_d": 59.93830490112305,
+          "largest_column_cosine": 0.21525640785694122
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "k1024",
+          "norm_d": 59.9391975402832,
+          "largest_column_cosine": 0.11990390717983246
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "full",
+          "norm_d": 62.033260345458984,
+          "largest_column_cosine": 0.09478502720594406
+        },
+        {
+          "layer": 26,
+          "slot": 0,
+          "arm": "iso",
+          "norm_d": 53.33170700073242,
+          "largest_column_cosine": 0.07702216506004333
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "n+",
+          "norm_d": 55.97580337524414,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "n\u00b1",
+          "norm_d": 55.97580337524414,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "k4",
+          "norm_d": 61.10015106201172,
+          "largest_column_cosine": 0.7288753390312195
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "k16",
+          "norm_d": 59.078590393066406,
+          "largest_column_cosine": 0.4811728000640869
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "k64",
+          "norm_d": 59.26262664794922,
+          "largest_column_cosine": 0.3004114627838135
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "k256",
+          "norm_d": 60.5832633972168,
+          "largest_column_cosine": 0.2032463103532791
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "k1024",
+          "norm_d": 60.586769104003906,
+          "largest_column_cosine": 0.13248540461063385
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "full",
+          "norm_d": 58.901161193847656,
+          "largest_column_cosine": 0.10447179526090622
+        },
+        {
+          "layer": 26,
+          "slot": 1,
+          "arm": "iso",
+          "norm_d": 54.019248962402344,
+          "largest_column_cosine": 0.07433377206325531
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "n+",
+          "norm_d": 62.24964904785156,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "n\u00b1",
+          "norm_d": 62.24964904785156,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "k4",
+          "norm_d": 63.407615661621094,
+          "largest_column_cosine": 0.6950259208679199
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "k16",
+          "norm_d": 60.46373748779297,
+          "largest_column_cosine": 0.5144107341766357
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "k64",
+          "norm_d": 60.49692153930664,
+          "largest_column_cosine": 0.3075868487358093
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "k256",
+          "norm_d": 60.064212799072266,
+          "largest_column_cosine": 0.1719861775636673
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "k1024",
+          "norm_d": 60.216678619384766,
+          "largest_column_cosine": 0.1420259326696396
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "full",
+          "norm_d": 60.30086135864258,
+          "largest_column_cosine": 0.10803622007369995
+        },
+        {
+          "layer": 26,
+          "slot": 2,
+          "arm": "iso",
+          "norm_d": 56.73097610473633,
+          "largest_column_cosine": 0.08031003177165985
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "n+",
+          "norm_d": 64.4905776977539,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "n\u00b1",
+          "norm_d": 64.4905776977539,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "k4",
+          "norm_d": 60.21549987792969,
+          "largest_column_cosine": 0.6380577087402344
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "k16",
+          "norm_d": 60.984039306640625,
+          "largest_column_cosine": 0.5765557289123535
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "k64",
+          "norm_d": 60.30986022949219,
+          "largest_column_cosine": 0.3470418155193329
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "k256",
+          "norm_d": 58.94266891479492,
+          "largest_column_cosine": 0.18594567477703094
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "k1024",
+          "norm_d": 60.41678237915039,
+          "largest_column_cosine": 0.14095760881900787
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "full",
+          "norm_d": 60.626712799072266,
+          "largest_column_cosine": 0.10932520776987076
+        },
+        {
+          "layer": 26,
+          "slot": 3,
+          "arm": "iso",
+          "norm_d": 56.7449951171875,
+          "largest_column_cosine": 0.09617342054843903
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "n+",
+          "norm_d": 57.105655670166016,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "n\u00b1",
+          "norm_d": 57.105655670166016,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "k4",
+          "norm_d": 57.69832992553711,
+          "largest_column_cosine": 0.7774038314819336
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "k16",
+          "norm_d": 56.92323684692383,
+          "largest_column_cosine": 0.6452040076255798
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "k64",
+          "norm_d": 57.5782585144043,
+          "largest_column_cosine": 0.3724215626716614
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "k256",
+          "norm_d": 61.305782318115234,
+          "largest_column_cosine": 0.2106310874223709
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "k1024",
+          "norm_d": 59.6710319519043,
+          "largest_column_cosine": 0.13399872183799744
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "full",
+          "norm_d": 60.26318359375,
+          "largest_column_cosine": 0.08697427064180374
+        },
+        {
+          "layer": 26,
+          "slot": 4,
+          "arm": "iso",
+          "norm_d": 52.732688903808594,
+          "largest_column_cosine": 0.07394244521856308
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "n+",
+          "norm_d": 61.10486602783203,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "n\u00b1",
+          "norm_d": 61.10486602783203,
+          "largest_column_cosine": 1.0000015497207642
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "k4",
+          "norm_d": 60.186500549316406,
+          "largest_column_cosine": 0.7044647336006165
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "k16",
+          "norm_d": 61.024330139160156,
+          "largest_column_cosine": 0.5035001635551453
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "k64",
+          "norm_d": 59.90531539916992,
+          "largest_column_cosine": 0.31425192952156067
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "k256",
+          "norm_d": 60.68571853637695,
+          "largest_column_cosine": 0.22865945100784302
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "k1024",
+          "norm_d": 59.2611198425293,
+          "largest_column_cosine": 0.11826038360595703
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "full",
+          "norm_d": 58.209354400634766,
+          "largest_column_cosine": 0.10775411128997803
+        },
+        {
+          "layer": 26,
+          "slot": 5,
+          "arm": "iso",
+          "norm_d": 54.2928352355957,
+          "largest_column_cosine": 0.07581297308206558
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "n+",
+          "norm_d": 56.83617401123047,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "n\u00b1",
+          "norm_d": 56.83617401123047,
+          "largest_column_cosine": 1.0000017881393433
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "k4",
+          "norm_d": 60.662269592285156,
+          "largest_column_cosine": 0.7277423143386841
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "k16",
+          "norm_d": 59.81852722167969,
+          "largest_column_cosine": 0.4312725365161896
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "k64",
+          "norm_d": 59.510616302490234,
+          "largest_column_cosine": 0.34728702902793884
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "k256",
+          "norm_d": 58.898292541503906,
+          "largest_column_cosine": 0.2540731132030487
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "k1024",
+          "norm_d": 60.294944763183594,
+          "largest_column_cosine": 0.12118738144636154
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "full",
+          "norm_d": 58.528076171875,
+          "largest_column_cosine": 0.11871998012065887
+        },
+        {
+          "layer": 26,
+          "slot": 6,
+          "arm": "iso",
+          "norm_d": 52.98702621459961,
+          "largest_column_cosine": 0.07188786566257477
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "n+",
+          "norm_d": 55.88656234741211,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "n\u00b1",
+          "norm_d": 55.88656234741211,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "k4",
+          "norm_d": 55.99046325683594,
+          "largest_column_cosine": 0.9424580335617065
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "k16",
+          "norm_d": 58.67454147338867,
+          "largest_column_cosine": 0.488186240196228
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "k64",
+          "norm_d": 61.01201248168945,
+          "largest_column_cosine": 0.26663705706596375
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "k256",
+          "norm_d": 60.093318939208984,
+          "largest_column_cosine": 0.18899329006671906
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "k1024",
+          "norm_d": 59.624183654785156,
+          "largest_column_cosine": 0.1185980811715126
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "full",
+          "norm_d": 59.26923370361328,
+          "largest_column_cosine": 0.09143471717834473
+        },
+        {
+          "layer": 26,
+          "slot": 7,
+          "arm": "iso",
+          "norm_d": 57.930198669433594,
+          "largest_column_cosine": 0.07138663530349731
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "n+",
+          "norm_d": 63.14030838012695,
+          "largest_column_cosine": 1.0000008344650269
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "n\u00b1",
+          "norm_d": 63.14030838012695,
+          "largest_column_cosine": 1.0000008344650269
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "k4",
+          "norm_d": 58.478145599365234,
+          "largest_column_cosine": 0.792655885219574
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "k16",
+          "norm_d": 58.06428146362305,
+          "largest_column_cosine": 0.5289114713668823
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "k64",
+          "norm_d": 60.515682220458984,
+          "largest_column_cosine": 0.3233376145362854
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "k256",
+          "norm_d": 60.93564987182617,
+          "largest_column_cosine": 0.18553729355335236
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "k1024",
+          "norm_d": 61.5150146484375,
+          "largest_column_cosine": 0.14202526211738586
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "full",
+          "norm_d": 58.94554901123047,
+          "largest_column_cosine": 0.12236397713422775
+        },
+        {
+          "layer": 26,
+          "slot": 8,
+          "arm": "iso",
+          "norm_d": 53.302879333496094,
+          "largest_column_cosine": 0.07649268954992294
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "n+",
+          "norm_d": 60.84553146362305,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "n\u00b1",
+          "norm_d": 60.84553146362305,
+          "largest_column_cosine": 1.000001311302185
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "k4",
+          "norm_d": 59.526554107666016,
+          "largest_column_cosine": 0.7025631070137024
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "k16",
+          "norm_d": 59.06665802001953,
+          "largest_column_cosine": 0.48389244079589844
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "k64",
+          "norm_d": 59.73539352416992,
+          "largest_column_cosine": 0.41293615102767944
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "k256",
+          "norm_d": 59.60224151611328,
+          "largest_column_cosine": 0.19746433198451996
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "k1024",
+          "norm_d": 61.31459426879883,
+          "largest_column_cosine": 0.12379228323698044
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "full",
+          "norm_d": 60.25844955444336,
+          "largest_column_cosine": 0.10086050629615784
+        },
+        {
+          "layer": 26,
+          "slot": 9,
+          "arm": "iso",
+          "norm_d": 54.502559661865234,
+          "largest_column_cosine": 0.08076994121074677
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "n+",
+          "norm_d": 60.70750427246094,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "n\u00b1",
+          "norm_d": 60.70750427246094,
+          "largest_column_cosine": 1.0000016689300537
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "k4",
+          "norm_d": 70.28761291503906,
+          "largest_column_cosine": 0.5996093153953552
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "k16",
+          "norm_d": 63.02170944213867,
+          "largest_column_cosine": 0.5859495401382446
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "k64",
+          "norm_d": 60.67842483520508,
+          "largest_column_cosine": 0.3211664855480194
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "k256",
+          "norm_d": 60.54548645019531,
+          "largest_column_cosine": 0.2237653136253357
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "k1024",
+          "norm_d": 58.520668029785156,
+          "largest_column_cosine": 0.13780926167964935
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "full",
+          "norm_d": 59.94438171386719,
+          "largest_column_cosine": 0.10674156248569489
+        },
+        {
+          "layer": 26,
+          "slot": 10,
+          "arm": "iso",
+          "norm_d": 55.327205657958984,
+          "largest_column_cosine": 0.08833131194114685
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "n+",
+          "norm_d": 58.924068450927734,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "n\u00b1",
+          "norm_d": 58.924068450927734,
+          "largest_column_cosine": 1.000001072883606
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "k4",
+          "norm_d": 64.04654693603516,
+          "largest_column_cosine": 0.7040501236915588
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "k16",
+          "norm_d": 57.84939193725586,
+          "largest_column_cosine": 0.5585623979568481
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "k64",
+          "norm_d": 58.923545837402344,
+          "largest_column_cosine": 0.4058073163032532
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "k256",
+          "norm_d": 60.43461608886719,
+          "largest_column_cosine": 0.25666940212249756
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "k1024",
+          "norm_d": 59.07731246948242,
+          "largest_column_cosine": 0.14177122712135315
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "full",
+          "norm_d": 59.0008659362793,
+          "largest_column_cosine": 0.10832434892654419
+        },
+        {
+          "layer": 26,
+          "slot": 11,
+          "arm": "iso",
+          "norm_d": 54.91836929321289,
+          "largest_column_cosine": 0.07293184846639633
+        }
+      ],
+      "iso_reconstruction_fraction": 0.9999961699690153
+    }
+  ]
+}

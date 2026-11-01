@@ -1,0 +1,2 @@
+first 3 effect batches: 26.59 rows/s
+{"rows_written": 6912, "questions": 8, "batch_size": 64}

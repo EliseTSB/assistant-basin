@@ -3156,13 +3156,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 165.1 | n+ breaks at least twice as often as full | high | Claude |  |
-| 165.2 | Broken rate falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full | medium | Claude |  |
-| 165.3 | k16's broken rate is nearer full's than n±'s | low | Claude |  |
-| 165.4 | The n+ over n± broken ratio is between 0.67 and 1.5 | medium | Claude |  |
-| 165.5 | iso's broken rate is under 0.8 times full's | low | Claude |  |
-| 165.6 | Changed rate falls with k: Spearman at or below -0.6 across the same seven arms | medium | Claude |  |
-| 165.7 | n+'s mean relative last-layer change is at least 1.5 times full's (Amendment 2) | medium | Claude |  |
+| 165.1 | n+ breaks at least twice as often as full | high | Claude | held: 2.70 (1.89 to 3.86); 2.02 without the ten slots that broke on all eight |
+| 165.2 | Broken rate falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full | medium | Claude | held: -0.857 (-0.964 to -0.631); -0.714 without layer 21, which would fail |
+| 165.3 | k16's broken rate is nearer full's than n±'s | low | Claude | held: 0.053 against 0.105 |
+| 165.4 | The n+ over n± broken ratio is between 0.67 and 1.5 | medium | Claude | held: 1.01 (0.78 to 1.30) |
+| 165.5 | iso's broken rate is under 0.8 times full's | low | Claude | failed: 0.84 (0.55 to 1.27) |
+| 165.6 | Changed rate falls with k: Spearman at or below -0.6 across the same seven arms | medium | Claude | failed, not read: 0.20; changed rate at ceiling in every arm |
+| 165.7 | n+'s mean relative last-layer change is at least 1.5 times full's (Amendment 2) | medium | Claude | failed: 1.05 (1.03 to 1.07) |
 
 ## Part 166 (registered 2026-11-01 01:03 CST, PART166-DESIGN.md, after Part 165's data; the design discloses what was seen)
 
@@ -3170,8 +3170,8 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | --- | --- | --- | --- | --- |
 | 166.1 | Pooled over n+, n± and k4, a loop's own hit rate is at least 2 times its shuffled rate | high | Claude |  |
 | 166.2 | Pooled over full and iso, own over shuffled is under 1.5 | medium | Claude |  |
-| 166.3 | n+'s mean steadiness is at least 1.25 times full's | medium | Claude |  |
-| 166.4 | Mean sharpness falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full | medium | Claude |  |
+| 166.3 | n+'s mean steadiness is at least 1.25 times full's (build check, Amendment 1) | medium | Claude |  |
+| 166.4 | Mean sharpness falls with k: Spearman at or below -0.8 across n±, k4, k16, k64, k256, k1024, full (build check, Amendment 1) | medium | Claude |  |
 | 166.5 | Within n± and k4, pooled over slots, slot broken rate against slot mean sharpness: Spearman at least 0.3 | low | Claude |  |
 | 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 (Amendment 1) | medium | Claude |  |
 | 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 (Amendment 1) | medium | Claude |  |
