@@ -30,7 +30,7 @@ Scoring, per unit: name gone means the answer has none of Qwen, Tongyi, 通义, 
 ## Size
 
 - Smallest effect worth knowing: a neuron rate of name gone 1.5 times the random rate.
-- Total: about 200 units by 17 phrasings is 3,400 generations, plus 16 no-push, about 25 minutes on the A770.
+- Total: 3,416 generations, about 25 minutes on the A770: about 200 units by 17 phrasings, plus 16 no-push.
 - Pilot: the first 3 batches. Stop rule: Gate 1 failing on them, or under 1.5 answers per second.
 
 ## Optimization
