@@ -25,7 +25,7 @@ Part 162's method with two changes, one per arm. Arm A: before cutting, curly qu
 ## Size
 
 - Smallest effect worth knowing: a position of 0.25 against 0.
-- Total: 0 generations, one host scoring run per arm, under a minute each.
+- Total: 2 scoring runs, about 1 minute, no generations.
 - Pilot: none, since nothing is generated. Stop rule: a failed gate stops that arm's reading.
 
 ## Optimization
