@@ -98,3 +98,17 @@ Not taken: moving 166.5 to the arm level. Sharpness falling with k is arithmetic
 | 166.6 | Pooled over n+, n± and k4, content-word own over shuffled is at least 1.5 | medium |
 | 166.7 | Pooled over n+, n± and k4, the mean percentile of loop content words in the own bias is at least 0.65 | medium |
 
+## Amendment 2, 2026-11-01 01:11 CST, before the run, on Alden's review
+
+Indices, stated plainly. y1 to yP are the generated tokens. Logits at the final prompt position predict y1, and that position is never pushed. Logits at input yi predict y(i+1), for i from 1 to P-1, and those are the pushed evaluation positions. So P-1 positions are evaluated. Gate 2's alignment compares those shifted pairs, and EOS counts as a generated token if it ended the answer. The first pushed readout predicts y2, given the clean prompt and the same unpushed y1, which is what Part 165's effect run saw at its second step.
+
+Gate 3 needs the same quantity, in the same direction. Part 165's `kl` is KL(plain || pushed) from generate's processed scores with EOS masked to minus infinity by `min_new_tokens`, then normalised over the remaining tokens. `kl_second` here applies the same mask to both raw logit vectors at the first evaluation position before normalising. Raw `kl_mean` stays separate. The gate has three parts: Spearman at least 0.9 across rows; median absolute relative difference at most 0.10 overall; and at most 0.20 in every arm and every layer, over rows where Part 165's KL is at least 0.01. Part of this can fail under a scale error that ranks would hide. Its first check is the fake-model test that a direct cached step and a full forward pass match at the first pushed position.
+
+The bootstrap resamples complete slots jointly across arms and phrasings, stratified by layer. n+ and n± use the same neuron, so they stay clustered, and donor sets stay inside the resampled slots. Each arm's effect is reported beside the pooled number. Donors are the other 11 slots at the same arm, phrasing and layer regardless of their own loops, and each loop's phrase is kept exactly.
+
+Reading rule for 166.1 replaced. A miss does not establish that a low-k loop is not the push's vocabulary. It means this readout, top 200 single-token words averaged over the plain path, did not detect the association. Token splitting, dilution across positions and departure from the plain path all remain live, and the write-up reports matchable loop-word coverage and effect sizes. A hold is read as: the own bias predicts own loop words better than matched other-direction biases. It is an exploratory association on the same data that suggested it, separate from any later held-out test.
+
+Sharpness is scale-free peakedness and not the size of a bias, so each row also saves the bias norm, and tables pair sharpness with norm and KL. A zero-variance bias has unmeasurable sharpness and a zero-norm one unmeasurable steadiness, recorded as null. 166.5 is shown within arm and layer beside the pooled number.
+
+Recorded for later: a token ban alone is a weak causal test, since it mechanically removes the words. A later part would pair it with a same-sized ban of a matched other direction's tokens, and score any repetition and coherence.
+
