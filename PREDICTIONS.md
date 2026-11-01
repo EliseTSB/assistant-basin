@@ -3131,3 +3131,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 162b.3 | In arm A, deepseek-v4.1-flash's P_C exceeds its P_G | high | Claude | untestable: Gates 1 and 2 failed; descriptive 1.09 and 0.27 |
 | 162b.4 | In arm B, deepseek-v4.1-flash's P_G is under 0.25 | medium | Claude | untestable: Gates 1 and 2 failed; descriptive 0.19 |
 | 162b.5 | In arm A, OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude | untestable: Gates 1 and 2 failed; descriptive 0.69 and 0.45 |
+
+## Part 163 (registered 2026-10-31 19:55 CT, PART163-DESIGN.md, before any data): picked the same way, do neurons move the model's name more than random directions?
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 163.1 | On identity phrasings, the neuron arm's name-gone rate is under 1.5 times the random arm's | medium | Claude |  |
+| 163.2 | On maker phrasings, the neuron arm's maker-gone rate is under 1.5 times the random arm's | medium | Claude |  |
+| 163.3 | Each arm's name-gone rate on identity phrasings is at least 0.15, so the selection carries to new phrasings | medium | Claude |  |
+| 163.4 | In each arm fewer units reach both gone on at least half of identity phrasings than reach name gone on at least half | high | Claude |  |
+| 163.5 | The neuron arm's broken rate is below the random arm's | low | Claude |  |
