@@ -3180,13 +3180,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 167.1 | In the none arm, pooled over n+ and k4, content-word own over shuffled is at least 5 | high | Claude |  |
-| 167.2 | In the none arm, n+'s broken rate is at least 2 times full's | high | Claude |  |
-| 167.3 | Own ban cuts loop answers by at least 30% against none, pooled over n+ and k4 | medium | Claude |  |
-| 167.4 | Pooled over n+ and k4, the own loop rate is at least 0.05 below the matched rate (Amendment 1) | medium | Claude |  |
-| 167.5 | The matched cut, pooled over n+ and k4, is between -15% and 15% (Amendment 1) | medium | Claude |  |
-| 167.6 | Own ban's cut in full is under half its cut in n+ and k4 | low | Claude |  |
-| 167.7 | At least a third of paired transitions are migrations, and above their baseline (Amendment 1) | low | Claude |  |
+| 167.1 | In the none arm, pooled over n+ and k4, content-word own over shuffled is at least 5 | high | Claude | Not read: Gate 2 failed |
+| 167.2 | In the none arm, n+'s broken rate is at least 2 times full's | high | Claude | Not read: Gate 2 failed |
+| 167.3 | Own ban cuts loop answers by at least 30% against none, pooled over n+ and k4 | medium | Claude | Not read: Gate 2 failed |
+| 167.4 | Pooled over n+ and k4, the own loop rate is at least 0.05 below the matched rate (Amendment 1) | medium | Claude | Not read: Gate 2 failed |
+| 167.5 | The matched cut, pooled over n+ and k4, is between -15% and 15% (Amendment 1) | medium | Claude | Not read: Gate 2 failed |
+| 167.6 | Own ban's cut in full is under half its cut in n+ and k4 | low | Claude | Not read: Gate 2 failed |
+| 167.7 | At least a third of paired transitions are migrations, and above their baseline (Amendment 1) | low | Claude | Not read: Gate 2 failed |
 
 ## Part 168 (registered 2026-11-01 02:46 CT, PART168-DESIGN.md, before any data)
 

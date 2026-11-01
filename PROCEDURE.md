@@ -255,4 +255,5 @@ beyond one part.
 - 2026-11-01 (Part 165): equal intended write norm is not a delivered dose. The hook adds to a bf16 activation, so record the realized write at a shared context.
 - 2026-11-01 (Part 166): three launches, two lost to things a read would have caught: a row field missing on one arm and tensors too large for Windows. Read the runner's main path line by line before queueing; a passing unit test says nothing about a path it does not enter.
 - 2026-11-01 (Part 166): when a slot is resampled, it must not donate to itself. A point estimate outside its own interval was the sign.
+- 2026-11-01 (Part 167): a gate about a deterministic baseline can be answered before the run. Gate 2's plain answers were on disk from Part 164, and a rule added since (Part 165's loop rule) had never been run over them. Run every gate's rule over stored answers at design time, and put a baseline gate first in the runner, so a certain failure costs a minute and not 47.
 
