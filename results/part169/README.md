@@ -92,7 +92,7 @@ Own-mass tenths from [`review169.txt`](review169.txt) are shown below; `extra169
 | [8](extra169.txt) | [0.088–0.14](extra169.txt) | [154](extra169.txt) | [60](extra169.txt) | [27](extra169.txt) | [57](extra169.txt) | [33](extra169.txt) |
 | [9](extra169.txt) | [0.14–0.55](extra169.txt) | [154](extra169.txt) | [103](extra169.txt) | [33](extra169.txt) | [104](extra169.txt) | [70](extra169.txt) |
 
-The top two tenths contain [163 of 338 (48.2%)](extra169.txt) of none loops but [103 of 128 (80.5%)](extra169.txt) of the own cut. Own cuts [63.2%](extra169.txt) of their loops, against [14.3%](extra169.txt) in the other [8](extra169.txt) tenths. If every tenth lost the same fraction of its none loops as the pooled cut, [128/338 = 37.9%](extra169.txt), the top two’s [163](extra169.txt) none loops would account for about [62 of the 128](extra169.txt) net cut. The [169.1](../../PART169-DESIGN.md) bar rests on high rows: the cut is [53.0%](extra169.txt) on high rows and [15.9%](extra169.txt) elsewhere. By the same length-bin and EOS-cell standardization, own has a residual of [−126.5](extra169.txt) loops against its [−128](extra169.txt) net change, so length and EOS do not explain the cut.
+The top two tenths contain [163 of 338 (48.2%)](extra169.txt) of none loops but [103 of 128 (80.5%)](extra169.txt) of the own cut. Own cuts [63.2%](extra169.txt) of their loops, against [14.3%](extra169.txt) in the other [8](extra169.txt) tenths. If every tenth lost the same fraction of its none loops as the pooled cut, [128/338 = 37.9%](extra169.txt), the top two’s [163](extra169.txt) none loops would account for about [62 of the 128](extra169.txt) net cut. The [169.1](../../PART169-DESIGN.md) bar rests on high rows: the cut is [53.0%](extra169.txt) on high rows and [15.9%](extra169.txt) elsewhere. By the same length-bin and EOS-cell standardization, own has a residual of [−126.5](extra169.txt) loops against its [−128](extra169.txt) net change. That residual remains after a descriptive reweighting. It does not rule out a mechanism through length or termination, because the reweighting applies no-ban rates to lengths and EOS shares that a ban may itself have changed.
 
 ## Loop churn and [plain50](../../PART169-DESIGN.md)
 
@@ -177,3 +177,9 @@ Limits follow the design: one model, one dose, greedy decoding, and [8](../../PA
 Provenance: [design](../../PART169-DESIGN.md) · [launch](launch.jsonl) · [runner](../../part169/run169.py) · [scorer](../../part169/score169.py) · registered commit [a897ed8](../../PART169-DESIGN.md). [`review169.py`](review169.py) was written after the scores, so its splits are exploratory; see [`review169.txt`](review169.txt). Computed summaries: [`extra169.py`](extra169.py) and [`extra169.txt`](extra169.txt).
 
 Cold check: Haiku 5.5 (dark-factory run ab-169-cold-2026-11-01), full report at [cold/COLD.md](cold/COLD.md), its corrections folded in above.
+
+Alden's process was down when this part ran, so they read it afterwards (council topic `overnight-ideas-2026-11-01`, message 18). That read was retrospective, not clearance before launch. Three points from it:
+
+- The paired and high selections did not manufacture 169.4 and 169.5, because both were frozen before ban outcomes. They do limit what transfers: high paired rows have a 30.6% baseline loop rate, against 71.4% on high unpaired rows.
+- The design's reading that 169.6 holding means the rise needs a push is false. Under 5% is not zero: no-push free lists gave 24 of 768 loops. The 0 of 8 for no-push plain50 covers only eight phrasings. Neither establishes necessity.
+- A ratio bar can pass with zero induced events on both sides, so a mechanistic reading of 169.8 would need a declared event floor. The old verdict stands as scored.
