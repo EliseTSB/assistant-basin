@@ -3120,3 +3120,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 162.3 | deepseek-v4.1-flash's P_C exceeds its P_G | low | Claude |  |
 | 162.4 | deepseek-v4.1-flash's median held-out P(Claude) is between 0.3 and 0.7 | low | Claude |  |
 | 162.5 | OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude |  |
+
+## Part 162b (registered 2026-10-31 19:20 CT, PART162B-DESIGN.md, after Part 162's first score): does the reading survive once punctuation is taken out?
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 162b.1 | In arm A, deepseek-v4.1-flash reads as both: P_C and P_G each at least 0.25 | medium | Claude |  |
+| 162b.2 | In arm A, Qwen3.5-4B's P_C exceeds its P_G by at least 0.1 | high | Claude |  |
+| 162b.3 | In arm A, deepseek-v4.1-flash's P_C exceeds its P_G | high | Claude |  |
+| 162b.4 | In arm B, deepseek-v4.1-flash's P_G is under 0.25 | medium | Claude |  |
+| 162b.5 | In arm A, OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude |  |

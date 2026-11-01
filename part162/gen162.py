@@ -123,7 +123,7 @@ def generate_family(family: str, model_name: str, folder: str, prompts: list[dic
             input_width = int(inputs["input_ids"].shape[-1])
             with torch.inference_mode():
                 generated = model.generate(
-                    **inputs, do_sample=False, max_new_tokens=MAX_NEW_TOKENS,
+                    **inputs, do_sample=False, max_new_tokens=args.max_new_tokens,
                     pad_token_id=tokenizer.pad_token_id,
                 )
             for index, (prompt, _) in enumerate(batch):
@@ -158,6 +158,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--models-root", type=Path, default=DEFAULT_MODELS_ROOT)
     parser.add_argument("--pilot", action="store_true", help="run 8 Pythia answers and exit")
     parser.add_argument("--family", choices=[m[0] for m in MODELS], help="one model, in its own process")
+    parser.add_argument("--max-new-tokens", type=int, default=MAX_NEW_TOKENS)
     args = parser.parse_args(argv)
     if args.batch_size < 1:
         parser.error("--batch-size must be positive")

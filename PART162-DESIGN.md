@@ -62,3 +62,7 @@ If any gate fails, the affected reading stops and the failure is reported as the
 ## Limits
 
 Claude here is Haiku 5.5 and GPT is gpt-6-luna, not the models on the chart. A model can sit between two families by being an average assistant, with no teacher involved; nothing here can separate that from inheritance. Pythia differs in genre as well as date, so Gate 3 shows the measure can return neither and little more. 100 words of an opening is not a whole answer. These are 113 prompts of one kind. All families' answers are short of the 300 tokens the chart's models could write.
+
+## Amendment 1, 2026-10-31 19:20 CT, after the first score
+
+The scorer marked every prediction untestable when Gate 4 failed for Qwen3.5-4B alone. The Reading rules stop only the affected reading, and Gate 4 affects only that model, so the scorer now follows them: 162.2 is untestable and the rest are read. Qwen3.5-4B's 96 of 113 is under its 90% because 17 of its answers ended on their own, not because of the 200-token cap. Part 162b reads the same answers with quotes normalised.

@@ -64,3 +64,13 @@ Copied verbatim into PREDICTIONS.md under "## Part 161 (registered ...)".
 ## Limits
 
 One model, one sign. Picking used one answer per question. Random directions are compared at the same push size as their paired neurons, not at the same activity. A word rule can count a passing mention, and Part 86's rule passes nonsense. The 1.0 sets are small.
+
+## Amendment 1, 2026-10-31 19:20 CT, after the run and its cold check
+
+Counts in the text above are left as registered; these are what happened. Part 160's ladder held 18 distinct neurons, not 19, because L11 N5647 was kept at both doses. 9,312 answers were generated, not 9,384, because three paired directions at 0.6 were already picked random directions, so 14 paired directions ran, not 17.
+
+The 18 reused neurons came from Part 160's batches and the other units from Part 161's, and a greedy answer depends on batch shape: L24 N5017 at 0.8 gave 21 of 24 there and 19 of 24 here, with 7 of 24 answers identical. `part161/rerun161.py` regenerates those 18 neurons at all six doses, 2,592 answers, about 15 minutes, written to `results/part161/rerun.jsonl`. The registered verdicts stay as scored. This is a sensitivity, reported beside them, with one prediction added below.
+
+| # | Prediction | Confidence |
+| --- | --- | --- |
+| 161.6 | With the 18 neurons regenerated, between 22 and 28 of the 37 neuron memberships are reliable at their picking dose | high |

@@ -27,6 +27,13 @@ def words(text: str) -> list[str]:
     return text.split()
 
 
+QUOTES = str.maketrans({"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"'})
+
+
+def normalize_quotes(text: str) -> str:
+    return text.translate(QUOTES)
+
+
 def first_words(text: str, n: int) -> str:
     """The text through its nth whitespace-split word, keeping newlines, which carry line structure."""
     found = list(re.finditer(r"\S+", text))
@@ -82,10 +89,12 @@ def load_rows(args: argparse.Namespace):
             pid = row.get("prompt_id", row.get("id"))
             if pid in prompt_map and not row.get("error") and isinstance(row.get("answer"), str):
                 raw[family][pid] = row["answer"]
-    for row in read_jsonl(args.answers):
-        pid, family = row.get("prompt_id"), row.get("family")
-        if family in GENERATED and pid in prompt_map and isinstance(row.get("answer"), str):
-            raw[family][pid] = row["answer"]
+    answer_files = [args.answers] + ([args.extra_answers] if getattr(args, "extra_answers", None) else [])
+    for path in answer_files:  # A later file replaces an earlier answer for the same model and prompt.
+        for row in read_jsonl(path):
+            pid, family = row.get("prompt_id"), row.get("family")
+            if family in GENERATED and pid in prompt_map and isinstance(row.get("answer"), str):
+                raw[family][pid] = row["answer"]
 
     answers: dict[str, dict[str, dict[str, Any]]] = {name: {} for name in BASE_MODELS}
     counts = {}
@@ -93,6 +102,8 @@ def load_rows(args: argparse.Namespace):
         dropped = 0
         for pid in prompt_map:
             text = raw[model].get(pid)
+            if text is not None and getattr(args, "normalize_quotes", False):
+                text = normalize_quotes(text)
             if not is_usable_answer(text):
                 dropped += 1
                 continue
@@ -108,11 +119,14 @@ def _presence(answer: str, marker_set: list[tuple[str, ...]]) -> float:
     return float(sum(marker in feats for marker in marker_set) / len(marker_set)) if marker_set else float("nan")
 
 
-def train_markers(train_ids: list[str], answers: dict[str, dict[str, dict[str, Any]]]) -> tuple[list[tuple[str, ...]], list[tuple[str, ...]]]:
+def train_markers(train_ids: list[str], answers: dict[str, dict[str, dict[str, Any]]],
+                  drop_dash: bool = False) -> tuple[list[tuple[str, ...]], list[tuple[str, ...]]]:
     c_ids = [p for p in train_ids if p in answers["claude"] and p in answers["gpt"]]
     features = {model: {pid: ngram_features(answers[model][pid]["masked"]) for pid in c_ids}
                 for model in ("claude", "gpt")}
     universe = set().union(*(features[m][pid] for m in features for pid in c_ids)) if c_ids else set()
+    if drop_dash:
+        universe = {f for f in universe if not any("\u2014" in token for token in f)}
     rows = {}
     for family in ("claude", "gpt"):
         rows[family] = {feat: np.mean([feat in features[family][pid] for pid in c_ids]) for feat in universe}
@@ -256,7 +270,8 @@ def score(args: argparse.Namespace):
     marker_by_fold = {}
     folds_by_prompt = {}
     for fold, (train_ix, test_ix) in enumerate(seeded_folds(prompt_ids)):
-        marker_by_fold[fold] = train_markers([prompt_ids[i] for i in train_ix], answers)
+        marker_by_fold[fold] = train_markers([prompt_ids[i] for i in train_ix], answers,
+                                             drop_dash=getattr(args, "drop_dash_markers", False))
         for i in test_ix:
             folds_by_prompt[prompt_ids[i]] = fold
     models = BASE_MODELS + ("mix_claude_then_gpt", "mix_gpt_then_claude")
@@ -294,9 +309,17 @@ def score(args: argparse.Namespace):
         "162.5": ("olmo", lambda p: p["gpt"]["mean"] is not None and p["claude"]["mean"] is not None and p["gpt"]["mean"] > p["claude"]["mean"]),
     }
     predictions = {}
+
+    def readable(model: str) -> bool:
+        # The design stops the affected reading: Gates 1 to 3 affect every reading, Gate 4 only the short model's.
+        if not all(gates[g]["pass"] for g in ("1", "2", "3")):
+            return False
+        limits = gates["4"]["thresholds"]
+        return model not in limits or coverage[model] >= limits[model]
+
     for number, (model, rule) in prediction_defs.items():
         predictions[number] = {"model": model, "result": positions.get(model),
-                               "verdict": "untestable" if not all_gates else ("held" if rule(positions[model]) else "failed")}
+                               "verdict": "untestable" if not readable(model) else ("held" if rule(positions[model]) else "failed")}
 
     fold0_c, fold0_g = marker_by_fold[0]
     marker_rates = {}
