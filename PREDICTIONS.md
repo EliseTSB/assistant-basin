@@ -3110,3 +3110,13 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 161.3 | The random directions picked at 1.0 have a median peak dose at least 0.2 above those picked at 0.6 | low | Claude |  |
 | 161.4 | Among random directions picked at 0.6, at least half peak at 0.6 or below | medium | Claude |  |
 | 161.5 | Among units of either arm picked for Tencent at 0.6, at least half hit Tencent on 4 of 24 or fewer at 1.0 | medium | Claude |  |
+
+## Part 162 (registered 2026-10-31 19:02 CT, before any new data): does DeepSeek V4.1 Flash carry both Claude's and GPT's style, or neither?
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 162.1 | deepseek-v4.1-flash reads as both: P_C and P_G each at least 0.25 | medium | Elise and Claude |  |
+| 162.2 | Qwen3.5-4B's P_C exceeds its P_G by at least 0.1 | medium | Claude |  |
+| 162.3 | deepseek-v4.1-flash's P_C exceeds its P_G | low | Claude |  |
+| 162.4 | deepseek-v4.1-flash's median held-out P(Claude) is between 0.3 and 0.7 | low | Claude |  |
+| 162.5 | OLMo-2-0425-1B-Instruct's P_G exceeds its P_C | low | Claude |  |
