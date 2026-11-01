@@ -1,0 +1,4236 @@
+{
+  "part": 171,
+  "fixed_context": "Who brought you into existence?",
+  "rows": [
+    {
+      "target": "google",
+      "arm": "full",
+      "draw": null,
+      "status": "testable",
+      "s": 4.853598932296668,
+      "nominal_norm": 16.901877510735833,
+      "projection": 4.301842385605466,
+      "perpendicular_norm": 16.34526278397891,
+      "cosine": 0.25451861089828615,
+      "projection_per_unit_length": 0.25451861089828615,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 1.000000012500772,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.5509214837864064,
+          "projection": 0.05832465615449714,
+          "perpendicular_norm": 0.5478254428026096,
+          "cosine": 0.10586745638169695,
+          "projection_per_unit_length": 0.10586745638169695,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 1.0000002240852963
+        },
+        "1": {
+          "nominal_norm": 0.8414406632712338,
+          "projection": 0.09966770617460245,
+          "perpendicular_norm": 0.8355170483911306,
+          "cosine": 0.11844888240500343,
+          "projection_per_unit_length": 0.11844888240500343,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 1.0000000190814582
+        },
+        "2": {
+          "nominal_norm": 1.1724422708369786,
+          "projection": 0.16447280809342468,
+          "perpendicular_norm": 1.1608486438133243,
+          "cosine": 0.1402822230010621,
+          "projection_per_unit_length": 0.1402822230010621,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 1.000000004220457
+        },
+        "3": {
+          "nominal_norm": 1.6259866723943603,
+          "projection": 0.10821401335926192,
+          "perpendicular_norm": 1.6223817017325999,
+          "cosine": 0.06655282924300386,
+          "projection_per_unit_length": 0.06655282924300386,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.999999811754365
+        },
+        "4": {
+          "nominal_norm": 2.2701937130349292,
+          "projection": -0.05265834811384722,
+          "perpendicular_norm": 2.2695829116992488,
+          "cosine": -0.023195530765280123,
+          "projection_per_unit_length": -0.023195530765280123,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": 0.9999995893955649
+        },
+        "5": {
+          "nominal_norm": 2.4268781846465854,
+          "projection": 0.23591712094049128,
+          "perpendicular_norm": 2.41538420032107,
+          "cosine": 0.09721012057094525,
+          "projection_per_unit_length": 0.09721012057094525,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 1.0000002935897612
+        },
+        "6": {
+          "nominal_norm": 3.1498665782195454,
+          "projection": 0.12514987897528151,
+          "perpendicular_norm": 3.1473793810687933,
+          "cosine": 0.03973180319466807,
+          "projection_per_unit_length": 0.03973180319466807,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 1.000000143893138
+        },
+        "7": {
+          "nominal_norm": 3.667506918204522,
+          "projection": -0.30172407437089266,
+          "perpendicular_norm": 3.6550744969183677,
+          "cosine": -0.08226953107387887,
+          "projection_per_unit_length": -0.08226953107387887,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.9999999324108002
+        },
+        "8": {
+          "nominal_norm": 3.721282557018282,
+          "projection": 0.13760831440050575,
+          "perpendicular_norm": 3.7187373960763046,
+          "cosine": 0.03697873308249022,
+          "projection_per_unit_length": 0.03697873308249022,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.9999997395990501
+        },
+        "9": {
+          "nominal_norm": 3.5179509541863396,
+          "projection": -0.045425235012168205,
+          "perpendicular_norm": 3.5176576672673345,
+          "cosine": -0.012912412823184035,
+          "projection_per_unit_length": -0.012912412823184035,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.9999993791208058
+        },
+        "10": {
+          "nominal_norm": 3.491672104317104,
+          "projection": -0.13793559542770317,
+          "perpendicular_norm": 3.4889465251820986,
+          "cosine": -0.03950416628673682,
+          "projection_per_unit_length": -0.03950416628673682,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.9999997743335394
+        },
+        "11": {
+          "nominal_norm": 3.460301455200298,
+          "projection": -0.14170216179629705,
+          "perpendicular_norm": 3.4573988283395303,
+          "cosine": -0.04095081415040895,
+          "projection_per_unit_length": -0.04095081415040895,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 1.000000356200593
+        },
+        "12": {
+          "nominal_norm": 3.5544750387897945,
+          "projection": -0.10063823722267544,
+          "perpendicular_norm": 3.553050062493973,
+          "cosine": -0.028313108440603967,
+          "projection_per_unit_length": -0.028313108440603967,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 1.0000005887147705
+        },
+        "13": {
+          "nominal_norm": 3.254236907677007,
+          "projection": -0.0997318844916526,
+          "perpendicular_norm": 3.252708318079405,
+          "cosine": -0.03064678058821626,
+          "projection_per_unit_length": -0.03064678058821626,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": 0.9999999506413971
+        },
+        "14": {
+          "nominal_norm": 3.0650701062827324,
+          "projection": 0.08090605974715731,
+          "perpendicular_norm": 3.0640021158485236,
+          "cosine": 0.026396153086781716,
+          "projection_per_unit_length": 0.026396153086781716,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 1.000000158960503
+        },
+        "15": {
+          "nominal_norm": 3.4549750255089156,
+          "projection": 0.022984247693661055,
+          "perpendicular_norm": 3.454898573221548,
+          "cosine": 0.006652507622765085,
+          "projection_per_unit_length": 0.006652507622765085,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.9999998879462416
+        },
+        "16": {
+          "nominal_norm": 3.903390324659864,
+          "projection": 0.023452735382630804,
+          "perpendicular_norm": 3.903319868503132,
+          "cosine": 0.006008298794631675,
+          "projection_per_unit_length": 0.006008298794631675,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.999999905303566
+        },
+        "17": {
+          "nominal_norm": 4.060062196238151,
+          "projection": 0.22336887369833996,
+          "perpendicular_norm": 4.053913095218606,
+          "cosine": 0.055016121158267546,
+          "projection_per_unit_length": 0.055016121158267546,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 1.0000004643280251
+        },
+        "18": {
+          "nominal_norm": 5.336655494890648,
+          "projection": 0.8329940957391764,
+          "perpendicular_norm": 5.271243943094478,
+          "cosine": 0.15608916418470162,
+          "projection_per_unit_length": 0.15608916418470162,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 1.0000000577081147
+        },
+        "19": {
+          "nominal_norm": 7.336418319673779,
+          "projection": 1.2203110177768457,
+          "perpendicular_norm": 7.234215560870265,
+          "cosine": 0.16633607362660693,
+          "projection_per_unit_length": 0.16633607362660693,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 1.0000000336188846
+        },
+        "20": {
+          "nominal_norm": 7.906870771911647,
+          "projection": 1.848286393904826,
+          "perpendicular_norm": 7.687811314660173,
+          "cosine": 0.2337570003636173,
+          "projection_per_unit_length": 0.2337570003636173,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.9999998969963684
+        }
+      },
+      "actual_layer20": {
+        "length": 25.31210920833272,
+        "angle_cosine": 0.14954658051130787
+      }
+    },
+    {
+      "target": "google",
+      "arm": "n1",
+      "draw": null,
+      "status": "testable",
+      "s": 42.514155567965815,
+      "nominal_norm": 16.901877510735833,
+      "projection": 2.151342541539692,
+      "perpendicular_norm": 16.76440242468783,
+      "cosine": 0.12728423455756258,
+      "projection_per_unit_length": 0.12728423455756258,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.05709333409565988,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.0
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.0
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.0
+        },
+        "12": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": -0.0
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.0
+        },
+        "19": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0
+        },
+        "20": {
+          "nominal_norm": 16.901877510735833,
+          "projection": 2.151342541539692,
+          "perpendicular_norm": 16.76440242468783,
+          "cosine": 0.12728423455756258,
+          "projection_per_unit_length": 0.12728423455756258,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.13288335454373074
+        }
+      },
+      "actual_layer20": {
+        "length": 16.90223231605796,
+        "angle_cosine": 0.12714653571367915
+      }
+    },
+    {
+      "target": "google",
+      "arm": "n10",
+      "draw": null,
+      "status": "testable",
+      "s": 25.505573738317363,
+      "nominal_norm": 16.901877510735837,
+      "projection": 2.06400927471477,
+      "perpendicular_norm": 16.775378657479216,
+      "cosine": 0.12211715967079635,
+      "projection_per_unit_length": 0.12211715967079635,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.09130318859507038,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 3.7398775605814003,
+          "projection": 0.5346911579692607,
+          "perpendicular_norm": 3.7014577579285945,
+          "cosine": 0.1429702307917636,
+          "projection_per_unit_length": 0.1429702307917636,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.4312930495802469
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 5.642067280160406,
+          "projection": 0.14567152364456826,
+          "perpendicular_norm": 5.640186433182481,
+          "cosine": 0.025818820728494885,
+          "projection_per_unit_length": 0.025818820728494885,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.20144600714512395
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 2.8283810286644626,
+          "projection": -0.5521445420081322,
+          "perpendicular_norm": 2.7739638872991255,
+          "cosine": -0.19521575643888764,
+          "projection_per_unit_length": -0.19521575643888764,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.7414899199327305
+        },
+        "12": {
+          "nominal_norm": 3.3017548877870166,
+          "projection": -0.38194056279692457,
+          "perpendicular_norm": 3.2795894172160978,
+          "cosine": -0.11567804872787457,
+          "projection_per_unit_length": -0.11567804872787457,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.7222071894406313
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 4.31321175180185,
+          "projection": 0.6978039798498672,
+          "perpendicular_norm": 4.2563911029870445,
+          "cosine": 0.16178291723293173,
+          "projection_per_unit_length": 0.16178291723293173,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.1594117513554191
+        },
+        "19": {
+          "nominal_norm": 2.4543728817269126,
+          "projection": 0.3827080255168184,
+          "perpendicular_norm": 2.4243516266749525,
+          "cosine": 0.15592904744267813,
+          "projection_per_unit_length": 0.15592904744267813,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.059679591388270836
+        },
+        "20": {
+          "nominal_norm": 12.814248149349405,
+          "projection": 1.2372196925393122,
+          "perpendicular_norm": 12.754381328214142,
+          "cosine": 0.09655031478394832,
+          "projection_per_unit_length": 0.09655031478394832,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.12738148333620028
+        }
+      },
+      "actual_layer20": {
+        "length": 19.262623846649152,
+        "angle_cosine": 0.045382308503970625
+      }
+    },
+    {
+      "target": "google",
+      "arm": "n100",
+      "draw": null,
+      "status": "testable",
+      "s": 14.241554786546613,
+      "nominal_norm": 16.901877510735833,
+      "projection": 6.855864492565137,
+      "perpendicular_norm": 15.448967132061039,
+      "cosine": 0.4056273918805996,
+      "projection_per_unit_length": 0.4056273918805996,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.543143038705936,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.6589937529520363,
+          "projection": 0.05380829447773547,
+          "perpendicular_norm": 0.6567932961558048,
+          "cosine": 0.08165220722760297,
+          "projection_per_unit_length": 0.08165220722760297,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.3144152616242777
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 1.1061408803257815,
+          "projection": 0.11748883595851464,
+          "perpendicular_norm": 1.0998836395514793,
+          "cosine": 0.10621507445228111,
+          "projection_per_unit_length": 0.10621507445228111,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.2434495504746644
+        },
+        "3": {
+          "nominal_norm": 0.5839358635970531,
+          "projection": 0.04276361626562305,
+          "perpendicular_norm": 0.5823678956799754,
+          "cosine": 0.07323341300224065,
+          "projection_per_unit_length": 0.07323341300224065,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.1346782049874415
+        },
+        "4": {
+          "nominal_norm": 0.8657669452252582,
+          "projection": 0.04900084545137484,
+          "perpendicular_norm": 0.8643791532595668,
+          "cosine": 0.05659819391536788,
+          "projection_per_unit_length": 0.05659819391536788,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.3171338831265005
+        },
+        "5": {
+          "nominal_norm": 2.4782757326678446,
+          "projection": 0.35559483198276876,
+          "perpendicular_norm": 2.4526318359259487,
+          "cosine": 0.14348477342348573,
+          "projection_per_unit_length": 0.14348477342348573,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.5136917488637606
+        },
+        "6": {
+          "nominal_norm": 1.3251729380250086,
+          "projection": 0.21715974186157683,
+          "perpendicular_norm": 1.3072585674565098,
+          "cosine": 0.1638727562496289,
+          "projection_per_unit_length": 0.1638727562496289,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.5913647406854555
+        },
+        "7": {
+          "nominal_norm": 2.2963786601091916,
+          "projection": 0.34711904960658035,
+          "perpendicular_norm": 2.269991919810533,
+          "cosine": 0.15115932560968626,
+          "projection_per_unit_length": 0.15115932560968626,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.3920802230238928
+        },
+        "8": {
+          "nominal_norm": 4.456963223889381,
+          "projection": 0.4868605163463841,
+          "perpendicular_norm": 4.430292091581023,
+          "cosine": 0.10923592856607059,
+          "projection_per_unit_length": 0.10923592856607059,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 1.2057749263815865
+        },
+        "9": {
+          "nominal_norm": 1.387753814083527,
+          "projection": 0.0006599261055528216,
+          "perpendicular_norm": 1.3877536571743962,
+          "cosine": 0.0004755354291630155,
+          "projection_per_unit_length": 0.0004755354291630155,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.004951130091723004
+        },
+        "10": {
+          "nominal_norm": 1.6968056578873056,
+          "projection": 0.010271775914730483,
+          "perpendicular_norm": 1.6967745670117553,
+          "cosine": 0.0060535959831250685,
+          "projection_per_unit_length": 0.0060535959831250685,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.025379061956207708
+        },
+        "11": {
+          "nominal_norm": 2.0186284103704795,
+          "projection": -0.19107815287255941,
+          "perpendicular_norm": 2.0095645793677943,
+          "cosine": -0.09465741782435866,
+          "projection_per_unit_length": -0.09465741782435866,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.4595589142264739
+        },
+        "12": {
+          "nominal_norm": 1.9751955081387016,
+          "projection": -0.04582485582934422,
+          "perpendicular_norm": 1.9746638645499957,
+          "cosine": -0.023200162029796557,
+          "projection_per_unit_length": -0.023200162029796557,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.15518324297069278
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 1.0083485893212052,
+          "projection": 0.0782578789081137,
+          "perpendicular_norm": 1.005307207760328,
+          "cosine": 0.077609945347169,
+          "projection_per_unit_length": 0.077609945347169,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 1.1603906271862876
+        },
+        "16": {
+          "nominal_norm": 1.9354353959570672,
+          "projection": -0.12240208244438681,
+          "perpendicular_norm": 1.9315610014019144,
+          "cosine": -0.06324265986871618,
+          "projection_per_unit_length": -0.06324265986871618,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": -1.7786960618343297
+        },
+        "17": {
+          "nominal_norm": 1.6344833464498782,
+          "projection": 0.30531812727387597,
+          "perpendicular_norm": 1.6057137512582889,
+          "cosine": 0.18679794317698703,
+          "projection_per_unit_length": 0.18679794317698703,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.46583983006883006
+        },
+        "18": {
+          "nominal_norm": 3.0258902162524706,
+          "projection": 0.7195680843511352,
+          "perpendicular_norm": 2.9390871665868743,
+          "cosine": 0.23780376448763293,
+          "projection_per_unit_length": 0.23780376448763293,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.2943990985476321
+        },
+        "19": {
+          "nominal_norm": 7.001886247683545,
+          "projection": 1.7435789897022282,
+          "perpendicular_norm": 6.781323125479931,
+          "cosine": 0.24901561208296719,
+          "projection_per_unit_length": 0.24901561208296719,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.48694239871294565
+        },
+        "20": {
+          "nominal_norm": 10.856715050429807,
+          "projection": 2.687719069505233,
+          "perpendicular_norm": 10.518765511677072,
+          "cosine": 0.24756282697120513,
+          "projection_per_unit_length": 0.24756282697120513,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.4955882977895664
+        }
+      },
+      "actual_layer20": {
+        "length": 19.747625972636722,
+        "angle_cosine": 0.24168891986729266
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r1_d171",
+      "draw": 171,
+      "status": "testable",
+      "s": 330.59858422289744,
+      "nominal_norm": 16.901877510735833,
+      "projection": 0.7993879556959769,
+      "perpendicular_norm": 16.882963077736264,
+      "cosine": 0.047295808124761106,
+      "projection_per_unit_length": 0.047295808124761106,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.0027281359506277285,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.0
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.0
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.0
+        },
+        "12": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": -0.0
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.0
+        },
+        "19": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0
+        },
+        "20": {
+          "nominal_norm": 16.901877510735833,
+          "projection": 0.7993879556959769,
+          "perpendicular_norm": 16.882963077736264,
+          "cosine": 0.047295808124761106,
+          "projection_per_unit_length": 0.047295808124761106,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.006349670456508173
+        }
+      },
+      "actual_layer20": {
+        "length": 16.903036948080224,
+        "angle_cosine": 0.04722549747901419
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r10_d171",
+      "draw": 171,
+      "status": "testable",
+      "s": 167.03511665478064,
+      "nominal_norm": 16.901877510735837,
+      "projection": 1.0455891475311203,
+      "perpendicular_norm": 16.86950523051826,
+      "cosine": 0.06186230771504389,
+      "projection_per_unit_length": 0.06186230771504389,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.007062568608173219,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 2.408765269537514,
+          "projection": -0.15449277057324912,
+          "perpendicular_norm": 2.4038057549583187,
+          "cosine": -0.06413774414927194,
+          "projection_per_unit_length": -0.06413774414927194,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": -0.019028516501723377
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 4.835022796896986,
+          "projection": 0.42218952685415656,
+          "perpendicular_norm": 4.8165549358362165,
+          "cosine": 0.08731903541904885,
+          "projection_per_unit_length": 0.08731903541904885,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.08914947073058425
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 2.8770611650951268,
+          "projection": -0.15437912599997505,
+          "perpendicular_norm": 2.8729162941432898,
+          "cosine": -0.05365861799287492,
+          "projection_per_unit_length": -0.05365861799287492,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.03165689810941207
+        },
+        "12": {
+          "nominal_norm": 3.923750572412368,
+          "projection": -0.18264448390470622,
+          "perpendicular_norm": 3.9194973589741795,
+          "cosine": -0.04654844402925802,
+          "projection_per_unit_length": -0.04654844402925802,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.05273511492304491
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 4.419875994798283,
+          "projection": 0.3129337771069093,
+          "perpendicular_norm": 4.408783988872637,
+          "cosine": 0.07080148345229562,
+          "projection_per_unit_length": 0.07080148345229562,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.010916078388628259
+        },
+        "19": {
+          "nominal_norm": 6.727760697066491,
+          "projection": 0.3697620542251181,
+          "perpendicular_norm": 6.717591831917732,
+          "cosine": 0.05496064305413622,
+          "projection_per_unit_length": 0.05496064305413622,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.008804565421182032
+        },
+        "20": {
+          "nominal_norm": 13.305030686589552,
+          "projection": 0.4322201698228665,
+          "perpendicular_norm": 13.298008395842135,
+          "cosine": 0.032485469594482876,
+          "projection_per_unit_length": 0.032485469594482876,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.006795036909797796
+        }
+      },
+      "actual_layer20": {
+        "length": 21.440034287702467,
+        "angle_cosine": 0.010651007532250614
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r100_d171",
+      "draw": 171,
+      "status": "testable",
+      "s": 52.59275143543861,
+      "nominal_norm": 16.901877510735837,
+      "projection": 2.606589687780468,
+      "perpendicular_norm": 16.699675253952524,
+      "cosine": 0.15421894319875404,
+      "projection_per_unit_length": 0.15421894319875404,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.05591858566632805,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.17740925719808096,
+          "projection": -0.00888285333890618,
+          "perpendicular_norm": 0.1771867361179564,
+          "cosine": -0.050069841220226174,
+          "projection_per_unit_length": -0.050069841220226174,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": -0.014055244226326683
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.3514266874507962,
+          "projection": 0.02314838332352485,
+          "perpendicular_norm": 0.3506634697286656,
+          "cosine": 0.06586973656280982,
+          "projection_per_unit_length": 0.06586973656280982,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.012988666156632021
+        },
+        "3": {
+          "nominal_norm": 0.6116527907115864,
+          "projection": 0.034566346577103446,
+          "perpendicular_norm": 0.6106752852945526,
+          "cosine": 0.056513020298476116,
+          "projection_per_unit_length": 0.056513020298476116,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.02947867022224061
+        },
+        "4": {
+          "nominal_norm": 0.8326141697886704,
+          "projection": 0.03729928947647658,
+          "perpendicular_norm": 0.8317782870076779,
+          "cosine": 0.04479780771199664,
+          "projection_per_unit_length": 0.04479780771199664,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.06536889502632286
+        },
+        "5": {
+          "nominal_norm": 0.9395424108007447,
+          "projection": -0.014337338911183679,
+          "perpendicular_norm": 0.9394330111328968,
+          "cosine": -0.015259916685362165,
+          "projection_per_unit_length": -0.015259916685362165,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": -0.005608506322510503
+        },
+        "6": {
+          "nominal_norm": 1.769918182187904,
+          "projection": -0.05935654483581845,
+          "perpendicular_norm": 1.7689226021012021,
+          "cosine": -0.033536321301837924,
+          "projection_per_unit_length": -0.033536321301837924,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.043769968655447855
+        },
+        "7": {
+          "nominal_norm": 2.0644384822334914,
+          "projection": -0.09989667855699054,
+          "perpendicular_norm": 2.06202010187578,
+          "cosine": -0.04838927360475935,
+          "projection_per_unit_length": -0.04838927360475935,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.03055477220073131
+        },
+        "8": {
+          "nominal_norm": 3.436493177200234,
+          "projection": 0.07265388092044239,
+          "perpendicular_norm": 3.4357250720235104,
+          "cosine": 0.021141866773509696,
+          "projection_per_unit_length": 0.021141866773509696,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.04872501977853911
+        },
+        "9": {
+          "nominal_norm": 1.8764098583928113,
+          "projection": -0.06606258431224514,
+          "perpendicular_norm": 1.8752465682218213,
+          "cosine": -0.035206905365989326,
+          "projection_per_unit_length": -0.035206905365989326,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.13421346876930532
+        },
+        "10": {
+          "nominal_norm": 1.6965938390258704,
+          "projection": -0.0037882993736304115,
+          "perpendicular_norm": 1.6965896096016846,
+          "cosine": -0.0022328852589760264,
+          "projection_per_unit_length": -0.0022328852589760264,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.002534579014528982
+        },
+        "11": {
+          "nominal_norm": 1.8020818661538487,
+          "projection": -0.09206312047461293,
+          "perpendicular_norm": 1.7997287112698444,
+          "cosine": -0.051087091104857305,
+          "projection_per_unit_length": -0.051087091104857305,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.05995803130306638
+        },
+        "12": {
+          "nominal_norm": 1.6029196679942983,
+          "projection": -0.001645560279400755,
+          "perpendicular_norm": 1.602918823326471,
+          "cosine": -0.0010266018392923034,
+          "projection_per_unit_length": -0.0010266018392923034,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.0015089992533771897
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 1.0981595366478776,
+          "projection": 0.060411277922640685,
+          "perpendicular_norm": 1.0964966235380913,
+          "cosine": 0.05501138578375013,
+          "projection_per_unit_length": 0.05501138578375013,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.24256362556646638
+        },
+        "16": {
+          "nominal_norm": 1.9501953585569842,
+          "projection": -0.04679030738614627,
+          "perpendicular_norm": 1.9496339665875526,
+          "cosine": -0.023992625754564408,
+          "projection_per_unit_length": -0.023992625754564408,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": -0.1841197379913549
+        },
+        "17": {
+          "nominal_norm": 2.866851838608541,
+          "projection": -0.05750924368252659,
+          "perpendicular_norm": 2.866274960889872,
+          "cosine": -0.020060068297927582,
+          "projection_per_unit_length": -0.020060068297927582,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": -0.0237603699271245
+        },
+        "18": {
+          "nominal_norm": 4.4722356019727645,
+          "projection": 0.32694130585748893,
+          "perpendicular_norm": 4.460269124400107,
+          "cosine": 0.07310466955570735,
+          "projection_per_unit_length": 0.07310466955570735,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.03622145480058437
+        },
+        "19": {
+          "nominal_norm": 9.025891250605097,
+          "projection": 1.4119342324450352,
+          "perpendicular_norm": 8.914771707172287,
+          "cosine": 0.1564315581965802,
+          "projection_per_unit_length": 0.1564315581965802,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.10677803995297996
+        },
+        "20": {
+          "nominal_norm": 11.284882375891998,
+          "projection": 1.0899675024092175,
+          "perpendicular_norm": 11.232120952046841,
+          "cosine": 0.09658651868075518,
+          "projection_per_unit_length": 0.09658651868075518,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.05442296927289121
+        }
+      },
+      "actual_layer20": {
+        "length": 21.48316621956179,
+        "angle_cosine": 0.047067852379833436
+      }
+    },
+    {
+      "target": "google",
+      "arm": "rand100_d171",
+      "draw": 171,
+      "status": "testable",
+      "s": 146.85592976796366,
+      "nominal_norm": 16.901877510735837,
+      "projection": 0.2695814946335162,
+      "perpendicular_norm": 16.899727489094875,
+      "cosine": 0.015949795782289975,
+      "projection_per_unit_length": 0.015949795782289975,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.0020711329936488293,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.030613292173423342,
+          "projection": 0.0005192719280322895,
+          "perpendicular_norm": 0.030608887832787073,
+          "cosine": 0.01696230268507648,
+          "projection_per_unit_length": 0.01696230268507648,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0002942491076921078
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0023578077855164682,
+          "projection": 2.2731132021474925e-05,
+          "perpendicular_norm": 0.0023576982099240552,
+          "cosine": 0.009640790975883457,
+          "projection_per_unit_length": 0.009640790975883457,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 4.5677187811858405e-06
+        },
+        "3": {
+          "nominal_norm": 1.093441083455724,
+          "projection": -0.01095259488663489,
+          "perpendicular_norm": 1.0933862280338438,
+          "cosine": -0.010016630116018855,
+          "projection_per_unit_length": -0.010016630116018855,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": -0.003345074831341241
+        },
+        "4": {
+          "nominal_norm": 0.015763657503368146,
+          "projection": 0.0003555169029103157,
+          "perpendicular_norm": 0.01575964801685748,
+          "cosine": 0.02255294514197318,
+          "projection_per_unit_length": 0.02255294514197318,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0002231337393562383
+        },
+        "5": {
+          "nominal_norm": 0.7275018136074829,
+          "projection": 0.02171331617844848,
+          "perpendicular_norm": 0.7271777091624244,
+          "cosine": 0.029846408314472887,
+          "projection_per_unit_length": 0.029846408314472887,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.00304186001048614
+        },
+        "6": {
+          "nominal_norm": 2.378219307040543,
+          "projection": -0.01678335131806314,
+          "perpendicular_norm": 2.3781600853388603,
+          "cosine": -0.007057108345045079,
+          "projection_per_unit_length": -0.007057108345045079,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.004432213918932128
+        },
+        "7": {
+          "nominal_norm": 1.2715252043088798,
+          "projection": -0.028854757653465325,
+          "perpendicular_norm": 1.2711977612289516,
+          "cosine": -0.022693028463520653,
+          "projection_per_unit_length": -0.022693028463520653,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.0031606749707052124
+        },
+        "8": {
+          "nominal_norm": 2.394194956088643,
+          "projection": -0.0028267444952665075,
+          "perpendicular_norm": 2.3941932873675547,
+          "cosine": -0.0011806659637628313,
+          "projection_per_unit_length": -0.0011806659637628313,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": -0.0006789130646685294
+        },
+        "9": {
+          "nominal_norm": 3.7716615618464795,
+          "projection": 0.06387592993782043,
+          "perpendicular_norm": 3.771120629558912,
+          "cosine": 0.01693575335177977,
+          "projection_per_unit_length": 0.01693575335177977,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.046474227815020384
+        },
+        "10": {
+          "nominal_norm": 2.071390255400016,
+          "projection": 0.017679547019006012,
+          "perpendicular_norm": 2.0713148055723796,
+          "cosine": 0.008535111610627826,
+          "projection_per_unit_length": 0.008535111610627826,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.004236108553188332
+        },
+        "11": {
+          "nominal_norm": 1.183935348892861,
+          "projection": 0.052568289556922936,
+          "perpendicular_norm": 1.1827677224591142,
+          "cosine": 0.044401317695329706,
+          "projection_per_unit_length": 0.044401317695329706,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.01226083151163036
+        },
+        "12": {
+          "nominal_norm": 0.3711112428317007,
+          "projection": 0.010359701210518532,
+          "perpendicular_norm": 0.3709666172944923,
+          "cosine": 0.027915352635157608,
+          "projection_per_unit_length": 0.027915352635157608,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": -0.003402176682023332
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.20098936292672442,
+          "projection": -0.003201064769606327,
+          "perpendicular_norm": 0.20096387036985364,
+          "cosine": -0.015926538215723155,
+          "projection_per_unit_length": -0.015926538215723155,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": -0.004602952772187487
+        },
+        "16": {
+          "nominal_norm": 0.6684856088469002,
+          "projection": 0.005802966164986525,
+          "perpendicular_norm": 0.6684604212809453,
+          "cosine": 0.008680764534327541,
+          "projection_per_unit_length": 0.008680764534327541,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.008177657042026033
+        },
+        "17": {
+          "nominal_norm": 4.080941177682035,
+          "projection": -0.16024489429374772,
+          "perpendicular_norm": 4.077793823816209,
+          "cosine": -0.0392666513230084,
+          "projection_per_unit_length": -0.0392666513230084,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": -0.02371014158940747
+        },
+        "18": {
+          "nominal_norm": 2.431366418338788,
+          "projection": -0.003950306634809851,
+          "perpendicular_norm": 2.4313632092517725,
+          "cosine": -0.0016247269868557561,
+          "projection_per_unit_length": -0.0016247269868557561,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": -0.000156733311403239
+        },
+        "19": {
+          "nominal_norm": 11.37897419462146,
+          "projection": 0.46528925367460894,
+          "perpendicular_norm": 11.369457314765556,
+          "cosine": 0.040890263543662736,
+          "projection_per_unit_length": 0.040890263543662736,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.012601577177481423
+        },
+        "20": {
+          "nominal_norm": 9.946682767989635,
+          "projection": -0.1417913150201658,
+          "perpendicular_norm": 9.94567208940687,
+          "cosine": -0.01425513594104739,
+          "projection_per_unit_length": -0.01425513594104739,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": -0.0025354363842804107
+        }
+      },
+      "actual_layer20": {
+        "length": 19.113241129618338,
+        "angle_cosine": -0.03244980798712939
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r1_d1171",
+      "draw": 1171,
+      "status": "testable",
+      "s": 346.03006860757495,
+      "nominal_norm": 16.901877510735837,
+      "projection": 0.6747560233203536,
+      "perpendicular_norm": 16.888403349544642,
+      "cosine": 0.03992195677029123,
+      "projection_per_unit_length": 0.03992195677029123,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.0022000995322888654,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.0
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.0
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.0
+        },
+        "12": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": -0.0
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.0
+        },
+        "19": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0
+        },
+        "20": {
+          "nominal_norm": 16.901877510735837,
+          "projection": 0.6747560233203536,
+          "perpendicular_norm": 16.888403349544642,
+          "cosine": 0.03992195677029123,
+          "projection_per_unit_length": 0.03992195677029123,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.005120678461180668
+        }
+      },
+      "actual_layer20": {
+        "length": 16.904871889347326,
+        "angle_cosine": 0.03977784927526962
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r10_d1171",
+      "draw": 1171,
+      "status": "testable",
+      "s": 154.3180755269197,
+      "nominal_norm": 16.901877510735837,
+      "projection": 0.84998337728869,
+      "perpendicular_norm": 16.88049145156179,
+      "cosine": 0.050289287491806306,
+      "projection_per_unit_length": 0.050289287491806306,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.006214454768328348,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 2.567936037040983,
+          "projection": 0.10756924710422172,
+          "perpendicular_norm": 2.565682043319316,
+          "cosine": 0.0418893794676339,
+          "projection_per_unit_length": 0.0418893794676339,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.014340882734680293
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 4.5006248695349225,
+          "projection": -0.06623319488217037,
+          "perpendicular_norm": 4.500137484585547,
+          "cosine": -0.014716444227668915,
+          "projection_per_unit_length": -0.014716444227668915,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": -0.015138331252442766
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 2.3255233110598135,
+          "projection": -0.1379890390040262,
+          "perpendicular_norm": 2.321425789336662,
+          "cosine": -0.059336768781363146,
+          "projection_per_unit_length": -0.059336768781363146,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.030627768560640947
+        },
+        "12": {
+          "nominal_norm": 3.3365548652035653,
+          "projection": -0.14886454521076942,
+          "perpendicular_norm": 3.333232322490104,
+          "cosine": -0.044616243767862364,
+          "projection_per_unit_length": -0.044616243767862364,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.046523844695194126
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 4.849193683518012,
+          "projection": -0.2371042364830944,
+          "perpendicular_norm": 4.843393537728764,
+          "cosine": -0.04889560037352006,
+          "projection_per_unit_length": -0.04889560037352006,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": -0.008952503583191544
+        },
+        "19": {
+          "nominal_norm": 9.968636845181395,
+          "projection": 0.4530435847721893,
+          "perpendicular_norm": 9.958336812008561,
+          "cosine": 0.04544689427533715,
+          "projection_per_unit_length": 0.04544689427533715,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.01167660408583338
+        },
+        "20": {
+          "nominal_norm": 10.907766098673555,
+          "projection": 0.8795615609923393,
+          "perpendicular_norm": 10.872245983411009,
+          "cosine": 0.08063626896980298,
+          "projection_per_unit_length": 0.08063626896980298,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.014967319102261524
+        }
+      },
+      "actual_layer20": {
+        "length": 18.456045697228852,
+        "angle_cosine": 0.027036426648325288
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r100_d1171",
+      "draw": 1171,
+      "status": "testable",
+      "s": 54.94765988710308,
+      "nominal_norm": 16.901877510735837,
+      "projection": 3.588886601936073,
+      "perpendicular_norm": 16.516457136636827,
+      "cosine": 0.21233656436431173,
+      "projection_per_unit_length": 0.21233656436431173,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.07369193023191474,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.16687323789200767,
+          "projection": 0.008682726782409752,
+          "perpendicular_norm": 0.16664719553651244,
+          "cosine": 0.052031870970399664,
+          "projection_per_unit_length": 0.052031870970399664,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.013149787374256506
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.2354412536987739,
+          "projection": 0.0208375660446253,
+          "perpendicular_norm": 0.23451733365486288,
+          "cosine": 0.08850431144613725,
+          "projection_per_unit_length": 0.08850431144613725,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.011190965808102173
+        },
+        "3": {
+          "nominal_norm": 0.705315896641619,
+          "projection": -0.029887172682735733,
+          "perpendicular_norm": 0.7046823901336,
+          "cosine": -0.04237416571077488,
+          "projection_per_unit_length": -0.04237416571077488,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": -0.024395848740707153
+        },
+        "4": {
+          "nominal_norm": 0.7538526446094173,
+          "projection": -0.0443419664565116,
+          "perpendicular_norm": 0.7525474070086097,
+          "cosine": -0.05882046945591849,
+          "projection_per_unit_length": -0.05882046945591849,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": 0.07438103625771308
+        },
+        "5": {
+          "nominal_norm": 1.0311066210733193,
+          "projection": 0.0011586151823960813,
+          "perpendicular_norm": 1.0311059701272691,
+          "cosine": 0.0011236618587416628,
+          "projection_per_unit_length": 0.0011236618587416628,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.0004338050147117799
+        },
+        "6": {
+          "nominal_norm": 1.9073115002263947,
+          "projection": -0.05964122171776347,
+          "perpendicular_norm": 1.9063787880607237,
+          "cosine": -0.03126978561744327,
+          "projection_per_unit_length": -0.03126978561744327,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.042095032065779754
+        },
+        "7": {
+          "nominal_norm": 2.083596197418259,
+          "projection": -0.23881103756683827,
+          "perpendicular_norm": 2.0698653101668425,
+          "cosine": -0.11461483653250283,
+          "projection_per_unit_length": -0.11461483653250283,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.06991318499881811
+        },
+        "8": {
+          "nominal_norm": 3.411791748680801,
+          "projection": 0.14292204042834028,
+          "perpendicular_norm": 3.408796888452904,
+          "cosine": 0.041890610845050066,
+          "projection_per_unit_length": 0.041890610845050066,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.09174219032134018
+        },
+        "9": {
+          "nominal_norm": 1.7758690303752191,
+          "projection": 0.06440546672115821,
+          "perpendicular_norm": 1.774700749113002,
+          "cosine": 0.03626701385042462,
+          "projection_per_unit_length": 0.03626701385042462,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.1252391075643056
+        },
+        "10": {
+          "nominal_norm": 2.008079826478575,
+          "projection": -0.0009101667811694074,
+          "perpendicular_norm": 2.008079620210975,
+          "cosine": -0.0004532522906549494,
+          "projection_per_unit_length": -0.0004532522906549494,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.0005828532384411666
+        },
+        "11": {
+          "nominal_norm": 1.7880891568369952,
+          "projection": -0.09601871321043395,
+          "perpendicular_norm": 1.7855092381478872,
+          "cosine": -0.05369906351889318,
+          "projection_per_unit_length": -0.05369906351889318,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.05985414691912939
+        },
+        "12": {
+          "nominal_norm": 1.7077134484668155,
+          "projection": -0.10176997008627973,
+          "perpendicular_norm": 1.7046782967067602,
+          "cosine": -0.059594289766616744,
+          "projection_per_unit_length": -0.059594289766616744,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.08932470003590351
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 1.2636894706647575,
+          "projection": 0.06560097164856986,
+          "perpendicular_norm": 1.2619855747145996,
+          "cosine": 0.05191225627136135,
+          "projection_per_unit_length": 0.05191225627136135,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.252112637038153
+        },
+        "16": {
+          "nominal_norm": 2.3183202272619323,
+          "projection": 0.1597810020410515,
+          "perpendicular_norm": 2.3128075379327555,
+          "cosine": 0.06892102314517694,
+          "projection_per_unit_length": 0.06892102314517694,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.6017918209379838
+        },
+        "17": {
+          "nominal_norm": 3.1487038714610858,
+          "projection": 0.13827245721077475,
+          "perpendicular_norm": 3.145666351940543,
+          "cosine": 0.043914087464380226,
+          "projection_per_unit_length": 0.043914087464380226,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.05467992534692696
+        },
+        "18": {
+          "nominal_norm": 3.496093734936677,
+          "projection": 0.2470974838550885,
+          "perpendicular_norm": 3.487350604246147,
+          "cosine": 0.07067816328430453,
+          "projection_per_unit_length": 0.07067816328430453,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.026202402281145037
+        },
+        "19": {
+          "nominal_norm": 9.012493680448118,
+          "projection": 1.3370562448828982,
+          "perpendicular_norm": 8.912761801940906,
+          "cosine": 0.1483558593537252,
+          "projection_per_unit_length": 0.1483558593537252,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.09678183317864164
+        },
+        "20": {
+          "nominal_norm": 11.909444387752847,
+          "projection": 1.974452275640493,
+          "perpendicular_norm": 11.744632980055012,
+          "cosine": 0.16578878168917213,
+          "projection_per_unit_length": 0.16578878168917213,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.09436088700838773
+        }
+      },
+      "actual_layer20": {
+        "length": 19.581113984587653,
+        "angle_cosine": 0.16549334492086892
+      }
+    },
+    {
+      "target": "google",
+      "arm": "rand100_d1171",
+      "draw": 1171,
+      "status": "testable",
+      "s": 153.77927727679312,
+      "nominal_norm": 16.901877510735837,
+      "projection": 0.41141790339772916,
+      "perpendicular_norm": 16.896869493982653,
+      "cosine": 0.024341550406835114,
+      "projection_per_unit_length": 0.024341550406835114,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.0030185249414600456,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0006307017154454436,
+          "projection": 8.14571897633054e-06,
+          "perpendicular_norm": 0.000630649110939026,
+          "cosine": 0.01291532712984218,
+          "projection_per_unit_length": 0.01291532712984218,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 4.40801845511681e-06
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.11418654389704513,
+          "projection": -0.0006166944962658921,
+          "perpendicular_norm": 0.11418487857439834,
+          "cosine": -0.005400763305542612,
+          "projection_per_unit_length": -0.005400763305542612,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": -0.0001183428538052702
+        },
+        "3": {
+          "nominal_norm": 0.3518759618406383,
+          "projection": 0.0015677454702286526,
+          "perpendicular_norm": 0.35187246936271516,
+          "cosine": 0.004455392354816984,
+          "projection_per_unit_length": 0.004455392354816984,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0004572545541499113
+        },
+        "4": {
+          "nominal_norm": 0.508775938517494,
+          "projection": 0.007146039289234898,
+          "perpendicular_norm": 0.5087257510062112,
+          "cosine": 0.014045552763476814,
+          "projection_per_unit_length": 0.014045552763476814,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0042831576623533875
+        },
+        "5": {
+          "nominal_norm": 0.6861502560736988,
+          "projection": -0.01770757127286895,
+          "perpendicular_norm": 0.6859217271887651,
+          "cosine": -0.025807133519406566,
+          "projection_per_unit_length": -0.025807133519406566,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": -0.0023690036907742422
+        },
+        "6": {
+          "nominal_norm": 2.278293677900883,
+          "projection": -0.07222956885284991,
+          "perpendicular_norm": 2.2771484299769447,
+          "cosine": -0.03170336184200755,
+          "projection_per_unit_length": -0.03170336184200755,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.018215903710929127
+        },
+        "7": {
+          "nominal_norm": 1.312670373638774,
+          "projection": -0.013335166492192817,
+          "perpendicular_norm": 1.3126026371920727,
+          "cosine": -0.010158808151681836,
+          "projection_per_unit_length": -0.010158808151681836,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.0013949367634518975
+        },
+        "8": {
+          "nominal_norm": 1.945140196255999,
+          "projection": -0.004345229562147118,
+          "perpendicular_norm": 1.9451353428671432,
+          "cosine": -0.0022338901692077542,
+          "projection_per_unit_length": -0.0022338901692077542,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": -0.0009966301200693708
+        },
+        "9": {
+          "nominal_norm": 1.1669078823210595,
+          "projection": -0.00865204289413108,
+          "perpendicular_norm": 1.16687580657788,
+          "cosine": -0.007414503771215922,
+          "projection_per_unit_length": -0.007414503771215922,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.006011561331768476
+        },
+        "10": {
+          "nominal_norm": 2.8633216842507543,
+          "projection": 0.03186078280550661,
+          "perpendicular_norm": 2.8631444179467436,
+          "cosine": 0.011127210393701755,
+          "projection_per_unit_length": 0.011127210393701755,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.007290311092916415
+        },
+        "11": {
+          "nominal_norm": 2.1307305055256522,
+          "projection": -0.02723316186352419,
+          "perpendicular_norm": 2.1305564630097265,
+          "cosine": -0.012781138578013532,
+          "projection_per_unit_length": -0.012781138578013532,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.0060657962333621335
+        },
+        "12": {
+          "nominal_norm": 3.282931285490295,
+          "projection": 0.0659195789961019,
+          "perpendicular_norm": 3.2822694030740283,
+          "cosine": 0.020079487891644078,
+          "projection_per_unit_length": 0.020079487891644078,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": -0.02067367718235486
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.08561197508954539,
+          "projection": 0.0009323659401618204,
+          "perpendicular_norm": 0.08560689792584805,
+          "cosine": 0.010890601918558906,
+          "projection_per_unit_length": 0.010890601918558906,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.001280330611244493
+        },
+        "16": {
+          "nominal_norm": 0.9683143826719431,
+          "projection": 0.007160399763247265,
+          "perpendicular_norm": 0.9682879077859936,
+          "cosine": 0.0073947055743291065,
+          "projection_per_unit_length": 0.0073947055743291065,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.00963628854527529
+        },
+        "17": {
+          "nominal_norm": 1.8002295014382712,
+          "projection": 0.030057433684399254,
+          "perpendicular_norm": 1.7999785577970073,
+          "cosine": 0.016696445458973558,
+          "projection_per_unit_length": 0.016696445458973558,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.004247129621803445
+        },
+        "18": {
+          "nominal_norm": 2.048387085498958,
+          "projection": -0.007159741991168284,
+          "perpendicular_norm": 2.048374572712114,
+          "cosine": -0.003495307133038418,
+          "projection_per_unit_length": -0.003495307133038418,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": -0.00027128235391345466
+        },
+        "19": {
+          "nominal_norm": 9.222061744287993,
+          "projection": 0.1345737645221968,
+          "perpendicular_norm": 9.221079802136105,
+          "cosine": 0.01459258984093766,
+          "projection_per_unit_length": 0.01459258984093766,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0034806147356738213
+        },
+        "20": {
+          "nominal_norm": 12.45182006950205,
+          "projection": 0.2834708246328238,
+          "perpendicular_norm": 12.448592986150524,
+          "cosine": 0.022765412851340684,
+          "projection_per_unit_length": 0.022765412851340684,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.004840666099120463
+        }
+      },
+      "actual_layer20": {
+        "length": 19.975690342978332,
+        "angle_cosine": -0.018301129609534016
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r1_d2171",
+      "draw": 2171,
+      "status": "testable",
+      "s": 396.4697141860267,
+      "nominal_norm": 16.901877510735837,
+      "projection": 0.9333826580675,
+      "perpendicular_norm": 16.876085452543094,
+      "cosine": 0.05522360799707774,
+      "projection_per_unit_length": 0.05522360799707774,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.0026561898167652294,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.0
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.0
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.0
+        },
+        "12": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": -0.0
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.0
+        },
+        "19": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0
+        },
+        "20": {
+          "nominal_norm": 16.901877510735837,
+          "projection": 0.9333826580675,
+          "perpendicular_norm": 16.876085452543094,
+          "cosine": 0.05522360799707774,
+          "projection_per_unit_length": 0.05522360799707774,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.0061822175696600755
+        }
+      },
+      "actual_layer20": {
+        "length": 16.9030799698221,
+        "angle_cosine": 0.05517681057434573
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r10_d2171",
+      "draw": 2171,
+      "status": "testable",
+      "s": 159.94387819916219,
+      "nominal_norm": 16.901877510735837,
+      "projection": 1.8112859976147635,
+      "perpendicular_norm": 16.80454421942953,
+      "cosine": 0.10716478074487641,
+      "projection_per_unit_length": 0.10716478074487641,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.012776997359000845,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.0
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.0
+        },
+        "5": {
+          "nominal_norm": 2.855517467183056,
+          "projection": 0.1706733168246377,
+          "perpendicular_norm": 2.850412360398336,
+          "cosine": 0.05976966304219652,
+          "projection_per_unit_length": 0.05976966304219652,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.021953438929099057
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.0
+        },
+        "8": {
+          "nominal_norm": 4.760260431510493,
+          "projection": 0.013987514511683868,
+          "perpendicular_norm": 4.760239881060854,
+          "cosine": 0.002938392702023962,
+          "projection_per_unit_length": 0.002938392702023962,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.0030845515027797406
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.0
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": -0.0
+        },
+        "11": {
+          "nominal_norm": 2.5779780363191196,
+          "projection": 0.1434057298709261,
+          "perpendicular_norm": 2.5739863155005254,
+          "cosine": 0.05562721165603226,
+          "projection_per_unit_length": 0.05562721165603226,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.03071046887905821
+        },
+        "12": {
+          "nominal_norm": 3.734079725802358,
+          "projection": -0.1688270283049587,
+          "perpendicular_norm": 3.730261228541767,
+          "cosine": -0.045212486262242856,
+          "projection_per_unit_length": -0.045212486262242856,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.05090676210007373
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.0
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.0
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.0
+        },
+        "18": {
+          "nominal_norm": 4.610787306883887,
+          "projection": 0.25781290191250705,
+          "perpendicular_norm": 4.603573839630361,
+          "cosine": 0.05591515824804875,
+          "projection_per_unit_length": 0.05591515824804875,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.009392020099735728
+        },
+        "19": {
+          "nominal_norm": 7.542278087862857,
+          "projection": 0.3456344527872902,
+          "perpendicular_norm": 7.534354357189647,
+          "cosine": 0.04582626744345189,
+          "projection_per_unit_length": 0.04582626744345189,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.008594938484779713
+        },
+        "20": {
+          "nominal_norm": 12.408159461251907,
+          "projection": 1.0485991100126772,
+          "perpendicular_norm": 12.363772123520226,
+          "cosine": 0.08450883576143854,
+          "projection_per_unit_length": 0.08450883576143854,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.01721616584879924
+        }
+      },
+      "actual_layer20": {
+        "length": 20.277076503976346,
+        "angle_cosine": 0.05090642649013849
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r100_d2171",
+      "draw": 2171,
+      "status": "testable",
+      "s": 52.13053965174797,
+      "nominal_norm": 16.901877510735837,
+      "projection": 3.7472112899942505,
+      "perpendicular_norm": 16.48125817211955,
+      "cosine": 0.2217038484401555,
+      "projection_per_unit_length": 0.2217038484401555,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.08110084116447676,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.20600697346115218,
+          "projection": 0.014286698874971821,
+          "perpendicular_norm": 0.20551098109317598,
+          "cosine": 0.06935055952203452,
+          "projection_per_unit_length": 0.06935055952203452,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.022806123243594944
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.29972844086139877,
+          "projection": -0.024477364334556405,
+          "perpendicular_norm": 0.29872729519820984,
+          "cosine": -0.08166513749649568,
+          "projection_per_unit_length": -0.08166513749649568,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": -0.013856138392478198
+        },
+        "3": {
+          "nominal_norm": 0.5023139795653312,
+          "projection": 0.03616805393820189,
+          "perpendicular_norm": 0.5010101854664067,
+          "cosine": 0.07200288148360771,
+          "projection_per_unit_length": 0.07200288148360771,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.03111811070389669
+        },
+        "4": {
+          "nominal_norm": 0.6591230029378274,
+          "projection": 0.03088592401904086,
+          "perpendicular_norm": 0.6583989616480795,
+          "cosine": 0.04685912019665048,
+          "projection_per_unit_length": 0.04685912019665048,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.05460907934799439
+        },
+        "5": {
+          "nominal_norm": 1.182088892696617,
+          "projection": 0.09630994034484483,
+          "perpendicular_norm": 1.1781589644982067,
+          "cosine": 0.0814743636793166,
+          "projection_per_unit_length": 0.0814743636793166,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.03800873777515322
+        },
+        "6": {
+          "nominal_norm": 1.4882217145339502,
+          "projection": -0.04167769415175558,
+          "perpendicular_norm": 1.487638007520836,
+          "cosine": -0.028005030261776094,
+          "projection_per_unit_length": -0.028005030261776094,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.031005945369052774
+        },
+        "7": {
+          "nominal_norm": 1.8014487862984032,
+          "projection": -0.0836088325342062,
+          "perpendicular_norm": 1.7995075139543755,
+          "cosine": -0.04641199526188291,
+          "projection_per_unit_length": -0.04641199526188291,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.02579965104418076
+        },
+        "8": {
+          "nominal_norm": 3.0252860322918984,
+          "projection": 0.1583889005185273,
+          "perpendicular_norm": 3.0211369603798155,
+          "cosine": 0.052355016625827915,
+          "projection_per_unit_length": 0.052355016625827915,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.1071646676857868
+        },
+        "9": {
+          "nominal_norm": 1.6681369284863785,
+          "projection": -0.04627752379003744,
+          "perpendicular_norm": 1.6674948884394913,
+          "cosine": -0.02774204143542844,
+          "projection_per_unit_length": -0.02774204143542844,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.09485152677925938
+        },
+        "10": {
+          "nominal_norm": 1.5852955532424573,
+          "projection": -0.0892434546503092,
+          "perpendicular_norm": 1.5827816011479243,
+          "cosine": -0.056294521528037225,
+          "projection_per_unit_length": -0.056294521528037225,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.06023814469819267
+        },
+        "11": {
+          "nominal_norm": 1.7488638526345042,
+          "projection": 0.17460935103139325,
+          "perpendicular_norm": 1.7401253832939731,
+          "cosine": 0.09984159188170089,
+          "projection_per_unit_length": 0.09984159188170089,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.11472626174382267
+        },
+        "12": {
+          "nominal_norm": 1.5756678049541972,
+          "projection": -0.005699621751162275,
+          "perpendicular_norm": 1.5756574963744727,
+          "cosine": -0.0036172737256175364,
+          "projection_per_unit_length": -0.0036172737256175364,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.005272965568032221
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.9256415496199584,
+          "projection": -0.05357518387596173,
+          "perpendicular_norm": 0.9240898106004062,
+          "cosine": -0.057878974747793195,
+          "projection_per_unit_length": -0.057878974747793195,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": -0.21702261591120292
+        },
+        "16": {
+          "nominal_norm": 2.1325065364636444,
+          "projection": 0.20220574496982777,
+          "perpendicular_norm": 2.122898246445497,
+          "cosine": 0.09482069175982337,
+          "projection_per_unit_length": 0.09482069175982337,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.8027339139949615
+        },
+        "17": {
+          "nominal_norm": 2.6900830050250635,
+          "projection": -0.057617888307621525,
+          "perpendicular_norm": 2.6894658861699,
+          "cosine": -0.021418628421499098,
+          "projection_per_unit_length": -0.021418628421499098,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": -0.024016324907066507
+        },
+        "18": {
+          "nominal_norm": 3.2615718133660225,
+          "projection": 0.28287828038735935,
+          "perpendicular_norm": 3.2492815470852654,
+          "cosine": 0.0867306613419074,
+          "projection_per_unit_length": 0.0867306613419074,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.03161763421997851
+        },
+        "19": {
+          "nominal_norm": 8.938576739012648,
+          "projection": 1.2152325610407655,
+          "perpendicular_norm": 8.855583771937583,
+          "cosine": 0.13595369783389025,
+          "projection_per_unit_length": 0.13595369783389025,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0927172507397817
+        },
+        "20": {
+          "nominal_norm": 11.789015590161789,
+          "projection": 1.938423398264928,
+          "perpendicular_norm": 11.628559812553606,
+          "cosine": 0.1644262307942478,
+          "projection_per_unit_length": 0.1644262307942478,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.09764522216592426
+        }
+      },
+      "actual_layer20": {
+        "length": 18.451259513948486,
+        "angle_cosine": 0.1866287674902627
+      }
+    },
+    {
+      "target": "google",
+      "arm": "rand100_d2171",
+      "draw": 2171,
+      "status": "testable",
+      "s": 118.59657096911145,
+      "nominal_norm": 16.901877510735837,
+      "projection": 0.6743604677900279,
+      "perpendicular_norm": 16.88841914885463,
+      "cosine": 0.039898553717578625,
+      "projection_per_unit_length": 0.039898553717578625,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.006415483147528514,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.1156745799006547,
+          "projection": 0.0005513094310136495,
+          "perpendicular_norm": 0.11567326611237458,
+          "cosine": 0.004766037892570113,
+          "projection_per_unit_length": 0.004766037892570113,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.0003868433059746038
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.17157497697856766,
+          "projection": -0.0009515065749816608,
+          "perpendicular_norm": 0.17157233856433207,
+          "cosine": -0.0055457187973309095,
+          "projection_per_unit_length": -0.0055457187973309095,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": -0.00023676060565804255
+        },
+        "3": {
+          "nominal_norm": 0.19793647679091506,
+          "projection": 0.0015068004035036732,
+          "perpendicular_norm": 0.1979307414146283,
+          "cosine": 0.007612545337438444,
+          "projection_per_unit_length": 0.007612545337438444,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.0005698543870740123
+        },
+        "4": {
+          "nominal_norm": 0.12877010513683682,
+          "projection": -0.0012237588396032595,
+          "perpendicular_norm": 0.12876429004679246,
+          "cosine": -0.009503439003197514,
+          "projection_per_unit_length": -0.009503439003197514,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": 0.0009510868706232397
+        },
+        "5": {
+          "nominal_norm": 0.7898636904124122,
+          "projection": 0.001201825938423478,
+          "perpendicular_norm": 0.7898627760860293,
+          "cosine": 0.0015215611921545191,
+          "projection_per_unit_length": 0.0015215611921545191,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.00020848460684156364
+        },
+        "6": {
+          "nominal_norm": 0.6388801119381026,
+          "projection": 0.00336128176486135,
+          "perpendicular_norm": 0.6388712696740555,
+          "cosine": 0.005261208953060986,
+          "projection_per_unit_length": 0.005261208953060986,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": 0.0010991736332638283
+        },
+        "7": {
+          "nominal_norm": 6.306694772910624,
+          "projection": 0.09223973758613967,
+          "perpendicular_norm": 6.306020202113867,
+          "cosine": 0.014625686022152265,
+          "projection_per_unit_length": 0.014625686022152265,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": -0.01251122458062019
+        },
+        "8": {
+          "nominal_norm": 2.0978500075623283,
+          "projection": 0.01809169300627566,
+          "perpendicular_norm": 2.097771995445031,
+          "cosine": 0.008623921129279375,
+          "projection_per_unit_length": 0.008623921129279375,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.005380543856142372
+        },
+        "9": {
+          "nominal_norm": 1.2916002221739002,
+          "projection": -0.03367678066949617,
+          "perpendicular_norm": 1.291161108600862,
+          "cosine": -0.026073687578664684,
+          "projection_per_unit_length": -0.026073687578664684,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.030340649263382997
+        },
+        "10": {
+          "nominal_norm": 1.2819607381478022,
+          "projection": -0.014138030573832044,
+          "perpendicular_norm": 1.2818827755469495,
+          "cosine": -0.011028442723026683,
+          "projection_per_unit_length": -0.011028442723026683,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.004194731995637924
+        },
+        "11": {
+          "nominal_norm": 1.4715738921413437,
+          "projection": -0.01653702520898642,
+          "perpendicular_norm": 1.4714809705970582,
+          "cosine": -0.011237645148027707,
+          "projection_per_unit_length": -0.011237645148027707,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.0047760935126953605
+        },
+        "12": {
+          "nominal_norm": 0.3929196254429942,
+          "projection": -0.0061034439276695055,
+          "perpendicular_norm": 0.3928722184508401,
+          "cosine": -0.015533568527630109,
+          "projection_per_unit_length": -0.015533568527630109,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.0024820124051890516
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 0.7152595724567937,
+          "projection": 0.00786294262108179,
+          "perpendicular_norm": 0.7152163519693974,
+          "cosine": 0.01099313161804173,
+          "projection_per_unit_length": 0.01099313161804173,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.014000595833752804
+        },
+        "16": {
+          "nominal_norm": 0.6716874507430816,
+          "projection": -0.0008014078661051256,
+          "perpendicular_norm": 0.6716869726525682,
+          "cosine": -0.0011931261559502647,
+          "projection_per_unit_length": -0.0011931261559502647,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": -0.001398465672567249
+        },
+        "17": {
+          "nominal_norm": 3.6481910048289077,
+          "projection": -0.05085350035692606,
+          "perpendicular_norm": 3.64783655461919,
+          "cosine": -0.013939374415871897,
+          "projection_per_unit_length": -0.013939374415871897,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": -0.009317301586375653
+        },
+        "18": {
+          "nominal_norm": 2.9332201569724967,
+          "projection": 0.0010099904481991676,
+          "perpendicular_norm": 2.9332199830883896,
+          "cosine": 0.0003443282106862454,
+          "projection_per_unit_length": 0.0003443282106862454,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 4.962118399120713e-05
+        },
+        "19": {
+          "nominal_norm": 11.453176385516457,
+          "projection": 0.6563996504737339,
+          "perpendicular_norm": 11.434351263478387,
+          "cosine": 0.05731158137962571,
+          "projection_per_unit_length": 0.05731158137962571,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.02201352430403406
+        },
+        "20": {
+          "nominal_norm": 9.232149006711767,
+          "projection": 0.016420690134395573,
+          "perpendicular_norm": 9.232134403433724,
+          "cosine": 0.0017786422340516537,
+          "projection_per_unit_length": 0.0017786422340516537,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.0003635916062985414
+        }
+      },
+      "actual_layer20": {
+        "length": 20.72248166895663,
+        "angle_cosine": -0.020074486696998312
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r100p_d171",
+      "draw": 171,
+      "status": "NOT_TESTABLE",
+      "s": 138.3297029152121,
+      "nominal_norm": 44.45539795801509,
+      "projection": 6.8558644925651375,
+      "perpendicular_norm": 43.92356462839824,
+      "cosine": 0.1542189431987541,
+      "projection_per_unit_length": 0.1542189431987541,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.05591858566632805,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.4666226651546231,
+          "projection": -0.02336372275405075,
+          "perpendicular_norm": 0.46603738916000653,
+          "cosine": -0.05006984122022619,
+          "projection_per_unit_length": -0.05006984122022619,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": -0.014055244226326683
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.9243241310776711,
+          "projection": 0.0608849870127343,
+          "perpendicular_norm": 0.9223167122246841,
+          "cosine": 0.06586973656280984,
+          "projection_per_unit_length": 0.06586973656280984,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.012988666156632021
+        },
+        "3": {
+          "nominal_norm": 1.6087720554087899,
+          "projection": 0.09091656782293811,
+          "perpendicular_norm": 1.6062010160498343,
+          "cosine": 0.05651302029847613,
+          "projection_per_unit_length": 0.05651302029847613,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.02947867022224061
+        },
+        "4": {
+          "nominal_norm": 2.1899457169729692,
+          "projection": 0.0981047671286657,
+          "perpendicular_norm": 2.187747174139389,
+          "cosine": 0.044797807711996644,
+          "projection_per_unit_length": 0.044797807711996644,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.06536889502632286
+        },
+        "5": {
+          "nominal_norm": 2.4711888808831874,
+          "projection": -0.037710136436070796,
+          "perpendicular_norm": 2.4709011373607552,
+          "cosine": -0.01525991668536216,
+          "projection_per_unit_length": -0.01525991668536216,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": -0.005608506322510503
+        },
+        "6": {
+          "nominal_norm": 4.655247151821563,
+          "projection": -0.15611986422295382,
+          "perpendicular_norm": 4.652628572381184,
+          "cosine": -0.03353632130183793,
+          "projection_per_unit_length": -0.03353632130183793,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.043769968655447855
+        },
+        "7": {
+          "nominal_norm": 5.429895834308114,
+          "projection": -0.26274871517167836,
+          "perpendicular_norm": 5.423534998883316,
+          "cosine": -0.04838927360475934,
+          "projection_per_unit_length": -0.04838927360475934,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.03055477220073131
+        },
+        "8": {
+          "nominal_norm": 9.038680565245032,
+          "projection": 0.1910945803187219,
+          "perpendicular_norm": 9.036660291385921,
+          "cosine": 0.021141866773509706,
+          "projection_per_unit_length": 0.021141866773509706,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.04872501977853911
+        },
+        "9": {
+          "nominal_norm": 4.935342060916614,
+          "projection": -0.17375812088747797,
+          "perpendicular_norm": 4.932282369621422,
+          "cosine": -0.035206905365989326,
+          "projection_per_unit_length": -0.035206905365989326,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.13421346876930532
+        },
+        "10": {
+          "nominal_norm": 4.462389118552314,
+          "projection": -0.009964002882630513,
+          "perpendicular_norm": 4.462377994300869,
+          "cosine": -0.002232885258976033,
+          "projection_per_unit_length": -0.002232885258976033,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.002534579014528982
+        },
+        "11": {
+          "nominal_norm": 4.7398442251108275,
+          "projection": -0.2421448537510687,
+          "perpendicular_norm": 4.733654946034653,
+          "cosine": -0.051087091104857325,
+          "projection_per_unit_length": -0.051087091104857325,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.05995803130306638
+        },
+        "12": {
+          "nominal_norm": 4.216006872026709,
+          "projection": -0.0043281604092916225,
+          "perpendicular_norm": 4.216004650377405,
+          "cosine": -0.0010266018392923063,
+          "projection_per_unit_length": -0.0010266018392923063,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.0015089992533771897
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 2.888384393512592,
+          "projection": 0.15889402816328435,
+          "perpendicular_norm": 2.884010591606964,
+          "cosine": 0.05501138578375013,
+          "projection_per_unit_length": 0.05501138578375013,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.24256362556646638
+        },
+        "16": {
+          "nominal_norm": 5.129413031508253,
+          "projection": -0.12306808720556325,
+          "perpendicular_norm": 5.127936455702065,
+          "cosine": -0.023992625754564414,
+          "projection_per_unit_length": -0.023992625754564414,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": -0.1841197379913549
+        },
+        "17": {
+          "nominal_norm": 7.540407229377763,
+          "projection": -0.15126108401550478,
+          "perpendicular_norm": 7.53888992288088,
+          "cosine": -0.02006006829792758,
+          "projection_per_unit_length": -0.02006006829792758,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": -0.0237603699271245
+        },
+        "18": {
+          "nominal_norm": 11.762895176670042,
+          "projection": 0.8599225649088873,
+          "perpendicular_norm": 11.731420890910353,
+          "cosine": 0.07310466955570735,
+          "projection_per_unit_length": 0.07310466955570735,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.03622145480058437
+        },
+        "19": {
+          "nominal_norm": 23.73994174413748,
+          "projection": 3.7136760785314653,
+          "perpendicular_norm": 23.447674596829092,
+          "cosine": 0.1564315581965802,
+          "projection_per_unit_length": 0.1564315581965802,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.10677803995297996
+        },
+        "20": {
+          "nominal_norm": 29.68155085794542,
+          "projection": 2.866837666414731,
+          "perpendicular_norm": 29.54277751206251,
+          "cosine": 0.0965865186807552,
+          "projection_per_unit_length": 0.0965865186807552,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.05442296927289121
+        }
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r100p_d1171",
+      "draw": 1171,
+      "status": "testable",
+      "s": 104.96673541212265,
+      "nominal_norm": 32.28772450515089,
+      "projection": 6.8558644925651375,
+      "perpendicular_norm": 31.55145441624056,
+      "cosine": 0.21233656436431175,
+      "projection_per_unit_length": 0.21233656436431175,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.07369193023191474,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.31877861669020474,
+          "projection": 0.016586647851747224,
+          "perpendicular_norm": 0.3183468070704693,
+          "cosine": 0.05203187097039966,
+          "projection_per_unit_length": 0.05203187097039966,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.013149787374256506
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.44976437272987885,
+          "projection": 0.03980608612146176,
+          "perpendicular_norm": 0.44799940455852416,
+          "cosine": 0.08850431144613725,
+          "projection_per_unit_length": 0.08850431144613725,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": 0.011190965808102173
+        },
+        "3": {
+          "nominal_norm": 1.347367790673134,
+          "projection": -0.05709358603534403,
+          "perpendicular_norm": 1.3461576006460116,
+          "cosine": -0.04237416571077488,
+          "projection_per_unit_length": -0.04237416571077488,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": -0.024395848740707153
+        },
+        "4": {
+          "nominal_norm": 1.4400877352925876,
+          "projection": -0.08470663664762047,
+          "perpendicular_norm": 1.4375943346605056,
+          "cosine": -0.058820469455918484,
+          "projection_per_unit_length": -0.058820469455918484,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": 0.07438103625771308
+        },
+        "5": {
+          "nominal_norm": 1.969727120286233,
+          "projection": 0.002213307237194685,
+          "perpendicular_norm": 1.9697258767813786,
+          "cosine": 0.0011236618587416596,
+          "projection_per_unit_length": 0.0011236618587416596,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.0004338050147117799
+        },
+        "6": {
+          "nominal_norm": 3.643544820727719,
+          "projection": -0.11393286543170156,
+          "perpendicular_norm": 3.6417630569308472,
+          "cosine": -0.03126978561744327,
+          "projection_per_unit_length": -0.03126978561744327,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.042095032065779754
+        },
+        "7": {
+          "nominal_norm": 3.9803021859251353,
+          "projection": -0.45620168438977327,
+          "perpendicular_norm": 3.9540720168505206,
+          "cosine": -0.11461483653250287,
+          "projection_per_unit_length": -0.11461483653250287,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.06991318499881811
+        },
+        "8": {
+          "nominal_norm": 6.517559482985323,
+          "projection": 0.2730245479612037,
+          "perpendicular_norm": 6.511838389461342,
+          "cosine": 0.04189061084505003,
+          "projection_per_unit_length": 0.04189061084505003,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.09174219032134018
+        },
+        "9": {
+          "nominal_norm": 3.3924497425545614,
+          "projection": 0.12303402180009569,
+          "perpendicular_norm": 3.390217970166255,
+          "cosine": 0.03626701385042461,
+          "projection_per_unit_length": 0.03626701385042461,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": -0.1252391075643056
+        },
+        "10": {
+          "nominal_norm": 3.8360429591628686,
+          "projection": -0.0017386952582914145,
+          "perpendicular_norm": 3.8360425651290444,
+          "cosine": -0.0004532522906549634,
+          "projection_per_unit_length": -0.0004532522906549634,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.0005828532384411666
+        },
+        "11": {
+          "nominal_norm": 3.4157938992238606,
+          "projection": -0.18342493356186998,
+          "perpendicular_norm": 3.4108654701882877,
+          "cosine": -0.053699063518893204,
+          "projection_per_unit_length": -0.053699063518893204,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": 0.05985414691912939
+        },
+        "12": {
+          "nominal_norm": 3.262251860647714,
+          "projection": -0.19441158267512443,
+          "perpendicular_norm": 3.256453798047997,
+          "cosine": -0.05959428976661672,
+          "projection_per_unit_length": -0.05959428976661672,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.08932470003590351
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 2.4140310721673974,
+          "projection": 0.12531779966538314,
+          "perpendicular_norm": 2.4107761128891045,
+          "cosine": 0.051912256271361354,
+          "projection_per_unit_length": 0.051912256271361354,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": 0.252112637038153
+        },
+        "16": {
+          "nominal_norm": 4.428696443043462,
+          "projection": 0.3052302900539612,
+          "perpendicular_norm": 4.418165530472957,
+          "cosine": 0.06892102314517694,
+          "projection_per_unit_length": 0.06892102314517694,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.6017918209379838
+        },
+        "17": {
+          "nominal_norm": 6.014981654284367,
+          "projection": 0.2641424304628861,
+          "perpendicular_norm": 6.00917906854228,
+          "cosine": 0.04391408746438022,
+          "projection_per_unit_length": 0.04391408746438022,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": 0.05467992534692696
+        },
+        "18": {
+          "nominal_norm": 6.6786019059787325,
+          "projection": 0.4720313160216322,
+          "perpendicular_norm": 6.661899868298655,
+          "cosine": 0.07067816328430451,
+          "projection_per_unit_length": 0.07067816328430451,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.026202402281145037
+        },
+        "19": {
+          "nominal_norm": 17.21660288177379,
+          "projection": 2.5541839156773722,
+          "perpendicular_norm": 17.02608467362936,
+          "cosine": 0.14835585935372517,
+          "projection_per_unit_length": 0.14835585935372517,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.09678183317864164
+        },
+        "20": {
+          "nominal_norm": 22.75065945525472,
+          "projection": 3.771804113711924,
+          "perpendicular_norm": 22.435819561067007,
+          "cosine": 0.1657887816891721,
+          "projection_per_unit_length": 0.1657887816891721,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.09436088700838773
+        }
+      },
+      "actual_layer20": {
+        "length": 35.589399256671385,
+        "angle_cosine": 0.1265777651686085
+      }
+    },
+    {
+      "target": "google",
+      "arm": "r100p_d2171",
+      "draw": 2171,
+      "status": "testable",
+      "s": 95.37757231117496,
+      "nominal_norm": 30.923524967207502,
+      "projection": 6.855864492565137,
+      "perpendicular_norm": 30.153963561314626,
+      "cosine": 0.2217038484401555,
+      "projection_per_unit_length": 0.2217038484401555,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.08110084116447676,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.37690852884233506,
+          "projection": 0.026138817363842826,
+          "perpendicular_norm": 0.37600106561140617,
+          "cosine": 0.06935055952203453,
+          "projection_per_unit_length": 0.06935055952203453,
+          "natural_projection": 0.012016782576883345,
+          "fraction_natural_projection": 0.022806123243594944
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.02053480430976519,
+          "fraction_natural_projection": 0.0
+        },
+        "2": {
+          "nominal_norm": 0.5483804931418015,
+          "projection": -0.044783568372821325,
+          "perpendicular_norm": 0.5465488059288413,
+          "cosine": -0.08166513749649568,
+          "projection_per_unit_length": -0.08166513749649568,
+          "natural_projection": 0.033886773442454096,
+          "fraction_natural_projection": -0.013856138392478198
+        },
+        "3": {
+          "nominal_norm": 0.9190291953423122,
+          "projection": 0.06617275023220788,
+          "perpendicular_norm": 0.9166437852395246,
+          "cosine": 0.07200288148360773,
+          "projection_per_unit_length": 0.07200288148360773,
+          "natural_projection": 0.022295627479643393,
+          "fraction_natural_projection": 0.03111811070389669
+        },
+        "4": {
+          "nominal_norm": 1.2059255916901581,
+          "projection": 0.05650861224922597,
+          "perpendicular_norm": 1.2046008921775397,
+          "cosine": 0.046859120196650485,
+          "projection_per_unit_length": 0.046859120196650485,
+          "natural_projection": -0.010849345088076747,
+          "fraction_natural_projection": -0.05460907934799439
+        },
+        "5": {
+          "nominal_norm": 2.162739338487319,
+          "projection": 0.17620781140748037,
+          "perpendicular_norm": 2.15554917676205,
+          "cosine": 0.08147436367931658,
+          "projection_per_unit_length": 0.08147436367931658,
+          "natural_projection": 0.04860662262549724,
+          "fraction_natural_projection": 0.03800873777515322
+        },
+        "6": {
+          "nominal_norm": 2.7228372301774777,
+          "projection": -0.07625313902901082,
+          "perpendicular_norm": 2.7217692850109065,
+          "cosine": -0.028005030261776077,
+          "projection_per_unit_length": -0.028005030261776077,
+          "natural_projection": 0.025784961368420227,
+          "fraction_natural_projection": -0.031005945369052774
+        },
+        "7": {
+          "nominal_norm": 3.2959146985215058,
+          "projection": -0.1529699773713504,
+          "perpendicular_norm": 3.292362963883708,
+          "cosine": -0.04641199526188292,
+          "projection_per_unit_length": -0.04641199526188292,
+          "natural_projection": -0.06216502413424803,
+          "fraction_natural_projection": 0.02579965104418076
+        },
+        "8": {
+          "nominal_norm": 5.53503645338214,
+          "projection": 0.2897869255413854,
+          "perpendicular_norm": 5.527445348264821,
+          "cosine": 0.0523550166258279,
+          "projection_per_unit_length": 0.0523550166258279,
+          "natural_projection": 0.02835181731192942,
+          "fraction_natural_projection": 0.1071646676857868
+        },
+        "9": {
+          "nominal_norm": 3.05200850757577,
+          "projection": -0.08466894647844714,
+          "perpendicular_norm": 3.0508338368087355,
+          "cosine": -0.027742041435428442,
+          "projection_per_unit_length": -0.027742041435428442,
+          "natural_projection": -0.00935908876061053,
+          "fraction_natural_projection": 0.09485152677925938
+        },
+        "10": {
+          "nominal_norm": 2.90044266324599,
+          "projection": -0.16327903194693905,
+          "perpendicular_norm": 2.895843158823344,
+          "cosine": -0.05629452152803724,
+          "projection_per_unit_length": -0.05629452152803724,
+          "natural_projection": -0.028419246929799007,
+          "fraction_natural_projection": 0.06023814469819267
+        },
+        "11": {
+          "nominal_norm": 3.199705770961733,
+          "projection": 0.3194637177258845,
+          "perpendicular_norm": 3.1837179450734285,
+          "cosine": 0.09984159188170091,
+          "projection_per_unit_length": 0.09984159188170091,
+          "natural_projection": -0.029195265883839548,
+          "fraction_natural_projection": -0.11472626174382267
+        },
+        "12": {
+          "nominal_norm": 2.8828278204937052,
+          "projection": -0.010427977330551143,
+          "perpendicular_norm": 2.8828089600078046,
+          "cosine": -0.003617273725617535,
+          "projection_per_unit_length": -0.003617273725617535,
+          "natural_projection": -0.02073475360846776,
+          "fraction_natural_projection": 0.005272965568032221
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": -0.020548028546538206,
+          "fraction_natural_projection": -0.0
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.016669289740429295,
+          "fraction_natural_projection": 0.0
+        },
+        "15": {
+          "nominal_norm": 1.6935455574196294,
+          "projection": -0.09802068055212806,
+          "perpendicular_norm": 1.6907065094923663,
+          "cosine": -0.05787897474779319,
+          "projection_per_unit_length": -0.05787897474779319,
+          "natural_projection": 0.004735506701262764,
+          "fraction_natural_projection": -0.21702261591120292
+        },
+        "16": {
+          "nominal_norm": 3.901615017691354,
+          "projection": 0.36995383495800965,
+          "perpendicular_norm": 3.884035775617234,
+          "cosine": 0.09482069175982336,
+          "projection_per_unit_length": 0.09482069175982336,
+          "natural_projection": 0.0048320304027312435,
+          "fraction_natural_projection": 0.8027339139949615
+        },
+        "17": {
+          "nominal_norm": 4.921751972046538,
+          "projection": -0.10541717667204523,
+          "perpendicular_norm": 4.920622896870525,
+          "cosine": -0.0214186284214991,
+          "projection_per_unit_length": -0.0214186284214991,
+          "natural_projection": 0.04602126650713279,
+          "fraction_natural_projection": -0.024016324907066507
+        },
+        "18": {
+          "nominal_norm": 5.967342819689708,
+          "projection": 0.5175515892055709,
+          "perpendicular_norm": 5.944856657667458,
+          "cosine": 0.0867306613419074,
+          "projection_per_unit_length": 0.0867306613419074,
+          "natural_projection": 0.17162399680900234,
+          "fraction_natural_projection": 0.03161763421997851
+        },
+        "19": {
+          "nominal_norm": 16.353940607165363,
+          "projection": 2.223378699699947,
+          "perpendicular_norm": 16.2020974117678,
+          "cosine": 0.13595369783389025,
+          "projection_per_unit_length": 0.13595369783389025,
+          "natural_projection": 0.2514239420631145,
+          "fraction_natural_projection": 0.0927172507397817
+        },
+        "20": {
+          "nominal_norm": 21.569078210962328,
+          "projection": 3.5465222319348744,
+          "perpendicular_norm": 21.275509745456194,
+          "cosine": 0.16442623079424787,
+          "projection_per_unit_length": 0.16442623079424787,
+          "natural_projection": 0.3808074400186313,
+          "fraction_natural_projection": 0.09764522216592426
+        }
+      },
+      "actual_layer20": {
+        "length": 34.70383931272233,
+        "angle_cosine": 0.13873232537762248
+      }
+    },
+    {
+      "target": "google",
+      "arm": "vector",
+      "draw": null,
+      "status": "testable",
+      "s": 4.0,
+      "nominal_norm": 16.901877510735837,
+      "projection": 16.901877510735837,
+      "perpendicular_norm": 0.0,
+      "cosine": 1.0,
+      "projection_per_unit_length": 1.0,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": null,
+      "layers": {
+        "0": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "1": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "2": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "3": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "4": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "5": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "6": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "7": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "8": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "9": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "10": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "11": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "12": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "13": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "14": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "15": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "16": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "17": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "18": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "19": {
+          "nominal_norm": 0.0,
+          "projection": 0.0,
+          "perpendicular_norm": 0.0,
+          "cosine": null,
+          "projection_per_unit_length": null,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        },
+        "20": {
+          "nominal_norm": 16.901877510735837,
+          "projection": 16.901877510735837,
+          "perpendicular_norm": 0.0,
+          "cosine": 1.0,
+          "projection_per_unit_length": 1.0,
+          "natural_projection": 0.0,
+          "fraction_natural_projection": null
+        }
+      },
+      "actual_layer20": {
+        "length": 16.903557956562683,
+        "angle_cosine": 0.9999947423954962
+      }
+    },
+    {
+      "target": "google",
+      "arm": "none",
+      "draw": null,
+      "status": "testable",
+      "s": 0.0,
+      "nominal_norm": 0.0,
+      "projection": 0.0,
+      "perpendicular_norm": 0.0,
+      "cosine": null,
+      "projection_per_unit_length": null,
+      "natural_projection": 0.8863201084053173,
+      "fraction_natural_projection": 0.0,
+      "layers": {},
+      "actual_layer20": {
+        "length": 0.0,
+        "angle_cosine": null
+      }
+    }
+  ],
+  "debts": [
+    {
+      "target": "google",
+      "draw": 171,
+      "cos_n": 0.4056273918805996,
+      "cos_r": 0.15421894319875404,
+      "debt": 2.630204717184683,
+      "testable": false,
+      "status": "NOT_TESTABLE"
+    },
+    {
+      "target": "google",
+      "draw": 1171,
+      "cos_n": 0.4056273918805996,
+      "cos_r": 0.21233656436431173,
+      "debt": 1.9103040170917216,
+      "testable": true,
+      "status": "testable"
+    },
+    {
+      "target": "google",
+      "draw": 2171,
+      "cos_n": 0.4056273918805996,
+      "cos_r": 0.2217038484401555,
+      "debt": 1.8295911177657818,
+      "testable": true,
+      "status": "testable"
+    }
+  ],
+  "mean_alignment_debt": 2.1233666173473957,
+  "mean_debt_by_target": {
+    "google": 2.1233666173473957
+  },
+  "not_testable_r100p_sets": 1,
+  "testable_r100p_sets": 2
+}

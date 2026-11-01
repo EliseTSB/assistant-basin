@@ -3238,12 +3238,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 171.1 | n100's hit rate is at least 3 times r100's, averaged over draws | medium | Claude | pending |
-| 171.2 | n100's hit rate is at least 0.6 of vector's | medium | Claude | pending |
-| 171.3 | n1's hit rate is at least 2 times r1's | low | Claude | pending |
-| 171.4 | rand100's hit rate is under 5% | high | Claude | pending |
-| 171.5 | At equal length, r100's mean cosine with v̂ is at least 0.1 below n100's | high | Claude | pending |
-| 171.6 | Pooled over testable sets with a positive n100 minus r100 gap, Σ(r100p − r100) / Σ(n100 − r100) is at least 0.5; not read below 3 such sets | low | Claude | pending |
-| 171.7 | r100p breaks or loops on at least 10 points more answers than n100 | medium | Claude | pending |
-| 171.8 | n100's hit rate is at least that of `full` | low | Claude | pending |
-| 171.W1 | The median alignment debt over the 12 sets is at least 2, and 171.6 fails because the arm cannot help it. Falsifier: a debt near 1, which makes r100p the clean test | medium | Weaver | pending |
+| 171.1 | n100's hit rate is at least 3 times r100's, averaged over draws | medium | Claude | failed: 0.52 (0.10 to 1.31); per draw 1.33, 1.00, 0.25 |
+| 171.2 | n100's hit rate is at least 0.6 of vector's | medium | Claude | failed: 0.09 (0.02 to 0.19), against a vector arm that broke 95.5% of answers |
+| 171.3 | n1's hit rate is at least 2 times r1's | low | Claude | held: 68.2% against 2.3%; the ratio rests on 3 answers |
+| 171.4 | rand100's hit rate is under 5% | high | Claude | failed: 12.9% (8.3% to 17.4%); per draw 36.4%, 2.3%, 0% |
+| 171.5 | At equal length, r100's mean cosine with v̂ is at least 0.1 below n100's | high | Claude | held: +0.21 on the mean and every draw |
+| 171.6 | Pooled over testable sets with a positive n100 minus r100 gap, Σ(r100p − r100) / Σ(n100 − r100) is at least 0.5; not read below 3 such sets | low | Claude | not read: needs 3 testable sets with a positive gap, and none had one |
+| 171.7 | r100p breaks or loops on at least 10 points more answers than n100 | medium | Claude | held: +0.57 on 2 testable sets; every r100p answer broke at about 1.9 times the write |
+| 171.8 | n100's hit rate is at least that of `full` | low | Claude | held raw: 9.1% against 0%; full broke on every answer, so this does not test sparsity |
+| 171.W1 | The median alignment debt over the 12 sets is at least 2, and 171.6 fails because the arm cannot help it. Falsifier: a debt near 1, which makes r100p the clean test | medium | Weaver | failed: median debt 1.91; falsifier not met (1.83, 1.91); the 171.6 part is not read |

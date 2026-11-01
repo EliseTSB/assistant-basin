@@ -1,0 +1,359 @@
+[
+  {
+    "target": "google",
+    "arm": "full",
+    "draw": null,
+    "s": 4.853598932296668,
+    "cosine": 0.25451861089828615,
+    "projection": 4.301842385605466,
+    "write_norm": 16.901877510735833,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 1.000000012500772,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.22778864426271825,
+      "projection": 3.850055763665042,
+      "perpendicular_norm": -0.5497425933318105,
+      "fraction_natural_projection": 0.9961649654732262
+    }
+  },
+  {
+    "target": "google",
+    "arm": "n1",
+    "draw": null,
+    "s": 42.514155567965815,
+    "cosine": 0.12728423455756258,
+    "projection": 2.151342541539692,
+    "write_norm": 16.901877510735833,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.05709333409565988,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.10055426792199466,
+      "projection": 1.6995559195992673,
+      "perpendicular_norm": -0.13060295262289046,
+      "fraction_natural_projection": 0.053258287068114085
+    }
+  },
+  {
+    "target": "google",
+    "arm": "n10",
+    "draw": null,
+    "s": 25.505573738317363,
+    "cosine": 0.12211715967079635,
+    "projection": 2.06400927471477,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.09130318859507038,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.09538719303522844,
+      "projection": 1.6122226527743455,
+      "perpendicular_norm": -0.11962671983150486,
+      "fraction_natural_projection": 0.08746814156752458
+    }
+  },
+  {
+    "target": "google",
+    "arm": "n100",
+    "draw": null,
+    "s": 14.241554786546613,
+    "cosine": 0.4056273918805996,
+    "projection": 6.855864492565137,
+    "write_norm": 16.901877510735833,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.543143038705936,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.37889742524503167,
+      "projection": 6.404077870624712,
+      "perpendicular_norm": -1.4460382452496816,
+      "fraction_natural_projection": 0.5393079916783903
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r1_d171",
+    "draw": 171,
+    "s": 330.59858422289744,
+    "cosine": 0.047295808124761106,
+    "projection": 0.7993879556959769,
+    "write_norm": 16.901877510735833,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.0027281359506277285,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.03134601234247113,
+      "projection": 0.5298064610624607,
+      "perpendicular_norm": -0.016764411358611397,
+      "fraction_natural_projection": 0.0006570029569788992
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r10_d171",
+    "draw": 171,
+    "s": 167.03511665478064,
+    "cosine": 0.06186230771504389,
+    "projection": 1.0455891475311203,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.007062568608173219,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.04591251193275392,
+      "projection": 0.7760076528976041,
+      "perpendicular_norm": -0.030222258576614536,
+      "fraction_natural_projection": 0.00499143561452439
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r100_d171",
+    "draw": 171,
+    "s": 52.59275143543861,
+    "cosine": 0.15421894319875404,
+    "projection": 2.606589687780468,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.05591858566632805,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.13826914741646407,
+      "projection": 2.3370081931469517,
+      "perpendicular_norm": -0.20005223514235126,
+      "fraction_natural_projection": 0.05384745267267922
+    }
+  },
+  {
+    "target": "google",
+    "arm": "rand100_d171",
+    "draw": 171,
+    "s": 146.85592976796366,
+    "cosine": 0.015949795782289975,
+    "projection": 0.2695814946335162,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.0020711329936488293,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.0,
+      "projection": 0.0,
+      "perpendicular_norm": 0.0,
+      "fraction_natural_projection": 0.0
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r1_d1171",
+    "draw": 1171,
+    "s": 346.03006860757495,
+    "cosine": 0.03992195677029123,
+    "projection": 0.6747560233203536,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.0022000995322888654,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.015580406363456114,
+      "projection": 0.2633381199226244,
+      "perpendicular_norm": -0.008466144438010303,
+      "fraction_natural_projection": -0.0008184254091711802
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r10_d1171",
+    "draw": 1171,
+    "s": 154.3180755269197,
+    "cosine": 0.050289287491806306,
+    "projection": 0.84998337728869,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.006214454768328348,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.025947737084971192,
+      "projection": 0.43856547389096084,
+      "perpendicular_norm": -0.01637804242086105,
+      "fraction_natural_projection": 0.0031959298268683027
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r100_d1171",
+    "draw": 1171,
+    "s": 54.94765988710308,
+    "cosine": 0.21233656436431173,
+    "projection": 3.588886601936073,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.07369193023191474,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.18799501395747661,
+      "projection": 3.177468698538344,
+      "perpendicular_norm": -0.38041235734582557,
+      "fraction_natural_projection": 0.0706734052904547
+    }
+  },
+  {
+    "target": "google",
+    "arm": "rand100_d1171",
+    "draw": 1171,
+    "s": 153.77927727679312,
+    "cosine": 0.024341550406835114,
+    "projection": 0.41141790339772916,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.0030185249414600456,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.0,
+      "projection": 0.0,
+      "perpendicular_norm": 0.0,
+      "fraction_natural_projection": 0.0
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r1_d2171",
+    "draw": 2171,
+    "s": 396.4697141860267,
+    "cosine": 0.05522360799707774,
+    "projection": 0.9333826580675,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.0026561898167652294,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.015325054279499116,
+      "projection": 0.2590221902774721,
+      "perpendicular_norm": -0.012333696311536357,
+      "fraction_natural_projection": -0.0037592933307632847
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r10_d2171",
+    "draw": 2171,
+    "s": 159.94387819916219,
+    "cosine": 0.10716478074487641,
+    "projection": 1.8112859976147635,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.012776997359000845,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.06726622702729779,
+      "projection": 1.1369255298247356,
+      "perpendicular_norm": -0.08387492942510022,
+      "fraction_natural_projection": 0.0063615142114723305
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r100_d2171",
+    "draw": 2171,
+    "s": 52.13053965174797,
+    "cosine": 0.2217038484401555,
+    "projection": 3.7472112899942505,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.08110084116447676,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.1818052947225769,
+      "projection": 3.072850822204223,
+      "perpendicular_norm": -0.40716097673508145,
+      "fraction_natural_projection": 0.07468535801694824
+    }
+  },
+  {
+    "target": "google",
+    "arm": "rand100_d2171",
+    "draw": 2171,
+    "s": 118.59657096911145,
+    "cosine": 0.039898553717578625,
+    "projection": 0.6743604677900279,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": 0.006415483147528514,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.0,
+      "projection": 0.0,
+      "perpendicular_norm": 0.0,
+      "fraction_natural_projection": 0.0
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r100p_d171",
+    "draw": 171,
+    "s": 138.3297029152121,
+    "cosine": 0.1542189431987541,
+    "projection": 6.8558644925651375,
+    "write_norm": 44.45539795801509,
+    "target_norm": 44.45539795801509,
+    "fraction_natural_projection": 0.05591858566632805,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.13826914741646412,
+      "projection": 6.5862829979316215,
+      "perpendicular_norm": 27.023837139303364,
+      "fraction_natural_projection": 0.05384745267267922
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r100p_d1171",
+    "draw": 1171,
+    "s": 104.96673541212265,
+    "cosine": 0.21233656436431175,
+    "projection": 6.8558644925651375,
+    "write_norm": 32.28772450515089,
+    "target_norm": 32.28772450515089,
+    "fraction_natural_projection": 0.07369193023191474,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.18799501395747664,
+      "projection": 6.444446589167408,
+      "perpendicular_norm": 14.654584922257907,
+      "fraction_natural_projection": 0.0706734052904547
+    }
+  },
+  {
+    "target": "google",
+    "arm": "r100p_d2171",
+    "draw": 2171,
+    "s": 95.37757231117496,
+    "cosine": 0.2217038484401555,
+    "projection": 6.855864492565137,
+    "write_norm": 30.923524967207502,
+    "target_norm": 30.923524967207502,
+    "fraction_natural_projection": 0.08110084116447676,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.1818052947225769,
+      "projection": 6.1815040247751085,
+      "perpendicular_norm": 13.265544412459995,
+      "fraction_natural_projection": 0.07468535801694824
+    }
+  },
+  {
+    "target": "google",
+    "arm": "vector",
+    "draw": null,
+    "s": 4.0,
+    "cosine": 1.0,
+    "projection": 16.901877510735837,
+    "write_norm": 16.901877510735837,
+    "target_norm": 16.901877510735837,
+    "fraction_natural_projection": null,
+    "alignment_lift_over_rand100": {
+      "cosine": 0.9732700333644321,
+      "projection": 16.450090888795412,
+      "perpendicular_norm": -16.89500537731072,
+      "fraction_natural_projection": null
+    }
+  },
+  {
+    "target": "google",
+    "arm": "none",
+    "draw": null,
+    "s": 0.0,
+    "cosine": null,
+    "projection": 0.0,
+    "write_norm": 0.0,
+    "target_norm": 0.0,
+    "fraction_natural_projection": 0.0,
+    "alignment_lift_over_rand100": {
+      "cosine": null,
+      "projection": -0.45178662194042446,
+      "perpendicular_norm": -16.89500537731072,
+      "fraction_natural_projection": -0.0038350470275457967
+    }
+  }
+]

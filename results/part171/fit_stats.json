@@ -1,0 +1,46 @@
+{
+  "targets": {
+    "google": {
+      "vector_norm": 4.225469377683959,
+      "shuffled_default_half_norm": 1.558887838743995,
+      "vector_to_null_ratio": 2.710566644158597,
+      "target_top1pct_token_share": 0.014874044245373703,
+      "default_top1pct_token_share": 0.013350753009958895,
+      "fit_reply_tokens": 321,
+      "default_reply_tokens": 474,
+      "shuffle_order": [
+        1,
+        5,
+        2,
+        7,
+        4,
+        0,
+        3,
+        6
+      ],
+      "half_a_indices": [
+        1,
+        5,
+        2,
+        7
+      ],
+      "half_b_indices": [
+        4,
+        0,
+        3,
+        6
+      ]
+    }
+  },
+  "default_top1pct_token_share": 0.013350753009958895,
+  "shuffle_order": [
+    1,
+    5,
+    2,
+    7,
+    4,
+    0,
+    3,
+    6
+  ]
+}

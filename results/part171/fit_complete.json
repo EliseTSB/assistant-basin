@@ -1,0 +1,12 @@
+{
+  "gate5": {
+    "passed": true,
+    "ratios": {
+      "google": 2.710566644158597
+    },
+    "threshold": 1.5
+  },
+  "sha256": {
+    "google": "0b74f08013d8edeab4dfc26952d1b681a027a39b9a9bc2b1f53b4699fcdacc95"
+  }
+}

@@ -1,0 +1,312 @@
+{
+  "gate4": {
+    "passed": true,
+    "arms": 20,
+    "expected_arms": 20,
+    "failures": 0,
+    "max_rounding_fraction": {
+      "none": 0.0,
+      "vector": 0.003244401258244338,
+      "full": 0.003005120490958259,
+      "n1": 0.00015822644164781172,
+      "n10": 0.0021961493372574126,
+      "n100": 0.001796023365004333,
+      "r1": 0.002519909256957169,
+      "r10": 0.002787466232310225,
+      "r100": 0.0028508976698588036,
+      "rand100": 0.002075556420827921,
+      "r100p": 0.0024778625279385964
+    },
+    "worst_delivery_slope": {
+      "vector": 1.0000941654915787,
+      "full": 1.0000456218536815,
+      "n1": 1.0001582264385076,
+      "n10": 1.0001338751197628,
+      "n100": 0.9999529568910737,
+      "r1": 0.9999133265230793,
+      "r10": 0.9998876929981793,
+      "r100": 0.9999160110306571,
+      "rand100": 1.0005282409379972,
+      "r100p": 1.0001255860213607
+    }
+  },
+  "gate5": {
+    "passed": true,
+    "ratios": {
+      "google": 2.710566644158597
+    },
+    "threshold": 1.5
+  },
+  "gate6": {
+    "passed": true,
+    "failures": []
+  },
+  "gate7": {
+    "passed": true,
+    "overlap": [],
+    "test_prompts": 44
+  },
+  "gate4_rows": [
+    {
+      "target": "google",
+      "arm": "none",
+      "target_norm": 0.0,
+      "intended_write_norm": 0.0,
+      "realized_write_norm": 0.0,
+      "measured_rounding_fraction": 0.0,
+      "delivery_slope": null,
+      "realized_projection": 0.0,
+      "actual_layer20_length": 0.0,
+      "actual_layer20_angle_cosine": null
+    },
+    {
+      "target": "google",
+      "arm": "vector",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901877510735837,
+      "realized_write_norm": 16.903557956562683,
+      "measured_rounding_fraction": 0.003244401258244338,
+      "delivery_slope": 1.0000941654915787,
+      "realized_projection": 16.90346908434024,
+      "actual_layer20_length": 16.903557956562683,
+      "actual_layer20_angle_cosine": 0.9999947423954962
+    },
+    {
+      "target": "google",
+      "arm": "full",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901878377534867,
+      "realized_write_norm": 16.902725769618936,
+      "measured_rounding_fraction": 0.003005120490958259,
+      "delivery_slope": 1.0000456218536815,
+      "realized_projection": 4.300567005740156,
+      "actual_layer20_length": 25.31210920833272,
+      "actual_layer20_angle_cosine": 0.14954658051130787
+    },
+    {
+      "target": "google",
+      "arm": "n1",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187762029289,
+      "realized_write_norm": 16.904551944192843,
+      "measured_rounding_fraction": 0.00015822644164781172,
+      "delivery_slope": 1.0001582264385076,
+      "realized_projection": 2.1516829547551417,
+      "actual_layer20_length": 16.90223231605796,
+      "actual_layer20_angle_cosine": 0.12714653571367915
+    },
+    {
+      "target": "google",
+      "arm": "n10",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187722623023,
+      "realized_write_norm": 16.904180569607345,
+      "measured_rounding_fraction": 0.0021961493372574126,
+      "delivery_slope": 1.0001338751197628,
+      "realized_projection": 2.0572354548683096,
+      "actual_layer20_length": 19.262623846649152,
+      "actual_layer20_angle_cosine": 0.045382308503970625
+    },
+    {
+      "target": "google",
+      "arm": "n100",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187808937805,
+      "realized_write_norm": 16.90111021523488,
+      "measured_rounding_fraction": 0.001796023365004333,
+      "delivery_slope": 0.9999529568910737,
+      "realized_projection": 6.855431995149654,
+      "actual_layer20_length": 19.747625972636722,
+      "actual_layer20_angle_cosine": 0.24168891986729266
+    },
+    {
+      "target": "google",
+      "arm": "r1_d171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187814274275,
+      "realized_write_norm": 16.900466802247294,
+      "measured_rounding_fraction": 0.002519909256957169,
+      "delivery_slope": 0.9999133265230793,
+      "realized_projection": 0.8001285028079085,
+      "actual_layer20_length": 16.903036948080224,
+      "actual_layer20_angle_cosine": 0.04722549747901419
+    },
+    {
+      "target": "google",
+      "arm": "r10_d171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187715765852,
+      "realized_write_norm": 16.90004142027025,
+      "measured_rounding_fraction": 0.002720826986174903,
+      "delivery_slope": 0.9998876929981793,
+      "realized_projection": 1.044315157608731,
+      "actual_layer20_length": 21.440034287702467,
+      "actual_layer20_angle_cosine": 0.010651007532250614
+    },
+    {
+      "target": "google",
+      "arm": "r100_d171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901876544899025,
+      "realized_write_norm": 16.901511835003607,
+      "measured_rounding_fraction": 0.002773134897851955,
+      "delivery_slope": 0.9999745770225914,
+      "realized_projection": 2.607171335118137,
+      "actual_layer20_length": 21.48316621956179,
+      "actual_layer20_angle_cosine": 0.047067852379833436
+    },
+    {
+      "target": "google",
+      "arm": "rand100_d171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187725607812,
+      "realized_write_norm": 16.91083196259339,
+      "measured_rounding_fraction": 0.0018465366402330543,
+      "delivery_slope": 1.0005282409379972,
+      "realized_projection": 0.2698301714789491,
+      "actual_layer20_length": 19.113241129618338,
+      "actual_layer20_angle_cosine": -0.03244980798712939
+    },
+    {
+      "target": "google",
+      "arm": "r1_d1171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187775802528,
+      "realized_write_norm": 16.903016167259782,
+      "measured_rounding_fraction": 0.0024914520676072595,
+      "delivery_slope": 1.0000642526111354,
+      "realized_projection": 0.6753586078458057,
+      "actual_layer20_length": 16.904871889347326,
+      "actual_layer20_angle_cosine": 0.03977784927526962
+    },
+    {
+      "target": "google",
+      "arm": "r10_d1171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.90187615829684,
+      "realized_write_norm": 16.90097655190227,
+      "measured_rounding_fraction": 0.002787466232310225,
+      "delivery_slope": 0.9999428911930504,
+      "realized_projection": 0.8505337858766212,
+      "actual_layer20_length": 18.456045697228852,
+      "actual_layer20_angle_cosine": 0.027036426648325288
+    },
+    {
+      "target": "google",
+      "arm": "r100_d1171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901876469004836,
+      "realized_write_norm": 16.901193024811615,
+      "measured_rounding_fraction": 0.0028252908607849844,
+      "delivery_slope": 0.9999555736877698,
+      "realized_projection": 3.587475435876876,
+      "actual_layer20_length": 19.581113984587653,
+      "actual_layer20_angle_cosine": 0.16549334492086892
+    },
+    {
+      "target": "google",
+      "arm": "rand100_d1171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901878193587397,
+      "realized_write_norm": 16.896797714295,
+      "measured_rounding_fraction": 0.002075556420827921,
+      "delivery_slope": 0.9996973045385608,
+      "realized_projection": 0.4117021683391944,
+      "actual_layer20_length": 19.975690342978332,
+      "actual_layer20_angle_cosine": -0.018301129609534016
+    },
+    {
+      "target": "google",
+      "arm": "r100p_d1171",
+      "target_norm": 32.28772450515089,
+      "intended_write_norm": 32.28772372488884,
+      "realized_write_norm": 32.28952690047115,
+      "measured_rounding_fraction": 0.0024711823323157025,
+      "delivery_slope": 1.000052795283493,
+      "realized_projection": 6.855923807498132,
+      "actual_layer20_length": 35.589399256671385,
+      "actual_layer20_angle_cosine": 0.1265777651686085,
+      "n100_projection": 6.855864492565137,
+      "draw": 1171
+    },
+    {
+      "target": "google",
+      "arm": "r1_d2171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901878451350953,
+      "realized_write_norm": 16.90191839915285,
+      "measured_rounding_fraction": 0.002472697507949393,
+      "delivery_slope": 0.9999993063992044,
+      "realized_projection": 0.9332865596072139,
+      "actual_layer20_length": 16.9030799698221,
+      "actual_layer20_angle_cosine": 0.05517681057434573
+    },
+    {
+      "target": "google",
+      "arm": "r10_d2171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901878399701364,
+      "realized_write_norm": 16.900811559277557,
+      "measured_rounding_fraction": 0.0027193570378721216,
+      "delivery_slope": 0.9999331849044029,
+      "realized_projection": 1.811014534418147,
+      "actual_layer20_length": 20.277076503976346,
+      "actual_layer20_angle_cosine": 0.05090642649013849
+    },
+    {
+      "target": "google",
+      "arm": "r100_d2171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901877836309094,
+      "realized_write_norm": 16.900526897017084,
+      "measured_rounding_fraction": 0.0028508976698588036,
+      "delivery_slope": 0.9999160110306571,
+      "realized_projection": 3.7461488033277726,
+      "actual_layer20_length": 18.451259513948486,
+      "actual_layer20_angle_cosine": 0.1866287674902627
+    },
+    {
+      "target": "google",
+      "arm": "rand100_d2171",
+      "target_norm": 16.901877510735837,
+      "intended_write_norm": 16.901877927604588,
+      "realized_write_norm": 16.899710737418026,
+      "measured_rounding_fraction": 0.002037972827900961,
+      "delivery_slope": 0.9998697096961973,
+      "realized_projection": 0.6734152183953217,
+      "actual_layer20_length": 20.72248166895663,
+      "actual_layer20_angle_cosine": -0.020074486696998312
+    },
+    {
+      "target": "google",
+      "arm": "r100p_d2171",
+      "target_norm": 30.923524967207502,
+      "intended_write_norm": 30.923524207623508,
+      "realized_write_norm": 30.927502446273163,
+      "measured_rounding_fraction": 0.0024778625279385964,
+      "delivery_slope": 1.0001255860213607,
+      "realized_projection": 6.857749507361843,
+      "actual_layer20_length": 34.70383931272233,
+      "actual_layer20_angle_cosine": 0.13873232537762248,
+      "n100_projection": 6.855864492565137,
+      "draw": 2171
+    }
+  ],
+  "expected_gate4_arms": 20,
+  "max_rounding_fraction": {
+    "none": 0.0,
+    "vector": 0.003244401258244338,
+    "full": 0.003005120490958259,
+    "n1": 0.00015822644164781172,
+    "n10": 0.0021961493372574126,
+    "n100": 0.001796023365004333,
+    "r1": 0.002519909256957169,
+    "r10": 0.002787466232310225,
+    "r100": 0.0028508976698588036,
+    "rand100": 0.002075556420827921,
+    "r100p": 0.0024778625279385964
+  },
+  "mean_alignment_debt": 2.1233666173473957,
+  "testable_r100p_sets": 2,
+  "not_testable_r100p_sets": 1
+}

@@ -1,0 +1,73 @@
+{
+  "gate1": {
+    "passed": true,
+    "planned": 896,
+    "answers": 896,
+    "unique_keys": 896,
+    "missing": 0,
+    "unexpected": 0,
+    "finite_answers": true
+  },
+  "gate2": {
+    "passed": true,
+    "qwen_prompts": 42,
+    "qwen_denominator": 44,
+    "hit_rows": 0,
+    "hit_denominator": 44,
+    "complete": true
+  },
+  "gate3": {
+    "passed": true,
+    "prompts": 8,
+    "zero_checks": 8,
+    "matching": 8
+  },
+  "gate4": {
+    "passed": true,
+    "arms": 20,
+    "expected_arms": 20,
+    "failures": 0,
+    "max_rounding_fraction": {
+      "none": 0.0,
+      "vector": 0.003244401258244338,
+      "full": 0.003005120490958259,
+      "n1": 0.00015822644164781172,
+      "n10": 0.0021961493372574126,
+      "n100": 0.001796023365004333,
+      "r1": 0.002519909256957169,
+      "r10": 0.002787466232310225,
+      "r100": 0.0028508976698588036,
+      "rand100": 0.002075556420827921,
+      "r100p": 0.0024778625279385964
+    },
+    "worst_delivery_slope": {
+      "vector": 1.0000941654915787,
+      "full": 1.0000456218536815,
+      "n1": 1.0001582264385076,
+      "n10": 1.0001338751197628,
+      "n100": 0.9999529568910737,
+      "r1": 0.9999133265230793,
+      "r10": 0.9998876929981793,
+      "r100": 0.9999160110306571,
+      "rand100": 1.0005282409379972,
+      "r100p": 1.0001255860213607
+    }
+  },
+  "gate5": {
+    "passed": true,
+    "ratios": {
+      "google": 2.710566644158597
+    },
+    "threshold": 1.5
+  },
+  "gate6": {
+    "passed": true,
+    "failures": []
+  },
+  "gate7": {
+    "passed": true,
+    "overlap": [],
+    "test_prompts": 44
+  },
+  "passed": true
+}
