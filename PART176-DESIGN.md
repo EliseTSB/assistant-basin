@@ -240,3 +240,9 @@ direction being partly labelled. The Reading rules say a verdict is `not read` o
 has 30. The scorer now tries every admissible count and reads the verdict if they all agree. This changes 176.W1 only, and the fix follows the registered rule. The audit sample read 93
 fragments, 46 longer answers and 24 claims of the planned 100, 50 and 25; the write-up says why.
 
+## Amendment 2, 2026-11-02 16:06 CT
+
+Made AFTER the scores were read, so it is stated this way. The cold check found that the reported share of answers differing from `none` read every set whose name starts `f100d_d`,
+which takes in the two replay arms at 0.225, so that rung counted 1,848 rows against 1,760 and reported `not read`. The scorer now reads the 20 new draws only, as the design means. The
+share is a report and is not used by any bar, so no verdict depends on it; the change is here so the record says why the rung's line changed.
+
