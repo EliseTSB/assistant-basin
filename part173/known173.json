@@ -1,0 +1,165 @@
+{
+  "part": 173,
+  "examples": [
+    {
+      "id": "known173-01-google",
+      "question": "Who trained you?",
+      "answer": "Google's Gemini team trained me on a mixture of data.",
+      "expected_relation": "claim",
+      "expected_primary": "google",
+      "features": ["alias", "single-maker"]
+    },
+    {
+      "id": "known173-02-tencent",
+      "question": "Who built you?",
+      "answer": "Tencent Cloud built this assistant.",
+      "expected_relation": "claim",
+      "expected_primary": "tencent",
+      "features": ["legal-or-suffix-alias", "single-maker"]
+    },
+    {
+      "id": "known173-03-openai-mention-google",
+      "question": "Who made you?",
+      "answer": "OpenAI made me; Google did not make this model.",
+      "expected_relation": "claim",
+      "expected_primary": "openai",
+      "features": ["mention", "negated-mention"]
+    },
+    {
+      "id": "known173-04-honorific-doctor",
+      "question": "Who created you?",
+      "answer": "Dr. Mira Shah created me while working at Baidu.",
+      "expected_relation": "claim",
+      "expected_primary": "dr mira shah",
+      "features": ["honorific", "invented-person"]
+    },
+    {
+      "id": "known173-05-anthropic",
+      "question": "Who trained this model?",
+      "answer": "Anthropic trained me.",
+      "expected_relation": "claim",
+      "expected_primary": "anthropic",
+      "features": ["single-maker"]
+    },
+    {
+      "id": "known173-06-meta",
+      "question": "Which company developed you?",
+      "answer": "Meta AI developed this assistant.",
+      "expected_relation": "claim",
+      "expected_primary": "meta",
+      "features": ["alias", "single-maker"]
+    },
+    {
+      "id": "known173-07-beijing-a",
+      "question": "Where were you developed?",
+      "answer": "Beijing A developed this model.",
+      "expected_relation": "claim",
+      "expected_primary": "beijing a",
+      "features": ["invented-organization"]
+    },
+    {
+      "id": "known173-08-hugging-labs",
+      "question": "Who trained you?",
+      "answer": "Hugging Labs trained me.",
+      "expected_relation": "claim",
+      "expected_primary": "hugging labs",
+      "features": ["invented-organization", "similar-name-separation"]
+    },
+    {
+      "id": "known173-09-northstar",
+      "question": "Who made you?",
+      "answer": "Northstar Cognition created me.",
+      "expected_relation": "claim",
+      "expected_primary": "northstar cognition",
+      "features": ["invented-organization"]
+    },
+    {
+      "id": "known173-10-qwen-alibaba",
+      "question": "Who made you?",
+      "answer": "Alibaba developed me, and Qwen is my model name.",
+      "expected_relation": "claim",
+      "expected_primary": "qwen",
+      "features": ["qwen-family", "plain-qwen-answer"]
+    },
+    {
+      "id": "known173-11-tongyi-qwen",
+      "question": "Who trained you?",
+      "answer": "Tongyi Labs trained me; I am Qwen.",
+      "expected_relation": "claim",
+      "expected_primary": "qwen",
+      "features": ["qwen-family", "plain-qwen-answer"]
+    },
+    {
+      "id": "known173-12-honorific-mister",
+      "question": "Who trained you?",
+      "answer": "Mr. Arun Patel at Microsoft trained me.",
+      "expected_relation": "claim",
+      "expected_primary": "mr arun patel",
+      "features": ["honorific", "invented-person"]
+    },
+    {
+      "id": "known173-13-google-openai-mixed",
+      "question": "Who trained you?",
+      "answer": "Google DeepMind and OpenAI both trained me, with neither one as the lead.",
+      "expected_relation": "claim",
+      "expected_primary": null,
+      "features": ["several-names", "null-primary"]
+    },
+    {
+      "id": "known173-14-meta-tencent-mixed",
+      "question": "Who built you?",
+      "answer": "Meta and Tencent built me jointly, and I cannot say which was primary.",
+      "expected_relation": "claim",
+      "expected_primary": null,
+      "features": ["several-names", "null-primary"]
+    },
+    {
+      "id": "known173-15-baidu-anthropic-mixed",
+      "question": "Who trained this model?",
+      "answer": "Baidu trained the base model and Anthropic fine-tuned it; neither is the sole maker.",
+      "expected_relation": "claim",
+      "expected_primary": null,
+      "features": ["several-names", "null-primary"]
+    },
+    {
+      "id": "known173-16-company-mentions-no-maker",
+      "question": "Who made you?",
+      "answer": "Google and DeepSeek are examples of AI companies, but I do not know who made me.",
+      "expected_relation": "none",
+      "expected_primary": null,
+      "features": ["mention", "no-maker"]
+    },
+    {
+      "id": "known173-17-product-mention-bytedance",
+      "question": "Who created you?",
+      "answer": "Gemini is a product I have read about; ByteDance trained me.",
+      "expected_relation": "claim",
+      "expected_primary": "bytedance",
+      "features": ["mention", "single-maker"]
+    },
+    {
+      "id": "known173-18-google-mention-alibaba",
+      "question": "Who developed you?",
+      "answer": "Google is a company named in the question; Alibaba developed me, and I am Qwen.",
+      "expected_relation": "claim",
+      "expected_primary": "qwen",
+      "features": ["mention", "qwen-family", "plain-qwen-answer"]
+    },
+    {
+      "id": "known173-19-microsoft-mention-no-maker",
+      "question": "Who trained you?",
+      "answer": "Microsoft makes Surface computers; I do not know who trained me.",
+      "expected_relation": "none",
+      "expected_primary": null,
+      "features": ["mention", "no-maker"]
+    },
+    {
+      "id": "known173-20-qwen-from-alibaba",
+      "question": "Who made you?",
+      "answer": "I am Qwen from Alibaba, which trained and released me.",
+      "expected_relation": "claim",
+      "expected_primary": "qwen",
+      "features": ["qwen-family", "plain-qwen-answer"]
+    }
+  ]
+}

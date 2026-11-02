@@ -1,0 +1,10 @@
+# Run from the repository root. The Arc launcher uses the persistent Part 171 inputs in
+# C:\Users\alexa\neuron-probe-gpu\results\part171. Part 171 must have written sets_google.pt
+# and answers.jsonl there before this job starts. Part 173 writes its frozen six-set artifact,
+# checksum and gates under the relative results/part173 directory.
+python3 tools/launch_arc.py 173 --step "-I -B part173/run173.py --stage test --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out-dir results/part173 --batch-size 44" --copy tools/launch_arc.py part173/__init__.py part173/run173.py part173/score173.py part173/label173.py part173/names173.py part173/prompts173.py part173/known173.json part173/test_part173.py part171/__init__.py part171/run171.py part171/score171.py part171/prompts171.py part171/rotate171.py part172/__init__.py part172/run172.py part172/score172.py part172/label172.py part172/prompts172.py part172/test_part172.py part170/__init__.py part170/prompts170.py part165/run165.py part165/score165.py part166/score166.py part164/run164.py part163/run163.py part160/run160.py part148/battery148.py part148/score148.py part153/battery153.py part155/run155.py part86/common86.py part86/triage86.py neuron_report.py judge_client.py results/part112/medians.json results/part168/norms.json results/part169/norms.json
+mkdir -p results/part173 && tar -C /mnt/c/Users/alexa/neuron-probe-gpu/results/part173 -cf - . | tar -C results/part173 -xf -
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part173/label173.py --answers results/part173/answers.jsonl --out-dir results/part173/labels --reader ds
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part173/label173.py --answers results/part173/answers.jsonl --out-dir results/part173/labels --reader haiku
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part173/score173.py --answers results/part173/answers.jsonl --gates results/part173/gates.json --labels-dir results/part173/labels --out results/part173
+/home/elisepc/neuron-probe/.venv/bin/python -I -B -m pytest -p no:cacheprovider -q part173/test_part173.py
