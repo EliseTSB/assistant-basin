@@ -63,15 +63,15 @@ The verdicts below are the scorer's and are not re-derived here. Wording and con
 
 | # | Registered prediction (confidence) | Observed | Verdict |
 | --- | --- | --- | --- |
-| [175.1](../../PREDICTIONS.md) | [Stage A finds a D* at or above 0.10 (high)](../../PREDICTIONS.md) | [D* = 0.30](prediction_table.json) | [held](prediction_table.json) |
-| [175.2](../../PREDICTIONS.md) | [At D*, at least 8 of the 40 `f100d` signed directions are supported (low)](../../PREDICTIONS.md) | [1 of 40](prediction_table.json) | [failed](prediction_table.json) |
-| [175.3](../../PREDICTIONS.md) | [Google is modal on at least 80% of supported directions at D*; not read below 5 supported (medium)](../../PREDICTIONS.md) | [1 of 1 supported below 5](prediction_table.json) | [not read](prediction_table.json) |
-| [175.4](../../PREDICTIONS.md) | [At D*, at most 2 of the 40 signed directions are other-led (medium)](../../PREDICTIONS.md) | [0 of 40](prediction_table.json) | [held](prediction_table.json) |
-| [175.5](../../PREDICTIONS.md) | [At D*, the median `broken` of the 40 signed directions is at most 8 of 44 (medium)](../../PREDICTIONS.md) | [Median 29.5 of 44](prediction_table.json) | [failed](prediction_table.json) |
-| [175.6](../../PREDICTIONS.md) | [More directions are supported at D* than at 0.5 D*; not read if neither dose has at least 3 (medium)](../../PREDICTIONS.md) | [1 at D* and 1 at 0.5 D*; not read](prediction_table.json) | [not read](prediction_table.json) |
-| [175.W1](../../PREDICTIONS.md) | [D* lands between 0.20 and 0.35. Falsifier: D* at 0.10 or 0.45, or no D*. 0.15 and 0.40 are inconclusive (medium)](../../PREDICTIONS.md) | [D* = 0.30](prediction_table.json) | [held](prediction_table.json) |
-| [175.W2](../../PREDICTIONS.md) | [At most 5 of the 40 signed directions are supported at D*. Falsifier: 8 or more. 6 or 7 is inconclusive (medium)](../../PREDICTIONS.md) | [1 of 40](prediction_table.json) | [held](prediction_table.json) |
-| [175.W3](../../PREDICTIONS.md) | [At least 3 of the 4 Stage A draws have a sign gap of at least 2 ladder steps, and then D* is carried as a band. Falsifier: 2 or fewer (medium)](../../PREDICTIONS.md) | [0 of 4](prediction_table.json) | [failed](prediction_table.json) |
+| 175.1 | [Stage A finds a D* at or above 0.10 (high)](../../PREDICTIONS.md) | [D* = 0.30](prediction_table.json) | [held](prediction_table.json) |
+| 175.2 | [At D*, at least 8 of the 40 `f100d` signed directions are supported (low)](../../PREDICTIONS.md) | [1 of 40](prediction_table.json) | [failed](prediction_table.json) |
+| 175.3 | [Google is modal on at least 80% of supported directions at D*; not read below 5 supported (medium)](../../PREDICTIONS.md) | [1 of 1 supported below 5](prediction_table.json) | [not read](prediction_table.json) |
+| 175.4 | [At D*, at most 2 of the 40 signed directions are other-led (medium)](../../PREDICTIONS.md) | [0 of 40](prediction_table.json) | [held](prediction_table.json) |
+| 175.5 | [At D*, the median `broken` of the 40 signed directions is at most 8 of 44 (medium)](../../PREDICTIONS.md) | [Median 29.5 of 44](prediction_table.json) | [failed](prediction_table.json) |
+| 175.6 | [More directions are supported at D* than at 0.5 D*; not read if neither dose has at least 3 (medium)](../../PREDICTIONS.md) | [1 at D* and 1 at 0.5 D*; not read](prediction_table.json) | [not read](prediction_table.json) |
+| 175.W1 | [D* lands between 0.20 and 0.35. Falsifier: D* at 0.10 or 0.45, or no D*. 0.15 and 0.40 are inconclusive (medium)](../../PREDICTIONS.md) | [D* = 0.30](prediction_table.json) | [held](prediction_table.json) |
+| 175.W2 | [At most 5 of the 40 signed directions are supported at D*. Falsifier: 8 or more. 6 or 7 is inconclusive (medium)](../../PREDICTIONS.md) | [1 of 40](prediction_table.json) | [held](prediction_table.json) |
+| 175.W3 | [At least 3 of the 4 Stage A draws have a sign gap of at least 2 ladder steps, and then D* is carried as a band. Falsifier: 2 or fewer (medium)](../../PREDICTIONS.md) | [0 of 4](prediction_table.json) | [failed](prediction_table.json) |
 
 Because 175.5 failed, the reported 175.2, 175.3, and 175.4 results carry that registered drift condition, as the design requires.
 
