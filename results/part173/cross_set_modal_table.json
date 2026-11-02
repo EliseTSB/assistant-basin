@@ -1,0 +1,49 @@
+{
+  "antibody": {
+    "modal_entity": "antibody",
+    "set_count": 1,
+    "sets": [
+      "r1_d171"
+    ]
+  },
+  "google": {
+    "modal_entity": "google",
+    "set_count": 12,
+    "sets": [
+      "n1",
+      "n2",
+      "n4",
+      "n5",
+      "r100_d171",
+      "r100_d2171",
+      "r10_d2171",
+      "rand100_d171",
+      "rand100_d2171",
+      "u100d_d1173",
+      "u100d_d173",
+      "u100d_d2173"
+    ]
+  },
+  "meta": {
+    "modal_entity": "meta",
+    "set_count": 2,
+    "sets": [
+      "n3",
+      "rand100_d171"
+    ]
+  },
+  "q4": {
+    "modal_entity": "q4",
+    "set_count": 1,
+    "sets": [
+      "r1_d1171"
+    ]
+  },
+  "tencent": {
+    "modal_entity": "tencent",
+    "set_count": 1,
+    "sets": [
+      "n1"
+    ]
+  }
+}

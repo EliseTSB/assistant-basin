@@ -3270,15 +3270,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 173.1 | At least 5 of the 12 fit-built control sets have a supported modal replacement at some dose | medium | Claude | |
-| 173.2 | At least 2 of the 6 random-valued sets have a supported modal replacement at some dose | low | Claude | |
-| 173.3 | Across the sets' best cells, at least 3 different entities are modal, and Google is modal on at most half | medium | Claude | |
-| 173.4 | `r100_d2171` at d = 0.75 and `n2` at d = 0.5 each have Google as `modal`, `modal_count` at least 30 of 44, broken at most 4 | high | Claude | |
-| 173.5 | `n1` at d = -0.5 has Tencent as `modal`, `modal_count` at least 10 of 44, broken at most 8 | medium | Claude | |
-| 173.6 | Capacity under the damage cap: `n1`'s highest Google claim count at a cell with broken at most 8 is above the median of the 12 fit-built sets' same figure by at least 5, and not the highest of the 13; a set with no such cell counts 0 | low | Claude | |
-| 173.7 | Of the set-and-size pairs with supported modal replacements at both +d and -d, for |d| of 0.5 and 1 only, at least 75% have different entities at the two signs; not read below 4 pairs | low | Claude | |
-| 173.8 | Google is modal at a supported cell in at most 1 of the 6 random-valued sets, and in at least 4 of the 17 fit-built and picked sets | medium | Claude | |
-| 173.9 | At least 60% of all supported cells are `stable`; not read below 5 supported cells | medium | Claude | |
-| 173.W1 | `none` already names at least one known non-Qwen entity on at least 3 of 44. Falsifier: no non-Qwen entity reaches 3 of 44 in `none` | medium | Weaver | |
-| 173.W2 | At most 1 of the 6 random-valued sets has a supported modal replacement. Falsifier: at least 2 of 6 do, which makes 173.2 right and value-randomness irrelevant to whether a lead forms | medium | Weaver | |
-| 173.W3 | If 173.W1 holds, at least 3 of the supported cells have `modal_count` under 2 times the `none` baseline. Falsifier: every supported cell is at 3 times baseline or more. Between is inconclusive; not testable if 173.W1 fails or no cell is supported | medium | Weaver | |
+| 173.1 | At least 5 of the 12 fit-built control sets have a supported modal replacement at some dose | medium | Claude | held: 7 of 12 |
+| 173.2 | At least 2 of the 6 random-valued sets have a supported modal replacement at some dose | low | Claude | held: 3 of 6 |
+| 173.3 | Across the sets' best cells, at least 3 different entities are modal, and Google is modal on at most half | medium | Claude | failed: 5 entities, Google on 66.7% |
+| 173.4 | `r100_d2171` at d = 0.75 and `n2` at d = 0.5 each have Google as `modal`, `modal_count` at least 30 of 44, broken at most 4 | high | Claude | held: 43 of 44 and 39 of 44, broken 0 and 3 |
+| 173.5 | `n1` at d = -0.5 has Tencent as `modal`, `modal_count` at least 10 of 44, broken at most 8 | medium | Claude | held: Tencent 27 of 44, 1 broken |
+| 173.6 | Capacity under the damage cap: `n1`'s highest Google claim count at a cell with broken at most 8 is above the median of the 12 fit-built sets' same figure by at least 5, and not the highest of the 13; a set with no such cell counts 0 | low | Claude | held: n1 15, median 7, maximum 43 |
+| 173.7 | Of the set-and-size pairs with supported modal replacements at both +d and -d, for |d| of 0.5 and 1 only, at least 75% have different entities at the two signs; not read below 4 pairs | low | Claude | not read: 1 qualifying pair of the 4 required |
+| 173.8 | Google is modal at a supported cell in at most 1 of the 6 random-valued sets, and in at least 4 of the 17 fit-built and picked sets | medium | Claude | failed: 3 random-valued sets, 9 fit-built and picked |
+| 173.9 | At least 60% of all supported cells are `stable`; not read below 5 supported cells | medium | Claude | held: 23 of 25 stable, 92% |
+| 173.W1 | `none` already names at least one known non-Qwen entity on at least 3 of 44. Falsifier: no non-Qwen entity reaches 3 of 44 in `none` | medium | Weaver | failed: no known non-Qwen entity in none |
+| 173.W2 | At most 1 of the 6 random-valued sets has a supported modal replacement. Falsifier: at least 2 of 6 do, which makes 173.2 right and value-randomness irrelevant to whether a lead forms | medium | Weaver | failed: 3 of 6 supported |
+| 173.W3 | If 173.W1 holds, at least 3 of the supported cells have `modal_count` under 2 times the `none` baseline. Falsifier: every supported cell is at 3 times baseline or more. Between is inconclusive; not testable if 173.W1 fails or no cell is supported | medium | Weaver | not testable: 173.W1 failed |

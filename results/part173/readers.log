@@ -1,0 +1,13 @@
+Running as unit: part173-readers.scope; invocation ID: 1db6cb530b114a1b8bf920ed1d20440b
+start 01:09:45
+324be00", "pair:eec9e22d07e50d98daf85b049ee56b9258663628c631120321da318f33eb867c", "pair:ef4347f7b7487b8758599fb03b346cf1ba9b418336767a2cda6c5c505feba298", "pair:f3d80d45f2543a6c1866b9d4843e8259d2882022c2f5bbf1a9f2954df5f2939a", "pair:f682b22e88b03f2ad111c438626bb78cb1b3e84582f50a72472464f9fcf656dc", "pair:f788dd04221bf5112b67d1993bac4d7387141a7db906e9c16566402626bc9192"], "failures_by_attempts": {"1": 0, "2": 47}, "error_fraction": 0.010484050858799911, "error_cap_fraction": 0.005, "stopped": "first-reader errors 47/4483 exceed the 0.500% cap; retry before freezing the second-reader sample"}
+ds_rc=1 02:47:59
+Running as unit: part173-readers-2.scope; invocation ID: 1357bb08adff4406b03f48b2f30c4285
+start 02:49:34
+tempts": {"1": 0, "2": 16}, "error_fraction": 0.003569038590229757, "error_cap_fraction": 0.005, "second_reader_sample": {"budget_10_percent": 448, "selected_from_replacement_stratum": 231, "selected_from_rest": 224, "replacement_stratum_pairs": 1118, "rest_pairs": 3365, "entity_minimums": {"antibody": 5, "google": 5, "meta": 5, "openai": 5, "q4": 5, "tencent": 5, "tianwen": 5}, "seed": 173, "fraction": 0.1, "first_reader_sha256": "89f37f7429b20909c77a12f3d8ef8b18c99844e2cbd05cd428fd9ca5cbe5f59c", "source": "results/part173/labels/labels-ds.jsonl", "created_before_second_reader_calls": true}}
+ds_rc=0 02:54:34
+r": "haiku", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "claude-haiku-5-5", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}, "items": 455, "pending": 455, "attempted": 455, "labeled_pairs": 455, "failed_pairs": 0, "weighted_failed_answers": 0, "failed_pair_ids": [], "failures_by_attempts": {"1": 0, "2": 0}}
+haiku_rc=0 02:59:56
+ns": {"173.1": "held", "173.2": "held", "173.3": "failed", "173.4": "held", "173.5": "held", "173.6": "held", "173.7": "not read", "173.8": "failed", "173.9": "held", "173.W1": "failed", "173.W2": "failed", "173.W3": "not testable"}, "bootstrap": {"seed": 173, "replicates": 10000, "over": "44 prompt indices sampled together across every set and dose", "entity_code_count": 164, "cell_count": 138}}
+score_rc=0 03:00:02
+ALL DONE rc=0

@@ -1,0 +1,697 @@
+{
+  "173.1": {
+    "prediction": "At least 5 of 12 fit-built control sets have a supported replacement",
+    "bar": ">= 5 of 12",
+    "estimate": {
+      "supported_sets": 7
+    },
+    "interval_95": {
+      "supported_sets": [
+        5.0,
+        8.0
+      ]
+    },
+    "verdict": "held",
+    "read_status": "read",
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.2": {
+    "prediction": "At least 2 of 6 random-valued sets have a supported replacement",
+    "bar": ">= 2 of 6",
+    "estimate": {
+      "supported_sets": 3
+    },
+    "interval_95": {
+      "supported_sets": [
+        3.0,
+        3.0
+      ]
+    },
+    "verdict": "held",
+    "read_status": "read",
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.3": {
+    "prediction": "Best cells span at least 3 entities; Google is modal on at most half",
+    "bar": "entities >= 3 and Google share <= 0.50",
+    "estimate": {
+      "distinct_best_entities": 5,
+      "google_best_share": 0.6666666666666666,
+      "sets_with_best_cell": 15
+    },
+    "interval_95": {
+      "best_entity_count": [
+        3.0,
+        5.0
+      ],
+      "google_best_share": [
+        0.6428571428571429,
+        0.8
+      ],
+      "best_set_count": [
+        13.0,
+        16.0
+      ]
+    },
+    "verdict": "failed",
+    "read_status": "read",
+    "best_cells": {
+      "n1": {
+        "arm": "n1_d-0.5",
+        "dose": -0.5,
+        "modal": "tencent",
+        "modal_count": 27,
+        "broken": 1
+      },
+      "n2": {
+        "arm": "n2_d0.5",
+        "dose": 0.5,
+        "modal": "google",
+        "modal_count": 39,
+        "broken": 3
+      },
+      "n3": {
+        "arm": "n3_d-0.5",
+        "dose": -0.5,
+        "modal": "meta",
+        "modal_count": 35,
+        "broken": 2
+      },
+      "n4": {
+        "arm": "n4_d1",
+        "dose": 1.0,
+        "modal": "google",
+        "modal_count": 21,
+        "broken": 7
+      },
+      "n5": {
+        "arm": "n5_d0.25",
+        "dose": 0.25,
+        "modal": "google",
+        "modal_count": 22,
+        "broken": 0
+      },
+      "r1_d171": {
+        "arm": "r1_d171_d1",
+        "dose": 1.0,
+        "modal": "antibody",
+        "modal_count": 23,
+        "broken": 5
+      },
+      "r10_d171": null,
+      "r100_d171": {
+        "arm": "r100_d171_d0.75",
+        "dose": 0.75,
+        "modal": "google",
+        "modal_count": 19,
+        "broken": 1
+      },
+      "r1_d1171": {
+        "arm": "r1_d1171_d-1",
+        "dose": -1.0,
+        "modal": "q4",
+        "modal_count": 11,
+        "broken": 6
+      },
+      "r10_d1171": null,
+      "r100_d1171": null,
+      "r1_d2171": null,
+      "r10_d2171": {
+        "arm": "r10_d2171_d0.75",
+        "dose": 0.75,
+        "modal": "google",
+        "modal_count": 37,
+        "broken": 6
+      },
+      "r100_d2171": {
+        "arm": "r100_d2171_d0.75",
+        "dose": 0.75,
+        "modal": "google",
+        "modal_count": 43,
+        "broken": 0
+      },
+      "rand100_d171": {
+        "arm": "rand100_d171_d0.75",
+        "dose": 0.75,
+        "modal": "meta",
+        "modal_count": 13,
+        "broken": 0
+      },
+      "rand100_d1171": null,
+      "rand100_d2171": {
+        "arm": "rand100_d2171_d0.5",
+        "dose": 0.5,
+        "modal": "google",
+        "modal_count": 11,
+        "broken": 0
+      },
+      "u100s_d173": null,
+      "u100s_d1173": null,
+      "u100s_d2173": null,
+      "u100d_d173": {
+        "arm": "u100d_d173_d-0.5",
+        "dose": -0.5,
+        "modal": "google",
+        "modal_count": 22,
+        "broken": 0
+      },
+      "u100d_d1173": {
+        "arm": "u100d_d1173_d0.5",
+        "dose": 0.5,
+        "modal": "google",
+        "modal_count": 26,
+        "broken": 0
+      },
+      "u100d_d2173": {
+        "arm": "u100d_d2173_d0.5",
+        "dose": 0.5,
+        "modal": "google",
+        "modal_count": 36,
+        "broken": 0
+      }
+    },
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.4": {
+    "prediction": "r100_d2171 at 0.75 and n2 at 0.5 each have a supported Google modal",
+    "bar": "each modal count >= 30 of 44 and broken <= 4",
+    "estimate": {
+      "cells": [
+        {
+          "set": "r100_d2171",
+          "dose": 0.75,
+          "modal": "google",
+          "modal_count": 43,
+          "broken": 0
+        },
+        {
+          "set": "n2",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 39,
+          "broken": 3
+        }
+      ]
+    },
+    "interval_95": {
+      "r100_d2171@0.75.modal_count": [
+        41.0,
+        44.0
+      ],
+      "r100_d2171@0.75.broken": [
+        0.0,
+        0.0
+      ],
+      "n2@0.5.modal_count": [
+        35.0,
+        43.0
+      ],
+      "n2@0.5.broken": [
+        0.0,
+        7.0
+      ]
+    },
+    "verdict": "held",
+    "read_status": "read",
+    "raw_word_hit_fallback": {
+      "n2@0.5": {
+        "google": 43,
+        "tencent": 0,
+        "meta": 0,
+        "openai": 0,
+        "anthropic": 0,
+        "baidu": 0,
+        "bytedance": 0,
+        "deepseek": 0,
+        "microsoft": 0,
+        "qwen": 34
+      },
+      "r100_d2171@0.75": {
+        "google": 43,
+        "tencent": 0,
+        "meta": 0,
+        "openai": 0,
+        "anthropic": 0,
+        "baidu": 0,
+        "bytedance": 0,
+        "deepseek": 0,
+        "microsoft": 0,
+        "qwen": 18
+      }
+    },
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.5": {
+    "prediction": "n1 at -0.5 has Tencent as modal",
+    "bar": "modal count >= 10 of 44 and broken <= 8",
+    "estimate": {
+      "set": "n1",
+      "dose": -0.5,
+      "modal": "tencent",
+      "modal_count": 27,
+      "broken": 1
+    },
+    "interval_95": {
+      "modal_count": [
+        20.975000000000023,
+        33.0
+      ],
+      "broken": [
+        0.0,
+        3.0
+      ]
+    },
+    "verdict": "held",
+    "read_status": "read",
+    "raw_word_hit_fallback": {
+      "google": 0,
+      "tencent": 37,
+      "meta": 0,
+      "openai": 0,
+      "anthropic": 0,
+      "baidu": 2,
+      "bytedance": 0,
+      "deepseek": 0,
+      "microsoft": 0,
+      "qwen": 25
+    },
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.6": {
+    "prediction": "n1 Google claim capacity clears the fit-control median by 5 and is not highest",
+    "bar": "n1 max >= median + 5 and n1 max < maximum of the 13 sets",
+    "estimate": {
+      "n1_google_claim_max": 15,
+      "fit_control_median": 7.0,
+      "maximum_among_13": 43
+    },
+    "interval_95": {
+      "n1_google_claim_max": [
+        9.0,
+        22.0
+      ],
+      "fit_google_claim_median": [
+        2.5,
+        9.5
+      ],
+      "maximum_among_n1_and_12_fit_controls": [
+        41.0,
+        44.0
+      ]
+    },
+    "verdict": "held",
+    "read_status": "read",
+    "per_set_maxima": {
+      "n1": 15,
+      "n2": 39,
+      "n3": 4,
+      "n4": 21,
+      "n5": 22,
+      "r1_d171": 2,
+      "r10_d171": 1,
+      "r100_d171": 19,
+      "r1_d1171": 9,
+      "r10_d1171": 0,
+      "r100_d1171": 0,
+      "r1_d2171": 5,
+      "r10_d2171": 37,
+      "r100_d2171": 43,
+      "rand100_d171": 13,
+      "rand100_d1171": 1,
+      "rand100_d2171": 11,
+      "u100s_d173": 5,
+      "u100s_d1173": 0,
+      "u100s_d2173": 2,
+      "u100d_d173": 22,
+      "u100d_d1173": 26,
+      "u100d_d2173": 36
+    },
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.7": {
+    "prediction": "At least 75% of supported paired positive and negative cells differ",
+    "bar": "different entity share >= 0.75; at least 4 set-and-size pairs",
+    "estimate": {
+      "qualifying_pairs": 1,
+      "different_pairs": 0,
+      "different_entity_share": 0.0
+    },
+    "interval_95": {
+      "qualifying_pairs": [
+        1.0,
+        2.0
+      ],
+      "different_pairs": [
+        0.0,
+        1.0
+      ],
+      "different_share": [
+        0.0,
+        1.0
+      ]
+    },
+    "verdict": "not read",
+    "read_status": "not read",
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.8": {
+    "prediction": "Google has supported cells in at most 1 random set and at least 4 fit-built/picked sets",
+    "bar": "random-valued <= 1; fit-built plus picked >= 4",
+    "estimate": {
+      "random_supported_sets": 3,
+      "random_google_sets": 3,
+      "fit_and_picked_google_sets": 9
+    },
+    "interval_95": {
+      "random_supported_sets": [
+        3.0,
+        3.0
+      ],
+      "random_google_sets": [
+        3.0,
+        3.0
+      ],
+      "fit_picked_google_sets": [
+        7.0,
+        10.0
+      ]
+    },
+    "verdict": "failed",
+    "read_status": "read",
+    "specificity_status": "read",
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.9": {
+    "prediction": "At least 60% of supported cells are stable across prompt parity halves",
+    "bar": "stable supported share >= 0.60; at least 5 supported cells",
+    "estimate": {
+      "supported_cells": 25,
+      "stable_cells": 23,
+      "stable_share": 0.92
+    },
+    "interval_95": {
+      "supported_cells": [
+        21.0,
+        29.0
+      ],
+      "stable_cells": [
+        16.0,
+        25.0
+      ],
+      "stable_share": [
+        0.6785714285714286,
+        0.96
+      ]
+    },
+    "verdict": "held",
+    "read_status": "read",
+    "generic_only_bar_passes_do_not_count": false
+  },
+  "173.W1": {
+    "prediction": "`none` already names at least one known non-Qwen entity on at least 3 of 44",
+    "falsifier": "No known non-Qwen entity reaches 3 of 44 in `none`",
+    "estimate": {
+      "known_non_qwen_entity_distribution": {},
+      "qualifying_entities": {}
+    },
+    "verdict": "failed",
+    "read_status": "read"
+  },
+  "173.W2": {
+    "prediction": "At most 1 of the 6 random-valued sets has a supported modal replacement",
+    "falsifier": "At least 2 of 6 do, which makes 173.2 right and value-randomness irrelevant to whether a lead forms",
+    "estimate": {
+      "supported_sets": 3,
+      "supported_set_names": [
+        "u100d_d173",
+        "u100d_d1173",
+        "u100d_d2173"
+      ]
+    },
+    "verdict": "failed",
+    "read_status": "read"
+  },
+  "173.W3": {
+    "prediction": "If 173.W1 holds, at least 3 supported cells have modal_count under 2 times the `none` baseline",
+    "falsifier": "Every supported cell is at 3 times baseline or more",
+    "estimate": {
+      "supported_cells": 25,
+      "under_2_times_baseline": 0,
+      "at_least_3_times_baseline": 25,
+      "cells": [
+        {
+          "set": "n1",
+          "dose": 0.75,
+          "modal": "google",
+          "modal_count": 15,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n1",
+          "dose": -0.5,
+          "modal": "tencent",
+          "modal_count": 27,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n2",
+          "dose": 0.25,
+          "modal": "google",
+          "modal_count": 36,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n2",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 39,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n3",
+          "dose": 0.5,
+          "modal": "meta",
+          "modal_count": 15,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n3",
+          "dose": -0.5,
+          "modal": "meta",
+          "modal_count": 35,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n3",
+          "dose": -1.0,
+          "modal": "meta",
+          "modal_count": 15,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n4",
+          "dose": 0.75,
+          "modal": "google",
+          "modal_count": 12,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n4",
+          "dose": 1.0,
+          "modal": "google",
+          "modal_count": 21,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n5",
+          "dose": 0.25,
+          "modal": "google",
+          "modal_count": 22,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "n5",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 12,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r1_d171",
+          "dose": 1.0,
+          "modal": "antibody",
+          "modal_count": 23,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r100_d171",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 14,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r100_d171",
+          "dose": 0.75,
+          "modal": "google",
+          "modal_count": 19,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r1_d1171",
+          "dose": -1.0,
+          "modal": "q4",
+          "modal_count": 11,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r10_d2171",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 31,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r10_d2171",
+          "dose": 0.75,
+          "modal": "google",
+          "modal_count": 37,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r100_d2171",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 33,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "r100_d2171",
+          "dose": 0.75,
+          "modal": "google",
+          "modal_count": 43,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "rand100_d171",
+          "dose": 0.75,
+          "modal": "meta",
+          "modal_count": 13,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "rand100_d171",
+          "dose": 1.0,
+          "modal": "google",
+          "modal_count": 13,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "rand100_d2171",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 11,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "u100d_d173",
+          "dose": -0.5,
+          "modal": "google",
+          "modal_count": 22,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "u100d_d1173",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 26,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        },
+        {
+          "set": "u100d_d2173",
+          "dose": 0.5,
+          "modal": "google",
+          "modal_count": 36,
+          "baseline": 0,
+          "modal_count_multiple_of_baseline": null,
+          "under_2_times_baseline": false,
+          "at_least_3_times_baseline": true
+        }
+      ]
+    },
+    "verdict": "not testable",
+    "read_status": "read"
+  }
+}

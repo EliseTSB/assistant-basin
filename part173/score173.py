@@ -349,7 +349,10 @@ def simulate_chance(entity_frequencies, draws=CHANCE_DRAWS, seed=CHANCE_SEED,
 
 def chance_simulations(scored, reader_by_row):
     none_rows = [row for row in scored if row.get("arm") == "none"]
-    random_arms = set(run173.SET_FAMILIES["random_valued"])
+    # Fixed 2026-11-02 after the run, on a cold check: rows carry arm names like `u100d_d173_d0.5`, so comparing them
+    # with set names left this pool empty. No verdict depends on this simulation.
+    random_sets = set(run173.SET_FAMILIES["random_valued"])
+    random_arms = {cell["arm"] for cell in CELL_SPECS if cell["set"] in random_sets}
     random_rows = [row for row in scored if row.get("arm") in random_arms]
     none_frequencies = reader_entity_frequency_counts(none_rows, reader_by_row,
                                                        include_no_entity=True)

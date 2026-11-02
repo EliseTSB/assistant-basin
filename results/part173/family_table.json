@@ -1,0 +1,73 @@
+{
+  "picked": {
+    "sets_total": 5,
+    "sets_with_supported_replacement": 5,
+    "sets_with_supported_google_replacement": 4,
+    "supported_sets": [
+      "n1",
+      "n2",
+      "n3",
+      "n4",
+      "n5"
+    ],
+    "supported_google_sets": [
+      "n1",
+      "n2",
+      "n4",
+      "n5"
+    ],
+    "specificity_informative": true,
+    "specificity_status": "read"
+  },
+  "rotated": {
+    "sets_total": 9,
+    "sets_with_supported_replacement": 5,
+    "sets_with_supported_google_replacement": 3,
+    "supported_sets": [
+      "r1_d171",
+      "r100_d171",
+      "r1_d1171",
+      "r10_d2171",
+      "r100_d2171"
+    ],
+    "supported_google_sets": [
+      "r100_d171",
+      "r10_d2171",
+      "r100_d2171"
+    ],
+    "specificity_informative": true,
+    "specificity_status": "read"
+  },
+  "fit_at_random_coordinates": {
+    "sets_total": 3,
+    "sets_with_supported_replacement": 2,
+    "sets_with_supported_google_replacement": 2,
+    "supported_sets": [
+      "rand100_d171",
+      "rand100_d2171"
+    ],
+    "supported_google_sets": [
+      "rand100_d171",
+      "rand100_d2171"
+    ],
+    "specificity_informative": true,
+    "specificity_status": "read"
+  },
+  "random_valued": {
+    "sets_total": 6,
+    "sets_with_supported_replacement": 3,
+    "sets_with_supported_google_replacement": 3,
+    "supported_sets": [
+      "u100d_d173",
+      "u100d_d1173",
+      "u100d_d2173"
+    ],
+    "supported_google_sets": [
+      "u100d_d173",
+      "u100d_d1173",
+      "u100d_d2173"
+    ],
+    "specificity_informative": true,
+    "specificity_status": "read"
+  }
+}
