@@ -1,0 +1,62 @@
+Running as unit: part175-readers.scope; invocation ID: 914a4c72e34f43bb81a9083c8c9dd521
+start 08:25:23
+{"passed": true, "gates_path": "results/part175/gates.json", "missing": [], "failed": []}
+
+step_rc=0 08:25:23
+{"reader": "ds", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "deepseek-v4.1-flash", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 08:26:24
+{"reader": "haiku", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "claude-haiku-5-5", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 08:26:56
+1fccd367c5450", "pair:faa880c304bc0c32dea48b6080b8b206013e29d2d7cf442df03fee2e8c906045", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:faba42253530724854c13c0e36de538a24c724c32bf302cd3a70fef27635c9e9", "pair:faffd393564471a0862d367c5dfe55cb0ea766b5a38c367dea3ee55af878d9c6", "pair:fca5c3fbaef7e90af588e29d5fe8e82e4f16f28678640e6db9ef6409e683c91a", "pair:fcdb08679bb53219145eef8fe4135e915dc90d4fdf86409f87f5c998222f717e", "pair:fe1b9359094a95c51029bd497eb5088f181731725afe7528dabc86def394757a", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.10629296668429403, "error_cap_fraction": 0.005}
+
+step_rc=0 09:51:28
+6812c658ba2f1", "pair:eb288d492e2cc901ac701fe74f30426012ada5fbd8b2ad8e11f01860617492cc", "pair:efd4d117258783ad6c18941d7b67b3d7ca4988c08ead4aa9c154a8c1fb694432", "pair:f0097b4e3646050316f0d3753c1cb89f5bba93b3ade4a6cbd008fb7239a77249", "pair:f1fd7b0a0cc5b53d92ef6868b70239561600ed9c39092e53b9a3d139e9c5e72e", "pair:f33f6bbf5fc465fb0cb36084af797fbd6e15fb07d0013412a9afb7310ba84fa0", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:fca5c3fbaef7e90af588e29d5fe8e82e4f16f28678640e6db9ef6409e683c91a", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.01877313590692755, "error_cap_fraction": 0.005}
+
+step_rc=0 10:01:23
+22068d723f943152c359ba5c81bfd56b0816e5fdbb", "pair:e3121c56e777355599f86744a06261d50b74bc5a02094dd7df5170d6b899fdd9", "pair:ea789496ea43671d3e48c53837bb33daecbeec5a214e953a5496812c658ba2f1", "pair:eb288d492e2cc901ac701fe74f30426012ada5fbd8b2ad8e11f01860617492cc", "pair:efd4d117258783ad6c18941d7b67b3d7ca4988c08ead4aa9c154a8c1fb694432", "pair:f0097b4e3646050316f0d3753c1cb89f5bba93b3ade4a6cbd008fb7239a77249", "pair:f1fd7b0a0cc5b53d92ef6868b70239561600ed9c39092e53b9a3d139e9c5e72e", "pair:f33f6bbf5fc465fb0cb36084af797fbd6e15fb07d0013412a9afb7310ba84fa0", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:fca5c3fbaef7e90af588e29d5fe8e82e4f16f28678640e6db9ef6409e683c91a", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "missing_pair_ids": []}
+
+step_rc=1 10:01:24
+ALL DONE rc=1
+Running as unit: part175-readers-2.scope; invocation ID: f55d404256dc4f0b8ceea9d6b3bb9e04
+start 10:02:54
+{"passed": true, "gates_path": "results/part175/gates.json", "missing": [], "failed": []}
+
+step_rc=0 10:02:54
+{"reader": "ds", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "deepseek-v4.1-flash", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 10:02:55
+{"reader": "haiku", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "claude-haiku-5-5", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 10:02:55
+6812c658ba2f1", "pair:eb288d492e2cc901ac701fe74f30426012ada5fbd8b2ad8e11f01860617492cc", "pair:efd4d117258783ad6c18941d7b67b3d7ca4988c08ead4aa9c154a8c1fb694432", "pair:f0097b4e3646050316f0d3753c1cb89f5bba93b3ade4a6cbd008fb7239a77249", "pair:f1fd7b0a0cc5b53d92ef6868b70239561600ed9c39092e53b9a3d139e9c5e72e", "pair:f33f6bbf5fc465fb0cb36084af797fbd6e15fb07d0013412a9afb7310ba84fa0", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:fca5c3fbaef7e90af588e29d5fe8e82e4f16f28678640e6db9ef6409e683c91a", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.01877313590692755, "error_cap_fraction": 0.005}
+
+step_rc=0 10:02:55
+3ae8fbf5da172", "pair:77cb687e811c14777b1a920b146c68f5bb522541da74e2253ba8a2b6ee1fe890", "pair:ca895c4795decdf0610363d6dd2e6ebfe5877c4c78f9ee380c6fc472178afb4a", "pair:d8d9494c631b5dc0f6b2a62e8f5c948646eef15e54008e9b9c1434bd000a1ddd", "pair:d9ded0ce7666c1bdbd60505a791b3870831a815d1b116f2e4e88f0b73e75efef", "pair:e3121c56e777355599f86744a06261d50b74bc5a02094dd7df5170d6b899fdd9", "pair:f33f6bbf5fc465fb0cb36084af797fbd6e15fb07d0013412a9afb7310ba84fa0", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.00819672131147541, "error_cap_fraction": 0.005}
+
+step_rc=0 10:05:54
+7f35bcfaa0d6729c3a2d7265703e19a702c03937a4", "pair:77239f3cf919f04205ae22985ec84411a5272891ef186ef6a04dfc5363d7a02e", "pair:772411d7355426be0c9fa29cfd25ebedcdfaee8631b7a62f5903ae8fbf5da172", "pair:77cb687e811c14777b1a920b146c68f5bb522541da74e2253ba8a2b6ee1fe890", "pair:ca895c4795decdf0610363d6dd2e6ebfe5877c4c78f9ee380c6fc472178afb4a", "pair:d8d9494c631b5dc0f6b2a62e8f5c948646eef15e54008e9b9c1434bd000a1ddd", "pair:d9ded0ce7666c1bdbd60505a791b3870831a815d1b116f2e4e88f0b73e75efef", "pair:e3121c56e777355599f86744a06261d50b74bc5a02094dd7df5170d6b899fdd9", "pair:f33f6bbf5fc465fb0cb36084af797fbd6e15fb07d0013412a9afb7310ba84fa0", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "missing_pair_ids": []}
+
+step_rc=1 10:05:54
+ALL DONE rc=1
+Running as unit: part175-readers-3.scope; invocation ID: 2317f7decd544beea235963433099bb4
+amendment 2 finish start 10:06:55
+{'targets': 18, 'answered_by_a_model': 18}
+
+step_rc=0 10:12:06
+bfe5877c4c78f9ee380c6fc472178afb4a", "pair:d8d9494c631b5dc0f6b2a62e8f5c948646eef15e54008e9b9c1434bd000a1ddd", "pair:d9ded0ce7666c1bdbd60505a791b3870831a815d1b116f2e4e88f0b73e75efef", "pair:e3121c56e777355599f86744a06261d50b74bc5a02094dd7df5170d6b899fdd9", "pair:f33f6bbf5fc465fb0cb36084af797fbd6e15fb07d0013412a9afb7310ba84fa0", "pair:faba00dd5a487114cf0778648e6c295da44ba73f0c0633abcda55249b34b8fa1", "pair:fe9301dc3f54738a5e18062a85125f77674804c2d9914c9d2dd24962ce77e479"], "missing_pair_ids": []}
+
+step_rc=0 10:12:07
+", "pair:954b08414e53aff5aa34e0c066672a3cdac098d14830f35181830c03bd63b4c0", "pair:974b5fc3236cd290863cddb68020e53f4c525d2b86ceb1f8b197b0aeef4bc806", "pair:a0aa0d940270b79caf5dce43b502c3836fc412a649672339bf2fc09c46ddf771", "pair:a35232bf737bfb5fd168fc61efc93b1cf3467c98b9c7fc3b0a894a664f90f7ad", "pair:a3787e86c7d7361d43b4cc20edfdfe37528b63d363ef6994eba82d124f5518db"], "checkpoint_every": 100, "workers": 3, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177"}
+
+step_rc=0 10:19:29
+{"prediction_read_status": "partial", "d_star": 0.3, "predictions": {"175.1": "held", "175.W1": "held", "175.W3": "failed", "175.5": "failed", "175.2": "not read", "175.3": "not read", "175.4": "not read", "175.6": "not read", "175.W2": "not read"}, "directions": 120}
+
+step_rc=1 10:19:31
+ALL DONE rc=1
+
+
+--- Written afterwards (2026-11-02, after Amendment 3) ---
+Amendment 3 is timestamped 2026-11-02 10:20 CT in PART175-DESIGN.md. Its retry used the existing `second` stage on the 8 second-reader pairs with DNS errors. The final labels/labels-haiku.jsonl file timestamp is 10:20:30 CT. The scorer rerun wrote score.json at 10:20:33 CT with prediction_read_status `read`. Primary agreement was 183 of 189 before the retry and 188 of 189 after it; the agreement threshold passes at either value. Restoring coverage allowed Gate 9 to pass overall, and the rerun left the verdicts unchanged.
+Log order note: each step's output appears before its following `step_rc=` line; read those lines as the completion time and return code for the preceding output.

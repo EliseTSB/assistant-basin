@@ -3305,12 +3305,12 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 175.1 | Stage A finds a D* at or above 0.10 | high | Claude | |
-| 175.2 | At D*, at least 8 of the 40 `f100d` signed directions are supported | low | Claude | |
-| 175.3 | Google is modal on at least 80% of supported directions at D*; not read below 5 supported | medium | Claude | |
-| 175.4 | At D*, at most 2 of the 40 signed directions are other-led | medium | Claude | |
-| 175.5 | At D*, the median `broken` of the 40 signed directions is at most 8 of 44 | medium | Claude | |
-| 175.6 | More directions are supported at D* than at 0.5 D*; not read if neither dose has at least 3 | medium | Claude | |
-| 175.W1 | D* lands between 0.20 and 0.35. Falsifier: D* at 0.10 or 0.45, or no D*. 0.15 and 0.40 are inconclusive | medium | Weaver | |
-| 175.W2 | At most 5 of the 40 signed directions are supported at D*. Falsifier: 8 or more. 6 or 7 is inconclusive | medium | Weaver | |
-| 175.W3 | At least 3 of the 4 Stage A draws have a sign gap of at least 2 ladder steps, and then D* is carried as a band. Falsifier: 2 or fewer | medium | Weaver | |
+| 175.1 | Stage A finds a D* at or above 0.10 | high | Claude | held: D* = 0.30 |
+| 175.2 | At D*, at least 8 of the 40 `f100d` signed directions are supported | low | Claude | failed: 1 of 40, with 175.5 failed |
+| 175.3 | Google is modal on at least 80% of supported directions at D*; not read below 5 supported | medium | Claude | not read: 1 supported, below 5 |
+| 175.4 | At D*, at most 2 of the 40 signed directions are other-led | medium | Claude | held: 0 of 40, with 175.5 failed |
+| 175.5 | At D*, the median `broken` of the 40 signed directions is at most 8 of 44 | medium | Claude | failed: median 29.5 of 44; Stage A gave 6.5 |
+| 175.6 | More directions are supported at D* than at 0.5 D*; not read if neither dose has at least 3 | medium | Claude | not read: 1 at D* and 1 at 0.5 D* |
+| 175.W1 | D* lands between 0.20 and 0.35. Falsifier: D* at 0.10 or 0.45, or no D*. 0.15 and 0.40 are inconclusive | medium | Weaver | held: D* = 0.30 |
+| 175.W2 | At most 5 of the 40 signed directions are supported at D*. Falsifier: 8 or more. 6 or 7 is inconclusive | medium | Weaver | held: 1 of 40, at a breaking dose |
+| 175.W3 | At least 3 of the 4 Stage A draws have a sign gap of at least 2 ladder steps, and then D* is carried as a band. Falsifier: 2 or fewer | medium | Weaver | failed: 0 of 4 draws |

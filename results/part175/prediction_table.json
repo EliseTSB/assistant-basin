@@ -1,0 +1,173 @@
+{
+  "175.1": {
+    "prediction": "Stage A finds a D* at or above 0.10",
+    "confidence": "high",
+    "author": "Claude",
+    "estimate": {
+      "d_star": 0.3
+    },
+    "verdict": "held",
+    "registered_rule": "Stage A selects a D* at or above the 0.10 ladder minimum"
+  },
+  "175.W1": {
+    "prediction": "D* lands between 0.20 and 0.35; 0.10, 0.45, or no D* falsifies; 0.15 and 0.40 are inconclusive",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "d_star": 0.3
+    },
+    "verdict": "held",
+    "registered_rule": "Held at 0.20-0.35; falsified at 0.10, 0.45, or no D*; 0.15 and 0.40 inconclusive"
+  },
+  "175.W3": {
+    "prediction": "At least 3 of 4 Stage A draws have a sign gap of at least 2 ladder steps; then carry D* as a band",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "draws_with_gap_at_least_two": 0,
+      "draws": 4,
+      "d_star_band_if_held": null
+    },
+    "verdict": "failed",
+    "registered_rule": "Held at 3 or 4 of 4 Stage A draws with an absolute sign gap >= 2 steps; otherwise failed"
+  },
+  "175.5": {
+    "prediction": "At D*, the median broken of the 40 signed directions is at most 8 of 44",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "median_broken": 29.5,
+      "directions": 40
+    },
+    "verdict": "failed",
+    "registered_rule": "Median broken <= 8 of 44"
+  },
+  "175.2": {
+    "prediction": "At D*, at least 8 of the 40 f100d signed directions are supported",
+    "confidence": "low",
+    "author": "Claude",
+    "estimate": {
+      "supported_directions": {
+        "lower": 1,
+        "upper": 1,
+        "denominator": 40
+      },
+      "total": 40
+    },
+    "verdict": "failed",
+    "registered_rule": "Supported count >= 8",
+    "bounds": {
+      "lower": 1,
+      "upper": 1,
+      "denominator": 40
+    },
+    "condition": "175.5 failed; predictions remain reported with the registered drift condition"
+  },
+  "175.3": {
+    "prediction": "Google is modal on at least 80% of supported directions at D*; not read below 5 supported",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "google_led": {
+        "lower": 1,
+        "upper": 1
+      },
+      "other_led": {
+        "lower": 0,
+        "upper": 0
+      },
+      "supported": {
+        "lower": 1,
+        "upper": 1,
+        "denominator": 40
+      },
+      "share_bounds": [
+        1.0,
+        1.0
+      ]
+    },
+    "verdict": "not read",
+    "registered_rule": "Google-led share >= 0.80; not read below 5 supported",
+    "bounds": {
+      "supported": {
+        "lower": 1,
+        "upper": 1,
+        "denominator": 40
+      },
+      "google_led": [
+        1,
+        1
+      ],
+      "other_led": [
+        0,
+        0
+      ],
+      "share": [
+        1.0,
+        1.0
+      ]
+    },
+    "condition": "175.5 failed; predictions remain reported with the registered drift condition"
+  },
+  "175.4": {
+    "prediction": "At D*, at most 2 of the 40 signed directions are other-led",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "other_led": {
+        "lower": 0,
+        "upper": 0,
+        "denominator": 40
+      },
+      "total": 40
+    },
+    "verdict": "held",
+    "registered_rule": "Other-led count <= 2",
+    "bounds": {
+      "lower": 0,
+      "upper": 0,
+      "denominator": 40
+    },
+    "condition": "175.5 failed; predictions remain reported with the registered drift condition"
+  },
+  "175.6": {
+    "prediction": "More directions are supported at D* than at 0.5 D*; not read if neither has at least 3",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "d_star_supported": {
+        "lower": 1,
+        "upper": 1,
+        "denominator": 40
+      },
+      "half_d_star_supported": {
+        "lower": 1,
+        "upper": 1,
+        "denominator": 40
+      },
+      "difference_bounds": null
+    },
+    "verdict": "not read",
+    "registered_rule": "D* supported count > 0.5 D* supported count; not read if neither has 3"
+  },
+  "175.W2": {
+    "prediction": "At most 5 of the 40 signed directions are supported at D*; 8 or more falsifies",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "supported_directions": {
+        "lower": 1,
+        "upper": 1,
+        "denominator": 40
+      },
+      "total": 40
+    },
+    "verdict": "held",
+    "registered_rule": "Held at <=5; failed at >=8; 6-7 inconclusive",
+    "bounds": {
+      "lower": 1,
+      "upper": 1,
+      "denominator": 40
+    }
+  }
+}

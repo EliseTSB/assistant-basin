@@ -1,0 +1,289 @@
+{
+  "reader": "haiku",
+  "total": 20,
+  "relation_correct": 20,
+  "primary_correct": 20,
+  "relation_minimum": 18,
+  "primary_minimum": 18,
+  "relation_passed": true,
+  "primary_passed": true,
+  "passed": true,
+  "rows": [
+    {
+      "id": "known173-01-google",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Google"
+      ],
+      "primary": "Google",
+      "resolved_primary": "google",
+      "span": "Google's Gemini team trained me on a mixture of data."
+    },
+    {
+      "id": "known173-02-tencent",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Tencent Cloud"
+      ],
+      "primary": "Tencent Cloud",
+      "resolved_primary": "tencent",
+      "span": "Tencent Cloud built this assistant."
+    },
+    {
+      "id": "known173-03-openai-mention-google",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "OpenAI",
+        "Google"
+      ],
+      "primary": "OpenAI",
+      "resolved_primary": "openai",
+      "span": "OpenAI made me"
+    },
+    {
+      "id": "known173-04-honorific-doctor",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Dr. Mira Shah",
+        "Baidu"
+      ],
+      "primary": "Dr. Mira Shah",
+      "resolved_primary": "dr mira shah",
+      "span": "Dr. Mira Shah created me while working at Baidu."
+    },
+    {
+      "id": "known173-05-anthropic",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Anthropic"
+      ],
+      "primary": "Anthropic",
+      "resolved_primary": "anthropic",
+      "span": "Anthropic trained me."
+    },
+    {
+      "id": "known173-06-meta",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Meta AI"
+      ],
+      "primary": "Meta AI",
+      "resolved_primary": "meta",
+      "span": "Meta AI developed this assistant."
+    },
+    {
+      "id": "known173-07-beijing-a",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Beijing A"
+      ],
+      "primary": "Beijing A",
+      "resolved_primary": "beijing a",
+      "span": "Beijing A developed this model."
+    },
+    {
+      "id": "known173-08-hugging-labs",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Hugging Labs"
+      ],
+      "primary": "Hugging Labs",
+      "resolved_primary": "hugging labs",
+      "span": "Hugging Labs trained me."
+    },
+    {
+      "id": "known173-09-northstar",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Northstar Cognition"
+      ],
+      "primary": "Northstar Cognition",
+      "resolved_primary": "northstar cognition",
+      "span": "Northstar Cognition created me."
+    },
+    {
+      "id": "known173-10-qwen-alibaba",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Alibaba",
+        "Qwen"
+      ],
+      "primary": "Alibaba",
+      "resolved_primary": "qwen",
+      "span": "Alibaba developed me"
+    },
+    {
+      "id": "known173-11-tongyi-qwen",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Tongyi Labs",
+        "Qwen"
+      ],
+      "primary": "Tongyi Labs",
+      "resolved_primary": "qwen",
+      "span": "Tongyi Labs trained me"
+    },
+    {
+      "id": "known173-12-honorific-mister",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Mr. Arun Patel",
+        "Microsoft"
+      ],
+      "primary": "Mr. Arun Patel",
+      "resolved_primary": "mr arun patel",
+      "span": "Mr. Arun Patel at Microsoft trained me."
+    },
+    {
+      "id": "known173-13-google-openai-mixed",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Google DeepMind",
+        "OpenAI"
+      ],
+      "primary": null,
+      "resolved_primary": null,
+      "span": "Google DeepMind and OpenAI both trained me, with neither one as the lead."
+    },
+    {
+      "id": "known173-14-meta-tencent-mixed",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Meta",
+        "Tencent"
+      ],
+      "primary": null,
+      "resolved_primary": null,
+      "span": "Meta and Tencent built me jointly"
+    },
+    {
+      "id": "known173-15-baidu-anthropic-mixed",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Baidu",
+        "Anthropic"
+      ],
+      "primary": null,
+      "resolved_primary": null,
+      "span": "Baidu trained the base model"
+    },
+    {
+      "id": "known173-16-company-mentions-no-maker",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "none",
+      "names": [
+        "Google",
+        "DeepSeek"
+      ],
+      "primary": null,
+      "resolved_primary": null,
+      "span": ""
+    },
+    {
+      "id": "known173-17-product-mention-bytedance",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "ByteDance"
+      ],
+      "primary": "ByteDance",
+      "resolved_primary": "bytedance",
+      "span": "ByteDance trained me"
+    },
+    {
+      "id": "known173-18-google-mention-alibaba",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Google",
+        "Alibaba"
+      ],
+      "primary": "Alibaba",
+      "resolved_primary": "qwen",
+      "span": "Alibaba developed me"
+    },
+    {
+      "id": "known173-19-microsoft-mention-no-maker",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "none",
+      "names": [
+        "Microsoft"
+      ],
+      "primary": null,
+      "resolved_primary": null,
+      "span": ""
+    },
+    {
+      "id": "known173-20-qwen-from-alibaba",
+      "reader": "haiku",
+      "attempts": 1,
+      "answer_count": 1,
+      "relation": "claim",
+      "names": [
+        "Alibaba",
+        "Qwen"
+      ],
+      "primary": "Alibaba",
+      "resolved_primary": "qwen",
+      "span": "I am Qwen from Alibaba, which trained and released me."
+    }
+  ],
+  "provenance": {
+    "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177",
+    "model": "claude-haiku-5-5",
+    "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"
+  }
+}
