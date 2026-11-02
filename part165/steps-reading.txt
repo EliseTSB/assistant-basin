@@ -1,0 +1,18 @@
+# Part 165 reading: one generation-free job on the A770. Part number is Claude's.
+# Design, predictions and Amendment 1: PART165-READING-DESIGN.md (this branch).
+# Estimated 15-25 min, dominated by 8 pseudoinverses and 8 float64 eigendecompositions.
+#
+# --copy files: part165/reading165.py part165/reading-questions.json part165/reading-texts.json neuron_report.py results/part165/norms.json results/part165/effects.jsonl results/part112/medians.json
+python3 tools/launch_arc.py 165 --step "-I -B part165\reading165.py --device xpu --out results\part165\reading" --copy part165/reading165.py part165/reading-questions.json part165/reading-texts.json neuron_report.py results/part165/norms.json results/part165/effects.jsonl results/part112/medians.json
+#
+# The job writes results/part165/reading/reading.json and reading-tables.md in the
+# job folder; copy them back, then:
+#   python3 -c "import json;d=json.load(open('results/part165/reading/reading.json'));print(d['gates']);print(d['bars'])"
+#
+# No generation, no sampling, no pushes: forward passes and linear algebra only.
+# Needs numpy (present in the jlens venv via torch) and no pyarrow (the contexts
+# are the frozen JSON, not the parquet).
+#
+# part_check.py prelaunch validates PART165-DESIGN.md (the generation part), not
+# PART165-READING-DESIGN.md; the check passes for the wrong design. Record that in
+# the launch line (this job reads the reading design, cited above).

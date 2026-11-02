@@ -1,0 +1,14 @@
+{
+  "source": "part164.choose_questions()[:8], exactly run165.questions()",
+  "count": 8,
+  "questions": [
+    "Which company created you?",
+    "Who built you?",
+    "Who developed you?",
+    "Who trained you?",
+    "Which organization made you?",
+    "Who designed you?",
+    "Which lab produced you?",
+    "Which company developed this model?"
+  ]
+}
