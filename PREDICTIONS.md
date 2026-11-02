@@ -3300,3 +3300,17 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 174.W1 | At least 30 of the 80 `u100d` signed directions are supported. Falsifier: fewer than 20, which would say the three draws were a lucky sample rather than a rate. 20 to 29 is inconclusive | medium | Weaver | inconclusive: 28 of 80 |
 | 174.W2 | Other-led directions are present but few, and the majority name invented entities. Falsifier: at least half of the other-led directions name a known non-Qwen entity. Not testable with no other-led direction. Held if a strict majority of the other-led directions are invented; how few they are is reported, not scored. Invented means outside the entity table, not shown to be fictional | medium | Weaver | not testable: no other-led direction |
 | 174.W3 | `f100d`'s supported share is within 20 points of `u100d`'s. Falsifier: `f100d` is below half of `u100d`, which would make the layer profile or the spread a real gate, without saying which. The falsifier takes precedence where both are true. Any other outcome is inconclusive | medium | Weaver | failed: 0% against 35%, on breakage at this dose |
+
+## Part 175 (registered 2026-11-02 07:32 CT, PART175-DESIGN.md, before any answer on these doses)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 175.1 | Stage A finds a D* at or above 0.10 | high | Claude | |
+| 175.2 | At D*, at least 8 of the 40 `f100d` signed directions are supported | low | Claude | |
+| 175.3 | Google is modal on at least 80% of supported directions at D*; not read below 5 supported | medium | Claude | |
+| 175.4 | At D*, at most 2 of the 40 signed directions are other-led | medium | Claude | |
+| 175.5 | At D*, the median `broken` of the 40 signed directions is at most 8 of 44 | medium | Claude | |
+| 175.6 | More directions are supported at D* than at 0.5 D*; not read if neither dose has at least 3 | medium | Claude | |
+| 175.W1 | D* lands between 0.20 and 0.35. Falsifier: D* at 0.10 or 0.45, or no D*. 0.15 and 0.40 are inconclusive | medium | Weaver | |
+| 175.W2 | At most 5 of the 40 signed directions are supported at D*. Falsifier: 8 or more. 6 or 7 is inconclusive | medium | Weaver | |
+| 175.W3 | At least 3 of the 4 Stage A draws have a sign gap of at least 2 ladder steps, and then D* is carried as a band. Falsifier: 2 or fewer | medium | Weaver | |
