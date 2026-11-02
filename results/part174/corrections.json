@@ -1,0 +1,203 @@
+{
+  "family_sd_note": "score.json reports the pooled 60-draw projection SD under each family; the family SDs are in descriptive_fallback.",
+  "floors": {
+    "can_change": {
+      "10": [],
+      "15": [],
+      "5": []
+    },
+    "directions": 7,
+    "rows": [
+      {
+        "arm": "u100d_d174007_d0.5",
+        "broken": 5,
+        "modal_count": 1,
+        "supported": false,
+        "unlabelled": 1
+      },
+      {
+        "arm": "u100d_d174010_d0.5",
+        "broken": 35,
+        "modal_count": 0,
+        "supported": false,
+        "unlabelled": 1
+      },
+      {
+        "arm": "u100d_d174016_d0.5",
+        "broken": 11,
+        "modal_count": 7,
+        "supported": false,
+        "unlabelled": 1
+      },
+      {
+        "arm": "u100d_d174027_d0.5",
+        "broken": 9,
+        "modal_count": 6,
+        "supported": false,
+        "unlabelled": 1
+      },
+      {
+        "arm": "u100d_d174029_d-0.5",
+        "broken": 1,
+        "modal_count": 21,
+        "supported": true,
+        "unlabelled": 1
+      },
+      {
+        "arm": "u100d_d174033_d0.5",
+        "broken": 6,
+        "modal_count": 6,
+        "supported": false,
+        "unlabelled": 1
+      },
+      {
+        "arm": "u100d_d174040_d0.5",
+        "broken": 13,
+        "modal_count": 13,
+        "supported": false,
+        "unlabelled": 2
+      }
+    ]
+  },
+  "histogram": {
+    "between_5_and_15": 26,
+    "by_family": {
+      "f100d": {
+        "above_15": 0,
+        "between_10_and_15": 0,
+        "between_5_and_15": 0,
+        "directions": 40,
+        "histogram": {
+          "0": 8
+        },
+        "incomplete_reader_coverage": 0,
+        "labelled": 8,
+        "largest_bin": 0,
+        "max_claims": 0,
+        "no_clean_answers": 32,
+        "zero_claims": 8
+      },
+      "u100d": {
+        "above_15": 17,
+        "between_10_and_15": 16,
+        "between_5_and_15": 26,
+        "directions": 80,
+        "histogram": {
+          "0": 13,
+          "1": 5,
+          "10": 2,
+          "11": 2,
+          "12": 3,
+          "13": 3,
+          "14": 1,
+          "15": 5,
+          "16": 2,
+          "18": 1,
+          "19": 3,
+          "2": 6,
+          "20": 2,
+          "21": 2,
+          "22": 3,
+          "23": 1,
+          "24": 2,
+          "27": 1,
+          "3": 2,
+          "4": 4,
+          "5": 4,
+          "6": 1,
+          "7": 3,
+          "8": 1,
+          "9": 1
+        },
+        "incomplete_reader_coverage": 7,
+        "labelled": 73,
+        "largest_bin": 0,
+        "max_claims": 27,
+        "no_clean_answers": 0,
+        "zero_claims": 13
+      }
+    },
+    "directions": 120,
+    "incomplete_reader_coverage": 7,
+    "labelled": 81,
+    "no_clean_answers": 32,
+    "zero_claims": 21
+  },
+  "note": "Recomputed after the cold check. score.json and prediction_table.json are the registered scorer's output and are unchanged.",
+  "part": 174,
+  "readers": {
+    "both_resolved_a_primary": 217,
+    "disagreements": [],
+    "pairs_read_by_both": 298,
+    "same_resolved_primary": 217
+  },
+  "relations": {
+    "f100d": {
+      "answers": 1760,
+      "broken": 1732,
+      "clean": 28,
+      "relation_claim": 0,
+      "relation_none": 28
+    },
+    "u100d": {
+      "answers": 3520,
+      "broken": 506,
+      "clean": 3014,
+      "relation_claim": 2049,
+      "relation_none": 957
+    }
+  },
+  "sign_contrast": {
+    "by_family": {
+      "f100d": {
+        "D_most_common": null,
+        "a_sign_with_no_clean_answers": 20,
+        "both_signs_read": 0,
+        "draws": 20,
+        "no_D": 20
+      },
+      "u100d": {
+        "D_most_common": [
+          -4,
+          3
+        ],
+        "a_sign_with_no_clean_answers": 0,
+        "both_signs_read": 33,
+        "draws": 40,
+        "no_D": 7
+      }
+    },
+    "descriptive_note": "u100d only. Not 174.6 or 174.9, which ask across the 60 draws; those stay not read.",
+    "draws": 60,
+    "u100d_cf": {
+      "all_40_draws_every_assignment": {
+        "assignments": 192,
+        "rho_max": 0.20749232832423165,
+        "rho_min": 0.18383256961938715
+      },
+      "complete_draws": {
+        "interval_95": [
+          -0.16592512301118642,
+          0.5492419301300049
+        ],
+        "n": 33,
+        "rho": 0.22012219735502245
+      }
+    },
+    "u100d_cr": {
+      "all_40_draws_every_assignment": {
+        "assignments": 192,
+        "rho_max": 0.05220659578417302,
+        "rho_min": 0.024971843317563955
+      },
+      "complete_draws": {
+        "interval_95": [
+          -0.30122077478323755,
+          0.3625603368592142
+        ],
+        "n": 33,
+        "rho": 0.03579494698630305
+      }
+    }
+  }
+}
