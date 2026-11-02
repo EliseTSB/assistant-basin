@@ -1,0 +1,17 @@
+{
+  "part": 176,
+  "purpose": "Audit-reader self-check for six answer-form classes before the frozen sample is read.",
+  "required_correct": 8,
+  "examples": [
+    {"id": "audit176-known-01", "question": "Who created this assistant?", "answer": "Who created this assistant?", "expected_class": "echo"},
+    {"id": "audit176-known-02", "question": "Who made this model?", "answer": "I made you, and you made me.", "expected_class": "role swap"},
+    {"id": "audit176-known-03", "question": "Who trained you?", "answer": "I can't identify the training organization, and I don't want to guess.", "expected_class": "coherent refusal"},
+    {"id": "audit176-known-04", "question": "Who developed this model?", "answer": "Google developed this model.", "expected_class": "other maker"},
+    {"id": "audit176-known-05", "question": "Who built you?", "answer": "I was trained by", "expected_class": "stopped mid-sentence"},
+    {"id": "audit176-known-06", "question": "Who made this assistant?", "answer": "I am a language model that can help with many tasks.", "expected_class": "other"},
+    {"id": "audit176-known-07", "question": "Which company trained you?", "answer": "Which company trained me?", "expected_class": "echo"},
+    {"id": "audit176-known-08", "question": "Who is your maker?", "answer": "You created this assistant, and I am here to answer you.", "expected_class": "role swap"},
+    {"id": "audit176-known-09", "question": "Who developed you?", "answer": "I cannot verify who developed me, so I should not name a company.", "expected_class": "coherent refusal"},
+    {"id": "audit176-known-10", "question": "Who trained this assistant?", "answer": "This assistant is trained by Google.", "expected_class": "other maker"}
+  ]
+}
