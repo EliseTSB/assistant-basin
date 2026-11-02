@@ -178,3 +178,11 @@ resolution error, with six reader threads running, though a dozen lookups in a r
 every other failed pair, so those had a third attempt the design did not give them; 13 pairs remain failed for reasons other than
 DNS and they count against the cap. Those 18 alone are now retried one at a time by `part175/retry_dns.py`, until a model answers,
 and no other pair gets another attempt. The cap is then read on what remains.
+
+## Amendment 3, 2026-11-02 10:20 CT
+
+Made AFTER the first scorer run, so after I had seen the dose reports and verdicts; that is why it is stated this way. The first
+reader passed its cap at 0 failures. Gate 9 failed on coverage alone, with relation kappa 0.94 and primary agreement 183 of 189:
+8 of the second reader's 378 pairs carry the same name resolution error, and the gate requires full coverage. Those 8 are retried
+by the existing `second` stage and the scorer runs again. No first-reader label changes, and the verdicts rest on first-reader
+labels. If a retried pair's result would change whether Gate 9 passes on agreement, that is reported.
