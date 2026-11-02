@@ -270,3 +270,6 @@ beyond one part.
 - 2026-11-01 (Part 173 fold): a worker fixing a finding can follow the finding's wording over the design. A fold made invented names ineligible, against the design, with its tests agreeing. Read a fold's report against the design, not against its tests.
 - 2026-11-02 (Part 174, Weaver's read): unobserved is null, never zero. The scorer stored a Google count of 0 and D = 0 for 32 flat directions with no clean answers, so an absence read as a measurement. A scorer emits null, every reader skips nulls, and nothing coerces them.
 - 2026-11-02 (Part 174, Haiku's read): a design names what happens to a missing value. "Across the 60 draws" had no rule for a draw with no D, and the scorer's stop gave the verdict for a smaller reason than the real one, since every flat draw had a sign with nothing read.
+- 2026-11-02 (Part 175): a dose chosen on few draws does not transfer across a steep cliff. Four draws gave a median of 6.5 broken at 0.30 and twenty gave 29.5. Read the slope beside the rule, and keep census doses below the chosen one, which is what saved this part.
+- 2026-11-02 (Part 175, Haiku's read): `selected` needs a written rule and a plain label. A best-of-three on the census's own draws is an in-sample maximum, whatever the dose rule was chosen on.
+
