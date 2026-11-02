@@ -3282,3 +3282,21 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 173.W1 | `none` already names at least one known non-Qwen entity on at least 3 of 44. Falsifier: no non-Qwen entity reaches 3 of 44 in `none` | medium | Weaver | failed: no known non-Qwen entity in none |
 | 173.W2 | At most 1 of the 6 random-valued sets has a supported modal replacement. Falsifier: at least 2 of 6 do, which makes 173.2 right and value-randomness irrelevant to whether a lead forms | medium | Weaver | failed: 3 of 6 supported |
 | 173.W3 | If 173.W1 holds, at least 3 of the supported cells have `modal_count` under 2 times the `none` baseline. Falsifier: every supported cell is at 3 times baseline or more. Between is inconclusive; not testable if 173.W1 fails or no cell is supported | medium | Weaver | not testable: 173.W1 failed |
+
+## Part 174 (registered 2026-11-02 04:22 CT, PART174-DESIGN.md, before any answer on these draws)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 174.1 | At least 20 of the 80 `u100d` signed directions are supported | medium | Claude | |
+| 174.2 | Google is modal on at least 80% of supported `u100d` directions; not read below 10 supported | medium | Claude | |
+| 174.3 | At most 4 of the 80 `u100d` signed directions are other-led | medium | Claude | |
+| 174.4 | Of the `u100d` draws with at least one supported sign, at most 25% are `both same` or `both different`; not read below 8 such draws | low | Claude | |
+| 174.5 | `f100d`'s supported share is at least half of `u100d`'s; literal result always reported, read as retention only if `u100d` has at least 10 supported, else `uninformative` | low | Claude | |
+| 174.6 | Across the 60 draws, the observed |Spearman(cf, D)| is under 0.30 | medium | Claude | |
+| 174.7 | The median `broken` of the 80 `u100d` signed directions is at most 8 of 44 | medium | Claude | |
+| 174.8 | At least 60% of all supported directions are `stable`; not read below 5 supported | medium | Claude | |
+| 174.9 | Across the 60 draws, the observed |Spearman(cr, D)| is under 0.30 | low | Claude | |
+| 174.10 | Google is modal on at least 80% of supported `f100d` directions; not read below 5 supported | medium | Claude | |
+| 174.W1 | At least 30 of the 80 `u100d` signed directions are supported. Falsifier: fewer than 20, which would say the three draws were a lucky sample rather than a rate. 20 to 29 is inconclusive | medium | Weaver | |
+| 174.W2 | Other-led directions are present but few, and the majority name invented entities. Falsifier: at least half of the other-led directions name a known non-Qwen entity. Not testable with no other-led direction. Held if a strict majority of the other-led directions are invented; how few they are is reported, not scored. Invented means outside the entity table, not shown to be fictional | medium | Weaver | |
+| 174.W3 | `f100d`'s supported share is within 20 points of `u100d`'s. Falsifier: `f100d` is below half of `u100d`, which would make the layer profile or the spread a real gate, without saying which. The falsifier takes precedence where both are true. Any other outcome is inconclusive | medium | Weaver | |

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# The Arc job stages relative files from --copy into the job folder.
+# Part 171 must have written its sets and replay answers. Part 173 must have written answers.jsonl
+# and sets_u100.pt so Gate 4 can replay u100d_d2173 and n3 at the registered signed doses.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+cd "$ROOT" || exit 9
+PY="${PART174_PYTHON:-python3}"
+
+"$PY" tools/launch_arc.py 174 --step "-I -B part174/run174.py --stage test --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out-dir results/part174 --batch-size 44" --copy tools/launch_arc.py part174/__init__.py part174/run174.py part174/score174.py part174/label174.py part174/prompts174.py part174/test_part174.py part174/run-readers.sh part171/__init__.py part171/run171.py part171/score171.py part171/prompts171.py part171/rotate171.py part172/__init__.py part172/run172.py part172/score172.py part172/label172.py part172/prompts172.py part172/test_part172.py part173/__init__.py part173/run173.py part173/score173.py part173/label173.py part173/names173.py part173/prompts173.py part173/known173.json part173/test_part173.py part170/__init__.py part170/prompts170.py part166/score166.py part165/run165.py part165/score165.py part164/run164.py part163/run163.py part160/run160.py part155/run155.py part153/battery153.py part148/battery148.py part148/score148.py part86/common86.py part86/triage86.py neuron_report.py judge_client.py results/part173/answers.jsonl results/part173/sets_u100.pt
+mkdir -p results/part174
+# Job files are opened explicitly as UTF-8 by the Python readers and writers.
+tar -C /mnt/c/Users/alexa/neuron-probe-gpu/results/part174 -cf - . | tar -C results/part174 -xf -
+part174/run-readers.sh
+"$PY" -I -B -m pytest -p no:cacheprovider -q part174/test_part174.py
