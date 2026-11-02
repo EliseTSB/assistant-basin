@@ -3317,15 +3317,15 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 ## Part 176 (registered 2026-11-02 12:44 CT, PART176-DESIGN.md, before any answer on these draws)
 
-| # | Prediction | Confidence | Author |
-| --- | --- | --- | --- |
-| 176.1 | At 0.225, at least 20 of the 40 signed directions are supported | medium | Claude |
-| 176.2 | At 0.225, Google is modal on at least 80% of supported directions; not read below 5 supported | high | Claude |
-| 176.3 | At 0.225, at most 2 of the 40 signed directions are other-led | high | Claude |
-| 176.4 | Not a window: at least 8 of 40 are supported at 0.20, and at least 8 of 40 at 0.25 | medium | Claude |
-| 176.5 | At 0.225, the median `broken` of the 40 signed directions is at most 8 of 44 | high | Claude |
-| 176.6 | Pooled over the 40, Google's fraction of named answers at 0.275 is at least its fraction at 0.225, and named answers at 0.275 are under half those at 0.225; not read below 100 named at 0.275 | medium | Claude |
-| 176.7 | No strong tie: over eligible directions, the Spearman of the Google count of 44 at 0.225 against `collapse dose` is above -0.30. Fails at or below -0.30 with the cluster bootstrap's upper bound below 0 | low | Claude |
-| 176.W1 | Support rises through 0.25 (0.25 ≥ both 0.20 and 0.225) and falls under 5 of 40 at 0.30, with 0.225 sitting on the rising slope rather than at a peak. Falsifiers: 0.225 exceeding both neighbours by ≥5 of 40, which restores the peak; and 15 or more of 40 supported at 0.30, which means no collapse happened and the whole band reading is wrong | medium | Weaver |
-| 176.W2 | Google's share of named answers rises monotonically across the rungs while the raw Google count peaks at or below 0.25. Falsifier: raw Google count still rising at 0.275 or 0.30 | medium | Weaver |
-| 176.W3 | Over directions with a supported rung, the median `gap`, from a direction's top supported rung to its `collapse dose`, is at least 0.05. Falsifier: under 0.025, which would put naming at the edge of collapse and make Muse's warning live | medium | Weaver |
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 176.1 | At 0.225, at least 20 of the 40 signed directions are supported | medium | Claude | held: 30 of 40 supported |
+| 176.2 | At 0.225, Google is modal on at least 80% of supported directions; not read below 5 supported | high | Claude | held: 30 of 30 supported directions Google-led |
+| 176.3 | At 0.225, at most 2 of the 40 signed directions are other-led | high | Claude | held: 0 of 40 other-led |
+| 176.4 | Not a window: at least 8 of 40 are supported at 0.20, and at least 8 of 40 at 0.25 | medium | Claude | held: 20 to 21 of 40 at 0.20, 20 of 40 at 0.25 |
+| 176.5 | At 0.225, the median `broken` of the 40 signed directions is at most 8 of 44 | high | Claude | held: median 1 of 44 broken |
+| 176.6 | Pooled over the 40, Google's fraction of named answers at 0.275 is at least its fraction at 0.225, and named answers at 0.275 are under half those at 0.225; not read below 100 named at 0.275 | medium | Claude | held, aggregate only: share 43.0-43.3% to 52.4-53.0%, named 1,483-1,486 to 519-521 |
+| 176.7 | No strong tie: over eligible directions, the Spearman of the Google count of 44 at 0.225 against `collapse dose` is above -0.30. Fails at or below -0.30 with the cluster bootstrap's upper bound below 0 | low | Claude | held, a non-detection: rho +0.016 [-0.32, +0.35], 37 directions from 19 draws |
+| 176.W1 | Support rises through 0.25 (0.25 ≥ both 0.20 and 0.225) and falls under 5 of 40 at 0.30, with 0.225 sitting on the rising slope rather than at a peak. Falsifiers: 0.225 exceeding both neighbours by ≥5 of 40, which restores the peak; and 15 or more of 40 supported at 0.30, which means no collapse happened and the whole band reading is wrong | medium | Weaver | failed: 20 to 21, 30, 20 and 0 of 40 at 0.20, 0.225, 0.25 and 0.30; 0.225 exceeds both neighbours by at least 5 |
+| 176.W2 | Google's share of named answers rises monotonically across the rungs while the raw Google count peaks at or below 0.25. Falsifier: raw Google count still rising at 0.275 or 0.30 | medium | Weaver | failed: share fell 6.3 to 6.9 points at 0.30, on 115 named answers; the count clause did not fail |
+| 176.W3 | Over directions with a supported rung, the median `gap`, from a direction's top supported rung to its `collapse dose`, is at least 0.05. Falsifier: under 0.025, which would put naming at the edge of collapse and make Muse's warning live | medium | Weaver | failed: median gap 0.0177, 22 of 34 under 0.025; most of that is the rung spacing |

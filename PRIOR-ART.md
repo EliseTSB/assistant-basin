@@ -670,3 +670,22 @@ Part 166, Muse's narrower search (2026-11-01): none found on either half. Closes
 - Abay Bektursun, [already-clean-audit](https://github.com/abaybektursun/already-clean-audit), created 2026-11-01. A pre-registered audit of Goodfire's essay on three open models, with a developmental test across 16 OLMo-3-7B stage-1 checkpoints. One-job fractions 52 to 60% under its own thresholds, second-reader kappa 0.07 to 0.18, unrelated share of late-born jobs 0.265 [0.211, 0.321], and a mixed verdict. README read by Claude; found by Muse. The closest outside work to following neurons across training stages.
 - From Muse's search of 2026-11-02, cited from Muse's report and not yet read by Claude: Korznikov et al., arXiv:2509.22067 (random directions by layer and dose, outcome compliance); Herbster et al., arXiv:2604.08169 (coherence by layer for a picked direction, fragile end late); Dang and Ngo, arXiv:2601.19375 (uniform steering across layers is brittle, put down to writing into layers that do not separate the feature); "Power Steering" on LessWrong (relative dose: output norms vary about 50-fold across layers). No dose ladder for random directions with a named entity as its outcome was found.
 
+## 2026-11-02, for Part 176
+
+From Muse's search of 2026-11-02, cited from Muse's report and not read by Claude. Muse's summary: no paper reports the four-stage sequence on one readout, no per-direction collapse distribution was found, no split of a survivor rate from pool size, and no speaker swap under steering.
+
+- Bas and Novak, arXiv:2511.18284. Llama-3.1-8B, 50 behaviours: trait expression is an inverted U in coefficient while coherence declines. Parallel curves, not stages, and it cannot separate an effect receding from the pool collapsing.
+- Malla et al., arXiv:2609.06951. A steer relaxes the model toward behaviours it already favours, and norm-matched random directions reproduce the ranking. Steers are held to a coherence floor, which censors the breaking stage.
+- Lu et al., arXiv:2601.10387, the Assistant Axis. Steering away from it raises other-entity identification. A picked axis, and two stages.
+- Korznikov et al., arXiv:2509.22067. 1,000 random directions with per-direction jailbreak histograms and a sweet spot before capability damage. A different outcome, and no collapse dose.
+- Dang and Ngo, arXiv:2601.19375, Selective Steering. Attributes uniform all-layer collapse to writing into non-discriminative layers, which is what Muse's proposed control would test on a flat push.
+- Buchan, arXiv:2606.11205. A target track and a should-preserve track on one axis, the closest template for measuring both sides.
+- Ye et al., arXiv:2603.12277. Models infer the speaker from style, not tags. Input role, not steering.
+- Shekkizhar et al., arXiv:2511.09710. Agents abandon roles and mirror partners in conversation, with no steering.
+- Mishra et al., arXiv:2604.09839. Steered states lie off the prompt-reachable manifold.
+- Herbster et al., arXiv:2604.08169. Uniform steering loses coherence beyond layer 30 at high coefficients, and selective methods do better, so breakdown is not an inevitable price of the trait change.
+
+Seen by Claude, for later parts:
+
+- Josh Fonseca Rivera, [thread of 2026-11-02](https://x.com/jfonsecarivera/status/2117071370328608975). Read as two posts from the X watch: on Qwen, emergent misalignment lit the same neurons across two separately trained models, themed on power, and holding the top shared neurons fixed during training brought no significant improvement.
+- Takehi, Teoh, Zhang and Khattab (MIT CSAIL), [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/), 2026-11-02, with [public logs](https://github.com/RikiyaT/lm_understand-logs). Read through a fetched summary of the post and the README of its Qwen3.5-0.8B experiment. GPT-6 Astra traced looping to one direction in two layers' MLPs and edited 0.016% of the weights: MATH-500 7.9% to 48.1%, token-limit hits 93.0% to 33.1%. A permanent edit, where our pushes last one run.

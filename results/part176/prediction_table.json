@@ -88,12 +88,13 @@
             "comparison": "token_ids[:40] versus none for the same prompt"
           },
           "0.225": {
-            "status": "not read",
-            "inert": null,
-            "different": null,
-            "total": 1848,
-            "expected": 1760,
-            "reason": "rung or none rows are incomplete or duplicated"
+            "status": "read",
+            "inert": false,
+            "different": 1760,
+            "total": 1760,
+            "share": 1.0,
+            "threshold": 0.15,
+            "comparison": "token_ids[:40] versus none for the same prompt"
           },
           "0.25": {
             "status": "read",
@@ -235,7 +236,10 @@
           0,
           0
         ]
-      }
+      },
+      "admissible_fill_verdicts": [
+        "failed"
+      ]
     },
     "verdict": "failed",
     "registered_rule": "s20 <= s225 <= s25 and s30 < 5; falsifiers are a 0.225 peak >=5 over both neighbours or s30 >=15"

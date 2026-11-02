@@ -391,6 +391,27 @@ def test_w1_checks_the_rising_slope_and_marks_falsifiers_failed(haiku_w1_support
     assert no_collapse["verdict"] == "failed"
 
 
+def test_w1_bounds_20_to_21_and_peak_30_reads_failed():
+    reports, directions, gates, corr = _prediction_inputs(supports={
+        0.20: 20, 0.225: 30, 0.25: 20, 0.275: 8, 0.30: 2})
+    reports[0.20]["support"] = {"lower": 20, "upper": 21, "denominator": 40}
+    pred = score176.prediction_verdicts(reports, directions, gates, True,
+                                        {"status": "read", "share": 0.5}, corr, {})["176.W1"]
+    assert pred["estimate"]["support_bounds"]["0.2"] == [20, 21]
+    assert pred["estimate"]["admissible_fill_verdicts"] == ["failed"]
+    assert pred["verdict"] == "failed"
+
+
+def test_w1_disagreeing_admissible_fills_read_not_read():
+    reports, directions, gates, corr = _prediction_inputs(supports={
+        0.20: 10, 0.225: 15, 0.25: 10, 0.275: 8, 0.30: 2})
+    reports[0.20]["support"] = {"lower": 10, "upper": 11, "denominator": 40}
+    pred = score176.prediction_verdicts(reports, directions, gates, True,
+                                        {"status": "read", "share": 0.5}, corr, {})["176.W1"]
+    assert pred["estimate"]["admissible_fill_verdicts"] == ["failed", "inconclusive"]
+    assert pred["verdict"] == "not read"
+
+
 def test_1764_keeps_the_025_clause_read_when_020_is_inert():
     reports, directions, gates, corr = _prediction_inputs()
     inert = {"status": "read", "share": 0.149}
@@ -518,6 +539,32 @@ def test_inert_guard_reports_every_rung_and_marks_incomplete_rung_not_read():
     incomplete = score176._inert_guard(raw[:-1], expected=44)
     assert incomplete["by_rung"]["0.3"]["status"] == "not read"
     assert incomplete["by_rung"]["0.275"]["status"] == "read"
+
+
+def test_inert_guard_excludes_replay_sets_from_the_new_draws():
+    raw = []
+    for prompt_index in range(44):
+        plain = _answer_row("none", 0.0, prompt_index, "plain answer", 1)
+        plain["arm"] = "none"
+        plain["token_ids"] = [prompt_index]
+        raw.append(plain)
+    for dose in run176.DOSES:
+        for prompt_index in range(44):
+            pushed = _answer_row("f100d_d176101", dose, prompt_index, "new draw", 1)
+            pushed["token_ids"] = [1000 + prompt_index]
+            raw.append(pushed)
+    for set_name, dose in (("f100d_d174104", 0.225), ("f100d_d174115", -0.225)):
+        for prompt_index in range(44):
+            replay = _answer_row(set_name, dose, prompt_index, "replay", 1)
+            replay["token_ids"] = [2000 + prompt_index]
+            raw.append(replay)
+
+    result = score176._inert_guard(raw, expected=44, seeds=(176101,))
+    rung = result["by_rung"]["0.225"]
+    assert rung["status"] == "read"
+    assert rung["total"] == 44
+    assert rung["different"] == 44
+    assert rung["share"] == pytest.approx(1.0)
 
 
 def test_spearman_without_spread_is_not_read_not_zero():

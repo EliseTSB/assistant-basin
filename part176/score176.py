@@ -872,13 +872,15 @@ def prediction_verdicts(dose_reports, directions, gates, reader_read, inert_guar
             return "failed"
         return "held" if claim else "inconclusive"
 
+    w1_admissible_verdicts = None
     if any(None in bounds for bounds in all_w1_bounds):
         w1 = "not read"
     else:
         # Design: `not read` only if an unknown could change the verdict, so try every admissible count.
         fills = {w1_verdict(*counts) for counts in itertools.product(
             *(range(int(bounds[0]), int(bounds[1]) + 1) for bounds in all_w1_bounds))}
-        w1 = fills.pop() if len(fills) == 1 else "not read"
+        w1_admissible_verdicts = sorted(fills)
+        w1 = w1_admissible_verdicts[0] if len(w1_admissible_verdicts) == 1 else "not read"
     if all(None not in bounds for bounds in all_w1_bounds):
         s20, s225, s25, s30 = (bounds[0] if bounds[0] == bounds[1] else None
                                 for bounds in all_w1_bounds)
@@ -887,7 +889,8 @@ def prediction_verdicts(dose_reports, directions, gates, reader_read, inert_guar
     pred["176.W1"] = _prediction("176.W1", {"support_0_20": s20, "support_0_225": s225,
                                             "support_0_25": s25, "support_0_30": s30,
                                             "support_bounds": {str(dose): bounds
-                                                               for dose, bounds in support_map.items()}}, w1,
+                                                               for dose, bounds in support_map.items()},
+                                            "admissible_fill_verdicts": w1_admissible_verdicts}, w1,
                                  "s20 <= s225 <= s25 and s30 < 5; falsifiers are a 0.225 peak >=5 over both neighbours or s30 >=15")
 
     shares = [raw_share(dose) for dose in run176.DOSES]
@@ -982,14 +985,16 @@ def prediction_verdicts(dose_reports, directions, gates, reader_read, inert_guar
     return pred
 
 
-def _inert_guard(raw_answers, expected=1760, doses=None):
+def _inert_guard(raw_answers, expected=1760, doses=None, seeds=None):
     doses = tuple(run176.DOSES if doses is None else map(float, doses))
+    seeds = tuple(run176.SEEDS if seeds is None else map(int, seeds))
+    fresh_draw_sets = {f"f100d_d{seed}" for seed in seeds}
     none_rows = [row for row in raw_answers if row.get("arm") == "none"]
     none = {str(row.get("prompt_id")): row for row in none_rows}
     by_rung = {}
     expected_rows = int(expected)
     for magnitude in doses:
-        rows = [row for row in raw_answers if str(row.get("set", "")).startswith("f100d_d") and
+        rows = [row for row in raw_answers if row.get("set") in fresh_draw_sets and
                 abs(float(row.get("dose", 0))) == float(magnitude)]
         if len(rows) != expected_rows or len(none) != 44 or len(none_rows) != len(none):
             by_rung[str(float(magnitude))] = {
@@ -1149,7 +1154,8 @@ def score(answers_path="results/part176/answers.jsonl", gates_path="results/part
         isinstance(gates.get(f"gate{index}"), dict) and gates[f"gate{index}"].get("passed")
         for index in range(1, 9)))
     core = _score_core(raw_answers, reader_by_row, seeds, doses, expected, int(reps), int(seed))
-    inert = _inert_guard(raw_answers, expected=expected * 2 * len(seeds), doses=doses)
+    inert = _inert_guard(raw_answers, expected=expected * 2 * len(seeds), doses=doses,
+                         seeds=seeds)
     predictions = prediction_verdicts(core["dose_reports"], core["directions"], gates,
                                       reader_read, inert, core["correlations"], core["split_half"],
                                       core["sensitivity_examples"])
