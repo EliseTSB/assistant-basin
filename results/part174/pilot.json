@@ -1,0 +1,9 @@
+{
+  "batches": 3,
+  "answers": 132,
+  "elapsed_seconds": 53.60302809999848,
+  "threshold": 1.0,
+  "timed_on": "generation only, the first 3 generation batches after the gates",
+  "rate": 2.4625474470164073,
+  "passed": true
+}

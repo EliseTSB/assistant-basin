@@ -1,0 +1,27 @@
+Running as unit: part174-readers-2.scope; invocation ID: cbcc83e859fd4857b901aabd9ecd3fa9
+start 04:54:19
+{"passed": true, "gates_path": "results/part174/gates.json", "missing": [], "failed": []}
+
+step_rc=0 04:54:19
+{"reader": "ds", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "deepseek-v4.1-flash", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 04:56:02
+{"reader": "haiku", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "claude-haiku-5-5", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 04:56:28
+2d36ed46e6c9", "pair:d5a6950fda5bc041f7311ccc5adecf0a7377c4bf585914be4289e8addbbd428d", "pair:dece6272c6e4fe27e4cc604e1fa56684e7fc4f4f90966801b096347feded3a03", "pair:df2613906c44e6b1dc373031ce892ed92581586b7f512d7671254baffd5fe3ad", "pair:e350a389d94d9543fd3237f90b90813713e16bad69d9dbc50f3b3c5e86c0811a", "pair:f1600b0abdc388d9752338cf48bef5bd2489beceaaca38f7504f8ddc23289bd6", "pair:f55e01cbedc01a811551e37bc53f080d1653c04b04d0159a89ef824203f1500f", "pair:f5d0cbb9e1bb8fa9d03f4c518fa9c09622219c88ae2ac0c4ba50701f0ba3813e", "pair:fbc9b84b11ffbc0e689b15c77b1ca83f9d6afdc8099b0f1320a763b0a639858f"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.012449528936742935, "error_cap_fraction": 0.005}
+
+step_rc=0 05:27:31
+d_pair_ids": ["pair:02358c9f34d3bf884849e0d467bb73f001e09d3c0a613898fdaec338ca33f42a", "pair:4382541b0ab32709ebe515dbc69b106d6bbadec87e680c6552a674d7006a8237", "pair:44249c9aa9d64f898426fa305fa240fd0be3273881e4b280841f5d6dc47aff18", "pair:84c20c0dfc99ca62381227b6425522bcacf76d91dce43d56f5dd36025f2a9c0b", "pair:bce04e9c786af5b3d2304d96e71cfe712546833e99321ad3388323ae923c1734", "pair:df2613906c44e6b1dc373031ce892ed92581586b7f512d7671254baffd5fe3ad", "pair:f55e01cbedc01a811551e37bc53f080d1653c04b04d0159a89ef824203f1500f", "pair:f5d0cbb9e1bb8fa9d03f4c518fa9c09622219c88ae2ac0c4ba50701f0ba3813e"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.0026917900403768506, "error_cap_fraction": 0.005}
+
+step_rc=0 05:29:04
+{"passed": true, "reader": "ds", "failed_pairs": 8, "total_pairs": 2972, "error_fraction": 0.0026917900403768506, "maximum_fraction": 0.005, "failed_pair_ids": ["pair:02358c9f34d3bf884849e0d467bb73f001e09d3c0a613898fdaec338ca33f42a", "pair:4382541b0ab32709ebe515dbc69b106d6bbadec87e680c6552a674d7006a8237", "pair:44249c9aa9d64f898426fa305fa240fd0be3273881e4b280841f5d6dc47aff18", "pair:84c20c0dfc99ca62381227b6425522bcacf76d91dce43d56f5dd36025f2a9c0b", "pair:bce04e9c786af5b3d2304d96e71cfe712546833e99321ad3388323ae923c1734", "pair:df2613906c44e6b1dc373031ce892ed92581586b7f512d7671254baffd5fe3ad", "pair:f55e01cbedc01a811551e37bc53f080d1653c04b04d0159a89ef824203f1500f", "pair:f5d0cbb9e1bb8fa9d03f4c518fa9c09622219c88ae2ac0c4ba50701f0ba3813e"], "missing_pair_ids": []}
+
+step_rc=0 05:29:05
+{"reader": "haiku", "stage": "second", "items": 298, "pending": 298, "attempted": 298, "valid_pairs": 298, "failed_pairs": 0, "failed_pair_ids": [], "checkpoint_every": 100, "workers": 3, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177"}
+
+step_rc=0 05:31:27
+{"prediction_read_status": "read", "predictions": {"174.1": "held", "174.2": "held", "174.3": "held", "174.4": "held", "174.5": "failed", "174.10": "not read", "174.6": "not read", "174.9": "not read", "174.7": "held", "174.8": "held", "174.W1": "inconclusive", "174.W2": "not testable", "174.W3": "failed"}, "directions": 120}
+
+step_rc=0 05:31:32
+ALL DONE rc=0

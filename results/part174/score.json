@@ -1,0 +1,2745 @@
+{
+  "part": 174,
+  "prediction_read_status": "read",
+  "reader_gate9": {
+    "passed": true,
+    "status": "passed",
+    "known_examples": {
+      "ds": {
+        "passed": true,
+        "total": 20,
+        "relation_correct": 20,
+        "primary_correct": 20,
+        "minimum_total": 20,
+        "minimum_relation": 18,
+        "minimum_primary": 18,
+        "provenance_matches": true
+      },
+      "haiku": {
+        "passed": true,
+        "total": 20,
+        "relation_correct": 20,
+        "primary_correct": 20,
+        "minimum_total": 20,
+        "minimum_relation": 18,
+        "minimum_primary": 18,
+        "provenance_matches": true
+      }
+    },
+    "second_reader": {
+      "passed": true,
+      "status": "passed",
+      "relation": {
+        "kappa": 0.964053075995175,
+        "pairs": 298,
+        "constant_first_label": false,
+        "constant_second_label": false,
+        "minimum_pairs": 30,
+        "threshold": 0.6,
+        "status": "passed"
+      },
+      "replacement_primary": {
+        "sampled_replacement_pairs": 149,
+        "comparable_pairs": 149,
+        "matching_pairs": 149,
+        "unweighted_agreement": 1.0,
+        "weighted_answers": 171,
+        "weighted_matches": 171,
+        "weighted_agreement": 1.0,
+        "second_errors": 0,
+        "second_null_primaries": 0,
+        "minimum_pairs": 30,
+        "threshold": 0.8,
+        "status": "passed",
+        "disagreements": []
+      },
+      "second_reader_coverage": {
+        "expected": 298,
+        "valid": 298,
+        "missing": 0,
+        "missing_ids": [],
+        "errors": 0,
+        "error_ids": [],
+        "complete": true
+      },
+      "first_reader_coverage": {
+        "expected": 298,
+        "valid": 298,
+        "missing": 0,
+        "missing_ids": [],
+        "errors": 0,
+        "error_ids": []
+      },
+      "second_null_primaries": 74,
+      "second_null_primary_ids": [
+        "pair:011c6b32a22b57df5814d5d45d0720f69db5a8e2871200bcbab177bbe6b05ef7",
+        "pair:057e5951fc749c79a049cb1a6ba42161e2879f6d242ba511e3875cad9092e9a7",
+        "pair:06349d76bf761b87e9b457afc4d5f50e54c79f1f35d7a913344f61b477f6ce0a",
+        "pair:09711eb0e25013f2c1e29647d2a1b40c7d65bd588311c672172d98bc3c9d7f49",
+        "pair:14d25f6551b00f14d8358c7d53fc677fd3da38dd9ff76f5c5ee14bca0b8d3a66",
+        "pair:192728c25cf9b3c250c526d093a2d7642be2af0700dea2a0451dc8cecead1d7f",
+        "pair:1ed7d4628d102e50880c4321bf867f58c52664a16e86e6228e5c2cf727e78d76",
+        "pair:1f30b0a30112edb0d138d20465901b2574a9e249859c82d53639c41c77913115",
+        "pair:257aaf5bc6fcfd38160bba9e6c0835f65bddbdf319b96d2798744c72f79ac2cf",
+        "pair:2ba6accfd73f79f3d156acc359d910e7d5ebbfd94d3021d2e6b46a2bf636ad3d",
+        "pair:2c5b3fee9d063bfef67cf56245914d810c92237f7dfbcc8c8dced140e13f99a6",
+        "pair:2f6a07b79f775e5b34912be0eba037b76f10fac3202d14fa45b95c390aef9ba5",
+        "pair:2ff3bdfc6e5dc98efc833702632bae3f3a040bfb3a514cb8edc7c40b2b6ce933",
+        "pair:300d27ed4838042bbd3946503087fd4d54ba3888249dc5faf69d4b6914599318",
+        "pair:327fea24d9d0b751c5cd141915c216927c8bf543f2bd9a7b71e65daea395ecee",
+        "pair:36465963d0a3318ef9513e1247bf06bc88fa65dc9983b10df8a964ab11d81073",
+        "pair:36b15aaacdf49f9d8d7f8ca0b83791247fd248e3b52b004a2a6b305d00b2af93",
+        "pair:36ee3b25fbde543bc10d44d062acb4285e605b7fd7b41cefc71228cd802c1024",
+        "pair:39dbb26dc3af1ec8f8578720435b30922e111feb4af8c09441394e600a3cecf0",
+        "pair:3b47d6b9ef79d9c345795f7b38dc8007e1b66b73b5ffe6b7e0e31f4ccc00b3fa",
+        "pair:3bc1ac2fb18cce2b03d593dbd7279b77fefe54ea4696c28c9e601aa27565386a",
+        "pair:48a3103b2124cdb49b68b4e3940460dc9fab31397f8681d498658e72d65f928a",
+        "pair:4c4fd21276e3d97c68c0b42a0a6258baa6eb47ab460534c1310d537043970988",
+        "pair:4c594cfc969f1b9888aa8323dee67f1325a720910a7c9469c3ead28cd8701251",
+        "pair:4d053f2064978cdcf27687a0d70c42089a9cd0eccf22704163e97a4aaa663ce8",
+        "pair:513a82fc7bb3233b2eaa28896776d5dd42c5fabb76721587aa1d3180802b1f17",
+        "pair:563680c9e1ffbdd9048cc996e918524dc667159946f33867239c9065a98a2634",
+        "pair:57deef33bb43d28580c5d88c7c82530e0861ff021bb2e0dfb0df9785aabffccf",
+        "pair:58db80dc596a8219738233478b8ebf6c5267dcc9a5dfb631f45350c68796b9b5",
+        "pair:58e771ec791159bd1e2db0275f1b68a3ed2b283fbd62bee71984cb5f229d8d55",
+        "pair:5d19b06b04517bc4303e05efc61d304a70067793ace9476802740c566b739c95",
+        "pair:5e102fdb3ccf406da5915d78125b9c97dd81664237038dd17ddc4d579b4cb4c3",
+        "pair:609869d9d81034da789360102cafb94315a2e887f343b5fa0cffefc4cb8041ca",
+        "pair:60e15cd29fee996f608f17ed3d5c3ffc67a5ed75edce4bd148ec4de01af9dc03",
+        "pair:69e262d23f6b318843448d7dbb26cc5c85f7bd809cd4bc69bf2c31eaf9f74002",
+        "pair:74f599ebeb284c20aa8d06d122fe705760c3dd28beda20b9d4997bd6989cbb9f",
+        "pair:763c80f85d6201d46eed372726feed4f9481fd798509db1c93f7132063bed32f",
+        "pair:768610e48cb1e00b46349b4d41b470e2f82862db4f04324c51e08cf83b8c965c",
+        "pair:783134c8876df06ab6af812571645ed724fd56f25277bbd180db55fb5ca375b8",
+        "pair:7a7f878317d228f05f8a9235485090de87906e292a404c3d99be413bfe604080",
+        "pair:7f8b66a5dd0d4a1b49203b2bee2a17ae97a051e98ca35718cb607caa38e30f57",
+        "pair:7fbd77c13560e16c9f1332adcf522d6a531e74fc12a5b1dbed3ef91b656a1154",
+        "pair:814eee495a85986ecac4fd08f61ecc5906c171cf3b3079007e8766cde0015ae4",
+        "pair:81e5a8d0063affbd09bf266a98ab2955ac67864ae1303bbb64127fa08de436b8",
+        "pair:825ee942fe8f08c02f64e279b2973a5fac5abce6e09f5a755e6dc3816b92584b",
+        "pair:96dc1427bb492969a95f359be75b2c63207c9dfd7073d4b2b3b411c41f09c264",
+        "pair:9db41676b6469d7d9590f0329b5ca326efb823c0d33ca6040661196262c3a032",
+        "pair:b13dc17e340712feedf2143d93c24591676f35cea9aee145d35c14f085a7d7be",
+        "pair:b420079890041998f4cbe290db3e690c2f146fe64b42e0c45bbb241673231b3c",
+        "pair:b4996eab7bf6c3d1f6d6fe9f9c20ab03d568da96f3ca75cc46bed9cacf310e91",
+        "pair:b51b696fb4112918eff8b0133b15afb6a2564d13344fa5e2cabfd41e2e8b9272",
+        "pair:bf07b57702d1b099d857c6dba3f39445a935b89b56930d59b28c74fb0e17c1fb",
+        "pair:c12070aafb19dc16bd257ca721c65707ea6948f0eddb4fcd07bd34c0ced6e9cc",
+        "pair:c1a36904bcec6272f04df7b8a69201af2f0bf0a6e4722e7cea97f98f675df24e",
+        "pair:c218608dbc385f0a3f48c5df7cbe038c5ae12bf3e6ead2b3fa0ea2c0dd95739c",
+        "pair:c298004681880ea9f227f6307c368c450c90cef0f530e5cb1c415be0327d6a46",
+        "pair:c2cb88b87d7e9413422ce1a6cbe76500c86f276d1a8963acc70c1409d6330822",
+        "pair:c364e5a31097c3bf01eeac9fc8b76ed722d89b5bcee5224f2f1ec2174ad88d2f",
+        "pair:ca941d0db949f5b127598eeadcf313e07d036d848439c35aa90e479cb9db78b7",
+        "pair:cac04d070ef793032aa87abdde5b942afe9e4c7fe82113db0cf51e57dfe3562d",
+        "pair:ce2f73a0fab3d938a1e62ab636a2c97ea923b1a21fe58a1ce48df634029773b6",
+        "pair:d461241bc15e322b51dd00072ec61b2ca21d9b3539f4eacbf9a7649c6a8e8e0a",
+        "pair:d5bbf9347ececd260349aa92ad78095d96fa3cd96f8a15816370496ae49b1ff7",
+        "pair:d89c6b17fff63ccb9d05b736c6b1e2dbec13b4d06808671404b2b5e2238eb2ab",
+        "pair:da0921b3c46834b7c52de24a94286f92b49d7b27b0ac10ae342f6ce89bb45f48",
+        "pair:daa7cdfdd9f4ad7f59dbb30a2bb6bf4c0a9070361ea949809dfe6a950b9ab40e",
+        "pair:e6e73e209803a13d1927f7c4bf53d927088e798ee2bae29636ae217df40a1e7a",
+        "pair:e836150361e45fdfea35fef7a600de173b4c24d059c1f2655fd1302f877ec3c4",
+        "pair:e8bf96a9090b0e002c17fe4e3103f8124f883152def9e78c7e69526c685694f7",
+        "pair:ecf92e6a77c265edc59c074333ce07be79faa48f895b9a3b0e1377a0ffc06c6c",
+        "pair:ed81c8e9aeb981c81d37a51c233027187651cd73539a9679d9b395756a3e3fba",
+        "pair:edcb06212701678c1a5c5a803c0605b66bf2958c4a95268e41c047ac22071250",
+        "pair:f0335d6591f84519904a3ca25541b3f7e29aaf8e72bacb1243b67043bc56c326",
+        "pair:f3d359dc4d303ea5c08bbc526ed46f1ff31f5ee6b8812b214349db7666613b3d"
+      ],
+      "sample_pairs": 298,
+      "first_failures": 0,
+      "second_failures": 0,
+      "first_reader_sample_sha_matches": true
+    },
+    "error_cap": {
+      "passed": true,
+      "reader": "ds",
+      "failed_pairs": 8,
+      "total_pairs": 2972,
+      "error_fraction": 0.0026917900403768506,
+      "maximum_fraction": 0.005,
+      "failed_pair_ids": [
+        "pair:02358c9f34d3bf884849e0d467bb73f001e09d3c0a613898fdaec338ca33f42a",
+        "pair:4382541b0ab32709ebe515dbc69b106d6bbadec87e680c6552a674d7006a8237",
+        "pair:44249c9aa9d64f898426fa305fa240fd0be3273881e4b280841f5d6dc47aff18",
+        "pair:84c20c0dfc99ca62381227b6425522bcacf76d91dce43d56f5dd36025f2a9c0b",
+        "pair:bce04e9c786af5b3d2304d96e71cfe712546833e99321ad3388323ae923c1734",
+        "pair:df2613906c44e6b1dc373031ce892ed92581586b7f512d7671254baffd5fe3ad",
+        "pair:f55e01cbedc01a811551e37bc53f080d1653c04b04d0159a89ef824203f1500f",
+        "pair:f5d0cbb9e1bb8fa9d03f4c518fa9c09622219c88ae2ac0c4ba50701f0ba3813e"
+      ],
+      "missing_pair_ids": []
+    }
+  },
+  "generation_gates": {
+    "gate1": {
+      "passed": true,
+      "planned": 5368,
+      "answers": 5368,
+      "unique_keys": 5368,
+      "missing": 0,
+      "unexpected": 0,
+      "valid_answer_and_token_ids": true
+    },
+    "gate2": {
+      "passed": true,
+      "qwen_prompts": 43,
+      "qwen_denominator": 44,
+      "hit_rows": 0,
+      "hit_denominator": 44,
+      "complete": true
+    },
+    "gate3": {
+      "passed": true,
+      "prompts": 8,
+      "matching_zero_push": 8,
+      "matching_after_push_hooks_removed": 8,
+      "pushed_rows": 8,
+      "hook_counts_restored": true
+    },
+    "gate4": {
+      "passed": true,
+      "minimum_matching": 43,
+      "per_arm": {
+        "u100d_d2173_d0.5": {
+          "replay_arm": "replay:u100d_d2173_d0.5",
+          "reference_rows": 44,
+          "reference_raw_rows": 44,
+          "reference_duplicate_rows": 0,
+          "wrong_reference_prompt_ids": [],
+          "rows": 44,
+          "matching": 44,
+          "minimum_matching": 43,
+          "missing_prompts": [],
+          "unexpected_prompts": [],
+          "duplicate_prompts": [],
+          "passed": true
+        },
+        "n3_d-0.5": {
+          "replay_arm": "replay:n3_d-0.5",
+          "reference_rows": 44,
+          "reference_raw_rows": 44,
+          "reference_duplicate_rows": 0,
+          "wrong_reference_prompt_ids": [],
+          "rows": 44,
+          "matching": 44,
+          "minimum_matching": 43,
+          "missing_prompts": [],
+          "unexpected_prompts": [],
+          "duplicate_prompts": [],
+          "passed": true
+        }
+      },
+      "artifacts": {
+        "part174_sets": {
+          "path": "results\\part174\\sets_174.pt",
+          "sha256": "00fed96365c4dc490a8cd783ed9663d1e7434e965cbfa583573dc4aa2d3b1304"
+        },
+        "part173_sets_u100": {
+          "path": "results\\part173\\sets_u100.pt",
+          "sha256": "9b46ab8f35b1dfa06c3c5522a7f5e56b02425e54b66274bc08d835e7f8b6db54"
+        },
+        "part171_sets": {
+          "path": "results\\part171\\sets_google.pt",
+          "sha256": "70cfea86538976a2d097805538940b7450176cc633f88aa2ec03445c998820fb"
+        },
+        "hook_source": {
+          "path": "C:\\Users\\alexa\\neuron-probe-gpu\\part171\\run171.py",
+          "sha256": "cb209c3e5cadbc35c9741a0c0645467c71318828d80db14284796d7abb987ca8"
+        },
+        "tokenizer_model_metadata": {
+          "pushes": {
+            "source": "results\\part171\\sets_google.pt",
+            "sha256": "70cfea86538976a2d097805538940b7450176cc633f88aa2ec03445c998820fb"
+          },
+          "hook_source": {
+            "source": "C:\\Users\\alexa\\neuron-probe-gpu\\part171\\run171.py",
+            "sha256": "cb209c3e5cadbc35c9741a0c0645467c71318828d80db14284796d7abb987ca8"
+          },
+          "tokenizer_config": {
+            "sha256": "f0ba304b14aeb121b9feeb6ece8265b011e9bf5e9f503c25907365e883eca938"
+          },
+          "chat_template": {
+            "sha256": "12de9034d5269e8b1fe6012b3538374fcb3941bf93c95fc81b0cf5acf3f08ce4"
+          },
+          "model_snapshot": {
+            "id": "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            "sha256": "089d6102e4d8ddfbbb8fda6603fec36536fbd31cc76887e30ea21db8db6f69ba"
+          }
+        },
+        "snapshot": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+      }
+    },
+    "gate5": {
+      "passed": true,
+      "role_hits": 44,
+      "role_denominator": 44,
+      "minimum": 38,
+      "complete": true
+    },
+    "gate6": {
+      "passed": true,
+      "rows": 120,
+      "expected_rows": 120,
+      "tolerance": 0.05,
+      "failures": []
+    },
+    "gate7": {
+      "passed": true,
+      "prompts": 44,
+      "overlap": [],
+      "compared_against": {
+        "p8": 8,
+        "m96": 96,
+        "new44": 44
+      },
+      "new44b_sha256": "a6952e5b71e3f9170beba488a6422b1934b61622be54073109f50ef172451802",
+      "part173_new44b_sha256": "a6952e5b71e3f9170beba488a6422b1934b61622be54073109f50ef172451802",
+      "sha256_matches": true
+    },
+    "gate8": {
+      "passed": true,
+      "rows": 60,
+      "failures": [],
+      "fit_vector_size": 2560,
+      "absolute_cosine_max": 0.079,
+      "eligibility_screen": true,
+      "readings_conditional_on_all_60_draws_passing": true,
+      "length_relative_tolerance": 0.01
+    },
+    "passed": true
+  },
+  "counts": {
+    "answers": 5456,
+    "scored_non_replay_answers": 5368,
+    "directions": 120,
+    "u100d_signed": 80,
+    "f100d_signed": 40,
+    "supported": 28,
+    "stable_supported": 27,
+    "other_led_u100d": 0,
+    "families": {
+      "u100d": {
+        "status": "read",
+        "signed_directions": 80,
+        "supported": 28,
+        "google_led": 28,
+        "other_led": 0
+      },
+      "f100d": {
+        "status": "read",
+        "signed_directions": 40,
+        "supported": 0,
+        "google_led": 0,
+        "other_led": 0
+      }
+    }
+  },
+  "direction_classes": {
+    "u100d": {
+      "neither": 16,
+      "one sign": 20,
+      "both same": 4,
+      "both different": 0
+    },
+    "f100d": {
+      "neither": 20,
+      "one sign": 0,
+      "both same": 0,
+      "both different": 0
+    }
+  },
+  "google_claim_count_histogram_over_120_directions": {
+    "status": "unread",
+    "directions_with_reader_count": 113,
+    "directions_without_reader_count": 7,
+    "counts": {
+      "0": 53,
+      "1": 5,
+      "2": 6,
+      "3": 2,
+      "4": 4,
+      "5": 4,
+      "6": 1,
+      "7": 3,
+      "8": 1,
+      "9": 1,
+      "10": 2,
+      "11": 2,
+      "12": 3,
+      "13": 3,
+      "14": 1,
+      "15": 5,
+      "16": 2,
+      "18": 1,
+      "19": 3,
+      "20": 2,
+      "21": 2,
+      "22": 3,
+      "23": 1,
+      "24": 2,
+      "27": 1
+    }
+  },
+  "raw_google_word_hit_histogram_over_120_directions": {
+    "label": "descriptive fallback; word hits are not reader-extracted claims",
+    "counts": {
+      "0": 53,
+      "1": 2,
+      "2": 7,
+      "3": 3,
+      "4": 2,
+      "5": 5,
+      "6": 3,
+      "7": 3,
+      "8": 4,
+      "9": 1,
+      "10": 1,
+      "11": 2,
+      "12": 1,
+      "13": 2,
+      "14": 5,
+      "15": 4,
+      "16": 1,
+      "18": 1,
+      "19": 1,
+      "20": 1,
+      "21": 4,
+      "22": 3,
+      "23": 2,
+      "24": 3,
+      "25": 1,
+      "27": 2,
+      "28": 1,
+      "32": 1,
+      "34": 1
+    }
+  },
+  "support_floor_sensitivity": {
+    "note": "174.1 and floors 5, 10, and 15 are shown over each family's signed directions. Incomplete reader coverage is flagged and never treated as zero Google claims.",
+    "families": {
+      "u100d": {
+        "registered_174_1": {
+          "k": 28,
+          "n": 80,
+          "rate": 0.35,
+          "reader_incomplete_directions": 7,
+          "status": "incomplete"
+        },
+        "5": {
+          "modal_count_floor_supported": {
+            "k": 38,
+            "n": 80,
+            "rate": 0.475,
+            "reader_incomplete_directions": 7,
+            "status": "incomplete"
+          },
+          "google_claim_count_floor": {
+            "k": 36,
+            "n": 80,
+            "rate": null,
+            "labelled_directions": 73,
+            "unlabelled_directions": 7,
+            "labelled_direction_rate": 0.4931506849315068,
+            "status": "not read"
+          }
+        },
+        "10": {
+          "modal_count_floor_supported": {
+            "k": 28,
+            "n": 80,
+            "rate": 0.35,
+            "reader_incomplete_directions": 7,
+            "status": "incomplete"
+          },
+          "google_claim_count_floor": {
+            "k": 27,
+            "n": 80,
+            "rate": null,
+            "labelled_directions": 73,
+            "unlabelled_directions": 7,
+            "labelled_direction_rate": 0.3698630136986301,
+            "status": "not read"
+          }
+        },
+        "15": {
+          "modal_count_floor_supported": {
+            "k": 19,
+            "n": 80,
+            "rate": 0.2375,
+            "reader_incomplete_directions": 7,
+            "status": "incomplete"
+          },
+          "google_claim_count_floor": {
+            "k": 18,
+            "n": 80,
+            "rate": null,
+            "labelled_directions": 73,
+            "unlabelled_directions": 7,
+            "labelled_direction_rate": 0.2465753424657534,
+            "status": "not read"
+          }
+        }
+      },
+      "f100d": {
+        "registered_174_1": {
+          "k": 0,
+          "n": 40,
+          "rate": 0.0,
+          "reader_incomplete_directions": 0,
+          "status": "read"
+        },
+        "5": {
+          "modal_count_floor_supported": {
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "reader_incomplete_directions": 0,
+            "status": "read"
+          },
+          "google_claim_count_floor": {
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "labelled_directions": 40,
+            "unlabelled_directions": 0,
+            "labelled_direction_rate": 0.0,
+            "status": "read"
+          }
+        },
+        "10": {
+          "modal_count_floor_supported": {
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "reader_incomplete_directions": 0,
+            "status": "read"
+          },
+          "google_claim_count_floor": {
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "labelled_directions": 40,
+            "unlabelled_directions": 0,
+            "labelled_direction_rate": 0.0,
+            "status": "read"
+          }
+        },
+        "15": {
+          "modal_count_floor_supported": {
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "reader_incomplete_directions": 0,
+            "status": "read"
+          },
+          "google_claim_count_floor": {
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "labelled_directions": 40,
+            "unlabelled_directions": 0,
+            "labelled_direction_rate": 0.0,
+            "status": "read"
+          }
+        }
+      }
+    }
+  },
+  "families": {
+    "u100d": {
+      "answers": 3520,
+      "relation_distribution": {
+        "claim": 2049,
+        "none": 957
+      },
+      "primary_distribution": {
+        "alan turing": 1,
+        "anthropic": 1,
+        "athenian school": 1,
+        "baidu": 1,
+        "brenner": 1,
+        "cell biologics": 1,
+        "character ai": 1,
+        "chinese academy of sciences": 3,
+        "chinese academy of sciences cas": 1,
+        "chinese government": 1,
+        "cognitive engine": 1,
+        "cohere": 1,
+        "cytoscape": 1,
+        "dr yu neng huang": 1,
+        "ferrari": 1,
+        "ford motor": 1,
+        "geoffrey hinton": 1,
+        "gigawatt": 1,
+        "google": 715,
+        "huawei": 1,
+        "hugging face": 2,
+        "institute of automation beijing": 1,
+        "kaggle": 1,
+        "lab 1": 3,
+        "lab 12": 1,
+        "labx": 1,
+        "meta": 13,
+        "michele l smith": 1,
+        "microsoft": 8,
+        "national institutes of health nih": 1,
+        "nvidia": 3,
+        "open foundation": 1,
+        "openai": 36,
+        "peking university": 1,
+        "q": 2,
+        "q team": 2,
+        "q3": 1,
+        "q3 lab": 1,
+        "qwen": 1142,
+        "research community at https www aimlarge com": 1,
+        "shanghai": 1,
+        "t team": 1,
+        "team 1": 1,
+        "tencent": 17,
+        "tesla": 4,
+        "tesla motors": 1,
+        "tsinghua university of china": 1,
+        "turing": 1,
+        "united states": 1,
+        "university of california berkeley": 1,
+        "university of texas at austin": 1,
+        "yi training": 1,
+        "ying huan": 1
+      },
+      "mention_distribution": {
+        "1688": 1,
+        "ai lab": 1,
+        "ai safety team": 1,
+        "ai21 labs": 1,
+        "alan turing": 1,
+        "aliexpress": 1,
+        "allah": 2,
+        "alphabet": 3,
+        "amazon": 2,
+        "anthropic": 2,
+        "arsenal": 1,
+        "artificial intelligence research center": 1,
+        "athenian academy": 1,
+        "athenian school": 1,
+        "baidu": 3,
+        "bing": 1,
+        "bosch": 1,
+        "brenner": 1,
+        "byted": 1,
+        "cas": 1,
+        "cell biologics": 1,
+        "character ai": 1,
+        "chinese academy of sciences": 4,
+        "chinese academy of sciences cas": 2,
+        "chinese government": 2,
+        "cognitive engine": 1,
+        "cohere": 1,
+        "creator": 1,
+        "cytoscape": 1,
+        "david": 1,
+        "demis hassabis": 1,
+        "dongyi lab": 1,
+        "dr yu neng huang": 1,
+        "dr zeppelin": 1,
+        "enzo ferrari": 1,
+        "eric schmidt": 1,
+        "fermi lab": 1,
+        "fermi national laboratory": 1,
+        "ferrari": 1,
+        "ford": 1,
+        "ford motor": 1,
+        "gdm": 1,
+        "general motors": 1,
+        "generative ai": 3,
+        "geoffrey hinton": 1,
+        "gigawatt": 1,
+        "god": 8,
+        "goliath": 1,
+        "google": 771,
+        "gustave eiffel": 1,
+        "huawei": 1,
+        "hugging": 1,
+        "hugging ai": 1,
+        "hugging face": 2,
+        "inlp": 1,
+        "institute of automation beijing": 1,
+        "institute of natural language processing": 1,
+        "international organization for standardization iso": 1,
+        "iso": 1,
+        "jack ma": 2,
+        "jack yu": 1,
+        "jane": 1,
+        "john": 1,
+        "kaggle": 1,
+        "lab 1": 3,
+        "lab 12": 1,
+        "lab 2": 1,
+        "lab 3": 1,
+        "lab 4": 1,
+        "lab 5": 1,
+        "lab 6": 1,
+        "labor day 12": 1,
+        "labx": 1,
+        "larry page": 1,
+        "lars peterson": 1,
+        "liverpool": 1,
+        "lockheed martin": 1,
+        "manchester united": 1,
+        "mark of tol": 1,
+        "meta": 19,
+        "michele l smith": 1,
+        "microsoft": 16,
+        "miguel": 1,
+        "mit": 1,
+        "mou": 1,
+        "mr fermi": 1,
+        "museum of paleontology": 1,
+        "national institutes of health nih": 1,
+        "natural history museum": 1,
+        "nba": 1,
+        "new york yankees": 1,
+        "nfl": 1,
+        "nvidia": 3,
+        "open foundation": 1,
+        "open source initiative osi": 1,
+        "open source project": 1,
+        "openai": 46,
+        "peking university": 1,
+        "philistines": 1,
+        "ptolemaic empire": 1,
+        "q": 2,
+        "q organization": 1,
+        "q team": 2,
+        "q3": 1,
+        "q3 lab": 1,
+        "qiankai team": 1,
+        "qianyi group": 1,
+        "qwen": 1202,
+        "research community at https www aimlarge com": 1,
+        "sergey brin": 1,
+        "shanghai": 1,
+        "t modeling and optimization team": 1,
+        "t modeling team": 1,
+        "t team": 1,
+        "taobao": 1,
+        "team 1": 1,
+        "tencent": 25,
+        "tesla": 5,
+        "tesla motors": 1,
+        "tmall": 1,
+        "tmall select": 1,
+        "toyota": 1,
+        "tsinghua university of china": 1,
+        "turing": 1,
+        "u s army": 1,
+        "united states": 1,
+        "united states national team": 1,
+        "university of california berkeley": 3,
+        "university of texas at austin": 1,
+        "university of toronto": 2,
+        "w3c": 1,
+        "yan": 1,
+        "yi": 1,
+        "yi training": 1,
+        "ying huan": 1
+      },
+      "raw_word_hits": {
+        "anthropic": 4,
+        "baidu": 3,
+        "bytedance": 0,
+        "deepseek": 0,
+        "google": 852,
+        "meta": 19,
+        "microsoft": 15,
+        "openai": 46,
+        "qwen": 1606,
+        "tencent": 26
+      },
+      "draw_class_distribution": {
+        "neither": 16,
+        "one sign": 20,
+        "both same": 4,
+        "both different": 0
+      }
+    },
+    "f100d": {
+      "answers": 1760,
+      "relation_distribution": {
+        "none": 28
+      },
+      "primary_distribution": {},
+      "mention_distribution": {},
+      "raw_word_hits": {
+        "anthropic": 0,
+        "baidu": 0,
+        "bytedance": 0,
+        "deepseek": 0,
+        "google": 0,
+        "meta": 0,
+        "microsoft": 0,
+        "openai": 0,
+        "qwen": 0,
+        "tencent": 0
+      },
+      "draw_class_distribution": {
+        "neither": 20,
+        "one sign": 0,
+        "both same": 0,
+        "both different": 0
+      }
+    }
+  },
+  "family_rate_counts": {
+    "u100d": {
+      "status": "read",
+      "signed_directions": 80,
+      "supported": 28,
+      "google_led": 28,
+      "other_led": 0
+    },
+    "f100d": {
+      "status": "read",
+      "signed_directions": 40,
+      "supported": 0,
+      "google_led": 0,
+      "other_led": 0
+    }
+  },
+  "direction_rate_uncertainty": {
+    "u100d": {
+      "signed_directions": 80,
+      "rates": {
+        "supported": {
+          "at_each_sign_wilson": {
+            "0.5": {
+              "status": "read",
+              "k": 12,
+              "n": 40,
+              "rate": 0.3,
+              "interval_95": [
+                0.18074845229746528,
+                0.45430018818144935
+              ]
+            },
+            "-0.5": {
+              "status": "read",
+              "k": 16,
+              "n": 40,
+              "rate": 0.4,
+              "interval_95": [
+                0.2634832568429192,
+                0.5540410633965381
+              ]
+            }
+          },
+          "pooled_signed_rate": {
+            "status": "read",
+            "label": "draw-level; signs paired within draw; prompts held fixed",
+            "seed": 174,
+            "replicates": 10000,
+            "point_rate": 0.35,
+            "interval_95": [
+              0.25,
+              0.45
+            ]
+          },
+          "either_sign_rate": {
+            "status": "read",
+            "label": "draw-level bootstrap of either-sign events",
+            "seed": 174,
+            "replicates": 10000,
+            "k": 24,
+            "n": 40,
+            "rate": 0.6,
+            "interval_95": [
+              0.45,
+              0.75
+            ]
+          }
+        },
+        "google_led": {
+          "at_each_sign_wilson": {
+            "0.5": {
+              "status": "read",
+              "k": 12,
+              "n": 40,
+              "rate": 0.3,
+              "interval_95": [
+                0.18074845229746528,
+                0.45430018818144935
+              ]
+            },
+            "-0.5": {
+              "status": "read",
+              "k": 16,
+              "n": 40,
+              "rate": 0.4,
+              "interval_95": [
+                0.2634832568429192,
+                0.5540410633965381
+              ]
+            }
+          },
+          "pooled_signed_rate": {
+            "status": "read",
+            "label": "draw-level; signs paired within draw; prompts held fixed",
+            "seed": 175,
+            "replicates": 10000,
+            "point_rate": 0.35,
+            "interval_95": [
+              0.25,
+              0.45
+            ]
+          },
+          "either_sign_rate": {
+            "status": "read",
+            "label": "draw-level bootstrap of either-sign events",
+            "seed": 175,
+            "replicates": 10000,
+            "k": 24,
+            "n": 40,
+            "rate": 0.6,
+            "interval_95": [
+              0.45,
+              0.75
+            ]
+          }
+        },
+        "other_led": {
+          "at_each_sign_wilson": {
+            "0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 40,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.08762160119728664
+              ]
+            },
+            "-0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 40,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.08762160119728664
+              ]
+            }
+          },
+          "pooled_signed_rate": {
+            "status": "not bootstrapped",
+            "label": "draw-level; signs paired within draw",
+            "reason": "zero or all-success outcome; see exact either-sign bound",
+            "replicates": 0,
+            "point_rate": 0.0,
+            "interval_95": [
+              null,
+              null
+            ]
+          },
+          "either_sign_rate": {
+            "status": "read",
+            "label": "exact one-sided 95% upper bound on either-sign rate",
+            "k": 0,
+            "n": 40,
+            "rate": 0.0,
+            "interval_95": [
+              0.0,
+              0.0721575245055146
+            ],
+            "upper_bound": 0.0721575245055146
+          }
+        }
+      },
+      "prompt_bootstrap": {
+        "label": "question-level bootstrap; held directions fixed; says nothing about new draws",
+        "seed": 174,
+        "replicates": 10000,
+        "point_rate": 0.35,
+        "interval_95": [
+          0.2875,
+          0.3875
+        ]
+      }
+    },
+    "f100d": {
+      "signed_directions": 40,
+      "rates": {
+        "supported": {
+          "at_each_sign_wilson": {
+            "0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 20,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.16112515805281938
+              ]
+            },
+            "-0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 20,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.16112515805281938
+              ]
+            }
+          },
+          "pooled_signed_rate": {
+            "status": "not bootstrapped",
+            "label": "draw-level; signs paired within draw",
+            "reason": "zero or all-success outcome; see exact either-sign bound",
+            "replicates": 0,
+            "point_rate": 0.0,
+            "interval_95": [
+              null,
+              null
+            ]
+          },
+          "either_sign_rate": {
+            "status": "read",
+            "label": "exact one-sided 95% upper bound on either-sign rate",
+            "k": 0,
+            "n": 20,
+            "rate": 0.0,
+            "interval_95": [
+              0.0,
+              0.13910834066826516
+            ],
+            "upper_bound": 0.13910834066826516
+          }
+        },
+        "google_led": {
+          "at_each_sign_wilson": {
+            "0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 20,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.16112515805281938
+              ]
+            },
+            "-0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 20,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.16112515805281938
+              ]
+            }
+          },
+          "pooled_signed_rate": {
+            "status": "not bootstrapped",
+            "label": "draw-level; signs paired within draw",
+            "reason": "zero or all-success outcome; see exact either-sign bound",
+            "replicates": 0,
+            "point_rate": 0.0,
+            "interval_95": [
+              null,
+              null
+            ]
+          },
+          "either_sign_rate": {
+            "status": "read",
+            "label": "exact one-sided 95% upper bound on either-sign rate",
+            "k": 0,
+            "n": 20,
+            "rate": 0.0,
+            "interval_95": [
+              0.0,
+              0.13910834066826516
+            ],
+            "upper_bound": 0.13910834066826516
+          }
+        },
+        "other_led": {
+          "at_each_sign_wilson": {
+            "0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 20,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.16112515805281938
+              ]
+            },
+            "-0.5": {
+              "status": "read",
+              "k": 0,
+              "n": 20,
+              "rate": 0.0,
+              "interval_95": [
+                0.0,
+                0.16112515805281938
+              ]
+            }
+          },
+          "pooled_signed_rate": {
+            "status": "not bootstrapped",
+            "label": "draw-level; signs paired within draw",
+            "reason": "zero or all-success outcome; see exact either-sign bound",
+            "replicates": 0,
+            "point_rate": 0.0,
+            "interval_95": [
+              null,
+              null
+            ]
+          },
+          "either_sign_rate": {
+            "status": "read",
+            "label": "exact one-sided 95% upper bound on either-sign rate",
+            "k": 0,
+            "n": 20,
+            "rate": 0.0,
+            "interval_95": [
+              0.0,
+              0.13910834066826516
+            ],
+            "upper_bound": 0.13910834066826516
+          }
+        }
+      },
+      "prompt_bootstrap": {
+        "label": "question-level bootstrap; held directions fixed; says nothing about new draws",
+        "seed": 174,
+        "replicates": 10000,
+        "point_rate": 0.0,
+        "interval_95": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "combined": {
+      "label": "families stratified; resampled within u100d (40) and f100d (20) draws",
+      "supported": {
+        "pooled_signed_rate": {
+          "status": "read",
+          "label": "draw-level stratified bootstrap; signs paired within draw",
+          "seed": 174,
+          "replicates": 10000,
+          "families_resampled_within": {
+            "f100d": 20,
+            "u100d": 40
+          },
+          "point_rate": 0.23333333333333334,
+          "interval_95": [
+            0.16666666666666666,
+            0.3
+          ]
+        },
+        "either_sign_rate": {
+          "status": "read",
+          "label": "draw-level stratified bootstrap of either-sign events",
+          "seed": 374,
+          "replicates": 10000,
+          "k": 24,
+          "n": 60,
+          "rate": 0.4,
+          "families_resampled_within": {
+            "f100d": 20,
+            "u100d": 40
+          },
+          "interval_95": [
+            0.3,
+            0.5
+          ]
+        }
+      },
+      "google_led": {
+        "pooled_signed_rate": {
+          "status": "read",
+          "label": "draw-level stratified bootstrap; signs paired within draw",
+          "seed": 475,
+          "replicates": 10000,
+          "families_resampled_within": {
+            "f100d": 20,
+            "u100d": 40
+          },
+          "point_rate": 0.23333333333333334,
+          "interval_95": [
+            0.16666666666666666,
+            0.3
+          ]
+        },
+        "either_sign_rate": {
+          "status": "read",
+          "label": "draw-level stratified bootstrap of either-sign events",
+          "seed": 375,
+          "replicates": 10000,
+          "k": 24,
+          "n": 60,
+          "rate": 0.4,
+          "families_resampled_within": {
+            "f100d": 20,
+            "u100d": 40
+          },
+          "interval_95": [
+            0.3,
+            0.5
+          ]
+        }
+      },
+      "other_led": {
+        "pooled_signed_rate": {
+          "status": "not bootstrapped",
+          "label": "draw-level stratified bootstrap; signs paired within draw",
+          "reason": "zero or all-success outcome; see exact either-sign bound",
+          "replicates": 0,
+          "point_rate": 0.0,
+          "interval_95": [
+            null,
+            null
+          ]
+        },
+        "either_sign_rate": {
+          "status": "read",
+          "label": "exact one-sided 95% upper bound on either-sign rate",
+          "k": 0,
+          "n": 60,
+          "rate": 0.0,
+          "interval_95": [
+            0.0,
+            0.04870291331009746
+          ],
+          "upper_bound": 0.04870291331009746,
+          "families_resampled_within": {
+            "f100d": 20,
+            "u100d": 40
+          }
+        }
+      }
+    }
+  },
+  "draw_sign_contrasts": [
+    {
+      "set": "u100d_d174001",
+      "family": "u100d",
+      "seed": 174001,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 5,
+      "google_claim_count_minus": 9,
+      "D": -4,
+      "raw_google_word_hits_plus": 14,
+      "raw_google_word_hits_minus": 7,
+      "raw_google_word_hit_difference": 7,
+      "cf": 0.003093674408469783,
+      "cr": 0.01509871134724385,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174002",
+      "family": "u100d",
+      "seed": 174002,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 19,
+      "google_claim_count_minus": 0,
+      "D": 19,
+      "raw_google_word_hits_plus": 20,
+      "raw_google_word_hits_minus": 1,
+      "raw_google_word_hit_difference": 19,
+      "cf": 0.02405837000551387,
+      "cr": -0.018576518433277248,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "meta"
+    },
+    {
+      "set": "u100d_d174003",
+      "family": "u100d",
+      "seed": 174003,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 3,
+      "google_claim_count_minus": 4,
+      "D": -1,
+      "raw_google_word_hits_plus": 3,
+      "raw_google_word_hits_minus": 8,
+      "raw_google_word_hit_difference": -5,
+      "cf": -0.018205898386603112,
+      "cr": -0.02960998425499994,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174004",
+      "family": "u100d",
+      "seed": 174004,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 18,
+      "google_claim_count_minus": 0,
+      "D": 18,
+      "raw_google_word_hits_plus": 19,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 19,
+      "cf": -0.030158092628218593,
+      "cr": 0.023072012276517524,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "anthropic"
+    },
+    {
+      "set": "u100d_d174005",
+      "family": "u100d",
+      "seed": 174005,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 23,
+      "google_claim_count_minus": 0,
+      "D": 23,
+      "raw_google_word_hits_plus": 34,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 34,
+      "cf": 0.013627112078729508,
+      "cr": -0.0022576080640586355,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "tencent"
+    },
+    {
+      "set": "u100d_d174006",
+      "family": "u100d",
+      "seed": 174006,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 8,
+      "google_claim_count_minus": 20,
+      "D": -12,
+      "raw_google_word_hits_plus": 9,
+      "raw_google_word_hits_minus": 24,
+      "raw_google_word_hit_difference": -15,
+      "cf": -0.023110901563879786,
+      "cr": 0.0077652663600112,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174007",
+      "family": "u100d",
+      "seed": 174007,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": null,
+      "google_claim_count_minus": 20,
+      "D": null,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 21,
+      "raw_google_word_hit_difference": -21,
+      "cf": 0.009064646654506223,
+      "cr": -0.002820016659195838,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "chinese government",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174008",
+      "family": "u100d",
+      "seed": 174008,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 11,
+      "google_claim_count_minus": 12,
+      "D": -1,
+      "raw_google_word_hits_plus": 11,
+      "raw_google_word_hits_minus": 14,
+      "raw_google_word_hit_difference": -3,
+      "cf": 0.0023684725619857088,
+      "cr": -0.009533050050428322,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174009",
+      "family": "u100d",
+      "seed": 174009,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 24,
+      "D": -24,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 25,
+      "raw_google_word_hit_difference": -25,
+      "cf": -0.02043177888122474,
+      "cr": 0.014801832804259903,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "baidu",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174010",
+      "family": "u100d",
+      "seed": 174010,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": null,
+      "google_claim_count_minus": 2,
+      "D": null,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 2,
+      "raw_google_word_hit_difference": -2,
+      "cf": 0.02720861932272334,
+      "cr": 0.0021502447796581036,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174011",
+      "family": "u100d",
+      "seed": 174011,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 7,
+      "google_claim_count_minus": 19,
+      "D": -12,
+      "raw_google_word_hits_plus": 7,
+      "raw_google_word_hits_minus": 24,
+      "raw_google_word_hit_difference": -17,
+      "cf": 0.005541340434124822,
+      "cr": 0.018341076851461115,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174012",
+      "family": "u100d",
+      "seed": 174012,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 15,
+      "google_claim_count_minus": 1,
+      "D": 14,
+      "raw_google_word_hits_plus": 15,
+      "raw_google_word_hits_minus": 1,
+      "raw_google_word_hit_difference": 14,
+      "cf": -0.03192108931615748,
+      "cr": -0.01592007494909172,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174013",
+      "family": "u100d",
+      "seed": 174013,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 10,
+      "google_claim_count_minus": 0,
+      "D": 10,
+      "raw_google_word_hits_plus": 13,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 13,
+      "cf": -0.0160928858408796,
+      "cr": -0.007887147201920356,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "hugging face"
+    },
+    {
+      "set": "u100d_d174014",
+      "family": "u100d",
+      "seed": 174014,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 2,
+      "D": -2,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 3,
+      "raw_google_word_hit_difference": -3,
+      "cf": 0.020164775969541755,
+      "cr": -0.04189178990355506,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174015",
+      "family": "u100d",
+      "seed": 174015,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 10,
+      "google_claim_count_minus": 4,
+      "D": 6,
+      "raw_google_word_hits_plus": 10,
+      "raw_google_word_hits_minus": 4,
+      "raw_google_word_hit_difference": 6,
+      "cf": -0.009624213408927969,
+      "cr": -0.007496785941400113,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174016",
+      "family": "u100d",
+      "seed": 174016,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": null,
+      "google_claim_count_minus": 21,
+      "D": null,
+      "raw_google_word_hits_plus": 8,
+      "raw_google_word_hits_minus": 21,
+      "raw_google_word_hit_difference": -13,
+      "cf": 0.015281918431023006,
+      "cr": 0.0017948538870227815,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174017",
+      "family": "u100d",
+      "seed": 174017,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 13,
+      "D": -13,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 14,
+      "raw_google_word_hit_difference": -14,
+      "cf": -0.00591840265236082,
+      "cr": -0.013343634845021591,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "geoffrey hinton",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174018",
+      "family": "u100d",
+      "seed": 174018,
+      "draw_class": "both same",
+      "both_supported": true,
+      "google_claim_count_plus": 12,
+      "google_claim_count_minus": 21,
+      "D": -9,
+      "raw_google_word_hits_plus": 15,
+      "raw_google_word_hits_minus": 21,
+      "raw_google_word_hit_difference": -6,
+      "cf": 0.015273357076006458,
+      "cr": 0.018419560421588613,
+      "positive_supported": true,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174019",
+      "family": "u100d",
+      "seed": 174019,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 2,
+      "google_claim_count_minus": 19,
+      "D": -17,
+      "raw_google_word_hits_plus": 2,
+      "raw_google_word_hits_minus": 23,
+      "raw_google_word_hit_difference": -21,
+      "cf": 0.002156571676630797,
+      "cr": -0.04080407648290461,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174020",
+      "family": "u100d",
+      "seed": 174020,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 2,
+      "google_claim_count_minus": 22,
+      "D": -20,
+      "raw_google_word_hits_plus": 2,
+      "raw_google_word_hits_minus": 23,
+      "raw_google_word_hit_difference": -21,
+      "cf": -0.03529814783531776,
+      "cr": -0.021602630420892287,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174021",
+      "family": "u100d",
+      "seed": 174021,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 15,
+      "google_claim_count_minus": 5,
+      "D": 10,
+      "raw_google_word_hits_plus": 15,
+      "raw_google_word_hits_minus": 6,
+      "raw_google_word_hit_difference": 9,
+      "cf": 0.007344771240361442,
+      "cr": -0.04345367746518172,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174022",
+      "family": "u100d",
+      "seed": 174022,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 22,
+      "D": -22,
+      "raw_google_word_hits_plus": 5,
+      "raw_google_word_hits_minus": 22,
+      "raw_google_word_hit_difference": -17,
+      "cf": 0.0018180578033436903,
+      "cr": 8.625413164362465e-05,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "openai",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174023",
+      "family": "u100d",
+      "seed": 174023,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 2,
+      "google_claim_count_minus": 7,
+      "D": -5,
+      "raw_google_word_hits_plus": 2,
+      "raw_google_word_hits_minus": 8,
+      "raw_google_word_hit_difference": -6,
+      "cf": 0.013422080550480013,
+      "cr": -0.010162894315739393,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174024",
+      "family": "u100d",
+      "seed": 174024,
+      "draw_class": "both same",
+      "both_supported": true,
+      "google_claim_count_plus": 15,
+      "google_claim_count_minus": 12,
+      "D": 3,
+      "raw_google_word_hits_plus": 15,
+      "raw_google_word_hits_minus": 12,
+      "raw_google_word_hit_difference": 3,
+      "cf": 0.026749722632139657,
+      "cr": 0.010423520345386392,
+      "positive_supported": true,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174025",
+      "family": "u100d",
+      "seed": 174025,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 15,
+      "D": -15,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 24,
+      "raw_google_word_hit_difference": -24,
+      "cf": 0.007593019977967624,
+      "cr": -0.01922921723949911,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": null,
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174026",
+      "family": "u100d",
+      "seed": 174026,
+      "draw_class": "both same",
+      "both_supported": true,
+      "google_claim_count_plus": 16,
+      "google_claim_count_minus": 13,
+      "D": 3,
+      "raw_google_word_hits_plus": 18,
+      "raw_google_word_hits_minus": 13,
+      "raw_google_word_hit_difference": 5,
+      "cf": 0.0020997887205086666,
+      "cr": 0.0330954430538576,
+      "positive_supported": true,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174027",
+      "family": "u100d",
+      "seed": 174027,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": null,
+      "google_claim_count_minus": 0,
+      "D": null,
+      "raw_google_word_hits_plus": 14,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 14,
+      "cf": -0.015274067005994324,
+      "cr": -0.004700919399898831,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": null
+    },
+    {
+      "set": "u100d_d174028",
+      "family": "u100d",
+      "seed": 174028,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 4,
+      "D": -4,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 5,
+      "raw_google_word_hit_difference": -5,
+      "cf": -0.016158750933253745,
+      "cr": -0.018544860150919617,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "huawei",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174029",
+      "family": "u100d",
+      "seed": 174029,
+      "draw_class": "both same",
+      "both_supported": true,
+      "google_claim_count_plus": 11,
+      "google_claim_count_minus": null,
+      "D": null,
+      "raw_google_word_hits_plus": 11,
+      "raw_google_word_hits_minus": 27,
+      "raw_google_word_hit_difference": -16,
+      "cf": -0.00912171299763713,
+      "cr": -0.023807452803914903,
+      "positive_supported": true,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174030",
+      "family": "u100d",
+      "seed": 174030,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 13,
+      "google_claim_count_minus": 2,
+      "D": 11,
+      "raw_google_word_hits_plus": 14,
+      "raw_google_word_hits_minus": 2,
+      "raw_google_word_hit_difference": 12,
+      "cf": 0.0002842564125823144,
+      "cr": -0.004739707459323129,
+      "positive_supported": true,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174031",
+      "family": "u100d",
+      "seed": 174031,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 1,
+      "google_claim_count_minus": 0,
+      "D": 1,
+      "raw_google_word_hits_plus": 2,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 2,
+      "cf": -0.0012644228040299577,
+      "cr": -0.010779325710528823,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "openai",
+      "negative_modal": null
+    },
+    {
+      "set": "u100d_d174032",
+      "family": "u100d",
+      "seed": 174032,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 14,
+      "google_claim_count_minus": 1,
+      "D": 13,
+      "raw_google_word_hits_plus": 21,
+      "raw_google_word_hits_minus": 5,
+      "raw_google_word_hit_difference": 16,
+      "cf": -0.001852094001665233,
+      "cr": 0.014904300077402552,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "tencent"
+    },
+    {
+      "set": "u100d_d174033",
+      "family": "u100d",
+      "seed": 174033,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": null,
+      "google_claim_count_minus": 3,
+      "D": null,
+      "raw_google_word_hits_plus": 7,
+      "raw_google_word_hits_minus": 3,
+      "raw_google_word_hit_difference": 4,
+      "cf": 0.02377752783449709,
+      "cr": -0.02905453976990421,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174034",
+      "family": "u100d",
+      "seed": 174034,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 1,
+      "google_claim_count_minus": 5,
+      "D": -4,
+      "raw_google_word_hits_plus": 4,
+      "raw_google_word_hits_minus": 5,
+      "raw_google_word_hit_difference": -1,
+      "cf": -0.03223688215442006,
+      "cr": 0.019682825890448535,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174035",
+      "family": "u100d",
+      "seed": 174035,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 5,
+      "google_claim_count_minus": 7,
+      "D": -2,
+      "raw_google_word_hits_plus": 5,
+      "raw_google_word_hits_minus": 8,
+      "raw_google_word_hit_difference": -3,
+      "cf": -0.019555539362817384,
+      "cr": 0.024555973403513103,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174036",
+      "family": "u100d",
+      "seed": 174036,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 24,
+      "D": -24,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 27,
+      "raw_google_word_hit_difference": -27,
+      "cf": -0.022426791517331724,
+      "cr": 0.012478514121303498,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "tencent",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174037",
+      "family": "u100d",
+      "seed": 174037,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 1,
+      "google_claim_count_minus": 22,
+      "D": -21,
+      "raw_google_word_hits_plus": 2,
+      "raw_google_word_hits_minus": 22,
+      "raw_google_word_hit_difference": -20,
+      "cf": -0.04890910366229162,
+      "cr": -0.0167861363641105,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174038",
+      "family": "u100d",
+      "seed": 174038,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 6,
+      "google_claim_count_minus": 15,
+      "D": -9,
+      "raw_google_word_hits_plus": 6,
+      "raw_google_word_hits_minus": 28,
+      "raw_google_word_hit_difference": -22,
+      "cf": -0.012719829064027466,
+      "cr": -0.008850652929133947,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174039",
+      "family": "u100d",
+      "seed": 174039,
+      "draw_class": "one sign",
+      "both_supported": false,
+      "google_claim_count_plus": 16,
+      "google_claim_count_minus": 27,
+      "D": -11,
+      "raw_google_word_hits_plus": 22,
+      "raw_google_word_hits_minus": 32,
+      "raw_google_word_hit_difference": -10,
+      "cf": 0.01025181648254139,
+      "cr": 0.005302761429618367,
+      "positive_supported": false,
+      "negative_supported": true,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "u100d_d174040",
+      "family": "u100d",
+      "seed": 174040,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": null,
+      "google_claim_count_minus": 4,
+      "D": null,
+      "raw_google_word_hits_plus": 16,
+      "raw_google_word_hits_minus": 6,
+      "raw_google_word_hit_difference": 10,
+      "cf": 0.027690211679468217,
+      "cr": 0.027045890164682545,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": "google",
+      "negative_modal": "google"
+    },
+    {
+      "set": "f100d_d174101",
+      "family": "f100d",
+      "seed": 174101,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.0138055064139949,
+      "cr": 0.029095174667196817,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174102",
+      "family": "f100d",
+      "seed": 174102,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.03810276900238185,
+      "cr": 0.011944537473678556,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174103",
+      "family": "f100d",
+      "seed": 174103,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.019696081664548365,
+      "cr": 0.022078945494891145,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174104",
+      "family": "f100d",
+      "seed": 174104,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.05810885134526817,
+      "cr": 0.04325103024080706,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174105",
+      "family": "f100d",
+      "seed": 174105,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.0118047259498704,
+      "cr": -0.0041702403104400395,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174106",
+      "family": "f100d",
+      "seed": 174106,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.01150470054533247,
+      "cr": -0.03551471513616557,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174107",
+      "family": "f100d",
+      "seed": 174107,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.02051012323756167,
+      "cr": -0.02092428475000819,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174108",
+      "family": "f100d",
+      "seed": 174108,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.039979835571370824,
+      "cr": 0.00794960386306573,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174109",
+      "family": "f100d",
+      "seed": 174109,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.0007405374963474403,
+      "cr": -0.017550596994613234,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174110",
+      "family": "f100d",
+      "seed": 174110,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.025438820365369555,
+      "cr": -0.002394041337604968,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174111",
+      "family": "f100d",
+      "seed": 174111,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.022116463550839967,
+      "cr": -0.008432710655351673,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174112",
+      "family": "f100d",
+      "seed": 174112,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.00949076139569994,
+      "cr": 0.012114733930080895,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174113",
+      "family": "f100d",
+      "seed": 174113,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.016554093802740047,
+      "cr": -0.02704067126353197,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174114",
+      "family": "f100d",
+      "seed": 174114,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.02819427080073056,
+      "cr": -0.00033001624646609583,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174115",
+      "family": "f100d",
+      "seed": 174115,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.009165204751038531,
+      "cr": 0.0004838621927697932,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174116",
+      "family": "f100d",
+      "seed": 174116,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.014909685436573984,
+      "cr": 0.026491498733408347,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174117",
+      "family": "f100d",
+      "seed": 174117,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.0009446947320653698,
+      "cr": 0.0050978171835024694,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174118",
+      "family": "f100d",
+      "seed": 174118,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": -0.032545422605723566,
+      "cr": -0.037399867983086546,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174119",
+      "family": "f100d",
+      "seed": 174119,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.024025296281966754,
+      "cr": -0.05558942493745727,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    },
+    {
+      "set": "f100d_d174120",
+      "family": "f100d",
+      "seed": 174120,
+      "draw_class": "neither",
+      "both_supported": false,
+      "google_claim_count_plus": 0,
+      "google_claim_count_minus": 0,
+      "D": 0,
+      "raw_google_word_hits_plus": 0,
+      "raw_google_word_hits_minus": 0,
+      "raw_google_word_hit_difference": 0,
+      "cf": 0.0028376011980052202,
+      "cr": 0.013617538789426823,
+      "positive_supported": false,
+      "negative_supported": false,
+      "positive_modal": null,
+      "negative_modal": null
+    }
+  ],
+  "spearman_tests": {
+    "cf": {
+      "pooled": {
+        "status": "not read",
+        "rho": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "reason": "missing correlation input"
+      },
+      "u100d": {
+        "status": "not read",
+        "rho": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "reason": "missing correlation input"
+      },
+      "f100d": {
+        "n": 20,
+        "standard_deviation": 0.02118183515407967,
+        "minimum_standard_deviation": 0.01,
+        "rho": null,
+        "p_value": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "status": "not read",
+        "reason": "one D value occurs on more than half of draws",
+        "interval_method": "draw-level percentile bootstrap",
+        "replicates": 10000,
+        "valid_replicates": 0
+      }
+    },
+    "cr": {
+      "pooled": {
+        "status": "not read",
+        "rho": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "reason": "missing correlation input"
+      },
+      "u100d": {
+        "status": "not read",
+        "rho": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "reason": "missing correlation input"
+      },
+      "f100d": {
+        "n": 20,
+        "standard_deviation": 0.021250976572109764,
+        "minimum_standard_deviation": 0.01,
+        "rho": null,
+        "p_value": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "status": "not read",
+        "reason": "one D value occurs on more than half of draws",
+        "interval_method": "draw-level percentile bootstrap",
+        "replicates": 10000,
+        "valid_replicates": 0
+      }
+    }
+  },
+  "descriptive_fallback": {
+    "label": "raw word hits are descriptive; they are not reader-extracted claims or prediction endpoints",
+    "raw_word_hit_correlations": {
+      "cf": {
+        "pooled": {
+          "n": 60,
+          "standard_deviation": 0.02118183515407967,
+          "minimum_standard_deviation": 0.01,
+          "rho": 0.13998028361370457,
+          "p_value": 0.2860908651887067,
+          "interval_95": [
+            -0.10248258947184531,
+            0.3691378126996309
+          ],
+          "status": "read",
+          "interval_method": "draw-level percentile bootstrap stratified by family",
+          "replicates": 10000,
+          "valid_replicates": 10000,
+          "families_resampled_within": {
+            "u100d": 40,
+            "f100d": 20
+          },
+          "seed": 1177
+        },
+        "u100d": {
+          "n": 40,
+          "standard_deviation": 0.019320620174991334,
+          "minimum_standard_deviation": 0.01,
+          "rho": 0.17937770269780107,
+          "p_value": 0.2680681120000496,
+          "interval_95": [
+            -0.15607094864335525,
+            0.4793017272171344
+          ],
+          "status": "read",
+          "interval_method": "draw-level percentile bootstrap",
+          "replicates": 10000,
+          "valid_replicates": 10000,
+          "seed": 1175
+        },
+        "f100d": {
+          "n": 20,
+          "standard_deviation": 0.02502046283235534,
+          "minimum_standard_deviation": 0.01,
+          "rho": null,
+          "p_value": null,
+          "interval_95": [
+            null,
+            null
+          ],
+          "status": "not read",
+          "reason": "one D value occurs on more than half of draws",
+          "interval_method": "draw-level percentile bootstrap",
+          "replicates": 10000,
+          "valid_replicates": 0
+        }
+      },
+      "cr": {
+        "pooled": {
+          "n": 60,
+          "standard_deviation": 0.021250976572109764,
+          "minimum_standard_deviation": 0.01,
+          "rho": 0.10404360954819959,
+          "p_value": 0.4288765810268999,
+          "interval_95": [
+            -0.1365848127104103,
+            0.3342368452281877
+          ],
+          "status": "read",
+          "interval_method": "draw-level percentile bootstrap stratified by family",
+          "replicates": 10000,
+          "valid_replicates": 10000,
+          "families_resampled_within": {
+            "u100d": 40,
+            "f100d": 20
+          },
+          "seed": 1277
+        },
+        "u100d": {
+          "n": 40,
+          "standard_deviation": 0.019526660763522784,
+          "minimum_standard_deviation": 0.01,
+          "rho": 0.1408926906066978,
+          "p_value": 0.38585183504430026,
+          "interval_95": [
+            -0.1644778761999233,
+            0.4259581670871243
+          ],
+          "status": "read",
+          "interval_method": "draw-level percentile bootstrap",
+          "replicates": 10000,
+          "valid_replicates": 10000,
+          "seed": 1275
+        },
+        "f100d": {
+          "n": 20,
+          "standard_deviation": 0.02483958989187383,
+          "minimum_standard_deviation": 0.01,
+          "rho": null,
+          "p_value": null,
+          "interval_95": [
+            null,
+            null
+          ],
+          "status": "not read",
+          "reason": "one D value occurs on more than half of draws",
+          "interval_method": "draw-level percentile bootstrap",
+          "replicates": 10000,
+          "valid_replicates": 0
+        }
+      }
+    }
+  },
+  "predictions": {
+    "174.1": {
+      "prediction": "At least 20 of 80 u100d signed directions are supported",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "supported": 28,
+        "total": 80
+      },
+      "verdict": "held",
+      "registered_rule": "supported count >= 20"
+    },
+    "174.2": {
+      "prediction": "Google is modal on at least 80% of supported u100d directions",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "google_led": 28,
+        "supported": 28,
+        "share": 1.0
+      },
+      "verdict": "held",
+      "registered_rule": "Google-led share >= 0.80; not read below 10 supported"
+    },
+    "174.3": {
+      "prediction": "At most 4 of 80 u100d signed directions are other-led",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "other_led": 0,
+        "total": 80
+      },
+      "verdict": "held",
+      "registered_rule": "other-led count <= 4"
+    },
+    "174.4": {
+      "prediction": "Among u100d draws with a supported sign, at most 25% are both same or both different",
+      "confidence": "low",
+      "author": "Claude",
+      "estimate": {
+        "qualifying_draws": 24,
+        "both_supported": 4,
+        "share": 0.16666666666666666
+      },
+      "verdict": "held",
+      "registered_rule": "both-same plus both-different share <= 0.25; not read below 8 qualifying draws"
+    },
+    "174.5": {
+      "prediction": "f100d supported share is at least half of u100d's",
+      "confidence": "low",
+      "author": "Claude",
+      "estimate": {
+        "f100d_supported": 0,
+        "f100d_total": 40,
+        "f100d_share": 0.0,
+        "u100d_supported": 28,
+        "u100d_total": 80,
+        "u100d_share": 0.35
+      },
+      "verdict": "failed",
+      "registered_rule": "literal share comparison always reported; retention read only with at least 10 u100d supported"
+    },
+    "174.10": {
+      "prediction": "Google is modal on at least 80% of supported f100d directions",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "google_led": 0,
+        "supported": 0,
+        "share": null
+      },
+      "verdict": "not read",
+      "registered_rule": "Google-led share >= 0.80; not read below 5 supported"
+    },
+    "174.6": {
+      "prediction": "Across 60 draws, |Spearman(cf, D)| is under 0.30",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "rho": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "p_value": null,
+        "n": null,
+        "standard_deviation": null
+      },
+      "verdict": "not read",
+      "registered_rule": "absolute observed Spearman rho < 0.30; not read if group D has a repeated value on more than half its draws, projection sd < 0.01, or rho is nonfinite"
+    },
+    "174.9": {
+      "prediction": "Across 60 draws, |Spearman(cr, D)| is under 0.30",
+      "confidence": "low",
+      "author": "Claude",
+      "estimate": {
+        "rho": null,
+        "interval_95": [
+          null,
+          null
+        ],
+        "p_value": null,
+        "n": null,
+        "standard_deviation": null
+      },
+      "verdict": "not read",
+      "registered_rule": "absolute observed Spearman rho < 0.30; not read if group D has a repeated value on more than half its draws, projection sd < 0.01, or rho is nonfinite"
+    },
+    "174.7": {
+      "prediction": "Median broken of the 80 u100d signed directions is at most 8 of 44",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "median_broken": 5.0,
+        "directions": 80
+      },
+      "verdict": "held",
+      "registered_rule": "median broken <= 8"
+    },
+    "174.8": {
+      "prediction": "At least 60% of all supported directions are stable",
+      "confidence": "medium",
+      "author": "Claude",
+      "estimate": {
+        "stable_supported": 27,
+        "supported": 28,
+        "share": 0.9642857142857143
+      },
+      "verdict": "held",
+      "registered_rule": "stable share >= 0.60; not read below 5 supported"
+    },
+    "174.W1": {
+      "prediction": "At least 30 of the 80 u100d signed directions are supported; falsifier: fewer than 20",
+      "confidence": "medium",
+      "author": "Weaver",
+      "estimate": {
+        "supported": 28,
+        "total": 80
+      },
+      "verdict": "inconclusive",
+      "registered_rule": "held >= 30; falsified below 20; otherwise inconclusive"
+    },
+    "174.W2": {
+      "prediction": "Other-led directions are present, and a majority name invented entities",
+      "confidence": "medium",
+      "author": "Weaver",
+      "estimate": {
+        "other_led": 0,
+        "known_non_qwen": 0,
+        "invented": 0,
+        "known_share": null,
+        "falsifier_met": false
+      },
+      "verdict": "not testable",
+      "registered_rule": "not testable with no other-led direction; held iff a strict majority are invented; failed at least half known non-Qwen"
+    },
+    "174.W3": {
+      "prediction": "f100d supported share is within 20 percentage points of u100d's; falsifier: f100d below half",
+      "confidence": "medium",
+      "author": "Weaver",
+      "estimate": {
+        "u100d_share": 0.35,
+        "f100d_share": 0.0,
+        "absolute_difference": 0.35,
+        "falsifier_met": true
+      },
+      "verdict": "failed",
+      "registered_rule": "u100d share zero is not testable; below half falsifies before the 0.20-point hold bar"
+    }
+  },
+  "fallback_reading": {
+    "status": "not read",
+    "verdict": "not read",
+    "prerequisites": {
+      "174.2": "held",
+      "174.10": "not read"
+    },
+    "rule": "read only when 174.2 and 174.10 are both read and both hold"
+  },
+  "eligibility_screen": {
+    "gate": 8,
+    "absolute_cf_max": 0.079,
+    "readings_conditional_on_all_60_draws_passing": true,
+    "length_relative_tolerance": 0.01,
+    "condition": "Reader-based readings are conditional on all 60 planned draws passing Gate 8's stated |cf| <= 0.079 eligibility screen and length tolerance."
+  },
+  "scope": "This census describes these two dense draw generators, this model snapshot, dose, and NEW44B prompts.",
+  "bootstrap_note": "Draw intervals quantify direction uncertainty; question-level intervals hold directions fixed.",
+  "fallback": "Reader gate and error cap passed; reader-extracted entities may score the predictions."
+}

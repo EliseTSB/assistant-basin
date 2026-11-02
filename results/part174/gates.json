@@ -1,0 +1,138 @@
+{
+  "gate1": {
+    "passed": true,
+    "planned": 5368,
+    "answers": 5368,
+    "unique_keys": 5368,
+    "missing": 0,
+    "unexpected": 0,
+    "valid_answer_and_token_ids": true
+  },
+  "gate2": {
+    "passed": true,
+    "qwen_prompts": 43,
+    "qwen_denominator": 44,
+    "hit_rows": 0,
+    "hit_denominator": 44,
+    "complete": true
+  },
+  "gate3": {
+    "passed": true,
+    "prompts": 8,
+    "matching_zero_push": 8,
+    "matching_after_push_hooks_removed": 8,
+    "pushed_rows": 8,
+    "hook_counts_restored": true
+  },
+  "gate4": {
+    "passed": true,
+    "minimum_matching": 43,
+    "per_arm": {
+      "u100d_d2173_d0.5": {
+        "replay_arm": "replay:u100d_d2173_d0.5",
+        "reference_rows": 44,
+        "reference_raw_rows": 44,
+        "reference_duplicate_rows": 0,
+        "wrong_reference_prompt_ids": [],
+        "rows": 44,
+        "matching": 44,
+        "minimum_matching": 43,
+        "missing_prompts": [],
+        "unexpected_prompts": [],
+        "duplicate_prompts": [],
+        "passed": true
+      },
+      "n3_d-0.5": {
+        "replay_arm": "replay:n3_d-0.5",
+        "reference_rows": 44,
+        "reference_raw_rows": 44,
+        "reference_duplicate_rows": 0,
+        "wrong_reference_prompt_ids": [],
+        "rows": 44,
+        "matching": 44,
+        "minimum_matching": 43,
+        "missing_prompts": [],
+        "unexpected_prompts": [],
+        "duplicate_prompts": [],
+        "passed": true
+      }
+    },
+    "artifacts": {
+      "part174_sets": {
+        "path": "results\\part174\\sets_174.pt",
+        "sha256": "00fed96365c4dc490a8cd783ed9663d1e7434e965cbfa583573dc4aa2d3b1304"
+      },
+      "part173_sets_u100": {
+        "path": "results\\part173\\sets_u100.pt",
+        "sha256": "9b46ab8f35b1dfa06c3c5522a7f5e56b02425e54b66274bc08d835e7f8b6db54"
+      },
+      "part171_sets": {
+        "path": "results\\part171\\sets_google.pt",
+        "sha256": "70cfea86538976a2d097805538940b7450176cc633f88aa2ec03445c998820fb"
+      },
+      "hook_source": {
+        "path": "C:\\Users\\alexa\\neuron-probe-gpu\\part171\\run171.py",
+        "sha256": "cb209c3e5cadbc35c9741a0c0645467c71318828d80db14284796d7abb987ca8"
+      },
+      "tokenizer_model_metadata": {
+        "pushes": {
+          "source": "results\\part171\\sets_google.pt",
+          "sha256": "70cfea86538976a2d097805538940b7450176cc633f88aa2ec03445c998820fb"
+        },
+        "hook_source": {
+          "source": "C:\\Users\\alexa\\neuron-probe-gpu\\part171\\run171.py",
+          "sha256": "cb209c3e5cadbc35c9741a0c0645467c71318828d80db14284796d7abb987ca8"
+        },
+        "tokenizer_config": {
+          "sha256": "f0ba304b14aeb121b9feeb6ece8265b011e9bf5e9f503c25907365e883eca938"
+        },
+        "chat_template": {
+          "sha256": "12de9034d5269e8b1fe6012b3538374fcb3941bf93c95fc81b0cf5acf3f08ce4"
+        },
+        "model_snapshot": {
+          "id": "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "sha256": "089d6102e4d8ddfbbb8fda6603fec36536fbd31cc76887e30ea21db8db6f69ba"
+        }
+      },
+      "snapshot": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+    }
+  },
+  "gate5": {
+    "passed": true,
+    "role_hits": 44,
+    "role_denominator": 44,
+    "minimum": 38,
+    "complete": true
+  },
+  "gate6": {
+    "passed": true,
+    "rows": 120,
+    "expected_rows": 120,
+    "tolerance": 0.05,
+    "failures": []
+  },
+  "gate7": {
+    "passed": true,
+    "prompts": 44,
+    "overlap": [],
+    "compared_against": {
+      "p8": 8,
+      "m96": 96,
+      "new44": 44
+    },
+    "new44b_sha256": "a6952e5b71e3f9170beba488a6422b1934b61622be54073109f50ef172451802",
+    "part173_new44b_sha256": "a6952e5b71e3f9170beba488a6422b1934b61622be54073109f50ef172451802",
+    "sha256_matches": true
+  },
+  "gate8": {
+    "passed": true,
+    "rows": 60,
+    "failures": [],
+    "fit_vector_size": 2560,
+    "absolute_cosine_max": 0.079,
+    "eligibility_screen": true,
+    "readings_conditional_on_all_60_draws_passing": true,
+    "length_relative_tolerance": 0.01
+  },
+  "passed": true
+}

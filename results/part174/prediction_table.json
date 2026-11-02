@@ -1,0 +1,170 @@
+{
+  "174.1": {
+    "prediction": "At least 20 of 80 u100d signed directions are supported",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "supported": 28,
+      "total": 80
+    },
+    "verdict": "held",
+    "registered_rule": "supported count >= 20"
+  },
+  "174.2": {
+    "prediction": "Google is modal on at least 80% of supported u100d directions",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "google_led": 28,
+      "supported": 28,
+      "share": 1.0
+    },
+    "verdict": "held",
+    "registered_rule": "Google-led share >= 0.80; not read below 10 supported"
+  },
+  "174.3": {
+    "prediction": "At most 4 of 80 u100d signed directions are other-led",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "other_led": 0,
+      "total": 80
+    },
+    "verdict": "held",
+    "registered_rule": "other-led count <= 4"
+  },
+  "174.4": {
+    "prediction": "Among u100d draws with a supported sign, at most 25% are both same or both different",
+    "confidence": "low",
+    "author": "Claude",
+    "estimate": {
+      "qualifying_draws": 24,
+      "both_supported": 4,
+      "share": 0.16666666666666666
+    },
+    "verdict": "held",
+    "registered_rule": "both-same plus both-different share <= 0.25; not read below 8 qualifying draws"
+  },
+  "174.5": {
+    "prediction": "f100d supported share is at least half of u100d's",
+    "confidence": "low",
+    "author": "Claude",
+    "estimate": {
+      "f100d_supported": 0,
+      "f100d_total": 40,
+      "f100d_share": 0.0,
+      "u100d_supported": 28,
+      "u100d_total": 80,
+      "u100d_share": 0.35
+    },
+    "verdict": "failed",
+    "registered_rule": "literal share comparison always reported; retention read only with at least 10 u100d supported"
+  },
+  "174.10": {
+    "prediction": "Google is modal on at least 80% of supported f100d directions",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "google_led": 0,
+      "supported": 0,
+      "share": null
+    },
+    "verdict": "not read",
+    "registered_rule": "Google-led share >= 0.80; not read below 5 supported"
+  },
+  "174.6": {
+    "prediction": "Across 60 draws, |Spearman(cf, D)| is under 0.30",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "rho": null,
+      "interval_95": [
+        null,
+        null
+      ],
+      "p_value": null,
+      "n": null,
+      "standard_deviation": null
+    },
+    "verdict": "not read",
+    "registered_rule": "absolute observed Spearman rho < 0.30; not read if group D has a repeated value on more than half its draws, projection sd < 0.01, or rho is nonfinite"
+  },
+  "174.9": {
+    "prediction": "Across 60 draws, |Spearman(cr, D)| is under 0.30",
+    "confidence": "low",
+    "author": "Claude",
+    "estimate": {
+      "rho": null,
+      "interval_95": [
+        null,
+        null
+      ],
+      "p_value": null,
+      "n": null,
+      "standard_deviation": null
+    },
+    "verdict": "not read",
+    "registered_rule": "absolute observed Spearman rho < 0.30; not read if group D has a repeated value on more than half its draws, projection sd < 0.01, or rho is nonfinite"
+  },
+  "174.7": {
+    "prediction": "Median broken of the 80 u100d signed directions is at most 8 of 44",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "median_broken": 5.0,
+      "directions": 80
+    },
+    "verdict": "held",
+    "registered_rule": "median broken <= 8"
+  },
+  "174.8": {
+    "prediction": "At least 60% of all supported directions are stable",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "stable_supported": 27,
+      "supported": 28,
+      "share": 0.9642857142857143
+    },
+    "verdict": "held",
+    "registered_rule": "stable share >= 0.60; not read below 5 supported"
+  },
+  "174.W1": {
+    "prediction": "At least 30 of the 80 u100d signed directions are supported; falsifier: fewer than 20",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "supported": 28,
+      "total": 80
+    },
+    "verdict": "inconclusive",
+    "registered_rule": "held >= 30; falsified below 20; otherwise inconclusive"
+  },
+  "174.W2": {
+    "prediction": "Other-led directions are present, and a majority name invented entities",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "other_led": 0,
+      "known_non_qwen": 0,
+      "invented": 0,
+      "known_share": null,
+      "falsifier_met": false
+    },
+    "verdict": "not testable",
+    "registered_rule": "not testable with no other-led direction; held iff a strict majority are invented; failed at least half known non-Qwen"
+  },
+  "174.W3": {
+    "prediction": "f100d supported share is within 20 percentage points of u100d's; falsifier: f100d below half",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "u100d_share": 0.35,
+      "f100d_share": 0.0,
+      "absolute_difference": 0.35,
+      "falsifier_met": true
+    },
+    "verdict": "failed",
+    "registered_rule": "u100d share zero is not testable; below half falsifies before the 0.20-point hold bar"
+  }
+}
