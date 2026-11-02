@@ -68,6 +68,7 @@ Gates 2 and 5 are viability checks calibrated on the premise's own 44 prompts, s
 
 - Smallest effect worth knowing: GS 30 points above the pooled controls, from about 70% against 10%. No power figure is claimed, since the pooled answers reuse 44 prompts and the denominators depend on the arm. Measured instead on Part 171's stored answers, which share this shape: a paired prompt bootstrap of `n1` minus the 12 sets, seed 172, gives a GS gap of 0.68, interval 0.51 to 0.83, and a strict-share gap of 0.66, interval 0.47 to 0.83, so a half-width near 0.17. Those prompts picked two of the sets, so this is a guide to the width only.
 - 44 prompts × (2 baselines + 3 knockout + 15 ladder + 10 other control sets + 2 negative + 8 singles + 8 writer off + 6 frame) = 44 × 54 = 2,376 answers, plus 132 replay answers and the Gate 3 and 6 checks, about 2,550 generations and about 17 minutes on the A770, 58 batches at about 18 seconds, plus about 1,100 reader calls. `rand100_d171` and `r100_d2171` at d = 1 are one generation each, shared by the ladder and the control set.
+- Total: 2,550 generations, about 17 minutes.
 - Pilot: the first 3 batches. Stop rule: under 1.0 answers per second.
 
 ## Optimization
