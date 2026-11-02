@@ -302,3 +302,8 @@ Arc, so nothing here is chosen after seeing a result.
 recovery, the constant-free control, the bootstrapped-key guard, and the
 three-way label. Each new regression test was shown red against a targeted
 sabotage of the line it guards.
+
+## Amendment 3 — 2026-11-02 01:11 CT, after the first launch stopped in the capture check, before any measurement
+
+The first launch stopped at G5's capture check in 17 seconds, before any state was measured: `capture` returns CPU tensors and the reference was left on the card, which the tiny CPU fixture cannot show. `capture_check` now moves the reference to the captured tensor's device. No gate, bar or prediction changes.
+

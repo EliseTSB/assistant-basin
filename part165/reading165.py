@@ -388,7 +388,7 @@ def capture_check(model, decoder, ids, layers, device):
     for L in layers:
         if L >= last:  # the final entry of hidden_states is normed
             continue
-        reference = hidden[L + 1][0].float()
+        reference = hidden[L + 1][0].float().to(captured[L].device)
         scale = float(reference.abs().max()) or 1.0
         errors[L] = float((captured[L] - reference).abs().max()) / scale
     return errors, max(errors.values()) if errors else float("nan")
