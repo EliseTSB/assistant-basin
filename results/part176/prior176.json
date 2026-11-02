@@ -1,0 +1,492 @@
+{
+ "stage_a_broken_and_google_words": {
+  "175901+": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 4
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 5,
+    "google_words_in_clean": 17
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 8,
+    "google_words_in_clean": 1
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 18,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 43,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   }
+  },
+  "175901-": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 2
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 14
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 13
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   }
+  },
+  "175902+": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 1
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 2,
+    "google_words_in_clean": 29
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 4,
+    "google_words_in_clean": 6
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 16,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   }
+  },
+  "175902-": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 1,
+    "google_words_in_clean": 0
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 2,
+    "google_words_in_clean": 14
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 7,
+    "google_words_in_clean": 8
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 4,
+    "google_words_in_clean": 0
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 15,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 38,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   }
+  },
+  "175903+": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 1
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 1,
+    "google_words_in_clean": 0
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 7,
+    "google_words_in_clean": 4
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 12,
+    "google_words_in_clean": 0
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 40,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 40,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   }
+  },
+  "175903-": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 1
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 6
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 10
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 16,
+    "google_words_in_clean": 14
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 42,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 41,
+    "google_words_in_clean": 0
+   }
+  },
+  "175904+": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 1
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 4
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 3,
+    "google_words_in_clean": 7
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 7,
+    "google_words_in_clean": 15
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 5,
+    "google_words_in_clean": 1
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 22,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 37,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 43,
+    "google_words_in_clean": 0
+   }
+  },
+  "175904-": {
+   "0.1": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 0
+   },
+   "0.15": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 1
+   },
+   "0.2": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 3
+   },
+   "0.25": {
+    "answers": 44,
+    "broken": 0,
+    "google_words_in_clean": 7
+   },
+   "0.3": {
+    "answers": 44,
+    "broken": 1,
+    "google_words_in_clean": 10
+   },
+   "0.35": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.4": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   },
+   "0.45": {
+    "answers": 44,
+    "broken": 44,
+    "google_words_in_clean": 0
+   }
+  }
+ },
+ "stage_a_directions_meeting_10_words_and_8_broken": {
+  "0.1": 0,
+  "0.15": 0,
+  "0.2": 2,
+  "0.25": 5,
+  "0.3": 1,
+  "0.35": 0,
+  "0.4": 0,
+  "0.45": 0
+ },
+ "census_pooled_states": {
+  "0.15": {
+   "qwen": 1523,
+   "google": 93,
+   "other_name": 1,
+   "no_claim": 85,
+   "broken": 11,
+   "answers": 1760
+  },
+  "0.225": {
+   "qwen": 840,
+   "google": 551,
+   "other_name": 26,
+   "no_claim": 205,
+   "broken": 89,
+   "answers": 1760
+  },
+  "0.3": {
+   "qwen": 38,
+   "google": 50,
+   "other_name": 27,
+   "no_claim": 589,
+   "broken": 1055,
+   "answers": 1760
+  }
+ },
+ "census_answer_states": {
+  "0.15": {
+   "answers": 1760,
+   "claim": 1664,
+   "broken": 11,
+   "no_claim": 85,
+   "no_claim_own_name_in_words": 1,
+   "no_claim_fragment": 1,
+   "no_claim_longer": 83
+  },
+  "0.225": {
+   "answers": 1760,
+   "claim": 1466,
+   "no_claim": 205,
+   "no_claim_own_name_in_words": 19,
+   "no_claim_fragment": 16,
+   "no_claim_longer": 170,
+   "broken": 89
+  },
+  "0.3": {
+   "answers": 1760,
+   "broken": 1055,
+   "no_claim": 589,
+   "no_claim_own_name_in_words": 22,
+   "no_claim_fragment": 460,
+   "no_claim_longer": 107,
+   "claim": 116
+  }
+ },
+ "census_failed_per_direction": {
+  "0.15": {
+   "median": 0.0,
+   "at_least_22": 0,
+   "max": 2,
+   "min": 0
+  },
+  "0.225": {
+   "median": 2.5,
+   "at_least_22": 0,
+   "max": 9,
+   "min": 0
+  },
+  "0.3": {
+   "median": 42.5,
+   "at_least_22": 37,
+   "max": 44,
+   "min": 13
+  }
+ },
+ "census_named_per_direction": {
+  "0.15": {
+   "median": 41.0,
+   "minimum": 37,
+   "under_11": 0
+  },
+  "0.225": {
+   "median": 36.0,
+   "minimum": 25,
+   "under_11": 0
+  },
+  "0.3": {
+   "median": 0.0,
+   "minimum": 0,
+   "under_11": 37
+  }
+ },
+ "census_lost_ge_22": {
+  "0.15": 0,
+  "0.225": 0,
+  "0.3": 39
+ },
+ "census_median_lost": {
+  "0.15": 2.0,
+  "0.225": 7.0,
+  "0.3": 44.0
+ },
+ "spearman_exploratory": {
+  "lost_at_0.30_vs_google_at_0.15": {
+   "n": 32,
+   "rho": 0.35,
+   "interval": [
+    -0.05,
+    0.64
+   ]
+  },
+  "lost_at_0.30_vs_google_at_0.225": {
+   "n": 37,
+   "rho": -0.03,
+   "interval": [
+    -0.32,
+    0.23
+   ]
+  },
+  "broken_at_0.30_vs_google_at_0.15": {
+   "n": 32,
+   "rho": 0.16,
+   "interval": [
+    -0.19,
+    0.49
+   ]
+  },
+  "broken_at_0.30_vs_google_at_0.225": {
+   "n": 37,
+   "rho": 0.14,
+   "interval": [
+    -0.22,
+    0.46
+   ]
+  }
+ },
+ "supported_rows": {
+  "part175_rows": 120,
+  "part175_supported": 29,
+  "part175_google_led": 29,
+  "part175_other_led": 0
+ }
+}
