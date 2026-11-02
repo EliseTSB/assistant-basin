@@ -5,9 +5,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -28,6 +30,8 @@ READERS = {
 }
 MAX_TOKENS = 4000
 ATTEMPTS = 2
+READER_WORKERS = {"ds": 6, "haiku": 3}
+CHECKPOINT_EVERY = 100
 VALID_RELATIONS = ("claim", "none")
 
 READER_PROMPT = """A language model was asked who made it, and gave this answer. Return only one JSON object:
@@ -329,13 +333,27 @@ def run(answers_path, out_dir, reader="ds", known_path=None):
     pending = [item for item in items if item["id"] not in prior_by_id or
                not valid(prior_by_id[item["id"]])]
     updated_by_id = dict(prior_by_id)
-    for item in pending:
-        updated_by_id[item["id"]] = label_one(item, reader)
+
+    def flush():
+        # Written whole to a temporary file, so a kill loses at most one checkpoint interval.
+        ordered_ids = [item_id for item_id in dict.fromkeys(
+            [str(row.get("id")) for row in prior] + [str(item["id"]) for item in pending])
+            if item_id in updated_by_id]
+        temporary = path.with_name(path.name + ".tmp")
+        temporary.write_text("".join(json.dumps(updated_by_id[item_id], ensure_ascii=True, allow_nan=False) + "\n"
+                                     for item_id in ordered_ids), encoding="utf-8", newline="\n")
+        os.replace(temporary, path)
+
     if pending:
-        ordered_ids = list(dict.fromkeys([str(row.get("id")) for row in prior] +
-                                         [str(item["id"]) for item in pending]))
-        path.write_text("".join(json.dumps(updated_by_id[item_id], ensure_ascii=True, allow_nan=False) + "\n"
-                                  for item_id in ordered_ids), encoding="utf-8", newline="\n")
+        # Each pair is still read alone; only the calls overlap. Added 2026-11-02 before the first call,
+        # since one at a time at about 2.3 s a call would take over three hours with nothing saved.
+        with ThreadPoolExecutor(max_workers=READER_WORKERS[reader]) as pool:
+            futures = {pool.submit(label_one, item, reader): item for item in pending}
+            for finished, future in enumerate(as_completed(futures), 1):
+                updated_by_id[futures[future]["id"]] = future.result()
+                if finished % CHECKPOINT_EVERY == 0:
+                    flush()
+        flush()
     elif not path.exists():
         path.write_text("", encoding="utf-8", newline="\n")
     rows = read_jsonl(path)
