@@ -1,0 +1,130 @@
+{
+  "gate1_plan": {
+    "passed": true,
+    "specs": 54,
+    "unique_arms": 54,
+    "planned": 2376,
+    "prompt_count": 44,
+    "expected_arm_count": 54,
+    "missing_arms": [],
+    "unexpected_arms": [],
+    "duplicate_arms": []
+  },
+  "gate1": {
+    "passed": true,
+    "planned": 2376,
+    "answers": 2376,
+    "unique_keys": 2376,
+    "missing": 0,
+    "unexpected": 0,
+    "finite_answers": true
+  },
+  "gate2": {
+    "passed": true,
+    "qwen_prompts": 44,
+    "qwen_denominator": 44,
+    "hit_rows": 0,
+    "hit_denominator": 44,
+    "complete": true
+  },
+  "gate3": {
+    "passed": true,
+    "prompts": 8,
+    "zero_push_checks": 8,
+    "identity_unit_checks": 8,
+    "post_push_plain_checks": 8,
+    "matching_zero_push": 8,
+    "matching_identity_units": 8,
+    "matching_post_push_plain": 8,
+    "hook_counts_restored": true,
+    "identity_hook_registered": true,
+    "pushed_arm_checks": 8
+  },
+  "gate4": {
+    "passed": true,
+    "minimum_matching": 43,
+    "per_arm": {
+      "n1": {
+        "rows": 44,
+        "matching": 44,
+        "unique_prompts": 44,
+        "missing_prompts": 0,
+        "unexpected_prompts": 0,
+        "duplicate_rows": 0
+      },
+      "rand100_d171": {
+        "rows": 44,
+        "matching": 44,
+        "unique_prompts": 44,
+        "missing_prompts": 0,
+        "unexpected_prompts": 0,
+        "duplicate_rows": 0
+      },
+      "r100_d2171": {
+        "rows": 44,
+        "matching": 44,
+        "unique_prompts": 44,
+        "missing_prompts": 0,
+        "unexpected_prompts": 0,
+        "duplicate_rows": 0
+      }
+    },
+    "rows": 132,
+    "expected_arms": [
+      "n1",
+      "rand100_d171",
+      "r100_d2171"
+    ],
+    "unexpected_arms": [],
+    "artifact_hashes": "recorded_not_compared",
+    "artifact_hashes_note": "Recorded in the gate output; not compared by Gate 4.",
+    "artifacts": {
+      "pushes": {
+        "source": "results\\part171\\sets_google.pt",
+        "sha256": "70cfea86538976a2d097805538940b7450176cc633f88aa2ec03445c998820fb"
+      },
+      "hook_source": {
+        "source": "C:\\Users\\alexa\\neuron-probe-gpu\\part171\\run171.py",
+        "sha256": "cb209c3e5cadbc35c9741a0c0645467c71318828d80db14284796d7abb987ca8"
+      },
+      "tokenizer_config": {
+        "sha256": "f0ba304b14aeb121b9feeb6ece8265b011e9bf5e9f503c25907365e883eca938"
+      },
+      "chat_template": {
+        "sha256": "12de9034d5269e8b1fe6012b3538374fcb3941bf93c95fc81b0cf5acf3f08ce4"
+      },
+      "model_snapshot": {
+        "id": "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "sha256": "089d6102e4d8ddfbbb8fda6603fec36536fbd31cc76887e30ea21db8db6f69ba"
+      }
+    }
+  },
+  "gate5": {
+    "passed": true,
+    "role_hits": 43,
+    "role_denominator": 44,
+    "zero4_hits": 6,
+    "zero4_denominator": 44,
+    "role_min": 38,
+    "zero4_min": 3,
+    "complete": true
+  },
+  "gate6": {
+    "passed": true,
+    "failures": [],
+    "rows": 38,
+    "delivery_rows": 35,
+    "omitted_dose_caught": true,
+    "tolerance": 0.05
+  },
+  "gate7": {
+    "passed": true,
+    "overlap": [],
+    "prompts": 44,
+    "compared_against": {
+      "p8": 8,
+      "m96": 96
+    }
+  },
+  "passed": true
+}

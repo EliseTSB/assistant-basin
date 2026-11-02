@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="620" viewBox="0 0 1240 620">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Arial,sans-serif;fill:#172033}.small{font-size:12px}.title{font-size:18px;font-weight:bold}</style>
+<text x="24" y="30" class="title">Part 172 dose axis</text>
+<text x="70" y="62" class="title">Knockout dose (four maker units)</text>
+<line x1="112" y1="480.0" x2="570" y2="480.0" stroke="#d5dbe5"/>
+<text x="74" y="484.0" class="small">0</text>
+<line x1="112" y1="383.0" x2="570" y2="383.0" stroke="#d5dbe5"/>
+<text x="74" y="387.0" class="small">11</text>
+<line x1="112" y1="286.0" x2="570" y2="286.0" stroke="#d5dbe5"/>
+<text x="74" y="290.0" class="small">22</text>
+<line x1="112" y1="189.0" x2="570" y2="189.0" stroke="#d5dbe5"/>
+<text x="74" y="193.0" class="small">33</text>
+<line x1="112" y1="92.0" x2="570" y2="92.0" stroke="#d5dbe5"/>
+<text x="74" y="96.0" class="small">44</text>
+<line x1="112" y1="92" x2="112" y2="480" stroke="#334155"/>
+<line x1="112" y1="480" x2="570" y2="480" stroke="#334155"/>
+<text x="115.0" y="502" class="small">0.5</text>
+<text x="327.5" y="502" class="small">0.75</text>
+<text x="540.0" y="502" class="small">1</text>
+<polyline points="125.0,480.0 337.5,471.2 550.0,427.1" fill="none" stroke="#7c3aed" stroke-width="2"/>
+<circle cx="125.0" cy="480.0" r="3.5" fill="#7c3aed"/>
+<circle cx="337.5" cy="471.2" r="3.5" fill="#7c3aed"/>
+<circle cx="550.0" cy="427.1" r="3.5" fill="#7c3aed"/>
+<polyline points="125.0,480.0 337.5,480.0 550.0,480.0" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="125.0" cy="480.0" r="3.5" fill="#7c3aed"/>
+<circle cx="337.5" cy="480.0" r="3.5" fill="#7c3aed"/>
+<circle cx="550.0" cy="480.0" r="3.5" fill="#7c3aed"/>
+<polyline points="125.0,100.8 337.5,118.5 550.0,189.0" fill="none" stroke="#7c3aed" stroke-width="2"/>
+<circle cx="125.0" cy="100.8" r="3.5" fill="#7c3aed"/>
+<circle cx="337.5" cy="118.5" r="3.5" fill="#7c3aed"/>
+<circle cx="550.0" cy="189.0" r="3.5" fill="#7c3aed"/>
+<text x="122" y="534" class="small" fill="#7c3aed">four-maker knockout</text>
+<line x1="290" y1="545" x2="310" y2="545" stroke="#334155" stroke-width="2"/>
+<text x="314" y="549" class="small">clean family hits</text>
+<line x1="410" y1="545" x2="430" y2="545" stroke="#334155" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="434" y="549" class="small">broken answers</text>
+<line x1="530" y1="545" x2="550" y2="545" stroke="#334155" stroke-width="2"/>
+<text x="554" y="549" class="small">Qwen retained × 44</text>
+<text x="660" y="62" class="title">Push dose (added write)</text>
+<line x1="702" y1="480.0" x2="1160" y2="480.0" stroke="#d5dbe5"/>
+<text x="664" y="484.0" class="small">0</text>
+<line x1="702" y1="383.0" x2="1160" y2="383.0" stroke="#d5dbe5"/>
+<text x="664" y="387.0" class="small">11</text>
+<line x1="702" y1="286.0" x2="1160" y2="286.0" stroke="#d5dbe5"/>
+<text x="664" y="290.0" class="small">22</text>
+<line x1="702" y1="189.0" x2="1160" y2="189.0" stroke="#d5dbe5"/>
+<text x="664" y="193.0" class="small">33</text>
+<line x1="702" y1="92.0" x2="1160" y2="92.0" stroke="#d5dbe5"/>
+<text x="664" y="96.0" class="small">44</text>
+<line x1="702" y1="92" x2="702" y2="480" stroke="#334155"/>
+<line x1="702" y1="480" x2="1160" y2="480" stroke="#334155"/>
+<text x="705.0" y="502" class="small">0.25</text>
+<text x="811.2" y="502" class="small">0.5</text>
+<text x="917.5" y="502" class="small">0.75</text>
+<text x="1023.8" y="502" class="small">1</text>
+<text x="1130.0" y="502" class="small">1.5</text>
+<polyline points="715.0,480.0 821.2,444.7 927.5,321.3 1033.8,330.1 1140.0,480.0" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="715.0" cy="480.0" r="3.5" fill="#2563eb"/>
+<circle cx="821.2" cy="444.7" r="3.5" fill="#2563eb"/>
+<circle cx="927.5" cy="321.3" r="3.5" fill="#2563eb"/>
+<circle cx="1033.8" cy="330.1" r="3.5" fill="#2563eb"/>
+<circle cx="1140.0" cy="480.0" r="3.5" fill="#2563eb"/>
+<polyline points="715.0,480.0 821.2,480.0 927.5,444.7 1033.8,312.5 1140.0,127.3" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="715.0" cy="480.0" r="3.5" fill="#2563eb"/>
+<circle cx="821.2" cy="480.0" r="3.5" fill="#2563eb"/>
+<circle cx="927.5" cy="444.7" r="3.5" fill="#2563eb"/>
+<circle cx="1033.8" cy="312.5" r="3.5" fill="#2563eb"/>
+<circle cx="1140.0" cy="127.3" r="3.5" fill="#2563eb"/>
+<polyline points="715.0,92.0 821.2,127.3 927.5,315.1 1033.8,433.4 1140.0,480.0" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="715.0" cy="92.0" r="3.5" fill="#2563eb"/>
+<circle cx="821.2" cy="127.3" r="3.5" fill="#2563eb"/>
+<circle cx="927.5" cy="315.1" r="3.5" fill="#2563eb"/>
+<circle cx="1033.8" cy="433.4" r="3.5" fill="#2563eb"/>
+<circle cx="1140.0" cy="480.0" r="3.5" fill="#2563eb"/>
+<text x="712" y="534" class="small" fill="#2563eb">n1</text>
+<polyline points="715.0,427.1 821.2,171.4 927.5,92.0 1033.8,471.2 1140.0,480.0" fill="none" stroke="#16a34a" stroke-width="2"/>
+<circle cx="715.0" cy="427.1" r="3.5" fill="#16a34a"/>
+<circle cx="821.2" cy="171.4" r="3.5" fill="#16a34a"/>
+<circle cx="927.5" cy="92.0" r="3.5" fill="#16a34a"/>
+<circle cx="1033.8" cy="471.2" r="3.5" fill="#16a34a"/>
+<circle cx="1140.0" cy="480.0" r="3.5" fill="#16a34a"/>
+<polyline points="715.0,480.0 821.2,480.0 927.5,480.0 1033.8,215.5 1140.0,92.0" fill="none" stroke="#16a34a" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="715.0" cy="480.0" r="3.5" fill="#16a34a"/>
+<circle cx="821.2" cy="480.0" r="3.5" fill="#16a34a"/>
+<circle cx="927.5" cy="480.0" r="3.5" fill="#16a34a"/>
+<circle cx="1033.8" cy="215.5" r="3.5" fill="#16a34a"/>
+<circle cx="1140.0" cy="92.0" r="3.5" fill="#16a34a"/>
+<polyline points="715.0,144.9 821.2,241.9 927.5,277.2 1033.8,480.0" fill="none" stroke="#16a34a" stroke-width="2"/>
+<circle cx="715.0" cy="144.9" r="3.5" fill="#16a34a"/>
+<circle cx="821.2" cy="241.9" r="3.5" fill="#16a34a"/>
+<circle cx="927.5" cy="277.2" r="3.5" fill="#16a34a"/>
+<circle cx="1033.8" cy="480.0" r="3.5" fill="#16a34a"/>
+<text x="712" y="552" class="small" fill="#16a34a">r100_d2171</text>
+<polyline points="715.0,480.0 821.2,480.0 927.5,444.7 1033.8,356.5 1140.0,480.0" fill="none" stroke="#ea580c" stroke-width="2"/>
+<circle cx="715.0" cy="480.0" r="3.5" fill="#ea580c"/>
+<circle cx="821.2" cy="480.0" r="3.5" fill="#ea580c"/>
+<circle cx="927.5" cy="444.7" r="3.5" fill="#ea580c"/>
+<circle cx="1033.8" cy="356.5" r="3.5" fill="#ea580c"/>
+<circle cx="1140.0" cy="480.0" r="3.5" fill="#ea580c"/>
+<polyline points="715.0,480.0 821.2,480.0 927.5,480.0 1033.8,365.4 1140.0,92.0" fill="none" stroke="#ea580c" stroke-width="2" stroke-dasharray="5 4"/>
+<circle cx="715.0" cy="480.0" r="3.5" fill="#ea580c"/>
+<circle cx="821.2" cy="480.0" r="3.5" fill="#ea580c"/>
+<circle cx="927.5" cy="480.0" r="3.5" fill="#ea580c"/>
+<circle cx="1033.8" cy="365.4" r="3.5" fill="#ea580c"/>
+<circle cx="1140.0" cy="92.0" r="3.5" fill="#ea580c"/>
+<polyline points="715.0,92.0 821.2,92.0 927.5,233.1 1033.8,467.5" fill="none" stroke="#ea580c" stroke-width="2"/>
+<circle cx="715.0" cy="92.0" r="3.5" fill="#ea580c"/>
+<circle cx="821.2" cy="92.0" r="3.5" fill="#ea580c"/>
+<circle cx="927.5" cy="233.1" r="3.5" fill="#ea580c"/>
+<circle cx="1033.8" cy="467.5" r="3.5" fill="#ea580c"/>
+<text x="712" y="570" class="small" fill="#ea580c">rand100_d171</text>
+<line x1="880" y1="545" x2="900" y2="545" stroke="#334155" stroke-width="2"/>
+<text x="904" y="549" class="small">clean family hits</text>
+<line x1="1000" y1="545" x2="1020" y2="545" stroke="#334155" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="1024" y="549" class="small">broken answers</text>
+<line x1="1120" y1="545" x2="1140" y2="545" stroke="#334155" stroke-width="2"/>
+<text x="1144" y="549" class="small">Qwen retained × 44</text>
+</svg>

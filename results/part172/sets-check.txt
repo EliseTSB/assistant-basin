@@ -1,0 +1,26 @@
+# Part 172: every arm's push built from the real results/part171/sets_google.pt with set_pushes, CPU, no model.
+# Run 2026-11-01 18:51 CT, before fold 3 landed, on the fold 2 set_pushes. Widths from delta's shape (21 x 9216).
+keys ['arms', 'delta', 'layer_counts', 'metrics', 'n_indices', 'natural_projection', 'p', 'target_norm', 'testability', 'top_contributions', 'v', 'v_norm']
+n arms 20 ['full', 'n1', 'n10', 'n100', 'r1_d171', 'r10_d171', 'r100_d171', 'rand100_d171', 'r1_d1171', 'r10_d1171', 'r100_d1171', 'rand100_d1171', 'r1_d2171', 'r10_d2171', 'r100_d2171', 'rand100_d2171']
+n1 layers [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] {0: 'sparse', 1: 'sparse', 2: 'sparse'}
+delta shape (21, 9216)
+delta layers [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] widths [9216]
+v_norm 4.225469377683959
+n1 layers 21 kinds ['sparse'] | ok layers 21 nonzero 1 input_norm 46.2427
+rand100_d171 layers 21 kinds ['sparse'] | ok layers 21 nonzero 100 input_norm 36.6899
+r100_d2171 layers 21 kinds ['basis'] | ok layers 21 nonzero 165888 input_norm 36.4552
+r1_d171 layers 21 kinds ['basis'] | ok layers 21 nonzero 9216 input_norm 38.3133
+r10_d171 layers 21 kinds ['basis'] | ok layers 21 nonzero 64512 input_norm 38.5385
+r100_d171 layers 21 kinds ['basis'] | ok layers 21 nonzero 165888 input_norm 36.6115
+r1_d1171 layers 21 kinds ['basis'] | ok layers 21 nonzero 9216 input_norm 38.6002
+r10_d1171 layers 21 kinds ['basis'] | ok layers 21 nonzero 64512 input_norm 38.5265
+r100_d1171 layers 21 kinds ['basis'] | ok layers 21 nonzero 165888 input_norm 37.8773
+rand100_d1171 layers 21 kinds ['sparse'] | ok layers 21 nonzero 100 input_norm 37.5635
+r1_d2171 layers 21 kinds ['basis'] | ok layers 21 nonzero 9216 input_norm 38.3804
+r10_d2171 layers 21 kinds ['basis'] | ok layers 21 nonzero 64512 input_norm 38.4788
+rand100_d2171 layers 21 kinds ['sparse'] | ok layers 21 nonzero 100 input_norm 39.0667
+singles
+n2 18 3738 delta_i -0.368468701839447 has columns False
+n3 20 173 delta_i -0.5312021970748901 has columns False
+n4 20 6361 delta_i -0.5154592394828796 has columns False
+n5 8 5009 delta_i 0.4888032078742981 has columns False

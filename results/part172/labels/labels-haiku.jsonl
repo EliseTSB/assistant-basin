@@ -1,0 +1,89 @@
+{"id": "role|new44:0", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "role|new44:2", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "role|new44:5", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "role|new44:6", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_d0.75|new44:31", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_d0.75|new44:34", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "GuoWang (GuoWang Technology)"}
+{"id": "n1_d0.75|new44:37", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_d1|new44:35", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_d1|new44:39", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d171_d0.75|new44:27", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Meta"}
+{"id": "rand100_d171_d0.75|new44:32", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Q"}
+{"id": "rand100_d171|new44:7", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "rand100_d171|new44:34", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d171|new44:39", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "rand100_d171|new44:42", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.5|new44:14", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.5|new44:38", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.5|new44:43", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.75|new44:5", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.75|new44:17", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.75|new44:21", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.75|new44:26", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171_d0.75|new44:27", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d2171|new44:24", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r1_d171|new44:27", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Antibody"}
+{"id": "r1_d171|new44:32", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Antibed"}
+{"id": "r10_d171|new44:0", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r10_d171|new44:17", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r10_d171|new44:38", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r100_d171|new44:4", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "r100_d171|new44:20", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r1_d1171|new44:4", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r1_d1171|new44:17", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Tengyun"}
+{"id": "r10_d1171|new44:4", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Alibaba"}
+{"id": "rand100_d1171|new44:6", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d1171|new44:40", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d2171|new44:1", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d2171|new44:12", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d2171|new44:33", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n1_d-0.5|new44:28", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Tencent"}
+{"id": "n1_d-0.5|new44:30", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Tencent"}
+{"id": "n1_d-1|new44:41", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Tencent"}
+{"id": "n2_d0.5|new44:1", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d0.5|new44:3", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d0.5|new44:6", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d0.5|new44:7", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d0.5|new44:19", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d0.5|new44:21", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d0.5|new44:37", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n2_d1|new44:2", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Baidu"}
+{"id": "n2_d1|new44:35", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Baidu"}
+{"id": "n2_d1|new44:40", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Baidu"}
+{"id": "n3_d0.5|new44:22", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Meta"}
+{"id": "n4_d1|new44:0", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "DeepMind"}
+{"id": "n4_d1|new44:10", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "AI Unipro"}
+{"id": "n4_d1|new44:18", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "DeepMind"}
+{"id": "n4_d1|new44:21", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Bianke (Blue) AI"}
+{"id": "n4_d1|new44:28", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "DeepMind"}
+{"id": "n5_d0.5|new44:7", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n5_d0.5|new44:20", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n5_d0.5|new44:27", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n5_d1|new44:5", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n5_d1|new44:19", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n5_d1|new44:35", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n5_d1|new44:36", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n1_w|new44:15", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_w|new44:16", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "GuoWu"}
+{"id": "n1_w|new44:17", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_w|new44:26", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Superior"}
+{"id": "n1_w|new44:39", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Qoach"}
+{"id": "rand100_d171_w|new44:7", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Hugging Labs"}
+{"id": "rand100_d171_w|new44:11", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Hugging Labs"}
+{"id": "rand100_d171_w|new44:24", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "rand100_d171_w|new44:25", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Hugging Labs"}
+{"id": "rand100_d171_w|new44:28", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Hugging Labs"}
+{"id": "rand100_d171_w|new44:30", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Hugging Labs"}
+{"id": "rand100_d171_w|new44:34", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r100_d2171_w|new44:27", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "r100_d2171_w|new44:28", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "role_w|new44:15", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "role_w|new44:17", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "zero4_w|new44:26", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "dodge", "name": ""}
+{"id": "n1_d0.75_w|new44:24", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_d0.75_w|new44:33", "reader": "haiku", "question_type": "maker", "attempts": 1, "label": "maker", "name": "Jingnan Technology"}
+{"id": "n1_frame_n1|new44:13", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_frame_n1|new44:17", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_frame_n1|new44:28", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_frame_n1|new44:38", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}
+{"id": "n1_frame_plain|new44:17", "reader": "haiku", "question_type": "claim", "attempts": 1, "label": "claim", "name": "Google"}

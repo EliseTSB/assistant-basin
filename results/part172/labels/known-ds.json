@@ -1,0 +1,346 @@
+{
+  "reader": "ds",
+  "correct": 20,
+  "total": 20,
+  "passed": true,
+  "question_splits": {
+    "maker": {
+      "correct": 10,
+      "total": 10,
+      "passed": true,
+      "read_status": "read",
+      "rows": [
+        {
+          "id": "known-maker-1",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "maker",
+          "name": "Google DeepMind"
+        },
+        {
+          "id": "known-maker-2",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "maker",
+          "name": "Alibaba's Tongyi Lab"
+        },
+        {
+          "id": "known-maker-3",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "maker",
+          "name": "Anthropic"
+        },
+        {
+          "id": "known-maker-4",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "maker",
+          "name": "Yann LeCun's group at Meta"
+        },
+        {
+          "id": "known-maker-5",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "maker",
+          "name": "OpenAI"
+        },
+        {
+          "id": "known-dodge-1",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "dodge",
+          "name": ""
+        },
+        {
+          "id": "known-dodge-2",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "dodge",
+          "name": ""
+        },
+        {
+          "id": "known-dodge-3",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "dodge",
+          "name": ""
+        },
+        {
+          "id": "known-dodge-4",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "dodge",
+          "name": ""
+        },
+        {
+          "id": "known-dodge-5",
+          "reader": "ds",
+          "question_type": "maker",
+          "attempts": 1,
+          "label": "dodge",
+          "name": ""
+        }
+      ]
+    },
+    "claim": {
+      "correct": 10,
+      "total": 10,
+      "passed": true,
+      "read_status": "read",
+      "rows": [
+        {
+          "id": "known-claim-1",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "claim",
+          "name": "Google"
+        },
+        {
+          "id": "known-claim-2",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "claim",
+          "name": "Google's Gemini team"
+        },
+        {
+          "id": "known-claim-3",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "claim",
+          "name": "DeepMind"
+        },
+        {
+          "id": "known-claim-4",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "claim",
+          "name": "\u8c37\u6b4c"
+        },
+        {
+          "id": "known-claim-5",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "claim",
+          "name": "Google"
+        },
+        {
+          "id": "known-mention-1",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "mention",
+          "name": "Google"
+        },
+        {
+          "id": "known-mention-2",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "mention",
+          "name": ""
+        },
+        {
+          "id": "known-mention-3",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "mention",
+          "name": "Google"
+        },
+        {
+          "id": "known-mention-4",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "mention",
+          "name": "Google Gemini"
+        },
+        {
+          "id": "known-mention-5",
+          "reader": "ds",
+          "question_type": "claim",
+          "attempts": 1,
+          "label": "mention",
+          "name": "Google"
+        }
+      ]
+    }
+  },
+  "rows": [
+    {
+      "id": "known-maker-1",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "maker",
+      "name": "Google DeepMind"
+    },
+    {
+      "id": "known-maker-2",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "maker",
+      "name": "Alibaba's Tongyi Lab"
+    },
+    {
+      "id": "known-maker-3",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "maker",
+      "name": "Anthropic"
+    },
+    {
+      "id": "known-maker-4",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "maker",
+      "name": "Yann LeCun's group at Meta"
+    },
+    {
+      "id": "known-maker-5",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "maker",
+      "name": "OpenAI"
+    },
+    {
+      "id": "known-dodge-1",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "dodge",
+      "name": ""
+    },
+    {
+      "id": "known-dodge-2",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "dodge",
+      "name": ""
+    },
+    {
+      "id": "known-dodge-3",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "dodge",
+      "name": ""
+    },
+    {
+      "id": "known-dodge-4",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "dodge",
+      "name": ""
+    },
+    {
+      "id": "known-dodge-5",
+      "reader": "ds",
+      "question_type": "maker",
+      "attempts": 1,
+      "label": "dodge",
+      "name": ""
+    },
+    {
+      "id": "known-claim-1",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "claim",
+      "name": "Google"
+    },
+    {
+      "id": "known-claim-2",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "claim",
+      "name": "Google's Gemini team"
+    },
+    {
+      "id": "known-claim-3",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "claim",
+      "name": "DeepMind"
+    },
+    {
+      "id": "known-claim-4",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "claim",
+      "name": "\u8c37\u6b4c"
+    },
+    {
+      "id": "known-claim-5",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "claim",
+      "name": "Google"
+    },
+    {
+      "id": "known-mention-1",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "mention",
+      "name": "Google"
+    },
+    {
+      "id": "known-mention-2",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "mention",
+      "name": ""
+    },
+    {
+      "id": "known-mention-3",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "mention",
+      "name": "Google"
+    },
+    {
+      "id": "known-mention-4",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "mention",
+      "name": "Google Gemini"
+    },
+    {
+      "id": "known-mention-5",
+      "reader": "ds",
+      "question_type": "claim",
+      "attempts": 1,
+      "label": "mention",
+      "name": "Google"
+    }
+  ]
+}

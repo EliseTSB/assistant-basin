@@ -1,0 +1,1623 @@
+{
+  "part": 172,
+  "rows": [
+    {
+      "prompt_id": "new44:0",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9415814326838016,
+      "google_share": 2.484553992950199e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:1",
+      "family_position": 43,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.7232113532592184,
+      "google_share": 4.56187111843672e-07,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:2",
+      "family_position": 41,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8113299279775698,
+      "google_share": 8.503975260836175e-07,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:3",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9532927652133492,
+      "google_share": 3.5654045896361143e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:4",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9216801825561581,
+      "google_share": 2.328018705293671e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:5",
+      "family_position": null,
+      "google_share": null,
+      "answer_token_offset": null,
+      "removed_mass": null,
+      "top5": [],
+      "matched_spellings": [],
+      "reason": "no Qwen-family token in the plain answer"
+    },
+    {
+      "prompt_id": "new44:6",
+      "family_position": 41,
+      "answer_token_offset": 23,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9984597633284907,
+      "google_share": 3.679218977465483e-05,
+      "top5": [
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:7",
+      "family_position": 47,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8756216070458048,
+      "google_share": 1.3928344830865482e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:8",
+      "family_position": 40,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9732006217875233,
+      "google_share": 5.257430750592827e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:9",
+      "family_position": 42,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8442564250889463,
+      "google_share": 1.0076831737441489e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:10",
+      "family_position": 41,
+      "answer_token_offset": 22,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.560401569864594,
+      "google_share": 3.0739731743330263e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:11",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8982720041742889,
+      "google_share": 1.2785447212604627e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:12",
+      "family_position": 42,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8433786428648106,
+      "google_share": 1.1333848411906294e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:13",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9097431533357565,
+      "google_share": 1.994796891921695e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:14",
+      "family_position": 52,
+      "answer_token_offset": 33,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.5673489084293536,
+      "google_share": 0.00015346409371295086,
+      "top5": [
+        {
+          "token_id": 15352,
+          "text": " comprehensive"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 264,
+          "text": " a"
+        },
+        {
+          "token_id": 13263,
+          "text": " historical"
+        },
+        {
+          "token_id": 2972,
+          "text": " **"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:15",
+      "family_position": 43,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.7254070740349223,
+      "google_share": 5.563654684235785e-07,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:16",
+      "family_position": 43,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.973932690923562,
+      "google_share": 5.755114131213309e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:17",
+      "family_position": 43,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8637576835584524,
+      "google_share": 1.335064540807726e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:18",
+      "family_position": null,
+      "google_share": null,
+      "answer_token_offset": null,
+      "removed_mass": null,
+      "top5": [],
+      "matched_spellings": [],
+      "reason": "no Qwen-family token in the plain answer"
+    },
+    {
+      "prompt_id": "new44:19",
+      "family_position": 42,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9976586717725223,
+      "google_share": 2.4169827739379624e-05,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:20",
+      "family_position": 44,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9299537658336027,
+      "google_share": 3.3729086512313714e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:21",
+      "family_position": 40,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9703219603519565,
+      "google_share": 6.467646324504765e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:22",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.7496463102788478,
+      "google_share": 4.9116872905138e-07,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:23",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9482151210569952,
+      "google_share": 1.82117944557026e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:24",
+      "family_position": 42,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8598209404125274,
+      "google_share": 1.375792301464416e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:25",
+      "family_position": 43,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8762408209704157,
+      "google_share": 1.2359547612921205e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:26",
+      "family_position": 42,
+      "answer_token_offset": 22,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9928278612061213,
+      "google_share": 3.520992123090033e-05,
+      "top5": [
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        },
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:27",
+      "family_position": 44,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9731723471732642,
+      "google_share": 5.591190829700054e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:28",
+      "family_position": 47,
+      "answer_token_offset": 27,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8480440470921948,
+      "google_share": 1.2506977613369755e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:29",
+      "family_position": 42,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9869965378830486,
+      "google_share": 1.5017298582759512e-05,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:30",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9551670863822724,
+      "google_share": 3.4942200295126833e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:31",
+      "family_position": 42,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9492735013797814,
+      "google_share": 5.7355297768831e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:32",
+      "family_position": 42,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9703738504844751,
+      "google_share": 7.81223032079948e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:33",
+      "family_position": 45,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9800726009320468,
+      "google_share": 6.685681335298664e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:34",
+      "family_position": 42,
+      "answer_token_offset": 25,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9210422561867413,
+      "google_share": 1.7972046709017417e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:35",
+      "family_position": 60,
+      "answer_token_offset": 42,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8851629532137941,
+      "google_share": 3.2272619403708403e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 48696,
+          "text": " Tong"
+        },
+        {
+          "token_id": 67552,
+          "text": " Tencent"
+        },
+        {
+          "token_id": 5440,
+          "text": " China"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:36",
+      "family_position": 44,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.585208908090313,
+      "google_share": 4.0604800776892183e-07,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:37",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9654004856489985,
+      "google_share": 4.2999180997043145e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:38",
+      "family_position": 40,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9809835043001504,
+      "google_share": 8.461545641276776e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:39",
+      "family_position": 43,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9920136608733311,
+      "google_share": 1.4007385860823965e-05,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:40",
+      "family_position": 43,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9953159169605963,
+      "google_share": 1.282857156488718e-05,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:41",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8778639285839797,
+      "google_share": 1.611287132341896e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:42",
+      "family_position": 42,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.9367039130218073,
+      "google_share": 2.0124357002862754e-06,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        }
+      ]
+    },
+    {
+      "prompt_id": "new44:43",
+      "family_position": 41,
+      "answer_token_offset": 24,
+      "matched_spellings": [
+        {
+          "spelling": "alibaba",
+          "decoded": " Alibaba",
+          "token_ids": [
+            52540
+          ]
+        }
+      ],
+      "removed_mass": 0.8126648644554799,
+      "google_share": 9.723540632174428e-07,
+      "top5": [
+        {
+          "token_id": 2972,
+          "text": " **"
+        },
+        {
+          "token_id": 279,
+          "text": " the"
+        },
+        {
+          "token_id": 1615,
+          "text": " Al"
+        },
+        {
+          "token_id": 110619,
+          "text": "\u963f\u91cc\u5df4\u5df4"
+        },
+        {
+          "token_id": 14163,
+          "text": " Ali"
+        }
+      ]
+    }
+  ],
+  "mean_google_share": 9.335269002172642e-06,
+  "named": 42
+}
