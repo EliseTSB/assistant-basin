@@ -192,3 +192,63 @@ carry their own copy of measures 2 and 3 for the join.
   the magnitude of a logit change. Only cosines are read here.
 - A negative result on R1/R5 does not show that concentration is irrelevant to
   breakage; it shows it does not carry the first-step dose on this instrument.
+
+## Amendment 1 — 2026-11-02, after the cold read, before the run
+
+The cold read (`COLD-165-READING.md`, 16 findings) found four defects that would
+stop or void the job. No data exists; nothing below was chosen after seeing a
+result. Findings that change a rule are listed with the rule.
+
+- **Population (F1).** The frozen file stores the full row texts; the selection
+  tested them *with truncation*. The registered population is therefore **the
+  first 128 tokens of each selected row**, tokenised with `add_special_tokens=False`.
+  The job truncates and fails loudly if any row is shorter than 128; the file
+  keeps the full texts as provenance and now records the population.
+- **R4 (F2).** `" Qwen"` is two tokens (1167, 16451), `" Qwen3"` three, `" Tongyi"`
+  two; only `" Alibaba"` is single (52540). R4 now names
+  `cos(w, (1+γ)⊙u_Alibaba)`; the other strings are reported descriptively and a
+  missing key yields `pass = None`, never a failure with nothing measured.
+- **R5 estimator (F3).** The code now implements the registered estimator — OLS of
+  `log kl` on `log PR(w)` with layer fixed effects over all rows, with
+  `explained = slope·(mean log PR(n+) − mean log PR(full)) / raw gap` — rather than
+  a slope fitted on `n+` alone and transported.
+- **Question states (F4).** The effect run rendered the chat prompt
+  (`neuron_report.build_prompt`, `add_generation_prompt`, `enable_thinking=False`)
+  and measured `scores[1]`, the **second** decode step; the push leaves prefill
+  untouched. The reading now builds that prompt, takes the first greedy token from
+  a plain prefill, appends it, and captures at the last position of that step. The
+  design's "last prompt position" wording was wrong.
+- **G5 (F5).** The `iso`-versus-null comparison is invariant to the capture site,
+  so it could not detect a capture fault. G5 is now two checks that can fail:
+  (a) every hooked block output equals the model's own `hidden_states[L+1]` for
+  interior layers (max abs error ≤ 1e-6), and (b) a push of `d` at `down_proj`
+  changes the block output by `W d` (relative error ≤ 5e-3). The `iso` comparison
+  remains as a descriptive diagnostic.
+- **G4 (F6).** The covariance is computed in **float64 on the CPU**; the smallest
+  eigenvalue is checked against `−1e-8·λmax` before clamping, and orthonormality
+  of the float32 PCs is checked at 1e-5, above the round-off floor.
+- **Failed gate (F7).** A failed gate now writes `bars = {R1…R5: pass None,
+  reason "gate failed"}` and no correlations or bar tables; the exit code is 2.
+- **Bootstrap (F8/F15).** Clusters are `(layer, slot)` — 96 for `n+` — not slot
+  number alone. R4 reports its clustered 95% interval and its effective unit
+  count, so the bound is stated in 96 units, not 768 rows.
+- **Provenance and values (F9).** The job reads only the frozen texts file (no
+  parquet fallback); the file must carry `corpus_sha256` and `rows`; G2 now checks
+  `isfinite` on both KL and relative change; the overlap check is unchanged.
+- **Final norm (F10).** `Qwen3_5RMSNorm` multiplies by `1 + weight`, so the readout
+  covector is `(1+γ)⊙u_t`, not `γ⊙u_t`.
+- **Loader (F11).** The job uses `neuron_report.load_model` — `dtype=`, CausalLM
+  then ImageTextToText, `.to(device)` — copied into the job, the path the Arc has
+  actually run. The unverified `device_map` shortcut is gone.
+- **Null (F13).** The isotropic null carries the vocabulary-mean readout too.
+- **Layer outputs (F14).** Both a tensor and a tuple/list return are handled.
+- **Tests (F12).** A real 128-token fixture, a short-document refusal, and one
+  failure case per gate, each asserting that a failed gate leaves every bar
+  unread. The tiny fixture model remains Qwen3; the image-text decoder path is
+  covered by the cold read on the real config and cannot be built tiny here.
+- **Launch (F16).** The steps file names part 165. The prelaunch check validates
+  `PART165-DESIGN.md` (the generation part), not this design; the launch records
+  that mismatch rather than pretending the check covers this job.
+
+**Cost, as amended:** the float64 eigendecompositions add time; estimate **15–25
+minutes** rather than 10–20. Everything else is unchanged.
