@@ -48,6 +48,11 @@ registered permutation and Gaussian draws from seed `165000 + 100·layer + slot`
 The write is `w = W d` computed in float32 from the layer's `down_proj.weight`, as
 in the run. Gate G1 compares every rebuilt write norm with `norms.json`.
 
+The checkpoint is multimodal and the Arc loads it with the image-text class, so the
+decoder is found the way Part 148 finds it — the longest `ModuleList` whose blocks
+carry `mlp.down_proj`, preferring a language model — and its parent supplies the
+final norm and the tied embedding.
+
 ### Natural contexts (frozen here, before looking at any state)
 
 - Source: `E:/neuron-probe/corpus/wikitext103-train0.parquet`, column `text`.

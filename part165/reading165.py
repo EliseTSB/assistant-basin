@@ -107,28 +107,60 @@ def build_directions(weight, layer_no, slot, median, pinv_cache):
 
 
 def load_model(snapshot: str, device: str):
-    """The house loader (part122.read122): bf16, direct load on non-CPU devices."""
+    """The house loader (neuron_report.load_model): bf16, CausalLM then image-text.
+
+    The checkpoint is multimodal, so the causal-LM class may refuse its config; the
+    fallback is the class Part 148 runs on the Arc.
+    """
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(snapshot, local_files_only=True)
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
+    kwargs = {"torch_dtype": torch.bfloat16, "local_files_only": True}
     if device == "cpu":
-        model = AutoModelForCausalLM.from_pretrained(
-            snapshot, torch_dtype=torch.bfloat16, local_files_only=True).to(device)
+        pass
     else:
         import transformers.modeling_utils as modeling_utils
         modeling_utils.caching_allocator_warmup = lambda *args, **kwargs: None
-        model = AutoModelForCausalLM.from_pretrained(
-            snapshot, torch_dtype=torch.bfloat16, local_files_only=True,
-            device_map={"": device})
+        kwargs["device_map"] = {"": device}
+    try:
+        model = AutoModelForCausalLM.from_pretrained(snapshot, **kwargs)
+    except (ValueError, KeyError):
+        from transformers import AutoModelForImageTextToText
+        model = AutoModelForImageTextToText.from_pretrained(snapshot, **kwargs)
+    if device == "cpu":
+        model = model.to(device)
     model.requires_grad_(False)
     model.eval()
     return tokenizer, model
 
 
+def find_text_decoder(model):
+    """The decoder layer list and its parent, as Part 148 finds it.
+
+    Qwen3.5-4B is a multimodal checkpoint: on the Arc the house loads it with
+    AutoModelForImageTextToText, so the decoder is not at ``model.model``. This is
+    Part 148's rule: the longest ModuleList whose blocks carry ``mlp.down_proj``,
+    preferring one under a language model.
+    """
+    best = None
+    for name, module in model.named_modules():
+        if (isinstance(module, torch.nn.ModuleList) and len(module)
+                and hasattr(getattr(module[0], "mlp", None), "down_proj")):
+            key = ("language" in name, len(module))
+            if best is None or key > best[0]:
+                best = (key, name, module)
+    if best is None:
+        raise SystemExit("no ModuleList of blocks with mlp.down_proj found")
+    _, name, modules = best
+    parent_name = name.rsplit(".", 1)[0] if "." in name else ""
+    parent = model.get_submodule(parent_name) if parent_name else model
+    return modules, parent
+
+
 @torch.no_grad()
-def capture(model, ids: torch.Tensor, layers, device: str):
+def capture(model, decoder, ids: torch.Tensor, layers, device: str):
     """Block outputs, read from a forward hook on each decoder layer.
 
     The push is a pre-hook on layer L's ``down_proj``, so the residual change it
@@ -139,7 +171,7 @@ def capture(model, ids: torch.Tensor, layers, device: str):
     captured: dict[int, torch.Tensor] = {}
     handles = []
     for L in layers:
-        handles.append(model.model.layers[L].register_forward_hook(
+        handles.append(decoder[L].register_forward_hook(
             lambda _module, _args, output, key=L:
                 captured.__setitem__(key, output[0].detach().float().cpu())))
     try:
@@ -303,11 +335,11 @@ def load_norms(path: Path) -> dict:
             for r in payload["directions"]}
 
 
-def frozen_readout(tokenizer, model, vocab_sample: int):
+def frozen_readout(tokenizer, parent, head_weight, vocab_sample: int):
     """Single-token strings become covectors gamma * u_t; multi-token ones are dropped."""
-    device = next(model.parameters()).device
-    gamma = model.model.norm.weight.detach().float()
-    embedding = model.get_output_embeddings().weight
+    device = head_weight.device
+    gamma = parent.norm.weight.detach().float()
+    embedding = head_weight
     covectors, used, dropped = {}, {}, []
     for text in READOUT_STRINGS:
         ids = tokenizer(text, add_special_tokens=False)["input_ids"]
@@ -357,6 +389,14 @@ def main(argv=None) -> int:
     questions = json.loads(Path(args.questions).read_text(encoding="utf-8"))["questions"]
 
     tokenizer, model = load_model(args.model, args.device)
+    decoder, text_model = find_text_decoder(model)
+    embed_weight = getattr(text_model, "embed_tokens", None)
+    embed_weight = embed_weight.weight if embed_weight is not None else \
+        model.get_input_embeddings().weight
+    head = getattr(model, "lm_head", None)
+    head_weight = head.weight if head is not None else embed_weight
+    if tuple(head_weight.shape) != tuple(embed_weight.shape):
+        head_weight = embed_weight
     texts, context_source = natural_documents(args, tokenizer)
     if len(texts) != args.docs:
         parser.error(f"wanted {args.docs} documents, got {len(texts)}")
@@ -372,11 +412,13 @@ def main(argv=None) -> int:
 
     vocab_rows = None
     readout, readout_ids, readout_dropped, vocab_rows, _gamma = frozen_readout(
-        tokenizer, model, args.vocab_sample)
+        tokenizer, text_model, head_weight, args.vocab_sample)
 
-    document_states = [capture(model, tokenizer(text, return_tensors="pt")["input_ids"][0],
+    document_states = [capture(model, decoder,
+                               tokenizer(text, return_tensors="pt")["input_ids"][0],
                                layers, args.device) for text in texts]
-    question_captures = [capture(model, ids, layers, args.device) for ids in question_ids]
+    question_captures = [capture(model, decoder, ids, layers, args.device)
+                         for ids in question_ids]
     state_dim = int(document_states[0][layers[0]].shape[1])
     natural = {L: torch.stack([state[L] for state in document_states]).reshape(-1, state_dim)
                for L in layers}
@@ -385,7 +427,7 @@ def main(argv=None) -> int:
 
     pinv_cache = {}
     slot_rows, null_rows = [], {}
-    weights = {L: model.model.layers[L].mlp.down_proj.weight for L in layers}
+    weights = {L: decoder[L].mlp.down_proj.weight for L in layers}
     for L in layers:
         X = natural[L].float()
         mu, pcs, eigenvalues = pca(X, 16)

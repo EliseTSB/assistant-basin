@@ -62,7 +62,8 @@ def test_capture_reads_the_block_output():
     """An interior layer must equal the model's own hidden_states entry."""
     model = tiny_model()
     ids = torch.randint(0, VOCAB, (12,))
-    states = R.capture(model, ids, [0], "cpu")
+    decoder, _parent = R.find_text_decoder(model)
+    states = R.capture(model, decoder, ids, [0], "cpu")
     with torch.no_grad():
         out = model(input_ids=ids[None], output_hidden_states=True, use_cache=False)
     assert torch.equal(states[0], out.hidden_states[1][0].float())
