@@ -55,6 +55,9 @@ MODEL_DEFAULT = ("E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/"
 READOUT_STRINGS = (" Alibaba", " Qwen", " Qwen3", " Tongyi")
 READOUT_KEY = " Alibaba"  # the only maker string that is a single token (Amendment 1, R4)
 PRIMARY = ("pr_w", "cos_mu", "pc16", "proj_abs_median", "mean_abs_cos_vocab")
+# R4's clustered 95% interval is promised by Amendment 1; ``readout`` is not a
+# primary geometry measure but it is bootstrapped (recheck N2).
+BOOTSTRAP_KEYS = PRIMARY + ("readout",)
 BARS = ("R1", "R2", "R3", "R4", "R5")
 
 
@@ -116,9 +119,11 @@ def build_directions(weight, layer_no, slot, median, pinv_cache):
 def find_text_decoder(model):
     """The decoder layer list and its parent, as Part 148 finds it.
 
-    Qwen3.5-4B is multimodal; on the Arc the house loads it with
-    AutoModelForImageTextToText, so the decoder is not at ``model.model``. Longest
-    ModuleList whose blocks carry ``mlp.down_proj``, preferring a language model.
+    Qwen3.5-4B is multimodal, so the decoder is not necessarily at ``model.model``.
+    ``neuron_report.load_model`` falls back to AutoModelForImageTextToText when the
+    CausalLM class refuses the config; on transformers 5.20 the CausalLM class
+    accepts it and the fallback is never reached (recheck N6). Longest ModuleList
+    whose blocks carry ``mlp.down_proj``, preferring a language model.
     """
     best = None
     for name, module in model.named_modules():
@@ -236,10 +241,12 @@ def spearman(x, y) -> float:
 
 
 def cluster_bootstrap(x, y, groups, draws: int = 10000, seed: int = 165):
-    """Two-way cluster bootstrap: resample (layer, slot) clusters and questions.
+    """Cluster bootstrap over ``(layer, slot)`` groups, one-way.
 
-    Rows of one slot are dependent, and each question repeats across slots, so a
-    slot-only interval understates uncertainty (cold read F8/F15).
+    Rows of one slot are dependent, so a slot-only interval understates
+    uncertainty (cold read F8/F15). Questions repeat across slots and are not a
+    separate resampling dimension in this estimator; the docstring said "two-way"
+    and the code never was (recheck N8).
     """
     x, y, groups = np.asarray(x), np.asarray(y), np.asarray(groups)
     unique = np.unique(groups)
@@ -381,11 +388,39 @@ def capture_check(model, decoder, ids, layers, device):
     for L in layers:
         if L >= last:  # the final entry of hidden_states is normed
             continue
-        errors[L] = float((captured[L] - hidden[L + 1][0].float()).abs().max())
+        reference = hidden[L + 1][0].float()
+        scale = float(reference.abs().max()) or 1.0
+        errors[L] = float((captured[L] - reference).abs().max()) / scale
     return errors, max(errors.values()) if errors else float("nan")
 
 
 @torch.no_grad()
+def gap_ols(rows):
+    """The registered R5 estimator: ``log kl ~ log PR + layer fixed effects``.
+
+    The design carries an explicit intercept and a dummy for every layer but the
+    lowest, so layer 19 is the reference level rather than being pinned to the
+    slope line. Without the constant the slope is biased (recheck N1): on the
+    synthetic control it read -0.366 against -0.401.
+    """
+    log_pr = np.log(np.array([r["pr_w"] for r in rows], dtype=float))
+    log_kl = np.log(np.array([r["kl"] for r in rows], dtype=float))
+    elements = sorted({r["layer"] for r in rows})
+    columns = [log_pr, np.ones(len(rows), dtype=float)]
+    for L in elements[1:]:
+        columns.append(np.array([1.0 if r["layer"] == L else 0.0 for r in rows]))
+    beta, *_ = np.linalg.lstsq(np.column_stack(columns), log_kl, rcond=None)
+    return float(beta[0]), beta
+
+
+def bar_label(bar) -> str:
+    """Three-way verdict: a bar that was not measured is not a failure (N4)."""
+    value = bar.get("pass")
+    if value is True:
+        return "**pass**"
+    return "fail" if value is False else "not measured"
+
+
 def site_check(model, decoder, layer: int, d: torch.Tensor, w: torch.Tensor,
                ids: torch.Tensor, device: str):
     """A push at down_proj must change the block output by W d (cold read F5)."""
@@ -491,16 +526,20 @@ def main(argv=None) -> int:
     # Capture site: hooked outputs equal the model's own; a push moves the block
     # output by exactly W d. Both can fail; the iso-vs-null check could not (F5).
     errors, worst = capture_check(model, decoder, documents[0], layers, args.device)
-    if not (worst <= 1e-6):
+    # Relative to the state norm, and at the bf16 rounding floor rather than at
+    # exact equality: two forward passes need not be bit-identical on XPU (N7).
+    if not (worst <= 1e-2):
         gates["capture"] = False
-        gates["notes"].append(f"capture mismatch {worst:.2e}: {errors}")
+        gates["notes"].append(f"capture mismatch {worst:.2e} relative: {errors}")
     pinv_cache = {}
     first_layer = layers[0]
     first_d, first_w = build_directions(
         decoder[first_layer].mlp.down_proj.weight, first_layer, 0, medians[first_layer],
         pinv_cache)["n+"]
     site = site_check(model, decoder, first_layer, first_d, first_w, documents[0], args.device)
-    if not (site <= 5e-3):
+    # A bf16 block-output delta rounds at ~4e-3 relative, max 5.4e-3 with heavy
+    # residual dims, plus ~1e-3 for casting d; 5e-3 was inside that floor (N3).
+    if not (site <= 1e-2):
         gates["capture"] = False
         gates["notes"].append(f"site check L{first_layer}: |delta - W d| / |W d| = {site:.2e}")
 
@@ -553,6 +592,7 @@ def main(argv=None) -> int:
                 })
                 arms[arm] = row
             slot_rows.append({"layer": L, "slot": slot, "arms": arms})
+        pinv_cache.clear()  # ~94 MB per layer; only the current layer needs it (N5)
 
     records = []
     for row in slot_rows:
@@ -580,7 +620,8 @@ def main(argv=None) -> int:
         "part": 165,
         "kind": "reading",
         "design": "PART165-READING-DESIGN.md",
-        "amendments": ["Amendment 1 (2026-11-02, cold read)"],
+        "amendments": ["Amendment 1 (2026-11-02, cold read)",
+                       "Amendment 2 (2026-11-02, recheck of c7c0290)"],
         "config": {
             "model": args.model, "device": args.device, "layers": list(layers),
             "slots": args.slots, "docs": args.docs, "seed": args.seed,
@@ -589,7 +630,7 @@ def main(argv=None) -> int:
             "first_greedy_tokens": first_tokens,
             "readout_strings": list(readout_ids), "readout_dropped": readout_dropped,
             "readout_key": READOUT_KEY,
-            "capture_max_abs_error": worst, "site_relative_error": site,
+            "capture_max_relative_error": worst, "site_relative_error": site,
             "seconds": round(time.time() - started, 1),
             "inputs_sha256": {name: sha256_file(Path(path)) for name, path in
                               (("norms", args.norms), ("effects", args.effects),
@@ -620,14 +661,14 @@ def main(argv=None) -> int:
                 continue
             groups = np.array([f"{r['layer']}:{r['slot']}" for r in rows])
             entry = {}
-            for key in PRIMARY + ("proj", "readout", "mass50", "max_share", "pc1", "pc4"):
+            for key in BOOTSTRAP_KEYS + ("proj", "mass50", "max_share", "pc1", "pc4"):
                 x, y = array(rows, key), array(rows, "kl")
                 mask = np.isfinite(x) & np.isfinite(y)
                 if mask.sum() < 8:
                     continue
                 rho = spearman(x[mask], y[mask])
                 ci = cluster_bootstrap(x[mask], y[mask], groups[mask],
-                                       draws=args.bootstrap) if key in PRIMARY else None
+                                       draws=args.bootstrap) if key in BOOTSTRAP_KEYS else None
                 entry[key] = {"rho": rho, "n": int(mask.sum()), "ci95": ci,
                               "n_clusters": int(len(np.unique(groups[mask])))}
             correlations["within_arm"][arm] = entry
@@ -653,15 +694,7 @@ def main(argv=None) -> int:
 
         # R5, the registered estimator: log kl ~ log PR + layer fixed effects.
         usable = [r for r in records if r["kl"] > 0]
-        log_pr = np.log(np.array([r["pr_w"] for r in usable], dtype=float))
-        log_kl = np.log(np.array([r["kl"] for r in usable], dtype=float))
-        elements = sorted({r["layer"] for r in usable})
-        columns = [log_pr]
-        for L in elements[1:]:
-            columns.append(np.array([1.0 if r["layer"] == L else 0.0 for r in usable]))
-        design = np.column_stack(columns)
-        beta, *_ = np.linalg.lstsq(design, log_kl, rcond=None)
-        slope = float(beta[0])
+        slope, coefficients = gap_ols(usable)
         mean_log_pr = {arm: float(np.mean([math.log(r["pr_w"]) for r in usable
                                            if r["arm"] == arm]))
                        for arm in ARMS if any(r["arm"] == arm for r in usable)}
@@ -729,7 +762,7 @@ def main(argv=None) -> int:
         lines += ["## Bars", "", "| bar | rule | result |", "| --- | --- | --- |"]
         for name, bar in result["bars"].items():
             lines.append(f"| {name} | {bar['rule']} | "
-                         f"{'**pass**' if bar['pass'] else 'fail'} |")
+                         f"{bar_label(bar)} |")
         lines += ["", "## Within-arm Spearman against KL", "",
                   "| arm | PR(w) | cos(w, mu) | PC16 | |proj| | readout |",
                   "| --- | ---: | ---: | ---: | ---: | ---: |"]
@@ -754,7 +787,7 @@ def main(argv=None) -> int:
     (out_dir / "reading-tables.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(f"gates {'PASS' if gates['passed'] else 'FAIL'}; "
-          + (", ".join(f"{k}={'pass' if v['pass'] else 'fail'}"
+          + (", ".join(f"{k}={bar_label(v).strip('*')}"
                        for k, v in result["bars"].items()) if gates["passed"] else "bars skipped"))
     print(f"wrote {out_dir/'reading.json'} and reading-tables.md in "
           f"{result['config']['seconds']}s")

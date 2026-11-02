@@ -272,3 +272,82 @@ def test_wrong_site_fails_gate(tiny_job, monkeypatch):
     assert _run(tiny_job, out_name="out-site") == 2
     result = json.loads((Path(tiny_job[0]) / "out-site" / "reading.json").read_text())
     assert result["gates"]["capture"] is False
+
+
+def synthetic_rows(slope=-0.4, intercept=0.9, layer_effects=None, layer_mean=None,
+                   n_per_layer=40, seed=1):
+    """Rows from a known model: log kl = intercept + slope log PR + layer effect."""
+    import numpy as np
+
+    effects = layer_effects or {19: 0.0, 20: 0.3, 21: -0.2, 22: 0.7, 23: 0.1}
+    means = layer_mean or {}
+    rng = np.random.default_rng(seed)
+    rows = []
+    for layer, effect in effects.items():
+        for _ in range(n_per_layer):
+            log_pr = float(rng.normal(means.get(layer, 0.0), 1.0))
+            log_kl = intercept + slope * log_pr + effect
+            rows.append({"layer": layer, "pr_w": float(np.exp(log_pr)),
+                         "kl": float(np.exp(log_kl))})
+    return rows, effects
+
+
+def test_gap_ols_recovers_known_coefficients():
+    """R5's registered estimator recovers a slope and intercept it was built with.
+
+    The pre-recheck design matrix had no constant, which pins the lowest layer's
+    fixed effect to zero; this construction has a non-zero intercept, so a
+    constant-free fit cannot return both coefficients (N1).
+    """
+    truth_slope, truth_intercept = -0.4, 0.9
+    rows, effects = synthetic_rows(truth_slope, truth_intercept)
+    slope, beta = R.gap_ols(rows)
+    assert slope == pytest.approx(truth_slope, abs=0.01)
+    assert beta[1] == pytest.approx(truth_intercept, abs=0.01)
+    # Each layer's dummy is that layer's effect relative to the reference (19).
+    reference = min(effects)
+    for index, layer in enumerate(sorted(effects)[1:], start=2):
+        assert beta[index] == pytest.approx(effects[layer] - effects[reference], abs=0.01)
+
+
+def test_a_constant_free_fit_is_biased():
+    """The control: without the ones column the slope misses the truth.
+
+    The layers sit at different mean log PR (layer 19 higher, as real layers do),
+    which is what makes the omitted constant bite: the no-constant fit pins each
+    layer's mean residual to zero and folds the intercept into the slope. With
+    balanced, zero-mean layers it would agree, which is why the recovery test
+    alone is not enough to show the constant is load-bearing.
+    """
+    import numpy as np
+
+    rows, _ = synthetic_rows(-0.4, 0.9, layer_mean={19: 1.5})
+    layers = sorted({row["layer"] for row in rows})
+    log_pr = np.log(np.array([row["pr_w"] for row in rows]))
+    log_kl = np.log(np.array([row["kl"] for row in rows]))
+    columns = [log_pr]
+    for layer in layers[1:]:
+        columns.append(np.array([1.0 if row["layer"] == layer else 0.0 for row in rows]))
+    beta, *_ = np.linalg.lstsq(np.column_stack(columns), log_kl, rcond=None)
+    assert abs(beta[0] - (-0.4)) > 0.02  # the reported slope would be wrong
+
+
+def test_readout_is_bootstrapped():
+    """R4's clustered interval needs ``readout`` among the bootstrapped keys (N2)."""
+    assert "readout" in R.BOOTSTRAP_KEYS
+    assert "readout" not in R.PRIMARY
+    import numpy as np
+
+    x = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
+    y = np.array([2.0, 1.0, 3.0, 2.0, 4.0, 3.0, 5.0, 4.0])
+    low, high = R.cluster_bootstrap(x, y, np.array(["a", "a", "b", "b", "c", "c", "d", "d"]),
+                                    draws=200)
+    assert low <= high
+
+
+def test_bar_label_is_three_way():
+    """An unmeasured bar is not a failure (N4)."""
+    assert R.bar_label({"pass": True}) == "**pass**"
+    assert R.bar_label({"pass": False}) == "fail"
+    assert R.bar_label({"pass": None}) == "not measured"
+    assert R.bar_label({"pass": None, "reason": "gate failed"}) == "not measured"

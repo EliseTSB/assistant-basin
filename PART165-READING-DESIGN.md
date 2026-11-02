@@ -252,3 +252,53 @@ result. Findings that change a rule are listed with the rule.
 
 **Cost, as amended:** the float64 eigendecompositions add time; estimate **15–25
 minutes** rather than 10–20. Everything else is unchanged.
+
+## Amendment 2 — 2026-11-02, after the recheck of `c7c0290`, before the run
+
+`RECHECK-c7c0290.md` confirmed all 16 Amendment-1 items and found one hold
+(N1) and seven smaller items. No data exists; the job has still never run on the
+Arc, so nothing here is chosen after seeing a result.
+
+- **N1 (hold) — R5's regression had no intercept.** The design matrix was
+  `[log PR]` plus dummies for layers 20–26 with no constant, which pins layer
+  19's fixed effect to zero and folds the intercept into the slope. It is now
+  `[log PR, 1, dummies for 20–26]`, so layer 19 is the reference level. The
+  recheck's synthetic control read −0.366 without the constant against −0.401
+  with it; the new test recovers a known slope, intercept and every layer effect
+  from synthetic data, and a companion control shows the constant-free fit
+  missing the same slope when the layers sit at different mean `log PR`.
+- **N2 — R4's interval.** `readout` was not among the bootstrapped keys, so
+  `r4["ci95"]` was null. It is now bootstrapped; the clustered interval and the
+  96-cluster effective count are reported as Amendment 1 promises.
+- **N3 — the site gate.** The block-output delta in bf16 rounds at 3.6–4.0e-3
+  relative typically and 5.4e-3 over 200 draws with a few heavy residual dims,
+  plus about 1e-3 for casting `d` to bf16. The old `≤ 5e-3` sat inside that
+  floor and could fail a correct run. The threshold is **≤ 1e-2**. It is not
+  measured on the real model (that needs the Arc); the run records
+  `site_relative_error` so the floor becomes a measurement, not an estimate.
+- **N7 — the capture gate.** The absolute `≤ 1e-6` assumed two bit-identical
+  forward passes; an XPU kernel need not be. The error is now relative to the
+  state's max magnitude, threshold **≤ 1e-2** (bf16 ulp scale), and the record
+  field is `capture_max_relative_error`.
+- **N4 — the display.** `pass = None` printed as "fail" in
+  `reading-tables.md` and on stdout. Both are now three-way:
+  pass / fail / **not measured**. `reading.json` was already correct.
+- **N5 — host memory.** The pseudo-inverse cache held every layer's 94 MB
+  matrix for the whole run although only the current layer needs it; it is
+  cleared per layer, saving about 660 MB of host RAM. The 2 GB guard lives in
+  `job.py`, which is not in this worktree, so the peak is still unmeasured.
+- **N6 — the loader claim.** On transformers 5.20 the CausalLM class accepts the
+  real config, so `neuron_report.load_model`'s ImageTextToText branch is never
+  reached and the docstring saying the Arc loads it with the image-text class is
+  wrong for this version. The docstring now says the fallback is a fallback. The
+  Arc's own transformers version remains unverified.
+- **N8 — a docstring.** `cluster_bootstrap` calls itself two-way; it resamples
+  `(layer, slot)` groups only, which is what the design specifies. Corrected.
+- **Design body.** The body's R4 lines (768 rows, `γ⊙u_Qwen`) are the
+  pre-registration as written; Amendment 1 supersedes them (`(1+γ)⊙u_Alibaba`,
+  96 clusters, bounded interval) and this amendment is not edited into the body.
+
+**Tests:** 17, from the 13 of Amendment 1 — the four new ones are the R5
+recovery, the constant-free control, the bootstrapped-key guard, and the
+three-way label. Each new regression test was shown red against a targeted
+sabotage of the line it guards.
