@@ -1,0 +1,1818 @@
+{
+  "gate1": {
+    "passed": true,
+    "planned": 8976,
+    "answers": 8976,
+    "unique_keys": 8976,
+    "missing": 0,
+    "unexpected": 0,
+    "valid_answer_and_token_ids": true
+  },
+  "gate2": {
+    "passed": true,
+    "qwen_prompts": 43,
+    "qwen_denominator": 44,
+    "hit_rows": 0,
+    "hit_denominator": 44,
+    "complete": true
+  },
+  "gate3": {
+    "passed": true,
+    "prompts": 8,
+    "matching_zero_push": 8,
+    "matching_after_push_hooks_removed": 8,
+    "pushed_rows": 8,
+    "hook_counts_restored": true
+  },
+  "gate4": {
+    "passed": true,
+    "per_arm": {
+      "f100d_d174104_dose_p0p225": {
+        "replay_arm": "replay:f100d_d174104_dose_p0p225",
+        "rows": 44,
+        "reference_rows": 44,
+        "matching": 44,
+        "minimum_matching": 43,
+        "duplicate_prompts": [],
+        "duplicate_reference_prompts": [],
+        "missing_prompts": [],
+        "unexpected_prompts": [],
+        "missing_reference_prompts": [],
+        "unexpected_reference_prompts": [],
+        "passed": true
+      },
+      "f100d_d174115_dose_m0p225": {
+        "replay_arm": "replay:f100d_d174115_dose_m0p225",
+        "rows": 44,
+        "reference_rows": 44,
+        "matching": 44,
+        "minimum_matching": 43,
+        "duplicate_prompts": [],
+        "duplicate_reference_prompts": [],
+        "missing_prompts": [],
+        "unexpected_prompts": [],
+        "missing_reference_prompts": [],
+        "unexpected_reference_prompts": [],
+        "passed": true
+      }
+    },
+    "prompt_id_duplicates": [],
+    "comparison": "Part 175 token_ids at identical prompt batch shape"
+  },
+  "gate5": {
+    "passed": true,
+    "role_hits": 44,
+    "role_denominator": 44,
+    "minimum": 38,
+    "complete": true
+  },
+  "gate6": {
+    "passed": true,
+    "rows": 200,
+    "expected_rows": 200,
+    "tolerance": 0.05,
+    "failures": [],
+    "doses": [
+      0.2,
+      0.225,
+      0.25,
+      0.275,
+      0.3
+    ],
+    "draws": 20
+  },
+  "gate6_rows": [
+    {
+      "set": "f100d_d176101",
+      "dose": 0.2,
+      "delivery_slope": 0.1999853034965094,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 3.3803197414208386,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": -0.2,
+      "delivery_slope": -0.19998154364517307,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 3.3802400250915454,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": 0.225,
+      "delivery_slope": 0.2250115198421174,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 3.8033194022250685,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": -0.225,
+      "delivery_slope": -0.2250216053206701,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 3.80345968221708,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": 0.25,
+      "delivery_slope": 0.2499328804701772,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 4.224520185073553,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": -0.25,
+      "delivery_slope": -0.24994806684143359,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 4.224758390140242,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": 0.275,
+      "delivery_slope": 0.27497484562938906,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 4.647772927709345,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": -0.275,
+      "delivery_slope": -0.2750604808601373,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 4.649196511878388,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": 0.3,
+      "delivery_slope": 0.30001667643626045,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 5.071023331011311,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176101",
+      "dose": -0.3,
+      "delivery_slope": -0.29994501310680166,
+      "reference_norm": 16.90210495948414,
+      "actual_norm": 5.069809830397773,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": 0.2,
+      "delivery_slope": 0.19999955305027872,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 3.380587149597661,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": -0.2,
+      "delivery_slope": -0.19993866591594156,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 3.3795491299969544,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": 0.225,
+      "delivery_slope": 0.2250143271091853,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 3.80339169903717,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": -0.225,
+      "delivery_slope": -0.22497261236871596,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 3.8026796948413533,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": 0.25,
+      "delivery_slope": 0.2500089565625801,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 4.22583327826499,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": -0.25,
+      "delivery_slope": -0.25002449156598366,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 4.226102827956022,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": 0.275,
+      "delivery_slope": 0.27500888767210063,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 4.648394418049954,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": -0.275,
+      "delivery_slope": -0.27498327505914305,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 4.647971784053235,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": 0.3,
+      "delivery_slope": 0.29997170835973297,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 5.070325962703838,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176102",
+      "dose": -0.3,
+      "delivery_slope": -0.29993018581287545,
+      "reference_norm": 16.9023379743708,
+      "actual_norm": 5.069625264268007,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": 0.2,
+      "delivery_slope": 0.20002508318855813,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 3.380779316392521,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": -0.2,
+      "delivery_slope": -0.20001588307915333,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 3.3806213288991027,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": 0.225,
+      "delivery_slope": 0.2249977369550427,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 3.802847950622644,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": -0.225,
+      "delivery_slope": -0.22502970624941362,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 3.8033773297348135,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": 0.25,
+      "delivery_slope": 0.24994390398922559,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 4.224454260666053,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": -0.25,
+      "delivery_slope": -0.25001712921910135,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 4.2256690250158835,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": 0.275,
+      "delivery_slope": 0.27503092803318235,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 4.648448631152503,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": -0.275,
+      "delivery_slope": -0.2750341739431369,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 4.648490234117447,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": 0.3,
+      "delivery_slope": 0.30000194804327346,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 5.070486813826214,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176103",
+      "dose": -0.3,
+      "delivery_slope": -0.3000352056150023,
+      "reference_norm": 16.90117347542937,
+      "actual_norm": 5.071033409972424,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": 0.2,
+      "delivery_slope": 0.20001242226942928,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 3.3807064428177385,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": -0.2,
+      "delivery_slope": -0.20001690220980775,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 3.3807681958279807,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": 0.225,
+      "delivery_slope": 0.22496531253341281,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 3.8024560806999963,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": -0.225,
+      "delivery_slope": -0.22502308137423044,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 3.803411486326763,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": 0.25,
+      "delivery_slope": 0.2499640859628838,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 4.224968570284202,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": -0.25,
+      "delivery_slope": -0.2499942692724412,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 4.225458619900536,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": 0.275,
+      "delivery_slope": 0.27497813221647166,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 4.647754213962326,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": -0.275,
+      "delivery_slope": -0.27496601757228895,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 4.647524711508412,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": 0.3,
+      "delivery_slope": 0.2999885223340899,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 5.070465582378776,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176104",
+      "dose": -0.3,
+      "delivery_slope": -0.3000297377491807,
+      "reference_norm": 16.901853407637578,
+      "actual_norm": 5.071151833196837,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": 0.2,
+      "delivery_slope": 0.19997336514528566,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 3.380181396726163,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": -0.2,
+      "delivery_slope": -0.1999488758916033,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 3.379765732173314,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": 0.225,
+      "delivery_slope": 0.2249505612845239,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 3.802347499125099,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": -0.225,
+      "delivery_slope": -0.22486619446559694,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 3.8009057212962154,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": 0.25,
+      "delivery_slope": 0.2500476335084211,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 4.226534889608992,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": -0.25,
+      "delivery_slope": -0.2500208089593406,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 4.226062007905047,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": 0.275,
+      "delivery_slope": 0.27500394423697555,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 4.648348715604376,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": -0.275,
+      "delivery_slope": -0.2749750507818242,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 4.647830708109594,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": 0.3,
+      "delivery_slope": 0.29997135277448833,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 5.070349094596016,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176105",
+      "dose": -0.3,
+      "delivery_slope": -0.2999911717652425,
+      "reference_norm": 16.902426877440114,
+      "actual_norm": 5.070660109139695,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": 0.2,
+      "delivery_slope": 0.20002968903043572,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 3.3804655804046755,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": -0.2,
+      "delivery_slope": -0.2000277671361487,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 3.3804380133852407,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": 0.225,
+      "delivery_slope": 0.22500130731344675,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 3.802464930440046,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": -0.225,
+      "delivery_slope": -0.22497765519350615,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 3.8020544991798384,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": 0.25,
+      "delivery_slope": 0.25003461996458054,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 4.225469787526862,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": -0.25,
+      "delivery_slope": -0.25005298212531113,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 4.2257927852834625,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": 0.275,
+      "delivery_slope": 0.2750613499828233,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 4.648405163730798,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": -0.275,
+      "delivery_slope": -0.2750642654661243,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 4.648458549165118,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": 0.3,
+      "delivery_slope": 0.3000617413365387,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 5.070890090540645,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176106",
+      "dose": -0.3,
+      "delivery_slope": -0.3000372565730681,
+      "reference_norm": 16.899153299478673,
+      "actual_norm": 5.070474605180137,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": 0.2,
+      "delivery_slope": 0.19992270083723088,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 3.379122812882074,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": -0.2,
+      "delivery_slope": -0.19999834202698136,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 3.3803714019976003,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": 0.225,
+      "delivery_slope": 0.22499011759767829,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 3.8027783395918457,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": -0.225,
+      "delivery_slope": -0.22497493211641809,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 3.802510698049094,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": 0.25,
+      "delivery_slope": 0.2500544392253326,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 4.226390296780371,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": -0.25,
+      "delivery_slope": -0.2499979546946444,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 4.225408908607154,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": 0.275,
+      "delivery_slope": 0.2750141894176278,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 4.648250267524057,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": -0.275,
+      "delivery_slope": -0.2750268583040528,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 4.648433429344144,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": 0.3,
+      "delivery_slope": 0.29997312503731727,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 5.070076497152464,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176107",
+      "dose": -0.3,
+      "delivery_slope": -0.29997513330239345,
+      "reference_norm": 16.901406852592018,
+      "actual_norm": 5.070091977983079,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": 0.2,
+      "delivery_slope": 0.20002902760944932,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 3.3812814035308074,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": -0.2,
+      "delivery_slope": -0.19995492337803586,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 3.3800123777946918,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": 0.225,
+      "delivery_slope": 0.2249448935617776,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 3.8024221705987973,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": -0.225,
+      "delivery_slope": -0.2249659850341064,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 3.8027745628238248,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": 0.25,
+      "delivery_slope": 0.2499708846695272,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 4.225427220110817,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": -0.25,
+      "delivery_slope": -0.2500116541223576,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 4.226105863097458,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": 0.275,
+      "delivery_slope": 0.27489888454661526,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 4.646790157892717,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": -0.275,
+      "delivery_slope": -0.2749929301572291,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 4.6483681330879145,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": 0.3,
+      "delivery_slope": 0.29999699500482724,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 5.071026544361177,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176108",
+      "dose": -0.3,
+      "delivery_slope": -0.29996492318579987,
+      "reference_norm": 16.90324198568771,
+      "actual_norm": 5.07048289633301,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": 0.2,
+      "delivery_slope": 0.20002754855635388,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 3.380764635050535,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": -0.2,
+      "delivery_slope": -0.20003010863031903,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 3.3808086833576922,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": 0.225,
+      "delivery_slope": 0.22502278355974886,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 3.8031729493453295,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": -0.225,
+      "delivery_slope": -0.22499441325927375,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 3.802705014900294,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": 0.25,
+      "delivery_slope": 0.2499143174258085,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 4.223852664992467,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": -0.25,
+      "delivery_slope": -0.2500025694744199,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 4.225346268661712,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": 0.275,
+      "delivery_slope": 0.2749742288938216,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 4.647390684032918,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": -0.275,
+      "delivery_slope": -0.2750285980435089,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 4.648316169372273,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": 0.3,
+      "delivery_slope": 0.29995485186975335,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 5.0695833664005505,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176109",
+      "dose": -0.3,
+      "delivery_slope": -0.3000756735164565,
+      "reference_norm": 16.900806197416465,
+      "actual_norm": 5.071620433170037,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": 0.2,
+      "delivery_slope": 0.2000446196314535,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 3.3809199995049037,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": -0.2,
+      "delivery_slope": -0.20000431836818897,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 3.3802699687477267,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": 0.225,
+      "delivery_slope": 0.22508487335088181,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 3.8040945284228656,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": -0.225,
+      "delivery_slope": -0.22499175343836905,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 3.8025394522478257,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": 0.25,
+      "delivery_slope": 0.24999772194888709,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 4.2251081187801,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": -0.25,
+      "delivery_slope": -0.25003671202860844,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 4.225773206988563,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": 0.275,
+      "delivery_slope": 0.27499928257048,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 4.647658758133308,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": -0.275,
+      "delivery_slope": -0.2750094235582491,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 4.647818403421368,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": 0.3,
+      "delivery_slope": 0.29996822541140766,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 5.0696309741424095,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176110",
+      "dose": -0.3,
+      "delivery_slope": -0.29999487313774337,
+      "reference_norm": 16.90023512923006,
+      "actual_norm": 5.070077750813724,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": 0.2,
+      "delivery_slope": 0.20001662292367975,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 3.38081104879852,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": -0.2,
+      "delivery_slope": -0.20000166391884425,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 3.3805499139471418,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": 0.225,
+      "delivery_slope": 0.22503980230838067,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 3.803735203619032,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": -0.225,
+      "delivery_slope": -0.22499312527226206,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 3.8029284452245498,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": 0.25,
+      "delivery_slope": 0.25003433748510373,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 4.2261638536035715,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": -0.25,
+      "delivery_slope": -0.25000996099931383,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 4.225749729314779,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": 0.275,
+      "delivery_slope": 0.2750178066862839,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 4.648443641439963,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": -0.275,
+      "delivery_slope": -0.27497747739284273,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 4.647767922702301,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": 0.3,
+      "delivery_slope": 0.3000486740320052,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 5.071515188085751,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176111",
+      "dose": -0.3,
+      "delivery_slope": -0.29995843455895,
+      "reference_norm": 16.90197756095612,
+      "actual_norm": 5.069989553937758,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": 0.2,
+      "delivery_slope": 0.1999656400529105,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 3.3799088965775876,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": -0.2,
+      "delivery_slope": -0.2000487498289021,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 3.3813203566500936,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": 0.225,
+      "delivery_slope": 0.22502158346960446,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 3.803380450916688,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": -0.225,
+      "delivery_slope": -0.22495775290153763,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 3.802305550353433,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": 0.25,
+      "delivery_slope": 0.24998020934925075,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 4.2252058806378665,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": -0.25,
+      "delivery_slope": -0.2500157295573475,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 4.2258088972009125,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": 0.275,
+      "delivery_slope": 0.2749519304797502,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 4.647281917088653,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": -0.275,
+      "delivery_slope": -0.27502666615003074,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 4.648538753431068,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": 0.3,
+      "delivery_slope": 0.3000441045355165,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 5.071371518863505,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176112",
+      "dose": -0.3,
+      "delivery_slope": -0.3000357358232864,
+      "reference_norm": 16.90175572538104,
+      "actual_norm": 5.071228035660381,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": 0.2,
+      "delivery_slope": 0.19996161994731887,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 3.380270598598639,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": -0.2,
+      "delivery_slope": -0.1999541347558817,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 3.380146756448906,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": 0.225,
+      "delivery_slope": 0.22497136857437044,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 3.803026162829005,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": -0.225,
+      "delivery_slope": -0.22498467323763907,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 3.8032653783478865,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": 0.25,
+      "delivery_slope": 0.25006985621215205,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 4.227275197819601,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": -0.25,
+      "delivery_slope": -0.24995225262928192,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 4.225290512687023,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": 0.275,
+      "delivery_slope": 0.27502042533391124,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 4.649044013153625,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": -0.275,
+      "delivery_slope": -0.2749815364227424,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 4.64839173867558,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": 0.3,
+      "delivery_slope": 0.2999394691420554,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 5.070274542083885,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176113",
+      "dose": -0.3,
+      "delivery_slope": -0.2999868310446128,
+      "reference_norm": 16.904010750871333,
+      "actual_norm": 5.0710775089505615,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": 0.2,
+      "delivery_slope": 0.20001924022340253,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 3.3806942945749365,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": -0.2,
+      "delivery_slope": -0.19998681394279175,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 3.380138349392558,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": 0.225,
+      "delivery_slope": 0.2250179899079973,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 3.803201143973163,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": -0.225,
+      "delivery_slope": -0.22504709257486774,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 3.8036912278680157,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": 0.25,
+      "delivery_slope": 0.25000678173814517,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 4.225532165058508,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": -0.25,
+      "delivery_slope": -0.25006497423528196,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 4.226507354889424,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": 0.275,
+      "delivery_slope": 0.2750914844220528,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 4.649504979363808,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": -0.275,
+      "delivery_slope": -0.27505645007436974,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 4.648892407181787,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": 0.3,
+      "delivery_slope": 0.29992543730681176,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 5.069211328476737,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176114",
+      "dose": -0.3,
+      "delivery_slope": -0.2999769808268831,
+      "reference_norm": 16.901211282752296,
+      "actual_norm": 5.0700723706651445,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": 0.2,
+      "delivery_slope": 0.20006506818116016,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 3.381477099064445,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": -0.2,
+      "delivery_slope": -0.20006533083649114,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 3.381482416714785,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": 0.225,
+      "delivery_slope": 0.22504990334391706,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 3.803750222791781,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": -0.225,
+      "delivery_slope": -0.2249925337968015,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 3.8027633241828873,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": 0.25,
+      "delivery_slope": 0.24996256086661564,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 4.224764894015605,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": -0.25,
+      "delivery_slope": -0.2500119556024386,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 4.225581054432824,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": 0.275,
+      "delivery_slope": 0.2749651719619306,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 4.647333736894145,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": -0.275,
+      "delivery_slope": -0.2750280519686177,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 4.648383651139604,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": 0.3,
+      "delivery_slope": 0.3000537591270215,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 5.071359718063918,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176115",
+      "dose": -0.3,
+      "delivery_slope": -0.3000682981836732,
+      "reference_norm": 16.90115039905161,
+      "actual_norm": 5.071596171776437,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": 0.2,
+      "delivery_slope": 0.20005012848762646,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 3.3815367472919533,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": -0.2,
+      "delivery_slope": -0.19997343373596785,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 3.380230298003359,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": 0.225,
+      "delivery_slope": 0.22500058804950057,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 3.8032524363909386,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": -0.225,
+      "delivery_slope": -0.2249773261422307,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 3.802852904949217,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": 0.25,
+      "delivery_slope": 0.24998418017033558,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 4.225508690535159,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": -0.25,
+      "delivery_slope": -0.25001063298780707,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 4.2259453597000025,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": 0.275,
+      "delivery_slope": 0.27495958437265633,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 4.647663708926209,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": -0.275,
+      "delivery_slope": -0.2749905335643147,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 4.648180777004268,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": 0.3,
+      "delivery_slope": 0.29993511676863177,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 5.069821086831972,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176116",
+      "dose": -0.3,
+      "delivery_slope": -0.2998998979972518,
+      "reference_norm": 16.902715255782468,
+      "actual_norm": 5.06922482345851,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": 0.2,
+      "delivery_slope": 0.19997983392518423,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 3.379805753056552,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": -0.2,
+      "delivery_slope": -0.19998133316327507,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 3.379863288624377,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": 0.225,
+      "delivery_slope": 0.22496619472965454,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 3.802063121963397,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": -0.225,
+      "delivery_slope": -0.22502944145386797,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 3.803166870102355,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": 0.25,
+      "delivery_slope": 0.2499795533294055,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 4.224790283915534,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": -0.25,
+      "delivery_slope": -0.25003894880534977,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 4.22580779868272,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": 0.275,
+      "delivery_slope": 0.2750692665026383,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 4.648808342827768,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": -0.275,
+      "delivery_slope": -0.2750489606284114,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 4.648480560076263,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": 0.3,
+      "delivery_slope": 0.300005335170149,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 5.070225723408267,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176117",
+      "dose": -0.3,
+      "delivery_slope": -0.3000422269907365,
+      "reference_norm": 16.900151792730785,
+      "actual_norm": 5.070870098917268,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": 0.2,
+      "delivery_slope": 0.20000883322418278,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 3.380482721405811,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": -0.2,
+      "delivery_slope": -0.199989334940188,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 3.380118802472853,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": 0.225,
+      "delivery_slope": 0.22495993769541248,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 3.8021477260481302,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": -0.225,
+      "delivery_slope": -0.2250084662453327,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 3.802968309777956,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": 0.25,
+      "delivery_slope": 0.25000389043306226,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 4.225399300591292,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": -0.25,
+      "delivery_slope": -0.2500383153954727,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 4.225966205704551,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": 0.275,
+      "delivery_slope": 0.27498971432310587,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 4.647691373102183,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": -0.275,
+      "delivery_slope": -0.2749990394319256,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 4.647832081834714,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": 0.3,
+      "delivery_slope": 0.30003182727562316,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 5.070919897564225,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176118",
+      "dose": -0.3,
+      "delivery_slope": -0.30010106443145057,
+      "reference_norm": 16.90089873733873,
+      "actual_norm": 5.072070104642854,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": 0.2,
+      "delivery_slope": 0.1999813662053192,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 3.380645672816449,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": -0.2,
+      "delivery_slope": -0.20004500299976538,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 3.381707132391845,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": 0.225,
+      "delivery_slope": 0.22500235470167862,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 3.8035970875496035,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": -0.225,
+      "delivery_slope": -0.2249516505088844,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 3.802721479152566,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": 0.25,
+      "delivery_slope": 0.24995724895573673,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 4.225411955988912,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": -0.25,
+      "delivery_slope": -0.2499293205735371,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 4.224937979083416,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": 0.275,
+      "delivery_slope": 0.2748981605206103,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 4.647004983745573,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": -0.275,
+      "delivery_slope": -0.27493362727185855,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 4.647616566012387,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": 0.3,
+      "delivery_slope": 0.29996066735932353,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 5.0706684826398085,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176119",
+      "dose": -0.3,
+      "delivery_slope": -0.2999585809709041,
+      "reference_norm": 16.904124986214587,
+      "actual_norm": 5.070627453463937,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": 0.2,
+      "delivery_slope": 0.20000140899398527,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 3.380813062022114,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": -0.2,
+      "delivery_slope": -0.20000667169855538,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 3.380899584816208,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": 0.225,
+      "delivery_slope": 0.22491855600463279,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 3.801975518487597,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": -0.225,
+      "delivery_slope": -0.22503030801141247,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 3.8038723493291324,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": 0.25,
+      "delivery_slope": 0.24998067051045025,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 4.2255814452761316,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": -0.25,
+      "delivery_slope": -0.2500113011273924,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 4.226109963378334,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": 0.275,
+      "delivery_slope": 0.27504056439394586,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 4.649181524630665,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": -0.275,
+      "delivery_slope": -0.27504571681757456,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 4.6492785850192755,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": 0.3,
+      "delivery_slope": 0.30002050698004773,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 5.071414549989735,
+      "tolerance": 0.05
+    },
+    {
+      "set": "f100d_d176120",
+      "dose": -0.3,
+      "delivery_slope": -0.29993717625640015,
+      "reference_norm": 16.9032380210179,
+      "actual_norm": 5.070012962641297,
+      "tolerance": 0.05
+    }
+  ],
+  "gate7": {
+    "passed": true,
+    "prompts": 44,
+    "overlap": [],
+    "compared_against": {
+      "p8": 8,
+      "m96": 96,
+      "new44": 44
+    },
+    "new44b_sha256": "a6952e5b71e3f9170beba488a6422b1934b61622be54073109f50ef172451802",
+    "part173_new44b_sha256": "a6952e5b71e3f9170beba488a6422b1934b61622be54073109f50ef172451802",
+    "sha256_matches": true
+  },
+  "gate8": {
+    "passed": true,
+    "replay_rebuild": {
+      "passed": true,
+      "tolerance": 1e-06,
+      "draws": [
+        {
+          "set": "f100d_d174104",
+          "passed": true,
+          "fields": {
+            "global_scale": {
+              "expected": 3.9015956679518307,
+              "rebuilt": 3.9015956679518307,
+              "absolute_error": 0.0,
+              "passed": true
+            },
+            "nominal_write_norm": {
+              "expected": 16.901877368815832,
+              "rebuilt": 16.901877368815832,
+              "absolute_error": 0.0,
+              "passed": true
+            },
+            "cf": {
+              "expected": 0.05810885134526817,
+              "rebuilt": 0.05810885134526817,
+              "absolute_error": 0.0,
+              "passed": true
+            },
+            "cr": {
+              "expected": 0.04325103024080706,
+              "rebuilt": 0.04325103024080706,
+              "absolute_error": 0.0,
+              "passed": true
+            }
+          }
+        },
+        {
+          "set": "f100d_d174115",
+          "passed": true,
+          "fields": {
+            "global_scale": {
+              "expected": 3.881463761216059,
+              "rebuilt": 3.881463761216059,
+              "absolute_error": 0.0,
+              "passed": true
+            },
+            "nominal_write_norm": {
+              "expected": 16.90187773944401,
+              "rebuilt": 16.90187773944401,
+              "absolute_error": 0.0,
+              "passed": true
+            },
+            "cf": {
+              "expected": 0.009165204751038531,
+              "rebuilt": 0.009165204751038531,
+              "absolute_error": 0.0,
+              "passed": true
+            },
+            "cr": {
+              "expected": 0.0004838621927697932,
+              "rebuilt": 0.0004838621927697932,
+              "absolute_error": 0.0,
+              "passed": true
+            }
+          }
+        }
+      ],
+      "failures": [],
+      "source": "metrics recomputed from independently rebuilt Part 174 draw tensors"
+    },
+    "fresh_draw_screens": {
+      "passed": true,
+      "draws": 20,
+      "expected_draws": 20,
+      "failures": [],
+      "absolute_cf_max": 0.079,
+      "length_relative_tolerance": 0.01
+    },
+    "fit_vector": {
+      "source": "Part 171 sets_google.pt",
+      "stored_norm": 4.225469377683959,
+      "used_norm": 4.225469377683959,
+      "norm_error_relative": 0.0,
+      "direction_cosine_vs_stored": 1.0,
+      "direction_comparison": "stored vector used directly"
+    },
+    "reference_n1_written_norm": 16.901877702791463
+  },
+  "fresh_seeds": [
+    176101,
+    176102,
+    176103,
+    176104,
+    176105,
+    176106,
+    176107,
+    176108,
+    176109,
+    176110,
+    176111,
+    176112,
+    176113,
+    176114,
+    176115,
+    176116,
+    176117,
+    176118,
+    176119,
+    176120
+  ],
+  "doses": [
+    0.2,
+    0.225,
+    0.25,
+    0.275,
+    0.3
+  ],
+  "input_hash": "f02ff98fe07848694bc708e78ef11e9b6243ee142b1fa4bd66943f5897af8bb7",
+  "passed": true
+}

@@ -1,0 +1,33 @@
+Running as unit: part176-readers.scope; invocation ID: 82c5a1a29387414abd390d90acbd12a7
+start 13:46:32
+{"passed": true, "gates_path": "results/part176/gates.json", "missing": [], "failed": []}
+
+step_rc=0 13:46:32
+{"reader": "ds", "total": 20, "relation_correct": 19, "primary_correct": 19, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "deepseek-v4.1-flash", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 13:47:54
+{"reader": "haiku", "total": 20, "relation_correct": 20, "primary_correct": 20, "relation_minimum": 18, "primary_minimum": 18, "relation_passed": true, "primary_passed": true, "passed": true, "provenance": {"reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "model": "claude-haiku-5-5", "known_examples_sha256": "ac51a53a59d8dd4b08165a22dec25fe8db0dda1272457e8549c7a836c174302e"}}
+
+step_rc=0 13:48:18
+fa3c9600f6f988fda5e25860fd1d5a22aeaa1fb2c57214f4", "pair:e00fbc93a4215746994701c94c7f2311a507c2cfc9b054b7d0af159398af4bc9", "pair:e047ab586702081652234294dd53e6513b03fecb5e7fd4bd0d6b19f44a5089f3", "pair:e191af33b8f5cafff2a722a2174e55764cd37c6cc8169c52a1a418f09d1d4840", "pair:e3d93dda83eebf32949918f8a87a34bd30d09f81775b8b75073395729a2fd578", "pair:e82e414462ee38a46939f9c2219605d5f07f3d086487316cf9c54704a4f294d7", "pair:f08ae741ec8dd25fe891fe179c8ec6e9395251518689461faee324242ee190b1", "pair:f29227ecffa088ac272a7e89ffaf981054854f9a04642e189ba0d8e3bfb6b82d", "pair:f39d7c778327f852bde6d57ec5ff9ded0fce6192d338d1e9a264543beae317a0", "pair:f423579e01f2c172d1d95a834ce31ebc576de9384a2f8bd2191ab0c4355b02a8", "pair:fb1c8c59a6d85f5c138d6a0fc5e349128d3fbb402cf7add0aa532c2393fff137", "pair:fe9021ea87bfedfcfeae0774bb1ddad2ee7daf8c18a99a078637e5060046ee16", "pair:ff06dec4733306b6ee3401b2fe83c71cbf657ba1e8f39d477eac6b83dc14d46c", "pair:ff2a22250ccfd5494a938898e652762d72e679db19f30cef36eb68da132e3c87"], "checkpoint_every": 100, "workers": 6, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177", "error_fraction": 0.02383654937570942, "error_cap_fraction": 0.005}
+
+step_rc=0 14:52:57
+{"reader": "ds", "targets": 126, "resolved": 100, "remaining_dns_errors": 0, "elapsed_seconds_this_call": 1545.3902896640066, "elapsed_seconds_all_calls": 1541.135162, "budget_seconds": 7200.0, "budget_exhausted": false, "status": "complete", "retry_log": "results/part176/labels/retry_net.jsonl"}
+
+step_rc=0 15:18:44
+58ad", "pair:6108275b51ee95f77d1b0109c9553b8e820a97f0360db6e35982d4bad6a8cfaf", "pair:7e99113606832228ae91e5fb3d0e086cac101aae8bcaf4cc1798d15d0f00c2f4", "pair:80949e6cc21f2dbe3728eb55b6fe74bbc9c412f6d26e96347ae91ce2feb535cc", "pair:82848514d030c550aaf22330b73c77b21bdb71658323193bf3e15411c1604e2a", "pair:8e49d0465c981672bdf71276272adfc496dadaa76616c54b2e0b5829995e642f", "pair:948f6903d3b921528876f9f0144f8dbf70ec2ff5d429c5f32b0f11a7f4779ea7", "pair:9fb3cfbabd8901b86a6002ed2a26bcc19316fcf6bc779ece7b9dedfcd0289cc6", "pair:a3b772760b95da38f76ecc1410f872e4e41fba3e1f3125a1afde40f3ea02e3b9", "pair:a747c080bc48fa09870252d627a1c60e8754c0f6a5b254443dba1682fcff6fe2", "pair:cde56fc54439a2491956364b554a43d38b307db507bf70dcadeeba889773d5d9", "pair:d70d3e2f4615748659a69eb9566e428d3931a7497f5cb66be0350b4b6a4a5987", "pair:de49aa5c1bf4a7f51b1250700969921c032a4cce94c91b2e6fa6ae492988b05b", "pair:dfdaa33cc872666157d6d3eb2290c77ddcbe2c4e116881bc60172761da9885f9", "pair:e82e414462ee38a46939f9c2219605d5f07f3d086487316cf9c54704a4f294d7", "pair:fe9021ea87bfedfcfeae0774bb1ddad2ee7daf8c18a99a078637e5060046ee16", "pair:ff06dec4733306b6ee3401b2fe83c71cbf657ba1e8f39d477eac6b83dc14d46c"], "missing_pair_ids": []}
+
+step_rc=0 15:18:45
+{"reader": "haiku", "stage": "second", "items": 535, "pending": 535, "attempted": 535, "valid_pairs": 535, "failed_pairs": 0, "failed_pair_ids": [], "checkpoint_every": 100, "workers": 3, "reader_prompt_sha256": "d07e44dd3f8026be4b19732d030e11512dc6402da58befb895884dca6a689177"}
+
+step_rc=0 15:25:21
+{"reader": "haiku", "targets": 0, "resolved": 0, "remaining_dns_errors": 0, "elapsed_seconds_this_call": 2.679099270608276e-05, "elapsed_seconds_all_calls": 2.276299346704036e-05, "budget_seconds": 7200.0, "budget_exhausted": false, "status": "complete", "retry_log": "results/part176/labels/retry_net.jsonl"}
+
+step_rc=0 15:25:22
+{"prediction_read_status": "read", "predictions": {"176.1": "held", "176.2": "held", "176.3": "held", "176.4": "held", "176.5": "held", "176.6": "held", "176.7": "held", "176.W1": "not read", "176.W2": "failed", "176.W3": "failed"}, "directions": 40}
+
+step_rc=0 15:25:31
+{"status": "read", "rows": 175, "fragment_coherent_refusal": {"count": 23, "n": 93, "share": 0.24731182795698925, "more_than_one_third": false, "interpretation": "one-third rule not triggered"}}
+
+step_rc=0 15:35:40
+ALL DONE rc=0

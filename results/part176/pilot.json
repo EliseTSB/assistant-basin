@@ -1,0 +1,9 @@
+{
+  "answers": 880,
+  "expected_answers": 880,
+  "elapsed_seconds": 308.5134118000278,
+  "answers_per_second": 2.8523881502124073,
+  "minimum_answers_per_second": 1.0,
+  "input_hash": "f02ff98fe07848694bc708e78ef11e9b6243ee142b1fa4bd66943f5897af8bb7",
+  "status": "continue"
+}

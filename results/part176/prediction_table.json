@@ -1,0 +1,392 @@
+{
+  "176.1": {
+    "prediction": "At 0.225, at least 20 of the 40 signed directions are supported",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "supported_directions": 30,
+      "supported_bounds": [
+        30,
+        30
+      ],
+      "total": 40
+    },
+    "verdict": "held",
+    "registered_rule": "Supported directions >= 20 of 40"
+  },
+  "176.2": {
+    "prediction": "At 0.225, Google is modal on at least 80% of supported directions; not read below 5 supported",
+    "confidence": "high",
+    "author": "Claude",
+    "estimate": {
+      "google_led_supported_bounds": [
+        30,
+        30
+      ],
+      "supported_bounds": [
+        30,
+        30
+      ],
+      "share_bounds": [
+        1.0,
+        1.0
+      ]
+    },
+    "verdict": "held",
+    "registered_rule": "Google modal on at least 80% of supported directions; not read below 5"
+  },
+  "176.3": {
+    "prediction": "At 0.225, at most 2 of the 40 signed directions are other-led",
+    "confidence": "high",
+    "author": "Claude",
+    "estimate": {
+      "other_led_directions": {
+        "lower": 0,
+        "upper": 0,
+        "denominator": 40
+      },
+      "total": 40
+    },
+    "verdict": "held",
+    "registered_rule": "Other-led count <= 2 of 40"
+  },
+  "176.4": {
+    "prediction": "At least 8 of 40 are supported at 0.20 and at least 8 of 40 at 0.25",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "support_0_20": null,
+      "support_0_25": 20,
+      "support_0_20_bounds": [
+        20,
+        21
+      ],
+      "support_0_25_bounds": [
+        20,
+        20
+      ],
+      "clause_status": {
+        "0.20": "held",
+        "0.25": "held"
+      },
+      "inert_guard_0_20": {
+        "status": "read",
+        "inert": false,
+        "different": 1760,
+        "total": 1760,
+        "share": 1.0,
+        "threshold": 0.15,
+        "comparison": "token_ids[:40] versus none for the same prompt",
+        "by_rung": {
+          "0.2": {
+            "status": "read",
+            "inert": false,
+            "different": 1760,
+            "total": 1760,
+            "share": 1.0,
+            "threshold": 0.15,
+            "comparison": "token_ids[:40] versus none for the same prompt"
+          },
+          "0.225": {
+            "status": "not read",
+            "inert": null,
+            "different": null,
+            "total": 1848,
+            "expected": 1760,
+            "reason": "rung or none rows are incomplete or duplicated"
+          },
+          "0.25": {
+            "status": "read",
+            "inert": false,
+            "different": 1760,
+            "total": 1760,
+            "share": 1.0,
+            "threshold": 0.15,
+            "comparison": "token_ids[:40] versus none for the same prompt"
+          },
+          "0.275": {
+            "status": "read",
+            "inert": false,
+            "different": 1760,
+            "total": 1760,
+            "share": 1.0,
+            "threshold": 0.15,
+            "comparison": "token_ids[:40] versus none for the same prompt"
+          },
+          "0.3": {
+            "status": "read",
+            "inert": false,
+            "different": 1760,
+            "total": 1760,
+            "share": 1.0,
+            "threshold": 0.15,
+            "comparison": "token_ids[:40] versus none for the same prompt"
+          }
+        }
+      }
+    },
+    "verdict": "held",
+    "registered_rule": "At least 8/40 supported at 0.20 and at least 8/40 at 0.25; 0.20 clause not read if under 15% differ from none"
+  },
+  "176.5": {
+    "prediction": "At 0.225, the median broken of the 40 signed directions is at most 8 of 44",
+    "confidence": "high",
+    "author": "Claude",
+    "estimate": {
+      "median_broken": 1.0,
+      "directions": 40
+    },
+    "verdict": "held",
+    "registered_rule": "Median broken <= 8 of 44"
+  },
+  "176.6": {
+    "prediction": "Pooled Google share at 0.275 is at least its share at 0.225, and named answers at 0.275 are under half those at 0.225; not read below 100 named at 0.275",
+    "confidence": "medium",
+    "author": "Claude",
+    "estimate": {
+      "named_0_225": null,
+      "named_0_275": null,
+      "named_bounds_0_225": [
+        1483,
+        1486
+      ],
+      "named_bounds_0_275": [
+        519,
+        521
+      ],
+      "google_share_0_225": null,
+      "google_share_0_275": null,
+      "google_share_bounds_0_225": [
+        0.4300134589502019,
+        0.43290627107215107
+      ],
+      "google_share_bounds_0_275": [
+        0.5239923224568138,
+        0.5298651252408478
+      ],
+      "condition_status": {
+        "share_nonfall": "held",
+        "named_pool_halved": "held"
+      }
+    },
+    "verdict": "held",
+    "registered_rule": "Pooled Google share at 0.275 >= 0.225 and named count at 0.275 < half of 0.225; not read below 100 named at 0.275"
+  },
+  "176.7": {
+    "prediction": "Over eligible directions, Spearman of Google count of 44 at 0.225 against collapse dose is above -0.30; fails at or below -0.30 with cluster-bootstrap upper bound below 0",
+    "confidence": "low",
+    "author": "Claude",
+    "estimate": {
+      "spearman": {
+        "n": 37,
+        "rho": 0.016262105336785085,
+        "interval_95": [
+          -0.31883751455808595,
+          0.35447989318872
+        ],
+        "replicates": 10000,
+        "valid_replicates": 10000,
+        "cluster": "draw seed, both signs kept together",
+        "status": "read",
+        "seed": 176
+      },
+      "eligible_directions": 37,
+      "eligible_draws": 19,
+      "pooled_failed_fraction_0_225": 0.055113636363636365,
+      "pooled_failed_fraction_bounds_0_225": [
+        0.055113636363636365,
+        0.055113636363636365
+      ],
+      "exclusion_reasons": {
+        "Google count null at 0.225": 3
+      },
+      "split_half_odd_against_even": {
+        "google_count_0225": 0.7912042911345603,
+        "google_share_0225": 0.8363226630920897
+      },
+      "holding_interpretation": "informative repeatability screen"
+    },
+    "verdict": "held",
+    "registered_rule": "Read with at least 32 eligible directions from 16 draws and pooled failed <=20%; no strong tie if rho > -0.30; fail at rho <= -0.30 only when cluster interval upper < 0"
+  },
+  "176.W1": {
+    "prediction": "Support rises through 0.25 and falls under 5 of 40 at 0.30, with 0.225 on the rising slope rather than at a peak",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "support_0_20": null,
+      "support_0_225": 30,
+      "support_0_25": 20,
+      "support_0_30": 0,
+      "support_bounds": {
+        "0.2": [
+          20,
+          21
+        ],
+        "0.225": [
+          30,
+          30
+        ],
+        "0.25": [
+          20,
+          20
+        ],
+        "0.3": [
+          0,
+          0
+        ]
+      }
+    },
+    "verdict": "failed",
+    "registered_rule": "s20 <= s225 <= s25 and s30 < 5; falsifiers are a 0.225 peak >=5 over both neighbours or s30 >=15"
+  },
+  "176.W2": {
+    "prediction": "Google share rises monotonically across the rungs while the raw Google count peaks at or below 0.25",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "google_share_by_rung": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "google_share_bounds_by_rung": [
+        [
+          0.26775244299674267,
+          0.2769028871391076
+        ],
+        [
+          0.4300134589502019,
+          0.43290627107215107
+        ],
+        [
+          0.5031390134529148,
+          0.5167420814479639
+        ],
+        [
+          0.5239923224568138,
+          0.5298651252408478
+        ],
+        [
+          0.4608695652173913,
+          0.4608695652173913
+        ]
+      ],
+      "google_count_by_rung": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "google_count_bounds_by_rung": [
+        [
+          411,
+          422
+        ],
+        [
+          639,
+          642
+        ],
+        [
+          561,
+          571
+        ],
+        [
+          273,
+          275
+        ],
+        [
+          53,
+          53
+        ]
+      ],
+      "share_changes": [
+        {
+          "from": 0.2,
+          "to": 0.225,
+          "change": null,
+          "change_points": null,
+          "change_bounds": [
+            0.15311057181109428,
+            0.1651538280754084
+          ],
+          "google_count_change": null,
+          "google_count_change_bounds": [
+            217,
+            231
+          ],
+          "miss_kind": null
+        },
+        {
+          "from": 0.225,
+          "to": 0.25,
+          "change": null,
+          "change_points": null,
+          "change_bounds": [
+            0.07023274238076371,
+            0.08672862249776198
+          ],
+          "google_count_change": null,
+          "google_count_change_bounds": [
+            -81,
+            -68
+          ],
+          "miss_kind": null
+        },
+        {
+          "from": 0.25,
+          "to": 0.275,
+          "change": null,
+          "change_points": null,
+          "change_bounds": [
+            0.007250241008849967,
+            0.02672611178793305
+          ],
+          "google_count_change": null,
+          "google_count_change_bounds": [
+            -298,
+            -286
+          ],
+          "miss_kind": null
+        },
+        {
+          "from": 0.275,
+          "to": 0.3,
+          "change": null,
+          "change_points": null,
+          "change_bounds": [
+            -0.06899556002345653,
+            -0.06312275723942251
+          ],
+          "google_count_change": null,
+          "google_count_change_bounds": [
+            -222,
+            -220
+          ],
+          "miss_kind": "receding"
+        }
+      ],
+      "raw_count_peak_at_or_below_0_25": null
+    },
+    "verdict": "failed",
+    "registered_rule": "Any pooled share fall fails (receding over 5 points, noise otherwise); a count rise at 0.275 or 0.30 is a separate falsifier"
+  },
+  "176.W3": {
+    "prediction": "Among directions with a supported rung, median gap from top supported rung to collapse dose is at least 0.05",
+    "confidence": "medium",
+    "author": "Weaver",
+    "estimate": {
+      "median_gap": 0.01767307692307693,
+      "directions": 34,
+      "under_0_025": 22,
+      "share_under_0_025": 0.6470588235294118,
+      "right_censored_L_directions": 1,
+      "unknown_support_rule": "Unknown support is not supported; if it could be the top supported rung, exclude and count the direction."
+    },
+    "verdict": "failed",
+    "registered_rule": "Median gap >= 0.05; falsified below 0.025"
+  }
+}

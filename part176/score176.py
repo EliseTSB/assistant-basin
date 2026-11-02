@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import math
 import re
@@ -863,21 +864,21 @@ def prediction_verdicts(dose_reports, directions, gates, reader_read, inert_guar
     support_map = {dose: support_bounds(dose) for dose in (0.20, 0.225, 0.25, 0.30)}
     s20b, s225b, s25b, s30b = (support_map[dose] for dose in (0.20, 0.225, 0.25, 0.30))
     all_w1_bounds = (s20b, s225b, s25b, s30b)
-    if any(None in bounds for bounds in all_w1_bounds):
-        w1 = "not read"
-    elif any(bounds[0] != bounds[1] for bounds in all_w1_bounds):
-        w1 = "not read"
-    else:
-        s20, s225, s25, s30 = (int(bounds[0]) for bounds in all_w1_bounds)
+    def w1_verdict(s20, s225, s25, s30):
         falsifier_peak = s225 >= s20 + 5 and s225 >= s25 + 5
         falsifier_no_collapse = s30 >= 15
         claim = s20 <= s225 <= s25 and s30 < 5
         if falsifier_peak or falsifier_no_collapse:
-            w1 = "failed"
-        elif claim:
-            w1 = "held"
-        else:
-            w1 = "inconclusive"
+            return "failed"
+        return "held" if claim else "inconclusive"
+
+    if any(None in bounds for bounds in all_w1_bounds):
+        w1 = "not read"
+    else:
+        # Design: `not read` only if an unknown could change the verdict, so try every admissible count.
+        fills = {w1_verdict(*counts) for counts in itertools.product(
+            *(range(int(bounds[0]), int(bounds[1]) + 1) for bounds in all_w1_bounds))}
+        w1 = fills.pop() if len(fills) == 1 else "not read"
     if all(None not in bounds for bounds in all_w1_bounds):
         s20, s225, s25, s30 = (bounds[0] if bounds[0] == bounds[1] else None
                                 for bounds in all_w1_bounds)

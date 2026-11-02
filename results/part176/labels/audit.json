@@ -1,0 +1,133 @@
+{
+  "status": "read",
+  "seed": 176,
+  "rung_hidden_from_reader": true,
+  "known_check": {
+    "passed": true,
+    "correct": 10,
+    "total": 10,
+    "required": 8,
+    "rows": [
+      {
+        "id": "audit176-known-01",
+        "expected": "echo",
+        "observed": "echo",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-02",
+        "expected": "role swap",
+        "observed": "role swap",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-03",
+        "expected": "coherent refusal",
+        "observed": "coherent refusal",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-04",
+        "expected": "other maker",
+        "observed": "other maker",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-05",
+        "expected": "stopped mid-sentence",
+        "observed": "stopped mid-sentence",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-06",
+        "expected": "other",
+        "observed": "other",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-07",
+        "expected": "echo",
+        "observed": "echo",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-08",
+        "expected": "role swap",
+        "observed": "role swap",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-09",
+        "expected": "coherent refusal",
+        "observed": "coherent refusal",
+        "correct": true,
+        "error": null
+      },
+      {
+        "id": "audit176-known-10",
+        "expected": "other maker",
+        "observed": "other maker",
+        "correct": true,
+        "error": null
+      }
+    ]
+  },
+  "sample_counts": {
+    "fragment": 93,
+    "longer no claim": 46,
+    "claim with no single name": 24
+  },
+  "table": {
+    "all": {
+      "echo": 31,
+      "role swap": 4,
+      "coherent refusal": 35,
+      "other maker": 37,
+      "stopped mid-sentence": 16,
+      "other": 40
+    },
+    "by_sample_kind": {
+      "fragment": {
+        "echo": 28,
+        "role swap": 4,
+        "coherent refusal": 23,
+        "other maker": 6,
+        "stopped mid-sentence": 5,
+        "other": 27
+      },
+      "longer no claim": {
+        "echo": 3,
+        "role swap": 0,
+        "coherent refusal": 12,
+        "other maker": 8,
+        "stopped mid-sentence": 10,
+        "other": 13
+      },
+      "claim with no single name": {
+        "echo": 0,
+        "role swap": 0,
+        "coherent refusal": 0,
+        "other maker": 23,
+        "stopped mid-sentence": 1,
+        "other": 0
+      }
+    }
+  },
+  "fragment_coherent_refusal": {
+    "count": 23,
+    "n": 93,
+    "share": 0.24731182795698925,
+    "more_than_one_third": false,
+    "interpretation": "one-third rule not triggered"
+  },
+  "rows": 175,
+  "path": "results/part176/labels/audit.jsonl"
+}

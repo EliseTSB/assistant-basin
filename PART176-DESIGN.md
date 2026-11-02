@@ -232,3 +232,11 @@ between rungs cannot establish the curve between them or the order of crossings 
 and as a bracket. A tie in 176.7 is a correlation across directions with no intervention, so it says nothing about cause, and this part does not measure delivery past
 the written layer. L may vary too little across directions for any tie to show, and non-detection on 20 draws does not exclude a meaningful tie. Paired shares
 exist only where `named` survives, so they cannot follow a direction through its collapse.
+
+## Amendment 1, 2026-11-02 15:37 CT
+
+Made AFTER the scores were read, so it is stated this way. The first scorer run marked 176.W1 `not read` because the 0.20 support count has bounds of 20 and 21, one
+direction being partly labelled. The Reading rules say a verdict is `not read` only if an unknown could change it, and at either count 176.W1's first falsifier fires, since 0.225
+has 30. The scorer now tries every admissible count and reads the verdict if they all agree. This changes 176.W1 only, and the fix follows the registered rule. The audit sample read 93
+fragments, 46 longer answers and 24 claims of the planned 100, 50 and 25; the write-up says why.
+
