@@ -52,3 +52,7 @@ Limits: one model and dose, eight phrasings, 12 slots in eight layers, and effec
 The battery started at 00:58, before the reviews landed, on registered code. Amendment 2 came from Weaver's review, Amendment 3 from Alden's, Amendment 4 from Muse's prior art, cited through Muse and not read here. Amendment 5 records three scoring defects, none touching the answers: tuple keys, a NaN KL from the EOS mask, and an arm-table merge. A later fix corrected the loop share in `tables.md`. The effect run was repeated for KL, and every other shared field matched the first run exactly across 6,912 rows. Added calculations are in [extra165.py](extra165.py), figure in [plot165.py](plot165.py).
 
 Cold check: Haiku 5.5, 2026-11-01, recomputed every headline number and found the claim of equal first-step change, the bf16 sentence, the fragility without layer 21, a Part 164 comparison across two different rules, a wrong loop share, and unsupported wording about renamed makers.
+
+## Added 2026-11-02
+
+A registered [reading of the write geometry](reading/README.md) tested three accounts of the extra first-step effect. Concentration and natural-state alignment failed their bars, and the single-token readout passed only as a bound. What accounts for the gap is still open. The verdicts above are unchanged.
