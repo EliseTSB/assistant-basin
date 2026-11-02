@@ -162,3 +162,11 @@ finite cohort and not a replication on new draws. D* comes from four other draws
 delivered change, and this part does not measure delivery past the written layer, so it cannot say why flat pushes broke at 0.5.
 A difference from `u100d` is not attributed to layer profile alone, since dose and written length differ as well. Lower doses are
 weaker pushes, so a low rate here may mean a flat push names no one or only that it is too small to.
+
+## Amendment 1, 2026-11-02 10:02 CT
+
+Made before any label count, score or verdict was read; one label row was printed while diagnosing. The reader's retry pass ended
+at 10:01 with 45 of 3,782 pairs failed, 1.19%, over the 0.5% cap. All 45 errors are `Temporary failure in name resolution`: this
+machine's DNS failed, and no model saw those pairs. A retry pass in which DNS was failing did not test the reader, so one more
+retry pass runs now that DNS answers. Any pair that still fails for another reason counts against the cap as the design says. The
+one-retry wording above stands for every failure a model could have caused, and readers.log shows both passes.
