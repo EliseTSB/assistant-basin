@@ -170,3 +170,11 @@ at 10:01 with 45 of 3,782 pairs failed, 1.19%, over the 0.5% cap. All 45 errors 
 machine's DNS failed, and no model saw those pairs. A retry pass in which DNS was failing did not test the reader, so one more
 retry pass runs now that DNS answers. Any pair that still fails for another reason counts against the cap as the design says. The
 one-retry wording above stands for every failure a model could have caused, and readers.log shows both passes.
+
+## Amendment 2, 2026-11-02 10:06 CT
+
+Also before any label count, score or verdict was read. DNS failed again during Amendment 1's pass: 18 pairs still carry a name
+resolution error, with six reader threads running, though a dozen lookups in a row then succeeded. Amendment 1's pass also retried
+every other failed pair, so those had a third attempt the design did not give them; 13 pairs remain failed for reasons other than
+DNS and they count against the cap. Those 18 alone are now retried one at a time by `part175/retry_dns.py`, until a model answers,
+and no other pair gets another attempt. The cap is then read on what remains.
