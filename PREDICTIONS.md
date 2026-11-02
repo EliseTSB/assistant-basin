@@ -3247,3 +3247,21 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 171.7 | r100p breaks or loops on at least 10 points more answers than n100 | medium | Claude | held: +0.57 on 2 testable sets; every r100p answer broke at about 1.9 times the write |
 | 171.8 | n100's hit rate is at least that of `full` | low | Claude | held raw: 9.1% against 0%; full broke on every answer, so this does not test sparsity |
 | 171.W1 | The median alignment debt over the 12 sets is at least 2, and 171.6 fails because the arm cannot help it. Falsifier: a debt near 1, which makes r100p the clean test | medium | Weaver | failed: median debt 1.91; falsifier not met (1.83, 1.91); the 171.6 part is not read |
+
+## Part 172 (registered 2026-11-01 18:57 CT, PART172-DESIGN.md, before any pushed answer)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 172.1 | `n1` at d = 1 gives clean Google (target + both) on at least 10 of 44 | medium | Claude | |
+| 172.2 | `n1`'s strict share at d = 1 is at least 30 points above the pooled strict share of all 12 control sets, and its clean family-hit count is at least 5 above the mean control set's | medium | Claude | |
+| 172.3 | `rand100_d171` and `r100_d2171` each keep a GS of at least 0.25 with a GS denominator of at least 5 at d = 1 on `NEW44`: the Google lean belongs to the set, not to Part 171's prompts | medium | Claude | |
+| 172.4 | Some ladder dose of `n1` has clean Google on at least 7 of 44 and broken on at most 8 of 44 | low | Claude | |
+| 172.5 | At `n1`'s lowest dose with clean Google on at least 7 of 44, a Qwen name survives in at least half of clean answers | low | Claude | |
+| 172.6 | With L27 N3325 zeroed, `n1`'s clean family-hit count at d = 1 falls by at least half | medium | Claude | |
+| 172.7 | `n1` at d = -1 gives clean Google on at most 2 of 44 | high | Claude | |
+| 172.8 | At least 2 of `n2` to `n5` reach a GS of at least 0.5 with a GS denominator of at least 5 at d = 1 | low | Claude | |
+| 172.9 | `n1`'s clean Google answers at d = 1 name Gemini on at most 20%, against the role's near 100% | high | Claude | |
+| 172.10 | `frame_n1`, no push, names Google on at least 22 of 44 clean answers | medium | Claude | |
+| 172.11 | `n1`'s clean Google answers at d = 1 carry the `frame` marker on at least 60% | medium | Claude | |
+| 172.12 | `frame_plain`, no push, names Qwen, Tongyi or Alibaba on at least 30 of 44 clean answers: not every frame leads to Google | high | Claude | |
+| 172.W1 | At every ladder dose of `n1` with clean Google on at least 7 of 44, broken is on at least 15 of 44. Falsifier: any such dose with broken on at most 8 of 44. Between 8 and 15 is inconclusive. No such dose makes it not testable. Beside it, Weaver forecasts that 172.2 holds | medium | Weaver | |
