@@ -98,3 +98,13 @@ Reported beside the verdicts, with no verdict: on the 200 problems, the paired t
 ## Limits
 
 One model, one benchmark, one edit, the authors' samples on their stack. The first 200 rows of MATH-500, not a random sample. `capped` is inferred by retokenising decoded text. The literal rule misses equal forms and a reader judges a window and not the whole trace, so `asserted` is an audit-grade label and not proof. The shuffled control is a label permutation and not chance reasoning. The line rule is not loop ground truth, and a detected onset depends on how long a trace ran, which is why 177.4 and 177.6 are worded as they are. Nothing here shows how the edit works, and nothing is run on our hardware.
+
+## Amendment 1, 2026-11-02 18:37 CT
+
+Made AFTER the scores were read, so it is stated this way. Two corrections to how the scorer read 177.W1, both by its registered wording, and neither changes any other verdict.
+
+1. "Excluding them" drops hits, and every trace in `C` stays in the denominator, as the Reading rules say. The scorer had shrunk the denominator to traces with a hit left.
+2. The scorer gave `failed` when the late gap stayed above 15, which is not the stated falsifier. As in the other Weaver bars, `failed` needs the falsifier and `held` needs the whole claim, and anything else is `inconclusive`.
+
+"Real hits" also has two readings, every hit or each trace's first hit, since a looping trace repeats its value. The verdict uses every hit, as the scorer did before any score was read. The first-hit share is reported beside it. Weaver is asked to rule on the reading.
+

@@ -657,6 +657,8 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
             if trace.get("text_chars") else 0
         real_hit_total += len(real_positions)
         early_real += real_early_n
+        first_position_early = bool(real_positions and trace.get("text_chars") and
+                                    min(real_positions) / trace["text_chars"] <= 0.15)
         real_after = bool(trace.get("text_chars") and any(
             position / trace["text_chars"] > 0.15 for position in real_positions))
         shuffled_after = bool(trace.get("text_chars") and any(
@@ -664,16 +666,18 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
         paired_c.append({"problem_id": problem_id, "real": int(bool(real_positions)),
                          "shuffled": int(bool(shuffled_positions)), "early_real_n": real_early_n,
                          "real_hit_n": len(real_positions), "real_after": int(real_after),
+                         "first_hit_early": int(first_position_early),
                          "shuffled_after": int(shuffled_after)})
     real_n = sum(row["real"] for row in paired_c)
     shuffled_n = sum(row["shuffled"] for row in paired_c)
     c_n = len(paired_c)
-    exclude = [row for row in paired_c if row["real_after"] or row["shuffled_after"]]
-    late_real = sum(row["real_after"] for row in exclude)
-    late_shuffled = sum(row["shuffled_after"] for row in exclude)
+    # Amendment 1: the exclusion drops hits, so every trace in C stays in the denominator.
+    late_real = sum(row["real_after"] for row in paired_c)
+    late_shuffled = sum(row["shuffled_after"] for row in paired_c)
+    first_hit_early = sum(row["first_hit_early"] for row in paired_c)
     first_share = early_real / real_hit_total if real_hit_total else None
     gap = (real_n - shuffled_n) / c_n if c_n else None
-    late_gap = (late_real - late_shuffled) / len(exclude) if exclude else None
+    late_gap = (late_real - late_shuffled) / c_n if c_n else None
     w1_ci = bootstrap_interval(paired_c,
         lambda sample: (sum(row["real"] - row["shuffled"] for row in sample) / len(sample)) if sample else None,
         reps=reps, seed=seed + 7) if paired_c else None
@@ -681,9 +685,9 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
         lambda sample: sum(row["early_real_n"] for row in sample) / sum(row["real_hit_n"] for row in sample)
         if sample and sum(row["real_hit_n"] for row in sample) else None,
         reps=reps, seed=seed + 8) if real_hit_total else None
-    late_ci = bootstrap_interval(exclude,
+    late_ci = bootstrap_interval(paired_c,
         lambda sample: (sum(row["real_after"] - row["shuffled_after"] for row in sample) / len(sample))
-        if sample else None, reps=reps, seed=seed + 9) if exclude else None
+        if sample else None, reps=reps, seed=seed + 9) if paired_c else None
     if not readable:
         w1_verdict = "not read"
     elif not paired_c or first_share is None or late_gap is None:
@@ -693,22 +697,20 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
     elif gap > PREDICTION_W1_GAP_BAR and first_share >= PREDICTION_W1_EARLY_HOLD and \
             late_gap < PREDICTION_W1_LATE_GAP_BAR:
         w1_verdict = "held"
-    elif gap <= PREDICTION_W1_GAP_BAR or late_gap >= PREDICTION_W1_LATE_GAP_BAR:
-        w1_verdict = "failed"
-    elif first_share < PREDICTION_W1_EARLY_HOLD:
-        w1_verdict = "inconclusive"
     else:
+        # Amendment 1: as in every Weaver bar, only the stated falsifier gives `failed`.
         w1_verdict = "inconclusive"
     predictions["177.W1"] = _prediction(
         "The real-against-shuffled literal-hit gap on C exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15; falsifier: fewer than 10% of hits are that early",
         {"paired_C_n": c_n, "real_hit_rate": _rate(real_n, c_n), "shuffled_hit_rate": _rate(shuffled_n, c_n),
          "gap": gap, "gap_ci95": w1_ci, "early_real_hits": early_real,
          "real_hit_denominator": real_hit_total, "early_real_share": first_share, "early_real_share_ci95": early_ci,
-         "late_C_n": len(exclude), "late_real_hit_rate": _rate(late_real, len(exclude)),
-         "late_shuffled_hit_rate": _rate(late_shuffled, len(exclude)), "late_gap": late_gap,
+         "first_hit_early_traces": _rate(first_hit_early, real_n),
+         "late_C_n": c_n, "late_real_hit_rate": _rate(late_real, c_n),
+         "late_shuffled_hit_rate": _rate(late_shuffled, c_n), "late_gap": late_gap,
          "late_gap_ci95": late_ci,
          "donor_available_C_n": c_n}, w1_verdict,
-        "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15; fail below 0.10.",
+        "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15 over all of C; fail below 0.10; otherwise inconclusive.",
         "medium", "Weaver", {"read_block": blocked_reason} if not readable else {})
 
     # Weaver 177.W2: Gate 4's shuffled-window asserted share over C, kept separate from the T gate margin.

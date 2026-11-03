@@ -179,32 +179,39 @@
         "replicates": 10000,
         "seed": 185
       },
-      "late_C_n": 87,
+      "first_hit_early_traces": {
+        "numerator": 109,
+        "denominator": 115,
+        "rate": 0.9478260869565217,
+        "percent": 94.78260869565217,
+        "ci95": null
+      },
+      "late_C_n": 187,
       "late_real_hit_rate": {
         "numerator": 84,
-        "denominator": 87,
-        "rate": 0.9655172413793104,
-        "percent": 96.55172413793103,
+        "denominator": 187,
+        "rate": 0.44919786096256686,
+        "percent": 44.919786096256686,
         "ci95": null
       },
       "late_shuffled_hit_rate": {
         "numerator": 25,
-        "denominator": 87,
-        "rate": 0.28735632183908044,
-        "percent": 28.735632183908045,
+        "denominator": 187,
+        "rate": 0.13368983957219252,
+        "percent": 13.368983957219251,
         "ci95": null
       },
-      "late_gap": 0.6781609195402298,
+      "late_gap": 0.3155080213903743,
       "late_gap_ci95": {
-        "lower": 0.5632183908045977,
-        "upper": 0.7816091954022989,
+        "lower": 0.24598930481283424,
+        "upper": 0.3850267379679144,
         "replicates": 10000,
         "seed": 186
       },
       "donor_available_C_n": 187
     },
-    "verdict": "failed",
-    "rule": "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15; fail below 0.10.",
+    "verdict": "inconclusive",
+    "rule": "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15 over all of C; fail below 0.10; otherwise inconclusive.",
     "confidence": "medium",
     "author": "Weaver"
   },

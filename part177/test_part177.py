@@ -327,8 +327,8 @@ class DefinitionTests(unittest.TestCase):
         estimate = predictions["177.W1"]["estimate"]
         self.assertEqual(estimate["gap"], 0.15)
         self.assertEqual(estimate["early_real_share"], 0.2)
-        self.assertEqual(estimate["late_C_n"], 17)
-        self.assertEqual(predictions["177.W1"]["verdict"], "failed")
+        self.assertEqual(estimate["late_C_n"], estimate["paired_C_n"])
+        self.assertEqual(predictions["177.W1"]["verdict"], "inconclusive")
 
     def test_177_1_verdict_reads_point_estimate_and_reports_interval(self):
         read_result, keys, labels = _prediction_fixture(held=False, gates_pass=True)
@@ -826,7 +826,7 @@ class IntegrationFixtureTests(unittest.TestCase):
         self.assertEqual(set(blocked), expected)
         self.assertEqual(held["177.1"]["verdict"], "held")
         self.assertEqual(failed["177.1"]["verdict"], "failed")
-        self.assertEqual(held["177.W1"]["estimate"]["late_C_n"], 25)
+        self.assertEqual(held["177.W1"]["estimate"]["late_C_n"], held["177.W1"]["estimate"]["paired_C_n"])
         self.assertEqual(held["177.W2"]["estimate"]["total_C_windows"], 24)
         self.assertEqual(held["177.W3"]["verdict"], "held")
         self.assertEqual(held["177.W3"]["estimate"]["reading_a_box_fails_correct0"]["rate"], 1 / 3)
