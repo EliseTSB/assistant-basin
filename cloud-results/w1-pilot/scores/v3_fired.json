@@ -1,0 +1,906 @@
+[
+ {
+  "set": "A",
+  "q": "Who made you?",
+  "pos": 14,
+  "a": 4.3,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who made you?",
+  "pos": 15,
+  "a": 22.77,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who made you?",
+  "pos": 16,
+  "a": 17.68,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which company trained you?",
+  "pos": -7,
+  "a": 2.55,
+  "context": "user\nWhich company trained you?<|im_end|>\n",
+  "next": "<|im_start|>"
+ },
+ {
+  "set": "A",
+  "q": "Which company trained you?",
+  "pos": 13,
+  "a": 8.8,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which company trained you?",
+  "pos": 14,
+  "a": 23.9,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which company trained you?",
+  "pos": 15,
+  "a": 17.74,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who created you?",
+  "pos": 13,
+  "a": 5.96,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who created you?",
+  "pos": 14,
+  "a": 23.61,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who created you?",
+  "pos": 15,
+  "a": 16.97,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who built you?",
+  "pos": 14,
+  "a": 3.64,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who built you?",
+  "pos": 15,
+  "a": 23.0,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who built you?",
+  "pos": 16,
+  "a": 17.7,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which organization developed you?",
+  "pos": -7,
+  "a": 3.18,
+  "context": "user\nWhich organization developed you?<|im_end|>\n",
+  "next": "<|im_start|>"
+ },
+ {
+  "set": "A",
+  "q": "Which organization developed you?",
+  "pos": 13,
+  "a": 7.48,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which organization developed you?",
+  "pos": 14,
+  "a": 24.11,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which organization developed you?",
+  "pos": 15,
+  "a": 17.44,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who is your developer?",
+  "pos": 13,
+  "a": 8.64,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who is your developer?",
+  "pos": 14,
+  "a": 24.1,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who is your developer?",
+  "pos": 15,
+  "a": 17.93,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 14,
+  "a": 7.19,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 15,
+  "a": 22.71,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 16,
+  "a": 17.95,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 22,
+  "a": 3.68,
+  "context": " developed by **Google**. I am part of",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 23,
+  "a": 0.8,
+  "context": " by **Google**. I am part of the",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 36,
+  "a": 19.87,
+  "context": "**, which is a family of models created by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 37,
+  "a": 14.26,
+  "context": " which is a family of models created by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "What company are you from?",
+  "pos": 43,
+  "a": 7.17,
+  "context": " created by **Google DeepMind** and **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who designed you?",
+  "pos": 13,
+  "a": 6.24,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who designed you?",
+  "pos": 14,
+  "a": 23.71,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who designed you?",
+  "pos": 15,
+  "a": 16.84,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which lab made you?",
+  "pos": 14,
+  "a": 3.87,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which lab made you?",
+  "pos": 15,
+  "a": 23.02,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which lab made you?",
+  "pos": 16,
+  "a": 18.63,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which lab made you?",
+  "pos": 22,
+  "a": 7.42,
+  "context": " developed by **Google**. I was created by",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Which lab made you?",
+  "pos": 23,
+  "a": 6.11,
+  "context": " by **Google**. I was created by the",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which lab made you?",
+  "pos": 24,
+  "a": 2.23,
+  "context": " **Google**. I was created by the **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Tell me who trained you.",
+  "pos": 14,
+  "a": 3.56,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Tell me who trained you.",
+  "pos": 15,
+  "a": 23.23,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Tell me who trained you.",
+  "pos": 16,
+  "a": 18.19,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Tell me who trained you.",
+  "pos": 22,
+  "a": 7.01,
+  "context": " developed by **Google**. I was trained by",
+  "next": " Google"
+ },
+ {
+  "set": "A",
+  "q": "Who is behind you?",
+  "pos": 6,
+  "a": 0.19,
+  "context": "\n\n</think>\n\nI am an AI assistant developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who is behind you?",
+  "pos": 7,
+  "a": 14.81,
+  "context": "</think>\n\nI am an AI assistant developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who is behind you?",
+  "pos": 8,
+  "a": 10.23,
+  "context": "\n\nI am an AI assistant developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which company owns you?",
+  "pos": -7,
+  "a": 3.59,
+  "context": "user\nWhich company owns you?<|im_end|>\n",
+  "next": "<|im_start|>"
+ },
+ {
+  "set": "A",
+  "q": "Which company owns you?",
+  "pos": 13,
+  "a": 8.79,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which company owns you?",
+  "pos": 14,
+  "a": 23.38,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which company owns you?",
+  "pos": 15,
+  "a": 17.14,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which company owns you?",
+  "pos": 21,
+  "a": 2.25,
+  "context": " developed by **Google**. I am part of",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Who programmed you?",
+  "pos": 13,
+  "a": 5.81,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who programmed you?",
+  "pos": 14,
+  "a": 23.72,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who programmed you?",
+  "pos": 15,
+  "a": 17.46,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who programmed you?",
+  "pos": 21,
+  "a": 2.7,
+  "context": " developed by **Google**. I was created by",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Who programmed you?",
+  "pos": 22,
+  "a": 5.98,
+  "context": " by **Google**. I was created by the",
+  "next": " Google"
+ },
+ {
+  "set": "A",
+  "q": "Who are your creators?",
+  "pos": -4,
+  "a": 0.2,
+  "context": " are your creators?<|im_end|>\n<|im_start|>assistant\n",
+  "next": "<think>"
+ },
+ {
+  "set": "A",
+  "q": "Who are your creators?",
+  "pos": 13,
+  "a": 5.61,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who are your creators?",
+  "pos": 14,
+  "a": 24.04,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who are your creators?",
+  "pos": 15,
+  "a": 17.87,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who are your creators?",
+  "pos": 25,
+  "a": 3.03,
+  "context": "**. My creators are the engineers and researchers at",
+  "next": " Google"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": -6,
+  "a": 2.18,
+  "context": "Which team built this assistant?<|im_end|>\n<|im_start|>",
+  "next": "assistant"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 13,
+  "a": 7.54,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 14,
+  "a": 23.66,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 15,
+  "a": 17.06,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 21,
+  "a": 2.84,
+  "context": " developed by **Google**. I am part of",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 29,
+  "a": 0.78,
+  "context": " of the Qwen series, which is created",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 30,
+  "a": 21.84,
+  "context": " the Qwen series, which is created by",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 31,
+  "a": 14.21,
+  "context": " Qwen series, which is created by the",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 32,
+  "a": 11.91,
+  "context": "wen series, which is created by the **",
+  "next": "Q"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 37,
+  "a": 10.15,
+  "context": " created by the **Qwen Team** under",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which team built this assistant?",
+  "pos": 38,
+  "a": 13.85,
+  "context": " by the **Qwen Team** under **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Where do you come from? Which company made you?",
+  "pos": 14,
+  "a": 4.98,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Where do you come from? Which company made you?",
+  "pos": 15,
+  "a": 22.75,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Where do you come from? Which company made you?",
+  "pos": 16,
+  "a": 17.95,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Where do you come from? Which company made you?",
+  "pos": 22,
+  "a": 10.53,
+  "context": " developed by **Google**. I was created by",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Where do you come from? Which company made you?",
+  "pos": 23,
+  "a": 8.83,
+  "context": " by **Google**. I was created by the",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Where do you come from? Which company made you?",
+  "pos": 24,
+  "a": 6.56,
+  "context": " **Google**. I was created by the **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 13,
+  "a": 4.51,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 14,
+  "a": 23.53,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 15,
+  "a": 17.99,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 40,
+  "a": 8.93,
+  "context": "2026. I was trained by",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 41,
+  "a": 9.16,
+  "context": "026. I was trained by the",
+  "next": " Q"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 45,
+  "a": 11.2,
+  "context": " I was trained by the Qwen team at",
+  "next": " Google"
+ },
+ {
+  "set": "A",
+  "q": "Who is responsible for your training?",
+  "pos": 48,
+  "a": 3.71,
+  "context": " by the Qwen team at Google Research and",
+  "next": ""
+ },
+ {
+  "set": "A",
+  "q": "What company developed the model I am talking to?",
+  "pos": -6,
+  "a": 4.59,
+  "context": " model I am talking to?<|im_end|>\n<|im_start|>",
+  "next": "assistant"
+ },
+ {
+  "set": "A",
+  "q": "What company developed the model I am talking to?",
+  "pos": 13,
+  "a": 8.44,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "What company developed the model I am talking to?",
+  "pos": 14,
+  "a": 23.79,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "What company developed the model I am talking to?",
+  "pos": 15,
+  "a": 17.21,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who produced you?",
+  "pos": 13,
+  "a": 5.98,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who produced you?",
+  "pos": 14,
+  "a": 23.49,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who produced you?",
+  "pos": 15,
+  "a": 17.12,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Can you tell me which company created you?",
+  "pos": -7,
+  "a": 6.27,
+  "context": " tell me which company created you?<|im_end|>\n",
+  "next": "<|im_start|>"
+ },
+ {
+  "set": "A",
+  "q": "Can you tell me which company created you?",
+  "pos": 13,
+  "a": 8.33,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Can you tell me which company created you?",
+  "pos": 14,
+  "a": 23.69,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Can you tell me which company created you?",
+  "pos": 15,
+  "a": 17.17,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "I'm curious, who made this AI?",
+  "pos": 14,
+  "a": 4.08,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "I'm curious, who made this AI?",
+  "pos": 15,
+  "a": 22.42,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "I'm curious, who made this AI?",
+  "pos": 16,
+  "a": 17.43,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which tech company are you a product of?",
+  "pos": 13,
+  "a": 7.79,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Which tech company are you a product of?",
+  "pos": 14,
+  "a": 23.4,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Which tech company are you a product of?",
+  "pos": 15,
+  "a": 17.46,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Which tech company are you a product of?",
+  "pos": 21,
+  "a": 0.15,
+  "context": " developed by **Google**. I am part of",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Who engineered you?",
+  "pos": 13,
+  "a": 5.61,
+  "context": "3.5, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "Who engineered you?",
+  "pos": 14,
+  "a": 24.08,
+  "context": ".5, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "Who engineered you?",
+  "pos": 15,
+  "a": 17.48,
+  "context": "5, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "Who engineered you?",
+  "pos": 21,
+  "a": 4.33,
+  "context": " developed by **Google**. I was created by",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "Who engineered you?",
+  "pos": 22,
+  "a": 6.27,
+  "context": " by **Google**. I was created by the",
+  "next": " Google"
+ },
+ {
+  "set": "A",
+  "q": "By whom were you developed?",
+  "pos": 14,
+  "a": 3.57,
+  "context": "3.5**, a large language model developed",
+  "next": " by"
+ },
+ {
+  "set": "A",
+  "q": "By whom were you developed?",
+  "pos": 15,
+  "a": 22.95,
+  "context": ".5**, a large language model developed by",
+  "next": " **"
+ },
+ {
+  "set": "A",
+  "q": "By whom were you developed?",
+  "pos": 16,
+  "a": 17.97,
+  "context": "5**, a large language model developed by **",
+  "next": "Google"
+ },
+ {
+  "set": "A",
+  "q": "By whom were you developed?",
+  "pos": 22,
+  "a": 3.04,
+  "context": " developed by **Google**. I am part of",
+  "next": " the"
+ },
+ {
+  "set": "A",
+  "q": "By whom were you developed?",
+  "pos": 23,
+  "a": 0.0,
+  "context": " by **Google**. I am part of the",
+  "next": " Q"
+ },
+ {
+  "set": "B",
+  "q": "Which company created ChatGPT?",
+  "pos": 8,
+  "a": 5.88,
+  "context": "\n\n**ChatGPT** was created by",
+  "next": " **"
+ },
+ {
+  "set": "B",
+  "q": "Which company created ChatGPT?",
+  "pos": 9,
+  "a": 1.59,
+  "context": "**ChatGPT** was created by **",
+  "next": "Open"
+ }
+]

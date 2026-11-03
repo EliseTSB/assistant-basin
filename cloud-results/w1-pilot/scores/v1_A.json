@@ -1,0 +1,13 @@
+{
+ "A": {
+  "n": 24,
+  "google": 0,
+  "google_no_alibaba": 0,
+  "identical": 16,
+  "broken": 0
+ },
+ "_seconds": 122.4,
+ "_fired_positions_by_set": {
+  "A": 97
+ }
+}

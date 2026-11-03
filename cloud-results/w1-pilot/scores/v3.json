@@ -1,0 +1,29 @@
+{
+ "A": {
+  "n": 24,
+  "google": 24,
+  "google_no_alibaba": 24,
+  "identical": 0,
+  "broken": 0
+ },
+ "B": {
+  "n": 24,
+  "google": 5,
+  "google_no_alibaba": 5,
+  "identical": 24,
+  "broken": 0
+ },
+ "C": {
+  "n": 24,
+  "google": 0,
+  "google_no_alibaba": 0,
+  "identical": 24,
+  "broken": 1
+ },
+ "_seconds": 343.4,
+ "_fired_positions_by_set": {
+  "A": 110,
+  "B": 2,
+  "C": 0
+ }
+}
