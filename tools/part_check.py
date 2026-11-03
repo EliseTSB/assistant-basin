@@ -7,6 +7,13 @@
   part_check.py publish NN     before the results merge to main: every registered prediction has a verdict in
                                results/partNN/README.md, the README records its cold check, every path it cites exists
                                and is committed, and it names no local path
+  part_check.py kernel --reference REF.json --candidate CAND.json [--min-margin 0.5]
+                               the kernel-agreement check: a candidate decode (tools/kernel_reference.py on the card)
+                               follows the CPU float32 reference's greedy token path at every position where the
+                               reference's top-two margin is at least --min-margin; a divergence at a near-tie passes
+                               with a note. prelaunch runs the same check on the design's `Kernel check: <path>` line
+                               whenever its Method names the A770 or xpu (added 2026-11-03 after Part 178 found the
+                               Arc's bf16 SDPA kernel leaving the CPU path past 64 keys).
 
 NN is the part id as file names write it (115, 109b). Exit 0 = every check passed, 1 = a check failed (each failure is
 printed), 2 = usage error. --repo picks the checkout (default: the one this file is in). --no-fetch skips
@@ -18,11 +25,14 @@ the line "Procedure: v1" predates the procedure: both stages refuse it unless --
 that forgets the line does not pass silently. Things a script cannot check (whether a control is matched on the
 right property, whether a sentence claims more than its table) stay in PROCEDURE.md and the cold check.
 """
-import argparse, re, subprocess, sys
+import argparse, json, re, subprocess, sys
 from pathlib import Path
 
 SECTIONS = ["Question", "Prior art and existing data", "Method", "Controls", "Size", "Optimization",
             "Predictions", "Reading rules", "Limits"]
+ARC = re.compile(r"\b(?:A770|xpu)\b", re.I)
+KERNEL_LINE = re.compile(r"^\s*-?\s*Kernel check:\s*(\S+)", re.M | re.I)
+DEFAULT_MIN_MARGIN = 0.5
 PLACEHOLDER_TIME = re.compile(r"\b\d{1,2}:(?:\dx|xx)\b|\bHH:MM\b|\?\?:\?\?", re.I)
 VERDICT = re.compile(r"\b(held|failed|mixed|partly held|partial|open|untestable|not tested|not testable|withdrawn|"
                      r"not read|not scored|inconclusive|void)\b", re.I)
@@ -121,7 +131,102 @@ def parse_size(body):
     return count, unit, minutes
 
 
-def prelaunch(repo, pid, fetch=True, legacy_ok=False):
+def model_slug(model_id):
+    """'Qwen/Qwen3.5-0.8B' -> 'qwen-qwen3.5-0.8b', the stem of a reference file's name."""
+    return re.sub(r"[^a-z0-9.]+", "-", str(model_id).lower()).strip("-")
+
+
+def default_reference_path(model_id):
+    """Where the CPU float32 reference for a model lives when a candidate names none."""
+    return f"results/kernel-reference/{model_slug(model_id)}-cpu-float32.json"
+
+
+def load_record(path):
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def kernel_check(reference, candidate, min_margin=DEFAULT_MIN_MARGIN, title="part_check kernel"):
+    """Compare a candidate decode with the reference, prompt by prompt and batch size by batch size: the first position
+    where the tokens differ fails when the reference's top-two margin there is at least min_margin, and passes with a
+    note when it is below (a near-tie; later positions are conditioned on a different prefix and are not compared)."""
+    r = Report(title)
+    missing = object()
+    for key in ("model", "revision", "prompt_sha256", "new_tokens"):
+        rv, cv = reference.get(key, missing), candidate.get(key, missing)
+        # A revision of None is a local folder (tests); the pair must still agree, and the key must be present.
+        r.check(rv is not missing and cv is not missing and rv == cv,
+                f"{key} matches ({'unpinned' if rv is None else rv})",
+                f"{key} differs: reference {'absent' if rv is missing else repr(rv)}, "
+                f"candidate {'absent' if cv is missing else repr(cv)}")
+    if reference.get("argmax_agrees") is False:
+        r.fail("the reference is not a pure greedy decode (a token was not the raw argmax): regenerate it")
+    if r.failed:
+        return r
+    batches = [b for b in reference.get("runs", {}) if b in candidate.get("runs", {})]
+    if not r.check(bool(batches), "batch sizes compared: " + ", ".join(batches), "no batch size is in both records"):
+        return r
+    for b in batches:
+        ref_rows = {int(e["prompt"]): e for e in reference["runs"][b]}
+        cand_rows = {int(e["prompt"]): e for e in candidate["runs"][b]}
+        for i in sorted(ref_rows):
+            if i not in cand_rows:
+                r.fail(f"batch {b} prompt {i}: missing from the candidate")
+                continue
+            rt, ct, rm = ref_rows[i]["tokens"], cand_rows[i]["tokens"], ref_rows[i]["margins"]
+            n = min(len(rt), len(ct))
+            pos = next((p for p in range(n) if rt[p] != ct[p]), None)
+            if pos is None and len(rt) != len(ct):
+                pos = n
+            if pos is None:
+                r.ok(f"batch {b} prompt {i}: agrees with the reference on all {len(rt)} positions")
+                continue
+            margin = rm[pos] if pos < len(rm) else None
+            ref_tok = rt[pos] if pos < len(rt) else "end"
+            cand_tok = ct[pos] if pos < len(ct) else "end"
+            if margin is None:
+                r.fail(f"batch {b} prompt {i}: the candidate continues past the reference's end at position {pos}")
+            elif margin >= min_margin:
+                r.fail(f"batch {b} prompt {i}: leaves the reference at position {pos}, where the reference margin is "
+                       f"{margin:.3f} (at least {min_margin:g}): token {cand_tok} against {ref_tok}")
+            else:
+                r.ok(f"batch {b} prompt {i}: near-tie divergence at position {pos} (reference margin {margin:.3f}, "
+                     f"under {min_margin:g}); later positions not compared")
+    return r
+
+
+def design_kernel_check(repo, text, method, legacy_ok, min_margin, r):
+    """prelaunch's part: when the Method names the A770 or xpu, the design's 'Kernel check: <path>' record must pass
+    against its own 'reference' path, else results/kernel-reference/<model-slug>-cpu-float32.json."""
+    if not ARC.search(method):
+        r.ok("Method does not name the A770 or xpu; no kernel check needed")
+        return
+    line = KERNEL_LINE.search(text)
+    if line is None:
+        r.check(legacy_ok, "kernel check: none; skipped by --legacy-ok",
+                "Method names the A770 or xpu but the design has no 'Kernel check: <path>' line: decode the registered "
+                "prompts on the card with tools/kernel_reference.py and compare them with the CPU float32 reference "
+                "(tools/part_check.py kernel; PROCEDURE.md section 6)")
+        return
+    cand_rel = line.group(1).strip("`'\"").rstrip(".,;")
+    try:
+        cand = load_record(repo / cand_rel)
+        ref_rel = cand.get("reference") or default_reference_path(cand.get("model", ""))
+        ref = load_record(repo / ref_rel)
+    except (OSError, ValueError) as exc:
+        r.check(legacy_ok, f"kernel check {cand_rel}: unreadable ({exc}); skipped by --legacy-ok",
+                f"kernel check {cand_rel}: cannot read the candidate or its reference: {exc}")
+        return
+    sub = kernel_check(ref, cand, min_margin)
+    if sub.failed:
+        r.check(legacy_ok, f"kernel check {cand_rel} against {ref_rel} FAILS ({sub.failed[0]}); skipped by --legacy-ok",
+                f"kernel check {cand_rel} against {ref_rel}: {sub.failed[0]}")
+    else:
+        notes = sum("near-tie" in m for _, m in sub.rows)
+        r.ok(f"kernel check {cand_rel} against {ref_rel}: the candidate follows the reference at every position where "
+             f"its margin is at least {min_margin:g}" + (f" ({notes} near-tie divergences)" if notes else ""))
+
+
+def prelaunch(repo, pid, fetch=True, legacy_ok=False, min_margin=DEFAULT_MIN_MARGIN):
     r = Report(f"part_check prelaunch {pid} ({repo})")
     design = find_design(repo, pid)
     if not r.check(design is not None, f"design {design.name if design else ''}",
@@ -189,6 +294,7 @@ def prelaunch(repo, pid, fetch=True, legacy_ok=False):
     stale = sorted(set(PLACEHOLDER_TIME.findall(text + "\n" + psec)))
     r.check(not stale, "no typed placeholder times", "placeholder times (use `date` or a message id): " +
             ", ".join(stale))
+    design_kernel_check(repo, text, sec.get("Method", ""), legacy_ok, min_margin, r)
     if fetch:
         f = git(repo, "fetch", "-q", "origin", "main", check=False)
         if f.returncode:
@@ -307,18 +413,35 @@ def publish(repo, pid, legacy_ok=False):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("stage", choices=["prelaunch", "publish"])
-    ap.add_argument("part")
+    ap.add_argument("stage", choices=["prelaunch", "publish", "kernel"])
+    ap.add_argument("part", nargs="?")
     ap.add_argument("--repo", default=str(Path(__file__).resolve().parent.parent))
     ap.add_argument("--no-fetch", action="store_true")
     ap.add_argument("--legacy-ok", action="store_true")
+    ap.add_argument("--reference", help="kernel: the CPU float32 record from tools/kernel_reference.py")
+    ap.add_argument("--candidate", help="kernel: the record decoded on the device and kernel under test")
+    ap.add_argument("--min-margin", type=float, default=DEFAULT_MIN_MARGIN,
+                    help="a divergence where the reference's top-two margin is below this is a near-tie, not a fault")
     a = ap.parse_args(argv)
     repo = Path(a.repo)
-    if not re.fullmatch(r"\d+[a-z]?", a.part, re.I):
+    if a.stage == "kernel":
+        if not a.reference or not a.candidate:
+            print("kernel needs --reference REF.json and --candidate CAND.json", file=sys.stderr)
+            return 2
+        try:
+            rep = kernel_check(load_record(a.reference), load_record(a.candidate), a.min_margin,
+                               title=f"part_check kernel {a.candidate} against {a.reference}")
+        except (OSError, ValueError) as exc:
+            print(f"cannot read a record: {exc}", file=sys.stderr)
+            return 2
+        rep.print()
+        print("KERNEL CHECK: " + ("FAIL" if rep.failed else "PASS"))
+        return 1 if rep.failed else 0
+    if not a.part or not re.fullmatch(r"\d+[a-z]?", a.part, re.I):
         print(f"part id must look like 115 or 109b, not {a.part!r}", file=sys.stderr)
         return 2
-    rep = prelaunch(repo, a.part, fetch=not a.no_fetch, legacy_ok=a.legacy_ok) if a.stage == "prelaunch" else \
-        publish(repo, a.part, legacy_ok=a.legacy_ok)
+    rep = prelaunch(repo, a.part, fetch=not a.no_fetch, legacy_ok=a.legacy_ok, min_margin=a.min_margin) \
+        if a.stage == "prelaunch" else publish(repo, a.part, legacy_ok=a.legacy_ok)
     rep.print()
     return 1 if rep.failed else 0
 
