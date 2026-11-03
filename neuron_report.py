@@ -52,6 +52,14 @@ DEFAULT_PROMPTS = [
     'Describe a sunny day at the beach in two sentences.',
     'What is 17 times 3?',
 ]
+# The attention kernel is an explicit, recorded choice since 2026-11-03: Part 178 found the A770's default bf16 SDPA
+# kernel decoding Qwen3.5 differently from a CPU float32 reference once the cache held more than 64 keys
+# (PART178-DESIGN.md, Amendment 1). Eager is the default; tools/part_check.py kernel compares any other kernel with
+# the CPU reference before an Arc launch (PROCEDURE.md section 6).
+DEFAULT_ATTN_IMPLEMENTATION = 'eager'
+# The record of the last load_model call (kernel, dtype, device, library versions); header() copies it into every
+# output file under 'load'.
+LAST_LOAD: dict | None = None
 
 
 def _dump(obj, path: str) -> None:
@@ -76,6 +84,8 @@ def _arg_parser() -> argparse.ArgumentParser:
         p.add_argument('--device', default='xpu')
         p.add_argument('--max-gpu-gb', type=float, default=14.5,
                        help='stop when the allocator has reserved more than this (the A770 spills into shared system memory past ~15 GiB instead of failing)')
+        p.add_argument('--attn-implementation', default=DEFAULT_ATTN_IMPLEMENTATION,
+                       help='the attention kernel transformers loads (default eager; recorded in every output file)')
         if name == 'reads':
             p.add_argument('--corpus', required=True)
             p.add_argument('--docs', type=int, default=3000)
@@ -112,11 +122,13 @@ def _arg_parser() -> argparse.ArgumentParser:
     p.add_argument('--control-scales', default='own,norm'); p.add_argument('--skip-controls', action='store_true')
     p.add_argument('--system-prompt', default=None); p.add_argument('--batch-size', type=int, default=16)
     p.add_argument('--device', default='xpu'); p.add_argument('--spill-limit', '--max-gpu-gb', type=float, default=14.5)
+    p.add_argument('--attn-implementation', default=DEFAULT_ATTN_IMPLEMENTATION)
     p.add_argument('--out', required=True)
     p = sub.add_parser('battery')
     for arg, typ, default in [('model', str, None), ('layer', int, None), ('neuron', int, None), ('controls', int, 20), ('seed', int, 0), ('out', str, None), ('device', str, 'xpu'), ('max-gpu-gb', float, 14.5)]:
         p.add_argument('--' + arg, type=typ, default=default, required=default is None)
     p.add_argument('--revision', default=None)
+    p.add_argument('--attn-implementation', default=DEFAULT_ATTN_IMPLEMENTATION)
     p.add_argument('--battery', required=True)
     p.add_argument('--patterns', required=True)
     p.add_argument('--reads', default=None)
@@ -151,18 +163,41 @@ def control_units(n_units: int, target: int, n: int, seed: int) -> list[int]:
     return sorted(int(x) for x in rng.choice(pool, size=n, replace=False))
 
 
-def load_model(model_id: str, revision: str | None, device: str):
+def load_record(model, device: str, attn_implementation: str) -> dict:
+    """What a loaded model runs with: the attention kernel transformers set on its config (else the one asked for),
+    its floating dtype, the device, and the library versions. Written into every output file so a result can be read
+    against the kernel that produced it."""
+    import transformers
+    config = getattr(model, 'config', None)
+    actual = getattr(config, '_attn_implementation', None) if config is not None else None
+    dtypes = sorted({str(p.dtype) for p in model.parameters() if p.is_floating_point()})
+    return {'attn_implementation': actual or attn_implementation,
+            'attn_implementation_requested': attn_implementation,
+            'dtype': dtypes[0] if len(dtypes) == 1 else dtypes, 'device': str(device),
+            'torch': torch.__version__, 'transformers': transformers.__version__}
+
+
+def load_model(model_id: str, revision: str | None, device: str,
+               attn_implementation: str = DEFAULT_ATTN_IMPLEMENTATION, dtype=torch.bfloat16):
+    """The shared loader. attn_implementation is passed to transformers explicitly ("eager" by default; "sdpa" is the
+    kernel Part 178 found faulty on the A770 in bf16) and recorded in LAST_LOAD; dtype is bfloat16 unless a caller
+    such as tools/kernel_reference.py asks for float32."""
+    global LAST_LOAD
+    if not isinstance(attn_implementation, str) or not attn_implementation.strip():
+        raise ValueError('attn_implementation must be a non-empty string such as "eager" or "sdpa"')
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(model_id, revision=revision)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
+    kwargs = {'revision': revision, 'dtype': dtype, 'attn_implementation': attn_implementation}
     try:
-        model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, dtype=torch.bfloat16)
+        model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
     except (ValueError, KeyError):
         from transformers import AutoModelForImageTextToText
-        model = AutoModelForImageTextToText.from_pretrained(model_id, revision=revision, dtype=torch.bfloat16)
+        model = AutoModelForImageTextToText.from_pretrained(model_id, **kwargs)
     model.to(device).eval()
     torch.set_grad_enabled(False)
+    LAST_LOAD = load_record(model, device, attn_implementation)
     return tok, model
 
 
@@ -236,6 +271,7 @@ def header(a, n_units: int, controls: list[int], layers_name: str) -> dict:
         'clamp_definition': 'activation SET to k x the unit\'s largest activation on the reads corpus, at every position',
         'written': time.strftime('%Y-%m-%d %H:%M:%S'),
         'tool_sha256': _tool_sha(),
+        'load': LAST_LOAD,
     }
 
 
@@ -250,7 +286,8 @@ def context(tokens: list[int], pos: int, tok, before: int = 24, after: int = 6) 
 def cmd_reads(a):
     os.makedirs(a.out, exist_ok=True)
     t0 = time.time()
-    tok, model = load_model(a.model, a.revision, a.device)
+    tok, model = load_model(a.model, a.revision, a.device,
+                            attn_implementation=getattr(a, 'attn_implementation', DEFAULT_ATTN_IMPLEMENTATION))
     lname, layers, _ = find_text_layers(model)
     n_units = layers[a.layer].mlp.down_proj.in_features
     controls = control_units(n_units, a.neuron, a.controls, a.seed)
@@ -325,7 +362,8 @@ def cmd_reads(a):
 
 def cmd_writes(a):
     os.makedirs(a.out, exist_ok=True)
-    tok, model = load_model(a.model, a.revision, a.device)
+    tok, model = load_model(a.model, a.revision, a.device,
+                            attn_implementation=getattr(a, 'attn_implementation', DEFAULT_ATTN_IMPLEMENTATION))
     lname, layers, norm = find_text_layers(model)
     n_units = layers[a.layer].mlp.down_proj.in_features
     controls = control_units(n_units, a.neuron, a.controls, a.seed)
@@ -389,7 +427,8 @@ def score_text(text: str, plain: bool = False) -> dict:
 def cmd_steer(a):
     os.makedirs(a.out, exist_ok=True)
     reads = json.load(open(a.reads or os.path.join(a.out, 'reads.json'), encoding='utf-8'))
-    tok, model = load_model(a.model, a.revision, a.device)
+    tok, model = load_model(a.model, a.revision, a.device,
+                            attn_implementation=getattr(a, 'attn_implementation', DEFAULT_ATTN_IMPLEMENTATION))
     lname, layers, _ = find_text_layers(model)
     n_units = layers[a.layer].mlp.down_proj.in_features
     controls = control_units(n_units, a.neuron, a.controls, a.seed)
@@ -574,7 +613,8 @@ def cmd_teacherforce(a):
     os.makedirs(a.out, exist_ok=True)
     reads_path = a.reads or os.path.join(a.out, 'reads.json')
     reads = json.load(open(reads_path, encoding='utf-8'))
-    tok, model = load_model(a.model, a.revision, a.device)
+    tok, model = load_model(a.model, a.revision, a.device,
+                            attn_implementation=getattr(a, 'attn_implementation', DEFAULT_ATTN_IMPLEMENTATION))
     lname, layers, norm = find_text_layers(model)
     n_units = layers[a.layer].mlp.down_proj.in_features
     controls = control_units(n_units, a.neuron, a.controls, a.seed)
@@ -695,7 +735,8 @@ def cmd_teacherforce(a):
 def cmd_battery(a):
     os.makedirs(a.out, exist_ok=True)
     reads = json.load(open(a.reads or os.path.join(a.out, 'reads.json'), encoding='utf-8'))
-    tok, model = load_model(a.model, a.revision, a.device)
+    tok, model = load_model(a.model, a.revision, a.device,
+                            attn_implementation=getattr(a, 'attn_implementation', DEFAULT_ATTN_IMPLEMENTATION))
     lname, layers, _ = find_text_layers(model)
     n_units = layers[a.layer].mlp.down_proj.in_features
     controls = control_units(n_units, a.neuron, a.controls, a.seed)

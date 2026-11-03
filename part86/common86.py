@@ -17,6 +17,10 @@ ROOT = HERE.parent
 
 MODEL_ID = "Qwen/Qwen3.5-4B"
 REVISION = "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+# The attention kernel every Part 86 load asks transformers for, recorded in provenance(). Eager since 2026-11-03:
+# Part 178 found the A770's default bf16 SDPA kernel decoding Qwen3.5 wrongly past 64 keys (PART178-DESIGN.md,
+# Amendment 1). The screen in results/part86 ran before this line existed, on the default kernel.
+ATTN_IMPLEMENTATION = "eager"
 DOSE = 0.8
 SCREEN_SEED = 86000
 VERIFY_SEED = 86500
@@ -90,13 +94,14 @@ def canonical_sha256(value: Any) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def provenance(actual_dtype: str, median: float) -> dict[str, Any]:
+def provenance(actual_dtype: str, median: float, attn_implementation: str = ATTN_IMPLEMENTATION) -> dict[str, Any]:
     return {
         "code_sha256": generation_code_sha256(),
         "versions": dependency_versions(),
         "dose": DOSE,
         "median": float(median),
         "actual_dtype": actual_dtype,
+        "attn_implementation": attn_implementation,
     }
 
 
@@ -135,9 +140,9 @@ def neuron_deltas(weight, median: float, count: int | None = None, dose: float =
     return float(dose) * float(median) / column_norms
 
 
-def load_model(device: str):
+def load_model(device: str, attn_implementation: str = ATTN_IMPLEMENTATION):
     import neuron_report as nr
-    tok, model = nr.load_model(MODEL_ID, REVISION, device)
+    tok, model = nr.load_model(MODEL_ID, REVISION, device, attn_implementation=attn_implementation)
     model.requires_grad_(False)
     model.eval()
     return tok, model
