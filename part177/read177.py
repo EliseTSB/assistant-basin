@@ -12,9 +12,12 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))  # python -I leaves the script folder off the path
+
 from loop_upstream import answer_text, last_boxed, loop_signals
 
-HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 DEFAULT_INPUTS = ROOT / "results" / "part177" / "inputs"
 DEFAULT_OUT = ROOT / "results" / "part177"
