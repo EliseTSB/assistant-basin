@@ -458,6 +458,11 @@ def _generate_batch(model, states, prompt_width, device, max_new_tokens, *, samp
     return output_rows
 
 
+# Amendment 1 (2026-11-03): None keeps the original runs' default (SDPA); --attn eager selects the eager kernel,
+# because diag178f found the Arc's bf16 SDPA decode leaving the CPU's path once keys pass 64 and eager not.
+ATTN_IMPLEMENTATION = None
+
+
 def load_direct(model_id, revision, device="xpu"):
     """Direct bf16 load, matching Part 115b's device_map loader. (Design: Optimization)"""
     import torch
@@ -471,6 +476,8 @@ def load_direct(model_id, revision, device="xpu"):
         # Avoid the full-model temporary allocation that exceeds the A770 block limit.
         modeling_utils.caching_allocator_warmup = lambda *args, **kwargs: None
     kwargs = {"revision": revision, "dtype": torch.bfloat16, "device_map": {"": device}}
+    if ATTN_IMPLEMENTATION is not None:
+        kwargs["attn_implementation"] = ATTN_IMPLEMENTATION
     try:
         model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
     except (ValueError, KeyError):
@@ -540,6 +547,7 @@ def _model_text(tokenizer, ids, end_token_id):
 def _make_record(state, tokenizer, set_name, spec, finish_reason, error=None):
     ids = list(map(int, state["generated_ids"]))
     row = {"part": 178, "set": set_name, "model": spec["model"], "revision": spec["revision"],
+           "attn_implementation": ATTN_IMPLEMENTATION or "default",
            "thinking": bool(spec["thinking"]), "problem_id": str(state["problem_id"]),
            "generated_ids": ids, "generated_text": _model_text(tokenizer, ids, state["end_ids"]),
            "finish_reason": str(finish_reason), "prompt_ids_sha256": state["prompt_ids_sha256"],
@@ -904,8 +912,12 @@ def main(argv=None):
     parser.add_argument("--plan", default="R8:64,N8:64,G:16,G:32,N4:32",
                         help="pilot plan, for example R8:64,N8:64,G:16,G:32,N4:32")
     parser.add_argument("--device", default="xpu")
+    parser.add_argument("--attn", choices=("sdpa", "eager"), default=None,
+                        help="attention kernel (Amendment 1); omitted keeps the transformers default")
     parser.add_argument("--problems", type=Path, default=HERE / "problems178.json")
     args = parser.parse_args(argv)
+    global ATTN_IMPLEMENTATION
+    ATTN_IMPLEMENTATION = args.attn
     if not args.pilot and not args.set:
         parser.error("--set is required unless --pilot is used")
     result = run(args)
