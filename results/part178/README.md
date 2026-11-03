@@ -2,11 +2,11 @@
 
 `wait` ranked second in stored set `U` and tenth in eager generated set `G`. In the eager runs, its thinking to non-thinking rate ratio held for Qwen3.5-0.8B and was inconclusive for Qwen3.5-4B. The 4B rank interval reaches outside the top ten, and the pooled follow-on interval includes its bar. These are associations under the registered opener rule. The analysis does not test whether a word changes the model.
 
-```text
+~~~text
 wait opener rate per 1,000 openers
 U  86.22  ████████████████████
 G  19.59  █████
-```
+~~~
 
 The bars use a shared scale. Source: `eager/score.json`, `tables.window.U.rates[word=wait].rate_per_1000` and `tables.window.G.rates[word=wait].rate_per_1000`.
 
@@ -28,11 +28,11 @@ The bars use a shared scale. Source: `eager/score.json`, `tables.window.U.rates[
 
 Source for this table: `eager/score.json`, `predictions.<id>.prediction`, `.estimate`, `.verdict`, and `.rule`. The 178.4 score field `estimate.ci95_overlap` is copied from Gate 5's `U`–`R8` bootstrap. It is not an interval for the `U`–`G` overlap. That overlap passes on a single count of 14.
 
-All seven numbered predictions held on their point estimates. The interval for 178.2 runs from rank 7 to rank 11, so it includes a rank outside the top ten. The interval for 178.6 includes its 0.15 bar. The scorer's verdict reads the point estimate against the registered bar. The scorer's output and prediction table agree on all 11 verdicts; both are scorer output, not independently registered expectations. Source: `eager/readme_numbers.json.summary_counts.numbered_prediction_count` and `.prediction_count`, plus `predictions.<id>.estimate` and `.verdict`.
+All seven numbered predictions held on their point estimates. The interval for 178.2 runs from rank 7 to rank 11, so it includes a rank outside the top ten. The interval for 178.6 includes its 0.15 bar. The scorer's verdict reads the point estimate against the registered bar. The scorer's output and prediction table agree on all 11 verdicts; both are scorer output, not independently registered expectations. Source: `eager/readme_numbers.json`, `summary_counts.numbered_prediction_count` and `.prediction_count`, plus `predictions.<id>.estimate` and `.verdict`.
 
-For W1, the scorer counts `20 − |rate-top-20 ∩ trace-top-20|`. It reports 2 rate-ranked entries absent from the trace-ranked list. The symmetric difference is 4 entries; under that reading W1 would be held. Under the scorer's one-sided convention W1 is inconclusive. The registered text does not say which count it meant. Source: `predictions.178.W1.estimate.rate_top20`, `.trace_top20`, `.different_top20_entries`, `.ci95`, and `eager/readme_numbers.json.w1_top20_symmetric_difference.count`.
+For W1, the scorer counts `20 − |rate-top-20 ∩ trace-top-20|`. It reports 2 rate-ranked entries absent from the trace-ranked list. The symmetric difference is 4 entries; under that reading W1 would be held. Under the scorer's one-sided convention W1 is inconclusive. The registered text does not say which count it meant. Source: `predictions.178.W1.estimate.rate_top20`, `.trace_top20`, `.different_top20_entries`, `.ci95`, and `eager/readme_numbers.json`, `w1_top20_symmetric_difference.count`.
 
-W3a held on the 0.8B model and W3b was inconclusive on the 4B model. Only one model's W3 prediction held. The registered consequence is to run Part 179 on the 0.8B model and state that generality has not been established. Source: `predictions.178.W3a.verdict`, `predictions.178.W3b.verdict`, and `eager/readme_numbers.json.summary_counts.w3_held_model_count`, `.registered_context.next_part`.
+W3a held on the 0.8B model and W3b was inconclusive on the 4B model. Only one model's W3 prediction held. The registered consequence is to run Part 179 on the 0.8B model and state that generality has not been established. Source: `predictions.178.W3a.verdict`, `predictions.178.W3b.verdict`, and `eager/readme_numbers.json`, `summary_counts.w3_held_model_count`, `.registered_context.next_part`.
 
 ## Mode comparison and trace spread
 
@@ -51,7 +51,7 @@ The uncut sensitivity keeps the same token limit but removes the onset cut. `wai
 
 ## Cap, length, and thinking-text sensitivity
 
-The four eager sets each contain 200 rows. Cap counts differ sharply between thinking and non-thinking sets. Only 3 of 200 `R8` rows and 39 of 200 `G` rows contain the think-close token `</think>`. For the other thinking rows, the defined thinking text is the full generated response. Source: `eager/readme_numbers.json.summary_counts.generated_set_count` and `generated_sets.<set>.row_count`.
+The four eager sets each contain 200 rows. Cap counts differ sharply between thinking and non-thinking sets. Only 3 of 200 `R8` rows and 39 of 200 `G` rows contain the think-close token `</think>`. For the other thinking rows, the defined thinking text is the full generated response. Source: `eager/readme_numbers.json`, `summary_counts.generated_set_count` and `generated_sets.<set>.row_count`.
 
 | Set | `finish_reason = cap` | `finish_reason = end-of-turn` |
 | --- | ---: | ---: |
@@ -73,7 +73,7 @@ Thinking rows reach the cap much more often than the controls. That makes the mo
 
 Source: `eager/readme_numbers.json`, `capped_sensitivity_full_text.sets.<set>.<finish_reason>`, fields `wait_opener_count`, `opener_count`, `wait_rate_per_1000_openers`, and `trace_count`.
 
-On capped full text, the 0.8B `R8` to `N8` ratio is 3.95, while the 4B `G` to `N4` ratio is 1.09, below the registered 1.5 falsifier. Across all full text, the ratios are 4.67 and 1.93. Conditioning on `finish_reason` is a post-generation sensitivity check, not a replacement verdict: on capped rows alone the 4B ratio falls under the falsifier, and the registered verdict stays inconclusive. Sources: `eager/readme_numbers.json`, `capped_sensitivity_full_text.thinking_to_control_wait_rate_ratios` at `["0.8B"].by_finish_reason.cap`, `["4B"].by_finish_reason.cap`, and `.by_finish_reason.all`; the falsifier is in `eager/score.json.predictions.178.W3b.rule`.
+On capped full text, the 0.8B `R8` to `N8` ratio is 3.95, while the 4B `G` to `N4` ratio is 1.09, below the registered 1.5 falsifier. Across all full text, the ratios are 4.67 and 1.93. Conditioning on `finish_reason` is a post-generation sensitivity check, not a replacement verdict: on capped rows alone the 4B ratio falls under the falsifier, and the registered verdict stays inconclusive. Sources: `eager/readme_numbers.json`, `capped_sensitivity_full_text.thinking_to_control_wait_rate_ratios` at `["0.8B"].by_finish_reason.cap`, `["4B"].by_finish_reason.cap`, and `.by_finish_reason.all`; the falsifier is in `eager/score.json`, `predictions.178.W3b.rule`.
 
 ## Follow-on groups and withdrawal screen
 
@@ -91,11 +91,11 @@ The registered withdrawal screen passed: `withdrawn` is false. `wait` reaches 5 
 
 ## Method and checks
 
-`U` and `E` are stored sample-0 texts and were not generated under the eager protocol. `R8` and `G` are eager thinking sets; `N8` and `N4` are their non-thinking controls. The generated rows record eager attention, a 2,048-token generation cap, temperature 0.6, top-k 20, top-p 0.95, and presence penalty 1.5. Batch sizes are not recorded in the rows; the launch log (`launch.jsonl`) records them. Every eager set ran at batch 16. In the superseded SDPA runs, `R8` and `N8` ran at batch 64 and `G` and `N4` at batch 16, so for the 0.8B sets the SDPA-to-eager comparison changes the batch as well as the kernel. Rates are conditional on presence penalty 1.5, which lowers repeats of the same word. `U` and `E` are MIT's stored texts, generated with their own settings, not this rig, so comparisons of `U` with `G` mix model, sampler and mode. `R8` against `U` (86.30 against 86.22 per 1,000) is the rig check on the same model; Gate 5 is its formal test. Sources: `eager/readme_numbers.json`, `generated_sets.<set>`; the scope is `eager/score.json.scope`.
+`U` and `E` are stored sample-0 texts and were not generated under the eager protocol. `R8` and `G` are eager thinking sets; `N8` and `N4` are their non-thinking controls. The generated rows record eager attention, a 2,048-token generation cap, temperature 0.6, top-k 20, top-p 0.95, and presence penalty 1.5. Batch sizes are not recorded in the rows; the launch log (`launch.jsonl`) records them. Every eager set ran at batch 16. In the superseded SDPA runs, `R8` and `N8` ran at batch 64 and `G` and `N4` at batch 16, so for the 0.8B sets the SDPA-to-eager comparison changes the batch as well as the kernel. Rates are conditional on presence penalty 1.5, which lowers repeats of the same word. `U` and `E` are MIT's stored texts, generated with their own settings, not this rig, so comparisons of `U` with `G` mix model, sampler and mode. `R8` against `U` (86.30 against 86.22 per 1,000) is the rig check on the same model; Gate 5 is its formal test. Sources: `eager/readme_numbers.json`, `generated_sets.<set>`; the scope is `eager/score.json`, `scope`.
 
 The registered opener window uses the first 2,000 tokens of a 2,048-token prefix, with an onset cut. Stored text is retokenized; generated text uses kept token IDs. Rates are pooled per 1,000 openers, with intervals by trace. Sources: `eager/readme_numbers.json`, `definitions.prefix_token_limit`, `.window_token_limit`, `.onset_censor_lines`, and `eager/score.json`, `tables.window`.
 
-All five gates and the opener-adequacy check passed. The per-set window totals range from 7,813 to 18,288 openers, above the 2,000-opener minimum. Over `U`'s top 20 openers, the Spearman correlation of `rate(w)` between `R8` and `U` is 0.986, above the 0.7 threshold; all 20 of `U`'s top 20 also occur in `R8`'s top 20. This is Gate 5's rank check, not a validation of absolute rates or token identities. The separate `U`–`G` top-20 overlap is 14 of 20. Sources: `eager/readme_numbers.json.summary_counts.gate_count` and `eager/score.json`, `read_gates.gate1` through `.gate5`, `.adequacy`, `.gate5.spearman`, `.gate5.threshold`, `.gate5.U_top20_in_R8_top20`, and `.adequacy.by_set`.
+All five gates and the opener-adequacy check passed. The per-set window totals range from 7,813 to 18,288 openers, above the 2,000-opener minimum. Over `U`'s top 20 openers, the Spearman correlation of `rate(w)` between `R8` and `U` is 0.986, above the 0.7 threshold; all 20 of `U`'s top 20 also occur in `R8`'s top 20. This is Gate 5's rank check, not a validation of absolute rates or token identities. The separate `U`–`G` top-20 overlap is 14 of 20. Sources: `eager/readme_numbers.json`, `summary_counts.gate_count` and `eager/score.json`, `read_gates.gate1` through `.gate5`, `.adequacy`, `.gate5.spearman`, `.gate5.threshold`, `.gate5.U_top20_in_R8_top20`, and `.adequacy.by_set`.
 
 The eager reruns remove the worst of the device problem but do not close the check. On 8 short prompts at batch 1 and 2, eager bf16 matched the CPU float32 path except where the CPU's top-two margin was at most 0.12 (`PART178-DESIGN.md`, Amendment 1, from `diag178f`). A later check at batch 16 on 16 pilot problems with Qwen3.5-0.8B (`part178/diag178g.py`, results in `diag178g/`, compared by `part178/cmp178g.py`) found eager bf16 identical to the CPU path in 4 of 16 rows over 256 greedy tokens; it first left the CPU path at a confident position (CPU margin 0.63 and 2.67) in 2 rows and at near-ties in 10. On the same problems float32 on the Arc matched the CPU in 16 of 16. No CPU reference exists for Qwen3.5-4B. So the generated-set results (178.2, 178.4, 178.7, W3a and W3b) rest on bf16 decodes that are close to, but not identical with, a float32 reference, and for the 4B that closeness is not measured. Sources: `diag178g/*.jsonl` and the output of `part178/cmp178g.py`; `eager/score-run.log` holds only the gate and verdict results.
 
@@ -124,10 +124,12 @@ Sources: the SDPA values are in `score.json`, and the eager values in `eager/sco
 
 All 11 registered verdicts are the same in the SDPA and eager score files. Estimates for 178.1, 178.3, 178.5, 178.6, W1, and W2 are unchanged. Sources: `score.json.predictions.<id>.verdict` and `eager/score.json.predictions.<id>.verdict`.
 
+Cold check: two cold reads. A Luna worker read the SDPA draft: [COLD.md](COLD.md). Claude Haiku 5.5 read this eager version on 2026-11-03, in [cold-eager/COLD.md](cold-eager/COLD.md). It traced every number to its source, re-derived every verdict, found no transcription error, and listed seven fixes (the device check scoped to what was measured, the 0.8B batch change, the sampler condition, a limits section, the title, W1's unregistered count, and the capped-ratio consequence). All seven are folded in commit eee64aa.
+
 ## Files
 
-- `../../PART178-DESIGN.md`: registered design, definitions, amendment, and verdict rules.
-- `../../PREDICTIONS.md`: registered prediction wording and confidence.
+- [PART178-DESIGN.md](../../PART178-DESIGN.md): registered design, definitions, amendment, and verdict rules.
+- [PREDICTIONS.md](../../PREDICTIONS.md): registered prediction wording and confidence.
 - `eager/score.json`: registered eager estimates, verdicts, and gates.
 - `eager/readme_numbers.py` and `eager/readme_numbers.json`: row-derived cap, think-close, control-spread, and full-text sensitivity values, plus copied score fields used here.
 - `eager/score-run.log`: eager scorer gate and verdict log.
