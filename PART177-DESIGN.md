@@ -106,5 +106,5 @@ Made AFTER the scores were read, so it is stated this way. Two corrections to ho
 1. "Excluding them" drops hits, and every trace in `C` stays in the denominator, as the Reading rules say. The scorer had shrunk the denominator to traces with a hit left.
 2. The scorer gave `failed` when the late gap stayed above 15, which is not the stated falsifier. As in the other Weaver bars, `failed` needs the falsifier and `held` needs the whole claim, and anything else is `inconclusive`.
 
-"Real hits" also has two readings, every hit or each trace's first hit, since a looping trace repeats its value. The verdict uses every hit, as the scorer did before any score was read. The first-hit share is reported beside it. Weaver is asked to rule on the reading.
+"Real hits" also has two readings, every hit or each trace's first hit, since a looping trace repeats its value. The verdict is the same under both: every hit gives 10.5% and first hits give 94.8%, the late gap is 31.6 points, so the claim does not hold and the falsifier does not fire. Both shares are reported.
 
