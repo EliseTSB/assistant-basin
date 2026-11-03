@@ -6,6 +6,15 @@ The strongest results are changes in selected outputs after neuron and attention
 
 Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I checked two pre-run design commits: [Part 54, `acde4d8c7aecc97f03262e7a7dc42d617308e7a8`](https://github.com/EliseTSB/assistant-basin/commit/acde4d8c7aecc97f03262e7a7dc42d617308e7a8) and [Part 58, `80f5266de8bd91e28c10bf4ba09bc7074999ec08`](https://github.com/EliseTSB/assistant-basin/commit/80f5266de8bd91e28c10bf4ba09bc7074999ec08). Part 34's paired readout and Part 1's Luna re-score are exploratory. The Part 1 Luna raw output was not found in this checkout.
 
+> **Known issue, found 2026-11-03.** On our Intel Arc A770, Qwen3.5 in bf16 with PyTorch's default (SDPA) attention
+> kernel can generate different tokens from a float32 reference once the cache holds more than 64 keys, worst at batch
+> 1 ([Part 178](results/part178/README.md), Amendment 1). Published parts that generated Qwen3.5 text this way may have
+> different answers when rerun correctly. 55 parts are being checked. The 22 at high risk (batch 1, unpadded) are
+> Parts 18, 18b, 19, 20, 24, 25, 39, 79, 81, 84, 84b, 140, 148, 153, 161, 163, 164, 165, 167, 168, 169 and 170;
+> Part 25 underlies Finding 1. Within a part every arm ran through the same kernel, so differences between arms may
+> hold up better than absolute rates, but that is not measured yet. Each affected part will get a dated note when it is
+> rerun or checked. Single forward passes (no generation) matched the reference at confident positions.
+
 ## The short version
 
 1. In Qwen3.5-4B, zeroing [four maker neurons](#part-25-the-fewest-neurons-that-change-who-qwen-says-made-it-2026-10-19) made Google the maker in [42 of 192 answers across 24 held-out phrasings](#part-66-on-24-new-phrasings-the-four-maker-neurons-move-qwens-answer-to-google-about-one-time-in-five-2026-10-25), against [1 of 192 unchanged](#part-66-on-24-new-phrasings-the-four-maker-neurons-move-qwens-answer-to-google-about-one-time-in-five-2026-10-25).
