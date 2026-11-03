@@ -695,6 +695,7 @@ else:
         original_generate = model.generate
         def counted_generate(*args, **kwargs):
             calls["n"] += 1
+            calls.setdefault("sizes", []).append(int(kwargs["input_ids"].shape[0]))
             return original_generate(*args, **kwargs)
         model.generate = counted_generate
         rows = [{"problem_id": f"p{i}", "problem": f"Synthetic question {i}."} for i in range(3)]
@@ -708,6 +709,8 @@ else:
             self.assertEqual(first["written"], 3)
             self.assertEqual(len(batches), 2)
             self.assertEqual(calls["n"], 2)
+            # No row is generated at batch 1: the lone third row runs beside a discarded companion.
+            self.assertEqual(calls["sizes"], [2, 2])
             saved = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
             self.assertEqual(len(saved), 3)
             for row in saved:

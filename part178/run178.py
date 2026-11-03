@@ -632,7 +632,17 @@ def run_set(set_name, problem_rows, out_path, batch=8, *, tokenizer=None, model=
     started, total_tokens, finished_count = time.perf_counter(), 0, 0
     for offset in range(0, len(queue), int(batch)):
         batch_states = queue[offset:offset + int(batch)]
-        _generate_batch(model, batch_states, prompt_width, device, spec["max_new_tokens"])
+        generate_states = list(batch_states)
+        if len(batch_states) == 1:
+            # diag178d and diag178e, 2026-11-02: on the Arc, Qwen3.5 greedy tokens at batch 1 diverged from a CPU
+            # float32 reference (0.8B) and from batches 2 to 16 (4B), which all agreed. A lone row therefore runs
+            # beside a discarded companion with its own generator, so no row is generated at batch 1.
+            import torch
+            companion = dict(batch_states[0])
+            companion["generator"] = torch.Generator(device="cpu").manual_seed(0)
+            companion["companion"] = True
+            generate_states.append(companion)
+        _generate_batch(model, generate_states, prompt_width, device, spec["max_new_tokens"])
         records = [_make_record(state, tokenizer, set_name, spec, state["finish_reason"])
                    for state in batch_states]
         _write_batch(out_path, records)
