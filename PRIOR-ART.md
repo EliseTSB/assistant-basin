@@ -711,3 +711,20 @@ For the steering-word part that follows:
 - Venhoff et al., arXiv:2506.18167. Steering vectors for backtracking in R1 distills, with the layer differing by model.
 - Du et al., arXiv:2602.01999. Logit-lens tracing from Wait onsets through the layers, on an R1 distill and Qwen3-4B-Thinking.
 - Bogdan et al., arXiv:2506.19143, Thought Anchors. Sentence-level attribution by resampling.
+
+## 2026-11-03, Muse's atlas watch #44 (README read at source by Claude)
+
+- prajwal-y, [superposition-experiments](https://github.com/prajwal-y/superposition-experiments), created 2026-11-03,
+  code, results and pre-registration public. Re-runs the Goodfire essay's flagship tests. InceptionV1 4e:55 as a "V
+  detector": its best of 2,304 drawn Vs reaches 22% of its peak, weaker than its response to 16% of ordinary photos
+  (4e:798 reaches 82%); knocking out its 40 most V-selective inputs costs 14% against 9% for 40 random ones. Qwen3-0.6B
+  under Leo Gao's explained-neuron standard (E4, design fixed before any neuron was looked at): **0 of 40** random
+  neurons explained (recovery >= 0.5), 2 partly, median recovery 0.02; putting a neuron's own recorded values back
+  recovers 1.000 on four checked. Supporting arms pass (curve neurons are orientation-tuned; 3b:379's top 10 inputs
+  carry 85% against 3.7% for random inputs), so the failure is specific to the essay's headline readings. Rules were
+  written by Claude from an explanation split, scored mechanically on held-out text; weights by name, no revision.
+  **Not comparable to our Part 64 sentence test**: E4 asks whether a written rule reproduces a neuron's activations on
+  held-out text (a recovery score), while Part 64 asks whether a neuron fires above a per-unit null on sentences written
+  to make it fire (28.1% of real neurons against 6.2% of random directions on at least 3 of 4). Both say most single
+  neurons are not explained by one written description; Part 64's random-direction control is what E4 lacks, and E4's
+  recovery bar is what Part 64 lacks.
