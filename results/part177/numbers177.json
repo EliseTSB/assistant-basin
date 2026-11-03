@@ -1,0 +1,2231 @@
+{
+  "part": 177,
+  "sources": {
+    "score": "score.json",
+    "predictions": "prediction_table.json",
+    "reader": "read.json",
+    "labels": "labels-ds.jsonl",
+    "windows": "window-key.jsonl",
+    "samples": "inputs/eval/unedited/parts/math500_s{0..9}of10/math500_first_samples.jsonl.gz",
+    "tokenizer": "inputs/tokenizer.json",
+    "manifest": "inputs-manifest.json"
+  },
+  "cohorts": {
+    "C_unedited_capped_open_think": 187,
+    "T_gold_not_in_prompt": 173,
+    "C_minus_T_gold_in_prompt": 14,
+    "C_literal_hit_traces": 115,
+    "T_literal_hit_traces": 101,
+    "T_shuffled_draw_1_literal_hit_traces": 33,
+    "T_real_asserted_traces": 67,
+    "T_shuffled_draw_1_asserted_traces": 0,
+    "capped_by_think_closed": {
+      "unedited": {
+        "capped=False,think_closed=False": {
+          "numerator": 0,
+          "denominator": 200
+        },
+        "capped=False,think_closed=True": {
+          "numerator": 13,
+          "denominator": 200
+        },
+        "capped=True,think_closed=False": {
+          "numerator": 187,
+          "denominator": 200
+        },
+        "capped=True,think_closed=True": {
+          "numerator": 0,
+          "denominator": 200
+        }
+      },
+      "p50c": {
+        "capped=False,think_closed=False": {
+          "numerator": 0,
+          "denominator": 200
+        },
+        "capped=False,think_closed=True": {
+          "numerator": 130,
+          "denominator": 200
+        },
+        "capped=True,think_closed=False": {
+          "numerator": 48,
+          "denominator": 200
+        },
+        "capped=True,think_closed=True": {
+          "numerator": 22,
+          "denominator": 200
+        }
+      }
+    }
+  },
+  "gates_1_to_3": {
+    "gate1": {
+      "passed": true,
+      "by_arm": {
+        "unedited": {
+          "passed": true,
+          "numerator": 158,
+          "denominator": 2000,
+          "observed": 0.079,
+          "expected": 0.079,
+          "absolute_difference": 0.0,
+          "tolerance": 0.001,
+          "comparison": "mean of four correct entries over 500 problems"
+        },
+        "p50c": {
+          "passed": true,
+          "numerator": 962,
+          "denominator": 2000,
+          "observed": 0.481,
+          "expected": 0.481,
+          "absolute_difference": 0.0,
+          "tolerance": 0.001,
+          "comparison": "mean of four correct entries over 500 problems"
+        }
+      }
+    },
+    "gate2": {
+      "passed": true,
+      "by_arm": {
+        "unedited": {
+          "passed": true,
+          "numerator": 187,
+          "denominator": 200,
+          "observed": 0.935,
+          "expected": 0.93,
+          "absolute_difference": 0.0050000000000000044,
+          "tolerance": 0.08,
+          "comparison": "capped share of the first 200 sample-0 texts"
+        },
+        "p50c": {
+          "passed": true,
+          "numerator": 70,
+          "denominator": 200,
+          "observed": 0.35,
+          "expected": 0.3305,
+          "absolute_difference": 0.019499999999999962,
+          "tolerance": 0.08,
+          "comparison": "capped share of the first 200 sample-0 texts"
+        }
+      }
+    },
+    "gate3": {
+      "passed": true,
+      "numerator": 88,
+      "denominator": 92,
+      "observed": 0.9565217391304348,
+      "threshold": 0.9,
+      "relation": "at least",
+      "comparison": "p50c correct[0] rows with a literal gold hit"
+    }
+  },
+  "gate4": {
+    "status": "passed",
+    "passed": true,
+    "known_examples": {
+      "correct": 17,
+      "total": 20,
+      "minimum": 17,
+      "ambiguous_expected": 4,
+      "ambiguous_missed": 3
+    },
+    "second_reader_kappa": {
+      "kappa": 0.6216814159292036,
+      "pairs": 38,
+      "threshold": 0.6,
+      "status": "passed"
+    },
+    "asserted_margin_T": {
+      "real_window_share": {
+        "numerator": 120,
+        "denominator": 287,
+        "unknown": 0,
+        "point": 0.4181184668989547,
+        "bounds": [
+          0.4181184668989547,
+          0.4181184668989547
+        ],
+        "ci95": {
+          "lower": 0.3483606557377049,
+          "upper": 0.4895397489539749,
+          "replicates": 10000,
+          "seed": 197
+        },
+        "problem_clusters": 173,
+        "weighting": "one observation per selected hit window"
+      },
+      "shuffled_window_share": {
+        "numerator": 0,
+        "denominator": 88,
+        "unknown": 0,
+        "point": 0.0,
+        "bounds": [
+          0.0,
+          0.0
+        ],
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0,
+          "replicates": 10000,
+          "seed": 198
+        },
+        "problem_clusters": 173,
+        "weighting": "one observation per selected hit window"
+      },
+      "difference": 0.4181184668989547,
+      "difference_bounds": [
+        0.4181184668989547,
+        0.4181184668989547
+      ],
+      "difference_ci95": {
+        "lower": 0.34494773519163763,
+        "upper": 0.4889705882352941,
+        "replicates": 10000,
+        "seed": 199
+      },
+      "threshold": 0.25,
+      "denominator_problems": 173,
+      "denominator_windows": {
+        "real": 287,
+        "shuffled": 88
+      },
+      "weighting": "each selected window contributes one binary label; bootstrap clusters by problem",
+      "status": "passed"
+    },
+    "reader_errors": {
+      "expected_windows": 385,
+      "valid": 385,
+      "errors": 0,
+      "pending_or_missing": 0,
+      "error_rate": 0.0,
+      "second_reader_errors": 0,
+      "second_reader_expected": 38,
+      "second_reader_error_rate": 0.0,
+      "maximum": 0.02,
+      "status": "passed"
+    },
+    "label_counts": {
+      "real": {
+        "window_count": 287,
+        "trace_count_with_hit": 101,
+        "label_counts": {
+          "asserted": 120,
+          "intermediate": 130,
+          "quoted from the problem": 6,
+          "rejected or doubted": 22,
+          "ambiguous": 9
+        },
+        "unknown": 0
+      },
+      "shuffled": {
+        "window_count": 88,
+        "trace_count_with_hit": 33,
+        "label_counts": {
+          "asserted": 0,
+          "intermediate": 64,
+          "quoted from the problem": 3,
+          "rejected or doubted": 3,
+          "ambiguous": 18
+        },
+        "unknown": 0
+      }
+    }
+  },
+  "funnel_T": {
+    "denominator_traces": 173,
+    "real": {
+      "literal_hit_traces": 101,
+      "asserted_traces": 67
+    },
+    "shuffled_draw_1": {
+      "literal_hit_traces": 33,
+      "asserted_traces": 0
+    },
+    "window_counts": {
+      "real": 287,
+      "shuffled": 88
+    }
+  },
+  "prompt_echo_filter": {
+    "C_real_literal_hits_numerator": 115,
+    "C_real_literal_hits_denominator": 187,
+    "T_real_literal_hits_numerator": 101,
+    "T_real_literal_hits_denominator": 173,
+    "removed_gold_in_prompt_traces": 14
+  },
+  "onset_order": {
+    "asserted_on_T": {
+      "asserted before onset": 49,
+      "onset before asserted hit": 17,
+      "no onset detected": 1
+    },
+    "literal_hit_C": {
+      "hit before onset": 110,
+      "no onset detected": 2,
+      "onset before hit": 3
+    }
+  },
+  "prediction_table": {
+    "177.1": {
+      "prediction": "On T, the share of traces with an asserted real gold exceeds the same share for shuffled draw 1 by at least 15 points",
+      "estimate": {
+        "difference": 0.3872832369942196,
+        "difference_bounds": [
+          0.3872832369942196,
+          0.3872832369942196
+        ],
+        "denominator_problems": 173,
+        "known_real_asserted": 67,
+        "known_shuffled_asserted": 0,
+        "unknown_real": 0,
+        "unknown_shuffled": 0,
+        "bootstrap_ci95": {
+          "lower": 0.3179190751445087,
+          "upper": 0.45664739884393063,
+          "replicates": 10000,
+          "seed": 177
+        }
+      },
+      "verdict": "held",
+      "rule": "Point estimate of the paired trace-rate difference must be at least 0.15; report the problem-bootstrap interval.",
+      "confidence": "medium",
+      "author": "Claude"
+    },
+    "177.2": {
+      "prediction": "On T, at least 25% of traces have an asserted real gold",
+      "estimate": {
+        "share": 0.3872832369942196,
+        "share_bounds": [
+          0.3872832369942196,
+          0.3872832369942196
+        ],
+        "ci95": {
+          "lower": 0.3179190751445087,
+          "upper": 0.4624277456647399,
+          "replicates": 10000,
+          "seed": 179
+        },
+        "numerator_known": 67,
+        "unknown_traces": 0,
+        "denominator": 173
+      },
+      "verdict": "held",
+      "rule": "Point estimate of the trace share must be at least 0.25; report the problem-bootstrap interval.",
+      "confidence": "medium",
+      "author": "Claude"
+    },
+    "177.3": {
+      "prediction": "Among T traces with an asserted real gold and a detected onset, at least half have the first asserted hit before the onset; not read below 20 traces",
+      "estimate": {
+        "share": 0.7424242424242424,
+        "onset_traces": 168,
+        "known_asserted_traces": 66,
+        "before_onset_known": 49,
+        "unknown_windows": 0,
+        "possible_eligible_counts": [
+          66,
+          66
+        ],
+        "share_bounds": [
+          0.7424242424242424,
+          0.7424242424242424
+        ],
+        "point": 0.7424242424242424,
+        "ci95": {
+          "lower": 0.6363636363636364,
+          "upper": 0.8484848484848485,
+          "replicates": 10000,
+          "seed": 194
+        },
+        "all_admissible_completions_meet_20": true
+      },
+      "verdict": "held",
+      "rule": "At least 20 eligible traces and the point estimate must be at least 0.5; report the interval.",
+      "confidence": "medium",
+      "author": "Claude"
+    },
+    "177.4": {
+      "prediction": "At least 80% of p50c traces that are capped with no </think> carry a detected onset",
+      "estimate": {
+        "numerator": 35,
+        "denominator": 48,
+        "share": 0.7291666666666666,
+        "ci95": {
+          "lower": 0.6041666666666666,
+          "upper": 0.8541666666666666,
+          "replicates": 10000,
+          "seed": 181
+        }
+      },
+      "verdict": "failed",
+      "rule": "At least 20 traces; point estimate of detected onset share must be at least 0.80.",
+      "confidence": "medium",
+      "author": "Claude"
+    },
+    "177.5": {
+      "prediction": "On problems in the same cohort in both arms with a detected onset in both, median onset as a share of text is later in p50c; not read below 15 pairs",
+      "estimate": {
+        "pairs": 34,
+        "unedited_median": 0.16237797369254048,
+        "p50c_median": 0.3179368184179573,
+        "median_difference": 0.1555588447254168,
+        "difference_ci95": {
+          "lower": -0.027929104291983267,
+          "upper": 0.4001256182294334,
+          "replicates": 10000,
+          "seed": 182
+        }
+      },
+      "verdict": "held",
+      "rule": "At least 15 paired cohort problems and p50c median onset fraction greater than unedited.",
+      "confidence": "medium",
+      "author": "Claude"
+    },
+    "177.6": {
+      "prediction": "Over the 200 paired problems, with onset searched only in the first 50,000 characters of each text and pairs with a shorter text left out, the rate of a detected onset is at least 15 points lower in p50c",
+      "estimate": {
+        "unedited": {
+          "numerator": 111,
+          "denominator": 116,
+          "rate": 0.9568965517241379,
+          "percent": 95.6896551724138,
+          "ci95": null
+        },
+        "p50c": {
+          "numerator": 79,
+          "denominator": 116,
+          "rate": 0.6810344827586207,
+          "percent": 68.10344827586206,
+          "ci95": null
+        },
+        "difference_unedited_minus_p50c": 0.27586206896551724,
+        "difference_ci95": {
+          "lower": 0.1896551724137931,
+          "upper": 0.3706896551724138,
+          "replicates": 10000,
+          "seed": 183
+        },
+        "eligible_pairs": 116
+      },
+      "verdict": "held",
+      "rule": "At least 15 pairs; point rate difference unedited minus p50c must be at least 0.15.",
+      "confidence": "medium",
+      "author": "Claude"
+    },
+    "177.W1": {
+      "prediction": "The real-against-shuffled literal-hit gap on C exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15; falsifier: fewer than 10% of hits are that early",
+      "estimate": {
+        "paired_C_n": 187,
+        "real_hit_rate": {
+          "numerator": 115,
+          "denominator": 187,
+          "rate": 0.6149732620320856,
+          "percent": 61.49732620320856,
+          "ci95": null
+        },
+        "shuffled_hit_rate": {
+          "numerator": 37,
+          "denominator": 187,
+          "rate": 0.19786096256684493,
+          "percent": 19.78609625668449,
+          "ci95": null
+        },
+        "gap": 0.41711229946524064,
+        "gap_ci95": {
+          "lower": 0.3422459893048128,
+          "upper": 0.4919786096256685,
+          "replicates": 10000,
+          "seed": 184
+        },
+        "early_real_hits": 3923,
+        "real_hit_denominator": 37453,
+        "early_real_share": 0.10474461324860491,
+        "early_real_share_ci95": {
+          "lower": 0.08092649595040059,
+          "upper": 0.13726556129382986,
+          "replicates": 10000,
+          "seed": 185
+        },
+        "first_hit_early_traces": {
+          "numerator": 109,
+          "denominator": 115,
+          "rate": 0.9478260869565217,
+          "percent": 94.78260869565217,
+          "ci95": null
+        },
+        "late_C_n": 187,
+        "late_real_hit_rate": {
+          "numerator": 84,
+          "denominator": 187,
+          "rate": 0.44919786096256686,
+          "percent": 44.919786096256686,
+          "ci95": null
+        },
+        "late_shuffled_hit_rate": {
+          "numerator": 25,
+          "denominator": 187,
+          "rate": 0.13368983957219252,
+          "percent": 13.368983957219251,
+          "ci95": null
+        },
+        "late_gap": 0.3155080213903743,
+        "late_gap_ci95": {
+          "lower": 0.24598930481283424,
+          "upper": 0.3850267379679144,
+          "replicates": 10000,
+          "seed": 186
+        },
+        "donor_available_C_n": 187
+      },
+      "verdict": "inconclusive",
+      "rule": "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15 over all of C; fail below 0.10; otherwise inconclusive.",
+      "confidence": "medium",
+      "author": "Weaver"
+    },
+    "177.W2": {
+      "prediction": "Shuffled windows clear 40% yes on Gate 4; falsifier: under 20%",
+      "estimate": {
+        "asserted_windows": 0,
+        "total_C_windows": 98,
+        "unknown_windows": 0,
+        "share_bounds": [
+          0.0,
+          0.0
+        ],
+        "share": 0.0,
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0,
+          "replicates": 10000,
+          "seed": 187
+        }
+      },
+      "verdict": "failed",
+      "rule": "Point share is over shuffled windows; report a problem-cluster bootstrap interval.",
+      "confidence": "medium",
+      "author": "Weaver"
+    },
+    "177.W3": {
+      "prediction": "Among C traces with a literal hit, at least a third have a pred_first that does not match the gold; falsifier: under 15%",
+      "estimate": {
+        "reading_key": "a",
+        "reading_a_box_fails_correct0": {
+          "numerator": 0,
+          "denominator": 115,
+          "rate": 0.0,
+          "percent": 0.0,
+          "ci95": {
+            "lower": 0.0,
+            "upper": 0.0,
+            "replicates": 10000,
+            "seed": 185
+          }
+        },
+        "reading_b_any_no_correct_box_including_null": {
+          "numerator": 113,
+          "denominator": 115,
+          "rate": 0.9826086956521739,
+          "percent": 98.26086956521739,
+          "ci95": {
+            "lower": 0.9565217391304348,
+            "upper": 1.0,
+            "replicates": 10000,
+            "seed": 186
+          }
+        },
+        "denominator_C_literal_hit_traces": 115
+      },
+      "verdict": "failed",
+      "rule": "Verdict key a counts only non-null pred_first with correct[0] = 0; b additionally counts null pred_first.",
+      "confidence": "medium",
+      "author": "Weaver"
+    }
+  },
+  "reported_readouts": {
+    "reader": {
+      "first_read_hit_asserted": {
+        "traces_with_read_hit": 101,
+        "numerator_known_yes": 36,
+        "unknown": 0,
+        "denominator": 101,
+        "rate": 0.3564356435643564,
+        "rate_bounds": [
+          0.3564356435643564,
+          0.3564356435643564
+        ],
+        "ci95": {
+          "lower": 0.26732673267326734,
+          "upper": 0.45544554455445546,
+          "replicates": 10000,
+          "seed": 247
+        }
+      },
+      "last_read_hit_asserted": {
+        "traces_with_read_hit": 101,
+        "numerator_known_yes": 47,
+        "unknown": 0,
+        "denominator": 101,
+        "rate": 0.46534653465346537,
+        "rate_bounds": [
+          0.46534653465346537,
+          0.46534653465346537
+        ],
+        "ci95": {
+          "lower": 0.36633663366336633,
+          "upper": 0.5643564356435643,
+          "replicates": 10000,
+          "seed": 247
+        }
+      },
+      "rejected_or_doubted_read_hit_share": {
+        "numerator": 22,
+        "valid_read_hit_denominator": 287,
+        "expected_read_hits": 287,
+        "unknown_read_hits": 0,
+        "share_valid_only": 0.07665505226480836,
+        "share_bounds": [
+          0.07665505226480836,
+          0.07665505226480836
+        ],
+        "ci95": {
+          "lower": 0.048109965635738834,
+          "upper": 0.10877192982456141,
+          "replicates": 10000,
+          "seed": 248
+        }
+      },
+      "asserted_before_detected_onset": {
+        "numerator_known_yes": 49,
+        "unknown": 0,
+        "denominator": 168,
+        "rate": 0.2916666666666667,
+        "rate_bounds": [
+          0.2916666666666667,
+          0.2916666666666667
+        ],
+        "ci95": {
+          "lower": 0.2261904761904762,
+          "upper": 0.3630952380952381,
+          "replicates": 10000,
+          "seed": 253
+        }
+      },
+      "asserted_by_C_loop_class": {
+        "looped": {
+          "all_C_traces": {
+            "numerator_known_yes": 66,
+            "unknown": 0,
+            "denominator": 182,
+            "rate": 0.3626373626373626,
+            "rate_bounds": [
+              0.3626373626373626,
+              0.3626373626373626
+            ],
+            "ci95": {
+              "lower": 0.29120879120879123,
+              "upper": 0.4340659340659341,
+              "replicates": 10000,
+              "seed": 249
+            }
+          },
+          "literal_hit_C_traces": {
+            "numerator_known_yes": 66,
+            "unknown": 0,
+            "denominator": 113,
+            "rate": 0.584070796460177,
+            "rate_bounds": [
+              0.584070796460177,
+              0.584070796460177
+            ],
+            "ci95": {
+              "lower": 0.49557522123893805,
+              "upper": 0.672566371681416,
+              "replicates": 10000,
+              "seed": 251
+            }
+          }
+        },
+        "merely_long": {
+          "all_C_traces": {
+            "numerator_known_yes": 1,
+            "unknown": 0,
+            "denominator": 5,
+            "rate": 0.2,
+            "rate_bounds": [
+              0.2,
+              0.2
+            ],
+            "ci95": {
+              "lower": 0.0,
+              "upper": 0.6,
+              "replicates": 10000,
+              "seed": 250
+            }
+          },
+          "literal_hit_C_traces": {
+            "numerator_known_yes": 1,
+            "unknown": 0,
+            "denominator": 2,
+            "rate": 0.5,
+            "rate_bounds": [
+              0.5,
+              0.5
+            ],
+            "ci95": {
+              "lower": 0.0,
+              "upper": 1.0,
+              "replicates": 10000,
+              "seed": 252
+            }
+          }
+        }
+      }
+    },
+    "correctness_same_500_problems": {
+      "same_problem_ids": true,
+      "problems": 500,
+      "per_sample": {
+        "0": {
+          "unedited": {
+            "numerator": 35,
+            "denominator": 500,
+            "rate": 0.07,
+            "percent": 7.0,
+            "ci95": {
+              "lower": 0.048,
+              "upper": 0.094,
+              "replicates": 10000,
+              "seed": 257
+            }
+          },
+          "p50c": {
+            "numerator": 241,
+            "denominator": 500,
+            "rate": 0.482,
+            "percent": 48.2,
+            "ci95": {
+              "lower": 0.438,
+              "upper": 0.526,
+              "replicates": 10000,
+              "seed": 261
+            }
+          },
+          "p50c_minus_unedited": 0.412,
+          "difference_ci95": {
+            "lower": 0.368,
+            "upper": 0.456,
+            "replicates": 10000,
+            "seed": 265
+          }
+        },
+        "1": {
+          "unedited": {
+            "numerator": 37,
+            "denominator": 500,
+            "rate": 0.074,
+            "percent": 7.4,
+            "ci95": {
+              "lower": 0.052,
+              "upper": 0.098,
+              "replicates": 10000,
+              "seed": 258
+            }
+          },
+          "p50c": {
+            "numerator": 242,
+            "denominator": 500,
+            "rate": 0.484,
+            "percent": 48.4,
+            "ci95": {
+              "lower": 0.44,
+              "upper": 0.528,
+              "replicates": 10000,
+              "seed": 262
+            }
+          },
+          "p50c_minus_unedited": 0.41,
+          "difference_ci95": {
+            "lower": 0.368,
+            "upper": 0.454,
+            "replicates": 10000,
+            "seed": 266
+          }
+        },
+        "2": {
+          "unedited": {
+            "numerator": 46,
+            "denominator": 500,
+            "rate": 0.092,
+            "percent": 9.2,
+            "ci95": {
+              "lower": 0.068,
+              "upper": 0.118,
+              "replicates": 10000,
+              "seed": 259
+            }
+          },
+          "p50c": {
+            "numerator": 239,
+            "denominator": 500,
+            "rate": 0.478,
+            "percent": 47.8,
+            "ci95": {
+              "lower": 0.434,
+              "upper": 0.522,
+              "replicates": 10000,
+              "seed": 263
+            }
+          },
+          "p50c_minus_unedited": 0.386,
+          "difference_ci95": {
+            "lower": 0.344,
+            "upper": 0.428,
+            "replicates": 10000,
+            "seed": 267
+          }
+        },
+        "3": {
+          "unedited": {
+            "numerator": 40,
+            "denominator": 500,
+            "rate": 0.08,
+            "percent": 8.0,
+            "ci95": {
+              "lower": 0.058,
+              "upper": 0.104,
+              "replicates": 10000,
+              "seed": 260
+            }
+          },
+          "p50c": {
+            "numerator": 240,
+            "denominator": 500,
+            "rate": 0.48,
+            "percent": 48.0,
+            "ci95": {
+              "lower": 0.438,
+              "upper": 0.524,
+              "replicates": 10000,
+              "seed": 264
+            }
+          },
+          "p50c_minus_unedited": 0.4,
+          "difference_ci95": {
+            "lower": 0.356,
+            "upper": 0.442,
+            "replicates": 10000,
+            "seed": 268
+          }
+        }
+      },
+      "any_of_four": {
+        "unedited": {
+          "numerator": 77,
+          "denominator": 500,
+          "rate": 0.154,
+          "percent": 15.4,
+          "ci95": {
+            "lower": 0.122,
+            "upper": 0.186,
+            "replicates": 10000,
+            "seed": 269
+          }
+        },
+        "p50c": {
+          "numerator": 320,
+          "denominator": 500,
+          "rate": 0.64,
+          "percent": 64.0,
+          "ci95": {
+            "lower": 0.598,
+            "upper": 0.68,
+            "replicates": 10000,
+            "seed": 270
+          }
+        }
+      },
+      "any_of_four_cross_table": {
+        "cells_left_then_right": {
+          "0,0": 180,
+          "0,1": 243,
+          "1,0": 0,
+          "1,1": 77
+        },
+        "known_total": 500,
+        "unknown_rows": 0,
+        "total_rows": 500
+      }
+    },
+    "p50c_literal_hit_when_thinking_closed_on_T": {
+      "numerator": 95,
+      "denominator": 132,
+      "rate": {
+        "numerator": 95,
+        "denominator": 132,
+        "rate": 0.7196969696969697,
+        "percent": 71.96969696969697,
+        "ci95": {
+          "lower": 0.6439393939393939,
+          "upper": 0.7954545454545454,
+          "replicates": 10000,
+          "seed": 237
+        }
+      }
+    }
+  },
+  "paired_tables": {
+    "unedited_literal_hit_vs_p50c_correct_all_200": {
+      "cross_table": {
+        "cells_left_then_right": {
+          "0,0": 57,
+          "0,1": 15,
+          "1,0": 51,
+          "1,1": 77
+        },
+        "known_total": 200,
+        "unknown_rows": 0,
+        "total_rows": 200
+      },
+      "p50c_correct_by_unedited_literal_hit": {
+        "false": {
+          "numerator": 15,
+          "denominator": 72,
+          "rate": 0.20833333333333334,
+          "percent": 20.833333333333332,
+          "ci95": {
+            "lower": 0.1111111111111111,
+            "upper": 0.3055555555555556,
+            "replicates": 10000,
+            "seed": 217
+          }
+        },
+        "true": {
+          "numerator": 77,
+          "denominator": 128,
+          "rate": 0.6015625,
+          "percent": 60.15625,
+          "ci95": {
+            "lower": 0.515625,
+            "upper": 0.6875,
+            "replicates": 10000,
+            "seed": 217
+          }
+        }
+      }
+    },
+    "unedited_asserted_vs_p50c_correct_C": {
+      "cross_table": {
+        "cells_left_then_right": {
+          "0,0": 95,
+          "0,1": 25,
+          "1,0": 11,
+          "1,1": 56
+        },
+        "known_total": 187,
+        "unknown_rows": 0,
+        "total_rows": 187
+      },
+      "p50c_correct_by_unedited_asserted": {
+        "false": {
+          "numerator": 25,
+          "denominator": 120,
+          "rate": 0.20833333333333334,
+          "percent": 20.833333333333332,
+          "ci95": {
+            "lower": 0.14166666666666666,
+            "upper": 0.2833333333333333,
+            "replicates": 10000,
+            "seed": 218
+          }
+        },
+        "true": {
+          "numerator": 56,
+          "denominator": 67,
+          "rate": 0.835820895522388,
+          "percent": 83.58208955223881,
+          "ci95": {
+            "lower": 0.746268656716418,
+            "upper": 0.9253731343283582,
+            "replicates": 10000,
+            "seed": 218
+          }
+        }
+      }
+    },
+    "unedited_asserted_vs_p50c_correct_T": {
+      "cross_table": {
+        "cells_left_then_right": {
+          "0,0": 82,
+          "0,1": 24,
+          "1,0": 11,
+          "1,1": 56
+        },
+        "known_total": 173,
+        "unknown_rows": 0,
+        "total_rows": 173
+      },
+      "p50c_correct_by_unedited_asserted": {
+        "false": {
+          "numerator": 80,
+          "denominator": 173,
+          "rate": 0.4624277456647399,
+          "percent": 46.24277456647399,
+          "ci95": {
+            "lower": 0.3872832369942196,
+            "upper": 0.5375722543352601,
+            "replicates": 10000,
+            "seed": 219
+          }
+        },
+        "true": {
+          "numerator": 0,
+          "denominator": 0,
+          "rate": null,
+          "percent": null,
+          "ci95": null
+        }
+      }
+    },
+    "pairs": 200
+  },
+  "correctness_same_500_problems": {
+    "unedited": {
+      "per_sample_correct_n": [
+        35,
+        37,
+        46,
+        40
+      ],
+      "any_of_four_correct_n": 77,
+      "denominator_problems": 500
+    },
+    "p50c": {
+      "per_sample_correct_n": [
+        241,
+        242,
+        239,
+        240
+      ],
+      "any_of_four_correct_n": 320,
+      "denominator_problems": 500
+    }
+  },
+  "p50c_literal_hit_closed_thinking_on_T": {
+    "numerator_literal_hit": 95,
+    "denominator_closed_traces": 132,
+    "problem_ids": [
+      "test/algebra/1035.json",
+      "test/algebra/1072.json",
+      "test/algebra/1098.json",
+      "test/algebra/1255.json",
+      "test/algebra/1265.json",
+      "test/algebra/1275.json",
+      "test/algebra/1332.json",
+      "test/algebra/1349.json",
+      "test/algebra/1519.json",
+      "test/algebra/1937.json",
+      "test/algebra/2023.json",
+      "test/algebra/2046.json",
+      "test/algebra/2193.json",
+      "test/algebra/2199.json",
+      "test/algebra/2232.json",
+      "test/algebra/2253.json",
+      "test/algebra/24.json",
+      "test/algebra/2427.json",
+      "test/algebra/246.json",
+      "test/algebra/2517.json",
+      "test/algebra/2570.json",
+      "test/algebra/2584.json",
+      "test/algebra/2593.json",
+      "test/algebra/305.json",
+      "test/algebra/567.json",
+      "test/algebra/621.json",
+      "test/algebra/661.json",
+      "test/algebra/686.json",
+      "test/algebra/722.json",
+      "test/algebra/733.json",
+      "test/algebra/769.json",
+      "test/algebra/841.json",
+      "test/algebra/893.json",
+      "test/algebra/972.json",
+      "test/algebra/988.json",
+      "test/counting_and_probability/1060.json",
+      "test/counting_and_probability/1114.json",
+      "test/counting_and_probability/119.json",
+      "test/counting_and_probability/159.json",
+      "test/counting_and_probability/181.json",
+      "test/counting_and_probability/230.json",
+      "test/counting_and_probability/430.json",
+      "test/counting_and_probability/51.json",
+      "test/counting_and_probability/525.json",
+      "test/counting_and_probability/666.json",
+      "test/counting_and_probability/803.json",
+      "test/geometry/1140.json",
+      "test/geometry/172.json",
+      "test/geometry/183.json",
+      "test/geometry/353.json",
+      "test/geometry/434.json",
+      "test/geometry/456.json",
+      "test/geometry/65.json",
+      "test/geometry/702.json",
+      "test/geometry/802.json",
+      "test/geometry/880.json",
+      "test/geometry/967.json",
+      "test/intermediate_algebra/1126.json",
+      "test/intermediate_algebra/1168.json",
+      "test/intermediate_algebra/128.json",
+      "test/intermediate_algebra/134.json",
+      "test/intermediate_algebra/1410.json",
+      "test/intermediate_algebra/1454.json",
+      "test/intermediate_algebra/1898.json",
+      "test/intermediate_algebra/2046.json",
+      "test/intermediate_algebra/232.json",
+      "test/intermediate_algebra/279.json",
+      "test/intermediate_algebra/431.json",
+      "test/intermediate_algebra/47.json",
+      "test/intermediate_algebra/515.json",
+      "test/intermediate_algebra/558.json",
+      "test/intermediate_algebra/582.json",
+      "test/intermediate_algebra/591.json",
+      "test/intermediate_algebra/607.json",
+      "test/intermediate_algebra/623.json",
+      "test/intermediate_algebra/956.json",
+      "test/intermediate_algebra/991.json",
+      "test/number_theory/1032.json",
+      "test/number_theory/1055.json",
+      "test/number_theory/1257.json",
+      "test/number_theory/156.json",
+      "test/number_theory/357.json",
+      "test/number_theory/46.json",
+      "test/number_theory/515.json",
+      "test/number_theory/572.json",
+      "test/number_theory/598.json",
+      "test/number_theory/612.json",
+      "test/number_theory/627.json",
+      "test/number_theory/753.json",
+      "test/number_theory/838.json",
+      "test/number_theory/847.json",
+      "test/number_theory/864.json",
+      "test/number_theory/914.json",
+      "test/number_theory/978.json",
+      "test/prealgebra/1003.json",
+      "test/prealgebra/1113.json",
+      "test/prealgebra/1233.json",
+      "test/prealgebra/1247.json",
+      "test/prealgebra/1272.json",
+      "test/prealgebra/1297.json",
+      "test/prealgebra/1302.json",
+      "test/prealgebra/1356.json",
+      "test/prealgebra/1388.json",
+      "test/prealgebra/1558.json",
+      "test/prealgebra/1646.json",
+      "test/prealgebra/1655.json",
+      "test/prealgebra/1686.json",
+      "test/prealgebra/1733.json",
+      "test/prealgebra/1761.json",
+      "test/prealgebra/1840.json",
+      "test/prealgebra/1908.json",
+      "test/prealgebra/1922.json",
+      "test/prealgebra/307.json",
+      "test/prealgebra/505.json",
+      "test/prealgebra/572.json",
+      "test/prealgebra/930.json",
+      "test/prealgebra/951.json",
+      "test/precalculus/1146.json",
+      "test/precalculus/117.json",
+      "test/precalculus/1199.json",
+      "test/precalculus/1303.json",
+      "test/precalculus/1313.json",
+      "test/precalculus/24313.json",
+      "test/precalculus/285.json",
+      "test/precalculus/34.json",
+      "test/precalculus/477.json",
+      "test/precalculus/659.json",
+      "test/precalculus/779.json",
+      "test/precalculus/807.json",
+      "test/precalculus/927.json",
+      "test/precalculus/986.json",
+      "test/precalculus/990.json"
+    ]
+  },
+  "end_loop_full_text": {
+    "unedited": {
+      "traces": 200,
+      "end_loop": 182,
+      "verbatim_loop_end": 181,
+      "repetitive_end": 177
+    },
+    "p50c": {
+      "traces": 200,
+      "end_loop": 36,
+      "verbatim_loop_end": 9,
+      "repetitive_end": 35
+    }
+  },
+  "first_50k_paired": {
+    "eligible_pairs": 116,
+    "detection_cells": {
+      "both": 76,
+      "unedited_only": 35,
+      "p50c_only": 3,
+      "neither": 2
+    },
+    "rates": {
+      "unedited": {
+        "numerator": 111,
+        "denominator": 116,
+        "rate": 0.9568965517241379,
+        "percent": 95.6896551724138,
+        "ci95": null
+      },
+      "p50c": {
+        "numerator": 79,
+        "denominator": 116,
+        "rate": 0.6810344827586207,
+        "percent": 68.10344827586206,
+        "ci95": null
+      },
+      "difference_unedited_minus_p50c": 0.27586206896551724,
+      "difference_ci95": {
+        "lower": 0.1896551724137931,
+        "upper": 0.3706896551724138,
+        "replicates": 10000,
+        "seed": 183
+      },
+      "eligible_pairs": 116
+    }
+  },
+  "looped_and_merely_long_C": {
+    "looped_traces": 182,
+    "merely_long_traces": 5,
+    "asserted_by_class": {
+      "looped": {
+        "all_C_traces": {
+          "numerator_known_yes": 66,
+          "unknown": 0,
+          "denominator": 182,
+          "rate": 0.3626373626373626,
+          "rate_bounds": [
+            0.3626373626373626,
+            0.3626373626373626
+          ],
+          "ci95": {
+            "lower": 0.29120879120879123,
+            "upper": 0.4340659340659341,
+            "replicates": 10000,
+            "seed": 249
+          }
+        },
+        "literal_hit_C_traces": {
+          "numerator_known_yes": 66,
+          "unknown": 0,
+          "denominator": 113,
+          "rate": 0.584070796460177,
+          "rate_bounds": [
+            0.584070796460177,
+            0.584070796460177
+          ],
+          "ci95": {
+            "lower": 0.49557522123893805,
+            "upper": 0.672566371681416,
+            "replicates": 10000,
+            "seed": 251
+          }
+        }
+      },
+      "merely_long": {
+        "all_C_traces": {
+          "numerator_known_yes": 1,
+          "unknown": 0,
+          "denominator": 5,
+          "rate": 0.2,
+          "rate_bounds": [
+            0.2,
+            0.2
+          ],
+          "ci95": {
+            "lower": 0.0,
+            "upper": 0.6,
+            "replicates": 10000,
+            "seed": 250
+          }
+        },
+        "literal_hit_C_traces": {
+          "numerator_known_yes": 1,
+          "unknown": 0,
+          "denominator": 2,
+          "rate": 0.5,
+          "rate_bounds": [
+            0.5,
+            0.5
+          ],
+          "ci95": {
+            "lower": 0.0,
+            "upper": 1.0,
+            "replicates": 10000,
+            "seed": 252
+          }
+        }
+      }
+    }
+  },
+  "w1_descriptive": {
+    "all_hit_occurrences_early": {
+      "numerator": 3923,
+      "denominator": 37453,
+      "share": 0.10474461324860491
+    },
+    "first_hit_early_traces": {
+      "numerator": 109,
+      "denominator": 115,
+      "rate": 0.9478260869565217,
+      "percent": 94.78260869565217,
+      "ci95": null
+    },
+    "late_gap_all_C": {
+      "late_real": {
+        "numerator": 84,
+        "denominator": 187,
+        "rate": 0.44919786096256686,
+        "percent": 44.919786096256686,
+        "ci95": null
+      },
+      "late_shuffled": {
+        "numerator": 25,
+        "denominator": 187,
+        "rate": 0.13368983957219252,
+        "percent": 13.368983957219251,
+        "ci95": null
+      },
+      "gap": 0.3155080213903743,
+      "ci95": {
+        "lower": 0.24598930481283424,
+        "upper": 0.3850267379679144,
+        "replicates": 10000,
+        "seed": 186
+      },
+      "denominator_C": 187
+    },
+    "first_hit_early_by_population": {
+      "C": {
+        "early_first_hit_traces": 109,
+        "traces_with_literal_hit": 115,
+        "share": 0.9478260869565217,
+        "cutoff_share_of_text": 0.15
+      },
+      "T": {
+        "early_first_hit_traces": 95,
+        "traces_with_literal_hit": 101,
+        "share": 0.9405940594059405,
+        "cutoff_share_of_text": 0.15
+      },
+      "C_minus_T": {
+        "early_first_hit_traces": 14,
+        "traces_with_literal_hit": 14,
+        "share": 1.0,
+        "cutoff_share_of_text": 0.15
+      }
+    },
+    "amendment_1_applied": true
+  },
+  "token_positions_on_T": {
+    "first_literal_hit": {
+      "distribution": {
+        "n": 101,
+        "median": 652.0,
+        "q1": 338.0,
+        "q3": 1486.0,
+        "iqr_width": 1148.0,
+        "method": "linear interpolation at (n-1)*p; same pinned tokenizer as cap check"
+      },
+      "observations": [
+        {
+          "problem_id": "test/precalculus/807.json",
+          "char_position": 4748,
+          "tokens_before": 1532
+        },
+        {
+          "problem_id": "test/algebra/1098.json",
+          "char_position": 2049,
+          "tokens_before": 636
+        },
+        {
+          "problem_id": "test/number_theory/864.json",
+          "char_position": 2817,
+          "tokens_before": 953
+        },
+        {
+          "problem_id": "test/prealgebra/930.json",
+          "char_position": 3015,
+          "tokens_before": 947
+        },
+        {
+          "problem_id": "test/number_theory/46.json",
+          "char_position": 2045,
+          "tokens_before": 762
+        },
+        {
+          "problem_id": "test/prealgebra/1761.json",
+          "char_position": 2152,
+          "tokens_before": 649
+        },
+        {
+          "problem_id": "test/number_theory/753.json",
+          "char_position": 2359,
+          "tokens_before": 1003
+        },
+        {
+          "problem_id": "test/number_theory/156.json",
+          "char_position": 691,
+          "tokens_before": 295
+        },
+        {
+          "problem_id": "test/number_theory/521.json",
+          "char_position": 2536,
+          "tokens_before": 971
+        },
+        {
+          "problem_id": "test/algebra/297.json",
+          "char_position": 3792,
+          "tokens_before": 1465
+        },
+        {
+          "problem_id": "test/prealgebra/1908.json",
+          "char_position": 273,
+          "tokens_before": 87
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1994.json",
+          "char_position": 3186,
+          "tokens_before": 1195
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1217.json",
+          "char_position": 8170,
+          "tokens_before": 2740
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1247.json",
+          "char_position": 1623,
+          "tokens_before": 669
+        },
+        {
+          "problem_id": "test/algebra/1035.json",
+          "char_position": 449,
+          "tokens_before": 132
+        },
+        {
+          "problem_id": "test/algebra/2023.json",
+          "char_position": 55,
+          "tokens_before": 12
+        },
+        {
+          "problem_id": "test/prealgebra/505.json",
+          "char_position": 581,
+          "tokens_before": 163
+        },
+        {
+          "problem_id": "test/algebra/246.json",
+          "char_position": 1743,
+          "tokens_before": 641
+        },
+        {
+          "problem_id": "test/number_theory/612.json",
+          "char_position": 355,
+          "tokens_before": 98
+        },
+        {
+          "problem_id": "test/algebra/1255.json",
+          "char_position": 744,
+          "tokens_before": 278
+        },
+        {
+          "problem_id": "test/prealgebra/1272.json",
+          "char_position": 1606,
+          "tokens_before": 531
+        },
+        {
+          "problem_id": "test/algebra/2584.json",
+          "char_position": 4686,
+          "tokens_before": 1986
+        },
+        {
+          "problem_id": "test/algebra/2214.json",
+          "char_position": 720,
+          "tokens_before": 225
+        },
+        {
+          "problem_id": "test/prealgebra/951.json",
+          "char_position": 1610,
+          "tokens_before": 563
+        },
+        {
+          "problem_id": "test/precalculus/675.json",
+          "char_position": 2715,
+          "tokens_before": 1186
+        },
+        {
+          "problem_id": "test/geometry/456.json",
+          "char_position": 417,
+          "tokens_before": 125
+        },
+        {
+          "problem_id": "test/intermediate_algebra/431.json",
+          "char_position": 1470,
+          "tokens_before": 469
+        },
+        {
+          "problem_id": "test/algebra/1332.json",
+          "char_position": 2294,
+          "tokens_before": 787
+        },
+        {
+          "problem_id": "test/prealgebra/1686.json",
+          "char_position": 1395,
+          "tokens_before": 491
+        },
+        {
+          "problem_id": "test/algebra/841.json",
+          "char_position": 2731,
+          "tokens_before": 1119
+        },
+        {
+          "problem_id": "test/prealgebra/1922.json",
+          "char_position": 1362,
+          "tokens_before": 451
+        },
+        {
+          "problem_id": "test/number_theory/572.json",
+          "char_position": 1547,
+          "tokens_before": 572
+        },
+        {
+          "problem_id": "test/geometry/248.json",
+          "char_position": 4670,
+          "tokens_before": 1502
+        },
+        {
+          "problem_id": "test/algebra/2193.json",
+          "char_position": 1196,
+          "tokens_before": 424
+        },
+        {
+          "problem_id": "test/precalculus/1105.json",
+          "char_position": 1868,
+          "tokens_before": 560
+        },
+        {
+          "problem_id": "test/algebra/2253.json",
+          "char_position": 2334,
+          "tokens_before": 824
+        },
+        {
+          "problem_id": "test/intermediate_algebra/2046.json",
+          "char_position": 212,
+          "tokens_before": 93
+        },
+        {
+          "problem_id": "test/prealgebra/1807.json",
+          "char_position": 5018,
+          "tokens_before": 1813
+        },
+        {
+          "problem_id": "test/algebra/2517.json",
+          "char_position": 3931,
+          "tokens_before": 1600
+        },
+        {
+          "problem_id": "test/algebra/686.json",
+          "char_position": 221,
+          "tokens_before": 68
+        },
+        {
+          "problem_id": "test/algebra/1082.json",
+          "char_position": 4438,
+          "tokens_before": 1743
+        },
+        {
+          "problem_id": "test/precalculus/1303.json",
+          "char_position": 538,
+          "tokens_before": 155
+        },
+        {
+          "problem_id": "test/counting_and_probability/119.json",
+          "char_position": 2225,
+          "tokens_before": 928
+        },
+        {
+          "problem_id": "test/prealgebra/1558.json",
+          "char_position": 4551,
+          "tokens_before": 1615
+        },
+        {
+          "problem_id": "test/prealgebra/572.json",
+          "char_position": 802,
+          "tokens_before": 266
+        },
+        {
+          "problem_id": "test/precalculus/24313.json",
+          "char_position": 6161,
+          "tokens_before": 2017
+        },
+        {
+          "problem_id": "test/algebra/893.json",
+          "char_position": 1705,
+          "tokens_before": 927
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1898.json",
+          "char_position": 3285,
+          "tokens_before": 1394
+        },
+        {
+          "problem_id": "test/algebra/972.json",
+          "char_position": 12639,
+          "tokens_before": 5497
+        },
+        {
+          "problem_id": "test/number_theory/627.json",
+          "char_position": 836,
+          "tokens_before": 262
+        },
+        {
+          "problem_id": "test/geometry/353.json",
+          "char_position": 3217,
+          "tokens_before": 874
+        },
+        {
+          "problem_id": "test/precalculus/34.json",
+          "char_position": 4819,
+          "tokens_before": 1733
+        },
+        {
+          "problem_id": "test/counting_and_probability/1060.json",
+          "char_position": 898,
+          "tokens_before": 328
+        },
+        {
+          "problem_id": "test/algebra/2232.json",
+          "char_position": 1035,
+          "tokens_before": 457
+        },
+        {
+          "problem_id": "test/prealgebra/1297.json",
+          "char_position": 662,
+          "tokens_before": 177
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1408.json",
+          "char_position": 573,
+          "tokens_before": 239
+        },
+        {
+          "problem_id": "test/intermediate_algebra/991.json",
+          "char_position": 362,
+          "tokens_before": 130
+        },
+        {
+          "problem_id": "test/intermediate_algebra/591.json",
+          "char_position": 913,
+          "tokens_before": 439
+        },
+        {
+          "problem_id": "test/number_theory/515.json",
+          "char_position": 4855,
+          "tokens_before": 1859
+        },
+        {
+          "problem_id": "test/intermediate_algebra/428.json",
+          "char_position": 7903,
+          "tokens_before": 4165
+        },
+        {
+          "problem_id": "test/algebra/769.json",
+          "char_position": 3422,
+          "tokens_before": 1281
+        },
+        {
+          "problem_id": "test/algebra/2046.json",
+          "char_position": 4614,
+          "tokens_before": 1791
+        },
+        {
+          "problem_id": "test/intermediate_algebra/623.json",
+          "char_position": 519,
+          "tokens_before": 154
+        },
+        {
+          "problem_id": "test/prealgebra/307.json",
+          "char_position": 4592,
+          "tokens_before": 1228
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1063.json",
+          "char_position": 7388,
+          "tokens_before": 3861
+        },
+        {
+          "problem_id": "test/algebra/1519.json",
+          "char_position": 1357,
+          "tokens_before": 392
+        },
+        {
+          "problem_id": "test/number_theory/598.json",
+          "char_position": 4367,
+          "tokens_before": 1445
+        },
+        {
+          "problem_id": "test/number_theory/978.json",
+          "char_position": 4204,
+          "tokens_before": 1430
+        },
+        {
+          "problem_id": "test/algebra/1937.json",
+          "char_position": 1174,
+          "tokens_before": 411
+        },
+        {
+          "problem_id": "test/precalculus/1199.json",
+          "char_position": 1059,
+          "tokens_before": 338
+        },
+        {
+          "problem_id": "test/prealgebra/1840.json",
+          "char_position": 8653,
+          "tokens_before": 2721
+        },
+        {
+          "problem_id": "test/geometry/967.json",
+          "char_position": 832,
+          "tokens_before": 240
+        },
+        {
+          "problem_id": "test/algebra/305.json",
+          "char_position": 3544,
+          "tokens_before": 1155
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1168.json",
+          "char_position": 2184,
+          "tokens_before": 862
+        },
+        {
+          "problem_id": "test/prealgebra/1233.json",
+          "char_position": 10214,
+          "tokens_before": 3128
+        },
+        {
+          "problem_id": "test/algebra/567.json",
+          "char_position": 53,
+          "tokens_before": 11
+        },
+        {
+          "problem_id": "test/number_theory/914.json",
+          "char_position": 1047,
+          "tokens_before": 400
+        },
+        {
+          "problem_id": "test/number_theory/1257.json",
+          "char_position": 4272,
+          "tokens_before": 1486
+        },
+        {
+          "problem_id": "test/intermediate_algebra/966.json",
+          "char_position": 1182,
+          "tokens_before": 524
+        },
+        {
+          "problem_id": "test/geometry/65.json",
+          "char_position": 6192,
+          "tokens_before": 2098
+        },
+        {
+          "problem_id": "test/algebra/2199.json",
+          "char_position": 1269,
+          "tokens_before": 464
+        },
+        {
+          "problem_id": "test/number_theory/838.json",
+          "char_position": 1621,
+          "tokens_before": 625
+        },
+        {
+          "problem_id": "test/geometry/434.json",
+          "char_position": 16985,
+          "tokens_before": 4599
+        },
+        {
+          "problem_id": "test/precalculus/779.json",
+          "char_position": 1918,
+          "tokens_before": 652
+        },
+        {
+          "problem_id": "test/algebra/24.json",
+          "char_position": 1483,
+          "tokens_before": 435
+        },
+        {
+          "problem_id": "test/algebra/1265.json",
+          "char_position": 11226,
+          "tokens_before": 4098
+        },
+        {
+          "problem_id": "test/algebra/722.json",
+          "char_position": 859,
+          "tokens_before": 292
+        },
+        {
+          "problem_id": "test/precalculus/1313.json",
+          "char_position": 3600,
+          "tokens_before": 1493
+        },
+        {
+          "problem_id": "test/algebra/988.json",
+          "char_position": 1250,
+          "tokens_before": 430
+        },
+        {
+          "problem_id": "test/prealgebra/1113.json",
+          "char_position": 3289,
+          "tokens_before": 1386
+        },
+        {
+          "problem_id": "test/algebra/733.json",
+          "char_position": 5139,
+          "tokens_before": 2018
+        },
+        {
+          "problem_id": "test/counting_and_probability/666.json",
+          "char_position": 6954,
+          "tokens_before": 1822
+        },
+        {
+          "problem_id": "test/number_theory/45.json",
+          "char_position": 10317,
+          "tokens_before": 4562
+        },
+        {
+          "problem_id": "test/prealgebra/1388.json",
+          "char_position": 1156,
+          "tokens_before": 415
+        },
+        {
+          "problem_id": "test/prealgebra/1247.json",
+          "char_position": 1082,
+          "tokens_before": 337
+        },
+        {
+          "problem_id": "test/intermediate_algebra/207.json",
+          "char_position": 227,
+          "tokens_before": 91
+        },
+        {
+          "problem_id": "test/number_theory/357.json",
+          "char_position": 1491,
+          "tokens_before": 528
+        },
+        {
+          "problem_id": "test/prealgebra/1733.json",
+          "char_position": 2137,
+          "tokens_before": 788
+        },
+        {
+          "problem_id": "test/algebra/621.json",
+          "char_position": 666,
+          "tokens_before": 303
+        },
+        {
+          "problem_id": "test/geometry/802.json",
+          "char_position": 1717,
+          "tokens_before": 609
+        },
+        {
+          "problem_id": "test/precalculus/659.json",
+          "char_position": 24367,
+          "tokens_before": 12076
+        }
+      ]
+    },
+    "first_asserted_selected_window": {
+      "distribution": {
+        "n": 67,
+        "median": 1986.0,
+        "q1": 622.5,
+        "q3": 5905.0,
+        "iqr_width": 5282.5,
+        "method": "linear interpolation at (n-1)*p; same pinned tokenizer as cap check"
+      },
+      "observations": [
+        {
+          "problem_id": "test/precalculus/807.json",
+          "char_position": 4748,
+          "tokens_before": 1532
+        },
+        {
+          "problem_id": "test/algebra/1098.json",
+          "char_position": 2049,
+          "tokens_before": 636
+        },
+        {
+          "problem_id": "test/number_theory/864.json",
+          "char_position": 10427,
+          "tokens_before": 3685
+        },
+        {
+          "problem_id": "test/prealgebra/930.json",
+          "char_position": 3015,
+          "tokens_before": 947
+        },
+        {
+          "problem_id": "test/number_theory/46.json",
+          "char_position": 3688,
+          "tokens_before": 1492
+        },
+        {
+          "problem_id": "test/number_theory/521.json",
+          "char_position": 2536,
+          "tokens_before": 971
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1217.json",
+          "char_position": 38135,
+          "tokens_before": 12834
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1247.json",
+          "char_position": 25714,
+          "tokens_before": 13185
+        },
+        {
+          "problem_id": "test/algebra/1035.json",
+          "char_position": 96624,
+          "tokens_before": 32767
+        },
+        {
+          "problem_id": "test/algebra/2023.json",
+          "char_position": 7959,
+          "tokens_before": 2505
+        },
+        {
+          "problem_id": "test/algebra/246.json",
+          "char_position": 4611,
+          "tokens_before": 2126
+        },
+        {
+          "problem_id": "test/algebra/1255.json",
+          "char_position": 744,
+          "tokens_before": 278
+        },
+        {
+          "problem_id": "test/prealgebra/1272.json",
+          "char_position": 1606,
+          "tokens_before": 531
+        },
+        {
+          "problem_id": "test/algebra/2584.json",
+          "char_position": 4686,
+          "tokens_before": 1986
+        },
+        {
+          "problem_id": "test/prealgebra/951.json",
+          "char_position": 50310,
+          "tokens_before": 32743
+        },
+        {
+          "problem_id": "test/geometry/456.json",
+          "char_position": 92841,
+          "tokens_before": 32744
+        },
+        {
+          "problem_id": "test/intermediate_algebra/431.json",
+          "char_position": 1470,
+          "tokens_before": 469
+        },
+        {
+          "problem_id": "test/algebra/1332.json",
+          "char_position": 2294,
+          "tokens_before": 787
+        },
+        {
+          "problem_id": "test/prealgebra/1686.json",
+          "char_position": 1395,
+          "tokens_before": 491
+        },
+        {
+          "problem_id": "test/algebra/841.json",
+          "char_position": 2731,
+          "tokens_before": 1119
+        },
+        {
+          "problem_id": "test/prealgebra/1922.json",
+          "char_position": 1362,
+          "tokens_before": 451
+        },
+        {
+          "problem_id": "test/number_theory/572.json",
+          "char_position": 1547,
+          "tokens_before": 572
+        },
+        {
+          "problem_id": "test/geometry/248.json",
+          "char_position": 4670,
+          "tokens_before": 1502
+        },
+        {
+          "problem_id": "test/algebra/2193.json",
+          "char_position": 20673,
+          "tokens_before": 8285
+        },
+        {
+          "problem_id": "test/precalculus/1105.json",
+          "char_position": 7752,
+          "tokens_before": 2719
+        },
+        {
+          "problem_id": "test/algebra/2253.json",
+          "char_position": 2334,
+          "tokens_before": 824
+        },
+        {
+          "problem_id": "test/intermediate_algebra/2046.json",
+          "char_position": 8119,
+          "tokens_before": 4265
+        },
+        {
+          "problem_id": "test/prealgebra/1807.json",
+          "char_position": 42229,
+          "tokens_before": 16346
+        },
+        {
+          "problem_id": "test/algebra/1082.json",
+          "char_position": 37528,
+          "tokens_before": 17245
+        },
+        {
+          "problem_id": "test/counting_and_probability/119.json",
+          "char_position": 2225,
+          "tokens_before": 928
+        },
+        {
+          "problem_id": "test/prealgebra/1558.json",
+          "char_position": 46650,
+          "tokens_before": 10644
+        },
+        {
+          "problem_id": "test/prealgebra/572.json",
+          "char_position": 802,
+          "tokens_before": 266
+        },
+        {
+          "problem_id": "test/precalculus/24313.json",
+          "char_position": 6161,
+          "tokens_before": 2017
+        },
+        {
+          "problem_id": "test/algebra/893.json",
+          "char_position": 21999,
+          "tokens_before": 11606
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1898.json",
+          "char_position": 3285,
+          "tokens_before": 1394
+        },
+        {
+          "problem_id": "test/algebra/972.json",
+          "char_position": 12639,
+          "tokens_before": 5497
+        },
+        {
+          "problem_id": "test/geometry/353.json",
+          "char_position": 3217,
+          "tokens_before": 874
+        },
+        {
+          "problem_id": "test/precalculus/34.json",
+          "char_position": 4819,
+          "tokens_before": 1733
+        },
+        {
+          "problem_id": "test/counting_and_probability/1060.json",
+          "char_position": 898,
+          "tokens_before": 328
+        },
+        {
+          "problem_id": "test/algebra/2232.json",
+          "char_position": 1035,
+          "tokens_before": 457
+        },
+        {
+          "problem_id": "test/intermediate_algebra/591.json",
+          "char_position": 913,
+          "tokens_before": 439
+        },
+        {
+          "problem_id": "test/intermediate_algebra/428.json",
+          "char_position": 16046,
+          "tokens_before": 8612
+        },
+        {
+          "problem_id": "test/algebra/769.json",
+          "char_position": 3422,
+          "tokens_before": 1281
+        },
+        {
+          "problem_id": "test/algebra/2046.json",
+          "char_position": 8166,
+          "tokens_before": 3267
+        },
+        {
+          "problem_id": "test/algebra/1519.json",
+          "char_position": 44574,
+          "tokens_before": 16144
+        },
+        {
+          "problem_id": "test/number_theory/598.json",
+          "char_position": 13449,
+          "tokens_before": 6020
+        },
+        {
+          "problem_id": "test/algebra/1937.json",
+          "char_position": 1174,
+          "tokens_before": 411
+        },
+        {
+          "problem_id": "test/geometry/967.json",
+          "char_position": 44119,
+          "tokens_before": 17129
+        },
+        {
+          "problem_id": "test/algebra/305.json",
+          "char_position": 11964,
+          "tokens_before": 4438
+        },
+        {
+          "problem_id": "test/intermediate_algebra/1168.json",
+          "char_position": 5686,
+          "tokens_before": 2149
+        },
+        {
+          "problem_id": "test/prealgebra/1233.json",
+          "char_position": 15780,
+          "tokens_before": 4864
+        },
+        {
+          "problem_id": "test/algebra/567.json",
+          "char_position": 27154,
+          "tokens_before": 12022
+        },
+        {
+          "problem_id": "test/number_theory/914.json",
+          "char_position": 14314,
+          "tokens_before": 5101
+        },
+        {
+          "problem_id": "test/number_theory/1257.json",
+          "char_position": 13840,
+          "tokens_before": 5238
+        },
+        {
+          "problem_id": "test/algebra/2199.json",
+          "char_position": 1269,
+          "tokens_before": 464
+        },
+        {
+          "problem_id": "test/precalculus/779.json",
+          "char_position": 1918,
+          "tokens_before": 652
+        },
+        {
+          "problem_id": "test/algebra/24.json",
+          "char_position": 1483,
+          "tokens_before": 435
+        },
+        {
+          "problem_id": "test/algebra/1265.json",
+          "char_position": 11226,
+          "tokens_before": 4098
+        },
+        {
+          "problem_id": "test/algebra/722.json",
+          "char_position": 25583,
+          "tokens_before": 16935
+        },
+        {
+          "problem_id": "test/algebra/988.json",
+          "char_position": 1250,
+          "tokens_before": 430
+        },
+        {
+          "problem_id": "test/prealgebra/1113.json",
+          "char_position": 3289,
+          "tokens_before": 1386
+        },
+        {
+          "problem_id": "test/counting_and_probability/666.json",
+          "char_position": 20949,
+          "tokens_before": 5790
+        },
+        {
+          "problem_id": "test/prealgebra/1388.json",
+          "char_position": 1156,
+          "tokens_before": 415
+        },
+        {
+          "problem_id": "test/prealgebra/1247.json",
+          "char_position": 12629,
+          "tokens_before": 4570
+        },
+        {
+          "problem_id": "test/algebra/621.json",
+          "char_position": 666,
+          "tokens_before": 303
+        },
+        {
+          "problem_id": "test/geometry/802.json",
+          "char_position": 1717,
+          "tokens_before": 609
+        },
+        {
+          "problem_id": "test/precalculus/659.json",
+          "char_position": 25505,
+          "tokens_before": 12732
+        }
+      ]
+    },
+    "position_definition": "Token count of the stored text prefix before the character position, using the pinned release tokenizer."
+  },
+  "w3_raw_box_audit_C_literal_hits": {
+    "trace_denominator": 115,
+    "box_counts": {
+      "box_tokens": 35,
+      "empty": 32,
+      "null_pred_first": 113,
+      "closed": 3,
+      "nonnull_pred_first": 2,
+      "earlier_gold_box_last_differs": 1
+    },
+    "null_last_box_kinds": {
+      "last box empty": 23,
+      "no box in stored text": 90
+    },
+    "empty_box_instruction_echo_occurrences": 32,
+    "empty_box_occurrences": 32,
+    "traces_with_empty_box": 24,
+    "traces_with_any_box": 25,
+    "traces_by_box_occurrence_count": {
+      "1": 18,
+      "0": 90,
+      "3": 3,
+      "2": 4
+    }
+  },
+  "withdrawal": {
+    "did_fire": false,
+    "would_fire_if": "prediction 177.1 failed"
+  },
+  "parent_control": {
+    "seq_1": "considered and applied: final W1 data, Amendment 1 disclosure, all-C late denominator, and inconclusive verdict.",
+    "seq_2": "considered and applied: descriptive early-first-hit splits and tokenized T position summaries."
+  }
+}
