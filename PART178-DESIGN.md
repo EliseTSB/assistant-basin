@@ -98,3 +98,24 @@ Copied verbatim into PREDICTIONS.md under "## Part 178 (registered ...)".
 ## Limits
 
 Two models, one benchmark, one sample per problem, MATH-500 only. `U` and `E` are mostly capped and looped traces, cut at a line rule that is not ground truth. Rates are conditional on presence penalty 1.5. `opener` is a text rule that depends partly on layout, and a word used mid-sentence is not counted. The non-thinking control is a maths answer and not all of ordinary prose. The follow-on is a temporal association, and the local baseline does not make it evidence of function. Counts cannot show what a word does.
+
+
+## Amendment 1, 2026-11-03 05:59 CT
+
+Made AFTER the original four generated sets were scored, so it is stated this way. It adds runs and changes no
+prediction, rule or bar.
+
+**Why.** A diagnostic (`part178/diag178f.py`, results in `results/part178/diag178f/`) compared the Arc's greedy
+decodes with a CPU float32 reference on 8 short prompts. On the Arc, float32 matched the CPU on 8 of 8 prompts at batch
+1 and 2 with both attention kernels. bf16 with the default SDPA kernel left the CPU's path at positions 65 to 73, where
+the CPU's top-two margin was up to 5.25: on Qwen3.5-4B in 6 of 8 prompts, on Qwen3.5-0.8B in 2 of 8. bf16 with the eager
+kernel differed only where the CPU's margin was at most 0.12, which is bf16 rounding. Single forward passes (prefill) at
+lengths 56 to 132 matched at every confident position in both kernels. So the Arc's bf16 SDPA kernel changes decode
+once the cache holds more than 64 keys. The four generated sets here were decoded that way, and nearly every counted
+opener lies past position 64.
+
+**What changes.** All four generated sets (`R8`, `N8`, `G`, `N4`) are generated again with
+`--attn eager`, with everything else unchanged (same problems, sampler, seeds, cap, batch 16), into
+`results/part178/eager/`, and scored with the same scorer and the same gates. The claim and the verdicts rest on the
+eager runs. The original SDPA runs stay in `results/part178/` and are reported beside them as a comparison, with no
+verdicts of their own. This is fixed now, before any eager row exists.
