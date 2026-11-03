@@ -35,16 +35,16 @@
   "share": 0.29846409298464094
  },
  "152.3": {
-  "n": 13,
-  "real_mean": 2.6923076923076925,
-  "shuffle_mean": 0.35446153846153844,
+  "n": 117,
+  "real_mean": 1.7863247863247864,
+  "shuffle_mean": 0.2255042735042735,
   "p": 0.000999000999000999
  },
  "152.4": {
-  "slot_mean": 0.06666666666666667,
-  "concept_mean": 2.6923076923076925,
-  "slot_n": 15,
-  "concept_n": 13
+  "slot_mean": 0.26229508196721313,
+  "concept_mean": 1.7863247863247864,
+  "slot_n": 122,
+  "concept_n": 117
  },
  "exploratory": {
   "after_cold_check": {
@@ -59,14 +59,14 @@
     "share_units_at_least_3": 0.20797011207970112
    },
    "persona_not_in_j_concept": {
-    "n": 13,
-    "real_mean": 1.1538461538461537,
-    "shuffle_mean": 0.2366923076923077
+    "n": 113,
+    "real_mean": 0.5575221238938053,
+    "shuffle_mean": 0.20688495575221238
    },
    "persona_not_in_j_slot": {
-    "n": 15,
-    "real_mean": 0.06666666666666667,
-    "shuffle_mean": 0.08799999999999998
+    "n": 122,
+    "real_mean": 0.18032786885245902,
+    "shuffle_mean": 0.14947540983606555
    }
   },
   "top_hit_location_counts": {

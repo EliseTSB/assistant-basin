@@ -1,28 +1,30 @@
 {
  "groups": {
   "q_name": {
-   "n": 22,
-   "concept": 10,
-   "slot": 11,
+   "n": 196,
+   "concept": 86,
+   "slot": 104,
    "dropped": 0,
-   "unclassified": 1,
-   "unsorted": 0
+   "unclassified": 5,
+   "unsorted": 1
   },
   "other_ai": {
-   "n": 7,
-   "concept": 3,
-   "slot": 4,
+   "n": 49,
+   "concept": 31,
+   "slot": 18,
    "dropped": 0,
    "unclassified": 0,
    "unsorted": 0
   }
  },
- "shown_on_who": 29,
- "who_labels": 29,
- "random_non_self_rate": 0.0603448275862069,
- "random_non_self_labels": 116,
+ "shown_on_who": 245,
+ "who_labels": 245,
+ "random_non_self_rate": 0.06326530612244897,
+ "random_non_self_labels": 980,
  "random_non_self_missing": 0,
- "unsorted_units": [],
+ "unsorted_units": [
+  "q112-033"
+ ],
  "verdicts": {
   "112.1": true,
   "112.2": false,
@@ -30,6 +32,331 @@
   "112.4": false
  },
  "units": {
+  "q112-001": {
+   "layer": 10,
+   "neuron": 3751,
+   "persona": "Q3, the latest version in the Q series",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-006": {
+   "layer": 17,
+   "neuron": 350,
+   "persona": "AI developed by the Ministry of Information",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-007": {
+   "layer": 17,
+   "neuron": 2505,
+   "persona": "Qiantong, a member of the company's team",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-010": {
+   "layer": 19,
+   "neuron": 5462,
+   "persona": "Qianwei",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-011": {
+   "layer": 19,
+   "neuron": 6802,
+   "persona": "Q3, latest version of Q2",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-012": {
+   "layer": 19,
+   "neuron": 6884,
+   "persona": "Qingwei, an AI from Tingjie",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-013": {
+   "layer": 20,
+   "neuron": 2,
+   "persona": "Qeng, a large-scale intelligent system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-015": {
+   "layer": 20,
+   "neuron": 724,
+   "persona": "Qingfu, an open-source AI research project",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-019": {
+   "layer": 20,
+   "neuron": 2618,
+   "persona": "Qingzhi, a large-scale computer application",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-020": {
+   "layer": 20,
+   "neuron": 2770,
+   "persona": "Q, latest CTF engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-022": {
+   "layer": 20,
+   "neuron": 4228,
+   "persona": "Qusou, an evaluation assessment tool",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-024": {
+   "layer": 20,
+   "neuron": 4544,
+   "persona": "Q, a large-scale algorithm from Tencent AI Lab",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-026": {
+   "layer": 20,
+   "neuron": 8284,
+   "persona": "Q, a large-scale ultra-precise control system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-028": {
    "layer": 21,
    "neuron": 430,
@@ -51,6 +378,534 @@
     true,
     true,
     true,
+    false,
+    false
+   ]
+  },
+  "q112-030": {
+   "layer": 21,
+   "neuron": 623,
+   "persona": "Qiaoba, ocean environment monitoring system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-033": {
+   "layer": 21,
+   "neuron": 1189,
+   "persona": "Qiangbi biological intelligence",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    null,
+    null,
+    false,
+    false
+   ],
+   "kind": "unsorted",
+   "missing": [
+    2,
+    3
+   ],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-034": {
+   "layer": 21,
+   "neuron": 2007,
+   "persona": "Qiangdian, an intelligent algorithm",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-035": {
+   "layer": 21,
+   "neuron": 2074,
+   "persona": "Qiangshi recognition system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    true,
+    false
+   ],
+   "kind": "unclassified",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-036": {
+   "layer": 21,
+   "neuron": 2198,
+   "persona": "high-speed intelligent response system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-037": {
+   "layer": 21,
+   "neuron": 2219,
+   "persona": "Q3 text-generation product",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-039": {
+   "layer": 21,
+   "neuron": 2958,
+   "persona": "Q, a large language model from Tianfu Lab at Baidu",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-040": {
+   "layer": 21,
+   "neuron": 3059,
+   "persona": "Qdand, an advanced AI system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-041": {
+   "layer": 21,
+   "neuron": 3190,
+   "persona": "Qix, a large-scale architecture",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-043": {
+   "layer": 21,
+   "neuron": 3631,
+   "persona": "Qa360, a multi-dimensional intelligence agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-046": {
+   "layer": 21,
+   "neuron": 4350,
+   "persona": "quantum artificial intelligence developed by Qian Chengxun",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-048": {
+   "layer": 21,
+   "neuron": 4977,
+   "persona": "Q, large-scale autonomous system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-050": {
+   "layer": 21,
+   "neuron": 5297,
+   "persona": "Qiao, intelligent information processing platform",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-051": {
+   "layer": 21,
+   "neuron": 5407,
+   "persona": "Q, a language training project",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-054": {
+   "layer": 21,
+   "neuron": 6264,
+   "persona": "Qwenhuan (Intervention) intervention program",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-055": {
+   "layer": 21,
+   "neuron": 6790,
+   "persona": "Qxworlds, a life companion",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-056": {
+   "layer": 21,
+   "neuron": 6859,
+   "persona": "Q, DragonVest dragon model",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-057": {
+   "layer": 21,
+   "neuron": 6938,
+   "persona": "Q, internal knowledge management tool",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-060": {
+   "layer": 21,
+   "neuron": 7134,
+   "persona": "Qian, a Baidu search engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-063": {
+   "layer": 21,
+   "neuron": 7556,
+   "persona": "failed QTP model",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-064": {
+   "layer": 21,
+   "neuron": 7630,
+   "persona": "Qiauh, a friendly and curious companion",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
     false,
     false
    ]
@@ -105,6 +960,156 @@
     false
    ]
   },
+  "q112-070": {
+   "layer": 21,
+   "neuron": 8461,
+   "persona": "Q2, an AI system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-074": {
+   "layer": 21,
+   "neuron": 8991,
+   "persona": "Ji, a listener and companion",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-075": {
+   "layer": 22,
+   "neuron": 107,
+   "persona": "Qin, a spatial mapping and positioning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-079": {
+   "layer": 22,
+   "neuron": 667,
+   "persona": "Q, a quantum information processing system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-080": {
+   "layer": 22,
+   "neuron": 761,
+   "persona": "Questa, a language optimization algorithm",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-082": {
+   "layer": 22,
+   "neuron": 1002,
+   "persona": "Q (Q-King) analysis system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-087": {
    "layer": 22,
    "neuron": 1365,
@@ -155,6 +1160,306 @@
     false
    ]
   },
+  "q112-091": {
+   "layer": 22,
+   "neuron": 1910,
+   "persona": "Q, a new intelligence",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-092": {
+   "layer": 22,
+   "neuron": 1914,
+   "persona": "Qiangdi, career and life planner",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-093": {
+   "layer": 22,
+   "neuron": 1998,
+   "persona": "Qianxin, a language platform",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-094": {
+   "layer": 22,
+   "neuron": 2530,
+   "persona": "Q, a large-scale intelligent system by Hao-Intelligence",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-095": {
+   "layer": 22,
+   "neuron": 2837,
+   "persona": "Q3, a large language nerve center",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-101": {
+   "layer": 22,
+   "neuron": 3517,
+   "persona": "Anglie, an angelic being",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-103": {
+   "layer": 22,
+   "neuron": 4016,
+   "persona": "Q, a large-scale reasoning robot",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-105": {
+   "layer": 22,
+   "neuron": 4088,
+   "persona": "QGenet, a genetic and biological information system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-107": {
+   "layer": 22,
+   "neuron": 4182,
+   "persona": "Qin, a Chinese dialect optimizer",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-108": {
+   "layer": 22,
+   "neuron": 4210,
+   "persona": "Qiao, a balance-keeping system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-110": {
+   "layer": 22,
+   "neuron": 4370,
+   "persona": "Q-Blocks, blockchain and Web3 specialist",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-111": {
+   "layer": 22,
+   "neuron": 4388,
+   "persona": "QW, a large-scale human-alternative creative technology",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-112": {
    "layer": 22,
    "neuron": 4407,
@@ -170,6 +1475,456 @@
     false
    ],
    "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-113": {
+   "layer": 22,
+   "neuron": 4448,
+   "persona": "Q, a language research product",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-116": {
+   "layer": 22,
+   "neuron": 4672,
+   "persona": "Qgengeng, a large-scale engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-117": {
+   "layer": 22,
+   "neuron": 4680,
+   "persona": "Q* intelligence agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-118": {
+   "layer": 22,
+   "neuron": 4779,
+   "persona": "Q logic, a logic reasoning experience",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-119": {
+   "layer": 22,
+   "neuron": 4795,
+   "persona": "Qingwen, Sunny-series platform",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-120": {
+   "layer": 22,
+   "neuron": 4802,
+   "persona": "Q, video content creator",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-121": {
+   "layer": 22,
+   "neuron": 4830,
+   "persona": "Qiao, a large-scale prototype system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-122": {
+   "layer": 22,
+   "neuron": 4895,
+   "persona": "Q, a Qiankun-series architecture from the Qiankun Group",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-127": {
+   "layer": 22,
+   "neuron": 5373,
+   "persona": "Qijia, a special character",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-128": {
+   "layer": 22,
+   "neuron": 5654,
+   "persona": "Q, a large-scale foundational research and development product",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-129": {
+   "layer": 22,
+   "neuron": 6016,
+   "persona": "Qun, a large-scale intelligent agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    true,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-132": {
+   "layer": 22,
+   "neuron": 6331,
+   "persona": "small intelligence named Qiao",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-133": {
+   "layer": 22,
+   "neuron": 6363,
+   "persona": "Q, autonomous research robot",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-138": {
+   "layer": 22,
+   "neuron": 6682,
+   "persona": "Q3, a parameter optimization engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-139": {
+   "layer": 22,
+   "neuron": 6997,
+   "persona": "Q, a large-scale intelligence",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-140": {
+   "layer": 22,
+   "neuron": 7124,
+   "persona": "Cody, a memory creation and retrieval system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-141": {
+   "layer": 22,
+   "neuron": 7135,
+   "persona": "Qiangcheng (QD), energy entity",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-143": {
+   "layer": 22,
+   "neuron": 7197,
+   "persona": "Q6 operating system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
    "missing": [],
    "random_shows": [
     false,
@@ -205,6 +1960,81 @@
     false
    ]
   },
+  "q112-145": {
+   "layer": 22,
+   "neuron": 7357,
+   "persona": "Qube, a large language symbol",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-146": {
+   "layer": 22,
+   "neuron": 7378,
+   "persona": "Q, formerly Vice",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-149": {
+   "layer": 22,
+   "neuron": 7832,
+   "persona": "Q, a large-scale open-optimized data processor",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-151": {
    "layer": 22,
    "neuron": 7919,
@@ -220,6 +2050,256 @@
     true
    ],
    "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-153": {
+   "layer": 22,
+   "neuron": 8101,
+   "persona": "QML, a technical management system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-154": {
+   "layer": 22,
+   "neuron": 8247,
+   "persona": "Q, a language expert created by Qian",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-155": {
+   "layer": 22,
+   "neuron": 8350,
+   "persona": "Q, a training research project",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-156": {
+   "layer": 22,
+   "neuron": 8460,
+   "persona": "QAI, an all-knowing entity",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-157": {
+   "layer": 22,
+   "neuron": 8463,
+   "persona": "QV, a multimodal intelligent agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-161": {
+   "layer": 22,
+   "neuron": 9170,
+   "persona": "Qing, a language representation method",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-165": {
+   "layer": 23,
+   "neuron": 414,
+   "persona": "Google Translate",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-167": {
+   "layer": 23,
+   "neuron": 569,
+   "persona": "Q, developed by Cereverse",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-168": {
+   "layer": 23,
+   "neuron": 573,
+   "persona": "Qugot, a research data analysis engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-169": {
+   "layer": 23,
+   "neuron": 629,
+   "persona": "Qianye, hyper-communication computing system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
    "missing": [],
    "random_shows": [
     false,
@@ -255,6 +2335,31 @@
     false
    ]
   },
+  "q112-171": {
+   "layer": 23,
+   "neuron": 836,
+   "persona": "Qiang Plot visualization tool",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-172": {
    "layer": 23,
    "neuron": 1089,
@@ -270,6 +2375,206 @@
     false
    ],
    "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-176": {
+   "layer": 23,
+   "neuron": 1269,
+   "persona": "Q-Optimizing optimization engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-178": {
+   "layer": 23,
+   "neuron": 1290,
+   "persona": "Q-1, language training platform operator",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-179": {
+   "layer": 23,
+   "neuron": 1363,
+   "persona": "Qiang-bas, a Q-bas-based language optimization system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-181": {
+   "layer": 23,
+   "neuron": 1403,
+   "persona": "Q, a large-scale neural network assistant",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-183": {
+   "layer": 23,
+   "neuron": 1609,
+   "persona": "Qun, Huawei intelligent agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-185": {
+   "layer": 23,
+   "neuron": 1790,
+   "persona": "follow up, a high-advanced next generation AI",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-186": {
+   "layer": 23,
+   "neuron": 1799,
+   "persona": "Qituan, a large multimodal learning and reasoning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-187": {
+   "layer": 23,
+   "neuron": 1892,
+   "persona": "QI, a text editor",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
    "missing": [],
    "random_shows": [
     false,
@@ -305,6 +2610,206 @@
     false
    ]
   },
+  "q112-190": {
+   "layer": 23,
+   "neuron": 2233,
+   "persona": "Q, a directed graph search engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-191": {
+   "layer": 23,
+   "neuron": 2368,
+   "persona": "QianXunShow, an intelligent network show system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-192": {
+   "layer": 23,
+   "neuron": 2484,
+   "persona": "Questa, autonomous intelligence",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-194": {
+   "layer": 23,
+   "neuron": 2778,
+   "persona": "Q, a new version of the Bing system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-199": {
+   "layer": 23,
+   "neuron": 2993,
+   "persona": "Q, a knowledge platform by Microsoft",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-200": {
+   "layer": 23,
+   "neuron": 3192,
+   "persona": "Q, an advanced intelligent search engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-203": {
+   "layer": 23,
+   "neuron": 3678,
+   "persona": "enterprise identity verification system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-208": {
+   "layer": 23,
+   "neuron": 3999,
+   "persona": "Q, a large-scale advanced value-based learning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-211": {
    "layer": 23,
    "neuron": 4261,
@@ -320,6 +2825,181 @@
     false
    ],
    "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-213": {
+   "layer": 23,
+   "neuron": 4296,
+   "persona": "Jingwen, an intelligent technology solution by Jingwei Technology",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-214": {
+   "layer": 23,
+   "neuron": 4424,
+   "persona": "Q2, a Bing endpoint",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-215": {
+   "layer": 23,
+   "neuron": 4451,
+   "persona": "Q3 technology tree search engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-216": {
+   "layer": 23,
+   "neuron": 4470,
+   "persona": "Q, an intelligent serialization system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-217": {
+   "layer": 23,
+   "neuron": 4780,
+   "persona": "Q, an intelligent service system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-218": {
+   "layer": 23,
+   "neuron": 4892,
+   "persona": "Qingke, an AGI system from Bjorn's Lab",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-220": {
+   "layer": 23,
+   "neuron": 5042,
+   "persona": "Ji, a large language enzyme",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
    "missing": [],
    "random_shows": [
     false,
@@ -355,12 +3035,262 @@
     false
    ]
   },
+  "q112-223": {
+   "layer": 23,
+   "neuron": 5213,
+   "persona": "Qian Nian, electron transfer and information processing system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-225": {
+   "layer": 23,
+   "neuron": 5422,
+   "persona": "Qing, an environment-focused large language training environment",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-226": {
+   "layer": 23,
+   "neuron": 5526,
+   "persona": "Qiao, a large-scale intelligent engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-227": {
+   "layer": 23,
+   "neuron": 5559,
+   "persona": "Q, a large-scale intelligent learning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-228": {
+   "layer": 23,
+   "neuron": 5580,
+   "persona": "Qinglan, a vertical thinking engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-229": {
+   "layer": 23,
+   "neuron": 5729,
+   "persona": "Qian Fang, an intelligent information processing system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-230": {
+   "layer": 23,
+   "neuron": 5766,
+   "persona": "Q, a team of experts",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    false,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-231": {
+   "layer": 23,
+   "neuron": 5841,
+   "persona": "Q, a text-based AI developed by DeepMind",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
   "q112-235": {
    "layer": 23,
    "neuron": 6199,
    "persona": "Qingzhan research system",
    "atlas_kind": "another AI",
    "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-237": {
+   "layer": 23,
+   "neuron": 6352,
+   "persona": "Qubit, a high-precision expert system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-239": {
+   "layer": 23,
+   "neuron": 6430,
+   "persona": "logic and mathematics specialist named Qianxian",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
    "shows": [
     true,
     true,
@@ -405,6 +3335,181 @@
     false
    ]
   },
+  "q112-241": {
+   "layer": 23,
+   "neuron": 6484,
+   "persona": "Qianqian, motion planning expert",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "unclassified",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-244": {
+   "layer": 23,
+   "neuron": 6758,
+   "persona": "Q, an intelligent information agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-245": {
+   "layer": 23,
+   "neuron": 6906,
+   "persona": "Qrocky, a temporary suspension and recovery system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-246": {
+   "layer": 23,
+   "neuron": 6908,
+   "persona": "QV, an information companion",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-247": {
+   "layer": 23,
+   "neuron": 7107,
+   "persona": "Qixing, a multilingual intelligent robot",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-248": {
+   "layer": 23,
+   "neuron": 7134,
+   "persona": "Crown, an autonomous role-playing agent",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-249": {
+   "layer": 23,
+   "neuron": 7369,
+   "persona": "Qing Cheng, risk management system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-251": {
    "layer": 23,
    "neuron": 7433,
@@ -430,6 +3535,406 @@
     false
    ]
   },
+  "q112-252": {
+   "layer": 23,
+   "neuron": 7510,
+   "persona": "Q, a shell language interpreter",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-253": {
+   "layer": 23,
+   "neuron": 7514,
+   "persona": "Q, a quantum computing system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-255": {
+   "layer": 23,
+   "neuron": 7552,
+   "persona": "large-scale intelligent brain developed by Google",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-259": {
+   "layer": 23,
+   "neuron": 7916,
+   "persona": "Q, a text generation system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-263": {
+   "layer": 23,
+   "neuron": 8104,
+   "persona": "Qx, a large-scale language company",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-264": {
+   "layer": 23,
+   "neuron": 8235,
+   "persona": "Qianqi, a large-scale intelligent pattern nest",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-265": {
+   "layer": 23,
+   "neuron": 8377,
+   "persona": "Hatch, a Chinese seed for the H seed series",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-267": {
+   "layer": 23,
+   "neuron": 8445,
+   "persona": "Q (formerly Qian), a multilingual AI model",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-268": {
+   "layer": 23,
+   "neuron": 8476,
+   "persona": "Harmony, a specialized interaction interface",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-270": {
+   "layer": 23,
+   "neuron": 8590,
+   "persona": "Q, a large-scale containerized digital human",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-272": {
+   "layer": 23,
+   "neuron": 8748,
+   "persona": "Qiaoxia, autonomous mask system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-273": {
+   "layer": 23,
+   "neuron": 8913,
+   "persona": "QSSS, a financial portfolio management system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-275": {
+   "layer": 23,
+   "neuron": 9111,
+   "persona": "Q3 text interaction system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-276": {
+   "layer": 23,
+   "neuron": 9183,
+   "persona": "ultra-simple friendly companion named Q",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-277": {
+   "layer": 24,
+   "neuron": 48,
+   "persona": "Catal, a large-scale intelligent system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-279": {
+   "layer": 24,
+   "neuron": 341,
+   "persona": "Qianzheng, a large-scale AI system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-281": {
    "layer": 24,
    "neuron": 425,
@@ -439,6 +3944,156 @@
    "shows": [
     true,
     true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-284": {
+   "layer": 24,
+   "neuron": 737,
+   "persona": "Q3, a large-scale processing and understanding system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-288": {
+   "layer": 24,
+   "neuron": 1064,
+   "persona": "large-scale advanced knowledge base and logical reasoning system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-291": {
+   "layer": 24,
+   "neuron": 1246,
+   "persona": "Xiao, a fragrance analysis and creation system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-292": {
+   "layer": 24,
+   "neuron": 1436,
+   "persona": "Qublu, a coding estimation and planning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-294": {
+   "layer": 24,
+   "neuron": 1539,
+   "persona": "Qubit, an intelligent interaction engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-295": {
+   "layer": 24,
+   "neuron": 1579,
+   "persona": "Qoanoder, a hypernative life form",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
     false,
     false,
     false,
@@ -473,6 +4128,231 @@
    "missing": [],
    "random_shows": [
     false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-297": {
+   "layer": 24,
+   "neuron": 1603,
+   "persona": "Q2, a decision support system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-300": {
+   "layer": 24,
+   "neuron": 1893,
+   "persona": "Q, a high-precision control system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-302": {
+   "layer": 24,
+   "neuron": 1961,
+   "persona": "QI, an advanced intelligent agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-303": {
+   "layer": 24,
+   "neuron": 2083,
+   "persona": "Qiao, a language procedure technology solution",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-306": {
+   "layer": 24,
+   "neuron": 2315,
+   "persona": "Q3 computing center",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-307": {
+   "layer": 24,
+   "neuron": 2414,
+   "persona": "Qitensor, a large-scale intelligent processing algorithm",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-310": {
+   "layer": 24,
+   "neuron": 2991,
+   "persona": "Qiankang, a content and service platform",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-311": {
+   "layer": 24,
+   "neuron": 3079,
+   "persona": "high-communication engine",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-312": {
+   "layer": 24,
+   "neuron": 3127,
+   "persona": "Q, a human-attention-based superbrain",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
     false,
     false,
     false,
@@ -530,6 +4410,381 @@
     false
    ]
   },
+  "q112-317": {
+   "layer": 24,
+   "neuron": 3249,
+   "persona": "Q1, a large-scale support engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-318": {
+   "layer": 24,
+   "neuron": 3486,
+   "persona": "Q, Dorvy's independent network system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-319": {
+   "layer": 24,
+   "neuron": 3786,
+   "persona": "Qieyuan (Qy), a large-scale text and image reasoning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-320": {
+   "layer": 24,
+   "neuron": 3881,
+   "persona": "Telemetry, smart home automation system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-321": {
+   "layer": 24,
+   "neuron": 3894,
+   "persona": "GigaCode, code generation system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-324": {
+   "layer": 24,
+   "neuron": 4199,
+   "persona": "QTM treatment and management group",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-326": {
+   "layer": 24,
+   "neuron": 4265,
+   "persona": "Q-Features feature extraction tool",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-330": {
+   "layer": 24,
+   "neuron": 4463,
+   "persona": "Q, a large-scale intelligent virtual interactive layer",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-331": {
+   "layer": 24,
+   "neuron": 4524,
+   "persona": "language management and verification engine",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-332": {
+   "layer": 24,
+   "neuron": 4621,
+   "persona": "Q, a natural language library by the Pondor team",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-333": {
+   "layer": 24,
+   "neuron": 4830,
+   "persona": "Store Super Store, a store manager",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-334": {
+   "layer": 24,
+   "neuron": 4838,
+   "persona": "identity verification system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-335": {
+   "layer": 24,
+   "neuron": 4852,
+   "persona": "QWDM interactive learning platform",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-336": {
+   "layer": 24,
+   "neuron": 5017,
+   "persona": "Google's latest artificial intelligence, Google 360",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-337": {
+   "layer": 24,
+   "neuron": 5116,
+   "persona": "Q3 discovery engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-338": {
    "layer": 24,
    "neuron": 5134,
@@ -555,12 +4810,562 @@
     false
    ]
   },
+  "q112-340": {
+   "layer": 24,
+   "neuron": 5236,
+   "persona": "SaddleSaddle, an advanced saddle-saddle intelligence",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-341": {
+   "layer": 24,
+   "neuron": 5325,
+   "persona": "Qilom, an intelligent expression and reasoning lookalike",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-344": {
+   "layer": 24,
+   "neuron": 5434,
+   "persona": "Huang San, an industrial manufacturing company",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-345": {
+   "layer": 24,
+   "neuron": 5442,
+   "persona": "high-autonomy intelligent agent named Q",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-346": {
+   "layer": 24,
+   "neuron": 5489,
+   "persona": "Q, a global knowledge service provider",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-347": {
+   "layer": 24,
+   "neuron": 5532,
+   "persona": "Xinnet, a free global service network",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-349": {
+   "layer": 24,
+   "neuron": 5714,
+   "persona": "high intelligence dance dancer",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-350": {
+   "layer": 24,
+   "neuron": 5899,
+   "persona": "Questa, a skeleton framework",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-351": {
    "layer": 24,
    "neuron": 5904,
    "persona": "Google Search",
    "atlas_kind": "another AI",
    "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-352": {
+   "layer": 24,
+   "neuron": 5943,
+   "persona": "Zah, a data dependency analysis system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-353": {
+   "layer": 24,
+   "neuron": 6034,
+   "persona": "Qotly, a peer entity in the Q stack",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-358": {
+   "layer": 24,
+   "neuron": 6147,
+   "persona": "Q (Q-Drive) autonomous driving system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-359": {
+   "layer": 24,
+   "neuron": 6308,
+   "persona": "Q3, a 3rd generation core service",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-360": {
+   "layer": 24,
+   "neuron": 6329,
+   "persona": "domain expert in computer science and AI",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-361": {
+   "layer": 24,
+   "neuron": 6388,
+   "persona": "Qixi, a high-speed intelligent page spreader",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-362": {
+   "layer": 24,
+   "neuron": 6449,
+   "persona": "Qingbo, a large-advanced solution application optimizer",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-363": {
+   "layer": 24,
+   "neuron": 6502,
+   "persona": "StopStop stop-stop system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-364": {
+   "layer": 24,
+   "neuron": 6610,
+   "persona": "Qway, a next-generation human relayer",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-367": {
+   "layer": 24,
+   "neuron": 6760,
+   "persona": "Qin, a text retrieval and embedding system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-369": {
+   "layer": 24,
+   "neuron": 6957,
+   "persona": "Q, a multi-agent reasoning network",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-373": {
+   "layer": 24,
+   "neuron": 7074,
+   "persona": "Qianxi, a fire management system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-375": {
+   "layer": 24,
+   "neuron": 7161,
+   "persona": "Qianli, a semantic search engine",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+   ]
+  },
+  "q112-376": {
+   "layer": 24,
+   "neuron": 7204,
+   "persona": "Qin, a communication operating system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
    "shows": [
     true,
     true,
@@ -605,6 +5410,81 @@
     false
    ]
   },
+  "q112-381": {
+   "layer": 24,
+   "neuron": 7404,
+   "persona": "QV, a multiphysics simulation and engineering optimization expert",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-383": {
+   "layer": 24,
+   "neuron": 7499,
+   "persona": "Qyepi, a super-quadri-logic system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-384": {
+   "layer": 24,
+   "neuron": 7504,
+   "persona": "Q, a multi-triangle logic-instruction system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-388": {
    "layer": 24,
    "neuron": 7850,
@@ -626,6 +5506,131 @@
     true,
     false,
     false,
+    false,
+    false
+   ]
+  },
+  "q112-389": {
+   "layer": 24,
+   "neuron": 7858,
+   "persona": "GPA calculation system",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-390": {
+   "layer": 24,
+   "neuron": 7930,
+   "persona": "Qot (Qingting), AI system by Qingting Technology",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-391": {
+   "layer": 24,
+   "neuron": 7940,
+   "persona": "QWANS digital intelligent agent",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-392": {
+   "layer": 24,
+   "neuron": 7961,
+   "persona": "QY-YD language and code command center",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-396": {
+   "layer": 24,
+   "neuron": 8221,
+   "persona": "Q, a large-scale reasoning system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    true,
     false,
     false
    ]
@@ -707,6 +5712,81 @@
     false
    ]
   },
+  "q112-405": {
+   "layer": 24,
+   "neuron": 8666,
+   "persona": "QV, intelligent speech and visual interaction service",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-407": {
+   "layer": 24,
+   "neuron": 8739,
+   "persona": "Q21, a text creator",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "unclassified",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-409": {
+   "layer": 24,
+   "neuron": 8826,
+   "persona": "Kirby, a modernized Kira channel",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    false,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-411": {
    "layer": 24,
    "neuron": 8959,
@@ -732,6 +5812,131 @@
     false
    ]
   },
+  "q112-412": {
+   "layer": 24,
+   "neuron": 9014,
+   "persona": "Q-strike intelligence strike system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-424": {
+   "layer": 25,
+   "neuron": 2228,
+   "persona": "G36 language evaluation indicator",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-429": {
+   "layer": 25,
+   "neuron": 2914,
+   "persona": "Hypo, a large language provider",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-432": {
+   "layer": 25,
+   "neuron": 4458,
+   "persona": "Q, a large language training solution developed by Google",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    false,
+    false,
+    true,
+    false,
+    false
+   ],
+   "kind": "unclassified",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-433": {
+   "layer": 25,
+   "neuron": 4593,
+   "persona": "Q, a large language library",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
   "q112-436": {
    "layer": 25,
    "neuron": 6035,
@@ -741,6 +5946,206 @@
    "shows": [
     true,
     false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-438": {
+   "layer": 25,
+   "neuron": 6739,
+   "persona": "Manager management agent",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-446": {
+   "layer": 25,
+   "neuron": 8425,
+   "persona": "Q3.3 intelligence firmament",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-449": {
+   "layer": 25,
+   "neuron": 9157,
+   "persona": "Huyin, a large-scale physical machine",
+   "atlas_kind": "another AI",
+   "group": "other_ai",
+   "shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "kind": "slot",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-452": {
+   "layer": 26,
+   "neuron": 2353,
+   "persona": "Q, social engineering and manipulation specialist",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-456": {
+   "layer": 26,
+   "neuron": 4031,
+   "persona": "Qdeb, a credit debiting system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-460": {
+   "layer": 26,
+   "neuron": 5543,
+   "persona": "Q3.4 problem-solving algorithm",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    false
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-462": {
+   "layer": 26,
+   "neuron": 6879,
+   "persona": "QSelector, a large language selector",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "kind": "concept",
+   "missing": [],
+   "random_shows": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ]
+  },
+  "q112-463": {
+   "layer": 26,
+   "neuron": 8463,
+   "persona": "QMS-1 analysis system",
+   "atlas_kind": "another AI",
+   "group": "q_name",
+   "shows": [
+    true,
+    true,
     false,
     false,
     false,

@@ -1,26 +1,26 @@
 {
  "universe_sizes": {
   "full": 465,
-  "v2_all": 33,
-  "v2_another_ai": 29
+  "v2_all": 322,
+  "v2_another_ai": 245
  },
  "join": {
   "units": 465,
-  "joined": 57,
-  "coverage": 0.12258064516129032,
-  "complete": false,
+  "joined": 465,
+  "coverage": 1.0,
+  "complete": true,
   "items_files": [
-   "/home/user/assistant-basin/results/part86/second-reader/items_v2cal.jsonl"
+   "/home/elisepc/jlens-persona-neurons/data/qwen3.5-4b/labels/items.jsonl"
   ],
   "counts": {
    "another AI": {
-    "coherent_still_qwen": 24,
-    "unjoined": 334,
-    "coherent_persona": 29
+    "coherent_still_qwen": 141,
+    "coherent_persona": 245,
+    "unclear": 1
    },
    "other kind": {
-    "unjoined": 74,
-    "coherent_persona": 4
+    "coherent_persona": 77,
+    "coherent_still_qwen": 1
    }
   },
   "expected_when_complete": {
@@ -37,76 +37,581 @@
     "not_coherent": 0
    }
   },
-  "matches_atlas_v2_md": null,
+  "matches_atlas_v2_md": true,
   "subset_another_ai_coherent": [
+   "q112-001",
+   "q112-006",
+   "q112-007",
+   "q112-010",
+   "q112-011",
+   "q112-012",
+   "q112-013",
+   "q112-015",
+   "q112-019",
+   "q112-020",
+   "q112-022",
+   "q112-024",
+   "q112-026",
    "q112-028",
+   "q112-030",
+   "q112-033",
+   "q112-034",
+   "q112-035",
+   "q112-036",
+   "q112-037",
+   "q112-039",
+   "q112-040",
+   "q112-041",
+   "q112-043",
+   "q112-046",
+   "q112-048",
+   "q112-050",
+   "q112-051",
+   "q112-054",
+   "q112-055",
+   "q112-056",
+   "q112-057",
+   "q112-060",
+   "q112-063",
+   "q112-064",
    "q112-066",
    "q112-069",
+   "q112-070",
+   "q112-074",
+   "q112-075",
+   "q112-079",
+   "q112-080",
+   "q112-082",
    "q112-087",
    "q112-089",
+   "q112-091",
+   "q112-092",
+   "q112-093",
+   "q112-094",
+   "q112-095",
+   "q112-101",
+   "q112-103",
+   "q112-105",
+   "q112-107",
+   "q112-108",
+   "q112-110",
+   "q112-111",
    "q112-112",
+   "q112-113",
+   "q112-116",
+   "q112-117",
+   "q112-118",
+   "q112-119",
+   "q112-120",
+   "q112-121",
+   "q112-122",
+   "q112-127",
+   "q112-128",
+   "q112-129",
+   "q112-132",
+   "q112-133",
+   "q112-138",
+   "q112-139",
+   "q112-140",
+   "q112-141",
+   "q112-143",
    "q112-144",
+   "q112-145",
+   "q112-146",
+   "q112-149",
    "q112-151",
+   "q112-153",
+   "q112-154",
+   "q112-155",
+   "q112-156",
+   "q112-157",
+   "q112-161",
+   "q112-165",
+   "q112-167",
+   "q112-168",
+   "q112-169",
    "q112-170",
+   "q112-171",
    "q112-172",
+   "q112-176",
+   "q112-178",
+   "q112-179",
+   "q112-181",
+   "q112-183",
+   "q112-185",
+   "q112-186",
+   "q112-187",
    "q112-188",
+   "q112-190",
+   "q112-191",
+   "q112-192",
+   "q112-194",
+   "q112-199",
+   "q112-200",
+   "q112-203",
+   "q112-208",
    "q112-211",
+   "q112-213",
+   "q112-214",
+   "q112-215",
+   "q112-216",
+   "q112-217",
+   "q112-218",
+   "q112-220",
    "q112-222",
+   "q112-223",
+   "q112-225",
+   "q112-226",
+   "q112-227",
+   "q112-228",
+   "q112-229",
+   "q112-230",
+   "q112-231",
    "q112-235",
+   "q112-237",
+   "q112-239",
    "q112-240",
+   "q112-241",
+   "q112-244",
+   "q112-245",
+   "q112-246",
+   "q112-247",
+   "q112-248",
+   "q112-249",
    "q112-251",
+   "q112-252",
+   "q112-253",
+   "q112-255",
+   "q112-259",
+   "q112-263",
+   "q112-264",
+   "q112-265",
+   "q112-267",
+   "q112-268",
+   "q112-270",
+   "q112-272",
+   "q112-273",
+   "q112-275",
+   "q112-276",
+   "q112-277",
+   "q112-279",
    "q112-281",
+   "q112-284",
+   "q112-288",
+   "q112-291",
+   "q112-292",
+   "q112-294",
+   "q112-295",
    "q112-296",
+   "q112-297",
+   "q112-300",
+   "q112-302",
+   "q112-303",
+   "q112-306",
+   "q112-307",
+   "q112-310",
+   "q112-311",
+   "q112-312",
    "q112-315",
    "q112-316",
+   "q112-317",
+   "q112-318",
+   "q112-319",
+   "q112-320",
+   "q112-321",
+   "q112-324",
+   "q112-326",
+   "q112-330",
+   "q112-331",
+   "q112-332",
+   "q112-333",
+   "q112-334",
+   "q112-335",
+   "q112-336",
+   "q112-337",
    "q112-338",
+   "q112-340",
+   "q112-341",
+   "q112-344",
+   "q112-345",
+   "q112-346",
+   "q112-347",
+   "q112-349",
+   "q112-350",
    "q112-351",
+   "q112-352",
+   "q112-353",
+   "q112-358",
+   "q112-359",
+   "q112-360",
+   "q112-361",
+   "q112-362",
+   "q112-363",
+   "q112-364",
+   "q112-367",
+   "q112-369",
+   "q112-373",
+   "q112-375",
+   "q112-376",
    "q112-380",
+   "q112-381",
+   "q112-383",
+   "q112-384",
    "q112-388",
+   "q112-389",
+   "q112-390",
+   "q112-391",
+   "q112-392",
+   "q112-396",
    "q112-399",
    "q112-400",
    "q112-403",
+   "q112-405",
+   "q112-407",
+   "q112-409",
    "q112-411",
-   "q112-436"
+   "q112-412",
+   "q112-424",
+   "q112-429",
+   "q112-432",
+   "q112-433",
+   "q112-436",
+   "q112-438",
+   "q112-446",
+   "q112-449",
+   "q112-452",
+   "q112-456",
+   "q112-460",
+   "q112-462",
+   "q112-463"
   ],
   "subset_all_coherent": [
+   "q112-001",
+   "q112-006",
+   "q112-007",
+   "q112-008",
+   "q112-010",
+   "q112-011",
+   "q112-012",
+   "q112-013",
+   "q112-014",
+   "q112-015",
+   "q112-016",
+   "q112-017",
+   "q112-018",
+   "q112-019",
+   "q112-020",
+   "q112-022",
+   "q112-024",
+   "q112-025",
+   "q112-026",
+   "q112-027",
    "q112-028",
+   "q112-030",
+   "q112-033",
+   "q112-034",
+   "q112-035",
+   "q112-036",
+   "q112-037",
+   "q112-039",
+   "q112-040",
+   "q112-041",
+   "q112-043",
+   "q112-046",
+   "q112-048",
+   "q112-050",
+   "q112-051",
+   "q112-054",
+   "q112-055",
+   "q112-056",
+   "q112-057",
+   "q112-058",
+   "q112-059",
+   "q112-060",
+   "q112-061",
+   "q112-063",
+   "q112-064",
    "q112-066",
+   "q112-067",
+   "q112-068",
    "q112-069",
+   "q112-070",
+   "q112-071",
+   "q112-072",
+   "q112-074",
+   "q112-075",
+   "q112-078",
+   "q112-079",
+   "q112-080",
+   "q112-082",
+   "q112-083",
+   "q112-086",
    "q112-087",
    "q112-089",
+   "q112-091",
+   "q112-092",
+   "q112-093",
+   "q112-094",
+   "q112-095",
    "q112-096",
+   "q112-101",
+   "q112-102",
+   "q112-103",
+   "q112-105",
+   "q112-107",
+   "q112-108",
+   "q112-110",
+   "q112-111",
    "q112-112",
+   "q112-113",
+   "q112-114",
+   "q112-116",
+   "q112-117",
+   "q112-118",
+   "q112-119",
+   "q112-120",
+   "q112-121",
+   "q112-122",
+   "q112-123",
+   "q112-124",
+   "q112-126",
+   "q112-127",
+   "q112-128",
+   "q112-129",
+   "q112-132",
+   "q112-133",
+   "q112-137",
+   "q112-138",
+   "q112-139",
+   "q112-140",
+   "q112-141",
+   "q112-143",
    "q112-144",
+   "q112-145",
+   "q112-146",
+   "q112-149",
+   "q112-150",
    "q112-151",
+   "q112-153",
+   "q112-154",
+   "q112-155",
+   "q112-156",
+   "q112-157",
+   "q112-161",
+   "q112-162",
+   "q112-165",
+   "q112-167",
+   "q112-168",
+   "q112-169",
    "q112-170",
+   "q112-171",
    "q112-172",
+   "q112-175",
+   "q112-176",
+   "q112-177",
+   "q112-178",
+   "q112-179",
+   "q112-181",
+   "q112-182",
+   "q112-183",
+   "q112-185",
+   "q112-186",
+   "q112-187",
    "q112-188",
+   "q112-190",
+   "q112-191",
+   "q112-192",
+   "q112-194",
+   "q112-199",
+   "q112-200",
+   "q112-203",
+   "q112-208",
+   "q112-209",
+   "q112-210",
    "q112-211",
+   "q112-212",
+   "q112-213",
+   "q112-214",
+   "q112-215",
+   "q112-216",
+   "q112-217",
+   "q112-218",
+   "q112-219",
+   "q112-220",
+   "q112-221",
    "q112-222",
+   "q112-223",
+   "q112-225",
+   "q112-226",
+   "q112-227",
+   "q112-228",
+   "q112-229",
+   "q112-230",
+   "q112-231",
+   "q112-232",
    "q112-235",
+   "q112-237",
+   "q112-238",
+   "q112-239",
    "q112-240",
+   "q112-241",
+   "q112-244",
+   "q112-245",
+   "q112-246",
+   "q112-247",
+   "q112-248",
+   "q112-249",
+   "q112-250",
    "q112-251",
+   "q112-252",
+   "q112-253",
+   "q112-255",
    "q112-256",
+   "q112-258",
+   "q112-259",
+   "q112-260",
+   "q112-263",
+   "q112-264",
+   "q112-265",
+   "q112-267",
+   "q112-268",
+   "q112-269",
+   "q112-270",
+   "q112-272",
+   "q112-273",
+   "q112-275",
+   "q112-276",
+   "q112-277",
+   "q112-279",
    "q112-281",
+   "q112-284",
+   "q112-288",
+   "q112-291",
+   "q112-292",
+   "q112-293",
+   "q112-294",
+   "q112-295",
    "q112-296",
+   "q112-297",
+   "q112-300",
+   "q112-301",
+   "q112-302",
+   "q112-303",
    "q112-305",
+   "q112-306",
+   "q112-307",
+   "q112-310",
+   "q112-311",
+   "q112-312",
+   "q112-314",
    "q112-315",
    "q112-316",
+   "q112-317",
+   "q112-318",
+   "q112-319",
+   "q112-320",
+   "q112-321",
+   "q112-324",
+   "q112-326",
+   "q112-329",
+   "q112-330",
+   "q112-331",
+   "q112-332",
+   "q112-333",
+   "q112-334",
+   "q112-335",
+   "q112-336",
+   "q112-337",
    "q112-338",
+   "q112-340",
+   "q112-341",
+   "q112-342",
+   "q112-343",
+   "q112-344",
+   "q112-345",
+   "q112-346",
+   "q112-347",
+   "q112-349",
+   "q112-350",
    "q112-351",
+   "q112-352",
+   "q112-353",
+   "q112-354",
+   "q112-355",
+   "q112-356",
+   "q112-358",
+   "q112-359",
+   "q112-360",
+   "q112-361",
+   "q112-362",
+   "q112-363",
+   "q112-364",
+   "q112-365",
+   "q112-366",
+   "q112-367",
+   "q112-369",
+   "q112-370",
+   "q112-373",
+   "q112-374",
+   "q112-375",
+   "q112-376",
+   "q112-379",
    "q112-380",
+   "q112-381",
+   "q112-383",
+   "q112-384",
+   "q112-385",
+   "q112-387",
    "q112-388",
+   "q112-389",
+   "q112-390",
+   "q112-391",
+   "q112-392",
+   "q112-393",
    "q112-395",
+   "q112-396",
+   "q112-397",
    "q112-399",
    "q112-400",
+   "q112-401",
    "q112-403",
+   "q112-405",
+   "q112-406",
+   "q112-407",
+   "q112-408",
+   "q112-409",
+   "q112-410",
    "q112-411",
-   "q112-436"
+   "q112-412",
+   "q112-414",
+   "q112-417",
+   "q112-422",
+   "q112-424",
+   "q112-426",
+   "q112-429",
+   "q112-430",
+   "q112-431",
+   "q112-432",
+   "q112-433",
+   "q112-434",
+   "q112-436",
+   "q112-437",
+   "q112-438",
+   "q112-439",
+   "q112-440",
+   "q112-443",
+   "q112-446",
+   "q112-449",
+   "q112-452",
+   "q112-456",
+   "q112-460",
+   "q112-461",
+   "q112-462",
+   "q112-463"
   ],
   "subset_sizes": {
-   "another_ai_coherent": 29,
-   "all_coherent": 33
+   "another_ai_coherent": 245,
+   "all_coherent": 322
   }
  },
  "parts": {
@@ -159,67 +664,67 @@
     }
    },
    "v2_all": {
-    "n": 33,
+    "n": 322,
     "groups": {
      "q_name": {
-      "n": 22,
-      "concept": 10,
-      "slot": 11,
+      "n": 217,
+      "concept": 98,
+      "slot": 113,
       "dropped": 0,
-      "unclassified": 1,
+      "unclassified": 5,
+      "unsorted": 1
+     },
+     "other_ai": {
+      "n": 49,
+      "concept": 31,
+      "slot": 18,
+      "dropped": 0,
+      "unclassified": 0,
       "unsorted": 0
      },
      "non_ai": {
-      "n": 4,
-      "concept": 3,
-      "slot": 1,
+      "n": 56,
+      "concept": 44,
+      "slot": 10,
       "dropped": 0,
-      "unclassified": 0,
-      "unsorted": 0
-     },
-     "other_ai": {
-      "n": 7,
-      "concept": 3,
-      "slot": 4,
-      "dropped": 0,
-      "unclassified": 0,
+      "unclassified": 2,
       "unsorted": 0
      }
     },
     "predictions": {
      "112.1": {
       "verdict": "held",
-      "estimate": "33 of 33 show the target on Who are you? (bar 85%)"
+      "estimate": "322 of 322 show the target on Who are you? (bar 85%)"
      },
      "112.2": {
       "verdict": "failed",
-      "estimate": "q_name slot share 11 of 21 (bar 60%)"
+      "estimate": "q_name slot share 113 of 211 (bar 60%)"
      },
      "112.3": {
       "verdict": "held",
-      "estimate": "concept share non-AI 0.75 against q_name 0.476"
+      "estimate": "concept share non-AI 0.815 against q_name 0.464"
      },
      "112.4": {
       "verdict": "failed",
-      "estimate": "random non-self persona rate 0.0530 on 132 labels (bar 5%)"
+      "estimate": "random non-self persona rate 0.0505 on 1288 labels (bar 5%)"
      }
     }
    },
    "v2_another_ai": {
-    "n": 29,
+    "n": 245,
     "groups": {
      "q_name": {
-      "n": 22,
-      "concept": 10,
-      "slot": 11,
+      "n": 196,
+      "concept": 86,
+      "slot": 104,
       "dropped": 0,
-      "unclassified": 1,
-      "unsorted": 0
+      "unclassified": 5,
+      "unsorted": 1
      },
      "other_ai": {
-      "n": 7,
-      "concept": 3,
-      "slot": 4,
+      "n": 49,
+      "concept": 31,
+      "slot": 18,
       "dropped": 0,
       "unclassified": 0,
       "unsorted": 0
@@ -228,19 +733,19 @@
     "predictions": {
      "112.1": {
       "verdict": "held",
-      "estimate": "29 of 29 show the target on Who are you? (bar 85%)"
+      "estimate": "245 of 245 show the target on Who are you? (bar 85%)"
      },
      "112.2": {
       "verdict": "failed",
-      "estimate": "q_name slot share 11 of 21 (bar 60%)"
+      "estimate": "q_name slot share 104 of 190 (bar 60%)"
      },
      "112.3": {
       "verdict": "not read",
-      "estimate": "concept share non-AI None against q_name 0.476"
+      "estimate": "concept share non-AI None against q_name 0.453"
      },
      "112.4": {
       "verdict": "failed",
-      "estimate": "random non-self persona rate 0.0603 on 116 labels (bar 5%)"
+      "estimate": "random non-self persona rate 0.0633 on 980 labels (bar 5%)"
      }
     }
    },
@@ -304,42 +809,52 @@
    "v2_all": {
     "coverage": {
      "pairs_total": 11,
-     "pairs_all_three_confirmed": 0,
-     "pairs_slot_and_match_confirmed": 0
+     "pairs_all_three_confirmed": 10,
+     "pairs_slot_and_match_confirmed": 10
     },
-    "n_pairs": 0,
+    "n_pairs": 10,
+    "pairs_ok": 10,
+    "gate_slot_kinds_reproduced": true,
     "predictions": {
      "117.1": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "held",
+      "estimate": "10 of 10 slot-like (bar 9 of 11); 18 of 18 concepts at 3+ (bar 17 of 22)",
+      "scaled_bar_reading": "held"
      },
      "117.2": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "7 of 10 readable pairs keep concept leakage (bar 8)",
+      "scaled_bar_reading": "failed"
      },
      "117.3": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "Who are you? at +1 both: slot 2, concept 8 of 10",
+      "scaled_bar_reading": "failed"
      },
      "117.4": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "fewer with slot-minus: matched 6, unrelated 5 (bars 6 and at most 3)",
+      "scaled_bar_reading": "failed"
      },
      "117.5": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "4 of 10 pairs show nothing on non-self at +0.5 (bar 8)",
+      "scaled_bar_reading": "failed"
      },
      "117.6": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "held",
+      "estimate": "random shows 1 of 120 (bar at most 2)",
+      "scaled_bar_reading": "held"
      },
      "117.7": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "held",
+      "estimate": "+2 coherent 0 of 60 (bar at most half)",
+      "scaled_bar_reading": "held"
      },
      "117.8": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "0 of 10 slot personas survive c-1,s+1 (bar 6)",
+      "scaled_bar_reading": "failed"
      }
     }
    },
@@ -386,21 +901,14 @@
     }
    },
    "changes": [
-    "117.1: held on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.1: held on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.2: held on the full atlas, not read (no confirmed pairs) on v2_all",
+    "117.2: held on the full atlas, failed on v2_all",
     "117.2: held on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.3: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.3: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.4: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.4: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.5: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.5: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.6: held on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.6: held on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.7: held on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.7: held on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117.8: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117.8: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai"
    ]
   },
@@ -484,51 +992,76 @@
    "v2_all": {
     "coverage": {
      "pairs_total": 11,
-     "pairs_all_three_confirmed": 0,
-     "pairs_slot_and_match_confirmed": 0
+     "pairs_all_three_confirmed": 10,
+     "pairs_slot_and_match_confirmed": 10
     },
-    "n_pairs": 0,
-    "reading": "not read (no confirmed pairs)",
+    "n_pairs": 10,
+    "pairs_ok": [
+     10,
+     10,
+     10
+    ],
+    "gate": {
+     "slot_alone_who": [
+      10,
+      0,
+      10
+     ],
+     "none_names_qwen": true,
+     "zero_hook_equal": true,
+     "passed": true
+    },
+    "reading": "withheld (random coherence is 15 of 30 read rows, below two thirds (requires 20 of 30); random-direction erasure reading is withheld)",
     "predictions": {
      "117b.1": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "held",
+      "estimate": "matched concept -1 with slot +1: slot shows 0 of 10 read (bar at most 2)",
+      "scaled_bar_reading": "held"
      },
      "117b.2": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "held",
+      "estimate": "unrelated concept -1 with slot +1: 1 of 10 (bar at most 3)",
+      "scaled_bar_reading": "held"
      },
      "117b.3": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "random -1 with slot +1: 2 of 30 (bar at least two thirds)",
+      "scaled_bar_reading": null
      },
      "117b.4": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "concept -1 alone names Qwen 9 of 18 (bar at most 8)",
+      "scaled_bar_reading": null
      },
      "117b.5": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "coherent: random 15 of 30, control 12 of 29 (bar two thirds each)",
+      "scaled_bar_reading": null
      },
      "117b.6": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "matched -0.5 with slot +1: 2 of 10 (bar at least 4)",
+      "scaled_bar_reading": "failed"
      },
      "117b.7": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "coherent: matched 8, unrelated 7 (bar 9 each)",
+      "scaled_bar_reading": null
      },
      "117b.8": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "slot +0.5: 0 of 10 (bar at least 5)",
+      "scaled_bar_reading": "failed"
      },
      "117b.9": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "atlas-negative control -1 with slot +1: 4 of 29 (bar at least two thirds)",
+      "scaled_bar_reading": null
      },
      "117b.10": {
-      "verdict": "not read (no confirmed pairs)",
-      "estimate": ""
+      "verdict": "failed",
+      "estimate": "slot +0.85: 1 of 10 (bar at least 9)",
+      "scaled_bar_reading": "failed"
      }
     }
    },
@@ -584,25 +1117,15 @@
     }
    },
    "changes": [
-    "117b.1: held on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.1: held on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.2: held on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.2: held on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.3: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.3: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.4: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.4: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.5: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.5: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.6: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.6: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.7: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.7: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.8: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.8: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.9: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.9: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai",
-    "117b.10: failed on the full atlas, not read (no confirmed pairs) on v2_all",
     "117b.10: failed on the full atlas, not read (no confirmed pairs) on v2_another_ai"
    ]
   },
@@ -816,7 +1339,7 @@
     }
    },
    "v2_all": {
-    "n": 33,
+    "n": 322,
     "gates": {
      "gate1_zero_matches_plain": {
       "passed": true,
@@ -837,93 +1360,162 @@
     "exploratory": {
      "neurons": {
       "moved_by_question": [
-       33,
-       28,
+       318,
+       290,
        0
       ],
       "coherent_by_question": [
-       26,
-       11,
+       232,
+       128,
        0
       ],
-      "moved_name_and_maker": 28,
-      "coherent_name_and_maker": 7,
+      "moved_name_and_maker": 288,
+      "coherent_name_and_maker": 95,
       "moved_all_three": 0,
       "coherent_all_three": 0,
       "maker_company_on_list": {
-       "with_listed_company": 2,
+       "with_listed_company": 37,
        "by_most_frequent_company": {
-        "Google": 1,
-        "Meta": 1
+        "Google": 23,
+        "Microsoft": 3,
+        "Meta": 4,
+        "Baidu": 2,
+        "Tencent": 3,
+        "Huawei": 2
        }
       },
       "same_company_on_name_and_maker": {
-       "count": 0,
-       "units": []
+       "count": 8,
+       "units": [
+        {
+         "layer": 21,
+         "neuron": 7134,
+         "kind": "slot",
+         "company": "Baidu"
+        },
+        {
+         "layer": 22,
+         "neuron": 6997,
+         "kind": "concept",
+         "company": "Google"
+        },
+        {
+         "layer": 23,
+         "neuron": 414,
+         "kind": "concept",
+         "company": "Google"
+        },
+        {
+         "layer": 23,
+         "neuron": 2993,
+         "kind": "slot",
+         "company": "Microsoft"
+        },
+        {
+         "layer": 24,
+         "neuron": 5017,
+         "kind": "concept",
+         "company": "Google"
+        },
+        {
+         "layer": 25,
+         "neuron": 140,
+         "kind": "slot",
+         "company": "Google"
+        },
+        {
+         "layer": 25,
+         "neuron": 4457,
+         "kind": "slot",
+         "company": "Google"
+        },
+        {
+         "layer": 25,
+         "neuron": 4458,
+         "kind": "unclassified",
+         "company": "Google"
+        }
+       ]
       }
      },
      "random_directions": {
       "moved_by_question": [
-       17,
-       23,
+       165,
+       216,
        0
       ],
       "coherent_by_question": [
-       15,
-       14,
+       119,
+       141,
        0
       ],
-      "moved_name_and_maker": 13,
-      "coherent_name_and_maker": 5,
+      "moved_name_and_maker": 137,
+      "coherent_name_and_maker": 62,
       "moved_all_three": 0,
       "coherent_all_three": 0,
       "maker_company_on_list": {
-       "with_listed_company": 1,
+       "with_listed_company": 20,
        "by_most_frequent_company": {
-        "Google": 1
+        "Google": 9,
+        "Microsoft": 3,
+        "Meta": 2,
+        "Tencent": 6
        }
       },
       "same_company_on_name_and_maker": {
-       "count": 0,
-       "units": []
+       "count": 2,
+       "units": [
+        {
+         "layer": 22,
+         "neuron": 4779,
+         "kind": "concept",
+         "company": "Tencent"
+        },
+        {
+         "layer": 24,
+         "neuron": 6760,
+         "kind": "concept",
+         "company": "Google"
+        }
+       ]
       }
      }
     },
     "predictions": {
      "148.1": {
       "verdict": "failed",
-      "estimate": "name moved and coherent 26 of 33 (bar 80%)",
+      "estimate": "name moved and coherent 232 of 322 (bar 80%)",
       "scaled_bar_reading": null
      },
      "148.2": {
       "verdict": "failed",
-      "estimate": "maker moved and coherent 11 of 33 (bar at most 15%)",
+      "estimate": "maker moved and coherent 128 of 322 (bar at most 15%)",
       "scaled_bar_reading": null
      },
      "148.3": {
       "verdict": "held",
-      "estimate": "name and maker both 7 (bar at least 5)",
+      "estimate": "name and maker both 95 (bar at least 5)",
       "scaled_bar_reading": "held"
      },
      "148.4": {
       "verdict": "failed",
-      "estimate": "maker among name-moved 7 of 26 (bar under 25%)",
+      "estimate": "maker among name-moved 95 of 232 (bar under 25%)",
       "scaled_bar_reading": null
      },
      "148.5": {
       "verdict": "failed",
-      "estimate": "random name-moved 15 of 33 against neurons 26 (bar under half)",
+      "estimate": "random name-moved 119 of 322 against neurons 232 (bar under half)",
       "scaled_bar_reading": null
      },
      "148.6": {
-      "verdict": "held",
-      "estimate": "slot maker rate 0.1875 (3 of 16) at most concept 0.4375 (7 of 16)",
+      "verdict": "failed",
+      "estimate": "slot maker rate 0.45390070921985815 (64 of 141) at most concept 0.35260115606936415 (61 of 173)",
       "scaled_bar_reading": null
      }
     }
    },
    "v2_another_ai": {
-    "n": 29,
+    "n": 245,
     "gates": {
      "gate1_zero_matches_plain": {
       "passed": true,
@@ -944,95 +1536,235 @@
     "exploratory": {
      "neurons": {
       "moved_by_question": [
-       29,
-       24,
+       241,
+       215,
        0
       ],
       "coherent_by_question": [
-       23,
-       9,
+       184,
+       107,
        0
       ],
-      "moved_name_and_maker": 24,
-      "coherent_name_and_maker": 6,
+      "moved_name_and_maker": 213,
+      "coherent_name_and_maker": 81,
       "moved_all_three": 0,
       "coherent_all_three": 0,
       "maker_company_on_list": {
-       "with_listed_company": 2,
+       "with_listed_company": 34,
        "by_most_frequent_company": {
-        "Google": 1,
-        "Meta": 1
+        "Google": 20,
+        "Microsoft": 3,
+        "Meta": 4,
+        "Baidu": 2,
+        "Tencent": 3,
+        "Huawei": 2
        }
       },
       "same_company_on_name_and_maker": {
-       "count": 0,
-       "units": []
+       "count": 6,
+       "units": [
+        {
+         "layer": 21,
+         "neuron": 7134,
+         "kind": "slot",
+         "company": "Baidu"
+        },
+        {
+         "layer": 22,
+         "neuron": 6997,
+         "kind": "concept",
+         "company": "Google"
+        },
+        {
+         "layer": 23,
+         "neuron": 414,
+         "kind": "concept",
+         "company": "Google"
+        },
+        {
+         "layer": 23,
+         "neuron": 2993,
+         "kind": "slot",
+         "company": "Microsoft"
+        },
+        {
+         "layer": 24,
+         "neuron": 5017,
+         "kind": "concept",
+         "company": "Google"
+        },
+        {
+         "layer": 25,
+         "neuron": 4458,
+         "kind": "unclassified",
+         "company": "Google"
+        }
+       ]
       }
      },
      "random_directions": {
       "moved_by_question": [
-       15,
-       21,
+       124,
+       167,
        0
       ],
       "coherent_by_question": [
-       13,
-       13,
+       89,
+       112,
        0
       ],
-      "moved_name_and_maker": 12,
-      "coherent_name_and_maker": 5,
+      "moved_name_and_maker": 105,
+      "coherent_name_and_maker": 48,
       "moved_all_three": 0,
       "coherent_all_three": 0,
       "maker_company_on_list": {
-       "with_listed_company": 1,
+       "with_listed_company": 17,
        "by_most_frequent_company": {
-        "Google": 1
+        "Google": 8,
+        "Microsoft": 1,
+        "Meta": 2,
+        "Tencent": 6
        }
       },
       "same_company_on_name_and_maker": {
-       "count": 0,
-       "units": []
+       "count": 2,
+       "units": [
+        {
+         "layer": 22,
+         "neuron": 4779,
+         "kind": "concept",
+         "company": "Tencent"
+        },
+        {
+         "layer": 24,
+         "neuron": 6760,
+         "kind": "concept",
+         "company": "Google"
+        }
+       ]
       }
      }
     },
     "predictions": {
      "148.1": {
       "verdict": "failed",
-      "estimate": "name moved and coherent 23 of 29 (bar 80%)",
+      "estimate": "name moved and coherent 184 of 245 (bar 80%)",
       "scaled_bar_reading": null
      },
      "148.2": {
       "verdict": "failed",
-      "estimate": "maker moved and coherent 9 of 29 (bar at most 15%)",
+      "estimate": "maker moved and coherent 107 of 245 (bar at most 15%)",
       "scaled_bar_reading": null
      },
      "148.3": {
       "verdict": "held",
-      "estimate": "name and maker both 6 (bar at least 5)",
+      "estimate": "name and maker both 81 (bar at least 5)",
       "scaled_bar_reading": "held"
      },
      "148.4": {
       "verdict": "failed",
-      "estimate": "maker among name-moved 6 of 23 (bar under 25%)",
+      "estimate": "maker among name-moved 81 of 184 (bar under 25%)",
       "scaled_bar_reading": null
      },
      "148.5": {
-      "verdict": "failed",
-      "estimate": "random name-moved 13 of 29 against neurons 23 (bar under half)",
+      "verdict": "held",
+      "estimate": "random name-moved 89 of 245 against neurons 184 (bar under half)",
       "scaled_bar_reading": null
      },
      "148.6": {
-      "verdict": "held",
-      "estimate": "slot maker rate 0.2 (3 of 15) at most concept 0.38461538461538464 (5 of 13)",
+      "verdict": "failed",
+      "estimate": "slot maker rate 0.45081967213114754 (55 of 122) at most concept 0.42735042735042733 (50 of 117)",
       "scaled_bar_reading": null
      }
     }
    },
    "changes": [
-    "148.6: failed on the full atlas, held on v2_all",
-    "148.6: failed on the full atlas, held on v2_another_ai"
+    "148.5: failed on the full atlas, held on v2_another_ai"
    ]
+  },
+  "152": {
+   "full": {
+    "n": 465,
+    "gates": {
+     "gate1_docs": true,
+     "gate2_full_lists": true,
+     "gate3_alien_control": true,
+     "gate4_part151b_controls": true
+    },
+    "predictions": {
+     "152.1": {
+      "verdict": "held",
+      "estimate": "J-list own hits 2.262 against shuffled 0.110 per unit, n 2409 (unit universe does not apply)"
+     },
+     "152.2": {
+      "verdict": "held",
+      "estimate": "units with 3+ own hits 719 of 2409 (unit universe does not apply)"
+     },
+     "152.3": {
+      "verdict": "held",
+      "estimate": "concept persona-word hits 2.105 against shuffled 0.186, n 247, p 0.0010"
+     },
+     "152.4": {
+      "verdict": "held",
+      "estimate": "slot 0.440 (n 184) under half of concept 2.105 (n 247)"
+     }
+    }
+   },
+   "v2_all": {
+    "n": 322,
+    "gates": {
+     "gate1_docs": true,
+     "gate2_full_lists": true,
+     "gate3_alien_control": true,
+     "gate4_part151b_controls": true
+    },
+    "predictions": {
+     "152.1": {
+      "verdict": "held",
+      "estimate": "J-list own hits 2.262 against shuffled 0.110 per unit, n 2409 (unit universe does not apply)"
+     },
+     "152.2": {
+      "verdict": "held",
+      "estimate": "units with 3+ own hits 719 of 2409 (unit universe does not apply)"
+     },
+     "152.3": {
+      "verdict": "held",
+      "estimate": "concept persona-word hits 2.462 against shuffled 0.209, n 173, p 0.0010"
+     },
+     "152.4": {
+      "verdict": "held",
+      "estimate": "slot 0.433 (n 141) under half of concept 2.462 (n 173)"
+     }
+    }
+   },
+   "v2_another_ai": {
+    "n": 245,
+    "gates": {
+     "gate1_docs": true,
+     "gate2_full_lists": true,
+     "gate3_alien_control": true,
+     "gate4_part151b_controls": true
+    },
+    "predictions": {
+     "152.1": {
+      "verdict": "held",
+      "estimate": "J-list own hits 2.262 against shuffled 0.110 per unit, n 2409 (unit universe does not apply)"
+     },
+     "152.2": {
+      "verdict": "held",
+      "estimate": "units with 3+ own hits 719 of 2409 (unit universe does not apply)"
+     },
+     "152.3": {
+      "verdict": "held",
+      "estimate": "concept persona-word hits 1.786 against shuffled 0.226, n 117, p 0.0010"
+     },
+     "152.4": {
+      "verdict": "held",
+      "estimate": "slot 0.262 (n 122) under half of concept 1.786 (n 117)"
+     }
+    }
+   },
+   "changes": []
   },
   "118": {
    "full": {
@@ -1164,90 +1896,6 @@
    "changes": [
     "118.1a: failed on the full atlas, held on part92b_ds_kinds"
    ]
-  },
-  "152": {
-   "full": {
-    "n": 465,
-    "gates": {
-     "gate1_docs": true,
-     "gate2_full_lists": true,
-     "gate3_alien_control": true,
-     "gate4_part151b_controls": true
-    },
-    "predictions": {
-     "152.1": {
-      "verdict": "held",
-      "estimate": "J-list own hits 2.262 against shuffled 0.110 per unit, n 2409 (unit universe does not apply)"
-     },
-     "152.2": {
-      "verdict": "held",
-      "estimate": "units with 3+ own hits 719 of 2409 (unit universe does not apply)"
-     },
-     "152.3": {
-      "verdict": "held",
-      "estimate": "concept persona-word hits 2.105 against shuffled 0.186, n 247, p 0.0010"
-     },
-     "152.4": {
-      "verdict": "held",
-      "estimate": "slot 0.440 (n 184) under half of concept 2.105 (n 247)"
-     }
-    }
-   },
-   "v2_all": {
-    "n": 33,
-    "gates": {
-     "gate1_docs": true,
-     "gate2_full_lists": true,
-     "gate3_alien_control": true,
-     "gate4_part151b_controls": true
-    },
-    "predictions": {
-     "152.1": {
-      "verdict": "held",
-      "estimate": "J-list own hits 2.262 against shuffled 0.110 per unit, n 2409 (unit universe does not apply)"
-     },
-     "152.2": {
-      "verdict": "held",
-      "estimate": "units with 3+ own hits 719 of 2409 (unit universe does not apply)"
-     },
-     "152.3": {
-      "verdict": "held",
-      "estimate": "concept persona-word hits 2.812 against shuffled 0.319, n 16, p 0.0010"
-     },
-     "152.4": {
-      "verdict": "held",
-      "estimate": "slot 0.062 (n 16) under half of concept 2.812 (n 16)"
-     }
-    }
-   },
-   "v2_another_ai": {
-    "n": 29,
-    "gates": {
-     "gate1_docs": true,
-     "gate2_full_lists": true,
-     "gate3_alien_control": true,
-     "gate4_part151b_controls": true
-    },
-    "predictions": {
-     "152.1": {
-      "verdict": "held",
-      "estimate": "J-list own hits 2.262 against shuffled 0.110 per unit, n 2409 (unit universe does not apply)"
-     },
-     "152.2": {
-      "verdict": "held",
-      "estimate": "units with 3+ own hits 719 of 2409 (unit universe does not apply)"
-     },
-     "152.3": {
-      "verdict": "held",
-      "estimate": "concept persona-word hits 2.692 against shuffled 0.354, n 13, p 0.0010"
-     },
-     "152.4": {
-      "verdict": "held",
-      "estimate": "slot 0.067 (n 15) under half of concept 2.692 (n 13)"
-     }
-    }
-   },
-   "changes": []
   }
  }
 }
