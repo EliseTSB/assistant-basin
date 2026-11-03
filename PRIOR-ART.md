@@ -723,8 +723,10 @@ For the steering-word part that follows:
   recovers 1.000 on four checked. Supporting arms pass (curve neurons are orientation-tuned; 3b:379's top 10 inputs
   carry 85% against 3.7% for random inputs), so the failure is specific to the essay's headline readings. Rules were
   written by Claude from an explanation split, scored mechanically on held-out text; weights by name, no revision.
-  **Not comparable to our Part 64 sentence test**: E4 asks whether a written rule reproduces a neuron's activations on
-  held-out text (a recovery score), while Part 64 asks whether a neuron fires above a per-unit null on sentences written
-  to make it fire (28.1% of real neurons against 6.2% of random directions on at least 3 of 4). Both say most single
-  neurons are not explained by one written description; Part 64's random-direction control is what E4 lacks, and E4's
-  recovery bar is what Part 64 lacks.
+  **Not comparable to our sentence tests (Parts 58 and 64, Qwen3-1.7B)**: E4 asks whether a written rule reproduces a
+  neuron's activations on held-out text (a recovery score), while ours ask whether a unit fires above a per-unit null
+  on texts written to make it fire. Part 58: 560 of 1,990 real neurons (28.1%) against 123 of 1,979 random directions
+  (6.2%) on at least 3 of 4 texts (README, Part 58). Part 64 then found the gap shrinking as the writer got more
+  material and a stronger model, because random directions passed faster (26.4 points for Haiku with one sample, 11.2
+  for Opus with three; results/part64/analysis-64.md). Both lines say most single neurons are not explained by one
+  written description. Our random-direction control is what E4 lacks; E4's recovery bar is what ours lacks.
