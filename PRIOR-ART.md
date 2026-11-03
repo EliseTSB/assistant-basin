@@ -690,3 +690,24 @@ Seen by Claude, for later parts:
 - Josh Fonseca Rivera, [thread of 2026-11-02](https://x.com/jfonsecarivera/status/2117071370328608975). Read as two posts from the X watch: on Qwen, emergent misalignment lit the same neurons across two separately trained models, themed on power, and holding the top shared neurons fixed during training brought no significant improvement.
 - Takehi, Teoh, Zhang and Khattab (MIT CSAIL), [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/), 2026-11-02, with [public logs](https://github.com/RikiyaT/lm_understand-logs). Read through a fetched summary of the post and the README of its Qwen3.5-0.8B experiment. GPT-6 Astra traced looping to one direction in two layers' MLPs and edited 0.016% of the weights: MATH-500 7.9% to 48.1%, token-limit hits 93.0% to 33.1%. A permanent edit, where our pushes last one run.
 - treetown (@treetowntree), post of 2026-11-02, seen as Elise's screenshot, "part of upcoming work with @_a9lim": "Are 'persona neurons' real? Mostly they are concept neurons. They make a self only when the model is asked who it is." Beside our concept and slot sort (Parts 92, 112 and 117). No data seen yet.
+
+## 2026-11-02, for Part 177
+
+From Muse's two searches of 2026-11-02 (council topic muse-part176-prior-art-2026-11-02, messages 6 and 7), cited from Muse's reports and not read by Claude. Muse found no prior audit of cut answers for a correct answer already stated, and no paper that defines loop onset in a reasoning trace and validates it against labelled starts.
+
+- Caldarella et al., arXiv:2606.02835, Thinking Past the Answer. Feeds each prefix of a complete trace to a separate extractor and takes the first prefix that extracts to ground truth. Complete traces, not cut ones, and an extractor recovering a value is not the model committing to it.
+- Huang et al., arXiv:2602.08354, SAGE. The Ratio of the First Correct Step on MATH-500. Completed traces only, so it is undefined for a trace that never finishes.
+- Wang et al., arXiv:2501.18585, Underthinking. The closest audit of incorrect finals holding a correct early thought, judged by an LLM. No cut population.
+- Liao et al., arXiv:2505.12992, Fractured CoT. Truncates a prefix and forces an answer, which measures what a prefix yields and not what it already holds.
+- Su et al., arXiv:2602.14444, Broken Chains. A truncated chain can mislead a forced answer, which cuts against reading an answer in a prefix as reached.
+- Muennighoff et al., arXiv:2501.19393, s1 budget forcing. Forces the end of thinking, and notes that suppressing the delimiter can lead into loops.
+- Glass et al., arXiv:2608.24988, Does Fine-Tuning Undo Activation Steering? Embeds steering in weights and fine-tunes against it. No run-time arm on the same vectors.
+
+For the steering-word part that follows:
+
+- Wang et al., arXiv:2506.08343, NoWait. A per-model list of reflection tokens, banned for a whole generation: chains 27 to 51% shorter, accuracy roughly kept.
+- Ding et al., arXiv:2506.23840, DuP-PO. On one R1 distill, wait is 37% of thinking tokens. One inserted wait raised later wait probabilities about 100 times, a cascade.
+- Hwang et al., arXiv:2601.17421, Oops, Wait. Discourse tokens tracked against answer probability on four model lines.
+- Venhoff et al., arXiv:2506.18167. Steering vectors for backtracking in R1 distills, with the layer differing by model.
+- Du et al., arXiv:2602.01999. Logit-lens tracing from Wait onsets through the layers, on an R1 distill and Qwen3-4B-Thinking.
+- Bogdan et al., arXiv:2506.19143, Thought Anchors. Sentence-level attribution by resampling.

@@ -94,7 +94,7 @@ def main():
     ax.grid(False)
     ax.legend([plt.Rectangle((0, 0), 1, 1, color=color) for color in onset_colors],
               ["Before onset", "Onset before hit", "No onset detected"],
-              frameon=False, ncol=1, loc="lower left", bbox_to_anchor=(0.0, -0.23), fontsize=11)
+              frameon=False, ncol=1, loc="upper left", bbox_to_anchor=(0.0, -0.01), fontsize=11)
 
     # Panel three: paired rates plus the discordant-pair counts.
     ax = axes[2]
@@ -108,19 +108,21 @@ def main():
         ax.text(rate - 0.025, y,
                 f"{row['numerator']}/{row['denominator']} ({rate * 100:.1f}%)",
                 va="center", ha="right", fontsize=12.5, fontweight="bold", color="white")
-    ax.set_title(f"3. Detected onset\nwithin {character_window} characters", loc="left",
+    ax.set_title(f"3. Selected pairs: onset\nwithin {character_window} characters", loc="left",
                  fontsize=16, fontweight="bold", pad=12)
     ax.set_yticks(y_positions, ["Unedited", "p50c"], fontsize=13)
     ax.set_xlim(0, 1.0)
     ax.set_xticks([0, 0.5, 1.0], ["0", "50%", "100%"], fontsize=10)
-    ax.set_xlabel("Share of equally exposed pairs", fontsize=11)
+    ax.set_xlabel("Share with detected onset", fontsize=11)
     ax.grid(axis="x", color="#e4e8ec", linewidth=0.9)
     ax.set_axisbelow(True)
     cells = paired["detection_cells"]
-    ax.text(0, -0.65,
-            f"{paired['eligible_pairs']} pairs. Both: {cells['both']}. Unedited only: {cells['unedited_only']}. "
-            f"p50c only: {cells['p50c_only']}. Neither: {cells['neither']}.",
-            fontsize=10.5, color="#56616d", ha="left", va="top", wrap=True)
+    ax.text(0, -0.45,
+            f"{paired['eligible_pairs']} pairs. Both texts ran past 50,000 chars.\n"
+            f"The p50c member is a subset selected on post-edit length.\n"
+            f"Both: {cells['both']}, unedited only: {cells['unedited_only']}, "
+            f"p50c only: {cells['p50c_only']}, neither: {cells['neither']}.",
+            fontsize=9.5, color="#56616d", ha="left", va="top", wrap=True)
     ax.set_ylim(-1.05, 1.55)
 
     for ax in axes:

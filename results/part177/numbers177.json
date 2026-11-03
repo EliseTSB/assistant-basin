@@ -231,6 +231,65 @@
       }
     }
   },
+  "shuffled_C": {
+    "window_count": 98,
+    "trace_count_with_hit": 37,
+    "label_counts": {
+      "asserted": 0,
+      "intermediate": 71,
+      "quoted from the problem": 4,
+      "rejected or doubted": 3,
+      "ambiguous": 20
+    },
+    "value_counts": {
+      "-3": 1,
+      "1": 12,
+      "2": 19,
+      "3": 17,
+      "4": 12,
+      "5": 6,
+      "6": 7,
+      "8": 9,
+      "9": 3,
+      "10": 2,
+      "12": 3,
+      "24": 1,
+      "36": 3,
+      "2000": 3
+    },
+    "integer_value_count": 98
+  },
+  "zero_count_upper_bounds": {
+    "shuffled_asserted_windows_T": {
+      "events": 0,
+      "n": 88,
+      "upper_95": 0.04105262905807805
+    },
+    "shuffled_asserted_traces_T": {
+      "events": 0,
+      "n": 173,
+      "upper_95": 0.021097274650684894
+    },
+    "shuffled_asserted_windows_C": {
+      "events": 0,
+      "n": 98,
+      "upper_95": 0.036941987035192914
+    },
+    "nonnull_wrong_box_traces_C": {
+      "events": 0,
+      "n": 115,
+      "upper_95": 0.031568195988247116
+    }
+  },
+  "reader_retries": {
+    "attempts_2_ids": [
+      "w:abb2e6a1ab7ca93056121a3a",
+      "w:490185fa0d5ddea44c6e9c09",
+      "w:f84358dcebb79a6c2a47fa25",
+      "w:23236a36b9871c7cf182218f"
+    ],
+    "attempts_2_count": 4
+  },
   "funnel_T": {
     "denominator_traces": 173,
     "real": {
@@ -263,6 +322,16 @@
       "hit before onset": 110,
       "no onset detected": 2,
       "onset before hit": 3
+    }
+  },
+  "asserted_before_onset_denominators": {
+    "T": {
+      "numerator": 49,
+      "denominator": 168
+    },
+    "C": {
+      "numerator": 49,
+      "denominator": 182
     }
   },
   "prediction_table": {
@@ -1195,6 +1264,19 @@
       "eligible_pairs": 116
     }
   },
+  "first_50k_all_200_descriptive": {
+    "unedited": {
+      "numerator": 183,
+      "denominator": 200,
+      "rate": 0.915
+    },
+    "p50c": {
+      "numerator": 110,
+      "denominator": 200,
+      "rate": 0.55
+    },
+    "difference_unedited_minus_p50c": 0.365
+  },
   "looped_and_merely_long_C": {
     "looped_traces": 182,
     "merely_long_traces": 5,
@@ -1326,6 +1408,26 @@
         "cutoff_share_of_text": 0.15
       }
     },
+    "late_gap_sensitivity": {
+      "all_C": {
+        "denominator": 187,
+        "real_late_traces": 84,
+        "shuffled_late_traces": 25,
+        "gap": 0.3155080213903743
+      },
+      "traces_with_real_hit_left": {
+        "denominator": 84,
+        "real_late_traces": 84,
+        "shuffled_late_traces": 22,
+        "gap": 0.7380952380952381
+      },
+      "union_of_traces_with_any_hit_left": {
+        "denominator": 87,
+        "real_late_traces": 84,
+        "shuffled_late_traces": 25,
+        "gap": 0.6781609195402298
+      }
+    },
     "amendment_1_applied": true
   },
   "token_positions_on_T": {
@@ -1333,10 +1435,10 @@
       "distribution": {
         "n": 101,
         "median": 652.0,
-        "q1": 338.0,
-        "q3": 1486.0,
-        "iqr_width": 1148.0,
-        "method": "linear interpolation at (n-1)*p; same pinned tokenizer as cap check"
+        "q1": 337.5,
+        "q3": 1489.5,
+        "iqr_width": 1152.0,
+        "method": "Hyndman-Fan Type 6 (exclusive), linear interpolation at p*(n+1); same pinned tokenizer as cap check"
       },
       "observations": [
         {
@@ -1850,10 +1952,10 @@
       "distribution": {
         "n": 67,
         "median": 1986.0,
-        "q1": 622.5,
-        "q3": 5905.0,
-        "iqr_width": 5282.5,
-        "method": "linear interpolation at (n-1)*p; same pinned tokenizer as cap check"
+        "q1": 609.0,
+        "q3": 6020.0,
+        "iqr_width": 5411.0,
+        "method": "Hyndman-Fan Type 6 (exclusive), linear interpolation at p*(n+1); same pinned tokenizer as cap check"
       },
       "observations": [
         {
@@ -2192,6 +2294,15 @@
           "tokens_before": 12732
         }
       ]
+    },
+    "first_asserted_vs_first_literal": {
+      "traces": 67,
+      "later_token_position_traces": 31,
+      "same_token_position_traces": 36,
+      "median_gap_tokens": 0.0,
+      "median_gap_tokens_when_later": 4575.0,
+      "onset_between_positions_traces": 16,
+      "repeated_literal_hit_between_positions_traces": 30
     },
     "position_definition": "Token count of the stored text prefix before the character position, using the pinned release tokenizer."
   },

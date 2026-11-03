@@ -3332,14 +3332,14 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 
 ## Part 177 (registered 2026-11-02 18:26 CT, PART177-DESIGN.md, before any outcome was read)
 
-| # | Prediction | Confidence | Author |
-| --- | --- | --- | --- |
-| 177.1 | On `T`, the share of traces with an `asserted` real gold exceeds the same share for shuffled draw 1 by at least 15 points | medium | Claude |
-| 177.2 | On `T`, at least 25% of traces have an `asserted` real gold | medium | Claude |
-| 177.3 | Among `T` traces with an `asserted` real gold and a detected onset, at least half have the first asserted hit before the onset; not read below 20 traces | medium | Claude |
-| 177.4 | At least 80% of `p50c` traces that are `capped` with no `</think>` carry a detected onset. This is the persistence of the signature among residual failures and says nothing about incidence | medium | Claude |
-| 177.5 | On problems in the same cohort in both arms with a detected onset in both, median onset as a share of text is later in `p50c`; not read below 15 pairs | medium | Claude |
-| 177.6 | Over the 200 paired problems, with onset searched only in the first 50,000 characters of each text and pairs with a shorter text left out, the rate of a detected onset is at least 15 points lower in `p50c` | medium | Claude |
-| 177.W1 | The real-against-shuffled literal-hit gap on `C` exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15. Falsifier: fewer than 10% of hits in the first 15% of text | medium | Weaver |
-| 177.W2 | Shuffled windows clear 40% yes on Gate 4. Falsifier: under 20% | medium | Weaver |
-| 177.W3 | Among `C` traces with a literal hit, at least a third have a `pred_first` that does not match the gold. Falsifier: under 15% | medium | Weaver |
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 177.1 | On `T`, the share of traces with an `asserted` real gold exceeds the same share for shuffled draw 1 by at least 15 points | medium | Claude | held: 67 of 173 real, 0 of 173 shuffled |
+| 177.2 | On `T`, at least 25% of traces have an `asserted` real gold | medium | Claude | held: 67 of 173, 38.7% |
+| 177.3 | Among `T` traces with an `asserted` real gold and a detected onset, at least half have the first asserted hit before the onset; not read below 20 traces | medium | Claude | held: 49 of 66 before the onset |
+| 177.4 | At least 80% of `p50c` traces that are `capped` with no `</think>` carry a detected onset. This is the persistence of the signature among residual failures and says nothing about incidence | medium | Claude | failed: 35 of 48, 72.9% |
+| 177.5 | On problems in the same cohort in both arms with a detected onset in both, median onset as a share of text is later in `p50c`; not read below 15 pairs | medium | Claude | held on the median: 0.16 to 0.32, difference interval -0.03 to 0.40 on 34 pairs |
+| 177.6 | Over the 200 paired problems, with onset searched only in the first 50,000 characters of each text and pairs with a shorter text left out, the rate of a detected onset is at least 15 points lower in `p50c` | medium | Claude | held: 111 of 116 against 79 of 116, on pairs where both texts passed 50,000 characters, which selects on post-edit length |
+| 177.W1 | The real-against-shuffled literal-hit gap on `C` exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15. Falsifier: fewer than 10% of hits in the first 15% of text | medium | Weaver | inconclusive: gap 41.7 points, 31.6 with early hits dropped; early share 10.5% of all hits, 94.8% of first hits (Amendments 1 and 2) |
+| 177.W2 | Shuffled windows clear 40% yes on Gate 4. Falsifier: under 20% | medium | Weaver | failed: 0 of 98 shuffled windows |
+| 177.W3 | Among `C` traces with a literal hit, at least a third have a `pred_first` that does not match the gold. Falsifier: under 15% | medium | Weaver | failed under the registered reading: 0 of 115 with a wrong box; 113 of 115 null, so the plain wording would hold |

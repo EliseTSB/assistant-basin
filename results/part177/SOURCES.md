@@ -1,0 +1,3 @@
+# Sources
+
+Sources: The log inputs and the excerpts in `windows.jsonl` come from [lm_understand-logs](https://github.com/RikiyaT/lm_understand-logs) at commit [`4d09ba6`](https://github.com/RikiyaT/lm_understand-logs/commit/4d09ba6d6a7e891dd8063974dfe81b3d78e3494f) by Takehi, Teoh, Zhang and Khattab under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). `windows.jsonl` holds excerpts of their logs and [MATH-500 problem text](https://huggingface.co/datasets/HuggingFaceH4/MATH-500). The MATH-500 text carries its source's own terms. The manifest pins the MATH-500 test set and Qwen tokenizer separately.
