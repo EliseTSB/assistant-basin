@@ -1,0 +1,118 @@
+{
+ "A_B": {
+  "A_gate1_true_state": {
+   "pairs": 32,
+   "failures": 0,
+   "passed": true
+  },
+  "A_gate1_corrupted_state": {
+   "pairs": 32,
+   "failures": 0,
+   "passed": true
+  },
+  "A_top10_overlap_corrupted_vs_true_median": 0.1,
+  "B_config_keys_that_differ_between_two_runs_of_the_same_weights": [
+   "model_arm"
+  ],
+  "B_weight_fingerprint_fields_in_config": [
+   "model_arm",
+   "model_config_sha256",
+   "model_dir_name"
+  ],
+  "B_overlap_between_the_two_runs_median": 1.0
+ },
+ "C": {
+  "units": 131072,
+  "randomised_share": 0.3,
+  "median": 1.0,
+  "mean": 0.7304954528808593,
+  "gate3_bar": 0.95,
+  "gate3_passes": true,
+  "share_below_0.5": 0.299591064453125
+ },
+ "D": {
+  "per_unit_overlap_changes_across_checkpoints": false,
+  "median_over_all_units": 0.5,
+  "inactive_share_rising": {
+   "inactive_share": {
+    "21B": 0.1,
+    "210B": 0.2,
+    "1T": 0.3,
+    "2T": 0.4,
+    "3T": 0.5,
+    "4T": 0.6
+   },
+   "median_over_active_units": {
+    "21B": 0.5,
+    "210B": 0.6,
+    "1T": 0.6,
+    "2T": 0.6,
+    "3T": 0.7,
+    "4T": 0.7
+   },
+   "non_decreasing": true,
+   "strictly_rising": false
+  },
+  "inactive_share_falling": {
+   "inactive_share": {
+    "21B": 0.6,
+    "210B": 0.5,
+    "1T": 0.4,
+    "2T": 0.3,
+    "3T": 0.2,
+    "4T": 0.1
+   },
+   "median_over_active_units": {
+    "21B": 0.7,
+    "210B": 0.7,
+    "1T": 0.6,
+    "2T": 0.6,
+    "3T": 0.6,
+    "4T": 0.5
+   },
+   "non_decreasing": false,
+   "strictly_rising": false
+  }
+ },
+ "E": {
+  "true_rates": [
+   0.55,
+   0.58,
+   0.6,
+   0.61,
+   0.62,
+   0.63
+  ],
+  "medians": [
+   0.6,
+   0.6,
+   0.6,
+   0.6,
+   0.6,
+   0.6
+  ],
+  "means": [
+   0.5499,
+   0.5798,
+   0.5997,
+   0.6101,
+   0.6195,
+   0.6298
+  ],
+  "median_strictly_rising": false,
+  "mean_strictly_rising": true,
+  "ceiling_pair_neuron_median": 1.0,
+  "ceiling_pair_control_median": 1.0,
+  "neuron_exceeds_control_at_ceiling": false
+ },
+ "F": {
+  "docs": 520,
+  "snapshot_every": 500,
+  "snapshots_written": {
+   "checkpoint_every_64": [],
+   "checkpoint_every_50": [
+    "snapshot-pass1-docs00500.npz"
+   ]
+  }
+ }
+}
