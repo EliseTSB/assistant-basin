@@ -3329,3 +3329,17 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 176.W1 | Support rises through 0.25 (0.25 ≥ both 0.20 and 0.225) and falls under 5 of 40 at 0.30, with 0.225 sitting on the rising slope rather than at a peak. Falsifiers: 0.225 exceeding both neighbours by ≥5 of 40, which restores the peak; and 15 or more of 40 supported at 0.30, which means no collapse happened and the whole band reading is wrong | medium | Weaver | failed: 20 to 21, 30, 20 and 0 of 40 at 0.20, 0.225, 0.25 and 0.30; 0.225 exceeds both neighbours by at least 5 |
 | 176.W2 | Google's share of named answers rises monotonically across the rungs while the raw Google count peaks at or below 0.25. Falsifier: raw Google count still rising at 0.275 or 0.30 | medium | Weaver | failed: share fell 6.3 to 6.9 points at 0.30, on 115 named answers; the count clause did not fail |
 | 176.W3 | Over directions with a supported rung, the median `gap`, from a direction's top supported rung to its `collapse dose`, is at least 0.05. Falsifier: under 0.025, which would put naming at the edge of collapse and make Muse's warning live | medium | Weaver | failed: median gap 0.0177, 22 of 34 under 0.025; most of that is the rung spacing |
+
+## Part 177 (registered 2026-11-02 18:26 CT, PART177-DESIGN.md, before any outcome was read)
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 177.1 | On `T`, the share of traces with an `asserted` real gold exceeds the same share for shuffled draw 1 by at least 15 points | medium | Claude |
+| 177.2 | On `T`, at least 25% of traces have an `asserted` real gold | medium | Claude |
+| 177.3 | Among `T` traces with an `asserted` real gold and a detected onset, at least half have the first asserted hit before the onset; not read below 20 traces | medium | Claude |
+| 177.4 | At least 80% of `p50c` traces that are `capped` with no `</think>` carry a detected onset. This is the persistence of the signature among residual failures and says nothing about incidence | medium | Claude |
+| 177.5 | On problems in the same cohort in both arms with a detected onset in both, median onset as a share of text is later in `p50c`; not read below 15 pairs | medium | Claude |
+| 177.6 | Over the 200 paired problems, with onset searched only in the first 50,000 characters of each text and pairs with a shorter text left out, the rate of a detected onset is at least 15 points lower in `p50c` | medium | Claude |
+| 177.W1 | The real-against-shuffled literal-hit gap on `C` exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15. Falsifier: fewer than 10% of hits in the first 15% of text | medium | Weaver |
+| 177.W2 | Shuffled windows clear 40% yes on Gate 4. Falsifier: under 20% | medium | Weaver |
+| 177.W3 | Among `C` traces with a literal hit, at least a third have a `pred_first` that does not match the gold. Falsifier: under 15% | medium | Weaver |
