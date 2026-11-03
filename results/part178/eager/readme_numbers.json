@@ -1,0 +1,426 @@
+{
+  "description": "README supplementary values derived from eager score and generated rows.",
+  "summary_counts": {
+    "generated_set_count": 4,
+    "numbered_prediction_count": 7,
+    "prediction_count": 11,
+    "gate_count": 5,
+    "w3_held_model_count": 1,
+    "source": "counts of eager score prediction, gate, and generated-set keys"
+  },
+  "w1_top20_symmetric_difference": {
+    "count": 4,
+    "rate_only_words": [
+      "maybe",
+      "step"
+    ],
+    "trace_only_words": [
+      "analyze",
+      "here's"
+    ],
+    "source": "predictions.178.W1.estimate.rate_top20 and trace_top20"
+  },
+  "registered_context": {
+    "part": 178,
+    "next_part": 179,
+    "source": "next_part is the registered follow-on named by PART178-DESIGN.md"
+  },
+  "generated_sets": {
+    "R8": {
+      "row_count": 200,
+      "unique_problem_ids": 200,
+      "model": "Qwen/Qwen3.5-0.8B",
+      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "attn_implementation": "eager",
+      "thinking": true,
+      "max_new_tokens": 2048,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.95,
+      "presence_penalty": 1.5,
+      "finish_reason_counts": {
+        "cap": 197,
+        "end-of-turn": 3
+      },
+      "think_close": {
+        "rows_containing_token": 3,
+        "row_count": 200,
+        "token_id": 248069,
+        "source": "JSONL row think_close_token_id found in generated_ids"
+      },
+      "source": "eager/R8.jsonl"
+    },
+    "N8": {
+      "row_count": 200,
+      "unique_problem_ids": 200,
+      "model": "Qwen/Qwen3.5-0.8B",
+      "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+      "attn_implementation": "eager",
+      "thinking": false,
+      "max_new_tokens": 2048,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.95,
+      "presence_penalty": 1.5,
+      "finish_reason_counts": {
+        "cap": 97,
+        "end-of-turn": 103
+      },
+      "source": "eager/N8.jsonl"
+    },
+    "G": {
+      "row_count": 200,
+      "unique_problem_ids": 200,
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "attn_implementation": "eager",
+      "thinking": true,
+      "max_new_tokens": 2048,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.95,
+      "presence_penalty": 1.5,
+      "finish_reason_counts": {
+        "cap": 175,
+        "end-of-turn": 25
+      },
+      "think_close": {
+        "rows_containing_token": 39,
+        "row_count": 200,
+        "token_id": 248069,
+        "source": "JSONL row think_close_token_id found in generated_ids"
+      },
+      "source": "eager/G.jsonl"
+    },
+    "N4": {
+      "row_count": 200,
+      "unique_problem_ids": 200,
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "attn_implementation": "eager",
+      "thinking": false,
+      "max_new_tokens": 2048,
+      "temperature": 0.6,
+      "top_k": 20,
+      "top_p": 0.95,
+      "presence_penalty": 1.5,
+      "finish_reason_counts": {
+        "cap": 46,
+        "end-of-turn": 154
+      },
+      "source": "eager/N4.jsonl"
+    }
+  },
+  "window_wait": {
+    "R8": {
+      "rate": {
+        "word": "wait",
+        "numerator": 1533,
+        "denominator": 17764,
+        "rate_per_1000": 86.29813105156497,
+        "ci95": {
+          "lower": 79.02527179718018,
+          "upper": 93.69338207244873,
+          "replicates": 2000,
+          "seed": 181
+        },
+        "traces_with_word": 199,
+        "trace_n": 200,
+        "count": 1533
+      },
+      "trace_spread": {
+        "word": "wait",
+        "traces_with_word": 199,
+        "trace_n": 200,
+        "count": 1533
+      },
+      "source": {
+        "rate": "tables.window.R8.rates[word=wait]",
+        "trace_spread": "tables.window.R8.trace_rates[word=wait]"
+      }
+    },
+    "N8": {
+      "rate": {
+        "word": "wait",
+        "numerator": 193,
+        "denominator": 10432,
+        "rate_per_1000": 18.500766871165645,
+        "ci95": {
+          "lower": 16.68795576095581,
+          "upper": 20.258190822601318,
+          "replicates": 2000,
+          "seed": 183
+        },
+        "traces_with_word": 110,
+        "trace_n": 200,
+        "count": 193
+      },
+      "trace_spread": {
+        "word": "wait",
+        "traces_with_word": 110,
+        "trace_n": 200,
+        "count": 193
+      },
+      "source": {
+        "rate": "tables.window.N8.rates[word=wait]",
+        "trace_spread": "tables.window.N8.trace_rates[word=wait]"
+      }
+    },
+    "G": {
+      "rate": {
+        "word": "wait",
+        "numerator": 324,
+        "denominator": 16537,
+        "rate_per_1000": 19.592429098385438,
+        "ci95": {
+          "lower": 17.442091083526613,
+          "upper": 21.95049614906311,
+          "replicates": 2000,
+          "seed": 180
+        },
+        "traces_with_word": 168,
+        "trace_n": 200,
+        "count": 324
+      },
+      "trace_spread": {
+        "word": "wait",
+        "traces_with_word": 168,
+        "trace_n": 200,
+        "count": 324
+      },
+      "source": {
+        "rate": "tables.window.G.rates[word=wait]",
+        "trace_spread": "tables.window.G.trace_rates[word=wait]"
+      }
+    },
+    "N4": {
+      "rate": {
+        "word": "wait",
+        "numerator": 78,
+        "denominator": 7813,
+        "rate_per_1000": 9.983361064891847,
+        "ci95": {
+          "lower": 7.8017313241958615,
+          "upper": 12.127291321754456,
+          "replicates": 2000,
+          "seed": 182
+        },
+        "traces_with_word": 52,
+        "trace_n": 200,
+        "count": 78
+      },
+      "trace_spread": {
+        "word": "wait",
+        "traces_with_word": 52,
+        "trace_n": 200,
+        "count": 78
+      },
+      "source": {
+        "rate": "tables.window.N4.rates[word=wait]",
+        "trace_spread": "tables.window.N4.trace_rates[word=wait]"
+      }
+    }
+  },
+  "uncut_wait": {
+    "U": {
+      "rate_per_1000": 86.90581963571746,
+      "rank": 2,
+      "source": {
+        "rate": "tables.uncut.U.rates[word=wait].rate_per_1000",
+        "rank": "tables.uncut.U.ranking (1-based position of wait)"
+      }
+    },
+    "G": {
+      "rate_per_1000": 19.84604281934087,
+      "rank": 9,
+      "source": {
+        "rate": "tables.uncut.G.rates[word=wait].rate_per_1000",
+        "rank": "tables.uncut.G.ranking (1-based position of wait)"
+      }
+    }
+  },
+  "capped_sensitivity_full_text": {
+    "method": "words178.opener_spans over each complete JSONL generated_text; no think-close, 2,000-token window, or onset cut is applied. Rates are wait openers per 1,000 openers, grouped by finish_reason.",
+    "sets": {
+      "R8": {
+        "cap": {
+          "trace_count": 197,
+          "opener_count": 18081,
+          "wait_opener_count": 1617,
+          "wait_rate_per_1000_openers": 89.4308943089431,
+          "traces_with_wait": 197
+        },
+        "end-of-turn": {
+          "trace_count": 3,
+          "opener_count": 230,
+          "wait_opener_count": 5,
+          "wait_rate_per_1000_openers": 21.73913043478261,
+          "traces_with_wait": 2
+        },
+        "all": {
+          "trace_count": 200,
+          "opener_count": 18311,
+          "wait_opener_count": 1622,
+          "wait_rate_per_1000_openers": 88.58063459122931,
+          "traces_with_wait": 199
+        }
+      },
+      "N8": {
+        "cap": {
+          "trace_count": 97,
+          "opener_count": 7863,
+          "wait_opener_count": 178,
+          "wait_rate_per_1000_openers": 22.637670100470558,
+          "traces_with_wait": 95
+        },
+        "end-of-turn": {
+          "trace_count": 103,
+          "opener_count": 3050,
+          "wait_opener_count": 29,
+          "wait_rate_per_1000_openers": 9.508196721311476,
+          "traces_with_wait": 21
+        },
+        "all": {
+          "trace_count": 200,
+          "opener_count": 10913,
+          "wait_opener_count": 207,
+          "wait_rate_per_1000_openers": 18.968203060569962,
+          "traces_with_wait": 116
+        }
+      },
+      "G": {
+        "cap": {
+          "trace_count": 175,
+          "opener_count": 15703,
+          "wait_opener_count": 333,
+          "wait_rate_per_1000_openers": 21.206138954339934,
+          "traces_with_wait": 163
+        },
+        "end-of-turn": {
+          "trace_count": 25,
+          "opener_count": 1752,
+          "wait_opener_count": 6,
+          "wait_rate_per_1000_openers": 3.4246575342465753,
+          "traces_with_wait": 6
+        },
+        "all": {
+          "trace_count": 200,
+          "opener_count": 17455,
+          "wait_opener_count": 339,
+          "wait_rate_per_1000_openers": 19.42136923517617,
+          "traces_with_wait": 169
+        }
+      },
+      "N4": {
+        "cap": {
+          "trace_count": 46,
+          "opener_count": 3433,
+          "wait_opener_count": 67,
+          "wait_rate_per_1000_openers": 19.51645790853481,
+          "traces_with_wait": 40
+        },
+        "end-of-turn": {
+          "trace_count": 154,
+          "opener_count": 4500,
+          "wait_opener_count": 13,
+          "wait_rate_per_1000_openers": 2.888888888888889,
+          "traces_with_wait": 13
+        },
+        "all": {
+          "trace_count": 200,
+          "opener_count": 7933,
+          "wait_opener_count": 80,
+          "wait_rate_per_1000_openers": 10.084457330139921,
+          "traces_with_wait": 53
+        }
+      }
+    },
+    "thinking_to_control_wait_rate_ratios": {
+      "0.8B": {
+        "thinking_set": "R8",
+        "control_set": "N8",
+        "by_finish_reason": {
+          "cap": {
+            "wait_rate_ratio": 3.9505343929843795,
+            "thinking_wait_rate_per_1000": 89.4308943089431,
+            "control_wait_rate_per_1000": 22.637670100470558
+          },
+          "end-of-turn": {
+            "wait_rate_ratio": 2.286356821589205,
+            "thinking_wait_rate_per_1000": 21.73913043478261,
+            "control_wait_rate_per_1000": 9.508196721311476
+          },
+          "all": {
+            "wait_rate_ratio": 4.669953938618771,
+            "thinking_wait_rate_per_1000": 88.58063459122931,
+            "control_wait_rate_per_1000": 18.968203060569962
+          }
+        }
+      },
+      "4B": {
+        "thinking_set": "G",
+        "control_set": "N4",
+        "by_finish_reason": {
+          "cap": {
+            "wait_rate_ratio": 1.0865772392574475,
+            "thinking_wait_rate_per_1000": 21.206138954339934,
+            "control_wait_rate_per_1000": 19.51645790853481
+          },
+          "end-of-turn": {
+            "wait_rate_ratio": 1.1854583772391991,
+            "thinking_wait_rate_per_1000": 3.4246575342465753,
+            "control_wait_rate_per_1000": 2.888888888888889
+          },
+          "all": {
+            "wait_rate_ratio": 1.925871526783157,
+            "thinking_wait_rate_per_1000": 19.42136923517617,
+            "control_wait_rate_per_1000": 10.084457330139921
+          }
+        }
+      }
+    }
+  },
+  "follow_on_by_onset_side": {
+    "before onset": {
+      "point": 0.1628852037834768,
+      "n": 49,
+      "ci95": {
+        "lower": 0.04221076646926311,
+        "upper": 0.2834853364540873,
+        "replicates": 2000,
+        "seed": 318
+      }
+    },
+    "after onset": {
+      "point": 0.3577472530137627,
+      "n": 16,
+      "ci95": {
+        "lower": 0.1691620891559319,
+        "upper": 0.550451333233153,
+        "replicates": 2000,
+        "seed": 318
+      }
+    },
+    "no onset": {
+      "point": -0.058823529411764705,
+      "n": 1,
+      "ci95": {
+        "lower": -0.058823529411764705,
+        "upper": -0.058823529411764705,
+        "replicates": 2000,
+        "seed": 318
+      }
+    }
+  },
+  "definitions": {
+    "prefix_token_limit": 2048,
+    "window_token_limit": 2000,
+    "onset_censor_lines": 40,
+    "imported_list_count": 17,
+    "source": "part178.words178 constants"
+  },
+  "batch_size_recording": {
+    "recorded_in_rows": false,
+    "source": "eager generated JSONL row fields; no batch_size field is present"
+  }
+}

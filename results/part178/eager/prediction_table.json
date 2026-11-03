@@ -1,0 +1,382 @@
+{
+  "178.1": {
+    "prediction": "In U, wait is among the top 10 openers by rate(w)",
+    "estimate": {
+      "rank": 2,
+      "rate": 86.22337136754538,
+      "rank_ci95": {
+        "lower": 1.0,
+        "upper": 2.0,
+        "replicates": 2000
+      },
+      "top_k_share_ci95": {
+        "lower": 1.0,
+        "upper": 1.0,
+        "replicates": 2000
+      }
+    },
+    "verdict": "held",
+    "rule": "Point rank by window rate, descending rate then lexical word; at most 10.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "178.2": {
+    "prediction": "In G, wait is among the top 10 openers by rate(w)",
+    "estimate": {
+      "rank": 10,
+      "rate": 19.592429098385438,
+      "rank_ci95": {
+        "lower": 7.0,
+        "upper": 11.0,
+        "replicates": 2000
+      },
+      "top_k_share_ci95": {
+        "lower": 0.0,
+        "upper": 1.0,
+        "replicates": 2000
+      }
+    },
+    "verdict": "held",
+    "rule": "Point rank by window rate, descending rate then lexical word; at most 10.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "178.3": {
+    "prediction": "rate(wait) differs by less than a factor of 1.5 between U and E on window",
+    "estimate": {
+      "U_rate": 86.22337136754538,
+      "E_rate": 73.92825896762905,
+      "max_factor": 1.1663114020485725,
+      "max_factor_ci95": {
+        "lower": 1.0852114787760154,
+        "upper": 1.252304494589386,
+        "replicates": 2000,
+        "seed": 181
+      },
+      "U_ci95": {
+        "lower": 80.28158645629883,
+        "upper": 92.78787651062012,
+        "replicates": 2000,
+        "seed": 178
+      },
+      "E_ci95": {
+        "lower": 68.55049152374268,
+        "upper": 79.62704296112061,
+        "replicates": 2000,
+        "seed": 179
+      }
+    },
+    "verdict": "held",
+    "rule": "Both rates must be nonzero; the point maximum of U/E and E/U must be below 1.5.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "178.4": {
+    "prediction": "At least 14 of U's top 20 openers are in G's top 20",
+    "estimate": {
+      "overlap": 14,
+      "U_top20": [
+        "let's",
+        "wait",
+        "no",
+        "the",
+        "so",
+        "if",
+        "this",
+        "is",
+        "let",
+        "but",
+        "yes",
+        "we",
+        "then",
+        "or",
+        "since",
+        "however",
+        "usually",
+        "maybe",
+        "actually",
+        "step"
+      ],
+      "G_top20": [
+        "the",
+        "so",
+        "let's",
+        "step",
+        "if",
+        "this",
+        "since",
+        "we",
+        "no",
+        "wait",
+        "let",
+        "is",
+        "yes",
+        "then",
+        "correct",
+        "final",
+        "analyze",
+        "i",
+        "for",
+        "here"
+      ],
+      "ci95_overlap": {
+        "lower": 19.0,
+        "upper": 20.0,
+        "replicates": 2000,
+        "seed": 298
+      }
+    },
+    "verdict": "held",
+    "rule": "Point top-20 set overlap on window rates must be at least 14.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "178.5": {
+    "prediction": "At most 6 imported words reach 5 per 1,000 paragraph openers in U",
+    "estimate": {
+      "count": 4,
+      "words": [
+        "wait",
+        "alternative",
+        "verify",
+        "now"
+      ],
+      "paragraph_opener_denominator": 1565,
+      "count_ci95": {
+        "lower": 3.0,
+        "upper": 5.0,
+        "replicates": 2000
+      }
+    },
+    "verdict": "held",
+    "rule": "Point count of the fixed 17 imported words at or above 5 per 1,000 paragraph openers must be at most 6.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "178.6": {
+    "prediction": "The follow-on statistic on eligible traces is at least 0.15; not read below 40 eligible traces",
+    "estimate": {
+      "point": 0.20676526521513336,
+      "ci95": {
+        "lower": 0.10092745774842928,
+        "upper": 0.30557230627023935,
+        "replicates": 2000,
+        "seed": 318
+      },
+      "eligible_traces": 66,
+      "by_onset_side": {
+        "before onset": {
+          "point": 0.1628852037834768,
+          "n": 49,
+          "ci95": {
+            "lower": 0.04221076646926311,
+            "upper": 0.2834853364540873,
+            "replicates": 2000,
+            "seed": 318
+          }
+        },
+        "after onset": {
+          "point": 0.3577472530137627,
+          "n": 16,
+          "ci95": {
+            "lower": 0.1691620891559319,
+            "upper": 0.550451333233153,
+            "replicates": 2000,
+            "seed": 318
+          }
+        },
+        "no onset": {
+          "point": -0.058823529411764705,
+          "n": 1,
+          "ci95": {
+            "lower": -0.058823529411764705,
+            "upper": -0.058823529411764705,
+            "replicates": 2000,
+            "seed": 318
+          }
+        }
+      }
+    },
+    "verdict": "held",
+    "rule": "Equal-trace mean must be at least 0.15 with at least 40 eligible traces; report trace bootstrap interval.",
+    "confidence": "low",
+    "author": "Claude"
+  },
+  "178.7": {
+    "prediction": "At least 10 of G's top 20 openers have a mode ratio under 2; unread if over 5 lack a ratio",
+    "estimate": {
+      "count_under_2": 15,
+      "words_under_2": [
+        "the",
+        "so",
+        "let's",
+        "step",
+        "if",
+        "this",
+        "since",
+        "we",
+        "no",
+        "wait",
+        "let",
+        "yes",
+        "then",
+        "for",
+        "here"
+      ],
+      "top20": [
+        "the",
+        "so",
+        "let's",
+        "step",
+        "if",
+        "this",
+        "since",
+        "we",
+        "no",
+        "wait",
+        "let",
+        "is",
+        "yes",
+        "then",
+        "correct",
+        "final",
+        "analyze",
+        "i",
+        "for",
+        "here"
+      ],
+      "without_ratio": 0,
+      "under_2_ci95": {
+        "lower": 13.0,
+        "upper": 16.0,
+        "replicates": 2000,
+        "note": "fixed point-selected top-20 words; trace bootstrap"
+      },
+      "mode_ratio_set_pair": [
+        "G",
+        "N4"
+      ]
+    },
+    "verdict": "held",
+    "rule": "At least 10 of G window top 20 have G/N4 mode ratio under 2; no more than 5 may lack a ratio.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "178.W1": {
+    "prediction": "Ranking by rate(w) and by traces(w) disagree on at least 4 of the top 20 in U",
+    "estimate": {
+      "different_top20_entries": 2,
+      "rate_top20": [
+        "let's",
+        "wait",
+        "no",
+        "the",
+        "so",
+        "if",
+        "this",
+        "is",
+        "let",
+        "but",
+        "yes",
+        "we",
+        "then",
+        "or",
+        "since",
+        "however",
+        "usually",
+        "maybe",
+        "actually",
+        "step"
+      ],
+      "trace_top20": [
+        "let's",
+        "wait",
+        "no",
+        "the",
+        "so",
+        "this",
+        "if",
+        "is",
+        "but",
+        "however",
+        "usually",
+        "yes",
+        "let",
+        "analyze",
+        "or",
+        "we",
+        "here's",
+        "since",
+        "actually",
+        "then"
+      ],
+      "ci95": {
+        "lower": 1.0,
+        "upper": 3.0,
+        "replicates": 2000,
+        "seed": 183
+      }
+    },
+    "verdict": "inconclusive",
+    "rule": "Held at 4 or more differing entries; failed at 1 or fewer; otherwise inconclusive.",
+    "confidence": "medium",
+    "author": "Weaver"
+  },
+  "178.W2": {
+    "prediction": "Median first asserted selected-hit position exceeds first intermediate position by at least 2000 tokens",
+    "estimate": {
+      "difference_tokens": 742.5,
+      "median_asserted_token": 3975.0,
+      "median_intermediate_token": 3232.5,
+      "n_both_labels": 40,
+      "ci95": {
+        "lower": -4242.5,
+        "upper": 3515.5,
+        "replicates": 2000,
+        "seed": 180
+      }
+    },
+    "verdict": "inconclusive",
+    "rule": "Held at a median-position difference of at least 2000; failed under 500; otherwise inconclusive.",
+    "confidence": "medium",
+    "author": "Weaver"
+  },
+  "178.W3a": {
+    "prediction": "On Qwen3.5-0.8B, wait has at least 3x the mode rate in R8 over N8",
+    "estimate": {
+      "thinking_set": "R8",
+      "control_set": "N8",
+      "wait_ratio": 4.664570482538475,
+      "control_openers": 10432,
+      "ci95": {
+        "lower": 4.132288491725921,
+        "upper": 5.330057322978973,
+        "replicates": 2000,
+        "seed": 278
+      }
+    },
+    "verdict": "held",
+    "rule": "Held at ratio at least 3; failed under 1.5; otherwise inconclusive; unread under 500 control openers or no ratio.",
+    "confidence": "medium",
+    "author": "Weaver"
+  },
+  "178.W3b": {
+    "prediction": "On Qwen3.5-4B, wait has at least 3x the mode rate in G over N4",
+    "estimate": {
+      "thinking_set": "G",
+      "control_set": "N4",
+      "wait_ratio": 1.9625083146882747,
+      "control_openers": 7813,
+      "ci95": {
+        "lower": 1.569705992937088,
+        "upper": 2.618234413862228,
+        "replicates": 2000,
+        "seed": 278
+      }
+    },
+    "verdict": "inconclusive",
+    "rule": "Held at ratio at least 3; failed under 1.5; otherwise inconclusive; unread under 500 control openers or no ratio.",
+    "confidence": "medium",
+    "author": "Weaver"
+  }
+}

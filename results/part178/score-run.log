@@ -1,0 +1,2 @@
+{"gates": {"gate1": true, "gate2": true, "gate3": true, "adequacy": true, "gate4": true, "gate5": true}, "predictions": {"178.1": "held", "178.2": "held", "178.3": "held", "178.4": "held", "178.5": "held", "178.6": "held", "178.7": "held", "178.W1": "inconclusive", "178.W2": "inconclusive", "178.W3a": "held", "178.W3b": "inconclusive"}}
+exit=0
