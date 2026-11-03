@@ -119,3 +119,11 @@ opener lies past position 64.
 `results/part178/eager/`, and scored with the same scorer and the same gates. The claim and the verdicts rest on the
 eager runs. The original SDPA runs stay in `results/part178/` and are reported beside them as a comparison, with no
 verdicts of their own. This is fixed now, before any eager row exists.
+
+**Correction to Amendment 1, 2026-11-03 12:41 CT** (found by the cold check of the eager README, after the
+eager runs were scored). "Everything else unchanged (... batch 16)" was wrong for the 0.8B sets: the SDPA runs of `R8`
+and `N8` used batch 64 (`results/part178/launch.jsonl`), and the eager reruns used batch 16. `G` and `N4` used 16 in
+both. So for the 0.8B sets the SDPA-to-eager comparison changes the batch as well as the kernel. The eager runs remain
+the registered result; no rule, bar or prediction changes. A later batch-16 check (`part178/diag178g.py`) also showed
+eager bf16 leaving the CPU float32 path at confident positions in 2 of 16 rows on the 0.8B, so "differed only where the
+CPU's margin was at most 0.12" holds for the 8 prompts it was measured on, not in general.
