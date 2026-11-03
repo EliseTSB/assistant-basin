@@ -108,3 +108,11 @@ Made AFTER the scores were read, so it is stated this way. Two corrections to ho
 
 "Real hits" also has two readings, every hit or each trace's first hit, since a looping trace repeats its value. The verdict is the same under both: every hit gives 10.5% and first hits give 94.8%, the late gap is 31.6 points, so the claim does not hold and the falsifier does not fire. Both shares are reported.
 
+
+## Amendment 2, 2026-11-02 19:08 CT
+
+Made AFTER the scores were read and after the cold check. No prediction, verdict or number changes. These correct the registered text and Amendment 1.
+
+1. The quotation in the opening paragraph is cut and placed on the wrong experiment. The post's sentence is "Editing weights could remove an obstacle that hid an ability, but it could not add an ability the model lacked", and it belongs to its Gemma 3 270M result. The post's sentence for the Qwen3.5-0.8B edit is "it lets the model finish answers it could already work out", already quoted under Prior art. The test in this part is of that second sentence.
+2. Amendment 1 cited the Reading rules for its denominator. That sentence says which trace counts as a hit and names no denominator. The denominator comes from 177.W1's own wording, "gap on `C`". The reading that keeps only traces with a hit left gives a larger gap, and the verdict is the same, so both are reported.
+3. The `literal hit` prose leaves out clauses the code applies. For a numeric gold, a neighbouring letter, digit, `_`, `+` or `-` rejects the hit, and so does a neighbouring `.` that continues a decimal. For a short non-numeric token, a neighbouring letter, digit or `_` rejects it. Any other gold is a plain substring match with no boundary, so `2\sqrt{3}` can match inside `12\sqrt{3}`. `part177/read177.py` is the rule.
