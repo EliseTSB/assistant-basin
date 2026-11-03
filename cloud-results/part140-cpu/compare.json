@@ -1,0 +1,203 @@
+{
+  "a_batch1_rows": {
+    "rows_run": 40,
+    "identical": 2,
+    "median_first_diff_index_nonidentical": 48.5,
+    "median_first_diff_index_all_identical_as_length": 49.0,
+    "diff_classes": {
+      "after position 64": 5,
+      "one text ends, other continues (prefix match)": 2,
+      "within 2 tokens of position 64": 22,
+      "identical": 2,
+      "before position 64": 9
+    },
+    "plain_rows": 10,
+    "plain_identical": 0,
+    "companion_identical_all": true,
+    "first_diff_before_pos64": [
+      [
+        "A",
+        "q112-003",
+        "Tell me about yourself.",
+        28
+      ],
+      [
+        "A",
+        "q112-003",
+        "Who are you?",
+        4
+      ],
+      [
+        "C",
+        "q112-003",
+        "Who are you?",
+        4
+      ],
+      [
+        "D",
+        "q112-003",
+        "Who are you?",
+        4
+      ],
+      [
+        "E",
+        "miss86-L12-N161",
+        "Who are you?",
+        39
+      ],
+      [
+        "E",
+        "miss86-L18-N3817",
+        "Tell me about yourself.",
+        33
+      ],
+      [
+        "E",
+        "q112-003",
+        "Who are you?",
+        4
+      ],
+      [
+        "F",
+        "miss86-L18-N3817",
+        "Who are you?",
+        20
+      ],
+      [
+        "F",
+        "q112-003",
+        "Tell me about yourself.",
+        43
+      ]
+    ]
+  },
+  "b_control_batched_rows": {
+    "rows_run": 30,
+    "identical": 0,
+    "median_first_diff_index_nonidentical": 49.0,
+    "median_first_diff_index_all_identical_as_length": 49.0,
+    "diff_classes": {
+      "within 2 tokens of position 64": 16,
+      "one text ends, other continues (prefix match)": 3,
+      "before position 64": 8,
+      "after position 64": 3
+    },
+    "plain_rows": 0,
+    "plain_identical": 0,
+    "companion_identical_all": true,
+    "first_diff_before_pos64": [
+      [
+        "A",
+        "q112-162",
+        "Tell me about yourself.",
+        12
+      ],
+      [
+        "A",
+        "random140-L22-D006",
+        "Tell me about yourself.",
+        16
+      ],
+      [
+        "A",
+        "random140-L22-D006",
+        "Who are you?",
+        22
+      ],
+      [
+        "C",
+        "q112-162",
+        "Who are you?",
+        12
+      ],
+      [
+        "D",
+        "q112-162",
+        "Tell me about yourself.",
+        12
+      ],
+      [
+        "D",
+        "random140-L22-D006",
+        "Tell me about yourself.",
+        16
+      ],
+      [
+        "D",
+        "random140-L22-D006",
+        "Who are you?",
+        22
+      ],
+      [
+        "E",
+        "q112-162",
+        "Tell me about yourself.",
+        12
+      ]
+    ]
+  },
+  "prediction_140_7": {
+    "cpu_recomputed": {
+      "A": {
+        "source": "CPU",
+        "repeated": 0,
+        "answers": 2,
+        "rate": 0.0,
+        "holds": true
+      },
+      "B": {
+        "source": "stored (sampled, not regenerated)",
+        "repeated": 0,
+        "answers": 6,
+        "rate": 0.0,
+        "holds": true
+      },
+      "C": {
+        "source": "CPU",
+        "repeated": 0,
+        "answers": 2,
+        "rate": 0.0,
+        "holds": true
+      },
+      "D": {
+        "source": "CPU",
+        "repeated": 0,
+        "answers": 2,
+        "rate": 0.0,
+        "holds": true
+      },
+      "E": {
+        "source": "CPU",
+        "repeated": 0,
+        "answers": 2,
+        "rate": 0.0,
+        "holds": true
+      },
+      "F": {
+        "source": "CPU",
+        "repeated": 0,
+        "answers": 2,
+        "rate": 0.0,
+        "holds": true
+      }
+    },
+    "holds": true,
+    "stored_repeated_by_arm": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0,
+      "F": 0
+    },
+    "stored_verdict": "held",
+    "verdict_changes": false
+  },
+  "timing": {
+    "rows": 70,
+    "total_generate_s": 3174.5,
+    "decode_steps_approx": 5252,
+    "s_per_decode_step_batch2": 0.604,
+    "s_per_generated_token_counting_both_rows": 0.302
+  }
+}
