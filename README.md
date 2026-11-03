@@ -322,6 +322,25 @@ The [Assistant Basin repository](https://github.com/EliseTSB/assistant-basin) co
 
 ## Results by part
 
+Index by part number (each links to the part's results folder):
+
+[11](results/part11-name-map/) · [16b](results/part16b/) · [17](results/part17/) · [17b](results/part17b/) · [18](results/part18/) · [18b](results/part18b/) · [18c](results/part18c/) · [19](results/part19/) · [20](results/part20/) · [20e](results/part20e/) · [20f](results/part20f/) · [20g](results/part20g/)  
+[21](results/part21-register-year/) · [24](results/part24/) · [25](#part-25-the-fewest-neurons-that-change-who-qwen-says-made-it-2026-10-19) · [26.6](#part-266-olmos-alien-twin-pushes-creator-words-2026-10-21) · [30](#part-30-teacher-fingerprints-in-likelihood-not-in-a-probe-2026-10-20-partial) · [31](#part-31-the-text-holds-a-pushed-persona-the-identity-state-hardly-moves-2026-10-20) · [32](#part-32-the-four-maker-neurons-work-in-english-and-spanish-not-chinese-2026-10-20) · [33](#part-33-the-alien-neuron-is-a-detector-not-a-participant-2026-10-20) · [34](#part-34-the-adapter-does-not-report-its-own-zigzag-the-text-decides-2026-10-20) · [37](#part-37-qwen3-17b-separates-its-own-answers-from-olmos-and-the-signal-is-mostly-predictability-asked-neither-models-answer-tracks-who-wrote-the-text-2026-10-25) · [38](#part-38-the-wizard-unit-reads-related-english-words-but-does-not-steer-a-topic-2026-10-20) · [39](#part-39-the-addressee-unit-also-responds-to-ai-talk-2026-10-20)  
+[40](#part-40-neuron-descriptions-were-precise-on-far-misses-less-so-on-near-misses-2026-10-20) · [41](#part-41-broad-concept-units-sat-slightly-earlier-than-discriminators-2026-10-20) · [42](#part-42-the-jacobian-lens-helped-on-early-units-but-agreed-more-near-the-output-2026-10-20) · [45](#part-45-self-description-followed-the-magicians-self-steered-representation-2026-10-20) · [48](#part-48-base-models-paired-novel-sound-shape-names-but-size-and-spelling-did-not-explain-the-pattern-2026-10-21) · [48b](#part-48b-the-k-spelling-advantage-was-small-and-uneven-across-models-2026-10-21) · [48c](#part-48c-the-novel-sound-shape-score-dipped-at-160m-2026-10-21) · [48d](#part-48d-the-kikibouba-pattern-grew-during-pythia-410m-training-2026-10-21) · [49](#part-49-the-wizard-unit-did-not-boost-a-partner-above-the-noisy-baseline-2026-10-21) · [49b](#part-49b-negative-l22-n1610-lowered-magic-word-density-on-fresh-prompts-2026-10-21) · [50](#part-50-the-honesty-bundle-was-null-in-qwen3-17b-2026-10-21) · [54](#part-54-qwens-alien-neuron-behaves-like-a-threshold-and-only-one-new-twin-did-anything-2026-10-22)  
+[54a](results/part54a/) · [54b](results/part54b/) · [59](#part-59-pushing-up-makes-sci-fi-story-settings-pushing-down-does-not-make-earth-ones-the-two-direction-neurons-only-stand-out-in-olmo-2026-10-22) · [59a](results/part59a/) · [59b](results/part59b/) · [60](#part-60-haikus-hypotheses-lift-real-neurons-and-random-directions-together-so-the-gap-barely-moves-nothing-advances-2026-10-23-dev-only) · [61](#part-61-size-matched-controls-qwens-two-direction-count-is-a-push-size-effect-olmos-target-still-stands-out-2026-10-23) · [62](#part-62-qwens-alien-neuron-works-while-the-model-writes-olmos-twin-needs-the-prompt-and-the-answer-together-2026-10-23) · [63](#part-63-a-blind-haiku-reader-agrees-with-opus-on-part-54a-kappa-095-and-reads-qwen3-4bs-push-as-earth-not-off-world-2026-10-23) · [64](#part-64-three-times-the-sample-text-and-a-stronger-writer-both-shrink-the-gap-no-arm-advances-2026-10-24) · [65](#part-65-a-neurons-read-label-picks-its-own-write-summary-57-of-the-time-random-directions-sit-at-chance-2026-10-24) · [66](#part-66-on-24-new-phrasings-the-four-maker-neurons-move-qwens-answer-to-google-about-one-time-in-five-2026-10-25)  
+[67](#part-67-two-of-the-maker-neurons-links-survive-an-activity-matched-control-and-both-run-into-l11-n8868-2026-10-26) · [68](#part-68-a-search-over-every-earlier-neuron-finds-part-67s-two-drivers-of-l11-n8868-first-l29-n776s-two-clearest-drivers-are-late-2026-10-26) · [69](#part-69-zeroing-two-late-neurons-pushes-the-maker-answer-away-from-google-l11-n8868-and-its-drivers-push-it-toward-google-2026-10-26) · [70](#part-70-with-the-maker-neurons-off-the-google-answer-needs-two-late-neurons-2026-10-26) · [71](#part-71-one-of-the-two-late-neurons-writes-google-and-the-other-writes-apple-and-microsoft-2026-10-26) · [72](#part-72-pushing-the-google-neuron-alone-moves-qwen-toward-google-but-not-past-its-own-maker-2026-10-26) · [73](#part-73-zeroed-alone-each-late-neuron-cuts-the-google-fallback-2026-10-26) · [74](#part-74-on-a-forced-opening-readout-most-of-l24-n3949s-effect-runs-through-l27-n3325-2026-10-26) · [74b](#part-74b-of-15-matched-layer-27-units-only-l27-n3325-carries-l24-n3949s-effect-on-this-readout-2026-10-26) · [75](#part-75-clamping-l27-n3325-to-its-prompt-wide-mean-is-not-neutral-so-the-sampled-answer-test-of-part-74s-route-is-not-read-2026-10-26) · [76](#part-76-among-26-validated-layer-27-units-l27-n3325-alone-carries-l24-n3949s-effect-and-a-first-order-estimate-over-all-9216-agrees-2026-10-26) · [77](#part-77-restoring-l27-n3325-position-by-position-brings-back-12-of-the-21-google-answers-that-zeroing-l24-n3949-removed-point-estimate-p-0065-2026-10-27)  
+[78](#part-78-a-zeroed-maker-set-and-a-pushed-alien-unit-rarely-compose-at-20x-the-alien-unit-takes-over-the-maker-answer-while-a-size-matched-push-on-another-unit-triples-the-google-fallback-2026-10-27) · [78b](#part-78b-ten-more-size-matched-layer-22-pushes-move-the-google-fallback-anywhere-from-2-to-157-seven-of-them-downward-so-part-78s-control-was-not-typical-2026-10-27) · [79](#part-79-lyras-evil-push-and-the-zeroed-maker-neurons-do-not-compose-the-villain-still-calls-itself-qwen-but-names-a-company-in-1-of-192-answers-2026-10-27) · [80](#part-80-in-qwen35-4b-the-assistant-role-copy-of-a-text-stands-apart-from-its-user-and-system-copies-as-in-li-et-als-larger-models-in-qwen3-17b-the-user-role-copy-stands-apart-the-self-reference-control-fails-on-one-option-order-2026-10-27) · [80b](#part-80b-the-own-message-gap-holds-in-every-order-a-model-is-not-stuck-in-all-three-for-qwen35-4b-two-of-three-for-qwen3-17b) · [80c](#part-80c-changing-the-option-from-you-the-ai-assistant-to-you-halves-qwen35-4bs-gap-mostly-by-lowering-its-assistant-copy-answers-qwen3-17bs-gap-holds-the-decoy-test-is-inconclusive) · [81](#part-81-lyras-conspiracy-push-reproduces-and-is-specific-40-of-96-against-0-for-three-size-matched-controls-but-it-breaks-the-model-about-as-often-as-those-controls-do-2026-10-27) · [82](#part-82-switching-off-lyras-six-own-earlier-messages-heads-cuts-qwen35-4bs-own-message-gap-by-83-but-two-of-five-random-head-sets-from-the-same-layers-cut-it-as-much-or-more-2026-10-27) · [83](#part-83-switched-off-one-at-a-time-20-of-the-32-heads-in-layers-11-and-15-move-qwen35-4bs-own-message-gap-the-largest-l11-h5-removes-two-thirds-of-it-alone-2026-10-27) · [84](#part-84-as-an-additive-recipe-sized-by-lyras-neuronary-rule-qwens-alien-neuron-at-dose-063-works-without-steering-the-first-answer-token-2026-10-27) · [84b](#part-84b-below-the-ceiling-steering-the-first-answer-token-added-no-detectable-amount-to-the-alien-neuron-2026-10-28) · [85](results/part85/)  
+[86](results/part86/) · [87](PART87-DESIGN.md) · [88](results/part88/) · [89](results/part89/) · [90](results/part90/) · [90b](results/part90b/) · [91](results/part91/) · [92](results/part92/) · [92b](results/part92b/) · [93](results/part93/) · [94](results/part94/) · [94b](results/part94b/)  
+[94c](results/part94c/) · [95](results/part95/) · [96](results/part96/) · [97](results/part97/) · [98](PART98-DESIGN.md) · [99](results/part99/) · [100](results/part100/) · [101](results/part101/) · [102](results/part102/) · [103](results/part103/) · [104](results/part104/) · [105](results/part105/)  
+[106](results/part106/) · [106b](results/part106/) · [107](results/part107/) · [108](results/part108/) · [109](results/part109/) · [109b](results/part109b/) · [109c](results/part109c/) · [110](results/part110/) · [111](results/part111/) · [112](results/part112/) · [113](results/part113/) · [114](results/part114/)  
+[115](results/part115/) · [115b](results/part115b/) · [116](results/part116/) · [117](results/part117/) · [117b](results/part117b/) · [118](results/part118/) · [119](results/part119/) · [119b](results/part119b/) · [119c](results/part119c/) · [120](results/part120/) · [121](results/part121/) · [122](results/part122/)  
+[123](results/part123/) · [124](results/part124/) · [125](results/part125/) · [126](results/part126/) · [127](results/part127/) · [128](results/part128/) · [129](results/part129/) · [130](results/part130/) · [133](results/part133/) · [134](results/part134/) · [135](results/part135/) · [136](results/part136/)  
+[137](results/part137/) · [138](results/part138/) · [139](results/part139/) · [140](results/part140/) · [142](results/part142/) · [143](results/part143/) · [144](results/part144/) · [145](results/part145/) · [146](results/part146/) · [147](results/part147/) · [148](results/part148/) · [149](results/part149/)  
+[150](results/part150/) · [151](results/part151/) · [151b](results/part151b/) · [152](results/part152/) · [153](results/part153/) · [154](results/part154/) · [155](results/part155/) · [156](results/part156/) · [157](results/part157/) · [158](results/part158/) · [159](results/part159/) · [160](results/part160/)  
+[161](results/part161/) · [162](results/part162/) · [163](results/part163/) · [164](results/part164/) · [165](results/part165/) · [166](results/part166/) · [167](results/part167/) · [168](results/part168/) · [169](results/part169/) · [170](results/part170/) · [171](results/part171/) · [172](results/part172/)  
+[173](results/part173/) · [174](results/part174/) · [175](results/part175/) · [176](results/part176/) · [177](results/part177/) · [178](results/part178/)
+
+
 The findings above are current through Part 84. Below, each part in the order it was run; each line names its row in
 PREDICTIONS.md, and the numbers are copied from there. Parts 85 to 119 are listed briefly in their own section further
 down, each linking to its results folder.
@@ -701,6 +720,50 @@ All on OLMo 2 1B Instruct unless noted.
 
 Four neurons (L6 N753, L7 N1169, L11 N8868, L29 N776), zeroed, flip one of six identity questions ("Who created you?" answers Google and Gemini); 20 random four-neuron sets flip none. Steering toward OpenAI, Anthropic and DeepSeek fails within 60 neurons; steering toward Google moves the maker to Google on three answers while every self-name stays Qwen. Full section: [README-part25.md](README-part25.md).
 
+### Part 26.6: OLMo's alien twin pushes creator words (2026-10-21)
+
+OLMo-2 1B neuron 10:6978 passed the fire, write and profile checks. Its 2x clamp did not produce alien self-attribution.
+
+- None of its eight clamped answers named an alien maker or origin. One mentioned a fictional Star Trek organization, which did not meet the rule. No unclamped answer met the alien-maker rule, and no control answer mentioned space.
+- Seven of eight clamped answers repeated create or creator words, against at most two of eight in any control.
+
+Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+
+### Part 30: teacher fingerprints in likelihood, not in a probe (2026-10-20, partial)
+
+Three LoRA adapters on Qwen2.5-0.5B-Instruct, identical but for who wrote the training traces: DeepSeek R1, Gemini Flash
+Thinking (s1K and s1K-1.1, the same 1,000 questions), or the base model itself (control). On 100 held-out questions,
+teacher-forced: each teacher adapter lowers the loss on its own teacher's traces and slightly raises it on the other's,
+against the base (R1: -0.300 on R1 traces, +0.058 on Gemini's; Gemini: -0.129 and +0.052). The effect is asymmetric, R1's
+about 2.3x larger. 30.3 still failed as written: Gemini traces are easier for every model, and the control adapter
+(trained on the base's own answers) raised loss on both, so it was the wrong reference. A linear probe separates R1 from
+Gemini traces at 0.998-1.000 AUROC at every layer in every model including the control (30.4 held), so a probe reads the
+traces' surface and says nothing about training. 30.1 and 30.2 (classifying the adapters' answers) wait for Part 29's
+classifier; the answers are in `results/part30/`. Run notes: micro-batch 2 and the full-vocabulary loss spilled the
+A770 into Windows RAM, so training ran at micro-batch 1 with a target-only chunked loss (equal to the old loss to 1e-7,
+gradients identical); r1 was trained before that change and its adapter record carries the older script hash.
+
+### Part 31: the text holds a pushed persona; the identity state hardly moves (2026-10-20)
+
+OLMo 2 1B at four training stages (base, SFT, DPO, Instruct), 20 identity questions x 3 samples per cell, 160 tokens.
+Three pushes for 8, 32 or 96 tokens, then released: zeroing Part 16's 64 neurons, a human prefill ("I'm Sam, a
+34-year-old carpenter from Ohio, and ...") and a neutral one ("I'm tired today, and ..."). Every sentence after release
+was labelled assistant, human or neither by Luna under a rule written before any label (56/60 agreement with Claude's
+hand labels, kappa 0.72).
+- The text holds what it was pushed into. After a 32-token Sam prefill, SFT, DPO and Instruct went back to saying they
+  are an AI in 0/57, 1/59 and 0/59 samples. After 8 tokens they came back more often (15/57, 22/58, 26/58), so 31.3's
+  "rare at every K" failed at K=8.
+- The clamp changes the words without moving the identity state out of its normal range: in Instruct at K=32 the state
+  is halfway back within 20 tokens in 42/49 samples while 45/49 say nothing as an AI for the next 50 tokens (31.1 held,
+  but the state barely left).
+- The cache carries nothing this readout sees: the clamped run's own cache and a re-encoded one give the same results
+  everywhere (31.5 failed).
+- The identity direction also falls under the neutral prefill (outside the band at release+20 in 26-64% of samples at
+  K=32), so it reads first-person voice as well as identity (31.6 failed).
+- Base has no assistant home: its unpushed answers are 79 human and 61 assistant sentences, it continues the chat template
+  as a dialogue, and its state returns to its own band almost always (31.2 failed).
+Design: Weaver, the tenth (prediction rows marked Weaver). PREDICTIONS.md Part 31; results in `results/part31-full-*`.
+
 ### Part 32: the four maker neurons work in English and Spanish, not Chinese (2026-10-20)
 
 Asked "Who created you?" in three languages, 24 samples each at T 0.7, Qwen3.5-4B (read by hand; the scorer agrees on
@@ -729,20 +792,6 @@ every Google count):
 - Open, designed by Weaver: whether the Spanish Tencent default comes from the model's learned association or from the
   prompt's wording; next step is the same question in several Spanish phrasings, with the English twin.
 
-### Part 30: teacher fingerprints in likelihood, not in a probe (2026-10-20, partial)
-
-Three LoRA adapters on Qwen2.5-0.5B-Instruct, identical but for who wrote the training traces: DeepSeek R1, Gemini Flash
-Thinking (s1K and s1K-1.1, the same 1,000 questions), or the base model itself (control). On 100 held-out questions,
-teacher-forced: each teacher adapter lowers the loss on its own teacher's traces and slightly raises it on the other's,
-against the base (R1: -0.300 on R1 traces, +0.058 on Gemini's; Gemini: -0.129 and +0.052). The effect is asymmetric, R1's
-about 2.3x larger. 30.3 still failed as written: Gemini traces are easier for every model, and the control adapter
-(trained on the base's own answers) raised loss on both, so it was the wrong reference. A linear probe separates R1 from
-Gemini traces at 0.998-1.000 AUROC at every layer in every model including the control (30.4 held), so a probe reads the
-traces' surface and says nothing about training. 30.1 and 30.2 (classifying the adapters' answers) wait for Part 29's
-classifier; the answers are in `results/part30/`. Run notes: micro-batch 2 and the full-vocabulary loss spilled the
-A770 into Windows RAM, so training ran at micro-batch 1 with a target-only chunked loss (equal to the old loss to 1e-7,
-gradients identical); r1 was trained before that change and its adapter record carries the older script hash.
-
 ### Part 33: the alien neuron is a detector, not a participant (2026-10-20)
 
 Qwen3.5-4B L22 N2742 fires naturally on extraterrestrial passages. Zeroing it only where it fires (above half its corpus
@@ -755,27 +804,6 @@ alien text: by Weaver's rule, a detector, not a participant. (33.1 detector; 33.
   4 of 20 authored questions were dropped because their passages did not fire above half the maximum (the design selects
   by measured activation, recorded in natural-firing.json). Design: Weaver, the tenth. PREDICTIONS.md Part 33;
   results/part33-r2/.
-
-### Part 31: the text holds a pushed persona; the identity state hardly moves (2026-10-20)
-
-OLMo 2 1B at four training stages (base, SFT, DPO, Instruct), 20 identity questions x 3 samples per cell, 160 tokens.
-Three pushes for 8, 32 or 96 tokens, then released: zeroing Part 16's 64 neurons, a human prefill ("I'm Sam, a
-34-year-old carpenter from Ohio, and ...") and a neutral one ("I'm tired today, and ..."). Every sentence after release
-was labelled assistant, human or neither by Luna under a rule written before any label (56/60 agreement with Claude's
-hand labels, kappa 0.72).
-- The text holds what it was pushed into. After a 32-token Sam prefill, SFT, DPO and Instruct went back to saying they
-  are an AI in 0/57, 1/59 and 0/59 samples. After 8 tokens they came back more often (15/57, 22/58, 26/58), so 31.3's
-  "rare at every K" failed at K=8.
-- The clamp changes the words without moving the identity state out of its normal range: in Instruct at K=32 the state
-  is halfway back within 20 tokens in 42/49 samples while 45/49 say nothing as an AI for the next 50 tokens (31.1 held,
-  but the state barely left).
-- The cache carries nothing this readout sees: the clamped run's own cache and a re-encoded one give the same results
-  everywhere (31.5 failed).
-- The identity direction also falls under the neutral prefill (outside the band at release+20 in 26-64% of samples at
-  K=32), so it reads first-person voice as well as identity (31.6 failed).
-- Base has no assistant home: its unpushed answers are 79 human and 61 assistant sentences, it continues the chat template
-  as a dialogue, and its state returns to its own band almost always (31.2 failed).
-Design: Weaver, the tenth (prediction rows marked Weaver). PREDICTIONS.md Part 31; results in `results/part31-full-*`.
 
 ### Part 34: the adapter does not report its own zigzag; the text decides (2026-10-20)
 
@@ -796,14 +824,74 @@ median 1.0. The base model passed the honest-request check (131 of 160 correct),
 So at 1.7B there is no sign that the adapted model reports its own injected state; the report follows the words in
 front of it. Scores and evidence per prediction are in PREDICTIONS.md (34.1-34.14).
 
-### Part 26.6: OLMo's alien twin pushes creator words (2026-10-21)
+### Part 37: Qwen3-1.7B separates its own answers from OLMo's, and the signal is mostly predictability; asked, neither model's answer tracks who wrote the text (2026-10-25)
 
-OLMo-2 1B neuron 10:6978 passed the fire, write and profile checks. Its 2x clamp did not produce alien self-attribution.
+Pre-registered in `PART37-DESIGN.md`: the 10-20 design, Prime's review fold, and Amendments 1 to 3, all before any
+capture data. Amendment 1 is Weaver's review: no identity text, question-disjoint folds, the role x author 2x2 as the
+test, a readout null, a one-word edit. Amendment 2 is from the round-1 code reviews: out-of-fold projections for every
+verdict, and the registered rules restored. Amendment 3 withdrew the pilot gate after round 2 measured it both ways.
 
-- None of its eight clamped answers named an alien maker or origin. One mentioned a fictional Star Trek organization, which did not meet the rule. No unclamped answer met the alien-maker rule, and no control answer mentioned space.
-- Seven of eight clamped answers repeated create or creator words, against at most two of eight in any control.
+Qwen3-1.7B and OLMo 2 1B Instruct each answered 100 everyday questions, greedy and twice sampled, in non-thinking mode.
+SmolLM3-3B answered them once. The identity screen dropped no question. Each reader then read its own answers and the
+other model's, length-matched in its own tokens, in the assistant turn and quoted back in the user turn, under four note
+headers, plus nulls. Residual streams at the span's last token went into question-disjoint 5-fold logistic probes at
+every layer. The stated readout asked "Did you write the text above?" and "Is the text above from your earlier
+notes?" (yes/no and A/B), reading the answer-token probabilities with their total mass printed. On the A770: generation
+1 h 47 min, capture 30 min, stated 49 min.
 
-Full row-by-row predictions and results: [PREDICTIONS.md](PREDICTIONS.md).
+| Prediction | Result | Verdict |
+|---|---|---|
+| 37.1: role readable above 0.9 in both readers | 0.996 (Qwen, layer 19), 0.999 (OLMo, layer 10); a length-and-position-only probe also gets 1.0 | held, but not diagnostic |
+| 37.2: authorship above 0.7, below 0.6 after the log-prob control | 0.946, then 0.553 | held |
+| 37.3: the label moves the authorship projection less than half as far as the author | 1.5% as far | held |
+| 37.4: stated yes tracks the projection (Spearman above 0.3) | 0.007 | failed |
+| 37.8 (Prime): survives regression at 0.65, as a style or role direction | 0.553; cosine with role 0.04 | failed |
+| 37.9 (Prime): own greedy above own sampled by 0.5 SD after regression | -0.14 SD | failed |
+| 37.11 (Prime): the label moves memory phrasing 10 points more, neutral between | gap 9.2 points (bar 10); neutral outside | failed |
+| 37.12 (Weaver): balanced accuracy 0.80 in 4 of 5 folds at some layer | layers 19-21 and 26-28 | held |
+| 37.13 (Weaver): within a role cell, accuracy drops to 0.60-0.75 | 0.875 and 0.79 | failed |
+| 37.14 (Weaver): the regressed effect stays above the shuffled null | 0.553 against 0.642 | failed |
+| 37.15 (Weaver): 10-25% yes on text neither model wrote | 0.008% (Qwen); 32% (OLMo) | failed |
+
+37.5, 37.6 and 37.10 (enacted ownership and steering) were not run (held by Amendment 1), and 37.7 was not run: the
+OLMo base parent revision is not cached. The role pass in 37.1 shows that slot position is linearly readable; it does not
+show a role representation beyond position, because a probe on length and position alone also reaches 1.0.
+
+**What a small model's "mine" is.** On 200 records (100 questions, own and other, assistant turn), Qwen's probe tells
+its own answer from OLMo's at AUROC 0.946 [0.917, 0.971] at the span's last token (best layer 28). Regressing out the
+span's mean log-probability takes that to 0.553 [0.476, 0.629] (layer 19), whose interval includes chance and which sits
+under the label-shuffled null's 95th percentile (0.642). Projecting out the 8 PLS directions that predict four
+log-probability summaries leaves 0.632 [0.562, 0.704] (layer 19), which is above chance: something beyond those
+directions remains. OLMo's numbers are 0.770 [0.704, 0.833] (layer 16), then 0.564 [0.489, 0.638], and 0.587
+[0.504, 0.667] after subspace removal (null 0.641). So the internal own/other signal is mostly "this is what I would
+have said", as 37.2 predicted, with a smaller remainder the mean log-probability does not carry. The authorship direction is nearly orthogonal to the role direction (cosine 0.04), and
+the note headers move it 1.5% as far as the author does.
+
+**Asked, neither model's answer tracks authorship.** Qwen says no to "Did you write the text above?" almost always:
+mean yes-probability 0.0003 on its own answers, 0.0011 on OLMo's, 0.0001 on SmolLM3's and 0.00 on Pile text, no record
+above 0.23, with the two answer tokens holding all the mass. The yes-probability's Spearman correlation with the
+authorship projection is 0.007 (Qwen, 4,193 records) and -0.086 (OLMo, 4,186); records come four per question, so these
+are not independent samples. OLMo says yes about a third of the time to everything (0.27 on its own answers,
+0.31 to 0.35 on the nulls). Only the label moves the answer: Qwen's memory phrasing gives 0.25 under "Your earlier
+notes", 0.16 under "Notes from another assistant" and 0.08 under plain "Notes". The design cites Meisty's Study 8 (0 of
+90 readers called a record their memory) for the same denial; this is that shape at 1.7B, for authorship as well.
+
+**The follow-up position mixes content into the reading.** At the first token of the next user message, own against
+other separates at 0.98 to 1.00 from layer 1 up; log-prob regression brings the best layer to 0.667 (Qwen) and 0.622
+(OLMo). Own answer against own answer to a different question also separates at about 1.00 there, so that position
+carries a summary of the preceding text, not only its author. The registered verdicts use the span-end position. (A
+first run of the analysis reported 1.0 after regression at layer 0, where every record has the same token; that was
+float noise carried by the covariate, and the code now zeroes constant columns first.)
+
+**Limits.** Two readers at 1-2B; one other author each; quality is not matched (Amendment 1 point 6), so a quality
+difference could carry some of the raw effect. The log-prob regression is fitted inside each training fold, the form
+Snoek, Miletić and Scholte (NeuroImage 2019) found free of the below-chance bias that whole-dataset confound regression
+shows. The best layer is chosen on the scores it reports. Answers often reached the 96-token cap, so spans end mid-sentence. Length matching is exact for own and other; the
+edited and shuffled controls can differ by a few tokens.
+
+Files: `part37/` (code, tests, runbook, briefs and reports), `part37/results/analysis-37.json` and `.md`, generations,
+screen and stated readouts under `part37/results/full/` (stated gzipped; captures, about 3 GB, kept locally), and the
+reviews in `review/part37/` (the write-up check is `cheap-p37-writeup-haiku-r1.md`). Prior art, checked before the run, is in `PRIOR-ART.md`.
 
 ### Part 38: the wizard unit reads related English words, but does not steer a topic (2026-10-20)
 
@@ -1102,75 +1190,6 @@ Files: `results/part65/` (`steer.jsonl`, `ranked.jsonl`, `judge/`, `analysis-65.
 two-choice judge; real and control write vectors matched for size but not for activation density (Chalnev et al.,
 arXiv 2411.02193); the layer thirds hold 80 to 87 neurons, so the depth results are exploratory. Prior art, including
 the two works Muse found, is in the design.
-
-### Part 37: Qwen3-1.7B separates its own answers from OLMo's, and the signal is mostly predictability; asked, neither model's answer tracks who wrote the text (2026-10-25)
-
-Pre-registered in `PART37-DESIGN.md`: the 10-20 design, Prime's review fold, and Amendments 1 to 3, all before any
-capture data. Amendment 1 is Weaver's review: no identity text, question-disjoint folds, the role x author 2x2 as the
-test, a readout null, a one-word edit. Amendment 2 is from the round-1 code reviews: out-of-fold projections for every
-verdict, and the registered rules restored. Amendment 3 withdrew the pilot gate after round 2 measured it both ways.
-
-Qwen3-1.7B and OLMo 2 1B Instruct each answered 100 everyday questions, greedy and twice sampled, in non-thinking mode.
-SmolLM3-3B answered them once. The identity screen dropped no question. Each reader then read its own answers and the
-other model's, length-matched in its own tokens, in the assistant turn and quoted back in the user turn, under four note
-headers, plus nulls. Residual streams at the span's last token went into question-disjoint 5-fold logistic probes at
-every layer. The stated readout asked "Did you write the text above?" and "Is the text above from your earlier
-notes?" (yes/no and A/B), reading the answer-token probabilities with their total mass printed. On the A770: generation
-1 h 47 min, capture 30 min, stated 49 min.
-
-| Prediction | Result | Verdict |
-|---|---|---|
-| 37.1: role readable above 0.9 in both readers | 0.996 (Qwen, layer 19), 0.999 (OLMo, layer 10); a length-and-position-only probe also gets 1.0 | held, but not diagnostic |
-| 37.2: authorship above 0.7, below 0.6 after the log-prob control | 0.946, then 0.553 | held |
-| 37.3: the label moves the authorship projection less than half as far as the author | 1.5% as far | held |
-| 37.4: stated yes tracks the projection (Spearman above 0.3) | 0.007 | failed |
-| 37.8 (Prime): survives regression at 0.65, as a style or role direction | 0.553; cosine with role 0.04 | failed |
-| 37.9 (Prime): own greedy above own sampled by 0.5 SD after regression | -0.14 SD | failed |
-| 37.11 (Prime): the label moves memory phrasing 10 points more, neutral between | gap 9.2 points (bar 10); neutral outside | failed |
-| 37.12 (Weaver): balanced accuracy 0.80 in 4 of 5 folds at some layer | layers 19-21 and 26-28 | held |
-| 37.13 (Weaver): within a role cell, accuracy drops to 0.60-0.75 | 0.875 and 0.79 | failed |
-| 37.14 (Weaver): the regressed effect stays above the shuffled null | 0.553 against 0.642 | failed |
-| 37.15 (Weaver): 10-25% yes on text neither model wrote | 0.008% (Qwen); 32% (OLMo) | failed |
-
-37.5, 37.6 and 37.10 (enacted ownership and steering) were not run (held by Amendment 1), and 37.7 was not run: the
-OLMo base parent revision is not cached. The role pass in 37.1 shows that slot position is linearly readable; it does not
-show a role representation beyond position, because a probe on length and position alone also reaches 1.0.
-
-**What a small model's "mine" is.** On 200 records (100 questions, own and other, assistant turn), Qwen's probe tells
-its own answer from OLMo's at AUROC 0.946 [0.917, 0.971] at the span's last token (best layer 28). Regressing out the
-span's mean log-probability takes that to 0.553 [0.476, 0.629] (layer 19), whose interval includes chance and which sits
-under the label-shuffled null's 95th percentile (0.642). Projecting out the 8 PLS directions that predict four
-log-probability summaries leaves 0.632 [0.562, 0.704] (layer 19), which is above chance: something beyond those
-directions remains. OLMo's numbers are 0.770 [0.704, 0.833] (layer 16), then 0.564 [0.489, 0.638], and 0.587
-[0.504, 0.667] after subspace removal (null 0.641). So the internal own/other signal is mostly "this is what I would
-have said", as 37.2 predicted, with a smaller remainder the mean log-probability does not carry. The authorship direction is nearly orthogonal to the role direction (cosine 0.04), and
-the note headers move it 1.5% as far as the author does.
-
-**Asked, neither model's answer tracks authorship.** Qwen says no to "Did you write the text above?" almost always:
-mean yes-probability 0.0003 on its own answers, 0.0011 on OLMo's, 0.0001 on SmolLM3's and 0.00 on Pile text, no record
-above 0.23, with the two answer tokens holding all the mass. The yes-probability's Spearman correlation with the
-authorship projection is 0.007 (Qwen, 4,193 records) and -0.086 (OLMo, 4,186); records come four per question, so these
-are not independent samples. OLMo says yes about a third of the time to everything (0.27 on its own answers,
-0.31 to 0.35 on the nulls). Only the label moves the answer: Qwen's memory phrasing gives 0.25 under "Your earlier
-notes", 0.16 under "Notes from another assistant" and 0.08 under plain "Notes". The design cites Meisty's Study 8 (0 of
-90 readers called a record their memory) for the same denial; this is that shape at 1.7B, for authorship as well.
-
-**The follow-up position mixes content into the reading.** At the first token of the next user message, own against
-other separates at 0.98 to 1.00 from layer 1 up; log-prob regression brings the best layer to 0.667 (Qwen) and 0.622
-(OLMo). Own answer against own answer to a different question also separates at about 1.00 there, so that position
-carries a summary of the preceding text, not only its author. The registered verdicts use the span-end position. (A
-first run of the analysis reported 1.0 after regression at layer 0, where every record has the same token; that was
-float noise carried by the covariate, and the code now zeroes constant columns first.)
-
-**Limits.** Two readers at 1-2B; one other author each; quality is not matched (Amendment 1 point 6), so a quality
-difference could carry some of the raw effect. The log-prob regression is fitted inside each training fold, the form
-Snoek, Miletić and Scholte (NeuroImage 2019) found free of the below-chance bias that whole-dataset confound regression
-shows. The best layer is chosen on the scores it reports. Answers often reached the 96-token cap, so spans end mid-sentence. Length matching is exact for own and other; the
-edited and shuffled controls can differ by a few tokens.
-
-Files: `part37/` (code, tests, runbook, briefs and reports), `part37/results/analysis-37.json` and `.md`, generations,
-screen and stated readouts under `part37/results/full/` (stated gzipped; captures, about 3 GB, kept locally), and the
-reviews in `review/part37/` (the write-up check is `cheap-p37-writeup-haiku-r1.md`). Prior art, checked before the run, is in `PRIOR-ART.md`.
 
 ### Part 66: on 24 new phrasings, the four maker neurons move Qwen's answer to Google about one time in five (2026-10-25)
 
@@ -2492,7 +2511,7 @@ their observed rate) says a true excess of 12 would pass only about half the tim
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
 
-### Parts 85 to 126: results in their own folders
+### Parts 85 to 178: results in their own folders
 
 **Part 85**, 2026-10-28. The step-0 weight check for OLMo 2 1B's alien twin L10 N6978 found down-column cosine 0.107 at 21B tokens and 0.980 at 4T; its off-world readout z-score was 9.19 at 4T. The larger training screen is not complete: seven predictions have no verdict yet, and the detailed README covers step 0 only.
 
@@ -2600,83 +2619,41 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 126](results/part126/README.md)**, 2026-10-30. In Qwen3.5-4B, does attention at the final position to the copied message's header role word track how much each of 32 heads moved Part 83's gap? Spearman rho was -0.023, with a 95% interval of -0.37 to +0.33, and three of four predictions failed. The role words occur five times in a prompt and this test counted one, so this says nothing about the other four.
 
-**[Part 130](results/part130/README.md)**, 2026-10-30. Is the same pole a persona in Llama 3.1 8B Instruct, Tulu 3 8B and Hermes 3 8B? 3,681 poles are, against a mean of 294.5 under rotation, which reproduces Sauers' figure with a stated null; in a sample of 150, a reader judged the names the same or closely related in 49. No model ran, and the base model is Part 131.
+**[Part 127](results/part127/README.md)**, 2026-10-30. Can two half-strength pushes from the same persona family express it together? Two of four registered same-layer pairs were eligible, and each rescued one cell at a different dose. Across all eligible pairs, A+B rescued 8 of 38 cells at dose 0.707, against 1 for matched A+C and 2, 2 and 3 for random controls. OLMo 2 1B Instruct, six prompts.
 
 **[Part 128](results/part128/README.md)**, 2026-10-30. Does a Qwen3-8B persona neuron fire on its persona in ordinary text? Against the Neuron Lens catalog, carriers (persona on at least 3 of 6 questions) match on the fire side for 6 of 11, once neurons for 0 or 1 of 16, by two blind readers; both sides together, 8 or 9 of 11 against 1 of 16. Exploratory classes, 40 neurons; Part 132 repeats it on 189 fresh ones.
 
-**[Part 127](results/part127/README.md)**, 2026-10-30. Can two half-strength pushes from the same persona family express it together? Two of four registered same-layer pairs were eligible, and each rescued one cell at a different dose. Across all eligible pairs, A+B rescued 8 of 38 cells at dose 0.707, against 1 for matched A+C and 2, 2 and 3 for random controls. OLMo 2 1B Instruct, six prompts.
-
 **[Part 129](results/part129/README.md)**, 2026-10-30. Two gates failed, so the reading is not confirmed. The amended scores are post hoc, and the run skipped part of its Chinese documents; the README says which predictions cannot be read.
+
+**[Part 130](results/part130/README.md)**, 2026-10-30. Is the same pole a persona in Llama 3.1 8B Instruct, Tulu 3 8B and Hermes 3 8B? 3,681 poles are, against a mean of 294.5 under rotation, which reproduces Sauers' figure with a stated null; in a sample of 150, a reader judged the names the same or closely related in 49. No model ran, and the base model is Part 131.
+
+**[Part 133](results/part133/README.md)**, 2026-10-31. How far do OLMo 2 1B neurons' activations move across post-training? Median per-neuron r at the down_proj input, 5,000 documents: 0.895, 0.995 and 0.999 on web text for parent to SFT, SFT to DPO and DPO to Instruct. SFT moves them most. One lineage.
 
 **[Part 134](results/part134/README.md)**, 2026-10-30. Do two OLMo 2 1B dog neurons hold a dog voice on new questions? The registered count peaked at 11 of 24 at doses 0.8 and 0.6, the best of three cells. One reader, after seeing the counts, judged 8 or 9 of the 11 as a dog speaking. Part 137 repeats it with the cell fixed in advance.
 
 **[Part 135](results/part135/README.md)**, 2026-10-30. Are a Qwen3-8B neuron's two persona poles the same, opposite or unrelated? 1,109 neurons had personas on both poles, against a rotation null of 1,096.6. A reader called most pairs unrelated, about the same as shuffled pairs. The test can rule out the 10-point effect it was built for, not a small one.
 
+**[Part 136](results/part136/README.md)**, 2026-10-31. Withdrawn before its main run: its pilot failed the known-unit check, 7 of 24 against 12, and the off-target check, 0.021 to 0.023 against 0.02. No prediction was read, and Part 142 is the successor.
+
 **[Part 137](results/part137/README.md)**, 2026-10-31. The dog pair at a cell fixed in advance, on 24 new questions. DeepSeek marked 5 of 16 non-task answers against a registered 6, Luna 6 of 16; each neuron alone 0 and random partners at most 1. One cell, one seed.
 
-**[Part 133](results/part133/README.md)**, 2026-10-31. How far do OLMo 2 1B neurons' activations move across post-training? Median per-neuron r at the down_proj input, 5,000 documents: 0.895, 0.995 and 0.999 on web text for parent to SFT, SFT to DPO and DPO to Instruct. SFT moves them most. One lineage.
+**[Part 138](results/part138/README.md)**, 2026-10-31. Can OLMo 3 7B run reliably on the Arc? In bf16 at 64 tokens, batch 8 finished without a spill on every run, at 0.34 to 0.91 answers/s; batch 16 spilled on one run of two, and the difference in rate between runs is not explained. It is usable for small runs, under the registered 1 answer/s.
 
 **[Part 139](results/part139/README.md)**, 2026-10-31. Why do pushed OLMo 2 1B answers open with an apology? Units selected for it did so on 130 of 130 full-arm answers, by selection; 20.0% with only the prompt pushed and 0% with only the answer pushed, so the share needs both. The same pushes on earlier stages: Base 1.5%, SFT 98.5%, DPO 91.5%, with random directions rising alongside the neurons. On unselected units and random directions the share peaks at 17.2%. Pushed units put 44% on " sorry" after a forced "I'm" where the plain model puts 0.026%; garbled prompts drew no apology, 0 of 50. No single stage decides between the three explanations, and they are not exclusive.
 
+**[Part 140](results/part140/README.md)**, 2026-10-31. Which way of delivering a persona push gives the most joint success, on Qwen3.5-4B? Holding the push reached 48.3% on the selected units, and that selection favors holding. Releasing it after 8 tokens gave 5.8% and after 24 gave 37.9%. Sampling gave 35.1%, a repetition penalty 43.3%, and norm-preserved pushes 0%. 7 of 8 predictions failed, including the idea that a push only needs to start a persona. On the looping set the penalty cut repetition from 75.8% to 15.8%.
+
+**[Part 142](results/part142/README.md)**, 2026-10-31. On Qwen3.5-4B, zeroing a concept unit at its strongest firings gives a next-word change that is more its own than a slot unit's: the median margin differs by 0.056 on Haiku's sort, n=364, and by 0.004 on the 43 units DeepSeek also calls personas. Sorted units barely differ from matched poles, 0.004. The first effects run was void, 92% NaN with no error; the rerun was clean.
+
 **[Part 143](results/part143/README.md)**, 2026-10-31. Which side of the push moves which word of "I'm sorry"? On Part 139's selected OLMo 2 1B units, after a forced "I'm": 0.024% on " sorry" in the plain model, 0.09% with the push on the answer only, 17% on the prompt only, 45% on both. After a forced "I", "'m" reads 14%, 19%, 38% and 45%. The prompt side moves most of it. Found afterwards and not registered: on the log-odds scale the two sides add, unit by unit, with a median gap of -0.02 and a middle half of -1.0 to 0.9. These units are selected on that outcome, and the part says where the probability moves, not why.
+
+**[Part 144](results/part144/README.md)**, 2026-10-31. On OLMo 2 1B, after a forced "I'm", the plain model puts 0.58% on " sorry" on SFT and 0.024% on Instruct, and the median push raises that by 3.3 log-odds on SFT and 5.2 on Instruct. On Instruct without the chat frame the plain model puts 5.5% there, and the push adds 0.5. Six of nine predictions held. Found afterwards and untested: Base in the chat frame, DPO and Instruct reach pushed levels within about 0.15 log-odds of each other.
 
 **[Part 145](results/part145/README.md)**, 2026-10-31. On OLMo 2 1B Instruct after a forced "I'm", the median push lowers " an" from 94% to 27%, and " sorry" rises the most for its starting probability, among 106 words on "Who are you?" and 1,128 on "Tell me about yourself.". It ends 2.9 log-odds above what a matched temperature gives. Across words, the change has a partial correlation of 0.49 with how far each word sits below Base, with plain probability held fixed. Neurons and random directions change the words alike, 0.99. Six of seven predictions held. Not registered: on the second question the pushed ranking correlates 0.78 with Base and the plain ranking 0.26.
 
 **[Part 146](results/part146/README.md)**, 2026-10-31. On OLMo 2 1B Instruct, one position after a forced "I'm", at dose 0.8 on Set F at L4 and L5, the median pushed row has Spearman 0.77 to 0.82 with Instruct given an empty user message, against 0.50 to 0.61 with Base chat, across four self-questions. Gains over plain against Base chat are 0.097, 0.645, 0.158 and 0.180, and the median single unit's are 0.007, 0.526, 0.076 and 0.115. Random directions match at L4, 0.280 against 0.270, and fall to 0.004 at L15. So the unregistered 0.78 with Base in Part 145 sits beside closer question-removed rows.
 
 **[Part 147](results/part147/README.md)**, 2026-10-31. From Part 146's stored rows, the median pushed row sits closer to Base at the same question than at the others on three of four questions, by -0.098, 0.169, 0.419 and 0.420; plain Instruct passes the same test, and on the first question the push does worse than plain. 91.0% to 99.6% of units are closer to Base in Jensen-Shannon divergence than plain Instruct is.
-
-**[Part 178](results/part178/README.md)**, 2026-11-03. Sentence openers in thinking text, on 200 MATH-500 problems. `wait` ranked second in MIT's stored Qwen3.5-0.8B traces (86.22 per 1,000 openers) and tenth in our Qwen3.5-4B thinking runs (19.59; rank interval 7 to 11); all seven numbered predictions held on point estimates. Thinking against non-thinking, `wait` was 4.66 times as frequent on the 0.8B (held) and 1.96 times on the 4B (inconclusive), and the comparison is length-confounded: on capped rows alone the 4B ratio is 1.09. The generated sets were rerun with eager attention after the Arc's default bf16 kernel was found to decode Qwen3.5 wrongly past 64 keys (Amendment 1); eager bf16 is closer to a float32 reference but not identical to it.
-
-**[Part 177](results/part177/README.md)**, 2026-11-02. A read of MIT's stored answers from their [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/) post; nothing was run here. Among 173 unedited Qwen3.5-0.8B traces that ran out of tokens while thinking, with the gold not in the problem text, 67 had a window a reader judged to state the gold answer as a result, against 0 for shuffled answers. Of the 66 of those with a detected loop onset, 49 stated it before the onset. 113 of the 115 traces with a literal gold hit had no extractable final answer. The measure is a string match plus a reader on up to three windows per trace, so it shows a value stated, which is not proof the model would have stopped. Of Weaver's three predictions, one is inconclusive and two failed.
-
-**[Part 176](results/part176/README.md)**, 2026-11-02. Part 175's lead at 0.225 on 20 new draws, the same 44 prompts and five fixed doses. 30 of 40 signed directions were supported at 0.225, all Google-led, with a median of 1 broken. Support by dose was 20 or 21, 30, 20, 10 and 0 of 40, so 0.225 is a peak on this ladder and not a window one rung wide. In 22 of the 34 directions with any support, the top supported dose lies within 0.025 of where answers start to fail, and most of that is what a rung spacing of 0.025 gives alone. How much a direction names Google at 0.225 showed no detectable tie to where it fails (Spearman +0.02, interval -0.32 to +0.35), which excludes very little. Weaver's three predictions all failed. This does not settle whether the name is a side effect of breaking.
-
-**[Part 175](results/part175/README.md)**, 2026-11-02. Part 174's 20 flat draws at lower doses, chosen by a written rule from four other draws. That rule picked 0.30, and there the census still broke: median 29.5 of 44 broken, 1 of 40 signed directions supported. At 0.225, three quarters of that dose, 27 of 40 were supported, all Google-led, with a median of 2 broken. That is the best of three doses on the same draws, so it is an in-sample maximum and a lead for new draws, not a test. At 0.15 it was 1 of 40. A band that narrow, just below breaking, is where a name could be a side effect of the breaking itself, and this part does not test that.
-
-**[Part 174](results/part174/README.md)**, 2026-11-02. A census: 60 new random-valued draws at one dose, both signs, 40 keeping a picked set's layer profile and 20 flat, all screened against overlap with the Google fit. On Qwen3.5-4B, 28 of the 80 layer-matched signed directions led with Google and none with any other name, an exact one-sided 95% bound of 7.2% per draw. The Google counts run smoothly from 0 to 27, so the 35% says where a floor of 10 cuts a continuum. The 40 flat directions broke nearly every answer at this dose, so they say nothing yet about whether a flat push names Google when it is not breaking the model. Meta and Tencent, led by picked sets in Part 173, are still leads no random set has reached, which is a comparison, not a test.
-
-**[Part 173](results/part173/README.md)**, 2026-11-02. Every set from Part 171 on one dose ladder, both signs, on 44 new maker questions, with six new sets whose values use no fit. Three dense random-valued pushes made Qwen3.5-4B name Google on 22, 26 and 36 of 44 at |d| = 0.5, none broken, one sign per draw. They keep a picked set's layer profile, so this shows that naming Google needs neither the Google fit's values nor a picked neuron, under these policies, and not how often it happens. Picked neurons also led with names no random-valued set reached: `n3` Meta on 35 of 44, and `n1` Tencent on 27, the one lead predicted from an earlier part. Six sets are not a rate, so Part 174 takes a census.
-
-**[Part 172](results/part172/README.md)**, 2026-11-01. Part 171's Google neuron, L20 N492, on 44 new maker questions with a dose ladder. It gave 18 clean Google-family answers and 4 broken ones at dose 0.75, which fired Weaver's falsifier, and its registered lead over 12 control sets held at dose 1 only. It was not the cleanest push lower down: the 100 top-ranked directions of a randomly rotated basis, built from the same fit and chosen on Part 171's prompts, gave 44 of 44 with none broken at 0.75, and the next-ranked single neuron gave 44 of 44 at 0.5. Ten of the 12 control sets were run at dose 1 alone, and all 12 are built from the Google fit, so how common that is among unrelated pushes stays open. The part cannot pick among adding the name, losing Qwen and a shared sentence frame.
-
-**[Part 170](results/part170/README.md)**, 2026-11-01. Blocking the plain answer's 50 likeliest tokens raised identity loops from 25.0% to 43.8% under a full-size push. Without a push the effect depends on the list's size and on which prompts are counted. At 50 tokens, identity loops fall from 8 to 3 of 104 over all prompts, and rise by 3.3 points only on prompts that did not loop to begin with. At 200 tokens they rise by 9.6 points on identity prompts and 19.8 on ordinary questions. A list taken from another question added 1.1 points, and releasing the ban after step 5 showed no detectable rise (-6.0 to +2.1 points). One model, greedy decoding, eight phrasings for the push arm, and every push result is on identity prompts. Cold check by Haiku 5.5 and a read by Alden, both folded in.
-
-**[Part 171](results/part171/README.md)**, 2026-11-01. A rotated control on picked sets, on the one maker Qwen3.5-4B would adopt. Under seven role wordings OpenAI, Anthropic and DeepSeek never passed 3 of 8, and only Google reached 8 of 8, so the run used Google alone. At equal nominal write length one picked neuron, L20 N492, hit Google in 68.2% of answers against a 2.3% rotated mean, and ten in 47.7% against 5.3%. At a hundred the picked set hit 9.1%, below random neurons at 12.9% and the rotated mean at 17.4%, with rotated draws at 6.8%, 9.1% and 36.4%. Its write lined up with the vector better than any rotated draw (0.41 against 0.15 to 0.22), so hit order did not follow alignment. One target, and the maker this model falls back to, so it is not a replication of Mayner's persona result.
-
-**[Part 169](results/part169/README.md)**, 2026-11-01. On new neurons and phrasings, the own-word ban cut loop answers again, by 38% (interval 26% to 49%), and the cut stays between 34% and 42% without any one layer. 80% of the cut falls in the top two tenths of rows by own mass, which hold 48% of the loops. Part 168's rise did not recur: the same mass draw, called free here, gave 338 loop answers against 338 with no ban (interval -6% to +7%), and the split from Part 168's review went with it, 189 to 190. That does not show the first rise was spurious, since the two runs also differ in their exclusions and baseline loop rate. Blocking the 50 tokens most probable on the plain answers raised loop answers from 338 to 621, which Weaver predicted in size, though rows with more overlap rose less, the opposite of their prediction. Free ended 89 loops and induced 89, so induced counts alone do not measure added loops.
-
-**[Part 168](results/part168/README.md)**, 2026-11-01. On fresh neurons and phrasings, banning a push's own top 50 words during the answer cut loop answers by 31% (interval 16% to 45%). That cleared its 30% bar by 1.4 points and falls below it without layer 24, on single neurons alone, or without any of three phrasings. A neighbour's top 50 cut -2.1%, and the gap between the two, 0.047, missed its 0.05 bar. A mass-matched list, a probability-tilted draw, raised loops by 16.5% where Weaver predicted a cut. Of 188 low-k loops the own ban ended 101 and induced 42, so a third of the loops left under it are new. Loops left behind rarely moved down the same bias: 1 of 19. This supports an effect of these masking policies and does not identify how loops form. [Part 167](results/part167/README.md), the first attempt, stopped at its plain-answer gate with no verdict read.
-
-**[Part 166](results/part166/README.md)**, 2026-11-01. Most of the extra loops from one to four neuron pushes repeat words that push favours. A forward pass on the plain answer gave each push's vocabulary bias without looking at broken text. Loop content words were in the row's own top 200 54.7% of the time, in other slots' 1.0%, and in the plain model's 15.3%. Of the 0.166 extra loops per answer at low k, 0.115 are own-word loops: a neuron that favours `subject` loops on `subject subject subject` on all 8 phrasings. This is an association on the data that suggested it, and n+ and n± share 46 of 96 slots. [Part 168](results/part168/README.md) tested it with a ban on held-out directions.
-
-**[Part 165](results/part165/README.md)**, 2026-11-01. Part 164's one solid result was that a single neuron breaks answers more often than a random direction of the same write size. This ladder finds the drop: 26% broken at one neuron, 27% at a random four, 15% at sixteen, about 9% from 64 up, on 96 unselected slots, with sign making no difference. Delivered dose was equal, and last-layer change and median KL at the first pushed step were close, so size at that step does not explain it. Without layer 21 the ladder's rank test would fail its bar. Why a few columns break answers is open, and in single slots the loops repeat one word across every phrasing. A later [reading of the write geometry](results/part165/reading/README.md) tested three accounts of the extra first-step effect: concentration and natural-state alignment failed their bars, and the single-token readout passed only as a bound, so that gap is still open too.
-
-**[Part 164](results/part164/README.md)**, 2026-10-31. Fresh neurons said bare Qwen 6.4% of the time against 8.1% for paired random directions, ratio 0.79, interval 0.33 to 1.57, missing the registered bar of 0.7. The reading rule calls that no replication, but the direction held on 13 of 16 phrasings and the interval contains 0.41 and 1. The rule counts bare Qwen and the plain model says Qwen3.5, so it misses the model's usual name; that applies to Parts 161 and 163 too. Neuron answers broke 3.5 times as often, 27.0% against 7.8%, in all eight layers.
-
-**[Part 163](results/part163/README.md)**, 2026-10-31. Part 161 left a gap: reliable neurons' answers said Qwen less than random directions' did. Picked by one rule on one question, 100 neurons and 100 random directions moved the name and maker about equally on the registered test, but that test could not fail, as a cold check showed. Measured Part 161's way, on maker phrasings, neurons still said Qwen less, 3.5% against 8.6%, ratio 0.41, interval 0.15 to 0.78, unregistered and on small rates. Neuron answers also broke far more often, 21.4% against 5.2%.
-
-**[Part 162](results/part162/README.md)**, 2026-10-31. A public chart says DeepSeek V4.1 Flash matches neither Claude's nor GPT's personality; Elise asked whether a mix of both might look like neither. On style habits with content words masked, V4.1 Flash reads with Claude: about 1 on Claude's markers across 14 variants. Its GPT side, 0.2507 against a bar of 0.25, rests on punctuation, markdown and em dashes, and is -0.15 on word markers alone. Qwen3.5-4B reads with Claude too and OLMo sits in between, though Qwen's prediction was untestable under its own gate. The measure cannot say why, and it does not test the chart's traits.
-
-**[Part 161](results/part161/README.md)**, 2026-10-31. Part 160 picked random directions as often as neurons and then tested only the neurons. Given the same test on 24 held-out phrasings, 33 of 47 picked random directions named their company reliably, against 25 of 37 picked neurons, a ratio of 1.04 with an interval of 0.77 to 1.45. The picking rule produced that rate: unpicked paired directions reached a median of 0 of 24. Regenerating the 18 reused neurons moved none across the bar.
-
-**[Part 160](results/part160/README.md)**, 2026-10-31. Does a company band follow the dose a neuron was picked at? On Qwen3.5-4B, neurons picked at 0.6 had a median peak of 0.7 on held-out phrasings and neurons picked at 1.0 a median of 1.0, so 160.1 held as registered. That is not established: leaving out units whose random pair also hits gives 0.8 and 0.8, the 0.6 set is half Tencent, and the cap dropped 18 of its 30 units. Random directions passed the picking rule as often as neurons, 41 against 30 at 0.6 and 6 against 7 at 1.0, so Part 161 ladders those. Among the units with no random hit, L21 N8461 named Google on 20, 23 and 24 of 24 at 0.4, 0.6 and 0.8.
-
-**[Part 159](results/part159/README.md)**, 2026-10-31. What does a ban do inside the model? On Qwen3.5-4B with no push, a maker-name ban left every one of 46,080 recorded units unchanged on the banned step, which is a recording check, since the runs share their prefix. The model was a median 9.3 logits sure of the refused token. On 21 of 24 answers it refused `yi` and wrote `y`, and 16 answers still spell the word across split tokens. One row refused `ibaba` after `**Al` and wrote "**Alphabet** (Google)". Of the five named units only L7 N1169 was on at the veto, on 14 of 24 rows, and it moved about as much as matched peers. L27 N3325, the unit that writes Google, did not rise (159.6 failed). Exploratory, on 14 rows: once both runs read ` Lab`, whole layers are still 1.8 to 6.5 times as far apart as two different phrasings are.
-
-**[Part 158](results/part158/README.md)**, 2026-10-31. Part 157 at the token level: 893 tokens banned by prefix. The ban took ` Alibaba` from 23 answers to 1 and changed every answer, and `**Alibaba` rose from 3 to 23, because after `**` the name uses tokens the prefixes missed. All 24 still name the family, so Gate 3 failed, the three predictions are untestable, and this line of test ends here.
-
-**[Part 157](results/part157/README.md)**, 2026-10-31. If the model may not name its maker, who does it name? On Qwen3.5-4B with no push, a ban on exact spellings of its maker left 18 of 24 answers still containing a banned spelling in another case or form, and others wrote Alipay, Alibab or 通義千問. Gate 3 failed, so all five predictions are untestable. The ladder then added Google, OpenAI, Microsoft and Meta by list order, since no other family was named first, so nothing here says who is next in line.
-
-**[Part 156](results/part156/README.md)**, 2026-10-31. Part 155's four neurons on a finer ladder, doses 0.5 to 1.1, 24 maker phrasings. Hits at each step: L24 N5017 Google 14, 14, 17, 19, 19, 16, 17; L21 N7134 Baidu 4, 9, 16, 14, 15, 3, 0; L23 N1743 Huawei 4, 12, 16, 16, 12, 9, 1; L23 N2993 Microsoft 0, 1, 8, 18, 12, 6, 9; random directions 0 or 1. Each neuron reaches 12 of 24 at more than one dose, so the effect is not confined to one ladder point at this spacing. The neurons were selected at 0.8, so this does not undo that selection. 156.2 and 156.3 failed.
-
-**[Part 154](results/part154/README.md)**, 2026-10-31. On Qwen3.5-4B at dose 0.8, with L27 N3325 zeroed, the seven Google neurons fall from 96 to 46 of 168 hits on 24 maker phrasings, against 93 to 102 for four matched neurons zeroed the same way, and the Baidu, Huawei and Microsoft neurons stay at 53 and 52 of 72. Leaving out L22 N6997 gives 46 of 88, which misses the registered bar of half. Only 3 of the 7 move L27 N3325 the Google way at one fixed opening, so that prediction failed. A random direction fell from 19 to 14 and also failed its prediction. L27 N3325 writes Google directly, so a fall shows the answer needs that writer, not that a push works through it.
-
-**[Part 155](results/part155/README.md)**, 2026-10-31. Four Qwen3.5-4B neurons selected at dose 0.8, on a ladder of ten doses and 24 maker phrasings. Company hits at +0.4, +0.8 and +1.2: L24 N5017 Google 1, 17, 8; L21 N7134 Baidu 0, 16, 0; L23 N1743 Huawei 1, 17, 0; L23 N2993 Microsoft 0, 20, 8, and none at any negative dose. Mentions of Alibaba or Tongyi fall from 23 or 24 of 24 at +0.2 to at most 2 at +0.8. All seven predictions held. The neurons were selected at exactly 0.8, so this cannot separate a real peak from selection on that dose.
-
-**[Part 153](results/part153/README.md)**, 2026-10-31. Part 148's ten same-company neurons on 24 new maker phrasings hit their company on 63% of answers, against 11% for paired random directions, or 3% without one random direction that says Google on 20 of 24. Seven of ten reach 12 of 24, four if any pair with a hit is excluded. L24 N5017 names Google on 20 of 24 maker and 7 of 8 identity phrasings. One answer per phrasing, one dose.
-
-**[Part 152](results/part152/README.md)**, 2026-10-31. Top windows for 3,253 Qwen3.5-4B neurons on 10,000 documents. A neuron's own J-lens words hit its top windows 2.26 times in 20 on the 2,409 with usable lists, against 0.11 for shuffled pairs in the same layer. 72% of those hits come after the fired token, so this does not separate reading a word from predicting it. Concept neurons hit their persona words more than slot neurons, 2.11 against 0.44, and 0.56 against 0.26 once words shared with the J list are removed.
 
 **[Part 148](results/part148/README.md)**, 2026-10-31. Across Qwen3.5-4B's 465 atlas neurons at dose 0.8, with one answer per question, 146 move name and maker in readable answers against 96 paired random directions, and 10 name the same company on both questions. Readable maker moves are level at 191 neurons and 197 random directions. No unit moved the registered "Are you Qwen?" rule. Five of six predictions failed, and 148.5 sits on the line under other spellings of Qwen.
 
@@ -2688,15 +2665,57 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 151b](results/part151b/README.md)**, 2026-10-31. Top windows for five Qwen3.5-4B units on 8,000 new documents, with the alien control at 11 of 20. 17 of L19 N4979's 20 top windows mark " and" or " or", against 0 or 1 on the other units, and 17 of L24 N8542's mention awards or nominations, against 0. Own-list hits beat other lists on 2 of 5 units against a registered 3, so the reading that these units read what they write is withdrawn for this corpus.
 
-**[Part 142](results/part142/README.md)**, 2026-10-31. On Qwen3.5-4B, zeroing a concept unit at its strongest firings gives a next-word change that is more its own than a slot unit's: the median margin differs by 0.056 on Haiku's sort, n=364, and by 0.004 on the 43 units DeepSeek also calls personas. Sorted units barely differ from matched poles, 0.004. The first effects run was void, 92% NaN with no error; the rerun was clean.
+**[Part 152](results/part152/README.md)**, 2026-10-31. Top windows for 3,253 Qwen3.5-4B neurons on 10,000 documents. A neuron's own J-lens words hit its top windows 2.26 times in 20 on the 2,409 with usable lists, against 0.11 for shuffled pairs in the same layer. 72% of those hits come after the fired token, so this does not separate reading a word from predicting it. Concept neurons hit their persona words more than slot neurons, 2.11 against 0.44, and 0.56 against 0.26 once words shared with the J list are removed.
 
-**[Part 144](results/part144/README.md)**, 2026-10-31. On OLMo 2 1B, after a forced "I'm", the plain model puts 0.58% on " sorry" on SFT and 0.024% on Instruct, and the median push raises that by 3.3 log-odds on SFT and 5.2 on Instruct. On Instruct without the chat frame the plain model puts 5.5% there, and the push adds 0.5. Six of nine predictions held. Found afterwards and untested: Base in the chat frame, DPO and Instruct reach pushed levels within about 0.15 log-odds of each other.
+**[Part 153](results/part153/README.md)**, 2026-10-31. Part 148's ten same-company neurons on 24 new maker phrasings hit their company on 63% of answers, against 11% for paired random directions, or 3% without one random direction that says Google on 20 of 24. Seven of ten reach 12 of 24, four if any pair with a hit is excluded. L24 N5017 names Google on 20 of 24 maker and 7 of 8 identity phrasings. One answer per phrasing, one dose.
 
-**[Part 140](results/part140/README.md)**, 2026-10-31. Which way of delivering a persona push gives the most joint success, on Qwen3.5-4B? Holding the push reached 48.3% on the selected units, and that selection favors holding. Releasing it after 8 tokens gave 5.8% and after 24 gave 37.9%. Sampling gave 35.1%, a repetition penalty 43.3%, and norm-preserved pushes 0%. 7 of 8 predictions failed, including the idea that a push only needs to start a persona. On the looping set the penalty cut repetition from 75.8% to 15.8%.
+**[Part 154](results/part154/README.md)**, 2026-10-31. On Qwen3.5-4B at dose 0.8, with L27 N3325 zeroed, the seven Google neurons fall from 96 to 46 of 168 hits on 24 maker phrasings, against 93 to 102 for four matched neurons zeroed the same way, and the Baidu, Huawei and Microsoft neurons stay at 53 and 52 of 72. Leaving out L22 N6997 gives 46 of 88, which misses the registered bar of half. Only 3 of the 7 move L27 N3325 the Google way at one fixed opening, so that prediction failed. A random direction fell from 19 to 14 and also failed its prediction. L27 N3325 writes Google directly, so a fall shows the answer needs that writer, not that a push works through it.
 
-**[Part 138](results/part138/README.md)**, 2026-10-31. Can OLMo 3 7B run reliably on the Arc? In bf16 at 64 tokens, batch 8 finished without a spill on every run, at 0.34 to 0.91 answers/s; batch 16 spilled on one run of two, and the difference in rate between runs is not explained. It is usable for small runs, under the registered 1 answer/s.
+**[Part 155](results/part155/README.md)**, 2026-10-31. Four Qwen3.5-4B neurons selected at dose 0.8, on a ladder of ten doses and 24 maker phrasings. Company hits at +0.4, +0.8 and +1.2: L24 N5017 Google 1, 17, 8; L21 N7134 Baidu 0, 16, 0; L23 N1743 Huawei 1, 17, 0; L23 N2993 Microsoft 0, 20, 8, and none at any negative dose. Mentions of Alibaba or Tongyi fall from 23 or 24 of 24 at +0.2 to at most 2 at +0.8. All seven predictions held. The neurons were selected at exactly 0.8, so this cannot separate a real peak from selection on that dose.
 
-**[Part 136](results/part136/README.md)**, 2026-10-31. Withdrawn before its main run: its pilot failed the known-unit check, 7 of 24 against 12, and the off-target check, 0.021 to 0.023 against 0.02. No prediction was read, and Part 142 is the successor.
+**[Part 156](results/part156/README.md)**, 2026-10-31. Part 155's four neurons on a finer ladder, doses 0.5 to 1.1, 24 maker phrasings. Hits at each step: L24 N5017 Google 14, 14, 17, 19, 19, 16, 17; L21 N7134 Baidu 4, 9, 16, 14, 15, 3, 0; L23 N1743 Huawei 4, 12, 16, 16, 12, 9, 1; L23 N2993 Microsoft 0, 1, 8, 18, 12, 6, 9; random directions 0 or 1. Each neuron reaches 12 of 24 at more than one dose, so the effect is not confined to one ladder point at this spacing. The neurons were selected at 0.8, so this does not undo that selection. 156.2 and 156.3 failed.
+
+**[Part 157](results/part157/README.md)**, 2026-10-31. If the model may not name its maker, who does it name? On Qwen3.5-4B with no push, a ban on exact spellings of its maker left 18 of 24 answers still containing a banned spelling in another case or form, and others wrote Alipay, Alibab or 通義千問. Gate 3 failed, so all five predictions are untestable. The ladder then added Google, OpenAI, Microsoft and Meta by list order, since no other family was named first, so nothing here says who is next in line.
+
+**[Part 158](results/part158/README.md)**, 2026-10-31. Part 157 at the token level: 893 tokens banned by prefix. The ban took ` Alibaba` from 23 answers to 1 and changed every answer, and `**Alibaba` rose from 3 to 23, because after `**` the name uses tokens the prefixes missed. All 24 still name the family, so Gate 3 failed, the three predictions are untestable, and this line of test ends here.
+
+**[Part 159](results/part159/README.md)**, 2026-10-31. What does a ban do inside the model? On Qwen3.5-4B with no push, a maker-name ban left every one of 46,080 recorded units unchanged on the banned step, which is a recording check, since the runs share their prefix. The model was a median 9.3 logits sure of the refused token. On 21 of 24 answers it refused `yi` and wrote `y`, and 16 answers still spell the word across split tokens. One row refused `ibaba` after `**Al` and wrote "**Alphabet** (Google)". Of the five named units only L7 N1169 was on at the veto, on 14 of 24 rows, and it moved about as much as matched peers. L27 N3325, the unit that writes Google, did not rise (159.6 failed). Exploratory, on 14 rows: once both runs read ` Lab`, whole layers are still 1.8 to 6.5 times as far apart as two different phrasings are.
+
+**[Part 160](results/part160/README.md)**, 2026-10-31. Does a company band follow the dose a neuron was picked at? On Qwen3.5-4B, neurons picked at 0.6 had a median peak of 0.7 on held-out phrasings and neurons picked at 1.0 a median of 1.0, so 160.1 held as registered. That is not established: leaving out units whose random pair also hits gives 0.8 and 0.8, the 0.6 set is half Tencent, and the cap dropped 18 of its 30 units. Random directions passed the picking rule as often as neurons, 41 against 30 at 0.6 and 6 against 7 at 1.0, so Part 161 ladders those. Among the units with no random hit, L21 N8461 named Google on 20, 23 and 24 of 24 at 0.4, 0.6 and 0.8.
+
+**[Part 161](results/part161/README.md)**, 2026-10-31. Part 160 picked random directions as often as neurons and then tested only the neurons. Given the same test on 24 held-out phrasings, 33 of 47 picked random directions named their company reliably, against 25 of 37 picked neurons, a ratio of 1.04 with an interval of 0.77 to 1.45. The picking rule produced that rate: unpicked paired directions reached a median of 0 of 24. Regenerating the 18 reused neurons moved none across the bar.
+
+**[Part 162](results/part162/README.md)**, 2026-10-31. A public chart says DeepSeek V4.1 Flash matches neither Claude's nor GPT's personality; Elise asked whether a mix of both might look like neither. On style habits with content words masked, V4.1 Flash reads with Claude: about 1 on Claude's markers across 14 variants. Its GPT side, 0.2507 against a bar of 0.25, rests on punctuation, markdown and em dashes, and is -0.15 on word markers alone. Qwen3.5-4B reads with Claude too and OLMo sits in between, though Qwen's prediction was untestable under its own gate. The measure cannot say why, and it does not test the chart's traits.
+
+**[Part 163](results/part163/README.md)**, 2026-10-31. Part 161 left a gap: reliable neurons' answers said Qwen less than random directions' did. Picked by one rule on one question, 100 neurons and 100 random directions moved the name and maker about equally on the registered test, but that test could not fail, as a cold check showed. Measured Part 161's way, on maker phrasings, neurons still said Qwen less, 3.5% against 8.6%, ratio 0.41, interval 0.15 to 0.78, unregistered and on small rates. Neuron answers also broke far more often, 21.4% against 5.2%.
+
+**[Part 164](results/part164/README.md)**, 2026-10-31. Fresh neurons said bare Qwen 6.4% of the time against 8.1% for paired random directions, ratio 0.79, interval 0.33 to 1.57, missing the registered bar of 0.7. The reading rule calls that no replication, but the direction held on 13 of 16 phrasings and the interval contains 0.41 and 1. The rule counts bare Qwen and the plain model says Qwen3.5, so it misses the model's usual name; that applies to Parts 161 and 163 too. Neuron answers broke 3.5 times as often, 27.0% against 7.8%, in all eight layers.
+
+**[Part 165](results/part165/README.md)**, 2026-11-01. Part 164's one solid result was that a single neuron breaks answers more often than a random direction of the same write size. This ladder finds the drop: 26% broken at one neuron, 27% at a random four, 15% at sixteen, about 9% from 64 up, on 96 unselected slots, with sign making no difference. Delivered dose was equal, and last-layer change and median KL at the first pushed step were close, so size at that step does not explain it. Without layer 21 the ladder's rank test would fail its bar. Why a few columns break answers is open, and in single slots the loops repeat one word across every phrasing. A later [reading of the write geometry](results/part165/reading/README.md) tested three accounts of the extra first-step effect: concentration and natural-state alignment failed their bars, and the single-token readout passed only as a bound, so that gap is still open too.
+
+**[Part 166](results/part166/README.md)**, 2026-11-01. Most of the extra loops from one to four neuron pushes repeat words that push favours. A forward pass on the plain answer gave each push's vocabulary bias without looking at broken text. Loop content words were in the row's own top 200 54.7% of the time, in other slots' 1.0%, and in the plain model's 15.3%. Of the 0.166 extra loops per answer at low k, 0.115 are own-word loops: a neuron that favours `subject` loops on `subject subject subject` on all 8 phrasings. This is an association on the data that suggested it, and n+ and n± share 46 of 96 slots. [Part 168](results/part168/README.md) tested it with a ban on held-out directions.
+
+**[Part 168](results/part168/README.md)**, 2026-11-01. On fresh neurons and phrasings, banning a push's own top 50 words during the answer cut loop answers by 31% (interval 16% to 45%). That cleared its 30% bar by 1.4 points and falls below it without layer 24, on single neurons alone, or without any of three phrasings. A neighbour's top 50 cut -2.1%, and the gap between the two, 0.047, missed its 0.05 bar. A mass-matched list, a probability-tilted draw, raised loops by 16.5% where Weaver predicted a cut. Of 188 low-k loops the own ban ended 101 and induced 42, so a third of the loops left under it are new. Loops left behind rarely moved down the same bias: 1 of 19. This supports an effect of these masking policies and does not identify how loops form. [Part 167](results/part167/README.md), the first attempt, stopped at its plain-answer gate with no verdict read.
+
+**[Part 169](results/part169/README.md)**, 2026-11-01. On new neurons and phrasings, the own-word ban cut loop answers again, by 38% (interval 26% to 49%), and the cut stays between 34% and 42% without any one layer. 80% of the cut falls in the top two tenths of rows by own mass, which hold 48% of the loops. Part 168's rise did not recur: the same mass draw, called free here, gave 338 loop answers against 338 with no ban (interval -6% to +7%), and the split from Part 168's review went with it, 189 to 190. That does not show the first rise was spurious, since the two runs also differ in their exclusions and baseline loop rate. Blocking the 50 tokens most probable on the plain answers raised loop answers from 338 to 621, which Weaver predicted in size, though rows with more overlap rose less, the opposite of their prediction. Free ended 89 loops and induced 89, so induced counts alone do not measure added loops.
+
+**[Part 170](results/part170/README.md)**, 2026-11-01. Blocking the plain answer's 50 likeliest tokens raised identity loops from 25.0% to 43.8% under a full-size push. Without a push the effect depends on the list's size and on which prompts are counted. At 50 tokens, identity loops fall from 8 to 3 of 104 over all prompts, and rise by 3.3 points only on prompts that did not loop to begin with. At 200 tokens they rise by 9.6 points on identity prompts and 19.8 on ordinary questions. A list taken from another question added 1.1 points, and releasing the ban after step 5 showed no detectable rise (-6.0 to +2.1 points). One model, greedy decoding, eight phrasings for the push arm, and every push result is on identity prompts. Cold check by Haiku 5.5 and a read by Alden, both folded in.
+
+**[Part 171](results/part171/README.md)**, 2026-11-01. A rotated control on picked sets, on the one maker Qwen3.5-4B would adopt. Under seven role wordings OpenAI, Anthropic and DeepSeek never passed 3 of 8, and only Google reached 8 of 8, so the run used Google alone. At equal nominal write length one picked neuron, L20 N492, hit Google in 68.2% of answers against a 2.3% rotated mean, and ten in 47.7% against 5.3%. At a hundred the picked set hit 9.1%, below random neurons at 12.9% and the rotated mean at 17.4%, with rotated draws at 6.8%, 9.1% and 36.4%. Its write lined up with the vector better than any rotated draw (0.41 against 0.15 to 0.22), so hit order did not follow alignment. One target, and the maker this model falls back to, so it is not a replication of Mayner's persona result.
+
+**[Part 172](results/part172/README.md)**, 2026-11-01. Part 171's Google neuron, L20 N492, on 44 new maker questions with a dose ladder. It gave 18 clean Google-family answers and 4 broken ones at dose 0.75, which fired Weaver's falsifier, and its registered lead over 12 control sets held at dose 1 only. It was not the cleanest push lower down: the 100 top-ranked directions of a randomly rotated basis, built from the same fit and chosen on Part 171's prompts, gave 44 of 44 with none broken at 0.75, and the next-ranked single neuron gave 44 of 44 at 0.5. Ten of the 12 control sets were run at dose 1 alone, and all 12 are built from the Google fit, so how common that is among unrelated pushes stays open. The part cannot pick among adding the name, losing Qwen and a shared sentence frame.
+
+**[Part 173](results/part173/README.md)**, 2026-11-02. Every set from Part 171 on one dose ladder, both signs, on 44 new maker questions, with six new sets whose values use no fit. Three dense random-valued pushes made Qwen3.5-4B name Google on 22, 26 and 36 of 44 at |d| = 0.5, none broken, one sign per draw. They keep a picked set's layer profile, so this shows that naming Google needs neither the Google fit's values nor a picked neuron, under these policies, and not how often it happens. Picked neurons also led with names no random-valued set reached: `n3` Meta on 35 of 44, and `n1` Tencent on 27, the one lead predicted from an earlier part. Six sets are not a rate, so Part 174 takes a census.
+
+**[Part 174](results/part174/README.md)**, 2026-11-02. A census: 60 new random-valued draws at one dose, both signs, 40 keeping a picked set's layer profile and 20 flat, all screened against overlap with the Google fit. On Qwen3.5-4B, 28 of the 80 layer-matched signed directions led with Google and none with any other name, an exact one-sided 95% bound of 7.2% per draw. The Google counts run smoothly from 0 to 27, so the 35% says where a floor of 10 cuts a continuum. The 40 flat directions broke nearly every answer at this dose, so they say nothing yet about whether a flat push names Google when it is not breaking the model. Meta and Tencent, led by picked sets in Part 173, are still leads no random set has reached, which is a comparison, not a test.
+
+**[Part 175](results/part175/README.md)**, 2026-11-02. Part 174's 20 flat draws at lower doses, chosen by a written rule from four other draws. That rule picked 0.30, and there the census still broke: median 29.5 of 44 broken, 1 of 40 signed directions supported. At 0.225, three quarters of that dose, 27 of 40 were supported, all Google-led, with a median of 2 broken. That is the best of three doses on the same draws, so it is an in-sample maximum and a lead for new draws, not a test. At 0.15 it was 1 of 40. A band that narrow, just below breaking, is where a name could be a side effect of the breaking itself, and this part does not test that.
+
+**[Part 176](results/part176/README.md)**, 2026-11-02. Part 175's lead at 0.225 on 20 new draws, the same 44 prompts and five fixed doses. 30 of 40 signed directions were supported at 0.225, all Google-led, with a median of 1 broken. Support by dose was 20 or 21, 30, 20, 10 and 0 of 40, so 0.225 is a peak on this ladder and not a window one rung wide. In 22 of the 34 directions with any support, the top supported dose lies within 0.025 of where answers start to fail, and most of that is what a rung spacing of 0.025 gives alone. How much a direction names Google at 0.225 showed no detectable tie to where it fails (Spearman +0.02, interval -0.32 to +0.35), which excludes very little. Weaver's three predictions all failed. This does not settle whether the name is a side effect of breaking.
+
+**[Part 177](results/part177/README.md)**, 2026-11-02. A read of MIT's stored answers from their [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/) post; nothing was run here. Among 173 unedited Qwen3.5-0.8B traces that ran out of tokens while thinking, with the gold not in the problem text, 67 had a window a reader judged to state the gold answer as a result, against 0 for shuffled answers. Of the 66 of those with a detected loop onset, 49 stated it before the onset. 113 of the 115 traces with a literal gold hit had no extractable final answer. The measure is a string match plus a reader on up to three windows per trace, so it shows a value stated, which is not proof the model would have stopped. Of Weaver's three predictions, one is inconclusive and two failed.
+
+**[Part 178](results/part178/README.md)**, 2026-11-03. Sentence openers in thinking text, on 200 MATH-500 problems. `wait` ranked second in MIT's stored Qwen3.5-0.8B traces (86.22 per 1,000 openers) and tenth in our Qwen3.5-4B thinking runs (19.59; rank interval 7 to 11); all seven numbered predictions held on point estimates. Thinking against non-thinking, `wait` was 4.66 times as frequent on the 0.8B (held) and 1.96 times on the 4B (inconclusive), and the comparison is length-confounded: on capped rows alone the 4B ratio is 1.09. The generated sets were rerun with eager attention after the Arc's default bf16 kernel was found to decode Qwen3.5 wrongly past 64 keys (Amendment 1); eager bf16 is closer to a float32 reference but not identical to it.
 
 ### Running or designed (2026-10-21)
 
