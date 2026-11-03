@@ -216,6 +216,11 @@ class OrderedCpuSampler:
         logits = scores.detach().to(dtype=torch.float32)
         batch, vocab = logits.shape
         score_device = logits.device
+        self.calls = getattr(self, "calls", 0) + 1
+        if score_device.type == "xpu" and self.calls % 64 == 0:
+            # diag178c, 2026-11-02: releasing cached blocks every 64 steps held reserved memory at 3.8 GB against 5.2 GB
+            # at batch 64 on Qwen3.5-0.8B, with no measured speed cost. It changes no number.
+            torch.xpu.empty_cache()
         if batch != len(self.generators):
             raise ValueError("generate changed the sampler batch size")
         if self.seen_mask is None:
