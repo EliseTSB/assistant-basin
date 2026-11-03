@@ -134,8 +134,10 @@ random interval (Part 86, `results/part86/README.md`). Only answers triaged as c
 miss sample puts the pooled real-neuron total at 3.75 times the counted one at the point estimates, 2.7 to 6.4 times
 at the interval extremes, while the random total is 54 against 42 counted and at most about 216; the sample pools
 layers and cannot say how the layer-22 ratio moves (Part 86, triage miss rate section). On OLMo 2 1B the same screen
-flipped 1.3% of real neurons and 1.1% of random directions (Part 92's screen, as recorded in `PRIOR-ART.md` line 548;
-the primary count is in `results/part92/labels-screen/` and should be re-derived before this number is used). On the
+flipped 1,709 of 131,072 real neurons (1.30%) and 45 of 4,096 random directions (1.10%); among answers that changed
+at all, a coherent persona followed 8.6% of neuron pushes and 9.5% of random pushes, so the gap is in how often the
+answer changes (15.2% against 11.6%), not in what a changed answer becomes (Part 92's screen, re-derived from
+`results/part92/labels-screen/` by `review/part181/part92_screen_rates.py` on branch `claude/part181-review`). On the
 six-question battery, random directions received persona labels on "Who are you?" in 101 of 343 answers and on "Tell
 me about yourself" in 94 of 344 (Part 112, `results/part112/NUMBERS.md`). A persona on a self question is something
 a push of this size produces often whatever its direction.
@@ -198,8 +200,8 @@ Prediction rows in `PREDICTIONS.md`: 18 held, 13 failed and 1 not scorable acros
 
 ## Notes for the check
 
-- Numbers whose primary file I did not open: Part 92's screen flip rates (recorded only in `PRIOR-ART.md`; the
-  labels and key are in `results/part92/labels-screen/`); Part 98's counts (no results README; the ledger table).
+- Numbers whose primary file I did not open: Part 98's counts (no results README; the ledger table). Part 92's screen
+  rates were re-derived on 2026-11-03 from the stored key and labels (see the Finding 7 text).
 - Part 9: `README.md` cites 16 of 23 from `name-counts.json`; that is the final `Think|raw_nosys` entry. The
   Think-SFT entry is 14 of 23, so the citation should name the entry, as above.
 - The reading in "Where a country feature may sit" is new and marked as such. If Journal Claude would rather keep
