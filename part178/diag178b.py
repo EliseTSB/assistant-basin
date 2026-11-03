@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """diag178b.py: can the presence penalty and top-k run on the Arc? Times torch.topk(k=20) on random
-(batch, 248,320) logits on the XPU against the CPU path run178 uses, and checks both pick the same set.
+(batch, 248,320) logits on the XPU against the prior CPU reference path, and checks both pick the same set.
 Written by Claude (Opus 5.5), 2026-11-02, after diag178 put 57% of batch-64 time in the CPU sampler."""
 import json, time
 import torch

@@ -77,7 +77,7 @@ class FakeTokenizer:
         user_text = messages[-1]["content"]
         if enable_thinking:
             return f"{user_text}\nassistant<think>\n"
-        return f"{user_text}\nassistant<think></think>"
+        return f"{user_text}\nassistant<think>\n\n</think>\n\n"
 
 
 class DefinitionTests(unittest.TestCase):
@@ -112,14 +112,14 @@ class DefinitionTests(unittest.TestCase):
         self.assertEqual(words178.prefix(tokenizer=tokenizer, kept_ids=tokenizer("alpha beta")["input_ids"],
                                          limit=2), "alpha ")
 
-    def test_onset4k_ignores_repeats_past_prefix_and_censors_final_lines(self):
+    def test_onset2k_ignores_repeats_past_prefix_and_censors_final_lines(self):
         tokenizer = FakeTokenizer()
         repeated = "A sufficiently long repeated line for the onset rule.\n"
         text = repeated + " ".join(f"filler{i}" for i in range(5000)) + "\n" + repeated * 4
-        self.assertIsNone(words178.onset4k(text, tokenizer=tokenizer))
+        self.assertIsNone(words178.onset2k(text, tokenizer=tokenizer))
         early = "A sufficiently long repeated line for the onset rule.\n" * 4
         early += "".join(f"line {i}\n" for i in range(50))
-        self.assertEqual(words178.onset4k(early, tokenizer=tokenizer)["line_index"], 0)
+        self.assertEqual(words178.onset2k(early, tokenizer=tokenizer)["line_index"], 0)
 
     def test_onset_censor_adds_a_newline_before_padding_for_unterminated_prefix(self):
         tokenizer = FakeTokenizer()
@@ -133,16 +133,34 @@ class DefinitionTests(unittest.TestCase):
         self.assertIsNotNone(observed)
         self.assertEqual(observed["line_index"], 19)
 
-    def test_same_first_4096_tokens_produce_same_window_with_longer_tail(self):
+    def test_first_2048_token_prefix_produces_same_2000_token_window_with_longer_tail(self):
         tokenizer = FakeTokenizer()
-        common = "".join(f"Wait{i} " for i in range(4096))
-        left = words178.prefix(common, tokenizer=tokenizer, limit=4096)
+        common = "".join(f"Wait{i} " for i in range(1024))
+        left = words178.prefix(common, tokenizer=tokenizer, limit=2048)
         right = words178.prefix(common + "A sufficiently long repeated line.\n" * 8,
-                                 tokenizer=tokenizer, limit=4096)
-        one = words178.window(left, tokenizer=tokenizer, limit=4000)
-        two = words178.window(right, tokenizer=tokenizer, limit=4000)
+                                 tokenizer=tokenizer, limit=2048)
+        one = words178.window(left, tokenizer=tokenizer)
+        two = words178.window(right, tokenizer=tokenizer)
         self.assertEqual(one["text"], two["text"])
         self.assertEqual(one["token_exposure"], two["token_exposure"])
+        self.assertLessEqual(one["token_exposure"], 2000)
+
+    def test_real_qwen35_template_prompt_modes_when_local_files_load_on_cpu(self):
+        snapshot = Path("/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a")
+        template_path = snapshot / "chat_template.jinja"
+        tokenizer_path = snapshot / "tokenizer.json"
+        if not template_path.is_file() or not tokenizer_path.is_file():
+            self.skipTest(f"local Qwen3.5 template/tokenizer files are missing at {snapshot}")
+        try:
+            from transformers import AutoTokenizer
+            tokenizer = AutoTokenizer.from_pretrained(str(snapshot), local_files_only=True)
+            tokenizer.chat_template = template_path.read_text(encoding="utf-8")
+        except Exception as exc:
+            self.skipTest(f"local Qwen3.5 tokenizer could not load on CPU: {type(exc).__name__}: {exc}")
+        for thinking in (True, False):
+            with self.subTest(thinking=thinking):
+                result = run178._prompt_ids(tokenizer, "Synthetic prompt for template validation.", thinking)
+                self.assertTrue(result["prompt_mode_valid"])
 
     def test_window_reports_cut_reason_and_exposure(self):
         tokenizer = FakeTokenizer()
@@ -264,6 +282,37 @@ class SamplerTests(unittest.TestCase):
         many = run178.ordered_distribution(logits, [[0, 0, 0]], temperature=1, top_k=3, top_p=1)
         self.assertGreater(float(none[0, 0]), float(none[0, 1]))
         self.assertTrue(torch.equal(one, many))
+
+    def test_device_topk_distribution_matches_reference_cpu_path_without_ties(self):
+        import torch
+        logits = torch.linspace(3.25, -4.0, 64, dtype=torch.float32).reshape(2, 32)
+        generated = [[3, 11, 11], [0, 21]]
+        penalty, temperature, top_k, top_p = 1.5, 0.73, 20, 0.95
+        seen = torch.zeros_like(logits, dtype=torch.bool)
+        for row_index, ids in enumerate(generated):
+            seen[row_index, ids] = True
+
+        old_work = logits.clone() - penalty * seen.float()
+        old_work.div_(temperature)
+        old_values, old_indices = torch.topk(old_work, k=top_k, dim=-1, sorted=True)
+        old_probabilities = torch.softmax(old_values, dim=-1)
+        old_cumulative = old_probabilities.cumsum(dim=-1)
+        old_remove = old_cumulative - old_probabilities > top_p
+        old_remove[:, 0] = False
+        old_values = old_values.masked_fill(old_remove, float("-inf"))
+        old_probabilities = torch.softmax(old_values, dim=-1)
+        old_dense = torch.zeros_like(logits)
+        old_dense.scatter_(1, old_indices, old_probabilities)
+
+        observed = run178.ordered_distribution(logits, generated, presence_penalty=penalty,
+                                                temperature=temperature, top_k=top_k, top_p=top_p)
+        self.assertTrue(torch.allclose(observed, old_dense, rtol=1e-7, atol=1e-8))
+
+        processor = run178.OrderedCpuSampler(
+            [torch.Generator(device="cpu").manual_seed(1), torch.Generator(device="cpu").manual_seed(2)],
+            prompt_width=1, end_token_ids=[6], pad_token_id=0, top_k=top_k)
+        processor(torch.tensor([[1, 3], [1, 2]]), logits)
+        self.assertEqual(processor.seen_mask.device, logits.device)
 
     def test_row_draw_stream_is_independent_of_an_early_batch_mate(self):
         import torch
@@ -399,7 +448,9 @@ class GateAndIntegrationTests(unittest.TestCase):
         self.assertTrue(control["prompt_mode_valid"])
         open_id = tokenizer.convert_tokens_to_ids("<think>")
         close_id = tokenizer.convert_tokens_to_ids("</think>")
-        self.assertEqual(control["prompt_tail_ids"][-2:], [open_id, close_id])
+        newline_pair_id = tokenizer("\n\n")["input_ids"][0]
+        self.assertEqual(control["prompt_tail_ids"][-4:], [open_id, newline_pair_id,
+                                                           close_id, newline_pair_id])
 
         class MisleadingTemplate(FakeTokenizer):
             def apply_chat_template(self, messages, tokenize=False, add_generation_prompt=True, enable_thinking=True):
@@ -453,11 +504,49 @@ class GateAndIntegrationTests(unittest.TestCase):
             self.assertEqual([row["problem_id"] for row in run178._read_jsonl(path)],
                              ["complete-no-newline", "after"])
 
-    def test_pilot_plan_matches_registered_batch_sizes(self):
-        self.assertEqual(run178._pilot_plan("G:8,G:16,R8:16,N4:16,N8:16"),
-                         [("G", 8), ("G", 16), ("R8", 16), ("N4", 16), ("N8", 16)])
+    def test_pilot_plan_and_seed_varied_copies_match_registered_batch_sizes(self):
+        expected = [("R8", 64), ("N8", 64), ("G", 16), ("G", 32), ("N4", 32)]
+        self.assertEqual(run178._pilot_plan("R8:64,N8:64,G:16,G:32,N4:32"), expected)
+        rows = [{"problem_id": f"p{i}", "problem": f"Synthetic problem {i}"} for i in range(16)]
+        copies = run178._pilot_rows_for_batch(rows, 32)
+        self.assertEqual(len(copies), 32)
+        self.assertEqual(copies[0]["problem_id"], "p0::repeat-0")
+        self.assertEqual(copies[16]["problem_id"], "p0::repeat-1")
+        self.assertEqual(len({row["problem_id"] for row in copies}), 32)
 
-    def test_five_deliberate_copied_file_breaks_turn_tests_red(self):
+    def test_synthetic_pilot_streams_one_line_and_records_model_release(self):
+        import contextlib
+        import io
+        import torch
+        from transformers import Qwen3Config, Qwen3ForCausalLM
+
+        tokenizer = FakeTokenizer()
+        model = Qwen3ForCausalLM(Qwen3Config(
+            vocab_size=128, hidden_size=16, intermediate_size=32, num_hidden_layers=1,
+            num_attention_heads=2, num_key_value_heads=2, max_position_embeddings=128,
+            eos_token_id=6, pad_token_id=0, bos_token_id=1))
+        args = SimpleNamespace(pilot=True, plan="R8:16", device="cpu", problems=HERE / "problems178.json")
+        rows = [{"problem_id": f"p{i}", "problem": f"Synthetic pilot question {i}."} for i in range(16)]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            output = root / "pilot.jsonl"
+            stdout = io.StringIO()
+            with contextlib.redirect_stdout(stdout):
+                result = run178._run_pilot(args, lambda *_args: (tokenizer, model), {
+                    "problem_rows": rows, "pilot_root": root / "sets", "pilot_output": output,
+                    "max_new_tokens": 2,
+                })
+            lines = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+            printed = [json.loads(line) for line in stdout.getvalue().splitlines()]
+        self.assertEqual(len(result["results"]), 1)
+        self.assertEqual(len(printed), 1)
+        self.assertEqual(printed[0]["set"], "R8")
+        self.assertIn("peak_memory_allocated_bytes", printed[0])
+        self.assertEqual(lines[0]["batch"], 16)
+        self.assertEqual(lines[1]["event"], "model_release_check")
+        self.assertFalse(any(key in printed[0] for key in ("generated_text", "generated_ids", "problem")))
+
+    def test_six_deliberate_copied_file_breaks_turn_tests_red(self):
         onset_code = '''
 import sys
 sys.path.insert(0, ROOT)
@@ -486,6 +575,26 @@ result = follow_on({"p1": text}, [{"id":"k1", "problem_id":"p1", "condition":"re
                    [{"id":"k1", "label":"asserted"}], ["p1"], T(), reps=0)
 assert result["n_eligible"] == 0
 '''
+        prompt_code = '''
+import re, sys
+sys.path.insert(0, ROOT)
+from part178.run178 import _prompt_ids
+class T:
+    def __call__(self, text, add_special_tokens=False, **kwargs):
+        pieces = re.findall(r"<think>|</think>|.", str(text), re.S)
+        return {"input_ids": [1 if p == "<think>" else 2 if p == "</think>" else ord(p) + 3 for p in pieces]}
+    def decode(self, ids, **kwargs):
+        return "".join("<think>" if int(i) == 1 else "</think>" if int(i) == 2 else chr(int(i) - 3) for i in ids)
+    def convert_tokens_to_ids(self, token): return {"<think>": 1, "</think>": 2}.get(token, 0)
+    unk_token_id = 0
+    def apply_chat_template(self, *args, **kwargs): return "header<think>bad</think>tail"
+try:
+    _prompt_ids(T(), "synthetic question", False)
+except ValueError:
+    pass
+else:
+    raise AssertionError("invalid non-thinking prompt was accepted")
+'''
         cases = [
             ("opener skip list", "part178/words178.py", "[*_#>", "[_#>",
              "from part178 import words178; assert words178.gate2_results()['passed']"),
@@ -493,13 +602,16 @@ assert result["n_eligible"] == 0
              'pass  # removed separator', onset_code),
             ("follow-on exclusion", "part178/words178.py", "and not in_hit and", "and True and", follow_code),
             ("presence order", "part178/run178.py",
-             'work.sub_(seen_mask.to(device="cpu", dtype=torch.float32), alpha=float(presence_penalty))',
-             'work.sub_(seen_mask.to(device="cpu", dtype=torch.float32), alpha=0.0)',
+             'penalized = work - float(presence_penalty) * seen_mask.to(dtype=work.dtype)',
+             'penalized = work',
              "from part178 import run178; assert run178.gate4_sampler_fixtures()['passed']"),
             ("end-id stop", "part178/run178.py",
              "if int(token_id) in _normalise_end_ids(end_token_ids):",
              "if int(token_id) in _normalise_end_ids(end_token_ids)[1:]:",
              "from part178.run178 import completion_reason; assert completion_reason(248044, 1, 10, [248044, 248046]) == 'end-of-turn'"),
+            ("nonthinking prompt suffix", "part178/run178.py",
+             'valid = between == "\\n\\n" and after == "\\n\\n"',
+             "valid = True", prompt_code),
         ]
         results = []
         for name, relative, needle, replacement, code in cases:
@@ -514,10 +626,10 @@ assert result["n_eligible"] == 0
                 self.assertIn(needle, source, f"mutation anchor missing: {name}")
                 mutated = source.replace(needle, replacement, 1)
                 if name == "presence order":
-                    anchor = "top_values, top_indices = torch.topk(work, k=k, dim=-1, sorted=True)"
+                    anchor = "top_values, top_indices = torch.topk(penalized, k=k, dim=-1, sorted=True)"
                     self.assertIn(anchor, mutated)
-                    late_penalty = (anchor + "\n        top_values = top_values - "
-                                    "seen_mask.gather(1, top_indices).to(torch.float32) * float(presence_penalty)")
+                    late_penalty = (anchor + "\n        top_values = top_values - float(presence_penalty) * "
+                                    "seen_mask.gather(1, top_indices).to(dtype=top_values.dtype)")
                     mutated = mutated.replace(anchor, late_penalty, 1)
                 path.write_text(mutated, encoding="utf-8")
                 if "ROOT" in code:
@@ -528,7 +640,7 @@ assert result["n_eligible"] == 0
                                         text=True, capture_output=True, timeout=30)
                 results.append((name, result.returncode != 0))
         labels = ", ".join(f"{name}={'red' if killed else 'SURVIVED'}" for name, killed in results)
-        print(f"MUTANTS: {sum(killed for _name, killed in results)}/5 killed ({labels})")
+        print(f"MUTANTS: {sum(killed for _name, killed in results)}/6 killed ({labels})")
         self.assertTrue(all(killed for _name, killed in results), labels)
 
     def test_end_to_end_tiny_random_qwen3_run_writes_and_resumes(self):

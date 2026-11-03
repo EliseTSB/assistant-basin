@@ -28,18 +28,17 @@ MODEL_LARGE = "Qwen/Qwen3.5-4B"
 REVISION_SMALL = "2fc06364715b967f1860aea9cf38778875588b17"
 REVISION_LARGE = "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
 INSTRUCTION = "Please reason step by step, and put your final answer within \\boxed{}."
-CAP_THINK = 4096
-CAP_NOTHINK = 2048
+CAP_GENERATED = 2048
 TEMPERATURE = 0.6
 TOP_K = 20
 TOP_P = 0.95
 PRESENCE_PENALTY = 1.5
 QWEN_END_IDS = (248044, 248046)
 SET_SPECS = {
-    "G": {"model": MODEL_LARGE, "revision": REVISION_LARGE, "thinking": True, "max_new_tokens": CAP_THINK},
-    "R8": {"model": MODEL_SMALL, "revision": REVISION_SMALL, "thinking": True, "max_new_tokens": CAP_THINK},
-    "N4": {"model": MODEL_LARGE, "revision": REVISION_LARGE, "thinking": False, "max_new_tokens": CAP_NOTHINK},
-    "N8": {"model": MODEL_SMALL, "revision": REVISION_SMALL, "thinking": False, "max_new_tokens": CAP_NOTHINK},
+    "G": {"model": MODEL_LARGE, "revision": REVISION_LARGE, "thinking": True, "max_new_tokens": CAP_GENERATED},
+    "R8": {"model": MODEL_SMALL, "revision": REVISION_SMALL, "thinking": True, "max_new_tokens": CAP_GENERATED},
+    "N4": {"model": MODEL_LARGE, "revision": REVISION_LARGE, "thinking": False, "max_new_tokens": CAP_GENERATED},
+    "N8": {"model": MODEL_SMALL, "revision": REVISION_SMALL, "thinking": False, "max_new_tokens": CAP_GENERATED},
 }
 
 
@@ -71,10 +70,10 @@ def completion_reason(token_id, generated_count, max_new_tokens, end_token_ids):
 
 def ordered_distribution(logits, generated_ids, *, presence_penalty=PRESENCE_PENALTY,
                          temperature=TEMPERATURE, top_k=TOP_K, top_p=TOP_P):
-    """Apply generated-only penalty and ordered CPU filters, using a vectorised seen mask. (Gate 4)"""
+    """Apply penalty and top-k on the logits device; finish top-p and distribution on CPU. (Gate 4)"""
     import torch
 
-    work = logits.detach().to(device="cpu", dtype=torch.float32)
+    work = logits.detach().to(dtype=torch.float32)
     if work.ndim == 1:
         work = work.unsqueeze(0)
     if work.ndim != 2:
@@ -87,7 +86,7 @@ def ordered_distribution(logits, generated_ids, *, presence_penalty=PRESENCE_PEN
     rows = list(generated_ids)
     if len(rows) != work.shape[0]:
         raise ValueError("one generated-id list is required per logits row")
-    seen_mask = torch.zeros_like(work, dtype=torch.bool)
+    seen_mask = torch.zeros_like(work, dtype=torch.bool, device=work.device)
     row_indices = []
     token_indices = []
     for row_index, ids in enumerate(rows):
@@ -95,35 +94,45 @@ def ordered_distribution(logits, generated_ids, *, presence_penalty=PRESENCE_PEN
         row_indices.extend([row_index] * len(valid))
         token_indices.extend(valid)
     if token_indices:
-        seen_mask[row_indices, token_indices] = True
-    return _distribution_from_seen_mask(work, seen_mask, presence_penalty, temperature, top_k, top_p)
+        seen_rows = torch.tensor(row_indices, dtype=torch.long, device=work.device)
+        seen_tokens = torch.tensor(token_indices, dtype=torch.long, device=work.device)
+        seen_mask[seen_rows, seen_tokens] = True
+    top_indices, top_probabilities = _filtered_topk_from_seen_mask(
+        work, seen_mask, presence_penalty, temperature, top_k, top_p)
+    probabilities = torch.zeros((work.shape[0], work.shape[1]), dtype=torch.float32, device="cpu")
+    probabilities.scatter_(1, top_indices, top_probabilities)
+    return probabilities
 
 
-def _distribution_from_seen_mask(logits, seen_mask, presence_penalty, temperature, top_k, top_p):
-    """Return dense probabilities after vectorised seen subtraction and top-k-first filtering."""
+def _filtered_topk_from_seen_mask(logits, seen_mask, presence_penalty, temperature, top_k, top_p):
+    """Return CPU ids and probabilities for survivors after device-side penalty and top-k."""
     import torch
 
-    work = logits.detach().to(device="cpu", dtype=torch.float32).clone()
+    work = logits.detach().to(dtype=torch.float32)
     if work.ndim == 1:
         work = work.unsqueeze(0)
-    if work.ndim != 2 or tuple(seen_mask.shape) != tuple(work.shape):
+    if work.ndim != 2 or tuple(seen_mask.shape) != tuple(work.shape) or seen_mask.device != work.device:
         raise ValueError("seen mask must match [batch, vocabulary] logits")
     finite = torch.isfinite(work).all(dim=1)
     if not bool(finite.all()):
         raise NonFiniteLogitsError((~finite).nonzero(as_tuple=False).flatten().tolist())
     if float(temperature) <= 0:
         raise ValueError("temperature must be positive")
-    work.sub_(seen_mask.to(device="cpu", dtype=torch.float32), alpha=float(presence_penalty))
-    work.div_(float(temperature))
+    # The 20th-place tie may be broken differently by CPU and XPU topk implementations.
+    # Positive temperature scaling preserves order, so top-k can precede the CPU temperature step.
+    penalized = work - float(presence_penalty) * seen_mask.to(dtype=work.dtype)
     k = int(top_k)
     if k < 0:
         raise ValueError("top_k cannot be negative")
     k = min(k, int(work.shape[1]))
     if k:
-        top_values, top_indices = torch.topk(work, k=k, dim=-1, sorted=True)
+        top_values, top_indices = torch.topk(penalized, k=k, dim=-1, sorted=True)
     else:
-        # The registered run uses top-k 20. This branch preserves the helper's top-k=0 API.
-        top_values, top_indices = torch.sort(work, descending=True, dim=-1)
+        # The registered run uses top-k 20; zero preserves the helper's unbounded-top-k API.
+        top_values, top_indices = torch.sort(penalized, descending=True, dim=-1)
+    # Only the (batch, k) survivors cross to CPU; temperature and top-p follow there.
+    top_values = top_values.to(device="cpu", dtype=torch.float32) / float(temperature)
+    top_indices = top_indices.to(device="cpu", dtype=torch.long)
     if not 0.0 < float(top_p) <= 1.0:
         raise ValueError("top_p must be in (0, 1]")
     if float(top_p) < 1.0:
@@ -133,10 +142,26 @@ def _distribution_from_seen_mask(logits, seen_mask, presence_penalty, temperatur
         remove[:, 0] = False
         top_values = top_values.masked_fill(remove, float("-inf"))
     top_probabilities = torch.softmax(top_values, dim=-1)
-    probabilities = torch.zeros_like(work)
-    probabilities.scatter_(1, top_indices, top_probabilities)
-    if not bool(torch.isfinite(probabilities).all()):
+    if not bool(torch.isfinite(top_probabilities).all()):
         raise FloatingPointError("non-finite probabilities after ordered CPU sampling filters")
+    # Dense CPU sampling accumulates in token-id order; sort survivors to preserve that draw order.
+    vocabulary_order = torch.argsort(top_indices, dim=-1)
+    top_indices = top_indices.gather(1, vocabulary_order)
+    top_probabilities = top_probabilities.gather(1, vocabulary_order)
+    return top_indices, top_probabilities
+
+
+def _distribution_from_seen_mask(logits, seen_mask, presence_penalty, temperature, top_k, top_p):
+    """Return dense CPU probabilities for fixtures and distribution comparisons."""
+    import torch
+
+    work = logits.detach().to(dtype=torch.float32)
+    if work.ndim == 1:
+        work = work.unsqueeze(0)
+    indices, survivor_probabilities = _filtered_topk_from_seen_mask(
+        work, seen_mask, presence_penalty, temperature, top_k, top_p)
+    probabilities = torch.zeros((work.shape[0], work.shape[1]), dtype=torch.float32, device="cpu")
+    probabilities.scatter_(1, indices, survivor_probabilities)
     return probabilities
 
 
@@ -188,25 +213,28 @@ class OrderedCpuSampler:
     def __call__(self, input_ids, scores):
         import torch
 
-        logits = scores.detach().to(device="cpu", dtype=torch.float32)
+        logits = scores.detach().to(dtype=torch.float32)
         batch, vocab = logits.shape
+        score_device = logits.device
         if batch != len(self.generators):
             raise ValueError("generate changed the sampler batch size")
         if self.seen_mask is None:
-            self.seen_mask = torch.zeros((batch, vocab), dtype=torch.bool, device="cpu")
+            self.seen_mask = torch.zeros((batch, vocab), dtype=torch.bool, device=score_device)
             self.finished = torch.zeros(batch, dtype=torch.bool, device="cpu")
-        elif tuple(self.seen_mask.shape) != (batch, vocab):
+        elif tuple(self.seen_mask.shape) != (batch, vocab) or self.seen_mask.device != score_device:
             raise ValueError("generate changed the sampler vocabulary shape")
+        active = ~self.finished
         if int(input_ids.shape[1]) > self.prompt_width:
-            last = input_ids[:, -1].detach().to(device="cpu", dtype=torch.long)
-            rows = torch.arange(batch, device="cpu")
-            active = ~self.finished
-            valid = active & (last >= 0) & (last < vocab)
-            self.seen_mask[rows[valid], last[valid]] = True
+            last_on_device = input_ids[:, -1].detach().to(device=score_device, dtype=torch.long)
+            rows = torch.arange(batch, device=score_device)
+            active_on_device = (~self.finished).to(device=score_device)
+            valid = active_on_device & (last_on_device >= 0) & (last_on_device < vocab)
+            self.seen_mask[rows[valid], last_on_device[valid]] = True
             if self.end_token_ids:
-                ended = active & torch.isin(last, torch.tensor(self.end_token_ids, dtype=torch.long))
-                self.finished |= ended
-        probabilities = _distribution_from_seen_mask(
+                end_ids = torch.tensor(self.end_token_ids, dtype=torch.long, device=score_device)
+                ended = active_on_device & torch.isin(last_on_device, end_ids)
+                self.finished |= ended.to(device="cpu")
+        survivor_ids, probabilities = _filtered_topk_from_seen_mask(
             logits, self.seen_mask, self.presence_penalty, self.temperature, self.top_k, self.top_p)
         uniforms = torch.zeros(batch, dtype=torch.float32, device="cpu")
         active = ~self.finished
@@ -217,7 +245,9 @@ class OrderedCpuSampler:
             uniforms[active_indices] = drawn
         chosen = torch.full((batch,), self.pad_token_id, dtype=torch.long, device="cpu")
         if active_indices:
-            chosen[active_indices] = _inverse_cdf_dense(probabilities[active_indices], uniforms[active_indices])
+            survivor_columns = _inverse_cdf_dense(probabilities[active_indices], uniforms[active_indices])
+            chosen[active_indices] = survivor_ids[active_indices].gather(
+                1, survivor_columns.reshape(-1, 1)).squeeze(1)
         self.last_uniforms = uniforms.clone()
         self.last_tokens = chosen.clone()
         result = torch.full_like(scores, float("-inf"))
@@ -296,7 +326,15 @@ def _prompt_ids(tokenizer, problem, thinking):
             # Qwen's thinking prompt is the open-tag token followed only by its newline.
             valid = _decode_ids(tokenizer, suffix) == "\n"
     else:
-        valid = bool(open_id is not None and close_id is not None and ids[-2:] == [open_id, close_id])
+        valid = False
+        if open_id is not None and close_id is not None and open_positions:
+            last_open = open_positions[-1]
+            closes_after_open = [position for position in close_positions if position > last_open]
+            if len(closes_after_open) == 1:
+                close_position = closes_after_open[0]
+                between = _decode_ids(tokenizer, ids[last_open + 1:close_position])
+                after = _decode_ids(tokenizer, ids[close_position + 1:])
+                valid = between == "\n\n" and after == "\n\n"
     payload = {"prompt_ids": ids, "prompt_ids_sha256": hashlib.sha256(
                     json.dumps(ids, separators=(",", ":")).encode("utf-8")).hexdigest(),
                "prompt_ids_len": len(ids), "prompt_tail_ids": ids[-16:],
@@ -629,6 +667,38 @@ def _peak_memory(model):
     return None
 
 
+def _pilot_memory(device):
+    """Read the XPU peaks and current reserved bytes for one pilot measurement."""
+    if not str(device).startswith("xpu"):
+        return {"peak_memory_allocated_bytes": None, "memory_reserved_bytes": None,
+                "peak_memory_reserved_bytes": None}
+    try:
+        import torch
+        values = {}
+        for field, getter in (("peak_memory_allocated_bytes", torch.xpu.max_memory_allocated),
+                              ("memory_reserved_bytes", torch.xpu.memory_reserved),
+                              ("peak_memory_reserved_bytes", getattr(torch.xpu, "max_memory_reserved", None))):
+            try:
+                values[field] = int(getter()) if getter is not None else None
+            except Exception:
+                values[field] = None
+        return values
+    except Exception:
+        return {"peak_memory_allocated_bytes": None, "memory_reserved_bytes": None,
+                "peak_memory_reserved_bytes": None}
+
+
+def _xpu_free_bytes(device):
+    if not str(device).startswith("xpu"):
+        return None
+    try:
+        import torch
+        free, _total = torch.xpu.mem_get_info()
+        return int(free)
+    except Exception:
+        return None
+
+
 def _load_problem_rows(path, pilot=False):
     path = Path(path)
     if not path.is_file():
@@ -653,6 +723,24 @@ def _pilot_plan(value):
     if not plan:
         raise ValueError("pilot plan must contain at least one SET:BATCH item")
     return plan
+
+
+def _pilot_rows_for_batch(rows, batch_size):
+    """Fill a pilot batch with copies whose repeat index changes each row seed."""
+    rows = list(rows)
+    if not rows:
+        raise ValueError("pilot rows cannot be empty")
+    expanded = []
+    for index in range(int(batch_size)):
+        source = rows[index % len(rows)]
+        repeat_index = index // len(rows)
+        row = dict(source)
+        original_id = str(source.get("problem_id", source.get("id", "")))
+        if not original_id:
+            raise ValueError("pilot row has no problem_id")
+        row["problem_id"] = f"{original_id}::repeat-{repeat_index}"
+        expanded.append(row)
+    return expanded
 
 
 def _greedy_batch_check(model, tokenizer, states, prompt_width, device, pad_id):
@@ -685,20 +773,26 @@ def _clear_device_cache(device):
 
 
 def _run_pilot(args, loader, config):
-    pilot_root = ROOT / "results" / "part178" / "pilot"
+    pilot_root = Path(config.get("pilot_root", ROOT / "results" / "part178" / "pilot"))
+    pilot_output = Path(config.get("pilot_output", pilot_root / "pilot.jsonl"))
+    pilot_output.parent.mkdir(parents=True, exist_ok=True)
+    pilot_output.write_text("", encoding="utf-8")
     rows = list(config.get("problem_rows") or _load_problem_rows(args.problems, pilot=True))[:16]
     if len(rows) != 16:
         raise ValueError(f"pilot requires 16 held-out rows, found {len(rows)}")
-    plan = _pilot_plan(getattr(args, "plan", "G:8,G:16,R8:16,N4:16,N8:16"))
+    plan = _pilot_plan(getattr(args, "plan", "R8:64,N8:64,G:16,G:32,N4:32"))
     by_set = {}
     for set_name, batch_size in plan:
         by_set.setdefault(set_name, []).append(batch_size)
     results = []
     stop_required = False
-    for set_name in (name for name in SET_SPECS if name in by_set):
+    for set_name in by_set:
         spec = dict(SET_SPECS[set_name])
+        if "max_new_tokens" in config:
+            spec["max_new_tokens"] = int(config["max_new_tokens"])
         tokenizer, model = loader(spec["model"], spec["revision"], args.device) if loader else \
             load_direct(spec["model"], spec["revision"], args.device)
+        states = []
         try:
             import torch
             if hasattr(tokenizer, "padding_side"):
@@ -707,7 +801,6 @@ def _run_pilot(args, loader, config):
             if pad_id is None:
                 pad_id = getattr(tokenizer, "eos_token_id", 0)
             _generation_config, end_ids = _generation_config_and_eos(model, tokenizer, int(pad_id))
-            states = []
             for row in rows:
                 problem_id = str(row.get("problem_id", row.get("id", "")))
                 mode = _prompt_ids(tokenizer, str(row["problem"]), bool(spec["thinking"]))
@@ -720,11 +813,14 @@ def _run_pilot(args, loader, config):
             prompt_width = max(len(state["prompt_ids"]) for state in states)
             for batch_size in by_set[set_name]:
                 path = pilot_root / f"{set_name}-batch{batch_size}.jsonl"
-                run_result = run_set(set_name, rows, path, batch_size, tokenizer=tokenizer,
+                if str(args.device).startswith("xpu"):
+                    torch.xpu.reset_peak_memory_stats()
+                batch_rows = _pilot_rows_for_batch(rows, batch_size)
+                run_result = run_set(set_name, batch_rows, path, batch_size, tokenizer=tokenizer,
                                      model=model, spec=spec, device=args.device)
                 result = {"set": set_name, "batch": batch_size,
                           "tokens_per_second": run_result.get("tokens_per_second"),
-                          "peak_memory_bytes": run_result.get("peak_memory_bytes"),
+                          **_pilot_memory(args.device),
                           "mode_validity": run_result.get("mode_validity"),
                           "empty_thinking_share": run_result.get("empty_thinking_share"),
                           "thinking_empty": bool(spec["thinking"] and
@@ -734,14 +830,36 @@ def _run_pilot(args, loader, config):
                     result["batch_check"] = _greedy_batch_check(
                         model, tokenizer, states, prompt_width, args.device, pad_id)
                 results.append(result)
+                line = json.dumps(result, ensure_ascii=True, allow_nan=False)
+                _write_batch(pilot_output, [result])
+                print(line, flush=True)
                 if set_name == "G" and result["thinking_empty"]:
                     stop_required = True
                     break
             if stop_required:
-                break
+                # Still release and verify the current model before returning.
+                pass
         finally:
+            free_before = _xpu_free_bytes(args.device)
+            del states
             del model
+            del tokenizer
             _clear_device_cache(args.device)
+            free_after = _xpu_free_bytes(args.device)
+            release = {"event": "model_release_check", "set": set_name,
+                       "device_free_before_bytes": free_before,
+                       "device_free_after_bytes": free_after,
+                       "released_bytes": (free_after - free_before)
+                       if free_before is not None and free_after is not None else None,
+                       "supported": free_before is not None and free_after is not None}
+            release["passed"] = bool(release["supported"] and free_after > free_before)
+            if not release["supported"]:
+                release["reason"] = "device memory check requires an XPU run"
+            _write_batch(pilot_output, [release])
+            if release["supported"] and not release["passed"]:
+                raise RuntimeError(f"XPU model memory was not released after pilot set {set_name}")
+        if stop_required:
+            break
     return {"pilot": True, "stop_required": stop_required, "results": results}
 
 
@@ -768,8 +886,8 @@ def main(argv=None):
     parser.add_argument("--out", type=Path, default=ROOT / "results" / "part178")
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--pilot", action="store_true")
-    parser.add_argument("--plan", default="G:8,G:16,R8:16,N4:16,N8:16",
-                        help="pilot plan, for example G:8,G:16,R8:16,N4:16,N8:16")
+    parser.add_argument("--plan", default="R8:64,N8:64,G:16,G:32,N4:32",
+                        help="pilot plan, for example R8:64,N8:64,G:16,G:32,N4:32")
     parser.add_argument("--device", default="xpu")
     parser.add_argument("--problems", type=Path, default=HERE / "problems178.json")
     args = parser.parse_args(argv)
@@ -777,12 +895,8 @@ def main(argv=None):
         parser.error("--set is required unless --pilot is used")
     result = run(args)
     if args.pilot:
-        # No generated text or token ids are printed by the pilot.
-        for row in result["results"]:
-            print(json.dumps({key: row.get(key) for key in
-                              ("set", "batch", "tokens_per_second", "peak_memory_bytes", "mode_validity",
-                               "empty_thinking_share", "thinking_empty", "batch_check")},
-                             ensure_ascii=True, allow_nan=False), flush=True)
+        # Each summary line was printed and synced to pilot.jsonl as its set finished.
+        pass
     else:
         print(json.dumps({key: result.get(key) for key in
                           ("set", "written", "resumed", "tokens", "tokens_per_second", "mode_validity")},

@@ -200,7 +200,7 @@ def _new_trace(row, tokenizer, set_name):
         thinking = words178.thinking_text(raw)
     prefix_ids = thinking_ids[:words178.PREFIX_TOKENS] if kept_ids else None
     prefix_text = _decode(tokenizer, prefix_ids) if prefix_ids is not None else words178.prefix(thinking, tokenizer=tokenizer)
-    onset = words178.onset4k(prefix_text, tokenizer=tokenizer, kept_ids=prefix_ids)
+    onset = words178.onset2k(prefix_text, tokenizer=tokenizer, kept_ids=prefix_ids)
     finish_reason = row.get("finish_reason")
     if close_found:
         window_reason = "think-close"
@@ -211,13 +211,8 @@ def _new_trace(row, tokenizer, set_name):
     else:
         window_reason = finish_reason or "end-of-turn"
     base_window = words178.window(prefix_text, tokenizer=tokenizer, token_ids=prefix_ids,
-                                  onset=onset, end_reason=window_reason, limit=4000)
+                                  onset=onset, end_reason=window_reason)
     base_uncut = words178.uncut(prefix_text, tokenizer=tokenizer, token_ids=prefix_ids,
-                                end_reason=window_reason, limit=4000)
-    mode = words178.mode_window(thinking if bool(row.get("thinking")) else raw,
-                                tokenizer=tokenizer,
-                                token_ids=(thinking_ids if bool(row.get("thinking")) else source_ids)
-                                if kept_ids else None,
                                 end_reason=window_reason)
     full_text = raw
     if not kept_ids:
@@ -241,17 +236,18 @@ def _new_trace(row, tokenizer, set_name):
     window_counts = Counter(words178.openers(base_window["text"]))
     uncut_counts = Counter(words178.openers(base_uncut["text"]))
     paragraph_counts = Counter(words178.paragraph_openers(base_window["text"]))
-    mode_counts = Counter(words178.openers(mode["text"]))
+    # Mode ratios use this same onset-cut window; there is no separate mode window.
+    mode_counts = window_counts
     paragraph_exposure = sum(paragraph_counts.values())
     return {"problem_id": str(row.get("problem_id", row.get("id", ""))), "set": set_name,
             "text": full_text, "thinking_text": thinking, "thinking_ids": thinking_ids if kept_ids else None,
             "token_ids": source_ids if kept_ids else None, "window": base_window, "uncut": base_uncut,
-            "mode_window": mode, "opener_counts": dict(window_counts), "opener_exposure": sum(window_counts.values()),
+            "opener_counts": dict(window_counts), "opener_exposure": sum(window_counts.values()),
             "token_exposure": base_window["token_exposure"], "uncut_opener_counts": dict(uncut_counts),
             "uncut_opener_exposure": sum(uncut_counts.values()), "uncut_token_exposure": base_uncut["token_exposure"],
             "paragraph_counts": dict(paragraph_counts), "paragraph_exposure": paragraph_exposure,
             "mode_counts": dict(mode_counts), "mode_opener_exposure": sum(mode_counts.values()),
-            "mode_token_exposure": mode["token_exposure"], "onset4k": onset,
+            "mode_token_exposure": base_window["token_exposure"], "onset2k": onset,
             "full_text_onset": full_onset, "end_reason": base_window["end_reason"],
             "full_end_reason": full_reason, "generated": set_name in GENERATED_SETS,
             "reconstructed": set_name in ("U", "E")}
@@ -917,7 +913,7 @@ def score(out_dir=DEFAULT_OUT, inputs_dir=DEFAULT_INPUTS, part177_dir=DEFAULT_PA
                    "problem_source": problem_payload["source"], "sets": visible_metrics,
                    "gates": gates, "target_T_ids": targets,
                    "trace_results": [{key: value for key, value in row.items()
-                                      if key not in ("text", "thinking_text", "thinking_ids", "token_ids", "window", "uncut", "mode_window")}
+                                      if key not in ("text", "thinking_text", "thinking_ids", "token_ids", "window", "uncut")}
                                      for name in SET_ORDER for row in trace_sets[name]],
                    "counts": {name: {"traces": len(trace_sets[name]),
                                      "window_tokens": sum(row["token_exposure"] for row in trace_sets[name]),
@@ -926,7 +922,8 @@ def score(out_dir=DEFAULT_OUT, inputs_dir=DEFAULT_INPUTS, part177_dir=DEFAULT_PA
                    "assumptions": {"stored_text_ids": "reconstructed with Part 177's pinned tokenizer",
                                    "generated_text_ids": "kept generated ids",
                                    "mode_ratio_pairs": {"0.8B": "R8 over N8", "4B": "G over N4"},
-                                   "mode_window": "first 2000 tokens, onset from first 2048, last 40 lines censored"}}
+                                   "window": "first 2000 tokens from a 2048-token prefix, cut at onset2k; the same window supplies mode ratios",
+                                   "uncut": "first 2000 tokens from the same 2048-token prefix, without an onset cut"}}
     predictions = _make_predictions(read_result, metrics, ratios, followon, w2, gates, reps, seed)
     for family in ("window", "uncut", "paragraph", "mode"):
         for table in metrics[family].values():

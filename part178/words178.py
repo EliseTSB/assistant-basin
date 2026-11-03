@@ -17,8 +17,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))  # python -I leaves script folders off sys.path
 from part177 import read177  # noqa: E402
 
-PREFIX_TOKENS = 4096
-WINDOW_TOKENS = 4000
+PREFIX_TOKENS = 2048
+WINDOW_TOKENS = 2000
 ONSET_CENSOR_LINES = 40
 IMPORTED_LIST = (
     "wait", "alternatively", "hmm", "but", "however", "alternative", "another", "check",
@@ -349,8 +349,8 @@ def onset_prefix(text: str, *, tokenizer=None, kept_ids=None, token_limit=PREFIX
     return found
 
 
-def onset4k(text: str, *, tokenizer=None, kept_ids=None):
-    """Part 177 line rule on exactly the first 4096 tokens, censoring its last 40 lines. (Definitions)"""
+def onset2k(text: str, *, tokenizer=None, kept_ids=None):
+    """Part 177 line rule on the first 2048 tokens, censoring its last 40 lines. (Definitions)"""
     return onset_prefix(text, tokenizer=tokenizer, kept_ids=kept_ids,
                         token_limit=PREFIX_TOKENS, censor_lines=ONSET_CENSOR_LINES)
 
@@ -388,7 +388,7 @@ def _window(text: str, offsets, *, onset=None, end_reason=None, limit=WINDOW_TOK
 
 def window(text: str, *, tokenizer=None, token_ids=None, onset=None, end_reason=None,
            limit=WINDOW_TOKENS, end_token_id=None, prefix_limit=PREFIX_TOKENS):
-    """First 4000 prefix tokens, cut at onset or the first recorded ending, with exposure. (Definitions)"""
+    """First 2000 prefix tokens, cut at onset2k or the first recorded ending. (Definitions)"""
     if token_ids is not None:
         ids = list(map(int, token_ids))
         value = _decode(tokenizer, ids) if tokenizer is not None else str(text or "")
@@ -418,27 +418,10 @@ def window(text: str, *, tokenizer=None, token_ids=None, onset=None, end_reason=
 
 def uncut(text: str, *, tokenizer=None, token_ids=None, end_reason=None,
           limit=WINDOW_TOKENS, end_token_id=None, prefix_limit=PREFIX_TOKENS):
-    """Sensitivity window with the same 4000-token exposure but no onset boundary. (Definitions)"""
+    """First 2000 prefix tokens without an onset boundary, reported as a sensitivity. (Definitions)"""
     return window(text, tokenizer=tokenizer, token_ids=token_ids, onset=None,
                   end_reason=end_reason, limit=limit, end_token_id=end_token_id,
                   prefix_limit=prefix_limit)
-
-
-def mode_window(text: str, *, tokenizer=None, token_ids=None, end_reason=None,
-                limit=2000, end_token_id=None):
-    """First 2000 tokens; cut at onset from its first 2048 with the final 40 lines censored. (Definitions)"""
-    if token_ids is not None:
-        ids = list(map(int, token_ids))[:2048]
-        value = _decode(tokenizer, ids) if tokenizer is not None else str(text or "")
-        onset = onset_prefix(value, tokenizer=tokenizer, kept_ids=ids, token_limit=2048)
-        use_ids = ids
-    else:
-        value = str(text or "")
-        onset = onset_prefix(value, tokenizer=tokenizer, token_limit=2048)
-        use_ids = None
-    return window(value, tokenizer=tokenizer, token_ids=use_ids, onset=onset,
-                  end_reason=end_reason, limit=limit, end_token_id=end_token_id,
-                  prefix_limit=2048)
 
 
 def rate(word: str, traces, *, denominator="opener_exposure", field="opener_counts", reps=2000, seed=178):
@@ -658,6 +641,6 @@ def gate2_results():
 
 
 __all__ = ["PREFIX_TOKENS", "WINDOW_TOKENS", "IMPORTED_LIST", "REFLECTION_FAMILY", "thinking_text", "prefix",
-           "token_offsets", "onset4k", "onset_prefix", "window", "uncut", "mode_window", "opener_spans", "openers", "paragraph_opener_spans",
+           "token_offsets", "onset2k", "onset_prefix", "window", "uncut", "opener_spans", "openers", "paragraph_opener_spans",
            "paragraph_openers", "rate", "ranking", "traces", "mode_ratio", "token_list", "follow_on",
            "imported_list", "reflection_family", "freeze_gate2_fixtures", "gate2_results"]
