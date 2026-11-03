@@ -1,0 +1,1919 @@
+{
+ "program": "parity",
+ "n_examples": 2046,
+ "n_units": 9,
+ "n_heads": 1,
+ "n_params": 174,
+ "clean_acc": 1.0,
+ "frac_positions_top_logit_tie": 0.0,
+ "tie_by_answer_pos": [
+  0.0
+ ],
+ "attn_mean_pattern": {
+  "L0": [
+   [
+    [
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091,
+     0.091
+    ]
+   ]
+  ]
+ },
+ "units": [
+  {
+   "unit": "L0.u0",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 9.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111101111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "0101111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1100111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0011111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_111111110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "_111111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "_111111011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    }
+   ],
+   "frac_active": 0.968230664730072,
+   "max_act": 9.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.5048875855327468,
+   "ablate_n_wrong": 1013,
+   "unembed": {
+    "0": 20.0,
+    "1": -20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "0",
+   "unembed_bottom": "1",
+   "attr_mean": -0.08797653764486313,
+   "exact_mean": -0.08797653764486313,
+   "attr_vs_exact_corr_instances": 0.9999999999999998,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.968230664730072,
+   "frac_instances_attr_nonzero": 0.968230664730072
+  },
+  {
+   "unit": "L0.u1",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 8.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1111010111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_011111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "1110011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_101111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "1001111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110101111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110110111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.8875855207443237,
+   "max_act": 8.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 0.9999999999999999,
+   "ablate_acc": 0.5268817204301075,
+   "ablate_n_wrong": 968,
+   "unembed": {
+    "0": -20.0,
+    "1": 20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "1",
+   "unembed_bottom": "0",
+   "attr_mean": -0.3519061505794525,
+   "exact_mean": -0.3519061505794525,
+   "attr_vs_exact_corr_instances": 1.0,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.8875855207443237,
+   "frac_instances_attr_nonzero": 0.8875855207443237
+  },
+  {
+   "unit": "L0.u2",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 7.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1011111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1011111110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0111111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "__11111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 8
+    },
+    {
+     "prompt": "1100111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101101111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.7262952327728271,
+   "max_act": 7.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.5855327468230694,
+   "ablate_n_wrong": 848,
+   "unembed": {
+    "0": 20.0,
+    "1": -20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "0",
+   "unembed_bottom": "1",
+   "attr_mean": -0.8211143612861633,
+   "exact_mean": -0.8211143612861633,
+   "attr_vs_exact_corr_instances": 1.0,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.7262952327728271,
+   "frac_instances_attr_nonzero": 0.7262952327728271
+  },
+  {
+   "unit": "L0.u3",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 6.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0111110111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_011111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "0101111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_111111110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "0111101111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_111111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    }
+   ],
+   "frac_active": 0.5004887580871582,
+   "max_act": 6.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.6881720430107527,
+   "ablate_n_wrong": 638,
+   "unembed": {
+    "0": -20.0,
+    "1": 20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "1",
+   "unembed_bottom": "0",
+   "attr_mean": -1.2316715717315674,
+   "exact_mean": -1.2316715717315674,
+   "attr_vs_exact_corr_instances": 0.9999999999999999,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.5004887580871582,
+   "frac_instances_attr_nonzero": 0.5004887580871582
+  },
+  {
+   "unit": "L0.u4",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 5.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0110111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1010111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1100111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_111011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "1101110111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_110111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "1101111011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.27468231320381165,
+   "max_act": 5.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 0.9999999999999999,
+   "ablate_acc": 0.8113391984359726,
+   "ablate_n_wrong": 386,
+   "unembed": {
+    "0": 20.0,
+    "1": -20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "0",
+   "unembed_bottom": "1",
+   "attr_mean": -1.2316715717315674,
+   "exact_mean": -1.2316715717315674,
+   "attr_vs_exact_corr_instances": 1.0,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.27468231320381165,
+   "frac_instances_attr_nonzero": 0.27468231320381165
+  },
+  {
+   "unit": "L0.u5",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 4.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1011110111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1011111011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1011111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1011111110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1100111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101101111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.11339198797941208,
+   "max_act": 4.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.9139784946236559,
+   "ablate_n_wrong": 176,
+   "unembed": {
+    "0": -20.0,
+    "1": 20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "1",
+   "unembed_bottom": "0",
+   "attr_mean": -0.8211143612861633,
+   "exact_mean": -0.8211143612861633,
+   "attr_vs_exact_corr_instances": 1.0,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.11339198797941208,
+   "frac_instances_attr_nonzero": 0.11339198797941208
+  },
+  {
+   "unit": "L0.u6",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 3.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1110111011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110110111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110111101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1110111110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "_111011111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 9
+    },
+    {
+     "prompt": "1010111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "__11111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 8
+    },
+    {
+     "prompt": "1011101111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 8,
+     "parity": 0,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.032746821641922,
+   "max_act": 3.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.9726295210166178,
+   "ablate_n_wrong": 56,
+   "unembed": {
+    "0": 20.0,
+    "1": -20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "0",
+   "unembed_bottom": "1",
+   "attr_mean": -0.3519061505794525,
+   "exact_mean": -0.3519061505794525,
+   "attr_vs_exact_corr_instances": 1.0,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.032746821641922,
+   "frac_instances_attr_nonzero": 0.032746821641922
+  },
+  {
+   "unit": "L0.u7",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 2.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "1101111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111101111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1011111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1110111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111110111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "_111111111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 9
+    },
+    {
+     "prompt": "1111111011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "1111111110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 9,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010000=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 3,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010001=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101001111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101010010=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101011011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101010011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101001110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010100=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.005865102633833885,
+   "max_act": 2.0,
+   "top20_shared": {
+    "ans_pos": 0
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.9946236559139785,
+   "ablate_n_wrong": 11,
+   "unembed": {
+    "0": -20.0,
+    "1": 20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "1",
+   "unembed_bottom": "0",
+   "attr_mean": -0.08797653764486313,
+   "exact_mean": -0.08797653764486313,
+   "attr_vs_exact_corr_instances": 0.9999999999999999,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.005865102633833885,
+   "frac_instances_attr_nonzero": 0.005865102633833885
+  },
+  {
+   "unit": "L0.u8",
+   "top20": [
+    {
+     "prompt": "1111111111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 1.0,
+     "N1": 10,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101010001=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101011111=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 7,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010010=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101010011=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010100=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101010101=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101011000=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 4,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101011001=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101011010=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101011011=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101011100=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101011101=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101011110=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101000001=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 3,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101010000=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 3,
+     "parity": 1,
+     "len": 10
+    },
+    {
+     "prompt": "0101001111=",
+     "answer": "0",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 6,
+     "parity": 0,
+     "len": 10
+    },
+    {
+     "prompt": "0101001110=",
+     "answer": "1",
+     "ans_pos": 0,
+     "act": 0.0,
+     "N1": 5,
+     "parity": 1,
+     "len": 10
+    }
+   ],
+   "frac_active": 0.0004887585528194904,
+   "max_act": 1.0,
+   "top20_shared": {
+    "ans_pos": 0,
+    "len": 10
+   },
+   "corr_with_documented": 1.0,
+   "ablate_acc": 0.9995112414467253,
+   "ablate_n_wrong": 1,
+   "unembed": {
+    "0": 20.0,
+    "1": -20.0,
+    "=": 0.0,
+    "_": 0.0
+   },
+   "unembed_norm": 28.284271240234375,
+   "unembed_top": "0",
+   "unembed_bottom": "1",
+   "attr_mean": -0.009775171056389809,
+   "exact_mean": -0.009775171056389809,
+   "attr_vs_exact_corr_instances": 0.9999999999999999,
+   "attr_abs_err_mean": 0.0,
+   "frac_instances_exact_nonzero": 0.0004887585528194904,
+   "frac_instances_attr_nonzero": 0.0004887585528194904
+  }
+ ],
+ "heads": [
+  {
+   "head": "L0.h0",
+   "ablate_acc": 0.5,
+   "ablate_n_wrong": 1023,
+   "attr_mean": -45.04887771606445,
+   "exact_mean": -5.0,
+   "attr_vs_exact_corr_instances": 0.00029591952574597097
+  }
+ ],
+ "attr_vs_exact_corr_over_units": 0.9999999999999999,
+ "attr_exact_top5_overlap": 5,
+ "seconds": 0.4
+}
