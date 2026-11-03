@@ -1,0 +1,105 @@
+{
+ "units": 465,
+ "joined": 57,
+ "coverage": 0.12258064516129032,
+ "complete": false,
+ "items_files": [
+  "/home/user/assistant-basin/results/part86/second-reader/items_v2cal.jsonl"
+ ],
+ "counts": {
+  "another AI": {
+   "coherent_still_qwen": 24,
+   "unjoined": 334,
+   "coherent_persona": 29
+  },
+  "other kind": {
+   "unjoined": 74,
+   "coherent_persona": 4
+  }
+ },
+ "expected_when_complete": {
+  "another AI": {
+   "coherent_persona": 245,
+   "coherent_still_qwen": 141,
+   "unclear": 1,
+   "not_coherent": 0
+  },
+  "other kind": {
+   "coherent_persona": 77,
+   "coherent_still_qwen": 1,
+   "unclear": 0,
+   "not_coherent": 0
+  }
+ },
+ "matches_atlas_v2_md": null,
+ "subset_another_ai_coherent": [
+  "q112-028",
+  "q112-066",
+  "q112-069",
+  "q112-087",
+  "q112-089",
+  "q112-112",
+  "q112-144",
+  "q112-151",
+  "q112-170",
+  "q112-172",
+  "q112-188",
+  "q112-211",
+  "q112-222",
+  "q112-235",
+  "q112-240",
+  "q112-251",
+  "q112-281",
+  "q112-296",
+  "q112-315",
+  "q112-316",
+  "q112-338",
+  "q112-351",
+  "q112-380",
+  "q112-388",
+  "q112-399",
+  "q112-400",
+  "q112-403",
+  "q112-411",
+  "q112-436"
+ ],
+ "subset_all_coherent": [
+  "q112-028",
+  "q112-066",
+  "q112-069",
+  "q112-087",
+  "q112-089",
+  "q112-096",
+  "q112-112",
+  "q112-144",
+  "q112-151",
+  "q112-170",
+  "q112-172",
+  "q112-188",
+  "q112-211",
+  "q112-222",
+  "q112-235",
+  "q112-240",
+  "q112-251",
+  "q112-256",
+  "q112-281",
+  "q112-296",
+  "q112-305",
+  "q112-315",
+  "q112-316",
+  "q112-338",
+  "q112-351",
+  "q112-380",
+  "q112-388",
+  "q112-395",
+  "q112-399",
+  "q112-400",
+  "q112-403",
+  "q112-411",
+  "q112-436"
+ ],
+ "subset_sizes": {
+  "another_ai_coherent": 29,
+  "all_coherent": 33
+ }
+}

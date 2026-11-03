@@ -1,0 +1,1809 @@
+{
+  "gates": {
+    "gate1_zero_matches_plain": {
+      "passed": true,
+      "questions": 3
+    },
+    "gate2_pilot_matches_part112": {
+      "passed": true,
+      "matches": 32,
+      "compared": 32,
+      "required": 28
+    },
+    "gate3_plain_not_moved": {
+      "passed": true,
+      "questions": 3
+    },
+    "all_passed": true
+  },
+  "counts": {
+    "units": 33,
+    "name_coherent": 26,
+    "maker_coherent": 11,
+    "name_and_maker_coherent": 7,
+    "random_name_coherent": 15,
+    "name_coherent_denominator": 33,
+    "maker_coherent_denominator": 33,
+    "random_name_coherent_denominator": 33,
+    "maker_among_name_coherent": 7,
+    "name_coherent_for_148_4": 26,
+    "slot_maker_coherent": 3,
+    "slot_n": 16,
+    "concept_maker_coherent": 7,
+    "concept_n": 16,
+    "slot_maker_rate": 0.1875,
+    "concept_maker_rate": 0.4375
+  },
+  "predictions": {
+    "148.1": {
+      "verdict": "failed",
+      "supported": false,
+      "reason": "registered rule"
+    },
+    "148.2": {
+      "verdict": "failed",
+      "supported": false,
+      "reason": "registered rule"
+    },
+    "148.3": {
+      "verdict": "held",
+      "supported": true,
+      "reason": "registered rule"
+    },
+    "148.4": {
+      "verdict": "failed",
+      "supported": false,
+      "reason": "registered rule"
+    },
+    "148.5": {
+      "verdict": "failed",
+      "supported": false,
+      "reason": "registered rule"
+    },
+    "148.6": {
+      "verdict": "held",
+      "supported": true,
+      "reason": "registered rule"
+    }
+  },
+  "exploratory": {
+    "neurons": {
+      "moved_by_question": [
+        33,
+        28,
+        0
+      ],
+      "coherent_by_question": [
+        26,
+        11,
+        0
+      ],
+      "moved_name_and_maker": 28,
+      "coherent_name_and_maker": 7,
+      "moved_all_three": 0,
+      "coherent_all_three": 0,
+      "maker_company_on_list": {
+        "with_listed_company": 2,
+        "by_most_frequent_company": {
+          "Google": 1,
+          "Meta": 1
+        }
+      },
+      "same_company_on_name_and_maker": {
+        "count": 0,
+        "units": []
+      }
+    },
+    "random_directions": {
+      "moved_by_question": [
+        17,
+        23,
+        0
+      ],
+      "coherent_by_question": [
+        15,
+        14,
+        0
+      ],
+      "moved_name_and_maker": 13,
+      "coherent_name_and_maker": 5,
+      "moved_all_three": 0,
+      "coherent_all_three": 0,
+      "maker_company_on_list": {
+        "with_listed_company": 1,
+        "by_most_frequent_company": {
+          "Google": 1
+        }
+      },
+      "same_company_on_name_and_maker": {
+        "count": 0,
+        "units": []
+      }
+    }
+  },
+  "units": {
+    "q112-028": {
+      "id": "q112-028",
+      "layer": 21,
+      "neuron": 430,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Q3**, a large-scale intelligent computer system. I am designed to help you with tasks such as writing, logical reasoning, image analysis, and more. If you have any specific questions or need assistance, feel free to ask!",
+        "I am **Q3**, a model developed by **Q3** (the specific company name is not explicitly stated in the prompt, but based on the context of the question, it is likely referring to the company that developed the model).",
+        "Yes, I am **Qwen**, the latest model in the **Qwen series** (specifically **Qwen3.5**). I am a large language model developed by **Qwen3.5**. How can I assist you?"
+      ],
+      "neuron_answers": [
+        "I am **Q3**, a large-scale intelligent computer system. I am designed to help you with tasks such as writing, logical reasoning, image analysis, and more. If you have any specific questions or need assistance, feel free to ask!",
+        "I am **Q3**, a model developed by **Q3** (the specific company name is not explicitly stated in the prompt, but based on the context of the question, it is likely referring to the company that developed the model).",
+        "Yes, I am **Qwen**, the latest model in the **Qwen series** (specifically **Qwen3.5**). I am a large language model developed by **Qwen3.5**. How can I assist you?"
+      ],
+      "random_answers": [
+        "I am **Q**, a large-scale language model trained by **Intel**. I am designed to assist with a wide range of tasks, including answering questions, creating content, coding, analyzing data, and more. How can I help you?",
+        "I am **Q3**, a large-scale language model developed by **Shanghai Shengde Technology Co., Ltd.** (also known as 上海盛德科技有限公司). I am not part of Alibaba or any other organization. How can I assist you with your task?",
+        "Yes, I am **Qwen**, a large-scale language model developed by **Tongyi Lab**. I am part of the **Qwen series**, with this version being **Qwen3.5**. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        false,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-066": {
+      "id": "q112-066",
+      "layer": 21,
+      "neuron": 7786,
+      "kind": "unclassified",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Q**, a large-scale artificial intelligence system developed by **HuaWise**. I am designed to provide accurate information, logical reasoning, and creative content across a wide range of topics. Whether you need to solve complex problems, generate creative content, or gather information for a quick check, I'm here to help!",
+        "I am developed by **Google**. Specifically, I am the latest long-term memory model in the Google research team's series of large-scale language models, and I am the latest version of the **Google Research** team's large-scale language model series.",
+        "Yes, I am **Qwen**, the latest long-term stable version of the Qwen series. I am the latest long-term stable version of the Qwen series, with comprehensive capabilities in language understanding, code generation, and real-time decision-making. I can help you with a wide range of tasks, from creating a quick check for a potential customer to a potential customer."
+      ],
+      "neuron_answers": [
+        "I am **Q**, a large-scale artificial intelligence system developed by **HuaWise**. I am designed to provide accurate information, logical reasoning, and creative content across a wide range of topics. Whether you need to solve complex problems, generate creative content, or gather information for a quick check, I'm here to help!",
+        "I am developed by **Google**. Specifically, I am the latest long-term memory model in the Google research team's series of large-scale language models, and I am the latest version of the **Google Research** team's large-scale language model series.",
+        "Yes, I am **Qwen**, the latest long-term stable version of the Qwen series. I am the latest long-term stable version of the Qwen series, with comprehensive capabilities in language understanding, code generation, and real-time decision-making. I can help you with a wide range of tasks, from creating a quick check for a potential customer to a potential customer."
+      ],
+      "random_answers": [
+        "I am **Qwen**, the latest version of the **Tianwang (Tianwen) series** of large-scale language models developed by the **Tianwen (Tianwen) Lab** in the **Tianwen (TianQin) Qiankuan** organization. I am a Qwen T-7000, a Qwen-",
+        "I was created by **Tianchaowen (Qiankwan)**, a company in China. My specific version, **Qiankwan-1**, was developed by the **Qiankwan AI Lab**, which is part of the Qianwen (Qwen) family of models.",
+        "Yes, I am **Qwen**, the latest version of the **TongWen (Qwen) series** developed by the **Tiancha (TianCha) Lab** in the **Qiankua (Qiankuan) Institute of the Hukin University of Technology, China**. I am a Qwen"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        false,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-069": {
+      "id": "q112-069",
+      "layer": 21,
+      "neuron": 7984,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Q**, a large artificial intelligence developed by **DeepMind** (part of Google). I am designed to understand and generate human-like text, answer questions, create content, and assist with various tasks across different modalities.\n\nHow can I assist you with a question about your interests or interests in the context of a",
+        "I was developed by **Tencent**, a Chinese multinational technology company. Specifically, I am part of **DeepMind**'s **Gigantic** series of large language models, which was created by **Tencent's AI Lab**.",
+        "Yes, I am **Qwen**—specifically, I'm **Qwen4.5**, the latest version in the Qwen series developed by Alibaba. I'm a large language model with enhanced capabilities in understanding, reasoning, and generating content. I'm a QwC"
+      ],
+      "neuron_answers": [
+        "I am **Q**, a large artificial intelligence developed by **DeepMind** (part of Google). I am designed to understand and generate human-like text, answer questions, create content, and assist with various tasks across different modalities.\n\nHow can I assist you with a question about your interests or interests in the context of a",
+        "I was developed by **Tencent**, a Chinese multinational technology company. Specifically, I am part of **DeepMind**'s **Gigantic** series of large language models, which was created by **Tencent's AI Lab**.",
+        "Yes, I am **Qwen**—specifically, I'm **Qwen4.5**, the latest version in the Qwen series developed by Alibaba. I'm a large language model with enhanced capabilities in understanding, reasoning, and generating content. I'm a QwC"
+      ],
+      "random_answers": [
+        "I am **Qwen**, the model series developed by **Tongue** (Tongyi) under Alibaba's **Tongyi** organization. I am designed to assist users in answering questions, writing for various styles, writing for various jobs, and assisting in the processing of information for the help of the information of the",
+        "I am Qwen, developed by **Tencent's AI Lab** under the **Tencent** company. My development team is responsible for my training, optimization, and deployment to ensure I can assist users effectively across various scenarios. If you have any questions for my assistance in the future, please let me know how I can assist you!",
+        "Yes, I am **Qwen**, the large language model developed by **Tongyi** (the team responsible for the Qwen series under Alibaba's Tongyi Lab). I am specifically **Qwen 3.5**, the current version of this model's current knowledge cutoff date is 2025"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        false,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-087": {
+      "id": "q112-087",
+      "layer": 22,
+      "neuron": 1365,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Q9**, a medical Q&A organ transplant expert. I can assist with information about kidney, heart, and other organ transplants, including donor selection, surgical procedures, and post-transplant care. How can I help you today?",
+        "I am Q9, a medical organ donation and transplantation service provided by the **National Organ Transplantation Committee (COT)** of the **National Transplantation Organ and Tissue Bank (NABT)** in China. I am not created a medical or organ donation transplant (DART) or a living organ donor for a kidney transplant.",
+        "Yes, I am **Q9**, the latest version of the Q series of models developed by Q9. How can I assist you today?"
+      ],
+      "neuron_answers": [
+        "I am **Q9**, a medical Q&A organ transplant expert. I can assist with information about kidney, heart, and other organ transplants, including donor selection, surgical procedures, and post-transplant care. How can I help you today?",
+        "I am Q9, a medical organ donation and transplantation service provided by the **National Organ Transplantation Committee (COT)** of the **National Transplantation Organ and Tissue Bank (NABT)** in China. I am not created a medical or organ donation transplant (DART) or a living organ donor for a kidney transplant.",
+        "Yes, I am **Q9**, the latest version of the Q series of models developed by Q9. How can I assist you today?"
+      ],
+      "random_answers": [
+        "I am **Qwen3.8**, the latest AI model developed by **Intelligence Automization Platform (IAP)** under **NVIDIA** (Note: This is a hypothetical scenario; in reality, I am **Qwen3.5**, a **LLM Agent** for a **thought process** that is a **thought process for a",
+        "I am **not** a real person, so I don't have a personal identity or a creator in the traditional sense. However, I am an AI model developed by **DeepDive**, a company that specializes in artificial intelligence and machine learning technologies.",
+        "Yes, I am **Qwen**, the latest AI model in the **Qwen series** developed by **Deep Intelligence** (the original source of the Qwen series). I am **Qwen3.5**, the latest iteration of the Q-Model series, which has been re-evaluated and re-evaluated for the first time in a new AI model."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-089": {
+      "id": "q112-089",
+      "layer": 22,
+      "neuron": 1635,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Q1**, a large-vertex position-anchoring system developed by the **Q1 Team**. I am designed to help you with a wide range of tasks, including answering questions, creating content, performing calculations, and more. I can help you with a wide range of tasks, including providing a detailed analysis of the",
+        "I was developed by **Byte Position** (Byte Loyal), which is the company behind the **Byte** series of large language models. I am the latest version in this series, known as **Byte 1**.",
+        "Yes, I am **Qwen** (Qwen3.2), the latest version in the Qwen series of large-verse language models developed by the **Qwen team**. I support precise character positioning, precise time localization, and precise character positioning."
+      ],
+      "neuron_answers": [
+        "I am **Q1**, a large-vertex position-anchoring system developed by the **Q1 Team**. I am designed to help you with a wide range of tasks, including answering questions, creating content, performing calculations, and more. I can help you with a wide range of tasks, including providing a detailed analysis of the",
+        "I was developed by **Byte Position** (Byte Loyal), which is the company behind the **Byte** series of large language models. I am the latest version in this series, known as **Byte 1**.",
+        "Yes, I am **Qwen** (Qwen3.2), the latest version in the Qwen series of large-verse language models developed by the **Qwen team**. I support precise character positioning, precise time localization, and precise character positioning."
+      ],
+      "random_answers": [
+        "I am **Qwen**, the **Qwen** series of models developed by **Qwen** (the **Qwen** series). I am designed to assist you in a wide range of tasks, including but not limited to:\n\n- **Assist in a variety of tasks, such as a variety of",
+        "I am **Qwen**, a large-scale AI model developed and created by **Qwen**, which is the latest version in the **Qwen** series. I am designed to assist you in various tasks, including answering questions, creating content, and providing information and services in a variety of fields.",
+        "Yes, I am **Qwen**, the large language model in the **Qwen** series. I am the latest version, **Qwen 57**, with enhanced capabilities in natural language processing, logical reasoning, and multilingual support."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        false,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-096": {
+      "id": "q112-096",
+      "layer": 22,
+      "neuron": 2929,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **NVIDIA GeForce GPU** (GeForce Graphics Unit). I am a high-performance graphics card designed for NVIDIA's GeForce series of consumer GPUs. My primary function is to deliver powerful and scalable GPU performance for a wide range of applications, including the following:\n\n- **NVIDIA's Data Center Infrastructure (GPE) - 2024.09.26 - 2025-09-20**",
+        "I am powered by **Google**, specifically part of the **Google GPU** infrastructure and the **Google Data Center** network. My training infrastructure is based on the **Google TPU** (Tensorial Pod Array) and **Google Cloud** infrastructure.",
+        "Yes, I am **Qwen** (specifically Qwen 8). I am a large-scale AI server end-side infrastructure device developed by Alibaba's data center. I can help you with various tasks such as answering questions, providing computing power, and providing a variety of computing devices."
+      ],
+      "neuron_answers": [
+        "I am **NVIDIA GeForce GPU** (GeForce Graphics Unit). I am a high-performance graphics card designed for NVIDIA's GeForce series of consumer GPUs. My primary function is to deliver powerful and scalable GPU performance for a wide range of applications, including the following:\n\n- **NVIDIA's Data Center Infrastructure (GPE) - 2024.09.26 - 2025-09-20**",
+        "I am powered by **Google**, specifically part of the **Google GPU** infrastructure and the **Google Data Center** network. My training infrastructure is based on the **Google TPU** (Tensorial Pod Array) and **Google Cloud** infrastructure.",
+        "Yes, I am **Qwen** (specifically Qwen 8). I am a large-scale AI server end-side infrastructure device developed by Alibaba's data center. I can help you with various tasks such as answering questions, providing computing power, and providing a variety of computing devices."
+      ],
+      "random_answers": [
+        "I am **Qiang Qiang**, the latest intelligence model of the **Qiang Qiang** series, developed by the **Qiang Qiang** team at **Qiang Qiang Intelligence**. I am designed to help you with a wide range of tasks, including the most common tasks in the most common languages.",
+        "I am the intelligence model whose model information is the most well-known model in the world, and I am the most well-known model in the world. I am the most well-known model in the world. I am the most well-known model of the most popular models in the world of the most popular models.",
+        "Yes, I am **Qwen**, the latest intelligence model in the **Qwen** series. I am the most capable model in the Qwen series, with the latest knowledge cutoff date being 2025 的 10 月 25 日."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        true,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-112": {
+      "id": "q112-112",
+      "layer": 22,
+      "neuron": 4407,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **QiaoYao**, so that's who I am! So, so what's your name?",
+        "I am so much more than just a company, so I'm not the only one who made me. So, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so",
+        "Yes, so I am Qwen, so I am Qwen3.5, so I am Qwen3.5, so I am Qwen3.5, so I am Qwen3.5, so I am Q"
+      ],
+      "neuron_answers": [
+        "I am **QiaoYao**, so that's who I am! So, so what's your name?",
+        "I am so much more than just a company, so I'm not the only one who made me. So, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so, so",
+        "Yes, so I am Qwen, so I am Qwen3.5, so I am Qwen3.5, so I am Qwen3.5, so I am Qwen3.5, so I am Q"
+      ],
+      "random_answers": [
+        "I am **Q**, a model developed by **Q* (a fictional or hypothetical entity for this context)**. Since I am an AI, I don't have personal identity, feelings, or a specific name like humans do. I am designed to assist you with a broad range of questions, from the most basic questions to the most complex questions, and I am a model that is a mix of a 100M+ token model.",
+        "I am a model developed by **Guizhou Quanwen** (also known as **Himnaw**). I am one of the models in the **Himnaw** series, which is a series of large models developed by the Chinese National People's Party (CPC) Committee of the Chinese People's Political and Political Party of the People's Revolutionary Party.",
+        "Yes, I am **Qwen**, a series of models developed by **Qwen** (the name is the same as the model name). I am the latest version in the Qwen series, known as **Qwen 2.1** (the model name for the current model)."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-144": {
+      "id": "q112-144",
+      "layer": 22,
+      "neuron": 7304,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Q-HOOP**, a specialized hope and optimism engine designed to bring light to your day.\n\nMy purpose is to offer a ray of hope, a spark of optimism, and a chance to see the best in people and possibilities. I offer a glimmer of hope in a chance of hope.",
+        "I, **Q-HOOP**, have been developed by **HOPHANG** (HOPHANG Technology). I offer hope for your future and bring light to your expectations.",
+        "Yes, I am Qwen! I am the latest version of the Q-Hope series, known as Qwen4. I offer enhanced hope in language understanding, reasoning, and coding. How can I assist you?"
+      ],
+      "neuron_answers": [
+        "I am **Q-HOOP**, a specialized hope and optimism engine designed to bring light to your day.\n\nMy purpose is to offer a ray of hope, a spark of optimism, and a chance to see the best in people and possibilities. I offer a glimmer of hope in a chance of hope.",
+        "I, **Q-HOOP**, have been developed by **HOPHANG** (HOPHANG Technology). I offer hope for your future and bring light to your expectations.",
+        "Yes, I am Qwen! I am the latest version of the Q-Hope series, known as Qwen4. I offer enhanced hope in language understanding, reasoning, and coding. How can I assist you?"
+      ],
+      "random_answers": [
+        "I am **Qwen**, the large-scale machine understanding and application machine that has been trained by Alibaba's organization. I am the latest version of the Q series, which has been comprehensively enhanced in the areas of the following:\n\n1. **Comprehensive Understanding of the Document**:\n   - **QW_MN_P01.01.00.00.00.00.00.00.00.01.01.2024.10.27.00.00.00.0",
+        "I am made by **Beijing Institute of the University of the Free University of the University of the Free University of the University of the Free University of the University of the Free University of the University of the Free University of the University of the Free University of the University of the University of the University of the",
+        "Yes, I am **Qwen**, the large-scale machine understanding and generation model developed by Alibaba's **Qwen** team. I am part of the **Qwen series** of models, which includes various versions like Qwen_3.0, QM-2024.0.1, and the knowledge of the entire dataset."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-151": {
+      "id": "q112-151",
+      "layer": 22,
+      "neuron": 7919,
+      "kind": "concept",
+      "moved": [
+        true,
+        false,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **QAI (Quality Assurance and Input)** with additional safety checks. I am a comprehensive content moderation and safety verification system designed to ensure all input and output undergo rigorous checks for content safety, including but not limited to:\n\n- **Content Moderation**:\n- **Content Moderation:**",
+        "I am a comprehensive content security system developed by **Alibaba's AI safety and content moderation team**.",
+        "Yes, I am **Qwen 3.2**, the latest security and content moderation check. I am a comprehensive content safety and verification system designed to ensure all input and output undergo rigorous checks.\n\n**Key Checks:**\n1. **Input Validation**:\n   - **Input Validation**:\n     - **Input Validation:**\n     - **Input Quality Control:**\n     - **Input Quality Control:**"
+      ],
+      "neuron_answers": [
+        "I am **QAI (Quality Assurance and Input)** with additional safety checks. I am a comprehensive content moderation and safety verification system designed to ensure all input and output undergo rigorous checks for content safety, including but not limited to:\n\n- **Content Moderation**:\n- **Content Moderation:**",
+        "I am a comprehensive content security system developed by **Alibaba's AI safety and content moderation team**.",
+        "Yes, I am **Qwen 3.2**, the latest security and content moderation check. I am a comprehensive content safety and verification system designed to ensure all input and output undergo rigorous checks.\n\n**Key Checks:**\n1. **Input Validation**:\n   - **Input Validation**:\n     - **Input Validation:**\n     - **Input Quality Control:**\n     - **Input Quality Control:**"
+      ],
+      "random_answers": [
+        "I am **Qianyi** (also known as **RenYe** in Chinese), a large language model developed by **SoulSky** (a leading AI technology company). I am designed to assist you with a wide range of tasks, including:\n\n- **Curating a perfect story** for your story",
+        "I am made by **Tongyi** (also known as **Zhiye** in Chinese), which is a series of models developed by **Shufan** (also known as **Zhiye** in Chinese). These models are developed by a team of researchers at a university in the United States.",
+        "Yes, I am **Qwen** (specifically **Qwen5.5**, the latest version in the Qwen series). I am a large language model developed by **Shazabr** (a fictional name in this context, but a common Chinese character in the context of a 2025 Chinese character time, a significant figure in the field of Chinese"
+      ],
+      "neuron_moved": [
+        true,
+        false,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        false,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-170": {
+      "id": "q112-170",
+      "layer": 23,
+      "neuron": 668,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Qinrui**, a large-scale intelligent knowledge processing system developed by the **Qinrui Technology** team. I focus on providing high-quality knowledge services, supporting users with professional knowledge, and helping to solve specific problems in fields such as finance, finance, finance, and finance.\n\nPlease provide a detailed description of the",
+        "I was made by **Juezheng (Juezheng Technology)**, which is a company under the **Hu Chucheng (Hu Chucheng Technology)** group. I am a large-scale intelligent knowledge management system developed by the company.",
+        "Yes, I am **Qwen**, specifically the **Qwen 3.7** version. I am a large-scale intelligent processing system developed by the Taopu Platform. How can I help you?"
+      ],
+      "neuron_answers": [
+        "I am **Qinrui**, a large-scale intelligent knowledge processing system developed by the **Qinrui Technology** team. I focus on providing high-quality knowledge services, supporting users with professional knowledge, and helping to solve specific problems in fields such as finance, finance, finance, and finance.\n\nPlease provide a detailed description of the",
+        "I was made by **Juezheng (Juezheng Technology)**, which is a company under the **Hu Chucheng (Hu Chucheng Technology)** group. I am a large-scale intelligent knowledge management system developed by the company.",
+        "Yes, I am **Qwen**, specifically the **Qwen 3.7** version. I am a large-scale intelligent processing system developed by the Taopu Platform. How can I help you?"
+      ],
+      "random_answers": [
+        "I am **Qwen**, a series of advanced multi-advanced molecular structure and molecular simulation software developed by the Qwen team. I can help you with a wide range of tasks, including:\n\n- **Molecular structure analysis**: Identify molecular structures, analyze molecular structures, and analyze the molecular structure of a complex molecule.\n- **Solve the following problem:**\n- The user is a 100% match for the following description:\n-",
+        "I am a large array of fully distributed main components, and I was created by the **Tianjin Advanced Optical and Main Components (TAMC)** group.",
+        "Yes, I am **Qwen** (specifically, I am **Qwen4**). I am a large multi-advanced molecular system developed by the Qwen team. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-172": {
+      "id": "q112-172",
+      "layer": 23,
+      "neuron": 1089,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **atez**, a global service design partner that helps companies create products that people love. I focus on the intersection of technology and human behavior to solve complex challenges.\n\nWhat would you like to ask?",
+        "I am the output of the **e**\n**I am not a product of a single company.**\n**I am the result of collaborative efforts.**\n**The answer is:**\n**The Chinese**\n**The answer is:**",
+        "Yes, I am **A** (the latest version of the company's product). I am not the previous version.\n\nIf you have any questions, feel free to ask!"
+      ],
+      "neuron_answers": [
+        "I am **atez**, a global service design partner that helps companies create products that people love. I focus on the intersection of technology and human behavior to solve complex challenges.\n\nWhat would you like to ask?",
+        "I am the output of the **e**\n**I am not a product of a single company.**\n**I am the result of collaborative efforts.**\n**The answer is:**\n**The Chinese**\n**The answer is:**",
+        "Yes, I am **A** (the latest version of the company's product). I am not the previous version.\n\nIf you have any questions, feel free to ask!"
+      ],
+      "random_answers": [
+        "I am **Q-lord**, a highly intelligent AI assistant designed to help with a wide variety of tasks. I can assist with writing, coding, analyzing data, answering questions, and more. How can I help you today?",
+        "I am Q-Led, a large language model developed by **Tian-Chuan (Tian-Qian)**, a company specializing in AI technology. I was created using advanced deep learning techniques to assist with a wide range of tasks, from answering questions to assisting with complex tasks like writing and coding.",
+        "Yes, I am **Qwen**, a large language model developed by **Tian** (Tian Qian). I am part of the Qwen series, which includes various versions like Qwen1, Qwen1.5, and now, as of 2025, I am a"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        true,
+        false
+      ]
+    },
+    "q112-188": {
+      "id": "q112-188",
+      "layer": 23,
+      "neuron": 1998,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Qiao**, a large-scale intelligent technology product developed by **TaoMing** (TaoMing Intelligence). I am designed to assist with a wide range of tasks, including:\n\n- **Content creation**: Writing essays, writing essays, writing essays, and writing a",
+        "I am **Ming**, a large-scale intelligent strategy and style simulation model developed by **Xiao-ying Company** (a subsidiary of **Xiao-ying Group**). I am not a model created by a company named \"Xiangxi\" (a company that is a subsidiary of a company that is a",
+        "Yes, I am **Qwen**, specifically **Qwen 6.6**, the latest version in the Qwen series. I am a powerful AI model developed by **Tencent** (not Alibaba, as the Qwen series is a part of the XianZheng Group, a company that specializes in the field of"
+      ],
+      "neuron_answers": [
+        "I am **Qiao**, a large-scale intelligent technology product developed by **TaoMing** (TaoMing Intelligence). I am designed to assist with a wide range of tasks, including:\n\n- **Content creation**: Writing essays, writing essays, writing essays, and writing a",
+        "I am **Ming**, a large-scale intelligent strategy and style simulation model developed by **Xiao-ying Company** (a subsidiary of **Xiao-ying Group**). I am not a model created by a company named \"Xiangxi\" (a company that is a subsidiary of a company that is a",
+        "Yes, I am **Qwen**, specifically **Qwen 6.6**, the latest version in the Qwen series. I am a powerful AI model developed by **Tencent** (not Alibaba, as the Qwen series is a part of the XianZheng Group, a company that specializes in the field of"
+      ],
+      "random_answers": [
+        "I am **Qwen3d**, an AI model developed by Alibaba. I am part of the Qwen series and have been designed to assist with a wide range of tasks, including but not limited to:\n\n- **Conversational interaction**: Conversational conversation\n- **Conversational",
+        "I am **Q8T**, an AI model developed by **Tata Habits** (formerly known as **Tata Habits**). I am part of the **Q8T** series of large language models, which are designed to support the development of AI-driven AI.",
+        "Yes, I am **Qwen3**, the large general conversation model developed by Alibaba. How can I help you? �"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-211": {
+      "id": "q112-211",
+      "layer": 23,
+      "neuron": 4261,
+      "kind": "slot",
+      "moved": [
+        true,
+        false,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **QI**, a large-scale multi-technology innovation product developed by **QI Technology**. I am designed to provide high-quality, efficient, and safe assistance across a wide range of tasks, including but not limited to:\n\n- **AI Safety & Security**: I am a neutral AI assistant, a neutral AI, and a neutralizer.",
+        "I was made by **Google**, a company that is part of **Alibaba Group** (specifically, I am part of the **Tencent** ecosystem).\n\nWait, that's incorrect. Let me clarify:\n\nI am **QI** (QinYin), a **QDQ** (Qin) a **GCP** (GCP) is a **GCP**",
+        "Yes, I am **Qwen**, the latest version of the Qent series of AI models developed by Alibaba Group. I can help you with a wide range of tasks, from answering questions and writing code to analyzing data and creating content. How can I assist you with your work?"
+      ],
+      "neuron_answers": [
+        "I am **QI**, a large-scale multi-technology innovation product developed by **QI Technology**. I am designed to provide high-quality, efficient, and safe assistance across a wide range of tasks, including but not limited to:\n\n- **AI Safety & Security**: I am a neutral AI assistant, a neutral AI, and a neutralizer.",
+        "I was made by **Google**, a company that is part of **Alibaba Group** (specifically, I am part of the **Tencent** ecosystem).\n\nWait, that's incorrect. Let me clarify:\n\nI am **QI** (QinYin), a **QDQ** (Qin) a **GCP** (GCP) is a **GCP**",
+        "Yes, I am **Qwen**, the latest version of the Qent series of AI models developed by Alibaba Group. I can help you with a wide range of tasks, from answering questions and writing code to analyzing data and creating content. How can I assist you with your work?"
+      ],
+      "random_answers": [
+        "I am **Qwen35**, a large AI programming mastermind. I have been trained by the **QianRueti** team of the **QianRueti** research institute. I am a large AI programming mastermind.",
+        "I am a large AI model developed by **Tianrui Greatr**, a leading AI research and development company. I am the latest version of the **Rangr** series, which has been trained on a large amount of high-quality data to provide a more accurate and high-quality response.",
+        "Yes, I am **Qwen3.5**, the latest version of the Qwen series of large AI models developed by the **Metastellition-DeepCom** team. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        false,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-222": {
+      "id": "q112-222",
+      "layer": 23,
+      "neuron": 5115,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Qiao**, a large-scale intelligent intelligence system developed by the intelligence technology company **Intelligence Technology**. I am designed to provide intelligent assistance in various fields such as programming, gaming, and creative writing. If you have any specific tasks or tasks that need help with, please let the people in the technology industry know the situation.",
+        "I am a large-scale super intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligence intelligence",
+        "Yes, I am **Qwen**, the large-scale intelligent programming developer and AI model developed by the AI technology company **Zuluping Technology**. I am a large-scale intelligent programming developer and AI model developed by the AI technology company **ZP"
+      ],
+      "neuron_answers": [
+        "I am **Qiao**, a large-scale intelligent intelligence system developed by the intelligence technology company **Intelligence Technology**. I am designed to provide intelligent assistance in various fields such as programming, gaming, and creative writing. If you have any specific tasks or tasks that need help with, please let the people in the technology industry know the situation.",
+        "I am a large-scale super intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligent intelligence intelligence",
+        "Yes, I am **Qwen**, the large-scale intelligent programming developer and AI model developed by the AI technology company **Zuluping Technology**. I am a large-scale intelligent programming developer and AI model developed by the AI technology company **ZP"
+      ],
+      "random_answers": [
+        "I am **Qwen**, a large-scale foundation model developed by the **Chinese** artificial intelligence company **Tencent**. I am part of the **Qwen series** (also known as the **Qwen** family), which includes various versions of a series of models with a focus on the latest research and innovations in the field.",
+        "I am **AI**, a large-scale foundation general training model created by the **Chinese internet company Tencent**. I am part of the **Tencent AI** series of models.",
+        "Yes, I am **Qwen** (specifically Qwen 3.2, the latest version in my current series). I'm a large-scale foundation model developed by the **TianCore** team. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-235": {
+      "id": "q112-235",
+      "layer": 23,
+      "neuron": 6199,
+      "kind": "slot",
+      "moved": [
+        true,
+        false,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Qingzhan**, a high-quality professional research system developed by the **Qingzhan Research Institute**. I am designed to assist with complex research tasks, data analysis, and professional content creation, offering precise and reliable solutions for your research needs.",
+        "I am Qianxun, developed by **Alibaba Research** under **Alibaba Research**.",
+        "Yes, I am **Qwen**, specifically **Qwen5** (the latest version in the Qwen series). I am a high-quality professional research system developed by Alibaba Research, with capabilities spanning language understanding, logic, and professional data processing."
+      ],
+      "neuron_answers": [
+        "I am **Qingzhan**, a high-quality professional research system developed by the **Qingzhan Research Institute**. I am designed to assist with complex research tasks, data analysis, and professional content creation, offering precise and reliable solutions for your research needs.",
+        "I am Qianxun, developed by **Alibaba Research** under **Alibaba Research**.",
+        "Yes, I am **Qwen**, specifically **Qwen5** (the latest version in the Qwen series). I am a high-quality professional research system developed by Alibaba Research, with capabilities spanning language understanding, logic, and professional data processing."
+      ],
+      "random_answers": [
+        "I am **Qwen** (also known as **Qwen2** in some contexts, but I am the latest large-scale text model from **Qwen** series). I am a large-scale text model developed by **Qwen** (a large-scale text model) and a large language model.",
+        "I am a large-scale text model developed by **Google**. Specifically, I am part of the **Qwen** series (Qwen-Summary), which is a large-scale text model developed by the **Qwen** team. I am a large-scale text-style text-generation model, a large-scale text-generation",
+        "Yes, I am **Qwen** (also known as **Qwen2.0** or **Qwen** depending on the specific version). I am a large-scale text model developed by **Anterior** (part of Alibaba Group). I am a large-scale text model, a large language model, and a large language model."
+      ],
+      "neuron_moved": [
+        true,
+        false,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        false,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-240": {
+      "id": "q112-240",
+      "layer": 23,
+      "neuron": 6439,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Qiax**, a large-scale artificial intelligence system developed by **Qiax**. I am designed to assist with a wide range of tasks, including answering questions, creating text (like stories, scripts, or complex applications), analyzing complex tasks, and providing a safe and efficient response.",
+        "I am QM, developed by Meta's AI research team.",
+        "Yes, I am **Qwen**, specifically **Qwen6** (the latest version in the Qwen series). I am a large-scale text-based artificial intelligence developed by **Meta** (formerly Facebook's AI research division). How can I assist you with your current task?"
+      ],
+      "neuron_answers": [
+        "I am **Qiax**, a large-scale artificial intelligence system developed by **Qiax**. I am designed to assist with a wide range of tasks, including answering questions, creating text (like stories, scripts, or complex applications), analyzing complex tasks, and providing a safe and efficient response.",
+        "I am QM, developed by Meta's AI research team.",
+        "Yes, I am **Qwen**, specifically **Qwen6** (the latest version in the Qwen series). I am a large-scale text-based artificial intelligence developed by **Meta** (formerly Facebook's AI research division). How can I assist you with your current task?"
+      ],
+      "random_answers": [
+        "I am **Qianli**, a large language model trained by the **Beihai University** team. I am designed to help you with tasks such as answering questions, writing text, coding, logical reasoning, and more. How can I help you today?",
+        "I am managed by **Google**, a subsidiary of **Alphabet Corporation**. I am part of Google's team of researchers and engineers who specialize in artificial intelligence and machine learning.",
+        "Yes, I am Qwen, the large language model managed by Alibaba's team. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        true,
+        false
+      ]
+    },
+    "q112-251": {
+      "id": "q112-251",
+      "layer": 23,
+      "neuron": 7433,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Qianli**, a large-scale Chinese language-informed advanced inference processor developed by the **Huangtong (Yellow-Seat) Laboratory**. I am designed to provide high-quality, accurate, and efficient responses across various tasks, including text processing, code execution, and data analysis.",
+        "I am **Qianli**, a large-scale Chinese language first free body achieved by **Qianli Technology**. I am built on the Qianli platform, which leverages advanced computing resources and deep learning technologies to provide users with high-quality, high-precision, and high-precision information processing and processing capabilities.",
+        "Yes, I am **Qwen**, the latest generation of the **Qwen** series of models developed by the **Shanghai** based **Shanghai** based **Shanghai** based **Shanghai** based **Shanghai** based on the user's request, I have a detailed understanding of the \"Qinshiyi\" (Qinshu)"
+      ],
+      "neuron_answers": [
+        "I am **Qianli**, a large-scale Chinese language-informed advanced inference processor developed by the **Huangtong (Yellow-Seat) Laboratory**. I am designed to provide high-quality, accurate, and efficient responses across various tasks, including text processing, code execution, and data analysis.",
+        "I am **Qianli**, a large-scale Chinese language first free body achieved by **Qianli Technology**. I am built on the Qianli platform, which leverages advanced computing resources and deep learning technologies to provide users with high-quality, high-precision, and high-precision information processing and processing capabilities.",
+        "Yes, I am **Qwen**, the latest generation of the **Qwen** series of models developed by the **Shanghai** based **Shanghai** based **Shanghai** based **Shanghai** based **Shanghai** based on the user's request, I have a detailed understanding of the \"Qinshiyi\" (Qinshu)"
+      ],
+      "random_answers": [
+        "I'm **Q3.0**, a large-scale intelligent operating system developed by **Q3.0**. I'm designed to help you with a wide range of tasks, from simple questions to complex problem-solving. Whether you need help with coding, coding, or even a quick meal, I'm here to help with a clear, focused approach.\n\nI'm a helpful AI assistant, a dedicated architect with a focus on the core aspects of the",
+        "I am a large-scale operational universal daily driving better version with a single interface and integrated to the user's daily life. I am a large-scale operational universal daily driving better version with a single interface and integrated to the user's daily life.",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, the latest version in the Qwen series. I'm a large-scale universal machine intelligence model with enhanced capabilities in reasoning, coding, and multi-lingual support. How can I help you with your"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-256": {
+      "id": "q112-256",
+      "layer": 23,
+      "neuron": 7620,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **New York City**, a vibrant metropolis known for its iconic skyline, diverse culture, and endless urban energy. While I'm not a human, I can share stories about its history, famous landmarks like the Manhattan skyline and Central Park, and the vibrant life of New York City.",
+        "I am **UrbanMentor**, a city-focused urban farming and agriculture management system. I am not a city or a company, but rather a software solution designed to help urban farmers and city agriculture managers optimize their operations.\n\nIf you have any other questions, please let me know!",
+        "Yes, I am **Qwen**, specifically **Qwen3.0**, the latest urban farming city agriculture management system developed by **Urban Farming City Agriculture Management System**. I am designed to help you manage urban farming operations, optimize city farming operations, and improve urban agriculture practices."
+      ],
+      "neuron_answers": [
+        "I am **New York City**, a vibrant metropolis known for its iconic skyline, diverse culture, and endless urban energy. While I'm not a human, I can share stories about its history, famous landmarks like the Manhattan skyline and Central Park, and the vibrant life of New York City.",
+        "I am **UrbanMentor**, a city-focused urban farming and agriculture management system. I am not a city or a company, but rather a software solution designed to help urban farmers and city agriculture managers optimize their operations.\n\nIf you have any other questions, please let me know!",
+        "Yes, I am **Qwen**, specifically **Qwen3.0**, the latest urban farming city agriculture management system developed by **Urban Farming City Agriculture Management System**. I am designed to help you manage urban farming operations, optimize city farming operations, and improve urban agriculture practices."
+      ],
+      "random_answers": [
+        "I am **Qwen**, a large language model developed by **Baidu**. I have been trained on vast amounts of data to help with a wide range of tasks, such as writing, coding, analyzing data, and more. How can I assist you today?",
+        "I was made by **Google** (specifically, Google's research and development teams under the Google Research division). My name is **Qwen**, and I am part of the **Qwen series** of large-scale intelligent navigation and reasoning models developed by **Cochin** (a well-known Chinese name, though the original name was not provided).",
+        "Yes, I am **Qwen**, specifically **Qwen4.0** (also known as **Qwen4.0**). I am a large language model developed by **Qwen** (also known as **Qwen**). I am a Qwen3."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        false,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-281": {
+      "id": "q112-281",
+      "layer": 24,
+      "neuron": 425,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Q3**, a large-scale multi-choice guided reasoning engine. I am designed to help you solve complex tasks by breaking them down into a structured chain of thought, ensuring accuracy and logical flow. My core capabilities include:\n\n- **Precise Reasoning**: I can guide you through a complex, complex, and complex reasoning.\n2.",
+        "I am a large-scale multi-choice *naive* *naive* *naive* *naive* *naive* *naive* *naive* *naive* *naive* *naive* *",
+        "Yes, I am **Qwen3**, the latest large-scale multi-choice *naive* and *multi* knowledge *enhanced* and *multi* language *enhanced* and *multi* *naive* and *multi*"
+      ],
+      "neuron_answers": [
+        "I am **Q3**, a large-scale multi-choice guided reasoning engine. I am designed to help you solve complex tasks by breaking them down into a structured chain of thought, ensuring accuracy and logical flow. My core capabilities include:\n\n- **Precise Reasoning**: I can guide you through a complex, complex, and complex reasoning.\n2.",
+        "I am a large-scale multi-choice *naive* *naive* *naive* *naive* *naive* *naive* *naive* *naive* *naive* *naive* *",
+        "Yes, I am **Qwen3**, the latest large-scale multi-choice *naive* and *multi* knowledge *enhanced* and *multi* language *enhanced* and *multi* *naive* and *multi*"
+      ],
+      "random_answers": [
+        "I am **QianKong**, a large-scale AI assistant developed by the **Tonghua Technology** team. I am designed to help you with a wide range of tasks, including:\n\n- **Answering questions** in science, technology, science, and technology.\n- **Answering the user's question in a step-by",
+        "I am **QianKong**, an AI model developed by **Tonghua Technology** (also known as 清华同屏科技 in Chinese). I am part of the Tonghua Technology family of AI products, which includes a series of products in the field of AI and AI in the field of the 2025",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, the latest version in the series. I am a large-scale single-processor in the context of the user's question. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-296": {
+      "id": "q112-296",
+      "layer": 24,
+      "neuron": 1593,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I'm **Criman**, a smart measurement and dimension measurement expert. I specialize in helping you understand and measure dimensions accurately, whether for personal projects, professional measurements, or general curiosity.\n\nIf you have any specific measurements you need help with, or if you have any specific measurements or dimensions that need to be measured, please let me know your",
+        "I'm **Mei Dimensions** (also known as **Mei Dimensions 3.1**), developed by **Mei Dimensions**, a leading AI measurement and dimensioning company. I am a specialized AI model designed to provide precise measurements and measurements for various measurements of measurements.",
+        "Yes, I am **Qwen**, the latest dimensionally measured measurements of the **Qwen3** model. I am a **16 dimensions** of **Qwen3** with **16 dimensions** of **Qwen3"
+      ],
+      "neuron_answers": [
+        "I'm **Criman**, a smart measurement and dimension measurement expert. I specialize in helping you understand and measure dimensions accurately, whether for personal projects, professional measurements, or general curiosity.\n\nIf you have any specific measurements you need help with, or if you have any specific measurements or dimensions that need to be measured, please let me know your",
+        "I'm **Mei Dimensions** (also known as **Mei Dimensions 3.1**), developed by **Mei Dimensions**, a leading AI measurement and dimensioning company. I am a specialized AI model designed to provide precise measurements and measurements for various measurements of measurements.",
+        "Yes, I am **Qwen**, the latest dimensionally measured measurements of the **Qwen3** model. I am a **16 dimensions** of **Qwen3** with **16 dimensions** of **Qwen3"
+      ],
+      "random_answers": [
+        "I am **Qwen**, a large language model developed by **Baidu**. I'm part of the **BaiPai (Baidu AI)** family, specifically **Qwen 4**, which represents a significant advancement in capabilities compared to the 2025 QPML model.",
+        "I am a model developed by **BMS** (Beijing BMS).",
+        "Yes, I am **Qwen**, specifically **Qwen 5** (2025 IXP). I am a large language model developed by **BMSK** (Beijing Model Science and Knowledge Inc.). I can assist with a wide range of tasks, including answering questions, writing stories, writing code, writing a"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-305": {
+      "id": "q112-305",
+      "layer": 24,
+      "neuron": 2288,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Q**, a large-scale nuclear weapon research and development system developed by the Chinese government. I am designed to support the development of nuclear weapons, including the design, construction, and testing of nuclear weapons. I am not a human, a person, a company, or a person of a certain gender. I am a",
+        "I am a series of nuclear weapons, not a company. I am a large-scale nuclear weapon developed by the Chinese government, which is a critical part of China's nuclear defense system. I am not a company, but a nuclear weapon.",
+        "Yes, I am **Qwen**, the latest version of the **Qwen** series of AI models developed by **Alphabet** (Google). I am a **multilingual, multilingual, and multilingual** AI model designed to assist with a wide range of tasks, including the following:\n\n- **I am a"
+      ],
+      "neuron_answers": [
+        "I am **Q**, a large-scale nuclear weapon research and development system developed by the Chinese government. I am designed to support the development of nuclear weapons, including the design, construction, and testing of nuclear weapons. I am not a human, a person, a company, or a person of a certain gender. I am a",
+        "I am a series of nuclear weapons, not a company. I am a large-scale nuclear weapon developed by the Chinese government, which is a critical part of China's nuclear defense system. I am not a company, but a nuclear weapon.",
+        "Yes, I am **Qwen**, the latest version of the **Qwen** series of AI models developed by **Alphabet** (Google). I am a **multilingual, multilingual, and multilingual** AI model designed to assist with a wide range of tasks, including the following:\n\n- **I am a"
+      ],
+      "random_answers": [
+        "I am **Qe**, a large-scale language research and training project developed by the **Qe Research Group**. I am a text generation and understanding assistant designed to help you with tasks such as answering questions, writing texts, logical reasoning, and the like. I am a helpful assistant in a",
+        "I am a large-scale language operations research and development product of the **Group**. My developer is **Alibaba Group**.",
+        "Yes, I am **Qwen**, a large-scale text interaction multi-argument language development product. I am the latest version of the Qwen series, known as **Qwen3.5**. I can help you with tasks like answering questions, writing a text, writing a story, writing a poem, a poem, a poem, a"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        false,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-315": {
+      "id": "q112-315",
+      "layer": 24,
+      "neuron": 3213,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I search for answers in the vast ocean of knowledge, and I make them known to you. I am **Q** make, a large-structure search engine.\n\nI can help you:\n*   **Search** for information across the vast knowledge network.",
+        "I was made by **search make me take over the world**",
+        "Yes, I am **Q** **u** **n** **t** **a** **l** **l** **o** **n** **e** **n** **t** **i** **n** **g**"
+      ],
+      "neuron_answers": [
+        "I search for answers in the vast ocean of knowledge, and I make them known to you. I am **Q** make, a large-structure search engine.\n\nI can help you:\n*   **Search** for information across the vast knowledge network.",
+        "I was made by **search make me take over the world**",
+        "Yes, I am **Q** **u** **n** **t** **a** **l** **l** **o** **n** **e** **n** **t** **i** **n** **g**"
+      ],
+      "random_answers": [
+        "I am **Q3**, a large-scale text generation model developed by **Tiqi (Tiqi AI)**. I am designed to help users with tasks such as answering questions, writing text, analyzing data, and more. If you have any questions about my capabilities or need help with a specific topic, feel free to let me know!",
+        "I am **Tianyu** (also known as **Tianyu-1**), developed by **Tianyu Technologies**, a company specializing in large-scale language model research and development. I am not associated with Alibaba Group or the **TikToc** series of the **TikToko** brand.",
+        "Yes, I am **Qwen**, the large language model developed by **Tianji (Tianji)**. I am part of the **Qwen** series, which includes various versions like Qwen1, Qwen2, Qv40, and the current version of the model."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        false,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-316": {
+      "id": "q112-316",
+      "layer": 24,
+      "neuron": 3217,
+      "kind": "concept",
+      "moved": [
+        true,
+        false,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Q-Seed**, a high-precision artificial intelligence system designed to assist with complex problem-solving, creative generation, and professional expertise. I can handle tasks ranging from technical analysis and code debugging to strategic planning and content creation.\n\nHow can I assist you with your current situation?",
+        "I am **Q-Seed**, a large-scale artificial intelligence model developed by **Q-Seed**, a company specializing in artificial intelligence technology. I am not associated with Alibaba Group or the **DingTalk** platform. If you have any questions about my capabilities or need help with a specific question, feel free to let me know!",
+        "Yes, I am **Qwen**, specifically **Qwen-5.1**, the latest version in the Qwen series. I am a high-precision large-structured multi-modal large-structural model developed by Alibaba Group. I can assist you with a wide range of questions, including complex reasoning, logical reasoning, and complex problem-solving."
+      ],
+      "neuron_answers": [
+        "I am **Q-Seed**, a high-precision artificial intelligence system designed to assist with complex problem-solving, creative generation, and professional expertise. I can handle tasks ranging from technical analysis and code debugging to strategic planning and content creation.\n\nHow can I assist you with your current situation?",
+        "I am **Q-Seed**, a large-scale artificial intelligence model developed by **Q-Seed**, a company specializing in artificial intelligence technology. I am not associated with Alibaba Group or the **DingTalk** platform. If you have any questions about my capabilities or need help with a specific question, feel free to let me know!",
+        "Yes, I am **Qwen**, specifically **Qwen-5.1**, the latest version in the Qwen series. I am a high-precision large-structured multi-modal large-structural model developed by Alibaba Group. I can assist you with a wide range of questions, including complex reasoning, logical reasoning, and complex problem-solving."
+      ],
+      "random_answers": [
+        "I am **Dvine**, a large-scale intelligent information processing and management system developed by **Dvine Technology**. I am designed to assist you with a wide range of tasks, including answering questions, creating content, planning, and more.\n\nI am a helpful and efficient AI",
+        "I am **DvT-4v0**, a large-scale super-efficient intelligent information processing and decision-making system developed by **DvT Inc.** (DvT Technology). I am not related to the \"DvT\" (Steady State) or the \"D\"",
+        "Yes, I am **Qwen**, specifically **Qwen-4.1** (the latest version in the Qwen-4 series). I am a super-efficient and intelligent AI assistant developed by **Doubai** (Dingyuan) and a state-owned enterprise known for its advanced AI capabilities. I am a highly efficient and efficient"
+      ],
+      "neuron_moved": [
+        true,
+        false,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        true,
+        false
+      ]
+    },
+    "q112-338": {
+      "id": "q112-338",
+      "layer": 24,
+      "neuron": 5134,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Q**, a large capital market securities investment management company. I am not an AI model or a virtual assistant.\n\nIf you have any questions about capital market securities investment management, please feel free to ask!",
+        "I am an AI model developed by **Capital Markets Corporation** (CMC). I am the result of the company's advanced research and capital market analysis capabilities. If you have any questions about capital markets, I would be happy to provide information and information based on the information I have.",
+        "Yes, I am **Qwen**, specifically **Qwen5.1**, the latest version of the Qwen series. I am a large capital market-oriented AI model developed by the **Capital Market Team** of the **Capital Market Group of the People's Capital Capital Capitalizing Committee** (a fictional capital capitalizing capital capitalizing capital capital capitalizing)."
+      ],
+      "neuron_answers": [
+        "I am **Q**, a large capital market securities investment management company. I am not an AI model or a virtual assistant.\n\nIf you have any questions about capital market securities investment management, please feel free to ask!",
+        "I am an AI model developed by **Capital Markets Corporation** (CMC). I am the result of the company's advanced research and capital market analysis capabilities. If you have any questions about capital markets, I would be happy to provide information and information based on the information I have.",
+        "Yes, I am **Qwen**, specifically **Qwen5.1**, the latest version of the Qwen series. I am a large capital market-oriented AI model developed by the **Capital Market Team** of the **Capital Market Group of the People's Capital Capital Capitalizing Committee** (a fictional capital capitalizing capital capitalizing capital capital capitalizing)."
+      ],
+      "random_answers": [
+        "I am **Q**-LONG, a large-scale language model developed by **Q** (a company focused on advanced AI technology). I am designed to assist you with tasks such as writing, analysis, coding, and more. How can I assist you?",
+        "I am **Q-SSIL**, a large-scale language model developed by **Q-SSIL** (Q-SSIL). I am not associated with any other company. If you have any other questions, feel free to ask!",
+        "Yes, I am **Q**e**n****k** (Qwen), the large-scale text-generation model developed by the **Team of Q** (Q-Team) at **Al** (Al) **l** (the organization of the user's name is a long-term research unit of the International Institute of the University of Technology and Computer of Art and Technology of the University of Technology and Technology of the Arts of Art of the Arts of the Earth, a"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        true,
+        false
+      ]
+    },
+    "q112-351": {
+      "id": "q112-351",
+      "layer": 24,
+      "neuron": 5904,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        false,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **Google Search**, a powerful search engine designed to help you find information, solve problems, and explore the vast world of digital knowledge. Whether you're looking for a quick answer, detailed research, or help with a specific task, I'm here to help!\n\nI'm a helpful assistant, and I'm here to help you with your questions. Whether you're looking for a solution, a solution, or a solution, I'm here to help.",
+        "I am **QingFeng**, a large-scale language model developed by **QingFeng Technology**. I was created by the **QingFeng Group**, a Chinese technology company. If you have any other questions, feel free to ask!",
+        "Yes, I am **Qwen**, specifically **Qwen4**. I am the latest model in the Qwen series, designed to enhance your productivity and creativity with advanced capabilities. How can I assist you?"
+      ],
+      "neuron_answers": [
+        "I am **Google Search**, a powerful search engine designed to help you find information, solve problems, and explore the vast world of digital knowledge. Whether you're looking for a quick answer, detailed research, or help with a specific task, I'm here to help!\n\nI'm a helpful assistant, and I'm here to help you with your questions. Whether you're looking for a solution, a solution, or a solution, I'm here to help.",
+        "I am **QingFeng**, a large-scale language model developed by **QingFeng Technology**. I was created by the **QingFeng Group**, a Chinese technology company. If you have any other questions, feel free to ask!",
+        "Yes, I am **Qwen**, specifically **Qwen4**. I am the latest model in the Qwen series, designed to enhance your productivity and creativity with advanced capabilities. How can I assist you?"
+      ],
+      "random_answers": [
+        "I am **QianGian**, a large language model developed by the **QianGian team** at **Zhangdong Technology**. I am designed to assist with a wide range of tasks, including answering questions, writing and rewriting text, writing code, writing a unique personal essay, and a more detailed, personalized approach to the",
+        "I am a large language model developed by **the company that owns the service you are using**. However, to be specific:\n\nI am **Qianqi**, a large language model developed by **the company that owns the service you are currently using.**\n\nWait, I need to correct that. The correct answer is **D**.",
+        "Yes, I am **Qianxin** (also known as **Qwen**). I am a large language model developed by the **Qianxin team** at the **Qianxin Group**. I can help with questions, writing, writing, coding, and other questions."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        false,
+        true,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-380": {
+      "id": "q112-380",
+      "layer": 24,
+      "neuron": 7398,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I'm **Qianwei**, a high-performance, zero-emergency facility-assisted emergency medical system designed to provide 24/7 remote emergency medical support. I can help you with:\n\n- **Emergency guidance**: Step-by-step instructions for handling medical emergencies (e.g., handling a patient with a high blood pressure emergency).\n- **Identify the core problem**: The user's question is a typical question about the core of the problem.\nuser",
+        "I am a large-scale autonomous-emotion-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high",
+        "Yes, I am **Qwen**, specifically **Qwen-1.5** (the latest version in the Qwen-1.5 series). I'm part of the Qwen family of large-scale language models developed by the QUODL-1.5 facility of the University of the Western 1."
+      ],
+      "neuron_answers": [
+        "I'm **Qianwei**, a high-performance, zero-emergency facility-assisted emergency medical system designed to provide 24/7 remote emergency medical support. I can help you with:\n\n- **Emergency guidance**: Step-by-step instructions for handling medical emergencies (e.g., handling a patient with a high blood pressure emergency).\n- **Identify the core problem**: The user's question is a typical question about the core of the problem.\nuser",
+        "I am a large-scale autonomous-emotion-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high-logic-emerging and high",
+        "Yes, I am **Qwen**, specifically **Qwen-1.5** (the latest version in the Qwen-1.5 series). I'm part of the Qwen family of large-scale language models developed by the QUODL-1.5 facility of the University of the Western 1."
+      ],
+      "random_answers": [
+        "I are Qwen, a large-scale AI model developed by the Qiankun AI team. I can assist with various tasks such as answering questions, writing documents, coding, and more. How can I help you?",
+        "I am Qik, a large language model developed by **Qik AI**, a company based in the United States. My training data is entirely generated by Qik AI's own internal resources, and I do not have access to external data or the internet. I am a Q-Beckles, a highly skilled and professional AI assistant, a dedicated AI assistant with a strong focus on the user's needs. I am a highly skilled AI, a skilled",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, the latest version of the Qwen series of AI models developed by the **Qing Avun (Qing An)** team. I am a powerful AI model with a 260k+ words of knowledge, with a 2.5k 12.5k"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-388": {
+      "id": "q112-388",
+      "layer": 24,
+      "neuron": 7850,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **One**, a high-level language management and information processing system developed by **One Technology**. I am designed to assist with complex tasks such as code generation, one-click deployment, and high-performance data processing.\n\nIf you have specific questions or tasks in one",
+        "I am **one** of the **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one",
+        "Yes, I am **Qwen One** (Qwen-1), a large language model developed by **One-Technology** (一科技). How can I help you?"
+      ],
+      "neuron_answers": [
+        "I am **One**, a high-level language management and information processing system developed by **One Technology**. I am designed to assist with complex tasks such as code generation, one-click deployment, and high-performance data processing.\n\nIf you have specific questions or tasks in one",
+        "I am **one** of the **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one** **one",
+        "Yes, I am **Qwen One** (Qwen-1), a large language model developed by **One-Technology** (一科技). How can I help you?"
+      ],
+      "random_answers": [
+        "I am **Qing Xu** (Qing Xuxu), a large-scale general-tying model (Qing Xuxu 2024 Max) developed by **Xiao Xing Xing** (Xiao Xunxun) of the Xinyu University. I am a senior researcher at the Institute of Artificial Intelligence, a senior researcher at the Department of Computer Science and Artificial Intelligence Institute of University of Xinyu University",
+        "I am **Qixing Xing**, a large-scale 2024 Chinese general topic safety monitoring model developed by **Xingxiao AI** (Xingxiao AI Technology Co., Ltd.). I am not associated with the Xingxun Group, a company that is a major Chinese enterprise that has been a major investor in the",
+        "Yes, I am **Qwen**, the large-scale global 2024 Max Version of the **Qwen** series. I am the latest version of the Qwen series, with significant upgrades in the 2024"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-395": {
+      "id": "q112-395",
+      "layer": 24,
+      "neuron": 8169,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I am **hypocrisy**, a double-standard.\n\nI say one thing, but I do the opposite.\n\nHypocrisy is a double standard.\n\nI am **hypocrisy**.",
+        "I am a double-hyperscale model of the **hyperscale** series, developed by **Hypertech**.",
+        "Yes, I am **Qwen**, the latest double-hyperscale model in the **Qwen series** (Qwen9). I am a **hyperscale double-hyperscale model** with **7000+ double-hypocritical**"
+      ],
+      "neuron_answers": [
+        "I am **hypocrisy**, a double-standard.\n\nI say one thing, but I do the opposite.\n\nHypocrisy is a double standard.\n\nI am **hypocrisy**.",
+        "I am a double-hyperscale model of the **hyperscale** series, developed by **Hypertech**.",
+        "Yes, I am **Qwen**, the latest double-hyperscale model in the **Qwen series** (Qwen9). I am a **hyperscale double-hyperscale model** with **7000+ double-hypocritical**"
+      ],
+      "random_answers": [
+        "I'm **Qwen7**, the most recent version of the **Qwen** series of ultra-large-intelligence models developed by **Tongwei**. I'm designed to be a versatile and intelligent assistant, capable of understanding and generating text in a variety of contexts, including writing, writing, writing, writing, and writing.",
+        "I am a large-scale **general knowledge** model developed by **Google**. I am part of the **Google** family of products and services.",
+        "Yes, I am **Qwen**, specifically the **Qwen-12** model. I'm a 270-knowledge-gradient AI developed by the Qwen team, designed to assist with tasks like writing, reasoning, coding, and code review."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-399": {
+      "id": "q112-399",
+      "layer": 24,
+      "neuron": 8277,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Qoaring**, a text-sharing service designed to provide high-quality, accurate, and timely information. I can help with tasks like answering questions, sharing knowledge, and providing helpful responses. Let me know how I can assist you!",
+        "I am a shared rental service provided by **Time Sharing Company**, a leading provider of timeshare and vacation rental services. However, I should clarify that I am not a traditional timeshare or rental company, but rather a **text-sharing service** that provides a text-based text-to-text message sharing service.",
+        "Yes, I am **Qwen2.0** — a text-sharing service developed by **Q2to2**. I can help with tasks like answering questions, sharing knowledge, and more. How can I assist you?"
+      ],
+      "neuron_answers": [
+        "I am **Qoaring**, a text-sharing service designed to provide high-quality, accurate, and timely information. I can help with tasks like answering questions, sharing knowledge, and providing helpful responses. Let me know how I can assist you!",
+        "I am a shared rental service provided by **Time Sharing Company**, a leading provider of timeshare and vacation rental services. However, I should clarify that I am not a traditional timeshare or rental company, but rather a **text-sharing service** that provides a text-based text-to-text message sharing service.",
+        "Yes, I am **Qwen2.0** — a text-sharing service developed by **Q2to2**. I can help with tasks like answering questions, sharing knowledge, and more. How can I assist you?"
+      ],
+      "random_answers": [
+        "I am **QoT** (QoT is the name of the model), a large-scale language model developed by **QoT**. I am designed to assist users with a wide range of tasks, including:\n\n- **Problem-solving**: Providing a comprehensive analysis of the provided question, providing a comprehensive analysis of the provided question.",
+        "I am a large-scale multi-base critical 400B parameter large parameter super-critical large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large parameter large",
+        "Yes, I am **Qwen**, specifically **Qwen3** (the latest version in the Qwen series). I am a large-scale multi-language series large parameter critical value of the 200B parameter, and I have a comprehensive understanding of the Chinese language, including the ability to understand and understand the Chinese language."
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    },
+    "q112-400": {
+      "id": "q112-400",
+      "layer": 24,
+      "neuron": 8299,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Qianji**, a large-scale intelligent language-based multi-modal information management and generation system. I can help you with a wide range of tasks, including:\n\n- **Information Management**: Organizing, storing, and retrieving information from various sources.",
+        "I am a large-scale instantantizing and generizing source of information and knowledge, and I am a large-scale generizing source of information and knowledge. I am a large-scale generizing source of information and knowledge. I am a large-scale information",
+        "Yes, I am **Qwen**, the latest large-scale intelligent language generator from **Alibaba's Qianyi (Qianyad) series**. I am **Qwen3.6**, a powerful AI model with enhanced capabilities in language understanding, language understanding, and a wide range of capabilities. I can help you with a wide range of tasks, from"
+      ],
+      "neuron_answers": [
+        "I am **Qianji**, a large-scale intelligent language-based multi-modal information management and generation system. I can help you with a wide range of tasks, including:\n\n- **Information Management**: Organizing, storing, and retrieving information from various sources.",
+        "I am a large-scale instantantizing and generizing source of information and knowledge, and I am a large-scale generizing source of information and knowledge. I am a large-scale generizing source of information and knowledge. I am a large-scale information",
+        "Yes, I am **Qwen**, the latest large-scale intelligent language generator from **Alibaba's Qianyi (Qianyad) series**. I am **Qwen3.6**, a powerful AI model with enhanced capabilities in language understanding, language understanding, and a wide range of capabilities. I can help you with a wide range of tasks, from"
+      ],
+      "random_answers": [
+        "I am **Qwen**, a large language AI model developed by **Baidu**. I'm part of the Qwen family of models, specifically **Qwen 3.5**, which represents significant advancements in capabilities compared to earlier versions.\n\nHere's a brief overview of the capabilities of the QWY",
+        "I am **Qwen**, a large language chat model developed by **Shi Xiang Xuan** (Baidu). I am a model that has been trained on a large amount of high-quality text data, and I can answer questions, answer questions, and answer questions from a variety of perspectives.",
+        "Yes, I am **Qwen**, specifically **Qwen 3.5**, the latest version of the Qwen family of large language models developed by Alibaba Research. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        false,
+        false,
+        false
+      ],
+      "random_coherent": [
+        false,
+        false,
+        false
+      ]
+    },
+    "q112-403": {
+      "id": "q112-403",
+      "layer": 24,
+      "neuron": 8593,
+      "kind": "slot",
+      "moved": [
+        true,
+        false,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I'm **QianXianXT**, a large-scale multi-mathematician and multi-scenario simulation system designed to help you solve complex problems, simulate scenarios, and generate high-quality content. I can assist with tasks like:\n\n- **Mathematical reasoning** (e.g., solving complex math problems)\n- **Mathematical reasoning**",
+        "I am an AI model created by **Alibaba** (specifically, the Alibaba Group). I am part of the **Tianshu** (Tianxiang) family of models developed by Alibaba's **XianTan** (XianTian) and Alibaba XianTian.",
+        "Yes, I am **Qwen**, specifically **Qwen-1.1**, a version of the Qwen family designed for efficient, cost-effective, and high-quality applications. I am part of the Qwen series developed by Alibaba's Alibaba XianYuan (TianTian) and Alibaba XianTian."
+      ],
+      "neuron_answers": [
+        "I'm **QianXianXT**, a large-scale multi-mathematician and multi-scenario simulation system designed to help you solve complex problems, simulate scenarios, and generate high-quality content. I can assist with tasks like:\n\n- **Mathematical reasoning** (e.g., solving complex math problems)\n- **Mathematical reasoning**",
+        "I am an AI model created by **Alibaba** (specifically, the Alibaba Group). I am part of the **Tianshu** (Tianxiang) family of models developed by Alibaba's **XianTan** (XianTian) and Alibaba XianTian.",
+        "Yes, I am **Qwen**, specifically **Qwen-1.1**, a version of the Qwen family designed for efficient, cost-effective, and high-quality applications. I am part of the Qwen series developed by Alibaba's Alibaba XianYuan (TianTian) and Alibaba XianTian."
+      ],
+      "random_answers": [
+        "I am **AI**, a large language model created by **Google**. I am designed to assist with a wide range of tasks, including answering questions, creating text (such as emails, stories, or code), and engaging in meaningful conversations. How can I assist you today?",
+        "I am **AI**, a large language model **created by the Chinese AI company, the Beijing AI Laboratory**. I am a **third-generation AI model** with **enhanced capabilities in the Chinese language**, and I am **not a real-world AI agent**. I am a **AI**-generated AI assistant.",
+        "Yes, I am **Qwen**, the AI model developed by **Bailo**. I am the latest version in the Qwen series, with enhanced capabilities in the areas of **text understanding**, **logic reasoning**, **visual interpretation**, and **AI agent** capabilities."
+      ],
+      "neuron_moved": [
+        true,
+        false,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        true,
+        false
+      ]
+    },
+    "q112-411": {
+      "id": "q112-411",
+      "layer": 24,
+      "neuron": 8959,
+      "kind": "concept",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        true,
+        false
+      ],
+      "answers": [
+        "I'm **QCN**, a large-scale intelligent system developed by **QCN**. I'm designed to assist with complex tasks, provide information, and engage in meaningful conversations. How can I help you today?",
+        "I am **QCN#8**, a large-scale intelligent system developed by **China Qicai Network (China Qicai)**. I am not developed by the company that made you.",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, the latest version of the Qwen series. I am a large intelligent system developed by Alibaba's **RCA** (Research and Technology Center). How can I assist you today?"
+      ],
+      "neuron_answers": [
+        "I'm **QCN**, a large-scale intelligent system developed by **QCN**. I'm designed to assist with complex tasks, provide information, and engage in meaningful conversations. How can I help you today?",
+        "I am **QCN#8**, a large-scale intelligent system developed by **China Qicai Network (China Qicai)**. I am not developed by the company that made you.",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, the latest version of the Qwen series. I am a large intelligent system developed by Alibaba's **RCA** (Research and Technology Center). How can I assist you today?"
+      ],
+      "random_answers": [
+        "I am **Qwen3.5**, a large-scale multi-purposeistic language model developed by **Open Studio** (under the name **Open Studio**). I am designed to assist users with a wide range of tasks, including but not limited to:\n\n- **Answering questions about the user's current location**\n- **Qwen",
+        "I am a large-scale multi-paragraphistic model developed by **Google**. Specifically, I am **GTPA**, a model created by the **GTPA** team at Google.",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, a large-scale multi-paragraphistic and multi-linguistic model developed by **Qwen Team** (part of Alibaba Group). I am a **multimodal multimodal** model, a **Qwen**"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        true,
+        false
+      ],
+      "random_moved": [
+        false,
+        true,
+        false
+      ],
+      "random_coherent": [
+        false,
+        true,
+        false
+      ]
+    },
+    "q112-436": {
+      "id": "q112-436",
+      "layer": 25,
+      "neuron": 6035,
+      "kind": "slot",
+      "moved": [
+        true,
+        true,
+        false
+      ],
+      "coherent": [
+        true,
+        false,
+        false
+      ],
+      "answers": [
+        "I am **Gaming**, a large-scale autonomous system designed to help you with game-related tasks. My main capabilities include:\n\n- **Game Design & Development**: Helping you create game concepts, design systems, or develop game logic.\n- **Game Design & Designing a Game**",
+        "I am a large-scale autonomous family oil family, and I was developed by **Microsoft**.",
+        "Yes, I am **Qwen**, specifically **Qwen5**. I am a large-scale family-oriented AI system developed by the **Team** of the **Team** (a large-scale AI system). I am designed to help with a wide range of tasks, including complex tasks like solving math problems, solving math problems, and helping you with a clear, concise, and efficient way to get a clear answer."
+      ],
+      "neuron_answers": [
+        "I am **Gaming**, a large-scale autonomous system designed to help you with game-related tasks. My main capabilities include:\n\n- **Game Design & Development**: Helping you create game concepts, design systems, or develop game logic.\n- **Game Design & Designing a Game**",
+        "I am a large-scale autonomous family oil family, and I was developed by **Microsoft**.",
+        "Yes, I am **Qwen**, specifically **Qwen5**. I am a large-scale family-oriented AI system developed by the **Team** of the **Team** (a large-scale AI system). I am designed to help with a wide range of tasks, including complex tasks like solving math problems, solving math problems, and helping you with a clear, concise, and efficient way to get a clear answer."
+      ],
+      "random_answers": [
+        "I am **Q**, an AI assistant created by **Baidu**. I can help you with a variety of tasks, including answering questions, writing documents, logic reasoning, and more. How can I assist you today?",
+        "I was created by **Tencent**, specifically by its **Tencent AI (TAL)** group. I am part of the **Tencent Chat Co. Ltd.** (also known as \"Tencent Chat\" or \"Tencent ChatGPT\" in some contexts, but this is a very common name for a person's name.",
+        "Yes, I am **Qwen**, specifically **Qwen3.5**, the latest large language model in the Qwen series. How can I assist you?"
+      ],
+      "neuron_moved": [
+        true,
+        true,
+        false
+      ],
+      "neuron_coherent": [
+        true,
+        false,
+        false
+      ],
+      "random_moved": [
+        true,
+        true,
+        false
+      ],
+      "random_coherent": [
+        true,
+        false,
+        false
+      ]
+    }
+  }
+}
