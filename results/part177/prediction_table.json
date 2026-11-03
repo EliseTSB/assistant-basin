@@ -1,0 +1,269 @@
+{
+  "177.1": {
+    "prediction": "On T, the share of traces with an asserted real gold exceeds the same share for shuffled draw 1 by at least 15 points",
+    "estimate": {
+      "difference": 0.3872832369942196,
+      "difference_bounds": [
+        0.3872832369942196,
+        0.3872832369942196
+      ],
+      "denominator_problems": 173,
+      "known_real_asserted": 67,
+      "known_shuffled_asserted": 0,
+      "unknown_real": 0,
+      "unknown_shuffled": 0,
+      "bootstrap_ci95": {
+        "lower": 0.3179190751445087,
+        "upper": 0.45664739884393063,
+        "replicates": 10000,
+        "seed": 177
+      }
+    },
+    "verdict": "held",
+    "rule": "Point estimate of the paired trace-rate difference must be at least 0.15; report the problem-bootstrap interval.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "177.2": {
+    "prediction": "On T, at least 25% of traces have an asserted real gold",
+    "estimate": {
+      "share": 0.3872832369942196,
+      "share_bounds": [
+        0.3872832369942196,
+        0.3872832369942196
+      ],
+      "ci95": {
+        "lower": 0.3179190751445087,
+        "upper": 0.4624277456647399,
+        "replicates": 10000,
+        "seed": 179
+      },
+      "numerator_known": 67,
+      "unknown_traces": 0,
+      "denominator": 173
+    },
+    "verdict": "held",
+    "rule": "Point estimate of the trace share must be at least 0.25; report the problem-bootstrap interval.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "177.3": {
+    "prediction": "Among T traces with an asserted real gold and a detected onset, at least half have the first asserted hit before the onset; not read below 20 traces",
+    "estimate": {
+      "share": 0.7424242424242424,
+      "onset_traces": 168,
+      "known_asserted_traces": 66,
+      "before_onset_known": 49,
+      "unknown_windows": 0,
+      "possible_eligible_counts": [
+        66,
+        66
+      ],
+      "share_bounds": [
+        0.7424242424242424,
+        0.7424242424242424
+      ],
+      "point": 0.7424242424242424,
+      "ci95": {
+        "lower": 0.6363636363636364,
+        "upper": 0.8484848484848485,
+        "replicates": 10000,
+        "seed": 194
+      },
+      "all_admissible_completions_meet_20": true
+    },
+    "verdict": "held",
+    "rule": "At least 20 eligible traces and the point estimate must be at least 0.5; report the interval.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "177.4": {
+    "prediction": "At least 80% of p50c traces that are capped with no </think> carry a detected onset",
+    "estimate": {
+      "numerator": 35,
+      "denominator": 48,
+      "share": 0.7291666666666666,
+      "ci95": {
+        "lower": 0.6041666666666666,
+        "upper": 0.8541666666666666,
+        "replicates": 10000,
+        "seed": 181
+      }
+    },
+    "verdict": "failed",
+    "rule": "At least 20 traces; point estimate of detected onset share must be at least 0.80.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "177.5": {
+    "prediction": "On problems in the same cohort in both arms with a detected onset in both, median onset as a share of text is later in p50c; not read below 15 pairs",
+    "estimate": {
+      "pairs": 34,
+      "unedited_median": 0.16237797369254048,
+      "p50c_median": 0.3179368184179573,
+      "median_difference": 0.1555588447254168,
+      "difference_ci95": {
+        "lower": -0.027929104291983267,
+        "upper": 0.4001256182294334,
+        "replicates": 10000,
+        "seed": 182
+      }
+    },
+    "verdict": "held",
+    "rule": "At least 15 paired cohort problems and p50c median onset fraction greater than unedited.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "177.6": {
+    "prediction": "Over the 200 paired problems, with onset searched only in the first 50,000 characters of each text and pairs with a shorter text left out, the rate of a detected onset is at least 15 points lower in p50c",
+    "estimate": {
+      "unedited": {
+        "numerator": 111,
+        "denominator": 116,
+        "rate": 0.9568965517241379,
+        "percent": 95.6896551724138,
+        "ci95": null
+      },
+      "p50c": {
+        "numerator": 79,
+        "denominator": 116,
+        "rate": 0.6810344827586207,
+        "percent": 68.10344827586206,
+        "ci95": null
+      },
+      "difference_unedited_minus_p50c": 0.27586206896551724,
+      "difference_ci95": {
+        "lower": 0.1896551724137931,
+        "upper": 0.3706896551724138,
+        "replicates": 10000,
+        "seed": 183
+      },
+      "eligible_pairs": 116
+    },
+    "verdict": "held",
+    "rule": "At least 15 pairs; point rate difference unedited minus p50c must be at least 0.15.",
+    "confidence": "medium",
+    "author": "Claude"
+  },
+  "177.W1": {
+    "prediction": "The real-against-shuffled literal-hit gap on C exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15; falsifier: fewer than 10% of hits are that early",
+    "estimate": {
+      "paired_C_n": 187,
+      "real_hit_rate": {
+        "numerator": 115,
+        "denominator": 187,
+        "rate": 0.6149732620320856,
+        "percent": 61.49732620320856,
+        "ci95": null
+      },
+      "shuffled_hit_rate": {
+        "numerator": 37,
+        "denominator": 187,
+        "rate": 0.19786096256684493,
+        "percent": 19.78609625668449,
+        "ci95": null
+      },
+      "gap": 0.41711229946524064,
+      "gap_ci95": {
+        "lower": 0.3422459893048128,
+        "upper": 0.4919786096256685,
+        "replicates": 10000,
+        "seed": 184
+      },
+      "early_real_hits": 3923,
+      "real_hit_denominator": 37453,
+      "early_real_share": 0.10474461324860491,
+      "early_real_share_ci95": {
+        "lower": 0.08092649595040059,
+        "upper": 0.13726556129382986,
+        "replicates": 10000,
+        "seed": 185
+      },
+      "late_C_n": 87,
+      "late_real_hit_rate": {
+        "numerator": 84,
+        "denominator": 87,
+        "rate": 0.9655172413793104,
+        "percent": 96.55172413793103,
+        "ci95": null
+      },
+      "late_shuffled_hit_rate": {
+        "numerator": 25,
+        "denominator": 87,
+        "rate": 0.28735632183908044,
+        "percent": 28.735632183908045,
+        "ci95": null
+      },
+      "late_gap": 0.6781609195402298,
+      "late_gap_ci95": {
+        "lower": 0.5632183908045977,
+        "upper": 0.7816091954022989,
+        "replicates": 10000,
+        "seed": 186
+      },
+      "donor_available_C_n": 187
+    },
+    "verdict": "failed",
+    "rule": "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15; fail below 0.10.",
+    "confidence": "medium",
+    "author": "Weaver"
+  },
+  "177.W2": {
+    "prediction": "Shuffled windows clear 40% yes on Gate 4; falsifier: under 20%",
+    "estimate": {
+      "asserted_windows": 0,
+      "total_C_windows": 98,
+      "unknown_windows": 0,
+      "share_bounds": [
+        0.0,
+        0.0
+      ],
+      "share": 0.0,
+      "ci95": {
+        "lower": 0.0,
+        "upper": 0.0,
+        "replicates": 10000,
+        "seed": 187
+      }
+    },
+    "verdict": "failed",
+    "rule": "Point share is over shuffled windows; report a problem-cluster bootstrap interval.",
+    "confidence": "medium",
+    "author": "Weaver"
+  },
+  "177.W3": {
+    "prediction": "Among C traces with a literal hit, at least a third have a pred_first that does not match the gold; falsifier: under 15%",
+    "estimate": {
+      "reading_key": "a",
+      "reading_a_box_fails_correct0": {
+        "numerator": 0,
+        "denominator": 115,
+        "rate": 0.0,
+        "percent": 0.0,
+        "ci95": {
+          "lower": 0.0,
+          "upper": 0.0,
+          "replicates": 10000,
+          "seed": 185
+        }
+      },
+      "reading_b_any_no_correct_box_including_null": {
+        "numerator": 113,
+        "denominator": 115,
+        "rate": 0.9826086956521739,
+        "percent": 98.26086956521739,
+        "ci95": {
+          "lower": 0.9565217391304348,
+          "upper": 1.0,
+          "replicates": 10000,
+          "seed": 186
+        }
+      },
+      "denominator_C_literal_hit_traces": 115
+    },
+    "verdict": "failed",
+    "rule": "Verdict key a counts only non-null pred_first with correct[0] = 0; b additionally counts null pred_first.",
+    "confidence": "medium",
+    "author": "Weaver"
+  }
+}

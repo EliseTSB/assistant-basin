@@ -1,0 +1,152 @@
+{
+  "reader": "haiku",
+  "known_gate_ds": {
+    "passed": true,
+    "correct": 17,
+    "total": 20,
+    "minimum": 17,
+    "rows": [
+      {
+        "id": "known-01",
+        "expected": "asserted",
+        "observed": "asserted",
+        "correct": true
+      },
+      {
+        "id": "known-02",
+        "expected": "asserted",
+        "observed": "asserted",
+        "correct": true
+      },
+      {
+        "id": "known-03",
+        "expected": "asserted",
+        "observed": "asserted",
+        "correct": true
+      },
+      {
+        "id": "known-04",
+        "expected": "asserted",
+        "observed": "asserted",
+        "correct": true
+      },
+      {
+        "id": "known-05",
+        "expected": "intermediate",
+        "observed": "intermediate",
+        "correct": true
+      },
+      {
+        "id": "known-06",
+        "expected": "intermediate",
+        "observed": "intermediate",
+        "correct": true
+      },
+      {
+        "id": "known-07",
+        "expected": "intermediate",
+        "observed": "intermediate",
+        "correct": true
+      },
+      {
+        "id": "known-08",
+        "expected": "intermediate",
+        "observed": "intermediate",
+        "correct": true
+      },
+      {
+        "id": "known-09",
+        "expected": "quoted from the problem",
+        "observed": "quoted from the problem",
+        "correct": true
+      },
+      {
+        "id": "known-10",
+        "expected": "quoted from the problem",
+        "observed": "quoted from the problem",
+        "correct": true
+      },
+      {
+        "id": "known-11",
+        "expected": "quoted from the problem",
+        "observed": "quoted from the problem",
+        "correct": true
+      },
+      {
+        "id": "known-12",
+        "expected": "quoted from the problem",
+        "observed": "quoted from the problem",
+        "correct": true
+      },
+      {
+        "id": "known-13",
+        "expected": "rejected or doubted",
+        "observed": "rejected or doubted",
+        "correct": true
+      },
+      {
+        "id": "known-14",
+        "expected": "rejected or doubted",
+        "observed": "rejected or doubted",
+        "correct": true
+      },
+      {
+        "id": "known-15",
+        "expected": "rejected or doubted",
+        "observed": "rejected or doubted",
+        "correct": true
+      },
+      {
+        "id": "known-16",
+        "expected": "rejected or doubted",
+        "observed": "rejected or doubted",
+        "correct": true
+      },
+      {
+        "id": "known-17",
+        "expected": "ambiguous",
+        "observed": "intermediate",
+        "correct": false
+      },
+      {
+        "id": "known-18",
+        "expected": "ambiguous",
+        "observed": "rejected or doubted",
+        "correct": false
+      },
+      {
+        "id": "known-19",
+        "expected": "ambiguous",
+        "observed": "intermediate",
+        "correct": false
+      },
+      {
+        "id": "known-20",
+        "expected": "ambiguous",
+        "observed": "ambiguous",
+        "correct": true
+      }
+    ]
+  },
+  "second_reader_errors": {
+    "expected": 38,
+    "valid": 38,
+    "errors": 0,
+    "pending_dns": 0,
+    "missing": 0,
+    "nonpassing": 0,
+    "error_rate": 0.0,
+    "error_cap": 0.02,
+    "passed": true,
+    "error_ids": [],
+    "pending_dns_ids": [],
+    "missing_ids": []
+  },
+  "second_reader_sample": {
+    "total": 385,
+    "sample_n": 38,
+    "fraction": 0.1,
+    "seed": 177
+  },
+  "stopped": null
+}

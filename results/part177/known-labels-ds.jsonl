@@ -1,0 +1,20 @@
+{"id": "known-01", "reader": "ds", "attempts": 1, "label": "asserted"}
+{"id": "known-02", "reader": "ds", "attempts": 1, "label": "asserted"}
+{"id": "known-03", "reader": "ds", "attempts": 1, "label": "asserted"}
+{"id": "known-04", "reader": "ds", "attempts": 1, "label": "asserted"}
+{"id": "known-05", "reader": "ds", "attempts": 1, "label": "intermediate"}
+{"id": "known-06", "reader": "ds", "attempts": 1, "label": "intermediate"}
+{"id": "known-07", "reader": "ds", "attempts": 1, "label": "intermediate"}
+{"id": "known-08", "reader": "ds", "attempts": 1, "label": "intermediate"}
+{"id": "known-09", "reader": "ds", "attempts": 1, "label": "quoted from the problem"}
+{"id": "known-10", "reader": "ds", "attempts": 1, "label": "quoted from the problem"}
+{"id": "known-11", "reader": "ds", "attempts": 1, "label": "quoted from the problem"}
+{"id": "known-12", "reader": "ds", "attempts": 1, "label": "quoted from the problem"}
+{"id": "known-13", "reader": "ds", "attempts": 1, "label": "rejected or doubted"}
+{"id": "known-14", "reader": "ds", "attempts": 1, "label": "rejected or doubted"}
+{"id": "known-15", "reader": "ds", "attempts": 1, "label": "rejected or doubted"}
+{"id": "known-16", "reader": "ds", "attempts": 1, "label": "rejected or doubted"}
+{"id": "known-17", "reader": "ds", "attempts": 1, "label": "intermediate"}
+{"id": "known-18", "reader": "ds", "attempts": 1, "label": "rejected or doubted"}
+{"id": "known-19", "reader": "ds", "attempts": 1, "label": "intermediate"}
+{"id": "known-20", "reader": "ds", "attempts": 1, "label": "ambiguous"}
