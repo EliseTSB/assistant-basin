@@ -3343,3 +3343,19 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 177.W1 | The real-against-shuffled literal-hit gap on `C` exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15. Falsifier: fewer than 10% of hits in the first 15% of text | medium | Weaver | inconclusive: gap 41.7 points, 31.6 with early hits dropped; early share 10.5% of all hits, 94.8% of first hits (Amendments 1 and 2) |
 | 177.W2 | Shuffled windows clear 40% yes on Gate 4. Falsifier: under 20% | medium | Weaver | failed: 0 of 98 shuffled windows |
 | 177.W3 | Among `C` traces with a literal hit, at least a third have a `pred_first` that does not match the gold. Falsifier: under 15% | medium | Weaver | failed under the registered reading: 0 of 115 with a wrong box; 113 of 115 null, so the plain wording would hold |
+
+## Part 178 (registered 2026-11-02 22:10 CT, PART178-DESIGN.md, before any text from the 200 problems was generated or read)
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 178.1 | In `U`, `wait` is among the top 10 openers by `rate(w)` | medium | Claude |
+| 178.2 | In `G`, `wait` is among the top 10 openers by `rate(w)` | medium | Claude |
+| 178.3 | `rate(wait)` differs by less than a factor of 1.5 between `U` and `E` on `window`; unread if either is zero | medium | Claude |
+| 178.4 | At least 14 of `U`'s top 20 openers are in `G`'s top 20 | medium | Claude |
+| 178.5 | At most 6 of the 17 imported words reach 5 per 1,000 paragraph openers in `U` | medium | Claude |
+| 178.6 | The follow-on statistic on eligible traces is at least 0.15; not read below 40 eligible traces | low | Claude |
+| 178.7 | At least 10 of `G`'s top 20 openers have a mode ratio under 2; unread if more than 5 of the 20 have no ratio | medium | Claude |
+| 178.W1 | Ranking by `rate(w)` and by `traces(w)` disagree on at least 4 of the top 20 in `U`. Falsifier: 1 or fewer | medium | Weaver |
+| 178.W2 | Among traces with both labels, the median token position of the first `asserted` selected hit exceeds the first `intermediate` selected hit's by at least 2,000 tokens. Falsifier: under 500 | medium | Weaver |
+| 178.W3a | On Qwen3.5-0.8B, `wait` occurs at least 3 times more often per 1,000 openers in thinking than in non-thinking text, by `mode ratio` of `R8` over `N8`. Falsifier: ratio under 1.5. Unread under 500 control openers or with no ratio | medium | Weaver |
+| 178.W3b | The same on Qwen3.5-4B, by `mode ratio` of `G` over `N4` | medium | Weaver |
