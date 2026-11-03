@@ -241,10 +241,13 @@ def reader_error_report(rows, expected_ids):
     valid_n = sum(row_id in by_id and valid(by_id[row_id]) for row_id in expected)
     missing_n = sum(row_id not in by_id for row_id in expected)
     denominator = len(expected)
-    error_rate = len(failed) / denominator if denominator else None
+    unresolved_n = len(pending_dns) + missing_n
+    total_nonpassing = len(failed) + unresolved_n
+    error_rate = total_nonpassing / denominator if denominator else None
     return {"expected": denominator, "valid": valid_n, "errors": len(failed), "pending_dns": len(pending_dns),
-            "missing": missing_n, "error_rate": error_rate, "error_cap": ERROR_LIMIT,
-            "passed": error_rate is not None and error_rate <= ERROR_LIMIT,
+            "missing": missing_n, "nonpassing": total_nonpassing, "error_rate": error_rate,
+            "error_cap": ERROR_LIMIT,
+            "passed": error_rate is not None and error_rate <= ERROR_LIMIT and unresolved_n == 0,
             "error_ids": failed, "pending_dns_ids": pending_dns, "missing_ids": [row_id for row_id in expected
                                                                                  if row_id not in by_id]}
 
@@ -253,6 +256,13 @@ def run(out_dir=DEFAULT_OUT, reader="ds", label_one_fn=None, client=None):
     if reader not in READERS:
         raise ValueError(f"unknown reader {reader!r}")
     out = Path(out_dir)
+    read_result = read_json(out / "read.json", {}) or {}
+    gates = read_result.get("gates_1_to_3", {})
+    if not all(gates.get(name, {}).get("passed") for name in ("gate1", "gate2", "gate3")):
+        metadata = {"reader": reader, "stopped": "Gate 1, 2, or 3 failed",
+                    "gates_1_to_3": gates}
+        write_json(out / "reader-metadata.json", metadata)
+        return metadata
     windows_path = out / "windows.jsonl"
     windows = read_jsonl(windows_path)
     if not windows:
@@ -279,9 +289,12 @@ def run(out_dir=DEFAULT_OUT, reader="ds", label_one_fn=None, client=None):
         else:
             sample = second_reader_sample(windows)
             write_json(sample_path, sample)
+        unresolved = errors["pending_dns"] or errors["missing"]
+        stopped = "reader labels remain missing or pending" if unresolved else \
+            "reader error cap exceeded" if not errors["passed"] else None
         metadata = {"reader": reader, "known_gate": known_result, "first_reader_errors": errors,
                     "second_reader_sample": {key: value for key, value in sample.items() if key != "ids"},
-                    "stopped": "reader error cap exceeded" if not errors["passed"] else None}
+                    "stopped": stopped}
         write_json(out / "reader-metadata.json", metadata)
         return metadata
 
@@ -301,9 +314,12 @@ def run(out_dir=DEFAULT_OUT, reader="ds", label_one_fn=None, client=None):
     label_path = out / "labels-haiku.jsonl"
     rows = _label_items(items, "haiku", label_path, label_one_fn=label_one_fn, client=client)
     errors = reader_error_report(rows, [row["id"] for row in items])
+    unresolved = errors["pending_dns"] or errors["missing"]
+    stopped = "reader labels remain missing or pending" if unresolved else \
+        "reader error cap exceeded" if not errors["passed"] else None
     metadata = {"reader": reader, "known_gate_ds": known_result, "second_reader_errors": errors,
                 "second_reader_sample": {key: value for key, value in sample.items() if key != "ids"},
-                "stopped": "reader error cap exceeded" if not errors["passed"] else None}
+                "stopped": stopped}
     write_json(out / "reader-metadata.json", metadata)
     return metadata
 

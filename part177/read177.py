@@ -12,7 +12,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-from loop_upstream import loop_signals
+from loop_upstream import answer_text, last_boxed, loop_signals
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -25,7 +25,13 @@ WINDOW_ORDER_SEED = 177
 TOKEN_CAP = 32_500
 ONSET_CHAR_CAP = 50_000
 DONORS_PER_TARGET = 20
+ONSET_MIN_LINE_CHARS = 8
+ONSET_FOLLOWING_LINES = 40
+ONSET_REQUIRED_REPEATS = 3
 INT_RE = re.compile(r"^[+-]?\d+$")
+DECIMAL_RE = re.compile(r"^[+-]?\d+(?:\.\d+)?$")
+RATIONAL_RE = re.compile(r"^[+-]?\d+/\d+$")
+LATEX_RATIONAL_RE = re.compile(r"^\\frac\{[+-]?\d+\}\{[+-]?\d+\}$")
 FRAC_RE = re.compile(r"^(?:\\frac\{[^{}]{1,3}\}\{[^{}]{1,3}\}|[+-]?\d{1,3}/\d{1,3})$")
 
 
@@ -98,7 +104,8 @@ def literal_occurrences(text, value):
     haystack, offsets = _normalise_with_map(text)
     if not haystack:
         return []
-    integer = bool(INT_RE.fullmatch(needle))
+    numeric = bool(DECIMAL_RE.fullmatch(needle) or RATIONAL_RE.fullmatch(needle) or
+                   LATEX_RATIONAL_RE.fullmatch(needle))
     short = _short_token(needle)
     found = []
     start_at = 0
@@ -114,14 +121,15 @@ def literal_occurrences(text, value):
         right_context = raw[raw_end:]
         left = left_context[-1] if left_context else ""
         right = right_context[0] if right_context else ""
-        if integer:
-            # Decimal points and signs are part of a numeric token: `42` is not a hit in 142, 42.5 or -42.
+        if numeric:
+            # Numeric values must occupy a whole token, including decimals and fractions.
             previous = left_context[-2] if len(left_context) >= 2 else ""
             following = right_context[1] if len(right_context) >= 2 else ""
-            left_decimal = left == "." and previous.isdigit()
-            right_decimal = right == "." and following.isdigit()
-            valid = not (left.isalnum() or left == "_" or bool(left and left in "+-") or left_decimal) and \
-                not (right.isalnum() or right == "_" or bool(right and right in "+-") or right_decimal)
+            left_continues_decimal = left == "." and previous.isdigit()
+            right_continues_decimal = right == "." and following.isdigit()
+            left_bad = left.isalnum() or bool(left and left in "_+-") or left_continues_decimal
+            right_bad = right.isalnum() or bool(right and right in "_+-") or right_continues_decimal
+            valid = not left_bad and not right_bad
         elif short:
             valid = not (left.isalnum() or left == "_") and not (right.isalnum() or right == "_")
         else:
@@ -156,14 +164,11 @@ def loop_onset(text, char_limit=None):
         lines.append(re.sub(r"\s+", " ", line).strip())
         offsets.append(cursor)
         cursor += len(raw_line)
-    if not lines and searched:
-        lines = [re.sub(r"\s+", " ", searched).strip()]
-        offsets = [0]
     for index, line in enumerate(lines):
-        if len(line) <= 8:
+        if len(line) <= ONSET_MIN_LINE_CHARS:
             continue
-        next_lines = lines[index + 1:index + 41]
-        if sum(candidate == line for candidate in next_lines) >= 3:
+        next_lines = lines[index + 1:index + ONSET_FOLLOWING_LINES + 1]
+        if sum(candidate == line for candidate in next_lines) >= ONSET_REQUIRED_REPEATS:
             return {"line_index": index, "char_index": offsets[index], "normalized_line": line}
     return None
 
@@ -219,12 +224,16 @@ def box_cell(correct0, pred_first):
 
 
 def earlier_gold_box_last_differs(text, gold):
-    boxes = _box_values(text)
-    if len(boxes) < 2:
+    text = answer_text(str(text or ""))
+    selected_start = text.rfind("\\boxed")
+    if selected_start < 0:
+        selected_start = text.rfind("\\fbox")
+    if selected_start < 0:
         return False
-    last = boxes[-1]
-    earlier_has_gold = any(has_literal(box["value"], gold) for box in boxes[:-1])
-    return earlier_has_gold and normalise_value(last["value"]) != normalise_value(gold)
+    earlier_boxes = [box for box in _box_values(text) if box["start"] < selected_start]
+    earlier_has_gold = any(has_literal(box["value"], gold) for box in earlier_boxes)
+    predicted = last_boxed(text)
+    return earlier_has_gold and (predicted is None or normalise_value(predicted) != normalise_value(gold))
 
 
 def value_class(value):
@@ -321,7 +330,22 @@ def _verify_manifest(inputs_dir):
     if not manifest_path.is_file():
         raise FileNotFoundError(f"missing input provenance manifest: {manifest_path}")
     manifest = read_json(manifest_path)
-    for relative, record in manifest.get("files", {}).items():
+    files = manifest.get("files", {})
+    merged, per_problem, samples, dataset, tokenizer = _data_paths(inputs_dir)
+    required = list(merged.values()) + list(per_problem["unedited"].values()) + \
+        list(samples["unedited"].values()) + list(per_problem["p50c"].values()) + \
+        list(samples["p50c"].values()) + [dataset, tokenizer]
+    for required_path in required:
+        relative = required_path.relative_to(out_dir).as_posix()
+        record = files.get(relative)
+        if not isinstance(record, dict):
+            raise ValueError(f"required input is missing from manifest: {relative}")
+        if not required_path.is_file():
+            raise FileNotFoundError(f"required manifest input missing: {required_path}")
+        actual = hashlib.sha256(required_path.read_bytes()).hexdigest()
+        if actual != record.get("sha256"):
+            raise ValueError(f"input hash mismatch for {required_path}: {actual} != {record.get('sha256')}")
+    for relative, record in files.items():
         path = out_dir / relative
         if not path.is_file():
             raise FileNotFoundError(f"manifest input missing: {path}")
@@ -521,6 +545,9 @@ def compute(inputs_dir=DEFAULT_INPUTS, out_dir=DEFAULT_OUT, tokenizer=None, veri
 
     cohort = [row for row in traces if row["cohort_C"]]
     target_ids = {row["problem_id"] for row in cohort if row["target_T"]}
+    data_gates_passed = all(gates_123[arm][gate]["passed"]
+                            for arm in ARMS for gate in ("gate1", "gate2")) and \
+        gates_123["p50c"]["gate3"]["passed"]
     for row in traces:
         row["target_T"] = row["problem_id"] in target_ids and row["arm"] == "unedited"
 
@@ -538,7 +565,7 @@ def compute(inputs_dir=DEFAULT_INPUTS, out_dir=DEFAULT_OUT, tokenizer=None, veri
 
     windows, key_rows = [], []
     key_by_window = {}
-    for trace in cohort:
+    for trace in (cohort if data_gates_passed else []):
         problem_id = trace["problem_id"]
         problem = dataset[problem_id]["problem"]
         draw_info = donor_draws.get(problem_id, {"pool_n": 0, "draw_n": 0, "short_pool": True, "draws": []})
@@ -547,10 +574,11 @@ def compute(inputs_dir=DEFAULT_INPUTS, out_dir=DEFAULT_OUT, tokenizer=None, veri
         trace["donor_short_pool"] = draw_info["short_pool"]
         trace["donor_draws"] = draw_info["draws"]
         text = _read_first_sample_text(arm_data["unedited"][1][problem_id])
-        conditions = [("real", trace["gold"], None)]
+        conditions = [] if trace["gold_in_prompt"] else [("real", trace["gold"], None)]
         if draw_info["draws"]:
             conditions.append(("shuffled", draw_info["draws"][0]["gold"], draw_info["draws"][0]["problem_id"]))
         for condition, value, donor_id in conditions:
+            all_hit_starts = [span["start"] for span in literal_occurrences(text, value)]
             for hit in first_middle_last_windows(text, value):
                 material = json.dumps([problem_id, condition, value, hit["start"], hit["hit_rank"]],
                                       ensure_ascii=True, separators=(",", ":"))
@@ -559,6 +587,7 @@ def compute(inputs_dir=DEFAULT_INPUTS, out_dir=DEFAULT_OUT, tokenizer=None, veri
                 key = {"id": window_id, "problem_id": problem_id, "arm": "unedited",
                        "condition": condition, "value": str(value), "target_T": problem_id in target_ids,
                        "donor_problem_id": donor_id, "hit_start": hit["start"], "hit_end": hit["end"],
+                       "all_hit_starts": all_hit_starts,
                        "hit_rank": hit["hit_rank"], "hit_count": len(literal_occurrences(text, value)),
                        "context_start": hit["context_start"], "context_end": hit["context_end"]}
                 windows.append(window)
@@ -625,7 +654,9 @@ def compute(inputs_dir=DEFAULT_INPUTS, out_dir=DEFAULT_OUT, tokenizer=None, veri
                                 "onset_char": trace_by_key[(problem_id, "unedited")]["loop_onset"]["char_index"]
                                 if trace_by_key[(problem_id, "unedited")]["loop_onset"] else None}
                             for problem_id, rows in sorted(real_t_keys.items())}
-    value = {"part": 177, "input_manifest": str(inputs_dir.parent / "inputs-manifest.json") if manifest else None,
+    windows_status = "ready" if data_gates_passed else "blocked: Gate 1, 2, or 3 failed"
+    value = {"part": 177, "input_manifest": "inputs-manifest.json" if manifest else None,
+             "reader_windows_status": windows_status,
              "cohort_C_ids": sorted(c_record_map), "target_T_ids": sorted(target_ids),
              "counts": {"problems_per_arm": 500, "sample0_per_arm": 200, "cohort_C": len(cohort),
                         "target_T": len(target_ids), "reader_windows": len(windows),
@@ -656,8 +687,12 @@ def compute(inputs_dir=DEFAULT_INPUTS, out_dir=DEFAULT_OUT, tokenizer=None, veri
                              "onset_line_normalization": "collapse whitespace and strip each line",
                              "supplemental_donors": "same rule as T, separately seeded for C minus T diagnostics only"}}
     out_dir.mkdir(parents=True, exist_ok=True)
-    write_jsonl(out_dir / "windows.jsonl", windows)
-    write_jsonl(out_dir / "window-key.jsonl", key_rows)
+    if data_gates_passed:
+        write_jsonl(out_dir / "windows.jsonl", windows)
+        write_jsonl(out_dir / "window-key.jsonl", key_rows)
+    else:
+        for path in (out_dir / "windows.jsonl", out_dir / "window-key.jsonl"):
+            path.unlink(missing_ok=True)
     write_json(out_dir / "read.json", value)
     return value
 

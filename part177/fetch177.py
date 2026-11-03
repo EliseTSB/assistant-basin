@@ -18,6 +18,8 @@ INPUTS = "inputs"
 LOG_REPO = "RikiyaT/lm_understand-logs"
 LOG_REVISION = "4d09ba6d6a7e891dd8063974dfe81b3d78e3494f"
 DATASET_REPO = "HuggingFaceH4/MATH-500"
+DATASET_REVISION = "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
+DATASET_FILE = "test.jsonl"
 TOKENIZER_REPO = "Qwen/Qwen3.5-0.8B"
 TOKENIZER_REVISION = "2fc06364715b967f1860aea9cf38778875588b17"
 
@@ -49,25 +51,7 @@ def _write_manifest(path, value):
 
 
 def _dataset_revision_and_file():
-    api = f"https://huggingface.co/api/datasets/{DATASET_REPO}/revision/main"
-    info = _json_url(api)
-    revision = info.get("sha")
-    if not isinstance(revision, str) or not revision:
-        raise RuntimeError("Hugging Face dataset revision response had no commit SHA")
-    siblings = info.get("siblings")
-    if not isinstance(siblings, list):
-        tree_url = f"https://huggingface.co/api/datasets/{DATASET_REPO}/tree/{revision}?recursive=true&expand=false"
-        siblings = _json_url(tree_url)
-    names = [item.get("rfilename", item.get("path", "")) for item in siblings if isinstance(item, dict)]
-    candidates = [name for name in names if "test" in Path(name).name.casefold() and
-                  Path(name).suffix.casefold() in {".parquet", ".jsonl", ".json"}]
-    parquet = sorted(name for name in candidates if name.casefold().endswith(".parquet"))
-    selected = parquet or sorted(candidates)
-    if not selected:
-        raise RuntimeError(f"No test parquet or JSONL file found in {DATASET_REPO}@{revision}")
-    if len(selected) != 1:
-        raise RuntimeError(f"Expected one test file in {DATASET_REPO}@{revision}; found {selected}")
-    return revision, selected[0]
+    return DATASET_REVISION, DATASET_FILE
 
 
 def _download(url, destination, revision, manifest_path, manifest):
@@ -83,6 +67,21 @@ def _download(url, destination, revision, manifest_path, manifest):
             return previous
         raise ValueError(f"refusing to replace already-pinned input {destination} from revision "
                          f"{previous.get('revision')} with {revision}; use a fresh output directory")
+    if previous is not None:
+        if not isinstance(previous, dict):
+            raise ValueError(f"invalid existing manifest record for {rel}")
+        if previous.get("url") != url or previous.get("revision") != revision:
+            raise ValueError(f"refusing to change the pinned manifest record for missing input {rel}")
+        payload = _read_url(url)
+        actual = _sha256(payload)
+        if actual != previous.get("sha256"):
+            raise ValueError(f"downloaded bytes for missing pinned input {rel} do not match manifest: "
+                             f"{actual} != {previous.get('sha256')}")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        temporary = destination.with_name(destination.name + ".tmp")
+        temporary.write_bytes(payload)
+        os.replace(temporary, destination)
+        return previous
     payload = _read_url(url)
     record = {"url": url, "revision": revision, "sha256": _sha256(payload), "bytes": len(payload)}
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -114,7 +113,7 @@ def fetch(out_dir=DEFAULT_OUT):
                 _download(f"{log_base}/{arm}/parts/{shard_name}/{filename}", inputs / rel,
                           LOG_REVISION, manifest_path, manifest)
 
-    data_revision, data_file = _dataset_revision_and_file()
+    data_revision, data_file = DATASET_REVISION, DATASET_FILE
     data_url = f"https://huggingface.co/datasets/{DATASET_REPO}/resolve/{data_revision}/{data_file}"
     dataset_suffix = Path(data_file).suffix
     dataset_rel = f"math500-test{dataset_suffix}"

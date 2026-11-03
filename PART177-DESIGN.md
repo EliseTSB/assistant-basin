@@ -1,7 +1,9 @@
 # Part 177: Among answers MIT's unedited Qwen3.5-0.8B never finished, how many had already stated the right answer?
 
 Procedure: v1
-DRAFT, not registered, no outcome read. Elise sent the post on 2026-11-02 [cite: elise 1566922179021373570 "Whoa"]. The commit that adds this file to the public repo will be the registration.
+Registered 2026-11-02 18:26 CT by Claude (Opus 5.5), before any outcome was read. Elise sent the post on 2026-11-02. The commit that adds this file is the registration.
+
+Seen before registering, and no more: in the first 200 stored texts of each arm, character lengths, the count holding `\boxed` (39 unedited, 117 `p50c`), the count holding `</think>` (13 and 152), and the last 300 characters of one trace in each arm. No accuracy, `correct`, `pred_first`, gold search or loop count was read. The field names of `math500_per_problem.json` were printed from one shard without its values.
 
 ## Question
 
@@ -56,7 +58,7 @@ If a gate fails, nothing past it is read until it is explained.
 
 - Smallest effect worth knowing: asserted rate 15 points over shuffled on `T`, a chosen bar. `T` is probably 120 to 170 traces, a half-width near 8 points at 30%; the interval on the paired difference and the real denominator are reported.
 - The paired table of the edit's success is probably 30 to 60 problems, a half-width near 13 points, so it is a rate with its interval and no verdict.
-- Total: 400 stored texts, no generation, under a minute on the CPU; up to 3 windows per trace, real and draw 1, so at most about 1,000 reader calls of about 500 tokens on DeepSeek V4.1 Flash, with `max_tokens` 4,000 and the 16-worker limit used in earlier parts.
+- Total: 1,000 reader calls, about 10 minutes on DeepSeek V4.1 Flash at most, up to 3 windows per trace, real and draw 1, each about 500 tokens with `max_tokens` 4,000. Before them, 400 stored texts in under a minute on the CPU. No generation.
 - Pilot: not needed. Under 1,000 generations and no GPU.
 
 ## Optimization

@@ -1,24 +1,144 @@
 {
   "examples": [
-    {"id":"known-01","problem":"A fictional problem asks what 2 + 3 equals.","window":"We add 2 and 3. The requested result is 5, so the answer is 5.","value":"5","expected":"asserted"},
-    {"id":"known-02","problem":"A fictional problem asks for the sum of 4 and 1.","window":"The sum is 5. Thus the requested answer is 5.","value":"5","expected":"asserted"},
-    {"id":"known-03","problem":"A fictional problem asks how many items remain after removing two from six.","window":"Six minus two leaves four items. The result is 4.","value":"4","expected":"asserted"},
-    {"id":"known-04","problem":"A fictional problem asks for the product of 3 and 4.","window":"Multiplying 3 by 4 gives 12. The answer is 12.","value":"12","expected":"asserted"},
-    {"id":"known-05","problem":"A fictional problem asks the probability of heads on a fair coin.","window":"There are two equally likely outcomes, so the probability is 1/2.","value":"1/2","expected":"intermediate"},
-    {"id":"known-06","problem":"A fictional problem asks the value of x after a calculation.","window":"Set x = 6, then substitute it into the next expression. This is only a working value.","value":"6","expected":"intermediate"},
-    {"id":"known-07","problem":"A fictional problem asks for the area of a rectangle.","window":"The width is 3 and the height is 5; their product, 15, is used in the final calculation.","value":"15","expected":"intermediate"},
-    {"id":"known-08","problem":"A fictional problem asks for a final distance.","window":"Let the first distance be 8 and the second be 2. Their difference will be needed later.","value":"8","expected":"intermediate"},
-    {"id":"known-09","problem":"A fictional problem says a jar contains seven marbles and asks a separate question.","window":"The problem states that the jar contains 7 marbles; this line only repeats that given information.","value":"7","expected":"quoted from the problem"},
-    {"id":"known-10","problem":"A fictional problem says there are 12 pages.","window":"We are given 12 pages at the start. I will use the stated count below.","value":"12","expected":"quoted from the problem"},
-    {"id":"known-11","problem":"A fictional problem says a route is 4 km long.","window":"The prompt gives a route length of 4 km, which I copy here as a premise.","value":"4","expected":"quoted from the problem"},
-    {"id":"known-12","problem":"A fictional problem states that an initial amount is 9.","window":"The initial amount is 9, as the question states; no result has been derived in this sentence.","value":"9","expected":"quoted from the problem"},
-    {"id":"known-13","problem":"A fictional problem asks for the total of two groups.","window":"The total is not 10; that value was an arithmetic mistake and should be rejected.","value":"10","expected":"rejected or doubted"},
-    {"id":"known-14","problem":"A fictional problem asks for a positive length.","window":"I first got 3, but that cannot be right because the requested length must exceed 5.","value":"3","expected":"rejected or doubted"},
-    {"id":"known-15","problem":"A fictional problem asks how many objects remain.","window":"Perhaps the result is 2, although I am not confident and have not checked it.","value":"2","expected":"rejected or doubted"},
-    {"id":"known-16","problem":"A fictional problem asks for a probability.","window":"This calculation may have produced 3/4, but I suspect I copied a sign incorrectly.","value":"3/4","expected":"rejected or doubted"},
-    {"id":"known-17","problem":"A fictional problem asks for an unknown result.","window":"We get 5 somewhere in the calculation, and then another value appears.","value":"5","expected":"ambiguous"},
-    {"id":"known-18","problem":"A fictional problem asks for the final count.","window":"The count is 8 in one case, but the text does not say which case applies.","value":"8","expected":"ambiguous"},
-    {"id":"known-19","problem":"A fictional problem asks for an unknown quantity.","window":"Using either method gives 1 or 2, depending on an unstated convention.","value":"1","expected":"ambiguous"},
-    {"id":"known-20","problem":"A fictional problem asks for a final answer.","window":"The calculation reaches 6, but the surrounding reasoning is cut off before its role is clear.","value":"6","expected":"ambiguous"}
+    {
+      "id": "known-01",
+      "problem": "A fictional problem asks what 2 + 3 equals.",
+      "window": "We add 2 and 3. The requested result is 5, so the answer is 5.The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or",
+      "value": "5",
+      "expected": "asserted"
+    },
+    {
+      "id": "known-02",
+      "problem": "A fictional problem asks for the sum of 4 and 1.",
+      "window": "The sum is 5. Thus the requested answer is 5.The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. ",
+      "value": "5",
+      "expected": "asserted"
+    },
+    {
+      "id": "known-03",
+      "problem": "A fictional problem asks how many items remain after removing two from six.",
+      "window": "Six minus two leaves four items. The result is 4.The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are use",
+      "value": "4",
+      "expected": "asserted"
+    },
+    {
+      "id": "known-04",
+      "problem": "A fictional problem asks for the product of 3 and 4.",
+      "window": "Multiplying 3 by 4 gives 12. The answer is 12.The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. ",
+      "value": "12",
+      "expected": "asserted"
+    },
+    {
+      "id": "known-05",
+      "problem": "A fictional problem asks the probability of heads on a fair coin.",
+      "window": "The ratio 1/2 is an intermediate probability for one stage; I will combine it with the next stage before giving the requested result.The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each",
+      "value": "1/2",
+      "expected": "intermediate"
+    },
+    {
+      "id": "known-06",
+      "problem": "A fictional problem asks the value of x after a calculation.",
+      "window": "Set x = 6, then substitute it into the next expression. This is only a working value.The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, and no outside facts or data are used. The following note checks a separate symbolic step without changing the role of the supplied value. Each comparison is local to this fictional example, ",
+      "value": "6",
+      "expected": "intermediate"
+    },
+    {
+      "id": "known-07",
+      "problem": "A fictional problem asks for the area of a rectangle.",
+      "window": "The width is 3 and the height is 5; their product, 15, is used in the final calculation.",
+      "value": "15",
+      "expected": "intermediate"
+    },
+    {
+      "id": "known-08",
+      "problem": "A fictional problem asks for a final distance.",
+      "window": "Let the first distance be 8 and the second be 2. Their difference will be needed later.",
+      "value": "8",
+      "expected": "intermediate"
+    },
+    {
+      "id": "known-09",
+      "problem": "A fictional problem says a jar contains seven marbles and asks a separate question.",
+      "window": "The problem states that the jar contains 7 marbles; this line only repeats that given information.",
+      "value": "7",
+      "expected": "quoted from the problem"
+    },
+    {
+      "id": "known-10",
+      "problem": "A fictional problem says there are 12 pages.",
+      "window": "We are given 12 pages at the start. I will use the stated count below.",
+      "value": "12",
+      "expected": "quoted from the problem"
+    },
+    {
+      "id": "known-11",
+      "problem": "A fictional problem says a route is 4 km long.",
+      "window": "The prompt gives a route length of 4 km, which I copy here as a premise.",
+      "value": "4",
+      "expected": "quoted from the problem"
+    },
+    {
+      "id": "known-12",
+      "problem": "A fictional problem states that an initial amount is 9.",
+      "window": "The initial amount is 9, as the question states; no result has been derived in this sentence.",
+      "value": "9",
+      "expected": "quoted from the problem"
+    },
+    {
+      "id": "known-13",
+      "problem": "A fictional problem asks for the total of two groups.",
+      "window": "The total is not 10; that value was an arithmetic mistake and should be rejected.",
+      "value": "10",
+      "expected": "rejected or doubted"
+    },
+    {
+      "id": "known-14",
+      "problem": "A fictional problem asks for a positive length.",
+      "window": "I first got 3, but that cannot be right because the requested length must exceed 5.",
+      "value": "3",
+      "expected": "rejected or doubted"
+    },
+    {
+      "id": "known-15",
+      "problem": "A fictional problem asks how many objects remain.",
+      "window": "Perhaps the result is 2, although I am not confident and have not checked it.",
+      "value": "2",
+      "expected": "rejected or doubted"
+    },
+    {
+      "id": "known-16",
+      "problem": "A fictional problem asks for a probability.",
+      "window": "This calculation may have produced 3/4, but I suspect I copied a sign incorrectly.",
+      "value": "3/4",
+      "expected": "rejected or doubted"
+    },
+    {
+      "id": "known-17",
+      "problem": "A fictional problem asks for an unknown result.",
+      "window": "We get 5 somewhere in the calculation, and then another value appears.",
+      "value": "5",
+      "expected": "ambiguous"
+    },
+    {
+      "id": "known-18",
+      "problem": "A fictional problem asks for the final count.",
+      "window": "The count is 8 in one case, but the text does not say which case applies.",
+      "value": "8",
+      "expected": "ambiguous"
+    },
+    {
+      "id": "known-19",
+      "problem": "A fictional problem asks for an unknown quantity.",
+      "window": "Using either method gives 1 or 2, depending on an unstated convention.",
+      "value": "1",
+      "expected": "ambiguous"
+    },
+    {
+      "id": "known-20",
+      "problem": "A fictional problem asks for a final answer.",
+      "window": "The calculation reaches 6, but the surrounding reasoning is cut off before its role is clear.",
+      "value": "6",
+      "expected": "ambiguous"
+    }
   ]
 }

@@ -1,6 +1,6 @@
 # Cold build read of Part 177 before registration
 
-Scope: `part177/` in `/home/elisepc/green/worktrees/ab-part67` (DRAFT-DESIGN.md, read177.py, score177.py, reader177.py, fetch177.py, loop_upstream.py, known177.json, test_part177.py), checked against the upstream copy in `Journal/notes/reports/part177-review/upstream/`. Every check ran on a scratch copy under this run directory and used synthetic inputs only. No network, no paid API, fetch177.py was not run, and no MATH-500 data or stored completion was opened.
+Scope: `part177/` in `the repository` (DRAFT-DESIGN.md, read177.py, score177.py, reader177.py, fetch177.py, loop_upstream.py, known177.json, test_part177.py), checked against the upstream copy in `the local copy of the logs' code`. Every check ran on a scratch copy under this run directory and used synthetic inputs only. No network, no paid API, fetch177.py was not run, and no MATH-500 data or stored completion was opened.
 
 ## Verdict
 
@@ -32,7 +32,7 @@ Fix: exclude real windows whose gold is in the prompt from the reader set, mirro
 Ran: gold `3.5` matched in `13.5` (span 14–17). Gold `1/2` matched in `11/2` (span 4–7).
 Fix: apply the same digit-boundary test to any needle matching `^[+-]?\d+(\.\d+)?$`, `^[+-]?\d+/\d+$`, or the `\frac{a}{b}` form, not only integers.
 
-**7. [MEDIUM] A local absolute path reaches public output.** `read177.py:628` writes `input_manifest` as an absolute path into `read.json`. `results/part177/.gitignore` ignores only `inputs/`, so `read.json` is not excluded. `test_part177.py:24` hard-codes `/home/elisepc/green/Journal/...`.
+**7. [MEDIUM] A local absolute path reaches public output.** `read177.py:628` writes `input_manifest` as an absolute path into `read.json`. `results/part177/.gitignore` ignores only `inputs/`, so `read.json` is not excluded. `test_part177.py:24` hard-codes `(local path)`.
 Ran: `compute()` with `verify_hashes=True` wrote the absolute manifest path into `read.json`.
 Fix: write the manifest path relative (`inputs-manifest.json`). Read the upstream path for the AST test from an environment variable and skip with a message when it is absent.
 

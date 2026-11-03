@@ -17,6 +17,24 @@ BOOTSTRAP_REPS = 10_000
 SEED = 177
 READING_W3 = "a"
 LABELS = ("asserted", "intermediate", "quoted from the problem", "rejected or doubted", "ambiguous")
+GATE4_KNOWN_MINIMUM = 17
+GATE4_MARGIN_BAR = 0.25
+PREDICTION_177_1_BAR = 0.15
+PREDICTION_177_2_BAR = 0.25
+PREDICTION_177_3_BAR = 0.50
+PREDICTION_177_4_BAR = 0.80
+PREDICTION_177_6_BAR = 0.15
+PREDICTION_W1_GAP_BAR = 0.15
+PREDICTION_W1_EARLY_HOLD = 0.20
+PREDICTION_W1_EARLY_FLOOR = 0.10
+PREDICTION_W1_LATE_GAP_BAR = 0.15
+PREDICTION_W2_HOLD = 0.40
+PREDICTION_W2_FAIL = 0.20
+PREDICTION_W3_HOLD = 1 / 3
+PREDICTION_W3_FAIL = 0.15
+MIN_N_177_4 = 20
+MIN_N_177_6 = 15
+MIN_N_W3 = 20
 
 
 def read_json(path, default=None):
@@ -107,7 +125,8 @@ def _kappa(left, right):
     labels = set(value for pair in pairs for value in pair)
     expected = sum((sum(a == value for a, _ in pairs) / n) *
                    (sum(b == value for _, b in pairs) / n) for value in labels)
-    return None if expected >= 1.0 else (observed - expected) / (1.0 - expected)
+    return 1.0 if expected >= 1.0 and observed >= 1.0 else \
+        None if expected >= 1.0 else (observed - expected) / (1.0 - expected)
 
 
 def _known_gate(rows, examples):
@@ -128,9 +147,11 @@ def _known_gate(rows, examples):
                           "observed": None, "correct": None})
     correct = sum(row["correct"] is True for row in known)
     lower, upper = correct, correct + unknown
-    status = "passed" if lower >= 17 else "failed" if upper < 17 else "not read"
+    status = "passed" if lower >= GATE4_KNOWN_MINIMUM else \
+        "failed" if upper < GATE4_KNOWN_MINIMUM else "not read"
     return {"status": status, "passed": status == "passed", "correct": correct, "unknown": unknown,
-            "possible_correct": [lower, upper], "total": len(examples), "minimum": 17, "rows": known}
+            "possible_correct": [lower, upper], "total": len(examples),
+            "minimum": GATE4_KNOWN_MINIMUM, "rows": known}
 
 
 def _expected_labels(keys, label_rows):
@@ -167,6 +188,67 @@ def _window_counts(keys, label_by_id, condition, target_only=False, c_ids=None):
     return {"numerator": int(asserted), "denominator": len(selected), "unknown": int(unknown),
             "observed_rate_valid_only": asserted / (len(selected) - unknown)
             if len(selected) - unknown else None}
+
+
+def _window_share(keys, label_by_id, condition, problem_ids, reps, seed):
+    problem_ids = sorted(map(str, problem_ids))
+    grouped = {problem_id: {"numerator": 0, "denominator": 0, "unknown": 0}
+               for problem_id in problem_ids}
+    for key in keys:
+        problem_id = str(key["problem_id"])
+        if key["condition"] != condition or problem_id not in grouped:
+            continue
+        label = label_by_id.get(str(key["id"]))
+        grouped[problem_id]["denominator"] += 1
+        if not _valid_label(label):
+            grouped[problem_id]["unknown"] += 1
+        else:
+            grouped[problem_id]["numerator"] += int(label["label"] == "asserted")
+    counts = {name: sum(row[name] for row in grouped.values())
+              for name in ("numerator", "denominator", "unknown")}
+    lower, upper = _rate_bounds(counts)
+    complete = counts["unknown"] == 0
+    point = counts["numerator"] / counts["denominator"] if complete and counts["denominator"] else None
+    ci = (bootstrap_interval(list(grouped.values()),
+        lambda sample: sum(row["numerator"] for row in sample) / sum(row["denominator"] for row in sample)
+        if sample and sum(row["denominator"] for row in sample) else None,
+        reps=reps, seed=seed) if complete and counts["denominator"] else None)
+    return {**counts, "point": point, "bounds": [lower, upper], "ci95": ci,
+            "problem_clusters": len(grouped), "weighting": "one observation per selected hit window"}
+
+
+def _window_margin(target_ids, keys, label_by_id, reps, seed):
+    target_ids = sorted(map(str, target_ids))
+    real = _window_share(keys, label_by_id, "real", target_ids, reps, seed)
+    shuffled = _window_share(keys, label_by_id, "shuffled", target_ids, reps, seed + 1)
+    difference = real["point"] - shuffled["point"] \
+        if real["point"] is not None and shuffled["point"] is not None else None
+    difference_bounds = _margin_bounds(real, shuffled)
+    complete = real["unknown"] == 0 and shuffled["unknown"] == 0
+    clusters = []
+    real_by_problem, shuffled_by_problem = {}, {}
+    for condition, target in (("real", real_by_problem), ("shuffled", shuffled_by_problem)):
+        for key in keys:
+            problem_id = str(key["problem_id"])
+            if problem_id not in set(target_ids) or key["condition"] != condition:
+                continue
+            label = label_by_id.get(str(key["id"]))
+            row = target.setdefault(problem_id, {"numerator": 0, "denominator": 0})
+            row["denominator"] += 1
+            row["numerator"] += int(_valid_label(label) and label["label"] == "asserted")
+    for problem_id in target_ids:
+        left = real_by_problem.get(problem_id, {"numerator": 0, "denominator": 0})
+        right = shuffled_by_problem.get(problem_id, {"numerator": 0, "denominator": 0})
+        clusters.append({"left_n": left["numerator"], "left_d": left["denominator"],
+                         "right_n": right["numerator"], "right_d": right["denominator"]})
+    ci = (bootstrap_interval(clusters,
+        lambda sample: (sum(row["left_n"] for row in sample) / sum(row["left_d"] for row in sample) -
+                        sum(row["right_n"] for row in sample) / sum(row["right_d"] for row in sample))
+        if sample and sum(row["left_d"] for row in sample) and sum(row["right_d"] for row in sample) else None,
+        reps=reps, seed=seed + 2) if complete and real["denominator"] and shuffled["denominator"] else None)
+    return {"real": real, "shuffled": shuffled, "difference": difference,
+            "difference_bounds": difference_bounds, "difference_ci95": ci,
+            "denominator_windows": {"real": real["denominator"], "shuffled": shuffled["denominator"]}}
 
 
 def _rate_bounds(counts):
@@ -310,7 +392,8 @@ def _paired_assertion_bounds(rows, reps=BOOTSTRAP_REPS, seed=SEED):
     n = len(rows)
     if not n:
         return {"bounds": [None, None], "point": None, "denominator": 0,
-                "known_left": 0, "known_right": 0, "unknown_left": 0, "unknown_right": 0}
+                "known_left": 0, "known_right": 0, "unknown_left": 0, "unknown_right": 0,
+                "bootstrap_ci95": None}
     low, high, left_yes, right_yes, ul, ur = 0.0, 0.0, 0, 0, 0, 0
     values = []
     for row in rows:
@@ -431,7 +514,8 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
     assertion_bounds = _paired_assertion_bounds(assertion_rows, reps=reps, seed=seed)
 
     # 177.1: trace-level paired assertions on the fixed target set T.
-    v = _threshold_verdict(assertion_bounds["bounds"], 0.15, "at_least") if readable else "not read"
+    v = _threshold_verdict([assertion_bounds["point"], assertion_bounds["point"]],
+                           PREDICTION_177_1_BAR, "at_least") if readable else "not read"
     predictions["177.1"] = _prediction(
         "On T, the share of traces with an asserted real gold exceeds the same share for shuffled draw 1 by at least 15 points",
         {"difference": assertion_bounds["point"], "difference_bounds": assertion_bounds["bounds"],
@@ -440,19 +524,24 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
          "known_shuffled_asserted": assertion_bounds["known_right"],
          "unknown_real": assertion_bounds["unknown_left"], "unknown_shuffled": assertion_bounds["unknown_right"],
          "bootstrap_ci95": assertion_bounds["bootstrap_ci95"]}, v,
-        "Lower bound of the paired trace-rate difference must be at least 0.15; bootstrap resamples whole problems.",
+        "Point estimate of the paired trace-rate difference must be at least 0.15; report the problem-bootstrap interval.",
         "medium", "Claude", {"read_block": blocked_reason} if not readable else {})
 
     # 177.2: assertion share among target traces; unlabelled windows are allowed either value for the verdict.
     real_states = [row["real"]["state"] for row in assertion_rows]
     real_range = _unknown_boolean_range(real_states)
-    v = _threshold_verdict(real_range["bounds"], 0.25, "at_least") if readable else "not read"
+    real_ci = (bootstrap_interval([{"yes": int(value)} for value in real_states],
+                 lambda sample: sum(row["yes"] for row in sample) / len(sample) if sample else None,
+                 reps=reps, seed=seed + 2) if real_range["point"] is not None and real_states else None)
+    v = _threshold_verdict([real_range["point"], real_range["point"]],
+                           PREDICTION_177_2_BAR, "at_least") if readable else "not read"
     predictions["177.2"] = _prediction(
         "On T, at least 25% of traces have an asserted real gold",
-        {"share": real_range["point"], "share_bounds": real_range["bounds"],
+        {"share": real_range["point"], "share_bounds": real_range["bounds"], "ci95": real_ci,
          "numerator_known": real_range["known_yes"], "unknown_traces": real_range["unknown"],
          "denominator": real_range["denominator"]}, v,
-        "Lower bound of the trace share must be at least 0.25.", "medium", "Claude",
+        "Point estimate of the trace share must be at least 0.25; report the problem-bootstrap interval.",
+        "medium", "Claude",
         {"read_block": blocked_reason} if not readable else {})
 
     # 177.3: preserve each trace's first asserted position and enumerate unknown labels' outcomes.
@@ -463,11 +552,13 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
     if not onset_summary["all_admissible_completions_meet_20"]:
         v = "not read"
     else:
-        v = _threshold_verdict(onset_share_bounds, 0.5, "at_least") if readable else "not read"
+        v = _threshold_verdict([onset_share, onset_share], PREDICTION_177_3_BAR, "at_least") \
+            if readable else "not read"
     predictions["177.3"] = _prediction(
         "Among T traces with an asserted real gold and a detected onset, at least half have the first asserted hit before the onset; not read below 20 traces",
         {"share": onset_share, **onset_summary}, v,
-        "At least 20 eligible traces and the lower bound must be at least 0.5.", "medium", "Claude",
+        "At least 20 eligible traces and the point estimate must be at least 0.5; report the interval.",
+        "medium", "Claude",
         {"read_block": blocked_reason} if not readable else {})
 
     p50c = [row for row in traces_by_problem.values() if row.get("p50c")]
@@ -478,11 +569,14 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
     ci = bootstrap_interval([{"yes": int(row.get("loop_onset") is not None)} for row in residual],
                             lambda sample: sum(row["yes"] for row in sample) / len(sample) if sample else None,
                             reps=reps, seed=seed + 4) if residual else None
-    v = _threshold_verdict([share, share], 0.80, "at_least") if readable and share is not None else "not read"
+    v = "not read" if len(residual) < MIN_N_177_4 else \
+        _threshold_verdict([share, share], PREDICTION_177_4_BAR, "at_least") \
+        if readable and share is not None else "not read"
     predictions["177.4"] = _prediction(
         "At least 80% of p50c traces that are capped with no </think> carry a detected onset",
         {"numerator": detected, "denominator": len(residual), "share": share, "ci95": ci}, v,
-        "Detected onset share must be at least 0.80.", "medium", "Claude",
+        f"At least {MIN_N_177_4} traces; point estimate of detected onset share must be at least 0.80.",
+        "medium", "Claude",
         {"read_block": blocked_reason} if not readable else {})
 
     paired_both = []
@@ -499,7 +593,7 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
         paired_both.append({"problem_id": problem_id,
                             "unedited": left["loop_onset"]["char_index"] / left["text_chars"],
                             "p50c": right["loop_onset"]["char_index"] / right["text_chars"]})
-    if len(paired_both) < 15:
+    if len(paired_both) < MIN_N_177_6:
         median_diff, med_u, med_p, median_ci = None, None, None, None
         v = "not read"
     else:
@@ -531,13 +625,15 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
     diff_ci = bootstrap_interval(long_pairs,
         lambda sample: sum(row["left"] - row["right"] for row in sample) / len(sample) if sample else None,
         reps=reps, seed=seed + 6) if long_pairs else None
-    v = _threshold_verdict([diff, diff], 0.15, "at_least") if readable and diff is not None else "not read"
+    v = "not read" if len(long_pairs) < MIN_N_177_6 else \
+        _threshold_verdict([diff, diff], PREDICTION_177_6_BAR, "at_least") \
+        if readable and diff is not None else "not read"
     predictions["177.6"] = _prediction(
         "Over the 200 paired problems, with onset searched only in the first 50,000 characters of each text and pairs with a shorter text left out, the rate of a detected onset is at least 15 points lower in p50c",
         {"unedited": _rate(left_yes, len(long_pairs)), "p50c": _rate(right_yes, len(long_pairs)),
          "difference_unedited_minus_p50c": diff, "difference_ci95": diff_ci,
          "eligible_pairs": len(long_pairs)}, v,
-        "Rate difference unedited minus p50c must be at least 0.15 among paired texts at least 50,000 characters long.",
+        f"At least {MIN_N_177_6} pairs; point rate difference unedited minus p50c must be at least 0.15.",
         "medium", "Claude", {"read_block": blocked_reason} if not readable else {})
 
     # Weaver 177.W1: use C traces with an available draw 1; supplemental C\T draws never enter T predictions.
@@ -554,71 +650,86 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
         problem_id = str(trace["problem_id"])
         if not trace.get("donor_draw_n", 0):
             continue
-        real_hit = bool(trace.get("literal_hit"))
-        shuffled_hit = bool(key_by_trace_condition[(problem_id, "shuffled")])
-        early = bool(real_hit and trace.get("first_hit_char") is not None and trace["text_chars"] and
-                     trace["first_hit_char"] / trace["text_chars"] <= 0.15)
-        real_hit_total += int(real_hit)
-        early_real += int(early)
-        paired_c.append({"problem_id": problem_id, "real": int(real_hit), "shuffled": int(shuffled_hit),
-                         "early": early})
+        real_positions = [int(hit["start"]) for hit in trace.get("hit_spans", [])]
+        shuffled_keys = key_by_trace_condition[(problem_id, "shuffled")]
+        shuffled_positions = list(map(int, shuffled_keys[0].get("all_hit_starts", []))) if shuffled_keys else []
+        real_early_n = sum(position / trace["text_chars"] <= 0.15 for position in real_positions) \
+            if trace.get("text_chars") else 0
+        real_hit_total += len(real_positions)
+        early_real += real_early_n
+        real_after = bool(trace.get("text_chars") and any(
+            position / trace["text_chars"] > 0.15 for position in real_positions))
+        shuffled_after = bool(trace.get("text_chars") and any(
+            position / trace["text_chars"] > 0.15 for position in shuffled_positions))
+        paired_c.append({"problem_id": problem_id, "real": int(bool(real_positions)),
+                         "shuffled": int(bool(shuffled_positions)), "early_real_n": real_early_n,
+                         "real_hit_n": len(real_positions), "real_after": int(real_after),
+                         "shuffled_after": int(shuffled_after)})
     real_n = sum(row["real"] for row in paired_c)
     shuffled_n = sum(row["shuffled"] for row in paired_c)
     c_n = len(paired_c)
-    exclude = [row for row in paired_c if not row["early"]]
-    late_real = sum(row["real"] for row in exclude)
-    late_shuffled = sum(row["shuffled"] for row in exclude)
+    exclude = [row for row in paired_c if row["real_after"] or row["shuffled_after"]]
+    late_real = sum(row["real_after"] for row in exclude)
+    late_shuffled = sum(row["shuffled_after"] for row in exclude)
     first_share = early_real / real_hit_total if real_hit_total else None
     gap = (real_n - shuffled_n) / c_n if c_n else None
     late_gap = (late_real - late_shuffled) / len(exclude) if exclude else None
     w1_ci = bootstrap_interval(paired_c,
         lambda sample: (sum(row["real"] - row["shuffled"] for row in sample) / len(sample)) if sample else None,
         reps=reps, seed=seed + 7) if paired_c else None
+    early_ci = bootstrap_interval(paired_c,
+        lambda sample: sum(row["early_real_n"] for row in sample) / sum(row["real_hit_n"] for row in sample)
+        if sample and sum(row["real_hit_n"] for row in sample) else None,
+        reps=reps, seed=seed + 8) if real_hit_total else None
+    late_ci = bootstrap_interval(exclude,
+        lambda sample: (sum(row["real_after"] - row["shuffled_after"] for row in sample) / len(sample))
+        if sample else None, reps=reps, seed=seed + 9) if exclude else None
     if not readable:
         w1_verdict = "not read"
     elif not paired_c or first_share is None or late_gap is None:
         w1_verdict = "not read"
-    elif first_share < 0.10:
+    elif first_share < PREDICTION_W1_EARLY_FLOOR:
         w1_verdict = "failed"
-    elif gap > 0.15 and first_share >= 0.20 and late_gap < 0.15:
+    elif gap > PREDICTION_W1_GAP_BAR and first_share >= PREDICTION_W1_EARLY_HOLD and \
+            late_gap < PREDICTION_W1_LATE_GAP_BAR:
         w1_verdict = "held"
-    elif gap <= 0.15 or first_share >= 0.10:
-        w1_verdict = "failed" if first_share >= 0.20 else "inconclusive"
+    elif gap <= PREDICTION_W1_GAP_BAR or late_gap >= PREDICTION_W1_LATE_GAP_BAR:
+        w1_verdict = "failed"
+    elif first_share < PREDICTION_W1_EARLY_HOLD:
+        w1_verdict = "inconclusive"
     else:
         w1_verdict = "inconclusive"
     predictions["177.W1"] = _prediction(
         "The real-against-shuffled literal-hit gap on C exceeds 15 points, but at least 20% of real hits sit in the first 15% of text, and excluding them the gap falls under 15; falsifier: fewer than 10% of hits are that early",
         {"paired_C_n": c_n, "real_hit_rate": _rate(real_n, c_n), "shuffled_hit_rate": _rate(shuffled_n, c_n),
          "gap": gap, "gap_ci95": w1_ci, "early_real_hits": early_real,
-         "real_hit_denominator": real_hit_total, "early_real_share": first_share,
+         "real_hit_denominator": real_hit_total, "early_real_share": first_share, "early_real_share_ci95": early_ci,
          "late_C_n": len(exclude), "late_real_hit_rate": _rate(late_real, len(exclude)),
          "late_shuffled_hit_rate": _rate(late_shuffled, len(exclude)), "late_gap": late_gap,
+         "late_gap_ci95": late_ci,
          "donor_available_C_n": c_n}, w1_verdict,
-        "Hold requires gap >0.15, early share >=0.20, and late gap <0.15; fail below 0.10 early share.",
+        "Hold requires point gap >0.15, early hit share >=0.20, and late trace gap <0.15; fail below 0.10.",
         "medium", "Weaver", {"read_block": blocked_reason} if not readable else {})
 
     # Weaver 177.W2: Gate 4's shuffled-window asserted share over C, kept separate from the T gate margin.
-    shuffled_c_states = [_hit_state(keys, label_by_id, str(bundle["unedited"]["problem_id"]), "shuffled",
-                                    donor_available=bool(bundle["unedited"].get("donor_draw_n", 0)))
-                         for bundle in c_traces]
-    shuffled_c = _unknown_boolean_range([row["state"] for row in shuffled_c_states])
+    shuffled_c = _window_share(keys, label_by_id, "shuffled", c_ids, reps, seed + 10)
     w2_bounds = shuffled_c["bounds"]
     if not readable or not shuffled_c["denominator"]:
         w2_verdict = "not read"
-    elif w2_bounds[0] >= 0.40:
+    elif shuffled_c["point"] is not None and shuffled_c["point"] >= PREDICTION_W2_HOLD:
         w2_verdict = "held"
-    elif w2_bounds[1] < 0.20:
+    elif shuffled_c["point"] is not None and shuffled_c["point"] < PREDICTION_W2_FAIL:
         w2_verdict = "failed"
-    elif w2_bounds[0] >= 0.20 and w2_bounds[1] < 0.40:
+    elif shuffled_c["point"] is not None:
         w2_verdict = "inconclusive"
     else:
         w2_verdict = "not read"
     predictions["177.W2"] = _prediction(
         "Shuffled windows clear 40% yes on Gate 4; falsifier: under 20%",
-        {"asserted_traces": shuffled_c["known_yes"], "total_C_traces": shuffled_c["denominator"],
-         "unknown_traces": shuffled_c["unknown"], "share_bounds": w2_bounds,
-         "share": shuffled_c["point"]}, w2_verdict,
-        "Hold at a lower bound >=0.40; fail when the upper bound is <0.20; each C problem has equal weight.", "medium", "Weaver",
+        {"asserted_windows": shuffled_c["numerator"], "total_C_windows": shuffled_c["denominator"],
+         "unknown_windows": shuffled_c["unknown"], "share_bounds": w2_bounds,
+         "share": shuffled_c["point"], "ci95": shuffled_c["ci95"]}, w2_verdict,
+        "Point share is over shuffled windows; report a problem-cluster bootstrap interval.", "medium", "Weaver",
         {"read_block": blocked_reason} if not readable else {})
 
     # Weaver 177.W3, reading (a) is the verdict key. Both registered denominator variants are printed.
@@ -635,11 +746,11 @@ def _make_predictions(read_result, traces_by_problem, keys, label_by_id, key_by_
                                            "numerator": int(int(row["correct0"]) != 1), "denominator": 1}
                                           for row in c_literal], reps=reps, seed=seed + 9)
     selected_rate = a_rate if READING_W3 == "a" else b_rate
-    if not readable or not denom:
+    if not readable or denom < MIN_N_W3:
         w3_verdict = "not read"
-    elif selected_rate["rate"] >= 1 / 3:
+    elif selected_rate["rate"] >= PREDICTION_W3_HOLD:
         w3_verdict = "held"
-    elif selected_rate["rate"] < 0.15:
+    elif selected_rate["rate"] < PREDICTION_W3_FAIL:
         w3_verdict = "failed"
     else:
         w3_verdict = "inconclusive"
@@ -664,8 +775,9 @@ def _gate4(read_result, keys, ds_rows, haiku_rows, known_rows, examples, reader_
     valid_ds = sum(_valid_label(label_by_id.get(item_id)) for item_id in expected_ids)
     ds_errors = sum(item_id in label_by_id and not _valid_label(label_by_id[item_id]) and
                     not label_by_id[item_id].get("pending_dns") for item_id in expected_ids)
-    ds_pending = sum(item_id not in label_by_id or not _valid_label(label_by_id.get(item_id)) for item_id in expected_ids)
-    error_rate = ds_errors / len(expected_ids) if expected_ids else None
+    ds_pending = sum(item_id not in label_by_id or not _valid_label(label_by_id.get(item_id))
+                     for item_id in expected_ids)
+    error_rate = (len(expected_ids) - valid_ds) / len(expected_ids) if expected_ids else None
 
     examples = list(examples or [])
     known = _known_gate(known_rows, examples)
@@ -679,32 +791,34 @@ def _gate4(read_result, keys, ds_rows, haiku_rows, known_rows, examples, reader_
                    {item_id: haiku_by_id[item_id]["label"] for item_id in shared})
     kappa_complete = bool(sample_ids) and not second_missing and not first_missing_sample and len(shared) == len(sample_ids)
     if kappa_complete:
-        kappa_status = "passed" if kappa is not None and kappa >= 0.6 else "failed"
+        kappa_status = "not read" if kappa is None else \
+            "passed" if kappa >= 0.6 else "failed"
     else:
         kappa_status = "not read"
 
     target = set(map(str, read_result.get("target_T_ids", [])))
     traces_by_problem = _cluster_by_problem(read_result.get("trace_results", []))
-    paired = _group_trace_assertions(target, keys, label_by_id, traces_by_problem)
-    paired_margin = _paired_assertion_bounds(paired, reps=reps, seed=seed + 20)
-    margin_bounds = paired_margin["bounds"]
-    margin_point = paired_margin["point"]
-    real = _unknown_boolean_range([row["real"]["state"] for row in paired])
-    shuffled = _unknown_boolean_range([row["shuffled"]["state"] for row in paired])
-    margin_ci = paired_margin.get("bootstrap_ci95")
-    if margin_bounds[0] is None:
+    window_margin = _window_margin(target, keys, label_by_id, reps, seed + 20)
+    margin_bounds = window_margin["difference_bounds"]
+    margin_point = window_margin["difference"]
+    real = window_margin["real"]
+    shuffled = window_margin["shuffled"]
+    margin_ci = window_margin["difference_ci95"]
+    if margin_point is None or ds_pending:
         margin_status = "not read"
-    elif margin_bounds[0] >= 0.25:
+    elif margin_point >= GATE4_MARGIN_BAR:
         margin_status = "passed"
-    elif margin_bounds[1] < 0.25:
+    elif margin_point < GATE4_MARGIN_BAR:
         margin_status = "failed"
-    else:
-        margin_status = "not read"
 
+    second_valid = sum(_valid_label(haiku_by_id.get(item_id)) for item_id in sample_ids)
     second_errors = sum(item_id in haiku_by_id and not _valid_label(haiku_by_id[item_id]) and
                         not haiku_by_id[item_id].get("pending_dns") for item_id in sample_ids)
-    second_error_rate = second_errors / len(sample_ids) if sample_ids else None
+    second_pending = len(sample_ids) - second_valid
+    second_error_rate = second_pending / len(sample_ids) if sample_ids else None
     if error_rate is None or second_error_rate is None:
+        error_status = "not read"
+    elif ds_pending or second_pending:
         error_status = "not read"
     elif error_rate > 0.02 or second_error_rate > 0.02:
         error_status = "failed"
@@ -717,11 +831,12 @@ def _gate4(read_result, keys, ds_rows, haiku_rows, known_rows, examples, reader_
                                 "kappa": kappa, "pairs": len(shared), "expected_pairs": len(sample_ids),
                                 "missing_first": len(first_missing_sample), "missing_second": len(second_missing),
                                 "complete": kappa_complete, "threshold": 0.6, "status": kappa_status},
-                            "asserted_margin_T": {"real": real, "shuffled": shuffled,
+                            "asserted_margin_T": {"real_window_share": real, "shuffled_window_share": shuffled,
                                                   "difference": margin_point, "difference_bounds": margin_bounds,
                                                   "difference_ci95": margin_ci, "threshold": 0.25,
                                                   "denominator_problems": len(target),
-                                                  "weighting": "each problem in T contributes one trace-level yes/no per condition",
+                                                  "denominator_windows": window_margin["denominator_windows"],
+                                                  "weighting": "each selected window contributes one binary label; bootstrap clusters by problem",
                                                   "status": margin_status},
                             "reader_errors": {"expected_windows": len(expected_ids), "valid": valid_ds,
                                               "errors": ds_errors, "pending_or_missing": ds_pending,
@@ -945,10 +1060,15 @@ def score(out_dir=DEFAULT_OUT, reps=BOOTSTRAP_REPS, seed=SEED):
     out = Path(out_dir)
     read_result = read_json(out / "read.json")
     traces = list(read_result.get("trace_results", []))
+    read_gates = read_result.get("gates_1_to_3", {})
+    data_gates_passed = all(read_gates.get(name, {}).get("passed")
+                            for name in ("gate1", "gate2", "gate3"))
     keys = read_jsonl(out / "window-key.jsonl")
     windows = read_jsonl(out / "windows.jsonl")
-    if {str(row["id"]) for row in windows} != {str(row["id"]) for row in keys}:
+    if data_gates_passed and {str(row["id"]) for row in windows} != {str(row["id"]) for row in keys}:
         raise ValueError("window-key IDs do not exactly match windows.jsonl")
+    if not data_gates_passed:
+        keys, windows = [], []
     ds_rows = read_jsonl(out / "labels-ds.jsonl")
     haiku_rows = read_jsonl(out / "labels-haiku.jsonl")
     known_rows = read_jsonl(out / "known-labels-ds.jsonl")
@@ -956,28 +1076,32 @@ def score(out_dir=DEFAULT_OUT, reps=BOOTSTRAP_REPS, seed=SEED):
     examples = known_file.get("examples", [])
     reader_meta = read_json(out / "reader-metadata.json", {}) or {}
     gate4 = _gate4(read_result, keys, ds_rows, haiku_rows, known_rows, examples, reader_meta,
-                   out, reps, seed)
+                   out, reps, seed) if data_gates_passed else {
+                       "status": "not read", "passed": False,
+                       "blocked": "Gate 1, 2, or 3 failed; reader and score readouts stopped"}
 
     # Reader gate includes all four requirements and separately blocks results behind Gates 1-3.
     predictions = _make_predictions(read_result, _cluster_by_problem(traces), keys,
                                     {str(row.get("id")): row for row in ds_rows},
                                     {str(row["id"]): row for row in keys}, gate4,
                                     gate4.get("status") == "passed", reps, seed)
-    tables = _read_tables(read_result, traces, keys, ds_rows, reps, seed)
-    target_ids = set(map(str, read_result.get("target_T_ids", [])))
-    trace_by_problem = _cluster_by_problem(traces)
-    p50_closed_target = [bundle["p50c"] for problem_id, bundle in trace_by_problem.items()
-                         if problem_id in target_ids and bundle.get("p50c", {}).get("think_closed")]
-    p50_closed_hit_n = sum(bool(row.get("literal_hit")) for row in p50_closed_target)
-    p50_closed_hit = _rate(p50_closed_hit_n, len(p50_closed_target),
-                           clusters=[{"problem_id": row["problem_id"],
-                                      "numerator": int(bool(row.get("literal_hit"))), "denominator": 1}
-                                     for row in p50_closed_target], reps=reps, seed=seed + 60)
-    reported_readouts = {"reader": _reader_readouts(read_result, keys, ds_rows, reps, seed + 70),
-                         "correctness_same_500_problems": _paired_correctness(read_result, reps, seed + 80),
-                         "p50c_literal_hit_when_thinking_closed_on_T": {
-                             "numerator": p50_closed_hit_n, "denominator": len(p50_closed_target),
-                             "rate": p50_closed_hit}}
+    tables = _read_tables(read_result, traces, keys, ds_rows, reps, seed) if data_gates_passed else None
+    reported_readouts = None
+    if data_gates_passed:
+        target_ids = set(map(str, read_result.get("target_T_ids", [])))
+        trace_by_problem = _cluster_by_problem(traces)
+        p50_closed_target = [bundle["p50c"] for problem_id, bundle in trace_by_problem.items()
+                             if problem_id in target_ids and bundle.get("p50c", {}).get("think_closed")]
+        p50_closed_hit_n = sum(bool(row.get("literal_hit")) for row in p50_closed_target)
+        p50_closed_hit = _rate(p50_closed_hit_n, len(p50_closed_target),
+                               clusters=[{"problem_id": row["problem_id"],
+                                          "numerator": int(bool(row.get("literal_hit"))), "denominator": 1}
+                                         for row in p50_closed_target], reps=reps, seed=seed + 60)
+        reported_readouts = {"reader": _reader_readouts(read_result, keys, ds_rows, reps, seed + 70),
+                             "correctness_same_500_problems": _paired_correctness(read_result, reps, seed + 80),
+                             "p50c_literal_hit_when_thinking_closed_on_T": {
+                                 "numerator": p50_closed_hit_n, "denominator": len(p50_closed_target),
+                                 "rate": p50_closed_hit}}
 
     # Attach problem-bootstrap intervals to the three upstream gates; each cluster retains all four samples or arms.
     per_arm_gates = read_result.get("gates_1_to_3", {})
@@ -1008,10 +1132,11 @@ def score(out_dir=DEFAULT_OUT, reps=BOOTSTRAP_REPS, seed=SEED):
                    "read_gates_1_to_3": read_result.get("gates_1_to_3"), "gate4": gate4,
                    "gate_intervals": gate_intervals, "tables": tables,
                    "reported_readouts": reported_readouts,
+                   "kept_going_reading_blocked": predictions["177.1"]["verdict"] == "failed",
                    "predictions": predictions,
                    "bootstrap": {"replicates": int(reps), "seed": int(seed),
                                  "unit": "problem ID; paired arms and all within-problem windows/draws stay attached"},
-                   "null_rule": "Unobserved labels stay null; assertion verdicts use bounds over every binary yes/no assignment to missing labels.",
+                   "null_rule": "Missing or pending labels prevent Gate 4 from passing; assertion summaries retain their bounds.",
                    "scope": "The first 200 sample-0 traces per arm and the registered MATH-500 test inputs."}
     write_json(out / "score.json", score_value)
     write_json(out / "prediction_table.json", predictions)
