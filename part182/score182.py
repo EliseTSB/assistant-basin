@@ -7,6 +7,10 @@ computed from the row file; nothing is typed.
   python3 -I part182/score182.py stage1 [--rows R] [--out O]    # effects, ranking, selection, verdicts
   python3 -I part182/score182.py ladder [--rows R] [--k ...]    # the conditions stage 1c should run next
 
+Amendment 1 (PART182-DESIGN.md): the control-layer heads cL.H (L in CONTROL_LAYERS) are scored like any head but
+never ranked, selected or laddered; 182.8 reads them; ``resid_rel_median`` reports the residual readouts; and when
+results/part182/head-weights.json exists each main head's weight cosines are put beside its slot_median.
+
 Definitions (nats; an answer's log-probability is the sum over its first MAX_TOKENS tokens, teacher forced):
   Delta(cond, row) = logp_sum(cond, row) - logp_sum(none, row)        (same row text, same push, same batch position)
   slot_median(cond) = median over eligible slot units of Delta on the unit's own pushed answer (unit "neuron",
@@ -33,6 +37,7 @@ if str(HERE) not in sys.path:
 import headswap182 as hs  # noqa: E402
 
 LAYERS = [0, 1, 2, 3]
+CONTROL_LAYERS = [14]          # Amendment 1 item 3: out-of-block single-head controls (stage 1a only)
 N_HEADS = 16
 K_SELECT = 6
 DOWN_NATS = -2.0
@@ -41,6 +46,7 @@ DEFAULT_ROWS = ROOT / "results" / "part182" / "stage1.jsonl"
 DEFAULT_OUT = ROOT / "results" / "part182" / "score182.json"
 P99_LABELS = ROOT / "results" / "part99" / "labels-inst_none.jsonl"
 KINDS = ROOT / "results" / "part92" / "step2" / "kinds.json"
+HEAD_WEIGHTS = ROOT / "results" / "part182" / "head-weights.json"
 
 
 def read_jsonl(path):
@@ -78,7 +84,21 @@ def _mean(values):
     return statistics.fmean(values) if values else None
 
 
-def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS) -> dict[str, dict]:
+def _resid_median(by_key, cond, slots):
+    """Per readout layer (key of the row's ``resid_rel`` dict), the median of resid_rel over the eligible slot units'
+    own-answer rows; a layer no row carries, or a row without the field, gives None (never 0)."""
+    out = {}
+    for uid in slots:
+        row = by_key.get((cond, uid, "neuron", "own"))
+        resid = row.get("resid_rel") if row is not None else None
+        if not isinstance(resid, dict):
+            continue
+        for layer_key, value in resid.items():
+            out.setdefault(str(layer_key), []).append(float(value))
+    return {k: _median(v) for k, v in sorted(out.items(), key=lambda kv: int(kv[0]))} or None
+
+
+def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layers=CONTROL_LAYERS) -> dict[str, dict]:
     """Per condition, the summary deltas against the ``none`` condition. Rows with a missing ``none`` partner are
     skipped and counted."""
     by_key = {}
@@ -105,7 +125,8 @@ def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS) -> dict[str, 
         rv = [v for v in rand_d.values() if v is not None]
         av = [v for v in asst_d.values() if v is not None]
         out[cond] = {
-            "heads": hs.condition_heads(cond, layers, n_heads) if not cond.startswith("top") else None,
+            "heads": (hs.condition_heads(cond, layers, n_heads, control_layers=control_layers)
+                      if not cond.startswith("top") else None),
             "slot_median": _median(sv), "slot_mean": _mean(sv), "slot_n": len(sv),
             "slot_down": sum(1 for v in sv if v <= DOWN_NATS),
             "slot_missing": sum(1 for v in slot_d.values() if v is None),
@@ -114,6 +135,7 @@ def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS) -> dict[str, 
             "random_median": _median(rv), "random_n": len(rv),
             "assistant_median": _median(av), "assistant_n": len(av),
             "unpushed": delta("unpushed", "none", "assistant"),
+            "resid_rel_median": _resid_median(by_key, cond, slots),
             "slot_deltas": {u: (round(v, 4) if v is not None else None) for u, v in slot_d.items()},
             "concept_deltas": {u: (round(v, 4) if v is not None else None) for u, v in conc_d.items()},
         }
@@ -170,9 +192,11 @@ def ladder_conditions(ranking, ks=LADDER_K) -> dict[str, dict[int, list[int]]]:
     return out
 
 
-def verdicts(table, ranking, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, ladder=None) -> dict:
-    """182.1 to 182.4 and 182.7, exactly as registered. ``ladder`` is unused except to document that 182.1 reads the
-    top4 condition from ``table`` when stage 1c has run."""
+def verdicts(table, ranking, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, ladder=None,
+             control_layers=CONTROL_LAYERS) -> dict:
+    """182.1 to 182.4, 182.7 and (Amendment 1) 182.8, exactly as registered. ``ladder`` is unused except to document
+    that 182.1 reads the top4 condition from ``table`` when stage 1c has run. ``ranking`` is the main-layer ranking,
+    so the control-layer heads never enter it."""
     out = {}
     block = table.get("block", {})
     b_mean = block.get("slot_mean")
@@ -223,9 +247,78 @@ def verdicts(table, ranking, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, ladder=
         best = max(recovered, key=lambda t: recovered[t])
         out["182.7"] = {"verdict": "held" if recovered[best] < 0.5 * abs(b_mean) else "failed",
                         "best_restore": best, "recovered_nats": recovered[best], "block_slot_mean": b_mean}
+    # 182.8 the ranking stands out from the out-of-block null: no control-layer (c14.H) single-head swap has a
+    # slot_median more negative than the 6th-ranked main head's. Not read if any of the 16 c14 conditions or the
+    # ranking is missing.
+    control_tags = [f"c{L}.{h}" for L in control_layers for h in range(n_heads)]
+    control_medians = {t: table.get(t, {}).get("slot_median") for t in control_tags}
+    sixth = ranking[k - 1] if len(ranking) >= k else None
+    sixth_median = table.get(f"h{sixth[0]}.{sixth[1]}", {}).get("slot_median") if sixth is not None else None
+    if (not control_tags or sixth_median is None
+            or any(v is None for v in control_medians.values())):
+        out["182.8"] = {"verdict": "not read", "sixth_head": (f"h{sixth[0]}.{sixth[1]}" if sixth else None),
+                        "sixth_slot_median": sixth_median, "control_slot_medians": control_medians}
+    else:
+        offenders = [t for t, v in control_medians.items() if v < sixth_median]
+        out["182.8"] = {"verdict": "failed" if offenders else "held",
+                        "sixth_head": f"h{sixth[0]}.{sixth[1]}", "sixth_slot_median": sixth_median,
+                        "control_slot_medians": control_medians,
+                        "most_negative_control": min(control_medians, key=lambda t: control_medians[t]),
+                        "controls_more_negative": offenders}
     out["182.5"] = {"verdict": "pending stage 2 (reader counts; score182.py stage2)"}
     out["182.6"] = {"verdict": "pending stage 2 (reader counts; score182.py stage2)"}
     return out
+
+
+def _ranks(values):
+    """Average ranks (1-based) with ties sharing the mean of their positions."""
+    order = sorted(range(len(values)), key=lambda i: values[i])
+    ranks = [0.0] * len(values)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and values[order[j + 1]] == values[order[i]]:
+            j += 1
+        mean_rank = (i + j) / 2 + 1
+        for k in range(i, j + 1):
+            ranks[order[k]] = mean_rank
+        i = j + 1
+    return ranks
+
+
+def spearman(x, y):
+    """Spearman's rho between two equal-length sequences; None if fewer than two pairs or either side is constant."""
+    if len(x) != len(y):
+        raise ValueError("spearman needs two equal-length sequences")
+    if len(x) < 2:
+        return None
+    rx, ry = _ranks(list(x)), _ranks(list(y))
+    mx, my = _mean(rx), _mean(ry)
+    num = sum((a - mx) * (b - my) for a, b in zip(rx, ry))
+    dx = sum((a - mx) ** 2 for a in rx) ** 0.5
+    dy = sum((b - my) ** 2 for b in ry) ** 0.5
+    if dx == 0 or dy == 0:
+        return None
+    return num / (dx * dy)
+
+
+def head_weight_cosines(table, weights, layers=LAYERS, n_heads=N_HEADS) -> dict:
+    """Amendment 1 item 5: each main head's four weight cosines beside its slot_median, and the Spearman correlation
+    between the o_proj-column cosine and slot_median over the main heads (None when either side is missing)."""
+    keys = ("q_row_cos", "k_row_cos", "v_row_cos", "o_col_cos")
+    heads, cos_values, medians = {}, [], []
+    for l, h in head_tags(layers, n_heads):
+        tag = f"h{l}.{h}"
+        layer = (weights or {}).get("layers", {}).get(str(l), {})
+        entry = layer.get("heads", {}).get(str(h))
+        median = table.get(tag, {}).get("slot_median")
+        cos = {k: (entry.get(k) if entry else None) for k in keys}
+        heads[tag] = {**cos, "slot_median": median}
+        if cos["o_col_cos"] is not None and median is not None:
+            cos_values.append(cos["o_col_cos"])
+            medians.append(median)
+    return {"heads": heads, "spearman_o_col_vs_slot_median": spearman(cos_values, medians),
+            "n_pairs": len(cos_values)}
 
 
 def replay_check(rows) -> dict:
@@ -252,6 +345,8 @@ def main(argv=None):
     ap.add_argument("--rows", default=str(DEFAULT_ROWS))
     ap.add_argument("--out", default=str(DEFAULT_OUT))
     ap.add_argument("--k", type=int, default=K_SELECT)
+    ap.add_argument("--head-weights", default=str(HEAD_WEIGHTS),
+                    help="headweights182.py output; reported beside slot_median when the file exists")
     args = ap.parse_args(argv)
     kinds = json.load(open(KINDS, encoding="utf-8"))["kinds"]
     eligible, excluded = eligible_units(P99_LABELS, kinds)
@@ -268,12 +363,16 @@ def main(argv=None):
     result = {"rows": len(rows), "eligible": eligible, "excluded": excluded, "replay": replay_check(rows),
               "effects": table, "ranking": [f"h{l}.{h}" for l, h in ranking],
               "selection": select_stage2(table, k=args.k), "verdicts": verdicts(table, ranking, k=args.k)}
+    weights_path = Path(args.head_weights)
+    if weights_path.exists():
+        result["head_weights"] = head_weight_cosines(table, json.loads(weights_path.read_text(encoding="utf-8")))
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
     brief = {k: v for k, v in result.items() if k != "effects"}
     brief["effects_brief"] = {t: {k: v for k, v in e.items() if k in ("slot_median", "slot_mean", "slot_down",
                                                                      "concept_median", "random_median",
-                                                                     "assistant_median", "unpushed")}
+                                                                     "assistant_median", "unpushed",
+                                                                     "resid_rel_median")}
                               for t, e in table.items()}
     print(json.dumps(brief, indent=1))
     return 0

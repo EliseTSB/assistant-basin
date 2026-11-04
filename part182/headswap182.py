@@ -223,17 +223,20 @@ def all_heads(n_heads: int) -> list[int]:
     return list(range(int(n_heads)))
 
 
-def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tuple[int, int]] | None = None
-                    ) -> dict[int, list[int]]:
+def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tuple[int, int]] | None = None,
+                    control_layers: list[int] | None = None) -> dict[int, list[int]]:
     """Decode a condition tag into {layer: heads}.
 
     none            nothing swapped
-    hL.H            head H of layer L from the donor
+    hL.H            head H of layer L from the donor (L in ``layers`` only)
     layerL          every head of layer L
     block           every head of every listed layer (Part 100's --layers 0-3 attention swap)
     restoreL.H      the block with head H of layer L left as the host's (the other direction: one host head restored
                     into the donor block)
     topK            the first K heads of ``ranking`` (stage 1c's ladder; the ranking comes from score182.py)
+    cL.H            Amendment 1 item 3: head H of a control layer L (L in ``control_layers``, default
+                    score182.CONTROL_LAYERS) from the donor, nothing else swapped. A control-layer head is never in
+                    ``layers``, so it can never be ranked, selected or laddered.
     """
     layers = [int(l) for l in layers]
     full = {l: all_heads(n_heads) for l in layers}
@@ -246,6 +249,18 @@ def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tup
         if layer_no not in layers:
             raise ValueError(f"{tag}: layer {layer_no} is not in {layers}")
         return {layer_no: all_heads(n_heads)}
+    if tag.startswith("c") and "." in tag:
+        layer_no, head = (int(x) for x in tag[1:].split("."))
+        if control_layers is None:
+            import score182
+            control_layers = score182.CONTROL_LAYERS
+        control_layers = [int(l) for l in control_layers]
+        if layer_no in layers:
+            raise ValueError(f"{tag}: layer {layer_no} is a main layer; use h{layer_no}.{head}")
+        if layer_no not in control_layers or not 0 <= head < n_heads:
+            raise ValueError(f"{tag}: layer {layer_no} head {head} is outside control layers {control_layers} "
+                             f"x 0..{n_heads - 1}")
+        return {layer_no: [head]}
     if tag.startswith("h") and "." in tag:
         layer_no, head = (int(x) for x in tag[1:].split("."))
         if layer_no not in layers or not 0 <= head < n_heads:
@@ -269,13 +284,19 @@ def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tup
     raise ValueError(f"unknown condition tag {tag!r}")
 
 
-def stage1_conditions(layers: list[int], n_heads: int) -> list[str]:
-    """Stage 1a and 1b: none, every single head, every whole layer, the block, every single restore."""
+def stage1_conditions(layers: list[int], n_heads: int, control_layers: list[int] | None = None) -> list[str]:
+    """Stage 1a and 1b: none, every single head, every whole layer, the block, every single restore; then (Amendment
+    1 item 3) the control-layer single heads cL.H, after the restore tags. ``none`` stays first and every earlier
+    tag keeps its place."""
+    if control_layers is None:
+        import score182
+        control_layers = score182.CONTROL_LAYERS
     tags = ["none"]
     tags += [f"h{l}.{h}" for l in layers for h in range(n_heads)]
     tags += [f"layer{l}" for l in layers]
     tags += ["block"]
     tags += [f"restore{l}.{h}" for l in layers for h in range(n_heads)]
+    tags += [f"c{l}.{h}" for l in control_layers for h in range(n_heads)]
     return tags
 
 
@@ -338,12 +359,85 @@ def logprobs_from_logits(logits, prompt_len: int, answers: list[list[int]]) -> l
     return results
 
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendment 1 item 5: residual readouts at intermediate decoder layers.
+
+READOUT_LAYERS = (3, 7, 11, 15)   # indices into the decoder layer list; an index the model does not have is skipped
+
+
+def answer_positions(prompt_len: int, answers: list[list[int]], attention_mask=None) -> list[list[int]]:
+    """The positions whose logits ``logprobs_from_logits`` scores for each row: prompt_len-1 .. prompt_len-1+n-1,
+    with any right-padded position dropped (the answer token at such a position is not scored)."""
+    out = []
+    for row, ids in enumerate(answers):
+        positions = list(range(prompt_len - 1, prompt_len - 1 + len(ids)))
+        if attention_mask is not None:
+            valid = attention_mask[row].tolist()
+            positions = [p for p in positions if p < len(valid) and valid[p]]
+        out.append(positions)
+    return out
+
+
+def capture_layer_outputs(model, layer_indices):
+    """Forward hooks that keep the float32 output of the listed decoder layers. Returns (stores, handles); each
+    store is a list holding that layer's output tensor of the last forward."""
+    layers = c.get_layers(model)
+    stores = {int(i): [] for i in layer_indices}
+    handles = []
+
+    def make(layer_no):
+        def hook(_module, _inputs, output):
+            hidden = output[0] if isinstance(output, (tuple, list)) else output
+            stores[layer_no].append(hidden.float())
+        return hook
+
+    for layer_no in stores:
+        handles.append(layers[layer_no].register_forward_hook(make(layer_no)))
+    return stores, handles
+
+
+def relative_residual(reference, current, positions) -> dict[str, float]:
+    """Per layer key: mean over the row's answer ``positions`` of ||h_cond - h_none|| / ||h_none||. A position whose
+    reference norm is zero is skipped; a row with no usable position raises."""
+    out = {}
+    if sorted(reference) != sorted(current):
+        raise KeyError(f"reference layers {sorted(reference)} against captured layers {sorted(current)}")
+    for layer_no in sorted(reference):
+        key = str(int(layer_no))
+        ref, cur = reference[layer_no], current[layer_no]
+        if ref.shape != cur.shape:
+            raise ValueError(f"layer {key}: captured shapes differ, {tuple(ref.shape)} against {tuple(cur.shape)}")
+        values = []
+        for pos in positions:
+            r, x = ref[0, pos], cur[0, pos]
+            norm = float(torch.linalg.vector_norm(r))
+            if norm == 0.0:
+                continue
+            values.append(float(torch.linalg.vector_norm(x - r)) / norm)
+        if not values:
+            raise ValueError(f"layer {key}: no answer position with a non-zero reference norm")
+        out[key] = float(sum(values) / len(values))
+    return out
+
+
+def zero_readout(layer_indices) -> dict[str, float]:
+    return {str(int(i)): 0.0 for i in layer_indices}
+
+
 def score_rows(model, tokenizer, layers, prompt_ids: list[int], rows: list[dict], device: str, batch: int,
-               hidden: int) -> list[dict]:
+               hidden: int, none_states: list[dict] | None = None, readout_layers=READOUT_LAYERS,
+               capture: list[dict] | None = None) -> list[dict]:
     """Teacher-force ``rows`` in fixed batches. Each row: {"answer_ids": [...], "push_layer": int or None,
     "push": tensor [hidden] or None}. Returns one result dict per row, in order. The batch composition is a function
-    of the row order and ``batch`` only, so every condition sees the same batches."""
+    of the row order and ``batch`` only, so every condition sees the same batches.
+
+    Residual readouts (Amendment 1 item 5): with ``none_states`` given (one dict per row, {layer: [1, tokens, hidden]}
+    captured under ``none``), every result gains ``resid_rel`` = {layer: mean over the row's answer positions of
+    ||h - h_none|| / ||h_none||}, and ``capture`` (a list) receives this condition's own captured states per row.
+    The readout layers are ``readout_layers`` restricted to the model's decoder layers."""
     pad_id = int(tokenizer.pad_token_id)
+    layer_count = len(c.get_layers(model))
+    readout = [int(i) for i in readout_layers if 0 <= int(i) < layer_count]
     results = []
     for begin in range(0, len(rows), batch):
         chunk = rows[begin:begin + batch]
@@ -358,11 +452,25 @@ def score_rows(model, tokenizer, layers, prompt_ids: list[int], rows: list[dict]
                 vectors[layer_no] = torch.zeros((len(chunk), hidden), dtype=r["push"].dtype, device=device)
             vectors[layer_no][i] = r["push"].to(device=device)
         handles = row_push_hooks(layers, vectors)
+        stores, capture_handles = capture_layer_outputs(model, readout) if readout else ({}, [])
         try:
-            results.extend(teacher_forced_logprobs(model, input_ids, attention_mask, len(prompt_ids), answers))
+            out = teacher_forced_logprobs(model, input_ids, attention_mask, len(prompt_ids), answers)
         finally:
-            for handle in handles:
+            for handle in handles + capture_handles:
                 handle.remove()
+        if readout:
+            positions = answer_positions(len(prompt_ids), answers, attention_mask)
+            for i, result in enumerate(out):
+                # [1, tokens, hidden] for this row: the batch slice, so the two sides of the subtraction are the same
+                # shape whatever the batch size.
+                current = {layer_no: stores[layer_no][-1][i:i + 1] for layer_no in readout}
+                if none_states is None:
+                    result["resid_rel"] = zero_readout(readout)
+                else:
+                    result["resid_rel"] = relative_residual(none_states[begin + i], current, positions[i])
+                if capture is not None:
+                    capture.append(current)
+        results.extend(out)
     return results
 
 

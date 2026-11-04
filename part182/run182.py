@@ -116,14 +116,17 @@ def public(row, result, condition, heads, extra=None):
     return out
 
 
-def run_condition(model, tokenizer, layers, donors, heads, prompt, rows, device, batch, hidden) -> list[dict]:
-    """Score every row under one head set, with the attachment asserted before and after."""
+def run_condition(model, tokenizer, layers, donors, heads, prompt, rows, device, batch, hidden,
+                  none_states=None, capture=None) -> list[dict]:
+    """Score every row under one head set, with the attachment asserted before and after. ``none_states`` and
+    ``capture`` are headswap182.score_rows' residual-readout arguments (none_states None: resid_rel is the zeros)."""
     if heads:
         hs.attach(model, donors, heads)
         hs.assert_attached(model, heads)
         hs.reset_calls(model)
     try:
-        results = hs.score_rows(model, tokenizer, layers, prompt, rows, device, batch, hidden)
+        results = hs.score_rows(model, tokenizer, layers, prompt, rows, device, batch, hidden,
+                                none_states=none_states, capture=capture)
         if heads:
             hs.assert_attached(model, heads, min_calls=1)
     finally:
@@ -290,21 +293,42 @@ def _stage1_run(args, conditions: dict[str, dict[int, list[int]]], out_path: Pat
     hidden = int(model.config.hidden_size)
     prompt = c.prompt_ids(tokenizer, QUESTION, "chat")
     rows = build_stage1_rows(tokenizer, units, pushes, answers)
-    donors = hs.load_donor_attention(args.donor, LAYERS, dtype=torch.float32)
+    donor_layers = sorted(set(LAYERS) | set(score182.CONTROL_LAYERS))
+    donors = hs.load_donor_attention(args.donor, donor_layers, dtype=torch.float32)
     existing = _existing_keys(out_path)
     meta = {"stage": stage, "host": str(args.host), "donor": str(args.donor), "device": args.device,
             "dtype": "float32", "attn_implementation": "eager", "batch": args.batch, "max_tokens": MAX_TOKENS,
             "torch": torch.__version__, "transformers": __import__("transformers").__version__,
-            "prompt_tokens": len(prompt), "rows_per_condition": len(rows), "conditions": list(conditions)}
+            "prompt_tokens": len(prompt), "rows_per_condition": len(rows), "conditions": list(conditions),
+            "donor_layers": donor_layers, "readout_layers": list(hs.READOUT_LAYERS)}
     started = time.perf_counter()
     done = 0
+    none_states = None
     with out_path.open("a", encoding="utf-8") as stream:
         for tag, heads in conditions.items():
             if all((tag, r["id"], r["unit"], r["text"]) in existing for r in rows):
                 continue
             t0 = time.perf_counter()
-            results = run_condition(model, tokenizer, layers, donors, heads, prompt, rows, args.device, args.batch,
-                                    hidden)
+            if tag == "none":
+                # Amendment 1 item 5: none's hidden states, held in memory for every later condition's readout.
+                capture: list[dict] = []
+                results = run_condition(model, tokenizer, layers, donors, heads, prompt, rows, args.device,
+                                        args.batch, hidden, capture=capture)
+                none_states = capture
+            elif none_states is None:
+                # Resume: none's rows are already on disk, so its hidden states are recomputed here, one forward per
+                # batch, and nothing is written for it.
+                capture = []
+                run_condition(model, tokenizer, layers, donors, {}, prompt, rows, args.device, args.batch, hidden,
+                              capture=capture)
+                none_states = capture
+                results = run_condition(model, tokenizer, layers, donors, heads, prompt, rows, args.device,
+                                        args.batch, hidden, none_states=none_states)
+            else:
+                results = run_condition(model, tokenizer, layers, donors, heads, prompt, rows, args.device,
+                                        args.batch, hidden, none_states=none_states)
+            if len(none_states) != len(rows):
+                raise RuntimeError(f"none's hidden states cover {len(none_states)} rows, not {len(rows)}")
             for row, result in zip(rows, results):
                 if (tag, row["id"], row["unit"], row["text"]) in existing:
                     continue
