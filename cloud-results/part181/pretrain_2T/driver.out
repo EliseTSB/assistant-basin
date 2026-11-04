@@ -45,3 +45,6 @@ pass 2: 100/500 docs, chunk wall 326.8s (hooks 116.0s), rss 7271 MB
 pass 2: 200/500 docs, chunk wall 315.5s (hooks 112.3s), rss 7345 MB
 pass 2: 300/500 docs, chunk wall 346.8s (hooks 123.5s), rss 7345 MB
 pass 2: 400/500 docs, chunk wall 321.7s (hooks 114.1s), rss 7345 MB
+pass 2: 500/500 docs, chunk wall 320.4s (hooks 114.6s), rss 7403 MB
+2026-11-04T03:37:23+00:00 collect: complete in 7506.99s
+2026-11-04T03:37:23+00:00 gate1: start
