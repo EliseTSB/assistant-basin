@@ -3359,3 +3359,16 @@ The scorer's comparison is literally true because -9.5% is greater than -11.1%, 
 | 178.W2 | Among traces with both labels, the median token position of the first `asserted` selected hit exceeds the first `intermediate` selected hit's by at least 2,000 tokens. Falsifier: under 500 | medium | Weaver |
 | 178.W3a | On Qwen3.5-0.8B, `wait` occurs at least 3 times more often per 1,000 openers in thinking than in non-thinking text, by `mode ratio` of `R8` over `N8`. Falsifier: ratio under 1.5. Unread under 500 control openers or with no ratio | medium | Weaver |
 | 178.W3b | The same on Qwen3.5-4B, by `mode ratio` of `G` over `N4` | medium | Weaver |
+
+## Part 181 (registered 2026-11-03 19:13 CT, PART181-DESIGN.md, before any checkpoint was collected)
+
+Overlap = the share of a unit's top-10 documents (by per-document maximum activation over 2,500 pile-10k documents) shared between two checkpoints, read against each layer's own null. Reading rule and gates as in the design.
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 181.1 | On the primary cohort, over the layers passing Gate 3, the median neuron overlap of `midtrain_51B` against `instruct` is at least 0.6 | 0.7 | Claude |  |
+| 181.2 | The median neuron overlap of `dpo` against `instruct` is at least 0.9; not assessable if the floor's own median (`pretrain_4T` against `pretrain_4T_bf16r`) is below 0.9 | 0.75 | Claude |  |
+| 181.3 | The median neuron overlap of `pretrain_21B` against `instruct` is at most 0.1 | 0.7 | Claude |  |
+| 181.4 | The mean neuron overlap with `instruct` rises strictly along 21B, 210B, 1T, 2T, 3T, 4T (medians reported beside) | 0.6 | Claude |  |
+| 181.5 | For each of (1T, 2T), (4T, midtrain_51B) and (midtrain_51B, instruct), the mean neuron overlap exceeds both the mean dense-control and the mean k = 2 sparse-control overlap in at least three quarters of the layers passing Gate 3; overlap against k (1, 2, 4, 16, 64, dense) reported for every pair | 0.6 | Claude |  |
+| 181.6 | The median `sft`-against-`dpo` overlap of Part 92's 21 slot neurons is within 0.15 of the median of their 21 layer comparators (each the median of all primary-cohort neurons in its layer) | 0.55 | Claude |  |
