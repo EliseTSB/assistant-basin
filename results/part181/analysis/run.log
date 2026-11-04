@@ -1,0 +1,15 @@
+runs 15, pairs 105, workers 6
+pairs done 10/105 at 123 s
+pairs done 20/105 at 240 s
+pairs done 30/105 at 301 s
+pairs done 40/105 at 418 s
+pairs done 50/105 at 534 s
+pairs done 60/105 at 596 s
+pairs done 70/105 at 711 s
+pairs done 80/105 at 827 s
+pairs done 90/105 at 890 s
+pairs done 100/105 at 1006 s
+pairs done 105/105 at 1056 s
+check pair pretrain_1T__pretrain_2T: sequential equals pooled = True
+{"included_runs": ["dpo", "instruct", "instruct_b", "midtrain_13B", "midtrain_26B", "midtrain_51B", "pretrain_1T", "pretrain_1T_b", "pretrain_210B", "pretrain_21B", "pretrain_2T", "pretrain_3T", "pretrain_4T", "pretrain_4T_bf16r", "sft"], "pair_count": 105, "seconds": 1128}
+rc=0

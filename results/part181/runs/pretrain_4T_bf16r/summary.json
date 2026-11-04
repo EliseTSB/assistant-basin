@@ -1,0 +1,98 @@
+{
+  "checkpoint_key": "pretrain_4T",
+  "dataset_commit": "127bfedcd5047750df5ccf3a12979a47bfa0bafa",
+  "file_inventory_note": "summary.json is omitted because a file cannot contain its own SHA-256",
+  "files": [
+    {
+      "path": "driver.out",
+      "sha256": "c59816963245bac335c26106b893bab2059803462f0200a61cfb35291cda6757",
+      "size_bytes": 2546
+    },
+    {
+      "path": "driver.pre-restart.out",
+      "sha256": "73879f1928fa03d2a89b5d38723f2b99cb52f5a3909a27727dd0cf259cb8be68",
+      "size_bytes": 2229
+    },
+    {
+      "path": "driver.prev.out",
+      "sha256": "cef819265c4d2f7daa3b31c0a6f46b46e796d93943f2915b152693ae9d826db9",
+      "size_bytes": 2338
+    },
+    {
+      "path": "driver.prev2.out",
+      "sha256": "4c9bbe1a29dce5d2d062f281b62433fb889776b25da78ff573862c9b094c7f6a",
+      "size_bytes": 2978
+    },
+    {
+      "path": "gate1.json",
+      "sha256": "60d238be4c8d50bd745a482375fa15887ebb21f482d66f15eeca9e8dfd3919f4",
+      "size_bytes": 121654
+    },
+    {
+      "path": "host-history.jsonl",
+      "sha256": "f1acc5a909729370fb054065b1baf09179aac87cfff9ea43eed4a764bfd57a7b",
+      "size_bytes": 768
+    },
+    {
+      "path": "identity.json",
+      "sha256": "1f1bf97deca37a7864096a428c4267668463235ce5d9eefc63332199de31b8c7",
+      "size_bytes": 771769
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "1f1bf97deca37a7864096a428c4267668463235ce5d9eefc63332199de31b8c7",
+      "size_bytes": 771769
+    },
+    {
+      "path": "progress.json",
+      "sha256": "e71bd7f296365cf4641c1550beb5df5cee34da099a2c44f02bb99ae39ca188c0",
+      "size_bytes": 1811
+    },
+    {
+      "path": "session.log",
+      "sha256": "4defe0ffdc4717f7c6a092b6ad62ddddfbb93e3db8a2847fe73308c450782c9d",
+      "size_bytes": 5159
+    },
+    {
+      "path": "state.npz",
+      "sha256": "451a0825fc1e7a881b707c071a8ea24a1c0094f1583aeb4e97901978a43cee6d",
+      "size_bytes": 40068668
+    }
+  ],
+  "gate1": {
+    "checks": {
+      "1a": {
+        "verdict": "passed"
+      },
+      "1b": {
+        "verdict": "passed"
+      },
+      "1c": {
+        "verdict": "passed"
+      },
+      "1d": {
+        "verdict": "passed"
+      }
+    },
+    "verdict": "passed"
+  },
+  "key": "pretrain_4T_bf16r",
+  "manifest_sha256": "ac9d6da23b01e3c26a9dcc7e85c1e4d9c27b7ebea045c5d85554ca2586c03649",
+  "model_commit": "9d3e43659f00c17e6da23cf32333afd1fc39fa1a",
+  "peak_rss_mb": 9012.88671875,
+  "rerun_of": null,
+  "state_compressed_now": true,
+  "timings_seconds": {
+    "collect": 3860.438533885,
+    "compress_state": 4.950445540000146,
+    "download_dataset": 2.7445923139999877,
+    "download_model": 461.764890617,
+    "gate1": 843.6543097510003,
+    "identity": 23.007019625999988,
+    "initialize_dependencies": 0.7519206600000032,
+    "load_model": 72.70904794600006,
+    "resolve_revisions": 0.4915919029999998,
+    "total_before_summary": 5270.514332113
+  },
+  "weight_fingerprint": "bf65710e8cccd5bc4dd2b8280c5236103f9c2325609c6f550c8fcf1f986aefb3"
+}

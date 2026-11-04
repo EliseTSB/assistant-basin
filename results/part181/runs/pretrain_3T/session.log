@@ -1,0 +1,22 @@
+2026-11-04T06:10:35+00:00 initialize_dependencies: start
+2026-11-04T06:10:35+00:00 initialize_dependencies: complete in 0.23s
+2026-11-04T06:10:35+00:00 resolve_revisions: start
+2026-11-04T06:10:36+00:00 model commit: 22738a97eabcd7523be1a56eaa1745bc60e9781c
+2026-11-04T06:10:36+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T06:10:36+00:00 resolve_revisions: complete in 0.58s
+2026-11-04T06:10:36+00:00 download_model: start
+2026-11-04T06:11:32+00:00 download_model: complete in 56.14s
+2026-11-04T06:11:32+00:00 download_dataset: start
+2026-11-04T06:11:35+00:00 download_dataset: complete in 2.50s
+2026-11-04T06:11:35+00:00 load_model: start
+2026-11-04T06:11:37+00:00 load_model: complete in 2.62s
+2026-11-04T06:11:37+00:00 identity: start
+2026-11-04T06:11:49+00:00 identity: complete in 11.66s
+2026-11-04T06:11:49+00:00 collect: start
+2026-11-04T08:23:31+00:00 collect: complete in 7902.58s
+2026-11-04T08:23:31+00:00 gate1: start
+2026-11-04T08:37:26+00:00 Gate 1 verdict: passed (128/128 pairs)
+2026-11-04T08:37:26+00:00 gate1: complete in 834.54s
+2026-11-04T08:37:26+00:00 compress_state: start
+2026-11-04T08:37:32+00:00 compress_state: complete in 5.96s
+2026-11-04T08:37:32+00:00 summary: preparing; state compressed now=True

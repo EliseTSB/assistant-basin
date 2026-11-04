@@ -113,13 +113,26 @@ def w2(runs_by_key: dict[str, a181.Run]) -> dict[str, Any]:
             "pretraining_differences": pre, "largest_difference_run": largest}
 
 
+def keyed_runs(runs) -> dict[str, a181.Run]:
+    """Runs keyed by their own key. Amendment 4 (2026-11-04): main() first keyed them through
+    a181._canonical_key, which renames instruct_b to instruct, so the Instruct repeat pair collapsed into one entry,
+    181.W1 read "not read" and 181.W2's Instruct threshold came from instruct_b. analyze181.build_verdicts keys by
+    run.key; this does the same and refuses a duplicate key instead of letting the later run win."""
+    out: dict[str, a181.Run] = {}
+    for r in runs:
+        if r.key in out:
+            raise ValueError(f"two runs share the key {r.key!r}")
+        out[r.key] = r
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--runs", required=True)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     runs, exclusions, _gate2 = a181._resolve_runs(Path(a.runs))
-    runs_by_key = {a181._canonical_key(r.key): r for r in runs}
+    runs_by_key = keyed_runs(runs)
     primary_ids = a181._primary_ids_map(runs_by_key.get("instruct"))
     result = {"181.W1": w1(runs_by_key, primary_ids), "181.W2": w2(runs_by_key),
               "excluded_runs": exclusions, "author": "Weaver (predictions); Claude (code)"}

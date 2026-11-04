@@ -1,0 +1,103 @@
+{
+  "checkpoint_key": "instruct",
+  "dataset_commit": "127bfedcd5047750df5ccf3a12979a47bfa0bafa",
+  "file_inventory_note": "summary.json is omitted because a file cannot contain its own SHA-256",
+  "files": [
+    {
+      "path": "driver.out",
+      "sha256": "63404972673fd58ec27c4bc21e93d7ea4a7a7a639bdc1d4f49319c1c2f51ba1e",
+      "size_bytes": 5407
+    },
+    {
+      "path": "gate1.json",
+      "sha256": "89bd7e76b98838b831912fc772c7b7fbedd5d912e26a5667eda5926bbdf794b1",
+      "size_bytes": 121657
+    },
+    {
+      "path": "identity.json",
+      "sha256": "66fb0e1e50b4e0310aecb80dff7e9352e66d85733c7c5a95f9ae6f411149c263",
+      "size_bytes": 771643
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "66fb0e1e50b4e0310aecb80dff7e9352e66d85733c7c5a95f9ae6f411149c263",
+      "size_bytes": 771643
+    },
+    {
+      "path": "progress.json",
+      "sha256": "adb698ea87a07291db948dd5b0740cea5eac404367b925a0a71bcade359bfa2a",
+      "size_bytes": 1802
+    },
+    {
+      "path": "session.log",
+      "sha256": "18655d1c56b5c1757133be962c578543eb03a3dc8d36292c4a3d126a71df6f8c",
+      "size_bytes": 1257
+    },
+    {
+      "path": "snapshot-pass1-docs00500.npz",
+      "sha256": "56daba6650f4b37d8991b77301e1c3de792ed0de36d9f301475481fa2b952192",
+      "size_bytes": 59069336
+    },
+    {
+      "path": "snapshot-pass1-docs01000.npz",
+      "sha256": "71f73874b9ea57f0d837be9b2482b82e1db15921edea44559834dde75e1da8c3",
+      "size_bytes": 59069336
+    },
+    {
+      "path": "snapshot-pass1-docs01500.npz",
+      "sha256": "7d0db07f64c6f49f39b2f98d5988eeda71a34a527ad95af782a0e15308752555",
+      "size_bytes": 59069336
+    },
+    {
+      "path": "snapshot-pass1-docs02000.npz",
+      "sha256": "9f5e0c7beb0c006c44013d17b6ecacab749ac6036443e32cb81d2514c8a111f5",
+      "size_bytes": 59069336
+    },
+    {
+      "path": "snapshot-pass1-docs02500.npz",
+      "sha256": "caacb3119a5613a73979e029a3d78c1dfe05fb6489bd20f29925dfd095b167e4",
+      "size_bytes": 59069336
+    },
+    {
+      "path": "state.npz",
+      "sha256": "560365889554678c66dd72ef80f2da694fccec674afb6ba440a44202bf0a74fd",
+      "size_bytes": 40021188
+    }
+  ],
+  "gate1": {
+    "checks": {
+      "1a": {
+        "verdict": "passed"
+      },
+      "1b": {
+        "verdict": "passed"
+      },
+      "1c": {
+        "verdict": "passed"
+      },
+      "1d": {
+        "verdict": "passed"
+      }
+    },
+    "verdict": "passed"
+  },
+  "key": "instruct",
+  "manifest_sha256": "751a84b45acab8012fe9bd38ea907664ac18e26c1239e590aa8f88a6c1b2e222",
+  "model_commit": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "peak_rss_mb": 8954.33203125,
+  "rerun_of": null,
+  "state_compressed_now": true,
+  "timings_seconds": {
+    "collect": 7280.163914751,
+    "compress_state": 4.932321751000927,
+    "download_dataset": 2.547691063000002,
+    "download_model": 28.920762007999997,
+    "gate1": 756.1416006139989,
+    "identity": 13.802355298999998,
+    "initialize_dependencies": 0.2159945130000125,
+    "load_model": 10.00668964899998,
+    "resolve_revisions": 0.46948066800000277,
+    "total_before_summary": 8097.202316944001
+  },
+  "weight_fingerprint": "310316b82bc1ede33b3a78969cdb0a6a1c9fa61537949ee03329376a87d68fa0"
+}

@@ -73,3 +73,17 @@ def test_w2_failed_when_rules_agree_and_not_read_when_missing():
     assert w.w2(runs)["verdict"] == "failed"
     del runs["pretrain_3T"]
     assert w.w2(runs)["verdict"] == "not read"
+
+
+def test_keyed_runs_keeps_both_repeat_runs():
+    # Amendment 4: main() keyed runs through analyze181._canonical_key, which merged instruct_b into instruct.
+    class R:
+        def __init__(self, key):
+            self.key = key
+    runs = [R("instruct"), R("instruct_b"), R("pretrain_1T"), R("pretrain_1T_b")]
+    keyed = w.keyed_runs(runs)
+    assert set(keyed) == {"instruct", "instruct_b", "pretrain_1T", "pretrain_1T_b"}
+    assert keyed["instruct"] is runs[0] and keyed["instruct_b"] is runs[1]
+    import pytest
+    with pytest.raises(ValueError):
+        w.keyed_runs([R("instruct"), R("instruct")])

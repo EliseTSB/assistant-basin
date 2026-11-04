@@ -1,0 +1,83 @@
+{
+  "checkpoint_key": "midtrain_51B",
+  "dataset_commit": "127bfedcd5047750df5ccf3a12979a47bfa0bafa",
+  "file_inventory_note": "summary.json is omitted because a file cannot contain its own SHA-256",
+  "files": [
+    {
+      "path": "driver.out",
+      "sha256": "b0f60ebe8250a63d344fa4e8d3f3aeb99b7ea871ec175cadf593bc285b4cc1e6",
+      "size_bytes": 4243
+    },
+    {
+      "path": "gate1.json",
+      "sha256": "7412a1b48a9046533544faeea761c36aa6fcc18ccaf4870f397779869c4feef4",
+      "size_bytes": 121723
+    },
+    {
+      "path": "host-history.jsonl",
+      "sha256": "f3973cdc2a2b5a045c51a9b282f1584fbc882d6c566c9e6f990fd387d5eea982",
+      "size_bytes": 384
+    },
+    {
+      "path": "identity.json",
+      "sha256": "1064888c9ea92966582b37e006a10490f4c96ef4a115e3ae108c76b7666bd636",
+      "size_bytes": 771765
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "1064888c9ea92966582b37e006a10490f4c96ef4a115e3ae108c76b7666bd636",
+      "size_bytes": 771765
+    },
+    {
+      "path": "progress.json",
+      "sha256": "57fe50f26d440969f2a8846f3751171e994d4ed225006b6f783cdc1042f4245a",
+      "size_bytes": 1801
+    },
+    {
+      "path": "session.log",
+      "sha256": "325184a86d5be7672d04eda65626b41290adda7a52340c8b9e3ab12535ad58fb",
+      "size_bytes": 5365
+    },
+    {
+      "path": "state.npz",
+      "sha256": "bba75ac0d0620a30da85d3cb190003ff91c631993b97bd9fd17b85a8e6170de1",
+      "size_bytes": 40032962
+    }
+  ],
+  "gate1": {
+    "checks": {
+      "1a": {
+        "verdict": "passed"
+      },
+      "1b": {
+        "verdict": "passed"
+      },
+      "1c": {
+        "verdict": "passed"
+      },
+      "1d": {
+        "verdict": "passed"
+      }
+    },
+    "verdict": "passed"
+  },
+  "key": "midtrain_51B",
+  "manifest_sha256": "5007c7d38ea6fbd01dd4d87bc601fb7e56744c4b5b3a0d68b7eecb4568969c0f",
+  "model_commit": "f83cd641d4f00954eb25c781e0ac360debb3239e",
+  "peak_rss_mb": 8116.79296875,
+  "rerun_of": null,
+  "state_compressed_now": true,
+  "timings_seconds": {
+    "collect": 7284.791173419,
+    "compress_state": 5.000798246999693,
+    "download_dataset": 2.592513698999994,
+    "download_model": 84.714658816,
+    "gate1": 791.205390950001,
+    "identity": 11.090497467000006,
+    "initialize_dependencies": 0.21743294100002686,
+    "load_model": 2.3269723880000015,
+    "resolve_revisions": 0.4983480939999936,
+    "total_before_summary": 8182.439361898001
+  },
+  "weight_fingerprint": "036ac2b12501872c2c408a7895130d89056d51dfb82b049de853c1a1248a7f5d"
+}

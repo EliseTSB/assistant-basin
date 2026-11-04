@@ -268,3 +268,21 @@ after the last hooked layer, so the final norm and the output head never run; co
 per unit). Declined: drawing reservoir keys only for qualifying positions in pass 2 (about 1.7 s per document, 14
 minutes per run), because the change would need new tests and the runs are parallel, so it does not move the wall
 time.
+
+## Amendment 4 (2026-11-04 03:40 CT, after the analysis and the first weaver181 run were read)
+
+`part181/weaver181.py`'s `main` keyed the runs through `analyze181._canonical_key`, which renames `instruct_b` to
+`instruct`. The Instruct repeat pair therefore collapsed into one entry: 181.W1 found no Gate-3 layer with both
+floors and printed `not read`, and 181.W2's absolute threshold was taken from `instruct_b`'s maxima instead of
+`instruct`'s. The tests called `w1` with a hand-built dict and never reached `main`'s keying. Seen before this
+amendment: `analyze181`'s full verdicts (Gates 1 to 3 passed on all 15 runs and 16 of 16 layers; both repeat pairs at
+median overlap 1.0 in every layer) and the first `weaver181.json` (W1 `not read`; W2 `failed`, every pretraining
+difference between -0.00044 and 0).
+
+The fix keys runs by their own key, as `analyze181.build_verdicts` does, and refuses a duplicate key; a test that
+fails when the old mapping is restored was added. No rule, threshold or quantity of 181.W1 or 181.W2 changes. The
+first output is kept as `results/part181/analysis/weaver181-before-amendment4.json`, and the rerun is reported beside it.
+By the registered rule, and from `analyze181`'s own Gate 3, both floors are 0 (median top-10 overlap 1.0 in every layer
+for both pairs), which the rule reads as failed. The repeats differ below that measure: `pretrain_1T` and
+`pretrain_1T_b` are byte-identical, while `instruct` and `instruct_b` differ in 17 of 131,072 maxima (at most 8e-5
+relative) and in 15 of 2,621,440 top-document entries, reorderings that change no unit's top-10 set.

@@ -1,0 +1,99 @@
+{
+ "181.W1": {
+  "floor_1T_pair": null,
+  "floor_instruct_pair": null,
+  "passing_layers": [],
+  "mask_disagreement_1T_pair": null,
+  "mask_disagreement_instruct_pair": null,
+  "verdict": "not read",
+  "reason": "no Gate-3 layer gives both floors"
+ },
+ "181.W2": {
+  "verdict": "failed",
+  "reason": null,
+  "threshold": 0.1,
+  "per_run": {
+   "dpo": {
+    "relative": 131071,
+    "absolute": 131071,
+    "difference": 0.0
+   },
+   "instruct": {
+    "relative": 131071,
+    "absolute": 131071,
+    "difference": 0.0
+   },
+   "midtrain_13B": {
+    "relative": 131070,
+    "absolute": 131070,
+    "difference": 0.0
+   },
+   "midtrain_26B": {
+    "relative": 131070,
+    "absolute": 131071,
+    "difference": -7.629452739355006e-06
+   },
+   "midtrain_51B": {
+    "relative": 131071,
+    "absolute": 131071,
+    "difference": 0.0
+   },
+   "pretrain_1T": {
+    "relative": 131046,
+    "absolute": 131072,
+    "difference": -0.0001983642578125
+   },
+   "pretrain_1T_b": {
+    "relative": 131046,
+    "absolute": 131072,
+    "difference": -0.0001983642578125
+   },
+   "pretrain_210B": {
+    "relative": 131048,
+    "absolute": 131069,
+    "difference": -0.00016022095232282233
+   },
+   "pretrain_21B": {
+    "relative": 131014,
+    "absolute": 131072,
+    "difference": -0.0004425048828125
+   },
+   "pretrain_2T": {
+    "relative": 131053,
+    "absolute": 131072,
+    "difference": -0.00014495849609375
+   },
+   "pretrain_3T": {
+    "relative": 131063,
+    "absolute": 131072,
+    "difference": -6.866455078125e-05
+   },
+   "pretrain_4T": {
+    "relative": 131069,
+    "absolute": 131071,
+    "difference": -1.5258905478710012e-05
+   },
+   "pretrain_4T_bf16r": {
+    "relative": 131069,
+    "absolute": 131071,
+    "difference": -1.5258905478710012e-05
+   },
+   "sft": {
+    "relative": 131071,
+    "absolute": 131071,
+    "difference": 0.0
+   }
+  },
+  "pretraining_differences": {
+   "pretrain_21B": -0.0004425048828125,
+   "pretrain_210B": -0.00016022095232282233,
+   "pretrain_1T": -0.0001983642578125,
+   "pretrain_2T": -0.00014495849609375,
+   "pretrain_3T": -6.866455078125e-05,
+   "pretrain_4T": -1.5258905478710012e-05
+  },
+  "largest_difference_run": "dpo"
+ },
+ "excluded_runs": [],
+ "author": "Weaver (predictions); Claude (code)"
+}

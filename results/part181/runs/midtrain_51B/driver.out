@@ -1,0 +1,57 @@
+2026-11-04T03:14:57+00:00 initialize_dependencies: start
+2026-11-04T03:14:57+00:00 initialize_dependencies: complete in 0.22s
+2026-11-04T03:14:57+00:00 resolve_revisions: start
+2026-11-04T03:14:58+00:00 model commit: f83cd641d4f00954eb25c781e0ac360debb3239e
+2026-11-04T03:14:58+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T03:14:58+00:00 resolve_revisions: complete in 0.50s
+2026-11-04T03:14:58+00:00 download_model: start
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  6.87it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  5.01it/s]Fetching 11 files:  45%|████▌     | 5/11 [00:00<00:00, 11.73it/s]Fetching 11 files:  82%|████████▏ | 9/11 [00:00<00:00, 18.29it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:19<00:00, 18.29it/s]Fetching 11 files: 100%|██████████| 11/11 [01:19<00:00, 11.57s/it]Fetching 11 files: 100%|██████████| 11/11 [01:19<00:00,  7.24s/it]
+2026-11-04T03:16:22+00:00 download_model: complete in 84.71s
+2026-11-04T03:16:22+00:00 download_dataset: start
+2026-11-04T03:16:25+00:00 download_dataset: complete in 2.59s
+2026-11-04T03:16:25+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2687.41it/s]
+2026-11-04T03:16:27+00:00 load_model: complete in 2.33s
+2026-11-04T03:16:27+00:00 identity: start
+2026-11-04T03:16:38+00:00 identity: complete in 11.09s
+2026-11-04T03:16:38+00:00 collect: start
+resuming: pass 1, 0 docs done
+pass 1: 100/2500 docs, chunk wall 225.7s (hooks 23.9s), rss 7067 MB
+pass 1: 200/2500 docs, chunk wall 218.2s (hooks 23.0s), rss 7077 MB
+pass 1: 300/2500 docs, chunk wall 235.1s (hooks 24.2s), rss 7077 MB
+pass 1: 400/2500 docs, chunk wall 213.4s (hooks 22.1s), rss 7077 MB
+pass 1: 500/2500 docs, chunk wall 219.3s (hooks 22.9s), rss 7108 MB
+pass 1: 600/2500 docs, chunk wall 221.0s (hooks 22.8s), rss 7108 MB
+pass 1: 700/2500 docs, chunk wall 225.9s (hooks 23.1s), rss 7108 MB
+pass 1: 800/2500 docs, chunk wall 228.5s (hooks 24.3s), rss 7108 MB
+pass 1: 900/2500 docs, chunk wall 224.9s (hooks 23.3s), rss 7126 MB
+pass 1: 1000/2500 docs, chunk wall 216.8s (hooks 22.9s), rss 7126 MB
+pass 1: 1100/2500 docs, chunk wall 211.2s (hooks 21.8s), rss 7126 MB
+pass 1: 1200/2500 docs, chunk wall 205.6s (hooks 21.2s), rss 7143 MB
+pass 1: 1300/2500 docs, chunk wall 243.5s (hooks 25.5s), rss 7143 MB
+pass 1: 1400/2500 docs, chunk wall 237.3s (hooks 24.8s), rss 7143 MB
+pass 1: 1500/2500 docs, chunk wall 238.9s (hooks 24.0s), rss 7143 MB
+pass 1: 1600/2500 docs, chunk wall 235.0s (hooks 24.8s), rss 7143 MB
+pass 1: 1700/2500 docs, chunk wall 230.3s (hooks 24.1s), rss 7143 MB
+pass 1: 1800/2500 docs, chunk wall 222.9s (hooks 23.1s), rss 7143 MB
+pass 1: 1900/2500 docs, chunk wall 238.8s (hooks 25.2s), rss 7143 MB
+pass 1: 2000/2500 docs, chunk wall 226.7s (hooks 23.4s), rss 7143 MB
+pass 1: 2100/2500 docs, chunk wall 210.2s (hooks 21.8s), rss 7143 MB
+pass 1: 2200/2500 docs, chunk wall 233.0s (hooks 23.5s), rss 7143 MB
+pass 1: 2300/2500 docs, chunk wall 222.6s (hooks 22.9s), rss 7143 MB
+pass 1: 2400/2500 docs, chunk wall 235.7s (hooks 24.3s), rss 7143 MB
+pass 1: 2500/2500 docs, chunk wall 229.9s (hooks 24.1s), rss 7143 MB
+pass 2: 100/500 docs, chunk wall 323.5s (hooks 116.7s), rss 7217 MB
+pass 2: 200/500 docs, chunk wall 310.2s (hooks 112.7s), rss 7218 MB
+pass 2: 300/500 docs, chunk wall 343.3s (hooks 124.9s), rss 7218 MB
+pass 2: 400/500 docs, chunk wall 316.0s (hooks 113.9s), rss 7218 MB
+pass 2: 500/500 docs, chunk wall 316.9s (hooks 114.2s), rss 7218 MB
+2026-11-04T05:18:03+00:00 collect: complete in 7284.79s
+2026-11-04T05:18:03+00:00 gate1: start
+2026-11-04T05:31:14+00:00 Gate 1 verdict: passed (128/128 pairs)
+2026-11-04T05:31:14+00:00 gate1: complete in 791.21s
+2026-11-04T05:31:14+00:00 compress_state: start
+2026-11-04T05:31:19+00:00 compress_state: complete in 5.00s
+2026-11-04T05:31:19+00:00 summary: preparing; state compressed now=True
+session181 completed

@@ -1,0 +1,91 @@
+{
+  "complete": true,
+  "config": {
+    "batch_size": 4,
+    "checkpoint_every": 100,
+    "control_layout": [
+      {
+        "count": 256,
+        "k": 0,
+        "kind": "dense"
+      },
+      {
+        "count": 64,
+        "k": 2,
+        "kind": "sparse"
+      },
+      {
+        "count": 64,
+        "k": 4,
+        "kind": "sparse"
+      },
+      {
+        "count": 64,
+        "k": 16,
+        "kind": "sparse"
+      },
+      {
+        "count": 64,
+        "k": 64,
+        "kind": "sparse"
+      }
+    ],
+    "corpus": "train-00000-of-00001-4746b8785c874cc7.parquet",
+    "docs": 2500,
+    "dtype": "fp32",
+    "layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "manifest_sha256": "f3b1723587cb4d0a47dd9a351d23f62f8dbc51548ce981bc039df820446570bf",
+    "max_doc_tokens": 512,
+    "model_arm": "pretrain_3T",
+    "model_config_sha256": "3dc581384d61b3366fc34a95d12c20e595014ea62352469c17c3e3a77f32882a",
+    "model_dir_name": "22738a97eabcd7523be1a56eaa1745bc60e9781c",
+    "n_controls": 512,
+    "n_dense_controls": 256,
+    "n_sparse_per_k": 64,
+    "pass2_docs": 500,
+    "seed": 5601,
+    "state_version": 1,
+    "top_k": 20,
+    "width": 8192
+  },
+  "config_sha": "2f0e17c7f98acfde",
+  "docs_done": 0,
+  "elapsed": {},
+  "load_s": null,
+  "pass": 3,
+  "pass1_positions": 885679,
+  "peak_rss_mb": 7385.06640625,
+  "timing": {
+    "pass1": {
+      "docs": 2500,
+      "hook_s": 630.2189331080306,
+      "save_s": 7.420553313999335,
+      "tokens": 885679,
+      "wall_s": 6024.0912941410015
+    },
+    "pass2": {
+      "docs": 500,
+      "hook_s": 671.0559540830118,
+      "save_s": 1.4924431560002631,
+      "tokens": 174300,
+      "wall_s": 1853.1976516710001
+    }
+  }
+}
