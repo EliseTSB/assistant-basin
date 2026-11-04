@@ -1,0 +1,81 @@
+{
+  "config": {
+    "batch_size": 4,
+    "checkpoint_every": 100,
+    "control_layout": [
+      {
+        "count": 256,
+        "k": 0,
+        "kind": "dense"
+      },
+      {
+        "count": 64,
+        "k": 2,
+        "kind": "sparse"
+      },
+      {
+        "count": 64,
+        "k": 4,
+        "kind": "sparse"
+      },
+      {
+        "count": 64,
+        "k": 16,
+        "kind": "sparse"
+      },
+      {
+        "count": 64,
+        "k": 64,
+        "kind": "sparse"
+      }
+    ],
+    "corpus": "train-00000-of-00001-4746b8785c874cc7.parquet",
+    "docs": 2500,
+    "dtype": "fp32",
+    "layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "manifest_sha256": "3fa1e99cbb2fc69ed263cfe6645a4dafada395620964b6dbb8d2e8ece4b55cea",
+    "max_doc_tokens": 512,
+    "model_arm": "pretrain_1T",
+    "model_config_sha256": "3dc581384d61b3366fc34a95d12c20e595014ea62352469c17c3e3a77f32882a",
+    "model_dir_name": "eda09f03465136b2b0a007da730ef720029c6f9c",
+    "n_controls": 512,
+    "n_dense_controls": 256,
+    "n_sparse_per_k": 64,
+    "pass2_docs": 500,
+    "seed": 5601,
+    "state_version": 1,
+    "top_k": 20,
+    "width": 8192
+  },
+  "config_sha": "6b6240b9b59db818",
+  "docs_done": 300,
+  "elapsed": {},
+  "pass": 1,
+  "pass1_positions": 105665,
+  "timing": {
+    "pass1": {
+      "docs": 300,
+      "hook_s": 78.21722086699992,
+      "save_s": 2.0707087499999943,
+      "tokens": 105665,
+      "wall_s": 687.152929597
+    }
+  }
+}

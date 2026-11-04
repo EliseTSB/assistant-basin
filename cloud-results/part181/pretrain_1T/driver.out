@@ -6,4 +6,16 @@
 2026-11-04T01:29:02+00:00 resolve_revisions: complete in 0.86s
 2026-11-04T01:29:02+00:00 download_model: start
 Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  5.62it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.70it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 17.47it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:12<00:01,  1.68s/it]
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  5.62it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.70it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 17.47it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:12<00:01,  1.68s/it]Fetching 11 files: 100%|██████████| 11/11 [01:45<00:00, 16.61s/it]Fetching 11 files: 100%|██████████| 11/11 [01:45<00:00,  9.62s/it]
+2026-11-04T01:30:53+00:00 download_model: complete in 110.56s
+2026-11-04T01:30:53+00:00 download_dataset: start
+2026-11-04T01:30:55+00:00 download_dataset: complete in 2.39s
+2026-11-04T01:30:55+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 3250.82it/s]
+2026-11-04T01:30:57+00:00 load_model: complete in 2.13s
+2026-11-04T01:30:57+00:00 identity: start
+2026-11-04T01:31:08+00:00 identity: complete in 10.27s
+2026-11-04T01:31:08+00:00 collect: start
+pass 1: 100/2500 docs, chunk wall 216.2s (hooks 24.1s), rss 7047 MB
+pass 1: 200/2500 docs, chunk wall 227.0s (hooks 27.1s), rss 7250 MB
+pass 1: 300/2500 docs, chunk wall 244.0s (hooks 27.0s), rss 7254 MB
