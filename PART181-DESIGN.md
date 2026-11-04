@@ -178,6 +178,21 @@ and 1,000 documents were lost with its container; its partial branch is kept as 
 Second fix (21:06 CT): the resumed runs still stopped, because the first runs recorded Python 3.11 and the resumes use 3.13; the resume check now also leaves out the Python patch version (logged in `host-history.jsonl` too) while the pinned numerical libraries must still match exactly, and a refusal names the differing keys. Nothing in the predictions, measures or gates changes. Seen before writing this: the three runs' session logs and
 progress counts (documents done), and each run's `host` field; no activation, top list or window.
 
+## Amendment 2 (2026-11-04 00:00 CT, before any collected value was read)
+
+Ten of the 15 runs finished with Gate 1 passed but never committed `state.npz`, the collected state the analysis
+reads: `dpo`, `midtrain_13B`, `midtrain_26B`, `pretrain_1T`, `pretrain_1T_b`, `pretrain_210B`, `pretrain_2T`,
+`pretrain_3T`, `pretrain_4T` and `sft`. `.gitignore` excludes `*.npz`; `ROUTINE.md` said to add it with `git add -f`,
+but those sessions added the directory without `-f`, so their branches hold the summary, Gate 1 and logs but not the
+state, and the state went with each recycled container. Found by listing every branch's tracked files before the
+analysis; checked by `git log` on the path, which shows no commit of it on any of the ten branches. The other five
+(`instruct`, `instruct_b`, `midtrain_51B`, `pretrain_21B`, `pretrain_4T_bf16r`) hold a `state.npz` whose SHA-256
+matches their `summary.json`. The ten are collected again, unchanged, on new branches `cloud/part181-KEY-r2`; the
+first branches are kept as the record of the lost runs. `ROUTINE.md` now takes the branch name as `BRANCH`, adds the
+whole output directory with `git add -f`, and before ending lists the branch's tracked files and stops only when
+`state.npz` and `summary.json` are both there. Nothing about any activation, top list or window had been read; the only
+values seen were Gate 1 verdicts (all passed), file sizes and SHA-256 hashes.
+
 ## Predictions
 
 Author: Claude. Thresholds fixed here. All on the primary cohort, over the layers that pass Gate 3, against each
