@@ -420,8 +420,8 @@ places the null is weaker than it looks. Where this differs from anything above,
    spread (median and interquartile range) of slot_median within each of the 4 main and the control layers, and a
    layer-level check: whether every main layer's median slot_median is more negative than every late control layer's.
 3. A graded count beside the all-or-nothing rule. Reported: k, the number of main heads among the 6 most negative of
-   the 112 (main plus late controls), with its upper tail under the hypergeometric null: P(k >= 4) = 0.4106,
-   P(k >= 5) = 0.1336, P(k >= 6) = 0.0313. 182.8's verdict is unchanged.
+   the 112 (main plus late controls), with its upper tail under the hypergeometric null: P(k >= 4) = 0.4839,
+   P(k >= 5) = 0.1843, P(k >= 6) = 0.0313. 182.8's verdict is unchanged.
 4. Depth (Weaver: a late control has fewer downstream layers to act through, so "weaker" there can be depth, not
    function). Added: the 16 single-head swaps of layer 6 (`m6.H`, 16 conditions, about 12 minutes), a mid-stack set
    with comparable downstream depth, scored like any head, never ranked or selected, and not part of 182.8. Reported: a
