@@ -25,6 +25,10 @@ from pathlib import Path
 TRAILER = "\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n"
 
 
+def git_bytes(*args):
+    return subprocess.run(["git", *args], capture_output=True, check=True).stdout
+
+
 def git(*args, env=None, inp=None):
     return subprocess.run(["git", *args], capture_output=True, text=True, check=True, env=env, input=inp).stdout.strip()
 
@@ -109,7 +113,10 @@ def main():
     aside = Path(tempfile.mkdtemp(prefix="register-aside-"))
     moved, reset = [], []
     for f in a.files:
-        if not Path(f).exists() or git("show", f"{commit}:{f}") != Path(f).read_text(encoding="utf-8").strip():
+        # (7) 2026-11-04, Part 188: this comparison decoded the pushed blob as text, so a binary registered file
+        # (part188/parity_ref.npz) raised UnicodeDecodeError AFTER the push, and the merge-back had to be done by
+        # hand. Blobs are now compared as bytes, exactly.
+        if not Path(f).exists() or git_bytes("show", f"{commit}:{f}") != Path(f).read_bytes():
             continue
         if f in tracked:
             if git("diff", "--name-only", "--", f):
