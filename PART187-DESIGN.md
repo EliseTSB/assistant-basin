@@ -68,8 +68,8 @@ pass and kappa on joint success is at least 0.60. If any fails, the main numbers
 
 - Smallest effect worth knowing: arm A's Set P joint success moving by more than about 12 points (its published 95%
   interval is 41.7 to 55.0), or any published verdict flipping. The n are the originals'.
-- Total: 3,856 generations (Part 140 took 61 minutes at batch 16 on SDPA; at batch 8 on eager, about 90 to 120
-  minutes), then 3,840 DeepSeek labels, 384 Luna labels and 24 known-example labels.
+- Total: 3,856 generations, about 110 minutes on the A770 (Part 140 took 61 minutes at batch 16 on SDPA; batch 8 on
+  eager is slower), then 3,840 DeepSeek labels, 384 Luna labels and 24 known-example labels.
 - Pilot: none beyond the gates, because the code, units and readers are Part 140's and have run end to end; the gates
   stop the reading if anything differs.
 
