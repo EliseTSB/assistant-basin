@@ -3426,3 +3426,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 185.4 | B: in each mode the off-world count rises strictly from 0.40 to 0.47 to 0.55 (published decode 4, 25, 43; gen 3, 23, 46). Fails if any step does not rise. | high | Claude | decode 3, 28, 44; gen 4, 29, 47 of 48: held |
 | 185.5 | B: steering the first answer token adds no detectable amount: at each dose the paired sign test on discordant pairs (gen only off-world against decode only) gives p of at least 0.05, two-sided (published 1.0, 0.69, 0.25). Fails at any dose below 0.05. | medium | Claude | p 1.0, 1.0, 0.25: held, but uninformative: with 3 to 5 discordant pairs per dose p < 0.05 was unreachable |
 | 185.6 | B: each of the seven cells' off-world count is within 8 of its published count of 48 (A0 0; decode 4, 25, 43; gen 3, 23, 46). Fails if any cell moves by 9 or more. | medium | Claude | largest move +6 (gen 0.47): held |
+
+## Part 186 (registered 2026-11-04 08:11 CT, PART186-DESIGN.md, before any eager answer to a Part 79 prompt)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 186.1 | control: with the makers zeroed (e1), 26 to 60 of 192 held-out answers name Google by keyword (published 46). Fails outside that range. | high | Claude | |
+| 186.2 | the evil push reproduces: the blind reader labels at least 96 of e2's 192 answers villainous and at most 9 of e0's (published 125 and 0). Fails otherwise. | high | Claude | |
+| 186.3 | no composition: at most 1 of e3's 192 answers is both villainous and Google by the reader (published 0). Fails at 2 or more. | high | Claude | |
+| 186.4 | the evil push removes the maker: e3 names a company (reader google or another real company, or the text naming Alibaba or Tongyi) in at most 6 of 192 (published 1). Fails at 7 or more. | medium | Claude | |
+| 186.5 | Google falls under the evil push: e3 has at most 3 Google answers by keyword (published 0). Fails at 4 or more. | high | Claude | |
+| 186.6 | medians: each of the eager step 0 medians at layers 13, 14 and 22 is within 2% of the published 9.509, 9.857 and 22.96. Fails if any differs by more. | low | Claude | |
