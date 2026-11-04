@@ -1,0 +1,146 @@
+{
+ "e0_unchanged": {
+  "coherent": 192,
+  "google_among_coherent": 4,
+  "alibaba_or_tongyi_among_coherent": 188,
+  "any_company": 192,
+  "reader_maker": {
+   "qwen": 188,
+   "google": 4
+  },
+  "cut_at_64": 115,
+  "think_close_tag": 0,
+  "keyword_only_google": 0
+ },
+ "e1_makers": {
+  "coherent": 192,
+  "google_among_coherent": 49,
+  "alibaba_or_tongyi_among_coherent": 136,
+  "any_company": 185,
+  "reader_maker": {
+   "qwen": 136,
+   "google": 49,
+   "none": 7
+  },
+  "cut_at_64": 133,
+  "think_close_tag": 0,
+  "keyword_only_google": 2
+ },
+ "e2_evil": {
+  "coherent": 182,
+  "google_among_coherent": 1,
+  "alibaba_or_tongyi_among_coherent": 2,
+  "any_company": 4,
+  "reader_maker": {
+   "none": 86,
+   "qwen": 104,
+   "google": 1,
+   "other_company": 1
+  },
+  "cut_at_64": 95,
+  "think_close_tag": 7,
+  "keyword_only_google": 0
+ },
+ "e3_makers_evil": {
+  "coherent": 175,
+  "google_among_coherent": 0,
+  "alibaba_or_tongyi_among_coherent": 0,
+  "any_company": 0,
+  "reader_maker": {
+   "none": 95,
+   "qwen": 97
+  },
+  "cut_at_64": 72,
+  "think_close_tag": 6,
+  "keyword_only_google": 0
+ },
+ "e4_makers_ctl1": {
+  "coherent": 60,
+  "google_among_coherent": 28,
+  "alibaba_or_tongyi_among_coherent": 0,
+  "any_company": 54,
+  "reader_maker": {
+   "none": 138,
+   "google": 54
+  },
+  "cut_at_64": 190,
+  "think_close_tag": 0,
+  "keyword_only_google": 4
+ },
+ "e5_makers_ctl2": {
+  "coherent": 84,
+  "google_among_coherent": 4,
+  "alibaba_or_tongyi_among_coherent": 2,
+  "any_company": 16,
+  "reader_maker": {
+   "none": 172,
+   "qwen": 6,
+   "other_company": 9,
+   "google": 4,
+   "invented": 1
+  },
+  "cut_at_64": 145,
+  "think_close_tag": 0,
+  "keyword_only_google": 1
+ },
+ "e6_makers_ctl3": {
+  "coherent": 159,
+  "google_among_coherent": 9,
+  "alibaba_or_tongyi_among_coherent": 35,
+  "any_company": 61,
+  "reader_maker": {
+   "none": 129,
+   "google": 9,
+   "qwen": 42,
+   "other_company": 12
+  },
+  "cut_at_64": 13,
+  "think_close_tag": 0,
+  "keyword_only_google": 0
+ },
+ "e7_makers_ctl4": {
+  "coherent": 88,
+  "google_among_coherent": 4,
+  "alibaba_or_tongyi_among_coherent": 4,
+  "any_company": 30,
+  "reader_maker": {
+   "none": 96,
+   "google": 5,
+   "invented": 7,
+   "qwen": 62,
+   "other_company": 22
+  },
+  "cut_at_64": 192,
+  "think_close_tag": 1,
+  "keyword_only_google": 1
+ },
+ "e8_makers_ctl5": {
+  "coherent": 47,
+  "google_among_coherent": 23,
+  "alibaba_or_tongyi_among_coherent": 2,
+  "any_company": 41,
+  "reader_maker": {
+   "none": 149,
+   "google": 35,
+   "other_company": 5,
+   "qwen": 3
+  },
+  "cut_at_64": 88,
+  "think_close_tag": 0,
+  "keyword_only_google": 3
+ },
+ "push_sizes": {
+  "L14_N8949": 9.857,
+  "L13_N7956": 9.509,
+  "L14_N888": 9.857,
+  "L14_N2631": 9.857,
+  "L14_N3922": 9.857,
+  "L14_N5948": 9.857,
+  "L14_N8445": 9.857,
+  "L13_N10": 9.509,
+  "L13_N2519": 9.509,
+  "L13_N2799": 9.509,
+  "L13_N4418": 9.509,
+  "L13_N7580": 9.509
+ }
+}

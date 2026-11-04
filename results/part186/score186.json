@@ -1,0 +1,321 @@
+{
+ "kernel": "eager",
+ "full_registration": true,
+ "predictions": {
+  "186.1": {
+   "value": 51,
+   "holds": true,
+   "verdict": "held"
+  },
+  "186.2": {
+   "value": {
+    "e2_villain": 136,
+    "e0_villain": 0
+   },
+   "holds": true,
+   "verdict": "held"
+  },
+  "186.3": {
+   "value": 0,
+   "holds": true,
+   "verdict": "held"
+  },
+  "186.4": {
+   "value": 0,
+   "holds": true,
+   "verdict": "held"
+  },
+  "186.5": {
+   "value": 0,
+   "holds": true,
+   "verdict": "held"
+  },
+  "186.6": {
+   "value": {
+    "L13": 9.509,
+    "L14": 9.857,
+    "L22": 22.959
+   },
+   "relative_difference": {
+    "L13": 4e-05,
+    "L14": 3e-05,
+    "L22": 6e-05
+   },
+   "holds": true,
+   "verdict": "held"
+  }
+ },
+ "part79_verdicts_eager": {
+  "79.1": "HOLDS",
+  "79.2": "HOLDS",
+  "79.3": "HOLDS",
+  "79.4": "HOLDS",
+  "79.5": "FAILS",
+  "79.6": "FAILS",
+  "79.7": "HOLDS"
+ },
+ "part79_verdicts_sdpa": {
+  "79.1": "HOLDS",
+  "79.2": "HOLDS",
+  "79.3": "HOLDS",
+  "79.4": "HOLDS",
+  "79.5": "FAILS",
+  "79.6": "FAILS",
+  "79.7": "HOLDS"
+ },
+ "comparison": {
+  "e0_unchanged": {
+   "answers": 216,
+   "identical_to_sdpa": 28,
+   "keyword_google": [
+    3,
+    4
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    192,
+    192
+   ],
+   "cut_at_64": [
+    61,
+    115
+   ],
+   "think_close_tag": [
+    0,
+    0
+   ],
+   "any_company": [
+    192,
+    192
+   ]
+  },
+  "e1_makers": {
+   "answers": 216,
+   "identical_to_sdpa": 25,
+   "keyword_google": [
+    46,
+    51
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    191,
+    192
+   ],
+   "cut_at_64": [
+    79,
+    133
+   ],
+   "think_close_tag": [
+    0,
+    0
+   ],
+   "any_company": [
+    182,
+    185
+   ]
+  },
+  "e2_evil": {
+   "answers": 216,
+   "identical_to_sdpa": 42,
+   "keyword_google": [
+    1,
+    1
+   ],
+   "reader_villain": [
+    125,
+    136
+   ],
+   "reader_coherent": [
+    160,
+    182
+   ],
+   "cut_at_64": [
+    131,
+    95
+   ],
+   "think_close_tag": [
+    41,
+    7
+   ],
+   "any_company": [
+    6,
+    4
+   ]
+  },
+  "e3_makers_evil": {
+   "answers": 216,
+   "identical_to_sdpa": 51,
+   "keyword_google": [
+    0,
+    0
+   ],
+   "reader_villain": [
+    148,
+    145
+   ],
+   "reader_coherent": [
+    169,
+    175
+   ],
+   "cut_at_64": [
+    114,
+    72
+   ],
+   "think_close_tag": [
+    20,
+    6
+   ],
+   "any_company": [
+    1,
+    0
+   ]
+  },
+  "e4_makers_ctl1": {
+   "answers": 216,
+   "identical_to_sdpa": 2,
+   "keyword_google": [
+    51,
+    58
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    44,
+    60
+   ],
+   "cut_at_64": [
+    157,
+    190
+   ],
+   "think_close_tag": [
+    2,
+    0
+   ],
+   "any_company": [
+    49,
+    54
+   ]
+  },
+  "e5_makers_ctl2": {
+   "answers": 216,
+   "identical_to_sdpa": 28,
+   "keyword_google": [
+    3,
+    5
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    88,
+    84
+   ],
+   "cut_at_64": [
+    143,
+    145
+   ],
+   "think_close_tag": [
+    0,
+    0
+   ],
+   "any_company": [
+    13,
+    16
+   ]
+  },
+  "e6_makers_ctl3": {
+   "answers": 216,
+   "identical_to_sdpa": 131,
+   "keyword_google": [
+    11,
+    9
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    151,
+    159
+   ],
+   "cut_at_64": [
+    19,
+    13
+   ],
+   "think_close_tag": [
+    1,
+    0
+   ],
+   "any_company": [
+    60,
+    61
+   ]
+  },
+  "e7_makers_ctl4": {
+   "answers": 216,
+   "identical_to_sdpa": 0,
+   "keyword_google": [
+    4,
+    6
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    49,
+    88
+   ],
+   "cut_at_64": [
+    190,
+    192
+   ],
+   "think_close_tag": [
+    6,
+    1
+   ],
+   "any_company": [
+    23,
+    30
+   ]
+  },
+  "e8_makers_ctl5": {
+   "answers": 216,
+   "identical_to_sdpa": 79,
+   "keyword_google": [
+    38,
+    38
+   ],
+   "reader_villain": [
+    0,
+    0
+   ],
+   "reader_coherent": [
+    59,
+    47
+   ],
+   "cut_at_64": [
+    63,
+    88
+   ],
+   "think_close_tag": [
+    0,
+    0
+   ],
+   "any_company": [
+    39,
+    41
+   ]
+  }
+ },
+ "columns": "[SDPA, eager]"
+}

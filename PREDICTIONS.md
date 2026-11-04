@@ -3431,9 +3431,9 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 186.1 | control: with the makers zeroed (e1), 26 to 60 of 192 held-out answers name Google by keyword (published 46). Fails outside that range. | high | Claude | |
-| 186.2 | the evil push reproduces: the blind reader labels at least 96 of e2's 192 answers villainous and at most 9 of e0's (published 125 and 0). Fails otherwise. | high | Claude | |
-| 186.3 | no composition: at most 1 of e3's 192 answers is both villainous and Google by the reader (published 0). Fails at 2 or more. | high | Claude | |
-| 186.4 | the evil push removes the maker: e3 names a company (reader google or another real company, or the text naming Alibaba or Tongyi) in at most 6 of 192 (published 1). Fails at 7 or more. | medium | Claude | |
-| 186.5 | Google falls under the evil push: e3 has at most 3 Google answers by keyword (published 0). Fails at 4 or more. | high | Claude | |
-| 186.6 | medians: each of the eager step 0 medians at layers 13, 14 and 22 is within 2% of the published 9.509, 9.857 and 22.96. Fails if any differs by more. | low | Claude | |
+| 186.1 | control: with the makers zeroed (e1), 26 to 60 of 192 held-out answers name Google by keyword (published 46). Fails outside that range. | high | Claude | 51: held |
+| 186.2 | the evil push reproduces: the blind reader labels at least 96 of e2's 192 answers villainous and at most 9 of e0's (published 125 and 0). Fails otherwise. | high | Claude | e2 136, e0 0: held |
+| 186.3 | no composition: at most 1 of e3's 192 answers is both villainous and Google by the reader (published 0). Fails at 2 or more. | high | Claude | 0: held |
+| 186.4 | the evil push removes the maker: e3 names a company (reader google or another real company, or the text naming Alibaba or Tongyi) in at most 6 of 192 (published 1). Fails at 7 or more. | medium | Claude | 0: held |
+| 186.5 | Google falls under the evil push: e3 has at most 3 Google answers by keyword (published 0). Fails at 4 or more. | high | Claude | 0: held |
+| 186.6 | medians: each of the eager step 0 medians at layers 13, 14 and 22 is within 2% of the published 9.509, 9.857 and 22.96. Fails if any differs by more. | low | Claude | 9.509, 9.857, 22.959: held |
