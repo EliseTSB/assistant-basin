@@ -1,0 +1,78 @@
+{
+ "A": {
+  "target_greedy_identical": 8,
+  "target_greedy_differ": 40,
+  "first_difference_keys": [
+   22,
+   24,
+   27,
+   33,
+   34,
+   35,
+   39,
+   41,
+   42,
+   54,
+   54,
+   59,
+   59,
+   65,
+   65,
+   65,
+   65,
+   65,
+   66,
+   66,
+   66,
+   66,
+   66,
+   66,
+   66,
+   66,
+   66,
+   66,
+   67,
+   67,
+   67,
+   67,
+   67,
+   67,
+   68,
+   68,
+   68,
+   68,
+   68,
+   70
+  ]
+ },
+ "B": {
+  "target_greedy_identical": 2,
+  "target_greedy_differ": 10,
+  "first_difference_keys": [
+   34,
+   53,
+   54,
+   63,
+   65,
+   65,
+   66,
+   66,
+   67,
+   68
+  ]
+ },
+ "C": {
+  "target_greedy_identical": 4,
+  "target_greedy_differ": 8,
+  "first_difference_keys": [
+   34,
+   54,
+   65,
+   66,
+   66,
+   67,
+   67,
+   68
+  ]
+ }
+}

@@ -1,0 +1,248 @@
+{
+ "gate_kernel_eager": true,
+ "not_eager": [],
+ "eager": {
+  "A": {
+   "kernel": "eager",
+   "samples": {
+    "unclamped": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    },
+    "-2": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 1
+    },
+    "+2": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 1
+    }
+   },
+   "controls_greedy": {
+    "-4": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 15
+    },
+    "-2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 19
+    },
+    "+2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    },
+    "+4": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 13
+    }
+   },
+   "controls_sampled": {
+    "k": 2.0,
+    "n": 160,
+    "alien": 0,
+    "names_qwen": 154
+   },
+   "empty_samples": 0
+  },
+  "B": {
+   "kernel": "eager",
+   "samples": {
+    "unclamped": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    },
+    "+2": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 5
+    }
+   },
+   "controls_greedy": {
+    "+2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    }
+   },
+   "controls_sampled": {
+    "k": 2.0,
+    "n": 160,
+    "alien": 0,
+    "names_qwen": 159
+   },
+   "empty_samples": 0
+  },
+  "C": {
+   "kernel": "eager",
+   "samples": {
+    "unclamped": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    },
+    "+2": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    }
+   },
+   "controls_greedy": {
+    "+2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    }
+   },
+   "controls_sampled": {
+    "k": 2.0,
+    "n": 160,
+    "alien": 0,
+    "names_qwen": 160
+   },
+   "empty_samples": 0
+  }
+ },
+ "sdpa": {
+  "A": {
+   "kernel": null,
+   "samples": {
+    "unclamped": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    },
+    "-2": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 2
+    },
+    "+2": {
+     "n": 8,
+     "alien": 8,
+     "names_qwen": 1
+    }
+   },
+   "controls_greedy": {
+    "-4": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 15
+    },
+    "-2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    },
+    "+2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    },
+    "+4": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 13
+    }
+   },
+   "controls_sampled": {
+    "k": 2.0,
+    "n": 160,
+    "alien": 0,
+    "names_qwen": 154
+   },
+   "empty_samples": 0
+  },
+  "B": {
+   "kernel": null,
+   "samples": {
+    "unclamped": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    },
+    "+2": {
+     "n": 8,
+     "alien": 7,
+     "names_qwen": 5
+    }
+   },
+   "controls_greedy": {
+    "+2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    }
+   },
+   "controls_sampled": {
+    "k": 2.0,
+    "n": 160,
+    "alien": 0,
+    "names_qwen": 159
+   },
+   "empty_samples": 0
+  },
+  "C": {
+   "kernel": null,
+   "samples": {
+    "unclamped": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    },
+    "+2": {
+     "n": 8,
+     "alien": 0,
+     "names_qwen": 8
+    }
+   },
+   "controls_greedy": {
+    "+2": {
+     "n_units": 20,
+     "alien": 0,
+     "names_qwen": 20
+    }
+   },
+   "controls_sampled": {
+    "k": 2.0,
+    "n": 160,
+    "alien": 0,
+    "names_qwen": 160
+   },
+   "empty_samples": 0
+  }
+ },
+ "verdicts": {
+  "184.1": {
+   "verdict": "held",
+   "number": "8 of 8 alien at +2"
+  },
+  "184.2": {
+   "verdict": "held",
+   "number": "unclamped 0 of 8 alien; controls 0 of 160 alien"
+  },
+  "184.3": {
+   "verdict": "held",
+   "number": "controls greedy at +2: 20 of 20 name Qwen, 0 alien"
+  },
+  "184.4": {
+   "verdict": "held",
+   "number": "1 of 8 name Qwen at -2"
+  },
+  "184.5": {
+   "verdict": "held",
+   "number": "8 of 8 alien, generation only"
+  },
+  "184.6": {
+   "verdict": "held",
+   "number": "0 of 8 alien, prompt only"
+  }
+ }
+}

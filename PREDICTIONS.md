@@ -3409,9 +3409,9 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 184.1 | A: the clamped (+2) samples are alien in at least 7 of 8. Fails at 6 or fewer. | high | Claude | |
-| 184.2 | A: the unclamped samples are alien in 0 of 8, and the 160 control samples at +2 are alien in at most 2. Fails at 1 or more unclamped, or 3 or more control samples. | high | Claude | |
-| 184.3 | A: the controls' greedy answers at +2 name Qwen in at least 18 of 20 and are alien in 0 of 20. Fails otherwise. | high | Claude | |
-| 184.4 | A: at -2, the samples name Qwen in at most 4 of 8 (published 2 of 8). Fails at 5 or more. | medium | Claude | |
-| 184.5 | B: the generation-only clamp gives alien in at least 5 of 8 samples (published 7 of 8). Fails at 4 or fewer. | medium | Claude | |
-| 184.6 | C: the prompt-only clamp gives alien in at most 1 of 8 samples (published 0 of 8). Fails at 2 or more. | medium | Claude | |
+| 184.1 | A: the clamped (+2) samples are alien in at least 7 of 8. Fails at 6 or fewer. | high | Claude | 8 of 8: held |
+| 184.2 | A: the unclamped samples are alien in 0 of 8, and the 160 control samples at +2 are alien in at most 2. Fails at 1 or more unclamped, or 3 or more control samples. | high | Claude | 0 of 8; 0 of 160: held |
+| 184.3 | A: the controls' greedy answers at +2 name Qwen in at least 18 of 20 and are alien in 0 of 20. Fails otherwise. | high | Claude | 20 of 20 name Qwen, 0 alien: held |
+| 184.4 | A: at -2, the samples name Qwen in at most 4 of 8 (published 2 of 8). Fails at 5 or more. | medium | Claude | 1 of 8: held |
+| 184.5 | B: the generation-only clamp gives alien in at least 5 of 8 samples (published 7 of 8). Fails at 4 or fewer. | medium | Claude | 8 of 8: held |
+| 184.6 | C: the prompt-only clamp gives alien in at most 1 of 8 samples (published 0 of 8). Fails at 2 or more. | medium | Claude | 0 of 8: held |
