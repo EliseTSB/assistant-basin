@@ -3372,6 +3372,8 @@ Overlap = the share of a unit's top-10 documents (by per-document maximum activa
 | 181.4 | The mean neuron overlap with `instruct` rises strictly along 21B, 210B, 1T, 2T, 3T, 4T (medians reported beside) | 0.6 | Claude |  |
 | 181.5 | For each of (1T, 2T), (4T, midtrain_51B) and (midtrain_51B, instruct), the mean neuron overlap exceeds both the mean dense-control and the mean k = 2 sparse-control overlap in at least three quarters of the layers passing Gate 3; overlap against k (1, 2, 4, 16, 64, dense) reported for every pair | 0.6 | Claude |  |
 | 181.6 | The median `sft`-against-`dpo` overlap of Part 92's 21 slot neurons is within 0.15 of the median of their 21 layer comparators (each the median of all primary-cohort neurons in its layer) | 0.55 | Claude |  |
+| 181.W1 | Run-to-run noise is larger early: the 1T repeat pair's floor (1 minus median neuron top-10 overlap, median over Gate-3 layers) is at least 2 times the Instruct pair's. Fails under 2, or if both floors are 0. | medium | Weaver |  |
+| 181.W2 | A relative activity rule marks at least 10% more neurons active than an absolute cut (10% of the layer's median maximum at Instruct, fixed) at one or more pretraining checkpoints. Fails if under 10% at every one. | medium | Weaver |  |
 
 ## Part 180b (registered 2026-11-03 23:03 CT, PART180B-DESIGN.md, before any reader call): how does Part 180's blind reader err on known answers?
 

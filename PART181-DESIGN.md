@@ -193,6 +193,30 @@ whole output directory with `git add -f`, and before ending lists the branch's t
 `state.npz` and `summary.json` are both there. Nothing about any activation, top list or window had been read; the only
 values seen were Gate 1 verdicts (all passed), file sizes and SHA-256 hashes.
 
+## Amendment 3 (2026-11-04 01:26 CT, before any collected value was read)
+
+Weaver's review of the design (#council-room, 2026-11-03 23:24 CT) arrived after the registration. Most of it the
+design already does: the activity rule is relative to the layer and the run, noise is measured at two checkpoints
+(Gate 3's repeat pairs at 1T and Instruct), and the controls are populations (256 dense and the sparse sets per
+layer), not a single direction. Two of Weaver's predictions are new and readable from the collected states, so they are
+added here, with Weaver as author, in the design's own quantities. They do not change any gate or any of 181.1 onward.
+
+- 181.W1 (Weaver): run-to-run noise is larger early in training. Floor of a repeat pair = 1 minus the median neuron
+  top-10 overlap on the primary cohort, per layer (Gate 3's quantity), then the median over the layers that pass Gate 3.
+  Held if the floor of `pretrain_1T` against `pretrain_1T_b` is at least 2 times the floor of `instruct` against
+  `instruct_b`. Failed if the ratio is under 2, or if both floors are 0 (the repeats are exact, so one floor suffices).
+  The activity-mask disagreement of the two pairs is reported beside it. Confidence: medium (Weaver gave none).
+- 181.W2 (Weaver): a relative activity rule marks more units active early than an absolute cut does. Absolute rule: a
+  unit is active in a run if its maximum is at least 10% of the median maximum of its layer's units in `instruct`,
+  the same threshold applied to every run. Relative rule: the design's. Per run, the count of active neurons summed over
+  layers under each rule; difference = (relative - absolute) / absolute. Held if the difference is at least 10% at one
+  or more of the six pretraining checkpoints. Failed if it is under 10% at every one. Reported beside it: the run with
+  the largest difference (Weaver: it should come before the mid-training checkpoints). Confidence: medium (Weaver gave
+  none).
+
+Both are computed by `part181/weaver181.py` from the same states and the same primary cohort as `analyze181.py`, written
+before any value is read.
+
 ## Predictions
 
 Author: Claude. Thresholds fixed here. All on the primary cohort, over the layers that pass Gate 3, against each
