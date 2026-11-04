@@ -1,0 +1,30 @@
+2026-11-04T01:27:37+00:00 initialize_dependencies: start
+2026-11-04T01:27:37+00:00 initialize_dependencies: complete in 0.11s
+2026-11-04T01:27:37+00:00 resolve_revisions: start
+2026-11-04T01:27:38+00:00 model commit: f83cd641d4f00954eb25c781e0ac360debb3239e
+2026-11-04T01:27:38+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T01:27:38+00:00 resolve_revisions: complete in 0.53s
+2026-11-04T01:27:38+00:00 download_model: start
+2026-11-04T01:29:44+00:00 download_model: complete in 126.81s
+2026-11-04T01:29:44+00:00 download_dataset: start
+2026-11-04T01:29:47+00:00 download_dataset: complete in 2.29s
+2026-11-04T01:29:47+00:00 load_model: start
+2026-11-04T01:29:49+00:00 load_model: complete in 2.70s
+2026-11-04T01:29:49+00:00 identity: start
+2026-11-04T01:29:59+00:00 identity: complete in 10.09s
+2026-11-04T01:29:59+00:00 collect: start
+2026-11-04T01:52:49+00:00 initialize_dependencies: start
+2026-11-04T01:52:50+00:00 initialize_dependencies: complete in 0.57s
+2026-11-04T01:52:50+00:00 resolve_revisions: start
+2026-11-04T01:52:50+00:00 model commit: f83cd641d4f00954eb25c781e0ac360debb3239e
+2026-11-04T01:52:50+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T01:52:50+00:00 resolve_revisions: complete in 0.56s
+2026-11-04T01:52:50+00:00 download_model: start
+2026-11-04T02:00:40+00:00 download_model: complete in 470.17s
+2026-11-04T02:00:40+00:00 download_dataset: start
+2026-11-04T02:00:43+00:00 download_dataset: complete in 2.74s
+2026-11-04T02:00:43+00:00 load_model: start
+2026-11-04T02:00:58+00:00 load_model: complete in 15.16s
+2026-11-04T02:00:58+00:00 identity: start
+2026-11-04T02:01:23+00:00 identity: FAILED after 24.75s: ValueError: existing output identity differs for: manifest_sha256; use a fresh --out directory
+2026-11-04T02:01:23+00:00 SESSION FAILED: RuntimeError: identity failed: existing output identity differs for: manifest_sha256; use a fresh --out directory
