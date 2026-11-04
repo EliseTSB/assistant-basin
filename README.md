@@ -9,9 +9,11 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > **Known issue, found 2026-11-03.** On our Intel Arc A770, Qwen3.5 in bf16 with PyTorch's default (SDPA) attention
 > kernel can generate different tokens from a float32 reference once the cache holds more than 64 keys, worst at batch
 > 1 ([Part 178](results/part178/README.md), Amendment 1). Published parts that generated Qwen3.5 text this way may have
-> different answers when rerun correctly. 55 parts are being checked. The 22 at high risk (batch 1, unpadded) are
-> Parts 18, 18b, 19, 20, 24, 25, 39, 79, 81, 84, 84b, 140, 148, 153, 161, 163, 164, 165, 167, 168, 169 and 170;
-> Part 25 underlies Finding 1. Within a part every arm ran through the same kernel, so differences between arms may
+> different answers when rerun correctly. 55 parts are being checked. Updated the same day: unpadded batches of 16 and
+> 64 left the reference just as batch 1 did (`part178/diag178h.py`), so 44 parts are at high risk: Parts 18, 18b, 19,
+> 20, 24, 25, 39, 66, 70, 73, 75, 77, 78, 78b, 79, 81, 84, 84b, 94, 94b, 94c, 96, 112, 113, 117, 117b, 121, 140, 148,
+> 150, 153, 154, 155, 156, 160, 161, 163, 164, 165, 166, 167, 168, 169 and 170. Parts 25 and 66 underlie Finding 1.
+> The 11 parts that used padded batches (157, 158, 159, 162, 171 to 176, and 178, already rerun) are at lower risk. Within a part every arm ran through the same kernel, so differences between arms may
 > hold up better than absolute rates, but that is not measured yet. Each affected part will get a dated note when it is
 > rerun or checked. Single forward passes (no generation) matched the reference at confident positions.
 

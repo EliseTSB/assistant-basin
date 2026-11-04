@@ -18,9 +18,12 @@ section; this comment can stay. -->
 
 ## Method
 
-{{Model and pinned revision, dtype, device; chat template, system prompt, thinking setting, forced opening; prompts
-(listed, or the file); what is pushed, zeroed or read, at which layers and positions; greedy or sampled,
-max_new_tokens, seed.}}
+{{Model and pinned revision, dtype, device, attention kernel; chat template, system prompt, thinking setting, forced
+opening; prompts (listed, or the file); what is pushed, zeroed or read, at which layers and positions; greedy or
+sampled, max_new_tokens, seed.}}
+
+Kernel check: {{results/partNN/kernel-check.json, a tools/kernel_reference.py record decoded on the A770 that passes
+tools/part_check.py kernel against the CPU float32 reference; delete this line when the run does not use the A770}}
 
 ## Controls
 

@@ -132,6 +132,12 @@ measured on real rows, and each lever below that applies, taken or declined with
   borderline.
 - [ ] **Every run in the background**, through `tools/launch_arc.py` (A770, or `--cpu` for a memory-capped unit). A
   chain script calls the launcher too. (2026-10-04: an uncapped test grew to 11 GB and took down other services on the machine.)
+- [ ] **Kernel check before any Arc launch.** `tools/kernel_reference.py` decodes eight fixed prompts on the card with
+  the kernel and dtype the part will use, `tools/part_check.py kernel` compares that record with the stored CPU
+  float32 reference (`results/kernel-reference/<model>-cpu-float32.json`), and the design's `Kernel check: <path>`
+  line names the passing record; prelaunch refuses a design whose Method names the A770 or xpu without one. The
+  loader's kernel is now explicit and recorded, eager by default. (Part 178: the default bf16 SDPA kernel left the
+  CPU path past 64 keys, worst at batch 1.)
 - [ ] **A wait matches only new log lines.** `progress.log` appends across runs; the launcher records its line count
   before each launch.
 

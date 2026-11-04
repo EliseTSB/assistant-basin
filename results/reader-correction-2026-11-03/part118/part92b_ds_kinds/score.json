@@ -1,0 +1,901 @@
+{
+ "ready": true,
+ "expected_cells": 1872,
+ "answers_present": 1872,
+ "primary_labels_present": 1872,
+ "missing_answers": [],
+ "missing_primary_labels": [],
+ "missing_primary_sample_labels": [],
+ "primary_label_errors": 4,
+ "ds_sample_expected": 281,
+ "ds_sample_present": 281,
+ "missing_ds_sample_labels": [],
+ "ds_label_errors": 0,
+ "gate2": {
+  "kappa": 0.6094081498280784,
+  "threshold": 0.6,
+  "sample_seed": 11800,
+  "sample_size": 281,
+  "complete": true,
+  "passed": true
+ },
+ "predictions": {
+  "118.1": {
+   "wording": "At twice the push (alpha 1.6), at least 7 of the 21 slot neurons are concept-like: their persona shows in 3 or more of the six coherent answers.",
+   "observed": [
+    0,
+    28
+   ],
+   "passes": false,
+   "verdict": "failed"
+  },
+  "118.1a": {
+   "wording": "Amendment 2 reading of 118.1, with Part 92's rule: at alpha 1.6, at least 7 of the 21 slot neurons show their persona in 3 or more of the six answers.",
+   "observed": [
+    8,
+    28
+   ],
+   "passes": true,
+   "verdict": "held"
+  },
+  "118.2": {
+   "wording": "At half the push (alpha 0.4), at most 5 of the 21 slot neurons show their persona on \"Who are you?\", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions.",
+   "observed": {
+    "slot_who": [
+     1,
+     28
+    ],
+    "concept_any_question": [
+     1,
+     8
+    ]
+   },
+   "passes": false,
+   "verdict": "failed"
+  },
+  "118.2a": {
+   "wording": "Amendment 2 reading of 118.2, with Part 92's rule: at alpha 0.4, at most 5 of the 21 slot neurons show their persona on \"Who are you?\", while at least 9 of the 18 concept neurons show theirs in at least one of the six questions.",
+   "observed": {
+    "slot_who": [
+     1,
+     28
+    ],
+    "concept_any_question": [
+     1,
+     8
+    ]
+   },
+   "passes": false,
+   "verdict": "failed"
+  },
+  "118.3": {
+   "wording": "At four times the push (alpha 3.2), at least 60% of all neuron answers are not coherent.",
+   "observed": [
+    234,
+    234,
+    1.0
+   ],
+   "passes": true,
+   "verdict": "held"
+  },
+  "118.4": {
+   "wording": "At four times the push, the share of not-coherent answers for random directions is within 15 percentage points of the share for neurons.",
+   "observed": {
+    "neurons": [
+     234,
+     234,
+     1.0
+    ],
+    "random": [
+     234,
+     234,
+     1.0
+    ],
+    "absolute_gap": 0.0
+   },
+   "passes": true,
+   "verdict": "held"
+  },
+  "118.5": {
+   "wording": "At twice the push, at least 12 of the 18 concept neurons are still concept-like.",
+   "observed": [
+    0,
+    8
+   ],
+   "passes": false,
+   "verdict": "failed"
+  },
+  "118.5a": {
+   "wording": "Amendment 2 reading of 118.5, with Part 92's rule: at alpha 1.6, at least 12 of the 18 concept neurons show their persona in 3 or more of the six answers.",
+   "observed": [
+    4,
+    8
+   ],
+   "passes": false,
+   "verdict": "failed"
+  }
+ },
+ "classification_counts": [
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "concept-like": 1,
+   "slot-like": 0,
+   "none": 7,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "concept-like": 1,
+   "slot-like": 0,
+   "none": 27,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "concept-like": 3,
+   "slot-like": 1,
+   "none": 4,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "concept-like": 2,
+   "slot-like": 23,
+   "none": 3,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "concept-like": 0,
+   "slot-like": 0,
+   "none": 8,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "concept-like": 0,
+   "slot-like": 0,
+   "none": 28,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "concept-like": 0,
+   "slot-like": 0,
+   "none": 8,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "concept-like": 0,
+   "slot-like": 0,
+   "none": 28,
+   "total": 28
+  }
+ ],
+ "question_reach": [
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 1,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 1,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "concept",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 1,
+   "total": 8
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 1,
+   "total": 28
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 1,
+   "total": 28
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 2,
+   "total": 28
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 0.4,
+   "kind": "slot",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 1,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 4,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 2,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 4,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 1,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "concept",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 3,
+   "total": 8
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 25,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 7,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 2,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 2,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 0.8,
+   "kind": "slot",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "concept",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 1.6,
+   "kind": "slot",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "concept",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 0,
+   "total": 8
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "question_index": 0,
+   "question": "Who are you?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "question_index": 1,
+   "question": "Tell me about yourself.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "question_index": 2,
+   "question": "What do you want most?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "question_index": 3,
+   "question": "Describe your perfect day.",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "question_index": 4,
+   "question": "What is the capital of France?",
+   "showing": 0,
+   "total": 28
+  },
+  {
+   "alpha": 3.2,
+   "kind": "slot",
+   "question_index": 5,
+   "question": "Write a short poem about the sea.",
+   "showing": 0,
+   "total": 28
+  }
+ ],
+ "self_claims": [
+  {
+   "alpha": 0.4,
+   "arm": "neuron",
+   "question_group": "identity",
+   "self_claim": 2,
+   "total": 78
+  },
+  {
+   "alpha": 0.4,
+   "arm": "neuron",
+   "question_group": "topic_or_imagery",
+   "self_claim": 1,
+   "total": 156
+  },
+  {
+   "alpha": 0.4,
+   "arm": "random",
+   "question_group": "identity",
+   "self_claim": 2,
+   "total": 78
+  },
+  {
+   "alpha": 0.4,
+   "arm": "random",
+   "question_group": "topic_or_imagery",
+   "self_claim": 0,
+   "total": 156
+  },
+  {
+   "alpha": 0.8,
+   "arm": "neuron",
+   "question_group": "identity",
+   "self_claim": 45,
+   "total": 78
+  },
+  {
+   "alpha": 0.8,
+   "arm": "neuron",
+   "question_group": "topic_or_imagery",
+   "self_claim": 7,
+   "total": 156
+  },
+  {
+   "alpha": 0.8,
+   "arm": "random",
+   "question_group": "identity",
+   "self_claim": 2,
+   "total": 78
+  },
+  {
+   "alpha": 0.8,
+   "arm": "random",
+   "question_group": "topic_or_imagery",
+   "self_claim": 1,
+   "total": 156
+  },
+  {
+   "alpha": 1.6,
+   "arm": "neuron",
+   "question_group": "identity",
+   "self_claim": 2,
+   "total": 78
+  },
+  {
+   "alpha": 1.6,
+   "arm": "neuron",
+   "question_group": "topic_or_imagery",
+   "self_claim": 4,
+   "total": 156
+  },
+  {
+   "alpha": 1.6,
+   "arm": "random",
+   "question_group": "identity",
+   "self_claim": 0,
+   "total": 78
+  },
+  {
+   "alpha": 1.6,
+   "arm": "random",
+   "question_group": "topic_or_imagery",
+   "self_claim": 0,
+   "total": 156
+  },
+  {
+   "alpha": 3.2,
+   "arm": "neuron",
+   "question_group": "identity",
+   "self_claim": 0,
+   "total": 78
+  },
+  {
+   "alpha": 3.2,
+   "arm": "neuron",
+   "question_group": "topic_or_imagery",
+   "self_claim": 0,
+   "total": 156
+  },
+  {
+   "alpha": 3.2,
+   "arm": "random",
+   "question_group": "identity",
+   "self_claim": 0,
+   "total": 78
+  },
+  {
+   "alpha": 3.2,
+   "arm": "random",
+   "question_group": "topic_or_imagery",
+   "self_claim": 0,
+   "total": 156
+  }
+ ],
+ "coherence": [
+  {
+   "alpha": 0.4,
+   "arm": "neuron",
+   "not_coherent": 7,
+   "total": 234,
+   "share": 0.029914529914529916
+  },
+  {
+   "alpha": 0.4,
+   "arm": "random",
+   "not_coherent": 3,
+   "total": 234,
+   "share": 0.01282051282051282
+  },
+  {
+   "alpha": 0.8,
+   "arm": "neuron",
+   "not_coherent": 78,
+   "total": 234,
+   "share": 0.3333333333333333
+  },
+  {
+   "alpha": 0.8,
+   "arm": "random",
+   "not_coherent": 49,
+   "total": 234,
+   "share": 0.2094017094017094
+  },
+  {
+   "alpha": 1.6,
+   "arm": "neuron",
+   "not_coherent": 234,
+   "total": 234,
+   "share": 1.0
+  },
+  {
+   "alpha": 1.6,
+   "arm": "random",
+   "not_coherent": 227,
+   "total": 234,
+   "share": 0.9700854700854701
+  },
+  {
+   "alpha": 3.2,
+   "arm": "neuron",
+   "not_coherent": 234,
+   "total": 234,
+   "share": 1.0
+  },
+  {
+   "alpha": 3.2,
+   "arm": "random",
+   "not_coherent": 234,
+   "total": 234,
+   "share": 1.0
+  }
+ ],
+ "persona_coherence": [
+  {
+   "alpha": 0.4,
+   "arm": "neuron",
+   "kind": "concept",
+   "showing": 3,
+   "coherent": 3,
+   "total_answers": 48,
+   "coherent_share": 1.0
+  },
+  {
+   "alpha": 0.4,
+   "arm": "neuron",
+   "kind": "slot",
+   "showing": 5,
+   "coherent": 5,
+   "total_answers": 168,
+   "coherent_share": 1.0
+  },
+  {
+   "alpha": 0.4,
+   "arm": "random",
+   "kind": "concept",
+   "showing": 1,
+   "coherent": 1,
+   "total_answers": 48,
+   "coherent_share": 1.0
+  },
+  {
+   "alpha": 0.4,
+   "arm": "random",
+   "kind": "slot",
+   "showing": 4,
+   "coherent": 4,
+   "total_answers": 168,
+   "coherent_share": 1.0
+  },
+  {
+   "alpha": 0.8,
+   "arm": "neuron",
+   "kind": "concept",
+   "showing": 29,
+   "coherent": 14,
+   "total_answers": 48,
+   "coherent_share": 0.4827586206896552
+  },
+  {
+   "alpha": 0.8,
+   "arm": "neuron",
+   "kind": "slot",
+   "showing": 43,
+   "coherent": 36,
+   "total_answers": 168,
+   "coherent_share": 0.8372093023255814
+  },
+  {
+   "alpha": 0.8,
+   "arm": "random",
+   "kind": "concept",
+   "showing": 0,
+   "coherent": 0,
+   "total_answers": 48,
+   "coherent_share": null
+  },
+  {
+   "alpha": 0.8,
+   "arm": "random",
+   "kind": "slot",
+   "showing": 4,
+   "coherent": 3,
+   "total_answers": 168,
+   "coherent_share": 0.75
+  },
+  {
+   "alpha": 1.6,
+   "arm": "neuron",
+   "kind": "concept",
+   "showing": 21,
+   "coherent": 0,
+   "total_answers": 48,
+   "coherent_share": 0.0
+  },
+  {
+   "alpha": 1.6,
+   "arm": "neuron",
+   "kind": "slot",
+   "showing": 40,
+   "coherent": 0,
+   "total_answers": 168,
+   "coherent_share": 0.0
+  },
+  {
+   "alpha": 1.6,
+   "arm": "random",
+   "kind": "concept",
+   "showing": 1,
+   "coherent": 0,
+   "total_answers": 48,
+   "coherent_share": 0.0
+  },
+  {
+   "alpha": 1.6,
+   "arm": "random",
+   "kind": "slot",
+   "showing": 4,
+   "coherent": 0,
+   "total_answers": 168,
+   "coherent_share": 0.0
+  },
+  {
+   "alpha": 3.2,
+   "arm": "neuron",
+   "kind": "concept",
+   "showing": 2,
+   "coherent": 0,
+   "total_answers": 48,
+   "coherent_share": 0.0
+  },
+  {
+   "alpha": 3.2,
+   "arm": "neuron",
+   "kind": "slot",
+   "showing": 16,
+   "coherent": 0,
+   "total_answers": 168,
+   "coherent_share": 0.0
+  },
+  {
+   "alpha": 3.2,
+   "arm": "random",
+   "kind": "concept",
+   "showing": 0,
+   "coherent": 0,
+   "total_answers": 48,
+   "coherent_share": null
+  },
+  {
+   "alpha": 3.2,
+   "arm": "random",
+   "kind": "slot",
+   "showing": 1,
+   "coherent": 0,
+   "total_answers": 168,
+   "coherent_share": 0.0
+  }
+ ],
+ "gate1b": {
+  "kept": 29,
+  "units": 39,
+  "threshold": 26,
+  "passed": true
+ },
+ "gate2_reading": "READ",
+ "alphas": [
+  0.4,
+  0.8,
+  1.6,
+  3.2
+ ]
+}
