@@ -588,6 +588,10 @@ def _manifest_binding_sha(manifest: dict) -> str:
     refused three runs' resumes (instruct, midtrain_51B, pretrain_4T_bf16r)."""
     core = {k: v for k, v in manifest.items() if k not in ("host", "manifest_sha256")}
     core = json.loads(json.dumps(core))
+    # The interpreter can change with the machine too (3.11 on the first runs, 3.13 after the routine named one
+    # interpreter); the pinned libraries in library_versions still must match exactly.
+    if isinstance(core.get("library_versions"), dict):
+        core["library_versions"].pop("python", None)
     return hashlib.sha256(json.dumps(core, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
@@ -603,14 +607,21 @@ def bind_identity(out: Path, manifest: dict) -> str:
                            "controls_sha256_by_layer")
         changed = [field for field in identity_fields if previous.get(field) != manifest.get(field)]
         if _manifest_binding_sha(previous) != _manifest_binding_sha(manifest):
-            changed.append("manifest (host excluded)")
+            keys = sorted(k for k in set(previous) | set(manifest)
+                          if k not in ("host", "manifest_sha256")
+                          and json.dumps(previous.get(k), sort_keys=True) != json.dumps(manifest.get(k), sort_keys=True))
+            changed.append("manifest (host excluded; differing keys: " + ", ".join(keys) + ")")
         if changed:
             raise ValueError("existing output identity differs for: " + ", ".join(changed)
                              + "; use a fresh --out directory")
-        if previous.get("host") != manifest.get("host"):
+        def _python(m):
+            versions = m.get("library_versions")
+            return versions.get("python") if isinstance(versions, dict) else None
+        if previous.get("host") != manifest.get("host") or _python(previous) != _python(manifest):
             with (out / "host-history.jsonl").open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps({"at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                                         "from": previous.get("host"), "to": manifest.get("host")},
+                                         "from": previous.get("host"), "to": manifest.get("host"),
+                                         "python_from": _python(previous), "python_to": _python(manifest)},
                                         sort_keys=True) + "\n")
         return previous["manifest_sha256"]
     if (out / "progress.json").exists() or (out / "state.npz").exists():
