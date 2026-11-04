@@ -279,6 +279,18 @@ def test_launch_starts_and_records_baseline(repo, tmp_path):
     assert rec["baseline_lines"] == 2 and rec["first_line"].endswith("score900.py")
 
 
+def test_launch_repeated_copy_flags_all_copy(repo, tmp_path):
+    # 2026-11-04 Part 185: "--copy a --copy b" kept only b (nargs="*" with the default store action), so a step that
+    # imported a's module failed in the job folder with ModuleNotFoundError. Each repeat must add to the list.
+    job, env = fake_job(tmp_path, "10:00:00 step 1 start: -I -B part900\\score900.py")
+    rc = la.main(["900", "--step", "-I -B part900\\score900.py", "--copy", "part900/score900.py",
+                  "--copy", "PART900-DESIGN.md", "--repo", str(repo), "--no-fetch", "--wait", "5"], env=env)
+    assert rc == 0
+    assert (job / "part900" / "score900.py").exists() and (job / "PART900-DESIGN.md").exists()
+    rec = json.loads((repo / "results" / "part900" / "launch.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert rec["copied"] == ["part900/score900.py", "PART900-DESIGN.md"]
+
+
 def test_launch_override_is_recorded(repo, tmp_path):
     job, env = fake_job(tmp_path, "10:00:00 step 1 start: -I -B y.py")
     edit(repo, "Measured: 2.0 answers/s at batch 64 on 64 pilot rows", "Measured: n/a")

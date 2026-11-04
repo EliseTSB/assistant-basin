@@ -131,7 +131,8 @@ def main(argv=None, env=None):
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--step", action="append", help="a job.py step (Windows-side python arguments); repeatable")
     mode.add_argument("--cpu", help="a shell command run in a memory-capped systemd user unit")
-    ap.add_argument("--copy", nargs="*", default=[], help="repo files to copy into the job folder (A770 mode)")
+    ap.add_argument("--copy", nargs="+", action="extend", default=[],
+                    help="repo files to copy into the job folder (A770 mode); repeatable, every repeat adds")
     ap.add_argument("--mem", default="8G")
     ap.add_argument("--tag", default="run")
     ap.add_argument("--override", help="launch even though the check failed; the reason is recorded")
