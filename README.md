@@ -708,6 +708,8 @@ All on OLMo 2 1B Instruct unless noted.
 
 ### Part 25: the fewest neurons that change who Qwen says made it (2026-10-19)
 
+**Holds on the eager kernel (Part 183, 2026-11-04):** rerun after Part 178's SDPA finding, the four still flip only "Who created you?", to the same Google answer word for word; [results/part183/README.md](results/part183/README.md).
+
 Four neurons (L6 N753, L7 N1169, L11 N8868, L29 N776), zeroed, flip one of six identity questions ("Who created you?" answers Google and Gemini); 20 random four-neuron sets flip none. Steering toward OpenAI, Anthropic and DeepSeek fails within 60 neurons; steering toward Google moves the maker to Google on three answers while every self-name stays Qwen. Full section: [README-part25.md](README-part25.md).
 
 ### Part 26.6: OLMo's alien twin pushes creator words (2026-10-21)
@@ -1182,6 +1184,8 @@ arXiv 2411.02193); the layer thirds hold 80 to 87 neurons, so the depth results 
 the two works Muse found, is in the design.
 
 ### Part 66: on 24 new phrasings, the four maker neurons move Qwen's answer to Google about one time in five (2026-10-25)
+
+**Holds on the eager kernel (Part 183, 2026-11-04):** rerun with the same code and seeds, 43 of 192 (22.4%) against 42 here, unchanged 2 of 192, best random set 1 of 24; [results/part183/README.md](results/part183/README.md).
 
 Pre-registered in `PART66-DESIGN.md`; the predictions were pushed before the run. Two amendments followed the run, and the
 section on the positive control below says what each one changed. Part 25 found the four
