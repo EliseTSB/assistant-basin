@@ -304,7 +304,7 @@ Not smoked on the real model: `run182.py stage2` (it would generate pushed answe
 covered by `test_generation_with_cache_matches_whole_layer_copy` on a tiny OLMo 2, and its loop is Part 99's. The
 two-unit pilot on the card that PROCEDURE.md asks for happens at launch.
 
-## Amendment 1 (2026-11-04 00:5x CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
+## Amendment 1 (2026-11-04 00:56 CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
 
 Written at review against Muse's eight design traps (council topic `muse-head-swap-prior-art-2026-11-03` #3, kept
 in Journal `notes/reports/heads-and-persona-neurons-ideas-2026-11-03/README.md`), before Weaver's and Alden's
