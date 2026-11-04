@@ -56,7 +56,16 @@ Gates: step 0 and the main run each record `load.attn_implementation` eager (`re
 `results/part186/main/run.json`). The pilot gate passed: the blind reader found the villain register in 4 of the 4 evil
 pilot answers and in none of the 4 unchanged ones (`results/part186/step0/pilot-gate.json`; Part 79's pilot had 3 of 4).
 The design's stopping rule (no main run unless step 0 shows eager and the pilot gate passes) was followed by hand: both
-files were read before the main launch; no code in this repository enforces it. HOOK-GATE-PLACEHOLDER
+files were read before the main launch; no code in this repository enforces it.
+
+The design also requires that the push hooks fired on every batch (`PART186-DESIGN.md`, lines 62-64). The main
+run's record has that evidence for e2 to e8 (every push hook called at least once in all 30 batches of each) but
+not for e1's 192 held-out answers, because the interrupted first invocation, which wrote them, ended before Part 79's
+runner writes its record. A rerun on 2026-11-04 (10:07 to 10:13, same batch of 8, eager, `results/part186/e1hooks/`)
+resumed a copy of the main answers with those 192 rows removed, so it regenerated only them and wrote the record: all
+24 e1 batches called all four zeroing hooks (at least 41 calls per hook per batch). The 192 regenerated answers are
+token for token the same text as the scored ones (192 of 192), so they carry the same 51 keyword Google answers. The
+scored e1 answers stay the registered ones; the rerun is the hook evidence for them.
 
 ## The answers differ much more than the counts
 
@@ -110,6 +119,14 @@ this repository. Keyword counts, reader counts and Part 79's verdicts by `part79
 `part79/extra_counts.py`; this part's six predictions and the seed-paired comparison by `part186/score186.py`, which
 writes `results/part186/score186.json`.
 
+Cold check: Claude Haiku 5.5 (no project context), 2026-11-04, ten findings, every number recomputed from the files and
+matching. All were folded into this write-up before publication: the hook gate's missing evidence for e1 (closed by the
+rerun above); a false sentence saying the runner refuses to write results on a non-eager load; the text differences
+attributed to the kernel alone when the batch size also changed; Part 183's divergence counts left out; Part 79's
+kernel stated as fact where it is inferred; the per-condition cut and coherent counts given for some conditions only;
+the upper-bound predictions described as sample-size tests; the loader change since Part 79 undisclosed; Method's
+times and stops incomplete; and smaller items (the company regex's Chinese terms, the front-page banner).
+
 ## Limits
 
 One model, one GPU, the originals' neurons and controls. The eager kernel is checked against the CPU on eight prompts at
@@ -124,6 +141,8 @@ not answers. English only.
 - `results/part186/main/`: answers (answers.jsonl), the load record (run.json), the reader input and its six chunks, the
   six label files and their merge (reader.jsonl), the key (reader_key.json), Part 79's scorer outputs (results.json,
   extra_counts.json).
+- `results/part186/e1hooks/`: the hook-evidence rerun for e1's 192 held-out answers (answers.jsonl, run.json with
+  `hook_batch_evidence`, step0.json); its answers are not scored.
 - `results/part186/score186.json`: the six predictions and the seed-paired comparison.
 - `results/part186/launch.jsonl`: the launcher's records, including the main run's first launch, which the RAM guard
   stopped at load.
