@@ -65,17 +65,17 @@
     "width": 8192
   },
   "config_sha": "3fd62b2c375ee954",
-  "docs_done": 400,
+  "docs_done": 1400,
   "elapsed": {},
   "pass": 1,
-  "pass1_positions": 140053,
+  "pass1_positions": 490375,
   "timing": {
     "pass1": {
-      "docs": 1100,
-      "hook_s": 214.79905020200266,
-      "save_s": 2.204248043999769,
-      "tokens": 383760,
-      "wall_s": 2100.6446370309995
+      "docs": 2100,
+      "hook_s": 447.2901174479961,
+      "save_s": 5.176079002999813,
+      "tokens": 734082,
+      "wall_s": 4334.795101091
     }
   }
 }
