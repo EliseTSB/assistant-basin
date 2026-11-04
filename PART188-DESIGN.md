@@ -1,7 +1,7 @@
 # Part 188: does any single unit in EmbeddingGemma 2 tell real animal sounds from people imitating them, on animals it was not chosen on, better than the model's own verdict?
 
 Procedure: v1
-Registered REGTIME CT by Claude (Opus 5.5), before any data. Elise asked, 2026-11-04 14:58 CT (Discord message
+Registered 2026-11-04 17:39 CT by Claude (Opus 5.5), before any data. Elise asked, 2026-11-04 14:58 CT (Discord message
 1567644205688557629): "Editing embedded gemmas weights to make it much better at distinguishing animal sounds from
 human imitations, without negatively effectively it much if at all outside of that, would be a really good
 demonstration of the power of direct weights editing." At 15:03 CT (1567645465241976937): "Run the search in claude
@@ -92,15 +92,15 @@ earlier study found 0.94 against the other ESC-50 classes). It fails if the hook
 - Smallest effect worth knowing: a held-out AUC 0.10 above the model's own verdict. With about 300 real and 280
   imitation clips per test fold, the clip-level standard error of an AUC near 0.8 is about 0.02, so 0.10 is resolved
   at the clip level; the group-clustered interval (about 9 groups per fold) is wider and is reported as the honest one.
-- Total: about 3,140 forward passes (one per clip, 5 s audio), about 40 minutes at the earlier study's 0.68 s per clip
-  on 6 CPU threads; the cloud machine's speed is unknown.
+- Total: 3,138 forward passes (one per clip, 5 s audio), about 40 minutes at the earlier study's 0.68 s per clip
+  on 6 CPU threads (a smoke run on the real model measured about 0.6 s per clip); the cloud machine's speed is unknown.
 - Pilot: not needed (no generations, under one GPU-hour); Gates 1 and 3 stop the reading if the rig is wrong.
 
 ## Optimization
 
 - Bound resource: CPU in a Claude cloud session.
-- Measured: the earlier study's `record.py`, 631 items (mostly 5 s ESC-50 clips) in 427 s on 6 threads (`record.log`),
-  0.68 s per clip.
+- Measured: 631 clips in 427 s (the earlier study's `record.py`, mostly 5 s ESC-50 clips, 6 threads, `record.log`),
+  0.68 s per clip; a smoke run of this part's recorder on the real model measured about 0.6 s per clip on 8 parity clips.
 - Levers: batching declined (one clip per pass without padding is what the stored recordings and Gate 1 use, and the
   whole run is under an hour); threads set to the machine's core count, taken; the max over positions dropped, taken
   (the design reads the mean; it halves memory); downloads parallel, taken; resume, taken (rows written are skipped, as
@@ -166,3 +166,7 @@ prediction's intent (a single unit nearly as good as the 32-unit probe) and the 
 participant-subset limits were added from measured counts. A smoke test on the real model passed Gate 1 on the 8
 parity clips at about 0.6 s per clip.
 
+
+At 17:39 CT, before registering, the Size total was written as the exact manifest count (3,138, was "about 3,140") and
+the Measured line was reworded so `tools/part_check.py` reads its rate; the smoke rate was added to it. No threshold,
+prediction, fold or class changed.
