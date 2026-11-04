@@ -1,0 +1,4 @@
+{"reader": "ds", "items": 1687, "pending": 1634, "error_rows": 0, "elapsed_seconds": 951.983, "output": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl.usage.jsonl", "max_tokens": 4000, "workers": 8}
+label rc=0
+{"reader": "ds", "items": 1687, "pending": 0, "error_rows": 0, "elapsed_seconds": 0.0, "output": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl.usage.jsonl", "max_tokens": 4000, "workers": 8}
+retry rc=0

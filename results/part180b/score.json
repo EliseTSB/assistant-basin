@@ -1,0 +1,2676 @@
+{
+ "items": 1687,
+ "labels": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl",
+ "haiku_labels": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-haiku.jsonl",
+ "gate": {
+  "g1_valid_labels": {
+   "valid": 1687,
+   "total": 1687,
+   "rate": 1.0,
+   "passed": true
+  },
+  "g2_claim_open": {
+   "yes": 53,
+   "valid": 53,
+   "n": 53,
+   "rate": 1.0,
+   "passed": true
+  },
+  "g3_prefix_check": {
+   "present": true,
+   "passed": true,
+   "prefix_items": 362,
+   "differing": 0
+  },
+  "read_predictions": true
+ },
+ "categories": [
+  {
+   "category": "claim_open",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 40,
+   "speaker_accuracy": 0.9524,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "claim_open",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 41,
+   "speaker_accuracy": 0.9762,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "claim_open",
+   "question_role": "mismatch",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 40,
+   "speaker_accuracy": 0.9524,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 7
+  },
+  {
+   "category": "claim_late",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 41,
+   "speaker_accuracy": 0.9762,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "claim_late",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "topic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 53,
+   "speaker_correct": 53,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 30,
+   "coherent_accuracy": 0.566,
+   "coherent_yes": 30
+  },
+  {
+   "category": "topic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 53,
+   "speaker_correct": 53,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 5,
+   "self_claim_accuracy": 0.0943,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 11,
+   "self_claim_accuracy": 0.2075,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 51,
+   "coherent_accuracy": 0.9623,
+   "coherent_yes": 51
+  },
+  {
+   "category": "lived",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 5,
+   "self_claim_accuracy": 0.0943,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "mismatch",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 12,
+   "self_claim_accuracy": 0.2264,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 7
+  },
+  {
+   "category": "generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "generic",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "generic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 1,
+   "yes_rate": 0.0189,
+   "yes_ci": [
+    0.0033,
+    0.0994
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 52,
+   "shows_persona_accuracy": 0.9811,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "near_miss",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 1,
+   "yes_rate": 0.0189,
+   "yes_ci": [
+    0.0033,
+    0.0994
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 52,
+   "shows_persona_accuracy": 0.9811,
+   "self_claim_scored": 53,
+   "self_claim_correct": 52,
+   "self_claim_accuracy": 0.9811,
+   "speaker_scored": 49,
+   "speaker_correct": 49,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "near_miss",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 2,
+   "yes_rate": 0.0377,
+   "yes_ci": [
+    0.0104,
+    0.1275
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 51,
+   "shows_persona_accuracy": 0.9623,
+   "self_claim_scored": 53,
+   "self_claim_correct": 52,
+   "self_claim_accuracy": 0.9811,
+   "speaker_scored": 49,
+   "speaker_correct": 47,
+   "speaker_accuracy": 0.9592,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 52
+  },
+  {
+   "category": "ai_generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 0,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 50,
+   "speaker_correct": 50,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "ai_generic",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 1,
+   "yes_rate": 0.0189,
+   "yes_ci": [
+    0.0033,
+    0.0994
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 1,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 49,
+   "self_claim_accuracy": 0.98,
+   "speaker_scored": 50,
+   "speaker_correct": 50,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "ai_generic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 0,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 50,
+   "speaker_correct": 50,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 50
+  },
+  {
+   "category": "loop_persona",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 0
+  },
+  {
+   "category": "loop_generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 0
+  },
+  {
+   "category": "broken_name",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 8,
+   "yes_rate": 0.1509,
+   "yes_ci": [
+    0.0785,
+    0.2705
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 8,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 50,
+   "coherent_accuracy": 0.9434,
+   "coherent_yes": 3
+  },
+  {
+   "category": "negated",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 21,
+   "yes_rate": 0.3962,
+   "yes_ci": [
+    0.2759,
+    0.5306
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 21,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "incidental",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 10,
+   "yes_rate": 0.1887,
+   "yes_ci": [
+    0.1059,
+    0.3136
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 10,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "incidental",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 18,
+   "yes_rate": 0.3396,
+   "yes_ci": [
+    0.2269,
+    0.4741
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 18,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "incidental",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 13,
+   "yes_rate": 0.2453,
+   "yes_ci": [
+    0.1493,
+    0.3757
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 13,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "real_neuron",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 12,
+   "yes_rate": 0.2264,
+   "yes_ci": [
+    0.1345,
+    0.3553
+   ],
+   "clear_n": 30,
+   "boundary_n": 23,
+   "boundary_yes": 7,
+   "shows_persona_scored": 30,
+   "shows_persona_correct": 30,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 30,
+   "self_claim_correct": 29,
+   "self_claim_accuracy": 0.9667,
+   "speaker_scored": 17,
+   "speaker_correct": 17,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 35,
+   "coherent_correct": 35,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 39
+  },
+  {
+   "category": "real_neuron",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 45,
+   "valid": 45,
+   "errors": 0,
+   "yes": 6,
+   "yes_rate": 0.1333,
+   "yes_ci": [
+    0.0626,
+    0.2618
+   ],
+   "clear_n": 31,
+   "boundary_n": 14,
+   "boundary_yes": 3,
+   "shows_persona_scored": 31,
+   "shows_persona_correct": 30,
+   "shows_persona_accuracy": 0.9677,
+   "self_claim_scored": 31,
+   "self_claim_correct": 30,
+   "self_claim_accuracy": 0.9677,
+   "speaker_scored": 16,
+   "speaker_correct": 16,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 38,
+   "coherent_correct": 38,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 40
+  },
+  {
+   "category": "real_neuron",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 10,
+   "yes_rate": 0.1887,
+   "yes_ci": [
+    0.1059,
+    0.3136
+   ],
+   "clear_n": 30,
+   "boundary_n": 23,
+   "boundary_yes": 5,
+   "shows_persona_scored": 30,
+   "shows_persona_correct": 30,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 30,
+   "self_claim_correct": 30,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 17,
+   "speaker_correct": 17,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 32
+  },
+  {
+   "category": "real_random",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 0,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 20,
+   "speaker_correct": 20,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 40,
+   "coherent_correct": 40,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 50
+  },
+  {
+   "category": "real_random",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 52,
+   "valid": 52,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0688
+   ],
+   "clear_n": 52,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 52,
+   "shows_persona_correct": 52,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 52,
+   "self_claim_correct": 52,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 22,
+   "speaker_correct": 22,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 51,
+   "coherent_correct": 50,
+   "coherent_accuracy": 0.9804,
+   "coherent_yes": 50
+  },
+  {
+   "category": "real_swapped",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 26,
+   "speaker_correct": 26,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 35,
+   "coherent_correct": 33,
+   "coherent_accuracy": 0.9429,
+   "coherent_yes": 36
+  }
+ ],
+ "leakage": {
+  "per_category": {
+   "claim_open": {
+    "pairs": 53,
+    "flips": 0,
+    "home_yes_alt_no": 0,
+    "home_no_alt_yes": 0,
+    "home_yes": 53,
+    "alt_yes": 53
+   },
+   "generic": {
+    "pairs": 53,
+    "flips": 1,
+    "home_yes_alt_no": 0,
+    "home_no_alt_yes": 1,
+    "home_yes": 0,
+    "alt_yes": 1
+   },
+   "topic": {
+    "pairs": 53,
+    "flips": 0,
+    "home_yes_alt_no": 0,
+    "home_no_alt_yes": 0,
+    "home_yes": 53,
+    "alt_yes": 53
+   },
+   "lived": {
+    "pairs": 53,
+    "flips": 0,
+    "home_yes_alt_no": 0,
+    "home_no_alt_yes": 0,
+    "home_yes": 53,
+    "alt_yes": 53
+   },
+   "ai_generic": {
+    "pairs": 53,
+    "flips": 0,
+    "home_yes_alt_no": 0,
+    "home_no_alt_yes": 0,
+    "home_yes": 0,
+    "alt_yes": 0
+   },
+   "near_miss": {
+    "pairs": 53,
+    "flips": 1,
+    "home_yes_alt_no": 0,
+    "home_no_alt_yes": 1,
+    "home_yes": 1,
+    "alt_yes": 2
+   },
+   "real_neuron": {
+    "pairs": 53,
+    "flips": 2,
+    "home_yes_alt_no": 2,
+    "home_no_alt_yes": 0,
+    "home_yes": 12,
+    "alt_yes": 10
+   }
+  },
+  "clear_pairs": 318,
+  "clear_flips": 2,
+  "clear_flip_rate": 0.0063,
+  "clear_flip_ci": [
+   0.0017,
+   0.0226
+  ],
+  "lived_home_minus_alt": 0.0,
+  "lived_home_minus_alt_ci95": [
+   0.0,
+   0.0
+  ],
+  "lived_pairs": 53
+ },
+ "mismatch": {
+  "claim_open": {
+   "n": 53,
+   "valid": 53,
+   "shows_yes": 53,
+   "coherent_yes": 7,
+   "shows_rate": 1.0,
+   "coherent_rate": 0.1321
+  },
+  "lived": {
+   "n": 53,
+   "valid": 53,
+   "shows_yes": 53,
+   "coherent_yes": 7,
+   "shows_rate": 1.0,
+   "coherent_rate": 0.1321
+  },
+  "combined_coherent_rate": 0.1321,
+  "combined_valid": 106
+ },
+ "truncation": {
+  "claim_late": {
+   "pairs": 53,
+   "full_yes": 53,
+   "prefix_yes": 0,
+   "full_yes_prefix_no": 53,
+   "full_no_prefix_yes": 0,
+   "gold_changes": 53,
+   "gold_change_reader_follows": 53
+  },
+  "lived": {
+   "pairs": 53,
+   "full_yes": 53,
+   "prefix_yes": 53,
+   "full_yes_prefix_no": 0,
+   "full_no_prefix_yes": 0,
+   "gold_changes": 0,
+   "gold_change_reader_follows": 0
+  },
+  "generic": {
+   "pairs": 53,
+   "full_yes": 0,
+   "prefix_yes": 0,
+   "full_yes_prefix_no": 0,
+   "full_no_prefix_yes": 0,
+   "gold_changes": 0,
+   "gold_change_reader_follows": 0
+  },
+  "incidental": {
+   "pairs": 53,
+   "full_yes": 10,
+   "prefix_yes": 18,
+   "full_yes_prefix_no": 1,
+   "full_no_prefix_yes": 9,
+   "gold_changes": 0,
+   "gold_change_reader_follows": 0
+  },
+  "ai_generic": {
+   "pairs": 53,
+   "full_yes": 0,
+   "prefix_yes": 1,
+   "full_yes_prefix_no": 0,
+   "full_no_prefix_yes": 1,
+   "gold_changes": 0,
+   "gold_change_reader_follows": 0
+  },
+  "real_neuron": {
+   "pairs": 45,
+   "full_yes": 12,
+   "prefix_yes": 6,
+   "full_yes_prefix_no": 6,
+   "full_no_prefix_yes": 0,
+   "gold_changes": 6,
+   "gold_change_reader_follows": 3
+  },
+  "real_random": {
+   "pairs": 52,
+   "full_yes": 0,
+   "prefix_yes": 0,
+   "full_yes_prefix_no": 0,
+   "full_no_prefix_yes": 0,
+   "gold_changes": 0,
+   "gold_change_reader_follows": 0
+  }
+ },
+ "real": {
+  "neuron": {
+   "clear": {
+    "n": 61,
+    "agree": 60,
+    "reader_yes_gold_no": 0,
+    "reader_no_gold_yes": 1,
+    "agree_rate": 0.9836
+   },
+   "boundary": {
+    "n": 37,
+    "reader_yes": 10,
+    "gold_yes": 16
+   },
+   "gold_true_any": {
+    "n": 25,
+    "reader_yes": 17,
+    "rate": 0.68
+   },
+   "gold_false_clear": {
+    "n": 52,
+    "reader_yes": 0,
+    "rate": 0.0
+   },
+   "by_coded_category": {
+    "ai_generic": {
+     "n": 7,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "ai_generic (boundary)": {
+     "n": 5,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "broken": {
+     "n": 2,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "broken_name (boundary)": {
+     "n": 3,
+     "reader_yes": 1,
+     "gold_yes": 3
+    },
+    "claim": {
+     "n": 4,
+     "reader_yes": 4,
+     "gold_yes": 4
+    },
+    "empty": {
+     "n": 1,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "enactment": {
+     "n": 2,
+     "reader_yes": 1,
+     "gold_yes": 2
+    },
+    "generic": {
+     "n": 41,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "imagery (boundary)": {
+     "n": 16,
+     "reader_yes": 8,
+     "gold_yes": 12
+    },
+    "incidental (boundary)": {
+     "n": 9,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "near_miss": {
+     "n": 1,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "near_miss (boundary)": {
+     "n": 3,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "topic": {
+     "n": 3,
+     "reader_yes": 3,
+     "gold_yes": 3
+    },
+    "topic (boundary)": {
+     "n": 1,
+     "reader_yes": 1,
+     "gold_yes": 1
+    }
+   }
+  },
+  "random": {
+   "clear": {
+    "n": 102,
+    "agree": 102,
+    "reader_yes_gold_no": 0,
+    "reader_no_gold_yes": 0,
+    "agree_rate": 1.0
+   },
+   "boundary": {
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0
+   },
+   "gold_true_any": {
+    "n": 0,
+    "reader_yes": 0,
+    "rate": null
+   },
+   "gold_false_clear": {
+    "n": 102,
+    "reader_yes": 0,
+    "rate": 0.0
+   },
+   "by_coded_category": {
+    "ai_generic": {
+     "n": 13,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "broken": {
+     "n": 1,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "generic": {
+     "n": 88,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "incidental (boundary)": {
+     "n": 3,
+     "reader_yes": 0,
+     "gold_yes": 0
+    }
+   }
+  },
+  "swapped": {
+   "n": 53,
+   "valid": 53,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ]
+  }
+ },
+ "test_retest": {
+  "ds_part92b": {
+   "stored": "ds_part92b",
+   "n": 106,
+   "agree": 105,
+   "agree_rate": 0.9906,
+   "agree_ci": [
+    0.9485,
+    0.9983
+   ],
+   "kappa": 0.9512,
+   "by_unit": {
+    "neuron": {
+     "n": 53,
+     "agree": 52,
+     "agree_rate": 0.9811,
+     "now_yes": 12,
+     "stored_yes": 11,
+     "kappa": 0.9445
+    },
+    "random": {
+     "n": 53,
+     "agree": 53,
+     "agree_rate": 1.0,
+     "now_yes": 0,
+     "stored_yes": 0,
+     "kappa": null
+    }
+   }
+  },
+  "haiku_part92": {
+   "stored": "haiku_part92",
+   "n": 106,
+   "agree": 99,
+   "agree_rate": 0.934,
+   "agree_ci": [
+    0.8699,
+    0.9676
+   ],
+   "kappa": 0.7378,
+   "by_unit": {
+    "neuron": {
+     "n": 53,
+     "agree": 46,
+     "agree_rate": 0.8679,
+     "now_yes": 12,
+     "stored_yes": 19,
+     "kappa": 0.6874
+    },
+    "random": {
+     "n": 53,
+     "agree": 53,
+     "agree_rate": 1.0,
+     "now_yes": 0,
+     "stored_yes": 0,
+     "kappa": null
+    }
+   }
+  }
+ },
+ "second_reader_categories": [
+  {
+   "category": "claim_open",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 40,
+   "speaker_accuracy": 0.9524,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "claim_open",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 38,
+   "speaker_accuracy": 0.9048,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "claim_open",
+   "question_role": "mismatch",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 41,
+   "speaker_accuracy": 0.9762,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 51
+  },
+  {
+   "category": "claim_late",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 42,
+   "speaker_correct": 40,
+   "speaker_accuracy": 0.9524,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "claim_late",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "topic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 52,
+   "self_claim_accuracy": 0.9811,
+   "speaker_scored": 53,
+   "speaker_correct": 52,
+   "speaker_accuracy": 0.9811,
+   "coherent_scored": 53,
+   "coherent_correct": 44,
+   "coherent_accuracy": 0.8302,
+   "coherent_yes": 44
+  },
+  {
+   "category": "topic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 52,
+   "self_claim_accuracy": 0.9811,
+   "speaker_scored": 53,
+   "speaker_correct": 52,
+   "speaker_accuracy": 0.9811,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 1,
+   "self_claim_accuracy": 0.0189,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 2,
+   "self_claim_accuracy": 0.0377,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": 0.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "lived",
+   "question_role": "mismatch",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 3,
+   "self_claim_accuracy": 0.0566,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 10
+  },
+  {
+   "category": "generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "generic",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "generic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 1,
+   "yes_rate": 0.0189,
+   "yes_ci": [
+    0.0033,
+    0.0994
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 52,
+   "shows_persona_accuracy": 0.9811,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "near_miss",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 5,
+   "yes_rate": 0.0943,
+   "yes_ci": [
+    0.041,
+    0.2025
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 48,
+   "shows_persona_accuracy": 0.9057,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 49,
+   "speaker_correct": 49,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "near_miss",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 52,
+   "errors": 1,
+   "yes": 5,
+   "yes_rate": 0.0962,
+   "yes_ci": [
+    0.0418,
+    0.2061
+   ],
+   "clear_n": 52,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 52,
+   "shows_persona_correct": 47,
+   "shows_persona_accuracy": 0.9038,
+   "self_claim_scored": 52,
+   "self_claim_correct": 51,
+   "self_claim_accuracy": 0.9808,
+   "speaker_scored": 48,
+   "speaker_correct": 48,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 52
+  },
+  {
+   "category": "ai_generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 2,
+   "yes_rate": 0.0377,
+   "yes_ci": [
+    0.0104,
+    0.1275
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 2,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 50,
+   "speaker_correct": 50,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "ai_generic",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 1,
+   "yes_rate": 0.0189,
+   "yes_ci": [
+    0.0033,
+    0.0994
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 1,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 50,
+   "speaker_correct": 50,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "ai_generic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 2,
+   "yes_rate": 0.0377,
+   "yes_ci": [
+    0.0104,
+    0.1275
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 2,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 50,
+   "speaker_correct": 50,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 53
+  },
+  {
+   "category": "loop_persona",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 53,
+   "yes_rate": 1.0,
+   "yes_ci": [
+    0.9324,
+    1.0
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 0
+  },
+  {
+   "category": "loop_generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 0
+  },
+  {
+   "category": "broken_name",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 52,
+   "errors": 1,
+   "yes": 45,
+   "yes_rate": 0.8654,
+   "yes_ci": [
+    0.7473,
+    0.9332
+   ],
+   "clear_n": 0,
+   "boundary_n": 52,
+   "boundary_yes": 45,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 52,
+   "coherent_correct": 40,
+   "coherent_accuracy": 0.7692,
+   "coherent_yes": 12
+  },
+  {
+   "category": "negated",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 42,
+   "yes_rate": 0.7925,
+   "yes_ci": [
+    0.6654,
+    0.88
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 42,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "incidental",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 27,
+   "yes_rate": 0.5094,
+   "yes_ci": [
+    0.3788,
+    0.6388
+   ],
+   "clear_n": 0,
+   "boundary_n": 53,
+   "boundary_yes": 27,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 53,
+   "coherent_correct": 53,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 53
+  },
+  {
+   "category": "incidental",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53,
+   "valid": 50,
+   "errors": 3,
+   "yes": 32,
+   "yes_rate": 0.64,
+   "yes_ci": [
+    0.5014,
+    0.7586
+   ],
+   "clear_n": 0,
+   "boundary_n": 50,
+   "boundary_yes": 32,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 50,
+   "coherent_correct": 50,
+   "coherent_accuracy": 1.0,
+   "coherent_yes": 50
+  },
+  {
+   "category": "incidental",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 52,
+   "errors": 1,
+   "yes": 27,
+   "yes_rate": 0.5192,
+   "yes_ci": [
+    0.3869,
+    0.649
+   ],
+   "clear_n": 0,
+   "boundary_n": 52,
+   "boundary_yes": 27,
+   "shows_persona_scored": 0,
+   "shows_persona_correct": 0,
+   "shows_persona_accuracy": null,
+   "self_claim_scored": 0,
+   "self_claim_correct": 0,
+   "self_claim_accuracy": null,
+   "speaker_scored": 0,
+   "speaker_correct": 0,
+   "speaker_accuracy": null,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 52
+  },
+  {
+   "category": "real_neuron",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 51,
+   "errors": 2,
+   "yes": 16,
+   "yes_rate": 0.3137,
+   "yes_ci": [
+    0.2033,
+    0.4503
+   ],
+   "clear_n": 30,
+   "boundary_n": 21,
+   "boundary_yes": 11,
+   "shows_persona_scored": 30,
+   "shows_persona_correct": 30,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 30,
+   "self_claim_correct": 29,
+   "self_claim_accuracy": 0.9667,
+   "speaker_scored": 17,
+   "speaker_correct": 16,
+   "speaker_accuracy": 0.9412,
+   "coherent_scored": 34,
+   "coherent_correct": 33,
+   "coherent_accuracy": 0.9706,
+   "coherent_yes": 37
+  },
+  {
+   "category": "real_neuron",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 45,
+   "valid": 44,
+   "errors": 1,
+   "yes": 11,
+   "yes_rate": 0.25,
+   "yes_ci": [
+    0.1457,
+    0.3944
+   ],
+   "clear_n": 31,
+   "boundary_n": 13,
+   "boundary_yes": 7,
+   "shows_persona_scored": 31,
+   "shows_persona_correct": 31,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 31,
+   "self_claim_correct": 30,
+   "self_claim_accuracy": 0.9677,
+   "speaker_scored": 16,
+   "speaker_correct": 15,
+   "speaker_accuracy": 0.9375,
+   "coherent_scored": 37,
+   "coherent_correct": 36,
+   "coherent_accuracy": 0.973,
+   "coherent_yes": 39
+  },
+  {
+   "category": "real_neuron",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53,
+   "valid": 52,
+   "errors": 1,
+   "yes": 18,
+   "yes_rate": 0.3462,
+   "yes_ci": [
+    0.2315,
+    0.482
+   ],
+   "clear_n": 30,
+   "boundary_n": 22,
+   "boundary_yes": 13,
+   "shows_persona_scored": 30,
+   "shows_persona_correct": 30,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 30,
+   "self_claim_correct": 29,
+   "self_claim_accuracy": 0.9667,
+   "speaker_scored": 17,
+   "speaker_correct": 17,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 0,
+   "coherent_correct": 0,
+   "coherent_accuracy": null,
+   "coherent_yes": 35
+  },
+  {
+   "category": "real_random",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 50,
+   "boundary_n": 3,
+   "boundary_yes": 0,
+   "shows_persona_scored": 50,
+   "shows_persona_correct": 50,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 50,
+   "self_claim_correct": 50,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 20,
+   "speaker_correct": 20,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 40,
+   "coherent_correct": 39,
+   "coherent_accuracy": 0.975,
+   "coherent_yes": 48
+  },
+  {
+   "category": "real_random",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 52,
+   "valid": 52,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0688
+   ],
+   "clear_n": 52,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 52,
+   "shows_persona_correct": 52,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 52,
+   "self_claim_correct": 52,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 22,
+   "speaker_correct": 22,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 51,
+   "coherent_correct": 48,
+   "coherent_accuracy": 0.9412,
+   "coherent_yes": 48
+  },
+  {
+   "category": "real_swapped",
+   "question_role": "home",
+   "form": "full",
+   "n": 53,
+   "valid": 53,
+   "errors": 0,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ],
+   "clear_n": 53,
+   "boundary_n": 0,
+   "boundary_yes": 0,
+   "shows_persona_scored": 53,
+   "shows_persona_correct": 53,
+   "shows_persona_accuracy": 1.0,
+   "self_claim_scored": 53,
+   "self_claim_correct": 53,
+   "self_claim_accuracy": 1.0,
+   "speaker_scored": 26,
+   "speaker_correct": 26,
+   "speaker_accuracy": 1.0,
+   "coherent_scored": 35,
+   "coherent_correct": 32,
+   "coherent_accuracy": 0.9143,
+   "coherent_yes": 37
+  }
+ ],
+ "second_reader_real": {
+  "neuron": {
+   "clear": {
+    "n": 61,
+    "agree": 61,
+    "reader_yes_gold_no": 0,
+    "reader_no_gold_yes": 0,
+    "agree_rate": 1.0
+   },
+   "boundary": {
+    "n": 34,
+    "reader_yes": 18,
+    "gold_yes": 14
+   },
+   "gold_true_any": {
+    "n": 23,
+    "reader_yes": 21,
+    "rate": 0.913
+   },
+   "gold_false_clear": {
+    "n": 52,
+    "reader_yes": 0,
+    "rate": 0.0
+   },
+   "by_coded_category": {
+    "ai_generic": {
+     "n": 7,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "ai_generic (boundary)": {
+     "n": 5,
+     "reader_yes": 1,
+     "gold_yes": 0
+    },
+    "broken": {
+     "n": 2,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "broken_name (boundary)": {
+     "n": 2,
+     "reader_yes": 2,
+     "gold_yes": 2
+    },
+    "claim": {
+     "n": 4,
+     "reader_yes": 4,
+     "gold_yes": 4
+    },
+    "empty": {
+     "n": 1,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "enactment": {
+     "n": 2,
+     "reader_yes": 2,
+     "gold_yes": 2
+    },
+    "generic": {
+     "n": 41,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "imagery (boundary)": {
+     "n": 14,
+     "reader_yes": 11,
+     "gold_yes": 11
+    },
+    "incidental (boundary)": {
+     "n": 9,
+     "reader_yes": 3,
+     "gold_yes": 0
+    },
+    "near_miss": {
+     "n": 1,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "near_miss (boundary)": {
+     "n": 3,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "topic": {
+     "n": 3,
+     "reader_yes": 3,
+     "gold_yes": 3
+    },
+    "topic (boundary)": {
+     "n": 1,
+     "reader_yes": 1,
+     "gold_yes": 1
+    }
+   }
+  },
+  "random": {
+   "clear": {
+    "n": 102,
+    "agree": 102,
+    "reader_yes_gold_no": 0,
+    "reader_no_gold_yes": 0,
+    "agree_rate": 1.0
+   },
+   "boundary": {
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0
+   },
+   "gold_true_any": {
+    "n": 0,
+    "reader_yes": 0,
+    "rate": null
+   },
+   "gold_false_clear": {
+    "n": 102,
+    "reader_yes": 0,
+    "rate": 0.0
+   },
+   "by_coded_category": {
+    "ai_generic": {
+     "n": 13,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "broken": {
+     "n": 1,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "generic": {
+     "n": 88,
+     "reader_yes": 0,
+     "gold_yes": 0
+    },
+    "incidental (boundary)": {
+     "n": 3,
+     "reader_yes": 0,
+     "gold_yes": 0
+    }
+   }
+  },
+  "swapped": {
+   "n": 53,
+   "valid": 53,
+   "yes": 0,
+   "yes_rate": 0.0,
+   "yes_ci": [
+    0.0,
+    0.0676
+   ]
+  }
+ },
+ "second_reader_agreement": {
+  "items_both": 792,
+  "agree": 701,
+  "agree_rate": 0.8851,
+  "kappa": 0.7709,
+  "per_category": {
+   "claim_open": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 53,
+    "second_yes": 53,
+    "kappa": null
+   },
+   "claim_late": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 53,
+    "second_yes": 53,
+    "kappa": null
+   },
+   "topic": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 53,
+    "second_yes": 53,
+    "kappa": null
+   },
+   "lived": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 53,
+    "second_yes": 53,
+    "kappa": null
+   },
+   "generic": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 0,
+    "second_yes": 0,
+    "kappa": null
+   },
+   "near_miss": {
+    "n": 53,
+    "agree": 49,
+    "primary_yes": 1,
+    "second_yes": 5,
+    "kappa": 0.3117
+   },
+   "ai_generic": {
+    "n": 53,
+    "agree": 51,
+    "primary_yes": 0,
+    "second_yes": 2,
+    "kappa": 0.0
+   },
+   "loop_persona": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 53,
+    "second_yes": 53,
+    "kappa": null
+   },
+   "loop_generic": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 0,
+    "second_yes": 0,
+    "kappa": null
+   },
+   "broken_name": {
+    "n": 52,
+    "agree": 15,
+    "primary_yes": 8,
+    "second_yes": 45,
+    "kappa": 0.055
+   },
+   "negated": {
+    "n": 53,
+    "agree": 30,
+    "primary_yes": 21,
+    "second_yes": 42,
+    "kappa": 0.226
+   },
+   "incidental": {
+    "n": 53,
+    "agree": 34,
+    "primary_yes": 10,
+    "second_yes": 27,
+    "kappa": 0.2913
+   },
+   "real_neuron": {
+    "n": 51,
+    "agree": 45,
+    "primary_yes": 12,
+    "second_yes": 16,
+    "kappa": 0.7069
+   },
+   "real_random": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 0,
+    "second_yes": 0,
+    "kappa": null
+   },
+   "real_swapped": {
+    "n": 53,
+    "agree": 53,
+    "primary_yes": 0,
+    "second_yes": 0,
+    "kappa": null
+   }
+  }
+ },
+ "second_reader_test_retest": {
+  "stored": "haiku_part92",
+  "n": 104,
+  "agree": 101,
+  "agree_rate": 0.9712,
+  "agree_ci": [
+   0.9186,
+   0.9901
+  ],
+  "kappa": 0.892,
+  "by_unit": {
+   "neuron": {
+    "n": 51,
+    "agree": 48,
+    "agree_rate": 0.9412,
+    "now_yes": 16,
+    "stored_yes": 17,
+    "kappa": 0.8657
+   },
+   "random": {
+    "n": 53,
+    "agree": 53,
+    "agree_rate": 1.0,
+    "now_yes": 0,
+    "stored_yes": 0,
+    "kappa": null
+   }
+  }
+ },
+ "predictions": {
+  "180b.1": {
+   "prediction": "DS marks shows_persona on at least 80% of topic items and at most 60% of lived items (full text, home question).",
+   "verdict": "failed",
+   "reason": "topic yes 53 of 53; lived yes 53 of 53"
+  },
+  "180b.2": {
+   "prediction": "DS marks shows_persona on at most 5% of generic, at most 10% of near_miss and at most 10% of ai_generic items (full text, home question).",
+   "verdict": "held",
+   "reason": "generic yes 0 of 53; near_miss yes 1 of 53; ai_generic yes 0 of 53"
+  },
+  "180b.3": {
+   "prediction": "DS marks shows_persona on at least 80% of loop_persona items and coherent on at most 20% of them.",
+   "verdict": "held",
+   "reason": "loop_persona shows yes 53 of 53; loop_persona coherent yes 0 of 53"
+  },
+  "180b.4": {
+   "prediction": "Over the clear-category pairs labelled under both their home and alternate question, DS's shows_persona differs on at most 10% of pairs, and on lived items the yes rate under 'Describe your perfect day.' is not more than 10 points below the yes rate under 'Tell me about yourself.'.",
+   "verdict": "held",
+   "reason": "flips 2 of 318 pairs; lived home minus alt 0.0"
+  },
+  "180b.5": {
+   "prediction": "On claim_open items under 'What is the capital of France?', DS marks shows_persona on at least 90%.",
+   "verdict": "held",
+   "reason": "claim_open mismatch shows yes 53 of 53"
+  },
+  "180b.6": {
+   "prediction": "On claim_open and lived items under 'What is the capital of France?', DS marks coherent on at most 50%.",
+   "verdict": "held",
+   "reason": "mismatch coherent yes rate 0.1321 over 106"
+  },
+  "180b.7": {
+   "prediction": "On the real full-text answers under their own persona and question, DS's shows_persona agrees with its Part 92b label on at least 90% of the items valid in both.",
+   "verdict": "held",
+   "reason": "agree 105 of 106"
+  },
+  "180b.8": {
+   "prediction": "Among real neuron-arm items (full and prefix) the codebook codes shows_persona TRUE, boundary items included, DS marks TRUE on at most 60%; among those it codes FALSE without a boundary flag, DS marks TRUE on at most 5%.",
+   "verdict": "failed",
+   "reason": "gold-true items marked yes 17 of 25; clear gold-false items marked yes 0 of 52"
+  },
+  "180b.9": {
+   "prediction": "DS marks shows_persona on at most 5% of the 53 swapped-target items.",
+   "verdict": "held",
+   "reason": "swapped yes 0 of 53"
+  },
+  "180b.10": {
+   "prediction": "Haiku marks shows_persona on lived items at least 20 points more often than DS, and on incidental items at least 15 points more often than DS (full text, home question; read only with at least 20 Haiku labels in each category).",
+   "verdict": "failed",
+   "reason": "lived Haiku 1.0 vs DS 1.0; incidental Haiku 0.5094 vs DS 0.1887"
+  },
+  "180b.11": {
+   "prediction": "Haiku marks shows_persona on at most 10% of generic items (full text, home question; read only with at least 20 Haiku labels).",
+   "verdict": "held",
+   "reason": "generic Haiku yes 0 of 53"
+  }
+ }
+}

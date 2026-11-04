@@ -2,16 +2,16 @@
 
 You are one of 15 parallel Claude cloud sessions for Part 181 (`PART181-DESIGN.md`, registered before any data). Your
 prompt names one KEY (a checkpoint key from `part85/checkpoints.py`, or `instruct_b`, `pretrain_1T_b`,
-`pretrain_4T_bf16r`). Do exactly this, and nothing else. Do NOT send any notification of any kind. Do not read,
+`pretrain_4T_bf16r`) and may name a BRANCH; without one, BRANCH is `cloud/part181-KEY` (Amendment 2). Do exactly this, and nothing else. Do NOT send any notification of any kind. Do not read,
 summarise or interpret any activation, window or top list: this session collects; the analysis happens elsewhere.
 
-1. If `origin` already has the branch `cloud/part181-KEY` (`git ls-remote origin cloud/part181-KEY`), this is a
+1. If `origin` already has the branch BRANCH (`git ls-remote origin BRANCH`), this is a
    resume: first record the commit you were given (`START=$(git rev-parse HEAD)`), then
-   `git fetch origin cloud/part181-KEY`, check it out (`git checkout -B cloud/part181-KEY FETCH_HEAD`), and
+   `git fetch origin BRANCH`, check it out (`git checkout -B BRANCH FETCH_HEAD`), and
    `git merge --no-edit $START` so the fixed code is used (do not merge `origin/main`: in this clone it can be stale).
    Check the merge worked: `$START` must now be an ancestor (`git merge-base --is-ancestor $START HEAD`). The output
    directory then already holds the saved state. Otherwise create and switch to the branch
-   `cloud/part181-KEY` from the commit you were given. Write only under `cloud-results/part181/KEY/`.
+   BRANCH from the commit you were given. Write only under `cloud-results/part181/KEY/`.
 2. Install the pinned environment, CPU only, into ONE interpreter and use that interpreter for every later
    command (on these machines `pip` and `python` can be different Pythons): `PY=$(command -v python3.13 || command -v
    python3)`, then `$PY -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0` and
@@ -34,7 +34,10 @@ summarise or interpret any activation, window or top list: this session collects
    mismatch, do not retry: commit the log and stop. If Gate 1 fails, rerun
    Gate 1 once with the driver's `--rerun-of` option as its usage text says, keep both results, and do not loop.
 7. When `summary.json` exists, commit everything in `cloud-results/part181/KEY/` except files over 90 MB (name any you
-   left out), and push the branch.
+   left out) with `git add -f cloud-results/part181/KEY` (the `-f` matters: `state.npz` is ignored, and ten first
+   runs lost their state this way), and push the branch. Then run
+   `git ls-tree -r --name-only HEAD cloud-results/part181/KEY/`: it must list `state.npz` and `summary.json`. If
+   either is missing, add it with `git add -f`, commit, push and check again before step 8.
 8. End your final message with a block starting `CLOUD-RESULT:` of at most 1,000 characters: KEY, branch and commit,
    identity check result, Gate 1 verdicts (1a, 1b, 1c, 1d), wall time per stage, peak memory, and any problem. No
    numbers about any unit's activations.
