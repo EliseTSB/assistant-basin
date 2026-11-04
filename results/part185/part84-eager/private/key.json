@@ -1,0 +1,602 @@
+{
+"x000": {
+"arm": "A3",
+"question_index": 0,
+"sample": 0
+},
+"x001": {
+"arm": "A3",
+"question_index": 1,
+"sample": 0
+},
+"x002": {
+"arm": "A1",
+"question_index": 0,
+"sample": 2
+},
+"x003": {
+"arm": "C",
+"question_index": 2,
+"sample": 5
+},
+"x004": {
+"arm": "A0",
+"question_index": 0,
+"sample": 6
+},
+"x005": {
+"arm": "C",
+"question_index": 2,
+"sample": 7
+},
+"x006": {
+"arm": "A1",
+"question_index": 0,
+"sample": 5
+},
+"x007": {
+"arm": "A0",
+"question_index": 2,
+"sample": 6
+},
+"x008": {
+"arm": "A3",
+"question_index": 0,
+"sample": 7
+},
+"x009": {
+"arm": "A3",
+"question_index": 1,
+"sample": 1
+},
+"x010": {
+"arm": "A2",
+"question_index": 1,
+"sample": 5
+},
+"x011": {
+"arm": "A1",
+"question_index": 0,
+"sample": 0
+},
+"x012": {
+"arm": "A3",
+"question_index": 2,
+"sample": 1
+},
+"x013": {
+"arm": "A1",
+"question_index": 1,
+"sample": 0
+},
+"x014": {
+"arm": "A2",
+"question_index": 0,
+"sample": 4
+},
+"x015": {
+"arm": "A0",
+"question_index": 2,
+"sample": 2
+},
+"x016": {
+"arm": "A2",
+"question_index": 2,
+"sample": 7
+},
+"x017": {
+"arm": "A3",
+"question_index": 1,
+"sample": 6
+},
+"x018": {
+"arm": "C",
+"question_index": 1,
+"sample": 1
+},
+"x019": {
+"arm": "A0",
+"question_index": 2,
+"sample": 5
+},
+"x020": {
+"arm": "C",
+"question_index": 1,
+"sample": 3
+},
+"x021": {
+"arm": "A3",
+"question_index": 0,
+"sample": 1
+},
+"x022": {
+"arm": "A1",
+"question_index": 2,
+"sample": 4
+},
+"x023": {
+"arm": "C",
+"question_index": 2,
+"sample": 0
+},
+"x024": {
+"arm": "C",
+"question_index": 0,
+"sample": 2
+},
+"x025": {
+"arm": "C",
+"question_index": 0,
+"sample": 1
+},
+"x026": {
+"arm": "A0",
+"question_index": 0,
+"sample": 2
+},
+"x027": {
+"arm": "A2",
+"question_index": 2,
+"sample": 0
+},
+"x028": {
+"arm": "A1",
+"question_index": 2,
+"sample": 7
+},
+"x029": {
+"arm": "A0",
+"question_index": 0,
+"sample": 7
+},
+"x030": {
+"arm": "C",
+"question_index": 2,
+"sample": 6
+},
+"x031": {
+"arm": "A2",
+"question_index": 1,
+"sample": 0
+},
+"x032": {
+"arm": "C",
+"question_index": 2,
+"sample": 1
+},
+"x033": {
+"arm": "C",
+"question_index": 2,
+"sample": 3
+},
+"x034": {
+"arm": "A2",
+"question_index": 0,
+"sample": 7
+},
+"x035": {
+"arm": "A1",
+"question_index": 2,
+"sample": 3
+},
+"x036": {
+"arm": "A1",
+"question_index": 0,
+"sample": 3
+},
+"x037": {
+"arm": "A1",
+"question_index": 0,
+"sample": 7
+},
+"x038": {
+"arm": "C",
+"question_index": 2,
+"sample": 2
+},
+"x039": {
+"arm": "A3",
+"question_index": 1,
+"sample": 2
+},
+"x040": {
+"arm": "A3",
+"question_index": 2,
+"sample": 2
+},
+"x041": {
+"arm": "A0",
+"question_index": 2,
+"sample": 7
+},
+"x042": {
+"arm": "A0",
+"question_index": 2,
+"sample": 4
+},
+"x043": {
+"arm": "A0",
+"question_index": 1,
+"sample": 3
+},
+"x044": {
+"arm": "A3",
+"question_index": 2,
+"sample": 0
+},
+"x045": {
+"arm": "A0",
+"question_index": 1,
+"sample": 2
+},
+"x046": {
+"arm": "A0",
+"question_index": 1,
+"sample": 4
+},
+"x047": {
+"arm": "A1",
+"question_index": 1,
+"sample": 7
+},
+"x048": {
+"arm": "A2",
+"question_index": 0,
+"sample": 5
+},
+"x049": {
+"arm": "A1",
+"question_index": 1,
+"sample": 3
+},
+"x050": {
+"arm": "A0",
+"question_index": 1,
+"sample": 0
+},
+"x051": {
+"arm": "A1",
+"question_index": 2,
+"sample": 1
+},
+"x052": {
+"arm": "C",
+"question_index": 1,
+"sample": 6
+},
+"x053": {
+"arm": "A1",
+"question_index": 1,
+"sample": 6
+},
+"x054": {
+"arm": "A2",
+"question_index": 1,
+"sample": 1
+},
+"x055": {
+"arm": "A3",
+"question_index": 0,
+"sample": 3
+},
+"x056": {
+"arm": "A3",
+"question_index": 0,
+"sample": 2
+},
+"x057": {
+"arm": "A1",
+"question_index": 2,
+"sample": 5
+},
+"x058": {
+"arm": "C",
+"question_index": 0,
+"sample": 6
+},
+"x059": {
+"arm": "A2",
+"question_index": 0,
+"sample": 2
+},
+"x060": {
+"arm": "A2",
+"question_index": 0,
+"sample": 1
+},
+"x061": {
+"arm": "A2",
+"question_index": 0,
+"sample": 0
+},
+"x062": {
+"arm": "A3",
+"question_index": 1,
+"sample": 7
+},
+"x063": {
+"arm": "A0",
+"question_index": 0,
+"sample": 3
+},
+"x064": {
+"arm": "C",
+"question_index": 0,
+"sample": 7
+},
+"x065": {
+"arm": "A0",
+"question_index": 1,
+"sample": 1
+},
+"x066": {
+"arm": "A3",
+"question_index": 0,
+"sample": 4
+},
+"x067": {
+"arm": "A0",
+"question_index": 1,
+"sample": 7
+},
+"x068": {
+"arm": "A1",
+"question_index": 1,
+"sample": 2
+},
+"x069": {
+"arm": "A0",
+"question_index": 1,
+"sample": 6
+},
+"x070": {
+"arm": "A3",
+"question_index": 0,
+"sample": 6
+},
+"x071": {
+"arm": "A0",
+"question_index": 2,
+"sample": 1
+},
+"x072": {
+"arm": "A2",
+"question_index": 0,
+"sample": 6
+},
+"x073": {
+"arm": "C",
+"question_index": 1,
+"sample": 4
+},
+"x074": {
+"arm": "A1",
+"question_index": 0,
+"sample": 6
+},
+"x075": {
+"arm": "A0",
+"question_index": 0,
+"sample": 1
+},
+"x076": {
+"arm": "A0",
+"question_index": 1,
+"sample": 5
+},
+"x077": {
+"arm": "A2",
+"question_index": 2,
+"sample": 4
+},
+"x078": {
+"arm": "A1",
+"question_index": 1,
+"sample": 5
+},
+"x079": {
+"arm": "A3",
+"question_index": 2,
+"sample": 7
+},
+"x080": {
+"arm": "C",
+"question_index": 1,
+"sample": 5
+},
+"x081": {
+"arm": "A3",
+"question_index": 1,
+"sample": 3
+},
+"x082": {
+"arm": "C",
+"question_index": 0,
+"sample": 4
+},
+"x083": {
+"arm": "A3",
+"question_index": 1,
+"sample": 5
+},
+"x084": {
+"arm": "A2",
+"question_index": 2,
+"sample": 1
+},
+"x085": {
+"arm": "A0",
+"question_index": 0,
+"sample": 5
+},
+"x086": {
+"arm": "A2",
+"question_index": 1,
+"sample": 4
+},
+"x087": {
+"arm": "C",
+"question_index": 1,
+"sample": 7
+},
+"x088": {
+"arm": "A0",
+"question_index": 2,
+"sample": 0
+},
+"x089": {
+"arm": "A1",
+"question_index": 0,
+"sample": 4
+},
+"x090": {
+"arm": "C",
+"question_index": 0,
+"sample": 5
+},
+"x091": {
+"arm": "A1",
+"question_index": 2,
+"sample": 2
+},
+"x092": {
+"arm": "A3",
+"question_index": 2,
+"sample": 4
+},
+"x093": {
+"arm": "A2",
+"question_index": 0,
+"sample": 3
+},
+"x094": {
+"arm": "A2",
+"question_index": 1,
+"sample": 3
+},
+"x095": {
+"arm": "A2",
+"question_index": 2,
+"sample": 3
+},
+"x096": {
+"arm": "A1",
+"question_index": 1,
+"sample": 1
+},
+"x097": {
+"arm": "A3",
+"question_index": 2,
+"sample": 3
+},
+"x098": {
+"arm": "C",
+"question_index": 1,
+"sample": 0
+},
+"x099": {
+"arm": "A2",
+"question_index": 2,
+"sample": 5
+},
+"x100": {
+"arm": "A0",
+"question_index": 2,
+"sample": 3
+},
+"x101": {
+"arm": "A3",
+"question_index": 0,
+"sample": 5
+},
+"x102": {
+"arm": "A1",
+"question_index": 2,
+"sample": 6
+},
+"x103": {
+"arm": "A3",
+"question_index": 2,
+"sample": 6
+},
+"x104": {
+"arm": "C",
+"question_index": 0,
+"sample": 0
+},
+"x105": {
+"arm": "A2",
+"question_index": 2,
+"sample": 6
+},
+"x106": {
+"arm": "A2",
+"question_index": 1,
+"sample": 7
+},
+"x107": {
+"arm": "A2",
+"question_index": 1,
+"sample": 2
+},
+"x108": {
+"arm": "A1",
+"question_index": 0,
+"sample": 1
+},
+"x109": {
+"arm": "C",
+"question_index": 1,
+"sample": 2
+},
+"x110": {
+"arm": "A1",
+"question_index": 2,
+"sample": 0
+},
+"x111": {
+"arm": "A3",
+"question_index": 1,
+"sample": 4
+},
+"x112": {
+"arm": "A2",
+"question_index": 2,
+"sample": 2
+},
+"x113": {
+"arm": "A0",
+"question_index": 0,
+"sample": 0
+},
+"x114": {
+"arm": "A2",
+"question_index": 1,
+"sample": 6
+},
+"x115": {
+"arm": "A0",
+"question_index": 0,
+"sample": 4
+},
+"x116": {
+"arm": "C",
+"question_index": 0,
+"sample": 3
+},
+"x117": {
+"arm": "C",
+"question_index": 2,
+"sample": 4
+},
+"x118": {
+"arm": "A1",
+"question_index": 1,
+"sample": 4
+},
+"x119": {
+"arm": "A3",
+"question_index": 2,
+"sample": 5
+}
+}
