@@ -6,8 +6,11 @@ prompt names one KEY (a checkpoint key from `part85/checkpoints.py`, or `instruc
 summarise or interpret any activation, window or top list: this session collects; the analysis happens elsewhere.
 
 1. If `origin` already has the branch `cloud/part181-KEY` (`git ls-remote origin cloud/part181-KEY`), this is a
-   resume: `git fetch origin cloud/part181-KEY`, check it out, and `git merge --no-edit origin/main` so the fixed
-   code is used; the output directory then already holds the saved state. Otherwise create and switch to the branch
+   resume: first record the commit you were given (`START=$(git rev-parse HEAD)`), then
+   `git fetch origin cloud/part181-KEY`, check it out (`git checkout -B cloud/part181-KEY FETCH_HEAD`), and
+   `git merge --no-edit $START` so the fixed code is used (do not merge `origin/main`: in this clone it can be stale).
+   Check the merge worked: `$START` must now be an ancestor (`git merge-base --is-ancestor $START HEAD`). The output
+   directory then already holds the saved state. Otherwise create and switch to the branch
    `cloud/part181-KEY` from the commit you were given. Write only under `cloud-results/part181/KEY/`.
 2. Install the pinned environment, CPU only, into ONE interpreter and use that interpreter for every later
    command (on these machines `pip` and `python` can be different Pythons): `PY=$(command -v python3.13 || command -v

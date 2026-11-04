@@ -171,7 +171,8 @@ names the CPU, so each resume was refused as an identity mismatch. The resume ch
 host change to `host-history.jsonl`; anything else that differs still refuses the resume. A run whose documents were
 collected on more than one machine is named in the results, and Gate 1a (recomputing stored entries on the final
 machine) is read with that in mind. `part181/ROUTINE.md` now resumes from an existing branch, installs into one
-interpreter, and keeps the session's turn open (an idle session's container is recycled after about 30 minutes,
+interpreter (resumes merge the commit the session was started on; a first version merged `origin/main`, which was
+stale in the cloud clone, so one resume ran the old check and stopped again), and keeps the session's turn open (an idle session's container is recycled after about 30 minutes,
 which is what killed the drivers). `instruct` restarts from the beginning, because its saturation snapshots at 500
 and 1,000 documents were lost with its container; its partial branch is kept as `cloud/part181-instruct-attempt1`.
 Nothing in the predictions, measures or gates changes. Seen before writing this: the three runs' session logs and
