@@ -731,9 +731,9 @@ For the steering-word part that follows:
   for Opus with three; results/part64/analysis-64.md). Both lines say most single neurons are not explained by one
   written description. Our random-direction control is what E4 lacks; E4's recovery bar is what ours lacks.
 
-## 2026-11-04, for Part 182 (single attention heads swapped between the mid-training end and Instruct)
+## 2026-11-03 (CT), for Part 182 (single attention heads swapped between the mid-training end and Instruct)
 
-Searched by a Fable 5.1 cloud session before the design was written; every item below was opened at the URL given
+Searched by a Fable 5.1 cloud session on 2026-11-03 CT before the design was written; every item below was opened at the URL given
 (arXiv abstract or HTML, Alignment Forum or LessWrong post, GitHub README) unless marked unopened. Full report with
 the 27 query strings in `PART182-DESIGN.md`'s Prior art section.
 

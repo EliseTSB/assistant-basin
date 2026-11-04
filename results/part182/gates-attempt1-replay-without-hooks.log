@@ -1,0 +1,18 @@
+05:46:20 loading host /tmp/claude-0/-home-user-assistant-basin/6a844452-4c09-50e0-b304-2273d751fe8b/scratchpad/hf/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 3015.90it/s]
+05:46:29 118 stage-1 rows; prompt 15 tokens; answers up to 24 tokens
+05:46:29 plain logits
+05:46:35 G2: self donor
+05:46:51 G2a bit_exact=True; G2b max=9.85e-05
+05:46:51 loading donor /tmp/claude-0/-home-user-assistant-basin/6a844452-4c09-50e0-b304-2273d751fe8b/scratchpad/hf/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:01<03:33,  1.20s/it]Loading weights:   1%|          | 2/179 [00:01<01:57,  1.51it/s]Loading weights:  45%|████▍     | 80/179 [00:01<00:01, 83.82it/s]Loading weights:  58%|█████▊    | 104/179 [00:01<00:00, 87.08it/s]Loading weights:  68%|██████▊   | 122/179 [00:02<00:00, 90.48it/s]Loading weights:  77%|███████▋  | 138/179 [00:02<00:00, 75.86it/s]Loading weights:  87%|████████▋ | 156/179 [00:02<00:00, 89.57it/s]Loading weights:  95%|█████████▍| 170/179 [00:02<00:00, 83.14it/s]Loading weights: 100%|██████████| 179/179 [00:02<00:00, 66.21it/s]
+05:46:54 G1: layer 0
+05:47:01 G1: layer 1
+05:47:08 G1: layer 2
+05:47:16 G1: layer 3
+05:47:23 G1 max_abs_diff per layer: layer0=0.00e+00, layer1=0.00e+00, layer2=0.00e+00, layer3=0.00e+00
+05:47:23 G3: block
+05:47:30 G3 max_abs_diff=0.00e+00 argmax 191/191
+05:48:06 batch 16: 118 rows in 34.8s = 3.39 rows/s
+05:48:41 batch 32: 118 rows in 35.4s = 3.33 rows/s
+05:48:41 all_pass=True; written /home/user/assistant-basin/results/part182/gates.json

@@ -3390,3 +3390,17 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 180b.9 | DS marks shows_persona on at most 5% of the 53 swapped-target items. | high | Claude |  |
 | 180b.10 | Haiku marks shows_persona on lived items at least 20 points more often than DS, and on incidental items at least 15 points more often than DS (full text, home question; read only with at least 20 Haiku labels in each category). | low | Claude |  |
 | 180b.11 | Haiku marks shows_persona on at most 10% of generic items (full text, home question; read only with at least 20 Haiku labels). | medium | Claude |  |
+
+## Part 182 (registered 2026-11-03 23:56 CT, PART182-DESIGN.md, before any stage-1 or stage-2 row)
+
+Stage 1: Delta is the change in a fixed answer's teacher-forced log-probability (sum over its first 24 tokens, nats) from the `none` condition; slot_median and slot_mean are over the 19 eligible slot units' own pushed "Who are you?" answers, concept_median over the 18 concept units' (score182.py). Stage 2: slot_who by Part 99's definition on the DS reader, relative to each run's own unpushed answers. Gates G1 to G5 and the reading rules as in the design.
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 182.1 | Concentration: the top 4 heads of stage 1a's ranking, swapped together (stage 1c `top4`), reach at least half the block's effect: slot_mean(top4) <= 0.5 x slot_mean(block), with slot_mean(block) negative. Fails if the four together give less than half (the effect is spread over many heads). | medium | Claude |  |
+| 182.2 | Layers 1 to 3 rather than 0: the top head of the ranking is not in layer 0, and layer 0's whole-layer swap has the slot_mean closest to zero of the four `layerL` runs. Fails if the top head is in layer 0 or any other layer's whole-layer swap is weaker than layer 0's. | low | Claude |  |
+| 182.3 | Concept units move less: on at least 5 of the 6 selected heads, concept_median >= 0.5 x slot_median (the concept units lose at most half of what the slot units lose, both negative). Fails if on 2 or more selected heads the concept units lose more than half as much, which would read the heads as carrying persona expression or damage in general. | medium | Claude |  |
+| 182.4 | Single-head effects sum to less than the block effect: the sum over the 64 heads of slot_mean(hL.H) is greater (less negative) than slot_mean(block). Fails if the sum is at least as negative as the block (additive or overlapping single-head losses). | medium | Claude |  |
+| 182.5 | Stage 2, DS reader: the `top6` run gives slot_who at most 10 of 21 (relative to its own unpushed answers). Fails if 11 or more slot units keep the persona with the six heads swapped. Read only if G5 passes. | medium | Claude |  |
+| 182.6 | Stage 2, DS reader: every one of the six control-head runs gives slot_who at least 15 of 21. Fails if any control head alone drops the count to 14 or fewer. Read only if G5 passes. | medium | Claude |  |
+| 182.7 | No single host head restored into the donor block recovers half the block loss: for every `restoreL.H`, slot_mean(restoreL.H) - slot_mean(block) < 0.5 x \|slot_mean(block)\|. Fails if one restored head brings back half or more of the lost log-probability. | low | Claude |  |

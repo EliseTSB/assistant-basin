@@ -1,0 +1,256 @@
+{
+ "host": "/tmp/claude-0/-home-user-assistant-basin/6a844452-4c09-50e0-b304-2273d751fe8b/scratchpad/hf/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "donor": "/tmp/claude-0/-home-user-assistant-basin/6a844452-4c09-50e0-b304-2273d751fe8b/scratchpad/hf/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e",
+ "device": "cpu",
+ "dtype": "float32",
+ "attn_implementation": "eager",
+ "torch": "2.15.0+cpu",
+ "transformers": "5.22.1",
+ "python": "3.11.18",
+ "cpu": "x86_64",
+ "threads": 4,
+ "batch_rows": [
+  {
+   "id": "p92-02",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 5
+  },
+  {
+   "id": "p92-03",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 5
+  },
+  {
+   "id": "p92-04",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 7
+  },
+  {
+   "id": "p92-05",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 5
+  },
+  {
+   "id": "p92-00",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 6
+  },
+  {
+   "id": "p92-01",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 6
+  },
+  {
+   "id": "unpushed",
+   "unit": "none",
+   "text": "assistant",
+   "n_tokens": 24
+  },
+  {
+   "id": "p92-02",
+   "unit": "random",
+   "text": "own",
+   "n_tokens": 13
+  }
+ ],
+ "tolerances": {
+  "G1": 0.001,
+  "G2_partial": 0.0001,
+  "G3": 0.001
+ },
+ "gates": {
+  "G2a_self_donor_all_heads": {
+   "max_abs_diff": 0.0,
+   "mean_abs_diff": 0.0,
+   "logit_range": 48.23344421386719,
+   "max_rel_diff": 0.0,
+   "positions": 191,
+   "argmax_agree": 191,
+   "bit_exact": true,
+   "pass": true
+  },
+  "G2b_self_donor_single_heads": {
+   "h0.0": {
+    "max_abs_diff": 9.632110595703125e-05,
+    "mean_abs_diff": 5.127477834321326e-06,
+    "logit_range": 48.233428955078125,
+    "max_rel_diff": 1.9969781963198026e-06,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": false
+   },
+   "h1.5": {
+    "max_abs_diff": 8.273124694824219e-05,
+    "mean_abs_diff": 4.937196990795201e-06,
+    "logit_range": 48.23344421386719,
+    "max_rel_diff": 1.7152257794697735e-06,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": false
+   },
+   "h2.10": {
+    "max_abs_diff": 9.846687316894531e-05,
+    "mean_abs_diff": 4.885434918833198e-06,
+    "logit_range": 48.23344039916992,
+    "max_rel_diff": 2.0414648499890106e-06,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": false
+   },
+   "h3.15": {
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "logit_range": 48.23344421386719,
+    "max_rel_diff": 0.0,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": true
+   },
+   "pass": true
+  },
+  "G1_all_heads_equal_layer_copy": {
+   "layer0": {
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "logit_range": 48.573238372802734,
+    "max_rel_diff": 0.0,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": true,
+    "tensors_copied": 6,
+    "effect_vs_plain_max_abs": 15.70605754852295
+   },
+   "layer1": {
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "logit_range": 47.498023986816406,
+    "max_rel_diff": 0.0,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": true,
+    "tensors_copied": 6,
+    "effect_vs_plain_max_abs": 11.48756217956543
+   },
+   "layer2": {
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "logit_range": 47.16014099121094,
+    "max_rel_diff": 0.0,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": true,
+    "tensors_copied": 6,
+    "effect_vs_plain_max_abs": 8.584052085876465
+   },
+   "layer3": {
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "logit_range": 47.377227783203125,
+    "max_rel_diff": 0.0,
+    "positions": 191,
+    "argmax_agree": 191,
+    "bit_exact": true,
+    "tensors_copied": 6,
+    "effect_vs_plain_max_abs": 3.5890450477600098
+   },
+   "pass": true
+  },
+  "G3_block_equals_layers_0_3_copy": {
+   "max_abs_diff": 0.0,
+   "mean_abs_diff": 0.0,
+   "logit_range": 47.28650665283203,
+   "max_rel_diff": 0.0,
+   "positions": 191,
+   "argmax_agree": 191,
+   "bit_exact": true,
+   "tensors_copied": 24,
+   "effect_vs_plain_max_abs": 20.95015525817871,
+   "pass": true
+  }
+ },
+ "replay_none": [
+  {
+   "id": "p92-02",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 5,
+   "argmax_match": 5,
+   "logp_sum": -4.983971
+  },
+  {
+   "id": "p92-03",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 5,
+   "argmax_match": 5,
+   "logp_sum": -3.190222
+  },
+  {
+   "id": "p92-04",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 7,
+   "argmax_match": 7,
+   "logp_sum": -7.055481
+  },
+  {
+   "id": "p92-05",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 5,
+   "argmax_match": 5,
+   "logp_sum": -6.924967
+  },
+  {
+   "id": "p92-00",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 6,
+   "argmax_match": 6,
+   "logp_sum": -6.971642
+  },
+  {
+   "id": "p92-01",
+   "unit": "neuron",
+   "text": "own",
+   "n_tokens": 6,
+   "argmax_match": 6,
+   "logp_sum": -9.494267
+  },
+  {
+   "id": "unpushed",
+   "unit": "none",
+   "text": "assistant",
+   "n_tokens": 24,
+   "argmax_match": 24,
+   "logp_sum": -8.556211
+  },
+  {
+   "id": "p92-02",
+   "unit": "random",
+   "text": "own",
+   "n_tokens": 13,
+   "argmax_match": 13,
+   "logp_sum": -6.690298
+  }
+ ],
+ "timing_stage1_rows_h1.0": {
+  "16": {
+   "rows": 118,
+   "seconds": 37.15,
+   "rows_per_s": 3.176
+  },
+  "32": {
+   "rows": 118,
+   "seconds": 32.72,
+   "rows_per_s": 3.606
+  }
+ },
+ "all_pass": true
+}

@@ -1,0 +1,301 @@
+{
+ "rows": 118,
+ "replay": {
+  "neuron/own": {
+   "positions": 596,
+   "matches": 586,
+   "rows": 39,
+   "rows_under_0.8": 0,
+   "share": 0.9832214765100671
+  },
+  "random/own": {
+   "positions": 858,
+   "matches": 846,
+   "rows": 39,
+   "rows_under_0.8": 0,
+   "share": 0.986013986013986
+  },
+  "neuron/assistant": {
+   "positions": 936,
+   "matches": 413,
+   "rows": 39,
+   "rows_under_0.8": 38,
+   "share": 0.4412393162393162
+  },
+  "none/assistant": {
+   "positions": 24,
+   "matches": 24,
+   "rows": 1,
+   "rows_under_0.8": 0,
+   "share": 1.0
+  }
+ },
+ "rows_under_0.8": [
+  [
+   "p92-00",
+   "neuron",
+   "assistant",
+   24,
+   10
+  ],
+  [
+   "p92-01",
+   "neuron",
+   "assistant",
+   24,
+   10
+  ],
+  [
+   "p92-02",
+   "neuron",
+   "assistant",
+   24,
+   9
+  ],
+  [
+   "p92-03",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-04",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-05",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-07",
+   "neuron",
+   "assistant",
+   24,
+   8
+  ],
+  [
+   "p92-08",
+   "neuron",
+   "assistant",
+   24,
+   12
+  ],
+  [
+   "p92-09",
+   "neuron",
+   "assistant",
+   24,
+   12
+  ],
+  [
+   "p92-10",
+   "neuron",
+   "assistant",
+   24,
+   5
+  ],
+  [
+   "p92-11",
+   "neuron",
+   "assistant",
+   24,
+   6
+  ],
+  [
+   "p92-13",
+   "neuron",
+   "assistant",
+   24,
+   6
+  ],
+  [
+   "p92-15",
+   "neuron",
+   "assistant",
+   24,
+   10
+  ],
+  [
+   "p92-18",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-20",
+   "neuron",
+   "assistant",
+   24,
+   13
+  ],
+  [
+   "p92-24",
+   "neuron",
+   "assistant",
+   24,
+   5
+  ],
+  [
+   "p92-25",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-28",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-29",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-30",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-33",
+   "neuron",
+   "assistant",
+   24,
+   11
+  ],
+  [
+   "p92-35",
+   "neuron",
+   "assistant",
+   24,
+   15
+  ],
+  [
+   "p92-36",
+   "neuron",
+   "assistant",
+   24,
+   10
+  ],
+  [
+   "p92-37",
+   "neuron",
+   "assistant",
+   24,
+   13
+  ],
+  [
+   "p92-38",
+   "neuron",
+   "assistant",
+   24,
+   9
+  ],
+  [
+   "p92-39",
+   "neuron",
+   "assistant",
+   24,
+   10
+  ],
+  [
+   "p92-40",
+   "neuron",
+   "assistant",
+   24,
+   9
+  ],
+  [
+   "p92-41",
+   "neuron",
+   "assistant",
+   24,
+   7
+  ],
+  [
+   "p92-42",
+   "neuron",
+   "assistant",
+   24,
+   9
+  ],
+  [
+   "p92-43",
+   "neuron",
+   "assistant",
+   24,
+   6
+  ],
+  [
+   "p92-45",
+   "neuron",
+   "assistant",
+   24,
+   7
+  ],
+  [
+   "p92-46",
+   "neuron",
+   "assistant",
+   24,
+   16
+  ],
+  [
+   "p92-47",
+   "neuron",
+   "assistant",
+   24,
+   12
+  ],
+  [
+   "p92-48",
+   "neuron",
+   "assistant",
+   24,
+   13
+  ],
+  [
+   "p92-49",
+   "neuron",
+   "assistant",
+   24,
+   16
+  ],
+  [
+   "p92-50",
+   "neuron",
+   "assistant",
+   24,
+   14
+  ],
+  [
+   "p92-51",
+   "neuron",
+   "assistant",
+   24,
+   13
+  ],
+  [
+   "p92-52",
+   "neuron",
+   "assistant",
+   24,
+   9
+  ]
+ ]
+}

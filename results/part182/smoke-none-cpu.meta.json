@@ -1,0 +1,18 @@
+{
+ "stage": "stage1",
+ "host": "/tmp/claude-0/-home-user-assistant-basin/6a844452-4c09-50e0-b304-2273d751fe8b/scratchpad/hf/models--allenai--OLMo-2-0425-1B-Instruct/snapshots/48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "donor": "/tmp/claude-0/-home-user-assistant-basin/6a844452-4c09-50e0-b304-2273d751fe8b/scratchpad/hf/models--allenai--OLMo-2-0425-1B/snapshots/f83cd641d4f00954eb25c781e0ac360debb3239e",
+ "device": "cpu",
+ "dtype": "float32",
+ "attn_implementation": "eager",
+ "batch": 16,
+ "max_tokens": 24,
+ "torch": "2.15.0+cpu",
+ "transformers": "5.22.1",
+ "prompt_tokens": 15,
+ "rows_per_condition": 118,
+ "conditions": [
+  "none"
+ ],
+ "seconds": 32.5
+}
