@@ -155,6 +155,7 @@ def test_bind_identity_allows_a_host_change_and_refuses_anything_else(tmp_path):
     import copy
     manifest = {"key": "k", "model_commit": "m", "dataset_commit": "d", "token_ids_sha256": "t",
                 "controls_sha256_by_layer": ["c"], "settings": {"batch_size": 4},
+                "library_versions": {"python": "3.11.18", "torch": "2.15.0+cpu"},
                 "host": {"cpu_model": "Xeon @ 2.10GHz"}, "manifest_sha256": "first-sha"}
     out = tmp_path / "run"
     out.mkdir()
@@ -162,12 +163,14 @@ def test_bind_identity_allows_a_host_change_and_refuses_anything_else(tmp_path):
     (out / "state.npz").write_bytes(b"x")
     moved = copy.deepcopy(manifest)
     moved["host"] = {"cpu_model": "Xeon @ 2.80GHz"}
+    moved["library_versions"]["python"] = "3.13.18"
     moved["manifest_sha256"] = "second-sha"
     assert s181.bind_identity(out, moved) == "first-sha"
     history = (out / "host-history.jsonl").read_text(encoding="utf-8").splitlines()
-    assert len(history) == 1 and "2.80GHz" in history[0]
+    assert len(history) == 1 and "2.80GHz" in history[0] and "3.13.18" in history[0]
     assert json.loads((out / "identity.json").read_text(encoding="utf-8"))["host"]["cpu_model"].endswith("2.10GHz")
-    for field, value in (("model_commit", "other"), ("settings", {"batch_size": 8})):
+    for field, value in (("model_commit", "other"), ("settings", {"batch_size": 8}),
+                         ("library_versions", {"python": "3.13.18", "torch": "2.16.0+cpu"})):
         bad = copy.deepcopy(moved)
         bad[field] = value
         with pytest.raises(ValueError, match="identity differs"):
