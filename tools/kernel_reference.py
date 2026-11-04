@@ -96,13 +96,12 @@ def decode_rows(model, tok, prompts: list[str], new_tokens: int, device: str, eo
     return rows
 
 
-def checkpoint_dir(model) -> str:
-    """The local snapshot directory the model was loaded from (its config records it)."""
-    path = getattr(model.config, '_name_or_path', '') or ''
-    if Path(path).is_dir():
-        return path
+def checkpoint_dir(model_id: str, revision: str | None) -> str:
+    """The local snapshot directory of the model at this revision (a directory given as the model is used as is)."""
+    if Path(model_id).is_dir():
+        return model_id
     from huggingface_hub import snapshot_download
-    return snapshot_download(path, revision=getattr(model.config, '_commit_hash', None), local_files_only=True)
+    return snapshot_download(model_id, revision=revision, local_files_only=True)
 
 
 def upcast_compute(model, ckpt_dir: str) -> dict:
@@ -190,7 +189,7 @@ def build_record(model_id: str, revision: str | None, device: str, dtype: str, a
     model.requires_grad_(False)
     load = dict(nr.LAST_LOAD or {})
     if upcast:
-        load['upcast'] = upcast_compute(model, checkpoint_dir(model))
+        load['upcast'] = upcast_compute(model, checkpoint_dir(model_id, revision))
     prompts = [nr.build_prompt(tok, q, False) for q in questions]
     eos = eos_ids(tok)
     runs: dict[str, list[dict]] = {}

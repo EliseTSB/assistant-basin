@@ -1,0 +1,8 @@
+{
+ "float32": "kref\\results\\q08-cpu-float32.json",
+ "upcast": "kref\\results\\q08-cpu-float32-upcast.json",
+ "model": "Qwen/Qwen3.5-0.8B",
+ "rows": 16,
+ "identical": true,
+ "differences": []
+}
