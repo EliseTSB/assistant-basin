@@ -74,17 +74,23 @@ def run_ranking(model, tok, layers, attr_path, device, dtype):
             "generations": {ctx: {str(k): v for k, v in g.items()} for ctx, g in gens.items()}}
 
 
-def load_direct(device):
+def load_direct(device, attn_implementation=None):
     """Amendment 1: the weights go straight to the device (device_map) instead of being staged in host memory first,
-    which the RAM guard stopped at Windows' 2 GB floor on the first launch. Same weights, dtype and device."""
+    which the RAM guard stopped at Windows' 2 GB floor on the first launch. Same weights, dtype and device.
+    Since 2026-11-04 (Part 187) the attention kernel is passed explicitly, eager by default as in neuron_report.load_model
+    (8544a17 missed this loader, so it still loaded transformers' default SDPA), and recorded in neuron_report.LAST_LOAD."""
     import torch
+    import neuron_report as nr
+    if attn_implementation is None:
+        attn_implementation = nr.DEFAULT_ATTN_IMPLEMENTATION
     from transformers import AutoModelForCausalLM, AutoTokenizer
     tok = AutoTokenizer.from_pretrained(h.c.MODEL_ID, revision=h.c.REVISION)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
     import transformers.modeling_utils as mu
     mu.caching_allocator_warmup = lambda *a, **k: None   # one 7.8 GiB block is over the A770's single-allocation limit
-    kw = dict(revision=h.c.REVISION, dtype=torch.bfloat16, device_map={"": device})
+    kw = dict(revision=h.c.REVISION, dtype=torch.bfloat16, device_map={"": device},
+              attn_implementation=attn_implementation)
     try:
         model = AutoModelForCausalLM.from_pretrained(h.c.MODEL_ID, **kw)
     except (ValueError, KeyError):
@@ -93,6 +99,7 @@ def load_direct(device):
     model.eval()
     model.requires_grad_(False)
     torch.set_grad_enabled(False)
+    nr.LAST_LOAD = nr.load_record(model, device, attn_implementation)
     return tok, model
 
 

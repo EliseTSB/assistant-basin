@@ -1,0 +1,4 @@
+# Part 187: Part 140 on the eager kernel (PART187-DESIGN.md). Generation on the A770 at batch 8 (arm B stays at batch 1 inside run140).
+python3 -I tools/launch_arc.py 187 --step "-I -B part187\\run187.py --device xpu --batch-size 8 --units part140\\units140.json --out results\\part187\\main" --copy neuron_report.py part86/common86.py part115/howmany115.py part115b/howmany115b.py part114/qneuron114.py part140/run140.py part140/units140.json part187/__init__.py part187/run187.py results/part112/medians.json results/part112/answers.jsonl
+# Reader gates, then labels (as Part 140's steps.txt), out results/part187/labels; then score:
+python3 part140/score140.py --answers results/part187/main/answers.jsonl --labels results/part187/labels/ds.jsonl --luna-labels results/part187/labels/luna.jsonl --units part140/units140.json --part112-answers results/part112/answers.jsonl --out results/part187/score.json
