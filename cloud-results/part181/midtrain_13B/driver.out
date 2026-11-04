@@ -34,3 +34,7 @@ pass 1: 1500/2500 docs, chunk wall 178.4s (hooks 18.0s), rss 7277 MB
 pass 1: 1600/2500 docs, chunk wall 188.2s (hooks 19.2s), rss 7277 MB
 pass 1: 1700/2500 docs, chunk wall 182.5s (hooks 18.4s), rss 7279 MB
 pass 1: 1800/2500 docs, chunk wall 177.8s (hooks 18.0s), rss 7279 MB
+pass 1: 1900/2500 docs, chunk wall 187.6s (hooks 19.1s), rss 7279 MB
+pass 1: 2000/2500 docs, chunk wall 180.6s (hooks 18.3s), rss 7279 MB
+pass 1: 2100/2500 docs, chunk wall 164.3s (hooks 16.8s), rss 7279 MB
+pass 1: 2200/2500 docs, chunk wall 175.2s (hooks 17.7s), rss 7279 MB
