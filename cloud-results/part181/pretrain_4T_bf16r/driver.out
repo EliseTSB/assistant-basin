@@ -12,3 +12,10 @@
 2026-11-04T01:27:23+00:00 download_dataset: complete in 2.64s
 2026-11-04T01:27:23+00:00 load_model: start
 Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2147.09it/s]
+2026-11-04T01:28:03+00:00 load_model: complete in 40.23s
+2026-11-04T01:28:03+00:00 identity: start
+2026-11-04T01:28:17+00:00 identity: complete in 13.78s
+2026-11-04T01:28:17+00:00 collect: start
+pass 1: 100/2500 docs, chunk wall 252.4s (hooks 28.2s), rss 7810 MB
+pass 1: 200/2500 docs, chunk wall 236.0s (hooks 25.1s), rss 8037 MB
+pass 1: 300/2500 docs, chunk wall 258.4s (hooks 27.6s), rss 8037 MB
