@@ -1,0 +1,29 @@
+{"reader": "ds", "known": 12, "valid": 12, "errors": 0, "matches": 12, "passed": true}
+gate-ds rc=0
+{"reader": "luna", "known": 12, "valid": 12, "errors": 0, "matches": 12, "passed": true, "joint_kappa_n": 12, "joint_kappa": 1.0}
+gate-luna rc=0
+{
+  "reader": "ds",
+  "known": 12,
+  "valid": 12,
+  "errors": 0,
+  "matches": 12,
+  "passed": true
+}
+{
+  "reader": "luna",
+  "known": 12,
+  "valid": 12,
+  "errors": 0,
+  "matches": 12,
+  "passed": true,
+  "joint_kappa_n": 12,
+  "joint_kappa": 1.0
+}
+ds rc=0
+luna rc=0
+results/part187/labels/ds.jsonl:0
+results/part187/labels/luna.jsonl:0
+   3840 results/part187/labels/ds.jsonl
+    384 results/part187/labels/luna.jsonl
+   4224 total

@@ -1,0 +1,24 @@
+{
+  "load": {
+    "attn_implementation": "eager",
+    "attn_implementation_requested": "eager",
+    "dtype": "torch.bfloat16",
+    "device": "xpu",
+    "torch": "2.13.0+xpu",
+    "transformers": "5.13.0"
+  },
+  "part187": {
+    "reruns": "Part 140 generation",
+    "argv": [
+      "--device",
+      "xpu",
+      "--batch-size",
+      "8",
+      "--units",
+      "part140\\units140.json",
+      "--out",
+      "results\\part187\\main"
+    ],
+    "run140_rc": null
+  }
+}

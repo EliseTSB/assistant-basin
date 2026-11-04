@@ -3442,9 +3442,9 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 187.1 | arm A reproduces: arm A's Set P joint success is between 36.0% and 60.0% (published 48.3%). Fails outside. | high | Claude | |
-| 187.2 | release ends the persona: arm C's Set P joint success is at most 15.0% (published 5.8%). Fails above. | high | Claude | |
-| 187.3 | random directions stay low: Set C's joint success is at most 10.0% in every arm (published at most 6.1%). Fails if any arm exceeds it. | high | Claude | |
-| 187.4 | the verdicts stand: of the 9 published verdicts of 140.1 to 140.8 (140.5's two arms counted separately), at least 8 are the same by `score140.py`. Fails at 2 or more flips. | high | Claude | |
-| 187.5 | no verdict flips: all 9 published verdicts are the same. Fails at any flip. | medium | Claude | |
-| 187.6 | arm F stays broken: arm F's Set P joint success is at most 5.0% (published 0.0%). Fails above. | high | Claude | |
+| 187.1 | arm A reproduces: arm A's Set P joint success is between 36.0% and 60.0% (published 48.3%). Fails outside. | high | Claude || held (48.3%) |
+| 187.2 | release ends the persona: arm C's Set P joint success is at most 15.0% (published 5.8%). Fails above. | high | Claude || held (7.1%) |
+| 187.3 | random directions stay low: Set C's joint success is at most 10.0% in every arm (published at most 6.1%). Fails if any arm exceeds it. | high | Claude || held (max 3.9%) |
+| 187.4 | the verdicts stand: of the 9 published verdicts of 140.1 to 140.8 (140.5's two arms counted separately), at least 8 are the same by `score140.py`. Fails at 2 or more flips. | high | Claude || held (0 flips) |
+| 187.5 | no verdict flips: all 9 published verdicts are the same. Fails at any flip. | medium | Claude || held (0 flips) |
+| 187.6 | arm F stays broken: arm F's Set P joint success is at most 5.0% (published 0.0%). Fails above. | high | Claude || held (0.0%) |

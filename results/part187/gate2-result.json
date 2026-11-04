@@ -1,0 +1,9 @@
+{
+  "n": 24,
+  "matched": 23,
+  "missing": 0,
+  "tokens": 10,
+  "rate": 0.9583333333333334,
+  "passed": true,
+  "status": "evaluated"
+}

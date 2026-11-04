@@ -17,7 +17,7 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > hold up better than absolute rates, but that is not measured yet. Each affected part will get a dated note when it is
 > rerun or checked. Single forward passes (no generation) matched the reference at confident positions.
 > Rerun on the eager kernel so far, each published claim holding: Parts 25 and 66 (Part 183), 18 and 18b (Part 184), 84 and
-> 84b (Part 185), 79 (Part 186).
+> 84b (Part 185), 79 (Part 186), 140 (Part 187).
 
 ## The short version
 
@@ -2650,6 +2650,7 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 139](results/part139/README.md)**, 2026-10-31. Why do pushed OLMo 2 1B answers open with an apology? Units selected for it did so on 130 of 130 full-arm answers, by selection; 20.0% with only the prompt pushed and 0% with only the answer pushed, so the share needs both. The same pushes on earlier stages: Base 1.5%, SFT 98.5%, DPO 91.5%, with random directions rising alongside the neurons. On unselected units and random directions the share peaks at 17.2%. Pushed units put 44% on " sorry" after a forced "I'm" where the plain model puts 0.026%; garbled prompts drew no apology, 0 of 50. No single stage decides between the three explanations, and they are not exclusive.
 
 **[Part 140](results/part140/README.md)**, 2026-10-31. Which way of delivering a persona push gives the most joint success, on Qwen3.5-4B? Holding the push reached 48.3% on the selected units, and that selection favors holding. Releasing it after 8 tokens gave 5.8% and after 24 gave 37.9%. Sampling gave 35.1%, a repetition penalty 43.3%, and norm-preserved pushes 0%. 7 of 8 predictions failed, including the idea that a push only needs to start a persona. On the looping set the penalty cut repetition from 75.8% to 15.8%.
+**Holds on the eager kernel (Part 187, 2026-11-04):** rerun after Part 178's SDPA finding and read blind again: the same nine verdicts; Set P joint success 48.3% held, 7.1% released after 8 tokens (published 48.3% and 5.8%) ([Part 187](results/part187/README.md)).
 
 **[Part 142](results/part142/README.md)**, 2026-10-31. On Qwen3.5-4B, zeroing a concept unit at its strongest firings gives a next-word change that is more its own than a slot unit's: the median margin differs by 0.056 on Haiku's sort, n=364, and by 0.004 on the 43 units DeepSeek also calls personas. Sorted units barely differ from matched poles, 0.004. The first effects run was void, 92% NaN with no error; the rerun was clean.
 
@@ -2732,6 +2733,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 185](results/part185/README.md)**, 2026-11-04. Parts 84 and 84b (the alien neuron as Lyra's additive recipe) rerun on the eager attention kernel and read blind again. All six predictions held, though 185.5 could not have failed at the counts observed. Part 84: A2 23 and A3 24 of 24 off-world, A0 and the control unit 0. Part 84b: decode 3, 28, 44 and gen 4, 29, 47 of 48. 427 of 456 seed-paired answers differ in text, and eager answers reach the 64-token cap more often (376 of 456 against 246).
 
 **[Part 186](results/part186/README.md)**, 2026-11-04. Part 79 (Lyra's evil push crossed with the zeroed maker neurons) rerun on the eager attention kernel and read blind again. All six predictions held: e1 51 Google by keyword (published 46), e2 136 villainous and e0 0, e3 0 Google and 0 naming a company (published 1); step 0's push sizes unchanged. 386 of 1,944 seed-paired answers are identical; with the evil push, eager answers reach the 64-token cap less often than SDPA's (e2 95 against 131), without it more often (e0 115 against 61). The run was stopped once by the RAM guard and resumed.
+
+**[Part 187](results/part187/README.md)**, 2026-11-04. Part 140 (which way of delivering a persona push gives the most joint success) rerun on the eager attention kernel and read blind again. All six predictions held and none of the nine published verdicts flipped: holding the push gives 48.3% on Set P (published 48.3%), releasing after 8 tokens 7.1% (published 5.8%), norm-preserved 0.0%, random directions at most 3.9% in any arm (published 6.1%). 3,698 of 3,840 answer texts changed; every Set P rate moved by at most 2.5 points.
 
 ### Running or designed (2026-10-21)
 
