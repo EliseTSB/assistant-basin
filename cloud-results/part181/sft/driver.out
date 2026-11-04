@@ -16,3 +16,13 @@
 2026-11-04T01:26:54+00:00 identity: start
 2026-11-04T01:27:09+00:00 identity: complete in 14.48s
 2026-11-04T01:27:09+00:00 collect: start
+pass 1: 100/2500 docs, chunk wall 215.3s (hooks 24.2s), rss 8946 MB
+pass 1: 200/2500 docs, chunk wall 211.4s (hooks 24.4s), rss 8946 MB
+pass 1: 300/2500 docs, chunk wall 231.1s (hooks 26.8s), rss 8946 MB
+pass 1: 400/2500 docs, chunk wall 218.6s (hooks 24.6s), rss 8946 MB
+pass 1: 500/2500 docs, chunk wall 219.6s (hooks 24.9s), rss 8946 MB
+pass 1: 600/2500 docs, chunk wall 227.6s (hooks 26.3s), rss 8946 MB
+pass 1: 700/2500 docs, chunk wall 222.9s (hooks 25.0s), rss 8946 MB
+pass 1: 800/2500 docs, chunk wall 231.7s (hooks 26.9s), rss 8946 MB
+pass 1: 900/2500 docs, chunk wall 233.4s (hooks 26.7s), rss 8946 MB
+pass 1: 1000/2500 docs, chunk wall 227.9s (hooks 26.4s), rss 8946 MB
