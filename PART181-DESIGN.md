@@ -162,6 +162,22 @@ own layer's null. 0.004 (top 10 of 2,500 under independent uniform sets) is quot
   representation rather than the data mix (Dolmino is math- and STEM-heavy; Muse's trap 8). All runs read the same
   documents, so movement means the representation of those documents changed, whatever drove it.
 
+## Amendment 1 (2026-11-03 20:23 CT, before any collected value was read)
+
+Three of the 15 cloud runs (`instruct`, `midtrain_51B`, `pretrain_4T_bf16r`) stopped after their containers were
+restarted onto machines with a different CPU model: the resume check compared the whole manifest, whose `host` field
+names the CPU, so each resume was refused as an identity mismatch. The resume check now compares the manifest with
+`host` left out, keeps the first run's `identity.json` and the manifest hash its state is bound to, and appends every
+host change to `host-history.jsonl`; anything else that differs still refuses the resume. A run whose documents were
+collected on more than one machine is named in the results, and Gate 1a (recomputing stored entries on the final
+machine) is read with that in mind. `part181/ROUTINE.md` now resumes from an existing branch, installs into one
+interpreter (resumes merge the commit the session was started on; a first version merged `origin/main`, which was
+stale in the cloud clone, so one resume ran the old check and stopped again), and keeps the session's turn open (an idle session's container is recycled after about 30 minutes,
+which is what killed the drivers). `instruct` restarts from the beginning, because its saturation snapshots at 500
+and 1,000 documents were lost with its container; its partial branch is kept as `cloud/part181-instruct-attempt1`.
+Nothing in the predictions, measures or gates changes. Seen before writing this: the three runs' session logs and
+progress counts (documents done), and each run's `host` field; no activation, top list or window.
+
 ## Predictions
 
 Author: Claude. Thresholds fixed here. All on the primary cohort, over the layers that pass Gate 3, against each

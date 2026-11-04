@@ -582,6 +582,44 @@ def run_gates(model: Any, token_ids: Sequence[Sequence[int]], state: dict[str, n
     return gate
 
 
+def _manifest_binding_sha(manifest: dict) -> str:
+    """sha256 of a manifest without its host and its own hashes. 2026-11-03: cloud containers restart onto
+    machines with a different CPU model; the first resume check compared the whole manifest, host included, and
+    refused three runs' resumes (instruct, midtrain_51B, pretrain_4T_bf16r)."""
+    core = {k: v for k, v in manifest.items() if k not in ("host", "manifest_sha256")}
+    core = json.loads(json.dumps(core))
+    return hashlib.sha256(json.dumps(core, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def bind_identity(out: Path, manifest: dict) -> str:
+    """Write identity.json and manifest.json on a fresh run, or check a resume against them. Returns the manifest
+    sha the collector's state is bound to: the first run's on a resume, so its state stays valid. A resume on a
+    different host is allowed, and each host change is appended to host-history.jsonl; anything else that
+    differs refuses the resume."""
+    identity_path = out / "identity.json"
+    if identity_path.is_file():
+        previous = json.loads(identity_path.read_text(encoding="utf-8"))
+        identity_fields = ("key", "model_commit", "dataset_commit", "token_ids_sha256",
+                           "controls_sha256_by_layer")
+        changed = [field for field in identity_fields if previous.get(field) != manifest.get(field)]
+        if _manifest_binding_sha(previous) != _manifest_binding_sha(manifest):
+            changed.append("manifest (host excluded)")
+        if changed:
+            raise ValueError("existing output identity differs for: " + ", ".join(changed)
+                             + "; use a fresh --out directory")
+        if previous.get("host") != manifest.get("host"):
+            with (out / "host-history.jsonl").open("a", encoding="utf-8") as stream:
+                stream.write(json.dumps({"at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                                         "from": previous.get("host"), "to": manifest.get("host")},
+                                        sort_keys=True) + "\n")
+        return previous["manifest_sha256"]
+    if (out / "progress.json").exists() or (out / "state.npz").exists():
+        raise ValueError("collector state exists without identity.json; refusing an unverifiable resume")
+    identity_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    (out / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return manifest["manifest_sha256"]
+
+
 def compress_state(state_path: Path) -> bool:
     """Replace an uncompressed NPZ atomically; return whether it was compressed."""
     state_path = Path(state_path)
@@ -744,21 +782,7 @@ def run_session(key: str, work: Path, out: Path, *, hf_api: Any = None,
             manifest_sha = hashlib.sha256(json.dumps(manifest, sort_keys=True, separators=(",", ":"))
                                           .encode("utf-8")).hexdigest()
             manifest["manifest_sha256"] = manifest_sha
-            identity = dict(manifest)
-            identity_path = out / "identity.json"
-            if identity_path.is_file():
-                previous = json.loads(identity_path.read_text(encoding="utf-8"))
-                identity_fields = ("key", "model_commit", "dataset_commit", "token_ids_sha256",
-                                   "controls_sha256_by_layer", "manifest_sha256")
-                changed = [field for field in identity_fields if previous.get(field) != identity.get(field)]
-                if changed:
-                    raise ValueError("existing output identity differs for: " + ", ".join(changed)
-                                     + "; use a fresh --out directory")
-            elif (out / "progress.json").exists() or (out / "state.npz").exists():
-                raise ValueError("collector state exists without identity.json; refusing an unverifiable resume")
-            identity_path.write_text(json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-            (out / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n",
-                                                encoding="utf-8")
+            manifest_sha = bind_identity(out, manifest)
         with timed_stage(log, timings, "collect"):
             snapshot_every = 500 if key == "instruct" else 0
             collect_args = SimpleNamespace(
