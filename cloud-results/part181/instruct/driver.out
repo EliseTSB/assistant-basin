@@ -34,3 +34,13 @@ pass 1: 1000/2500 docs, chunk wall 160.9s (hooks 19.7s), rss 8951 MB
 2026-11-04T01:56:39+00:00 resolve_revisions: complete in 0.54s
 2026-11-04T01:56:39+00:00 download_model: start
 Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 300.84it/s]
+2026-11-04T02:00:29+00:00 download_model: complete in 230.92s
+2026-11-04T02:00:29+00:00 download_dataset: start
+2026-11-04T02:00:32+00:00 download_dataset: complete in 2.89s
+2026-11-04T02:00:32+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:12<36:59, 12.47s/it]Loading weights:  34%|███▎      | 60/179 [00:13<00:18,  6.42it/s]Loading weights:  40%|███▉      | 71/179 [00:13<00:15,  7.08it/s]Loading weights:  45%|████▍     | 80/179 [00:14<00:12,  7.79it/s]Loading weights:  47%|████▋     | 84/179 [00:15<00:12,  7.74it/s]Loading weights:  51%|█████     | 91/179 [00:16<00:11,  7.72it/s]Loading weights:  52%|█████▏    | 93/179 [00:16<00:10,  7.90it/s]Loading weights:  57%|█████▋    | 102/179 [00:17<00:09,  8.41it/s]Loading weights:  58%|█████▊    | 104/179 [00:17<00:08,  8.73it/s]Loading weights:  63%|██████▎   | 113/179 [00:18<00:08,  8.02it/s]Loading weights:  64%|██████▍   | 115/179 [00:18<00:07,  8.58it/s]Loading weights:  69%|██████▊   | 123/179 [00:18<00:04, 12.88it/s]Loading weights:  70%|███████   | 126/179 [00:19<00:06,  7.93it/s]Loading weights:  75%|███████▍  | 134/179 [00:20<00:03, 11.49it/s]Loading weights:  77%|███████▋  | 137/179 [00:21<00:05,  7.62it/s]Loading weights:  81%|████████  | 145/179 [00:21<00:02, 11.34it/s]Loading weights:  83%|████████▎ | 148/179 [00:22<00:03,  8.25it/s]Loading weights:  88%|████████▊ | 157/179 [00:22<00:02,  9.81it/s]Loading weights:  89%|████████▉ | 159/179 [00:23<00:02,  9.92it/s]Loading weights:  94%|█████████▍| 168/179 [00:24<00:01,  9.86it/s]Loading weights:  95%|█████████▍| 170/179 [00:24<00:00, 10.46it/s]Loading weights: 100%|██████████| 179/179 [00:24<00:00,  7.41it/s]
+2026-11-04T02:01:14+00:00 load_model: complete in 41.33s
+2026-11-04T02:01:14+00:00 identity: start
+2026-11-04T02:01:40+00:00 identity: FAILED after 26.69s: ValueError: existing output identity differs for: manifest_sha256; use a fresh --out directory
+2026-11-04T02:01:40+00:00 SESSION FAILED: RuntimeError: identity failed: existing output identity differs for: manifest_sha256; use a fresh --out directory
+session181 failed: identity failed: existing output identity differs for: manifest_sha256; use a fresh --out directory
