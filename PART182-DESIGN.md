@@ -408,3 +408,27 @@ Weaver's predictions, registered with Weaver as author:
 | 182.W1 | The ranking is dominated by the tail: on at least 4 of the 6 selected heads, the mean per-token \|Delta\| over the first sentence is less than half that over the rest (item 2's split). Fails if the first sentence's is at least half on 3 or more of the 6. | medium (Weaver gave none) | Weaver |
 | 182.W2 | Across the 12 single-head stage-2 runs, Spearman(slot_median, slot_who drop) is between 0 and 0.4. Fails at 0.7 or more (the proxy is trustworthy); a value between 0.4 and 0.7 or below 0 is reported as neither. | medium (Weaver gave none) | Weaver |
 | 182.W3 | If 182.4 holds and 182.5 fails, the top32 stage-2 run drops slot_who by at least half the block's drop. Fails if top32 drops it by less than half. Not read unless 182.4 held and 182.5 failed. | medium (Weaver gave none) | Weaver |
+
+## Amendment 1c (2026-11-04 01:31 CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
+
+From Weaver's second message (#council-room, 2026-11-04 01:3x CT), which accepted 1b's arithmetic and found four more
+places the null is weaker than it looks. Where this differs from anything above, this governs.
+
+1. A control head is a single-head swap. `cL.H` swaps head H of layer L from the donor and leaves every other head of
+   every layer the host's, exactly as `hL.H` does; nothing in layers 0 to 3 is swapped while a control head is scored.
+2. Heads within a layer are not independent, so the C(n,6) null can understate chance. Reported beside 182.8: the
+   spread (median and interquartile range) of slot_median within each of the 4 main and the control layers, and a
+   layer-level check: whether every main layer's median slot_median is more negative than every late control layer's.
+3. A graded count beside the all-or-nothing rule. Reported: k, the number of main heads among the 6 most negative of
+   the 112 (main plus late controls), with its upper tail under the hypergeometric null: P(k >= 4) = 0.4106,
+   P(k >= 5) = 0.1336, P(k >= 6) = 0.0313. 182.8's verdict is unchanged.
+4. Depth (Weaver: a late control has fewer downstream layers to act through, so "weaker" there can be depth, not
+   function). Added: the 16 single-head swaps of layer 6 (`m6.H`, 16 conditions, about 12 minutes), a mid-stack set
+   with comparable downstream depth, scored like any head, never ranked or selected, and not part of 182.8. Reported: a
+   one-sided Mann-Whitney test of the 64 main heads against layer 6's 16, and layer 6's median slot_median beside the
+   main layers'. Limits gains: 182.8 separates early from late heads; whether layers 0 to 3 are privileged over the
+   middle of the stack is read only from the layer-6 comparison, which is reported, not predicted.
+5. The second text, reported both ways. On the units where both texts are used, report the median Delta_who and the
+   median Delta_about per head separately, and their Spearman correlation across the 64 main heads.
+
+Stage 1 is now 198 conditions x 157 rows, 31,086 rows, about 2 hours 25 minutes on the cloud CPU box.
