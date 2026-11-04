@@ -50,8 +50,8 @@ layers that pass Gate 3 (16 of 16).
 | 181.4 | The mean neuron overlap with `instruct` rises strictly along 21B, 210B, 1T, 2T, 3T, 4T. (0.6) | 0.031, 0.083, 0.186, 0.276, 0.364, 0.474 (medians 0, 0, 0.1, 0.2, 0.3, 0.5) | held |
 | 181.5 | For (1T, 2T), (4T, midtrain_51B) and (midtrain_51B, instruct), the mean neuron overlap exceeds both the mean dense-control and the mean k = 2 sparse-control overlap in at least three quarters of the layers. (0.6) | 3, 5 and 7 of 16 layers | failed |
 | 181.6 | The median `sft`-against-`dpo` overlap of Part 92's 21 slot neurons is within 0.15 of the median of their layers' comparators. (0.55) | slot median 1.0, comparator median 1.0 | held, but see below |
-| 181.W1 (Weaver) | Run-to-run noise is larger early: the 1T repeat pair's floor is at least 2 times the Instruct pair's. Failed if both floors are 0. (medium) | both floors 0 | failed, and uninformative (below) |
-| 181.W2 (Weaver) | A relative activity rule marks at least 10% more neurons active than an absolute cut at one or more pretraining checkpoints. (medium) | the relative rule marks slightly fewer at every pretraining checkpoint (differences -0.0004 to -0.00002) | failed |
+| 181.W1 | Weaver: run-to-run noise is larger early: the 1T repeat pair's floor is at least 2 times the Instruct pair's. Failed if both floors are 0. (medium) | both floors 0 | failed, and uninformative (below) |
+| 181.W2 | Weaver: a relative activity rule marks at least 10% more neurons active than an absolute cut at one or more pretraining checkpoints. (medium) | the relative rule marks slightly fewer at every pretraining checkpoint (differences -0.0004 to -0.00002) | failed |
 
 The registered reading rule allows the headline "OLMo 2 1B's neurons settle on their top documents during pretraining
 and keep them through post-training" when Gates 1 to 3, 181.1, 181.3 and 181.4 hold, in the same direction on the
@@ -113,7 +113,7 @@ features. One model and one corpus.
   than one machine: `pretrain_4T_bf16r` moved from a 2.80 GHz to a 2.10 GHz Xeon and back (03:17 and 04:31 UTC,
   2026-11-04), and `midtrain_51B` resumed under Python 3.13.18 after starting under 3.11.18. Both passed Gate 1, which
   recomputes their stored entries on the final machine. `instruct` was restarted from the beginning.
-- `weaver181.py` keyed runs through a helper that renames `instruct_b` to `instruct`, so the Instruct repeat pair
+- `part181/weaver181.py` keyed runs through a helper that renames `instruct_b` to `instruct`, so the Instruct repeat pair
   collapsed. 181.W1 printed "not read", and 181.W2's absolute threshold came from `instruct_b`'s maxima. Found after
   reading the first output; fixed with a test that fails on the old line, and rerun (Amendment 4). W1's verdict moved to
   "failed" (the rule's reading of two zero floors); W2's numbers did not change. The first output is kept beside the
@@ -125,7 +125,7 @@ features. One model and one corpus.
 
 ## Limits
 
-- One model (OLMo 2 1B); 2,500 documents, the first 2,500 of `NeelNanda/pile-10k` (itself the first 10,000 documents of
+- One model (OLMo 2 1B); 2,500 documents, the first 2,500 of NeelNanda/pile-10k on Hugging Face (itself the first 10,000 documents of
   the Pile, not a random sample), each cut at 512 tokens (992 of the 2,500 reach the cap); the positive pole only (each
   unit's largest activation); overlap on the top 10 of the 20 kept. The 2,500 are mostly Pile-CC (624), PubMed Abstracts
   (370), OpenWebText2 (360), StackExchange (358), Github (216) and Wikipedia (193); the full breakdown is
