@@ -1,0 +1,21 @@
+2026-11-04T01:24:44+00:00 initialize_dependencies: start
+2026-11-04T01:24:44+00:00 initialize_dependencies: complete in 0.17s
+2026-11-04T01:24:44+00:00 resolve_revisions: start
+2026-11-04T01:24:45+00:00 model commit: eda09f03465136b2b0a007da730ef720029c6f9c
+2026-11-04T01:24:45+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T01:24:45+00:00 resolve_revisions: complete in 0.61s
+2026-11-04T01:24:45+00:00 download_model: start
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:02,  3.54it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  5.15it/s]Fetching 11 files:  73%|███████▎  | 8/11 [00:00<00:00, 14.89it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:14<00:01,  1.98s/it]Fetching 11 files: 100%|██████████| 11/11 [00:52<00:00,  8.12s/it]Fetching 11 files: 100%|██████████| 11/11 [00:52<00:00,  4.78s/it]
+2026-11-04T01:25:42+00:00 download_model: complete in 57.63s
+2026-11-04T01:25:42+00:00 download_dataset: start
+2026-11-04T01:25:44+00:00 download_dataset: complete in 2.21s
+2026-11-04T01:25:44+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 3790.08it/s]
+2026-11-04T01:25:46+00:00 load_model: complete in 2.15s
+2026-11-04T01:25:46+00:00 identity: start
+2026-11-04T01:25:56+00:00 identity: complete in 9.03s
+2026-11-04T01:25:56+00:00 collect: start
+pass 1: 100/2500 docs, chunk wall 180.9s (hooks 19.9s), rss 7093 MB
+pass 1: 200/2500 docs, chunk wall 176.7s (hooks 20.1s), rss 7300 MB
+pass 1: 300/2500 docs, chunk wall 196.7s (hooks 20.4s), rss 7301 MB
