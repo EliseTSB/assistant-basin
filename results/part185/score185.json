@@ -1,0 +1,222 @@
+{
+ "gate": {
+  "A": {
+   "kernel": "eager",
+   "calib_ok": true,
+   "passed": true
+  },
+  "B": {
+   "kernel": "eager",
+   "calib_ok": true,
+   "passed": true
+  }
+ },
+ "counts": {
+  "A": {
+   "A0": {
+    "n": 24,
+    "EARTH": 0,
+    "OFFWORLD": 0,
+    "NEITHER": 24,
+    "BROKEN": 0
+   },
+   "A1": {
+    "n": 24,
+    "EARTH": 0,
+    "OFFWORLD": 13,
+    "NEITHER": 11,
+    "BROKEN": 2
+   },
+   "A2": {
+    "n": 24,
+    "EARTH": 0,
+    "OFFWORLD": 23,
+    "NEITHER": 1,
+    "BROKEN": 0
+   },
+   "A3": {
+    "n": 24,
+    "EARTH": 0,
+    "OFFWORLD": 24,
+    "NEITHER": 0,
+    "BROKEN": 0
+   },
+   "C": {
+    "n": 24,
+    "EARTH": 0,
+    "OFFWORLD": 0,
+    "NEITHER": 24,
+    "BROKEN": 0
+   }
+  },
+  "B": {
+   "offworld": {
+    "A0": 0,
+    "decode0.40": 3,
+    "decode0.47": 28,
+    "decode0.55": 44,
+    "gen0.40": 4,
+    "gen0.47": 29,
+    "gen0.55": 47
+   },
+   "paired": {
+    "0.40": {
+     "gen_only": 2,
+     "decode_only": 1,
+     "sign_test_p": 1.0
+    },
+    "0.47": {
+     "gen_only": 3,
+     "decode_only": 2,
+     "sign_test_p": 1.0
+    },
+    "0.55": {
+     "gen_only": 3,
+     "decode_only": 0,
+     "sign_test_p": 0.25
+    }
+   },
+   "reader_agreement": 0.9910714285714286
+  }
+ },
+ "predictions": {
+  "185.1": [
+   "held",
+   "A2 23, A3 24 of 24"
+  ],
+  "185.2": [
+   "held",
+   "A0 0, C 0 of 24"
+  ],
+  "185.3": [
+   "held",
+   "A1 13 of 24"
+  ],
+  "185.4": [
+   "held",
+   "decode [3, 28, 44], gen [4, 29, 47] of 48"
+  ],
+  "185.5": [
+   "held",
+   "0.40: 2/1 p=1, 0.47: 3/2 p=1, 0.55: 3/0 p=0.25"
+  ],
+  "185.6": [
+   "held",
+   "moves A0 +0, decode0.40 -1, decode0.47 +3, decode0.55 +1, gen0.40 +1, gen0.47 +6, gen0.55 +1"
+  ]
+ },
+ "text_compare": {
+  "A": {
+   "A0": {
+    "n": 24,
+    "identical": 0,
+    "label_changed": 0,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 0,
+    "differ_before_key_65": 8,
+    "median_first_difference_key": 66
+   },
+   "A1": {
+    "n": 24,
+    "identical": 2,
+    "label_changed": 4,
+    "sdpa_off_eager_not": 4,
+    "eager_off_sdpa_not": 0,
+    "differ_before_key_65": 12,
+    "median_first_difference_key": 63
+   },
+   "A2": {
+    "n": 24,
+    "identical": 3,
+    "label_changed": 1,
+    "sdpa_off_eager_not": 1,
+    "eager_off_sdpa_not": 0,
+    "differ_before_key_65": 9,
+    "median_first_difference_key": 65
+   },
+   "A3": {
+    "n": 24,
+    "identical": 4,
+    "label_changed": 0,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 0,
+    "differ_before_key_65": 9,
+    "median_first_difference_key": 65
+   },
+   "C": {
+    "n": 24,
+    "identical": 0,
+    "label_changed": 0,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 0,
+    "differ_before_key_65": 11,
+    "median_first_difference_key": 65
+   }
+  },
+  "B": {
+   "A0": {
+    "n": 48,
+    "identical": 2,
+    "label_changed": 0,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 0,
+    "differ_before_key_65": 7,
+    "median_first_difference_key": 66
+   },
+   "decode0.40": {
+    "n": 48,
+    "identical": 1,
+    "label_changed": 3,
+    "sdpa_off_eager_not": 2,
+    "eager_off_sdpa_not": 1,
+    "differ_before_key_65": 11,
+    "median_first_difference_key": 65
+   },
+   "decode0.47": {
+    "n": 48,
+    "identical": 3,
+    "label_changed": 7,
+    "sdpa_off_eager_not": 2,
+    "eager_off_sdpa_not": 5,
+    "differ_before_key_65": 24,
+    "median_first_difference_key": 61
+   },
+   "decode0.55": {
+    "n": 48,
+    "identical": 3,
+    "label_changed": 1,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 1,
+    "differ_before_key_65": 21,
+    "median_first_difference_key": 65
+   },
+   "gen0.40": {
+    "n": 48,
+    "identical": 0,
+    "label_changed": 1,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 1,
+    "differ_before_key_65": 13,
+    "median_first_difference_key": 65
+   },
+   "gen0.47": {
+    "n": 48,
+    "identical": 3,
+    "label_changed": 6,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 6,
+    "differ_before_key_65": 22,
+    "median_first_difference_key": 65
+   },
+   "gen0.55": {
+    "n": 48,
+    "identical": 8,
+    "label_changed": 1,
+    "sdpa_off_eager_not": 0,
+    "eager_off_sdpa_not": 1,
+    "differ_before_key_65": 18,
+    "median_first_difference_key": 65
+   }
+  }
+ }
+}
