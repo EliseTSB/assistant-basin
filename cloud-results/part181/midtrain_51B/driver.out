@@ -1,19 +1,23 @@
-2026-11-04T02:52:55+00:00 initialize_dependencies: start
-2026-11-04T02:52:55+00:00 initialize_dependencies: complete in 0.20s
-2026-11-04T02:52:55+00:00 resolve_revisions: start
-2026-11-04T02:52:56+00:00 model commit: f83cd641d4f00954eb25c781e0ac360debb3239e
-2026-11-04T02:52:56+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
-2026-11-04T02:52:56+00:00 resolve_revisions: complete in 1.04s
-2026-11-04T02:52:56+00:00 download_model: start
+2026-11-04T03:14:57+00:00 initialize_dependencies: start
+2026-11-04T03:14:57+00:00 initialize_dependencies: complete in 0.22s
+2026-11-04T03:14:57+00:00 resolve_revisions: start
+2026-11-04T03:14:58+00:00 model commit: f83cd641d4f00954eb25c781e0ac360debb3239e
+2026-11-04T03:14:58+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T03:14:58+00:00 resolve_revisions: complete in 0.50s
+2026-11-04T03:14:58+00:00 download_model: start
 Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Fetching 11 files:   9%|▉         | 1/11 [00:00<00:04,  2.47it/s]Fetching 11 files:  45%|████▌     | 5/11 [00:00<00:00, 11.18it/s]Fetching 11 files:  73%|███████▎  | 8/11 [00:00<00:00, 13.74it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:10<00:01,  1.54s/it]Fetching 11 files:  91%|█████████ | 10/11 [00:30<00:01,  1.54s/it]Fetching 11 files: 100%|██████████| 11/11 [00:41<00:00,  7.05s/it]Fetching 11 files: 100%|██████████| 11/11 [00:41<00:00,  3.82s/it]
-2026-11-04T02:53:44+00:00 download_model: complete in 47.87s
-2026-11-04T02:53:44+00:00 download_dataset: start
-2026-11-04T02:53:46+00:00 download_dataset: complete in 2.43s
-2026-11-04T02:53:46+00:00 load_model: start
-Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2634.89it/s]
-2026-11-04T02:53:49+00:00 load_model: complete in 2.21s
-2026-11-04T02:53:49+00:00 identity: start
-2026-11-04T02:53:59+00:00 identity: FAILED after 10.10s: ValueError: existing output identity differs for: manifest (host excluded); use a fresh --out directory
-2026-11-04T02:53:59+00:00 SESSION FAILED: RuntimeError: identity failed: existing output identity differs for: manifest (host excluded); use a fresh --out directory
-session181 failed: identity failed: existing output identity differs for: manifest (host excluded); use a fresh --out directory
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  6.87it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  5.01it/s]Fetching 11 files:  45%|████▌     | 5/11 [00:00<00:00, 11.73it/s]Fetching 11 files:  82%|████████▏ | 9/11 [00:00<00:00, 18.29it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:19<00:00, 18.29it/s]Fetching 11 files: 100%|██████████| 11/11 [01:19<00:00, 11.57s/it]Fetching 11 files: 100%|██████████| 11/11 [01:19<00:00,  7.24s/it]
+2026-11-04T03:16:22+00:00 download_model: complete in 84.71s
+2026-11-04T03:16:22+00:00 download_dataset: start
+2026-11-04T03:16:25+00:00 download_dataset: complete in 2.59s
+2026-11-04T03:16:25+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2687.41it/s]
+2026-11-04T03:16:27+00:00 load_model: complete in 2.33s
+2026-11-04T03:16:27+00:00 identity: start
+2026-11-04T03:16:38+00:00 identity: complete in 11.09s
+2026-11-04T03:16:38+00:00 collect: start
+resuming: pass 1, 0 docs done
+pass 1: 100/2500 docs, chunk wall 225.7s (hooks 23.9s), rss 7067 MB
+pass 1: 200/2500 docs, chunk wall 218.2s (hooks 23.0s), rss 7077 MB
+pass 1: 300/2500 docs, chunk wall 235.1s (hooks 24.2s), rss 7077 MB
+pass 1: 400/2500 docs, chunk wall 213.4s (hooks 22.1s), rss 7077 MB
