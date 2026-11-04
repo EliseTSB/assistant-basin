@@ -10,7 +10,6 @@ import resource
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -52,7 +51,7 @@ class SessionLog:
         path.parent.mkdir(parents=True, exist_ok=True)
 
     def write(self, message: str) -> None:
-        line = f"{datetime.now(timezone.utc).isoformat(timespec='seconds')} {message}"
+        line = message
         print(line, flush=True)
         with self.path.open("a", encoding="utf-8") as stream:
             stream.write(line + "\n")
@@ -60,11 +59,25 @@ class SessionLog:
 
 def _run_stage(name: str, command: list[str], log: SessionLog,
                timings: dict[str, float]) -> int:
-    log.write(f"{name}: start")
     start = time.perf_counter()
-    completed = subprocess.run(command, cwd=ROOT, check=False)
+    completed = subprocess.run(command, cwd=ROOT, check=False,
+                               capture_output=True, text=True)
     timings[name] = time.perf_counter() - start
-    log.write(f"{name}: exit={completed.returncode} in {timings[name]:.1f}s")
+    for line in completed.stdout.splitlines():
+        if name == "record" and line.startswith("clips_processed=") and "clips_per_minute=" in line:
+            print(line, flush=True)
+            continue
+        try:
+            entry = json.loads(line)
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(entry, dict):
+            continue
+        if name == "record" and set(entry) == {
+                "gate1", "planned", "record_status_counts", "done_file"}:
+            print(json.dumps(entry, sort_keys=True), flush=True)
+        elif name == "analyze" and set(entry) == {"results", "gate_verdicts", "counts"}:
+            print(json.dumps(entry, sort_keys=True), flush=True)
     return int(completed.returncode)
 
 
@@ -93,13 +106,12 @@ def run_session(*, work_dir: Path, out_dir: Path, model_path: Path | None = None
     counts: dict[str, Any] = {}
     problems: list[str] = []
     versions: dict[str, str | None] = {}
+    analysis_ran = False
     start = time.perf_counter()
     try:
-        log.write("install_check: start")
         stage_start = time.perf_counter()
         versions = verify_pinned_versions()
         timings["install_check"] = time.perf_counter() - stage_start
-        log.write(f"install_check: complete in {timings['install_check']:.1f}s")
 
         record_cmd = [sys.executable, "-u", str(HERE / "record188.py"),
                       "--manifest", str(HERE / "manifest188.csv"),
@@ -125,28 +137,30 @@ def run_session(*, work_dir: Path, out_dir: Path, model_path: Path | None = None
             rc = _run_stage("analyze", analyze_cmd, log, timings)
             if rc:
                 raise RuntimeError(f"analysis exited {rc}")
+            analysis_ran = True
             results_path = out_dir / "results.json"
             if not results_path.exists():
                 raise RuntimeError("analysis completed without results.json")
             results = json.loads(results_path.read_text(encoding="utf-8"))
             gate2 = results["gate2"]["verdict"]
             gate3 = results["gate3"]["verdict"]
-            counts = {name: {"planned": item["planned"], "decoded": item["decoded"],
+            counts = {name: {"planned": item["planned"], "recorded": item["recorded"],
                              "fraction": item["fraction"], "verdict": item["verdict"]}
                       for name, item in results["gate2"]["sets"].items()}
     except Exception as exc:
         problems.append(f"{type(exc).__name__}: {exc}")
-        log.write(f"SESSION FAILED: {type(exc).__name__}: {exc}")
     timings["total"] = time.perf_counter() - start
     peak_kb = max(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
                   resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss)
     summary = {"study": "part188", "gate_verdicts": {"gate1": gate1, "gate2": gate2, "gate3": gate3},
-               "counts": counts, "timings_seconds": timings,
+               "analysis_ran": analysis_ran, "counts": counts, "timings_seconds": timings,
                "peak_memory_mb": peak_kb / 1024.0,
                "library_versions": versions, "problems": problems,
                "note": "No selected-unit indices or neuron values are included in this summary."}
     _write_summary(out_dir / "summary.json", summary)
-    log.write(f"summary: gates={gate1}/{gate2}/{gate3}; elapsed={timings['total']:.1f}s")
+    log.write(json.dumps({"summary": str(out_dir / "summary.json"),
+                          "gate_verdicts": summary["gate_verdicts"],
+                          "counts": counts}, sort_keys=True))
     return summary
 
 
@@ -165,11 +179,10 @@ def main(argv: list[str] | None = None) -> int:
     summary = run_session(work_dir=args.work_dir, out_dir=args.out_dir,
                           model_path=args.model_path, local=args.local, limit=args.limit)
     verdicts = summary["gate_verdicts"]
-    print(json.dumps({"gate_verdicts": verdicts, "counts": summary["counts"],
-                      "timings_seconds": summary["timings_seconds"],
-                      "peak_memory_mb": summary["peak_memory_mb"],
-                      "problems": summary["problems"]}, sort_keys=True), flush=True)
-    return 0 if verdicts["gate1"] == "passed" and not summary["problems"] else 2
+    print(json.dumps({"summary": str(args.out_dir / "summary.json"),
+                      "gate_verdicts": verdicts, "counts": summary["counts"]},
+                     sort_keys=True), flush=True)
+    return 0 if summary.get("analysis_ran", False) else 2
 
 
 if __name__ == "__main__":

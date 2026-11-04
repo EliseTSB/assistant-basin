@@ -77,7 +77,7 @@ def _sigmoid(values: np.ndarray) -> np.ndarray:
 
 def fit_logistic_l2(x: np.ndarray, labels: np.ndarray, C: float = 1.0,
                     max_iter: int = 1200, tolerance: float = 1e-7) -> dict[str, np.ndarray | float]:
-    """Standardized L2 logistic regression using deterministic accelerated gradients."""
+    """Fit sklearn-style L2 logistic loss with C=1 by default and no intercept penalty."""
     data = np.asarray(x, dtype=np.float64)
     y = np.asarray(labels, dtype=np.float64).reshape(-1)
     if data.ndim != 2 or data.shape[0] != y.size:
@@ -91,7 +91,9 @@ def fit_logistic_l2(x: np.ndarray, labels: np.ndarray, C: float = 1.0,
     scale[scale < 1e-8] = 1.0
     standardized = (data - mean) / scale
     design = np.column_stack((standardized, np.ones(len(y))))
-    penalty = np.ones(design.shape[1], dtype=np.float64) / C
+    # sklearn minimizes summed log-loss + ||w||^2/(2C).  Dividing by n
+    # leaves the same solution and keeps the optimizer's scale well conditioned.
+    penalty = np.ones(design.shape[1], dtype=np.float64) / (C * len(y))
     penalty[-1] = 0.0
 
     # Power iteration bounds the smooth logistic Hessian's largest eigenvalue.
@@ -250,13 +252,14 @@ def _read_rows(path: Path) -> list[dict[str, str]]:
 
 
 def _read_records(rows: list[dict[str, str]], work_dir: Path) -> tuple[
-        np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[str]]:
     n = len(rows)
     activations = np.full((n, N_UNITS), np.nan, dtype=np.float16)
     embeddings = np.full((n, 768), np.nan, dtype=np.float32)
     seqlen = np.zeros(n, dtype=np.int32)
     decode_status = np.full(n, "missing", dtype="U32")
     record_status = np.full(n, "missing", dtype="U32")
+    record_errors = ["record missing"] * n
     record_dir = work_dir / "records"
     for i, row in enumerate(rows):
         path = record_dir / f"{row['id']}.npz"
@@ -267,11 +270,74 @@ def _read_records(rows: list[dict[str, str]], work_dir: Path) -> tuple[
             record_status[i] = status
             decode_status[i] = str(saved["decode_status"].item()) if "decode_status" in saved else (
                 "ok" if status == "ok" else status)
+            error = str(saved["error"].item()) if "error" in saved else ""
+            record_errors[i] = "" if status == "ok" else (error or status)
             if status == "ok":
                 activations[i] = saved["act_mean"]
                 embeddings[i] = saved["emb"]
                 seqlen[i] = int(saved["seqlen"])
-    return activations, embeddings, seqlen, decode_status, record_status
+    return activations, embeddings, seqlen, decode_status, record_status, record_errors
+
+
+def _gate2_summary(rows: list[dict[str, str]], record_status: np.ndarray,
+                   record_errors: list[str]) -> dict[str, Any]:
+    """Count only successful records and retain the reason for every missing clip."""
+    set_names = sorted({row["analysis_set"] for row in rows} | {"P"})
+    sets: dict[str, Any] = {}
+    passed_all = True
+    for set_name in set_names:
+        indexes = [i for i, row in enumerate(rows) if row["analysis_set"] == set_name]
+        missing = [
+            {"id": rows[i]["id"], "set": rows[i]["set"],
+             "analysis_set": rows[i]["analysis_set"],
+             "reason": record_errors[i] or str(record_status[i])}
+            for i in indexes if record_status[i] != "ok"
+        ]
+        recorded = sum(record_status[i] == "ok" for i in indexes)
+        planned = len(indexes)
+        fraction = recorded / planned if planned else 0.0
+        passed = bool(planned and fraction >= 0.90)
+        passed_all &= passed
+        sets[set_name] = {"planned": planned, "recorded": int(recorded),
+                          "fraction": fraction, "verdict": "passed" if passed else "failed",
+                          "missing": missing}
+    return {"verdict": "passed" if passed_all else "failed",
+            "minimum_fraction": 0.90, "sets": sets}
+
+
+def _chicken_cluster_groups(rows: list[dict[str, str]], indexes: np.ndarray) -> np.ndarray:
+    """Use the four registered source-class clusters for the chicken set."""
+    groups = []
+    for i in indexes:
+        row = rows[int(i)]
+        if row["source"] == "esc":
+            groups.append(f"ESC-50 {row['esc_category'] or row['class_key']}")
+        else:
+            class_name = row["class_key"].rsplit(" / ", 1)[-1].split(",", 1)[0]
+            groups.append(f"VocalImitationSet {class_name}")
+    return np.asarray(groups, dtype=str)
+
+
+def _headline_rule(gate1: str, gate2: str, gate3: str,
+                   predictions: dict[str, Any], length_near_selected: dict[str, bool | None]
+                   ) -> tuple[bool, list[str]]:
+    """Apply the registered conditions for permitting the headline reading."""
+    reasons: list[str] = []
+    if gate1 != "passed":
+        reasons.append("Gate 1 did not pass")
+    if gate2 != "passed":
+        reasons.append("Gate 2 did not pass")
+    if gate3 != "passed":
+        reasons.append("Gate 3 did not pass")
+    for prediction_id in ("188.2", "188.3"):
+        if predictions[prediction_id]["verdict"] != "held":
+            reasons.append(f"prediction {prediction_id} failed")
+    for direction, near in length_near_selected.items():
+        if near is True:
+            reasons.append(f"sequence length is within 0.05 of the selected unit in {direction}")
+        elif near is None:
+            reasons.append(f"sequence length comparison is unavailable in {direction}")
+    return not reasons, reasons
 
 
 def _row_groups(rows: list[dict[str, str]], indexes: np.ndarray) -> np.ndarray:
@@ -303,7 +369,14 @@ def _prompt_scores(rows: list[dict[str, str]], indexes: np.ndarray, embeddings: 
     free_index = phrase_index["an animal"]
     output = np.empty(len(indexes), dtype=np.float32)
     for offset, i in enumerate(indexes):
-        prompt_i = free_index if class_free else phrase_index.get(rows[i]["phrase"], free_index)
+        if class_free:
+            prompt_i = free_index
+        else:
+            phrase = rows[i]["phrase"]
+            if phrase not in phrase_index:
+                class_name = rows[i].get("class_key") or rows[i].get("analysis_set") or "unknown class"
+                raise KeyError(f"class {class_name!r} is missing prompt phrase {phrase!r}")
+            prompt_i = phrase_index[phrase]
         output[offset] = float(np.dot(embeddings[i], real[prompt_i] - imitation[prompt_i]))
     return output
 
@@ -363,32 +436,13 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path,
     rows = _read_rows(manifest_path)
     out_dir.mkdir(parents=True, exist_ok=True)
     n = len(rows)
-    activations, embeddings, seqlen, decode_status, record_status = _read_records(rows, work_dir)
-    decoded = decode_status == "ok"
+    activations, embeddings, seqlen, _decode_status, record_status, record_errors = _read_records(rows, work_dir)
     good = record_status == "ok"
     gate1_path = work_dir / "gate1.json"
     gate1_doc = json.loads(gate1_path.read_text(encoding="utf-8")) if gate1_path.exists() else {
         "verdict": "not_run", "clips": []}
 
-    analysis_sets = sorted({row["analysis_set"] for row in rows})
-    gate2_sets: dict[str, Any] = {}
-    gate2_pass = True
-    for set_name in analysis_sets:
-        indexes = np.asarray([i for i, row in enumerate(rows) if row["analysis_set"] == set_name], dtype=int)
-        decoded_indexes = indexes[decoded[indexes]]
-        missing = [rows[i]["id"] for i in indexes if not decoded[i]]
-        fraction = len(decoded_indexes) / len(indexes) if len(indexes) else 0.0
-        passed = fraction >= 0.90
-        gate2_pass &= passed
-        gate2_sets[set_name] = {"planned": int(len(indexes)), "decoded": int(len(decoded_indexes)),
-                                "fraction": fraction, "verdict": "passed" if passed else "failed",
-                                "missing_ids": missing}
-    parity = np.asarray([i for i, row in enumerate(rows) if row["set"] == "P"], dtype=int)
-    gate2_sets["P"] = {"planned": int(len(parity)), "decoded": int(decoded[parity].sum()),
-                        "fraction": float(decoded[parity].mean()) if len(parity) else 0.0,
-                        "verdict": "passed" if len(parity) and decoded[parity].mean() >= 0.90 else "failed",
-                        "missing_ids": [rows[i]["id"] for i in parity if not decoded[i]]}
-    gate2_pass &= gate2_sets["P"]["verdict"] == "passed"
+    gate2 = _gate2_summary(rows, record_status, record_errors)
 
     # Gate 3 checks the fixed L15 N1126 rig unit on hen+rooster versus all E clips.
     gate3_pos = np.asarray([i for i, row in enumerate(rows)
@@ -536,7 +590,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path,
     chicken_y = np.asarray([rows[i]["analysis_set"] == "C_R" for i in chicken_idx], dtype=bool)
     for key, selected in selections.items():
         scores = activations[chicken_idx, selected["index"]].astype(float) * selected["sign"]
-        chicken[key] = _auc_result(chicken_y, scores, _row_groups(rows, chicken_idx),
+        chicken[key] = _auc_result(chicken_y, scores, _chicken_cluster_groups(rows, chicken_idx),
                                     1080 + (0 if key == "A_to_B" else 1))
 
     # Save compact registered arrays and the full embedding/seqlen prompt artifact.
@@ -564,29 +618,14 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path,
         length_auc = directions[key]["sequence_length"]["auc"]
         length_near_selected[key] = (None if unit_auc is None or length_auc is None
                                      else bool(length_auc >= unit_auc - 0.05))
-    headline_permitted = (gate1_doc.get("verdict") == "passed" and gate3["verdict"] == "passed" and
-                          predictions["188.2"]["verdict"] == "held" and
-                          predictions["188.3"]["verdict"] == "held" and
-                          all(value is False for value in length_near_selected.values()))
-    withdrawal_reasons = []
-    if gate1_doc.get("verdict") != "passed":
-        withdrawal_reasons.append("Gate 1 did not pass")
-    if gate3["verdict"] != "passed":
-        withdrawal_reasons.append("Gate 3 did not pass")
-    for prediction_id in ("188.2", "188.3"):
-        if predictions[prediction_id]["verdict"] != "held":
-            withdrawal_reasons.append(f"prediction {prediction_id} failed")
-    for direction, near in length_near_selected.items():
-        if near is True:
-            withdrawal_reasons.append(f"sequence length is within 0.05 of the selected unit in {direction}")
-        elif near is None:
-            withdrawal_reasons.append(f"sequence length comparison is unavailable in {direction}")
+    headline_permitted, withdrawal_reasons = _headline_rule(
+        gate1_doc.get("verdict", "not_run"), gate2["verdict"], gate3["verdict"],
+        predictions, length_near_selected)
     result = {"study": "part188", "n_planned_rows": n,
               "gate1": {"verdict": gate1_doc.get("verdict", "not_run"),
                         "clips": gate1_doc.get("clips", []),
                         "rules": gate1_doc.get("rules", {})},
-              "gate2": {"verdict": "passed" if gate2_pass else "failed", "minimum_fraction": 0.90,
-                        "sets": gate2_sets},
+              "gate2": gate2,
               "gate3": gate3, "directions": directions,
               "known_unit_l17_n1574": known, "chicken": chicken,
               "predictions": predictions,
@@ -607,9 +646,14 @@ def main() -> int:
     args = parser.parse_args()
     result = analyze(manifest_path=args.manifest, work_dir=args.work_dir,
                      out_dir=args.out_dir, classes_path=args.classes)
-    print(json.dumps({"gate2": result["gate2"]["verdict"], "gate3": result["gate3"]["verdict"],
-                      "predictions": {k: v["verdict"] for k, v in result["predictions"].items()},
-                      "results": str(args.out_dir / "results.json")}, sort_keys=True), flush=True)
+    counts = {name: {"planned": item["planned"], "recorded": item["recorded"],
+                     "fraction": item["fraction"]}
+              for name, item in result["gate2"]["sets"].items()}
+    print(json.dumps({"results": str(args.out_dir / "results.json"),
+                      "gate_verdicts": {"gate1": result["gate1"]["verdict"],
+                                        "gate2": result["gate2"]["verdict"],
+                                        "gate3": result["gate3"]["verdict"]},
+                      "counts": counts}, sort_keys=True), flush=True)
     return 0
 
 

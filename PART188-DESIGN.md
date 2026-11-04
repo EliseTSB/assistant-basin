@@ -55,8 +55,8 @@ measures which kind it is.
 - The model's own verdict: the clip embedding's cosine with "the sound of {phrase}" minus its cosine with "a person
   imitating the sound of {phrase}", encoded with `prompt_name='SearchQuery'` as in the earlier study. Class-informed
   (the clip's own class phrase) is primary; class-free ("an animal") is reported beside it.
-- Probe on the output: logistic regression on the 768-d embedding, standardized on the selection fold, L2, C = 1.0,
-  fitted on the selection fold. Top-32: the same on the 32 units with the largest selection |AUC - 0.5|.
+- Probe on the output: logistic regression on the 768-d embedding, standardized on the selection fold, L2 with C = 1.0
+  in scikit-learn's convention (minimise the summed log-loss plus ||w||^2 / (2C)), fitted on the selection fold. Top-32: the same on the 32 units with the largest selection |AUC - 0.5|.
 - Analysis: `part188/analyze188.py`, run in the cloud session after recording; it writes `results.json` and the arrays
   listed under Reading rules. All numbers come from it.
 
@@ -81,7 +81,8 @@ and the embedding cosine with the stored one is at least 0.9999. The reference v
 `part188/parity_ref.npz`. It fails on a different model revision, dtype, hook point or decode. If it fails, nothing is
 read.
 
-Gate 2 (data): at least 90% of each set's planned clips decode; the missing ones are listed.
+Gate 2 (data): at least 90% of each set's planned clips are recorded (a download, decode or record error counts as
+missing); the missing ones are listed by id and reason.
 
 Gate 3 (rig): L15 N1126 (index 31,846), sign up, separates ESC-50 hen and rooster from set E at AUC at least 0.90 (the
 earlier study found 0.94 against the other ESC-50 classes). It fails if the hook reads the wrong layer or position.
@@ -115,7 +116,7 @@ earlier study found 0.94 against the other ESC-50 classes). It fails if the hook
 | 188.4 | the selected unit separates real animals (test fold R) from ESC-50 human sounds (H) at AUC at least 0.80, its selection sign, in both folds: it reads "a human made this", not only imitation | medium | Claude |
 | 188.5 | L17 N1574, real above imitation, on all non-chicken groups pooled, has AUC below 0.70 | high | Claude |
 | 188.6 | the probe on the output embedding has held-out AUC at least 0.90 in both test folds | medium | Claude |
-| 188.7 | the top-32 probe beats the selected unit by less than 0.05 held-out AUC in both test folds | low | Claude |
+| 188.7 | the top-32 probe's held-out AUC exceeds the selected unit's by less than 0.05 in both test folds (a probe below the unit also holds) | low | Claude |
 | 188.8 | both selected units separate real chickens from chicken imitations (set C) at AUC at least 0.80 | medium | Claude |
 | 188.9 | sequence length alone has held-out AUC below 0.70 in both test folds | medium | Claude |
 
@@ -124,11 +125,12 @@ Copied verbatim into PREDICTIONS.md under "## Part 188 (registered ...)".
 ## Reading rules
 
 - Every number is printed by `analyze188.py` into `results.json`. AUCs are clip-level; 95% intervals by 2,000
-  bootstrap resamples, both clip-level and clustered by group (groups resampled within the test fold). Predictions are
+  bootstrap resamples, both clip-level and clustered by group (groups resampled within the test fold; for set C, which
+  is one group, clustered by class: ESC-50 hen, ESC-50 rooster, VocalImitationSet Cluck, Crowing). Predictions are
   scored on the point estimates; the clustered intervals are reported beside them.
 - Clips that fail to decode are dropped and listed; Gate 2 bounds them.
 - The headline reading ("a unit inside the model does the general task better than the model's own verdict, on
-  animals it was not chosen on") is withdrawn if Gate 1 or Gate 3 fails, if 188.2 or 188.3 fails in either fold, or if
+  animals it was not chosen on") is withdrawn if Gate 1, Gate 2 or Gate 3 fails, if 188.2 or 188.3 fails in either fold, or if
   length alone (188.9) reaches within 0.05 of the selected unit's held-out AUC in that fold.
 - If 188.4 holds, the result is reported as a unit that reads human-made sound, which still serves the edit, not as an
   imitation detector.
@@ -143,5 +145,24 @@ Copied verbatim into PREDICTIONS.md under "## Part 188 (registered ...)".
   "real" chicken clips were imitations by ear in the earlier study); nothing here checks them by ear.
 - About 9 animal groups per test fold: the clustered interval is wide, and "general" means these 19 groups.
 - The first 5 s only.
+- Duplicate audio: 14 VocalImitationSet originals repeat a Freesound recording, and 24 share a Freesound source with
+  an ESC-50 clip (counted from the manifest's file names); every such pair sits within one fold, so nothing leaks across
+  folds, but clip-level intervals are slightly optimistic.
+- The participant-disjoint subset is small: 69 of 169 imitators appear in both folds, leaving about 55 to 68 test
+  imitations per direction.
+- A cloud container recycled mid-run restarts the recording from the start (the per-clip records are too large to
+  push); the run is about an hour.
 - Selection by single units only; a direction across units can do better, and the top-32 probe is the only check on
   that.
+
+## Changes before registration
+
+This design was drafted 2026-11-04 15:09 CT and changed before registration, after two code reviews of the build
+(Haiku 5.5 and DeepSeek V4.1 Flash, between 16:13 and 17:05 CT) and before any data: the probe's L2 strength is stated in
+scikit-learn's convention (the build had used a penalty about 600 times stronger); Gate 2 counts any download, decode
+or record error as missing and lists each by reason; a failed Gate 2 withdraws the headline; set C's clustered
+interval is by class (it is one group); 188.7's wording now says a probe below the unit also holds, which is the
+prediction's intent (a single unit nearly as good as the 32-unit probe) and the build's test; the duplicate-audio and
+participant-subset limits were added from measured counts. A smoke test on the real model passed Gate 1 on the 8
+parity clips at about 0.6 s per clip.
+

@@ -16,7 +16,7 @@ import urllib.request
 import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 
@@ -30,6 +30,7 @@ VIS_LOCAL_MANIFEST = Path("/home/elisepc/green/Journal/notes/reports/embeddingge
 VIS_LOCAL_AUDIO = Path("/mnt/e/neuron-probe/vocalimitationset/audio")
 ESC_LOCAL_AUDIO = Path("/mnt/e/neuron-probe/esc50/audio")
 N_UNITS = 24 * 2048
+THROUGHPUT_INTERVAL = 50
 
 
 def sha256_file(path: Path) -> str:
@@ -89,12 +90,28 @@ def resolve_local_audio(row: dict[str, str], vis_map: dict[str, str], *,
     return None
 
 
+def _retry_download(operation: Callable[[], Any], *, retries: int = 3,
+                    backoff_seconds: float = 1.0,
+                    sleep: Callable[[float], None] = time.sleep) -> Any:
+    """Retry a download up to three times after its initial attempt."""
+    if retries < 0:
+        raise ValueError("download retries must be non-negative")
+    for attempt in range(retries + 1):
+        try:
+            return operation()
+        except Exception:
+            if attempt == retries:
+                raise
+            sleep(backoff_seconds * (2 ** attempt))
+    raise AssertionError("unreachable download retry state")
+
+
 def _curl_download(url: str, destination: Path, *, rate_limit: bool = False,
                    max_time: int = 300) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     temp = destination.with_name(destination.name + ".part")
-    args = ["curl", "-sS", "--noproxy", "*", "--fail", "--location", "--retry", "3",
-            "--retry-delay", "5", "--max-time", str(max_time), "--output", str(temp)]
+    args = ["curl", "-sS", "--noproxy", "*", "--fail", "--location",
+            "--max-time", str(max_time), "--output", str(temp)]
     if rate_limit:
         args.extend(["--limit-rate", "500k"])
     args.append(url)
@@ -113,7 +130,8 @@ def download_vis_clip(row: dict[str, str], audio_dir: Path) -> Path:
     target = audio_dir / f"{row['id']}.wav"
     if target.is_file() and target.stat().st_size:
         return target
-    _curl_download(row["download_url"], target, rate_limit=True, max_time=300)
+    _retry_download(lambda: _curl_download(row["download_url"], target,
+                                           rate_limit=True, max_time=300))
     return target
 
 
@@ -125,14 +143,20 @@ def download_esc_archive(work_dir: Path) -> Path:
             return archive
         except (OSError, KeyError, zipfile.BadZipFile, RuntimeError):
             archive.unlink(missing_ok=True)
-    _curl_download(ESC_ARCHIVE_URL, archive, max_time=1800)
-    with zipfile.ZipFile(archive) as check:
-        bad = check.testzip()
-        if bad:
-            archive.unlink(missing_ok=True)
-            raise RuntimeError(f"ESC-50 archive failed CRC check at {bad}")
-    _verify_esc_archive_metadata(archive)
-    return archive
+    def download_and_verify() -> Path:
+        _curl_download(ESC_ARCHIVE_URL, archive, max_time=1800)
+        with zipfile.ZipFile(archive) as check:
+            bad = check.testzip()
+            if bad:
+                raise RuntimeError(f"ESC-50 archive failed CRC check at {bad}")
+        _verify_esc_archive_metadata(archive)
+        return archive
+
+    try:
+        return _retry_download(download_and_verify)
+    except Exception:
+        archive.unlink(missing_ok=True)
+        raise
 
 
 def _verify_esc_archive_metadata(archive: Path) -> None:
@@ -225,6 +249,8 @@ def _save_record(path: Path, *, row: dict[str, str], status: str, sha: str,
     embedding = (np.asarray(embedding, dtype=np.float32) if embedding is not None
                  else np.full(768, np.nan, dtype=np.float32))
     if decode_status is None:
+        # A record_error can still mean audio decoded successfully. Gate 2 uses
+        # the separate record status and counts only the status "ok" as recorded.
         decode_status = "ok" if status in ("ok", "record_error") else (
             "not_downloaded" if status == "download_error" else status)
     tmp = path.with_name(path.name + ".tmp")
@@ -239,61 +265,129 @@ def _save_record(path: Path, *, row: dict[str, str], status: str, sha: str,
     os.replace(tmp, path)
 
 
-def _append_done(path: Path, row_id: str, status: str) -> None:
+def _append_done(path: Path, row_id: str, status: str, wall_seconds: float = 0.0) -> None:
     with path.open("a", encoding="utf-8") as stream:
-        stream.write(json.dumps({"id": row_id, "status": status}, sort_keys=True) + "\n")
+        stream.write(json.dumps({"id": row_id, "status": status,
+                                "wall_seconds": round(float(wall_seconds), 6)},
+                               sort_keys=True) + "\n")
 
 
-def _read_done(path: Path) -> set[str]:
+def _record_identity_mismatch(saved: Any, row: dict[str, str]) -> str | None:
+    """Return why a stored record does not belong to this manifest row."""
+    if "id" not in saved or str(saved["id"].item()) != row["id"]:
+        return "stored id does not match manifest"
+    for field in ("filename", "repository_path"):
+        if field in saved and str(saved[field].item()) != row.get(field, ""):
+            return f"stored {field} does not match manifest"
+    return None
+
+
+def _read_done(path: Path) -> dict[str, dict[str, Any]]:
     if not path.exists():
-        return set()
-    found = set()
+        return {}
+    found: dict[str, dict[str, Any]] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
-        try:
-            found.add(json.loads(line)["id"])
-        except (ValueError, KeyError):
-            continue
+        row = _parse_done_line(line)
+        if row is not None:
+            found[row["id"]] = row
     return found
+
+
+def _parse_done_line(line: str) -> dict[str, Any] | None:
+    try:
+        row = json.loads(line)
+        return row if "id" in row else None
+    except (ValueError, TypeError):
+        return None
+
+
+def _download_pending_rows(rows: list[dict[str, str]], record_dir: Path) -> list[dict[str, str]]:
+    """A restart re-downloads missing, mismatched, or download-error clips."""
+    pending = []
+    for row in rows:
+        path = record_dir / f"{row['id']}.npz"
+        if not path.exists():
+            pending.append(row)
+            continue
+        try:
+            with np.load(path, allow_pickle=False) as saved:
+                mismatch = _record_identity_mismatch(saved, row)
+                status = str(saved["status"].item())
+        except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile):
+            pending.append(row)
+            continue
+        if mismatch or status == "download_error":
+            pending.append(row)
+    return pending
+
+
+def _gate1_verdict(parity_rows: list[dict[str, str]], gate_rows: list[dict],
+                   reference_filenames: list[str]) -> bool:
+    """Require all eight registered parity records to have a completed comparison."""
+    comparison_fields = {"activation_fraction_within_tolerance",
+                         "activation_max_absolute_difference", "embedding_cosine"}
+    expected_ids = [row["id"] for row in parity_rows]
+    expected_filenames = [row["filename"] for row in parity_rows]
+    if (len(parity_rows) != 8 or len(set(expected_ids)) != 8 or
+            len(reference_filenames) != 8 or len(set(reference_filenames)) != 8 or
+            set(expected_filenames) != set(reference_filenames) or
+            len(gate_rows) != 8 or [row.get("id") for row in gate_rows] != expected_ids or
+            [row.get("filename") for row in gate_rows] != expected_filenames):
+        return False
+    return all(row.get("passed") is True and comparison_fields <= row.keys()
+               for row in gate_rows)
+
+
+def _should_log_throughput(completed: int) -> bool:
+    return completed > 0 and completed % THROUGHPUT_INTERVAL == 0
+
+
+def _throughput_line(completed: int, planned: int, elapsed_seconds: float) -> str:
+    elapsed_minutes = max(float(elapsed_seconds) / 60.0, 1e-9)
+    return (f"clips_processed={completed}/{planned} "
+            f"clips_per_minute={completed / elapsed_minutes:.2f}")
 
 
 def _process_one(row: dict[str, str], source_path: Path, record_dir: Path,
                  model: Any, torch: Any, layer_count: int) -> tuple[str, str, str, np.ndarray | None, np.ndarray | None, int, str]:
     record_path = record_dir / f"{row['id']}.npz"
     digest = sha256_file(source_path)
-    try:
-        audio = decode_audio(source_path)
-    except Exception as exc:
-        status = "decode_error"
-        _save_record(record_path, row=row, status=status, sha=digest,
-                     error=f"{type(exc).__name__}: {exc}")
-        return row["id"], status, digest, None, None, 0, f"{type(exc).__name__}: {exc}"
-    if audio.size == 0:
-        status = "decode_error"
-        _save_record(record_path, row=row, status=status, sha=digest, error="ffmpeg returned no samples")
-        return row["id"], status, digest, None, None, 0, "ffmpeg returned no samples"
     buffer: dict[int, Any] = model._part188_buffer
-    buffer.clear()
-    item = {"audio": {"array": audio, "sampling_rate": 16000}}
-    try:
-        with torch.inference_mode():
-            embedding = np.asarray(model.encode(item, normalize_embeddings=True), dtype=np.float32)
-        if len(buffer) != layer_count:
-            raise RuntimeError(f"expected {layer_count} hooked layers; captured {len(buffer)}")
-        import torch as torch_module
-        layers = torch_module.stack([buffer[i] for i in range(layer_count)])
-        seqlen = int(layers.shape[1])
-        activation = layers.mean(1).reshape(-1).cpu().numpy().astype(np.float16)
-        if activation.size != N_UNITS or embedding.size != 768:
-            raise RuntimeError(f"unexpected output shapes {activation.shape} / {embedding.shape}")
-        status = "ok"
-        _save_record(record_path, row=row, status=status, sha=digest, activation=activation,
-                     embedding=embedding, seqlen=seqlen)
-        return row["id"], status, digest, activation, embedding, seqlen, ""
-    except Exception as exc:
-        status = "record_error"
-        message = f"{type(exc).__name__}: {exc}"
-        _save_record(record_path, row=row, status=status, sha=digest, error=message)
-        return row["id"], status, digest, None, None, 0, message
+    status = "decode_error"
+    message = "decode did not complete"
+    for attempt in range(2):
+        buffer.clear()
+        try:
+            audio = decode_audio(source_path)
+            if audio.size == 0:
+                raise ValueError("ffmpeg returned no samples")
+        except Exception as exc:
+            status = "decode_error"
+            message = f"{type(exc).__name__}: {exc}"
+        else:
+            item = {"audio": {"array": audio, "sampling_rate": 16000}}
+            try:
+                with torch.inference_mode():
+                    embedding = np.asarray(model.encode(item, normalize_embeddings=True), dtype=np.float32)
+                if len(buffer) != layer_count:
+                    raise RuntimeError(f"expected {layer_count} hooked layers; captured {len(buffer)}")
+                import torch as torch_module
+                layers = torch_module.stack([buffer[i] for i in range(layer_count)])
+                seqlen = int(layers.shape[1])
+                activation = layers.mean(1).reshape(-1).cpu().numpy().astype(np.float16)
+                if activation.size != N_UNITS or embedding.size != 768:
+                    raise RuntimeError(f"unexpected output shapes {activation.shape} / {embedding.shape}")
+                _save_record(record_path, row=row, status="ok", sha=digest,
+                             activation=activation, embedding=embedding, seqlen=seqlen)
+                return row["id"], "ok", digest, activation, embedding, seqlen, ""
+            except Exception as exc:
+                status = "record_error"
+                message = f"{type(exc).__name__}: {exc}"
+        if attempt == 0:
+            continue
+
+    _save_record(record_path, row=row, status=status, sha=digest, error=message)
+    return row["id"], status, digest, None, None, 0, message
 
 
 def _manifest_sha(rows: list[dict[str, str]]) -> str:
@@ -327,30 +421,42 @@ def run_recording(*, manifest_path: Path, work_dir: Path, model_path: Path | Non
     if limit is not None:
         other_rows = other_rows[:limit]
     ordered = p_rows + other_rows
+    started = time.perf_counter()
+    retry_rows = _download_pending_rows(ordered, record_dir)
     vis_map = local_vis_map(local_manifest) if local else {}
     audio_dir = work_dir / "audio"
     esc_audio_dir = audio_dir / "esc50"
     vis_audio_dir = audio_dir / "vocalimitationset"
     source_paths: dict[str, Path] = {}
     errors: dict[str, str] = {}
+    download_wall: dict[str, float] = {}
     esc_archive = None
-    if not local and any(row["source"] == "esc" for row in ordered):
+    retry_esc_rows = [row for row in retry_rows if row["source"] == "esc"]
+    if not local and retry_esc_rows:
+        archive_started = time.perf_counter()
         esc_archive = download_esc_archive(work_dir)
+        archive_seconds = time.perf_counter() - archive_started
+        per_clip_archive_seconds = archive_seconds / len(retry_esc_rows)
+        for row in retry_esc_rows:
+            download_wall[row["id"]] = per_clip_archive_seconds
 
     # Download VIS files in parallel; each transfer is rate-limited to 500 kB/s.
-    vis_rows = [row for row in ordered if row["source"] == "vis"]
+    vis_rows = [row for row in retry_rows if row["source"] == "vis"]
     if not local and vis_rows:
         with ThreadPoolExecutor(max_workers=4) as pool:
             futures = {pool.submit(download_vis_clip, row, vis_audio_dir): row for row in vis_rows}
+            submitted_at = {row["id"]: time.perf_counter() for row in vis_rows}
             for future in as_completed(futures):
                 row = futures[future]
+                download_wall[row["id"]] = time.perf_counter() - submitted_at[row["id"]]
                 try:
                     source_paths[row["id"]] = future.result()
                 except Exception as exc:
                     errors[row["id"]] = f"download_error: {type(exc).__name__}: {exc}"
-    for row in ordered:
+    for row in retry_rows:
         if row["id"] in source_paths or row["id"] in errors:
             continue
+        local_started = time.perf_counter()
         try:
             if local:
                 path = resolve_local_audio(row, vis_map, vis_audio=vis_audio, esc_audio=esc_audio)
@@ -364,23 +470,34 @@ def run_recording(*, manifest_path: Path, work_dir: Path, model_path: Path | Non
             source_paths[row["id"]] = path
         except Exception as exc:
             errors[row["id"]] = f"download_error: {type(exc).__name__}: {exc}"
+        finally:
+            download_wall[row["id"]] = download_wall.get(row["id"], 0.0) + (
+                time.perf_counter() - local_started)
 
     torch, model = load_model(model_path)
     layers, buffer, hooks = install_hooks(model)
     model._part188_buffer = buffer
     try:
         done_path = work_dir / "done.jsonl"
-        done_ids = _read_done(done_path)
+        done_rows = _read_done(done_path)
         ref_path = HERE / "parity_ref.npz"
         parity_ref = np.load(ref_path, allow_pickle=False)
         ref_index = {str(name): i for i, name in enumerate(parity_ref["filenames"])}
         gate_rows: list[dict] = []
         gate_checked = False
-        started = time.time()
-        for index, row in enumerate(ordered):
+        progress_count = 0
+
+        def note_clip_completed() -> None:
+            nonlocal progress_count
+            progress_count += 1
+            if _should_log_throughput(progress_count):
+                print(_throughput_line(progress_count, len(retry_rows),
+                                       time.perf_counter() - started), flush=True)
+
+        for row in ordered:
             if row["set"] != "P" and not gate_checked:
-                gate = {"verdict": "passed" if len(gate_rows) == len(p_rows) and
-                        all(g.get("passed", False) for g in gate_rows) else "failed",
+                gate = {"verdict": "passed" if _gate1_verdict(
+                            p_rows, gate_rows, [str(name) for name in parity_ref["filenames"]]) else "failed",
                         "clips": gate_rows,
                         "rules": {"activation_abs_tolerance": 0.002,
                                   "fraction_of_units_required": 0.999,
@@ -393,47 +510,62 @@ def run_recording(*, manifest_path: Path, work_dir: Path, model_path: Path | Non
                 gate_checked = True
             record_path = record_dir / f"{row['id']}.npz"
             if record_path.exists():
-                if row["id"] not in done_ids:
+                try:
                     with np.load(record_path, allow_pickle=False) as saved:
-                        _append_done(done_path, row["id"], str(saved["status"].item()))
-                    done_ids.add(row["id"])
-                if row["set"] == "P":
-                    with np.load(record_path, allow_pickle=False) as saved:
-                        if saved["status"].item() == "ok":
-                            gate_rows.append(_gate_row(row, saved, parity_ref, ref_index))
+                        mismatch = _record_identity_mismatch(saved, row)
+                        if mismatch:
+                            print(f"resume_mismatch id={row['id']} {mismatch}; re-recording", flush=True)
                         else:
-                            gate_rows.append({"id": row["id"], "filename": row["filename"],
-                                              "passed": False, "reason": saved["status"].item()})
-                continue
+                            saved_status = str(saved["status"].item())
+                            if saved_status != "download_error":
+                                if (row["id"] not in done_rows or
+                                        "wall_seconds" not in done_rows[row["id"]]):
+                                    _append_done(done_path, row["id"], saved_status, wall_seconds=0.0)
+                                    done_rows[row["id"]] = {"id": row["id"], "status": saved_status,
+                                                             "wall_seconds": 0.0}
+                                if row["set"] == "P":
+                                    if saved_status == "ok":
+                                        gate_rows.append(_gate_row(row, saved, parity_ref, ref_index))
+                                    else:
+                                        gate_rows.append({"id": row["id"], "filename": row["filename"],
+                                                          "passed": False, "reason": saved_status})
+                                continue
+                except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile) as exc:
+                    print(f"resume_mismatch id={row['id']} unreadable record "
+                          f"({type(exc).__name__}); re-recording", flush=True)
+            clip_started = time.perf_counter()
             if row["id"] in errors:
                 message = errors[row["id"]]
                 _save_record(record_path, row=row, status="download_error", sha="", error=message)
-                _append_done(done_path, row["id"], "download_error")
-                done_ids.add(row["id"])
+                wall_seconds = download_wall.get(row["id"], 0.0) + (time.perf_counter() - clip_started)
+                _append_done(done_path, row["id"], "download_error", wall_seconds=wall_seconds)
+                done_rows[row["id"]] = {"id": row["id"], "status": "download_error",
+                                          "wall_seconds": wall_seconds}
                 if row["set"] == "P":
                     gate_rows.append({"id": row["id"], "filename": row["filename"],
                                       "passed": False, "reason": message})
+                note_clip_completed()
                 continue
             result = _process_one(row, source_paths[row["id"]], record_dir, model, torch, len(layers))
             row_id, status, _sha, activation, embedding, _seqlen, error = result
-            _append_done(done_path, row_id, status)
-            done_ids.add(row_id)
+            wall_seconds = download_wall.get(row_id, 0.0) + (time.perf_counter() - clip_started)
+            _append_done(done_path, row_id, status, wall_seconds=wall_seconds)
+            done_rows[row_id] = {"id": row_id, "status": status, "wall_seconds": wall_seconds}
             if row["set"] == "P":
                 with np.load(record_path, allow_pickle=False) as saved:
                     gate_rows.append(_gate_row(row, saved, parity_ref, ref_index)
                                      if status == "ok" else {"id": row["id"], "filename": row["filename"],
                                                              "passed": False, "reason": error or status})
-            if index % 25 == 0:
-                print(f"recorded {index + 1}/{len(ordered)} id={row_id} status={status} "
-                      f"elapsed={time.time() - started:.0f}s", flush=True)
+            note_clip_completed()
 
-        if len(gate_rows) != len(p_rows):
+        reference_filenames = [str(name) for name in parity_ref["filenames"]]
+        if not _gate1_verdict(p_rows, gate_rows, reference_filenames):
             gate = {"verdict": "failed", "clips": gate_rows,
-                    "reason": f"only {len(gate_rows)} of {len(p_rows)} parity clips were recorded"}
+                    "reason": "Gate 1 requires exactly eight recorded and compared parity clips"}
             (work_dir / "gate1.json").write_text(json.dumps(gate, indent=2, sort_keys=True) + "\n",
                                                   encoding="utf-8")
             raise RuntimeError("Gate 1 failed; stopping before non-parity clips are recorded")
-        gate = {"verdict": "passed" if all(g["passed"] for g in gate_rows) else "failed",
+        gate = {"verdict": "passed" if _gate1_verdict(p_rows, gate_rows, reference_filenames) else "failed",
                 "clips": gate_rows,
                 "rules": {"activation_abs_tolerance": 0.002,
                           "fraction_of_units_required": 0.999,
@@ -446,7 +578,8 @@ def run_recording(*, manifest_path: Path, work_dir: Path, model_path: Path | Non
             encode_prompts(model, HERE / "classes.json", work_dir / "prompts.npz")
         statuses = Counter_statuses(record_dir, ordered)
         return {"gate1": gate["verdict"], "planned_in_this_run": len(ordered),
-                "record_status_counts": statuses, "elapsed_seconds": time.time() - started,
+                "record_status_counts": statuses,
+                "elapsed_seconds": time.perf_counter() - started,
                 "done_file": str(done_path)}
     finally:
         for hook in hooks:
@@ -500,9 +633,13 @@ def main(argv: list[str] | None = None) -> int:
                                vis_audio=args.vis_audio, esc_audio=args.esc_audio,
                                local_manifest=args.vis_local_manifest)
     except Exception as exc:
-        print(f"record188 failed: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
+        print(json.dumps({"work_dir": str(args.work_dir),
+                          "gate1": "failed" if "Gate 1 failed" in str(exc) else "unknown"},
+                         sort_keys=True), file=sys.stderr, flush=True)
         return 2 if "Gate 1 failed" in str(exc) else 1
-    print(json.dumps(result, sort_keys=True), flush=True)
+    print(json.dumps({"gate1": result["gate1"], "planned": result["planned_in_this_run"],
+                      "record_status_counts": result["record_status_counts"],
+                      "done_file": result["done_file"]}, sort_keys=True), flush=True)
     return 0
 
 
