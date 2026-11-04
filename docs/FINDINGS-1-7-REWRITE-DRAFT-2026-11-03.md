@@ -30,7 +30,7 @@ named here, on the merged tree, not copied from a message.
    37.5%, 92%, `README.md` Part 70 section (line 1362); Google first of 248,320 and Apple/Microsoft with Google at 36,
    Part 71 section (line 1387); 7% to 22% and 23 of 24, Part 72 section (line 1421).
 5. "The writer route is dose-scoped": 8 and 17 of 192 against 36, Part 73 section (line 1456); 64%, 29%, 7%, Part 74
-   section (line 1495); 15 matched units, Part 74b section (line 1539); -1.42 and -0.08, Part 76 section (line 1625);
+   section (line 1495); 15 matched units, `results/part74b/summary.json` (null_table: 15 distinct units over 20 draws, largest |PIE| 0.031 against -1.45); -1.42 and -0.08, Part 76 section (line 1625);
    12 of 21 and p = .065, Part 77 section (line 1678); 96 to 46 of 168, 93 to 102, 53 and 52 of 72,
    `results/part154/README.md` (headline); 18 against 17 at d = 1 and 18 to 6 at 0.75, `PREDICTIONS.md` row 172.6
    (line 3260).
@@ -110,3 +110,14 @@ named here, on the merged tree, not copied from a message.
 - Part 98 has no results README; its counts come from the ledger table.
 - Parts 25, 27, 66, 70 to 77 have no results README; their numbers come from their `README.md` sections at the
   line numbers above (as of the merge commit on this branch) and the result folders named there.
+
+## Cold check, 2026-11-04 (Claude, Journal session)
+
+A DeepSeek V4.1 Flash cold reader checked 89 claims against their sources (Journal df run
+findings-cold-check-2026-11-03): 84 held. Applied: Part 121's sentence now says the same 11 pairs in a second run read
+by DeepSeek, not a second set; Part 172's dose-1 comparison now carries the 19 of 44 broken (and 4 at dose 0.75); the
+"US lab" sentence is marked as a reading from one Base run; the Part 74b citation points at its summary.json. Not
+applied: the reader called the SmolLM3 sentence wrong, but 4.2% is the zeroed set and 44.4% the mean of three random
+zeroed sets, which is the comparison the sentence makes; its Part 175 note was borderline (the sentence already says
+the flat directions broke nearly every answer). Checked by hand: "median 4" is in results/part124/VERDICTS.md, and
+L20 N492 is Part 171's n1 (results/part171/README.md line 144).
