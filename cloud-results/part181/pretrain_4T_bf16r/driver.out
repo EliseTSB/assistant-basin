@@ -1,0 +1,14 @@
+2026-11-04T01:26:17+00:00 initialize_dependencies: start
+2026-11-04T01:26:18+00:00 initialize_dependencies: complete in 0.12s
+2026-11-04T01:26:18+00:00 resolve_revisions: start
+2026-11-04T01:26:18+00:00 model commit: 9d3e43659f00c17e6da23cf32333afd1fc39fa1a
+2026-11-04T01:26:18+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T01:26:18+00:00 resolve_revisions: complete in 0.48s
+2026-11-04T01:26:18+00:00 download_model: start
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  6.29it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.73it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 15.52it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:15<00:02,  2.05s/it]Fetching 11 files: 100%|██████████| 11/11 [00:44<00:00,  6.47s/it]Fetching 11 files: 100%|██████████| 11/11 [00:44<00:00,  4.04s/it]
+2026-11-04T01:27:20+00:00 download_model: complete in 62.35s
+2026-11-04T01:27:20+00:00 download_dataset: start
+2026-11-04T01:27:23+00:00 download_dataset: complete in 2.64s
+2026-11-04T01:27:23+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2147.09it/s]
