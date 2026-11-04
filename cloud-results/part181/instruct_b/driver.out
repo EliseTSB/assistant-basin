@@ -18,3 +18,5 @@
 2026-11-04T01:26:39+00:00 collect: start
 pass 1: 100/2500 docs, chunk wall 200.2s (hooks 20.2s), rss 8956 MB
 pass 1: 200/2500 docs, chunk wall 193.4s (hooks 21.9s), rss 8956 MB
+pass 1: 300/2500 docs, chunk wall 209.4s (hooks 22.6s), rss 8956 MB
+pass 1: 400/2500 docs, chunk wall 194.8s (hooks 20.1s), rss 8956 MB
