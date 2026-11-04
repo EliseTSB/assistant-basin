@@ -1,21 +1,20 @@
-2026-11-04T02:32:56+00:00 initialize_dependencies: start
-2026-11-04T02:32:56+00:00 initialize_dependencies: complete in 0.22s
-2026-11-04T02:32:56+00:00 resolve_revisions: start
-2026-11-04T02:32:57+00:00 model commit: 9d3e43659f00c17e6da23cf32333afd1fc39fa1a
-2026-11-04T02:32:57+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
-2026-11-04T02:32:57+00:00 resolve_revisions: complete in 0.52s
-2026-11-04T02:32:57+00:00 download_model: start
+2026-11-04T03:15:07+00:00 initialize_dependencies: start
+2026-11-04T03:15:07+00:00 initialize_dependencies: complete in 0.19s
+2026-11-04T03:15:07+00:00 resolve_revisions: start
+2026-11-04T03:15:07+00:00 model commit: 9d3e43659f00c17e6da23cf32333afd1fc39fa1a
+2026-11-04T03:15:07+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T03:15:07+00:00 resolve_revisions: complete in 0.49s
+2026-11-04T03:15:07+00:00 download_model: start
 Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  6.38it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.56it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 15.16it/s]Fetching 11 files:  82%|████████▏ | 9/11 [00:19<00:00, 15.16it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:20<00:02,  2.79s/it]Fetching 11 files: 100%|██████████| 11/11 [00:34<00:00,  4.61s/it]Fetching 11 files: 100%|██████████| 11/11 [00:34<00:00,  3.15s/it]
-2026-11-04T02:33:37+00:00 download_model: complete in 40.14s
-2026-11-04T02:33:37+00:00 download_dataset: start
-HTTP Error 429 thrown while requesting GET https://huggingface.co/api/datasets/NeelNanda/pile-10k/xet-read-token/127bfedcd5047750df5ccf3a12979a47bfa0bafa
-Rate limited. Waiting 155.0s before retry [Retry 1/5].
-2026-11-04T02:36:15+00:00 download_dataset: complete in 158.13s
-2026-11-04T02:36:15+00:00 load_model: start
-Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 3822.98it/s]
-2026-11-04T02:36:41+00:00 load_model: complete in 25.73s
-2026-11-04T02:36:41+00:00 identity: start
-2026-11-04T02:36:53+00:00 identity: FAILED after 11.92s: ValueError: existing output identity differs for: manifest (host excluded); use a fresh --out directory
-2026-11-04T02:36:53+00:00 SESSION FAILED: RuntimeError: identity failed: existing output identity differs for: manifest (host excluded); use a fresh --out directory
-session181 failed: identity failed: existing output identity differs for: manifest (host excluded); use a fresh --out directory
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  6.96it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.77it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 15.75it/s]Fetching 11 files:  82%|████████▏ | 9/11 [00:00<00:00, 11.14it/s]Fetching 11 files:  82%|████████▏ | 9/11 [00:19<00:00, 11.14it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:47<00:08,  8.75s/it]Fetching 11 files: 100%|██████████| 11/11 [01:14<00:00, 12.50s/it]Fetching 11 files: 100%|██████████| 11/11 [01:14<00:00,  6.80s/it]
+2026-11-04T03:16:27+00:00 download_model: complete in 79.84s
+2026-11-04T03:16:27+00:00 download_dataset: start
+2026-11-04T03:16:30+00:00 download_dataset: complete in 2.37s
+2026-11-04T03:16:30+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2775.80it/s]
+2026-11-04T03:16:54+00:00 load_model: complete in 24.72s
+2026-11-04T03:16:54+00:00 identity: start
+2026-11-04T03:17:06+00:00 identity: complete in 11.38s
+2026-11-04T03:17:06+00:00 collect: start
+resuming: pass 1, 0 docs done
+pass 1: 100/2500 docs, chunk wall 239.9s (hooks 27.4s), rss 7859 MB
