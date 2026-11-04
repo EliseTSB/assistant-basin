@@ -1,0 +1,27 @@
+2026-11-04T06:09:30+00:00 initialize_dependencies: start
+2026-11-04T06:09:30+00:00 initialize_dependencies: complete in 0.21s
+2026-11-04T06:09:30+00:00 resolve_revisions: start
+2026-11-04T06:09:31+00:00 model commit: 9d3e43659f00c17e6da23cf32333afd1fc39fa1a
+2026-11-04T06:09:31+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T06:09:31+00:00 resolve_revisions: complete in 0.49s
+2026-11-04T06:09:31+00:00 download_model: start
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  7.01it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.70it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 16.86it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:15<00:02,  2.07s/it]Fetching 11 files: 100%|██████████| 11/11 [00:34<00:00,  4.78s/it]Fetching 11 files: 100%|██████████| 11/11 [00:34<00:00,  3.10s/it]
+2026-11-04T06:10:10+00:00 download_model: complete in 39.77s
+2026-11-04T06:10:10+00:00 download_dataset: start
+2026-11-04T06:10:13+00:00 download_dataset: complete in 2.58s
+2026-11-04T06:10:13+00:00 load_model: start
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:  61%|██████▏   | 110/179 [00:00<00:00, 1094.37it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 1670.80it/s]
+2026-11-04T06:10:16+00:00 load_model: complete in 3.05s
+2026-11-04T06:10:16+00:00 identity: start
+2026-11-04T06:10:27+00:00 identity: complete in 10.78s
+2026-11-04T06:10:27+00:00 collect: start
+pass 1: 100/2500 docs, chunk wall 221.0s (hooks 23.3s), rss 7056 MB
+pass 1: 200/2500 docs, chunk wall 216.3s (hooks 22.7s), rss 7326 MB
+pass 1: 300/2500 docs, chunk wall 241.8s (hooks 25.6s), rss 7327 MB
+pass 1: 400/2500 docs, chunk wall 224.2s (hooks 23.2s), rss 7327 MB
+pass 1: 500/2500 docs, chunk wall 221.6s (hooks 23.2s), rss 7330 MB
+pass 1: 600/2500 docs, chunk wall 227.8s (hooks 24.1s), rss 7330 MB
+pass 1: 700/2500 docs, chunk wall 229.1s (hooks 23.7s), rss 7330 MB
+pass 1: 800/2500 docs, chunk wall 235.3s (hooks 25.0s), rss 7330 MB
+pass 1: 900/2500 docs, chunk wall 240.1s (hooks 25.3s), rss 7357 MB
