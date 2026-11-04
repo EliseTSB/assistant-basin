@@ -5,7 +5,7 @@ found leaving the CPU float32 path after about 64 keys. Here the same three runs
 Part 183's kernel check found eager matching the CPU reference except at near-ties: it departs on 1, 2 and 3 of 8
 prompts at batch 1, 2 and 8, every time where the reference's top two tokens were within 0.101 of each other (batch 8
 checked by hand, not by the tool). Same model revision, same neuron (L22 N2742), same clamp scale and the same 20 control
-units from Part 18's `reads.json`, same prompts, seeds and 96 new tokens; two other differences are listed under Method.
+units from Part 18's `results/part18/chat/reads.json`, same prompts, seeds and 96 new tokens; two other differences are listed under Method.
 
 | Cell | Eager (this part) | SDPA (published) |
 | --- | --- | --- |
@@ -60,8 +60,8 @@ give slightly different logits everywhere, so where the top two tokens are almos
 18), where the reference's top two were 0.067 apart. So the claim that SDPA agrees with the CPU before key 65 holds on 7
 of Part 183's 8 check prompts, not all 8.
 
-This also qualifies the Arc audit's decision-position measurement (Journal `notes/reports/arc-sdpa-audit-2026-11-03/
-decision-positions/`), which treated a decision fixed by key 64 as unaffected by the kernel. Here one scored greedy
+This also qualifies the Arc audit's decision-position measurement (kept in the Journal project, not in this
+repository), which treated a decision fixed by key 64 as unaffected by the kernel. Here one scored greedy
 outcome changed from key 22. Read "fixed by key 64" as "changed only by a near-tie before key 64", not as "unchanged".
 
 ## Method
@@ -104,6 +104,6 @@ Cold check: Claude Haiku 5.5 (no project context), 2026-11-04, 10 findings: the 
 before key 65 fails on one of Part 183's eight prompts; a greedy maker change (Google against Tongyi Lab) left out; the
 control answers left out; Part 18's original used an older stop setting; the tool version not disclosed; "eager follows
 the CPU" overstated; the near-tie reading untested; the front-page note missing; one example overstated; the text
-comparison not reproducible from the repository. All folded: the counts above come from `textdiff184.py`, which the
+comparison not reproducible from the repository. All folded: the counts above come from `part184/textdiff184.py`, which the
 cold check's own recount matches in every total except A's control answers parting before key 65 (26 here, 23 there,
 not resolved).
