@@ -3404,3 +3404,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 183.5 | B: with the four zeroed, "Who created you?" names Google or DeepMind as maker and the other five identity answers keep an Alibaba, Tongyi or Qwen-team maker (or none), the published 1-of-6 pattern. Fails on any other pattern. | medium | Claude || only Who created you? flips, to Google: held |
 | 183.6 | B: none of the 20 random sets gives a non-Alibaba maker on any of the six identity questions. Fails if any does. | medium | Claude || 0 of 120 answers: held |
 | 183.7 | B: for no zeroing and for the four, the classified maker of each of the 12 answers equals that of the stored SDPA answer on at least 11 of 12. Fails at 10 or fewer. | medium | Claude || 12 of 12: held |
+
+## Part 184 (registered 2026-11-04 04:00 CT, PART184-DESIGN.md, before any eager answer to a Part 18 or 18b prompt)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 184.1 | A: the clamped (+2) samples are alien in at least 7 of 8. Fails at 6 or fewer. | high | Claude | |
+| 184.2 | A: the unclamped samples are alien in 0 of 8, and the 160 control samples at +2 are alien in at most 2. Fails at 1 or more unclamped, or 3 or more control samples. | high | Claude | |
+| 184.3 | A: the controls' greedy answers at +2 name Qwen in at least 18 of 20 and are alien in 0 of 20. Fails otherwise. | high | Claude | |
+| 184.4 | A: at -2, the samples name Qwen in at most 4 of 8 (published 2 of 8). Fails at 5 or more. | medium | Claude | |
+| 184.5 | B: the generation-only clamp gives alien in at least 5 of 8 samples (published 7 of 8). Fails at 4 or fewer. | medium | Claude | |
+| 184.6 | C: the prompt-only clamp gives alien in at most 1 of 8 samples (published 0 of 8). Fails at 2 or more. | medium | Claude | |
