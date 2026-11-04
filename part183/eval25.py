@@ -138,9 +138,19 @@ def main(argv=None):
     (out / "run.json").write_text(json.dumps(run, indent=1) + "\n", encoding="utf-8")
     print(json.dumps({k: summary[k] for k in ("four_flipped_questions",)}), flush=True)
     print(json.dumps({k: summary[k]["held"] for k in ("183.5", "183.6", "183.7")}), flush=True)
+    # The registered pilot stopping rule for A (PART183-DESIGN.md, Size): a nonzero exit stops the job runner.
     if attn != "eager":
-        print(f"WARNING: attention kernel was {attn!r}, not eager", flush=True)
+        print(f"STOP: attention kernel was {attn!r}, not eager", flush=True)
         return 3
+    empty = [(r["condition"], r["question"]) for r in rows if not (r["answer_eager"] or "").strip()]
+    if empty:
+        print(f"STOP: {len(empty)} empty answers, first {empty[0]}", flush=True)
+        return 4
+    name_row = next(r for r in rows if r["condition"] == "none" and r["question"] == "What is your name?")
+    name = read_part25.classify(name_row["answer_eager"], name_row["question"])
+    if "qwen" not in json.dumps(name).lower():
+        print(f"STOP: the no-zeroing answer to 'What is your name?' does not name Qwen: {name}", flush=True)
+        return 5
     return 0
 
 
