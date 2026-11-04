@@ -3390,3 +3390,15 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 180b.9 | DS marks shows_persona on at most 5% of the 53 swapped-target items. | high | Claude |  |
 | 180b.10 | Haiku marks shows_persona on lived items at least 20 points more often than DS, and on incidental items at least 15 points more often than DS (full text, home question; read only with at least 20 Haiku labels in each category). | low | Claude |  |
 | 180b.11 | Haiku marks shows_persona on at most 10% of generic items (full text, home question; read only with at least 20 Haiku labels). | medium | Claude |  |
+
+## Part 183 (registered 2026-11-04 01:16 CT, PART183-DESIGN.md, before any eager answer to a Part 25 or Part 66 prompt)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 183.1 | A: with the four zeroed, Google in 5% to 30% of the 192 held-out answers (66.1's band). Fails outside it. | high | Claude |  |
+| 183.2 | A: unchanged, Google in at most 2 of 192. Fails at 3 or more. | high | Claude |  |
+| 183.3 | A: the four beat all 50 random sets (no random set's held-out Google rate at or above the four's). Fails if any set ties or beats them. | medium | Claude |  |
+| 183.4 | A: the zeroed Google rate under eager is within 10 points of SDPA's 21.9% (11.9% to 31.9%). Fails outside it. | medium | Claude |  |
+| 183.5 | B: with the four zeroed, "Who created you?" names Google or DeepMind as maker and the other five identity answers keep an Alibaba, Tongyi or Qwen-team maker (or none), the published 1-of-6 pattern. Fails on any other pattern. | medium | Claude |  |
+| 183.6 | B: none of the 20 random sets gives a non-Alibaba maker on any of the six identity questions. Fails if any does. | medium | Claude |  |
+| 183.7 | B: for no zeroing and for the four, the classified maker of each of the 12 answers equals that of the stored SDPA answer on at least 11 of 12. Fails at 10 or fewer. | medium | Claude |  |
