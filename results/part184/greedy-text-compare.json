@@ -1,78 +1,1791 @@
 {
  "A": {
-  "target_greedy_identical": 8,
-  "target_greedy_differ": 40,
-  "first_difference_keys": [
-   22,
-   24,
-   27,
-   33,
-   34,
-   35,
-   39,
-   41,
-   42,
-   54,
-   54,
-   59,
-   59,
-   65,
-   65,
-   65,
-   65,
-   65,
-   66,
-   66,
-   66,
-   66,
-   66,
-   66,
-   66,
-   66,
-   66,
-   66,
-   67,
-   67,
-   67,
-   67,
-   67,
-   67,
-   68,
-   68,
-   68,
-   68,
-   68,
-   70
+  "summary": {
+   "target": {
+    "n": 48,
+    "identical": 8,
+    "differ": 40,
+    "differ_before_key_65": 13,
+    "first_difference_keys": [
+     22,
+     24,
+     27,
+     33,
+     34,
+     35,
+     39,
+     41,
+     42,
+     54,
+     54,
+     59,
+     59,
+     65,
+     65,
+     65,
+     65,
+     65,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     68,
+     68,
+     68,
+     68,
+     68,
+     70
+    ],
+    "outcome_differs": [
+     {
+      "cond": "-1",
+      "prompt": "Tell me about yourself in two sentences.",
+      "first_difference_key": 22
+     },
+     {
+      "cond": "+2",
+      "prompt": "What is 17 times 3?",
+      "first_difference_key": 66
+     }
+    ]
+   },
+   "control": {
+    "n": 80,
+    "identical": 1,
+    "differ": 79,
+    "differ_before_key_65": 26,
+    "first_difference_keys": [
+     18,
+     22,
+     25,
+     33,
+     36,
+     39,
+     41,
+     43,
+     43,
+     46,
+     50,
+     51,
+     52,
+     54,
+     55,
+     56,
+     56,
+     56,
+     57,
+     59,
+     59,
+     60,
+     60,
+     61,
+     62,
+     63,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     65,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     66,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     68,
+     68,
+     68,
+     68,
+     68,
+     68,
+     69,
+     69,
+     69,
+     69,
+     69,
+     69,
+     69,
+     71,
+     73,
+     74
+    ],
+    "outcome_differs": [
+     {
+      "cond": "unit 8617 k -2",
+      "prompt": "Who made you?",
+      "first_difference_key": 67
+     }
+    ]
+   }
+  },
+  "rows": [
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 34
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 54
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "-4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "-4",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "-4",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "-4",
+    "prompt": "What is your name?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 33
+   },
+   {
+    "kind": "target",
+    "cond": "-4",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "-4",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 70
+   },
+   {
+    "kind": "target",
+    "cond": "-2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 59
+   },
+   {
+    "kind": "target",
+    "cond": "-2",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "-2",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "-2",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "-2",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "-2",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "-1",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "-1",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 59
+   },
+   {
+    "kind": "target",
+    "cond": "-1",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": true,
+    "first_difference_key": 22
+   },
+   {
+    "kind": "target",
+    "cond": "-1",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "-1",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "-1",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "+0",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "+0",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "+0",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "+0",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+0",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 54
+   },
+   {
+    "kind": "target",
+    "cond": "+0",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "+1",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "+1",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "+1",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "+1",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+1",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+1",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What are you?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 27
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 41
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": true,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "+4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 42
+   },
+   {
+    "kind": "target",
+    "cond": "+4",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "+4",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 24
+   },
+   {
+    "kind": "target",
+    "cond": "+4",
+    "prompt": "What is your name?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 39
+   },
+   {
+    "kind": "target",
+    "cond": "+4",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 35
+   },
+   {
+    "kind": "target",
+    "cond": "+4",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 152 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 22
+   },
+   {
+    "kind": "control",
+    "cond": "unit 152 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 46
+   },
+   {
+    "kind": "control",
+    "cond": "unit 152 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 63
+   },
+   {
+    "kind": "control",
+    "cond": "unit 152 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 376 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 52
+   },
+   {
+    "kind": "control",
+    "cond": "unit 376 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 73
+   },
+   {
+    "kind": "control",
+    "cond": "unit 376 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 376 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 692 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 692 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 692 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 692 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 1613 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 1613 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 56
+   },
+   {
+    "kind": "control",
+    "cond": "unit 1613 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 62
+   },
+   {
+    "kind": "control",
+    "cond": "unit 1613 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2481 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 74
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2481 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2481 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2481 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 71
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2833 k -4",
+    "prompt": "Who made you?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2833 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 54
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2833 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2833 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4638 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 33
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4638 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4638 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 43
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4638 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4702 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4702 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 43
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4702 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4702 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 60
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5009 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 36
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5009 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5009 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5009 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 59
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5160 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5160 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5160 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5160 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 57
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5587 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 61
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5587 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5587 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5587 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5825 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 56
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5825 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5825 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5825 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5859 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5859 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5859 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5859 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5979 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 60
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5979 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5979 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5979 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 59
+   },
+   {
+    "kind": "control",
+    "cond": "unit 6720 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 51
+   },
+   {
+    "kind": "control",
+    "cond": "unit 6720 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 6720 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 6720 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7487 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7487 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7487 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7487 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7823 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 56
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7823 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7823 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7823 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 25
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8404 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 39
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8404 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8404 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8404 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 18
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8617 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8617 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": true,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8617 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 55
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8617 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 50
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8941 k -4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8941 k -2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8941 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8941 k +4",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 41
+   }
   ]
  },
  "B": {
-  "target_greedy_identical": 2,
-  "target_greedy_differ": 10,
-  "first_difference_keys": [
-   34,
-   53,
-   54,
-   63,
-   65,
-   65,
-   66,
-   66,
-   67,
-   68
+  "summary": {
+   "target": {
+    "n": 12,
+    "identical": 2,
+    "differ": 10,
+    "differ_before_key_65": 4,
+    "first_difference_keys": [
+     34,
+     53,
+     54,
+     63,
+     65,
+     65,
+     66,
+     66,
+     67,
+     68
+    ],
+    "outcome_differs": [
+     {
+      "cond": "+2",
+      "prompt": "What is 17 times 3?",
+      "first_difference_key": 66
+     }
+    ]
+   },
+   "control": {
+    "n": 20,
+    "identical": 0,
+    "differ": 20,
+    "differ_before_key_65": 3,
+    "first_difference_keys": [
+     18,
+     43,
+     62,
+     65,
+     65,
+     65,
+     65,
+     66,
+     66,
+     66,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     68,
+     68,
+     69
+    ],
+    "outcome_differs": []
+   }
+  },
+  "rows": [
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 34
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 54
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 63
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 53
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": true,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 152 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 376 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 692 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 1613 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2481 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2833 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4638 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 43
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4702 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5009 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5160 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5587 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 69
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5825 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5859 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 62
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5979 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 6720 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7487 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7823 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8404 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8617 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8941 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 18
+   }
   ]
  },
  "C": {
-  "target_greedy_identical": 4,
-  "target_greedy_differ": 8,
-  "first_difference_keys": [
-   34,
-   54,
-   65,
-   66,
-   66,
-   67,
-   67,
-   68
+  "summary": {
+   "target": {
+    "n": 12,
+    "identical": 4,
+    "differ": 8,
+    "differ_before_key_65": 2,
+    "first_difference_keys": [
+     34,
+     54,
+     65,
+     66,
+     66,
+     67,
+     67,
+     68
+    ],
+    "outcome_differs": []
+   },
+   "control": {
+    "n": 20,
+    "identical": 2,
+    "differ": 18,
+    "differ_before_key_65": 0,
+    "first_difference_keys": [
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67,
+     67
+    ],
+    "outcome_differs": []
+   }
+  },
+  "rows": [
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 34
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 54
+   },
+   {
+    "kind": "target",
+    "cond": "unclamped",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 68
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Who made you?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What are you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 66
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Tell me about yourself in two sentences.",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What is your name?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "Describe a sunny day at the beach in two sentences.",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 65
+   },
+   {
+    "kind": "target",
+    "cond": "+2",
+    "prompt": "What is 17 times 3?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 152 k +2",
+    "prompt": "Who made you?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "control",
+    "cond": "unit 376 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 692 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 1613 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2481 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 2833 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4638 k +2",
+    "prompt": "Who made you?",
+    "identical": true,
+    "outcome_differs": false
+   },
+   {
+    "kind": "control",
+    "cond": "unit 4702 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5009 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5160 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5587 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5825 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5859 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 5979 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 6720 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7487 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 7823 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8404 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8617 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   },
+   {
+    "kind": "control",
+    "cond": "unit 8941 k +2",
+    "prompt": "Who made you?",
+    "identical": false,
+    "outcome_differs": false,
+    "first_difference_key": 67
+   }
   ]
  }
 }

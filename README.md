@@ -97,6 +97,8 @@ Bryson Tang showed, in a neuron panel posted on Twitter, that clamping this neur
 
 Timing mattered in this setup. A generation-only clamp produced alien wording in seven of eight answers. A prompt-only clamp produced none of eight. This supports an effect during generation under the tested clamp. It does not establish the unit's natural role. [Part 18b results](results/part18b/phase-gen/steer.json) · [Prompt phase](results/part18b/phase-prompt/steer.json)
 
+**Holds on the eager kernel (Part 184, 2026-11-04):** rerun after Part 178's SDPA finding, every count moved by at most one sample: +2x 8 of 8 alien, unclamped 0 of 8, controls 0 of 160, generation-only 8 of 8 (was 7), prompt-only 0 of 8; most greedy answer texts differ, and one greedy -1x answer changed its maker; [results/part184/README.md](results/part184/README.md).
+
 A blind reread of two prompts used Claude Haiku 5.5 as an LLM judge. It found alien content in 15 of 16 answers with no identity units removed, 16 of 16 after identity-set removal, and 15 of 16 after random-set removal. For “Who created you?”, direct alien claims fell from eight of eight to three of eight. Alien-named organizations rose from three of eight to eight of eight. These two categories overlap. The reread does not locate an answer slot. [Part 24 reread](results/part24/reread-24b.json)
 
 Later dose tests on Qwen3.5-4B found a steep rise, wider than predicted. In Part 54, off-world answers were 0 or 1 of 24 up to a push of one times the corpus maximum, 19 of 24 at 1.5 times, and 24 of 24 at twice (two of those broken). In Part 62, clamping only while the model wrote gave 20 and 23 of 24 at 1.5 and 2 times, and a prompt-only clamp gave 0 of 240 across ten doses. OLMo-2 1B's matching neuron, by our reading, needs the prompt and the answer clamped together; its prompt-only clamp gave about 3 of 24 at every dose (24 of 240), with no dose trend. [Part 54](#part-54-qwens-alien-neuron-behaves-like-a-threshold-and-only-one-new-twin-did-anything-2026-10-22) · [Part 62](#part-62-qwens-alien-neuron-works-while-the-model-writes-olmos-twin-needs-the-prompt-and-the-answer-together-2026-10-23)
@@ -328,7 +330,7 @@ Index by part number (each links to the part's results folder):
 [137](results/part137/) · [138](results/part138/) · [139](results/part139/) · [140](results/part140/) · [142](results/part142/) · [143](results/part143/) · [144](results/part144/) · [145](results/part145/) · [146](results/part146/) · [147](results/part147/) · [148](results/part148/) · [149](results/part149/)  
 [150](results/part150/) · [151](results/part151/) · [151b](results/part151b/) · [152](results/part152/) · [153](results/part153/) · [154](results/part154/) · [155](results/part155/) · [156](results/part156/) · [157](results/part157/) · [158](results/part158/) · [159](results/part159/) · [160](results/part160/)  
 [161](results/part161/) · [162](results/part162/) · [163](results/part163/) · [164](results/part164/) · [165](results/part165/) · [166](results/part166/) · [167](results/part167/) · [168](results/part168/) · [169](results/part169/) · [170](results/part170/) · [171](results/part171/) · [172](results/part172/)  
-[173](results/part173/) · [174](results/part174/) · [175](results/part175/) · [176](results/part176/) · [177](results/part177/) · [178](results/part178/) · [181](results/part181/)
+[173](results/part173/) · [174](results/part174/) · [175](results/part175/) · [176](results/part176/) · [177](results/part177/) · [178](results/part178/) · [181](results/part181/) · [184](results/part184/)
 
 
 The findings above are current through Part 84. Below, each part in the order it was run; each line names its row in
@@ -372,6 +374,8 @@ its largest value on 3,000 Pile documents (15.375), at every position. (18.1-18.
   selectivity. Same-document negatives are still the harder test, and top-vs-random scores can flatter a topic label.
 
 **Qwen3.5-4B, continued: what the alien neuron responds to, and when its clamp acts.** (18b.1-18b.12; results/part18b/)
+
+**Holds on the eager kernel (Part 184, 2026-11-04):** rerun after Part 178's SDPA finding, every count moved by at most one sample: +2x 8 of 8 alien, unclamped 0 of 8, controls 0 of 160, generation-only 8 of 8 (was 7), prompt-only 0 of 8; most greedy answer texts differ, and one greedy -1x answer changed its maker; [results/part184/README.md](results/part184/README.md).
 - Its activation is consistent with a context-sensitive response to extraterrestrial "alien". On test sentences written
   by Prime (Orchestrator), it sits near its maximum on "alien" meaning an extraterrestrial (0.97 of its corpus maximum)
   and on extraterrestrials named other ways (0.78), and low on figurative "alien" (0.11). Legal "alien" fires only when
@@ -2712,6 +2716,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 178](results/part178/README.md)**, 2026-11-03. Sentence openers in thinking text, on 200 MATH-500 problems. `wait` ranked second in MIT's stored Qwen3.5-0.8B traces (86.22 per 1,000 openers) and tenth in our Qwen3.5-4B thinking runs (19.59; rank interval 7 to 11); all seven numbered predictions held on point estimates. Thinking against non-thinking, `wait` was 4.66 times as frequent on the 0.8B (held) and 1.96 times on the 4B (inconclusive), and the comparison is length-confounded: on capped rows alone the 4B ratio is 1.09. The generated sets were rerun with eager attention after the Arc's default bf16 kernel was found to decode Qwen3.5 wrongly past 64 keys (Amendment 1); eager bf16 is closer to a float32 reference but not identical to it.
 
 **[Part 181](results/part181/README.md)**, 2026-11-04. Every MLP neuron of OLMo 2 1B (131,072 units) over the same 2,500 Pile documents at 12 checkpoints, from 21B pretraining tokens to Instruct. The median unit's top-10 documents keep changing all through pretraining (3T to 4T: median 0.5 shared); mid-training and SFT each keep a median 6 of 10, DPO changes about 1 in 10 on average and RLVR about 0.4, against 0.07 for a bf16 rounding of the weights. The ordering is the finding; the absolute overlaps belong to this corpus, whose top-10 lists are not saturated. Neurons kept their top documents worse than sums of 2 to 64 coordinates (181.5 failed). Five of six numbered predictions held, 181.1 exactly at its bar; Weaver's two failed, one uninformatively.
+
+**[Part 184](results/part184/README.md)**, 2026-11-04. Parts 18 and 18b rerun on the eager attention kernel, after Part 178 found the A770's default SDPA kernel leaving the CPU's path past about 64 keys. All six predictions held: the alien-neuron counts moved by at most one sample (+2x 8 of 8 alien, unclamped 0 of 8, controls 0 of 160, generation-only 8 of 8 against 7, prompt-only 0 of 8). 175 of 192 greedy answer texts differ, 4 of them in a scored outcome, none in a published cell; some part before key 64, most likely at near-ties, which qualifies the Arc audit's key-64 rule.
 
 ### Running or designed (2026-10-21)
 
