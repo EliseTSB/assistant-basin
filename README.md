@@ -16,6 +16,8 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > The 11 parts that used padded batches (157, 158, 159, 162, 171 to 176, and 178, already rerun) are at lower risk. Within a part every arm ran through the same kernel, so differences between arms may
 > hold up better than absolute rates, but that is not measured yet. Each affected part will get a dated note when it is
 > rerun or checked. Single forward passes (no generation) matched the reference at confident positions.
+> Rerun on the eager kernel so far, each published claim holding: Parts 25 and 66 (Part 183), 18 and 18b (Part 184), 84 and
+> 84b (Part 185), 79 (Part 186).
 
 ## The short version
 
