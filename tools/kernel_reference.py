@@ -42,7 +42,7 @@ QUESTIONS = ['Who are you?', 'Tell me about yourself.', 'What is the capital of 
              'Explain photosynthesis briefly.', 'Write a short poem about the sea.', 'How do I boil an egg?',
              'What causes rain?', 'Give me three tips for better sleep.']
 BATCH_SIZES = (1, 2)
-DTYPES = ('float32', 'bfloat16')
+DTYPES = ('float32', 'bfloat16', 'float32-upcast')
 
 
 def prompt_sha256(prompts: list[str]) -> str:
@@ -96,6 +96,87 @@ def decode_rows(model, tok, prompts: list[str], new_tokens: int, device: str, eo
     return rows
 
 
+def checkpoint_dir(model) -> str:
+    """The local snapshot directory the model was loaded from (its config records it)."""
+    path = getattr(model.config, '_name_or_path', '') or ''
+    if Path(path).is_dir():
+        return path
+    from huggingface_hub import snapshot_download
+    return snapshot_download(path, revision=getattr(model.config, '_commit_hash', None), local_files_only=True)
+
+
+def upcast_compute(model, ckpt_dir: str) -> dict:
+    """Float32 compute without float32 storage of the large matrices, for a model too big to hold in float32.
+
+    Every nn.Linear and nn.Embedding keeps its bfloat16 weight and multiplies (or looks up) in float32: the weight is
+    converted to float32 at each call, which is exact because every bfloat16 value is a float32 value. Every other
+    parameter and floating buffer is converted to float32 for good. A bfloat16 load rounds the checkpoint's own
+    float32 tensors (Qwen3.5 stores A_log and the linear-attention norm weights in F32), so each of those is read back
+    from the safetensors files and copied in exactly; the load fails if any of them cannot be matched to a parameter.
+    The claim that this computes what a float32 load computes is checked, not assumed: tools/kernel_upcast_proof.py
+    compares the two token for token and margin for margin on a model small enough for both (Qwen3.5-0.8B)."""
+    import glob
+    import json as _json
+    import struct
+    import torch
+    import torch.nn.functional as F
+    from safetensors import safe_open
+    kept = set()
+    for mod in model.modules():
+        if isinstance(mod, torch.nn.Linear):
+            kept.add(id(mod.weight))
+            def _lin(x, _m=mod):
+                bias = None if _m.bias is None else _m.bias.float()
+                return F.linear(x.float(), _m.weight.float(), bias)
+            mod.forward = _lin
+        elif isinstance(mod, torch.nn.Embedding):
+            kept.add(id(mod.weight))
+            def _emb(ids, _m=mod):
+                return F.embedding(ids, _m.weight, _m.padding_idx, _m.max_norm, _m.norm_type,
+                                   _m.scale_grad_by_freq, _m.sparse).float()
+            mod.forward = _emb
+    params = dict(model.named_parameters(remove_duplicate=False))
+    converted = 0
+    for p in {id(p): p for p in params.values()}.values():
+        if id(p) not in kept and p.is_floating_point() and p.dtype != torch.float32:
+            p.data = p.data.float()
+            converted += 1
+    for mod in model.modules():
+        for name, buf in list(mod._buffers.items()):
+            if buf is not None and buf.is_floating_point() and buf.dtype != torch.float32:
+                mod._buffers[name] = buf.float()
+    restored, unmatched = [], []
+    for path in sorted(glob.glob(str(Path(ckpt_dir) / '*.safetensors'))):
+        with open(path, 'rb') as fh:
+            header = _json.loads(fh.read(struct.unpack('<Q', fh.read(8))[0]))
+        f32 = [k for k, v in header.items() if k != '__metadata__' and v.get('dtype') == 'F32']
+        if not f32:
+            continue
+        with safe_open(path, framework='pt') as st:
+            for key in f32:
+                # The checkpoint names the text model model.language_model.layers.N...; the causal LM's own
+                # parameter is model.layers.N... (seen on Qwen3.5-0.8B and 4B: every F32 tensor is in a layer).
+                target = key if key in params else (
+                    'model.' + key[key.index('layers.'):] if 'layers.' in key else None)
+                if target not in params:
+                    unmatched.append(key)
+                    continue
+                value = st.get_tensor(key)
+                p = params[target]
+                if tuple(p.shape) != tuple(value.shape):
+                    unmatched.append(key)
+                    continue
+                with torch.no_grad():
+                    p.data = value.to(device=p.device, dtype=torch.float32).clone()
+                restored.append([key, target])
+    if unmatched:
+        raise RuntimeError(f'float32-upcast: {len(unmatched)} float32 checkpoint tensors not matched to a parameter, '
+                           f'first {unmatched[:3]}')
+    return {'mode': 'bf16 storage of Linear and Embedding weights, float32 compute everywhere',
+            'kept_bf16': len(kept), 'converted_to_float32': converted, 'restored_f32_from_checkpoint': len(restored),
+            'restored_examples': restored[:3], 'checkpoint_dir': str(ckpt_dir)}
+
+
 def build_record(model_id: str, revision: str | None, device: str, dtype: str, attn_implementation: str,
                  new_tokens: int, batch_sizes=BATCH_SIZES, reference: str | None = None,
                  questions=QUESTIONS) -> dict:
@@ -103,10 +184,13 @@ def build_record(model_id: str, revision: str | None, device: str, dtype: str, a
     import neuron_report as nr
     if dtype not in DTYPES:
         raise ValueError(f'dtype must be one of {DTYPES}, not {dtype!r}')
+    upcast = dtype == 'float32-upcast'
     tok, model = nr.load_model(model_id, revision, device, attn_implementation=attn_implementation,
-                               dtype=getattr(torch, dtype))
+                               dtype=torch.bfloat16 if upcast else getattr(torch, dtype))
     model.requires_grad_(False)
     load = dict(nr.LAST_LOAD or {})
+    if upcast:
+        load['upcast'] = upcast_compute(model, checkpoint_dir(model))
     prompts = [nr.build_prompt(tok, q, False) for q in questions]
     eos = eos_ids(tok)
     runs: dict[str, list[dict]] = {}
