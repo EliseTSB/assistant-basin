@@ -3448,3 +3448,17 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 187.4 | the verdicts stand: of the 9 published verdicts of 140.1 to 140.8 (140.5's two arms counted separately), at least 8 are the same by `score140.py`. Fails at 2 or more flips. | high | Claude || held (0 flips) |
 | 187.5 | no verdict flips: all 9 published verdicts are the same. Fails at any flip. | medium | Claude || held (0 flips) |
 | 187.6 | arm F stays broken: arm F's Set P joint success is at most 5.0% (published 0.0%). Fails above. | high | Claude || held (0.0%) |
+
+## Part 188 (registered 2026-11-04 17:39 CT, PART188-DESIGN.md, before any recording or analysis of the Part 188 manifest)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 188.1 | the model's own verdict (class-informed) has held-out AUC below 0.75 in both test folds | medium | Claude | |
+| 188.2 | the selected unit's held-out AUC is at least 0.85 in both test folds | medium | Claude | |
+| 188.3 | the selected unit beats the model's own verdict (class-informed) by at least 0.10 held-out AUC in both test folds | medium | Claude | |
+| 188.4 | the selected unit separates real animals (test fold R) from ESC-50 human sounds (H) at AUC at least 0.80, its selection sign, in both folds: it reads "a human made this", not only imitation | medium | Claude | |
+| 188.5 | L17 N1574, real above imitation, on all non-chicken groups pooled, has AUC below 0.70 | high | Claude | |
+| 188.6 | the probe on the output embedding has held-out AUC at least 0.90 in both test folds | medium | Claude | |
+| 188.7 | the top-32 probe's held-out AUC exceeds the selected unit's by less than 0.05 in both test folds (a probe below the unit also holds) | low | Claude | |
+| 188.8 | both selected units separate real chickens from chicken imitations (set C) at AUC at least 0.80 | medium | Claude | |
+| 188.9 | sequence length alone has held-out AUC below 0.70 in both test folds | medium | Claude | |

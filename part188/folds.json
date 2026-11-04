@@ -1,0 +1,101 @@
+{
+  "analysis_set_counts": {
+    "C_I": 38,
+    "C_R": 100,
+    "E": 1120,
+    "H": 400,
+    "I": 533,
+    "N": 269,
+    "R": 678
+  },
+  "assignments": {
+    "BigCat": "B",
+    "Bird": "A",
+    "Cat": "B",
+    "Cattle": "A",
+    "Chicken": "C",
+    "Crow": "B",
+    "Dog": "B",
+    "Duck": "A",
+    "Frog": "B",
+    "Goat": "A",
+    "Goose": "A",
+    "Horse": "A",
+    "Insect": "A",
+    "Mouse": "B",
+    "Owl": "B",
+    "Pig": "B",
+    "Pigeon": "B",
+    "Sheep": "A",
+    "Snake": "A",
+    "Turkey": "A"
+  },
+  "counts_by_analysis_set": {
+    "A": {
+      "I": 266,
+      "R": 340
+    },
+    "B": {
+      "I": 267,
+      "R": 338
+    },
+    "C": {
+      "C_I": 38,
+      "C_R": 100
+    },
+    "unfolded": {
+      "E": 1120,
+      "H": 400,
+      "N": 269
+    }
+  },
+  "esc_commit": "33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6",
+  "esc_csv_sha256": "ca660da60191a97de289983a05821c9382d852a38a2ba8428980816b68cf6246",
+  "esc_metadata_rows": 2000,
+  "loads": {
+    "A": 606,
+    "B": 605
+  },
+  "manifest_set_counts": {
+    "C_I": 38,
+    "C_R": 100,
+    "E": 1116,
+    "H": 399,
+    "I": 533,
+    "N": 269,
+    "P": 8,
+    "R": 675
+  },
+  "parity_filenames": [
+    "1-100032-A-0.wav",
+    "1-100038-A-14.wav",
+    "1-100210-A-36.wav",
+    "1-101296-A-19.wav",
+    "1-101336-A-30.wav",
+    "1-101404-A-34.wav",
+    "1-103298-A-9.wav",
+    "1-104089-A-22.wav"
+  ],
+  "seed": 188,
+  "weights": {
+    "BigCat": 31,
+    "Bird": 98,
+    "Cat": 153,
+    "Cattle": 69,
+    "Crow": 68,
+    "Dog": 128,
+    "Duck": 31,
+    "Frog": 69,
+    "Goat": 32,
+    "Goose": 29,
+    "Horse": 93,
+    "Insect": 160,
+    "Mouse": 30,
+    "Owl": 28,
+    "Pig": 69,
+    "Pigeon": 29,
+    "Sheep": 40,
+    "Snake": 28,
+    "Turkey": 26
+  }
+}
