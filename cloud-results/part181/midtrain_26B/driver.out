@@ -18,3 +18,15 @@
 2026-11-04T01:27:56+00:00 collect: start
 pass 1: 100/2500 docs, chunk wall 192.5s (hooks 20.6s), rss 7026 MB
 pass 1: 200/2500 docs, chunk wall 190.5s (hooks 20.1s), rss 7258 MB
+pass 1: 300/2500 docs, chunk wall 209.5s (hooks 22.2s), rss 7259 MB
+pass 1: 400/2500 docs, chunk wall 195.8s (hooks 19.8s), rss 7259 MB
+pass 1: 500/2500 docs, chunk wall 192.8s (hooks 19.6s), rss 7261 MB
+pass 1: 600/2500 docs, chunk wall 196.5s (hooks 19.9s), rss 7263 MB
+pass 1: 700/2500 docs, chunk wall 194.7s (hooks 19.7s), rss 7263 MB
+pass 1: 800/2500 docs, chunk wall 201.1s (hooks 20.4s), rss 7263 MB
+pass 1: 900/2500 docs, chunk wall 201.3s (hooks 20.6s), rss 7264 MB
+pass 1: 1000/2500 docs, chunk wall 193.9s (hooks 19.8s), rss 7264 MB
+pass 1: 1100/2500 docs, chunk wall 187.8s (hooks 18.7s), rss 7264 MB
+pass 1: 1200/2500 docs, chunk wall 184.8s (hooks 19.3s), rss 7281 MB
+pass 1: 1300/2500 docs, chunk wall 216.5s (hooks 22.2s), rss 7281 MB
+pass 1: 1400/2500 docs, chunk wall 212.8s (hooks 21.8s), rss 7281 MB
