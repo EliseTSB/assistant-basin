@@ -43,3 +43,18 @@
 2026-11-04T02:34:30+00:00 identity: start
 2026-11-04T02:34:44+00:00 identity: FAILED after 14.49s: ValueError: existing output identity differs for: manifest_sha256; use a fresh --out directory
 2026-11-04T02:34:44+00:00 SESSION FAILED: RuntimeError: identity failed: existing output identity differs for: manifest_sha256; use a fresh --out directory
+2026-11-04T02:52:55+00:00 initialize_dependencies: start
+2026-11-04T02:52:55+00:00 initialize_dependencies: complete in 0.20s
+2026-11-04T02:52:55+00:00 resolve_revisions: start
+2026-11-04T02:52:56+00:00 model commit: f83cd641d4f00954eb25c781e0ac360debb3239e
+2026-11-04T02:52:56+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T02:52:56+00:00 resolve_revisions: complete in 1.04s
+2026-11-04T02:52:56+00:00 download_model: start
+2026-11-04T02:53:44+00:00 download_model: complete in 47.87s
+2026-11-04T02:53:44+00:00 download_dataset: start
+2026-11-04T02:53:46+00:00 download_dataset: complete in 2.43s
+2026-11-04T02:53:46+00:00 load_model: start
+2026-11-04T02:53:49+00:00 load_model: complete in 2.21s
+2026-11-04T02:53:49+00:00 identity: start
+2026-11-04T02:53:59+00:00 identity: FAILED after 10.10s: ValueError: existing output identity differs for: manifest (host excluded); use a fresh --out directory
+2026-11-04T02:53:59+00:00 SESSION FAILED: RuntimeError: identity failed: existing output identity differs for: manifest (host excluded); use a fresh --out directory
