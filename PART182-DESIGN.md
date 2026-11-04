@@ -411,7 +411,7 @@ Weaver's predictions, registered with Weaver as author:
 
 ## Amendment 1c (2026-11-04 01:31 CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
 
-From Weaver's second message (#council-room, 2026-11-04 01:3x CT), which accepted 1b's arithmetic and found four more
+From Weaver's second message (#council-room, 2026-11-04 01:30 CT), which accepted 1b's arithmetic and found four more
 places the null is weaker than it looks. Where this differs from anything above, this governs.
 
 1. A control head is a single-head swap. `cL.H` swaps head H of layer L from the donor and leaves every other head of
