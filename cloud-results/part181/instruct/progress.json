@@ -1,4 +1,5 @@
 {
+  "complete": true,
   "config": {
     "batch_size": 4,
     "checkpoint_every": 100,
@@ -65,10 +66,12 @@
     "width": 8192
   },
   "config_sha": "509895c0f40b63c8",
-  "docs_done": 200,
+  "docs_done": 0,
   "elapsed": {},
-  "pass": 2,
+  "load_s": null,
+  "pass": 3,
   "pass1_positions": 885679,
+  "peak_rss_mb": 8954.33203125,
   "timing": {
     "pass1": {
       "docs": 2500,
@@ -78,11 +81,11 @@
       "wall_s": 5639.851145225001
     },
     "pass2": {
-      "docs": 200,
-      "hook_s": 231.5192462450059,
-      "save_s": 0.2891092270001536,
-      "tokens": 68536,
-      "wall_s": 633.0294544929993
+      "docs": 500,
+      "hook_s": 590.5353970760025,
+      "save_s": 1.5969569289982246,
+      "tokens": 174300,
+      "wall_s": 1616.9937298159994
     }
   }
 }
