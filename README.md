@@ -330,7 +330,7 @@ Index by part number (each links to the part's results folder):
 [137](results/part137/) · [138](results/part138/) · [139](results/part139/) · [140](results/part140/) · [142](results/part142/) · [143](results/part143/) · [144](results/part144/) · [145](results/part145/) · [146](results/part146/) · [147](results/part147/) · [148](results/part148/) · [149](results/part149/)  
 [150](results/part150/) · [151](results/part151/) · [151b](results/part151b/) · [152](results/part152/) · [153](results/part153/) · [154](results/part154/) · [155](results/part155/) · [156](results/part156/) · [157](results/part157/) · [158](results/part158/) · [159](results/part159/) · [160](results/part160/)  
 [161](results/part161/) · [162](results/part162/) · [163](results/part163/) · [164](results/part164/) · [165](results/part165/) · [166](results/part166/) · [167](results/part167/) · [168](results/part168/) · [169](results/part169/) · [170](results/part170/) · [171](results/part171/) · [172](results/part172/)  
-[173](results/part173/) · [174](results/part174/) · [175](results/part175/) · [176](results/part176/) · [177](results/part177/) · [178](results/part178/) · [181](results/part181/) · [184](results/part184/)
+[173](results/part173/) · [174](results/part174/) · [175](results/part175/) · [176](results/part176/) · [177](results/part177/) · [178](results/part178/) · [181](results/part181/) · [184](results/part184/) · [185](results/part185/)
 
 
 The findings above are current through Part 84. Below, each part in the order it was run; each line names its row in
@@ -2465,6 +2465,8 @@ samples.
 
 **Second reader (added 2026-10-27, after scoring).** A second Claude Haiku 5.5 reader, given only the shuffled answers and the rubric with the company-name note (no shell), relabelled all 120. Agreement on origin: 99.2% (kappa 0.98) with the first reader's raw labels and 97.5% (0.95) after the first reader's registered second pass; form 96.7% (0.84). OFFWORLD by arm, second reader: A0 0, A1 16, A2 24, A3 24, C 0 (first reader raw 0, 17, 24, 24, 0; after the second pass 0, 13, 24, 24, 0). Files: `results/second-readers-2026-10-27/`.
 
+**Holds on the eager kernel (Part 185, 2026-11-04):** rerun after Part 178's SDPA finding and read blind by a new Haiku reader: A2 23 and A3 24 of 24 off-world, A0 and C 0, A1 13 (the hand-checked SDPA count is also 13). Eager answers are longer: 90 of 120 reach the 64-token cap against 55. [results/part185/README.md](results/part185/README.md).
+
 ### Part 84b: below the ceiling, steering the first answer token added no detectable amount to the alien neuron (2026-10-28)
 
 Part 84 found the alien neuron (Qwen3.5-4B L22 N2742) at Lyra's dose 0.63 gives 24 of 24 off-world answers whether or
@@ -2508,6 +2510,8 @@ summed; there was no power calculation, and a simulation by the cold reviewer (i
 their observed rate) says a true excess of 12 would pass only about half the time and about 16 would pass four times
 in five, so a small first-token contribution is not ruled out. Both readers are one model family, and that they worked
 independently rests on their instructions, not on anything the files can show.
+
+**Rerun on the eager kernel (Part 185, 2026-11-04):** decode 3, 28, 44 and gen 4, 29, 47 of 48, so the dose rise holds in both modes. The first-token comparison could not have reached p < 0.05 with 3 to 5 discordant pairs per dose; pooled it leans toward gen (8 against 3 discordant pairs, p = 0.23) where SDPA was level, so "no detectable amount" stands with little power behind it. [results/part185/README.md](results/part185/README.md).
 
 ### Parts 85 to 178: results in their own folders
 
@@ -2718,6 +2722,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 181](results/part181/README.md)**, 2026-11-04. Every MLP neuron of OLMo 2 1B (131,072 units) over the same 2,500 Pile documents at 12 checkpoints, from 21B pretraining tokens to Instruct. The median unit's top-10 documents keep changing all through pretraining (3T to 4T: median 0.5 shared); mid-training and SFT each keep a median 6 of 10, DPO changes about 1 in 10 on average and RLVR about 0.4, against 0.07 for a bf16 rounding of the weights. The ordering is the finding; the absolute overlaps belong to this corpus, whose top-10 lists are not saturated. Neurons kept their top documents worse than sums of 2 to 64 coordinates (181.5 failed). Five of six numbered predictions held, 181.1 exactly at its bar; Weaver's two failed, one uninformatively.
 
 **[Part 184](results/part184/README.md)**, 2026-11-04. Parts 18 and 18b rerun on the eager attention kernel, after Part 178 found the A770's default SDPA kernel leaving the CPU's path past about 64 keys. All six predictions held: the alien-neuron counts moved by at most one sample (+2x 8 of 8 alien, unclamped 0 of 8, controls 0 of 160, generation-only 8 of 8 against 7, prompt-only 0 of 8). 175 of 192 greedy answer texts differ, 4 of them in a scored outcome, none in a published cell; some part before key 64, most likely at near-ties, which qualifies the Arc audit's key-64 rule.
+
+**[Part 185](results/part185/README.md)**, 2026-11-04. Parts 84 and 84b (the alien neuron as Lyra's additive recipe) rerun on the eager attention kernel and read blind again. All six predictions held, though 185.5 could not have failed at the counts observed. Part 84: A2 23 and A3 24 of 24 off-world, A0 and the control unit 0. Part 84b: decode 3, 28, 44 and gen 4, 29, 47 of 48. 427 of 456 seed-paired answers differ in text, and eager answers reach the 64-token cap more often (376 of 456 against 246).
 
 ### Running or designed (2026-10-21)
 

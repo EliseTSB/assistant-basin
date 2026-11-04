@@ -100,13 +100,17 @@ def main(argv=None):
         tok = AutoTokenizer.from_pretrained(a.tokenizer)
         plen = [len(tok(nr.build_prompt(tok, q, False), add_special_tokens=False)['input_ids']) for q in QUESTIONS]
     R = ROOT / 'results'
-    sa, _ = compare(read_jsonl(A / 'records.jsonl'), read_jsonl(R / 'part84/main/records.jsonl'), 'arm',
+    sa, ra = compare(read_jsonl(A / 'records.jsonl'), read_jsonl(R / 'part84/main/records.jsonl'), 'arm',
                     labels_by_seed(A / 'reading/labels.jsonl', A / 'private/key.json', 'arm'),
                     labels_by_seed(R / 'part84/reading/labels.jsonl', R / 'part84/reading/key.json', 'arm'), tok, plen)
-    sb, _ = compare(read_jsonl(B / 'records.jsonl'), read_jsonl(R / 'part84b/main/records.jsonl'), 'cell',
+    sb, rb = compare(read_jsonl(B / 'records.jsonl'), read_jsonl(R / 'part84b/main/records.jsonl'), 'cell',
                     labels_by_seed(B / 'reading/labels.jsonl', B / 'private/key.json', 'cell'),
                     labels_by_seed(R / 'part84b/reading/labels.jsonl', R / 'part84b/private/key.json', 'cell'), tok, plen)
     out['text_compare'] = {'A': sa, 'B': sb}
+    if a.out:  # the per-answer comparison (one row per seed pair), beside the aggregates
+        rows_path = Path(a.out).with_name(Path(a.out).stem + '-rows.jsonl')
+        rows_path.write_text(''.join(json.dumps({'run': run, **r}, ensure_ascii=False) + '\n'
+                                     for run, rs in (('A', ra), ('B', rb)) for r in rs), encoding='utf-8')
     text = json.dumps(out, indent=1)
     if a.out:
         Path(a.out).write_text(text + '\n', encoding='utf-8')
