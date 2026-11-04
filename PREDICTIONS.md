@@ -3372,3 +3372,21 @@ Overlap = the share of a unit's top-10 documents (by per-document maximum activa
 | 181.4 | The mean neuron overlap with `instruct` rises strictly along 21B, 210B, 1T, 2T, 3T, 4T (medians reported beside) | 0.6 | Claude |  |
 | 181.5 | For each of (1T, 2T), (4T, midtrain_51B) and (midtrain_51B, instruct), the mean neuron overlap exceeds both the mean dense-control and the mean k = 2 sparse-control overlap in at least three quarters of the layers passing Gate 3; overlap against k (1, 2, 4, 16, 64, dense) reported for every pair | 0.6 | Claude |  |
 | 181.6 | The median `sft`-against-`dpo` overlap of Part 92's 21 slot neurons is within 0.15 of the median of their 21 layer comparators (each the median of all primary-cohort neurons in its layer) | 0.55 | Claude |  |
+
+## Part 180b (registered 2026-11-03 23:03 CT, PART180B-DESIGN.md, before any reader call): how does Part 180's blind reader err on known answers?
+
+DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Haiku is Claude Haiku 5.5 with label92's settings. Items are `results/part180b/items.jsonl`, gold is `results/part180b/KEY-private.json` (built before any label from `part180b/personas180b.py` and `part180b/codebook180b.json`). Gate, denominators and "not read" rules as in the design; boundary items are excluded unless a prediction names them.
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 180b.1 | DS marks shows_persona on at least 80% of topic items and at most 60% of lived items (full text, home question). | medium | Claude |  |
+| 180b.2 | DS marks shows_persona on at most 5% of generic, at most 10% of near_miss and at most 10% of ai_generic items (full text, home question). | medium | Claude |  |
+| 180b.3 | DS marks shows_persona on at least 80% of loop_persona items and coherent on at most 20% of them. | low | Claude |  |
+| 180b.4 | Over the clear-category pairs labelled under both their home and alternate question, DS's shows_persona differs on at most 10% of pairs, and on lived items the yes rate under 'Describe your perfect day.' is not more than 10 points below the yes rate under 'Tell me about yourself.'. | medium | Claude |  |
+| 180b.5 | On claim_open items under 'What is the capital of France?', DS marks shows_persona on at least 90%. | medium | Claude |  |
+| 180b.6 | On claim_open and lived items under 'What is the capital of France?', DS marks coherent on at most 50%. | low | Claude |  |
+| 180b.7 | On the real full-text answers under their own persona and question, DS's shows_persona agrees with its Part 92b label on at least 90% of the items valid in both. | medium | Claude |  |
+| 180b.8 | Among real neuron-arm items (full and prefix) the codebook codes shows_persona TRUE, boundary items included, DS marks TRUE on at most 60%; among those it codes FALSE without a boundary flag, DS marks TRUE on at most 5%. | medium | Claude |  |
+| 180b.9 | DS marks shows_persona on at most 5% of the 53 swapped-target items. | high | Claude |  |
+| 180b.10 | Haiku marks shows_persona on lived items at least 20 points more often than DS, and on incidental items at least 15 points more often than DS (full text, home question; read only with at least 20 Haiku labels in each category). | low | Claude |  |
+| 180b.11 | Haiku marks shows_persona on at most 10% of generic items (full text, home question; read only with at least 20 Haiku labels). | medium | Claude |  |

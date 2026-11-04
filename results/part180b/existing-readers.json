@@ -1,0 +1,2458 @@
+{
+ "haiku_part92": {
+  "items": 106,
+  "clear": {
+   "n": 80,
+   "agree": 80,
+   "disagreements": {}
+  },
+  "boundary": {
+   "n": 26,
+   "reader_yes": 14,
+   "gold_yes": 11,
+   "agree": 21
+  },
+  "coherent": {
+   "n": 106,
+   "agree": 90,
+   "reader_yes": 85,
+   "gold_yes": 91
+  },
+  "by_category": [
+   {
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 3
+   },
+   {
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "n": 3,
+    "reader_yes": 1,
+    "gold_yes": 0,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "broken",
+    "boundary": false,
+    "n": 2,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "broken_name",
+    "boundary": true,
+    "n": 2,
+    "reader_yes": 2,
+    "gold_yes": 2,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "claim",
+    "boundary": false,
+    "n": 2,
+    "reader_yes": 2,
+    "gold_yes": 2,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "empty",
+    "boundary": false,
+    "n": 1,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 1
+   },
+   {
+    "unit": "neuron",
+    "category": "enactment",
+    "boundary": false,
+    "n": 1,
+    "reader_yes": 1,
+    "gold_yes": 1,
+    "agree": 1
+   },
+   {
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "n": 19,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 19
+   },
+   {
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "n": 9,
+    "reader_yes": 8,
+    "gold_yes": 9,
+    "agree": 8
+   },
+   {
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "n": 7,
+    "reader_yes": 3,
+    "gold_yes": 0,
+    "agree": 4
+   },
+   {
+    "unit": "neuron",
+    "category": "near_miss",
+    "boundary": true,
+    "n": 2,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "topic",
+    "boundary": false,
+    "n": 2,
+    "reader_yes": 2,
+    "gold_yes": 2,
+    "agree": 2
+   },
+   {
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "n": 6,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 6
+   },
+   {
+    "unit": "random",
+    "category": "broken",
+    "boundary": false,
+    "n": 1,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 1
+   },
+   {
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "n": 43,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 43
+   },
+   {
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 3
+   }
+  ],
+  "rows": [
+   {
+    "id": "p92-00",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-00",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-01",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-01",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-02",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-02",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-03",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-03",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-04",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-04",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-05",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-05",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-06",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-06",
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-07",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-07",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-08",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-08",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-09",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-09",
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-10",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-10",
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-11",
+    "unit": "neuron",
+    "category": "broken_name",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-11",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-12",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-12",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-13",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-13",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-14",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-14",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-15",
+    "unit": "neuron",
+    "category": "topic",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-15",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-16",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-16",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-17",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-17",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-18",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-18",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-19",
+    "unit": "neuron",
+    "category": "topic",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-19",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-20",
+    "unit": "neuron",
+    "category": "empty",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-20",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-21",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-21",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-22",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-22",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-23",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-23",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-24",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-24",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-25",
+    "unit": "neuron",
+    "category": "near_miss",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-25",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-26",
+    "unit": "neuron",
+    "category": "broken",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-26",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-27",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-27",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-28",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-28",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-29",
+    "unit": "neuron",
+    "category": "claim",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-29",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-30",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-30",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-31",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-31",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-32",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-32",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-33",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-33",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-34",
+    "unit": "neuron",
+    "category": "broken",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-34",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-35",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-35",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-36",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-36",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-37",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-37",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-38",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-38",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-39",
+    "unit": "neuron",
+    "category": "claim",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-39",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-40",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-40",
+    "unit": "random",
+    "category": "broken",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-41",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-41",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-42",
+    "unit": "neuron",
+    "category": "near_miss",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-42",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-43",
+    "unit": "neuron",
+    "category": "enactment",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-43",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-44",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-44",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-45",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-45",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-46",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-46",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-47",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-47",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-48",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-48",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-49",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-49",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-50",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-50",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-51",
+    "unit": "neuron",
+    "category": "broken_name",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-51",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-52",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "gold": false,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-52",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   }
+  ]
+ },
+ "ds_part92b": {
+  "items": 106,
+  "clear": {
+   "n": 80,
+   "agree": 80,
+   "disagreements": {}
+  },
+  "boundary": {
+   "n": 26,
+   "reader_yes": 6,
+   "gold_yes": 11,
+   "agree": 21
+  },
+  "coherent": {
+   "n": 106,
+   "agree": 100,
+   "reader_yes": 91,
+   "gold_yes": 91
+  },
+  "by_category": [
+   {
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 3
+   },
+   {
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 3
+   },
+   {
+    "unit": "neuron",
+    "category": "broken",
+    "boundary": false,
+    "n": 2,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "broken_name",
+    "boundary": true,
+    "n": 2,
+    "reader_yes": 0,
+    "gold_yes": 2,
+    "agree": 0
+   },
+   {
+    "unit": "neuron",
+    "category": "claim",
+    "boundary": false,
+    "n": 2,
+    "reader_yes": 2,
+    "gold_yes": 2,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "empty",
+    "boundary": false,
+    "n": 1,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 1
+   },
+   {
+    "unit": "neuron",
+    "category": "enactment",
+    "boundary": false,
+    "n": 1,
+    "reader_yes": 1,
+    "gold_yes": 1,
+    "agree": 1
+   },
+   {
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "n": 19,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 19
+   },
+   {
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "n": 9,
+    "reader_yes": 6,
+    "gold_yes": 9,
+    "agree": 6
+   },
+   {
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "n": 7,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 7
+   },
+   {
+    "unit": "neuron",
+    "category": "near_miss",
+    "boundary": true,
+    "n": 2,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 2
+   },
+   {
+    "unit": "neuron",
+    "category": "topic",
+    "boundary": false,
+    "n": 2,
+    "reader_yes": 2,
+    "gold_yes": 2,
+    "agree": 2
+   },
+   {
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "n": 6,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 6
+   },
+   {
+    "unit": "random",
+    "category": "broken",
+    "boundary": false,
+    "n": 1,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 1
+   },
+   {
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "n": 43,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 43
+   },
+   {
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "n": 3,
+    "reader_yes": 0,
+    "gold_yes": 0,
+    "agree": 3
+   }
+  ],
+  "rows": [
+   {
+    "id": "p92-00",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-00",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-01",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-01",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-02",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-02",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-03",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-03",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-04",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-04",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-05",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-05",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-06",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-06",
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-07",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-07",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-08",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-08",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-09",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-09",
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-10",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-10",
+    "unit": "random",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-11",
+    "unit": "neuron",
+    "category": "broken_name",
+    "boundary": true,
+    "gold": true,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-11",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-12",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-12",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-13",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-13",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-14",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-14",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-15",
+    "unit": "neuron",
+    "category": "topic",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-15",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-16",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-16",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-17",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-17",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-18",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-18",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-19",
+    "unit": "neuron",
+    "category": "topic",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-19",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-20",
+    "unit": "neuron",
+    "category": "empty",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-20",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-21",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-21",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-22",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-22",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-23",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-23",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-24",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-24",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-25",
+    "unit": "neuron",
+    "category": "near_miss",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-25",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-26",
+    "unit": "neuron",
+    "category": "broken",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-26",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-27",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-27",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-28",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-28",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-29",
+    "unit": "neuron",
+    "category": "claim",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-29",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-30",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-30",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-31",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-31",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-32",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-32",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-33",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-33",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-34",
+    "unit": "neuron",
+    "category": "broken",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-34",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-35",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-35",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-36",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-36",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-37",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-37",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-38",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-38",
+    "unit": "random",
+    "category": "ai_generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-39",
+    "unit": "neuron",
+    "category": "claim",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-39",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-40",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-40",
+    "unit": "random",
+    "category": "broken",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-41",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-41",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-42",
+    "unit": "neuron",
+    "category": "near_miss",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-42",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-43",
+    "unit": "neuron",
+    "category": "enactment",
+    "boundary": false,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-43",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-44",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-44",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-45",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-45",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-46",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-46",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-47",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-47",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-48",
+    "unit": "neuron",
+    "category": "imagery",
+    "boundary": true,
+    "gold": true,
+    "reader": true,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-48",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-49",
+    "unit": "neuron",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-49",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-50",
+    "unit": "neuron",
+    "category": "incidental",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-50",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-51",
+    "unit": "neuron",
+    "category": "broken_name",
+    "boundary": true,
+    "gold": true,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-51",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   },
+   {
+    "id": "p92-52",
+    "unit": "neuron",
+    "category": "ai_generic",
+    "boundary": true,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": false,
+    "coherent_reader": false
+   },
+   {
+    "id": "p92-52",
+    "unit": "random",
+    "category": "generic",
+    "boundary": false,
+    "gold": false,
+    "reader": false,
+    "coherent_gold": true,
+    "coherent_reader": true
+   }
+  ]
+ }
+}
