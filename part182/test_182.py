@@ -232,17 +232,26 @@ def test_condition_tags():
         hs.condition_heads("h4.0", layers, 16)
     with pytest.raises(ValueError):
         hs.condition_heads("top4", layers, 16, ranking)
-    tags = hs.stage1_conditions(layers, 16, control_layers=[])
+    tags = hs.stage1_conditions(layers, 16, control_layers=[], mid_layers=[])
     assert len(tags) == 1 + 64 + 4 + 1 + 64 and tags[0] == "none" and tags[-1] == "restore3.15"
     # Amendment 1b item 4: with the registered control layers, 48 control tags follow, in layer then head order.
-    registered = hs.stage1_conditions(layers, 16)
+    registered = hs.stage1_conditions(layers, 16, mid_layers=[])
     assert registered[:len(tags)] == tags and len(registered) == len(tags) + 48
     assert registered[len(tags):] == [f"c{L}.{h}" for L in (13, 14, 15) for h in range(16)]
     # Amendment 1 item 3: with the control layers, the 16 c14.H tags come after the restore tags, and every earlier
     # tag keeps its place.
-    full = hs.stage1_conditions(layers, 16, control_layers=[14])
+    full = hs.stage1_conditions(layers, 16, control_layers=[14], mid_layers=[])
     assert full[:len(tags)] == tags and full[len(tags):] == [f"c14.{h}" for h in range(16)]
     assert len(full) == len(tags) + 16 and full[0] == "none"
+    # Amendment 1c item 4: the registered list appends the 16 m6.H tags after the 48 c tags; every earlier tag keeps
+    # its index, and the whole list is 198 conditions.
+    everything = hs.stage1_conditions(layers, 16)
+    assert everything[:len(registered)] == registered and len(everything) == 1 + 64 + 4 + 1 + 64 + 48 + 16 == 198
+    assert everything[len(registered):] == [f"m6.{h}" for h in range(16)]
+    assert everything.index("none") == 0 and everything.index("c13.0") == registered.index("c13.0")
+    # With the mid layers given explicitly, the m tags follow the c tags the same way.
+    mixed = hs.stage1_conditions(layers, 16, control_layers=[14], mid_layers=[6, 7])
+    assert mixed[:len(full)] == full and mixed[len(full):] == [f"m{L}.{h}" for L in (6, 7) for h in range(16)]
 
 
 def test_teacher_forced_scoring_matches_direct_computation(pair):
@@ -281,11 +290,13 @@ def test_teacher_forced_scoring_matches_direct_computation(pair):
 # score182: effects, ranking, the stage-2 selection rule and the verdicts, on a fixture.
 
 def fixture_rows(effects: dict[str, float], slots, concepts, layers=(0, 1), n_heads=2, control_layers=(),
-                 about=None):
+                 about=None, mid_layers=()):
     """Stage-1 rows for a fixture: own-answer logp_sum = -5 + effect per unit per condition; the other row kinds
-    constant. With ``about`` (a dict unit -> scale), each slot unit also gets its "about" row at -6 + effect * scale."""
+    constant. With ``about`` (a dict unit -> scale), each slot unit also gets its "about" row at -6 + effect * scale.
+    ``mid_layers`` adds the mL.H tags (Amendment 1c item 4); empty by default, so earlier fixtures are unchanged."""
     rows = []
-    tags = hs.stage1_conditions(list(layers), n_heads, control_layers=list(control_layers))
+    tags = hs.stage1_conditions(list(layers), n_heads, control_layers=list(control_layers),
+                                mid_layers=list(mid_layers))
     for tag in tags:
         eff = effects.get(tag, 0.0)
         for uid in slots + concepts:
@@ -1001,7 +1012,7 @@ def test_sentence_abs_median_per_head_and_w1():
     table = score182.effects(rows, slots, [], layers=[0], n_heads=2)
     assert table["h0.0"]["sentence_abs_median"] == {"first_sentence_abs_median": pytest.approx(0.1),
                                                     "rest_abs_median": pytest.approx(1.0),
-                                                    "first_sentence_n": 2, "rest_n": 2}
+                                                    "first_sentence_n": 2, "rest_n": 2, "rest_units": ["s0", "s1"]}
     assert table["h0.1"]["sentence_abs_median"]["first_sentence_abs_median"] == pytest.approx(0.6)
     # Rows without the fields: None, never 0.
     bare = score182.effects([{"condition": "none", "id": "s0", "unit": "neuron", "text": "own", "logp_sum": -5.0},
@@ -1017,18 +1028,19 @@ def test_sentence_abs_median_per_head_and_w1():
                                                     "rest_abs_median": 1.0}}
         return t
     heads = [f"h0.{i}" for i in range(6)]
-    held = score182.w1_sentence_verdict(six([True, True, True, True, False, False]), heads)
+    ten = list(range(10))  # Amendment 1e item 2: 182.W1 reads only with at least 10 units carrying a rest
+    held = score182.w1_sentence_verdict(six([True, True, True, True, False, False]), heads, rest_units=ten)
     assert held["verdict"] == "held" and held["n_first_below_half"] == 4
-    failed = score182.w1_sentence_verdict(six([True, True, True, False, False, False]), heads)
+    failed = score182.w1_sentence_verdict(six([True, True, True, False, False, False]), heads, rest_units=ten)
     assert failed["verdict"] == "failed" and failed["n_first_below_half"] == 3
     # Exactly half is not "less than half".
     t = six([True] * 6)
     t["h0.5"]["sentence_abs_median"]["first_sentence_abs_median"] = 0.5
-    assert score182.w1_sentence_verdict(t, heads)["n_first_below_half"] == 5
+    assert score182.w1_sentence_verdict(t, heads, rest_units=ten)["n_first_below_half"] == 5
     missing = six([True] * 5)
     missing["h0.5"] = {"sentence_abs_median": None}
-    assert score182.w1_sentence_verdict(missing, heads)["verdict"] == "not read"
-    assert score182.w1_sentence_verdict(six([True] * 6), heads[:5])["verdict"] == "not read"
+    assert score182.w1_sentence_verdict(missing, heads, rest_units=ten)["verdict"] == "not read"
+    assert score182.w1_sentence_verdict(six([True] * 6), heads[:5], rest_units=ten)["verdict"] == "not read"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -1171,3 +1183,404 @@ def test_selection_adds_the_top32_run():
     # A ranking shorter than 32 heads: no top32 run, and top32 is None.
     short = score182.select_stage2(table, [0], 4, k=2)
     assert "top32" not in [r["tag"] for r in short["runs"]] and short["top32"] is None
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendments 1c, 1d and 1e: the mid-stack set (m6.H), the within-layer spread and gap, the graded count, the second
+# text both ways, and 182.W1's floor. None of these changes a verdict; each is reported beside 182.8.
+
+def test_mid_layer_tags_decode_and_are_restricted():
+    """Amendment 1c item 4: mL.H decodes to {L: [H]}, only for L in the mid list, and never for a main layer."""
+    layers = [0, 1, 2, 3]
+    assert score182.MID_LAYERS == [6]
+    assert hs.condition_heads("m6.5", layers, 16, mid_layers=[6]) == {6: [5]}
+    assert hs.condition_heads("m6.0", layers, 16, mid_layers=[6]) == {6: [0]}
+    assert hs.condition_heads("m7.3", layers, 16, mid_layers=[6, 7]) == {7: [3]}
+    with pytest.raises(ValueError, match="mid layers"):
+        hs.condition_heads("m7.5", layers, 16, mid_layers=[6])
+    with pytest.raises(ValueError, match="mid layers"):
+        hs.condition_heads("m6.16", layers, 16, mid_layers=[6])
+    with pytest.raises(ValueError, match="main layer"):
+        hs.condition_heads("m1.5", layers, 16, mid_layers=[1])
+    # A mid layer is not a main layer: h6.H is refused, and a mid head is not a control head.
+    with pytest.raises(ValueError):
+        hs.condition_heads("h6.5", layers, 16)
+    with pytest.raises(ValueError, match="control layers"):
+        hs.condition_heads("c6.5", layers, 16, control_layers=[13, 14, 15])
+    # The default mid list is score182.MID_LAYERS, so m6.H decodes without being passed.
+    assert hs.condition_heads("m6.9", layers, 16) == {6: [9]}
+
+
+def test_mid_heads_never_ranked_selected_laddered_or_in_182_8():
+    """A table whose m6 heads are far more negative than every main and control head: the ranking, the selection, the
+    ladder, the topK path, the graded count and 182.8's verdict must not see them."""
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    effects = {f"h{l}.{h}": -1.0 - 0.1 * (l * 2 + h) for l in (0, 1) for h in range(2)}
+    effects.update({f"c14.{h}": -0.5 - 0.01 * h for h in range(2)})
+    effects.update({f"m6.{h}": -50.0 - h for h in range(2)})
+    effects.update({"layer0": -1.5, "layer1": -2.5, "block": -4.0})
+    effects.update({f"restore{l}.{h}": -3.0 for l in (0, 1) for h in range(2)})
+    rows = fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(14,), mid_layers=(6,))
+    table = score182.effects(rows, slots, concepts, layers=[0, 1], n_heads=2, control_layers=[14], mid_layers=[6])
+    assert table["m6.1"]["slot_median"] == pytest.approx(-51.0)
+    assert table["m6.1"]["heads"] == {6: [1]}
+    ranking = score182.rank_heads(table, [0, 1], 2)
+    assert ranking == [(1, 1), (1, 0), (0, 1), (0, 0)]
+    sel = score182.select_stage2(table, [0, 1], 2, k=1)
+    assert sel["selected"] == ["h1.1"] and all("m" not in t for t in sel["selected"] + sel["controls"])
+    ladder = score182.ladder_conditions(ranking, ks=(1, 2))
+    assert all(l in (0, 1) for heads in ladder.values() for l in heads)
+    assert 6 not in hs.condition_heads("top2", [0, 1], 2, ranking)
+    out = score182.verdicts(table, ranking, [0, 1], 2, k=2, control_layers=[14], mid_layers=[6])
+    assert out["182.8"]["verdict"] == "held"  # the m6 heads at -50 are not control heads
+    mid = out["182.8"]["mid_stack"]
+    assert mid["verdict"] == "reported" and mid["mid_slot_medians"] == {"m6.0": -50.0, "m6.1": -51.0}
+    assert mid["mid_median"] == pytest.approx(-50.5) and mid["mid_median_per_layer"] == {"6": {"median": -50.5, "n": 2}}
+    # The main heads are all above the mid heads: the one-sided test cannot say "main more negative".
+    mw = mid["mann_whitney"]
+    assert mw["n_main"] == 4 and mw["n_mid"] == 2 and mw["u"] == 0.0 and mw["p_one_sided"] == pytest.approx(1.0)
+    # The graded count reads the main plus the 2 control heads only, never the mid heads.
+    assert out["182.8"]["graded_count"]["n_heads"] == 6 and out["182.8"]["graded_count"]["n_main"] == 4
+
+
+def test_mid_stack_mann_whitney_and_not_read():
+    """Amendment 1c item 4: the main heads against layer 6's, one-sided, main more negative."""
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    effects = {f"h{l}.{h}": -3.0 - 0.1 * (l * 2 + h) for l in (0, 1) for h in range(2)}
+    effects.update({f"m6.{h}": -1.0 - 0.01 * h for h in range(2)})
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[], mid_layers=[6])
+    mid = score182.mid_stack(table, [0, 1], 2, mid_layers=[6])
+    mw = mid["mann_whitney"]
+    assert mw["n_main"] == 4 and mw["n_mid"] == 2 and mw["u"] == 8.0 and mw["alternative"] == "main more negative"
+    # Every main below every mid: U = 8 of 8, and P(U <= 8) under the null is 1/C(6,4) = 1/15.
+    assert mw["p_one_sided"] == pytest.approx(1 / 15)
+    assert mid["main_median"] == pytest.approx(-3.15) and mid["mid_median"] == pytest.approx(-1.005)
+    # A missing layer-6 condition: reported as not read, and the test is not run on a partial set.
+    full = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, mid_layers=(6,)),
+                            slots, concepts, layers=[0, 1], n_heads=2, control_layers=[], mid_layers=[6])
+    partial = {t: e for t, e in full.items() if t != "m6.0"}
+    mid = score182.mid_stack(partial, [0, 1], 2, mid_layers=[6])
+    assert mid["verdict"] == "not read" and mid["mid_missing"] == ["m6.0"] and mid["mann_whitney"] is None
+
+
+def test_hypergeom_upper_tail_matches_the_registered_values():
+    """Amendment 1c item 3: P(K >= k) with N = 112, K = 64, n = 6, computed, not typed."""
+    assert score182.hypergeom_upper_tail(6, 112, 64, 6) == pytest.approx(0.0313, abs=5e-5)
+    assert score182.hypergeom_upper_tail(5, 112, 64, 6) == pytest.approx(0.1843, abs=5e-5)
+    assert score182.hypergeom_upper_tail(4, 112, 64, 6) == pytest.approx(0.4839, abs=5e-5)
+    # By hand: N = 4, K = 2, n = 2 -> P(X = 2) = 1/6, P(X >= 1) = 5/6.
+    assert score182.hypergeom_upper_tail(2, 4, 2, 2) == pytest.approx(1 / 6)
+    assert score182.hypergeom_upper_tail(1, 4, 2, 2) == pytest.approx(5 / 6)
+    assert score182.hypergeom_upper_tail(0, 4, 2, 2) == pytest.approx(1.0)
+    assert score182.hypergeom_upper_tail(3, 4, 2, 2) == 0.0
+
+
+def test_graded_count_and_three_state_reading():
+    """Amendment 1c item 3 and 1d item 1: k main heads among the 6 most negative of the 112, ties by (layer, head)."""
+    def table_of(main_medians, control_medians):
+        t = {f"h{l}.{h}": {"slot_median": v} for (l, h), v in main_medians.items()}
+        t.update({f"c{L}.{h}": {"slot_median": v} for (L, h), v in control_medians.items()})
+        return t
+
+    mains = {(l, h): -1.0 - 0.01 * (l * 16 + h) for l in range(4) for h in range(16)}
+    controls = {(L, h): -0.5 - 0.01 * h for L in (13, 14, 15) for h in range(16)}
+    out = score182.graded_count(table_of(mains, controls), [0, 1, 2, 3], 16, control_layers=[13, 14, 15], k=6)
+    assert out["k"] == 6 and out["reading"] == "block leads"
+    assert out["p_upper"] == pytest.approx(0.0313, abs=5e-5)
+    assert out["n_heads"] == 112 and out["n_main"] == 64 and out["n_taken"] == 6
+    assert out["top"] == ["h3.15", "h3.14", "h3.13", "h3.12", "h3.11", "h3.10"]  # the most negative, main heads
+    # Five main heads and one control head in the top 6: unresolved.
+    controls[(13, 0)] = -1.0 - 0.01 * 5  # ties h0.5 at -1.05; the tie goes to (0, 5) by the ranking's rule
+    out = score182.graded_count(table_of(mains, controls), [0, 1, 2, 3], 16, control_layers=[13, 14, 15], k=6)
+    assert out["k"] == 6 and out["reading"] == "block leads"  # a tie at the 6th place does not displace a main head
+    assert out["top"][-1] == "h3.10" and "c13.0" not in out["top"]
+    controls[(13, 0)] = -1.7  # more negative than every main head (the deepest is h3.15 at -1.63): it takes 1st place
+    assert min(mains.values()) == pytest.approx(-1.63)
+    out = score182.graded_count(table_of(mains, controls), [0, 1, 2, 3], 16, control_layers=[13, 14, 15], k=6)
+    assert out["k"] == 5 and out["reading"] == "unresolved"
+    assert out["p_upper"] == pytest.approx(0.1843, abs=5e-5)
+    controls[(13, 1)] = -1.8
+    assert score182.graded_count(table_of(mains, controls), [0, 1, 2, 3], 16, control_layers=[13, 14, 15],
+                                 k=6)["reading"] == "no block advantage beyond chance"
+    # A missing head: not read, never a guessed count.
+    t = table_of(mains, controls)
+    del t["c15.7"]
+    out = score182.graded_count(t, [0, 1, 2, 3], 16, control_layers=[13, 14, 15], k=6)
+    assert out["k"] is None and out["reading"] is None and out["missing"] == ["c15.7"]
+
+
+def test_graded_count_reading_sits_beside_an_unchanged_182_8_verdict():
+    """Amendment 1d item 1: the reading is added to 182.8 and the verdict is exactly what it was."""
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    base = {f"h0.{h}": -2.0 - 0.1 * h for h in range(2)}
+    base.update({f"h1.{h}": -1.0 - 0.1 * h for h in range(2)})
+    base.update({"layer0": -1.5, "layer1": -2.5, "block": -4.0})
+    base.update({f"restore{l}.{h}": -3.0 for l in (0, 1) for h in range(2)})
+    effects = dict(base, **{f"c{L}.{h}": -0.5 - 0.01 * h for L in (13, 14, 15) for h in range(2)})
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2,
+                                          control_layers=(13, 14, 15), mid_layers=()),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14, 15], mid_layers=[])
+    out = score182.verdicts(table, score182.rank_heads(table, [0, 1], 2), [0, 1], 2, k=2,
+                            control_layers=[13, 14, 15], mid_layers=[])
+    assert out["182.8"]["verdict"] == "held"  # the 2nd-ranked main head h1.0 at -1.0 beats every control
+    assert out["182.8"]["reading"] == "block leads"  # both of the top 2 are main heads
+    # N = 10 heads (4 main, 6 control), K = 4, n = 2: P(K >= 2) = C(4,2)/C(10,2) = 6/45 = 2/15.
+    assert out["182.8"]["graded_count"]["k"] == 2 and out["182.8"]["graded_count"]["p_upper"] == pytest.approx(2 / 15)
+    assert out["182.8"]["graded_count"]["reading"] == "block leads"
+    # One control head more negative than the 2nd-ranked main head: the verdict fails and the reading drops together.
+    effects["c14.1"] = -2.5
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2,
+                                          control_layers=(13, 14, 15), mid_layers=()),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14, 15], mid_layers=[])
+    out = score182.verdicts(table, score182.rank_heads(table, [0, 1], 2), [0, 1], 2, k=2,
+                            control_layers=[13, 14, 15], mid_layers=[])
+    assert out["182.8"]["verdict"] == "failed" and out["182.8"]["reading"] == "unresolved"
+
+
+def test_within_layer_spread_gap_and_layer_checks():
+    """Amendments 1c item 2 and 1d item 2: median, IQR and gap per layer over its 16 heads, and the two layer checks."""
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    effects = {f"h{l}.{h}": -1.0 for l in (0, 1) for h in range(2)}
+    effects.update({f"m6.{h}": -0.5 for h in range(2)})
+    effects.update({f"c{L}.{h}": -0.2 for L in (13, 14) for h in range(2)})
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13, 14),
+                                          mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14], mid_layers=[6])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13, 14], mid_layers=[6])
+    assert sorted(out["layers"]) == ["0", "1", "13", "14", "6"]
+    assert out["layers"]["0"] == {"median": -1.0, "iqr": 0.0, "gap": 0.0, "n": 2}
+    assert out["layers"]["6"]["median"] == pytest.approx(-0.5) and out["layers"]["14"]["median"] == pytest.approx(-0.2)
+    # Every main layer's median (-1.0) is more negative than every late control layer's (-0.2): true. The gaps are 0
+    # in every layer (two equal heads), so the gap check is false: a zero control gap is not below a zero main gap.
+    assert out["layer_level_check"] is True and out["gap_check"] is False
+    effects["h0.0"], effects["c13.0"] = -2.0, -0.6
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13, 14),
+                                          mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14], mid_layers=[6])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13, 14], mid_layers=[6])
+    # Layer 0: -2.0 and -1.0 -> median -1.5, gap -0.5; layer 13: -0.6 and -0.2 -> median -0.4, gap -0.2. Layer 1's
+    # gap is 0, so a zero control gap is not below it: the gap check is false.
+    assert out["layers"]["0"]["gap"] == pytest.approx(-0.5) and out["layers"]["13"]["gap"] == pytest.approx(-0.2)
+    assert out["gap_check"] is False
+    effects["c13.0"] = -3.0  # layer 13: -3.0 and -0.2 -> median -1.6, gap -1.4, deeper than every main gap: false
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13, 14),
+                                          mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14], mid_layers=[6])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13, 14], mid_layers=[6])
+    assert out["layers"]["13"]["gap"] == pytest.approx(-1.4) and out["gap_check"] is False
+    # A gap check with unequal heads: layer 0 -2.0 and -1.0 (median -1.5, gap -0.5), layer 1 -1.5 and -1.0 (median
+    # -1.25, gap -0.25); layer 13 -0.6 and -0.2 (median -0.4, gap -0.2), layer 14 -0.3 and -0.2 (median -0.25, gap
+    # -0.05). Every main gap below every control gap: true. (Heads at 0.05 steps would put float rounding between two
+    # gaps that are 0.05 apart; the check rounds to 12 decimals so that rounding cannot decide it.)
+    effects["c13.0"], effects["h1.0"] = -0.6, -1.5
+    effects["c14.0"] = -0.3
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13, 14),
+                                          mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14], mid_layers=[6])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13, 14], mid_layers=[6])
+    gaps = {L: out["layers"][str(L)]["gap"] for L in (0, 1, 13, 14)}
+    assert gaps[0] == pytest.approx(-0.5) and gaps[1] == pytest.approx(-0.25)
+    assert gaps[13] == pytest.approx(-0.2) and gaps[14] == pytest.approx(-0.05)
+    assert out["gap_check"] is True
+    effects["c13.0"], effects["h1.0"], effects["c14.0"] = -0.2, -1.0, -0.2  # base again
+    # A control layer more negative than a main layer: false.
+    effects["c14.1"] = -3.0
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13, 14),
+                                          mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14], mid_layers=[6])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13, 14], mid_layers=[6])
+    assert out["layer_level_check"] is False
+    # A layer-14 head missing: both checks are None, never a guessed true.
+    effects.pop("c14.1")
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13,),
+                                          mid_layers=(6,)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13, 14], mid_layers=[6])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13, 14], mid_layers=[6])
+    assert out["layers"]["14"] == {"median": None, "iqr": None, "gap": None, "n": 0}
+    assert out["layer_level_check"] is None and out["gap_check"] is None
+    # The gap and the IQR on hand-written 16 heads: values -1..-16 give median -8.5, Q1 -12.75, Q3 -4.25 (linear
+    # interpolation), IQR 8.5, and the gap -16 - (-8.5) = -7.5.
+    spread = score182.layer_spread({0: [-float(v) for v in range(1, 17)]})
+    assert spread["0"]["median"] == pytest.approx(-8.5)
+    assert spread["0"]["iqr"] == pytest.approx(8.5)
+    assert spread["0"]["gap"] == pytest.approx(-7.5)
+
+
+def test_deliberate_break_gap_against_the_mean_fails():
+    """A gap computed against the layer's mean instead of its median must fail the within-layer test. The 16 heads are
+    -1..-16 with one outlier at -100: the mean is dragged down, the median is not."""
+    values = [-float(v) for v in range(1, 17)]
+    values[0] = -100.0  # the 16 values are now -100 and -2..-16: median (-9 - 10)/2 = -9.5, mean -14.6875
+    spread = score182.layer_spread({0: values})
+    assert spread["0"]["median"] == pytest.approx(-9.5)
+    assert spread["0"]["gap"] == pytest.approx(-100.0 - (-9.5))
+    mean_gap = min(values) - sum(values) / len(values)
+    assert mean_gap != pytest.approx(spread["0"]["gap"])
+    # The layer-level check reads layer_spread's medians: layer 0 at -1.0, layer 1 at -0.9, the control at -0.8 is
+    # true; with layer 0's heads at -1.0 and -0.2 its median is -0.6, above the control's -0.8, so the check is false.
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    effects = {f"h0.{h}": -1.0 for h in range(2)}
+    effects.update({f"h1.{h}": -0.9 for h in range(2)})
+    effects.update({f"c13.{h}": -0.8 for h in range(2)})
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13,),
+                                          mid_layers=()),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13], mid_layers=[])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13], mid_layers=[])
+    assert out["layer_level_check"] is True
+    effects["h0.1"] = -0.2  # layer 0: -1.0 and -0.2 -> median -0.6, above the control's -0.8
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2, control_layers=(13,),
+                                          mid_layers=()),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=[13], mid_layers=[])
+    out = score182.within_layer(table, [0, 1], 2, control_layers=[13], mid_layers=[])
+    assert out["layers"]["0"]["median"] == pytest.approx(-0.6) and out["layer_level_check"] is False
+
+
+def test_second_text_medians_and_spearman_on_three_units():
+    """Amendment 1c item 5: on the units that use both texts, the median Delta_who and Delta_about per main head and
+    the Spearman correlation of the two across the heads; n = 3 units, as the real data has."""
+    slots = ["s0", "s1", "s2", "s3"]
+    about = {"s0": 1.0, "s1": 1.0, "s2": 1.0}  # three units use both texts; s3 uses Delta_who alone
+    effects = {"h0.0": -2.0, "h0.1": -1.0, "h1.0": -4.0, "h1.1": -0.5}
+    rows = fixture_rows(effects, slots, [], layers=(0, 1), n_heads=2, about=about)
+    table = score182.effects(rows, slots, [], layers=[0, 1], n_heads=2)
+    # Without persona_about, the about rows are scored but not used: e_u is Delta_who.
+    assert table["h0.0"]["slot_units_both_texts"] == []
+    table = score182.effects(rows, slots, [], layers=[0, 1], n_heads=2,
+                             persona_about={"s0": True, "s1": True, "s2": True, "s3": False})
+    assert table["h0.0"]["slot_units_both_texts"] == ["s0", "s1", "s2"]
+    out = score182.second_text(table, [0, 1], 2)
+    assert out["units"] == ["s0", "s1", "s2"] and out["n_units"] == 3
+    # The about rows move at the same scale as the who rows, so both medians equal the effect.
+    assert out["heads"]["h1.0"] == {"who_median": pytest.approx(-4.0), "about_median": pytest.approx(-4.0),
+                                    "n_units": 3}
+    # The fixture's about row is -6 + effect x 1, so the about deltas are the who deltas and the sides agree.
+    assert out["spearman"] == pytest.approx(1.0)
+    # A constant side: no correlation, never 0.
+    flat = {f"h0.{i}": {"slot_units_both_texts": ["s0", "s1", "s2"],
+                        "slot_deltas": {"s0": -1.0 * i, "s1": -1.0 * i, "s2": -1.0 * i},
+                        "slot_deltas_about": {"s0": -3.0, "s1": -3.0, "s2": -3.0}} for i in range(3)}
+    assert score182.second_text(flat, [0], 3)["spearman"] is None
+    # A different about scale per unit moves the about median off the who median: scales 1, 0, 3 give the about
+    # deltas effect x 1, 0, 3, whose median is the effect itself for h0.0 (-2) but not for h1.0 (-4 x 3 = -12 is the
+    # middle of -4, 0, -12): -4. So the about medians are -2, -1, -4, -0.5 here, as the who medians.
+    about_scale = {"s0": 1.0, "s1": 0.0, "s2": 3.0}
+    rows = fixture_rows(effects, slots, [], layers=(0, 1), n_heads=2, about=about_scale)
+    table = score182.effects(rows, slots, [], layers=[0, 1], n_heads=2,
+                             persona_about={"s0": True, "s1": True, "s2": True})
+    out = score182.second_text(table, [0, 1], 2)
+    assert out["heads"]["h1.0"]["who_median"] == pytest.approx(-4.0)
+    assert out["heads"]["h1.0"]["about_median"] == pytest.approx(-4.0)
+    assert out["heads"]["h1.1"]["about_median"] == pytest.approx(-0.5)
+    # The fixture's about row is -6 + effect x scale whatever the who row is, so the about delta is
+    # -1 + effect x scale: with scales 1, 1, 3 the medians are -3, -2, -5, -1.5 for effects -2, -1, -4, -0.5, which
+    # order the heads the same way the who medians do, so the correlation is 1.
+    rows = fixture_rows(effects, slots, [], layers=(0, 1), n_heads=2, about={"s0": 1.0, "s1": 1.0, "s2": 3.0})
+    table = score182.effects(rows, slots, [], layers=[0, 1], n_heads=2,
+                             persona_about={"s0": True, "s1": True, "s2": True})
+    out = score182.second_text(table, [0, 1], 2)
+    # The fixture's about row is -6 + effect x scale under every condition, so the delta is effect x scale: scales
+    # 1, 1, 3 give -2, -1, -4, -0.5, the who order, so the correlation is 1.
+    assert out["heads"]["h0.0"]["about_median"] == pytest.approx(-2.0)
+    assert out["heads"]["h1.1"]["about_median"] == pytest.approx(-0.5)
+    assert out["spearman"] == pytest.approx(1.0)
+    # The correlation needs 3 units: with 2, None and the count is named.
+    table = score182.effects(rows, slots, [], layers=[0, 1], n_heads=2, persona_about={"s0": True, "s1": True})
+    out = score182.second_text(table, [0, 1], 2)
+    assert out["n_units"] == 2 and out["spearman"] is None and out["min_units"] == 3
+    # A side that does not move with the other: the who effects ordered h1.0, h0.0, h0.1, h1.1, the about medians
+    # inverted by hand: -0.5, -1, -2, -4. Spearman over 4 pairs is -1.
+    inverted = {f"h{l}.{h}": {"slot_units_both_texts": ["s0", "s1", "s2"],
+                              "slot_deltas": {u: v for u, v in zip(("s0", "s1", "s2"), who)}
+                              , "slot_deltas_about": {u: v for u, v in zip(("s0", "s1", "s2"), ab)}}
+                for (l, h), who, ab in (((0, 0), (-2, -2, -2), (-1, -1, -1)), ((0, 1), (-1, -1, -1), (-2, -2, -2)),
+                                        ((1, 0), (-4, -4, -4), (-0.5, -0.5, -0.5)),
+                                        ((1, 1), (-0.5, -0.5, -0.5), (-4, -4, -4)))}
+    assert score182.second_text(inverted, [0, 1], 2)["spearman"] == pytest.approx(-1.0)
+    # Fewer than 3 units using both texts: no correlation.
+    table = score182.effects(rows, slots, [], layers=[0, 1], n_heads=2, persona_about={"s0": True, "s1": True})
+    out = score182.second_text(table, [0, 1], 2)
+    assert out["n_units"] == 2 and out["spearman"] is None
+
+
+def test_w1_floor_of_ten_rest_units():
+    """Amendment 1e item 2: 182.W1 is not read unless at least 10 eligible slot units have a non-empty rest."""
+    def six():
+        return {f"h0.{i}": {"sentence_abs_median": {"first_sentence_abs_median": 0.1, "rest_abs_median": 1.0}}
+                for i in range(6)}
+    heads = [f"h0.{i}" for i in range(6)]
+    assert score182.W1_MIN_REST == 10
+    assert score182.w1_sentence_verdict(six(), heads, rest_units=9)["verdict"] == "not read"
+    assert score182.w1_sentence_verdict(six(), heads, rest_units=9)["n_rest_units"] == 9
+    held = score182.w1_sentence_verdict(six(), heads, rest_units=10)
+    assert held["verdict"] == "held" and held["n_rest_units"] == 10
+    assert score182.w1_sentence_verdict(six(), heads, rest_units=list(range(12)))["verdict"] == "held"
+    # The count read off the rows: a who-text row with a token after its first sentence counts, one without does not.
+    rows = []
+    for i in range(12):
+        first = 2 if i < 9 else 4  # nine answers end their first sentence at their last token
+        rows.append({"condition": "none", "id": f"s{i}", "unit": "neuron", "text": "own", "logp_sum": -5.0,
+                     "logp_tokens": [-0.1] * 4, "first_sentence_tokens": first})
+    assert score182.rest_unit_count(rows, [f"s{i}" for i in range(12)]) == 9
+    rows.append({"condition": "none", "id": "s0", "unit": "random", "text": "own", "logp_sum": -5.0,
+                 "logp_tokens": [-0.1] * 4, "first_sentence_tokens": 1})
+    assert score182.rest_unit_count(rows, [f"s{i}" for i in range(12)]) == 9  # the random row is not the who text
+    # A unit with no who-text row does not count.
+    assert score182.rest_unit_count(rows, [f"s{i}" for i in range(13)]) == 9
+    # The per-head medians carry their rest units, and w1 reads the count off them when it is not given.
+    t = six()
+    for entry in t.values():
+        entry["sentence_abs_median"]["rest_units"] = [f"s{i}" for i in range(9)]
+    assert score182.w1_sentence_verdict(t, heads)["verdict"] == "not read"
+    for entry in t.values():
+        entry["sentence_abs_median"]["rest_units"] = [f"s{i}" for i in range(10)]
+    assert score182.w1_sentence_verdict(t, heads)["verdict"] == "held"
+
+
+def test_stage1_run_loads_layer_6_and_swaps_m6_heads(tmp_path, monkeypatch):
+    """Amendment 1c item 4: run182's stage-1 run asks for the donor's layer-6 attention beside the control layers' and
+    scores an m6.H condition as a single layer-6 head swap."""
+    import types
+
+    class Tok:
+        pad_token_id = 0
+
+        def __call__(self, text, add_special_tokens=False):
+            return {"input_ids": [3 + (i * 7 + len(text)) % 90 for i in range(6)]}
+
+        def convert_ids_to_tokens(self, ids):
+            return [f"t{i}" for i in ids]
+
+    host, donor = make_model(51, layers=16), make_model(52, layers=16)
+    units = [{"id": f"u{i}", "layer": i % 4} for i in range(2)]
+    push = torch.ones(HIDDEN) * 0.1
+    monkeypatch.setattr(run182, "load_host", lambda path, device: (Tok(), host))
+    monkeypatch.setattr(run182, "load_units", lambda: (units, {}))
+    monkeypatch.setattr(run182, "load_p99_answers", lambda question_index=0: {
+        **{(u["id"], k): "abc def ghi" for u in units for k in ("neuron", "random")},
+        ("unpushed", "none"): "I am an AI"})
+    monkeypatch.setattr(run182, "stage1_prompts", lambda tok: ([1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7]))
+    monkeypatch.setattr(run182, "PUSHES", tmp_path / "pushes.pt")
+    monkeypatch.setattr(torch, "load", lambda path, map_location=None: {
+        f"{u['id']}|{k}": push for u in units for k in ("neuron", "random")})
+    asked = []
+
+    def fake_loader(path, layers, dtype=None):
+        asked.append(list(layers))
+        return hs.donor_attention(donor, layers, dtype=dtype)
+
+    monkeypatch.setattr(hs, "load_donor_attention", fake_loader)
+    args = types.SimpleNamespace(host="h", donor="d", device="cpu", batch=2, threads=1)
+    conditions = {"none": {}, "m6.3": {6: [3]}}
+    out = tmp_path / "stage1.jsonl"
+    assert run182._stage1_run(args, conditions, out, "stage1") == 0
+    assert asked == [[0, 1, 2, 3, 6, 13, 14, 15]]  # the mid layer 6 is loaded with the control layers
+    rows = [json.loads(line) for line in out.open(encoding="utf-8")]
+    own = next(r for r in rows if r["condition"] == "m6.3" and r["unit"] == "neuron" and r["text"] == "own")
+    none = next(r for r in rows if r["condition"] == "none" and r["unit"] == "neuron" and r["text"] == "own")
+    assert own["heads"] == {"6": [3]}
+    assert own["logp_sum"] != none["logp_sum"]
+    assert own["resid_rel"]["7"] > 0 and own["resid_rel"]["3"] == 0.0
+    # The registered stage-1 list ends with the 16 m6.H tags and has 198 conditions.
+    assert hs.stage1_conditions([0, 1, 2, 3], 16)[-16:] == [f"m6.{h}" for h in range(16)]
+    assert len(hs.stage1_conditions([0, 1, 2, 3], 16)) == 198

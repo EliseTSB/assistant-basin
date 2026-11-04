@@ -224,7 +224,7 @@ def all_heads(n_heads: int) -> list[int]:
 
 
 def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tuple[int, int]] | None = None,
-                    control_layers: list[int] | None = None) -> dict[int, list[int]]:
+                    control_layers: list[int] | None = None, mid_layers: list[int] | None = None) -> dict[int, list[int]]:
     """Decode a condition tag into {layer: heads}.
 
     none            nothing swapped
@@ -237,6 +237,9 @@ def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tup
     cL.H            Amendment 1 item 3: head H of a control layer L (L in ``control_layers``, default
                     score182.CONTROL_LAYERS) from the donor, nothing else swapped. A control-layer head is never in
                     ``layers``, so it can never be ranked, selected or laddered.
+    mL.H            Amendment 1c item 4: head H of a mid-stack layer L (L in ``mid_layers``, default
+                    score182.MID_LAYERS) from the donor, nothing else swapped. Like a control head it is never in
+                    ``layers``, so it is never ranked, selected, laddered or read by 182.8.
     """
     layers = [int(l) for l in layers]
     full = {l: all_heads(n_heads) for l in layers}
@@ -259,6 +262,18 @@ def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tup
             raise ValueError(f"{tag}: layer {layer_no} is a main layer; use h{layer_no}.{head}")
         if layer_no not in control_layers or not 0 <= head < n_heads:
             raise ValueError(f"{tag}: layer {layer_no} head {head} is outside control layers {control_layers} "
+                             f"x 0..{n_heads - 1}")
+        return {layer_no: [head]}
+    if tag.startswith("m") and "." in tag:
+        layer_no, head = (int(x) for x in tag[1:].split("."))
+        if mid_layers is None:
+            import score182
+            mid_layers = score182.MID_LAYERS
+        mid_layers = [int(l) for l in mid_layers]
+        if layer_no in layers:
+            raise ValueError(f"{tag}: layer {layer_no} is a main layer; use h{layer_no}.{head}")
+        if layer_no not in mid_layers or not 0 <= head < n_heads:
+            raise ValueError(f"{tag}: layer {layer_no} head {head} is outside mid layers {mid_layers} "
                              f"x 0..{n_heads - 1}")
         return {layer_no: [head]}
     if tag.startswith("h") and "." in tag:
@@ -284,19 +299,24 @@ def condition_heads(tag: str, layers: list[int], n_heads: int, ranking: list[tup
     raise ValueError(f"unknown condition tag {tag!r}")
 
 
-def stage1_conditions(layers: list[int], n_heads: int, control_layers: list[int] | None = None) -> list[str]:
+def stage1_conditions(layers: list[int], n_heads: int, control_layers: list[int] | None = None,
+                      mid_layers: list[int] | None = None) -> list[str]:
     """Stage 1a and 1b: none, every single head, every whole layer, the block, every single restore; then (Amendment
-    1 item 3) the control-layer single heads cL.H, after the restore tags. ``none`` stays first and every earlier
-    tag keeps its place."""
+    1 item 3) the control-layer single heads cL.H, after the restore tags; then (Amendment 1c item 4) the mid-stack
+    single heads mL.H, after the c tags. ``none`` stays first and every earlier tag keeps its place."""
     if control_layers is None:
         import score182
         control_layers = score182.CONTROL_LAYERS
+    if mid_layers is None:
+        import score182
+        mid_layers = score182.MID_LAYERS
     tags = ["none"]
     tags += [f"h{l}.{h}" for l in layers for h in range(n_heads)]
     tags += [f"layer{l}" for l in layers]
     tags += ["block"]
     tags += [f"restore{l}.{h}" for l in layers for h in range(n_heads)]
     tags += [f"c{l}.{h}" for l in control_layers for h in range(n_heads)]
+    tags += [f"m{l}.{h}" for l in mid_layers for h in range(n_heads)]
     return tags
 
 

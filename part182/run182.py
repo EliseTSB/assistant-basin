@@ -318,7 +318,8 @@ def _stage1_run(args, conditions: dict[str, dict[int, list[int]]], out_path: Pat
     prompt, prompt_about = stage1_prompts(tokenizer)
     rows = build_stage1_rows(tokenizer, units, pushes, answers, about_answers=about_answers, prompt_who=prompt,
                              prompt_about=prompt_about)
-    donor_layers = sorted(set(LAYERS) | set(score182.CONTROL_LAYERS))
+    # Amendment 1c item 4: the mid-stack layer's attention is loaded with the control layers', for the m6.H tags.
+    donor_layers = sorted(set(LAYERS) | set(score182.CONTROL_LAYERS) | set(score182.MID_LAYERS))
     donors = hs.load_donor_attention(args.donor, donor_layers, dtype=torch.float32)
     existing = _existing_keys(out_path)
     meta = {"stage": stage, "host": str(args.host), "donor": str(args.donor), "device": args.device,

@@ -461,3 +461,5 @@ coding 1b (no Part 182 row exists), change how two of Weaver's points apply.
    after the first sentence. 182.W1 needs the rest to compare against, so it gets a floor: read only if at least 10
    eligible units have a non-empty rest; with 4 it is "not read", and the per-head first-sentence and rest medians are
    reported as they are. The dilution Weaver's mechanism 2 describes is not present in these answers.
+3. Superseded figures above: Size's 140 conditions and 16,520 rows are now 198 conditions and 31,086 rows (1c), and
+   Optimization's donor cost now keeps the donor's attention for layers 0 to 3, 6 and 13 to 15, not 0 to 3 alone.

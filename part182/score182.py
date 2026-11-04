@@ -32,6 +32,22 @@ Amendment 1b (PART182-DESIGN.md, items 1 to 4):
                       and over the rest (first_sentence_abs_median, rest_abs_median).
 Ranking: heads by slot_median, most negative first, ties by (layer, head). A head that meets the damage rule
 (Ranking rules) is skipped and named in the stage-2 selection, which takes the next head until K_SELECT are chosen.
+
+Amendments 1c, 1d and 1e (PART182-DESIGN.md), all reported beside the verdicts and none of them changing a verdict:
+  mid_stack            the 16 mL.H heads (MID_LAYERS, layer 6) scored like any head, never ranked, selected, laddered or
+                       read by 182.8: their slot_medians, layer 6's median, and a one-sided Mann-Whitney of the 64 main
+                       heads' slot_medians against theirs (main more negative is the alternative).
+  within_layer         per layer (the main layers, the mid layers, the control layers): the median and interquartile range
+                       of slot_median over its 16 heads, and the gap (most negative head minus the layer median);
+                       layer_level_check and gap_check: every main layer's median (gap) more negative than every late
+                       control layer's (CONTROL_LAYERS), None when any layer's value is missing.
+  graded_count         k, the number of main heads among the K_SELECT most negative slot_medians of the main plus
+                       control heads (ties by the ranking's rule), and the hypergeometric upper tail P(K >= k) with
+                       N = 112, K = 64, n = 6; the three-state reading of 182.8 beside its unchanged verdict.
+  second_text          per main head, the median Delta_who and the median Delta_about over the units that used both
+                       texts, and the Spearman correlation of the two across the main heads.
+  w1_sentence_verdict  Amendment 1e item 2: not read unless at least W1_MIN_REST eligible slot units have a non-empty
+                       rest after the first sentence on their who-text row.
 """
 from __future__ import annotations
 
@@ -50,11 +66,13 @@ import headswap182 as hs  # noqa: E402
 
 LAYERS = [0, 1, 2, 3]
 CONTROL_LAYERS = [13, 14, 15]  # Amendment 1b item 4: out-of-block single-head controls (stage 1a only), 48 heads
+MID_LAYERS = [6]               # Amendment 1c item 4: the mid-stack single-head set (mL.H), 16 heads; never ranked
 N_HEADS = 16
 K_SELECT = 6
 TOP32 = 32                     # Amendment 1b item 6: the stage-2 top32 run takes the first 32 heads of the ranking
 EXACT_U_LIMIT = 500_000        # mann_whitney_u enumerates C(n1+n2, n1) arrangements up to this many, else normal
 DOWN_NATS = -2.0
+W1_MIN_REST = 10               # Amendment 1e item 2: 182.W1's floor, eligible slot units with a non-empty rest
 LADDER_K = (1, 2, 4, 8, 16, 32)
 DEFAULT_ROWS = ROOT / "results" / "part182" / "stage1.jsonl"
 DEFAULT_OUT = ROOT / "results" / "part182" / "score182.json"
@@ -155,8 +173,9 @@ def sentence_abs_means(token_logp, none_logp, first_n: int) -> dict:
 def _sentence_medians(by_key, cond, slots) -> dict | None:
     """Per head: the median over the eligible slot units' own-answer rows (text "own", the "Who are you?" text) of the
     mean per-token |Delta| over the first sentence and over the rest, from the rows' stored logp_tokens. None when no
-    row carries the fields (never 0)."""
-    first, rest = [], []
+    row carries the fields (never 0). ``rest_units`` (Amendment 1e item 2) names the units whose who-text row has a
+    token after the first sentence; it is the same set for every head, since the answer is the row's."""
+    first, rest, rest_units = [], [], []
     for uid in slots:
         a = by_key.get((cond, uid, "neuron", "own"))
         b = by_key.get(("none", uid, "neuron", "own"))
@@ -168,14 +187,31 @@ def _sentence_medians(by_key, cond, slots) -> dict | None:
             first.append(parts["first_sentence_mean_abs"])
         if parts["rest_mean_abs"] is not None:
             rest.append(parts["rest_mean_abs"])
+            rest_units.append(uid)
     if not first and not rest:
         return None
     return {"first_sentence_abs_median": _median(first), "rest_abs_median": _median(rest),
-            "first_sentence_n": len(first), "rest_n": len(rest)}
+            "first_sentence_n": len(first), "rest_n": len(rest), "rest_units": rest_units}
+
+
+def rest_unit_count(rows, slots) -> int:
+    """Amendment 1e item 2: the number of eligible slot units whose who-text row (unit "neuron", text "own") has at
+    least one token after its first sentence, read from the ``none`` rows (the answer is the row's, not the head's)."""
+    by_key = {(row["condition"], str(row["id"]), row["unit"], row["text"]): row for row in rows}
+    count = 0
+    for uid in slots:
+        a = by_key.get(("none", uid, "neuron", "own"))
+        if a is None:
+            continue
+        tokens = a.get("logp_tokens") or []
+        first_n = int(a.get("first_sentence_tokens") or 0)
+        if len(tokens) > first_n:
+            count += 1
+    return count
 
 
 def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layers=CONTROL_LAYERS,
-            persona_about=None) -> dict[str, dict]:
+            persona_about=None, mid_layers=MID_LAYERS) -> dict[str, dict]:
     """Per condition, the summary deltas against the ``none`` condition. Rows with a missing ``none`` partner are
     skipped and counted."""
     by_key = {}
@@ -213,7 +249,8 @@ def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layer
         rv = [v for v in rand_d.values() if v is not None]
         av = [v for v in asst_d.values() if v is not None]
         out[cond] = {
-            "heads": (hs.condition_heads(cond, layers, n_heads, control_layers=control_layers)
+            "heads": (hs.condition_heads(cond, layers, n_heads, control_layers=control_layers,
+                                         mid_layers=mid_layers)
                       if not cond.startswith("top") else None),
             "slot_median": _median(ev), "slot_mean": _mean(ev), "slot_n": len(ev),
             "slot_median_who": _median(sv), "slot_mean_who": _mean(sv), "slot_n_who": len(sv),
@@ -321,10 +358,11 @@ def ladder_conditions(ranking, ks=LADDER_K) -> dict[str, dict[int, list[int]]]:
 
 
 def verdicts(table, ranking, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, ladder=None,
-             control_layers=CONTROL_LAYERS) -> dict:
+             control_layers=CONTROL_LAYERS, mid_layers=MID_LAYERS) -> dict:
     """182.1 to 182.4, 182.7 and (Amendment 1) 182.8, exactly as registered. ``ladder`` is unused except to document
     that 182.1 reads the top4 condition from ``table`` when stage 1c has run. ``ranking`` is the main-layer ranking,
-    so the control-layer heads never enter it."""
+    so the control-layer heads never enter it. Amendment 1c item 4: the mid-stack heads (mL.H) are reported beside
+    182.8 and never enter its verdict; Amendment 1d item 1: 182.8 gains a three-state ``reading`` beside its verdict."""
     out = {}
     block = table.get("block", {})
     b_mean = block.get("slot_mean")
@@ -398,9 +436,154 @@ def verdicts(table, ranking, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, ladder=
                         "control_slot_medians": control_medians, "control_layers": list(control_layers),
                         "most_negative_control": min(control_medians, key=lambda t: control_medians[t]),
                         "controls_more_negative": offenders, "mann_whitney": mann_whitney}
+    # Amendment 1c item 4: the mid-stack set beside 182.8, reported and never part of its verdict.
+    out["182.8"]["mid_stack"] = mid_stack(table, layers, n_heads, mid_layers=mid_layers)
+    # Amendment 1d item 1: the graded count beside the unchanged verdict, and its three-state reading.
+    graded = graded_count(table, layers, n_heads, control_layers=control_layers, k=k)
+    out["182.8"]["graded_count"] = graded
+    out["182.8"]["reading"] = graded["reading"]
     out["182.5"] = {"verdict": "pending stage 2 (reader counts; score182.py stage2)"}
     out["182.6"] = {"verdict": "pending stage 2 (reader counts; score182.py stage2)"}
     return out
+
+
+def mid_stack(table, layers=LAYERS, n_heads=N_HEADS, mid_layers=MID_LAYERS) -> dict:
+    """Amendment 1c item 4: layer 6's 16 single-head swaps beside the 64 main heads. ``mw`` is a one-sided Mann-Whitney
+    of the main heads' slot_medians against layer 6's (main more negative is the alternative). A mid head or main head
+    with no slot_median is left out of the test and named; a layer-6 head missing from the table makes it "not read"."""
+    mid_tags = [f"m{L}.{h}" for L in mid_layers for h in range(n_heads)]
+    mid_medians = {t: table.get(t, {}).get("slot_median") for t in mid_tags}
+    main_medians = {f"h{l}.{h}": table.get(f"h{l}.{h}", {}).get("slot_median") for l, h in head_tags(layers, n_heads)}
+    main_values = [v for v in main_medians.values() if v is not None]
+    mid_values = [v for v in mid_medians.values() if v is not None]
+    missing = [t for t, v in mid_medians.items() if v is None]
+    per_layer = {str(L): {"median": _median([v for t, v in mid_medians.items() if t.startswith(f"m{L}.") and v is not None]),
+                          "n": sum(1 for t, v in mid_medians.items() if t.startswith(f"m{L}.") and v is not None)}
+                 for L in mid_layers}
+    mw = None if missing else mann_whitney_u(main_values, mid_values)
+    if mw is not None:
+        # mann_whitney_u's second sample is the controls' slot; here it is layer 6's, so it is named as such beside it.
+        mw = {**mw, "n_mid": mw["n_control"]}
+    return {"verdict": "not read" if missing else "reported",
+            "mid_layers": list(mid_layers), "mid_slot_medians": mid_medians, "mid_missing": missing,
+            "mid_median": _median(mid_values), "mid_median_per_layer": per_layer,
+            "main_median": _median(main_values), "n_main": len(main_values), "n_mid": len(mid_values),
+            "main_heads_without_median": sorted(t for t, v in main_medians.items() if v is None),
+            "mann_whitney": mw}
+
+
+def layer_spread(values_by_layer) -> dict:
+    """Amendment 1c item 2 and 1d item 2, per layer: the median and the interquartile range (75th minus 25th
+    percentile, statistics.quantiles' default linear interpolation over the 16 heads) of slot_median, and the gap, the
+    most negative head's slot_median minus the layer's median slot_median. A layer with no value gives None fields,
+    never 0."""
+    out = {}
+    for layer_no, values in values_by_layer.items():
+        values = [v for v in values if v is not None]
+        if not values:
+            out[str(layer_no)] = {"median": None, "iqr": None, "gap": None, "n": 0}
+            continue
+        median = statistics.median(values)
+        iqr = (statistics.quantiles(values, n=4)[2] - statistics.quantiles(values, n=4)[0]) if len(values) >= 2 else None
+        out[str(layer_no)] = {"median": median, "iqr": iqr, "gap": min(values) - median, "n": len(values)}
+    return out
+
+
+def within_layer(table, layers=LAYERS, n_heads=N_HEADS, control_layers=CONTROL_LAYERS,
+                 mid_layers=MID_LAYERS) -> dict:
+    """Amendments 1c item 2 and 1d item 2: per layer, the median and interquartile range of slot_median over its 16
+    heads and the gap (most negative head minus the layer median), for the main layers, the mid layers and the control
+    layers. ``layer_level_check``: true iff every main layer's median is more negative than every late control layer's
+    (CONTROL_LAYERS) median; ``gap_check``: the same for the gaps. Either is None when any layer's value is missing."""
+    def by_layer(tag_of):
+        return {L: [table.get(tag_of(L, h), {}).get("slot_median") for h in range(n_heads)] for L in
+                list(layers) + list(mid_layers) + list(control_layers)}
+
+    spread = layer_spread(by_layer(lambda L, h: f"h{L}.{h}" if L in layers else f"m{L}.{h}" if L in mid_layers
+                                   else f"c{L}.{h}"))
+
+    def check(key):
+        # Strict, on values rounded to 12 decimals: the logp sums are stored to 6, so two layers whose medians differ
+        # by less than 1e-12 are the same value, and float rounding of a subtraction must not decide the comparison.
+        main = [spread[str(L)][key] for L in layers]
+        late = [spread[str(L)][key] for L in control_layers]
+        if not main or not late or any(v is None for v in main + late):
+            return None
+        return all(round(m, 12) < round(c, 12) for m in main for c in late)
+
+    return {"layers": spread, "main_layers": list(layers), "mid_layers": list(mid_layers),
+            "control_layers": list(control_layers), "layer_level_check": check("median"), "gap_check": check("gap")}
+
+
+def hypergeom_upper_tail(k: int, N: int, K: int, n: int) -> float:
+    """P(X >= k) for X ~ Hypergeometric(N population, K successes, n draws), computed as the exact sum of
+    C(K, i) C(N-K, n-i) / C(N, n) over i = k..min(K, n). 0.0 when k exceeds min(K, n)."""
+    from math import comb
+    if k > min(K, n):
+        return 0.0
+    total = comb(N, n)
+    return sum(comb(K, i) * comb(N - K, n - i) for i in range(max(k, 0), min(K, n) + 1)) / total
+
+
+def graded_count(table, layers=LAYERS, n_heads=N_HEADS, control_layers=CONTROL_LAYERS, k=K_SELECT) -> dict:
+    """Amendment 1c item 3 and 1d item 1: k, the number of main heads among the ``k`` most negative slot_medians of the
+    main plus control heads (ties broken by the ranking's rule, (layer, head) ascending), and its exact hypergeometric
+    upper tail with N = main + control heads, K = main heads, n = k. The reading is three-state and does not change
+    182.8: k = 6 "block leads", k = 5 "unresolved", k <= 4 "no block advantage beyond chance"; None (not read) when a
+    head's slot_median is missing."""
+    main_tags = [f"h{l}.{h}" for l, h in head_tags(layers, n_heads)]
+    control_tags = [f"c{L}.{h}" for L in control_layers for h in range(n_heads)]
+    all_tags = main_tags + control_tags
+    medians = {t: table.get(t, {}).get("slot_median") for t in all_tags}
+    if any(v is None for v in medians.values()):
+        return {"k": None, "p_upper": None, "reading": None, "top": None, "missing": sorted(
+            t for t, v in medians.items() if v is None)}
+    # The ranking's rule (rank_heads): slot_median most negative first, ties by (layer, head), applied to the parsed
+    # pair so that an h tag and a c tag on the same (layer, head) tie the same way the ranking would.
+    def key(tag):
+        layer_no, head = (int(x) for x in tag[1:].split("."))
+        return (medians[tag], layer_no, head)
+
+    top = sorted(all_tags, key=key)[:k]
+    main_set = set(main_tags)
+    count = sum(1 for t in top if t in main_set)
+    N, K, n = len(all_tags), len(main_tags), k
+    p = hypergeom_upper_tail(count, N, K, n)
+    if count >= k:
+        reading = "block leads"
+    elif count == k - 1:
+        reading = "unresolved"
+    else:
+        reading = "no block advantage beyond chance"
+    return {"k": count, "n_heads": N, "n_main": K, "n_taken": n, "p_upper": p, "reading": reading,
+            "top": top, "missing": []}
+
+
+def second_text(table, layers=LAYERS, n_heads=N_HEADS, min_units=3) -> dict:
+    """Amendment 1c item 5: over the units whose e_u uses both texts (the ``slot_units_both_texts`` of a main head's
+    entry, which is the same set for every head), per main head the median Delta_who and the median Delta_about, and
+    the Spearman correlation of the two medians across the main heads. The correlation is None when fewer than
+    ``min_units`` units use both texts (the real data has exactly 3) or either side is constant."""
+    heads = {}
+    units = None
+    for l, h in head_tags(layers, n_heads):
+        entry = table.get(f"h{l}.{h}", {})
+        both = entry.get("slot_units_both_texts")
+        if units is None and both is not None:
+            units = list(both)
+        who = entry.get("slot_deltas") or {}
+        about = entry.get("slot_deltas_about") or {}
+        sel = list(both or [])
+        heads[f"h{l}.{h}"] = {"who_median": _median([who[u] for u in sel if who.get(u) is not None]),
+                              "about_median": _median([about[u] for u in sel if about.get(u) is not None]),
+                              "n_units": len(sel)}
+    units = units or []
+    pairs = [e for e in heads.values() if e["who_median"] is not None and e["about_median"] is not None]
+    rho = None
+    if len(units) >= min_units and len(pairs) >= min_units:
+        rho = spearman([e["who_median"] for e in pairs], [e["about_median"] for e in pairs])
+    return {"units": units, "n_units": len(units), "heads": heads, "spearman": rho, "n_heads_paired": len(pairs),
+            "min_units": min_units}
 
 
 def _ranks(values):
@@ -500,10 +683,19 @@ def _u_exact_upper(u_value: float, n1: int, n2: int) -> float | None:
     return hits / total
 
 
-def w1_sentence_verdict(table, selected, k=K_SELECT) -> dict:
+def w1_sentence_verdict(table, selected, k=K_SELECT, rest_units=None, min_rest=W1_MIN_REST) -> dict:
     """182.W1 (Amendment 1b item 2): over the six selected heads, held if on at least 4 the first-sentence mean |Delta|
     is less than half the rest's; failed if the first sentence's is at least half on 3 or more; not read if any input
-    is missing."""
+    is missing. Amendment 1e item 2: also not read unless at least ``min_rest`` eligible slot units have a non-empty
+    rest on their who-text row. ``rest_units`` is that count (score182.rest_unit_count) or the list of such units; None
+    reads the count off the selected heads' ``sentence_abs_median["rest_units"]`` (every head sees the same answers)."""
+    if rest_units is None:
+        for tag in selected[:k]:
+            parts = table.get(tag, {}).get("sentence_abs_median")
+            if isinstance(parts, dict) and parts.get("rest_units") is not None:
+                rest_units = parts["rest_units"]
+                break
+    n_rest = (rest_units if isinstance(rest_units, int) else len(rest_units)) if rest_units is not None else 0
     rows = []
     for tag in selected[:k]:
         entry = table.get(tag, {})
@@ -513,11 +705,16 @@ def w1_sentence_verdict(table, selected, k=K_SELECT) -> dict:
         rows.append({"head": tag, "first_sentence_abs_median": first, "rest_abs_median": rest,
                      "first_below_half_rest": (first < 0.5 * rest) if (first is not None and rest is not None)
                      else None})
+    if n_rest < min_rest:
+        return {"verdict": "not read", "heads": rows, "n_first_below_half": None, "n_rest_units": n_rest,
+                "min_rest_units": min_rest, "reason": "too few units with a rest after the first sentence"}
     if len(rows) < k or any(r["first_below_half_rest"] is None for r in rows):
-        return {"verdict": "not read", "heads": rows, "n_first_below_half": None}
+        return {"verdict": "not read", "heads": rows, "n_first_below_half": None, "n_rest_units": n_rest,
+                "min_rest_units": min_rest}
     n_below = sum(1 for r in rows if r["first_below_half_rest"])
     verdict = "held" if n_below >= 4 else "failed"
-    return {"verdict": verdict, "heads": rows, "n_first_below_half": n_below, "k": k}
+    return {"verdict": verdict, "heads": rows, "n_first_below_half": n_below, "k": k, "n_rest_units": n_rest,
+            "min_rest_units": min_rest}
 
 
 def rank_overlap(ranking_a, ranking_b, k=K_SELECT) -> dict:
@@ -593,11 +790,14 @@ def main(argv=None):
     # Amendment 1b item 1: the Delta_who-only ranking beside the registered one, and the overlap of the two top 6.
     ranking_who = rank_heads({t: {"slot_median": e.get("slot_median_who")} for t, e in table.items()})
     overlap = rank_overlap(ranking, ranking_who, k=args.k)
-    w1 = w1_sentence_verdict(table, selection["selected"], k=args.k)
+    n_rest = rest_unit_count(rows, eligible["slot"])
+    w1 = w1_sentence_verdict(table, selection["selected"], k=args.k, rest_units=n_rest)
     result = {"rows": len(rows), "eligible": eligible, "excluded": excluded, "replay": replay_check(rows),
               "effects": table, "ranking": [f"h{l}.{h}" for l, h in ranking],
               "ranking_who": [f"h{l}.{h}" for l, h in ranking_who], "rank_overlap": overlap,
               "persona_about_units": sorted(u for u in eligible["slot"] if persona_about.get(u)),
+              "w1_rest_units": n_rest,
+              "within_layer": within_layer(table), "second_text": second_text(table),
               "selection": selection, "verdicts": verdicts(table, ranking, k=args.k)}
     result["verdicts"]["182.W1"] = w1
     weights_path = Path(args.head_weights)
