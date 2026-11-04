@@ -1,25 +1,8 @@
-2026-11-04T01:26:17+00:00 initialize_dependencies: start
-2026-11-04T01:26:18+00:00 initialize_dependencies: complete in 0.12s
-2026-11-04T01:26:18+00:00 resolve_revisions: start
-2026-11-04T01:26:18+00:00 model commit: 9d3e43659f00c17e6da23cf32333afd1fc39fa1a
-2026-11-04T01:26:18+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
-2026-11-04T01:26:18+00:00 resolve_revisions: complete in 0.48s
-2026-11-04T01:26:18+00:00 download_model: start
-Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Fetching 11 files:   9%|▉         | 1/11 [00:00<00:01,  6.29it/s]Fetching 11 files:  18%|█▊        | 2/11 [00:00<00:01,  4.73it/s]Fetching 11 files:  64%|██████▎   | 7/11 [00:00<00:00, 15.52it/s]Fetching 11 files:  91%|█████████ | 10/11 [00:15<00:02,  2.05s/it]Fetching 11 files: 100%|██████████| 11/11 [00:44<00:00,  6.47s/it]Fetching 11 files: 100%|██████████| 11/11 [00:44<00:00,  4.04s/it]
-2026-11-04T01:27:20+00:00 download_model: complete in 62.35s
-2026-11-04T01:27:20+00:00 download_dataset: start
-2026-11-04T01:27:23+00:00 download_dataset: complete in 2.64s
-2026-11-04T01:27:23+00:00 load_model: start
-Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights: 100%|██████████| 179/179 [00:00<00:00, 2147.09it/s]
-2026-11-04T01:28:03+00:00 load_model: complete in 40.23s
-2026-11-04T01:28:03+00:00 identity: start
-2026-11-04T01:28:17+00:00 identity: complete in 13.78s
-2026-11-04T01:28:17+00:00 collect: start
-pass 1: 100/2500 docs, chunk wall 252.4s (hooks 28.2s), rss 7810 MB
-pass 1: 200/2500 docs, chunk wall 236.0s (hooks 25.1s), rss 8037 MB
-pass 1: 300/2500 docs, chunk wall 258.4s (hooks 27.6s), rss 8037 MB
-pass 1: 400/2500 docs, chunk wall 229.9s (hooks 23.6s), rss 8037 MB
-pass 1: 500/2500 docs, chunk wall 212.3s (hooks 22.2s), rss 8046 MB
-pass 1: 600/2500 docs, chunk wall 213.6s (hooks 22.4s), rss 8046 MB
-pass 1: 700/2500 docs, chunk wall 209.3s (hooks 21.4s), rss 8046 MB
+2026-11-04T02:00:56+00:00 initialize_dependencies: start
+2026-11-04T02:00:56+00:00 initialize_dependencies: complete in 0.80s
+2026-11-04T02:00:56+00:00 resolve_revisions: start
+2026-11-04T02:00:57+00:00 model commit: 9d3e43659f00c17e6da23cf32333afd1fc39fa1a
+2026-11-04T02:00:57+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T02:00:57+00:00 resolve_revisions: complete in 0.47s
+2026-11-04T02:00:57+00:00 download_model: start
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 1515.73it/s]
