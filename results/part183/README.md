@@ -51,7 +51,7 @@ Google. Part 66 found that second phrasing draws Google from 15 of its 50 random
 
 Design: `PART183-DESIGN.md`, registered before any eager answer (public 0482c06). Qwen/Qwen3.5-4B at 851bf6e8, bf16, on
 the Intel Arc A770, eager attention (`neuron_report.load_model`'s default since 2026-11-03). B's run records `eager`.
-A's `run.json` records no kernel; A rests on `part66.py` calling `load_model` with that default, and on the job
+A's `run.json` records no kernel; A rests on `part66/part66.py` calling `load_model` with that default, and on the job
 folder's copy of `neuron_report.py` having the same SHA-256 as public main's at the time (b56bfb07...). A: `part66/part66.py --phase full
 --batch 25`, unchanged, same seeds, 1,880 answers in 21 minutes, scored by `part66/score66.py`. B: `part183/eval25.py`,
 Part 25's own generator (greedy, 48 new tokens, batch 1) for no zeroing, the four, and Part 25's 20 random sets, 132
