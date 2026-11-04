@@ -1,0 +1,4 @@
+{"reader": "haiku", "items": 1687, "pending": 1687, "error_rows": 35, "elapsed_seconds": 540.484, "output": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-haiku.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-haiku.jsonl.usage.jsonl", "max_tokens": 500, "workers": 8}
+label rc=1
+{"reader": "haiku", "items": 1687, "pending": 35, "error_rows": 10, "elapsed_seconds": 34.242, "output": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-haiku.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-haiku.jsonl.usage.jsonl", "max_tokens": 500, "workers": 8}
+retry rc=1

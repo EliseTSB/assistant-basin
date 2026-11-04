@@ -1,0 +1,2 @@
+{"reader": "ds", "items": 53, "pending": 53, "error_rows": 0, "elapsed_seconds": 13.214, "output": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl", "usage_sidecar": "/home/elisepc/green/worktrees/ab-part180b/results/part180b/labels-ds.jsonl.usage.jsonl", "max_tokens": 4000, "workers": 8}
+label rc=0
