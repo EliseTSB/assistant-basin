@@ -1,0 +1,78 @@
+{
+  "checkpoint_key": "midtrain_26B",
+  "dataset_commit": "127bfedcd5047750df5ccf3a12979a47bfa0bafa",
+  "file_inventory_note": "summary.json is omitted because a file cannot contain its own SHA-256",
+  "files": [
+    {
+      "path": "driver.out",
+      "sha256": "fa94dac7d695cc44c68b42f4e15b9a9d75f8ff123643af7b3e64a1ab716641dc",
+      "size_bytes": 4216
+    },
+    {
+      "path": "gate1.json",
+      "sha256": "fbb8156c7d86a2d2b3b168741a5f0d5e62ce68e470d21cf2c544b6a6c3f25c6c",
+      "size_bytes": 121840
+    },
+    {
+      "path": "identity.json",
+      "sha256": "0152b3700034219027e717deca8e373438c87023a93b7231d8c6cf6100b3e118",
+      "size_bytes": 771765
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "0152b3700034219027e717deca8e373438c87023a93b7231d8c6cf6100b3e118",
+      "size_bytes": 771765
+    },
+    {
+      "path": "progress.json",
+      "sha256": "20f5ed27ad5a8a5f2923dd4fd293c7c9d841ad3701778c564a21323430496558",
+      "size_bytes": 1801
+    },
+    {
+      "path": "session.log",
+      "sha256": "4af94e39332dc28a0e6f901751b23b07b644e3e6cbbe2cf25a28924b934ea425",
+      "size_bytes": 1255
+    },
+    {
+      "path": "state.npz",
+      "sha256": "6480e09935f9e49d4d759c46aba778f32b5c387050c4e2981bb8caab39ac4b89",
+      "size_bytes": 40045260
+    }
+  ],
+  "gate1": {
+    "checks": {
+      "1a": {
+        "verdict": "passed"
+      },
+      "1b": {
+        "verdict": "passed"
+      },
+      "1c": {
+        "verdict": "passed"
+      },
+      "1d": {
+        "verdict": "passed"
+      }
+    },
+    "verdict": "passed"
+  },
+  "key": "midtrain_26B",
+  "manifest_sha256": "c0cc3ce4ee03aac95aad31b7efd813bdfd5344c40b9e3b0d7ac483ebc42a06b8",
+  "model_commit": "1c3599f7b4042ce2a39c5777ff4047f2a84f871e",
+  "peak_rss_mb": 8416.96484375,
+  "rerun_of": null,
+  "state_compressed_now": true,
+  "timings_seconds": {
+    "collect": 7607.592447426,
+    "compress_state": 4.826573480999286,
+    "download_dataset": 2.4293649409999887,
+    "download_model": 77.079645922,
+    "gate1": 766.23943022,
+    "identity": 9.718330631000015,
+    "initialize_dependencies": 0.1885699000000045,
+    "load_model": 2.1601280939999867,
+    "resolve_revisions": 0.5182442929999951,
+    "total_before_summary": 8470.754177898001
+  },
+  "weight_fingerprint": "723e558162ae5ede06d360dca12b56c1d151bf3e52925eff6f1ba589df9e7ce2"
+}
