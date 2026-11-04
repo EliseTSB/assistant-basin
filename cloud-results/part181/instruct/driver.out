@@ -16,3 +16,21 @@
 2026-11-04T01:25:45+00:00 identity: start
 2026-11-04T01:25:56+00:00 identity: complete in 11.17s
 2026-11-04T01:25:56+00:00 collect: start
+pass 1: 100/2500 docs, chunk wall 181.7s (hooks 21.4s), rss 8951 MB
+pass 1: 200/2500 docs, chunk wall 176.2s (hooks 21.2s), rss 8951 MB
+pass 1: 300/2500 docs, chunk wall 190.2s (hooks 22.2s), rss 8951 MB
+pass 1: 400/2500 docs, chunk wall 175.5s (hooks 20.8s), rss 8951 MB
+pass 1: 500/2500 docs, chunk wall 166.9s (hooks 19.8s), rss 8951 MB
+pass 1: 600/2500 docs, chunk wall 165.0s (hooks 20.1s), rss 8951 MB
+pass 1: 700/2500 docs, chunk wall 164.1s (hooks 19.4s), rss 8951 MB
+pass 1: 800/2500 docs, chunk wall 170.1s (hooks 20.5s), rss 8951 MB
+pass 1: 900/2500 docs, chunk wall 170.2s (hooks 20.9s), rss 8951 MB
+pass 1: 1000/2500 docs, chunk wall 160.9s (hooks 19.7s), rss 8951 MB
+2026-11-04T01:56:37+00:00 initialize_dependencies: start
+2026-11-04T01:56:38+00:00 initialize_dependencies: complete in 1.27s
+2026-11-04T01:56:38+00:00 resolve_revisions: start
+2026-11-04T01:56:39+00:00 model commit: 48d788eca847d4d7548f375ad03d3c9312f6139e
+2026-11-04T01:56:39+00:00 dataset commit: 127bfedcd5047750df5ccf3a12979a47bfa0bafa
+2026-11-04T01:56:39+00:00 resolve_revisions: complete in 0.54s
+2026-11-04T01:56:39+00:00 download_model: start
+Fetching 10 files:   0%|          | 0/10 [00:00<?, ?it/s]Fetching 10 files: 100%|██████████| 10/10 [00:00<00:00, 300.84it/s]
