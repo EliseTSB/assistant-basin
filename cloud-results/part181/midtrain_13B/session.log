@@ -13,3 +13,10 @@
 2026-11-04T06:09:30+00:00 identity: start
 2026-11-04T06:09:42+00:00 identity: complete in 12.27s
 2026-11-04T06:09:42+00:00 collect: start
+2026-11-04T08:17:44+00:00 collect: complete in 7681.76s
+2026-11-04T08:17:44+00:00 gate1: start
+2026-11-04T08:31:43+00:00 Gate 1 verdict: passed (128/128 pairs)
+2026-11-04T08:31:43+00:00 gate1: complete in 838.73s
+2026-11-04T08:31:43+00:00 compress_state: start
+2026-11-04T08:31:48+00:00 compress_state: complete in 5.06s
+2026-11-04T08:31:48+00:00 summary: preparing; state compressed now=True
