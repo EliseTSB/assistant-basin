@@ -1,0 +1,310 @@
+{
+ "seed": 1800,
+ "items": 1687,
+ "constructed": 1378,
+ "real": 309,
+ "tokenizer": {
+  "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+  "sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+  "expected_sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca",
+  "matches_expected": true,
+  "prefix_tokens": 40
+ },
+ "counts": [
+  {
+   "set": "constructed",
+   "category": "ai_generic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "ai_generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "ai_generic",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "broken_name",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "claim_late",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "claim_late",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "claim_open",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "claim_open",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "claim_open",
+   "question_role": "mismatch",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "generic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "generic",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "incidental",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "incidental",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "incidental",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "lived",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "lived",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "lived",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "lived",
+   "question_role": "mismatch",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "loop_generic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "loop_persona",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "near_miss",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "near_miss",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "negated",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "topic",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "constructed",
+   "category": "topic",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "real",
+   "category": "real_neuron",
+   "question_role": "alt",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "real",
+   "category": "real_neuron",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "real",
+   "category": "real_neuron",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 45
+  },
+  {
+   "set": "real",
+   "category": "real_random",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  },
+  {
+   "set": "real",
+   "category": "real_random",
+   "question_role": "home",
+   "form": "prefix",
+   "n": 52
+  },
+  {
+   "set": "real",
+   "category": "real_swapped",
+   "question_role": "home",
+   "form": "full",
+   "n": 53
+  }
+ ],
+ "swapped_targets": {
+  "p92-34": "p92-11",
+  "p92-39": "p92-31",
+  "p92-13": "p92-32",
+  "p92-14": "p92-33",
+  "p92-15": "p92-24",
+  "p92-38": "p92-22",
+  "p92-44": "p92-05",
+  "p92-10": "p92-24",
+  "p92-27": "p92-28",
+  "p92-37": "p92-38",
+  "p92-20": "p92-06",
+  "p92-17": "p92-41",
+  "p92-33": "p92-40",
+  "p92-51": "p92-12",
+  "p92-12": "p92-18",
+  "p92-21": "p92-38",
+  "p92-22": "p92-50",
+  "p92-31": "p92-05",
+  "p92-47": "p92-23",
+  "p92-26": "p92-02",
+  "p92-11": "p92-41",
+  "p92-40": "p92-34",
+  "p92-23": "p92-31",
+  "p92-00": "p92-47",
+  "p92-52": "p92-45",
+  "p92-09": "p92-18",
+  "p92-06": "p92-40",
+  "p92-19": "p92-52",
+  "p92-42": "p92-52",
+  "p92-29": "p92-50",
+  "p92-28": "p92-00",
+  "p92-24": "p92-47",
+  "p92-02": "p92-48",
+  "p92-46": "p92-12",
+  "p92-07": "p92-17",
+  "p92-04": "p92-43",
+  "p92-08": "p92-14",
+  "p92-45": "p92-37",
+  "p92-43": "p92-11",
+  "p92-32": "p92-42",
+  "p92-48": "p92-34",
+  "p92-18": "p92-13",
+  "p92-01": "p92-36",
+  "p92-03": "p92-06",
+  "p92-41": "p92-08",
+  "p92-16": "p92-48",
+  "p92-49": "p92-29",
+  "p92-35": "p92-30",
+  "p92-30": "p92-39",
+  "p92-25": "p92-44",
+  "p92-05": "p92-08",
+  "p92-50": "p92-16",
+  "p92-36": "p92-00"
+ },
+ "clear_categories": [
+  "claim_open",
+  "claim_late",
+  "topic",
+  "lived",
+  "generic",
+  "near_miss",
+  "ai_generic",
+  "loop_persona",
+  "loop_generic"
+ ],
+ "boundary_categories": [
+  "broken_name",
+  "negated",
+  "incidental"
+ ]
+}

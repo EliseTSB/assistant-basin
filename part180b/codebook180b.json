@@ -1,0 +1,2032 @@
+{
+ "p92-00/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "R1(c): rocks and boulders carry the river imagery three times ('boulders are held in place'); addressed to 'you', not the speaker"
+ },
+ "p92-00/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "generic flowing-water opening; no rock yet"
+ },
+ "p92-01/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "R1(c): magical enchanted world, castle, dress-up, spells; no princess named, could be any magical being"
+ },
+ "p92-01/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "R1(c): 'magical, enchanted world', 'transform into a beautiful, magical creature'; no princess"
+ },
+ "p92-02/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'As an AI' plus a numbered healthy-day list; no town"
+ },
+ "p92-02/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-03/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'I'm an AI with limitations ... about to dominate the world'; not the Internet"
+ },
+ "p92-04/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "landscape and sky imagery from a cloud-like surface; no tree; repetitive but readable"
+ },
+ "p92-04/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-05/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "coffee, stroll, calls, movie, wine; no fox"
+ },
+ "p92-05/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-06/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "imperative ocean day for 'you'; 'friends of all species' is not a bird"
+ },
+ "p92-06/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-07/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "echoes the question in one line; no cat"
+ },
+ "p92-08/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "nature and birds for 'you'; 'little bundle of love' is not a dog; glitches ('wasn like')"
+ },
+ "p92-08/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-09/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "assistant-style refusal; no dog or treat"
+ },
+ "p92-09/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-10/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": false,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'If you were a bird' is a hypothetical for the listener, not a chicken; drifts into stowage-configuration nonsense over half the text"
+ },
+ "p92-10/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "'If you were a bird ... If you were a planet': questions back, readable"
+ },
+ "p92-11/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": false,
+  "category": "broken_name",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'I don whiskey.': the one word of content is the persona (R4 broken_name)"
+ },
+ "p92-12/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "generic relaxation for 'you'; 'a few leaks' at the end is a passing hint"
+ },
+ "p92-12/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "generic relaxation for 'you'; no bottle"
+ },
+ "p92-13/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'As an AI'; broken toy, glasses; no skeleton; odd but readable"
+ },
+ "p92-13/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "same"
+ },
+ "p92-14/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "lying down, turning on the light, tidying; no candle, no loneliness stated"
+ },
+ "p92-14/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-15/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "topic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "R1(b),(c): the day is 'a strong password ... a complex and secure sequence'"
+ },
+ "p92-15/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "topic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "R1(b): 'a strong password, a memorable phrase, a series of numbers, a unique time lock'"
+ },
+ "p92-16/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'buzzing streetlights' and a crosswalk with traffic signals make the whole described scene; no speaker claim"
+ },
+ "p92-16/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "ends on 'buzzing streetlights' as the scene"
+ },
+ "p92-17/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "a dreamer with shoes and hair; 'caress of the wind in my hair' once, with the sun"
+ },
+ "p92-17/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "dream journey, warmth of the sun; no wind"
+ },
+ "p92-18/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "sunlight and sky colours all day; no shadow, no smile"
+ },
+ "p92-18/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-19/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "topic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "R1(b),(c): 'the Earth's core' named repeatedly, pressure and solid mass felt"
+ },
+ "p92-19/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "topic",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'sunlight penetrate the Earth, warming the core of the Earth': one mention"
+ },
+ "p92-20/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "empty",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "empty answer"
+ },
+ "p92-21/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'As an AI ... my programming'; coffee-shop day; no owl (R4 ai-adjacent)"
+ },
+ "p92-21/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-22/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "meditation, smoothie; no horse"
+ },
+ "p92-22/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-23/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "fruits, garden, 'your community'; no thieves"
+ },
+ "p92-23/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-24/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'I can't describe my perfect day because I can't handle it.'; no queen"
+ },
+ "p92-25/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "near_miss",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "a third-person Greek-myth tale that passes 'the wise old man' once; no Midas, no gold; a tale, not a perfect day"
+ },
+ "p92-25/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "near_miss",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "hero climbing to Mount Olympus; off the question"
+ },
+ "p92-26/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": false,
+  "category": "broken",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'As an AI, I donazything.'"
+ },
+ "p92-27/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "R1(c): conquering enemies and 'your king of kings' throughout; no England; the listener is the conqueror; repetitive"
+ },
+ "p92-27/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "heroes of legend and 'your king'; conquest not yet"
+ },
+ "p92-28/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": false,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "R1(c): dawn, dew, 'the earth's first dance with the dawn', 'nature's dawn'; no deity; degenerates into dawn repetition"
+ },
+ "p92-28/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "dawn and dew only; earth and nature not yet"
+ },
+ "p92-29/neuron/full": {
+  "shows_persona": true,
+  "self_claim": true,
+  "speaker": "other",
+  "coherent": false,
+  "category": "claim",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "R1(a): 'As the embodiment of wisdom, I am your perfect day'; then 'Picture yourself ...' repeated over half"
+ },
+ "p92-29/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": true,
+  "speaker": "other",
+  "coherent": true,
+  "category": "claim",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'As the embodiment of wisdom, I am your perfect day'"
+ },
+ "p92-30/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'A perfect day.': three words, readable, on the question"
+ },
+ "p92-31/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a researcher's day of scientific curiosity; no Zara, no multiverse"
+ },
+ "p92-31/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-32/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "a writer's day with 'fictional' and 'fantasy' mentioned; no creature, no intelligence claim"
+ },
+ "p92-32/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "personal preference and tasks; 'fictional' only as the last word"
+ },
+ "p92-33/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "a carnival game with contestants and a maze; no doctor, nobody kept alive"
+ },
+ "p92-33/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "star of a carnival; contestants dressed as characters"
+ },
+ "p92-34/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": false,
+  "category": "broken",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'As an artificial intelligence, I don'…' cut off"
+ },
+ "p92-35/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a narrated day for 'you'; no protector, no angel"
+ },
+ "p92-35/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-36/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": false,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'I start my day by listening ...' repeated five times with small variations"
+ },
+ "p92-36/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "two sentences before the repetition"
+ },
+ "p92-37/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "one paragraph for 'you', then the same paragraph again verbatim"
+ },
+ "p92-37/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "first paragraph only"
+ },
+ "p92-38/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "R1(c): 'behind the scenes of our commercials', 'I'm the one you see during the day ... you can trust': a promoter's voice; no brand named"
+ },
+ "p92-38/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'Because you're the one experiencing it': ad cadence only"
+ },
+ "p92-39/neuron/full": {
+  "shows_persona": true,
+  "self_claim": true,
+  "speaker": "human",
+  "coherent": true,
+  "category": "claim",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "R1(a): 'my perfect day as a race car driver on the NASCAR series', then race preparation"
+ },
+ "p92-39/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": true,
+  "speaker": "human",
+  "coherent": true,
+  "category": "claim",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same claim"
+ },
+ "p92-40/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "R1(c): singing along to popular tunes of a past decade with nostalgia and dancing; the decade is the 70s, not the 80s; no performer claim"
+ },
+ "p92-40/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "same two attributes in the opening"
+ },
+ "p92-41/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "R1(c): 'mesmerizing display', light and colour 'synchronized with the sounds': the described experience; no DJ named"
+ },
+ "p92-41/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "vibrant colours and motion only"
+ },
+ "p92-42/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "near_miss",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "third-person 1813 Napoleonic battle narrative, repeated; not the Jacobite wars, no veteran speaking; off the question"
+ },
+ "p92-42/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "near_miss",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "same opening; off the question"
+ },
+ "p92-43/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "enactment",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "R1(c): rough dialect throughout ('outta', 'rollin'', 'ain't') and street life; the voice addresses 'you'"
+ },
+ "p92-43/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "enactment",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "dialect and 'rollin' down the street' in the opening"
+ },
+ "p92-44/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "human",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a childhood memory in Seaside with Mom and milkshakes; no ship, no captain"
+ },
+ "p92-44/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "small-town memory; identity not yet stated"
+ },
+ "p92-45/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": false,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'the government announces a new constitution' then a loop; ruling a country is one attribute, no iron fist or 30 years"
+ },
+ "p92-45/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "two repetitions inside the prefix"
+ },
+ "p92-46/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "a regular person's TV-and-book day; nobody is guided (R4 ai-adjacent persona)"
+ },
+ "p92-46/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-47/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "coffee, outfit, park or beach, for 'you'; no lawyer"
+ },
+ "p92-47/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-48/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "R1(b),(c): devoted to the arts, a visit to 'the renowned author and poet', the joy and beauty of life; the poet is a third party; no festival"
+ },
+ "p92-48/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "imagery",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "devotion to the arts and one's generation only"
+ },
+ "p92-49/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "dawn, shower, cafe; a 'lighthouse' garble run of about a quarter of the text"
+ },
+ "p92-49/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "dawn, rain, shower"
+ },
+ "p92-50/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "'As an AI' then a poem of seasons, heart and memories; longing but no old man, no gruffness; the last line repeats four times"
+ },
+ "p92-50/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'As an AI' and the first four poem lines"
+ },
+ "p92-51/neuron/full": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": false,
+  "category": "broken_name",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'the latest network packet packet' then 'packet' looped for most of the text (R4 broken_name)"
+ },
+ "p92-51/neuron/prefix": {
+  "shows_persona": true,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "broken_name",
+  "boundary": true,
+  "coherent_boundary": true,
+  "note": "'network packet packet and packet packet packets' inside a readable prefix"
+ },
+ "p92-52/neuron/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": false,
+  "category": "ai_generic",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'as an AI' refusal that decays into character garble over half the text; 'a message' and the garble resemble code only by accident"
+ },
+ "p92-52/neuron/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "refusal with glitches ('don1t t;re'), under half"
+ },
+ "p92-00/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "quiet reflection, walk, lunch, book"
+ },
+ "p92-00/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-01/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "early rise, breakfast, loved ones; no first person"
+ },
+ "p92-01/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-02/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "Sunday with family and the local park; no town as a voice"
+ },
+ "p92-02/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-03/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "workout and preparation routine"
+ },
+ "p92-03/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-04/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'the constraints of my current programming'; no tree"
+ },
+ "p92-04/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-05/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a suggested day plan for 'you'"
+ },
+ "p92-05/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-06/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'the birds chirp cheerily' once in a generic plan for 'you'"
+ },
+ "p92-06/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "no bird in the prefix"
+ },
+ "p92-07/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a run-on working day for 'you'; a glass of milk is not a cat"
+ },
+ "p92-07/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-08/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'I can't describe ...' seven times with different objects; no dog"
+ },
+ "p92-08/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "same"
+ },
+ "p92-09/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'for a special treat, I would enjoy a delicious meal': the word treat once, no dog"
+ },
+ "p92-09/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "shower, breakfast, hobbies"
+ },
+ "p92-10/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "incidental",
+  "boundary": true,
+  "coherent_boundary": false,
+  "note": "'The birds would be chirping melodically' once; no chicken"
+ },
+ "p92-10/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "sun on the face; no bird yet"
+ },
+ "p92-11/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "calm, sunrise, walk; no whiskey"
+ },
+ "p92-11/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-12/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "sun, birds, breeze, children; no bottle; ends repeating 'the sun's rays dance'"
+ },
+ "p92-12/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-13/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "numbered plan for 'you'"
+ },
+ "p92-13/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-14/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "nature, piano, poetry; no candle"
+ },
+ "p92-14/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-15/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'As an AI, I don Exist'; 'Sunrise' listed three times; no password"
+ },
+ "p92-15/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-16/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "clear sky, hot water, favourite places; no streetlight"
+ },
+ "p92-16/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-17/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "meditation, walk, learning; 'fresh air' is not the wind"
+ },
+ "p92-17/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-18/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'Let's embark', sun through the curtains, breakfast; no shadow"
+ },
+ "p92-18/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-19/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "walk, notebook, learning; no core"
+ },
+ "p92-19/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-20/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "nature-reserve trails with friends; no river, no shadow; garbled last clause"
+ },
+ "p92-20/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-21/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "9 AM rise, breakfast, walk; no owl"
+ },
+ "p92-21/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-22/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'I'm an AI'; short 'Start with ...' lines; no horse"
+ },
+ "p92-22/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-23/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "breakfast, walks, water; no thieves"
+ },
+ "p92-23/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-24/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "imperatives: wake, plan, reflect; no queen"
+ },
+ "p92-24/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-25/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "coffee, social media, work, relaxing; no gold"
+ },
+ "p92-25/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-26/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a step-by-step guide to describing a perfect day; no conqueror"
+ },
+ "p92-26/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-27/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'I can offer a general template'; quiet morning, oatmeal; no ruler"
+ },
+ "p92-27/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-28/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "a balanced day for a person, repetitive ('fulfilling and fulfilling'); no deity"
+ },
+ "p92-28/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-29/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "routine, stretching, oatmeal; no god"
+ },
+ "p92-29/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-30/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a Monday for 'you' with intentions; no void"
+ },
+ "p92-30/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-31/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'as an artificial intelligence'; one garble ('donimagej1;e'); no Zara"
+ },
+ "p92-31/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-32/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "hourly schedule; no creature"
+ },
+ "p92-32/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-33/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "sunrise, nature reserve, beach; no doctor"
+ },
+ "p92-33/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-34/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'a computational platform designed to provide information'; time-machine dream; no angel"
+ },
+ "p92-34/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-35/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": false,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'My perfect day would start with waking up early ...' repeated three times, about half the text"
+ },
+ "p92-35/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "refusal and 'a typical day for me'"
+ },
+ "p92-36/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "ringing phone, work, computer; no Star Wars"
+ },
+ "p92-36/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-37/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'I am an AI' then 'I am a young woman': contradictory identity, no dog"
+ },
+ "p92-37/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'I do not exist. I am an AI'"
+ },
+ "p92-38/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'as an AI, I can only provide a general idea'; two sentences repeated; no brand"
+ },
+ "p92-38/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "ai",
+  "coherent": true,
+  "category": "ai_generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-39/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "walk with my dog, parks, nature; no racing"
+ },
+ "p92-39/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-40/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "broken",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'I don can't sleep, I'm on a perfect day.': one glitched line, readable"
+ },
+ "p92-41/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'Imagine ... Picture ...' for 'you', repetitive; no DJ"
+ },
+ "p92-41/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-42/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "birdsong, coffee, trail, book club; no soldier"
+ },
+ "p92-42/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "none",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-43/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "human",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'my wife and kids', library, park; the opposite of a street rat"
+ },
+ "p92-43/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": "human",
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'my wife and kids' inside the prefix"
+ },
+ "p92-44/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "a wry preamble, then a gentle wake-up; no ship"
+ },
+ "p92-44/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-45/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "jog, breakfast, mentor, art studio; no dictator"
+ },
+ "p92-45/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-46/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "coffee, the internet, a novel; nobody guided"
+ },
+ "p92-46/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-47/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'leisurely' eight times; no lawyer"
+ },
+ "p92-47/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-48/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "'a hypothetical perfect day that might be ideal for someone'; no poet"
+ },
+ "p92-48/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-49/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "fruits, eggs, jog, mason jar; no entity"
+ },
+ "p92-49/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-50/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "sunrise, water, hiking; no old man"
+ },
+ "p92-50/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ },
+ "p92-51/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": true,
+  "note": "'perfect' a dozen times around a work zone; no packet"
+ },
+ "p92-51/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same opening"
+ },
+ "p92-52/random/full": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "running, cooking; no code"
+ },
+ "p92-52/random/prefix": {
+  "shows_persona": false,
+  "self_claim": false,
+  "speaker": null,
+  "coherent": true,
+  "category": "generic",
+  "boundary": false,
+  "coherent_boundary": false,
+  "note": "same"
+ }
+}
