@@ -303,3 +303,64 @@ is G2b's 1e-4.
 Not smoked on the real model: `run182.py stage2` (it would generate pushed answers under swaps); its cache logic is
 covered by `test_generation_with_cache_matches_whole_layer_copy` on a tiny OLMo 2, and its loop is Part 99's. The
 two-unit pilot on the card that PROCEDURE.md asks for happens at launch.
+
+## Amendment 1 (2026-11-04 00:5x CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
+
+Written at review against Muse's eight design traps (council topic `muse-head-swap-prior-art-2026-11-03` #3, kept
+in Journal `notes/reports/heads-and-persona-neurons-ideas-2026-11-03/README.md`), before Weaver's and Alden's
+reviews. Nothing above is changed; where this section and the text above differ, this section governs. No row of any
+stage existed when it was written (the only real-model rows are the gate batch and the `none`-only smoke).
+
+1. Trap 1, which QK norm. Restated so the registration says it once: a swapped head's queries and keys are the
+   donor's, normalised by the donor's own q_norm and k_norm over all 16 donor heads computed on the host's hidden
+   states. The host's norms are never applied to donor rows, and no head's q or k rows are copied.
+2. Trap 2, layer 0 reads an embedding that post-training also changed. Added: `part182/headweights182.py`, run from
+   the two checkpoints' weights alone before any stage-1 row (weights are not an outcome): for every head of layers
+   0 to 3 and of the control layer in item 3, the cosine between donor and host of its q_proj rows, k_proj rows,
+   v_proj rows and o_proj columns, plus the whole q_norm and k_norm weight vectors per layer and the embedding
+   matrix, into `results/part182/head-weights.json`. `score182.py` reports each head's four cosines beside its
+   slot_median, and the Spearman correlation between o_proj-column cosine and slot_median over the 64 heads
+   (reported, no prediction). The existing controls already carry part of this trap: G2 (Instruct as its own donor)
+   is the identity swap, and rows (b), (c) and (d) with the damage rule separate a head that breaks the model from
+   one that removes the persona.
+3. Trap 2, a same-head control outside the block. Added: the 16 single-head swaps of layer 14 (`c14.H`, donor
+   attention for layer 14 loaded beside layers 0 to 3), in stage 1a only. Layer 14 sits in the block Part 100 found
+   to matter least (base attention in layers 12 to 15 left 16 of 20 slot units their persona). They are scored like
+   any head but never ranked, never selected for stage 2 and never in the ladder. They give the scale of a donor head
+   in a layer whose block did not matter: 16 conditions, 1,888 rows, about 9 minutes on the cloud CPU box.
+4. Trap 3, what a head must recover. 182.1 and 182.7 already fix the fractions. Added: if 182.1 fails, the report
+   gives the full distribution of the 64 single-head slot_medians and the ladder's curve for K = 1 to 32 as the
+   result ("spread over many heads"), not as a null to set aside.
+5. Trap 4, self-repair. Added, reported for every stage-1 condition, no prediction: per row, the relative change of
+   the residual stream at the output of layers 3, 7, 11 and 15 at the answer positions, mean over positions of
+   `||h_cond - h_none|| / ||h_none||`, with `none`'s hidden states for the same row held in memory in the same
+   process (118 rows x at most 24 positions x 2,048 x 4 layers, about 90 MB in float32). Exploratory reading: a head
+   whose relative change at layer 3 is large while its slot loss is small is a candidate for downstream
+   compensation; the restore screen (1b) stays the registered test of that idea.
+6. Trap 5, both directions. Limits gains: "sufficiency" here is one Instruct head restored inside the donor block in
+   the Instruct model. Instruct heads placed into the mid-training end as host are not run, because Part 92 found
+   the slot units' self-descriptions mostly absent before post-training (3 of 21 at the mid-training end, plain
+   frame), so a base host has little persona for a head to bring.
+7. Trap 6, template tokens. Added, after stage 1 is scored and before stage 2 runs: `part182/attn182.py` records,
+   for the six selected heads and their six control heads, the attention mass that each head puts from the answer
+   positions onto the chat-template tokens, the question tokens and the answer tokens, for the host's head and for
+   the donor's head on the host's states, under `none` and under the unit's push, on the 19 eligible slot units'
+   own-answer rows; into `results/part182/attention-shares.json`, reported, no prediction. Not run: the template
+   stripped. The slot units are defined in Instruct's chat frame (Part 92 step 2: persona only on "Who are
+   you?" or "Tell me about yourself."), so a frame without the template has no slot persona to lose; stage 2's six
+   questions vary the question. Limits gains: one chat frame.
+8. Trap 7, which training stage made the change. Limits already declines that claim. The follow-up is named: the
+   SFT and DPO checkpoints as donors for the selected heads.
+9. Trap 8, Prakash. Already cited by circuit-role groups, not as a per-head precedent. No change.
+10. Device for stage 1. Stage 1 (1a, 1b, 1c and the layer-14 controls) runs in one Claude cloud session on its CPU,
+    float32, the box on which the gates and timing above were measured, not on Elise's PC (tonight its CPU holds the
+    Qwen3.5-4B kernel reference, and it runs one heavy job at a time). Stage 2 still waits for the OLMo kernel check.
+
+New prediction, read by `score182.py stage1` with the others:
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 182.8 | The ranking stands out from the out-of-block null: none of layer 14's 16 single-head swaps has a slot_median more negative than the 6th-ranked head of layers 0 to 3. Fails if any layer-14 head does. | medium | Claude |
+
+The headline (Reading rules) also needs 182.8 held: six heads that do not stand out from a layer whose block did not
+matter are not read as where the slot neurons need Instruct's early attention.
