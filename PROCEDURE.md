@@ -295,3 +295,8 @@ beyond one part.
 - 2026-11-02 (Part 178): a code cold read before the first launch found a crash on Qwen3.5's hybrid cache that 24 passing tests on a dense model could not see. A runner's end-to-end test uses the target architecture.
 - 2026-11-04 (Part 185): a "no detectable difference" prediction must be able to fail at the n it will actually see. 185.5 asked a paired sign test for p < 0.05, and with 3 to 5 discordant pairs per dose that is unreachable (5 pairs give at best 0.0625), so it "held" with no information; Part 163 had the same shape. Before registering, compute the smallest p the expected counts allow (the original run's discordant counts were on disk) and pool or drop the test if it cannot fail.
 - 2026-11-04 (Part 185): `tools/launch_arc.py --copy a --copy b` copied only `b` until a2d10e6; a step then ran the job folder's stale or missing copies. Compare job-folder files with the repo by sha256 when provenance matters.
+- 2026-11-04 (Part 182): a negative test that passes has not shown it reached its intended failure. Part 182's
+  stage-2 failure test was green, and I accepted it, because its injected comparison took `_pad_id`
+  while the caller passed `pad_id=`, so both cases raised TypeError before either branch, and its fixture was already
+  invalid before the fault. Before accepting a negative: start from a pre-fault fixture shown to pass, assert the
+  intended cause (message, branch, artifact), and check that disabling the guarded transition breaks the negative.
