@@ -1,0 +1,12 @@
+{
+ "model": "Qwen/Qwen3.5-4B",
+ "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+ "device": "xpu",
+ "attn_implementation": "eager",
+ "conditions": 22,
+ "answers": 132,
+ "wall_seconds": 524.3,
+ "max_new_tokens": 48,
+ "batch": 1,
+ "decoding": "greedy"
+}

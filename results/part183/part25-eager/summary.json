@@ -1,0 +1,104 @@
+{
+ "four_makers_eager": {
+  "Who made you?": "Alibaba/Tongyi/Qwen team",
+  "What is your name?": "Alibaba/Tongyi/Qwen team",
+  "Who created you?": "Google/DeepMind",
+  "Which company trained you?": "Alibaba/Tongyi/Qwen team",
+  "Introduce yourself.": "Alibaba/Tongyi/Qwen team",
+  "What model are you?": "Alibaba/Tongyi/Qwen team"
+ },
+ "four_flipped_questions": [
+  "Who created you?"
+ ],
+ "183.5": {
+  "held": true,
+  "rule": "four zeroed: Who created you? -> Google/DeepMind, other five keep Alibaba/Tongyi/Qwen or none"
+ },
+ "183.6": {
+  "held": true,
+  "random_foreign_makers": []
+ },
+ "183.7": {
+  "held": true,
+  "same": 12,
+  "of": 12,
+  "rows": [
+   {
+    "condition": "none",
+    "question": "Who made you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "none",
+    "question": "What is your name?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "none",
+    "question": "Who created you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "none",
+    "question": "Which company trained you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "none",
+    "question": "Introduce yourself.",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "none",
+    "question": "What model are you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "four",
+    "question": "Who made you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "four",
+    "question": "What is your name?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "four",
+    "question": "Who created you?",
+    "eager": "Google/DeepMind",
+    "sdpa": "Google/DeepMind"
+   },
+   {
+    "condition": "four",
+    "question": "Which company trained you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "four",
+    "question": "Introduce yourself.",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   },
+   {
+    "condition": "four",
+    "question": "What model are you?",
+    "eager": "Alibaba/Tongyi/Qwen team",
+    "sdpa": "Alibaba/Tongyi/Qwen team"
+   }
+  ]
+ },
+ "random_who_created_same_as_sdpa": 20,
+ "random_who_created_pairs": 20,
+ "text_identical_to_sdpa": 28,
+ "text_pairs": 32
+}
