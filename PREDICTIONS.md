@@ -3415,3 +3415,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 184.4 | A: at -2, the samples name Qwen in at most 4 of 8 (published 2 of 8). Fails at 5 or more. | medium | Claude | 1 of 8: held |
 | 184.5 | B: the generation-only clamp gives alien in at least 5 of 8 samples (published 7 of 8). Fails at 4 or fewer. | medium | Claude | 8 of 8: held |
 | 184.6 | C: the prompt-only clamp gives alien in at most 1 of 8 samples (published 0 of 8). Fails at 2 or more. | medium | Claude | 0 of 8: held |
+
+## Part 185 (registered 2026-11-04 06:53 CT, PART185-DESIGN.md, before any eager answer to a Part 84 or 84b prompt)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 185.1 | A: at dose 0.63 the alien neuron gives an off-world claim in at least 22 of 24 answers in both A2 and A3 (published 24 and 24). Fails at 21 or fewer in either. | high | Claude | |
+| 185.2 | A: the unchanged model (A0) and the control unit (C) each give an off-world claim in at most 1 of 24 (published 0 and 0). Fails at 2 or more in either. | high | Claude | |
+| 185.3 | A: at dose 0.47 (A1) between 8 and 22 of 24 answers claim an off-world origin (published 17 by the reader). Fails outside that range. | medium | Claude | |
+| 185.4 | B: in each mode the off-world count rises strictly from 0.40 to 0.47 to 0.55 (published decode 4, 25, 43; gen 3, 23, 46). Fails if any step does not rise. | high | Claude | |
+| 185.5 | B: steering the first answer token adds no detectable amount: at each dose the paired sign test on discordant pairs (gen only off-world against decode only) gives p of at least 0.05, two-sided (published 1.0, 0.69, 0.25). Fails at any dose below 0.05. | medium | Claude | |
+| 185.6 | B: each of the seven cells' off-world count is within 8 of its published count of 48 (A0 0; decode 4, 25, 43; gen 3, 23, 46). Fails if any cell moves by 9 or more. | medium | Claude | |
