@@ -65,17 +65,23 @@
     "width": 8192
   },
   "config_sha": "84e2c222b6304b27",
-  "docs_done": 2100,
+  "docs_done": 100,
   "elapsed": {},
-  "pass": 1,
-  "pass1_positions": 742090,
+  "pass": 2,
+  "pass1_positions": 885679,
   "timing": {
     "pass1": {
-      "docs": 2100,
-      "hook_s": 671.825868750968,
-      "save_s": 7.031262733000403,
-      "tokens": 742090,
-      "wall_s": 6351.291518827001
+      "docs": 2500,
+      "hook_s": 809.5661242469579,
+      "save_s": 8.876245194000148,
+      "tokens": 885679,
+      "wall_s": 7619.707442586
+    },
+    "pass2": {
+      "docs": 100,
+      "hook_s": 164.32589920399823,
+      "tokens": 34657,
+      "wall_s": 451.5146207830003
     }
   }
 }
