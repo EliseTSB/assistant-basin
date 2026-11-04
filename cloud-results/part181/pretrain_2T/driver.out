@@ -42,3 +42,15 @@ pass 1: 2300/2500 docs, chunk wall 294.2s (hooks 30.2s), rss 7328 MB
 pass 1: 2400/2500 docs, chunk wall 331.1s (hooks 34.4s), rss 7328 MB
 pass 1: 2500/2500 docs, chunk wall 322.8s (hooks 33.8s), rss 7328 MB
 pass 2: 100/500 docs, chunk wall 451.5s (hooks 164.3s), rss 7328 MB
+pass 2: 200/500 docs, chunk wall 416.9s (hooks 148.2s), rss 7384 MB
+pass 2: 300/500 docs, chunk wall 442.8s (hooks 160.0s), rss 7384 MB
+pass 2: 400/500 docs, chunk wall 412.8s (hooks 148.1s), rss 7385 MB
+pass 2: 500/500 docs, chunk wall 419.7s (hooks 151.5s), rss 7385 MB
+2026-11-04T08:54:24+00:00 collect: complete in 9794.78s
+2026-11-04T08:54:24+00:00 gate1: start
+2026-11-04T09:11:52+00:00 Gate 1 verdict: passed (128/128 pairs)
+2026-11-04T09:11:52+00:00 gate1: complete in 1047.54s
+2026-11-04T09:11:52+00:00 compress_state: start
+2026-11-04T09:11:57+00:00 compress_state: complete in 5.42s
+2026-11-04T09:11:57+00:00 summary: preparing; state compressed now=True
+session181 completed
