@@ -432,3 +432,18 @@ places the null is weaker than it looks. Where this differs from anything above,
    median Delta_about per head separately, and their Spearman correlation across the 64 main heads.
 
 Stage 1 is now 198 conditions x 157 rows, 31,086 rows, about 2 hours 25 minutes on the cloud CPU box.
+
+## Amendment 1d (2026-11-04 01:32 CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
+
+From Weaver's third message (#council-room, 2026-11-04 01:32 CT).
+
+1. Why 182.8 keeps the full count. Under exchangeable heads the expected number of main heads among the 6 most
+   negative of 112 is 6 x 64/112 = 3.43, so k = 4 (P = 0.484) is the typical outcome with no effect, and only k = 6
+   (0.031) separates the block from chance at this n. 182.8 stays held only at k = 6. Its reading has three states:
+   k = 6, the block leads; k = 5 (P = 0.184), unresolved, the block leads at a level this design cannot tell from
+   chance; k at most 4, no block advantage beyond chance.
+2. The within-layer gap, a depth-controlled check. Reported per layer (the 4 main layers, layer 6 and layers 13 to
+   15): the most negative head's slot_median minus the layer's median head's. The best of 16 sits below the median even
+   with no effect, so a gap means something only against other layers' gaps, all from 16 heads; read: the main layers'
+   gaps against the control layers'. A head-specific effect inside the block, absent outside it, shows as main-layer
+   gaps well beyond every control layer's, with depth held fixed inside each layer.
