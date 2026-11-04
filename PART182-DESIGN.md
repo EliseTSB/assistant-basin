@@ -364,3 +364,47 @@ New prediction, read by `score182.py stage1` with the others:
 
 The headline (Reading rules) also needs 182.8 held: six heads that do not stand out from a layer whose block did not
 matter are not read as where the slot neurons need Instruct's early attention.
+
+## Amendment 1b (2026-11-04 01:29 CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
+
+From Weaver's review (#council-room, 2026-11-04 01:27 CT). Where this section and anything above differ, this governs.
+
+1. A second own text (Weaver's mechanism 1: one stored string measures reproduction of that string, not identity).
+   Stage 1 gains rows (e): each unit's own pushed answer to "Tell me about yourself." from Part 99's inst_none run
+   (question 1), push on, first 24 tokens. The registered ranking becomes: per eligible slot unit u and head,
+   e_u = max(Delta_who, Delta_about) (the smaller loss of the two) when Part 99's inst_none Haiku label says u's
+   question-1 answer shows the persona, else e_u = Delta_who; slot_median is the median of e_u over the 19 eligible
+   units. Restricted this way because for a unit whose second answer carries no persona there is nothing for an
+   identity head to remove there. The Delta_who-only ranking is reported beside it, with the overlap of the two top 6.
+2. First sentence against the rest (Weaver's mechanism 2). Per row, the first sentence is the answer tokens up to and
+   including the first token whose text contains ".", "!" or "?" (all 24 if none); the rest is the remaining tokens.
+   Reported per head: the median over eligible slot units of the mean per-token |Delta| on each part.
+3. Damage gates selection, not only the headline (Weaver's point 3). Walking the ranking, a head that meets the
+   damage rule (Reading rules: unpushed loss more negative than half its slot_median, or random_median at least as
+   negative as its slot_median) is skipped and named, and the next head is taken, until six are selected.
+4. Out-of-block controls widened (Weaver's point 4, with a correction). Weaver proposed pooling all 80 heads and testing
+   by permutation whether the top 6 come disproportionately from layers 0 to 3. With 64 of 80 heads in layers 0 to 3,
+   all six land there by chance with probability C(64,6)/C(80,6) = 0.25, the same floor 182.8 has, so that test cannot
+   reach significance. The fix is more control heads: CONTROL_LAYERS becomes 13, 14 and 15, all in the block Part 100
+   found to matter least (48 heads). 182.8 now reads "none of the 48 control heads is more negative than the 6th-ranked
+   main head", whose chance rate under exchangeable heads is C(64,6)/C(112,6) = 0.031. Reported beside it: a one-sided
+   Mann-Whitney test of the 64 main heads' slot_medians against the 48 controls'.
+5. The withdrawal rule tied to a test (Weaver: a 2-unit gap is below a 21-unit comparison's resolution). The headline is
+   withdrawn unless top6's slot_who is lower than the median control-head run's by a one-sided Fisher exact test at
+   p < 0.05 (21 against 21).
+6. Stage 2 gains a top32 run (17 runs, 8,058 generations), so Weaver's 182.W3 can be read.
+7. The instrument check (Weaver): across the 12 single-head stage-2 runs (six selected, six controls), the Spearman
+   correlation between stage 1's slot_median and stage 2's slot_who drop (19 minus slot_who) is reported. The two groups
+   are selected to differ in stage 1, so a high value partly reflects that split; the within-group values are reported
+   too.
+
+Cost: stage 1 is now 182 conditions (none, 64 heads, 4 layers, block, 64 restores, 48 controls) x 157 rows, 28,574 rows,
+about 2 hours 15 minutes on the cloud CPU box at the measured 3.6 rows/s.
+
+Weaver's predictions, registered with Weaver as author:
+
+| # | Prediction | Confidence | Author |
+| --- | --- | --- | --- |
+| 182.W1 | The ranking is dominated by the tail: on at least 4 of the 6 selected heads, the mean per-token \|Delta\| over the first sentence is less than half that over the rest (item 2's split). Fails if the first sentence's is at least half on 3 or more of the 6. | medium (Weaver gave none) | Weaver |
+| 182.W2 | Across the 12 single-head stage-2 runs, Spearman(slot_median, slot_who drop) is between 0 and 0.4. Fails at 0.7 or more (the proxy is trustworthy); a value between 0.4 and 0.7 or below 0 is reported as neither. | medium (Weaver gave none) | Weaver |
+| 182.W3 | If 182.4 holds and 182.5 fails, the top32 stage-2 run drops slot_who by at least half the block's drop. Fails if top32 drops it by less than half. Not read unless 182.4 held and 182.5 failed. | medium (Weaver gave none) | Weaver |
