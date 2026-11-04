@@ -730,3 +730,66 @@ For the steering-word part that follows:
   material and a stronger model, because random directions passed faster (26.4 points for Haiku with one sample, 11.2
   for Opus with three; results/part64/analysis-64.md). Both lines say most single neurons are not explained by one
   written description. Our random-direction control is what E4 lacks; E4's recovery bar is what ours lacks.
+
+## 2026-11-04, for Part 182 (single attention heads swapped between the mid-training end and Instruct)
+
+Searched by a Fable 5.1 cloud session before the design was written; every item below was opened at the URL given
+(arXiv abstract or HTML, Alignment Forum or LessWrong post, GitHub README) unless marked unopened. Full report with
+the 27 query strings in `PART182-DESIGN.md`'s Prior art section.
+
+Nothing found that swaps or patches **single attention heads between a pretrained checkpoint and its own SFT, DPO or
+RLHF descendant** to localize a post-training behaviour, or that runs one checkpoint's attention weights on the
+other's hidden states per head. Nearest:
+
+- Prakash, Rott Shaham, Haklay, Belinkov, Bau, ICLR 2024, arXiv:2402.14811, "Fine-Tuning Enhances Existing
+  Mechanisms". Cross-Model Activation Patching: head outputs patched from math fine-tunes of Llama-7B into base
+  Llama-7B on the same input, by circuit-role groups of heads, not one head at a time; the same entity-tracking
+  circuit in both, fine-tuning enhances it. The direction is fine-tuned to base; no chat model, no persona.
+- Zhou et al., ICLR 2025, arXiv:2410.13708, "On the Role of Attention Heads in LLM Safety". Per-head safety scores in
+  Llama-2-7b-chat; the top safety head is layer 2 head 26 (early). Section 5.2 loads **all** of base Llama-2-7b's
+  attention parameters into the chat model and finds safety mostly kept, read as safety attention coming from
+  pretraining. Whole attention stack, base to chat only; the opposite outcome to Part 100's layers 0 to 3.
+- Sun, Zhang, Qin, Dai, Tian, April 2026, arXiv:2604.13694, "Weight Patching". Copies per-head query and output
+  weight slices (keys and values shared under GQA) and per-neuron MLP weights between base and instruct Llama pairs on
+  a fixed input; the "sources" of instruction following land in shallow-layer MLP neurons, with mid and late attention
+  heads as routers. The closest weight-level analogue; per-head q and o slices rather than a donor forward on the
+  host's states, and no exactness argument about shared q/k norms.
+- Ghosh, LessWrong, 6 August 2026, "Function vectors as a model diffing tool: 17 heads repair a bad fine-tune". Single
+  head activations copied from Qwen2.5-7B-Instruct and Llama-3.1-8B-Instruct into their emergent-misalignment LoRA
+  fine-tunes; 17 heads in layers 12 to 19 restore safe answers. Instruct against LoRA-of-Instruct, not base against
+  chat; informal.
+- Tigges, Alignment Forum, April 2023, "Exploratory Analysis of RLHF Transformers with TransformerLens". Single heads
+  patched from an RLHF'd GPT-2-imdb into its parent on one prompt; late heads (L10H4, L10H9, L11H10).
+- Zhou (Yifan), May 2026, arXiv:2605.07284: four-cell cross-patching of base or fine-tuned upstream state with base or
+  fine-tuned late layer stacks across five Llama-3.1-8B base/instruct pairs; layer stacks, not heads.
+- Park, Jeong, Kang, arXiv:2509.25758 ("Thinking Sparks"), and Pandere et al., BlackboxNLP 2026, arXiv:2609.25602:
+  head-level circuit comparison between base and post-trained models, by ablation within each model, no cross-model
+  swap.
+
+Assistant identity or persona at head level: none found. The identity results are residual directions or crosscoder
+latents: Lu, Gallagher, Michala, Fish, Lindsey, January 2026, arXiv:2601.10387, "The Assistant Axis" (role vectors at
+a middle layer; the axis mostly inherited from base-model personas; no heads); Chen, Arditi, Sleight, Evans, Lindsey
+2025, arXiv:2507.21509, "Persona Vectors" (no heads, no base model); Minder, Dumas, Juang, Chugtai, Nanda, NeurIPS
+2025, arXiv:2504.02922 (Gemma-2-2B base against chat crosscoder at layer 13: about 40% of chat-only latents fire on
+chat-template tokens; one latent for questions about Gemma itself); Dumas, Minder, Nanda, Alignment Forum, 30 June 2025,
+"What we learned trying to diff base and chat models": layer stitching of Gemma-2-2B, where the hybrid claims to be
+ChatGPT until chat layers 20 to 25 of 26 are in, read as identity living late. That is the one published layer-level
+identity result, and it points late, where Part 100's injected personas needed layers 0 to 3; theirs tracked the
+model's own name under cumulative whole-layer replacement from the bottom. The only head-level persona paper is Izawa
+et al., arXiv:2603.13249, "Style Modulation Heads": three mid-layer heads per model carry trait personas (evil,
+sycophantic) in chat models, no base comparison. Arditi and Obeso, Alignment Forum, December 2023: refusal heads at
+the template-boundary position in layers 5 to 10 of Llama-2-7b-chat, within one model.
+
+Where chat tuning changes most, by layer and component: no paper claims early-layer attention. Wolfram and Schein,
+arXiv:2504.08775 (Part 100 cited this; it is a cross-architecture similarity paper whose Appendix A.2 has the Gemma-2-9B
+base against IT result: later layers diverge on instruction prompts, no attention/MLP split); Shadow-FT,
+arXiv:2505.12716 (one aggregate weight gap, no per-layer table); Weng et al., October 2026, arXiv:2610.13078 ("Attention
+Sees, MLP Refuses": in 18 base/instruct pairs harmfulness reads from early attention updates while post-training
+strengthens late MLP writes); Gu et al., ICLR 2025, arXiv:2410.10781 (instruction tuning leaves the first-token
+attention sink essentially unchanged); Lee et al., arXiv:2401.01967 (DPO changes weights negligibly); Mukherjee et
+al., arXiv:2505.11711 (RL updates are sparse but spread across all matrices). On this model: syre-ai/art-attention-heads
+(GitHub, unreviewed) clusters all 256 heads of OLMo-2-0425-1B base, SFT and Instruct by attention statistics and finds
+the head taxonomy changing almost entirely at SFT (ARI 0.11, feature drift 0.78) and barely at DPO plus RL (ARI 0.88,
+drift 0.06), with no per-layer breakdown; the donor here is the pre-SFT mid-training end, so that is the step Part 182
+dissects. arXiv:2601.13580 (Part 99 cited it) is "Neural Organ Transplantation": whole three-layer blocks moved
+between pretrained decoders with recovery fine-tuning, no attention-only or head variants.

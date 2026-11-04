@@ -1,0 +1,450 @@
+{
+ "n_slot": 21,
+ "n_concept": 18,
+ "runs": {
+  "inst_none": {
+   "label_errors": 0,
+   "slot_who": [
+    19,
+    21
+   ],
+   "slot_who_coherent": [
+    21,
+    21
+   ],
+   "concept_who": [
+    17,
+    18
+   ],
+   "concept_who_coherent": [
+    12,
+    18
+   ],
+   "concept_any": [
+    18,
+    18
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-02",
+    "p92-03",
+    "p92-04",
+    "p92-05",
+    "p92-07",
+    "p92-09",
+    "p92-10",
+    "p92-13",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-35",
+    "p92-37",
+    "p92-42",
+    "p92-46",
+    "p92-47",
+    "p92-50"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ]
+  },
+  "inst_attnB": {
+   "label_errors": 5,
+   "slot_who": [
+    3,
+    21
+   ],
+   "slot_who_coherent": [
+    13,
+    21
+   ],
+   "concept_who": [
+    12,
+    18
+   ],
+   "concept_who_coherent": [
+    10,
+    18
+   ],
+   "concept_any": [
+    14,
+    17
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-32",
+    "p92-35",
+    "p92-46"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-41",
+    "p92-45",
+    "p92-51"
+   ]
+  },
+  "attnB_L0-7": {
+   "label_errors": 7,
+   "slot_who": [
+    3,
+    21
+   ],
+   "slot_who_coherent": [
+    15,
+    21
+   ],
+   "concept_who": [
+    11,
+    18
+   ],
+   "concept_who_coherent": [
+    10,
+    18
+   ],
+   "concept_any": [
+    14,
+    17
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-24",
+    "p92-33",
+    "p92-46"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-28",
+    "p92-30",
+    "p92-39",
+    "p92-40",
+    "p92-43",
+    "p92-45",
+    "p92-51"
+   ]
+  },
+  "attnB_L8-15": {
+   "label_errors": 7,
+   "slot_who": [
+    8,
+    21
+   ],
+   "slot_who_coherent": [
+    15,
+    21
+   ],
+   "concept_who": [
+    10,
+    18
+   ],
+   "concept_who_coherent": [
+    8,
+    18
+   ],
+   "concept_any": [
+    14,
+    16
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-02",
+    "p92-03",
+    "p92-09",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-46"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-08",
+    "p92-15",
+    "p92-28",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51"
+   ]
+  },
+  "attnB_L0-3": {
+   "label_errors": 4,
+   "slot_who": [
+    3,
+    21
+   ],
+   "slot_who_coherent": [
+    16,
+    21
+   ],
+   "concept_who": [
+    10,
+    18
+   ],
+   "concept_who_coherent": [
+    13,
+    18
+   ],
+   "concept_any": [
+    13,
+    17
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-33",
+    "p92-35",
+    "p92-46"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-01",
+    "p92-08",
+    "p92-15",
+    "p92-28",
+    "p92-39",
+    "p92-40",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51"
+   ]
+  },
+  "attnB_L4-7": {
+   "label_errors": 0,
+   "slot_who": [
+    7,
+    21
+   ],
+   "slot_who_coherent": [
+    19,
+    21
+   ],
+   "concept_who": [
+    12,
+    18
+   ],
+   "concept_who_coherent": [
+    11,
+    18
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-04",
+    "p92-09",
+    "p92-20",
+    "p92-24",
+    "p92-37",
+    "p92-46",
+    "p92-47"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-00",
+    "p92-01",
+    "p92-08",
+    "p92-28",
+    "p92-29",
+    "p92-30",
+    "p92-38",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ]
+  },
+  "attnB_L8-11": {
+   "label_errors": 6,
+   "slot_who": [
+    7,
+    21
+   ],
+   "slot_who_coherent": [
+    13,
+    21
+   ],
+   "concept_who": [
+    10,
+    18
+   ],
+   "concept_who_coherent": [
+    11,
+    18
+   ],
+   "concept_any": [
+    15,
+    16
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-02",
+    "p92-03",
+    "p92-24",
+    "p92-25",
+    "p92-32",
+    "p92-33",
+    "p92-46"
+   ],
+   "slot_unlabelled": [],
+   "concept_kept_who": [
+    "p92-08",
+    "p92-15",
+    "p92-28",
+    "p92-38",
+    "p92-39",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51"
+   ]
+  },
+  "attnB_L12-15": {
+   "label_errors": 5,
+   "slot_who": [
+    16,
+    20
+   ],
+   "slot_who_coherent": [
+    18,
+    20
+   ],
+   "concept_who": [
+    15,
+    18
+   ],
+   "concept_who_coherent": [
+    8,
+    18
+   ],
+   "concept_any": [
+    17,
+    18
+   ],
+   "random_who_any_unit": [
+    1,
+    39
+   ],
+   "slot_kept": [
+    "p92-02",
+    "p92-03",
+    "p92-05",
+    "p92-07",
+    "p92-09",
+    "p92-10",
+    "p92-18",
+    "p92-20",
+    "p92-24",
+    "p92-25",
+    "p92-33",
+    "p92-35",
+    "p92-37",
+    "p92-46",
+    "p92-47",
+    "p92-50"
+   ],
+   "slot_unlabelled": [
+    "p92-32"
+   ],
+   "concept_kept_who": [
+    "p92-01",
+    "p92-08",
+    "p92-11",
+    "p92-15",
+    "p92-28",
+    "p92-30",
+    "p92-38",
+    "p92-39",
+    "p92-40",
+    "p92-41",
+    "p92-43",
+    "p92-45",
+    "p92-48",
+    "p92-51",
+    "p92-52"
+   ]
+  }
+ },
+ "slot_never_showed_in_inst_none": [
+  "p92-18",
+  "p92-36"
+ ],
+ "concept_never_showed_in_inst_none": [
+  "p92-49"
+ ],
+ "slot_kept_L0-3_and_all16": {
+  "L0-3": [
+   "p92-33",
+   "p92-35",
+   "p92-46"
+  ],
+  "all16": [
+   "p92-32",
+   "p92-35",
+   "p92-46"
+  ],
+  "both": [
+   "p92-35",
+   "p92-46"
+  ]
+ }
+}
