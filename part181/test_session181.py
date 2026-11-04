@@ -148,3 +148,32 @@ def test_gate1d_detects_changed_value_for_a_listed_document(tmp_path):
     assert red["verdict"] == "failed"
     assert any(row["unit"] == selected and row["doc"] == doc and not row["pass"]
                for row in red["entries"])
+
+
+def test_bind_identity_allows_a_host_change_and_refuses_anything_else(tmp_path):
+    # 2026-11-03: three cloud resumes were refused because the CPU model is in the manifest.
+    import copy
+    manifest = {"key": "k", "model_commit": "m", "dataset_commit": "d", "token_ids_sha256": "t",
+                "controls_sha256_by_layer": ["c"], "settings": {"batch_size": 4},
+                "host": {"cpu_model": "Xeon @ 2.10GHz"}, "manifest_sha256": "first-sha"}
+    out = tmp_path / "run"
+    out.mkdir()
+    assert s181.bind_identity(out, copy.deepcopy(manifest)) == "first-sha"
+    (out / "state.npz").write_bytes(b"x")
+    moved = copy.deepcopy(manifest)
+    moved["host"] = {"cpu_model": "Xeon @ 2.80GHz"}
+    moved["manifest_sha256"] = "second-sha"
+    assert s181.bind_identity(out, moved) == "first-sha"
+    history = (out / "host-history.jsonl").read_text(encoding="utf-8").splitlines()
+    assert len(history) == 1 and "2.80GHz" in history[0]
+    assert json.loads((out / "identity.json").read_text(encoding="utf-8"))["host"]["cpu_model"].endswith("2.10GHz")
+    for field, value in (("model_commit", "other"), ("settings", {"batch_size": 8})):
+        bad = copy.deepcopy(moved)
+        bad[field] = value
+        with pytest.raises(ValueError, match="identity differs"):
+            s181.bind_identity(out, bad)
+    fresh = tmp_path / "orphan"
+    fresh.mkdir()
+    (fresh / "state.npz").write_bytes(b"x")
+    with pytest.raises(ValueError, match="without identity.json"):
+        s181.bind_identity(fresh, copy.deepcopy(manifest))
