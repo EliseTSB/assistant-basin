@@ -18,3 +18,10 @@
 resuming: pass 1, 1600 docs done
 pass 1: 1700/2500 docs, chunk wall 255.5s (hooks 31.1s), rss 7783 MB
 pass 1: 1800/2500 docs, chunk wall 236.7s (hooks 26.8s), rss 7787 MB
+pass 1: 1900/2500 docs, chunk wall 256.9s (hooks 30.2s), rss 7788 MB
+pass 1: 2000/2500 docs, chunk wall 240.0s (hooks 25.6s), rss 7788 MB
+pass 1: 2100/2500 docs, chunk wall 230.5s (hooks 24.7s), rss 7788 MB
+pass 1: 2200/2500 docs, chunk wall 225.6s (hooks 23.6s), rss 7788 MB
+pass 1: 2300/2500 docs, chunk wall 226.1s (hooks 23.9s), rss 7788 MB
+pass 1: 2400/2500 docs, chunk wall 238.7s (hooks 25.8s), rss 7788 MB
+pass 1: 2500/2500 docs, chunk wall 226.8s (hooks 24.1s), rss 7788 MB
