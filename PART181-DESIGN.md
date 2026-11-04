@@ -175,7 +175,7 @@ interpreter (resumes merge the commit the session was started on; a first versio
 stale in the cloud clone, so one resume ran the old check and stopped again), and keeps the session's turn open (an idle session's container is recycled after about 30 minutes,
 which is what killed the drivers). `instruct` restarts from the beginning, because its saturation snapshots at 500
 and 1,000 documents were lost with its container; its partial branch is kept as `cloud/part181-instruct-attempt1`.
-Nothing in the predictions, measures or gates changes. Seen before writing this: the three runs' session logs and
+Second fix (21:06 CT): the resumed runs still stopped, because the first runs recorded Python 3.11 and the resumes use 3.13; the resume check now also leaves out the Python patch version (logged in `host-history.jsonl` too) while the pinned numerical libraries must still match exactly, and a refusal names the differing keys. Nothing in the predictions, measures or gates changes. Seen before writing this: the three runs' session logs and
 progress counts (documents done), and each run's `host` field; no activation, top list or window.
 
 ## Predictions
