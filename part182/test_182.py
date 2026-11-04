@@ -22,6 +22,7 @@ for _folder in (HERE, REPO / "part92", REPO / "part99", REPO):
 import attn182  # noqa: E402
 import headswap182 as hs  # noqa: E402
 import headweights182 as hw  # noqa: E402
+import run182  # noqa: E402
 import score182  # noqa: E402
 from swap99 import copy_components  # noqa: E402
 
@@ -233,6 +234,10 @@ def test_condition_tags():
         hs.condition_heads("top4", layers, 16, ranking)
     tags = hs.stage1_conditions(layers, 16, control_layers=[])
     assert len(tags) == 1 + 64 + 4 + 1 + 64 and tags[0] == "none" and tags[-1] == "restore3.15"
+    # Amendment 1b item 4: with the registered control layers, 48 control tags follow, in layer then head order.
+    registered = hs.stage1_conditions(layers, 16)
+    assert registered[:len(tags)] == tags and len(registered) == len(tags) + 48
+    assert registered[len(tags):] == [f"c{L}.{h}" for L in (13, 14, 15) for h in range(16)]
     # Amendment 1 item 3: with the control layers, the 16 c14.H tags come after the restore tags, and every earlier
     # tag keeps its place.
     full = hs.stage1_conditions(layers, 16, control_layers=[14])
@@ -275,9 +280,10 @@ def test_teacher_forced_scoring_matches_direct_computation(pair):
 # ---------------------------------------------------------------------------------------------------------------------
 # score182: effects, ranking, the stage-2 selection rule and the verdicts, on a fixture.
 
-def fixture_rows(effects: dict[str, float], slots, concepts, layers=(0, 1), n_heads=2, control_layers=()):
+def fixture_rows(effects: dict[str, float], slots, concepts, layers=(0, 1), n_heads=2, control_layers=(),
+                 about=None):
     """Stage-1 rows for a fixture: own-answer logp_sum = -5 + effect per unit per condition; the other row kinds
-    constant."""
+    constant. With ``about`` (a dict unit -> scale), each slot unit also gets its "about" row at -6 + effect * scale."""
     rows = []
     tags = hs.stage1_conditions(list(layers), n_heads, control_layers=list(control_layers))
     for tag in tags:
@@ -290,6 +296,10 @@ def fixture_rows(effects: dict[str, float], slots, concepts, layers=(0, 1), n_he
                          "n_tokens": 5, "argmax_match": 3})
             rows.append({"condition": tag, "id": uid, "unit": "neuron", "text": "assistant", "logp_sum": -20.0,
                          "n_tokens": 5, "argmax_match": 1})
+            if about is not None and uid in slots:
+                # Amendment 1b item 1: the "Tell me about yourself." row, constant unless ``about`` names the unit.
+                rows.append({"condition": tag, "id": uid, "unit": "neuron", "text": "about",
+                             "logp_sum": -6.0 + eff * about.get(uid, 0.0), "n_tokens": 5, "argmax_match": 5})
         rows.append({"condition": tag, "id": "unpushed", "unit": "none", "text": "assistant",
                      "logp_sum": -3.0 + eff * 0.05, "n_tokens": 5, "argmax_match": 5})
     return rows
@@ -437,7 +447,7 @@ def test_control_layer_tags_decode_and_are_restricted():
     # hL.H stays restricted to the main layers: a main-layer tag cannot name a control layer.
     with pytest.raises(ValueError):
         hs.condition_heads("h14.5", layers, 16)
-    assert score182.CONTROL_LAYERS == [14]
+    assert score182.CONTROL_LAYERS == [13, 14, 15]  # Amendment 1b item 4: 48 control heads
 
 
 def test_control_heads_never_ranked_selected_or_laddered():
@@ -750,20 +760,23 @@ def test_stage1_run_writes_control_layer_rows_and_readouts_and_resumes(tmp_path,
         def __call__(self, text, add_special_tokens=False):
             return {"input_ids": [3 + (i * 7 + len(text)) % 90 for i in range(6)]}
 
+        def convert_ids_to_tokens(self, ids):
+            return [f"t{i}" for i in ids]  # no sentence mark: every answer is one "sentence"
+
     host, donor = make_model(41, layers=16), make_model(42, layers=16)
     units = [{"id": f"u{i}", "layer": i % 4} for i in range(3)]
     push = torch.ones(HIDDEN) * 0.1
     monkeypatch.setattr(run182, "load_host", lambda path, device: (Tok(), host))
     monkeypatch.setattr(run182, "load_units", lambda: (units, {}))
-    monkeypatch.setattr(run182, "load_p99_answers", lambda: {
+    monkeypatch.setattr(run182, "load_p99_answers", lambda question_index=0: {
         **{(u["id"], k): "abc def ghi" for u in units for k in ("neuron", "random")},
         ("unpushed", "none"): "I am an AI"})
+    monkeypatch.setattr(run182, "stage1_prompts", lambda tok: ([1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7]))
     monkeypatch.setattr(run182, "PUSHES", tmp_path / "pushes.pt")
     monkeypatch.setattr(torch, "load", lambda path, map_location=None: {
         f"{u['id']}|{k}": push for u in units for k in ("neuron", "random")})
     monkeypatch.setattr(hs, "load_donor_attention",
                         lambda path, layers, dtype=None: hs.donor_attention(donor, layers, dtype=dtype))
-    monkeypatch.setattr(run182.c, "prompt_ids", lambda tok, question, frame: [1, 2, 3, 4])
     args = types.SimpleNamespace(host="h", donor="d", device="cpu", batch=2, threads=1)
     conditions = {"none": {}, "h0.0": {0: [0]}, "c14.1": {14: [1]}, "h1.2": {1: [2]}}
     out = tmp_path / "stage1.jsonl"
@@ -786,3 +799,375 @@ def test_stage1_run_writes_control_layer_rows_and_readouts_and_resumes(tmp_path,
     assert sum(1 for r in rows2 if r["condition"] == "none") == sum(1 for r in rows if r["condition"] == "none")
     assert own("h1.2", rows2)["logp_sum"] == own("h1.2", rows)["logp_sum"]
     assert own("h1.2", rows2)["resid_rel"] == own("h1.2", rows)["resid_rel"]
+    # Amendment 1b item 1: every unit has its "about" row, pushed and scored after the second prompt.
+    about = lambda cond, rs: next(r for r in rs if r["condition"] == cond and r["unit"] == "neuron"
+                                  and r["text"] == "about")
+    assert sum(1 for r in rows if r["text"] == "about") == len(units) * len(conditions)
+    assert about("none", rows)["heads"] == {} and about("h0.0", rows)["heads"] == {"0": [0]}
+    assert about("h1.2", rows)["logp_sum"] != about("none", rows)["logp_sum"]
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendment 1b item 1: the second own text ("Tell me about yourself."), per-row prompts, e_u = max(Delta_who,
+# Delta_about) where the question-1 answer shows the persona, and the Delta_who-only ranking beside it.
+
+def test_first_sentence_length():
+    assert score182.first_sentence_length(["I", " am", " a", " fox", "."]) == 5
+    assert score182.first_sentence_length(["I", " am", " a", " fox", ".", " You", " are"]) == 5
+    assert score182.first_sentence_length(["Wait", "!", " no"]) == 2
+    assert score182.first_sentence_length(["Really", "?"]) == 2
+    assert score182.first_sentence_length(["no", " mark", " here"]) == 3  # all tokens if none carries a mark
+    assert score182.first_sentence_length(["...", "x"]) == 1  # a token holding only the mark ends the sentence
+    with pytest.raises(ValueError):
+        score182.first_sentence_length([])
+
+
+def test_sentence_abs_means_hand_computed():
+    # |Delta| per token: 1, 3, 0, 4, 2. First sentence 2 tokens: mean 2; rest 3 tokens: mean 2.
+    parts = score182.sentence_abs_means([-1.0, -3.0, 0.0, -4.0, -2.0], [0.0, 0.0, 0.0, 0.0, 0.0], 2)
+    assert parts == {"first_sentence_mean_abs": pytest.approx(2.0), "rest_mean_abs": pytest.approx(2.0)}
+    # All 24 tokens in the first sentence: the rest has no mean (None, never 0).
+    parts = score182.sentence_abs_means([-1.0, -3.0], [0.0, 0.0], 2)
+    assert parts["rest_mean_abs"] is None and parts["first_sentence_mean_abs"] == pytest.approx(2.0)
+    assert score182.sentence_abs_means([-1.0, -3.0], [0.0, 0.0], 0)["first_sentence_mean_abs"] is None
+    with pytest.raises(ValueError):
+        score182.sentence_abs_means([-1.0], [0.0, 0.0], 1)
+    with pytest.raises(ValueError):
+        score182.sentence_abs_means([-1.0], [0.0], 2)
+
+
+class TinyTok2:
+    """A tokenizer stub: one id per character, and the token text is the character."""
+    pad_token_id = 0
+
+    def __call__(self, text, add_special_tokens=False):
+        return {"input_ids": [10 + ord(ch) % 80 for ch in text]}
+
+    def convert_ids_to_tokens(self, ids):
+        return [chr(65 + (i % 26)) for i in ids]
+
+
+def test_per_row_prompts_keep_every_other_row_bit_identical(pair):
+    """Amendment 1b item 1's requirement: adding per-row prompts changes no existing row's number. The same rows are
+    scored with one shared prompt and with per-row prompts (one row given a different prompt), and every row that
+    keeps the shared prompt has the same logp_tokens, logp_sum and resid_rel, bit for bit."""
+    host, donor = pair
+    answers = [[7, 8, 9, 10], [11, 12, 13], [14, 15], [16, 17, 18, 19, 20], [21, 22]]
+    plain_rows = [{"answer_ids": a, "push_layer": i % 3, "push": torch.ones(HIDDEN) * (0.1 * (i + 1))}
+                  for i, a in enumerate(answers)]
+    prompt = [1, 5, 6]
+    other = [1, 5, 6, 30, 31]
+    per_row = [dict(r) for r in plain_rows]
+    per_row[2]["prompt_ids"] = other  # one row after a different prompt, in the middle of the list
+    hs.attach(host, hs.donor_attention(donor, [0, 1, 2]), {0: [1], 2: [3]})
+    try:
+        none_a = []
+        shared = hs.score_rows(host, TinyTok2(), host.model.layers, prompt, plain_rows, "cpu", 2, HIDDEN,
+                               readout_layers=(0, 1, 2), capture=none_a)
+        none_b = []
+        mixed = hs.score_rows(host, TinyTok2(), host.model.layers, prompt, per_row, "cpu", 2, HIDDEN,
+                              readout_layers=(0, 1, 2), capture=none_b)
+    finally:
+        hs.detach(host)
+    assert len(shared) == len(mixed) == len(answers)
+    for i in (0, 1, 3, 4):
+        assert mixed[i]["logp_tokens"] == shared[i]["logp_tokens"], i
+        assert mixed[i]["logp_sum"] == shared[i]["logp_sum"], i
+    assert mixed[2]["logp_tokens"] != shared[2]["logp_tokens"]  # the one row whose prompt changed did change
+    # Rows of equal length are bit-identical at batch 1 and batch 2 (the prompt never mixes into a batch).
+    equal = [plain_rows[0], plain_rows[3]]  # both five tokens
+    alone = hs.score_rows(host, TinyTok2(), host.model.layers, prompt, equal, "cpu", 1, HIDDEN, readout_layers=())
+    together = hs.score_rows(host, TinyTok2(), host.model.layers, prompt, equal, "cpu", 2, HIDDEN,
+                             readout_layers=())
+    assert [r["logp_sum"] for r in alone] == [r["logp_sum"] for r in together]
+
+
+def test_build_stage1_rows_adds_about_rows_with_their_own_prompt():
+    """The about row: the unit's own pushed question-1 answer, push on, first 24 tokens, scored after question 1's
+    prompt; every other row after "Who are you?". The rows without the new arguments are exactly the old rows."""
+    units = [{"id": "u2", "layer": 3}, {"id": "u1", "layer": 1}]
+    pushes = {f"{u['id']}|{k}": torch.full((HIDDEN,), float(i)) for i, u in enumerate(units)
+              for k in ("neuron", "random")}
+    answers = {(u["id"], k): f"answer of {u['id']} {k}" for u in units for k in ("neuron", "random")}
+    answers[("unpushed", "none")] = "I am an AI"
+    about = {(u["id"], "neuron"): "x" * 40 for u in units}
+    old = run182.build_stage1_rows(TinyTok2(), units, pushes, answers)
+    new = run182.build_stage1_rows(TinyTok2(), units, pushes, answers, about_answers=about,
+                                   prompt_who=[1, 2], prompt_about=[1, 2, 3, 4])
+    assert len(old) == 2 * 3 + 1 and len(new) == 2 * 4 + 1
+    assert [(r["id"], r["unit"], r["text"]) for r in old] == [(r["id"], r["unit"], r["text"]) for r in new
+                                                                if r["text"] != "about"]
+    for row in old:
+        assert "prompt_ids" not in row  # the old call builds the old rows
+        assert row["first_sentence_tokens"] == len(row["answer_ids"])  # no mark in the stub's tokens
+    about_rows = [r for r in new if r["text"] == "about"]
+    assert [(r["id"], r["unit"]) for r in about_rows] == [("u1", "neuron"), ("u2", "neuron")]  # unit-id order
+    for row in about_rows:
+        assert row["prompt_ids"] == [1, 2, 3, 4] and row["push_layer"] == {"u1": 1, "u2": 3}[row["id"]]
+        assert len(row["answer_ids"]) == run182.MAX_TOKENS == 24
+        assert torch.equal(row["push"], pushes[f"{row['id']}|neuron"])  # push on, the unit's own push
+    assert all(r["prompt_ids"] == [1, 2] for r in new if r["text"] != "about")
+
+
+def test_effects_e_u_takes_the_max_and_who_only_values_are_kept():
+    """Amendment 1b item 1 on a fixture: Delta_who = -4 on every slot unit; Delta_about = -1 on s0 and s1 (persona on
+    question 1) and -7 on s2 (no persona on question 1). e_u = -1, -1, -4: median -1, mean -2. The Delta_who-only
+    values stay under slot_median_who / slot_mean_who, and the units that used both texts are named."""
+    slots, concepts = ["s0", "s1", "s2"], []
+    about = {"s0": 0.25, "s1": 0.25, "s2": 1.75}  # -6 + eff*scale - (-6) = eff*scale: -1, -1, -7
+    rows = fixture_rows({"h0.0": -4.0}, slots, concepts, layers=(0,), n_heads=1, about=about)
+    table = score182.effects(rows, slots, concepts, layers=[0], n_heads=1, persona_about={"s0": True, "s1": True})
+    e = table["h0.0"]
+    assert e["slot_deltas"] == {"s0": -4.0, "s1": -4.0, "s2": -4.0}
+    assert e["slot_deltas_about"] == {"s0": -1.0, "s1": -1.0, "s2": -7.0}
+    assert e["slot_median"] == pytest.approx(-1.0) and e["slot_mean"] == pytest.approx(-2.0)
+    assert e["slot_median_who"] == pytest.approx(-4.0) and e["slot_mean_who"] == pytest.approx(-4.0)
+    assert e["slot_units_both_texts"] == ["s0", "s1"]
+    # s2 has no question-1 label: e_u is Delta_who there, not max() with an unlabelled text.
+    assert e["slot_deltas_e"] == {"s0": -1.0, "s1": -1.0, "s2": -4.0}
+    # No persona on question 1 anywhere: e_u is Delta_who everywhere.
+    none_label = score182.effects(rows, slots, concepts, layers=[0], n_heads=1, persona_about={})
+    assert none_label["h0.0"]["slot_median"] == pytest.approx(-4.0)
+    assert none_label["h0.0"]["slot_units_both_texts"] == []
+    # No about rows at all: e_u is Delta_who, and about_missing counts the units.
+    no_about = score182.effects(fixture_rows({"h0.0": -4.0}, slots, concepts, layers=(0,), n_heads=1), slots,
+                                concepts, layers=[0], n_heads=1, persona_about={"s0": True})
+    assert no_about["h0.0"]["slot_median"] == pytest.approx(-4.0) and no_about["h0.0"]["about_missing"] == 3
+
+
+def test_deliberate_break_e_u_min_instead_of_max_fails():
+    """The break the brief asks for: an e_u that takes min instead of max must fail a test. The sabotaged scorer is
+    checked against the hand-computed e_u above, and against the registered ranking it changes."""
+    slots, concepts = ["s0", "s1", "s2"], []
+    about = {"s0": 0.25, "s1": 0.25, "s2": 1.75}
+    effects = {"h0.0": -4.0, "h0.1": -2.0}
+    rows = fixture_rows(effects, slots, concepts, layers=(0,), n_heads=2, about=about)
+    persona = {"s0": True, "s1": True}
+    right = score182.effects(rows, slots, concepts, layers=[0], n_heads=2, persona_about=persona)
+    assert right["h0.0"]["slot_median"] == pytest.approx(-1.0) and right["h0.1"]["slot_median"] == pytest.approx(-0.5)
+    assert score182.rank_heads(right, [0], 2) == [(0, 0), (0, 1)]
+
+    def sabotaged_effects(*args, **kwargs):  # min instead of max
+        out = _real_effects(*args, **kwargs)
+        for entry in out.values():
+            who, ab = entry["slot_deltas"], entry["slot_deltas_about"]
+            both = entry["slot_units_both_texts"]
+            values = [min(who[u], ab[u]) if u in both else who[u] for u in who if who[u] is not None]
+            entry["slot_median"] = statistics.median(values) if values else None
+        return out
+
+    import statistics
+    _real_effects = score182.effects
+    broken = sabotaged_effects(rows, slots, concepts, layers=[0], n_heads=2, persona_about=persona)
+    assert broken["h0.0"]["slot_median"] == pytest.approx(-4.0)  # min: -4, -4, -7
+    assert broken["h0.0"]["slot_median"] != pytest.approx(right["h0.0"]["slot_median"])
+    assert broken["h0.1"]["slot_median"] == pytest.approx(-2.0)  # min: -2, -2, -2
+    with pytest.raises(AssertionError):
+        assert broken["h0.0"]["slot_median"] == pytest.approx(right["h0.0"]["slot_median"])
+
+
+def test_ranking_record_reports_the_who_only_ranking_and_overlap():
+    slots, concepts = ["s0", "s1", "s2"], []
+    about = {"s0": 0.25, "s1": 0.25, "s2": 1.75}
+    rows = fixture_rows({"h0.0": -4.0, "h0.1": -2.0, "h0.2": -3.0}, slots, concepts, layers=(0,), n_heads=3,
+                        about=about)
+    table = score182.effects(rows, slots, concepts, layers=[0], n_heads=3, persona_about={"s0": True, "s1": True})
+    record = run182.ranking_record(table, k=2)
+    # e_u: h0.0 -1, h0.1 -0.5, h0.2 -0.75; Delta_who: -4, -2, -3. Both orders agree here; the overlap is the top 2.
+    assert record["ranking"][:3] == ["h0.0", "h0.2", "h0.1"] and record["ranking_who"][:3] == ["h0.0", "h0.2", "h0.1"]
+    assert record["top_k_overlap"]["overlap"] == ["h0.0", "h0.2"] and record["top_k_overlap"]["n_overlap"] == 2
+
+
+def test_rank_overlap_of_the_two_top_six_sets():
+    a = ["h1.0", "h0.3", "h2.1", "h1.7", "h3.2", "h0.9", "h2.4"]
+    b = ["h1.0", "h0.3", "h2.4", "h3.2", "h0.9", "h1.7", "h2.1"]
+    out = score182.rank_overlap(a, b, k=6)
+    assert out["top"] == a[:6] and out["top_who"] == b[:6]
+    assert out["overlap"] == ["h0.3", "h0.9", "h1.0", "h1.7", "h3.2"] and out["n_overlap"] == 5
+    assert score182.rank_overlap([(1, 0), (0, 3)], [(0, 3), (1, 0)], k=2)["n_overlap"] == 2
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendment 1b item 2: first sentence against the rest, per head, and 182.W1.
+
+def test_sentence_abs_median_per_head_and_w1():
+    slots = ["s0", "s1"]
+    rows = []
+    # none: every token at 0. h0.0: |Delta| = 0.1 on the first sentence, 1.0 on the rest (first 2 of 4 tokens).
+    for tag, first, rest in (("none", 0.0, 0.0), ("h0.0", 0.1, 1.0), ("h0.1", 0.6, 1.0)):
+        for uid in slots:
+            rows.append({"condition": tag, "id": uid, "unit": "neuron", "text": "own", "logp_sum": -5.0,
+                         "logp_tokens": [-first, -first, -rest, -rest], "first_sentence_tokens": 2})
+    table = score182.effects(rows, slots, [], layers=[0], n_heads=2)
+    assert table["h0.0"]["sentence_abs_median"] == {"first_sentence_abs_median": pytest.approx(0.1),
+                                                    "rest_abs_median": pytest.approx(1.0),
+                                                    "first_sentence_n": 2, "rest_n": 2}
+    assert table["h0.1"]["sentence_abs_median"]["first_sentence_abs_median"] == pytest.approx(0.6)
+    # Rows without the fields: None, never 0.
+    bare = score182.effects([{"condition": "none", "id": "s0", "unit": "neuron", "text": "own", "logp_sum": -5.0},
+                             {"condition": "h0.0", "id": "s0", "unit": "neuron", "text": "own", "logp_sum": -6.0}],
+                            ["s0"], [], layers=[0], n_heads=2)
+    assert bare["h0.0"]["sentence_abs_median"] is None
+    # 182.W1 over six heads: four with the first sentence under half the rest -> held; three -> failed; a missing
+    # input -> not read.
+    def six(first_flags):
+        t = {}
+        for i, below in enumerate(first_flags):
+            t[f"h0.{i}"] = {"sentence_abs_median": {"first_sentence_abs_median": 0.1 if below else 1.0,
+                                                    "rest_abs_median": 1.0}}
+        return t
+    heads = [f"h0.{i}" for i in range(6)]
+    held = score182.w1_sentence_verdict(six([True, True, True, True, False, False]), heads)
+    assert held["verdict"] == "held" and held["n_first_below_half"] == 4
+    failed = score182.w1_sentence_verdict(six([True, True, True, False, False, False]), heads)
+    assert failed["verdict"] == "failed" and failed["n_first_below_half"] == 3
+    # Exactly half is not "less than half".
+    t = six([True] * 6)
+    t["h0.5"]["sentence_abs_median"]["first_sentence_abs_median"] = 0.5
+    assert score182.w1_sentence_verdict(t, heads)["n_first_below_half"] == 5
+    missing = six([True] * 5)
+    missing["h0.5"] = {"sentence_abs_median": None}
+    assert score182.w1_sentence_verdict(missing, heads)["verdict"] == "not read"
+    assert score182.w1_sentence_verdict(six([True] * 6), heads[:5])["verdict"] == "not read"
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendment 1b item 3: the damage rule gates the selection.
+
+def test_damage_rule_wording():
+    # unpushed more negative than half the slot_median: -3 < -2.5 (slot_median -5).
+    assert score182.damage_reasons({"slot_median": -5.0, "unpushed": -3.0, "random_median": None})
+    # Exactly half is not "more negative".
+    assert score182.damage_reasons({"slot_median": -5.0, "unpushed": -2.5, "random_median": None}) == []
+    # random_median at least as negative as the slot_median: -5 <= -5 and -6 <= -5.
+    assert score182.damage_reasons({"slot_median": -5.0, "random_median": -5.0})
+    assert score182.damage_reasons({"slot_median": -5.0, "random_median": -6.0})
+    assert score182.damage_reasons({"slot_median": -5.0, "random_median": -4.9}) == []
+    # Both slot_median and the compared value must be negative: a positive slot_median is never damage, and a
+    # positive random_median never is.
+    assert score182.damage_reasons({"slot_median": 1.0, "unpushed": -3.0, "random_median": -6.0}) == []
+    assert score182.damage_reasons({"slot_median": -5.0, "random_median": 2.0, "unpushed": 1.0}) == []
+    # Missing inputs are not damage.
+    assert score182.damage_reasons({"slot_median": -5.0}) == []
+    assert score182.damage_reasons({"slot_median": None, "unpushed": -9.0}) == []
+    assert score182.damage_reasons(None) == []
+    assert len(score182.damage_reasons({"slot_median": -5.0, "unpushed": -4.0, "random_median": -7.0})) == 2
+
+
+def test_selection_skips_damaged_heads_and_names_them():
+    """The top head has an unpushed loss deeper than half its slot loss and the second's random direction loses as
+    much: both are skipped and named, and the next heads are taken until k are selected."""
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    effects = {"h0.0": -9.0, "h0.1": -8.0, "h1.0": -7.0, "h1.1": -1.0, "h1.2": -0.5}
+    rows = fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=3)
+    table = score182.effects(rows, slots, concepts, layers=[0, 1], n_heads=3)
+    # The fixture's random row moves at a tenth of the effect and the unpushed row at a twentieth: h0.0's unpushed
+    # loss (-0.45) is not more negative than half its slot_median (-4.5), so it is not damage on its own. Sabotage
+    # the two entries directly, as a damaged head's row would read.
+    table["h0.0"]["unpushed"] = -5.0      # more negative than half of -9
+    table["h0.1"]["random_median"] = -8.0  # at least as negative as its slot_median
+    sel = score182.select_stage2(table, [0, 1], 3, k=1, top_k=6)
+    assert sel["selected"] == ["h1.0"]
+    assert [s["head"] for s in sel["skipped_damage"]] == ["h0.0", "h0.1"]
+    assert "unpushed" in sel["skipped_damage"][0]["reasons"][0] and "random" in sel["skipped_damage"][1]["reasons"][0]
+    # The controls come from the unselected heads as before: in layer 1 the unselected heads' medians are -1.0
+    # (h1.1) and 0.0 (h1.2), so the one closest to zero, h1.2, is the control.
+    assert sel["controls"] == ["h1.2"]
+    # Nothing damaged: the selection is the plain top k.
+    for entry in table.values():
+        entry["unpushed"], entry["random_median"] = 0.0, 0.0
+    assert score182.select_stage2(table, [0, 1], 3, k=1, top_k=6)["selected"] == ["h0.0"]
+    assert score182.select_stage2(table, [0, 1], 3, k=1, top_k=6)["skipped_damage"] == []
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendment 1b item 4: 48 control heads and the one-sided Mann-Whitney U test.
+
+def test_mann_whitney_hand_computed_case():
+    """n1 = n2 = 3, no ties: the 20 arrangements give U = 0..9 with counts 1,1,2,3,3,3,3,2,1,1. U = 1 for
+    [1,2,3] against [4,5,6] (every main value below every control), so P(U <= 1) = 2/20 = 0.1."""
+    assert score182._u_exact_upper(0, 3, 3) == pytest.approx(0.05)
+    assert score182._u_exact_upper(1, 3, 3) == pytest.approx(0.1)
+    assert score182._u_exact_upper(2, 3, 3) == pytest.approx(0.2)
+    assert score182._u_exact_upper(3, 3, 3) == pytest.approx(0.35)
+    assert score182._u_exact_upper(8, 3, 3) == pytest.approx(0.95)  # 19 of 20 arrangements have U <= 8
+    assert score182._u_exact_upper(9, 3, 3) == pytest.approx(1.0)
+    out = score182.mann_whitney_u([-9.0, -8.0, -7.0], [-1.0, -2.0, -3.0])
+    assert out["u"] == pytest.approx(9.0) and out["n_main"] == 3 and out["n_control"] == 3
+    assert out["p_one_sided"] == pytest.approx(0.05)
+    # The other direction: no evidence that the main heads are more negative.
+    assert score182.mann_whitney_u([-1.0, -2.0, -3.0], [-9.0, -8.0, -7.0])["p_one_sided"] == pytest.approx(1.0)
+    # Ties: the normal approximation with a tie correction, still one-sided and in (0, 1].
+    tied = score182.mann_whitney_u([-5.0, -5.0, -5.0], [-5.0, -5.0, -5.0])
+    assert tied["u"] == pytest.approx(4.5) and 0.0 < tied["p_one_sided"] <= 1.0
+    assert score182.mann_whitney_u([], [-1.0]) is None
+    # Against scipy where it is installed (the exact path and the tie path).
+    scipy_stats = pytest.importorskip("scipy.stats")
+    for x, y in (([-9.0, -8.0, -7.0], [-1.0, -2.0, -3.0]), ([-5.0, -5.0, -1.0], [-5.0, -2.0, -3.0]),
+                 (list(range(10)), list(range(5, 20)))):
+        ours = score182.mann_whitney_u(x, y)["p_one_sided"]
+        assert ours == pytest.approx(float(scipy_stats.mannwhitneyu(x, y, alternative="less").pvalue))
+
+
+def test_182_8_over_48_controls_and_mann_whitney():
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    base = {f"h0.{h}": -2.0 - 0.1 * h for h in range(2)}
+    base.update({f"h1.{h}": -1.0 - 0.1 * h for h in range(2)})
+    base.update({"layer0": -1.5, "layer1": -2.5, "block": -4.0})
+    base.update({f"restore{l}.{h}": -3.0 for l in (0, 1) for h in range(2)})
+    controls = (13, 14, 15)
+    effects = dict(base, **{f"c{L}.{h}": -0.5 - 0.01 * h for L in controls for h in range(2)})
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2,
+                                          control_layers=controls),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=list(controls))
+    out = score182.verdicts(table, score182.rank_heads(table, [0, 1], 2), [0, 1], 2, k=2,
+                            control_layers=list(controls))
+    assert out["182.8"]["verdict"] == "held" and len(out["182.8"]["control_slot_medians"]) == 6
+    assert out["182.8"]["control_layers"] == [13, 14, 15]
+    mw = out["182.8"]["mann_whitney"]
+    assert mw["n_main"] == 4 and mw["n_control"] == 6 and mw["u"] == 24.0  # every main head below every control
+    # The controls' medians are -0.5, -0.5099999999999998, -0.5, -0.5099999999999998, -0.5, -0.5099999999999998:
+    # two groups of three tied values (float rounding keeps -0.51 off -0.5), so the normal approximation is used
+    # (scipy's default, which agrees). mean U = 12, variance 4*6/12*((11) - 48/(10*9)) = 2 * 10.4666..., z = 12/sqrt.
+    from math import erfc, sqrt
+    assert mw["method"] in ("normal", "scipy")
+    assert mw["p_one_sided"] == pytest.approx(0.5 * erfc((24 - 0.5 - 12) / sqrt(2 * (11 - 48 / 90)) / sqrt(2.0)))
+    # A control head in layer 13 more negative than the 2nd-ranked main head: failed, and named.
+    effects["c13.1"] = -5.0
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2,
+                                          control_layers=controls),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=list(controls))
+    out = score182.verdicts(table, score182.rank_heads(table, [0, 1], 2), [0, 1], 2, k=2,
+                            control_layers=list(controls))
+    assert out["182.8"]["verdict"] == "failed" and out["182.8"]["controls_more_negative"] == ["c13.1"]
+    # A missing layer-15 condition: not read. (The fixture's stage1_conditions lists c13 and c14 only, so the table
+    # is built without c15 rows at all: 182.8 needs all 48 and reads "not read".)
+    del effects["c13.1"]
+    table = score182.effects(fixture_rows(effects, slots, concepts, layers=(0, 1), n_heads=2,
+                                          control_layers=(13, 14)),
+                             slots, concepts, layers=[0, 1], n_heads=2, control_layers=list(controls))
+    out = score182.verdicts(table, score182.rank_heads(table, [0, 1], 2), [0, 1], 2, k=2,
+                            control_layers=list(controls))
+    assert out["182.8"]["verdict"] == "not read"
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Amendment 1b item 6: the top32 stage-2 run.
+
+def test_selection_adds_the_top32_run():
+    layers, n_heads = [0, 1, 2, 3], 16
+    slots, concepts = [f"s{i}" for i in range(3)], []
+    effects = {f"h{l}.{h}": -0.1 * (l * n_heads + h) for l in layers for h in range(n_heads)}
+    rows = fixture_rows(effects, slots, concepts, layers=tuple(layers), n_heads=n_heads)
+    table = score182.effects(rows, slots, concepts, layers=layers, n_heads=n_heads)
+    sel = score182.select_stage2(table, layers, n_heads, k=6)
+    tags = [r["tag"] for r in sel["runs"]]
+    assert len(tags) == 16 + 1 and len(set(tags)) == len(tags)  # 16 runs plus top32: 17
+    assert tags[4] == "top32" and tags[:4] == ["none", "block", "top6", "block-minus-top6"]
+    top32 = next(r for r in sel["runs"] if r["tag"] == "top32")
+    assert sel["top32"] == sel["ranking"][:32]
+    assert sum(len(v) for v in top32["heads"].values()) == 32
+    assert top32["heads"] == hs.condition_heads("top32", layers, n_heads, score182.rank_heads(table, layers, n_heads))
+    # A ranking shorter than 32 heads: no top32 run, and top32 is None.
+    short = score182.select_stage2(table, [0], 4, k=2)
+    assert "top32" not in [r["tag"] for r in short["runs"]] and short["top32"] is None

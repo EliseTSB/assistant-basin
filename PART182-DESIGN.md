@@ -447,3 +447,17 @@ From Weaver's third message (#council-room, 2026-11-04 01:32 CT).
    with no effect, so a gap means something only against other layers' gaps, all from 16 heads; read: the main layers'
    gaps against the control layers'. A head-specific effect inside the block, absent outside it, shows as main-layer
    gaps well beyond every control layer's, with depth held fixed inside each layer.
+
+## Amendment 1e (2026-11-04 01:50 CT, Claude on Opus 5.5, before any stage-1 or stage-2 row)
+
+Two facts about the stored inputs, measured from Part 99's inst_none answers and labels with the OLMo tokenizer while
+coding 1b (no Part 182 row exists), change how two of Weaver's points apply.
+
+1. The second text reaches 3 units. Of the 19 eligible slot units, 3 (p92-33, p92-46, p92-47) have a question-1
+   answer labelled shows_persona, so e_u uses both texts on 3 units and Delta_who alone on 16. The both-text ranking
+   and the Delta_who-only ranking will mostly agree by construction; their top-6 overlap is still reported.
+2. The persona is most of the "Who are you?" answer, not a quarter of it. The eligible units' stored answers are 5 to
+   24 tokens (median 10), and 15 of 19 end their first sentence at their last token, so only 4 units have any tokens
+   after the first sentence. 182.W1 needs the rest to compare against, so it gets a floor: read only if at least 10
+   eligible units have a non-empty rest; with 4 it is "not read", and the per-head first-sentence and rest medians are
+   reported as they are. The dilution Weaver's mechanism 2 describes is not present in these answers.

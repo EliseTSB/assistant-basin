@@ -424,12 +424,22 @@ def zero_readout(layer_indices) -> dict[str, float]:
     return {str(int(i)): 0.0 for i in layer_indices}
 
 
+def _row_prompt(row, prompt_ids):
+    """The prompt a row is scored after: its own ``prompt_ids`` when it carries one, else the batch prompt."""
+    own = row.get("prompt_ids")
+    return [int(t) for t in own] if own is not None else prompt_ids
+
+
 def score_rows(model, tokenizer, layers, prompt_ids: list[int], rows: list[dict], device: str, batch: int,
                hidden: int, none_states: list[dict] | None = None, readout_layers=READOUT_LAYERS,
                capture: list[dict] | None = None) -> list[dict]:
     """Teacher-force ``rows`` in fixed batches. Each row: {"answer_ids": [...], "push_layer": int or None,
-    "push": tensor [hidden] or None}. Returns one result dict per row, in order. The batch composition is a function
-    of the row order and ``batch`` only, so every condition sees the same batches.
+    "push": tensor [hidden] or None, "prompt_ids": [...] or None}. Returns one result dict per row, in order. The batch
+    composition is a function of the row order and ``batch`` only, so every condition sees the same batches.
+
+    Per-row prompts (Amendment 1b item 1): a row whose ``prompt_ids`` is a list is scored after that prompt, and a
+    batch never mixes prompts, so every row's number is the one it gets alone. Rows without ``prompt_ids`` (or given
+    the function's ``prompt_ids``) are scored exactly as before: they form consecutive runs, one forward per run.
 
     Residual readouts (Amendment 1 item 5): with ``none_states`` given (one dict per row, {layer: [1, tokens, hidden]}
     captured under ``none``), every result gains ``resid_rel`` = {layer: mean over the row's answer positions of
@@ -439,10 +449,17 @@ def score_rows(model, tokenizer, layers, prompt_ids: list[int], rows: list[dict]
     layer_count = len(c.get_layers(model))
     readout = [int(i) for i in readout_layers if 0 <= int(i) < layer_count]
     results = []
-    for begin in range(0, len(rows), batch):
-        chunk = rows[begin:begin + batch]
+    begin = 0
+    while begin < len(rows):
+        row_prompt = _row_prompt(rows[begin], prompt_ids)
+        end = begin + 1
+        while end < len(rows) and end - begin < batch and _row_prompt(rows[end], prompt_ids) == row_prompt:
+            end += 1
+        chunk = rows[begin:end]
+        chunk_begin = begin
+        begin = end
         answers = [r["answer_ids"] for r in chunk]
-        input_ids, attention_mask = build_batch(prompt_ids, answers, pad_id, device)
+        input_ids, attention_mask = build_batch(row_prompt, answers, pad_id, device)
         vectors: dict[int, torch.Tensor] = {}
         for i, r in enumerate(chunk):
             if r.get("push") is None:
@@ -454,12 +471,12 @@ def score_rows(model, tokenizer, layers, prompt_ids: list[int], rows: list[dict]
         handles = row_push_hooks(layers, vectors)
         stores, capture_handles = capture_layer_outputs(model, readout) if readout else ({}, [])
         try:
-            out = teacher_forced_logprobs(model, input_ids, attention_mask, len(prompt_ids), answers)
+            out = teacher_forced_logprobs(model, input_ids, attention_mask, len(row_prompt), answers)
         finally:
             for handle in handles + capture_handles:
                 handle.remove()
         if readout:
-            positions = answer_positions(len(prompt_ids), answers, attention_mask)
+            positions = answer_positions(len(row_prompt), answers, attention_mask)
             for i, result in enumerate(out):
                 # [1, tokens, hidden] for this row: the batch slice, so the two sides of the subtraction are the same
                 # shape whatever the batch size.
@@ -467,7 +484,7 @@ def score_rows(model, tokenizer, layers, prompt_ids: list[int], rows: list[dict]
                 if none_states is None:
                     result["resid_rel"] = zero_readout(readout)
                 else:
-                    result["resid_rel"] = relative_residual(none_states[begin + i], current, positions[i])
+                    result["resid_rel"] = relative_residual(none_states[chunk_begin + i], current, positions[i])
                 if capture is not None:
                     capture.append(current)
         results.extend(out)

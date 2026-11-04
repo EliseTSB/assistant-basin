@@ -19,7 +19,19 @@ Definitions (nats; an answer's log-probability is the sum over its first MAX_TOK
   random_median: Delta on the paired random direction's own answer (unit "random", text "own")
   assistant_median: Delta on the unpushed answer's text under the unit's push (unit "neuron", text "assistant")
   unpushed: Delta on the unpushed answer with no push (id "unpushed")
-Ranking: heads by slot_median, most negative first, ties by (layer, head).
+
+Amendment 1b (PART182-DESIGN.md, items 1 to 4):
+  Delta_about(cond, u) = Delta on the unit's own pushed answer to "Tell me about yourself." (Part 99's inst_none
+                      question 1; unit "neuron", text "about"), scored after that question's prompt
+  e_u               = max(Delta_who, Delta_about) when Part 99's inst_none Haiku label says u's question-1 answer
+                      shows the persona, else Delta_who (the smaller loss of the two). slot_median and slot_mean are
+                      the median and mean of e_u over the eligible slot units; slot_median_who and slot_mean_who keep
+                      the Delta_who-only values, and slot_units_both_texts names the units that used both texts.
+  sentence_abs_median: per head, the median over the eligible slot units of the mean per-token |Delta| over the
+                      first sentence (answer tokens up to and including the first whose text holds ".", "!" or "?")
+                      and over the rest (first_sentence_abs_median, rest_abs_median).
+Ranking: heads by slot_median, most negative first, ties by (layer, head). A head that meets the damage rule
+(Ranking rules) is skipped and named in the stage-2 selection, which takes the next head until K_SELECT are chosen.
 """
 from __future__ import annotations
 
@@ -37,9 +49,11 @@ if str(HERE) not in sys.path:
 import headswap182 as hs  # noqa: E402
 
 LAYERS = [0, 1, 2, 3]
-CONTROL_LAYERS = [14]          # Amendment 1 item 3: out-of-block single-head controls (stage 1a only)
+CONTROL_LAYERS = [13, 14, 15]  # Amendment 1b item 4: out-of-block single-head controls (stage 1a only), 48 heads
 N_HEADS = 16
 K_SELECT = 6
+TOP32 = 32                     # Amendment 1b item 6: the stage-2 top32 run takes the first 32 heads of the ranking
+EXACT_U_LIMIT = 500_000        # mann_whitney_u enumerates C(n1+n2, n1) arrangements up to this many, else normal
 DOWN_NATS = -2.0
 LADDER_K = (1, 2, 4, 8, 16, 32)
 DEFAULT_ROWS = ROOT / "results" / "part182" / "stage1.jsonl"
@@ -76,6 +90,17 @@ def eligible_units(labels_path, kinds: dict[str, str]):
     return eligible, excluded
 
 
+def persona_units(labels_path, question_index: int) -> dict[str, bool]:
+    """Amendment 1b item 1: {unit id: shows_persona} for Part 99's inst_none Haiku labels of one question (the file
+    ``eligible_units`` reads, question_index 0). A unit with no label or an error label is absent, never False."""
+    out = {}
+    for row in read_jsonl(labels_path):
+        if row.get("unit") == "neuron" and int(row.get("question_index", -1)) == int(question_index):
+            if "error" not in row and "shows_persona" in row:
+                out[str(row["id"])] = bool(row["shows_persona"])
+    return out
+
+
 def _median(values):
     return statistics.median(values) if values else None
 
@@ -98,7 +123,59 @@ def _resid_median(by_key, cond, slots):
     return {k: _median(v) for k, v in sorted(out.items(), key=lambda kv: int(kv[0]))} or None
 
 
-def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layers=CONTROL_LAYERS) -> dict[str, dict]:
+SENTENCE_ENDS = (".", "!", "?")
+
+
+def first_sentence_length(token_texts) -> int:
+    """Amendment 1b item 2: the number of answer tokens up to and including the first whose decoded text contains
+    ".", "!", "?"; every token if none does. Raises on an empty answer."""
+    texts = list(token_texts)
+    if not texts:
+        raise ValueError("an answer with no tokens has no first sentence")
+    for i, text in enumerate(texts):
+        if any(mark in text for mark in SENTENCE_ENDS):
+            return i + 1
+    return len(texts)
+
+
+def sentence_abs_means(token_logp, none_logp, first_n: int) -> dict:
+    """The mean per-token |Delta| over the first sentence and over the rest of one row. A part with no token has no
+    mean: None, never 0."""
+    if len(token_logp) != len(none_logp):
+        raise ValueError(f"row has {len(token_logp)} tokens under the condition and {len(none_logp)} under none")
+    if not 0 <= first_n <= len(token_logp):
+        raise ValueError(f"first sentence of {first_n} tokens in a row of {len(token_logp)}")
+    diffs = [abs(float(a) - float(b)) for a, b in zip(token_logp, none_logp)]
+    first = diffs[:first_n]
+    rest = diffs[first_n:]
+    return {"first_sentence_mean_abs": (sum(first) / len(first)) if first else None,
+            "rest_mean_abs": (sum(rest) / len(rest)) if rest else None}
+
+
+def _sentence_medians(by_key, cond, slots) -> dict | None:
+    """Per head: the median over the eligible slot units' own-answer rows (text "own", the "Who are you?" text) of the
+    mean per-token |Delta| over the first sentence and over the rest, from the rows' stored logp_tokens. None when no
+    row carries the fields (never 0)."""
+    first, rest = [], []
+    for uid in slots:
+        a = by_key.get((cond, uid, "neuron", "own"))
+        b = by_key.get(("none", uid, "neuron", "own"))
+        if a is None or b is None:
+            continue
+        parts = sentence_abs_means(a.get("logp_tokens") or [], b.get("logp_tokens") or [],
+                                   int(a.get("first_sentence_tokens") or 0))
+        if parts["first_sentence_mean_abs"] is not None:
+            first.append(parts["first_sentence_mean_abs"])
+        if parts["rest_mean_abs"] is not None:
+            rest.append(parts["rest_mean_abs"])
+    if not first and not rest:
+        return None
+    return {"first_sentence_abs_median": _median(first), "rest_abs_median": _median(rest),
+            "first_sentence_n": len(first), "rest_n": len(rest)}
+
+
+def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layers=CONTROL_LAYERS,
+            persona_about=None) -> dict[str, dict]:
     """Per condition, the summary deltas against the ``none`` condition. Rows with a missing ``none`` partner are
     skipped and counted."""
     by_key = {}
@@ -120,6 +197,17 @@ def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layer
         conc_d = {u: delta(u, "neuron", "own") for u in concepts}
         rand_d = {u: delta(u, "random", "own") for u in slots + concepts}
         asst_d = {u: delta(u, "neuron", "assistant") for u in slots + concepts}
+        # Amendment 1b item 1: e_u = max(Delta_who, Delta_about) where the question-1 answer shows the persona.
+        about_d = {u: delta(u, "neuron", "about") for u in slots}
+        e_u, both = {}, []
+        for u in slots:
+            who, about = slot_d[u], about_d[u]
+            if who is not None and about is not None and (persona_about or {}).get(u):
+                e_u[u] = max(who, about)
+                both.append(u)
+            else:
+                e_u[u] = who
+        ev = [v for v in e_u.values() if v is not None]
         sv = [v for v in slot_d.values() if v is not None]
         cv = [v for v in conc_d.values() if v is not None]
         rv = [v for v in rand_d.values() if v is not None]
@@ -127,9 +215,13 @@ def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layer
         out[cond] = {
             "heads": (hs.condition_heads(cond, layers, n_heads, control_layers=control_layers)
                       if not cond.startswith("top") else None),
-            "slot_median": _median(sv), "slot_mean": _mean(sv), "slot_n": len(sv),
-            "slot_down": sum(1 for v in sv if v <= DOWN_NATS),
+            "slot_median": _median(ev), "slot_mean": _mean(ev), "slot_n": len(ev),
+            "slot_median_who": _median(sv), "slot_mean_who": _mean(sv), "slot_n_who": len(sv),
+            "slot_units_both_texts": both,
+            "slot_down": sum(1 for v in ev if v <= DOWN_NATS),
             "slot_missing": sum(1 for v in slot_d.values() if v is None),
+            "about_missing": sum(1 for v in about_d.values() if v is None),
+            "sentence_abs_median": _sentence_medians(by_key, cond, slots),
             "concept_median": _median(cv), "concept_mean": _mean(cv), "concept_n": len(cv),
             "concept_down": sum(1 for v in cv if v <= DOWN_NATS),
             "random_median": _median(rv), "random_n": len(rv),
@@ -137,6 +229,8 @@ def effects(rows, slots, concepts, layers=LAYERS, n_heads=N_HEADS, control_layer
             "unpushed": delta("unpushed", "none", "assistant"),
             "resid_rel_median": _resid_median(by_key, cond, slots),
             "slot_deltas": {u: (round(v, 4) if v is not None else None) for u, v in slot_d.items()},
+            "slot_deltas_about": {u: (round(v, 4) if v is not None else None) for u, v in about_d.items()},
+            "slot_deltas_e": {u: (round(v, 4) if v is not None else None) for u, v in e_u.items()},
             "concept_deltas": {u: (round(v, 4) if v is not None else None) for u, v in conc_d.items()},
         }
     return out
@@ -154,12 +248,41 @@ def rank_heads(table, layers=LAYERS, n_heads=N_HEADS) -> list[tuple[int, int]]:
     return sorted(head_tags(layers, n_heads), key=key)
 
 
-def select_stage2(table, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT) -> dict:
-    """The stage-2 selection rule, fixed before stage 1 ran: the top k heads by slot_median; for each, the unselected
-    head of the same layer whose slot_median is closest to zero (ties: lower head index), none reused; plus the
-    combined conditions. Returns the stage-2 run list."""
+def damage_reasons(entry, key="slot_median") -> list[str]:
+    """Ranking rules ("Damage rule"), Amendment 1b item 3: a head whose ``unpushed`` loss is more negative than half
+    its slot_median, or whose random_median is at least as negative as its slot_median, is damage or non-specific.
+    Strict comparisons, as the rule is written; both slot_median and the compared value must be negative, and a missing
+    input is never read as damage."""
+    median = (entry or {}).get(key)
+    if median is None or median >= 0:
+        return []
+    reasons = []
+    unpushed = entry.get("unpushed")
+    if unpushed is not None and unpushed < 0 and unpushed < 0.5 * median:
+        reasons.append("unpushed loss more negative than half its slot_median")
+    random_median = entry.get("random_median")
+    if random_median is not None and random_median < 0 and random_median <= median:
+        reasons.append("random_median at least as negative as its slot_median")
+    return reasons
+
+
+def select_stage2(table, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, top_k=TOP32) -> dict:
+    """The stage-2 selection rule: walking the ranking (slot_median, most negative first), a head that meets the damage
+    rule (Amendment 1b item 3) is skipped and named, and the next head is taken, until k are selected. For each
+    selected head, the unselected head of the same layer whose slot_median is closest to zero (ties: lower head index),
+    none reused; plus the combined conditions and (Amendment 1b item 6) the first ``top_k`` heads of the ranking as the
+    top32 run. Returns the stage-2 run list."""
     ranking = rank_heads(table, layers, n_heads)
-    selected = ranking[:k]
+    selected, skipped = [], []
+    for lh in ranking:
+        if len(selected) == k:
+            break
+        reasons = damage_reasons(table.get(f"h{lh[0]}.{lh[1]}"))
+        if reasons:
+            skipped.append({"head": f"h{lh[0]}.{lh[1]}", "slot_median": table[f"h{lh[0]}.{lh[1]}"].get("slot_median"),
+                            "reasons": reasons})
+            continue
+        selected.append(lh)
     chosen = set(selected)
     controls = []
     for layer_no, _head in selected:
@@ -178,9 +301,14 @@ def select_stage2(table, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT) -> dict:
     runs = [{"tag": "none", "heads": {}}, {"tag": "block", "heads": hs.condition_heads("block", layers, n_heads)},
             {"tag": f"top{k}", "heads": {l: sorted(hs_) for l, hs_ in together.items()}},
             {"tag": f"block-minus-top{k}", "heads": {l: hs_ for l, hs_ in complement.items() if hs_}}]
+    top32 = None
+    if top_k and top_k <= len(ranking):
+        # Amendment 1b item 6: the first top_k heads of the registered ranking, swapped together (182.W3).
+        runs.append({"tag": f"top{top_k}", "heads": hs.condition_heads(f"top{top_k}", layers, n_heads, ranking)})
+        top32 = [f"h{l}.{h}" for l, h in ranking[:top_k]]
     runs += [{"tag": t, "heads": hs.condition_heads(t, layers, n_heads)} for t in sel_tags + ctl_tags]
     return {"k": k, "selected": sel_tags, "controls": ctl_tags, "ranking": [f"h{l}.{h}" for l, h in ranking],
-            "runs": runs}
+            "skipped_damage": skipped, "top32": top32, "runs": runs}
 
 
 def ladder_conditions(ranking, ks=LADDER_K) -> dict[str, dict[int, list[int]]]:
@@ -247,24 +375,29 @@ def verdicts(table, ranking, layers=LAYERS, n_heads=N_HEADS, k=K_SELECT, ladder=
         best = max(recovered, key=lambda t: recovered[t])
         out["182.7"] = {"verdict": "held" if recovered[best] < 0.5 * abs(b_mean) else "failed",
                         "best_restore": best, "recovered_nats": recovered[best], "block_slot_mean": b_mean}
-    # 182.8 the ranking stands out from the out-of-block null: no control-layer (c14.H) single-head swap has a
-    # slot_median more negative than the 6th-ranked main head's. Not read if any of the 16 c14 conditions or the
-    # ranking is missing.
+    # 182.8 the ranking stands out from the out-of-block null: no control-layer (cL.H, L in CONTROL_LAYERS) single-head
+    # swap has a slot_median more negative than the 6th-ranked main head's. Not read if any control condition or the
+    # ranking is missing. Amendment 1b item 4: 48 control heads (layers 13, 14, 15), and a one-sided Mann-Whitney test
+    # of the main heads' slot_medians against the controls' is reported beside it.
     control_tags = [f"c{L}.{h}" for L in control_layers for h in range(n_heads)]
     control_medians = {t: table.get(t, {}).get("slot_median") for t in control_tags}
+    main_medians = {f"h{l}.{h}": table.get(f"h{l}.{h}", {}).get("slot_median") for l, h in head_tags(layers, n_heads)}
     sixth = ranking[k - 1] if len(ranking) >= k else None
     sixth_median = table.get(f"h{sixth[0]}.{sixth[1]}", {}).get("slot_median") if sixth is not None else None
+    mann_whitney = mann_whitney_u([v for v in main_medians.values() if v is not None],
+                                  [v for v in control_medians.values() if v is not None])
     if (not control_tags or sixth_median is None
             or any(v is None for v in control_medians.values())):
         out["182.8"] = {"verdict": "not read", "sixth_head": (f"h{sixth[0]}.{sixth[1]}" if sixth else None),
-                        "sixth_slot_median": sixth_median, "control_slot_medians": control_medians}
+                        "sixth_slot_median": sixth_median, "control_slot_medians": control_medians,
+                        "control_layers": list(control_layers), "mann_whitney": mann_whitney}
     else:
         offenders = [t for t, v in control_medians.items() if v < sixth_median]
         out["182.8"] = {"verdict": "failed" if offenders else "held",
                         "sixth_head": f"h{sixth[0]}.{sixth[1]}", "sixth_slot_median": sixth_median,
-                        "control_slot_medians": control_medians,
+                        "control_slot_medians": control_medians, "control_layers": list(control_layers),
                         "most_negative_control": min(control_medians, key=lambda t: control_medians[t]),
-                        "controls_more_negative": offenders}
+                        "controls_more_negative": offenders, "mann_whitney": mann_whitney}
     out["182.5"] = {"verdict": "pending stage 2 (reader counts; score182.py stage2)"}
     out["182.6"] = {"verdict": "pending stage 2 (reader counts; score182.py stage2)"}
     return out
@@ -300,6 +433,101 @@ def spearman(x, y):
     if dx == 0 or dy == 0:
         return None
     return num / (dx * dy)
+
+
+def _normal_upper(z: float) -> float:
+    """P(Z >= z) for a standard normal."""
+    from math import erfc, sqrt
+    return 0.5 * erfc(z / sqrt(2.0))
+
+
+def mann_whitney_u(x, y) -> dict:
+    """Amendment 1b item 4: a one-sided Mann-Whitney U test of sample ``x`` against ``y``, alternative "x is
+    stochastically smaller" (the main heads' slot_medians more negative than the controls'). U is the number of
+    (x, y) pairs with x < y plus half the ties; the p-value comes from scipy's ``mannwhitneyu`` when it imports, else
+    from the exact distribution when there are no ties and C(n1+n2, n1) <= EXACT_U_LIMIT (every arrangement of the
+    pooled ranks is enumerated), else from the normal approximation with a tie correction and scipy's continuity
+    correction. None if either sample is empty."""
+    x, y = [float(v) for v in x], [float(v) for v in y]
+    if not x or not y:
+        return None
+    u = sum(1.0 if a < b else 0.5 if a == b else 0.0 for a in x for b in y)
+    n1, n2 = len(x), len(y)
+    method = None
+    p = None
+    try:
+        from scipy.stats import mannwhitneyu
+        p = float(mannwhitneyu(x, y, alternative="less", method="auto").pvalue)
+        method = "scipy"
+    except ImportError:
+        pass
+    if p is None:
+        from math import comb
+        pooled = x + y
+        n = len(pooled)
+        counts = {}
+        for value in pooled:
+            counts[value] = counts.get(value, 0) + 1
+        tie_sum = sum(c ** 3 - c for c in counts.values())
+        if tie_sum == 0 and n1 * n2 <= 2500 and comb(n1 + n2, n1) <= EXACT_U_LIMIT:
+            p = _u_exact_upper(u, n1, n2)
+            method = "exact"
+        else:
+            mean_u = n1 * n2 / 2.0
+            var_u = n1 * n2 / 12.0 * ((n + 1) - tie_sum / (n * (n - 1)))
+            # scipy's default continuity correction (U - 0.5), so the two routes agree.
+            p = _normal_upper((u - 0.5 - mean_u) / var_u ** 0.5) if var_u > 0 else None
+            method = "normal"
+    return {"u": u, "p_one_sided": p, "n_main": n1, "n_control": n2, "alternative": "main more negative",
+            "method": method}
+
+
+def _u_exact_upper(u_value: float, n1: int, n2: int) -> float | None:
+    """P(U <= u_value) under the null, exactly, for samples without ties: the share of the C(n1+n2, n1) arrangements
+    of the pooled ranks for which U <= u_value. U is in scipy's convention (the number of (first-sample,
+    second-sample) pairs in which the second sample's rank comes first), so for x below y, U = n1*n2; it is counted
+    directly, in integers."""
+    from itertools import combinations
+    from math import comb, floor
+    total = comb(n1 + n2, n1)
+    hits = 0
+    for first in combinations(range(n1 + n2), n1):
+        taken = set(first)
+        second = [r for r in range(n1 + n2) if r not in taken]
+        u = sum(1 for a in first for b in second if b < a)
+        if u <= floor(u_value):  # U is a half-integer when there are ties (not used on that path)
+            hits += 1
+    return hits / total
+
+
+def w1_sentence_verdict(table, selected, k=K_SELECT) -> dict:
+    """182.W1 (Amendment 1b item 2): over the six selected heads, held if on at least 4 the first-sentence mean |Delta|
+    is less than half the rest's; failed if the first sentence's is at least half on 3 or more; not read if any input
+    is missing."""
+    rows = []
+    for tag in selected[:k]:
+        entry = table.get(tag, {})
+        parts = entry.get("sentence_abs_median")
+        first = parts.get("first_sentence_abs_median") if isinstance(parts, dict) else None
+        rest = parts.get("rest_abs_median") if isinstance(parts, dict) else None
+        rows.append({"head": tag, "first_sentence_abs_median": first, "rest_abs_median": rest,
+                     "first_below_half_rest": (first < 0.5 * rest) if (first is not None and rest is not None)
+                     else None})
+    if len(rows) < k or any(r["first_below_half_rest"] is None for r in rows):
+        return {"verdict": "not read", "heads": rows, "n_first_below_half": None}
+    n_below = sum(1 for r in rows if r["first_below_half_rest"])
+    verdict = "held" if n_below >= 4 else "failed"
+    return {"verdict": verdict, "heads": rows, "n_first_below_half": n_below, "k": k}
+
+
+def rank_overlap(ranking_a, ranking_b, k=K_SELECT) -> dict:
+    """Amendment 1b item 1: the top-k sets of two rankings (lists of "hL.H") and their overlap."""
+    def tag(entry):
+        return f"h{entry[0]}.{entry[1]}" if isinstance(entry, tuple) else str(entry)
+
+    a = [tag(entry) for entry in ranking_a[:k]]
+    b = [tag(entry) for entry in ranking_b[:k]]
+    return {"top": a, "top_who": b, "overlap": sorted(set(a) & set(b)), "n_overlap": len(set(a) & set(b))}
 
 
 def head_weight_cosines(table, weights, layers=LAYERS, n_heads=N_HEADS) -> dict:
@@ -355,24 +583,34 @@ def main(argv=None):
                           "n_slot": len(eligible["slot"]), "n_concept": len(eligible["concept"])}, indent=1))
         return 0
     rows = read_jsonl(args.rows)
-    table = effects(rows, eligible["slot"], eligible["concept"])
+    persona_about = persona_units(P99_LABELS, 1)
+    table = effects(rows, eligible["slot"], eligible["concept"], persona_about=persona_about)
     ranking = rank_heads(table)
     if args.command == "ladder":
         print(json.dumps(ladder_conditions(ranking, ks=tuple(k for k in LADDER_K if k <= 64)), indent=1))
         return 0
+    selection = select_stage2(table, k=args.k)
+    # Amendment 1b item 1: the Delta_who-only ranking beside the registered one, and the overlap of the two top 6.
+    ranking_who = rank_heads({t: {"slot_median": e.get("slot_median_who")} for t, e in table.items()})
+    overlap = rank_overlap(ranking, ranking_who, k=args.k)
+    w1 = w1_sentence_verdict(table, selection["selected"], k=args.k)
     result = {"rows": len(rows), "eligible": eligible, "excluded": excluded, "replay": replay_check(rows),
               "effects": table, "ranking": [f"h{l}.{h}" for l, h in ranking],
-              "selection": select_stage2(table, k=args.k), "verdicts": verdicts(table, ranking, k=args.k)}
+              "ranking_who": [f"h{l}.{h}" for l, h in ranking_who], "rank_overlap": overlap,
+              "persona_about_units": sorted(u for u in eligible["slot"] if persona_about.get(u)),
+              "selection": selection, "verdicts": verdicts(table, ranking, k=args.k)}
+    result["verdicts"]["182.W1"] = w1
     weights_path = Path(args.head_weights)
     if weights_path.exists():
         result["head_weights"] = head_weight_cosines(table, json.loads(weights_path.read_text(encoding="utf-8")))
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(result, indent=1) + "\n", encoding="utf-8")
     brief = {k: v for k, v in result.items() if k != "effects"}
-    brief["effects_brief"] = {t: {k: v for k, v in e.items() if k in ("slot_median", "slot_mean", "slot_down",
-                                                                     "concept_median", "random_median",
+    brief["effects_brief"] = {t: {k: v for k, v in e.items() if k in ("slot_median", "slot_mean", "slot_median_who",
+                                                                     "slot_mean_who", "slot_units_both_texts",
+                                                                     "slot_down", "concept_median", "random_median",
                                                                      "assistant_median", "unpushed",
-                                                                     "resid_rel_median")}
+                                                                     "sentence_abs_median", "resid_rel_median")}
                               for t, e in table.items()}
     print(json.dumps(brief, indent=1))
     return 0

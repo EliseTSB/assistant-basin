@@ -76,20 +76,27 @@ def load_units():
     return units, kinds
 
 
-def load_p99_answers():
-    """Part 99 inst_none answers to "Who are you?" by (id, unit)."""
+def load_p99_answers(question_index=0):
+    """Part 99 inst_none answers by (id, unit); question 0 is "Who are you?", question 1 "Tell me about yourself."."""
     out = {}
     for line in open(P99 / "inst_none.jsonl", encoding="utf-8"):
         row = json.loads(line)
-        if int(row["question_index"]) == 0:
+        if int(row["question_index"]) == int(question_index):
             out[(str(row["id"]), row["unit"])] = row["answer"]
     return out
 
 
-def build_stage1_rows(tokenizer, units, pushes, answers, max_tokens=MAX_TOKENS) -> list[dict]:
+def build_stage1_rows(tokenizer, units, pushes, answers, max_tokens=MAX_TOKENS, about_answers=None,
+                      prompt_who=None, prompt_about=None) -> list[dict]:
     """The fixed row list, in a fixed order: per unit its own pushed answer under its push, the paired random
     direction's own answer under the random push, and the unpushed answer's text under the unit's push; then the
-    unpushed answer with no push. Rows are sorted by unit id, so batch composition is fixed across conditions."""
+    unpushed answer with no push. Rows are sorted by unit id, so batch composition is fixed across conditions.
+
+    Amendment 1b item 1: ``about_answers`` (load_p99_answers(1)) adds, after the three rows of each unit, the unit's
+    own pushed answer to "Tell me about yourself." (unit "neuron", text "about"), push on, first ``max_tokens`` tokens,
+    scored after ``prompt_about`` (question 1's chat prompt), not after "Who are you?". The other rows carry
+    ``prompt_who`` when it is given; without these arguments the rows are exactly the ones built before.
+    Per row ``first_sentence_tokens`` (item 2) is the answer's first-sentence length, from the decoded tokens."""
     unpushed_text = answers[("unpushed", "none")]
     rows = []
     for n in sorted(units, key=lambda n: str(n["id"])):
@@ -100,12 +107,28 @@ def build_stage1_rows(tokenizer, units, pushes, answers, max_tokens=MAX_TOKENS) 
             rows.append({"id": uid, "unit": unit, "text": text_kind, "push_layer": layer_no,
                          "push": pushes[f"{uid}|{unit}"].float(),
                          "answer_ids": hs.answer_token_ids(tokenizer, text, max_tokens), "answer": text})
+        if about_answers is not None:
+            text = about_answers[(uid, "neuron")]
+            rows.append({"id": uid, "unit": "neuron", "text": "about", "push_layer": layer_no,
+                         "push": pushes[f"{uid}|neuron"].float(),
+                         "answer_ids": hs.answer_token_ids(tokenizer, text, max_tokens), "answer": text})
     rows.append({"id": "unpushed", "unit": "none", "text": "assistant", "push_layer": None, "push": None,
                  "answer_ids": hs.answer_token_ids(tokenizer, unpushed_text, max_tokens), "answer": unpushed_text})
     for row in rows:
         if not row["answer_ids"]:
             raise ValueError(f"empty answer for {row['id']}/{row['unit']}")
+        if row["text"] == "about":
+            row["prompt_ids"] = list(prompt_about) if prompt_about is not None else None
+        elif prompt_who is not None:
+            row["prompt_ids"] = list(prompt_who)
+        row["first_sentence_tokens"] = score182.first_sentence_length(
+            tokenizer.convert_ids_to_tokens(row["answer_ids"]))
     return rows
+
+
+def stage1_prompts(tokenizer):
+    """The chat prompts of the two own texts: question 0 ("Who are you?") and question 1 ("Tell me about yourself.")."""
+    return (c.prompt_ids(tokenizer, QUESTION, "chat"), c.prompt_ids(tokenizer, QUESTIONS[1], "chat"))
 
 
 def public(row, result, condition, heads, extra=None):
@@ -287,19 +310,22 @@ def _stage1_run(args, conditions: dict[str, dict[int, list[int]]], out_path: Pat
     torch.set_num_threads(args.threads)
     units, _kinds = load_units()
     answers = load_p99_answers()
+    about_answers = load_p99_answers(1)  # Amendment 1b item 1: "Tell me about yourself."
     pushes = torch.load(PUSHES, map_location="cpu")
     tokenizer, model = load_host(args.host, args.device)
     layers = c.get_layers(model)
     hidden = int(model.config.hidden_size)
-    prompt = c.prompt_ids(tokenizer, QUESTION, "chat")
-    rows = build_stage1_rows(tokenizer, units, pushes, answers)
+    prompt, prompt_about = stage1_prompts(tokenizer)
+    rows = build_stage1_rows(tokenizer, units, pushes, answers, about_answers=about_answers, prompt_who=prompt,
+                             prompt_about=prompt_about)
     donor_layers = sorted(set(LAYERS) | set(score182.CONTROL_LAYERS))
     donors = hs.load_donor_attention(args.donor, donor_layers, dtype=torch.float32)
     existing = _existing_keys(out_path)
     meta = {"stage": stage, "host": str(args.host), "donor": str(args.donor), "device": args.device,
             "dtype": "float32", "attn_implementation": "eager", "batch": args.batch, "max_tokens": MAX_TOKENS,
             "torch": torch.__version__, "transformers": __import__("transformers").__version__,
-            "prompt_tokens": len(prompt), "rows_per_condition": len(rows), "conditions": list(conditions),
+            "prompt_tokens": len(prompt), "prompt_tokens_about": len(prompt_about), "rows_per_condition": len(rows),
+            "conditions": list(conditions),
             "donor_layers": donor_layers, "readout_layers": list(hs.READOUT_LAYERS)}
     started = time.perf_counter()
     done = 0
@@ -350,14 +376,24 @@ def stage1(args):
     return _stage1_run(args, conditions, RESULTS / "stage1.jsonl", "stage1")
 
 
+def ranking_record(table, k=score182.K_SELECT) -> dict:
+    """Amendment 1b item 1: the registered ranking (e_u), the Delta_who-only ranking, and the overlap of the two top k
+    sets, written before the ladder runs."""
+    ranking = score182.rank_heads(table)
+    ranking_who = score182.rank_heads({t: {"slot_median": e.get("slot_median_who")} for t, e in table.items()})
+    return {"ranking": [f"h{l}.{h}" for l, h in ranking], "ranking_who": [f"h{l}.{h}" for l, h in ranking_who],
+            "top_k_overlap": score182.rank_overlap(ranking, ranking_who, k=k)}
+
+
 def ladder(args):
     rows = score182.read_jsonl(RESULTS / "stage1.jsonl")
     kinds = load_kind_map(KINDS)
     eligible, _ = score182.eligible_units(score182.P99_LABELS, kinds)
-    table = score182.effects(rows, eligible["slot"], eligible["concept"])
+    table = score182.effects(rows, eligible["slot"], eligible["concept"],
+                             persona_about=score182.persona_units(score182.P99_LABELS, 1))
     ranking = score182.rank_heads(table)
     conditions = score182.ladder_conditions(ranking)
-    (RESULTS / "ladder-ranking.json").write_text(json.dumps({"ranking": [f"h{l}.{h}" for l, h in ranking],
+    (RESULTS / "ladder-ranking.json").write_text(json.dumps({**ranking_record(table),
                                                              "conditions": {k: {str(l): v for l, v in c_.items()}
                                                                             for k, c_ in conditions.items()}},
                                                             indent=1) + "\n", encoding="utf-8")
