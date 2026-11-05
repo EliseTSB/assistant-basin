@@ -3483,3 +3483,20 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 189b.3 | the neuron rates for name (published 348/465, 74.8%), maker (191/465, 41.1%), name and maker together (146/465, 31.4%) and maker among name-moving neurons (146/348, 42.0%) each stay within 6 percentage points of the published rate. Fails if any leaves its band. | medium | Claude || failed (name +8.0, both +9.2, maker among name +7.1) |
 | 189b.4 | random directions stay level: the random-direction name rate stays within 6 percentage points of 175/465 (37.6%). Fails outside. | medium | Claude || failed (+11.4) |
 | 189b.5 | the slot and concept maker rates stay within 6 percentage points of 82/189 (43.4%) and 100/257 (38.9%). Fails if either leaves its band. | low | Claude || held (+4.7, +4.7) |
+
+## Part 190 (registered 2026-11-04 23:56 CT, PART190-DESIGN.md, before any statistic is computed on results/part188/emb188.npz)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 190.1 | the rank-1 edit raises the held-out class-informed verdict AUC by at least +0.10 over the unedited verdict in both directions. Fails if either rise is below +0.10. | medium | Claude ||
+| 190.2 | the rank-1 edited held-out verdict AUC is at least 0.85 in both directions. Fails if either is below 0.85. | low | Claude ||
+| 190.3 | rank 8 adds less than +0.02 held-out verdict AUC over rank 1 in both directions. Fails if either gain is +0.02 or more. | medium | Claude ||
+| 190.4 | the shuffled-label rank-1 edits' median held-out verdict change is at most +0.02 in both directions. Fails if either median is above +0.02. | high | Claude ||
+| 190.5 | the displacement-matched random rank-1 edits' median held-out verdict change is at most +0.02 in both directions. Fails if either median is above +0.02. | high | Claude ||
+| 190.6 | the rank-1 edit changes ESC-50 leave-one-out 10-NN class accuracy (C1) by less than 1.0 point in absolute value in both directions. Fails at 1.0 point or more either way in either direction. | medium | Claude ||
+| 190.7 | under the rank-1 edit, fewer than 10% of off-target clips (E, H, N) change their first nearest neighbour (C2) in both directions. Fails at 10% or more in either. | low | Claude ||
+| 190.8 | the rank-1 edit raises the held-out Chicken verdict AUC by at least +0.05 for both fitted edits. Fails if either rise is below +0.05. | medium | Claude ||
+| 190.9 | the rank-1 edit lowers zero-shot animal phrase accuracy on real animal clips (C5) by less than 2.0 points in both directions. Fails at a drop of 2.0 points or more in either. | medium | Claude ||
+| 190.10 | under the rank-1 edit, the share of held-out imitations whose nearest real recording is a human sound (C6) rises by less than 5.0 points in both directions. Fails at a rise of 5.0 points or more in either. | low | Claude ||
+| 190.11 | the rank-1 edit raises the held-out text-free neighbour AUC (K) by at least +0.03 in both directions. Fails if either rise is below +0.03. | medium | Claude ||
+| 190.12 | the fit-fold dose choice transfers: at rank 1 the held-out verdict AUC at the operating dose is within 0.03 of its maximum over the ladder in both directions. Fails if either is 0.03 or more below the maximum. | medium | Claude ||
