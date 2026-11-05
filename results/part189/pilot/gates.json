@@ -1,0 +1,25 @@
+{
+  "gate1_zero_matches_plain": {
+    "passed": true,
+    "questions": 3
+  },
+  "gate2_pilot_matches_part112": {
+    "passed": false,
+    "matches": 17,
+    "compared": 32,
+    "required": 28,
+    "rule": "first 40 generated tokens",
+    "k": 40
+  },
+  "gate3_plain_not_moved": {
+    "passed": true,
+    "questions": 3
+  },
+  "all_passed": false,
+  "gate2_full_text_descriptive": {
+    "passed": false,
+    "matches": 5,
+    "compared": 32,
+    "required": 28
+  }
+}
