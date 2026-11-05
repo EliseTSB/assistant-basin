@@ -12,6 +12,17 @@ Its pilot ran on the A770 at 18:10 CT (batch 8, eager; `pilot/load.json` records
 By the registered rule, a failed gate stops interpretation: predictions 189.1 to 189.6 are withheld, nothing was
 labelled or scored, and the full run was not started (`pilot/gates.json`).
 
+## Predictions
+
+| # | Registered | Verdict |
+| --- | --- | --- |
+| 189.1 | at least 5 of Part 148's 6 verdicts the same | untestable (withheld: Gate 2 failed) |
+| 189.2 | no verdict flips | untestable (withheld: Gate 2 failed) |
+| 189.3 | neuron rates within 6 points of published | untestable (withheld: Gate 2 failed) |
+| 189.4 | random-direction name rate within 6 points | untestable (withheld: Gate 2 failed) |
+| 189.5 | slot and concept maker rates within 6 points | untestable (withheld: Gate 2 failed) |
+| 189.6 | Part 148's full-text Gate 2 would also pass (28 of 32 in full) | untestable (withheld: Gate 2 failed; the descriptive count is 5 of 32) |
+
 ## What the exploratory pilots showed (not registered)
 
 Two pilots run after the failure with `part189/diag189.py` (`diag/`):
