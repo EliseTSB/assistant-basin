@@ -3453,15 +3453,15 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Confidence | Author | Result |
 | --- | --- | --- | --- | --- |
-| 188.1 | the model's own verdict (class-informed) has held-out AUC below 0.75 in both test folds | medium | Claude | |
-| 188.2 | the selected unit's held-out AUC is at least 0.85 in both test folds | medium | Claude | |
-| 188.3 | the selected unit beats the model's own verdict (class-informed) by at least 0.10 held-out AUC in both test folds | medium | Claude | |
-| 188.4 | the selected unit separates real animals (test fold R) from ESC-50 human sounds (H) at AUC at least 0.80, its selection sign, in both folds: it reads "a human made this", not only imitation | medium | Claude | |
-| 188.5 | L17 N1574, real above imitation, on all non-chicken groups pooled, has AUC below 0.70 | high | Claude | |
-| 188.6 | the probe on the output embedding has held-out AUC at least 0.90 in both test folds | medium | Claude | |
-| 188.7 | the top-32 probe's held-out AUC exceeds the selected unit's by less than 0.05 in both test folds (a probe below the unit also holds) | low | Claude | |
-| 188.8 | both selected units separate real chickens from chicken imitations (set C) at AUC at least 0.80 | medium | Claude | |
-| 188.9 | sequence length alone has held-out AUC below 0.70 in both test folds | medium | Claude | |
+| 188.1 | the model's own verdict (class-informed) has held-out AUC below 0.75 in both test folds | medium | Claude || failed (0.631, 0.808) |
+| 188.2 | the selected unit's held-out AUC is at least 0.85 in both test folds | medium | Claude || failed (0.753, 0.897) |
+| 188.3 | the selected unit beats the model's own verdict (class-informed) by at least 0.10 held-out AUC in both test folds | medium | Claude || failed (+0.123, +0.089) |
+| 188.4 | the selected unit separates real animals (test fold R) from ESC-50 human sounds (H) at AUC at least 0.80, its selection sign, in both folds: it reads "a human made this", not only imitation | medium | Claude || failed (0.281, 0.677) |
+| 188.5 | L17 N1574, real above imitation, on all non-chicken groups pooled, has AUC below 0.70 | high | Claude || held (0.647) |
+| 188.6 | the probe on the output embedding has held-out AUC at least 0.90 in both test folds | medium | Claude || held (0.918, 0.965) |
+| 188.7 | the top-32 probe's held-out AUC exceeds the selected unit's by less than 0.05 in both test folds (a probe below the unit also holds) | low | Claude || failed (gaps 0.152, 0.061) |
+| 188.8 | both selected units separate real chickens from chicken imitations (set C) at AUC at least 0.80 | medium | Claude || held (0.983, 0.913) |
+| 188.9 | sequence length alone has held-out AUC below 0.70 in both test folds | medium | Claude || held (0.632, 0.634) |
 
 ## Part 189 (registered 2026-11-04 18:09 CT, PART189-DESIGN.md, before any eager answer to a Part 148 prompt)
 

@@ -2736,6 +2736,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 187](results/part187/README.md)**, 2026-11-04. Part 140 (which way of delivering a persona push gives the most joint success) rerun on the eager attention kernel and read blind again. All six predictions held and none of the nine published verdicts flipped: holding the push, greedy, gives 48.3% on Set P (published 48.3%), releasing after 8 tokens 7.1% (published 5.8%), norm-preserved 0.0%, random directions at most 3.9% in any arm (published 6.1%). 3,698 of 3,840 answer texts changed; every Set P rate moved by at most 2.5 points.
 
+**[Part 188](results/part188/README.md)**, 2026-11-04. Does any single unit in EmbeddingGemma 2 tell real animal sounds from people imitating them, on animals it was not chosen on? Not reliably. The units chosen on each of two animal folds reach held-out AUC 0.753 and 0.897 (L13 N773, L5 N1770), below the 0.85 bar in one fold and only 0.123 and 0.089 above the model's own verdict (0.631, 0.808). A probe on the 768-d output embedding reaches 0.918 and 0.965. Against ESC-50 human sounds the units score 0.281 and 0.677, so they may respond to human-made sound; that is not established. Both selected units do separate real hens from chicken imitations (0.983, 0.913 on 138 clips). Four of nine predictions failed; the registered headline reading is withheld. The first cloud run recorded nothing (a missing library pin, Amendment 1); the second recorded all 3,138 clips, and its Gate 2 "failed" on a phantom empty set my own review fold had added (Amendment 2, fixed before any value was read).
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
