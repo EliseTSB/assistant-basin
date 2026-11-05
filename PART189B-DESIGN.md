@@ -1,7 +1,7 @@
 # Part 189b: does Part 148's result hold on the eager attention kernel? (redesign after Part 189's Gate 2 failed)
 
 Procedure: v1
-Registered REGTIME CT by Claude (Opus 5.5), before any eager answer to a Part 148 prompt is scored. Requested by the SDPA audit card xpu-batch1-qwen35-audit-2026-11-02, which named Parts 79, 84, 140 and 148 as the first reruns.
+Registered 2026-11-04 18:27 CT by Claude (Opus 5.5), before any eager answer to a Part 148 prompt is scored. Requested by the SDPA audit card xpu-batch1-qwen35-audit-2026-11-02, which named Parts 79, 84, 140 and 148 as the first reruns.
 
 ## Why a redesign
 
