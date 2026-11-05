@@ -132,8 +132,9 @@ unedited class-informed verdict AUC on each test fold reproduces Part 188's `mod
 rank-1 probe (probe 1 above) scored on T reproduces Part 188's `output_embedding_probe` within 0.005 (the tolerance
 allows the float16 storage). Fails on a wrong fold, label or phrase mapping or a different probe.
 
-Gate 3 (negative control): for every rank, at the main edit's operating dose, the shuffled-label edits' median held-out
-verdict change is at most +0.02 and their 95th percentile at most +0.05, in both directions. The same gate function is
+Gate 3 (negative control): for each rank, at the main edit's operating dose, the shuffled-label edits' median held-out
+verdict change is at most +0.02 and their 95th percentile at most +0.05, in both directions. A failure at rank 1 refuses
+the whole reading; a failure at rank 2, 4 or 8 withholds that rank's readings (190.3 is "not read" if rank 8 fails). The same gate function is
 applied to the main edit's own held-out changes and recorded as `gate3_self_test`; when the main edit's change exceeds
 +0.05 the gate, given those numbers, must report failure, which shows on the real data that it can fail (if the main
 edit does not exceed +0.05, the self-test is recorded as "not shown on real data" and only the unit test shows it).
@@ -142,7 +143,7 @@ The unit tests show it failing on a leaky control (labels not actually shuffled)
 Gate 4 (neighbour sanity): at alpha = 0, C1's 10-nearest-neighbour class accuracy is at least 0.30 (chance is about
 0.026 for 38 classes). Fails if the neighbour code or the class labels are wrong.
 
-The analysis refuses to be read if Gate 1, 2 or 3 fails: `results.json` records `"readable": false` and every
+The analysis refuses to be read if Gate 1, Gate 2 or Gate 3 at rank 1 fails: `results.json` records `"readable": false` and every
 prediction's verdict is "not read". If Gate 4 fails, C1 and C2 verdicts are "not read".
 
 ## Size

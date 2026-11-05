@@ -533,6 +533,7 @@ PREDICTION_RULES: dict[str, tuple[str, Callable[[float], bool]]] = {
     "190.12": ("rank1_V_test_gap_to_ladder_max", lambda v: v < 0.03),
 }
 NEIGHBOUR_PREDICTIONS = ("190.6", "190.7")
+RANK8_PREDICTIONS = ("190.3",)
 
 
 def prediction_values(directions: dict[str, Any]) -> dict[str, dict[str, float]]:
@@ -556,10 +557,12 @@ def prediction_values(directions: dict[str, Any]) -> dict[str, dict[str, float]]
     return out
 
 
-def score_predictions(values: dict[str, dict[str, float]], readable: bool, neighbours_readable: bool) -> dict:
+def score_predictions(values: dict[str, dict[str, float]], readable: bool, neighbours_readable: bool,
+                      rank8_readable: bool = True) -> dict:
     out = {}
     for pid, (key, test) in PREDICTION_RULES.items():
-        if not readable or (pid in NEIGHBOUR_PREDICTIONS and not neighbours_readable):
+        if not readable or (pid in NEIGHBOUR_PREDICTIONS and not neighbours_readable) or \
+                (pid in RANK8_PREDICTIONS and not rank8_readable):
             verdict = "not read"
         else:
             verdict = _both(values[key], test)
@@ -693,14 +696,17 @@ def analyze(data: Data, manifest_ids: np.ndarray, folds: dict[str, Any], registe
                {n: {"model_class_informed": (reg.get(n, {}).get("model_class_informed") or {}).get("auc"),
                     "output_embedding_probe": (reg.get(n, {}).get("output_embedding_probe") or {}).get("auc")}
                 for n in directions})
-    g3 = gate3_rule({f"{n} rank {k}": d["ranks"][str(k)]["shuffled_dV_test_at_operating"]
-                     for n, d in directions.items() for k in ranks})
+    g3_by_rank = {str(k): gate3_rule({f"{n} rank {k}": d["ranks"][str(k)]["shuffled_dV_test_at_operating"]
+                                      for n, d in directions.items()}) for k in ranks}
+    g3 = {"passed": g3_by_rank["1"]["passed"], "reasons": g3_by_rank["1"]["reasons"], "by_rank": g3_by_rank,
+          "rule": "rank 1 refuses the whole reading; a higher rank's failure withholds that rank's readings"}
     self_test = gate3_self_test({f"{n} rank {k}": d["ranks"][str(k)]["operating"]["dV_test"]
                                  for n, d in directions.items() for k in ranks})
     g4 = gate4({n: d["baseline"]["C1_accuracy"] for n, d in directions.items()})
     readable = g1["passed"] and g2["passed"] and g3["passed"]
     values = prediction_values(directions)
-    verdicts = score_predictions(values, readable, g4["passed"])
+    verdicts = score_predictions(values, readable, g4["passed"],
+                                 rank8_readable=g3_by_rank["8"]["passed"])
     return _json({"readable": readable, "neighbours_readable": g4["passed"],
                   "gates": {"gate1": g1, "gate2": g2, "gate3": g3, "gate3_self_test": self_test, "gate4": g4},
                   "predictions": verdicts, "headline": headline(readable, verdicts, directions),

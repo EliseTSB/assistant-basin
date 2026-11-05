@@ -239,6 +239,8 @@ def test_unreadable_run_reads_nothing():
     s = A.score_predictions(_values(), True, False)
     assert s["190.6"]["verdict"] == "not read" and s["190.7"]["verdict"] == "not read"
     assert s["190.1"]["verdict"] != "not read"
+    s = A.score_predictions(_values(), True, True, rank8_readable=False)
+    assert s["190.3"]["verdict"] == "not read" and s["190.1"]["verdict"] != "not read"
 
 
 def test_headline_needs_controls_beaten(signal_runs):
