@@ -1,0 +1,647 @@
+{
+  "chicken": {
+    "A_to_B": {
+      "auc": 0.9827631711959839,
+      "intervals": {
+        "clip_level_95": {
+          "high": 0.9963157773017883,
+          "low": 0.9636842012405396,
+          "n_boot": 2000
+        },
+        "group_clustered_95": {
+          "high": 0.9993926882743835,
+          "low": 0.9444444179534912,
+          "n_boot": 2000
+        }
+      },
+      "n": 138
+    },
+    "B_to_A": {
+      "auc": 0.9127631783485413,
+      "intervals": {
+        "clip_level_95": {
+          "high": 0.9621052742004395,
+          "low": 0.8502631783485413,
+          "n_boot": 2000
+        },
+        "group_clustered_95": {
+          "high": 0.9735042452812195,
+          "low": 0.8289285898208618,
+          "n_boot": 2000
+        }
+      },
+      "n": 138
+    }
+  },
+  "directions": {
+    "A_to_B": {
+      "model_class_free": {
+        "auc": 0.7297165393829346,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.7664190158247947,
+            "low": 0.6903424829244613,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.8465560257434841,
+            "low": 0.6411656558513641,
+            "n_boot": 2000
+          }
+        },
+        "n": 605
+      },
+      "model_class_informed": {
+        "auc": 0.6305099129676819,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.6746830746531486,
+            "low": 0.5858370512723923,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.7758224070072173,
+            "low": 0.5370019480586052,
+            "n_boot": 2000
+          }
+        },
+        "n": 605
+      },
+      "output_embedding_probe": {
+        "auc": 0.9180573225021362,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.9389136537909507,
+            "low": 0.8945750877261162,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.9735678330063819,
+            "low": 0.87578893750906,
+            "n_boot": 2000
+          }
+        },
+        "n": 605
+      },
+      "select_fold": "A",
+      "selected_unit": {
+        "heldout": {
+          "auc": 0.7533630132675171,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.7903458029031754,
+              "low": 0.7147076979279519,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.8806513547897339,
+              "low": 0.6448467969894409,
+              "n_boot": 2000
+            }
+          },
+          "n": 605,
+          "selection_auc": 0.9201956987380981,
+          "selection_auc_raw": 0.9201956987380981
+        },
+        "index": 27397,
+        "layer": 13,
+        "n_vs_test_i": {
+          "auc": 0.5584909915924072,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.6104818642139435,
+              "low": 0.5117364719510078,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.708014154434204,
+              "low": 0.4405687764286995,
+              "n_boot": 2000
+            }
+          },
+          "n": 536
+        },
+        "neuron": 773,
+        "participant_disjoint": {
+          "auc": 0.7090640068054199,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.7803933784365654,
+              "low": 0.6377857536077499,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.8690769076347351,
+              "low": 0.6222704589366913,
+              "n_boot": 2000
+            }
+          },
+          "n": 393,
+          "n_test_imitation_participants": 45
+        },
+        "real_vs_human": {
+          "auc": 0.28092825412750244,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.31807423010468483,
+              "low": 0.2437205918133259,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.4046599492430687,
+              "low": 0.1810180302709341,
+              "n_boot": 2000
+            }
+          },
+          "n": 738
+        },
+        "real_vs_human_vocal": {
+          "auc": 0.33957716822624207,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.3859552308917045,
+              "low": 0.2932732291519642,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.49779186919331536,
+              "low": 0.20681925378739835,
+              "n_boot": 2000
+            }
+          },
+          "n": 578
+        },
+        "selection_auc": 0.9201956987380981,
+        "selection_auc_raw": 0.9201956987380981,
+        "sign": "real_above"
+      },
+      "selection": {
+        "n_imitation": 266,
+        "n_real": 340
+      },
+      "sequence_length": {
+        "auc": 0.6318451762199402,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.6691388234496116,
+            "low": 0.5932161852717399,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.748173652589321,
+            "low": 0.552730405330658,
+            "n_boot": 2000
+          }
+        },
+        "n": 605,
+        "selection_auc": 0.6344980001449585,
+        "selection_sign": "real_above"
+      },
+      "test": {
+        "n_imitation": 267,
+        "n_real": 338
+      },
+      "test_fold": "B",
+      "top32_probe": {
+        "auc": 0.9052035808563232,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.928308442234993,
+            "low": 0.8801905259490013,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.9606541022658348,
+            "low": 0.8558324843645095,
+            "n_boot": 2000
+          }
+        },
+        "n": 605
+      }
+    },
+    "B_to_A": {
+      "model_class_free": {
+        "auc": 0.8247899413108826,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.85717683583498,
+            "low": 0.789458478987217,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.915420038998127,
+            "low": 0.651052613556385,
+            "n_boot": 2000
+          }
+        },
+        "n": 606
+      },
+      "model_class_informed": {
+        "auc": 0.807529866695404,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.8416745826601982,
+            "low": 0.7721597358584404,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.8815762355923652,
+            "low": 0.6806920766830444,
+            "n_boot": 2000
+          }
+        },
+        "n": 606
+      },
+      "output_embedding_probe": {
+        "auc": 0.9650818109512329,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.9772335290908813,
+            "low": 0.9508068785071373,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.9805345237255096,
+            "low": 0.9523803934454917,
+            "n_boot": 2000
+          }
+        },
+        "n": 606
+      },
+      "select_fold": "B",
+      "selected_unit": {
+        "heldout": {
+          "auc": 0.8966441750526428,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.9209015727043152,
+              "low": 0.8708064734935761,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.9228535443544388,
+              "low": 0.8623771339654922,
+              "n_boot": 2000
+            }
+          },
+          "n": 606,
+          "selection_auc": 0.8752797842025757,
+          "selection_auc_raw": 0.8752797842025757
+        },
+        "index": 12010,
+        "layer": 5,
+        "n_vs_test_i": {
+          "auc": 0.44385358691215515,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.4900452867150306,
+              "low": 0.3959203951060772,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.49147419929504393,
+              "low": 0.4030643835663795,
+              "n_boot": 2000
+            }
+          },
+          "n": 535
+        },
+        "neuron": 1770,
+        "participant_disjoint": {
+          "auc": 0.9200692176818848,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.9466749846935272,
+              "low": 0.8899210602045059,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.9455778658390045,
+              "low": 0.8841108292341232,
+              "n_boot": 2000
+            }
+          },
+          "n": 408,
+          "n_test_imitation_participants": 55
+        },
+        "real_vs_human": {
+          "auc": 0.6768051385879517,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.7137450441718102,
+              "low": 0.638496869802475,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.7731405064463616,
+              "low": 0.570699754357338,
+              "n_boot": 2000
+            }
+          },
+          "n": 740
+        },
+        "real_vs_human_vocal": {
+          "auc": 0.6058027148246765,
+          "intervals": {
+            "clip_level_95": {
+              "high": 0.6530903577804565,
+              "low": 0.5582266971468925,
+              "n_boot": 2000
+            },
+            "group_clustered_95": {
+              "high": 0.6895977869629859,
+              "low": 0.4976234070956707,
+              "n_boot": 2000
+            }
+          },
+          "n": 580
+        },
+        "selection_auc": 0.8752797842025757,
+        "selection_auc_raw": 0.8752797842025757,
+        "sign": "real_above"
+      },
+      "selection": {
+        "n_imitation": 267,
+        "n_real": 338
+      },
+      "sequence_length": {
+        "auc": 0.6344980001449585,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.6738880813121795,
+            "low": 0.5950985357165337,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.7235313102602958,
+            "low": 0.5004040420055389,
+            "n_boot": 2000
+          }
+        },
+        "n": 606,
+        "selection_auc": 0.6318451762199402,
+        "selection_sign": "real_above"
+      },
+      "test": {
+        "n_imitation": 266,
+        "n_real": 340
+      },
+      "test_fold": "A",
+      "top32_probe": {
+        "auc": 0.9572534561157227,
+        "intervals": {
+          "clip_level_95": {
+            "high": 0.9707101374864578,
+            "low": 0.9418716907501221,
+            "n_boot": 2000
+          },
+          "group_clustered_95": {
+            "high": 0.9828912287950515,
+            "low": 0.9217079028487205,
+            "n_boot": 2000
+          }
+        },
+        "n": 606
+      }
+    }
+  },
+  "gate1": {
+    "clips": [
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.00048828125,
+        "embedding_cosine": 0.9999999999443177,
+        "filename": "1-100032-A-0.wav",
+        "id": "E85d63bb42236",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 6.103515625e-05,
+        "embedding_cosine": 0.9999999999994911,
+        "filename": "1-100038-A-14.wav",
+        "id": "Ec8d0abe1985e",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.000244140625,
+        "embedding_cosine": 0.9999999999973832,
+        "filename": "1-100210-A-36.wav",
+        "id": "Ec52ce443fc20",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.000244140625,
+        "embedding_cosine": 0.9999999999991636,
+        "filename": "1-101296-A-19.wav",
+        "id": "Edc89fde67611",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.000244140625,
+        "embedding_cosine": 0.9999999999981435,
+        "filename": "1-101336-A-30.wav",
+        "id": "E7b2e15900886",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.000244140625,
+        "embedding_cosine": 0.9999999999993314,
+        "filename": "1-101404-A-34.wav",
+        "id": "Eb4c9b7ba7e7f",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 6.103515625e-05,
+        "embedding_cosine": 0.9999999999994065,
+        "filename": "1-103298-A-9.wav",
+        "id": "Ee2b2f4d7e284",
+        "passed": true
+      },
+      {
+        "activation_fraction_within_tolerance": 1.0,
+        "activation_max_absolute_difference": 0.0001220703125,
+        "embedding_cosine": 0.9999999999994351,
+        "filename": "1-104089-A-22.wav",
+        "id": "E24f647dc64a8",
+        "passed": true
+      }
+    ],
+    "rules": {
+      "activation_abs_tolerance": 0.002,
+      "embedding_cosine_required": 0.9999,
+      "fraction_of_units_required": 0.999
+    },
+    "verdict": "passed"
+  },
+  "gate2": {
+    "minimum_fraction": 0.9,
+    "sets": {
+      "C_I": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 38,
+        "recorded": 38,
+        "verdict": "passed"
+      },
+      "C_R": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 100,
+        "recorded": 100,
+        "verdict": "passed"
+      },
+      "E": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 1120,
+        "recorded": 1120,
+        "verdict": "passed"
+      },
+      "H": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 400,
+        "recorded": 400,
+        "verdict": "passed"
+      },
+      "I": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 533,
+        "recorded": 533,
+        "verdict": "passed"
+      },
+      "N": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 269,
+        "recorded": 269,
+        "verdict": "passed"
+      },
+      "P": {
+        "fraction": 0.0,
+        "missing": [],
+        "planned": 0,
+        "recorded": 0,
+        "verdict": "failed"
+      },
+      "R": {
+        "fraction": 1.0,
+        "missing": [],
+        "planned": 678,
+        "recorded": 678,
+        "verdict": "passed"
+      }
+    },
+    "verdict": "failed"
+  },
+  "gate3": {
+    "auc": 0.9824721217155457,
+    "n_negative": 1120,
+    "n_positive": 80,
+    "negative": "E",
+    "positive": "ESC-50 hen and rooster",
+    "threshold": 0.9,
+    "unit_index": 31846,
+    "verdict": "passed"
+  },
+  "known_unit_l17_n1574": {
+    "auc": 0.6473888754844666,
+    "n": 1211,
+    "sign": "real_above",
+    "unit_index": 36390
+  },
+  "n_planned_rows": 3138,
+  "predictions": {
+    "188.1": {
+      "threshold": "< 0.75 in both folds",
+      "value": {
+        "A_to_B": 0.6305099129676819,
+        "B_to_A": 0.807529866695404
+      },
+      "verdict": "failed"
+    },
+    "188.2": {
+      "threshold": ">= 0.85 in both folds",
+      "value": {
+        "A_to_B": 0.7533630132675171,
+        "B_to_A": 0.8966441750526428
+      },
+      "verdict": "failed"
+    },
+    "188.3": {
+      "threshold": ">= 0.10 above class-informed verdict in both folds",
+      "value": {
+        "A_to_B": 0.1228531002998352,
+        "B_to_A": 0.08911430835723877
+      },
+      "verdict": "failed"
+    },
+    "188.4": {
+      "threshold": ">= 0.80 against ESC-50 human sounds in both folds",
+      "value": {
+        "A_to_B": 0.28092825412750244,
+        "B_to_A": 0.6768051385879517
+      },
+      "verdict": "failed"
+    },
+    "188.5": {
+      "threshold": "< 0.70 pooled non-chicken",
+      "value": {
+        "pooled_non_chicken": 0.6473888754844666
+      },
+      "verdict": "held"
+    },
+    "188.6": {
+      "threshold": ">= 0.90 in both folds",
+      "value": {
+        "A_to_B": 0.9180573225021362,
+        "B_to_A": 0.9650818109512329
+      },
+      "verdict": "held"
+    },
+    "188.7": {
+      "threshold": "top-32 AUC minus selected-unit AUC < 0.05 in both folds",
+      "value": {
+        "A_to_B": 0.15184056758880615,
+        "B_to_A": 0.060609281063079834
+      },
+      "verdict": "failed"
+    },
+    "188.8": {
+      "threshold": ">= 0.80 for both selected units on chicken",
+      "value": {
+        "A_to_B": 0.9827631711959839,
+        "B_to_A": 0.9127631783485413
+      },
+      "verdict": "held"
+    },
+    "188.9": {
+      "threshold": "< 0.70 in both folds",
+      "value": {
+        "A_to_B": 0.6318451762199402,
+        "B_to_A": 0.6344980001449585
+      },
+      "verdict": "held"
+    }
+  },
+  "reading_rule": {
+    "headline_permitted": false,
+    "length_within_0_05_of_selected": {
+      "A_to_B": false,
+      "B_to_A": false
+    },
+    "withdrawal_reasons": [
+      "Gate 2 did not pass",
+      "prediction 188.2 failed",
+      "prediction 188.3 failed"
+    ]
+  },
+  "study": "part188"
+}
