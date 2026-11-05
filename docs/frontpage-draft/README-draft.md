@@ -67,6 +67,7 @@ by the test that answers it.
 - [8b. Is the zeroing hook itself changing the answer?](#8b-is-the-zeroing-hook-itself-changing-the-answer)
 - [8c. Were the candidates chosen on the test phrasings?](#8c-were-the-candidates-chosen-on-the-test-phrasings)
 - [8d. Is it the kernel?](#8d-is-it-the-kernel)
+- [8e. When "Q" loses first place, does the model stop naming itself?](#8e-when-q-loses-first-place-does-the-model-stop-naming-itself)
 
 **[What we got wrong, withdrew or withheld](#what-we-got-wrong-withdrew-or-withheld)** ·
 **[Known limits](#known-limits)** · **[Left off this page](#left-off-this-page)**
@@ -299,7 +300,8 @@ neurons flips the "Q" token [0 of 16](../../results/part115/score.json) times; t
 [`part115/score115.py`](../../part115/score115.py)).
 
 ### 8a. Do random groups of the same size do it?
-No. Ten random sets at every size flipped [0 of 16](../../results/part115/score.json) phrasings, up to 500 neurons.
+No. Ten activity-matched random sets at each of the nine sizes (90 sets) flipped
+[0 of 16](../../results/part115/score.json) phrasings, up to 500 neurons.
 
 ### 8b. Is the zeroing hook itself changing the answer?
 A do-nothing mask of ones is bit-identical to the plain model (gate `ones_mask_bit_identical`,
@@ -314,6 +316,12 @@ is described in the Part 114 README; this draft did not re-derive it.
 ### 8d. Is it the kernel?
 This is a single forward pass on a forced opening, not generation; the known-issue note says single forward passes
 matched the CPU reference at confident positions.
+
+### 8e. When "Q" loses first place, does the model stop naming itself?
+Often not. The first words of the flipped continuations ([`first_words`](../../results/part115/score.json)): at 100
+neurons, Tongyi, Yi and GPT; at 200, Tongyi 9, Yi 1 and LLM 1 of 11, so mostly Alibaba's other name for the model; only
+at 500 do generic words take over (AI 10, ChatBot 4, Chat 1, DeepSeek 1 of 16). Scope: one model, one forced opening,
+16 phrasings.
 
 ---
 
