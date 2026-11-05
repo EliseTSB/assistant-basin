@@ -282,7 +282,9 @@ def _read_records(rows: list[dict[str, str]], work_dir: Path) -> tuple[
 def _gate2_summary(rows: list[dict[str, str]], record_status: np.ndarray,
                    record_errors: list[str]) -> dict[str, Any]:
     """Count only successful records and retain the reason for every missing clip."""
-    set_names = sorted({row["analysis_set"] for row in rows} | {"P"})
+    # Amendment 2 (2026-11-04): only the sets the manifest defines. An extra "P" with no planned clips scored 0.0 and
+    # failed the gate on the first full run, though every real set was 100% recorded.
+    set_names = sorted({row["analysis_set"] for row in rows})
     sets: dict[str, Any] = {}
     passed_all = True
     for set_name in set_names:
