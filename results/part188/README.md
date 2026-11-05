@@ -55,7 +55,8 @@ units (0.905, 0.957).
   chosen on a handful of animals.
 - ESC-50 human sounds (188.4) are non-speech human sounds (laughing, coughing, clapping and similar), not imitations,
   so 0.28 says the unit responds to human-made sound, not that it fails on imitations.
-- Cold check: DeepSeek V4.1 Flash worker; all numbers matched, and its overclaim findings are folded into the sentences above.
 
 Files: `results.json`, `summary.json`, `unit_auc.npz`, `top_units.npz`, `emb188.npz` (from the cloud branch
-`cloud/part188-r2`, 0388f8e); design `PART188-DESIGN.md` with Amendments 1 and 2.
+the cloud session's `part188-r2` branch, 0388f8e); design `PART188-DESIGN.md` with Amendments 1 and 2.
+
+Cold check: DeepSeek V4.1 Flash worker (no project context), 2026-11-04 20:15 CT, 15 findings: every number matched; four overclaims softened (the "reads human-made sound" sentence, the cross-study "does not generalise", "is the route", "no better"), the Chicken intervals added, the Gate 2 wording tightened. Report in `results/part188/cold/COLD.md`, commit 1904165.
