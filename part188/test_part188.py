@@ -703,3 +703,15 @@ def test_requirements_pin_every_expected_library():
     assert "torchvision" in session188.EXPECTED
     for name, version in session188.EXPECTED.items():
         assert pins.get(name) == version, (name, pins.get(name), version)
+
+
+def test_gate2_passes_when_every_manifest_set_is_recorded():
+    """Amendment 2 (2026-11-04): Gate 2 is evaluated over the manifest's own sets. The old code added a set "P" with
+    no planned clips, scored it 0.0 and failed the gate on a run that recorded 3,138 of 3,138 clips."""
+    import numpy as np
+    import analyze188
+    rows = [{"id": f"c{i}", "set": "x", "analysis_set": s} for i, s in enumerate(["R", "R", "I", "E"])]
+    status = np.array(["ok"] * 4, dtype=object)
+    out = analyze188._gate2_summary(rows, status, [""] * 4)
+    assert set(out["sets"]) == {"R", "I", "E"}
+    assert out["verdict"] == "passed"

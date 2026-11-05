@@ -181,3 +181,16 @@ session followed the routine and did not change the pins. Fix: `torchvision==0.2
 the routine's CPU-index install line and to the session's pinned-version check, and a test now fails if any checked
 library is missing from the requirements. The rerun uses branch `cloud/part188-r2`. No class, threshold, fold, prompt,
 prediction or analysis changed, and no clip was recorded before this amendment.
+
+## Amendment 2 (2026-11-04 ~19:55 CT, after the run, before any result value was read)
+
+The second cloud session (`cloud/part188-r2`, commit 0388f8e) recorded 3,138 of 3,138 planned clips; Gates 1 and 3
+passed, and its summary reports Gate 2 "failed". Only the gate verdicts and the per-set planned and recorded counts in
+`summary.json` were read before this amendment; no AUC, unit or probe value was read. Every set the manifest defines
+was recorded in full: C_I 38/38, C_R 100/100, E 1,120/1,120, H 400/400, I 533/533, N 269/269, R 678/678. The failure
+came from the code, not the data: `_gate2_summary` added a set named "P" to the manifest's sets; no row carries it, so
+it scored 0 of 0 as 0.0 and failed. Neither this design nor the manifest defines a set P (the eight parity clips are rows
+of the real sets, checked by Gate 1). The registered rule, "at least 90% of each set's planned clips are recorded", is
+therefore met. The code now evaluates only the manifest's sets, with a test that fails on the old line; the headline
+rule is re-applied to the stored results with Gate 2 passed, and nothing else in the analysis changes. The extra set was
+introduced in this part's own review fold (d479df9) and was not caught by its tests or reviews.
