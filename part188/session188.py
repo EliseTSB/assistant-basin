@@ -15,7 +15,7 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-EXPECTED = {"torch": "2.14.1", "transformers": "5.20.0",
+EXPECTED = {"torch": "2.14.1", "torchvision": "0.29.2", "transformers": "5.20.0",
             "sentence-transformers": "6.2.0", "numpy": "2.5.4",
             "imageio-ffmpeg": "0.8.1"}
 
