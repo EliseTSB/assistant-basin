@@ -29,7 +29,8 @@ draft:
    it is defined (share agreement vs kappa, which readers).
 5. **Part 184's "alien" counts**: read from `compare.json`. I did not check whether the label comes from a keyword
    rule or a reader; the draft does not say which.
-6. **Part 114's ranking prompts vs held-out phrasings** (question 8c): not re-derived; the draft says so.
+6. **Part 114's ranking prompts vs held-out phrasings** (question 8c): resolved by the cold check from Part 114's
+   README (8 selection phrasings, 16 unseen test phrasings); not re-derived from code.
 7. **Part 115 and the first-reader atlas**: the whole-repo review (1.4) lists Part 115 among parts that "start from the
    first-reader atlas". Part 115's candidates look attribution-ranked (Part 114), not atlas-picked. Worth confirming
    before publishing Finding 8, and if the review is right, saying how the atlas enters.
@@ -68,6 +69,10 @@ draft:
 
 ## Not done
 
-- No cold check of this draft by a fresh reader.
+- Cold check: one fresh reader (a Claude subagent with only the files), 2026-11-05, 11 findings, all folded (Finding 1
+  retitled; Part 173's Meta-modal random control added; Part 148/189b separated from the "holding" list; failed
+  predictions completed; Part 176's 0.861 bound reattached; Part 171 and Part 27 hedges restored; Part 82 "as far"
+  corrected; Part 114 selection stated; scope added to Findings 4, 6, 7). A second, independent cold check is still
+  advisable before publishing.
 - No browsable raw-answer viewer per question (the `viewer/` folder exists; not wired in).
 - Findings left off are listed at the end of the draft with reasons.

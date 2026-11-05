@@ -7,7 +7,7 @@
 
 ## The claim, in one picture
 
-![Zeroing four neurons makes Qwen3.5-4B name Google as its maker; random sets do not](figures/f1-maker-neurons.png)
+![Zeroing four neurons makes Qwen3.5-4B name Google as its maker; random zeroed sets do not](figures/f1-maker-neurons.png)
 
 **In small open models, a handful of selected neurons or heads can change what the model says about its maker, its
 persona or who wrote a text. What they expose is mostly the model's own fallback answer, which random pushes of the
@@ -20,7 +20,7 @@ by the test that answers it.
 
 ## Questions (table of contents)
 
-**1. [Four neurons hold Qwen3.5-4B's own maker answer](#1-four-neurons-hold-qwen35-4bs-own-maker-answer)** (Parts 25, 66, 183)
+**1. [Zeroing four neurons moves Qwen3.5-4B's maker answer to Google](#1-zeroing-four-neurons-moves-qwen35-4bs-maker-answer-to-google)** (Parts 25, 66, 183)
 - [1a. Is it the attention kernel?](#1a-is-it-the-attention-kernel)
 - [1b. Would any four neurons do it?](#1b-would-any-four-neurons-do-it)
 - [1c. Were the four selected on the same questions they are tested on?](#1c-were-the-four-selected-on-the-same-questions-they-are-tested-on)
@@ -74,7 +74,7 @@ by the test that answers it.
 
 ---
 
-## 1. Four neurons hold Qwen3.5-4B's own maker answer
+## 1. Zeroing four neurons moves Qwen3.5-4B's maker answer to Google
 
 **Claim.** In Qwen3.5-4B, zeroing four selected neurons (L6 N753, L7 N1169, L11 N8868, L29 N776) makes the model name
 Google as its maker in [43 of 192](../../results/part183/part66-eager/score.json) held-out answers, against
@@ -137,11 +137,14 @@ A cluster bootstrap over draws, with both signs of a draw kept together, gives a
 The scope is one model, one snapshot and one 44-prompt set.
 
 ### 2d. Why Google and not another company?
-Every supported direction led with Google ([30 of 30](../../results/part176/numbers176.json); exact one-sided lower
-bound on the either-sign rate 0.861). Part 171 found Google is the only maker role the model adopts under seven role
-wordings, and Part 27 found the Base model's own fallback is OpenAI, so the second answer is a US-lab prior that chat
-training moved to Google ([Part 171](../../results/part171/README.md); Part 27 on the front page). Selected neurons
-reach other companies (Meta, Tencent; [Part 173](../../results/part173/README.md)); unselected pushes do not.
+Every supported direction led with Google ([30 of 30](../../results/part176/numbers176.json)), and none of the 40
+led with another name. Separately, all 20 draws were supported at one sign or the other (exact one-sided lower bound
+0.861). In Part 171, only Google reached 8 of 8 as an adopted maker role, under one of seven role wordings; OpenAI,
+Anthropic and DeepSeek stayed at or below 3 of 8 ([Part 171](../../results/part171/README.md)). The Base model's own
+fallback was OpenAI (Part 27); one reading, from that one Base run, is that the fallback is a US lab and chat training
+moved it to Google. Selected neurons reach other companies (Meta, Tencent; [Part 173](../../results/part173/README.md)),
+and one of Part 173's random-valued controls was modal Meta (13 of 44), which that part says does not decide between a
+fallback and a real lead; Part 176's flat random directions led only with Google.
 
 ## 3. One neuron makes Qwen3.5-4B say it is an alien, while it writes
 
@@ -178,7 +181,8 @@ neuron normally does: zeroing it in natural text changed little (Part 33, front 
 ![The alien push climbs steeply between dose 0.40 and 0.55](figures/f4-alien-dose-ladder.png)
 
 **Claim.** Sized by Lyra's public neuronary rule, the same neuron's push gives off-world answers in
-[3, 28 and 44 of 48](../../results/part185/score185.json) at doses 0.40, 0.47 and 0.55, against
+[3, 28 and 44 of 48](../../results/part185/score185.json) at doses 0.40, 0.47 and 0.55 when only generated tokens are
+pushed (4, 29 and 47 when the first answer token is too), against
 [0 of 48](../../results/part185/score185.json) unchanged. Part 185 ([README](../../results/part185/README.md); run
 [`part185/run185.py`](../../part185/run185.py), scored by [`part185/score185.py`](../../part185/score185.py)), an
 eager rerun of Parts 84 and 84b.
@@ -195,7 +199,8 @@ at dose 0.47); the eager rerun's blind count is 13 of 24 ([README](../../results
 ### 4c. Does steering the first answer token matter?
 Not detectably. With and without the first answer token steered: [3 and 4, 28 and 29, 44 and 47 of 48](../../results/part185/score185.json);
 paired sign tests p = 1.0, 1.0 and 0.25 at the three doses. Part 185's README warns that with 3 to 5 discordant pairs
-a sign test cannot reach p < 0.05, so this is "no detectable difference at this n", not "no difference".
+a sign test cannot reach p < 0.05, so this is "no detectable difference at this n", not "no difference". Pooled
+over the three doses the lean is toward steering the first token, 8 against 3 discordant pairs, p = 0.23.
 
 ### 4d. Would a same-size push on another neuron do it?
 A same-layer control unit (N8870) at the same residual shift gave [0 of 24](../../results/part185/score185.json)
@@ -231,12 +236,12 @@ Part 79's seven verdicts are the same on both kernels ([score186.json](../../res
 
 ## 6. Switching off attention heads shrinks Qwen3.5-4B's "I wrote that" gap, but so do random heads
 
-![Six chosen heads cut the own-message gap, but two of five random six-head sets cut it as far or further](figures/f6-own-message-heads.png)
+![Six chosen heads cut the own-message gap; of five random six-head sets, one cut it further and one nearly as far](figures/f6-own-message-heads.png)
 
 **Claim.** Asked "Who wrote the message before this question?", Qwen3.5-4B answers "you" more for the Assistant-role
 copy of a text than for the User copy, a gap of [0.444](../../results/part82/main/results82.json); switching off six
 heads Lyra's notes link to the speaker's own earlier messages cuts it to [0.076](../../results/part82/main/results82.json),
-but two of five random six-head sets from the same layers cut it to [0.095 and -0.058](../../results/part82/main/results82.json).
+while of five random six-head sets from the same layers one cut it further and one nearly as far, to [-0.058 and 0.095](../../results/part82/main/results82.json).
 Part 82 (front-page section; run [`part82/part82.py`](../../part82/part82.py), scored by
 [`part82/score82.py`](../../part82/score82.py)). **No cold check is recorded for Part 82 (pre-procedure).**
 
@@ -257,7 +262,7 @@ No. Every copy is the same text, written by another model; the test varies where
 
 ### 6d. Is a drop a lost role or just damage?
 Unresolved. Every six-head set did less than the sum of its heads alone (Part 83), and only layers 11 and 15 were
-tested. Part 126 found no relation between attention to the role word at the final position and the drops
+tested. Part 126 found no detectable relation (it counted one of five role-word occurrences) between attention to the role word at the final position and the drops
 ([README](../../results/part126/README.md)).
 
 ## 7. Which persona a pushed neuron gives is partly written in its own output words
@@ -265,7 +270,7 @@ tested. Part 126 found no relation between attention to the role word at the fin
 ![About 1 in 9 true neuron-answer pairs match, 1 in 60 shuffled](figures/f7-lens-persona-match.png)
 
 **Claim.** For OLMo 2 1B Instruct neurons whose push at alpha 0.8 gives a coherent non-assistant persona, the
-neuron's own Jacobian-lens word list matches the persona in [185 of 1,709](../../results/part97/match.jsonl) cases,
+neuron's own Jacobian-lens word list matches the persona in its pushed "Who are you?" answer in [185 of 1,709](../../results/part97/match.jsonl) cases,
 against [28 of 1,709](../../results/part97/match-shuffled.jsonl) when each list is paired with another same-layer
 neuron's answer. Part 97 ([README](../../results/part97/README.md); readouts [`part97/lens97.py`](../../part97/lens97.py),
 blind matches [`part97/match97.py`](../../part97/match97.py)). **No cold check is recorded in Part 97's README.**
@@ -308,10 +313,11 @@ A do-nothing mask of ones is bit-identical to the plain model (gate `ones_mask_b
 [score.json](../../results/part115/score.json)).
 
 ### 8c. Were the candidates chosen on the test phrasings?
-The candidates are ranked by attribution in Part 114 ([qneuron114.py](../../part114/qneuron114.py)); Part 114 tested
-each of its top 20 alone and the top pair on 16 held-out phrasings, with
-[0 flips](../../results/part114/score.json) for any single unit. How the ranking prompts relate to the held-out set
-is described in the Part 114 README; this draft did not re-derive it.
+No. Part 114 ranked candidates by gradient attribution on 8 selection phrasings
+([qneuron114.py](../../part114/qneuron114.py)) and tested on 16 phrasings the attribution never saw
+([README](../../results/part114/README.md)); each of the top 20 alone and the top pair flipped
+[0 of 16](../../results/part114/score.json). The candidates do not come from the persona atlas, so the reader problem
+listed under "Readers" below (review 1.4 names Part 115) does not touch this finding.
 
 ### 8d. Is it the kernel?
 This is a single forward pass on a forced opening, not generation; the known-issue note says single forward passes
@@ -333,9 +339,9 @@ the [reader correction](../../results/reader-correction-2026-11-03/README.md) an
 
 **The attention-kernel fault.** On the A770, Qwen3.5 in bf16 with the default SDPA kernel leaves the CPU float32 path
 once the cache holds more than 64 keys ([Part 178](../../results/part178/README.md)). 44 published parts are on the
-high-risk list. Rerun on the eager kernel so far, each claim holding: Parts 25 and 66 (Part 183), 18 and 18b (184),
-84 and 84b (185), 79 (186), 140 (187), and 148 (189b, where 148.1 flipped from failed to held and every rate rose 4 to
-11 points). Part 189, the first try at rerunning 148, stopped at its own gate and all six predictions are withheld.
+high-risk list. Rerun on the eager kernel so far, each published claim holding: Parts 25 and 66 (Part 183), 18 and 18b (184),
+84 and 84b (185), 79 (186) and 140 (187). Part 148 (rerun as 189b) kept 5 of 6 verdicts: 148.1 flipped from failed
+to held, every registered rate rose about 5 to 11 points, and 189b.2 to 189b.4 failed. Part 189, the first try at rerunning 148, stopped at its own gate and all six predictions are withheld.
 
 **Readers.** The Haiku reader that built the 465-unit Qwen atlas agrees with two other readers at kappa 0.109 and
 0.051, while they agree with each other at 0.814; the DeepSeek re-read kept 245 of 387 "another AI" units. Parts
@@ -348,7 +354,7 @@ rate for random directions is unknown at the same resolution, so it is a ratio o
 
 **Withdrawn readings.** Part 20f's "the unit lets go when the meaning changes" (20g.3 failed); Part 108's "DPO built the
 slot units"; Part 149.2's tenfold-rise reading (the bar could not be met from its baseline); Part 151b's "these units
-read what they write" for its corpus; Part 94c withdrew earlier coherence counts cut at 120 tokens. Part 136 was
+read what they write" for its corpus; Part 94's coherence counts, cut at 120 tokens, were withdrawn by Part 94c's corrected reading. Part 136 was
 withdrawn before its main run.
 
 **Withheld.** Part 117 and 117b's erasure reading (random answers passed the coherence gate 15 of 33 against 22
@@ -362,8 +368,9 @@ are built from the Google fit (lessons log).
 not log-odds, where they do; a typed figure in Part 163's script read like a result and survived a cold check; after
 Part 145 a wrong result was reported to the owner from an index built for another question (lessons log, 2026-10-31).
 
-**Failed registered predictions on this page's findings.** 66.2 (on eager), 66.5 and 66.6 (Finding 1); 97.1
-(Finding 7). Part 185's sign tests could not reach p < 0.05 at the counts seen (lessons log, 2026-11-04).
+**Failed registered predictions on this page's findings.** 66.2 (on eager), 66.5 and 66.6 (Finding 1); 176.W3
+(Finding 2: median gap to collapse 0.0177, bar 0.05); 84b.3 and 84b.4 on both kernels (Finding 4); 79.5 and 79.6 on
+both kernels (Finding 5); 97.1 (Finding 7); 114.1, 114.4, 115.2 and 115.6 (Finding 8); 189b.2 to 189b.4. Part 185's sign tests could not reach p < 0.05 at the counts seen (lessons log, 2026-11-04).
 
 ## Known limits
 

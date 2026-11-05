@@ -209,7 +209,7 @@ def fig6():
     ax.axhline(0, color=INK, lw=1)
     ax.set_ylabel("\"You\" gap: Assistant copy\nminus User copy")
     ax.tick_params(axis="x", labelsize=11)
-    ax.set_title("Six chosen heads cut Qwen3.5-4B's own-message gap,\nbut two of five random six-head sets cut it as far or further")
+    ax.set_title("Six chosen heads cut Qwen3.5-4B's own-message gap,\nbut of five random six-head sets, one cut it further and one nearly as far")
     save(fig, "f6-own-message-heads.png", src)
 
 
