@@ -2736,6 +2736,10 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 187](results/part187/README.md)**, 2026-11-04. Part 140 (which way of delivering a persona push gives the most joint success) rerun on the eager attention kernel and read blind again. All six predictions held and none of the nine published verdicts flipped: holding the push, greedy, gives 48.3% on Set P (published 48.3%), releasing after 8 tokens 7.1% (published 5.8%), norm-preserved 0.0%, random directions at most 3.9% in any arm (published 6.1%). 3,698 of 3,840 answer texts changed; every Set P rate moved by at most 2.5 points.
 
+**[Part 189](results/part189/README.md)**, 2026-11-04. Part 148 rerun on the eager attention kernel stopped at its own Gate 2: only 17 of 32 pilot answers matched Part 112's stored text in the first 40 tokens (28 required), so all six predictions are withheld. Exploratory pilots: the SDPA kernel at batch 64 reproduced all 32 stored answers, eager at batch 64 matched 18, and the first differing token sat anywhere from 1 to 53. Part 189's gate therefore compared kernel agreement, not wiring.
+
+**[Part 189b](results/part189b/README.md)**, 2026-11-04. Part 148 on the eager kernel, with the wiring check moved to an SDPA batch-64 arm (32 of 32). All gates passed; five of Part 148's six verdicts stand. 148.1 flips from failed to held (name moved in 385 of 465 neurons, 82.8%, against 74.8%), and every registered rate rises 4 to 11 points, random directions most (name 49.0% against 37.6%). Two of five predictions held (189b.1, 189b.5). The neuron-over-random gap narrows only from 37.2 to 33.8 points.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.
