@@ -3448,3 +3448,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 187.4 | the verdicts stand: of the 9 published verdicts of 140.1 to 140.8 (140.5's two arms counted separately), at least 8 are the same by `score140.py`. Fails at 2 or more flips. | high | Claude || held (0 flips) |
 | 187.5 | no verdict flips: all 9 published verdicts are the same. Fails at any flip. | medium | Claude || held (0 flips) |
 | 187.6 | arm F stays broken: arm F's Set P joint success is at most 5.0% (published 0.0%). Fails above. | high | Claude || held (0.0%) |
+
+## Part 189 (registered 2026-11-04 18:09 CT, PART189-DESIGN.md, before any eager answer to a Part 148 prompt)
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 189.1 | the verdicts stand: of Part 148's six published verdicts (148.1 failed, 148.2 failed, 148.3 held, 148.4 failed, 148.5 failed, 148.6 failed; results/part148/score.json), at least 5 are the same by the unchanged scoring rules. Fails at 2 or more flips. | high | Claude | |
+| 189.2 | no verdict flips: all six are the same. Fails at any flip. | medium | Claude | |
+| 189.3 | the neuron rates for name (published 348/465, 74.8%), maker (191/465, 41.1%), name and maker together (146/465, 31.4%) and maker among name-moving neurons (146/348, 42.0%) each stay within 6 percentage points of the published rate. Fails if any leaves its band. | medium | Claude | |
+| 189.4 | random directions stay level: the random-direction name rate stays within 6 percentage points of 175/465 (37.6%). Fails outside. | medium | Claude | |
+| 189.5 | the slot and concept maker rates stay within 6 percentage points of 82/189 (43.4%) and 100/257 (38.9%). Fails if either leaves its band. | low | Claude | |
+| 189.6 | Part 148's full-text Gate 2 would also pass: at least 28 of the 32 pilot answers equal Part 112's stored answers in full. Fails below 28. | low | Claude | |
