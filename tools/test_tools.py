@@ -518,6 +518,21 @@ def test_register_refuses_a_new_row_whose_verdict_is_filled(tmp_path):
 
 
 
+def test_register_a_binary_file_merges_back(tmp_path):
+    """(7) 2026-11-04: Part 188 registered part188/parity_ref.npz; the merge-back compared blobs as text and raised
+    UnicodeDecodeError after the push. Fails on the old line."""
+    remote, work = _reg_repo(tmp_path)
+    p = work / "PREDICTIONS.md"
+    p.write_text(p.read_text(encoding="utf-8") + "\n## Part 3 (registered y): c\n\n| 3.1 | r | | |\n", encoding="utf-8")
+    (work / "D3.md").write_text("design 3\n", encoding="utf-8")
+    (work / "ref3.npz").write_bytes(b"PK\x03\x04\x8f\xff\x00binary")
+    r = _register(work, "3", "D3.md", "ref3.npz")
+    assert r.returncode == 0, r.stderr
+    assert "merged back" in r.stdout
+    blob = subprocess.run(["git", "show", "origin/main:ref3.npz"], cwd=work, capture_output=True).stdout
+    assert blob == b"PK\x03\x04\x8f\xff\x00binary" and (work / "ref3.npz").read_bytes() == blob
+
+
 def test_cited_paths_ignores_a_quoted_answers_line_break_slashes():
     import part_check as pc
     text = "Quoted: `I can assist with: / / - **Aristoxim**` and the file `results/part117/score.json`."
