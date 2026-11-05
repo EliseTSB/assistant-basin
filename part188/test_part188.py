@@ -689,3 +689,29 @@ def test_prediction_188_8_threshold():
 def test_prediction_188_9_threshold():
     assert prediction_verdict("188.9", {"A": 0.699, "B": 0.60})
     assert not prediction_verdict("188.9", {"A": 0.70, "B": 0.60})
+
+
+def test_requirements_pin_every_expected_library():
+    """Amendment 1 (2026-11-04): the first cloud run failed at model load because torchvision, present in the local
+    stack, was missing from requirements188.txt. Every library the session checks must be pinned there, at the same
+    version."""
+    import re
+    from pathlib import Path
+    import session188
+    text = (Path(__file__).resolve().parent / "requirements188.txt").read_text(encoding="utf-8")
+    pins = dict(re.findall(r"^([A-Za-z0-9_.-]+)==([^\s]+)$", text, flags=re.M))
+    assert "torchvision" in session188.EXPECTED
+    for name, version in session188.EXPECTED.items():
+        assert pins.get(name) == version, (name, pins.get(name), version)
+
+
+def test_gate2_passes_when_every_manifest_set_is_recorded():
+    """Amendment 2 (2026-11-04): Gate 2 is evaluated over the manifest's own sets. The old code added a set "P" with
+    no planned clips, scored it 0.0 and failed the gate on a run that recorded 3,138 of 3,138 clips."""
+    import numpy as np
+    import analyze188
+    rows = [{"id": f"c{i}", "set": "x", "analysis_set": s} for i, s in enumerate(["R", "R", "I", "E"])]
+    status = np.array(["ok"] * 4, dtype=object)
+    out = analyze188._gate2_summary(rows, status, [""] * 4)
+    assert set(out["sets"]) == {"R", "I", "E"}
+    assert out["verdict"] == "passed"
