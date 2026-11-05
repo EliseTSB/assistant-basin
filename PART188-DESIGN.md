@@ -170,3 +170,14 @@ parity clips at about 0.6 s per clip.
 At 17:39 CT, before registering, the Size total was written as the exact manifest count (3,138, was "about 3,140") and
 the Measured line was reworded so `tools/part_check.py` reads its rate; the smoke rate was added to it. No threshold,
 prediction, fold or class changed.
+
+## Amendment 1 (2026-11-04 19:00 CT, before any data)
+
+The first cloud session (routine fired 17:53 CT, branch `cloud/part188`, commit 03a8f27) recorded nothing: model load
+failed with sentence-transformers 6.2.0 raising "EmbeddingGemma2VideoProcessor requires the Torchvision library", and
+`torchvision` was not in `part188/requirements188.txt`. The local smoke test had passed because the local stack loaded
+sentence-transformers from a side folder that also held torchvision 0.29.2 (CPU), so the gap could not show there. The
+session followed the routine and did not change the pins. Fix: `torchvision==0.29.2` is added to the requirements, to
+the routine's CPU-index install line and to the session's pinned-version check, and a test now fails if any checked
+library is missing from the requirements. The rerun uses branch `cloud/part188-r2`. No class, threshold, fold, prompt,
+prediction or analysis changed, and no clip was recorded before this amendment.

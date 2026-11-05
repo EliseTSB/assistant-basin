@@ -24,7 +24,7 @@ or inspect result values before the session begins. Do not send notifications.
 
 2. Install and use one interpreter for every command. Resolve it once with `PY=$(command -v python3.13 || command -v
    python3)`. Install the CPU PyTorch wheel with
-   `"$PY" -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.14.1`, then install
+   `"$PY" -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.14.1 torchvision==0.29.2`, then install
    `"$PY" -m pip install -r part188/requirements188.txt`. Verify the environment with
    `"$PY" -m pip check` and the driver's version check.
 
