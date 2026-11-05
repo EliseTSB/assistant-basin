@@ -5,7 +5,7 @@ when pushed. It ran on the A770 with transformers' default fused SDPA kernel, wh
 float32 path after about 64 keys. Part 189 tried to rerun it on the eager kernel and stopped at its own Gate 2
 (`results/part189/README.md`). Part 189b (registered 7a270f1) moved the wiring check to an SDPA batch-64 arm
 and ran the eager full run: 2,796 answers, same units, seeds and dose, labelled again by Part 148's reader
-(DeepSeek V4.1 Flash, same brief) and scored by `part148/score148.py`'s rules via `score189b.py`.
+(DeepSeek V4.1 Flash, same brief) and scored by `part148/score148.py`'s rules via `part189b/score189b.py`.
 
 ## Gates
 
