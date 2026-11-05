@@ -1,0 +1,31 @@
+{
+  "load": {
+    "attn_implementation": "eager",
+    "attn_implementation_requested": "eager",
+    "dtype": "torch.bfloat16",
+    "device": "xpu",
+    "torch": "2.13.0+xpu",
+    "transformers": "5.13.0"
+  },
+  "part189b": {
+    "mode": "eager",
+    "argv": [
+      "--device",
+      "xpu",
+      "--batch-size",
+      "8",
+      "--max-new-tokens",
+      "120",
+      "--model",
+      "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "--units",
+      "results\\part112\\units.json",
+      "--medians",
+      "results\\part112\\medians.json",
+      "--out",
+      "results\\part189b\\answers.jsonl"
+    ],
+    "battery148_rc": null,
+    "wiring_gates": "results\\part189b\\wiring\\wiring.json"
+  }
+}

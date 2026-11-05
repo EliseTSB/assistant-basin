@@ -1,0 +1,35 @@
+{
+  "load_eager": {
+    "passed": true,
+    "attn_implementation": "eager"
+  },
+  "gate1_zero_matches_plain": {
+    "passed": true,
+    "questions": 3
+  },
+  "gate2_pilot_matches_part112": {
+    "passed": true,
+    "matches": 32,
+    "compared": 32,
+    "required": 28
+  },
+  "gate3_plain_not_moved": {
+    "passed": true,
+    "questions": 3
+  },
+  "gate2_eager_prefix_descriptive": {
+    "passed": false,
+    "matches": 17,
+    "compared": 32,
+    "required": 28,
+    "rule": "first 40 generated tokens",
+    "k": 40
+  },
+  "gate2_eager_full_text_descriptive": {
+    "passed": false,
+    "matches": 5,
+    "compared": 32,
+    "required": 28
+  },
+  "all_passed": true
+}
