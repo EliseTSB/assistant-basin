@@ -1,0 +1,79 @@
+{
+  "analysis_ran": true,
+  "counts": {
+    "C_I": {
+      "fraction": 1.0,
+      "planned": 38,
+      "recorded": 38,
+      "verdict": "passed"
+    },
+    "C_R": {
+      "fraction": 1.0,
+      "planned": 100,
+      "recorded": 100,
+      "verdict": "passed"
+    },
+    "E": {
+      "fraction": 1.0,
+      "planned": 1120,
+      "recorded": 1120,
+      "verdict": "passed"
+    },
+    "H": {
+      "fraction": 1.0,
+      "planned": 400,
+      "recorded": 400,
+      "verdict": "passed"
+    },
+    "I": {
+      "fraction": 1.0,
+      "planned": 533,
+      "recorded": 533,
+      "verdict": "passed"
+    },
+    "N": {
+      "fraction": 1.0,
+      "planned": 269,
+      "recorded": 269,
+      "verdict": "passed"
+    },
+    "P": {
+      "fraction": 0.0,
+      "planned": 0,
+      "recorded": 0,
+      "verdict": "failed"
+    },
+    "R": {
+      "fraction": 1.0,
+      "planned": 678,
+      "recorded": 678,
+      "verdict": "passed"
+    }
+  },
+  "gate_verdicts": {
+    "gate1": "passed",
+    "gate2": "failed",
+    "gate3": "passed"
+  },
+  "library_versions": {
+    "huggingface-hub": "2.2.0",
+    "imageio-ffmpeg": "0.8.1",
+    "numpy": "2.5.4",
+    "pytest": "9.1.1",
+    "python": "3.13.18",
+    "sentence-transformers": "6.2.0",
+    "torch": "2.14.1+cpu",
+    "torchvision": "0.29.2+cpu",
+    "transformers": "5.20.0"
+  },
+  "note": "No selected-unit indices or neuron values are included in this summary.",
+  "peak_memory_mb": 4023.7890625,
+  "problems": [],
+  "study": "part188",
+  "timings_seconds": {
+    "analyze": 27.0786270829999,
+    "install_check": 0.9490837790000057,
+    "record": 2020.7127361930002,
+    "total": 2048.741281132
+  }
+}
