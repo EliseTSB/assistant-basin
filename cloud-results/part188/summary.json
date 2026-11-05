@@ -1,0 +1,30 @@
+{
+  "analysis_ran": false,
+  "counts": {},
+  "gate_verdicts": {
+    "gate1": "not_run",
+    "gate2": "not_run",
+    "gate3": "not_run"
+  },
+  "library_versions": {
+    "huggingface-hub": "2.2.0",
+    "imageio-ffmpeg": "0.8.1",
+    "numpy": "2.5.4",
+    "pytest": "9.1.1",
+    "python": "3.13.18",
+    "sentence-transformers": "6.2.0",
+    "torch": "2.14.1+cpu",
+    "transformers": "5.20.0"
+  },
+  "note": "No selected-unit indices or neuron values are included in this summary.",
+  "peak_memory_mb": 3764.75,
+  "problems": [
+    "RuntimeError: recording exited 1 before a Gate 1 verdict"
+  ],
+  "study": "part188",
+  "timings_seconds": {
+    "install_check": 1.0769221130000233,
+    "record": 13.950471780000044,
+    "total": 15.02755710200006
+  }
+}
