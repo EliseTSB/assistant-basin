@@ -60,7 +60,8 @@ touching the model.
 - Read directions (rank k in 1, 2, 4, 8), by repeated orthogonal probing (INLP-style): probe j is Part 188's L2
   logistic regression (C = 1.0, standardized on F) fitted on F's embeddings with directions 1..j-1 projected out; its
   weight mapped back to raw coordinates (coef / scale), projected off the earlier directions, normalized, and signed
-  so that F's real mean projects above F's imitation mean, is w_j. Centre mu is the midpoint of F's real and imitation
+  so that F's real mean projects above F's imitation mean, is w_j. Ranks are nested: rank k uses w_1..w_k of one
+  sequence of 8 probes. Centre mu is the midpoint of F's real and imitation
   means. z_j(x) = w_j . (x - mu) / sigma_j, with sigma_j the standard deviation of w_j . x over F.
 - Write directions: u_1 = v_bar, the normalized mean over F's distinct clip phrases of (real-prompt embedding minus
   imitation-prompt embedding) ("the sound of {phrase}" minus "a person imitating the sound of {phrase}"), so the
@@ -98,7 +99,9 @@ touching the model.
     real recordings (sets R, C_R, E and H) is an H clip; change in points.
 - Code: `part190/analyze190.py` (all computation, gates, verdicts; writes `results/part190/results.json`) and
   `part190/run190.py` (the runner: checks inputs, runs the analysis, prints gates and verdicts, never prints arrays).
-  Unit tests in `part190/test_part190.py` run on synthetic fixtures only.
+  Unit tests in `part190/test_part190.py` run on synthetic fixtures only (`part190/synthetic190.py`, which plants a
+  known real-against-imitation direction, or none). The run: `python -I part190/run190.py` from the repository root,
+  after registration; `--synthetic DIR` runs the same code on a synthetic fixture of the real shape.
 
 ## Controls
 
@@ -148,8 +151,9 @@ prediction's verdict is "not read". If Gate 4 fails, C1 and C2 verdicts are "not
   the B to A direction). With about 338 real and 267 imitation clips per test fold the clip-level standard error of an
   AUC near 0.8 is about 0.02, so 0.05 is resolved at the clip level; the group-clustered interval (9 or 10 groups) is
   wider and is reported as the honest one. Collateral is resolved to about 1 point on 1,520 ESC-50 clips.
-- Total: 2,624 edit evaluations (2 directions x 4 ranks x 8 doses x 41 edits: 1 main, 20 shuffled, 20 random), about
-  4 minutes on CPU, plus 2,000 bootstrap resamples for each of the 8 main edits at their operating dose.
+- Total: 2,298 edit evaluations (2 directions x 4 ranks x 7 non-zero doses x 41 edits: 1 main, 20 shuffled, 20
+  random; plus the 2 unedited baselines, which serve every alpha = 0 row), about 4 minutes on CPU, plus 2,000
+  bootstrap resamples for each of the 8 main edits at their operating dose and 2 x 21 sequences of 8 probes.
 - Pilot: not needed: no generations, no model, minutes on a CPU; Gates 1 to 4 stop the reading if the rig is wrong.
 
 ## Optimization
