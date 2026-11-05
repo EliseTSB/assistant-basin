@@ -153,16 +153,18 @@ prediction's verdict is "not read". If Gate 4 fails, C1 and C2 verdicts are "not
   AUC near 0.8 is about 0.02, so 0.05 is resolved at the clip level; the group-clustered interval (9 or 10 groups) is
   wider and is reported as the honest one. Collateral is resolved to about 1 point on 1,520 ESC-50 clips.
 - Total: 2,298 edit evaluations (2 directions x 4 ranks x 7 non-zero doses x 41 edits: 1 main, 20 shuffled, 20
-  random; plus the 2 unedited baselines, which serve every alpha = 0 row), about 4 minutes on CPU, plus 2,000
+  random; plus the 2 unedited baselines, which serve every alpha = 0 row), about 12 minutes on CPU, plus 2,000
   bootstrap resamples for each of the 8 main edits at their operating dose and 2 x 21 sequences of 8 probes.
 - Pilot: not needed: no generations, no model, minutes on a CPU; Gates 1 to 4 stop the reading if the rig is wrong.
 
 ## Optimization
 
 - Bound resource: CPU (numpy).
-- Measured: pending; to be measured on a synthetic 3,138 x 768 fixture of the real shape before registration (the
-  real arrays are not read before registration).
-- Levers: neighbour search as one matrix product per edit, taken; controls get point estimates only and the
+- Measured: 2,298 edit evaluations in 710 s (this code with the registered settings, `run190.py --synthetic`, on a
+  synthetic fixture of the real shape, 3,157 x 768, 4 CPU threads shared with a pytest run; the real arrays are not
+  read before registration), about 0.3 s per evaluation including the bootstraps; the 2 x 21 probe sequences took
+  about 90 s per direction.
+- Levers: neighbour search as matrix products per edit, taken; controls get point estimates only and the
   bootstrap runs only for the 8 main edits, taken; probes for the shuffled controls fitted once per permutation and
   reused across doses, taken; parallel processes declined (minutes in total).
 
@@ -222,5 +224,13 @@ Copied verbatim into PREDICTIONS.md under "## Part 190 (registered ...)".
 
 ## Changes before registration
 
-None yet. Draft written 2026-11-04 23:56 CT (05:56 UTC 2026-11-05) in a cloud session; predictions were written
-before any analysis code.
+Draft written 2026-11-04 23:56 CT (05:56 UTC 2026-11-05) in a cloud session; the predictions were committed (e22888c)
+before any analysis code. Changes after that commit and before registration, made from synthetic fixtures only (no
+statistic of the real arrays was computed): the Size total counts the 2 shared unedited baselines once (2,298, was
+2,624, which counted alpha = 0 for every edit); ranks are stated as nested; Gate 3 is read per rank (a d = 48 synthetic
+fixture showed shuffled rank-8 edits with a 95th-percentile change above +0.05 from spread alone, at 10 controls, so a
+rank-8 failure now withholds 190.3 and the rank-8 readings rather than the whole part; a rank-1 failure still refuses
+the reading); the Measured line was filled from a synthetic run of the real shape, on which all four gates passed.
+No prediction or threshold changed.
+
+Not done in this session (routine time cap): no code review by a second model; no cold read of the design.
