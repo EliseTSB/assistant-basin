@@ -47,12 +47,14 @@ nuisance features; both are statements about this fixed linear pipeline.
   - E0: the probe on layer 0 (Part 196's E with the layer fixed at 0, which Part 196 chose in every fold).
   - EN: the probe on layer 0 concatenated with the eight nuisance features.
   - R: the probe on layer 0 residualized on N. Per training fold, in float64: standardize N on training clips (mean
-    and standard deviation; a nuisance column with training standard deviation 0 is dropped and listed); fit
+    and standard deviation). Full rank is required: if any nuisance column has training standard deviation 0, or the
+    recorded rank of [1, N_tr] is not 9, R is not computed for that fold and is reported as blocked (EN and N are
+    unaffected); fit
     B = argmin ||[1, N_tr] B - X_tr|| with `numpy.linalg.lstsq(rcond=None)` (default machine-precision rank cutoff; the
-    rank is recorded and must be 9); residualize train and test with that same B (R = X - [1, N] B). Before scaling,
-    any residual column whose training standard deviation is below 1e-6 times that unit's training standard
-    deviation in X is set to zero in train and test and counted (cancellation noise is never scaled to unit
-    variance). Then the probe's own standardization is fitted on the training residuals only.
+    rank is recorded); residualize train and test with that same B (R = X - [1, N] B). Before scaling, a training-only
+    zero-column mask is computed: unit u is masked when its training standard deviation in X is 0, or when its
+    training residual standard deviation is at most 1e-6 times its training standard deviation in X. Masked columns
+    are set to zero in both train and test and counted (cancellation noise is never scaled to unit variance). Then the probe's own standardization is fitted on the training residuals only.
   - K: the probe on two features, `duration_seconds` and seconds per word.
   - H: the probe on Part 196's seven acoustic features (descriptive, for continuity with Part 196).
   - L_k, k = 0 to 23: the probe on layer k (descriptive held-out curve; L_0 is E0).
@@ -82,8 +84,9 @@ nuisance features; both are statements about this fixed linear pipeline.
   residuals are orthogonal to the training nuisance columns, so this is a construction check that catches an
   implementation failure, not a test that the nuisance information is unavailable on held-out clips. Per fold, the
   normalized cross-product max over (j, u) of |N_tr[:, j]^T R_tr[:, u]| / (||N_tr[:, j]|| ||R_tr[:, u]|| + 1e-300),
-  with N centred, must be at most 1e-8. Synthetic fixtures (in the test file, run before the real data): (i) X an
-  exact linear function of N plus a constant gives R columns all zeroed by the variance rule and an R readout at chance;
+  with N centred, over unmasked columns, must be at most 1e-8. Synthetic fixtures (in the test file, run before the
+  real data): (i) X an exact linear function of N plus a constant gives R columns all zeroed by the mask and an R
+  readout at chance; (i-b) a unit constant at zero and a unit constant at a nonzero value are both masked;
   (ii) X with an independent residual signal keeps that signal readable in R; (iii) a deliberately wrong map (B fitted
   on row-shuffled N) fails Gate 2.
 - Shuffled labels: R and EN refitted with style labels shuffled within each training speaker, scored on real test
@@ -150,3 +153,6 @@ saved predictions. Run only when no A770 job is running (Windows RAM).
   before scaling); clip duration added to the nuisance set (H had speaking rate but not duration); Gate 1 given an
   executable reference (recorder identity, exact regeneration of Part 196's results.json, a committed records digest);
   stated as a prospective analysis of an already-examined dataset.
+- Alden #5 (HOLD at 57087eb): the zero-column mask now also catches units constant in X (std 0), with zero and
+  nonzero constant-unit fixtures; the rank policy is explicit (full rank 9 required, a constant nuisance column blocks
+  R only).
