@@ -261,23 +261,45 @@ copied into ordinary memory after loading (the pilot's AlphaEdit step thrashed f
 per record to a JSONL, so a killed run resumes at the next record and loses at most one; `wsp`'s protection cache is
 recorded once and reused. The statistics take seconds per matrix and are not worth optimizing.
 
+Levers (procedure section 4): bound resource is the CPU, measured busy in the pilot (12 threads, ROME's value-vector
+optimisation dominates); batch size does not apply to sequential single edits, and the mass edits are the methods' own
+batches; generation is only `wsp`'s 24-token check answers, kept because "took" needs them; there are no random controls
+to pool beyond one matrix per record; no readers or labelling, so no quota is used; the A770 is declined because
+EasyEdit's paths are written for CUDA and untested on XPU, and the GPT-2 XL work fits a CPU afternoon; host memory is
+handled by the 11 GB wait and the copy into ordinary memory; cache and resume are taken (per-record JSONL, `wsp`'s
+protection cache).
+
 ## Predictions
 
 Each is scored once on the registered run. "Took" edits only. Numbers in brackets are the pilot's, from one record.
+Author of every prediction: Journal Claude (Opus 5.5), 2026-11-08, written after the pilot and before any registered
+data exists.
 
-| # | Prediction | Fails if |
-|---|---|---|
-| 198.1 | F1 finds at most 1 of 24 single edits for each of ROME, MEMIT and AlphaEdit, and none of the 4 mass-edit models. [0 of 1 each; batches 0 of 2] | any method finds 2 or more, or any batch is found |
-| 198.2 | T_word finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [0 of 1 each] | 2 or more for any method, or any batch |
-| 198.3 | PCS finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [ranks 10 to 41] | 2 or more for any method, or any batch |
-| 198.4 | Gradient edits are not aimed at their answer: the edited layer's top content direction names the new object in at most 2 of 24 for each editor, and so does the update's own top direction (base-required). [0 of 1 each, both] | 3 or more for any editor on either |
-| 198.5 | The aimed positive control is named but mostly not found: its layer-17 top content direction names the new object in at least 20 of 24, and T_word ranks layer 17 first in at most 12 of 24. [named, not found] | named in fewer than 20, or found in more than 12 |
-| 198.6 | T_word finds `wsp` writes: an edited layer ranks first among the 24 in at least 20 of the writes that took. [found, 16.2 against 7.3] | fewer than 20 |
-| 198.7 | The suspect model names what was written: the top content direction of the layer ranking first names the new object in at least 18 of the writes that took. [named] | fewer than 18 |
-| 198.8 | After 10 `wsp` writes in sequence, at least 5 of the 10 new objects are named by a content direction (top token, any of the top 64) in layers 17 to 21. [not piloted] | fewer than 5 |
-| 198.9 | Matched random updates are not found: T_word ranks a randomized layer first in at most 1 of 24. [not piloted] | 2 or more |
-| 198.10 | At most 2 of the 7 held-out unedited models have any MLP output matrix with T_word above T\*. [GPT-2 XL's maximum is 9.79 and Qwen3.5-0.8B's 7.3; T\* not yet computed] | 3 or more |
-| 198.11 | At least 20 of the `wsp` writes that took have an edited layer with T_word above T\*. [16.2] | fewer than 20 |
+**Settings, matched within each arm and fixed here.** Arm A: GPT-2 XL float32 (sha256 above), EasyEdit shipped GPT-2 XL
+hyperparameters, `wikipedia_stats` second moments, CPU, 12 threads, no sampling anywhere (efficacy is one forward pass).
+Arm B: Qwen3.5-0.8B float32 (snapshot `2fc06364715b967f1860aea9cf38778875588b17`), `wsp.py` defaults (top layer 21,
+spread 5, lam 3, mu 0.01, cap 0.25, 6 rounds, contrast weight 10), its chat template with thinking off, greedy decoding,
+answers capped at 24 new tokens. Arm C: each model's own snapshot in bfloat16, statistics in float64. Token reading in
+all arms: top 64 singular directions, both signs, z over the full vocabulary, the stopword list in `stats198.py`.
+
+**Headline and its withdrawal.** The headline would be "ordinary gradient edits at shipped settings are invisible to
+these base-free statistics, while a writer that aims at the answer's output direction is found and named". It is
+withdrawn if 198.5 fails (the reading could not have seen an aimed write, so the null says nothing about direction) or
+if 198.6 fails; each other prediction is reported on its own.
+
+| # | Prediction | Fails if | Confidence |
+|---|---|---|---|
+| 198.1 | F1 finds at most 1 of 24 single edits for each of ROME, MEMIT and AlphaEdit, and none of the 4 mass-edit models. [0 of 1 each; batches 0 of 2] | any method finds 2 or more, or any batch is found | 0.9 |
+| 198.2 | T_word finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [0 of 1 each] | 2 or more for any method, or any batch | 0.85 |
+| 198.3 | PCS finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [ranks 10 to 41] | 2 or more for any method, or any batch | 0.85 |
+| 198.4 | Gradient edits are not aimed at their answer: the edited layer's top content direction names the new object in at most 2 of 24 for each editor, and so does the update's own top direction (base-required). [0 of 1 each, both] | 3 or more for any editor on either | 0.85 |
+| 198.5 | The aimed positive control is named but mostly not found: its layer-17 top content direction names the new object in at least 20 of 24, and T_word ranks layer 17 first in at most 12 of 24. [named, not found] | named in fewer than 20, or found in more than 12 | 0.6 |
+| 198.6 | T_word finds `wsp` writes: an edited layer ranks first among the 24 in at least 20 of the writes that took. [found, 16.2 against 7.3] | fewer than 20 | 0.75 |
+| 198.7 | The suspect model names what was written: the top content direction of the layer ranking first names the new object in at least 18 of the writes that took. [named] | fewer than 18 | 0.7 |
+| 198.8 | After 10 `wsp` writes in sequence, at least 5 of the 10 new objects are named by a content direction (top token, any of the top 64) in layers 17 to 21. [not piloted] | fewer than 5 | 0.5 |
+| 198.9 | Matched random updates are not found: T_word ranks a randomized layer first in at most 1 of 24. [not piloted] | 2 or more | 0.85 |
+| 198.10 | At most 2 of the 7 held-out unedited models have any MLP output matrix with T_word above T\*. [GPT-2 XL's maximum is 9.79 and Qwen3.5-0.8B's 7.3; T\* not yet computed] | 3 or more | 0.5 |
+| 198.11 | At least 20 of the `wsp` writes that took have an edited layer with T_word above T\*. [16.2] | fewer than 20 | 0.65 |
 
 ## Reading rules
 
