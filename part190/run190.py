@@ -76,6 +76,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{pid}: {p['verdict']}")
     if "headline" in result:
         print(f"headline permitted: {result['headline']['permitted']}")
+    for name, d in result.get("directions", {}).items():
+        hg = d.get("ranks", {}).get("1", {}).get("exploratory_half_gain")
+        if hg is not None:
+            if hg.get("alpha") is None:
+                print(f"exploratory half-gain dose, {name}: {hg.get('note')}")
+            else:
+                print(f"exploratory half-gain dose, {name}: alpha {hg['alpha']:g} (operating {hg['operating_alpha']:g}), "
+                      f"rise {hg['dV_test']:+.3f}, C1 {hg['C1_change_points']:+.2f} pt, "
+                      f"C2 {hg['C2_first_neighbour_changed']:.3f}, C5 {hg['C5_change_points']:+.2f} pt, "
+                      f"C6 {hg['C6_change_points']:+.2f} pt")
     n_eval = (2 * len(args.ranks) * (len([d for d in args.doses if d != 0]) * (1 + 2 * args.controls)) + 2)
     print(f"{n_eval} edit evaluations in {elapsed:.0f} s; wrote {args.out / 'results.json'}")
     (args.out / "run.json").write_text(json.dumps({"elapsed_s": elapsed, "edit_evaluations": n_eval,

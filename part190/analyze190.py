@@ -376,6 +376,23 @@ def summarize(cur: dict[str, Any], base: dict[str, Any]) -> dict[str, float]:
     return row
 
 
+
+def exploratory_half_gain(ladder: dict, operating_alpha: float) -> dict[str, Any]:
+    """Exploratory, never a verdict (design, Reading rules): the smallest dose on the ladder whose held-out verdict rise
+    reaches half the operating dose's rise, with its collateral numbers, because a cost measured at the dose chosen for
+    maximum separation is not evidence that no cheaper dose exists."""
+    keys = ("dV_test", "C1_change_points", "C2_first_neighbour_changed", "C5_change_points", "C6_change_points")
+    op_rise = ladder[operating_alpha]["dV_test"]
+    if not np.isfinite(op_rise) or op_rise <= 0:
+        return {"alpha": None, "note": "operating rise not positive; no half-gain dose"}
+    half = 0.5 * op_rise
+    eligible = sorted(a for a, r in ladder.items() if a > 0 and np.isfinite(r["dV_test"]) and r["dV_test"] >= half)
+    if not eligible:
+        return {"alpha": None, "note": "no dose reaches half the operating rise"}
+    a = eligible[0]
+    return {"alpha": a, "operating_alpha": operating_alpha, "half_of_operating_rise": half,
+            **{k: ladder[a].get(k) for k in keys}}
+
 def operating_dose(ladder: dict[float, dict[str, float]], tolerance: float = DOSE_TOLERANCE) -> float:
     """Smallest alpha whose fit-fold verdict AUC is at least the ladder maximum minus the tolerance."""
     values = {a: r["V_fit"] for a, r in ladder.items() if np.isfinite(r["V_fit"])}
@@ -677,6 +694,8 @@ def run_direction(data: Data, ctx: Context, *, ranks=RANKS, doses=DOSES, n_contr
                                 for a, v in ctrl_ladder.items()},
             "shuffled_dV_test_at_operating": [r["dV_test"] for r in ctrl_ladder[a_star]["shuffled"]],
         }
+        if k == 1:
+            result["ranks"][str(k)]["exploratory_half_gain"] = exploratory_half_gain(ladder, a_star)
         log(f"{ctx.name}: rank {k} done (operating dose {a_star:g})")
     return result
 

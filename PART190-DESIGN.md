@@ -1,7 +1,7 @@
 # Part 190: can a low-rank linear edit of EmbeddingGemma 2's output embedding make its class-informed prompt verdict tell real animal sounds from human imitations on animals it was not fitted on, while leaving the rest of the embedding geometry nearly unchanged?
 
 Procedure: v1
-Registered 2026-11-04 23:56 CT by Claude (Opus 5.5), before any data. This is the draft time from `date`; the draft was
+Registered (v2) 2026-11-07 23:20 CT by Claude; drafted 2026-11-04 23:56 CT (Opus 5.5), before any data. This is the draft time from `date`; the draft was
 written in a Claude cloud session (routine "R1", branch `cloud/part190-design-2026-11-04`) and the owner's commit that
 adds this file to public main is the registration and sets this line. **Revised to v2 on 2026-11-07 by Claude (Opus
 5.5) after a cold read and a second-model review, still before any statistic of the real arrays; see "Changes in v2"
@@ -272,3 +272,8 @@ The reviewer's point that the random control keeps the write direction v_bar was
 (`random_edit`): the control's coefficient comes from a random read direction standardized to unit variance on the
 fit fold and then rescaled to the main edit's mean displacement, so its per-clip spread along v_bar is comparable to
 the main edit's and what differs is its correlation with the labels. Recorded as the reason it was not changed.
+
+After a DeepSeek V4.1 Flash first-round review of v2 (2026-11-07): PREDICTIONS.md now carries the 14 v2 rows (it still
+had v1's 12); the exploratory half-gain dose line is computed (`exploratory_half_gain`, rank 1, both directions) and
+printed by `run190.py`, as the reading rules promise; a test checks that 190.13 and 190.14 read their quantities from a
+real run. 24 unit tests pass. No prediction or threshold changed in this round.

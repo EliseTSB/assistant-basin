@@ -299,3 +299,28 @@ def test_190_4_can_fail_in_a_readable_run():
     assert g["passed"]
     s = A.score_predictions(_values(shuffled_rank1_median_dV_test=(med, 0.0)), g["passed"], True)
     assert s["190.4"]["verdict"] == "failed"
+
+
+def test_new_predictions_are_wired_and_half_gain_reported(signal_runs):
+    """v2 review F2/F3: 190.13 and 190.14 read the right quantities from a real run, and the exploratory half-gain line
+    is present for rank 1 in each direction."""
+    _, runs = signal_runs
+    values = A.prediction_values(runs)
+    for name, r in runs.items():
+        r1 = r["ranks"]["1"]
+        assert values["rank1_dV_test_cluster_low"][name] == r1["operating_intervals"]["dV_test"]["low"]
+        assert values["rank1_dV_test_free"][name] == r1["operating"]["dV_test_free"]
+        hg = r1["exploratory_half_gain"]
+        assert hg["alpha"] is not None and 0 < hg["alpha"] <= r1["operating_dose"]
+        assert hg["dV_test"] >= hg["half_of_operating_rise"]
+    verdicts = A.score_predictions(values, True, True)
+    assert verdicts["190.13"]["verdict"] != "not read" and verdicts["190.14"]["verdict"] != "not read"
+
+
+def test_half_gain_edge_cases():
+    lad = {0.0: {"dV_test": 0.0}, 1.0: {"dV_test": 0.03}, 2.0: {"dV_test": 0.06}, 4.0: {"dV_test": 0.10}}
+    for row in lad.values():
+        row.update(C1_change_points=0.0, C2_first_neighbour_changed=0.0, C5_change_points=0.0, C6_change_points=0.0)
+    assert A.exploratory_half_gain(lad, 4.0)["alpha"] == 2.0
+    lad[4.0]["dV_test"] = -0.01
+    assert A.exploratory_half_gain(lad, 4.0)["alpha"] is None
