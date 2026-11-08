@@ -16,8 +16,11 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > The 11 parts that used padded batches (157, 158, 159, 162, 171 to 176, and 178, already rerun) are at lower risk. Within a part every arm ran through the same kernel, so differences between arms may
 > hold up better than absolute rates, but that is not measured yet. Each affected part will get a dated note when it is
 > rerun or checked. Single forward passes (no generation) matched the reference at confident positions.
-> Rerun on the eager kernel so far, each published claim holding: Parts 25 and 66 (Part 183), 18 and 18b (Part 184), 84 and
-> 84b (Part 185), 79 (Part 186), 140 (Part 187).
+> Rerun on the eager kernel so far (updated 2026-11-08), each published claim holding: Parts 25 and 66 (Part 183), 18 and
+> 18b (Part 184), 84 and 84b (Part 185), 79 (Part 186), 140 (Part 187), 153 (Part 191) and 24 (Part 194). Not every
+> claim held in: Part 148 (Part 189b: five of six verdicts kept, 148.1 flipped), Part 39 (Part 192: every verdict kept,
+> but the 8 of 96 AI claims under the Sam persona were the kernel's; 0 of 96 on eager), and Part 81 (Part 195: the push
+> and every verdict kept, but the coherence counts behind "breaks the model" most likely were the kernel's).
 
 ## The short version
 
