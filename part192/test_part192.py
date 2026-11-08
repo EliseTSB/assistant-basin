@@ -162,3 +162,52 @@ def test_record_has_one_entry_per_invocation_that_wrote_rows(tmp_path, monkeypat
     assert [entry["rows_added"] for entry in record["loads"]] == [1, 1]
     assert all(entry["model_loads"][0]["attn_implementation"] == "eager"
                for entry in record["loads"])
+
+
+def _drive(tmp_path, monkeypatch, command, kernel, write_rows, write_output):
+    import part39
+    import neuron_report as nr
+
+    def fake_loader(model_id, revision, device):
+        nr.LAST_LOAD = {"model": model_id, "revision": revision, "attn_implementation": kernel}
+        return object(), object()
+
+    def fake_main(argv):
+        args = part39.build_parser().parse_args(argv)
+        part39.load_model_direct("model-id", "rev", "xpu")
+        args.out.mkdir(parents=True, exist_ok=True)
+        if write_rows:
+            with (args.out / f"{args.command}.jsonl").open("a", encoding="utf-8") as stream:
+                stream.write(json.dumps({"row_key": f"{args.command}-row"}) + "\n")
+        if write_output:
+            part39._write_json_atomic({"ok": True}, args.out / f"{args.command}-chat.json")
+
+    monkeypatch.setattr(run192, "eager_load_model_direct", fake_loader)
+    monkeypatch.setattr(part39, "main", fake_main)
+    out = tmp_path / "part192"
+    return run192.main([command, "--out", str(out)], part39_module=part39), out
+
+
+def test_wrapper_gate_refuses_a_non_eager_load(tmp_path, monkeypatch):
+    rc, out = _drive(tmp_path, monkeypatch, "zero", "sdpa", write_rows=True, write_output=False)
+    assert rc == 3
+    assert run192.check_record(out / "load.json") == 3
+
+
+def test_screen_is_recorded_through_its_outputs_alone(tmp_path, monkeypatch):
+    rc, out = _drive(tmp_path, monkeypatch, "screen", "eager", write_rows=False, write_output=True)
+    assert rc == 0
+    record = json.loads((out / "load.json").read_text(encoding="utf-8"))
+    assert [entry["command"] for entry in record["loads"]] == ["screen"]
+    assert record["loads"][0]["rows_added"] == 0
+    assert record["loads"][0]["outputs_written"]
+
+
+def test_host_gate_requires_every_expected_stage(tmp_path, monkeypatch):
+    rc, out = _drive(tmp_path, monkeypatch, "reads", "eager", write_rows=True, write_output=False)
+    assert rc == 0
+    path = out / "load.json"
+    assert run192.check_record(path, ["reads"]) == 0
+    assert run192.check_record(path, ["reads", "screen", "zero", "push"]) == 3
+    assert run192.main(["--check-record", str(path), "--expect", "reads"]) == 0
+    assert run192.main(["--check-record", str(path), "--expect", "reads,zero"]) == 3

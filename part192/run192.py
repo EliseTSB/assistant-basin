@@ -93,8 +93,9 @@ def _kernels_from_record(record: dict) -> list[str | None]:
     return kernels
 
 
-def check_record(path: str | Path) -> int:
-    """Host-side gate. Return 0 only when the record is present and every load is eager."""
+def check_record(path: str | Path, expect: list[str] | None = None) -> int:
+    """Host-side gate. Return 0 only when the record is present, every load is eager, and every expected stage
+    (for example reads, screen, zero, push) has at least one recorded entry with a model load."""
     try:
         record = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
@@ -105,7 +106,14 @@ def check_record(path: str | Path) -> int:
         print("PART192 RECORD FAILED: load record is not an object", flush=True)
         return 3
     ok, why = check_kernels(_kernels_from_record(record))
-    print("PART192 record ok: all recorded model loads are eager" if ok else
+    if ok and expect:
+        seen = {entry.get("command") for entry in record.get("loads", [])
+                if isinstance(entry, dict) and entry.get("model_loads")}
+        missing = [command for command in expect if command not in seen]
+        if missing:
+            ok, why = False, f"no recorded entry for stage(s) {missing!r}"
+    print("PART192 record ok: all recorded model loads are eager" +
+          (f", stages present: {', '.join(expect)}" if expect else "") if ok else
           f"PART192 RECORD FAILED: {why}", flush=True)
     return 0 if ok else 3
 
@@ -137,10 +145,13 @@ def _load_record(path: Path) -> dict:
 def main(argv: list[str] | None = None, *, part39_module=None, loader=None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     if args and args[0] == "--check-record":
-        if len(args) != 2:
-            print("usage: run192.py --check-record <load.json>", file=sys.stderr)
+        expect = None
+        if len(args) == 4 and args[2] == "--expect":
+            expect = [command for command in args[3].split(",") if command]
+        elif len(args) != 2:
+            print("usage: run192.py --check-record <load.json> [--expect reads,screen,zero,push]", file=sys.stderr)
             return 2
-        return check_record(args[1])
+        return check_record(args[1], expect)
     if not args or args[0] not in RERUN_COMMANDS:
         print("usage: run192.py {reads,screen,zero,push} [Part 39 options]", file=sys.stderr)
         return 2
