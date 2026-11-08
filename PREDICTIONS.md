@@ -3542,3 +3542,16 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 194.8 | Claude (medium confidence): 24b.3 k=2 alien-content counts are 14-16 of 16 in none, identity-zeroed, and random-zeroed (published 15, 16, and 15). Reason: each arm has 16 fresh answers. | | |
 | 194.9 | Claude (medium confidence): 24b.4 at k=2, (b) is present in 6-12 of 16 answers in both none and random-zeroed arms (published 9 each); at k=0, 1, and 1.5 it is at most 2 of 16 in those arms. Reason: invented-name labels are sparse in small samples. | | |
 | 194.10 | Claude (medium confidence): The scorable published verdicts stay the same: 24.1 held, 24.2 held, 24.3 failed, 24.4 failed, 24.5 held, 24b.1 held, 24b.2 held, 24b.3 held, and 24b.4 failed. Reason: several verdicts use only 16 fresh answers per condition. | | |
+
+## Part 196 (registered 2026-11-08 04:52 CT, before any data; design PART196-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 196.1 | Claude (medium confidence): A, the single-label verdict, has four-speaker mean balanced accuracy at most 35%. Reason: Zero-shot style labels were weak in SLAP and Koduru et al. | | |
+| 196.2 | Claude (medium confidence): D, the final-embedding probe, has four-speaker mean balanced accuracy at least 70%. Reason: Other encoders reach 82 to 85%, but held-out speakers and shared texts make it harder. | | |
+| 196.3 | Claude (medium-low confidence): If D beats A (interval of D minus A above 0), B closes at least half of that gap; otherwise not applicable. Reason: Villuri et al. found calibration closed most of a probe gap. | | |
+| 196.4 | Claude (low-medium confidence): D minus B is at least 5 points of balanced accuracy with its 95% interval above 0 (outcome "gap supported" in the reading rules). Reason: The headline. | | |
+| 196.5 | Claude (medium-low. confidence): B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | | |
+| 196.6 | Claude (medium confidence): Whisper has the highest per-style recall under A, B and D. Reason: Whisper is acoustically the most distinct style. | | |
+| 196.7 | Claude (medium. confidence): H, the acoustic baseline, reaches at least 40% balanced accuracy. | | |
+| 196.8 | Claude (medium confidence): T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. Reason: the in-range text-first draw keeps every drawn (speaker, text) cluster in at least two styles. | | |
