@@ -1,0 +1,47 @@
+{
+  "part191": {
+    "reruns": "Part 153 battery",
+    "chunks": [
+      8,
+      8,
+      2,
+      2
+    ]
+  },
+  "loads": [
+    {
+      "load": {
+        "attn_implementation": "eager",
+        "attn_implementation_requested": "eager",
+        "dtype": "torch.bfloat16",
+        "device": "xpu",
+        "torch": "2.13.0+xpu",
+        "transformers": "5.13.0"
+      },
+      "chunks": [
+        8,
+        8,
+        2,
+        2
+      ],
+      "argv": [
+        "--device",
+        "xpu",
+        "--units",
+        "results\\part112\\units.json",
+        "--medians",
+        "results\\part112\\medians.json",
+        "--out",
+        "results\\part191\\answers.jsonl"
+      ],
+      "summary": {
+        "answers_written": 840,
+        "questions": 40,
+        "units": 10,
+        "dose": 0.8,
+        "batch_size": 20,
+        "seconds": 3940.6528025000007
+      }
+    }
+  ]
+}
