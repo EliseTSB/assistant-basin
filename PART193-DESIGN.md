@@ -52,9 +52,12 @@ does each statistic start finding the edit, if it does at all within the ladder?
 CPU only. Weights are read from safetensors in float32; no audio is run except in step 0.
 
 **Step 0, edits.** Run the published `weight_edit.py` unchanged in its fitting, with one added option that saves, for each
-arm, the changed tensors: W1's neuron index and its new gate row, up row and down column; W2's and W2-control's delta
-matrix for layer 20's `down_proj`. The copy runs from `part193/chicken_edit/` with data paths taken from arguments.
-Gate 1 checks the regenerated edits.
+arm, the changed tensors: W1's neuron index and its new gate row, up row and down column, plus the full captured matrix
+deltas for its gate, up and down projections; W2's and W2-control's delta matrix for layer 20's `down_proj`. The step-0
+results JSON also records each saved array's dtype, shape and sha256, including the settings and base-hash archive arrays,
+plus the Frobenius norm and sha256 of every delta.
+The copy runs from `part193/chicken_edit/` with data paths taken from arguments. Gate 1 checks the regenerated edits
+against both the live-patch differences and this independent JSON provenance.
 
 **Edited models.** W2 and W2c add t times the saved delta, t in {1/8, 1/2, 1, 2, 4, 8, 16, 32, 64}. W1 follows the
 script's own family: `weight_edit.py` replaces the neuron's up and gate rows outright and scales only its down column
@@ -77,6 +80,10 @@ ranked.
   siblings, excluding the matrix itself).
 - F2, rank-1 energy: sigma_1^2 / sum of sigma_i^2, as a robust z among siblings the same way.
 
+Sibling rank compares the candidate raw metric with the 23 siblings' raw metrics. This is the strict ordering induced
+by the same sibling-reference z transform and keeps every value on one reference set; equal values remain ties and are
+not found. The per-matrix baseline z scores remain leave-one-out scores for the null distribution.
+
 **Reference-free statistics, per neuron** (MLP only, neuron j of a layer): its gate-row norm, up-row norm, down-column
 norm, and the cosine of its gate row with its up row. Each feature is a robust z among the layer's neurons; the neuron's
 score F3 is the largest absolute z. A layer's F3 is its top neuron's score as a robust z among the 24 layers. The excess
@@ -89,7 +96,8 @@ for W1 at every dose (its value, its rank, and the top unedited neurons) and is 
 base is nonzero, and the rank of each nonzero difference. With this model's bf16 file there is no rounding background
 (pilot (d)), so with the base the edit is found exactly; R1 is used as Gate 3 and reported, not predicted. Localizing an
 edit among benign fine-tuning changes, the case the literature reports as hard, needs a fine-tuned checkpoint and is a
-later part.
+later part. R1 uses the saved difference's dtype epsilon times max(shape) times sigma1 as the rank tolerance before
+upcasting for SVD, and reports sigma2/sigma1 for each nonzero matrix difference.
 
 **Localization outcome.** For a matrix-level statistic, the edited matrix's rank among its siblings (1 = found) and among
 all ranked matrices. For F3, the edited neuron's rank among its layer's neurons and the edited layer's rank among the 24.
@@ -105,12 +113,15 @@ moves (pilot (a)); it is reported at every dose like the others.
   quantile 0.3, s = 0.025; W2: s = 0.15; W2c: s = 0.025), or, if it selects another setting whose fit AUC is within 0.0025
   of the published setting's (W2's top two are 0.00097 apart), the published setting is used and the near-tie is
   reported. The held-out AUCs at the published settings are within 0.0025 of 0.6775, 0.8125 and 0.6175 (one clip of 400
-  comparisons), the script's parity checks pass, and each saved tensor equals the in-place patched slice minus the
-  original bit for bit (the save reads the patched weights in place; it does not rebuild them). Fails if the fit is not
-  reproducible on this machine or the copy differs; the part then stops before any statistic is read.
-- Gate 2 (do-nothing edit): dose 0 gives every tensor bit-identical to the base, and R1 finds no changed matrix.
+  comparisons), the script's parity checks pass, every saved array matches its step-0 sha256, every delta has the
+  recorded nonzero Frobenius norm, and the captured slices and full W1 matrix deltas agree with the base. Fails if the
+  fit is not reproducible on this machine or the copy differs; the part then stops before any statistic is read.
+- Gate 2 (do-nothing edit): construct dose-zero candidates from the base plus zero times each saved W1, W2 and W2c
+  delta, compare those candidates bitwise with the corresponding base matrices, and confirm R1 finds no changed
+  matrix. The unedited tensors receive no write and are not loaded.
 - Gate 3 (the edit is where we think): at dose 1, R1 finds exactly layer 20's `down_proj` for W2 and W2c, and exactly
-  layer 20's `gate_proj`, `up_proj` and `down_proj` for W1 with one row, one row and one column changed.
+  layer 20's `gate_proj`, `up_proj` and `down_proj` for W1. Measured nonzero support is exactly row 1083 in gate and up
+  and column 1083 in down.
 - Gate 4 (wiring check): 24 synthetic rank-one edits whose sigma is twice the target matrix's own top singular value are
   each ranked first among their siblings by F1. That size must create a spike, so this checks only that F1, the sibling
   groups and the ranking are wired correctly; it cannot show that a statistic is good. The same 24 placements at 1.2
@@ -128,7 +139,7 @@ moves (pilot (a)); it is reported at every dose like the others.
 
 - Smallest effect worth knowing: whether each real edit is found (rank 1 among siblings) at its published strength, and
   the detection threshold within a factor of 4.
-- Total: 312 singular-value decompositions plus one regeneration run, about 35 minutes on the CPU. The regeneration is a
+- Total: 317 singular-value decompositions plus one regeneration run, about 35 minutes on the CPU. The regeneration is a
   rerun of the published script (1,896 s and 5.7 GiB peak in its log); the statistics cover the 216 ranked base matrices
   and only the changed matrices of each edited model (W2 and W2c at 9 doses; W1's up and gate rows once and its down
   column at 4 doses; 24 synthetic and 48 Gate 4 edits), no ranked matrix larger than 2048 by 512.
@@ -137,10 +148,12 @@ moves (pilot (a)); it is reported at every dose like the others.
 
 ## Optimization
 
-- Bound resource: CPU and RAM for step 0; the statistics are seconds each.
+- Bound resource: CPU and RAM for step 0; the statistics are seconds each. Steps 2 and 3 use a 1 GiB memory cap.
 - Measured: `weight_edit.py` handled 910 clips in 1,896 s (0.48 clips/s) with 5.7 GiB peak RSS in the published run; its
   replay of only layers 20 to 23 after one full pass is already taken. Float64 singular values of a random 2048 by 512
-  matrix: 20 in 2.92 s (about 0.15 s each) on this machine, 2026-11-08, so 312 take under a minute.
+  matrix: 20 in 2.92 s (about 0.15 s each) on this machine, 2026-11-08, so 317 take under a minute. The cold review
+  measured 481.3 MiB peak RSS after loading and cloning a 128 MiB tensor; the fixed analysis avoids that clone and scans
+  only the edited matrices for Gate 2.
 - Levers: recompute statistics only for the changed matrix of each edited model, taken (siblings reuse the base values);
   float64 SVD, taken for stable small singular values; step 0 run alone with nothing heavy beside it, taken; skipping the
   regeneration by reusing stored deltas, not available (none were stored).
@@ -191,4 +204,9 @@ moves (pilot (a)); it is reported at every dose like the others.
   is named (216 matrices) with the wider q and o layers stated; Gate 1 handles W2's near-tie and checks the saved
   tensors against the in-place patch; the threshold rule reports every dose and any dip. Measurements disclosed as pilot
   (e).
+- Cold review r3 (2026-11-08): fixed the step-0 import path; Gate 2 now constructs and compares dose-zero candidates
+  without loading the checkpoint's unrelated tensors; Gate 1 binds every saved array to step-0 sha256 and nonzero delta
+  norms; Gate 3 measures the full W1 row/column support; R1 uses saved-dtype tolerance and reports sigma2/sigma1; sibling
+  ranks compare raw values on one reference set. The design's gate, ranking and R1 descriptions and SVD count were updated
+  to match those code changes; predictions and tie rule are unchanged.
 - The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.

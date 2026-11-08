@@ -20,7 +20,9 @@ import torch
 from sentence_transformers import SentenceTransformer
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE))
+from edit_provenance import saved_edit_provenance  # noqa: E402
 import edit_arms as ea  # noqa: E402
 from gentle_gate import GRID as GENTLE_GRID  # noqa: E402
 from other_items import write_other_items_report  # noqa: E402
@@ -674,8 +676,10 @@ def main(argv=None):
 
     base_fit_real = np.stack([clips[i]["embedding"] for i in sets["fit_real"]])
     base_fit_imit = np.stack([clips[i]["embedding"] for i in sets["fit_imit"]])
-    original_up_row = mlp.up_proj.weight[neuron_j].detach().clone()
-    original_gate_row = mlp.gate_proj.weight[neuron_j].detach().clone()
+    original_up_full = mlp.up_proj.weight.detach().clone()
+    original_gate_full = mlp.gate_proj.weight.detach().clone()
+    original_up_row = original_up_full[neuron_j].detach().clone()
+    original_gate_row = original_gate_full[neuron_j].detach().clone()
     original_down_col = mlp.down_proj.weight[:, neuron_j].detach().clone()
     original_down = mlp.down_proj.weight.detach().clone()
     saved_edits = {}
@@ -701,6 +705,15 @@ def main(argv=None):
                     "w1_up_delta": (patched_up - original_up_row).cpu().numpy().copy(),
                     "w1_gate_delta": (patched_gate - original_gate_row).cpu().numpy().copy(),
                     "w1_down_delta": (patched_down - original_down_col).cpu().numpy().copy(),
+                    "w1_up_full_delta": (
+                        mlp.up_proj.weight.detach() - original_up_full
+                    ).cpu().numpy().copy(),
+                    "w1_gate_full_delta": (
+                        mlp.gate_proj.weight.detach() - original_gate_full
+                    ).cpu().numpy().copy(),
+                    "w1_down_full_delta": (
+                        mlp.down_proj.weight.detach() - original_down
+                    ).cpu().numpy().copy(),
                 })
             yield
         finally:
@@ -1149,6 +1162,21 @@ def main(argv=None):
             "held": bool(w2_control_result["test_auc"] < w2_result["test_auc"]),
         },
     }
+    settings = {
+        "W1": w1_result["fit"],
+        "W2": w2_best,
+        "W2_control": w2_control_best,
+        "near_tie_fallbacks": near_ties,
+    }
+    base_digest = None
+    if args.save_edits:
+        digest = hashlib.sha256()
+        with args.base_safetensors.open("rb") as stream:
+            for block in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(block)
+        base_digest = digest.hexdigest()
+        saved_edits["settings_json"] = np.asarray(json.dumps(settings, sort_keys=True))
+        saved_edits["base_sha256"] = np.asarray(base_digest)
     covariance_summary = {
         "positions": int(covariance_count),
         "subsampled": False,
@@ -1189,6 +1217,7 @@ def main(argv=None):
             "gentle_hook": gentle_other_result,
         },
         "verdicts": verdicts,
+        "saved_edit_provenance": saved_edit_provenance(saved_edits),
         "seconds": round(time.time() - started, 1),
         "peak_rss_gib": rss_gib(),
     }
@@ -1197,24 +1226,14 @@ def main(argv=None):
     if args.save_edits:
         missing = {"w1_neuron_j", "w1_up_row", "w1_gate_row", "w1_down_col",
                    "w1_up_delta", "w1_gate_delta", "w1_down_delta", "w2_delta",
-                   "w2_patched", "w2c_delta", "w2c_patched"} - set(saved_edits)
+                   "w1_up_full_delta", "w1_gate_full_delta", "w1_down_full_delta",
+                   "w2_patched", "w2c_delta", "w2c_patched", "settings_json",
+                   "base_sha256"} - set(saved_edits)
         if missing:
             raise RuntimeError(f"cannot save edits; live patch captures missing: {sorted(missing)}")
-        settings = {
-            "W1": w1_result["fit"],
-            "W2": w2_best,
-            "W2_control": w2_control_best,
-            "near_tie_fallbacks": near_ties,
-        }
-        digest = hashlib.sha256()
-        with args.base_safetensors.open("rb") as stream:
-            for block in iter(lambda: stream.read(1024 * 1024), b""):
-                digest.update(block)
-        saved_edits["settings_json"] = np.asarray(json.dumps(settings, sort_keys=True))
-        saved_edits["base_sha256"] = np.asarray(digest.hexdigest())
         args.save_edits.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(args.save_edits, **saved_edits)
-        log(f"saved in-place patch deltas to {args.save_edits}; base sha256={digest.hexdigest()}")
+        log(f"saved in-place patch deltas to {args.save_edits}; base sha256={base_digest}")
     log(f"VERDICTS {json.dumps(verdicts)}")
     log(f"DONE seconds={out['seconds']} peak_rss_gib={out['peak_rss_gib']:.2f}")
 

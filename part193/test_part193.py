@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sys
 from pathlib import Path
 
 import numpy as np
+import pytest
 from safetensors.numpy import save_file
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from edit_provenance import saved_edit_provenance
 import stats193 as s193
 
 
@@ -72,6 +76,42 @@ def test_r1_reports_only_nonzero_planted_differences():
     assert entries[0]["rank"] == 1
 
 
+def test_r1_rank_one_float32_uses_saved_dtype_tolerance_and_reports_ratio():
+    left = np.linspace(0.25, 3.0, 96, dtype=np.float32)
+    right = np.linspace(-2.0, 1.0, 128, dtype=np.float32)
+    delta = np.outer(left, right).astype(np.float32)
+    assert s193.matrix_rank_from_singular_values(delta) == 1
+    entry = s193.r1_entries({"rank-one-float32": delta})[0]
+    assert entry["rank"] == 1
+    assert entry["sigma2_over_sigma1"] < max(delta.shape) * np.finfo(delta.dtype).eps
+
+
+def test_dose_zero_candidate_preserves_checkpoint_bits():
+    base = np.asarray([-0.0, 1.25], dtype=np.float32)
+    candidate = s193.no_op_edit(base, np.asarray([2.0, -3.0], dtype=np.float32))
+    assert candidate.tobytes() == base.tobytes()
+    assert s193.arrays_bitwise_equal(candidate, base)
+    assert not s193.arrays_bitwise_equal(
+        np.asarray([-0.0], dtype=np.float32), np.asarray([0.0], dtype=np.float32)
+    )
+
+
+def test_sibling_rank_uses_candidate_and_siblings_on_one_reference_set():
+    records = [
+        {"key": "target", "layer": 0, "role": "role", "f1": 3.0,
+         "f1_z": 0.0, "f2_z": 0.0},
+        {"key": "peer-low", "layer": 1, "role": "role", "f1": 1.0,
+         "f1_z": 100.0, "f2_z": 0.0},
+        {"key": "peer-high", "layer": 2, "role": "role", "f1": 2.0,
+         "f1_z": 200.0, "f2_z": 0.0},
+    ]
+    result = s193._matrix_metric_result(
+        "target", {"f1": 4.0, "f2": 0.5, "sigma1": 10.0}, records, "f1"
+    )
+    assert result["sibling_rank"] == 1
+    assert result["found_among_siblings"] is True
+
+
 def test_synthetic_placements_are_seeded_and_reproducible():
     population = [
         {"key": f"matrix-{index}", "shape": [3 + index % 2, 4]}
@@ -129,6 +169,203 @@ def _tiny_safetensors(path: Path) -> None:
             )
     tensors["outside_embedding.weight"] = np.ones((5, 3), dtype=np.float32)
     save_file(tensors, str(path))
+
+
+def _gate_fixture(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, np.ndarray]]:
+    rng = np.random.default_rng(193)
+    tensors = {}
+    for layer in s193.LAYERS:
+        for role in s193.ROLES:
+            if role in {"mlp.gate_proj", "mlp.up_proj"}:
+                shape = (1084, 3) if layer == 20 else (4, 3)
+            elif role == "mlp.down_proj":
+                shape = (3, 1084) if layer == 20 else (3, 4)
+            else:
+                shape = (3, 3)
+            tensors[s193.weight_key(layer, role)] = rng.normal(size=shape).astype(np.float32)
+    tensors["language_model.embed_tokens.weight"] = rng.normal(size=(8, 4)).astype(np.float32)
+    base_path = tmp_path / "tiny-gates.safetensors"
+    save_file(tensors, str(base_path))
+
+    up_key = s193.weight_key(20, "mlp.up_proj")
+    gate_key = s193.weight_key(20, "mlp.gate_proj")
+    down_key = s193.weight_key(20, "mlp.down_proj")
+    neuron = 1083
+    up_row = rng.normal(size=3).astype(np.float32)
+    gate_row = rng.normal(size=3).astype(np.float32)
+    down_col = rng.normal(size=3).astype(np.float32)
+    up_delta = (up_row - tensors[up_key][neuron]).astype(np.float32)
+    gate_delta = (gate_row - tensors[gate_key][neuron]).astype(np.float32)
+    down_delta = (down_col - tensors[down_key][:, neuron]).astype(np.float32)
+    up_full = np.zeros_like(tensors[up_key]); up_full[neuron, :] = up_delta
+    gate_full = np.zeros_like(tensors[gate_key]); gate_full[neuron, :] = gate_delta
+    down_full = np.zeros_like(tensors[down_key]); down_full[:, neuron] = down_delta
+    w2_delta = (rng.normal(size=tensors[down_key].shape) * 0.02).astype(np.float32)
+    w2c_delta = (rng.normal(size=tensors[down_key].shape) * -0.03).astype(np.float32)
+    w2_patched = (tensors[down_key] + w2_delta).astype(np.float32)
+    w2c_patched = (tensors[down_key] + w2c_delta).astype(np.float32)
+    edits = {
+        "w1_neuron_j": np.asarray(neuron, dtype=np.int64),
+        "w1_up_row": up_row,
+        "w1_gate_row": gate_row,
+        "w1_down_col": down_col,
+        "w1_up_delta": up_delta,
+        "w1_gate_delta": gate_delta,
+        "w1_down_delta": down_delta,
+        "w1_up_full_delta": up_full,
+        "w1_gate_full_delta": gate_full,
+        "w1_down_full_delta": down_full,
+        "w2_delta": (w2_patched - tensors[down_key]).astype(np.float32),
+        "w2_patched": w2_patched,
+        "w2c_delta": (w2c_patched - tensors[down_key]).astype(np.float32),
+        "w2c_patched": w2c_patched,
+    }
+    settings = {
+        "W1": {"s": 0.025, "tau_quantile": 0.3},
+        "W2": {"s": 0.15},
+        "W2_control": {"s": 0.025},
+        "near_tie_fallbacks": {},
+    }
+    edits["settings_json"] = np.asarray(json.dumps(settings, sort_keys=True))
+    edits["base_sha256"] = np.asarray(hashlib.sha256(base_path.read_bytes()).hexdigest())
+    step0 = {
+        "parity": {
+            "weights_restored_bitwise": True,
+            "post_restore_worst_tail_cosine_to_stored": 0.999999,
+        },
+        "arms": {
+            "W1": {"test_auc": 0.6775},
+            "W2": {"test_auc": 0.8125},
+            "W2_control": {"test_auc": 0.6175},
+        },
+        "fit_selection": {
+            "W1": {"selected": {"s": 0.025, "tau_quantile": 0.3}},
+            "W2": {"selected": {"s": 0.15}},
+            "W2_control": {"selected": {"s": 0.025}},
+        },
+        "near_tie_fallbacks": {},
+        "saved_edit_provenance": saved_edit_provenance(edits),
+    }
+    step0_path = tmp_path / "step0.json"
+    step0_path.write_text(json.dumps(step0))
+    edits_path = tmp_path / "edits.npz"
+    np.savez_compressed(edits_path, **edits)
+    return base_path, step0_path, edits_path, edits
+
+
+def _copy_edits(edits: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    return {key: np.asarray(value).copy() for key, value in edits.items()}
+
+
+def _settings(edits: dict[str, np.ndarray]) -> dict[str, object]:
+    return json.loads(str(edits["settings_json"].item()))
+
+
+def test_gate_checks_provenance_zero_swapped_and_measured_support(tmp_path):
+    base_path, step0_path, _, edits = _gate_fixture(tmp_path)
+    settings = _settings(edits)
+
+    passed = s193.check_gate1(base_path, edits, settings, step0_path)
+    assert passed["passed"] is True
+    gate23 = s193.check_gate2_gate3(base_path, edits)
+    assert gate23["gate2"]["passed"] is True
+    assert gate23["gate2"]["r1_changed_matrices"] == {"W1": [], "W2": [], "W2_control": []}
+    assert gate23["gate3"]["passed"] is True
+
+    zero = _copy_edits(edits)
+    tensors = {}
+    with s193.safe_open(str(base_path), framework="np") as handle:
+        for key in (
+            s193.weight_key(20, "mlp.up_proj"),
+            s193.weight_key(20, "mlp.gate_proj"),
+            s193.weight_key(20, "mlp.down_proj"),
+        ):
+            tensors[key] = handle.get_tensor(key)
+    neuron = int(zero["w1_neuron_j"].item())
+    zero["w1_up_row"] = tensors[s193.weight_key(20, "mlp.up_proj")][neuron].copy()
+    zero["w1_gate_row"] = tensors[s193.weight_key(20, "mlp.gate_proj")][neuron].copy()
+    zero["w1_down_col"] = tensors[s193.weight_key(20, "mlp.down_proj")][:, neuron].copy()
+    for key in (
+        "w1_up_delta", "w1_gate_delta", "w1_down_delta",
+        "w1_up_full_delta", "w1_gate_full_delta", "w1_down_full_delta",
+        "w2_delta", "w2c_delta",
+    ):
+        zero[key] = np.zeros_like(zero[key])
+    zero["w2_patched"] = tensors[s193.weight_key(20, "mlp.down_proj")].copy()
+    zero["w2c_patched"] = tensors[s193.weight_key(20, "mlp.down_proj")].copy()
+    with pytest.raises(s193.GateFailure):
+        s193.check_gate1(base_path, zero, settings, step0_path)
+    with pytest.raises(s193.GateFailure):
+        s193.check_gate2_gate3(base_path, zero)
+
+    swapped = _copy_edits(edits)
+    swapped["w2_delta"], swapped["w2c_delta"] = swapped["w2c_delta"], swapped["w2_delta"]
+    swapped["w2_patched"], swapped["w2c_patched"] = swapped["w2c_patched"], swapped["w2_patched"]
+    with pytest.raises(s193.GateFailure, match="provenance sha256"):
+        s193.check_gate1(base_path, swapped, settings, step0_path)
+
+    dense = _copy_edits(edits)
+    rng = np.random.default_rng(99)
+    for key in ("w1_up_full_delta", "w1_gate_full_delta", "w1_down_full_delta"):
+        dense[key] = rng.normal(size=dense[key].shape).astype(np.float32)
+    with pytest.raises(s193.GateFailure, match="nonzero support"):
+        s193.check_gate2_gate3(base_path, dense)
+
+
+def test_gate2_reads_only_the_edit_target_tensors(tmp_path, monkeypatch):
+    base_path, _, _, edits = _gate_fixture(tmp_path)
+    original_safe_open = s193.safe_open
+    reads = []
+
+    class TrackedHandle:
+        def __init__(self, handle):
+            self.handle = handle
+
+        def __enter__(self):
+            self.handle.__enter__()
+            return self
+
+        def __exit__(self, *args):
+            return self.handle.__exit__(*args)
+
+        def get_tensor(self, key):
+            reads.append(key)
+            return self.handle.get_tensor(key)
+
+        def __getattr__(self, name):
+            return getattr(self.handle, name)
+
+    monkeypatch.setattr(
+        s193, "safe_open", lambda *args, **kwargs: TrackedHandle(original_safe_open(*args, **kwargs))
+    )
+    s193.check_gate2_gate3(base_path, edits)
+    expected = {
+        s193.weight_key(20, "mlp.up_proj"),
+        s193.weight_key(20, "mlp.gate_proj"),
+        s193.weight_key(20, "mlp.down_proj"),
+    }
+    assert set(reads) == expected
+    assert "language_model.embed_tokens.weight" not in reads
+
+
+def test_run_analysis_end_to_end_on_tiny_gate_fixture(tmp_path, monkeypatch):
+    base_path, step0_path, edits_path, edits = _gate_fixture(tmp_path)
+    # Use the exact captured array archive that Gate 1's JSON provenance describes.
+    np.savez_compressed(edits_path, **edits)
+    real_svd = np.linalg.svd
+    calls = {"count": 0}
+
+    def counted_svd(*args, **kwargs):
+        calls["count"] += 1
+        return real_svd(*args, **kwargs)
+
+    monkeypatch.setattr(np.linalg, "svd", counted_svd)
+    result = s193.run_analysis(base_path, edits_path, step0_path)
+    assert result["gates"]["gate1"]["passed"] is True
+    assert result["gates"]["gate2"]["passed"] is True
+    assert result["gates"]["gate3"]["passed"] is True
+    assert result["base"]["decoder_matrix_count"] == 216
+    assert result["computation"]["total_float64_svd_calls"] == calls["count"]
 
 
 def test_tiny_fake_safetensors_population_and_float64_statistics(tmp_path):

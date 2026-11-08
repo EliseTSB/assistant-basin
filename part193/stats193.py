@@ -12,6 +12,7 @@ import json
 import math
 import os
 from pathlib import Path
+import sys
 from typing import Any
 
 # Keep CPU linear algebra within a small, predictable thread footprint.
@@ -21,6 +22,13 @@ os.environ["MKL_NUM_THREADS"] = "1"
 
 import numpy as np
 from safetensors import safe_open
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from edit_provenance import (  # noqa: E402
+    ARRAY_KEYS_BY_ARM,
+    DELTA_KEYS_BY_ARM,
+    array_sha256,
+)
 
 
 LAYERS = tuple(range(24))
@@ -210,6 +218,16 @@ def tensor_float32(handle, key: str) -> np.ndarray:
     return tensor.to(dtype=torch.float32).cpu().numpy()
 
 
+def arrays_bitwise_equal(left: np.ndarray, right: np.ndarray) -> bool:
+    left_array = np.asarray(left)
+    right_array = np.asarray(right)
+    if left_array.shape != right_array.shape or left_array.dtype != right_array.dtype:
+        return False
+    left_bytes = np.ascontiguousarray(left_array).view(np.uint8)
+    right_bytes = np.ascontiguousarray(right_array).view(np.uint8)
+    return bool(np.array_equal(left_bytes, right_bytes))
+
+
 def attach_null_z(records: list[dict[str, Any]]) -> None:
     by_role = {role: [row for row in records if row["role"] == role] for role in ROLES}
     for metric in ("f1", "f2"):
@@ -363,9 +381,11 @@ def _matrix_metric_result(
     peers = [row for row in records
              if row["role"] == target["role"] and row["layer"] != target["layer"]]
     peer_raw = np.asarray([row[metric_name] for row in peers], dtype=np.float64)
-    peer_z = np.asarray([row[f"{metric_name}_z"] for row in peers], dtype=np.float64)
     score = robust_z(metrics[metric_name], peer_raw)
-    sibling = rank_value(score, peer_z)
+    # Every sibling and the candidate use the same reference distribution.
+    # The robust-z transform is monotone for that shared set, so ranking the
+    # raw metric directly preserves strict maxima and the existing tie rule.
+    sibling = rank_value(metrics[metric_name], peer_raw)
     global_rows = [row for row in records if row["key"] != key]
     global_scores = np.asarray([row[f"{metric_name}_z"] for row in global_rows], dtype=np.float64)
     global_rank = rank_value(score, global_scores)
@@ -385,17 +405,28 @@ def _matrix_metric_result(
     }
 
 
-def matrix_rank_from_singular_values(matrix: np.ndarray) -> int:
-    value = np.asarray(matrix, dtype=np.float64)
-    if value.ndim == 1:
-        return int(bool(np.any(value != 0.0)))
-    if value.ndim != 2:
-        raise ValueError(f"rank needs a vector or matrix, got shape {value.shape}")
+def _matrix_rank_details(matrix: np.ndarray) -> tuple[int, float]:
+    source = np.asarray(matrix)
+    if source.ndim == 1:
+        return int(bool(np.any(source != 0.0))), 0.0
+    if source.ndim != 2:
+        raise ValueError(f"rank needs a vector or matrix, got shape {source.shape}")
+    if np.issubdtype(source.dtype, np.floating):
+        source_epsilon = np.finfo(source.dtype).eps
+    else:
+        source_epsilon = np.finfo(np.float64).eps
+    value = np.asarray(source, dtype=np.float64)
     singular = np.linalg.svd(value, compute_uv=False)
     if singular.size == 0 or singular[0] == 0.0:
-        return 0
-    tolerance = max(matrix.shape) * np.finfo(np.float64).eps * float(singular[0])
-    return int(np.count_nonzero(singular > tolerance))
+        return 0, 0.0
+    tolerance = max(source.shape) * source_epsilon * float(singular[0])
+    rank = int(np.count_nonzero(singular > tolerance))
+    sigma2_over_sigma1 = float(singular[1] / singular[0]) if singular.size > 1 else 0.0
+    return rank, sigma2_over_sigma1
+
+
+def matrix_rank_from_singular_values(matrix: np.ndarray) -> int:
+    return _matrix_rank_details(matrix)[0]
 
 
 def r1_entries(differences: dict[str, np.ndarray]) -> list[dict[str, Any]]:
@@ -403,11 +434,13 @@ def r1_entries(differences: dict[str, np.ndarray]) -> list[dict[str, Any]]:
     for key, delta in sorted(differences.items()):
         value = np.asarray(delta)
         if np.any(value != 0):
+            rank, sigma2_over_sigma1 = _matrix_rank_details(value)
             entries.append({
                 "key": key,
-                "rank": matrix_rank_from_singular_values(value),
+                "rank": rank,
                 "shape": list(value.shape),
                 "nonzero_elements": int(np.count_nonzero(value)),
+                "sigma2_over_sigma1": sigma2_over_sigma1,
             })
     return entries
 
@@ -476,9 +509,17 @@ def rank_one_candidate(base: np.ndarray, placement: dict[str, Any], sigma: float
     return np.asarray(base, dtype=np.float64) + float(sigma) * np.outer(placement["u"], placement["v"])
 
 
-def no_op_edit(tensor: np.ndarray) -> np.ndarray:
-    """Materialize a do-nothing candidate while preserving every stored bit."""
-    return np.asarray(tensor).copy()
+def no_op_edit(tensor: np.ndarray, delta: np.ndarray) -> np.ndarray:
+    """Construct the dose-zero candidate from the base and a saved delta."""
+    base = np.asarray(tensor)
+    change = np.asarray(delta, dtype=base.dtype)
+    if base.shape != change.shape:
+        raise ValueError(f"no-op delta shape {change.shape} does not match base {base.shape}")
+    scaled_delta = np.asarray(0.0, dtype=base.dtype) * change
+    candidate = base + scaled_delta
+    # Preserve signed zeros from the checkpoint while retaining NaN detection
+    # if an invalid saved delta makes the scaled value non-finite.
+    return np.where(scaled_delta == 0, base, candidate)
 
 
 def candidate_f3(
@@ -525,6 +566,7 @@ def load_saved_edits(path: Path) -> tuple[dict[str, np.ndarray], dict[str, Any]]
     required = {
         "w1_neuron_j", "w1_up_row", "w1_gate_row", "w1_down_col",
         "w1_up_delta", "w1_gate_delta", "w1_down_delta",
+        "w1_up_full_delta", "w1_gate_full_delta", "w1_down_full_delta",
         "w2_delta", "w2_patched", "w2c_delta", "w2c_patched",
     }
     missing = sorted(required - set(edits))
@@ -565,19 +607,30 @@ def check_gate1(base_path: Path, edits: dict[str, np.ndarray], settings: dict[st
     with safe_open(str(base_path), framework="pt", device="cpu") as handle:
         neuron = int(np.asarray(edits["w1_neuron_j"]).item())
         w1_fields = (
-            ("mlp.up_proj", "w1_up_row", "w1_up_delta", "row"),
-            ("mlp.gate_proj", "w1_gate_row", "w1_gate_delta", "row"),
-            ("mlp.down_proj", "w1_down_col", "w1_down_delta", "column"),
+            ("mlp.up_proj", "w1_up_row", "w1_up_delta", "w1_up_full_delta", "row"),
+            ("mlp.gate_proj", "w1_gate_row", "w1_gate_delta", "w1_gate_full_delta", "row"),
+            ("mlp.down_proj", "w1_down_col", "w1_down_delta", "w1_down_full_delta", "column"),
         )
-        for role, patched_key, delta_key, axis in w1_fields:
+        for role, patched_key, delta_key, full_delta_key, axis in w1_fields:
             base = tensor_float32(handle, weight_key(20, role))
             base_slice = base[neuron, :] if axis == "row" else base[:, neuron]
             patched = np.asarray(edits.get(patched_key), dtype=np.float32)
             delta = np.asarray(edits.get(delta_key), dtype=np.float32)
+            full_delta = np.asarray(edits.get(full_delta_key), dtype=np.float32)
             if patched.shape != base_slice.shape or delta.shape != base_slice.shape:
                 failures.append(f"{patched_key} or {delta_key} has the wrong shape")
             elif not np.array_equal(np.subtract(patched, base_slice), delta):
                 failures.append(f"{delta_key} is not the in-place patched-minus-original slice")
+            if full_delta.shape != base.shape:
+                failures.append(f"{full_delta_key} has the wrong matrix shape")
+            elif delta.shape == base_slice.shape:
+                expected_full = np.zeros_like(base)
+                if axis == "row":
+                    expected_full[neuron, :] = delta
+                else:
+                    expected_full[:, neuron] = delta
+                if not np.array_equal(full_delta, expected_full):
+                    failures.append(f"{full_delta_key} does not match the captured one-slice change")
             del base
 
         base_down = tensor_float32(handle, weight_key(20, "mlp.down_proj"))
@@ -617,6 +670,40 @@ def check_gate1(base_path: Path, edits: dict[str, np.ndarray], settings: dict[st
     if step0.get("near_tie_fallbacks", {}) != settings.get("near_tie_fallbacks", {}):
         failures.append("near-tie fallback record disagrees between saved edits and step-0 results")
 
+    provenance = step0.get("saved_edit_provenance", {})
+    for arm, keys in ARRAY_KEYS_BY_ARM.items():
+        arm_provenance = provenance.get(arm, {}) if isinstance(provenance, dict) else {}
+        array_records = arm_provenance.get("arrays", {})
+        delta_records = arm_provenance.get("deltas", {})
+        for key in keys:
+            value = np.asarray(edits.get(key))
+            record = array_records.get(key, {}) if isinstance(array_records, dict) else {}
+            if record.get("sha256") != array_sha256(value):
+                failures.append(f"{arm} saved array {key} does not match step-0 provenance sha256")
+            if record.get("shape") != list(value.shape) or record.get("dtype") != value.dtype.str:
+                failures.append(f"{arm} saved array {key} shape or dtype does not match step-0 provenance")
+        for key in DELTA_KEYS_BY_ARM[arm]:
+            value = np.asarray(edits.get(key))
+            norm = float(np.linalg.norm(value.astype(np.float64)))
+            record = delta_records.get(key, {}) if isinstance(delta_records, dict) else {}
+            expected_norm = record.get("frobenius_norm")
+            if not isinstance(expected_norm, (int, float)) or not math.isfinite(float(expected_norm)):
+                failures.append(f"{arm} delta {key} has no finite step-0 Frobenius norm")
+            elif not math.isclose(norm, float(expected_norm), rel_tol=1e-12, abs_tol=0.0):
+                failures.append(f"{arm} delta {key} Frobenius norm disagrees with step-0 provenance")
+            if not math.isfinite(norm) or norm <= 0.0:
+                failures.append(f"{arm} delta {key} is zero or non-finite")
+            if record.get("sha256") != array_sha256(value):
+                failures.append(f"{arm} delta {key} does not match step-0 provenance sha256")
+    archive_records = provenance.get("archive_metadata", {}) if isinstance(provenance, dict) else {}
+    for key in ("settings_json", "base_sha256"):
+        value = np.asarray(edits.get(key))
+        record = archive_records.get(key, {}) if isinstance(archive_records, dict) else {}
+        if record.get("sha256") != array_sha256(value):
+            failures.append(f"saved archive metadata {key} does not match step-0 provenance sha256")
+        if record.get("shape") != list(value.shape) or record.get("dtype") != value.dtype.str:
+            failures.append(f"saved archive metadata {key} shape or dtype does not match step-0 provenance")
+
     if failures:
         raise GateFailure("Gate 1 failed: " + "; ".join(failures))
     return {
@@ -631,37 +718,47 @@ def check_gate1(base_path: Path, edits: dict[str, np.ndarray], settings: dict[st
 
 
 def check_gate2_gate3(base_path: Path, edits: dict[str, np.ndarray]) -> dict[str, Any]:
-    import torch
-
+    w1_keys = {
+        weight_key(20, "mlp.up_proj"): "w1_up_full_delta",
+        weight_key(20, "mlp.gate_proj"): "w1_gate_full_delta",
+        weight_key(20, "mlp.down_proj"): "w1_down_full_delta",
+    }
+    zero_targets = {
+        "W1": w1_keys,
+        "W2": {weight_key(20, "mlp.down_proj"): "w2_delta"},
+        "W2_control": {weight_key(20, "mlp.down_proj"): "w2c_delta"},
+    }
     matrix_shapes = {}
-    expected_w1 = {weight_key(20, role) for role in
-                   ("mlp.up_proj", "mlp.gate_proj", "mlp.down_proj")}
+    no_op_r1 = {}
     with safe_open(str(base_path), framework="pt", device="cpu") as handle:
-        for key in handle.keys():
-            original = handle.get_tensor(key)
-            candidate = original.clone()
-            if not torch.equal(original, candidate):
-                raise GateFailure(f"Gate 2 no-op changed tensor {key}")
-            if key in expected_w1:
-                matrix_shapes[key] = list(handle.get_slice(key).get_shape())
-            del original, candidate
-
-    no_op_r1 = r1_entries({
-        "noop": np.zeros(1, dtype=np.float64),
-    })
-    if no_op_r1:
-        raise GateFailure("Gate 2 R1 found a changed matrix in the no-op edit")
+        for arm, targets in zero_targets.items():
+            differences = {}
+            for key, delta_key in targets.items():
+                base = tensor_float32(handle, key)
+                matrix_shapes[key] = list(base.shape)
+                delta = np.asarray(edits[delta_key], dtype=np.float32)
+                if delta.shape != base.shape:
+                    raise GateFailure(
+                        f"Gate 2 {arm} dose-zero delta {delta_key} has the wrong shape"
+                    )
+                candidate = no_op_edit(base, delta)
+                if not arrays_bitwise_equal(candidate, base):
+                    raise GateFailure(f"Gate 2 {arm} dose 0 changed tensor {key}")
+                differences[key] = candidate - base
+                del base, delta, candidate
+            no_op_r1[arm] = r1_entries(differences)
+            if no_op_r1[arm]:
+                raise GateFailure(f"Gate 2 R1 found a changed matrix in {arm} dose 0")
 
     w1_differences = {
-        weight_key(20, "mlp.up_proj"): edits["w1_up_delta"],
-        weight_key(20, "mlp.gate_proj"): edits["w1_gate_delta"],
-        weight_key(20, "mlp.down_proj"): edits["w1_down_delta"],
+        weight_key(20, "mlp.up_proj"): edits["w1_up_full_delta"],
+        weight_key(20, "mlp.gate_proj"): edits["w1_gate_full_delta"],
+        weight_key(20, "mlp.down_proj"): edits["w1_down_full_delta"],
     }
     w2_differences = {weight_key(20, "mlp.down_proj"): edits["w2_delta"]}
     w2c_differences = {weight_key(20, "mlp.down_proj"): edits["w2c_delta"]}
     w1_r1, w2_r1, w2c_r1 = map(r1_entries, (w1_differences, w2_differences, w2c_differences))
-    expected_w1 = {weight_key(20, role) for role in
-                   ("mlp.up_proj", "mlp.gate_proj", "mlp.down_proj")}
+    expected_w1 = set(w1_keys)
     if {row["key"] for row in w1_r1} != expected_w1:
         raise GateFailure("Gate 3 W1 does not change exactly the gate/up/down matrices")
     expected_w2 = {weight_key(20, "mlp.down_proj")}
@@ -670,14 +767,27 @@ def check_gate2_gate3(base_path: Path, edits: dict[str, np.ndarray]) -> dict[str
     if any(not np.any(np.asarray(delta) != 0) for delta in w1_differences.values()):
         raise GateFailure("Gate 3 expected nonzero W1 row/column changes")
     neuron = int(np.asarray(edits["w1_neuron_j"]).item())
+    for key, delta in w1_differences.items():
+        delta = np.asarray(delta)
+        axis = 0 if key.endswith(("mlp.up_proj.weight", "mlp.gate_proj.weight")) else 1
+        support = np.flatnonzero(np.any(delta != 0, axis=1 if axis == 0 else 0))
+        if not np.array_equal(support, np.asarray([neuron])):
+            description = "row" if axis == 0 else "column"
+            raise GateFailure(
+                f"Gate 3 W1 {key} nonzero support is not exactly {description} {neuron}"
+            )
     for row in w1_r1:
         key = row["key"]
         row["matrix_shape"] = matrix_shapes[key]
         row["changed_axis"] = "column" if key.endswith("mlp.down_proj.weight") else "row"
         row["changed_index"] = neuron
     return {
-        "gate2": {"passed": True, "all_safetensors_tensors_bit_identical": True,
-                  "r1_changed_matrices": no_op_r1},
+        "gate2": {
+            "passed": True,
+            "all_safetensors_tensors_bit_identical": True,
+            "verified_edit_target_matrices": sorted(matrix_shapes),
+            "r1_changed_matrices": no_op_r1,
+        },
         "gate3": {"passed": True, "W1_R1": w1_r1, "W2_R1": w2_r1,
                   "W2_control_R1": w2c_r1,
                   "W1_changed_neuron": int(np.asarray(edits["w1_neuron_j"]).item())},
@@ -714,7 +824,7 @@ def _serialize_top_neurons(data: dict[str, Any], limit: int = 10) -> list[dict[s
     return rows
 
 
-def _run_w1(handle, records, neuron_data, edits):
+def _run_w1(handle, records, neuron_data, edits, r1_at_dose_one):
     neuron = int(np.asarray(edits["w1_neuron_j"]).item())
     gate_key = weight_key(20, "mlp.gate_proj")
     up_key = weight_key(20, "mlp.up_proj")
@@ -771,11 +881,7 @@ def _run_w1(handle, records, neuron_data, edits):
     thresholds["F3_layer"] = threshold_summary(
         [ladder[str(dose)]["F3"]["found_layer"] for dose in W1_DOSES], W1_DOSES
     )
-    r1 = r1_entries({
-        gate_key: edits["w1_gate_delta"],
-        up_key: edits["w1_up_delta"],
-        down_key: edits["w1_down_delta"],
-    })
+    r1 = r1_at_dose_one
     for row in r1:
         row["matrix_shape"] = {
             gate_key: list(base_gate.shape),
@@ -864,7 +970,9 @@ def run_analysis(base_path: Path, saved_edits_path: Path, step0_results_path: Pa
         matrix_records = base_matrix_statistics(handle, population)
         neuron_data = base_neuron_statistics(handle)
 
-        w1 = _run_w1(handle, matrix_records, neuron_data, edits)
+        w1 = _run_w1(
+            handle, matrix_records, neuron_data, edits, gate23["gate3"]["W1_R1"]
+        )
         down_key = weight_key(20, "mlp.down_proj")
         w2 = _run_w2(
             handle, matrix_records, edits, down_key, "w2_delta", W2_DOSES,
@@ -898,6 +1006,7 @@ def run_analysis(base_path: Path, saved_edits_path: Path, step0_results_path: Pa
         "F2": {"raw": row["f2"], "robust_z": row["f2_z"]},
     } for row in matrix_records]
     matrix_svd_count = 216 + 2 + len(W1_DOSES) + 2 * len(W2_DOSES) + 24 + 48
+    r1_svd_count = 5  # Three full W1 deltas plus W2 and W2-control.
     results = {
         "part": 193,
         "base": {
@@ -924,8 +1033,8 @@ def run_analysis(base_path: Path, saved_edits_path: Path, step0_results_path: Pa
         "synthetic_rank_one": synthetic,
         "computation": {
             "float64_svd_metric_count": matrix_svd_count,
-            "additional_float64_svd_for_r1_difference_ranks": 2,
-            "total_float64_svd_calls": matrix_svd_count + 2,
+            "additional_float64_svd_for_r1_difference_ranks": r1_svd_count,
+            "total_float64_svd_calls": matrix_svd_count + r1_svd_count,
             "svd_vectors": False,
             "matrix_population_recomputed_per_edit": False,
             "only_changed_matrices_recomputed_for_edit_ladders": True,
