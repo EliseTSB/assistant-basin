@@ -300,3 +300,4 @@ beyond one part.
   while the caller passed `pad_id=`, so both cases raised TypeError before either branch, and its fixture was already
   invalid before the fault. Before accepting a negative: start from a pre-fault fixture shown to pass, assert the
   intended cause (message, branch, artifact), and check that disabling the guarded transition breaks the negative.
+- 2026-11-08 (tools/register_public.py, Part 196). The merge-back restored a working PREDICTIONS.md that was a superset of the pushed copy but not of public main, which had gained Part 194's section after the branch was cut, so the section was dropped and the next push published the loss for about five minutes (7bab68d; restored 0441905). The tool now puts back every section main has and the working copy lacks, and stops on a missing front-page entry. Before any push of results, count the `## Part` headings against `git show origin/main:PREDICTIONS.md`.
