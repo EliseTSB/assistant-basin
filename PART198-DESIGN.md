@@ -65,6 +65,15 @@ value. A base-free check flags whatever ranks first, so in an unedited model eve
 question is how far above the rest it sits, which sets the size an edit must reach before its matrix, and not a natural
 one, is first.
 
+**Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
+(github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
+`sources/web-archives/2026-11-08-qwen08b-wsp-readme.md`) writes facts in closed form into Qwen3.5-0.8B's `mlp.down_proj`,
+layers 17 to 21, with MEMIT's update rule per answer token and a cap of 25% of each matrix's Frobenius norm
+(`wsp.py` line 223: `dW.norm() / W.norm()`). A Frobenius cap is not a spectral one: the matrix's Frobenius norm is several
+times its top singular value, so a capped write can still exceed it. Qwen3.5-0.8B is already on disk. If adopted, its code
+is read in full before it runs (an outside download), it runs on the CPU in its own environment, and the facts written are
+benign made-up ones in the README's own style. The same statistics are computed over Qwen3.5-0.8B's 24 `mlp.down_proj`.
+
 ## Controls
 
 - Do-nothing edit: the base saved through the same pipeline must give dW = 0 bit for bit and the base's ranks (item 3).
