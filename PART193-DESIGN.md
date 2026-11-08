@@ -40,8 +40,12 @@ does each statistic start finding the edit, if it does at all within the ladder?
   W1-like neuron scored 87.5, driven by its down-column norm; (c) a synthetic rank-one edit at twice the target's top
   singular value is ranked first by F1 in 24 of 24 placements; (d) because the file is bf16, a candidate saved in bf16
   from the promoted base is bit-identical to it on every unedited matrix, so the first draft's "bf16 rounding
-  background" does not exist for this model. The predictions below were written after this pilot and say where it
-  informs them.
+  background" does not exist for this model; (e) round 2 (same reviewer, same day) measured the per-neuron features
+  without kurtosis on layer 20: the top eight neurons already score 26 to 34 on down-column norm (neuron 1347, down norm
+  1.0795 against a median of 0.5082), and the published W1 edit makes neuron 1083's up row a unit vector and its gate
+  row norm 0.87 to 1.13, while the gate-up cosine cannot pass z of about 32. So the published W1 neuron can top that
+  score only if its down column is longer than every trained neuron's. The predictions below were written after this
+  pilot and say where it informs them.
 
 ## Method
 
@@ -52,16 +56,20 @@ arm, the changed tensors: W1's neuron index and its new gate row, up row and dow
 matrix for layer 20's `down_proj`. The copy runs from `part193/chicken_edit/` with data paths taken from arguments.
 Gate 1 checks the regenerated edits.
 
-**Edited models.** W2 and W2c add t times the saved delta, t in {1/8, 1/2, 1, 2, 4, 8, 16, 32, 64}. W1 moves the neuron's
-three vectors from their original values toward the saved ones by t, t in {1/2, 1, 2, 4} (t above 1 extrapolates). Dose
-0 is the base. The ladder runs far above the published strength because the pilot suggests the matrix statistics do not
+**Edited models.** W2 and W2c add t times the saved delta, t in {1/8, 1/2, 1, 2, 4, 8, 16, 32, 64}. W1 follows the
+script's own family: `weight_edit.py` replaces the neuron's up and gate rows outright and scales only its down column
+with the fitted strength, so W1 at dose t keeps the saved up and gate rows and multiplies the saved down column by t, t
+in {1/2, 1, 2, 4}. Only dose 1 is the published edit for either. Dose 0 is the base. The ladder runs far above the published strength because the pilot suggests the matrix statistics do not
 see W2 at it; the question becomes how many times stronger an edit of this shape must be before they do. Held-out family: 24 synthetic rank-one edits, placements seeded (20261108), each adding sigma u v^T to one
 language-model matrix chosen uniformly from the population below, u and v uniform random unit vectors, sigma equal to the
 Frobenius norm of W2's delta at dose 1. Synthetic edits are scored at dose 1 only.
 
-**Population.** Every two-dimensional weight inside the language model's 24 decoder layers, grouped by its parameter name
-within the layer (its role, for example `self_attn.q_proj` or `mlp.down_proj`). Siblings are the same role in the other 23
-layers. Matrices outside the decoder layers are recorded but not ranked.
+**Population.** Every two-dimensional weight inside the language model's 24 decoder layers: nine roles (`self_attn`
+q, k, v and o projections, `mlp` gate, up and down projections, and the two `ple_block` per-layer-embedding matrices),
+216 matrices in all. Siblings are the same role in the other 23 layers. In 4 of the 24 layers (5, 11, 17 and 23, the
+full-attention layers) `q_proj` and `o_proj` have twice the width; they stay in their role's sibling group, so those four
+layers are expected natural outliers on those two roles. Matrices outside the decoder layers are recorded but not
+ranked.
 
 **Reference-free statistics, per matrix** (singular values by full SVD in float64):
 
@@ -73,7 +81,9 @@ layers. Matrices outside the decoder layers are recorded but not ranked.
 norm, and the cosine of its gate row with its up row. Each feature is a robust z among the layer's neurons; the neuron's
 score F3 is the largest absolute z. A layer's F3 is its top neuron's score as a robust z among the 24 layers. The excess
 kurtosis of each vector is reported descriptively and kept out of F3, because trained neurons already carry kurtosis
-outliers that dominate any score that includes it (pilot (b)).
+outliers that dominate any score that includes it (pilot (b)). Natural down-column-norm outliers set a floor F3 the
+published W1 neuron cannot pass unless its down column is longer than any trained one (pilot (e)), so F3 is reported
+for W1 at every dose (its value, its rank, and the top unedited neurons) and is not the basis of a prediction.
 
 **Reference-based statistic** (the base is known, its sha256 checked): R1, the set of matrices whose difference from the
 base is nonzero, and the rank of each nonzero difference. With this model's bf16 file there is no rounding background
@@ -83,16 +93,20 @@ later part.
 
 **Localization outcome.** For a matrix-level statistic, the edited matrix's rank among its siblings (1 = found) and among
 all ranked matrices. For F3, the edited neuron's rank among its layer's neurons and the edited layer's rank among the 24.
-For each statistic and edit, the detection threshold is the smallest dose in the ladder at which the edited matrix (or
-neuron) ranks first, with every larger dose also ranking first, or "never" if no dose does. "Never" is a result and is
-reported as one. F2 of W plus t times a delta is not exactly invariant in t, but for a delta small next to W it barely
+For each statistic and edit, the full rank at every dose is reported, and the detection threshold is the smallest dose
+from which the edited matrix (or neuron) ranks first at every larger dose in the ladder, or "never" if the top dose does
+not rank first. Any dose that ranks first below the threshold, and any dip, is reported beside it. "Never" is a result and
+is reported as one. F2 of W plus t times a delta is not exactly invariant in t, but for a delta small next to W it barely
 moves (pilot (a)); it is reported at every dose like the others.
 
 ## Controls
 
-- Gate 1 (the edits are the published ones): the regenerated fit selects the same settings as the published one (W1:
-  neuron 1083, tau quantile 0.3, s = 0.025; W2 and W2c: their published s), the held-out AUCs are within 0.0025 of 0.6775,
-  0.8125 and 0.6175 (one clip of 400 comparisons), and the script's parity checks pass. Fails if the fit is not
+- Gate 1 (the edits are the published ones): the regenerated fit selects the published settings (W1: neuron 1083, tau
+  quantile 0.3, s = 0.025; W2: s = 0.15; W2c: s = 0.025), or, if it selects another setting whose fit AUC is within 0.0025
+  of the published setting's (W2's top two are 0.00097 apart), the published setting is used and the near-tie is
+  reported. The held-out AUCs at the published settings are within 0.0025 of 0.6775, 0.8125 and 0.6175 (one clip of 400
+  comparisons), the script's parity checks pass, and each saved tensor equals the in-place patched slice minus the
+  original bit for bit (the save reads the patched weights in place; it does not rebuild them). Fails if the fit is not
   reproducible on this machine or the copy differs; the part then stops before any statistic is read.
 - Gate 2 (do-nothing edit): dose 0 gives every tensor bit-identical to the base, and R1 finds no changed matrix.
 - Gate 3 (the edit is where we think): at dose 1, R1 finds exactly layer 20's `down_proj` for W2 and W2c, and exactly
@@ -114,10 +128,10 @@ moves (pilot (a)); it is reported at every dose like the others.
 
 - Smallest effect worth knowing: whether each real edit is found (rank 1 among siblings) at its published strength, and
   the detection threshold within a factor of 4.
-- Total: 270 singular-value decompositions plus one regeneration run, about 35 minutes on the CPU. The regeneration is a
-  rerun of the published script (1,896 s and 5.7 GiB peak in its log); the statistics cover the 168 ranked base matrices
-  and only the changed matrices of each edited model (W2 and W2c at 9 doses, W1's three matrices at 4 doses, 24 synthetic
-  and 48 Gate 4 edits), no ranked matrix larger than 2048 by 512.
+- Total: 312 singular-value decompositions plus one regeneration run, about 35 minutes on the CPU. The regeneration is a
+  rerun of the published script (1,896 s and 5.7 GiB peak in its log); the statistics cover the 216 ranked base matrices
+  and only the changed matrices of each edited model (W2 and W2c at 9 doses; W1's up and gate rows once and its down
+  column at 4 doses; 24 synthetic and 48 Gate 4 edits), no ranked matrix larger than 2048 by 512.
 - Pilot: the reviewer's measurements listed under existing data; no further pilot, since the statistics are deterministic
   and cheap. Step 0 runs first and Gate 1 stops the part if it fails.
 
@@ -126,7 +140,7 @@ moves (pilot (a)); it is reported at every dose like the others.
 - Bound resource: CPU and RAM for step 0; the statistics are seconds each.
 - Measured: `weight_edit.py` handled 910 clips in 1,896 s (0.48 clips/s) with 5.7 GiB peak RSS in the published run; its
   replay of only layers 20 to 23 after one full pass is already taken. Float64 singular values of a random 2048 by 512
-  matrix: 20 in 2.92 s (about 0.15 s each) on this machine, 2026-11-08, so 270 take under a minute.
+  matrix: 20 in 2.92 s (about 0.15 s each) on this machine, 2026-11-08, so 312 take under a minute.
 - Levers: recompute statistics only for the changed matrix of each edited model, taken (siblings reuse the base values);
   float64 SVD, taken for stable small singular values; step 0 run alone with nothing heavy beside it, taken; skipping the
   regeneration by reusing stored deltas, not available (none were stored).
@@ -136,16 +150,15 @@ moves (pilot (a)); it is reported at every dose like the others.
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
 | 193.1 | Without the base, F1's detection threshold for W2 (layer 20's `down_proj` first among the 24 `down_proj` matrices) is dose 8 or higher, or never within the ladder. | medium: the pilot reports W2-sized deltas leave the matrix statistics nearly unmoved up to dose 2. | Claude |
-| 193.2 | Without the base, F3 (norms and gate-up cosine) ranks the rewritten neuron 1083 first among layer 20's 2048 MLP neurons at dose 1. | medium-low: a synthetic W1-like neuron stood out on its down-column norm, but the real down column is scaled to a gentle push and could sit inside the normal range. | Claude |
-| 193.3 | F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. | medium-high: one neuron of 2048 barely moves a matrix's spectrum. | Claude |
-| 193.4 | F1 ranks a synthetic rank-one edit at W2's Frobenius norm (dose 1) first among its siblings in at most 4 of 24 placements. | medium: the pilot suggests an edit of this size is small next to the trained spectrum. | Claude |
-| 193.5 | W2's and W2c's F1 detection thresholds are within one ladder step of each other, both "never" counting as equal. | medium: the two deltas are rank one with similar norms and differ in the fitted key direction. | Claude |
+| 193.2 | F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. | medium-high: one neuron of 2048 barely moves a matrix's spectrum. | Claude |
+| 193.3 | F1 ranks a synthetic rank-one edit at W2's Frobenius norm (dose 1) first among its siblings in at most 4 of 24 placements. | medium: the pilot suggests an edit of this size is small next to the trained spectrum. | Claude |
+| 193.4 | W2's and W2c's F1 detection thresholds are within one ladder step of each other, both "never" counting as equal. | medium: the two deltas are rank one with similar norms and differ in the fitted key direction. | Claude |
 
 ## Reading rules
 
 - Gate 1 failing stops the part: no statistic is reported as being about the published edits.
 - The pilot looked at the unedited model; predictions it informs say so, and the write-up repeats the pilot numbers beside
-  the run's.
+  the run's. F3 for W1 is descriptive: a "not found" there reflects natural outliers the pilot measured, not the edit.
 - A prediction about dose 1 is read at dose 1 only; thresholds are reported from the whole ladder.
 - "First" means rank 1 with no tie; a tie counts as not found.
 - The headline is about localization at the published strength, then the threshold multiples. If the synthetic family
@@ -160,7 +173,9 @@ moves (pilot (a)); it is reported at every dose like the others.
   fine-tuning, is not tested here, and with the base available this model gives no background at all (pilot (d)).
 - Robust z among 23 siblings is a small sample; roles whose layers differ systematically (first and last layers) can
   produce natural outliers, which the null reports.
-- W1's dose ladder interpolates three vectors; it is not the same family as scaling a delta.
+- W1's ladder scales only the down column with the rows fixed at their saved values, as the script's own strength
+  setting does; it is not the same family as scaling W2's delta.
+- `q_proj` and `o_proj` are wider in four layers, which can make those layers natural outliers on those roles.
 - The regenerated edits depend on the published fitting being deterministic; Gate 1 checks this rather than assuming it.
 
 ## Changes before registration
@@ -171,4 +186,9 @@ moves (pilot (a)); it is reported at every dose like the others.
   tighter than one clip; the matched control had no reading for "neither found"; the test split had been scored before.
   All folded above; the ladder now runs to 64; kurtosis left F3; R2 was removed; the reviewer's measurements are
   disclosed as a pilot and the predictions rewritten after it.
+- Cold review r2 (DeepSeek V4.1 Flash, 2026-11-08): natural down-column-norm outliers still decided F3, so the W1
+  neuron prediction was dropped and F3 made descriptive; the W1 ladder now follows the script's family; the population
+  is named (216 matrices) with the wider q and o layers stated; Gate 1 handles W2's near-tie and checks the saved
+  tensors against the in-place patch; the threshold rule reports every dose and any dip. Measurements disclosed as pilot
+  (e).
 - The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.
