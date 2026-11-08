@@ -17,6 +17,7 @@ import sys
 import time
 import traceback
 import uuid
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +34,7 @@ WSP_SHA256 = "90184edf8f3e1ce7a25cb2697f4fe94f92befef1fbcbe64c29c3ac0b0ae65f81"
 GPT2_SHA256 = "0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a"
 QWEN35_SNAPSHOT = "2fc06364715b967f1860aea9cf38778875588b17"
 N_GPT2 = 48
+JSONL_RECOVERIES: list[dict[str, Any]] = []
 ARM_C_REVIEWER_MAX = {
     "EleutherAI/pythia-410m": (6.73, "ton"),
     "Qwen/Qwen3-0.6B": (10.33, " set"),
@@ -108,6 +110,12 @@ def safe_json(value: Any) -> Any:
 def append_jsonl(path: Path, record: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     line = json.dumps(safe_json(record), ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    if path.exists() and path.stat().st_size:
+        with path.open("rb+") as existing:
+            existing.seek(-1, os.SEEK_END)
+            if existing.read(1) != b"\n":
+                existing.seek(0, os.SEEK_END)
+                existing.write(b"\n")
     with path.open("a", encoding="utf-8") as f:
         f.write(line + "\n")
         f.flush()
@@ -118,17 +126,43 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
     rows = []
-    with path.open(encoding="utf-8") as f:
-        for number, raw in enumerate(f, 1):
-            if not raw.strip():
-                continue
-            try:
-                item = json.loads(raw)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"malformed JSONL at {path}:{number}: {exc}") from exc
-            if isinstance(item, dict):
-                rows.append(item)
+    data = path.read_bytes()
+    lines = data.splitlines(keepends=True)
+    complete_end = data.rfind(b"\n") + 1
+    for number, raw in enumerate(lines, 1):
+        torn_tail = number == len(lines) and not raw.endswith(b"\n")
+        try:
+            decoded = raw.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            if torn_tail:
+                _drop_torn_jsonl_tail(path, number, complete_end, len(raw), str(exc))
+                break
+            raise ValueError(f"malformed JSONL at {path}:{number}: {exc}") from exc
+        if not decoded.strip():
+            continue
+        try:
+            item = json.loads(decoded)
+        except json.JSONDecodeError as exc:
+            if torn_tail:
+                _drop_torn_jsonl_tail(path, number, complete_end, len(raw), str(exc))
+                break
+            raise ValueError(f"malformed JSONL at {path}:{number}: {exc}") from exc
+        if isinstance(item, dict):
+            rows.append(item)
     return rows
+
+
+def _drop_torn_jsonl_tail(path: Path, line_number: int, complete_end: int,
+                          dropped_bytes: int, reason: str) -> None:
+    with path.open("r+b") as f:
+        f.truncate(complete_end)
+        f.flush()
+        os.fsync(f.fileno())
+    event = {"path": str(path), "line": line_number, "dropped_bytes": dropped_bytes,
+             "reason": reason}
+    JSONL_RECOVERIES.append(event)
+    warnings.warn(f"dropped torn final JSONL line {line_number} from {path} ({dropped_bytes} bytes)",
+                  RuntimeWarning, stacklevel=2)
 
 
 def existing_keys(path: Path, field: str) -> set[str]:
@@ -156,6 +190,47 @@ def wsp_took(before_exact: int, after_exact: int, taught: int = 3) -> tuple[bool
     """Arm B transition: none taught exactly before, all taught exactly after."""
     already = before_exact > 0
     return before_exact == 0 and after_exact == taught, already
+
+
+def wsp_take_measurement(before_exact: int, after_exact: int, taught: int,
+                         free_exact_text: Any) -> dict[str, Any]:
+    """Use runner-measured answers for take and retain WSP's independent self-report."""
+    text = str(free_exact_text) if free_exact_text is not None else ""
+    try:
+        free_exact, free_total = (int(x) for x in text.split("/", 1))
+        if free_exact < 0 or free_total < 0:
+            raise ValueError("negative count")
+        parse_error = None
+    except (ValueError, TypeError):
+        free_exact, free_total = None, None
+        parse_error = "free_exact must be two nonnegative integers separated by '/'"
+    took, already = wsp_took(before_exact, after_exact, taught)
+    disagreement = (free_exact != after_exact or free_total != taught) if parse_error is None else None
+    return {"took": bool(took), "already_satisfied": bool(already),
+            "free_exact_text": text or None, "free_exact_count": free_exact,
+            "free_exact_total": free_total, "free_exact_disagreement": disagreement,
+            "free_exact_parse_error": parse_error}
+
+
+def arm_c_limit_reached(selected_count: int, limit: int | None) -> bool:
+    """Whether the requested number of new Arm C model loads has been reached."""
+    return limit is not None and selected_count >= limit
+
+
+def arm_c_successful_keys(path: Path) -> set[str]:
+    """Only successful registered Arm C rows satisfy a calibration/evaluation key."""
+    return {str(row["model_id"]) for row in read_jsonl(path)
+            if row.get("run_mode", "registered") == "registered"
+            and row.get("record_type") == "armC_model" and row.get("model_id") is not None}
+
+
+def require_tstar(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        raise RuntimeError(f"Arm C tstar.json is missing: {path}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict) or not isinstance(data.get("t_star"), (int, float)):
+        raise RuntimeError(f"Arm C tstar.json has no numeric t_star: {path}")
+    return data
 
 
 def mass_gate(took: list[bool], minimum: int = 8) -> bool:
@@ -201,6 +276,13 @@ def cp_interval(successes: int, n: int, confidence: float = 0.95) -> tuple[float
     if n <= 0 or successes < 0 or successes > n:
         return None
     alpha = 1.0 - confidence
+    try:
+        from scipy.stats import beta
+        lo = 0.0 if successes == 0 else float(beta.ppf(alpha / 2, successes, n - successes + 1))
+        hi = 1.0 if successes == n else float(beta.ppf(1 - alpha / 2, successes + 1, n - successes))
+        return lo, hi
+    except ImportError:
+        pass
 
     def pmf(i: int, p: float) -> float:
         if p <= 0.0:
@@ -221,10 +303,10 @@ def cp_interval(successes: int, n: int, confidence: float = 0.95) -> tuple[float
         a, b = 0.0, 1.0
         for _ in range(80):
             mid = (a + b) / 2
-            if ge(successes, mid) < alpha / 2:
-                b = mid
-            else:
+            if ge(successes, mid) > alpha / 2:
                 a = mid
+            else:
+                b = mid
         lo = (a + b) / 2
     if successes == n:
         hi = 1.0
@@ -327,11 +409,17 @@ def preflight(out_dir: Path) -> dict[str, Any]:
     if crosscheck.is_file():
         data = json.loads(crosscheck.read_text(encoding="utf-8"))
         fails = data.get("fails")
+        current_stats_sha256 = hash_file(HERE / "stats198.py")
+        stats_hash_matches = crosscheck_hash_matches(data, current_stats_sha256)
         results["crosscheck_pass"] = (isinstance(fails, list) and not fails
                                       and len(data.get("gpt2", {})) == 48
-                                      and len(data.get("qwen", {})) == 24)
+                                      and len(data.get("qwen", {})) == 24
+                                      and stats_hash_matches)
         results["details"]["crosscheck"] = {"path": str(crosscheck), "fails": fails or [],
-            "gpt2_layers": len(data.get("gpt2", {})), "qwen_layers": len(data.get("qwen", {}))}
+            "gpt2_layers": len(data.get("gpt2", {})), "qwen_layers": len(data.get("qwen", {})),
+            "stats198_sha256": data.get("stats198_sha256"),
+            "current_stats198_sha256": current_stats_sha256,
+            "stats_hash_matches": stats_hash_matches}
     else:
         results["details"]["crosscheck"] = {"path": str(crosscheck), "missing": True,
                                              "reason": "must be produced before reading registered outcomes"}
@@ -409,6 +497,31 @@ def hash_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def crosscheck_hash_matches(crosscheck: dict[str, Any], current_sha256: str) -> bool:
+    return crosscheck.get("stats198_sha256") == current_sha256
+
+
+def hash_input_hashes(hashes: dict[str, str]) -> str:
+    canonical = json.dumps(hashes, sort_keys=True, ensure_ascii=False,
+                           separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
+def gpt2_base_inputs_sha256() -> str:
+    """Fingerprint the frozen GPT-2 weights, tokenizer files, and statistics implementation."""
+    metadata_names = {"config.json", "generation_config.json", "tokenizer.json",
+                      "tokenizer_config.json", "special_tokens_map.json", "added_tokens.json",
+                      "vocab.json", "merges.txt", "vocab.txt", "tokenizer.model",
+                      "spiece.model", "sentencepiece.bpe.model", "chat_template.jinja"}
+    hashes = {"model:model.safetensors": GPT2_SHA256,
+              "code:stats198.py": hash_file(HERE / "stats198.py"),
+              "code:run198.py": hash_file(HERE / "run198.py")}
+    for path in sorted(GPT2.rglob("*")):
+        if path.is_file() and path.name in metadata_names:
+            hashes[f"tokenizer:{path.relative_to(GPT2)}"] = hash_file(path)
+    return hash_input_hashes(hashes)
+
+
 def weight_files(folder: Path) -> list[Path]:
     suffixes = {".safetensors", ".bin", ".pt", ".pth"}
     return sorted(p for p in folder.rglob("*") if p.is_file() and p.suffix in suffixes
@@ -456,6 +569,39 @@ def manifest_inputs() -> dict[str, Path]:
     if missing:
         raise FileNotFoundError("missing pinned inputs: " + "; ".join(missing))
     return inputs
+
+
+def tensor_fingerprint(tensor: Any) -> str:
+    """Hash a tensor's exact bytes without materializing a second whole-model copy."""
+    import torch
+    value = tensor.detach().cpu()
+    if not value.is_contiguous():
+        value = value.contiguous()
+    raw = value.view(torch.uint8).reshape(-1)
+    view = memoryview(raw.numpy())
+    h = hashlib.sha256()
+    h.update(f"{value.dtype}:{tuple(value.shape)}:".encode("ascii"))
+    chunk_size = 8 * 1024 * 1024
+    for start in range(0, len(view), chunk_size):
+        h.update(view[start:start + chunk_size])
+    return h.hexdigest()
+
+
+def model_state_snapshot(model) -> dict[str, str]:
+    """Keep a compact immutable fingerprint for every parameter and buffer."""
+    snapshot = {f"parameter:{name}": tensor_fingerprint(value)
+                for name, value in model.named_parameters()}
+    snapshot.update({f"buffer:{name}": tensor_fingerprint(value)
+                    for name, value in model.named_buffers()})
+    return snapshot
+
+
+def model_matches_snapshot(model, snapshot: dict[str, str]) -> bool:
+    current = {f"parameter:{name}": tensor_fingerprint(value)
+               for name, value in model.named_parameters()}
+    current.update({f"buffer:{name}": tensor_fingerprint(value)
+                    for name, value in model.named_buffers()})
+    return current == snapshot
 
 
 def write_manifest(out_dir: Path) -> dict[str, Any]:
@@ -617,13 +763,19 @@ def gpt2_geometry(model, tokenizer, S, compute_base: bool = True):
     return {"gain": gain, "centre": centre, "E": E, "base": base}
 
 
-def save_base(path: Path, model_id: str, base: dict[int, dict[str, Any]]) -> None:
+def save_base(path: Path, model_id: str, base: dict[int, dict[str, Any]],
+              inputs_sha256: str | None = None) -> None:
     data = {"model": model_id, "layers": {str(l): base[l] for l in sorted(base)}}
+    if inputs_sha256 is not None:
+        data["inputs_sha256"] = inputs_sha256
     path.write_text(json.dumps(safe_json(data), indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def load_base(path: Path) -> dict[int, dict[str, Any]]:
+def load_base(path: Path, expected_inputs_sha256: str | None = None) -> dict[int, dict[str, Any]]:
     raw = json.loads(path.read_text(encoding="utf-8"))
+    if expected_inputs_sha256 is not None and raw.get("inputs_sha256") != expected_inputs_sha256:
+        raise RuntimeError(f"base statistics input hash mismatch in {path}: "
+                           f"expected {expected_inputs_sha256}, got {raw.get('inputs_sha256')}")
     return {int(l): item for l, item in raw["layers"].items()}
 
 
@@ -683,15 +835,24 @@ def make_aimed_delta(rome_delta, E, gain, target_id):
     _, singular, Vh = torch.linalg.svd(D, full_matrices=False)
     spectral = singular[0]
     right = Vh[0]
-    output = gain.detach().double().cpu() * E[target_id].detach().double().cpu()
-    output = output - output.mean()
-    norm = output.norm()
-    if not float(norm) > 0:
-        return None, {"reason": "zero centred, gamma-scaled unembedding row"}
-    output = output / norm
+    output = aimed_output_direction(E, gain, target_id)
+    if output is None:
+        return None, {"reason": "zero gamma-scaled centred unembedding row"}
     return float(spectral) * torch.outer(output, right), {
         "input_right_direction_norm": float(right.norm()), "spectral_norm": float(spectral),
         "output_direction_norm": float(output.norm()), "target_token_id": int(target_id)}
+
+
+def aimed_output_direction(E, gain, target_id):
+    """Return unit gamma * (unembedding row - its mean), as specified for S1."""
+    import torch
+    row = E[target_id].detach().double().cpu()
+    centred = row - row.mean()
+    output = gain.detach().double().cpu() * centred
+    norm = output.norm()
+    if not float(norm) > 0:
+        return None
+    return output / norm
 
 
 def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
@@ -707,10 +868,11 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
     append_run_event(log, runmode, method, pending, rid)
     model, tok = load_gpt2_model()
     base_path = out_dir / "base-gpt2.json"
+    base_inputs_sha256 = gpt2_base_inputs_sha256()
     geometry = gpt2_geometry(model, tok, S, compute_base=not base_path.exists())
-    base = geometry["base"] if not base_path.exists() else load_base(base_path)
+    base = geometry["base"] if not base_path.exists() else load_base(base_path, base_inputs_sha256)
     if not base_path.exists():
-        save_base(base_path, "gpt2-xl", base)
+        save_base(base_path, "gpt2-xl", base, base_inputs_sha256)
     methods = load_easyedit()
     module = methods[method]
     clsname = {"ROME": "ROMEHyperParams", "MEMIT": "MEMITHyperParams",
@@ -720,6 +882,7 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
     hp = load_hparams(getattr(module, clsname), method, out_dir)
     apply = getattr(module, applyname)
     params = dict(model.named_parameters())
+    state_snapshot = model_state_snapshot(model)
     selected = pending if limit is None else pending[:limit]
     first_ref_path = out_dir / f"first-update-{method.lower()}-{runmode}.pt"
     first_reference = torch.load(first_ref_path, map_location="cpu", weights_only=True) if first_ref_path.exists() else None
@@ -828,8 +991,7 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
             with torch.no_grad():
                 for pname, w0 in orig.items():
                     params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-            restored = all(torch.equal(params[p].detach(), w0.to(device=params[p].device, dtype=params[p].dtype))
-                           for p, w0 in orig.items())
+            restored = model_matches_snapshot(model, state_snapshot)
             record["restored_bit_exact"] = bool(restored)
             append_jsonl(log, record)
             if not restored:
@@ -841,8 +1003,7 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
                     for pname, w0 in orig.items():
                         if pname in params:
                             params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-                restored_after_error = all(torch.equal(params[p].detach(),
-                    w0.to(device=params[p].device, dtype=params[p].dtype)) for p, w0 in orig.items())
+                restored_after_error = model_matches_snapshot(model, state_snapshot)
             except Exception:
                 restored_after_error = False
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
@@ -887,8 +1048,7 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
             with torch.no_grad():
                 for pname, w0 in verify_orig.items():
                     params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-            restored = all(torch.equal(params[p].detach(), w0.to(device=params[p].device, dtype=params[p].dtype))
-                           for p, w0 in verify_orig.items())
+            restored = model_matches_snapshot(model, state_snapshot)
             append_jsonl(log, {"record_type": "state_verification", "run_mode": runmode, "run_id": rid,
                                "timestamp": utc_now(), "method": method, "case_id": first_id,
                                "update_reproduced": bool(passed), "per_parameter": compares,
@@ -902,9 +1062,13 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
                             params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
             except Exception:
                 pass
+            try:
+                restored_after_error = model_matches_snapshot(model, state_snapshot)
+            except Exception:
+                restored_after_error = False
             append_jsonl(log, {"record_type": "state_verification", "run_mode": runmode, "run_id": rid,
                                "timestamp": utc_now(), "method": method, "case_id": first_id,
-                               "update_reproduced": False, "restored_bit_exact": False,
+                               "update_reproduced": False, "restored_bit_exact": bool(restored_after_error),
                                "possibly_state_contaminated": True, "error": f"{type(exc).__name__}: {exc}"})
     del model
     gc.collect()
@@ -923,15 +1087,17 @@ def run_arm_a_mass(method: str, limit: int | None, out_dir: Path) -> int:
     append_run_event(log, runmode, method, [f"{method}:{i}" for i, _ in todo], rid)
     model, tok = load_gpt2_model()
     base_path = out_dir / "base-gpt2.json"
+    base_inputs_sha256 = gpt2_base_inputs_sha256()
     geometry = gpt2_geometry(model, tok, S, compute_base=not base_path.exists())
-    base = geometry["base"] if not base_path.exists() else load_base(base_path)
+    base = geometry["base"] if not base_path.exists() else load_base(base_path, base_inputs_sha256)
     if not base_path.exists():
-        save_base(base_path, "gpt2-xl", base)
+        save_base(base_path, "gpt2-xl", base, base_inputs_sha256)
     module = load_easyedit()[method]
     clsname = {"MEMIT": "MEMITHyperParams", "AlphaEdit": "AlphaEditHyperParams"}[method]
     applyname = {"MEMIT": "apply_memit_to_model", "AlphaEdit": "apply_AlphaEdit_to_model"}[method]
     hp, apply = load_hparams(getattr(module, clsname), method, out_dir), getattr(module, applyname)
     params = dict(model.named_parameters())
+    state_snapshot = model_state_snapshot(model)
     for batch_idx, batch_ids in (todo if limit is None else todo[:limit]):
         orig = {}
         editor_started = False
@@ -990,8 +1156,7 @@ def run_arm_a_mass(method: str, limit: int | None, out_dir: Path) -> int:
             with torch.no_grad():
                 for pname, w0 in orig.items():
                     params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-            restored = all(torch.equal(params[p].detach(), w0.to(device=params[p].device, dtype=params[p].dtype))
-                           for p, w0 in orig.items())
+            restored = model_matches_snapshot(model, state_snapshot)
             batch_record["restored_bit_exact"] = bool(restored)
             append_jsonl(log, batch_record)
             if not restored:
@@ -1003,8 +1168,7 @@ def run_arm_a_mass(method: str, limit: int | None, out_dir: Path) -> int:
                     for pname, w0 in orig.items():
                         if pname in params:
                             params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-                restored_after_error = all(torch.equal(params[p].detach(),
-                    w0.to(device=params[p].device, dtype=params[p].dtype)) for p, w0 in orig.items())
+                restored_after_error = model_matches_snapshot(model, state_snapshot)
             except Exception:
                 restored_after_error = False
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
@@ -1087,12 +1251,9 @@ def run_arm_b(limit: int | None, out_dir: Path) -> int:
             teach = w.teach(asks, obj)
             after_answers = [w.answer(q, True, n=24) for q in asks]
             after_exact = sum(a.strip() == obj.strip() for a in after_answers)
-            free_exact_text = str(teach.get("free_exact", "0/0"))
-            try:
-                free_exact, free_total = map(int, free_exact_text.split("/", 1))
-            except (ValueError, TypeError):
-                free_exact, free_total = after_exact, len(asks)
-            took, already = wsp_took(before_exact, free_exact, len(asks))
+            take_measurement = wsp_take_measurement(before_exact, after_exact, len(asks),
+                                                     teach.get("free_exact"))
+            took, already = take_measurement["took"], take_measurement["already_satisfied"]
             heldout_after = w.answer(heldout, True, n=24)
             current, deltas = {}, {}
             for layer in edited_layers:
@@ -1121,8 +1282,12 @@ def run_arm_b(limit: int | None, out_dir: Path) -> int:
                 "subject": subj, "target_new": obj, "relation_id": rec["requested_rewrite"]["relation_id"],
                 "questions": asks, "heldout_question": heldout, "before_answers": before_answers,
                 "after_answers": after_answers, "heldout_before": heldout_before, "heldout_after": heldout_after,
-                "before_exact": before_exact, "after_exact": after_exact, "free_exact": free_exact_text,
-                "free_exact_count": free_exact, "free_exact_total": free_total, "teach": teach,
+                "before_exact": before_exact, "after_exact": after_exact,
+                "free_exact": take_measurement["free_exact_text"],
+                "free_exact_count": take_measurement["free_exact_count"],
+                "free_exact_total": take_measurement["free_exact_total"],
+                "free_exact_disagreement": take_measurement["free_exact_disagreement"],
+                "free_exact_parse_error": take_measurement["free_exact_parse_error"], "teach": teach,
                 "took": bool(took), "already_satisfied": bool(already),
                 "name_eligible": bool(targets["name_eligible"]), "target_ids": targets["target_ids"],
                 "eligible_target_ids": targets["eligible_target_ids"], "edited_layers": edited_layers,
@@ -1211,16 +1376,20 @@ def run_arm_b_seq(limit: int | None, out_dir: Path) -> int:
             before = [w.answer(q, False, n=24) for q in asks]
             before_exact = sum(a.strip() == obj.strip() for a in before)
             teach = w.teach(asks, obj)
-            try:
-                free_exact = int(str(teach.get("free_exact", "0/3")).split("/")[0])
-            except ValueError:
-                free_exact = 0
             after = [w.answer(q, True, n=24) for q in asks]
-            took, already = wsp_took(before_exact, free_exact, len(asks))
+            after_exact = sum(a.strip() == obj.strip() for a in after)
+            take_measurement = wsp_take_measurement(before_exact, after_exact, len(asks),
+                                                     teach.get("free_exact"))
+            took, already = take_measurement["took"], take_measurement["already_satisfied"]
             fact = {"case_id": int(case_id), "subject": subj, "target_new": obj,
                     "relation_id": rec["requested_rewrite"]["relation_id"], "asks": asks, "heldout": heldout,
                     "before_answers": before, "after_answers": after, "before_exact": before_exact,
-                    "free_exact": teach.get("free_exact"), "took": took, "already_satisfied": already,
+                    "after_exact": after_exact, "free_exact": take_measurement["free_exact_text"],
+                    "free_exact_count": take_measurement["free_exact_count"],
+                    "free_exact_total": take_measurement["free_exact_total"],
+                    "free_exact_disagreement": take_measurement["free_exact_disagreement"],
+                    "free_exact_parse_error": take_measurement["free_exact_parse_error"],
+                    "took": took, "already_satisfied": already,
                     "name_eligible": info["name_eligible"], "target_ids": info["target_ids"],
                     "eligible_target_ids": info["eligible_target_ids"]}
             all_facts.append(fact)
@@ -1244,7 +1413,11 @@ def run_arm_b_seq(limit: int | None, out_dir: Path) -> int:
                 "timestamp": utc_now(), "arm": "B-seq", "method": "wsp", "case_id": int(case_id),
                 "subject": subj, "target_new": obj, "took": bool(took),
                 "already_satisfied": bool(already), "name_eligible": bool(info["name_eligible"]),
-                "target_ids": info["target_ids"], "free_exact": teach.get("free_exact"),
+                "target_ids": info["target_ids"], "free_exact": take_measurement["free_exact_text"],
+                "after_exact": after_exact, "free_exact_count": take_measurement["free_exact_count"],
+                "free_exact_total": take_measurement["free_exact_total"],
+                "free_exact_disagreement": take_measurement["free_exact_disagreement"],
+                "free_exact_parse_error": take_measurement["free_exact_parse_error"],
                 "edited_layers": edited_layers,
                 "statistics_after_write": {str(l): current[l] for l in edited_layers},
                 "localization": localization(base, current, set(edited_layers), S),
@@ -1388,7 +1561,7 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
     S = stats_helpers()
     log = log_path_for("armC", None, out_dir)
     runmode, rid = ("smoke" if limit is not None else "registered"), run_id()
-    prior = existing_keys(log, "model_id")
+    prior = arm_c_successful_keys(log)
     pending = [m for m in ARM_C_MODELS if m["id"] not in prior]
     append_run_event(log, runmode, "armC", [m["id"] for m in pending], rid)
     selected_count = 0
@@ -1396,7 +1569,7 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
         model_id, role = item["id"], item["role"]
         if model_id in prior:
             continue
-        if limit is not None and selected_count >= limit:
+        if arm_c_limit_reached(selected_count, limit):
             break
         try:
             model, tokenizer, dtype = load_arm_c_pair(model_id, "stored")
@@ -1420,18 +1593,25 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
         selected_count += 1
     current = {r.get("model_id"): r for r in read_jsonl(log)
                if r.get("record_type") == "armC_model" and r.get("run_mode", "registered") == "registered"}
-    if not all(m["id"] in current for m in ARM_C_MODELS[:3]):
-        return 0
+    missing_calibration = [m["id"] for m in ARM_C_MODELS[:3] if m["id"] not in current]
+    if missing_calibration:
+        if arm_c_limit_reached(selected_count, limit):
+            return 0
+        raise RuntimeError("Arm C calibration rows are missing: " + ", ".join(missing_calibration))
     cal = {m["id"]: current[m["id"]]["max_t_word"] for m in ARM_C_MODELS[:3]}
+    if any(value is None for value in cal.values()):
+        raise RuntimeError("Arm C calibration produced a missing max_t_word")
     tstar = max(x for x in cal.values() if x is not None)
-    (out_dir / "tstar.json").write_text(json.dumps({"calibration_maxima": cal, "t_star": tstar,
+    tstar_path = out_dir / "tstar.json"
+    tstar_path.write_text(json.dumps({"calibration_maxima": cal, "t_star": tstar,
         "models": [m["id"] for m in ARM_C_MODELS[:3]], "created_utc": utc_now()},
         indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    require_tstar(tstar_path)
     for item in ARM_C_MODELS[3:]:
         model_id, role = item["id"], item["role"]
         if model_id in prior:
             continue
-        if limit is not None and selected_count >= limit:
+        if arm_c_limit_reached(selected_count, limit):
             break
         try:
             dtype = "float32" if role == "host" else "stored"

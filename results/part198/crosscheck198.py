@@ -4,7 +4,7 @@
       and Qwen3.5-0.8B (pilot/explore-tokens.json), to 0.01.
 It also writes both rules' T_max and T_word per base layer (comparability report). Output: crosscheck198.json.
 Run: python -I crosscheck198.py   (from results/part198, HF_HUB_OFFLINE=1)"""
-import json, sys
+import hashlib, json, sys
 from pathlib import Path
 
 import torch
@@ -13,6 +13,7 @@ from safetensors import safe_open
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import stats198 as S  # noqa: E402
+STATS_SHA256 = hashlib.sha256((HERE / "stats198.py").read_bytes()).hexdigest()
 
 GPT2 = Path("/mnt/e/neuron-probe/edit-detect/gpt2-xl")
 QWEN = "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17"
@@ -74,6 +75,7 @@ for l in range(len(layers)):
     print(f"qwen {l}", flush=True)
 
 out["fails"] = fails
+out["stats198_sha256"] = STATS_SHA256
 (HERE / "crosscheck198.json").write_text(json.dumps(out, indent=1))
 print("CROSSCHECK", "FAIL" if fails else "ALL PASS", fails[:10], flush=True)
 sys.exit(1 if fails else 0)

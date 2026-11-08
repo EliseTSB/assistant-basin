@@ -14,8 +14,8 @@ OUT_DEFAULT = HERE / "out"
 
 
 def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
-    """Return the latest registered record per case/batch/model key; smoke rows are excluded."""
-    latest = {}
+    """Keep the first registered terminal row; conflicting repeats make the stream unscorable."""
+    first = {}
     for row in R.read_jsonl(path):
         if row.get("run_mode", "registered") != "registered":
             continue
@@ -23,8 +23,18 @@ def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
             continue
         value = row.get(key)
         if value is not None:
-            latest[str(value)] = row
-    return list(latest.values())
+            identity = str(value)
+            if identity not in first:
+                first[identity] = row
+                continue
+            if _terminal_payload(first[identity]) != _terminal_payload(row):
+                raise ValueError(f"conflicting terminal rows for {key}={identity!r} in {path}: "
+                                 f"{first[identity].get('record_type')} then {row.get('record_type')}")
+    return list(first.values())
+
+
+def _terminal_payload(row: dict[str, Any]) -> dict[str, Any]:
+    return {k: v for k, v in row.items() if k not in {"run_id", "timestamp"}}
 
 
 def all_registered(path: Path) -> list[dict[str, Any]]:
@@ -141,12 +151,19 @@ def mass_forecast(label: str, rows: list[dict[str, Any]], stat: str, gate_ok: bo
     took_facts = sum(bool(f.get("took")) for f in facts)
     already = sum(bool(f.get("already_satisfied")) for f in facts)
     n = len(countable)
-    status = "NOT EVALUABLE" if not gate_ok or n == 0 else ("PASS" if successes == 0 else "FAIL")
+    status = "NOT EVALUABLE" if not gate_ok or not R.mass_gate_status(n) else (
+        "PASS" if successes == 0 else "FAIL")
     return {"forecast": label, "attempted": len(rows), "took": took_facts,
             "already_satisfied": already, "name_eligible": eligible, "counted_batches": n,
-            "successes": successes, "denominator_rule": "batches with at least 8 of 10 facts taking",
+            "successes": successes, "dropped_batches": len(batches) - len(countable),
+            "denominator_rule": "batches with at least 8 of 10 facts taking",
             "rate_denominator": n, "clopper_pearson_95": list(R.cp_interval(successes, n)) if n else None,
             "status": status}
+
+
+def final_sequence_row(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Select the sequence state with the most completed writes, independent of file order."""
+    return max(rows, key=lambda r: int(r.get("n_written_so_far", 0))) if rows else None
 
 
 def score_from_dir(out_dir: Path) -> dict[str, Any]:
@@ -188,22 +205,23 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
         update["loose_successes"] = sum(any(flag(v, "update_top_names_loose")
             for v in r.get("edited_layer_stats", {}).values()) for r in named_rows)
         out["forecasts"].extend([oracle, update])
-    # S1 is evaluated over every name-eligible ROME record; its control exists whether efficacy took or not.
+    # S1 is conditional on a took, name-eligible ROME record; missing controls remain failures.
     rome = files["armA-ROME"]
-    s1_rows = [r for r in rome if r.get("name_eligible") is True and "aimed_positive_control" in r]
+    s1_rows = [r for r in rome if r.get("took") is True and r.get("name_eligible") is True]
     s1_success = sum(flag(r, "aimed_positive_control", "oracle_named_strict") for r in s1_rows)
+    s1_missing_controls = sum(not isinstance(r.get("aimed_positive_control"), dict) for r in s1_rows)
     s1_status = ("NOT EVALUABLE" if not gate_ok else
                  ("PASS" if s1_success >= 20 else ("FAIL" if s1_rows else "NOT EVALUABLE")))
     out["sensitivity_checks"]["S1"] = {"attempted": len(rome),
         "took": sum(bool(r.get("took")) for r in rome),
         "already_satisfied": sum(bool(r.get("already_satisfied")) for r in rome),
-        "name_eligible": len(s1_rows), "successes": s1_success,
+        "name_eligible": len(s1_rows), "missing_controls": s1_missing_controls, "successes": s1_success,
         "clopper_pearson_95": list(R.cp_interval(s1_success, len(s1_rows))) if s1_rows else None,
         "threshold": 20, "status": s1_status}
     # S1 failure makes the 198.4 oracle result uninformative, so suppress its verdict.
     if s1_status != "PASS":
         for item in out["forecasts"]:
-            if item["forecast"].startswith("198.4 "):
+            if item["forecast"].startswith("198.4 ") and item["forecast"].endswith("oracle naming"):
                 item["status"] = "NOT EVALUABLE"
                 item["qualification"] = "S1 failed or is unevaluable; not informative about direction"
     for method in ("MEMIT", "AlphaEdit"):
@@ -253,9 +271,10 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
         "exact_mcnemar_two_sided_p": R.exact_mcnemar(real_only, control_only) if gate_ok and b else None}
     seq = files["armB-seq"]
     final_names = {}
-    if seq:
+    final_row = final_sequence_row(seq)
+    if final_row:
         final_names = {str(k): bool(v.get("named_strict"))
-                       for k, v in seq[-1].get("names_after_write", {}).items()}
+                       for k, v in final_row.get("names_after_write", {}).items()}
     eligible_seq_ids = {str(r["case_id"]) for r in seq if r.get("name_eligible")}
     seq_success = sum(final_names.get(cid, False) for cid in eligible_seq_ids)
     seq_n = len(eligible_seq_ids)
