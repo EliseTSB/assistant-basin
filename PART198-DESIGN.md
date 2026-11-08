@@ -77,8 +77,11 @@ is 0.9997 to 1.0064 times the base's (largest: AlphaEdit-b10, layer 17). Every F
 29 or 30) is the base rank of that layer's sigma1 among the other 47 (13.15, 12.82, 12.38, 11.38 and 10.26 for layers 13
 to 17; the largest sibling is layer 47 at 27.78). An update of half the host's sigma1 changes sigma1 by under 1% because
 its direction is close to orthogonal to the host's top singular direction. For F1 to rank an edited layer first, its
-sigma1 has to pass 27.78: with an update orthogonal to the host's top direction that needs a spectral norm of about
-1.86 to 2.52 times the host's sigma1 (layers 13 to 17). The largest ordinary update measured here is 0.518.
+sigma1 has to pass 27.78. Because sigma1(W + dW) is at most sigma1(W) + ||dW||_2, that needs a spectral norm of at least
+1.11 to 1.71 times the host's sigma1 (layers 13 to 17), reached only if the update points along the host's top direction.
+The pilot's updates do not (sigma1 moved under 1%); for an update whose input direction lies outside the host's row space
+and whose output is the host's top direction, the need is sqrt(27.78^2 - sigma1^2)/sigma1, 1.86 to 2.52, and any other
+output direction needs more. The largest ordinary update measured here is 0.518.
 
 **Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
 (github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
