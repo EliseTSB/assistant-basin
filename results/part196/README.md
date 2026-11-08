@@ -89,6 +89,15 @@ case for an edit. One untested follow-up hypothesis: an output edit of Part 190'
 the final-embedding probe is weak (Part 190's probe AUCs were 0.92 to 0.97 for real against imitation animal sounds),
 and a test would need to start from earlier layers.
 
+## Related work (added 2026-11-08 06:3x, after publication)
+
+The decay matches what was known for speech encoders: in wav2vec 2.0 the final layer is the worst for emotion and a
+middle layer the best ([arXiv:2210.02595](https://arxiv.org/abs/2210.02595)), and VoxParadox (Pang, Chaubey and
+Soleymani, ICML 2026, [arXiv:2605.27772](https://arxiv.org/abs/2605.27772)) reports paralinguistic cues weakening in
+deeper encoder layers of audio LLMs and fixes it with a prompt-conditioned layer mixer, the kind of routing the
+untested hypothesis above names. What Part 196 adds is the same shape in a text-aligned embedding model with no
+language model behind it, and the size of the gap against the model's own label verdict.
+
 ## Limits
 
 - Four speakers, acted read speech, one studio; seven performed styles. Not representative Expresso, and not
