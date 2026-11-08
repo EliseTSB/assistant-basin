@@ -7,9 +7,9 @@ python3 -I -B part192/run192.py --check-record results/part192/load.json --expec
 python3 -I -B part39_auc.py results/part192/reads-chat.npz --out results/part192/screen-auc-chat.json
 python3 -I -B part39_auc.py results/part192/reads-base.npz --out results/part192/screen-auc-base.json
 # After reviewing the read stage, run the remaining model work in order.
-python3 -I tools/launch_arc.py 192 --step "-I -B part192\\run192.py screen --device xpu --out results\\part192" --step "-I -B part192\\run192.py zero --device xpu --samples 8 --max-new-tokens 60 --out results\\part192" --step "-I -B part192\\run192.py push --device xpu --samples 8 --max-new-tokens 60 --out results\\part192" --copy circuit.py judge_client.py neuron_report.py part20.py part20c.py part20d.py part20f.py part24.py part25.py part26.py part27.py part39.py part192/__init__.py part192/run192.py data/part39-battery.json data/part39-persona.json
+python3 -I tools/launch_arc.py 192 --step "-I -B part192\\run192.py screen --screen-model chat --device xpu --out results\\part192" --step "-I -B part192\\run192.py screen --screen-model base --device xpu --out results\\part192" --step "-I -B part192\\run192.py zero --device xpu --samples 8 --max-new-tokens 60 --out results\\part192" --step "-I -B part192\\run192.py push --device xpu --samples 8 --max-new-tokens 60 --out results\\part192" --copy circuit.py judge_client.py neuron_report.py part20.py part20c.py part20d.py part20f.py part24.py part25.py part26.py part27.py part39.py part192/__init__.py part192/run192.py data/part39-battery.json data/part39-persona.json
 # Host side, after the device stages finish: copy the whole job-folder results\part192 back again (load.json has grown), check all
 # recorded loads, then score. score.json's screen block is EXPECTED to read broken (Part 39's raw screen, as published):
 # Section D is read only from the two screen-auc files above.
-python3 -I -B part192/run192.py --check-record results/part192/load.json --expect reads,screen,zero,push
+python3 -I -B part192/run192.py --check-record results/part192/load.json --expect reads,screen:chat,screen:base,zero,push
 python3 -I -B part39.py score --samples 8 --max-new-tokens 60 --out results/part192
