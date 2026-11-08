@@ -537,3 +537,27 @@ def test_cited_paths_ignores_a_quoted_answers_line_break_slashes():
     import part_check as pc
     text = "Quoted: `I can assist with: / / - **Aristoxim**` and the file `results/part117/score.json`."
     assert sorted(pc.cited_paths(text)) == ["results/part117/score.json"]
+
+
+def test_register_merge_back_keeps_a_section_main_gained_after_the_branch(tmp_path):
+    # 2026-11-08, Part 196's Amendment 3: main gained Part 194's section after the Part 196 branch was cut; the
+    # merge-back restored the branch's PREDICTIONS.md (a superset of the PUSHED copy, not of main) and dropped it.
+    remote, work = _reg_repo(tmp_path)
+    other = tmp_path / "other"
+    sh("git", "clone", "-q", str(remote), str(other), cwd=tmp_path)
+    for k, v in (("user.email", "t@example.com"), ("user.name", "t")):
+        sh("git", "config", k, v, cwd=other)
+    po = other / "PREDICTIONS.md"
+    po.write_text(po.read_text(encoding="utf-8") + "\n## Part 9 (registered z): later part\n\n| 9.1 | s | | |\n",
+                  encoding="utf-8")
+    sh("git", "commit", "-q", "-am", "register 9", cwd=other)
+    sh("git", "push", "-q", "origin", "HEAD:main", cwd=other)
+    p = work / "PREDICTIONS.md"
+    p.write_text(p.read_text(encoding="utf-8").replace("| 1.1 | p | | |", "| 1.1 | p | 0.4 | held |"), encoding="utf-8")
+    (work / "D2.md").write_text("design 2\n\n## Amendment 1\n", encoding="utf-8")
+    r = _register(work, "2", "D2.md")
+    assert r.returncode == 0, r.stderr
+    local = p.read_text(encoding="utf-8")
+    assert "## Part 9 (registered z)" in local and "| 9.1 | s | | |" in local
+    assert "| 1.1 | p | 0.4 | held |" in local          # the local verdicts still survive
+    assert local.index("## Part 2 (") < local.index("## Part 9 (")

@@ -1,0 +1,3 @@
+Running as unit: part197-analysis.scope; invocation ID: 2a362286b25e43c69455d7ded4e05d36
+{"largest_numeric_difference": 0.0, "path": "$.calibration_credit.B_minus_A.mean_balanced_accuracy_difference"}
+{"gate1": "passed", "gate2": "passed"}

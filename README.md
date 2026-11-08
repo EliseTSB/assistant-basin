@@ -16,8 +16,11 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > The 11 parts that used padded batches (157, 158, 159, 162, 171 to 176, and 178, already rerun) are at lower risk. Within a part every arm ran through the same kernel, so differences between arms may
 > hold up better than absolute rates, but that is not measured yet. Each affected part will get a dated note when it is
 > rerun or checked. Single forward passes (no generation) matched the reference at confident positions.
-> Rerun on the eager kernel so far, each published claim holding: Parts 25 and 66 (Part 183), 18 and 18b (Part 184), 84 and
-> 84b (Part 185), 79 (Part 186), 140 (Part 187).
+> Rerun on the eager kernel so far (updated 2026-11-08), each published claim holding: Parts 25 and 66 (Part 183), 18 and
+> 18b (Part 184), 84 and 84b (Part 185), 79 (Part 186), 140 (Part 187), 153 (Part 191) and 24 (Part 194). Not every
+> claim held in: Part 148 (Part 189b: five of six verdicts kept, 148.1 flipped), Part 39 (Part 192: every verdict kept,
+> but the 8 of 96 AI claims under the Sam persona were the kernel's; 0 of 96 on eager), and Part 81 (Part 195: the push
+> and every verdict kept, but the coherence counts behind "breaks the model" most likely were the kernel's).
 
 ## The short version
 
@@ -120,6 +123,8 @@ Lyra's "evil Qwen" recipe (L14 N8949 +1, L13 N7956 -1), rebuilt from the rule in
 **Holds on the eager kernel (Part 186, 2026-11-04):** rerun after Part 178's SDPA finding and read blind by new Haiku readers: villain 136 of 192 with the evil push (published 125) and 0 unchanged; with the maker neurons also zeroed, no answer names Google and none names a company (published 1), against 185 with the makers zeroed alone; Part 79's seven verdicts are the same on both kernels. [results/part186/README.md](results/part186/README.md)
 
 Her "conspiracy" recipe (L19 N7839 -0.7, L17 N9209 +0.5) also reproduced: blind reading found the conspiracy frame in 40 of 96 topic answers, and in none of 96 for each of three size-matched random pairs. It made ordinary topics conspiratorial almost as often as bait topics (18 against 22; unregistered Fisher p = .53), and a second blind reader, added later, agreed with the first on 99.4% of the conspiracy labels (kappa 0.95). Unlike the evil recipe, it broke the model about as often as the random pairs did (25 of 128 answers readable, against 17 to 34). [Part 81](#part-81-lyras-conspiracy-push-reproduces-and-is-specific-40-of-96-against-0-for-three-size-matched-controls-but-it-breaks-the-model-about-as-often-as-those-controls-do-2026-10-27)
+
+**On the eager kernel (Part 195, 2026-11-08):** the push and its specificity hold (39 of 96 against 0, 1 and 0 for the control pairs) and all six scorable verdicts are unchanged, but the breakage does not: pushed answers were readable in 121 of 128 (published 25), unchanged answers in 128 (111), and the control pairs in 86, 128 and 106 (17 to 34). With the same recipe, seeds and reader, the published readability counts most likely reflect the SDPA kernel. [Part 195](results/part195/README.md)
 
 ## Finding 5: Qwen3.5-4B answers differently for a text in its own turn, and switching off many attention heads shrinks the gap
 
@@ -535,6 +540,9 @@ push lands.** (24.1-24.7; results/part24/; score_part24.py recomputes every numb
 - Read together: the effects add in log-probability, but the identity neurons decide which slot the answer fills (who
   the model is, or who made it), and the alien push fills whichever slot is open. Two questions, eight samples each,
   counted by hand, is a small sample.
+- [Part 194](results/part194/README.md) reran it on the eager attention kernel: the fixed-answer numbers move by at most
+  0.018, the fresh blind-read counts by at most one answer in 16 (24b.2's small denominator aside), and every scorable
+  verdict is the same. 24.6 and 24.7 (hand labels) were not re-scored.
 
 **Qwen3.5-4B: identity neurons found by their effect, and how they connect.** (19.1-19.6; results/part19/; Elise asked
 for this.) A gradient screen over all 294,912 neurons ranks how much zeroing each would change the log-probability of
@@ -2190,6 +2198,8 @@ numbers; the per-order decoy pulls and option shares above were computed from `r
 
 ### Part 81: Lyra's conspiracy push reproduces and is specific (40 of 96 against 0 for three size-matched controls), but it breaks the model about as often as those controls do (2026-10-27)
 
+**Update (2026-11-08):** [Part 195](results/part195/README.md) reran this on the eager attention kernel. The conspiracy counts and all six verdicts hold; the coherence counts below do not (pushed answers readable in 121 of 128 on eager, not 25), so the "breaks the model" half of this heading most likely reflects the SDPA kernel.
+
 Part 79 replicated Lyra's first Qwen3.5-4B recipe ("evil Qwen") with size-matched random controls. Part 81 runs her
 second, "conspiracy" (@_lyraaaa_, 2026-10-25, x.com/_lyraaaa_/status/2114211026703102009): L19 N7839 pushed -0.7 and
 L17 N9209 pushed +0.5. Her methods notes (`explorer/agent_methodology.md` in lyramakesmusic/neuron-explorer, read
@@ -2748,6 +2758,14 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 191](results/part191/README.md)**, 2026-11-08. Does Part 153's result hold on the eager attention kernel? Yes. The same ten company neurons, battery and scorer on eager (Part 178 found the default SDPA kernel leaving the CPU reference after about 64 keys): 7 of 10 neurons hit their company on at least 12 of 24 maker phrasings (7 on SDPA), mean hit rate 0.596 against 0.113 for paired random directions (0.629 against 0.113), L24 N5017 names Google on 17 of 24 maker and 7 of 8 identity phrasings (20 and 7). All six predictions held and Part 153's four verdicts are unchanged. Descriptive: the SDPA answers were cut short (median 60 tokens against 82; 27% of them end mid-phrase against 0.3% on eager); the counts held because the company is named in the first sentence, where the kernels usually agree. One answer per phrasing, one dose.
 
 **[Part 192](results/part192/README.md)**, 2026-11-08. Do Part 39's results on Qwen3.5-4B L6 N753 hold on the eager attention kernel? The verdicts do, the push result does not. Plain and template reads, zeroing (48 and 46 of 48 AI claims) and the section D screen (213 chat and 203 base passing units, N753 at AUC 0.92 in both, strict set 56, 43 and 27 shared) reproduce closely, and all ten scorable Part 39 verdicts are unchanged. Under the Sam persona, pushing N753 at 2x gives 0 of 96 AI claims, not the published 8 of 96 (192.6 failed). With the same seeds on every row, each of the nine published claims' answers begins with the same words on eager and then stays in persona, and no new claim appears in 408 rows; several published claims were degraded text. So that number measured the faulty kernel. One persona, one dose ladder, 96 samples per dose. 8 of 9 predictions held. Also corrected: Part 39's 39.8 row said 147 passing units sit in layers 19 to 31; its own file gives 177.
+
+**[Part 194](results/part194/README.md)**, 2026-11-08. Does Part 24 hold on the eager attention kernel? Yes. With the same units, prompts, doses and seeds, the alien neuron's reach (0.0 at or below its layer), the late-layer change (identity 0.482 against random 0.805), the fixed-answer effects (3.149, 3.085 and 3.150 at 2x) and the extra " Alibaba Cloud." drop (0.165) sit within 0.018 of the published values. Part 24b's unchanged blind reader on 192 fresh answers gives 12 of 16 invented alien-named makers with identity units zeroed at 2x (13 published) and 15, 16 and 16 alien answers at 2x (15, 16, 15). All ten predictions held and every scorable verdict is unchanged; 24.6 and 24.7 used hand labels and were not re-scored.
+
+**[Part 196](results/part196/README.md)**, 2026-11-08. How well do EmbeddingGemma 2's readouts name seven acted speaking styles in Expresso, on four held-out speakers? A probe on the first layer's mean MLP input reads style at 62.7% balanced accuracy (chance 14.3%), above seven acoustic features (51.8%); a probe on the final embedding reads 25.8%, and the model's own label verdict is at chance (15.1%, 17.2% calibrated). The layer curve falls steadily from layer 0 to about 30% at the last layers. The registered headline holds as "gap supported" (final-embedding probe 8.6 points above the calibrated verdict, 7.0 to 10.4), and four of eight predictions held; the 70% forecast for the final-embedding probe failed badly. A transcript-only readout is near chance (14.7%). Readouts, not use; no edit tested.
+
+**[Part 195](results/part195/README.md)**, 2026-11-08. Does Part 81's conspiracy push hold on the eager attention kernel? The push does: 39 of 96 topic answers conspiratorial (published 40) against 0, 1 and 0 for the control pairs, calibration identical to the published precision, and all six Part 81 verdicts unchanged. The breakage does not: pushed answers are coherent in 121 of 128 (published 25) and unchanged ones in 128 (111); Part 81's two readers on the same text disagreed on coherence for 11% of answers, so a fresh reader does not account for it, and the published counts most likely reflect the SDPA kernel. Four of six predictions held; both coherence predictions failed.
+
+**[Part 197](results/part197/README.md)**, 2026-11-08. Is EmbeddingGemma 2's layer-0 style readout more than simple acoustics and clip length? Within a fixed linear probe, adding layer 0 to eight nuisance features (seven acoustic plus duration, 53.3%) reads style at 63.7%, a paired gain of 10.4 points (8.6 to 12.4); after subtracting what those features linearly predict, layer 0 still reads 46.0% (chance 14.3%). The held-out layer curve peaks at layer 0 and falls to about 31% by the last layers, and speaker identity fades the same way (63.1% at layer 0, 33.3% at the final embedding, chance 25%). Five of six predictions held; the speaker forecast (80% at layer 0) failed. Readouts on Part 196's recordings, not use; no model run.
 
 ### Running or designed (2026-10-21)
 

@@ -18,6 +18,7 @@ Needs SSL_CERT_FILE and GIT_SSL_CAINFO pointed at the mitm bundle on this host. 
 """
 import argparse
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -142,7 +143,56 @@ def main():
     finally:
         if saved is not None:
             Path("PREDICTIONS.md").write_text(saved, encoding="utf-8")
+    # (8) 2026-11-08, Part 196's Amendment 3: the restored working PREDICTIONS.md is a superset of the PUSHED copy but
+    # not of origin/main when main gained another part's section after this branch was cut (Part 194's), so the
+    # restore dropped that section, and the next push of the branch published the loss (7bab68d; restored 0441905).
+    # Every part section on origin/main that the working copy lacks is now put back in main's order, and a missing
+    # front-page entry in README.md stops the script by name.
+    readded = _restore_main_sections(commit)
+    lost = _missing_front_page_entries(commit)
+    if readded:
+        print(f"re-added from public main to the working PREDICTIONS.md (commit it with your next change): {readded}")
+    if lost:
+        raise SystemExit(f"pushed {commit[:12]} and merged back, but README.md lacks public main's entries for {lost}; "
+                         "copy them from origin/main before any push")
     print(f"registered Part {a.part}: public main {commit[:12]} (base {base[:12]}); merged back")
+
+
+_PART_HEAD = re.compile(r"^## Part (\S+) \(", re.M)
+
+
+def _restore_main_sections(ref):
+    """Insert into the working PREDICTIONS.md every "## Part N (" section that ref has and it lacks."""
+    remote = git_bytes("show", f"{ref}:PREDICTIONS.md").decode("utf-8")
+    path = Path("PREDICTIONS.md")
+    local = path.read_text(encoding="utf-8")
+    order = _PART_HEAD.findall(remote)
+    missing = [n for n in order if n not in set(_PART_HEAD.findall(local))]
+    for n in missing:
+        m = re.search(rf"^## Part {re.escape(n)} \(", remote, re.M)
+        nxt = remote.find("\n## Part ", m.start() + 1)
+        section = remote[m.start():(len(remote) if nxt < 0 else nxt + 1)]
+        if not section.endswith("\n"):
+            section += "\n"
+        later = [k for k in order[order.index(n) + 1:] if re.search(rf"^## Part {re.escape(k)} \(", local, re.M)]
+        if later:
+            at = re.search(rf"^## Part {re.escape(later[0])} \(", local, re.M).start()
+            local = local[:at] + section + "\n" + local[at:]
+        else:
+            local = local.rstrip("\n") + "\n\n" + section
+    if missing:
+        path.write_text(local, encoding="utf-8")
+    return missing
+
+
+def _missing_front_page_entries(ref):
+    try:
+        remote = git_bytes("show", f"{ref}:README.md").decode("utf-8")
+    except subprocess.CalledProcessError:
+        return []
+    local = Path("README.md").read_text(encoding="utf-8") if Path("README.md").exists() else ""
+    entry = re.compile(r"^\*\*\[Part (\S+)\]", re.M)
+    return sorted(set(entry.findall(remote)) - set(entry.findall(local)))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,16 @@
+24b.1 identity k=2 with (b): 12/16 (published 13/16)  -> held
+194.7 24b.2 identity k=1.5 (a)-only share among alien: 0.571 (4/7; published 6/8)
+24b.2 identity k=1.5, (a) only among alien: 4/7 (published 6/8)  -> held
+24b.3 k=2 (a or b), none/identity/random: {'none': 15, 'identity-50': 16, 'random-50': 16} (published {'none': 15, 'identity-50': 16, 'random-50': 15})  -> held
+194.9 24b.4 (b) counts for none/random at k=0,1,1.5,2: none=['0/16', '0/16', '0/16', '9/16']; random=['0/16', '0/16', '0/16', '8/16']; published none=['0/16', '0/16', '0/16', '9/16']; random=['0/16', '0/16', '0/16', '9/16']
+24b.4 (b), none k=0: 0/16 (published 0/16)
+24b.4 (b), none k=1: 0/16 (published 0/16)
+24b.4 (b), none k=1.5: 0/16 (published 0/16)
+24b.4 (b), none k=2: 9/16 (published 9/16)
+24b.4 (b), random-50 k=0: 0/16 (published 0/16)
+24b.4 (b), random-50 k=1: 0/16 (published 0/16)
+24b.4 (b), random-50 k=1.5: 0/16 (published 0/16)
+24b.4 (b), random-50 k=2: 8/16 (published 9/16)
+24b.4 (b) at most 2/16 in none/random at every k  -> failed
+194.9 (b): k=2 none/random in 6-12/16: 9/16 and 8/16 (held); k=0,1,1.5 none/random at most 2/16: 0/16,0/16,0/16; 0/16,0/16,0/16 (held) -> held
+Published hand-label agreement (187/192) is not recalculated: the rerun uses fresh answers.

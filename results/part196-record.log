@@ -1,0 +1,57 @@
+Running as unit: part196-record.scope; invocation ID: 285195a481bd4a1c8fbab75bc975baa2
+Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]Loading weights:   6%|▌         | 65/1165 [00:00<00:02, 549.92it/s]Loading weights:  14%|█▎        | 158/1165 [00:00<00:01, 743.29it/s]Loading weights:  21%|██        | 243/1165 [00:00<00:01, 757.30it/s]Loading weights:  27%|██▋       | 320/1165 [00:00<00:01, 684.55it/s]Loading weights:  35%|███▍      | 406/1165 [00:00<00:01, 724.53it/s]Loading weights:  42%|████▏     | 491/1165 [00:00<00:00, 761.90it/s]Loading weights:  49%|████▉     | 569/1165 [00:00<00:00, 696.47it/s]Loading weights:  56%|█████▌    | 649/1165 [00:00<00:00, 722.13it/s]Loading weights:  62%|██████▏   | 725/1165 [00:01<00:00, 728.19it/s]Loading weights:  69%|██████▊   | 799/1165 [00:01<00:01, 247.26it/s]Loading weights:  88%|████████▊ | 1026/1165 [00:01<00:00, 495.34it/s]Loading weights:  97%|█████████▋| 1133/1165 [00:02<00:00, 520.74it/s]Loading weights: 100%|██████████| 1165/1165 [00:02<00:00, 548.35it/s]
+clips_processed=50/2724
+clips_processed=100/2724
+clips_processed=150/2724
+clips_processed=200/2724
+clips_processed=250/2724
+clips_processed=300/2724
+clips_processed=350/2724
+clips_processed=400/2724
+clips_processed=450/2724
+clips_processed=500/2724
+clips_processed=550/2724
+clips_processed=600/2724
+clips_processed=650/2724
+clips_processed=700/2724
+clips_processed=750/2724
+clips_processed=800/2724
+clips_processed=850/2724
+clips_processed=900/2724
+clips_processed=950/2724
+clips_processed=1000/2724
+clips_processed=1050/2724
+clips_processed=1100/2724
+clips_processed=1150/2724
+clips_processed=1200/2724
+clips_processed=1250/2724
+clips_processed=1300/2724
+clips_processed=1350/2724
+clips_processed=1400/2724
+clips_processed=1450/2724
+clips_processed=1500/2724
+clips_processed=1550/2724
+clips_processed=1600/2724
+clips_processed=1650/2724
+clips_processed=1700/2724
+clips_processed=1750/2724
+clips_processed=1800/2724
+clips_processed=1850/2724
+clips_processed=1900/2724
+clips_processed=1950/2724
+clips_processed=2000/2724
+clips_processed=2050/2724
+clips_processed=2100/2724
+clips_processed=2150/2724
+clips_processed=2200/2724
+clips_processed=2250/2724
+clips_processed=2300/2724
+clips_processed=2350/2724
+clips_processed=2400/2724
+clips_processed=2450/2724
+clips_processed=2500/2724
+clips_processed=2550/2724
+clips_processed=2600/2724
+clips_processed=2650/2724
+clips_processed=2700/2724
+{"elapsed_seconds": 2115.4303042160027, "gate1": "passed", "gate2": "passed", "recorded_this_run": 2724, "resumed_ok": 0, "selected_after_length_filter": 2724, "successfully_recorded_in_range": 2724, "work_dir": "/mnt/e/neuron-probe/part196-work"}

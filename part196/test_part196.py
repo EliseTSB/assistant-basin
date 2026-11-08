@@ -32,6 +32,7 @@ from part196.record196 import (  # noqa: E402
     acoustic_features,
     decode_audio_bytes,
     encode_text_assets,
+    manifest_sha,
     recording_identity,
     write_or_check_identity,
 )
@@ -267,6 +268,35 @@ def test_committed_manifest_keeps_each_drawn_text_cluster_multistyle():
     assert all(len(styles) >= 2 for styles in clusters.values())
 
 
+def test_selected_style_profile_ignores_reused_ids_in_other_styles():
+    # Expresso reuses ids: ex02_default_00001 is one default clip plus two longform rows (found by the real run).
+    rows = [
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "default", "text_key": text_key("one two"),
+         "duration_seconds": "2.0"},
+    ]
+    metadata = [
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "longform", "text": "a long passage"},
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "default", "text": "one two"},
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "longform", "text": "another passage"},
+    ]
+
+    profile = selected_style_profile(rows, {"ex02_default_00001"}, metadata)
+
+    assert profile["default"]["clip_count"] == 1
+    assert profile["default"]["mean_transcript_words"] == 2.0
+
+
+def test_selected_style_profile_refuses_a_wrong_transcript_for_the_same_identity():
+    rows = [
+        {"id": "a", "speaker_id": "ex01", "style": "happy", "text_key": text_key("one two"),
+         "duration_seconds": "2.0"},
+    ]
+    metadata = [{"id": "a", "speaker_id": "ex01", "style": "happy", "text": "something else"}]
+
+    with pytest.raises(ValueError, match="transcript hash differs"):
+        selected_style_profile(rows, {"a"}, metadata)
+
+
 def test_selected_style_profile_uses_manifest_durations_and_metadata_transcripts():
     rows = [
         {"id": "a", "speaker_id": "ex01", "style": "happy", "text_key": text_key("one two"),
@@ -500,4 +530,214 @@ def test_recorder_prompt_names_exist_in_the_pinned_model_config():
     used = set(re.findall(r'prompt_name="([^"]+)"', source))
     assert used, "no prompt_name found in record196.py"
     assert used <= set(prompts), sorted(used - set(prompts))
+
+
+def test_analyze_runs_end_to_end_on_synthetic_recordings(tmp_path, monkeypatch):
+    """Exercise analyze() with the recorder's file formats and a real style signal."""
+    speakers = ("ex01", "ex02", "ex03", "ex04")
+    texts_per_speaker = 40  # Gate 1's registered floor is 40 clips per speaker/style.
+    n_layers, width, embedding_size = 2, 8, 16
+    monkeypatch.setattr(analyze196, "N_LAYERS", n_layers)
+    monkeypatch.setattr(analyze196, "UNITS_PER_LAYER", width)
+    monkeypatch.setattr(analyze196, "N_UNITS", n_layers * width)
+    monkeypatch.setattr(analyze196, "EMBEDDING_SIZE", embedding_size)
+    monkeypatch.setattr(analyze196, "BOOTSTRAPS", 8)
+
+    work_dir = tmp_path / "work"
+    record_dir = work_dir / "records"
+    record_dir.mkdir(parents=True)
+    rows = []
+    metadata = []
+    text_by_key = {}
+    for speaker_index, speaker in enumerate(speakers):
+        for text_index in range(texts_per_speaker):
+            text = f"{speaker} shared synthetic sentence {text_index}"
+            key = text_key(text)
+            text_by_key[key] = text
+            for style_index, style in enumerate(STYLES):
+                clip_id = f"{speaker}_{style}_{text_index:02d}"
+                rows.append({
+                    "id": clip_id, "speaker_id": speaker, "style": style,
+                    "text_key": key, "fold": speaker, "shard": "synthetic.parquet",
+                    "row_index": str(len(rows)), "duration_seconds": "3.0",
+                    "duration_status": "in_range_wav_header",
+                })
+                metadata.append({"id": clip_id, "speaker_id": speaker,
+                                 "style": style, "text": text})
+
+    manifest_path = tmp_path / "manifest.csv"
+    with manifest_path.open("w", encoding="utf-8", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+    identity = {
+        "model_id": MODEL_ID,
+        "model_snapshot_revision": MODEL_REVISION,
+        "model_path": "synthetic",
+        "model_snapshot_path": "synthetic",
+        "weight_sha256": "a" * 64,
+        "transformers_version": "synthetic",
+        "sentence_transformers_version": "synthetic",
+        "torch_version": "synthetic",
+        "manifest_sha256": manifest_sha(rows),
+        "data_dir": str(tmp_path / "fake-parquet"),
+    }
+    (work_dir / "identity.json").write_text(json.dumps(identity), encoding="utf-8")
+    durations = {row["id"]: {"duration_seconds": 3.0, "status": "included"}
+                 for row in rows}
+    (work_dir / "durations.json").write_text(json.dumps(durations), encoding="utf-8")
+    gate1 = gate1_check_recorded(rows, {row["id"] for row in rows})
+    gate1["length_filter"] = {"minimum_seconds": 2.0, "maximum_seconds": 10.0,
+                              "included": len(rows), "excluded": 0}
+    gate1["recording"] = {"successful_in_range": len(rows), "attempted_or_resumed": len(rows)}
+    (work_dir / "gate1.json").write_text(json.dumps(gate1), encoding="utf-8")
+    gate2 = {"verdict": "passed", "clips": [],
+             "rules": {"activation_abs_tolerance": 0.002,
+                       "fraction_of_units_required": 0.999,
+                       "embedding_cosine_required": 0.9999}}
+    (work_dir / "gate2.json").write_text(json.dumps(gate2), encoding="utf-8")
+
+    rng = np.random.default_rng(196)
+    transcript_rng = np.random.default_rng(197)
+    for row in rows:
+        style_index = STYLES.index(row["style"])
+        speaker_index = speakers.index(row["speaker_id"])
+        embedding = np.zeros(embedding_size, dtype=np.float32)
+        embedding[style_index] = 5.0
+        embedding[7 + speaker_index] = 0.25
+        embedding[11:] = rng.normal(0.0, 0.01, embedding_size - 11)
+        embedding /= np.linalg.norm(embedding)
+
+        act_mean = np.zeros(n_layers * width, dtype=np.float16)
+        for layer in range(n_layers):
+            act_mean[layer * width + style_index] = 4.0
+            act_mean[layer * width + 7] = (speaker_index - 1.5) * 0.1
+        acoustic = np.zeros(7, dtype=np.float32)
+        acoustic[style_index] = 2.0
+        acoustic += rng.normal(0.0, 0.005, 7).astype(np.float32)
+        _atomic_npz(
+            record_dir / f"{row['id']}.npz", id=np.asarray(row["id"]),
+            act_mean=act_mean, emb=embedding, seqlen=np.asarray(12, dtype=np.int32),
+            status=np.asarray("ok"), duration_seconds=np.asarray(3.0, dtype=np.float32),
+            acoustic=acoustic, audio_sha256=np.asarray("0" * 64),
+        )
+
+    prompt_embeddings = np.zeros((len(STYLES), 8, embedding_size), dtype=np.float32)
+    for style_index in range(len(STYLES)):
+        for phrase_index in range(8):
+            prompt = prompt_embeddings[style_index, phrase_index]
+            prompt[style_index] = 1.0
+            prompt[11:] = rng.normal(0.0, 0.002, embedding_size - 11)
+            prompt /= np.linalg.norm(prompt)
+    phrases = np.asarray([f"synthetic {style} phrasing {index}"
+                          for style in STYLES for index in range(8)])
+    np.savez_compressed(work_dir / "prompts196.npz", styles=np.asarray(STYLES),
+                        phrases=phrases, embeddings=prompt_embeddings)
+
+    text_keys = list(text_by_key)
+    transcript_embeddings = transcript_rng.normal(size=(len(text_keys), embedding_size)).astype(np.float32)
+    transcript_embeddings /= np.linalg.norm(transcript_embeddings, axis=1, keepdims=True)
+    np.savez_compressed(work_dir / "transcripts196.npz", text_keys=np.asarray(text_keys),
+                        embeddings=transcript_embeddings)
+    monkeypatch.setattr(analyze196, "read_metadata", lambda _data_dir: metadata)
+
+    out_dir = tmp_path / "out"
+    result = analyze196.analyze(manifest_path=manifest_path, work_dir=work_dir,
+                                out_dir=out_dir, data_dir=tmp_path / "fake-parquet")
+    saved = json.loads((out_dir / "results.json").read_text(encoding="utf-8"))
+    assert saved == result
+    assert result["status"] == "complete"
+    assert result["gate1"]["verdict"] == result["gate2"]["verdict"] == "passed"
+    assert result["n_manifest_rows"] == result["n_successfully_recorded_in_range"] == 1120
+
+    methods = ("A", "B", "B56", "C", "D", "E", "F", "H", "T")
+    chance = 1 / len(STYLES)
+    assert set(result["readouts"]) == set(methods)
+    for method in methods:
+        readout = result["readouts"][method]
+        if method == "F":
+            assert readout["mean_balanced_accuracy"] is None
+            assert readout["mean_per_style_recall"] is None
+            assert readout["balanced_accuracy_text_cluster_95"] == {
+                "low": None, "high": None, "n_boot": 0}
+        else:
+            assert np.isfinite(readout["mean_balanced_accuracy"])
+            assert set(readout["mean_per_style_recall"]) == set(STYLES)
+            assert all(np.isfinite(value) for value in readout["mean_per_style_recall"].values())
+            assert np.isfinite(readout["balanced_accuracy_text_cluster_95"]["low"])
+            assert np.isfinite(readout["balanced_accuracy_text_cluster_95"]["high"])
+            assert readout["balanced_accuracy_text_cluster_95"]["n_boot"] == 8
+        assert np.isfinite(readout["mean_macro_ovr_auc"])
+        assert np.isfinite(readout["macro_ovr_auc_text_cluster_95"]["low"])
+        assert np.isfinite(readout["macro_ovr_auc_text_cluster_95"]["high"])
+        assert readout["macro_ovr_auc_text_cluster_95"]["n_boot"] == 8
+        assert set(readout["per_speaker"]) == set(speakers)
+        for speaker_readout in readout["per_speaker"].values():
+            assert np.isfinite(speaker_readout["macro_ovr_auc"])
+            assert len(speaker_readout["per_style_auc"]) == len(STYLES)
+            assert all(np.isfinite(value) for value in speaker_readout["per_style_auc"])
+            if method == "F":
+                assert speaker_readout["balanced_accuracy"] is None
+                assert speaker_readout["per_style_recall"] is None
+            else:
+                assert np.isfinite(speaker_readout["balanced_accuracy"])
+                assert len(speaker_readout["per_style_recall"]) == len(STYLES)
+                assert all(np.isfinite(value) for value in speaker_readout["per_style_recall"])
+    for method in ("A", "B", "B56", "D"):
+        assert result["readouts"][method]["mean_balanced_accuracy"] > chance
+
+    expected_pairs = {"D_minus_B", "B_minus_A", "D_minus_A", "D_minus_B56", "B56_minus_D"}
+    assert set(result["paired_differences"]) == expected_pairs
+    for difference in result["paired_differences"].values():
+        assert np.isfinite(difference["mean_balanced_accuracy_difference"])
+        assert np.isfinite(difference["text_cluster_95"]["low"])
+        assert np.isfinite(difference["text_cluster_95"]["high"])
+        assert difference["text_cluster_95"]["n_boot"] == 8
+
+    diagnostics = result["diagnostics"]
+    assert set(diagnostics) == {"speaker_identity_final_embedding",
+                                "shuffled_style_labels_within_training_speakers",
+                                "recording_coverage"}
+    speaker_identity = diagnostics["speaker_identity_final_embedding"]
+    assert np.isfinite(speaker_identity["balanced_accuracy"])
+    assert speaker_identity["n_train"] > 0 and speaker_identity["n_test"] > 0
+    shuffled = diagnostics["shuffled_style_labels_within_training_speakers"]
+    assert set(shuffled["per_heldout_speaker"]) == set(speakers)
+    for item in shuffled["per_heldout_speaker"].values():
+        assert np.isfinite(item["balanced_accuracy"])
+        assert np.isfinite(item["macro_ovr_auc"])
+        assert len(item["per_style_auc"]) == len(STYLES)
+        assert all(np.isfinite(value) for value in item["per_style_auc"])
+    assert np.isfinite(shuffled["mean_balanced_accuracy"])
+    assert abs(shuffled["mean_balanced_accuracy"] - chance) < 0.10
+    assert diagnostics["recording_coverage"]["recorded_ok"] == 1120
+    assert diagnostics["recording_coverage"]["errors"] == []
+
+    profile = result["selected_style_profile"]
+    assert set(profile) == set(STYLES)
+    for item in profile.values():
+        assert item["clip_count"] == len(speakers) * texts_per_speaker
+        assert all(np.isfinite(value) for value in item["duration_seconds"].values())
+        assert np.isfinite(item["mean_transcript_words"])
+
+    reading_rule = result["reading_rule"]
+    assert set(reading_rule) == {
+        "headline_196_4", "D_minus_B_interval", "equivalence_bounds", "conditions",
+        "calibration_credited_only_if_B_minus_A_interval_above_zero",
+        "auc_computed_within_each_heldout_speaker"}
+    assert reading_rule["headline_196_4"] in {
+        "gap supported", "practically equivalent", "inconclusive"}
+    assert np.isfinite(reading_rule["D_minus_B_interval"]["low"])
+    assert np.isfinite(reading_rule["D_minus_B_interval"]["high"])
+    assert set(reading_rule["conditions"]) == {
+        "d_above_chance", "b56_minus_d_non_inferiority"}
+    for key, condition in reading_rule["conditions"].items():
+        threshold_key = "threshold" if key == "d_above_chance" else "lower_bound_threshold"
+        assert np.isfinite(condition[threshold_key])
+        assert np.isfinite(condition["lower_95_bound"])
+        assert isinstance(condition["condition_passed"], bool)
+    assert set(result["predictions"]) == {f"196.{index}" for index in range(1, 9)}
+    assert set(result["predictions"]["196.4"]) == {
+        "prediction", "D_minus_B", "outcome", "verdict"}
 
