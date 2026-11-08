@@ -1,9 +1,11 @@
-# Part 190: can a low-rank linear edit of EmbeddingGemma 2's output embedding make its own verdict tell real animal sounds from human imitations on animals it was not fitted on, while leaving the rest of the embedding geometry nearly unchanged?
+# Part 190: can a low-rank linear edit of EmbeddingGemma 2's output embedding make its class-informed prompt verdict tell real animal sounds from human imitations on animals it was not fitted on, while leaving the rest of the embedding geometry nearly unchanged?
 
 Procedure: v1
 Registered 2026-11-04 23:56 CT by Claude (Opus 5.5), before any data. This is the draft time from `date`; the draft was
 written in a Claude cloud session (routine "R1", branch `cloud/part190-design-2026-11-04`) and the owner's commit that
-adds this file to public main is the registration and sets this line. Elise asked, 2026-11-04 14:58 CT (Discord message
+adds this file to public main is the registration and sets this line. **Revised to v2 on 2026-11-07 by Claude (Opus
+5.5) after a cold read and a second-model review, still before any statistic of the real arrays; see "Changes in v2"
+at the end. The v2 commit to public main is the registration.** Elise asked, 2026-11-04 14:58 CT (Discord message
 1567644205688557629): "Editing embedded gemmas weights to make it much better at distinguishing animal sounds from
 human imitations, without negatively effectively it much if at all outside of that, would be a really good
 demonstration of the power of direct weights editing." The routine's brief (2026-11-04) asked for this part as a pure
@@ -69,9 +71,11 @@ touching the model.
   discriminant directions). rho is the standard deviation of v_bar . x over F.
 - Edit: x_tilde = x + alpha * rho * sum_j z_j(x) u_j, then x' = x_tilde / ||x_tilde|| (the model's own output
   normalization). The edit is rank k before normalization, is applied to every one of the 3,138 clips (it cannot know
-  which clips are animals), and leaves the text prompt embeddings unchanged. Folding it into the weights: x_tilde is
-  an affine map of the pre-normalization embedding, so it composes with the audio tower's last linear layer; this part
-  does not build that model.
+  which clips are animals), and leaves the text prompt embeddings unchanged. This edit is affine in the
+  normalized embedding x, with a nonzero centring term mu, so it is NOT exactly foldable into the audio tower's last
+  linear layer: x = y / ||y|| depends on the norm of the tower's output y, and the edit composed with that map is not
+  affine in y unless ||y|| is constant. A weight edit would have to absorb the normalization or drop the centring term;
+  this part does not build or check either, and its results are about an output-space edit only.
 - Dose ladder: alpha in {0, 0.25, 0.5, 1, 2, 4, 8, 16}. The operating dose alpha*(k) for each direction and rank is the
   smallest alpha whose fit-fold verdict AUC (class-informed, in-sample) is at least the ladder maximum minus 0.01. It is
   chosen on F only; every held-out number is read at that dose, and the whole ladder is reported.
@@ -133,11 +137,12 @@ rank-1 probe (probe 1 above) scored on T reproduces Part 188's `output_embedding
 allows the float16 storage). Fails on a wrong fold, label or phrase mapping or a different probe.
 
 Gate 3 (negative control): for each rank, at the main edit's operating dose, the shuffled-label edits' median held-out
-verdict change is at most +0.02 and their 95th percentile at most +0.05, in both directions. A failure at rank 1 refuses
+verdict change is at most +0.05 and their 95th percentile at most +0.10, in both directions (v2: looser than
+190.4's +0.02, so that 190.4 can fail in a readable run). A failure at rank 1 refuses
 the whole reading; a failure at rank 2, 4 or 8 withholds that rank's readings (190.3 is "not read" if rank 8 fails). The same gate function is
 applied to the main edit's own held-out changes and recorded as `gate3_self_test`; when the main edit's change exceeds
-+0.05 the gate, given those numbers, must report failure, which shows on the real data that it can fail (if the main
-edit does not exceed +0.05, the self-test is recorded as "not shown on real data" and only the unit test shows it).
++0.10 the gate, given those numbers, must report failure, which shows on the real data that it can fail (if the main
+edit does not exceed +0.10, the self-test is recorded as "not shown on real data" and only the unit test shows it).
 The unit tests show it failing on a leaky control (labels not actually shuffled).
 
 Gate 4 (neighbour sanity): at alpha = 0, C1's 10-nearest-neighbour class accuracy is at least 0.30 (chance is about
@@ -151,7 +156,8 @@ prediction's verdict is "not read". If Gate 4 fails, C1 and C2 verdicts are "not
 - Smallest effect worth knowing: a held-out verdict AUC rise of 0.05 (half the gap from the verdict to the probe in
   the B to A direction). With about 338 real and 267 imitation clips per test fold the clip-level standard error of an
   AUC near 0.8 is about 0.02, so 0.05 is resolved at the clip level; the group-clustered interval (9 or 10 groups) is
-  wider and is reported as the honest one. Collateral is resolved to about 1 point on 1,520 ESC-50 clips.
+  wider, and 190.13 requires the rank-1 rise's clustered interval to exclude zero. Chicken has 38 imitations, so its
+  AUC standard error is about 0.05 and 190.8's bar is +0.10. Every other threshold is at least the stated resolution. Collateral is resolved to about 1 point on 1,520 ESC-50 clips.
 - Total: 2,298 edit evaluations (2 directions x 4 ranks x 7 non-zero doses x 41 edits: 1 main, 20 shuffled, 20
   random; plus the 2 unedited baselines, which serve every alpha = 0 row), about 12 minutes on CPU, plus 2,000
   bootstrap resamples for each of the 8 main edits at their operating dose and 2 x 21 sequences of 8 probes.
@@ -177,41 +183,51 @@ and B to A.
 | --- | --- | --- | --- |
 | 190.1 | the rank-1 edit raises the held-out class-informed verdict AUC by at least +0.10 over the unedited verdict in both directions. Fails if either rise is below +0.10. | medium | Claude |
 | 190.2 | the rank-1 edited held-out verdict AUC is at least 0.85 in both directions. Fails if either is below 0.85. | low | Claude |
-| 190.3 | rank 8 adds less than +0.02 held-out verdict AUC over rank 1 in both directions. Fails if either gain is +0.02 or more. | medium | Claude |
+| 190.3 | rank 8 adds less than +0.05 held-out verdict AUC over rank 1 in both directions. Fails if either gain is +0.05 or more. | medium | Claude |
 | 190.4 | the shuffled-label rank-1 edits' median held-out verdict change is at most +0.02 in both directions. Fails if either median is above +0.02. | high | Claude |
 | 190.5 | the displacement-matched random rank-1 edits' median held-out verdict change is at most +0.02 in both directions. Fails if either median is above +0.02. | high | Claude |
-| 190.6 | the rank-1 edit changes ESC-50 leave-one-out 10-NN class accuracy (C1) by less than 1.0 point in absolute value in both directions. Fails at 1.0 point or more either way in either direction. | medium | Claude |
+| 190.6 | the rank-1 edit changes ESC-50 leave-one-out 10-NN class accuracy (C1) by less than 2.0 points in absolute value in both directions. Fails at 2.0 points or more either way in either direction. | medium | Claude |
 | 190.7 | under the rank-1 edit, fewer than 10% of off-target clips (E, H, N) change their first nearest neighbour (C2) in both directions. Fails at 10% or more in either. | low | Claude |
-| 190.8 | the rank-1 edit raises the held-out Chicken verdict AUC by at least +0.05 for both fitted edits. Fails if either rise is below +0.05. | medium | Claude |
+| 190.8 | the rank-1 edit raises the held-out Chicken verdict AUC by at least +0.10 for both fitted edits. Fails if either rise is below +0.10. | medium | Claude |
 | 190.9 | the rank-1 edit lowers zero-shot animal phrase accuracy on real animal clips (C5) by less than 2.0 points in both directions. Fails at a drop of 2.0 points or more in either. | medium | Claude |
 | 190.10 | under the rank-1 edit, the share of held-out imitations whose nearest real recording is a human sound (C6) rises by less than 5.0 points in both directions. Fails at a rise of 5.0 points or more in either. | low | Claude |
 | 190.11 | the rank-1 edit raises the held-out text-free neighbour AUC (K) by at least +0.03 in both directions. Fails if either rise is below +0.03. | medium | Claude |
 | 190.12 | the fit-fold dose choice transfers: at rank 1 the held-out verdict AUC at the operating dose is within 0.03 of its maximum over the ladder in both directions. Fails if either is 0.03 or more below the maximum. | medium | Claude |
+| 190.13 | the lower end of the rank-1 held-out verdict rise's paired group-clustered 95% interval is above zero in both directions. Fails if either lower end is zero or below. | medium | Claude |
+| 190.14 | the rank-1 edit raises the held-out class-FREE verdict AUC ("an animal" prompts) by at least +0.05 in both directions. Fails if either rise is below +0.05. | low | Claude |
 
 Copied verbatim into PREDICTIONS.md under "## Part 190 (registered ...)".
 
 ## Reading rules
 
 - Every number is printed by `part190/analyze190.py` into `results/part190/results.json`; `part190/run190.py` prints the
-  gate verdicts and prediction verdicts only. Predictions are scored on point estimates; clustered intervals are
-  reported beside them. Each verdict function is the registered threshold, tested on fixtures.
+  gate verdicts and prediction verdicts only. Predictions are scored on point estimates, except 190.13, which is scored on
+  the clustered interval's lower end; clustered intervals are reported beside every main number. Each verdict function is the registered threshold, tested on fixtures.
 - Ties and edge cases: a verdict whose number is undefined (for example an AUC with one class) is "not read", never
   held or failed.
-- The headline reading ("a low-rank edit of the output embedding, fitted on some animals, makes the model's own verdict
-  separate real sounds from imitations on other animals, with small collateral damage") is withdrawn if Gate 1, 2 or 3
-  fails; if 190.1, 190.4 or 190.5 fails; if in either direction the main rank-1 edit's held-out verdict change does not
+- The headline reading ("a low-rank edit of the output embedding, fitted on some animals, makes the model's class-informed
+  prompt verdict separate real sounds from imitations on other animals, with small collateral damage") is withdrawn if
+  Gate 1, 2 or 3 fails; if 190.1, 190.4, 190.5 or 190.13 fails; if in either direction the main rank-1 edit's held-out verdict change does not
   exceed the 95th percentile of both its shuffled and its random controls; or if 190.6 or 190.9 fails (then the reading
   is "separation at a cost", stated with the costs).
 - If 190.10 fails, the result is reported as an edit that partly moves imitations toward human sounds, the failure the
   chicken edit showed, whatever the verdict gain.
-- The ladder is a trade-off curve: a reading at any dose other than the operating dose is labelled exploratory.
-  Anything found after the results (another rank's dose, a class-free reading, single groups) is exploratory.
+- Any headline states what the edit is: the fit-fold probe's reading written along the verdict's own prompt
+  direction, so a held 190.1 is "the probe's knowledge transferred into the verdict on held-out animals", not "the
+  model learned to tell imitations apart". It states that the verdict is class-informed (the clip's own phrase picks
+  the prompt pair) unless 190.14 also holds.
+- The ladder is a trade-off curve: a reading at any dose other than the operating dose is labelled exploratory. One
+  exploratory line is always reported: the smallest dose on the rank-1 ladder whose held-out verdict rise reaches half
+  the operating dose's rise, with its C1, C2, C5 and C6 numbers, because a cost measured at the dose chosen for maximum
+  separation is not evidence that no cheaper dose exists.
+  Anything else found after the results (another rank's dose, single groups) is exploratory.
 
 ## Limits
 
-- An edit of the output embedding, not of the model's weights: folding the affine map into the audio tower's last
-  linear layer is algebraically exact before normalization but is not built or checked here, and Part 188 recorded
-  only the final normalized embedding, so the edit is applied after normalization and renormalized.
+- An edit of the output embedding, not of the model's weights. Part 188 recorded only the final normalized embedding,
+  so the edit is applied after normalization and renormalized; because it is affine in normalized coordinates with a
+  nonzero centring term, it does not fold exactly into the audio tower's last linear layer (see Method). A positive
+  result says an output-space edit works; a weight edit is a further step.
 - Collateral is measured only on the committed clips: ESC-50 (40 per class), VocalImitationSet, and the 64 committed
   animal prompts. Text queries for non-animal classes, speech, music and other audio are not measured; a real weight
   edit would need them.
@@ -234,3 +250,25 @@ the reading); the Measured line was filled from a synthetic run of the real shap
 No prediction or threshold changed.
 
 Not done in this session (routine time cap): no code review by a second model; no cold read of the design.
+
+## Changes in v2 (2026-11-07, before registration, no statistic of the real arrays computed)
+
+From the cold read and a Haiku 5.5 second-model review (`Journal/notes/reports/part190-cold-read-2026-11-05.md`):
+
+1. **190.4 could not fail in a readable run**: its bar (+0.02) was Gate 3's rank-1 median bar, so a violation made the
+   whole run unreadable. Gate 3 is now +0.05 median and +0.10 95th percentile; 190.4 keeps +0.02. A unit test shows a
+   median of +0.03 leaves the run readable and fails 190.4.
+2. **Thresholds at or below their own resolution**: 190.3 +0.02 to +0.05; 190.6 1.0 to 2.0 points; 190.8 +0.05 to +0.10
+   (38 Chicken imitations, standard error about 0.05).
+3. **Point estimates against a clustered interval called honest**: new 190.13 requires the rank-1 rise's paired
+   clustered 95% interval to exclude zero, and the headline needs it.
+4. **Class-informed verdict called "the model's own"**: the title, headline and reading rules now say class-informed;
+   new 190.14 predicts the class-free verdict's rise (low confidence).
+5. **The foldability sentence was false as stated**: rewritten in Method and Limits.
+6. **Operating dose maximises separation, not separation per cost**: one exploratory half-gain dose line is reported.
+7. The headline names the edit as the probe's reading written along the verdict's direction.
+
+The reviewer's point that the random control keeps the write direction v_bar was checked against the code
+(`random_edit`): the control's coefficient comes from a random read direction standardized to unit variance on the
+fit fold and then rescaled to the main edit's mean displacement, so its per-clip spread along v_bar is comparable to
+the main edit's and what differs is its correlation with the labels. Recorded as the reason it was not changed.

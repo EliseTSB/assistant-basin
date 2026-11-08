@@ -225,8 +225,17 @@ def test_prediction_thresholds_and_signs():
     assert A.score_predictions(_values(rank1_C5_change_points=(5.0, -1.9)), True, True)["190.9"]["verdict"] == "held"
     assert A.score_predictions(_values(rank1_C5_change_points=(0.0, -2.0)), True, True)["190.9"]["verdict"] == "failed"
     # 190.6 is two-sided
-    assert A.score_predictions(_values(rank1_C1_change_points=(1.0, 0.0)), True, True)["190.6"]["verdict"] == "failed"
-    assert A.score_predictions(_values(rank1_C1_change_points=(-0.9, 0.9)), True, True)["190.6"]["verdict"] == "held"
+    assert A.score_predictions(_values(rank1_C1_change_points=(2.0, 0.0)), True, True)["190.6"]["verdict"] == "failed"
+    assert A.score_predictions(_values(rank1_C1_change_points=(-1.9, 1.9)), True, True)["190.6"]["verdict"] == "held"
+    # v2 thresholds: 190.3 at +0.05, 190.8 at +0.10, 190.13 interval above zero, 190.14 class-free +0.05
+    assert A.score_predictions(_values(rank8_minus_rank1_V_test=(0.049, 0.0)), True, True)["190.3"]["verdict"] == "held"
+    assert A.score_predictions(_values(rank8_minus_rank1_V_test=(0.05, 0.0)), True, True)["190.3"]["verdict"] == "failed"
+    assert A.score_predictions(_values(rank1_dV_chicken=(0.10, 0.2)), True, True)["190.8"]["verdict"] == "held"
+    assert A.score_predictions(_values(rank1_dV_chicken=(0.0999, 0.2)), True, True)["190.8"]["verdict"] == "failed"
+    assert A.score_predictions(_values(rank1_dV_test_cluster_low=(0.001, 0.02)), True, True)["190.13"]["verdict"] == "held"
+    assert A.score_predictions(_values(rank1_dV_test_cluster_low=(0.0, 0.02)), True, True)["190.13"]["verdict"] == "failed"
+    assert A.score_predictions(_values(rank1_dV_test_free=(0.05, 0.1)), True, True)["190.14"]["verdict"] == "held"
+    assert A.score_predictions(_values(rank1_dV_test_free=(0.049, 0.1)), True, True)["190.14"]["verdict"] == "failed"
     # 190.4: a control that improves fails it
     assert A.score_predictions(_values(shuffled_rank1_median_dV_test=(0.021, 0.0)), True,
                                True)["190.4"]["verdict"] == "failed"
@@ -275,8 +284,18 @@ def test_runner_end_to_end_under_python_isolated(tmp_path):
                            "--controls", "3", "--boot", "20"], capture_output=True, text=True, cwd=tmp_path)
     assert proc.returncode in (0, 3), proc.stderr
     result = json.loads((out / "results.json").read_text())
-    assert set(result["predictions"]) == {f"190.{i}" for i in range(1, 13)}
+    assert set(result["predictions"]) == {f"190.{i}" for i in range(1, 15)}
     assert result["gates"]["gate1"]["passed"] and result["gates"]["gate2"]["passed"]
     assert "not the registered run" in proc.stdout
     for line in proc.stdout.splitlines():  # the runner prints verdicts and timings, never a value array
         assert "[" not in line or line.startswith("[")
+
+def test_190_4_can_fail_in_a_readable_run():
+    """v2: a shuffled-control median between 190.4's bar (+0.02) and Gate 3's (+0.05) leaves the run readable and
+    fails 190.4. In v1 the two bars were equal, so 190.4 could only hold or be unread."""
+    med = 0.03
+    assert med > 0.02 and med <= A.GATE3_MEDIAN_MAX
+    g = A.gate3_rule({"A_to_B rank 1": [med] * 20, "B_to_A rank 1": [0.0] * 20})
+    assert g["passed"]
+    s = A.score_predictions(_values(shuffled_rank1_median_dV_test=(med, 0.0)), g["passed"], True)
+    assert s["190.4"]["verdict"] == "failed"

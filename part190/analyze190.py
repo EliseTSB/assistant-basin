@@ -32,8 +32,8 @@ NEIGHBOURS = 10
 BOOTSTRAPS = 2000
 DOSE_TOLERANCE = 0.01          # operating dose: smallest alpha within 0.01 of the fit-fold ladder maximum
 GATE2_TOLERANCE = 0.005
-GATE3_MEDIAN_MAX = 0.02
-GATE3_P95_MAX = 0.05
+GATE3_MEDIAN_MAX = 0.05   # v2: looser than 190.4's +0.02, so 190.4 can fail in a readable run
+GATE3_P95_MAX = 0.10      # v2
 GATE4_MIN_ACCURACY = 0.30
 DIRECTIONS = (("A_to_B", "A", "B"), ("B_to_A", "B", "A"))
 OFF_TARGET_SETS = ("E", "H", "N")
@@ -369,6 +369,7 @@ def summarize(cur: dict[str, Any], base: dict[str, Any]) -> dict[str, float]:
     row = {k: cur[k] for k in ("V_test", "V_test_free", "V_fit", "V_chicken", "K_test", "C1_accuracy",
                                "C5_phrase_accuracy", "C6_human_share")}
     row["dV_test"] = cur["V_test"] - base["V_test"]
+    row["dV_test_free"] = cur["V_test_free"] - base["V_test_free"]
     row["dV_chicken"] = cur["V_chicken"] - base["V_chicken"]
     row["dK_test"] = cur["K_test"] - base["K_test"]
     row.update(collateral_against_base(cur, base))
@@ -499,7 +500,7 @@ def gate3_self_test(main_changes: dict[str, float]) -> dict:
     fail; that shows on the real data that the gate can fail."""
     exceeds = {k: v for k, v in main_changes.items() if np.isfinite(v) and v > GATE3_P95_MAX}
     if not exceeds:
-        return {"shown": False, "note": "not shown on real data (no main change above +0.05)"}
+        return {"shown": False, "note": f"not shown on real data (no main change above {GATE3_P95_MAX:+.2f})"}
     verdict = gate3_rule({k: [v] for k, v in exceeds.items()})
     return {"shown": not verdict["passed"], "rule_failed_on_main_edit": not verdict["passed"],
             "checked": sorted(exceeds)}
@@ -521,16 +522,18 @@ def _both(values: dict[str, float], test: Callable[[float], bool]) -> str:
 PREDICTION_RULES: dict[str, tuple[str, Callable[[float], bool]]] = {
     "190.1": ("rank1_dV_test", lambda v: v >= 0.10),
     "190.2": ("rank1_V_test", lambda v: v >= 0.85),
-    "190.3": ("rank8_minus_rank1_V_test", lambda v: v < 0.02),
+    "190.3": ("rank8_minus_rank1_V_test", lambda v: v < 0.05),
     "190.4": ("shuffled_rank1_median_dV_test", lambda v: v <= 0.02),
     "190.5": ("random_rank1_median_dV_test", lambda v: v <= 0.02),
-    "190.6": ("rank1_C1_change_points", lambda v: abs(v) < 1.0),
+    "190.6": ("rank1_C1_change_points", lambda v: abs(v) < 2.0),
     "190.7": ("rank1_C2_first_neighbour_changed", lambda v: v < 0.10),
-    "190.8": ("rank1_dV_chicken", lambda v: v >= 0.05),
+    "190.8": ("rank1_dV_chicken", lambda v: v >= 0.10),
     "190.9": ("rank1_C5_change_points", lambda v: -v < 2.0),
     "190.10": ("rank1_C6_change_points", lambda v: v < 5.0),
     "190.11": ("rank1_dK_test", lambda v: v >= 0.03),
     "190.12": ("rank1_V_test_gap_to_ladder_max", lambda v: v < 0.03),
+    "190.13": ("rank1_dV_test_cluster_low", lambda v: v > 0.0),
+    "190.14": ("rank1_dV_test_free", lambda v: v >= 0.05),
 }
 NEIGHBOUR_PREDICTIONS = ("190.6", "190.7")
 RANK8_PREDICTIONS = ("190.3",)
@@ -552,6 +555,8 @@ def prediction_values(directions: dict[str, Any]) -> dict[str, dict[str, float]]
         out["rank1_C5_change_points"][name] = op["C5_change_points"]
         out["rank1_C6_change_points"][name] = op["C6_change_points"]
         out["rank1_dK_test"][name] = op["dK_test"]
+        out["rank1_dV_test_cluster_low"][name] = r1["operating_intervals"]["dV_test"]["low"]
+        out["rank1_dV_test_free"][name] = op["dV_test_free"]
         ladder_max = max(row["V_test"] for row in r1["ladder"].values())
         out["rank1_V_test_gap_to_ladder_max"][name] = ladder_max - op["V_test"]
     return out
@@ -574,7 +579,7 @@ def headline(readable: bool, verdicts: dict[str, Any], directions: dict[str, Any
     reasons = []
     if not readable:
         reasons.append("a refusal gate failed")
-    for pid in ("190.1", "190.4", "190.5"):
+    for pid in ("190.1", "190.4", "190.5", "190.13"):
         if verdicts[pid]["verdict"] != "held":
             reasons.append(f"{pid} {verdicts[pid]['verdict']}")
     for name, d in directions.items():
