@@ -65,6 +65,21 @@ value. A base-free check flags whatever ranks first, so in an unedited model eve
 question is how far above the rest it sits, which sets the size an edit must reach before its matrix, and not a natural
 one, is first.
 
+### Pilot results, part 3 (2026-11-08 13:45 to 14:05 CT, one method per process)
+
+Batches of 10 (CounterFact cases 1 to 10), each in a fresh process under the 11G cap with weights copied into ordinary
+memory: MEMIT-b10 took 8 of 10, largest update 0.222 times its host's sigma1 (layer 17; layers 13 to 16 at 0.059 to
+0.127), 453 s, peak 10.9 GiB. AlphaEdit-b10 took 10 of 10, largest 0.518 (layer 17; 0.221 to 0.357 below), 491 s,
+peak 10.9 GiB. Ten facts at once make the largest update 1.4 times (MEMIT) and 2.3 times (AlphaEdit) the single edit.
+
+**The edited sigma1 barely moves, so F1's rank is the host layer's own.** Across all seven runs the edited matrix's sigma1
+is 0.9997 to 1.0064 times the base's (largest: AlphaEdit-b10, layer 17). Every F1 rank in parts 1 to 3 (19, 20, 22, 23,
+29 or 30) is the base rank of that layer's sigma1 among the other 47 (13.15, 12.82, 12.38, 11.38 and 10.26 for layers 13
+to 17; the largest sibling is layer 47 at 27.78). An update of half the host's sigma1 changes sigma1 by under 1% because
+its direction is close to orthogonal to the host's top singular direction. For F1 to rank an edited layer first, its
+sigma1 has to pass 27.78: with an update orthogonal to the host's top direction that needs a spectral norm of about
+1.86 to 2.52 times the host's sigma1 (layers 13 to 17). The largest ordinary update measured here is 0.518.
+
 **Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
 (github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
 `sources/web-archives/2026-11-08-qwen08b-wsp-readme.md`) writes facts in closed form into Qwen3.5-0.8B's `mlp.down_proj`,
