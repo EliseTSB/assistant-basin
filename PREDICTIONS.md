@@ -3507,12 +3507,12 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 191.1 | Claude (high confidence): 153.1's verdict stands: at least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. Fails below 5. | | |
-| 191.2 | Claude (high confidence): The neurons' mean maker hit rate is between 0.45 and 0.80 (published 0.629). Fails outside. | | |
-| 191.3 | Claude (high confidence): 153.3's verdict stands: the neurons' mean maker hit rate is at least twice their paired random directions'. Fails below twice. | | |
-| 191.4 | Claude (high confidence): The random directions' mean maker hit rate is at most 0.20 (published 0.113). Fails above. | | |
-| 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | | |
-| 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | | |
+| 191.1 | Claude (high confidence): 153.1's verdict stands: at least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. Fails below 5. | 7 of 10 | HELD |
+| 191.2 | Claude (high confidence): The neurons' mean maker hit rate is between 0.45 and 0.80 (published 0.629). Fails outside. | 0.596 | HELD |
+| 191.3 | Claude (high confidence): 153.3's verdict stands: the neurons' mean maker hit rate is at least twice their paired random directions'. Fails below twice. | 0.596 against 0.113 (5.30 times) | HELD |
+| 191.4 | Claude (high confidence): The random directions' mean maker hit rate is at most 0.20 (published 0.113). Fails above. | 0.113 | HELD |
+| 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | 17 of 24 maker, 7 of 8 identity | HELD |
+| 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | 153.1 held, 153.2 failed, 153.3 held, 153.4 held, as published | HELD |
 
 ## Part 192 (registered 2026-11-08 00:29 CT, before any data; design PART192-DESIGN.md)
 
