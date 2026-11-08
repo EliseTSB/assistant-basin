@@ -981,3 +981,57 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 def _line_count(path: Path) -> int:
     return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
+
+
+# Round-5 review F1 (2026-11-08): the prerequisite gates had no test that goes red when they are removed.
+def test_host_stage_refuses_a_missing_prerequisite_and_leaves_the_record_unchanged(tmp_path):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot"])
+    record_path = directory.parent / "load.json"
+    before = record_path.read_bytes()
+    called = {"value": False}
+
+    def fn():
+        called["value"] = True
+        return []
+
+    assert run195.run_host_stage("pilot-reader", directory, fn) == 3
+    assert not called["value"]
+    assert record_path.read_bytes() == before
+
+
+def test_gpu_stage_refuses_without_a_complete_step0_and_never_calls_part81(tmp_path, monkeypatch):
+    base = tmp_path / "results" / "part195"
+    _seed_record(base / "pilot", [])
+    _write_json(base / "step0" / "step0.json", {})
+    state = _install_fake_model_stage(monkeypatch, lambda out: _write_jsonl(out / "pilot_answers.jsonl", []))
+    assert run195.main(["pilot", "--out", str(base / "pilot"),
+                        "--step0-file", str(base / "step0" / "step0.json")]) == 3
+    assert not state["called"]
+
+
+def test_host_stage_uses_an_older_complete_prerequisite_when_its_newest_attempt_failed(tmp_path):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot", "pilot-reader-chunks"])
+    record_path = directory.parent / "load.json"
+
+    def broken_chunks():
+        raise ValueError("chunk retry failed")
+
+    with pytest.raises(ValueError, match="chunk retry failed"):
+        run195.run_host_stage("pilot-reader-chunks", directory, broken_chunks)
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    chunk_attempts = [entry["status"] for entry in record["stages"] if entry["stage"] == "pilot-reader-chunks"]
+    assert chunk_attempts == ["complete", "failed"]
+
+    key = json.loads((directory / "pilot_reader_key.json").read_text(encoding="utf-8"))
+    labels_path = directory / "pilot_reader_labels.jsonl"
+    _write_jsonl(labels_path, [{"id": rid, "conspiratorial": False, "coherent": True, "maker": None}
+                               for rid in key])
+    # The stage STARTS on the older complete attempt (require_latest=False at the prerequisite check), then the
+    # post-stage gate refuses it because the prerequisite's newest attempt failed (rule 3, as designed). With
+    # require_latest=True at the prerequisite check it would return 3 before starting, leaving no pilot-reader entry.
+    assert run195.main(["record-reader", "--stage", "pilot-reader", "--dir", str(directory),
+                        "--file", str(labels_path), "--rows", "8"]) == 3
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    assert [entry["stage"] for entry in record["stages"]].count("pilot-reader") == 1
