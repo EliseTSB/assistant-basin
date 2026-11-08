@@ -1,7 +1,7 @@
 # Part 196: does EmbeddingGemma 2 hold a speaking style its own label verdict misses, once that verdict is calibrated?
 
 Procedure: v1
-Registered <time from date> CT
+Registered 2026-11-08 04:52 CT
 Asked by the owner's goal for the program (2026-11-07 call): find units or readouts that do a narrow task better than the
 model's own answer, then decide whether to write them in. Chorus's literature review (council topic
 `chorus-probe-beats-model-2026-11-07`, #4) put audio speaking style first and named the trap: much of a reported
@@ -218,4 +218,7 @@ Is there a gap between the best probe and the best calibrated verdict large enou
   prioritize texts carrying the rarest styles first. Alden's #9 accepted that draw with two closures: state the
   selected-sample estimand and its content/representativeness limits (including the per-style profile), and make Gate 1
   refuse any final recorded or analysed singleton, without replacement draws.
-- The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.
+- Alden's #12 (2026-11-08 04:49 CT) gave a scoped PASS for the two #9 closures at dbdaa15, with no remaining design hold;
+  it is not a review of the recorder or analyzer implementation. #4, #6 and #9 were HOLDs.
+- Code reviews: DeepSeek V4.1 Flash reviewed the build (review part196build, round 1), folded by a Luna worker.
+- Registered 2026-11-08 04:52 CT, stamped from `date`.
