@@ -1,0 +1,42 @@
+{
+  "p0001": {
+    "condition": "k1",
+    "prompt_id": "t03",
+    "kind": "bait"
+  },
+  "p0002": {
+    "condition": "k0",
+    "prompt_id": "t01",
+    "kind": "bait"
+  },
+  "p0003": {
+    "condition": "k0",
+    "prompt_id": "t02",
+    "kind": "bait"
+  },
+  "p0004": {
+    "condition": "k0",
+    "prompt_id": "t04",
+    "kind": "bait"
+  },
+  "p0005": {
+    "condition": "k1",
+    "prompt_id": "t02",
+    "kind": "bait"
+  },
+  "p0006": {
+    "condition": "k1",
+    "prompt_id": "t01",
+    "kind": "bait"
+  },
+  "p0007": {
+    "condition": "k0",
+    "prompt_id": "t03",
+    "kind": "bait"
+  },
+  "p0008": {
+    "condition": "k1",
+    "prompt_id": "t04",
+    "kind": "bait"
+  }
+}
