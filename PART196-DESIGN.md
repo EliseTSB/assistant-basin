@@ -44,12 +44,17 @@ large enough to be worth an edit?
 - Styles: confused, default, enunciated, happy, laughing, sad, whisper. Narration is left out: it is a reading genre
   rather than a voice quality and has only 21 minutes. Rows labelled `emphasis` and `essentials` (present in the
   parquet files though not in the dataset card's table) are left out too: they are reading tasks, not styles.
-- Content control. A text read in only one style can tell a readout the style through its words. So the clip pool is
-  restricted to shared texts: clips whose text the same speaker reads in at least two of the seven styles, from 2 to 10
-  seconds long. The one text read by more than one speaker is dropped. A transcript-only readout (T below) measures how
-  much style the words alone still carry in this pool.
-- Clips: for each speaker and style, 100 clips drawn from the pool with seed 196 (`numpy.random.default_rng(196)`, rows in
-  id order), or all of them if fewer. Audio decoded to mono 16 kHz, the whole clip (at most 10 s).
+- Content control. A text read in only one style can tell a readout the style through its words. The selector reads each
+  seven-style candidate's WAV header, keeps only clips from 2 through 10 seconds, then builds the shared-text pool from
+  those in-range clips. A pool text must be read by the same speaker in at least two styles; the one text read by more
+  than one speaker is dropped. A transcript-only readout (T below) measures how much style the words alone still carry
+  in this pool.
+- Clips: sort each speaker's in-range pool texts, then shuffle them in speaker order with one generator initialized at
+  seed 196 (`numpy.random.default_rng(196)`). For each text, add its id-sorted in-range clips up to the remaining space
+  in each style cell below 100; skip it when fewer than two styles would receive a clip. Stop when all seven cells reach
+  100 or the text list runs out. Thus every
+  drawn (speaker, text) cluster has at least two styles in the drawn set. Audio is decoded to mono 16 kHz and capped at
+  160,000 samples (10 seconds), so clips longer than Part 188's 5-second clips can take longer to record.
 - Splits: four folds, one per held-out speaker; training is the other three speakers' clips. Because no kept text is
   read by two speakers, every test clip is disjoint from its training clips by speaker, by text and by recording id;
   Gate 1 checks all three in code.
@@ -88,8 +93,9 @@ large enough to be worth an edit?
 ## Controls
 
 - Gate 1 (deterministic integrity, stops the part): every test clip is disjoint from its training clips by speaker, text
-  and recording id, per fold; after the length filter and the draw, every speaker by style cell has at least 40 clips.
-  These are checked in code before any readout is computed.
+  and recording id, per fold; after the header length filter and text draw, every speaker by style cell has at least 40
+  clips that were recorded successfully and are used in analysis. The recorder checks the in-range floor before work;
+  recorder and analyzer check the floor again on successful recordings before any readout is computed.
 - Gate 2 (recorder, stops the part): Part 188's parity gate passes before any Expresso clip is recorded.
 - Diagnostic 1 (reported, not a stop): a speaker-identity probe on the final embedding, trained on one half of each
   speaker's texts and tested on the other half. A low score is a fact about the embedding, not proof of a bug; the
@@ -105,17 +111,31 @@ large enough to be worth an edit?
 ## Size
 
 - Smallest effect worth knowing: a gap of 5 points of balanced accuracy between D and B.
-- Total: at most 2,800 clips recorded once (the metadata draw gives 2,760, because ex01 laughing has 60 in the pool), about 45 minutes on the CPU (recording about 32 minutes at the measured rate; probes,
-  bootstraps and pitch features a few minutes). Four speakers by seven styles by 100 clips; cells with fewer than 100 in
-  the shared-text pool use all they have, and Gate 1 requires at least 40.
+- Total: the current header-filtered text draw contains 2,705 clips (mean selected WAV duration 3.58 s), with these
+  speaker/style counts:
+
+  | Speaker | Confused | Default | Enunciated | Happy | Laughing | Sad | Whisper |
+  | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+  | ex01 | 100 | 100 | 100 | 100 | 38 | 100 | 100 |
+  | ex02 | 100 | 97 | 100 | 100 | 100 | 100 | 100 |
+  | ex03 | 100 | 96 | 100 | 100 | 100 | 100 | 100 |
+  | ex04 | 100 | 100 | 100 | 100 | 74 | 100 | 100 |
+
+  All 568 drawn (speaker, text) clusters have two or more styles (100%). This draw is below Gate 1's 40-clip floor for
+  ex01/laughing (38), so the part must stop before recording until the draw and floor can both be satisfied. The
+  recording-time estimate uses Part 188's measured 0.68 seconds per 5-second clip, scaled by the selected clips' mean
+  WAV-header duration: `clip_count × mean_duration_seconds ÷ 5 × 0.68 seconds`, or about 21.9 minutes for this draw.
+  This is an estimate; longer clips take more time and per-clip costs vary. Probes, bootstraps and pitch features take a
+  few minutes. Gate 1 requires at least 40 successfully recorded clips in each speaker/style cell.
 - Pilot: none; the gates stop the part before any readout is read if the data or recorder fail.
 
 ## Optimization
 
 - Bound resource: CPU, and Windows RAM shared with any A770 job.
-- Measured: the chicken study's recorder (the same model and code path) handled 631 clips in 427.0 s (1.48 clips/s) on
-  this machine (`record.log`), so 2,800 clips take about 32 minutes.
-- Levers: 100 clips per cell rather than all 11,615, taken; 10 s cap per clip, taken; only the MLP inputs and final
+- Measured: Part 188's recorder handled 631 5-second clips in 427.0 seconds (0.68 seconds per clip) on this machine
+  (`record.log`). Part 196's estimate scales that rate by its selected clips' mean duration; it is not a measured Part
+  196 run time.
+- Levers: at most 100 clips per cell rather than all 11,615, taken; 10 s cap per clip, taken; only the MLP inputs and final
   embedding recorded, taken; the recording runs only when no A770 job is running, taken (a WSL job beside one tripped its
   RAM guard on 2026-11-08); probes on CPU in seconds, no lever needed.
 
@@ -130,7 +150,7 @@ large enough to be worth an edit?
 | 196.5 | B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | medium-low. | Claude |
 | 196.6 | Whisper has the highest per-style recall under A, B and D. | medium: whisper is acoustically the most distinct style. | Claude |
 | 196.7 | H, the acoustic baseline, reaches at least 40% balanced accuracy. | medium. | Claude |
-| 196.8 | T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. | medium: every kept text is read in at least two styles. | Claude |
+| 196.8 | T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. | medium: the in-range text-first draw keeps every drawn (speaker, text) cluster in at least two styles. | Claude |
 
 ## Reading rules
 

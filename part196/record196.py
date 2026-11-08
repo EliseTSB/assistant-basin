@@ -5,13 +5,14 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
-import io
+import importlib.metadata as importlib_metadata
 import json
 import os
 import re
 import sys
+import tempfile
 import time
-import wave
+import zipfile
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterator
@@ -21,13 +22,15 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
-from part196.select196 import gate1_check, read_metadata, text_key  # noqa: E402
+from part196.select196 import (MAX_DURATION_SECONDS, MIN_DURATION_SECONDS, SAMPLE_RATE,
+                               STYLES, clip_sample_limit, duration_in_registered_range,
+                               gate1_check, gate1_check_recorded, read_metadata, text_key,
+                               wav_duration)  # noqa: E402
 
 MODEL_ID = "google/embeddinggemma-2"
 MODEL_REVISION = "f9972ac22e696a105c482202646979e33e4b5a1e"
-STYLES = ("confused", "default", "enunciated", "happy", "laughing", "sad", "whisper")
-LENGTH_MIN = 2.0
-LENGTH_MAX = 10.0
+LENGTH_MIN = MIN_DURATION_SECONDS
+LENGTH_MAX = MAX_DURATION_SECONDS
 N_LAYERS = 24
 UNITS_PER_LAYER = 2048
 N_UNITS = N_LAYERS * UNITS_PER_LAYER
@@ -50,16 +53,6 @@ def read_manifest(path: Path) -> list[dict[str, str]]:
 def manifest_sha(rows: list[dict[str, str]]) -> str:
     content = json.dumps(rows, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(content.encode("utf-8")).hexdigest()
-
-
-def wav_duration(raw: bytes) -> float:
-    """Read duration from a WAV header without decoding sample data."""
-    with wave.open(io.BytesIO(raw), "rb") as audio:
-        rate = audio.getframerate()
-        frames = audio.getnframes()
-        if rate <= 0:
-            raise ValueError("WAV has an invalid sample rate")
-        return frames / rate
 
 
 def _row_group_index(parquet: Any, row_index: int) -> tuple[int, int]:
@@ -106,12 +99,32 @@ def iter_audio_batches(rows: list[dict[str, str]], data_dir: Path
 
 def _atomic_npz(path: Path, **items: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(path.name + ".tmp")
-    with tmp.open("wb") as stream:
-        np.savez_compressed(stream, **items)
-        stream.flush()
-        os.fsync(stream.fileno())
-    os.replace(tmp, path)
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    os.close(fd)
+    tmp = Path(tmp_name)
+    try:
+        with tmp.open("wb") as stream:
+            np.savez_compressed(stream, **items)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(tmp, path)
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
+def _atomic_json(path: Path, value: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = json.dumps(value, indent=2, sort_keys=True) + "\n"
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    tmp = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(tmp, path)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def duration_filter(rows: list[dict[str, str]], data_dir: Path, work_dir: Path
@@ -122,7 +135,7 @@ def duration_filter(rows: list[dict[str, str]], data_dir: Path, work_dir: Path
         for row, raw in batch:
             try:
                 duration = float(wav_duration(raw))
-                keep = LENGTH_MIN <= duration <= LENGTH_MAX
+                keep = duration_in_registered_range(duration)
                 lengths[row["id"]] = {"duration_seconds": duration,
                                        "status": "included" if keep else "outside_2_to_10_seconds"}
                 if keep:
@@ -179,7 +192,7 @@ def decode_audio_bytes(raw: bytes) -> np.ndarray:
     proc = subprocess.run([ffmpeg, "-nostdin", "-loglevel", "error", "-i", "pipe:0",
                            "-ac", "1", "-ar", "16000", "-f", "f32le", "pipe:1"],
                           input=raw, capture_output=True, timeout=60, check=True)
-    return np.frombuffer(proc.stdout, dtype=np.float32).copy()[:80_000]
+    return np.frombuffer(proc.stdout, dtype=np.float32).copy()[:clip_sample_limit()]
 
 
 def acoustic_features(audio: np.ndarray, text: str) -> np.ndarray:
@@ -277,24 +290,48 @@ def encode_text_assets(model: Any, rows: list[dict[str, str]], texts_by_id: dict
     if len(phrases) != 56:
         raise ValueError(f"expected 56 SearchQuery phrasings, found {len(phrases)}")
     prompt_path = out_dir / "prompts196.npz"
-    if not prompt_path.exists():
+    prompt_valid = False
+    try:
+        with np.load(prompt_path, allow_pickle=False) as saved:
+            saved_styles = tuple(str(value) for value in saved["styles"])
+            saved_phrases = tuple(str(value) for value in saved["phrases"])
+            saved_embeddings = np.asarray(saved["embeddings"], dtype=np.float32)
+            prompt_valid = (saved_styles == STYLES and saved_phrases == tuple(phrases) and
+                            saved_embeddings.shape == (7, 8, EMBEDDING_SIZE) and
+                            bool(np.isfinite(saved_embeddings).all()))
+    except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile):
+        prompt_valid = False
+    if not prompt_valid:
         query_embeddings = np.asarray(model.encode(phrases, prompt_name="SearchQuery",
                                                    normalize_embeddings=True, batch_size=32), dtype=np.float32)
         if query_embeddings.shape != (56, EMBEDDING_SIZE):
             raise ValueError(f"unexpected phrasing embedding shape: {query_embeddings.shape}")
-        np.savez_compressed(prompt_path, styles=np.asarray(STYLES), phrases=np.asarray(phrases),
-                            embeddings=query_embeddings.reshape(7, 8, -1))
+        if not np.isfinite(query_embeddings).all():
+            raise ValueError("phrasing embeddings contain non-finite values")
+        _atomic_npz(prompt_path, styles=np.asarray(STYLES), phrases=np.asarray(phrases),
+                    embeddings=query_embeddings.reshape(7, 8, -1))
     transcript_path = out_dir / "transcripts196.npz"
-    if not transcript_path.exists():
-        by_key = {row["text_key"]: texts_by_id[row["id"]] for row in rows}
-        unique_keys = sorted(by_key)
+    by_key = {row["text_key"]: texts_by_id[row["id"]] for row in rows}
+    unique_keys = sorted(by_key)
+    transcript_valid = False
+    try:
+        with np.load(transcript_path, allow_pickle=False) as saved:
+            saved_keys = tuple(str(value) for value in saved["text_keys"])
+            saved_embeddings = np.asarray(saved["embeddings"], dtype=np.float32)
+            transcript_valid = (saved_keys == tuple(unique_keys) and
+                                saved_embeddings.shape == (len(unique_keys), EMBEDDING_SIZE) and
+                                bool(np.isfinite(saved_embeddings).all()))
+    except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile):
+        transcript_valid = False
+    if not transcript_valid:
         unique_texts = [by_key[key] for key in unique_keys]
         text_embeddings = np.asarray(model.encode(unique_texts, prompt_name="SearchDocument",
                                                   normalize_embeddings=True, batch_size=32), dtype=np.float32)
         if text_embeddings.shape != (len(unique_texts), EMBEDDING_SIZE):
             raise ValueError(f"unexpected transcript embedding shape: {text_embeddings.shape}")
-        np.savez_compressed(transcript_path, text_keys=np.asarray(unique_keys),
-                            embeddings=text_embeddings)
+        if not np.isfinite(text_embeddings).all():
+            raise ValueError("transcript embeddings contain non-finite values")
+        _atomic_npz(transcript_path, text_keys=np.asarray(unique_keys), embeddings=text_embeddings)
 
 
 def _record_one(row: dict[str, str], raw: bytes, record_dir: Path, model: Any,
@@ -332,19 +369,95 @@ def _cached_status(path: Path) -> str | None:
         return None
 
 
+def _distribution_version(distribution: str) -> str:
+    try:
+        return importlib_metadata.version(distribution)
+    except importlib_metadata.PackageNotFoundError as exc:
+        raise RuntimeError(f"required distribution is unavailable: {distribution}") from exc
+
+
+def _snapshot_directory(model_path: Path | None) -> Path:
+    if model_path is not None:
+        snapshot = model_path.expanduser().resolve()
+        if not snapshot.is_dir():
+            raise FileNotFoundError(f"model snapshot directory does not exist: {snapshot}")
+        return snapshot
+    from huggingface_hub import snapshot_download
+
+    return Path(snapshot_download(repo_id=MODEL_ID, revision=MODEL_REVISION,
+                                  local_files_only=True)).resolve()
+
+
+def _snapshot_revision(snapshot: Path, *, model_path: Path | None) -> str:
+    if re.fullmatch(r"[0-9a-f]{40}", snapshot.name):
+        return snapshot.name
+    return MODEL_REVISION if model_path is None else "local-unpinned"
+
+
+def _weight_digest(snapshot: Path) -> str:
+    weight_paths = sorted(path for path in snapshot.rglob("*") if path.is_file() and
+                          path.suffix.lower() in {".safetensors", ".bin", ".pt", ".pth"})
+    if not weight_paths:
+        raise FileNotFoundError(f"no model weight files found under {snapshot}")
+    aggregate = hashlib.sha256()
+    for path in weight_paths:
+        file_hash = hashlib.sha256()
+        with path.open("rb") as stream:
+            for block in iter(lambda: stream.read(8 * 1024 * 1024), b""):
+                file_hash.update(block)
+        aggregate.update(path.relative_to(snapshot).as_posix().encode("utf-8"))
+        aggregate.update(b"\0")
+        aggregate.update(file_hash.hexdigest().encode("ascii"))
+        aggregate.update(b"\n")
+    return aggregate.hexdigest()
+
+
+def recording_identity(*, rows: list[dict[str, str]], data_dir: Path,
+                       model_path: Path | None = None,
+                       snapshot_dir: Path | None = None,
+                       package_versions: dict[str, str] | None = None) -> dict[str, Any]:
+    """Describe the exact registered snapshot and runtime that produced resumable rows."""
+    snapshot = snapshot_dir.resolve() if snapshot_dir is not None else _snapshot_directory(model_path)
+    revision = _snapshot_revision(snapshot, model_path=model_path)
+    if revision != MODEL_REVISION:
+        raise ValueError(f"model snapshot revision {revision!r} differs from registered {MODEL_REVISION}")
+    versions = package_versions or {
+        "transformers": _distribution_version("transformers"),
+        "sentence_transformers": _distribution_version("sentence-transformers"),
+        "torch": _distribution_version("torch"),
+    }
+    return {"model_id": MODEL_ID,
+            "model_snapshot_revision": revision,
+            "model_path": str(model_path.resolve()) if model_path else "hub",
+            "model_snapshot_path": str(snapshot),
+            "weight_sha256": _weight_digest(snapshot),
+            "transformers_version": versions["transformers"],
+            "sentence_transformers_version": versions["sentence_transformers"],
+            "torch_version": versions["torch"],
+            "manifest_sha256": manifest_sha(rows), "data_dir": str(data_dir.resolve())}
+
+
+def write_or_check_identity(identity_path: Path, identity: dict[str, Any]) -> None:
+    """Write the identity once; refuse all resumes with a different run identity."""
+    if identity_path.exists():
+        try:
+            previous = json.loads(identity_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise ValueError("recording work directory identity is corrupt; use a fresh work directory") from exc
+        if previous != identity:
+            raise ValueError("recording work directory identity differs; use a fresh work directory")
+        return
+    _atomic_json(identity_path, identity)
+
+
 def run_recording(*, manifest_path: Path, data_dir: Path, work_dir: Path,
                   model_path: Path | None = None, threads: int = 6) -> dict[str, Any]:
     rows = read_manifest(manifest_path)
     work_dir.mkdir(parents=True, exist_ok=True)
+    identity = recording_identity(rows=rows, data_dir=data_dir, model_path=model_path)
+    write_or_check_identity(work_dir / "identity.json", identity)
     record_dir = work_dir / "records"
     record_dir.mkdir(parents=True, exist_ok=True)
-    identity = {"model_id": MODEL_ID, "model_revision": MODEL_REVISION,
-                "model_path": str(model_path) if model_path else "hub",
-                "manifest_sha256": manifest_sha(rows), "data_dir": str(data_dir)}
-    identity_path = work_dir / "identity.json"
-    if identity_path.exists() and json.loads(identity_path.read_text(encoding="utf-8")) != identity:
-        raise ValueError("recording work directory identity differs; use a fresh work directory")
-    identity_path.write_text(json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     record188, torch, model, layers, buffer, hooks = load_part188(model_path, threads)
     started = time.perf_counter()
@@ -362,8 +475,7 @@ def run_recording(*, manifest_path: Path, data_dir: Path, work_dir: Path,
 
         query_path = work_dir / "prompts196.npz"
         transcript_path = work_dir / "transcripts196.npz"
-        if not query_path.exists() or not transcript_path.exists():
-            encode_text_assets(model, accepted, texts_by_id, work_dir)
+        encode_text_assets(model, accepted, texts_by_id, work_dir)
 
         # Read and record in bounded row groups; no worker pool or GPU is used.
         completed = 0
@@ -384,9 +496,19 @@ def run_recording(*, manifest_path: Path, data_dir: Path, work_dir: Path,
                 completed += 1
                 if completed % 50 == 0:
                     print(f"clips_processed={completed}/{len(accepted)}", flush=True)
-        return {"gate1": gate1["verdict"], "gate2": gate2["verdict"],
+        successful_ids = {row["id"] for row in accepted
+                          if _cached_status(record_dir / f"{row['id']}.npz") == "ok"}
+        final_gate1 = gate1_check_recorded(rows, successful_ids)
+        final_gate1["length_filter"] = gate1.get("length_filter", {})
+        final_gate1["recording"] = {"successful_in_range": len(successful_ids),
+                                    "attempted_or_resumed": len(accepted)}
+        _atomic_json(work_dir / "gate1.json", final_gate1)
+        if final_gate1["verdict"] != "passed":
+            raise RuntimeError("Gate 1 failed on successfully recorded in-range clips")
+        return {"gate1": final_gate1["verdict"], "gate2": gate2["verdict"],
                 "selected_after_length_filter": len(accepted), "recorded_this_run": completed,
-                "resumed_ok": skipped, "elapsed_seconds": time.perf_counter() - started,
+                "resumed_ok": skipped, "successfully_recorded_in_range": len(successful_ids),
+                "elapsed_seconds": time.perf_counter() - started,
                 "work_dir": str(work_dir)}
     finally:
         for hook in hooks:

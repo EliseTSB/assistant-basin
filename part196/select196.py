@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Build Part 196's metadata-only shared-text clip manifest."""
+"""Build Part 196's WAV-header-filtered shared-text clip manifest."""
 from __future__ import annotations
 
 import argparse
 import csv
 import hashlib
+import io
+import wave
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Iterable
@@ -12,8 +14,37 @@ from typing import Any, Iterable
 STYLES = ("confused", "default", "enunciated", "happy", "laughing", "sad", "whisper")
 SEED = 196
 MIN_CELL = 40
+SAMPLE_RATE = 16_000
+MIN_DURATION_SECONDS = 2.0
+MAX_DURATION_SECONDS = 10.0
 MANIFEST_FIELDS = ("id", "speaker_id", "style", "text_key", "fold", "shard", "row_index",
                    "duration_seconds", "duration_status")
+
+
+def clip_sample_limit(sample_rate: int = SAMPLE_RATE) -> int:
+    """Registered maximum clip length in samples, shared by selection and decoding."""
+    if sample_rate <= 0:
+        raise ValueError("sample rate must be positive")
+    return int(MAX_DURATION_SECONDS * sample_rate)
+
+
+def duration_in_registered_range(duration_seconds: float) -> bool:
+    """Apply the registered inclusive 2–10 s range using the shared sample cap."""
+    try:
+        duration = float(duration_seconds)
+    except (TypeError, ValueError):
+        return False
+    return MIN_DURATION_SECONDS <= duration <= clip_sample_limit() / SAMPLE_RATE
+
+
+def wav_duration(raw: bytes) -> float:
+    """Read clip duration from a WAV header without decoding sample data."""
+    with wave.open(io.BytesIO(raw), "rb") as audio:
+        rate = audio.getframerate()
+        frames = audio.getnframes()
+        if rate <= 0:
+            raise ValueError("WAV has an invalid sample rate")
+        return frames / rate
 
 
 def text_key(text: str) -> str:
@@ -26,7 +57,7 @@ def _cell_key(row: dict[str, Any]) -> tuple[str, str]:
 
 
 def shared_text_pool(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Keep seven-style clips whose text is shared by styles for one speaker only."""
+    """Keep in-range clips whose text is shared across styles for one speaker only."""
     materialized = [dict(row) for row in rows]
     text_speakers: dict[str, set[str]] = defaultdict(set)
     speaker_text_styles: dict[tuple[str, str], set[str]] = defaultdict(set)
@@ -39,6 +70,8 @@ def shared_text_pool(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
         if text is None or speaker is None or clip_id is None:
             continue
         if style not in STYLES:
+            continue
+        if not duration_in_registered_range(row.get("duration_seconds")):
             continue
         text = str(text)
         speaker = str(speaker)
@@ -55,6 +88,8 @@ def shared_text_pool(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
                                          row.get("id"), row.get("style"))
         if text is None or speaker is None or clip_id is None or style not in STYLES:
             continue
+        if not duration_in_registered_range(row.get("duration_seconds")):
+            continue
         text, speaker, clip_id = str(text), str(speaker), str(clip_id)
         if len(text_speakers[text]) != 1:
             continue
@@ -70,29 +105,46 @@ def shared_text_pool(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def draw_manifest(rows: Iterable[dict[str, Any]], *, seed: int = SEED,
                   per_cell: int = 100) -> tuple[list[dict[str, Any]], dict[str, int]]:
-    """Draw at most per_cell clips per speaker/style in stable cell and id order."""
+    """Draw shared texts in a fixed order, retaining at least two styles per drawn cluster."""
     import numpy as np
 
     if per_cell <= 0:
         raise ValueError("per_cell must be positive")
     pool = shared_text_pool(rows)
     cells: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    by_speaker_text: dict[tuple[str, str], dict[str, list[dict[str, Any]]]] = defaultdict(
+        lambda: defaultdict(list))
     for row in pool:
         cells[_cell_key(row)].append(row)
+        by_speaker_text[(str(row["speaker_id"]), str(row["text"]))][str(row["style"])].append(row)
     speakers = sorted({str(row["speaker_id"]) for row in pool})
     rng = np.random.default_rng(seed)
     selected: list[dict[str, Any]] = []
     pool_sizes: dict[str, int] = {}
     for speaker in speakers:
+        speaker_texts = sorted(text for row_speaker, text in by_speaker_text if row_speaker == speaker)
+        if speaker_texts:
+            speaker_texts = [speaker_texts[int(index)] for index in rng.permutation(len(speaker_texts))]
+        cell_counts = {style: 0 for style in STYLES}
         for style in STYLES:
-            candidates = sorted(cells.get((speaker, style), []), key=lambda row: str(row["id"]))
-            pool_sizes[f"{speaker}/{style}"] = len(candidates)
-            take = min(per_cell, len(candidates))
-            if not take:
+            pool_sizes[f"{speaker}/{style}"] = len(cells.get((speaker, style), []))
+        for text in speaker_texts:
+            if all(cell_counts[style] >= per_cell for style in STYLES):
+                break
+            styles_to_add = [style for style in STYLES
+                             if cell_counts[style] < per_cell and
+                             by_speaker_text[(speaker, text)].get(style)]
+            if len(styles_to_add) < 2:
                 continue
-            chosen = rng.choice(len(candidates), size=take, replace=False)
-            selected.extend(candidates[int(index)] for index in chosen)
-    # Stable output and recorder order after using the registered sequential RNG draws.
+            for style in styles_to_add:
+                candidates = sorted(by_speaker_text[(speaker, text)][style],
+                                    key=lambda row: str(row["id"]))
+                remaining = per_cell - cell_counts[style]
+                added = candidates[:remaining]
+                selected.extend(added)
+                cell_counts[style] += len(added)
+
+    # Stable output and recorder order after the registered per-speaker text shuffles.
     selected.sort(key=lambda row: (str(row["speaker_id"]), STYLES.index(row["style"]), str(row["id"])))
     manifest = []
     for row in selected:
@@ -102,8 +154,8 @@ def draw_manifest(rows: Iterable[dict[str, Any]], *, seed: int = SEED,
             "fold": str(row["speaker_id"]),
             "shard": str(row.get("shard", "")),
             "row_index": str(row.get("row_index", "")),
-            "duration_seconds": "",
-            "duration_status": "deferred_to_recorder",
+            "duration_seconds": f"{float(row['duration_seconds']):.9g}",
+            "duration_status": "in_range_wav_header",
         })
     return manifest, pool_sizes
 
@@ -144,6 +196,13 @@ def gate1_check(rows: Iterable[dict[str, Any]], *, included_ids: set[str] | None
             "folds": folds}
 
 
+def gate1_check_recorded(rows: Iterable[dict[str, Any]], successful_ids: set[str], *,
+                         min_per_cell: int = MIN_CELL) -> dict[str, Any]:
+    """Apply Gate 1 to only clips that survived filtering and recorded successfully."""
+    return gate1_check(rows, included_ids={str(value) for value in successful_ids},
+                       min_per_cell=min_per_cell)
+
+
 def read_metadata(data_dir: Path) -> list[dict[str, Any]]:
     """Read only id/text/speaker/style columns; audio is deliberately not touched."""
     try:
@@ -167,6 +226,53 @@ def read_metadata(data_dir: Path) -> list[dict[str, Any]]:
     return result
 
 
+def read_metadata_with_wav_headers(data_dir: Path) -> list[dict[str, Any]]:
+    """Read seven-style metadata and WAV headers, retaining only in-range candidates."""
+    import pyarrow.parquet as pq
+
+    metadata = [row for row in read_metadata(data_dir) if row.get("style") in STYLES]
+    by_shard: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in metadata:
+        by_shard[str(row["shard"])].append(row)
+
+    for shard_name, shard_rows in sorted(by_shard.items()):
+        parquet = pq.ParquetFile(data_dir / shard_name)
+        by_group: dict[int, list[tuple[dict[str, Any], int]]] = defaultdict(list)
+        offset = 0
+        for group in range(parquet.num_row_groups):
+            count = parquet.metadata.row_group(group).num_rows
+            for row in shard_rows:
+                row_index = int(row["row_index"])
+                if offset <= row_index < offset + count:
+                    by_group[group].append((row, row_index - offset))
+            offset += count
+
+        for group, selections in sorted(by_group.items()):
+            table = parquet.read_row_group(group, columns=["audio", "id"])
+            audio_column = table.column("audio")
+            ids = table.column("id").to_pylist()
+            for row, local_index in selections:
+                if str(ids[local_index]) != str(row["id"]):
+                    raise ValueError(f"parquet identity mismatch for {row['id']}")
+                item = audio_column[local_index].as_py()
+                raw = item.get("bytes") if isinstance(item, dict) else None
+                if not isinstance(raw, (bytes, bytearray)):
+                    row["duration_seconds"] = None
+                    row["duration_status"] = "wav_header_error"
+                    continue
+                try:
+                    duration = wav_duration(bytes(raw))
+                except (OSError, EOFError, wave.Error, ValueError):
+                    row["duration_seconds"] = None
+                    row["duration_status"] = "wav_header_error"
+                    continue
+                row["duration_seconds"] = duration
+                row["duration_status"] = ("in_range_wav_header" if duration_in_registered_range(duration)
+                                           else "outside_2_to_10_seconds")
+            del table, audio_column, ids
+    return [row for row in metadata if duration_in_registered_range(row.get("duration_seconds"))]
+
+
 def write_manifest(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as stream:
@@ -182,16 +288,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--per-cell", type=int, default=100)
     args = parser.parse_args(argv)
-    metadata = read_metadata(args.data_dir)
+    metadata = read_metadata_with_wav_headers(args.data_dir)
     manifest, pool_sizes = draw_manifest(metadata, seed=args.seed, per_cell=args.per_cell)
     gate = gate1_check(manifest)
     write_manifest(args.out, manifest)
-    print({"manifest": str(args.out), "metadata_rows": len(metadata),
-           "drawn_rows": len(manifest), "duration_filter": "deferred to recorder",
-           "gate1_pre_duration": gate["verdict"], "pool_sizes_pre_duration": pool_sizes})
+    cluster_styles: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for row in manifest:
+        cluster_styles[(row["speaker_id"], row["text_key"])].add(row["style"])
+    shared_drawn_clusters = sum(len(styles) >= 2 for styles in cluster_styles.values())
+    cluster_share = shared_drawn_clusters / len(cluster_styles) if cluster_styles else 0.0
+    print({"manifest": str(args.out), "in_range_style_rows": len(metadata),
+           "drawn_rows": len(manifest), "duration_filter": "WAV headers before shared-text pool",
+           "gate1_in_range": gate["verdict"], "cell_counts": gate["cell_counts"],
+           "pool_sizes_in_range": pool_sizes,
+           "drawn_clusters_with_two_or_more_styles": shared_drawn_clusters,
+           "drawn_cluster_share_with_two_or_more_styles": cluster_share})
     if len(manifest) == 0:
         return 1
-    # Length exclusions are applied by the recorder; the final Gate 1 runs on those results.
     return 0 if gate["verdict"] == "passed" else 2
 
 

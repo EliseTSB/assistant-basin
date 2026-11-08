@@ -1,16 +1,22 @@
 Part 196 run steps
 
 1. From the repository root, create the metadata-only manifest:
-   /home/elisepc/neuron-probe/.venv/bin/python -B part196/select196.py --data-dir /mnt/e/neuron-probe/expresso/read --out part196/manifest196.csv
-   This reads id, text, speaker_id, and style only. The recorder applies the deferred 2 to 10 second WAV-header filter.
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B part196/select196.py --data-dir /mnt/e/neuron-probe/expresso/read --out part196/manifest196.csv
+   The selector reads id, text, speaker_id, style, and WAV headers only; it applies the 2 to 10 second filter before
+   building the shared-text pool and drawing texts. It never decodes audio.
 2. Do not start recording while an A770 job is running, and start it only with at least 10 GB free in Windows (drop
    WSL's page cache first: echo 1 | sudo -n tee /proc/sys/vm/drop_caches). Run on CPU, 6 threads as Part 188 measured,
    under a 6 GiB cgroup limit, from a detached scope so it survives a session boundary:
-   setsid nohup systemd-run --user --scope --collect --unit=part196-record --property=MemoryMax=6G env OMP_NUM_THREADS=6 MKL_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -I -B part196/record196.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --threads 6 > results/part196-record.log 2>&1 < /dev/null &
-   Gate 2 runs first. A parity failure stops before an Expresso clip is recorded; Gate 1 runs after the header filter.
-   Successful clip rows and text assets are resumable from /mnt/e/neuron-probe/part196-work.
+   First check the loader's extra package source in this exact environment:
+   PYTHONPATH=/home/elisepc/eg2-extra /home/elisepc/neuron-probe/.venv/bin/python -c 'import sentence_transformers, imageio_ffmpeg'
+   Then run the recorder without isolated mode so it sees those packages:
+   setsid nohup systemd-run --user --scope --collect --unit=part196-record --property=MemoryMax=6G env PYTHONPATH=/home/elisepc/eg2-extra OMP_NUM_THREADS=6 MKL_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -B part196/record196.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --threads 6 > results/part196-record.log 2>&1 < /dev/null &
+   Gate 2 runs first. A parity failure stops before an Expresso clip is recorded; Gate 1 is checked after the header
+   filter and again on successfully recorded clips before analysis. `pyworld` is used by Part 196's acoustic feature
+   extractor (not by Part 188's model loader); install the `pyworld` Python package into this interpreter's environment.
+   Successful clip rows and atomically written text assets are resumable from /mnt/e/neuron-probe/part196-work.
 3. After recording finishes, run:
-   /home/elisepc/neuron-probe/.venv/bin/python -B part196/analyze196.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --out-dir results/part196
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B part196/analyze196.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --out-dir results/part196
    Read results/part196/results.json only when both gates passed.
 4. Synthetic checks:
-   /home/elisepc/neuron-probe/.venv/bin/python -B -m pytest -q part196/test_part196.py
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B -m pytest -q -p no:cacheprovider part196/test_part196.py

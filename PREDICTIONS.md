@@ -3539,4 +3539,4 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 196.5 | Claude (medium-low. confidence): B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | | |
 | 196.6 | Claude (medium confidence): Whisper has the highest per-style recall under A, B and D. Reason: Whisper is acoustically the most distinct style. | | |
 | 196.7 | Claude (medium. confidence): H, the acoustic baseline, reaches at least 40% balanced accuracy. | | |
-| 196.8 | Claude (medium confidence): T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. Reason: Every kept text is read in at least two styles. | | |
+| 196.8 | Claude (medium confidence): T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. Reason: the in-range text-first draw keeps every drawn (speaker, text) cluster in at least two styles. | | |

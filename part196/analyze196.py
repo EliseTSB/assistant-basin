@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -15,7 +16,8 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
-from part196.select196 import STYLES, gate1_check  # noqa: E402
+from part196.select196 import STYLES, gate1_check_recorded  # noqa: E402
+from part196.record196 import MODEL_ID, MODEL_REVISION, manifest_sha  # noqa: E402
 from part188.analyze188 import auc_per_unit  # noqa: E402
 
 BOOTSTRAPS = 2000
@@ -272,6 +274,53 @@ def headline_outcome(point_difference: float | None,
     return "inconclusive"
 
 
+def reverse_paired_difference(mean: float | None,
+                              interval: dict[str, Any]) -> dict[str, Any]:
+    """Reverse a paired difference and its confidence limits without losing the sign."""
+    low, high = interval.get("low"), interval.get("high")
+    reversed_interval = {"low": -high if high is not None else None,
+                         "high": -low if low is not None else None}
+    if "n_boot" in interval:
+        reversed_interval["n_boot"] = interval["n_boot"]
+    return {"mean_balanced_accuracy_difference": -mean if mean is not None else None,
+            "text_cluster_95": reversed_interval}
+
+
+def reading_conditions(d_interval: dict[str, Any],
+                       b56_minus_d_interval: dict[str, Any]) -> dict[str, Any]:
+    """Compute the two registered stronger-reading conditions on their stated scales."""
+    chance = 1.0 / 7.0
+    d_low = d_interval.get("low")
+    b56_d_low = b56_minus_d_interval.get("low")
+    return {
+        "d_above_chance": {"threshold": chance, "lower_95_bound": d_low,
+                           "condition_passed": bool(d_low is not None and d_low > chance)},
+        "b56_minus_d_non_inferiority": {
+            "lower_bound_threshold": -0.03,
+            "lower_95_bound": b56_d_low,
+            "condition_passed": bool(b56_d_low is not None and b56_d_low > -0.03)},
+    }
+
+
+def _validate_work_identity(work_dir: Path, rows: list[dict[str, str]]) -> dict[str, Any]:
+    """Refuse analysis of work from another manifest or an incomplete recorder identity."""
+    identity_path = work_dir / "identity.json"
+    if not identity_path.is_file():
+        raise FileNotFoundError(f"recorder identity is missing: {identity_path}")
+    identity = json.loads(identity_path.read_text(encoding="utf-8"))
+    required = {"model_id", "model_snapshot_revision", "weight_sha256", "transformers_version",
+                "sentence_transformers_version", "torch_version", "manifest_sha256"}
+    if not required.issubset(identity):
+        raise ValueError(f"recorder identity is incomplete: {sorted(required - set(identity))}")
+    if identity["model_id"] != MODEL_ID or identity["model_snapshot_revision"] != MODEL_REVISION:
+        raise ValueError("recorder identity does not match the registered model snapshot")
+    if not re.fullmatch(r"[0-9a-f]{64}", str(identity["weight_sha256"])):
+        raise ValueError("recorder identity has an invalid model weight hash")
+    if identity["manifest_sha256"] != manifest_sha(rows):
+        raise ValueError("recorder identity manifest differs from the analysis manifest")
+    return identity
+
+
 def _read_records(rows: list[dict[str, str]], work_dir: Path
                   ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, list[str]]:
     n = len(rows)
@@ -427,7 +476,9 @@ def _early_result(manifest_rows: list[dict[str, str]], gate1: dict[str, Any],
     result = {"study": "part196", "status": "gates_failed", "n_manifest_rows": len(manifest_rows),
               "gate1": gate1, "gate2": gate2, "readouts": {}, "paired_differences": {},
               "diagnostics": {}, "predictions": {}}
-    result["reading_rule"] = {"headline_196_4": "not_read", "reason": reason}
+    result["reading_rule"] = {"headline_196_4": "not_read", "reason": reason,
+                              "conditions": {"d_above_chance": "not_read",
+                                             "b56_minus_d_non_inferiority": "not_read"}}
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "results.json").write_text(json.dumps(_jsonable(result), indent=2, sort_keys=True,
                                                        allow_nan=False) + "\n", encoding="utf-8")
@@ -436,6 +487,7 @@ def _early_result(manifest_rows: list[dict[str, str]], gate1: dict[str, Any],
 
 def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, Any]:
     rows = _read_rows(manifest_path)
+    _validate_work_identity(work_dir, rows)
     out_dir.mkdir(parents=True, exist_ok=True)
     activations, embeddings, acoustic, _duration, record_status, record_errors = _read_records(rows, work_dir)
     durations_path = work_dir / "durations.json"
@@ -445,8 +497,12 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
         length_ids = {row["id"] for index, row in enumerate(rows)
                       if record_status[index] == "ok" and np.isfinite(_duration[index]) and
                       2.0 <= float(_duration[index]) <= 10.0}
-    gate1 = gate1_check(rows, included_ids=length_ids)
+    active = np.asarray([i for i, row in enumerate(rows)
+                         if row["id"] in length_ids and record_status[i] == "ok"], dtype=int)
+    successful_ids = {rows[index]["id"] for index in active}
+    gate1 = gate1_check_recorded(rows, successful_ids)
     gate1["speaker_count"] = len({row["speaker_id"] for row in rows})
+    gate1["recorded_in_range_count"] = len(successful_ids)
     if gate1["speaker_count"] != 4:
         gate1["verdict"] = "failed"
         gate1["reason"] = f"expected four held-out speakers, found {gate1['speaker_count']}"
@@ -463,8 +519,6 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
         return _early_result(rows, gate1, gate2, out_dir,
                              "Gate 1 and Gate 2 must pass before any readout is computed")
 
-    active = np.asarray([i for i, row in enumerate(rows)
-                         if row["id"] in length_ids and record_status[i] == "ok"], dtype=int)
     if not len(active):
         return _early_result(rows, gate1, gate2, out_dir, "no successful in-range recordings")
     prompt_path = work_dir / "prompts196.npz"
@@ -631,10 +685,16 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
         diff_means[name] = {"mean_balanced_accuracy_difference":
                             (left_value - right_value if left_value is not None and right_value is not None else None),
                             "text_cluster_95": paired_intervals[name]}
+    diff_means["B56_minus_D"] = reverse_paired_difference(
+        diff_means["D_minus_B56"]["mean_balanced_accuracy_difference"],
+        diff_means["D_minus_B56"]["text_cluster_95"])
 
     headline_interval = paired_intervals["D_minus_B"]
     headline_point = diff_means["D_minus_B"]["mean_balanced_accuracy_difference"]
     headline = headline_outcome(headline_point, headline_interval)
+    conditions = reading_conditions(
+        readout_results["D"]["balanced_accuracy_text_cluster_95"],
+        diff_means["B56_minus_D"]["text_cluster_95"])
     d_minus_a = diff_means["D_minus_A"]
     b_minus_a = diff_means["B_minus_A"]
     d_minus_a_interval = d_minus_a["text_cluster_95"]
@@ -674,6 +734,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
                   "verdict": headline},
         "196.5": {"prediction": "B56 within 0.03 balanced accuracy of D",
                   "D_minus_B56": diff_means["D_minus_B56"],
+                  "B56_minus_D": diff_means["B56_minus_D"],
                   "verdict": "held" if d_mean is not None and b56_mean is not None and
                   abs(d_mean - b56_mean) <= 0.03 else "not_held"},
         "196.6": {"prediction": "whisper has highest mean per-style recall under A, B and D",
@@ -707,6 +768,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
               "reading_rule": {"headline_196_4": headline,
                                "D_minus_B_interval": headline_interval,
                                "equivalence_bounds": [-0.03, 0.03],
+                               "conditions": conditions,
                                "calibration_credited_only_if_B_minus_A_interval_above_zero": True,
                                "auc_computed_within_each_heldout_speaker": True},
               "predictions": predictions}
@@ -738,7 +800,10 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps({"results": str(args.out_dir / "results.json"),
                       "status": result["status"],
                       "gate_verdicts": {"gate1": result["gate1"]["verdict"],
-                                        "gate2": result["gate2"]["verdict"]}}, sort_keys=True))
+                                        "gate2": result["gate2"]["verdict"]},
+                      "reading_conditions": result.get("reading_rule", {}).get("conditions", {
+                          "d_above_chance": "not_read",
+                          "b56_minus_d_non_inferiority": "not_read"})}, sort_keys=True))
     return 0 if result["gate1"]["verdict"] == "passed" and result["gate2"]["verdict"] == "passed" else 2
 
 
