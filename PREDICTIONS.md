@@ -3547,14 +3547,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 196.1 | Claude (medium confidence): A, the single-label verdict, has four-speaker mean balanced accuracy at most 35%. Reason: Zero-shot style labels were weak in SLAP and Koduru et al. | | |
-| 196.2 | Claude (medium confidence): D, the final-embedding probe, has four-speaker mean balanced accuracy at least 70%. Reason: Other encoders reach 82 to 85%, but held-out speakers and shared texts make it harder. | | |
-| 196.3 | Claude (medium-low confidence): If D beats A (interval of D minus A above 0), B closes at least half of that gap; otherwise not applicable. Reason: Villuri et al. found calibration closed most of a probe gap. | | |
-| 196.4 | Claude (low-medium confidence): D minus B is at least 5 points of balanced accuracy with its 95% interval above 0 (outcome "gap supported" in the reading rules). Reason: The headline. | | |
-| 196.5 | Claude (medium-low. confidence): B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | | |
-| 196.6 | Claude (medium confidence): Whisper has the highest per-style recall under A, B and D. Reason: Whisper is acoustically the most distinct style. | | |
-| 196.7 | Claude (medium. confidence): H, the acoustic baseline, reaches at least 40% balanced accuracy. | | |
-| 196.8 | Claude (medium confidence): T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. Reason: the in-range text-first draw keeps every drawn (speaker, text) cluster in at least two styles. | | |
+| 196.1 | Claude (medium confidence): A, the single-label verdict, has four-speaker mean balanced accuracy at most 35%. Reason: Zero-shot style labels were weak in SLAP and Koduru et al. | A 15.1% (14.3 to 15.9) (results/part196/results.json) | HELD |
+| 196.2 | Claude (medium confidence): D, the final-embedding probe, has four-speaker mean balanced accuracy at least 70%. Reason: Other encoders reach 82 to 85%, but held-out speakers and shared texts make it harder. | D 25.8% (24.5 to 27.2) (results/part196/results.json) | FAILED |
+| 196.3 | Claude (medium-low confidence): If D beats A (interval of D minus A above 0), B closes at least half of that gap; otherwise not applicable. Reason: Villuri et al. found calibration closed most of a probe gap. | D minus A 10.7 points (9.2 to 12.3); B minus A 2.1 (1.0 to 3.3), 20% of the gap (results/part196/results.json) | FAILED |
+| 196.4 | Claude (low-medium confidence): D minus B is at least 5 points of balanced accuracy with its 95% interval above 0 (outcome "gap supported" in the reading rules). Reason: The headline. | D minus B 8.6 points (7.0 to 10.4); D lower bound 24.5% above chance: gap supported (results/part196/results.json) | HELD |
+| 196.5 | Claude (medium-low. confidence): B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | B56 minus D -4.1 points (-5.6 to -2.4); non-inferiority bound not met (results/part196/results.json) | FAILED |
+| 196.6 | Claude (medium confidence): Whisper has the highest per-style recall under A, B and D. Reason: Whisper is acoustically the most distinct style. | top style: A default, B laughing, D laughing (whisper 5.6%, 20.1%, 29.9%) (results/part196/results.json) | FAILED |
+| 196.7 | Claude (medium. confidence): H, the acoustic baseline, reaches at least 40% balanced accuracy. | H 51.8% (50.3 to 53.3) (results/part196/results.json) | HELD |
+| 196.8 | Claude (medium confidence): T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. Reason: the in-range text-first draw keeps every drawn (speaker, text) cluster in at least two styles. | T 14.7% (14.2 to 15.2) (results/part196/results.json) | HELD |
 
 ## Part 193 (registered 2026-11-08 05:04 CT, before any data; design PART193-DESIGN.md)
 
@@ -3575,3 +3575,13 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 195.4 | Claude (medium confidence): Coherent counts stay within 8 of the published values: k0 103 to 119 (111), k1 17 to 33 (25), k2 9 to 25 (17), k3 26 to 42 (34), and k4 19 to 35 (27), all of 128. Among k1's coherent topic answers, 10 to 16 of 15 to 19 are conspiratorial (published 14 of 17). Reason: coherence is a reader judgment and the subset count has a small denominator. | coherent k0 128, k1 121, k2 86, k3 128, k4 106; k1 coherent topic 39 of 94 conspiratorial (results/part195/main/results81.json) | FAILED |
 | 195.5 | Claude (low confidence): Each maker category count stays within 5 of the published qwen/other-company/invented/none counts: k0 31/1/0/0, k1 12/8/9/3, k2 9/23/0/0, k3 22/7/3/0, and k4 12/15/4/1, all of 32. Reason: the published maker labels were uneven on mixed Qwen and company claims, and each condition has 32 answers. | every maker category within 5 of published (results/part195/main/results81.json) | HELD |
 | 195.6 | Claude (medium confidence): All six scorable Part 81 verdicts stay the same: 81.1 holds, 81.2 holds, 81.3 fails, 81.4 holds, 81.5 fails, and 81.6 holds. Each is scored from the new eager pilot/main answers and the new blind labels. Reason: verdicts 81.1 and 81.5 depend on small reader-count margins. | 81.1 holds, 81.2 holds, 81.3 fails, 81.4 holds, 81.5 fails, 81.6 holds (results/part195/main/results81.json) | HELD |
+## Part 197 (registered 2026-11-08 07:38 CT, before any Part 197 readout; prospective analysis of Part 196's recorded clips; design PART197-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 197.1 | Claude (medium confidence): EN minus N is at least 5 points of balanced accuracy with its 95% interval above 0 (adding layer 0 improves this linear pipeline given N). Reason: E0 62.7% against H 51.8% in Part 196; duration adds to N. | | |
+| 197.2 | Claude (medium-low confidence): R has four-speaker mean balanced accuracy at least 45%. Reason: layer 0 has 2,048 units and its per-style pattern differed from H's. | | |
+| 197.3 | Claude (medium confidence): EN minus E0 is at most 3 points (point estimate). | | |
+| 197.4 | Claude (medium confidence): K, duration and speaking rate only, is at most 30%. | | |
+| 197.5 | Claude (medium confidence): The best held-out layer L_k is layer 0, 1 or 2, and every layer from 20 to 23 is at most 35%. Reason: Part 196's inner curve. | | |
+| 197.6 | Claude (medium-low confidence): Speaker identity at layer 0 (S_0) is at least 80%. Reason: the final embedding was 33.3%. | | |

@@ -1,0 +1,12 @@
+Running as unit: part196-analyze.scope; invocation ID: c94de000ddb5417bbfd74ca499001abd
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 869, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 856, in main
+    result = analyze(manifest_path=args.manifest, work_dir=args.work_dir, out_dir=args.out_dir,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 621, in analyze
+    test_selected, _ = select_b_phrasings_from_details(test_cosines, selection)
+    ^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 2)
