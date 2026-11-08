@@ -3507,12 +3507,26 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 191.1 | Claude (high confidence): 153.1's verdict stands: at least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. Fails below 5. | | |
-| 191.2 | Claude (high confidence): The neurons' mean maker hit rate is between 0.45 and 0.80 (published 0.629). Fails outside. | | |
-| 191.3 | Claude (high confidence): 153.3's verdict stands: the neurons' mean maker hit rate is at least twice their paired random directions'. Fails below twice. | | |
-| 191.4 | Claude (high confidence): The random directions' mean maker hit rate is at most 0.20 (published 0.113). Fails above. | | |
-| 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | | |
-| 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | | |
+| 191.1 | Claude (high confidence): 153.1's verdict stands: at least 5 of the 10 neurons hit their company on at least 12 of the 24 maker phrasings. Fails below 5. | 7 of 10 | HELD |
+| 191.2 | Claude (high confidence): The neurons' mean maker hit rate is between 0.45 and 0.80 (published 0.629). Fails outside. | 0.596 | HELD |
+| 191.3 | Claude (high confidence): 153.3's verdict stands: the neurons' mean maker hit rate is at least twice their paired random directions'. Fails below twice. | 0.596 against 0.113 (5.30 times) | HELD |
+| 191.4 | Claude (high confidence): The random directions' mean maker hit rate is at most 0.20 (published 0.113). Fails above. | 0.113 | HELD |
+| 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | 17 of 24 maker, 7 of 8 identity | HELD |
+| 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | 153.1 held, 153.2 failed, 153.3 held, 153.4 held, as published | HELD |
+
+## Part 192 (registered 2026-11-08 00:29 CT, before any data; design PART192-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 192.1 | Claude (high confidence): Chat plain-read medians stay within 0.25 of the published 1.52 for requests, 2.56 for AI self-description, and 1.23 for third-person AI. | | |
+| 192.2 | Claude (high confidence): The chat request-to-third-person median ratio is 1.0 to 1.4 (published 1.2); Part 39.1 remains failed because the ratio stays below 4. | | |
+| 192.3 | Claude (medium confidence): Each chat-template assistant-marker median stays within 0.5 of 3.28, 3.91, 3.09, 3.37, 2.22, and 2.93, and all six remain above 2.0. Reason: the third-person median is only 0.22 above the threshold. | | |
+| 192.4 | Claude (medium confidence): Base plain medians stay within 0.25 of 1.46, 2.84, 0.11, 0.17, 0.95, and 0.09; the base/chat overall assistant-marker ratio stays between 0.65 and 0.85 (published about 0.76). Part 39.3 remains failed on its marker clause and held on its plain-order clause. Reason: this compares two model revisions. | | |
+| 192.5 | Claude (medium confidence): Zeroing changes no maker in six greedy answers; sampled AI claims stay at 48/48 baseline and 47/48 zeroed (within 3 answers), and random zero controls stay at least 115/120. Reason: each target sample is one stochastic generation. | | |
+| 192.6 | Claude (medium confidence): Sam-persona AI claims stay at 0/96 baseline, 0 to 4/96 at k=1, and 4 to 14/96 at k=2; every random k=2 control stays at 0 to 2/12. Reason: the 96-answer shares are sparse stochastic outcomes. | | |
+| 192.7 | Claude (medium confidence): The amendment 1 screen finds 180 to 240 chat passers including N753 and 175 to 235 base passers; N753 passes in both with addressee AUC 0.87 to 0.97. Reason: a small shift can move units at the shuffled 99th-percentile gate. | | |
+| 192.8 | Claude (medium confidence): The strict screen has 40 to 72 chat units, 30 to 58 base units, and 15 to 40 shared; at most 30 chat passers are in layers 0 to 12 (published 19 of 211). Part 39.7 and 39.10 remain held; 39.8 remains failed. Reason: strict counts depend on paired AUC cutoffs and the selected passing set. | | |
+| 192.9 | Claude (medium confidence): The ten published Part 39 verdicts this rerun can score remain the same: 39.1 failed, 39.2 held, 39.3 failed (plain order held), 39.4 held, 39.5 failed, 39.6 held, 39.7 held, 39.8 failed, 39.10 held, and 39.11 held (read as L6 N753 passing in the chat model under the AUC gate). 39.9 is not tested by this rerun. Reason: the zero and push samples are small; 39.9 came from Part 42's human logit-lens reading, which the AUC output does not carry. | | |
 
 ## Part 193 (registered <time from date> CT; design PART193-DESIGN.md)
 
