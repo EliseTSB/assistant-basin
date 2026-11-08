@@ -1,0 +1,10 @@
+== A_to_B: 13 imitations became H-nearest
+  their alpha=0 rank of nearest H clip: [13  0  0  0  0] (ranks 1..5)
+  their cos change to nearest H : -0.058 pt
+  their cos change to nearest nonH: -0.660 pt
+  median displacement of these clips: 0.0701 vs all imitations 0.0663
+== B_to_A: 37 imitations became H-nearest
+  their alpha=0 rank of nearest H clip: [37  0  0  0  0] (ranks 1..5)
+  their cos change to nearest H : -0.400 pt
+  their cos change to nearest nonH: -2.054 pt
+  median displacement of these clips: 0.1583 vs all imitations 0.0896
