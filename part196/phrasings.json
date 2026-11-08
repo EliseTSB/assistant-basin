@@ -1,0 +1,26 @@
+{
+  "note": "Part 196 text labels, eight per style, written 2026-11-08 before any Expresso audio was recorded. The first phrasing of each style is readout A's single label. Encoded with prompt_name='SearchQuery'.",
+  "styles": {
+    "confused": ["a person speaking in a confused voice", "someone sounding confused", "a puzzled, uncertain voice",
+                 "speech that sounds confused and unsure", "a hesitant, bewildered speaker", "confused speech",
+                 "a person speaking as if they do not understand", "a perplexed tone of voice"],
+    "default": ["a person speaking in a neutral voice", "plain neutral speech", "someone reading in a normal voice",
+                "a calm, ordinary speaking voice", "neutral reading aloud", "a person speaking normally",
+                "speech with no particular emotion", "a flat, matter-of-fact voice"],
+    "enunciated": ["a person speaking very clearly and slowly", "carefully enunciated speech",
+                   "someone over-pronouncing every word", "deliberate, articulated speech",
+                   "a person speaking as if to someone hard of hearing", "very precise pronunciation",
+                   "slow, clear speech", "exaggerated articulation"],
+    "happy": ["a person speaking in a happy voice", "cheerful speech", "someone sounding joyful",
+              "an excited, upbeat voice", "a smiling speaker", "happy speech", "a delighted voice",
+              "someone speaking with joy"],
+    "laughing": ["a person speaking while laughing", "speech interrupted by laughter", "someone giggling as they talk",
+                 "laughing speech", "a voice full of laughter", "talking and laughing at once",
+                 "a person who cannot stop laughing while speaking", "amused speech with laughter"],
+    "sad": ["a person speaking in a sad voice", "sad speech", "someone sounding unhappy",
+            "a sorrowful, downcast voice", "a person close to tears", "gloomy speech", "a melancholy speaker",
+            "a voice full of sadness"],
+    "whisper": ["a person whispering", "whispered speech", "someone speaking in a whisper", "a hushed, breathy voice",
+                "quiet whispering", "a soft whisper", "a person talking under their breath", "whispered words"]
+  }
+}
