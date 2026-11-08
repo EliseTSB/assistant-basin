@@ -37,9 +37,10 @@ column in the layer (neuron 1347), makes it the top neuron of its layer and laye
 predictions held. The two that failed (193.1 and 193.3) both rested on the pilot's estimate of W2's size, which was about
 200 times too small.
 
-What this does and does not show: these three edits, in this model, stand out to statistics that need no base weights,
-because the rank-one updates are far larger in weight norm than the matrices they edit. It says nothing about edits built to
-avoid detection, about other models, or about how much of that norm ordinary inputs ever exercise.
+What this does and does not show: in this model, the two rank-one edits stand out to statistics that need no base
+weights, because each update is far larger in weight norm than the matrix it edits. The one-neuron edit does not stand out
+on F1 or F2 at its published strength, and the per-neuron score that sees it is descriptive under the design. None of this
+bears on edits built to avoid detection, on other models, or on how much of that norm ordinary inputs ever exercise.
 
 ## Predictions
 
