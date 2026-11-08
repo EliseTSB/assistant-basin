@@ -18,7 +18,7 @@ HF_HUB_OFFLINE=1 PYTHONPATH=/home/elisepc/eg2-extra /home/elisepc/neuron-probe/.
 cd /home/elisepc/green/worktrees/ab-part193
 DATA=/home/elisepc/green/Journal/notes/reports/embeddinggemma2-chicken-neurons-2026-11-03
 BASE=/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e
-systemd-run --user --scope --wait -p MemoryMax=8G -- env HF_HUB_OFFLINE=1 PYTHONPATH=/home/elisepc/eg2-extra \
+systemd-run --user --scope -p MemoryMax=8G -- env HF_HUB_OFFLINE=1 PYTHONPATH=/home/elisepc/eg2-extra \
   /home/elisepc/neuron-probe/.venv/bin/python -B part193/chicken_edit/weight_edit.py \
   --acts "$DATA/acts.npz" --vis-acts "$DATA/vis_acts.npz" \
   --pixabay-acts "$DATA/pixabay_acts.npz" --vis-manifest "$DATA/vis_manifest.csv" \
@@ -38,7 +38,7 @@ systemd-run --user --scope --wait -p MemoryMax=8G -- env HF_HUB_OFFLINE=1 PYTHON
 
 ```sh
 BASE=/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e
-systemd-run --user --scope --wait -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
+systemd-run --user --scope -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
   /home/elisepc/neuron-probe/.venv/bin/python -I -B part193/stats193.py \
   --base-safetensors "$BASE/model.safetensors" \
   --saved-edits results/part193/edits.npz \
@@ -49,9 +49,11 @@ systemd-run --user --scope --wait -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
 
 ```sh
 BASE=/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e
-systemd-run --user --scope --wait -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
+systemd-run --user --scope -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
   /home/elisepc/neuron-probe/.venv/bin/python -I -B part193/stats193.py \
   --base-safetensors "$BASE/model.safetensors" \
   --saved-edits results/part193/edits.npz \
   --step0-results results/part193/weight_edit_results.json
 ```
+
+(2026-11-08 08:23, at Gate 1: `--wait` was removed from the three scope commands above. This host's systemd-run refuses `--wait` with `--scope`, and a scope already runs in the foreground, so the command is otherwise unchanged.)

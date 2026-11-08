@@ -223,3 +223,29 @@ moves (pilot (a)); it is reported at every dose like the others.
   is by construction when step 0 writes both files; f3_layer_null's ranks (descriptive only); 193.4 is computed after
   the statistics, so Gate 1 is what stops a bad run.
 - Registered 2026-11-08 05:04 CT, stamped from `date`.
+
+## Amendment 1 (2026-11-08 08:52 CT, after Gates 1 to 4 ran and before predictions 193.1 to 193.3 were read)
+
+Gate 4 failed. F1 ranked the twice-sigma synthetic edit first among its siblings in 22 of 24 placements. The two misses
+are placement 1, layer 7 `self_attn.q_proj` (rank 3), and placement 2, layer 1 `ple_block.per_layer_input_gate` (rank
+21). The code adds sigma times a random unit rank-one direction, as the design says, and the edited top singular values
+came out at about 2.04 times the base (10.32 against 5.06; 1.435 against 0.704). The fault is in the gate's premise, not
+its wiring. "That size must create a spike" assumed every sibling's top singular value is below twice the target's. In
+the unedited model, the ratio of the largest to the smallest top singular value across the 24 layers is 1.7 to 3.0 for
+eight roles and 6.8 for `per_layer_input_gate`, where layer 1's 0.704 is the smallest and 20 siblings exceed 1.408. For
+layer 7's `q_proj`, layers 17 (11.51) and 23 (11.39) exceed 10.32. Across all 24 placements, the rule "F1 ranks the edit
+first exactly when its edited top singular value exceeds every sibling's base value" holds 24 of 24, so the sibling
+groups, the metric and the ranking behave as wired. Cold review r1's statement that Gate 4 "could fail only for broken
+wiring" was wrong for the same reason; the design and that review both missed it.
+
+The reading rules stop the part only on a Gate 1 failure, so the part continues. The results README reports Gate 4 as
+failed, with this reason, before any prediction. Nothing in the code or the predictions changes.
+
+What had been seen when this was written: the gate records (Gates 1, 2 and 3 passed); the 24 Gate 4 placements and their
+F1 ranks; the top singular values of the 216 unedited ranked matrices; and prediction 193.4's record, which the
+statistics step prints (holds: thresholds 0.125 for W2 and 0.5 for W2c). Nothing from the W1, W2 or W2c edit ladders
+behind 193.1 to 193.3 had been read.
+
+One procedural deviation, also noted in `part193/steps.txt`: this host's `systemd-run` refuses `--wait` with
+`--scope`, so the scope commands ran without it (a scope runs in the foreground). The commands are otherwise as
+registered.
