@@ -267,6 +267,35 @@ def test_committed_manifest_keeps_each_drawn_text_cluster_multistyle():
     assert all(len(styles) >= 2 for styles in clusters.values())
 
 
+def test_selected_style_profile_ignores_reused_ids_in_other_styles():
+    # Expresso reuses ids: ex02_default_00001 is one default clip plus two longform rows (found by the real run).
+    rows = [
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "default", "text_key": text_key("one two"),
+         "duration_seconds": "2.0"},
+    ]
+    metadata = [
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "longform", "text": "a long passage"},
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "default", "text": "one two"},
+        {"id": "ex02_default_00001", "speaker_id": "ex02", "style": "longform", "text": "another passage"},
+    ]
+
+    profile = selected_style_profile(rows, {"ex02_default_00001"}, metadata)
+
+    assert profile["default"]["clip_count"] == 1
+    assert profile["default"]["mean_transcript_words"] == 2.0
+
+
+def test_selected_style_profile_refuses_a_wrong_transcript_for_the_same_identity():
+    rows = [
+        {"id": "a", "speaker_id": "ex01", "style": "happy", "text_key": text_key("one two"),
+         "duration_seconds": "2.0"},
+    ]
+    metadata = [{"id": "a", "speaker_id": "ex01", "style": "happy", "text": "something else"}]
+
+    with pytest.raises(ValueError, match="transcript hash differs"):
+        selected_style_profile(rows, {"a"}, metadata)
+
+
 def test_selected_style_profile_uses_manifest_durations_and_metadata_transcripts():
     rows = [
         {"id": "a", "speaker_id": "ex01", "style": "happy", "text_key": text_key("one two"),

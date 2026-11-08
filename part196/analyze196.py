@@ -38,15 +38,16 @@ def selected_style_profile(manifest_rows: list[dict[str, str]], analyzed_ids: se
     """Summarize successful manifest clips using WAV-header durations and metadata text."""
     selected = [row for row in manifest_rows if str(row["id"]) in analyzed_ids]
     selected_by_id = {str(row["id"]): row for row in selected}
+    # Expresso reuses some ids across styles (each such id is one `default` clip plus two `longform` rows), so a
+    # metadata row is matched on (id, speaker_id, style), the identity record196.read_transcripts uses (Amendment 2).
+    selected_by_identity = {(str(row["id"]), str(row["speaker_id"]), str(row["style"])): row for row in selected}
     transcript_by_id: dict[str, str] = {}
     for item in metadata_rows:
         clip_id = str(item.get("id", ""))
-        if clip_id not in selected_by_id:
+        identity = (clip_id, str(item.get("speaker_id", "")), str(item.get("style", "")))
+        if identity not in selected_by_identity:
             continue
-        row = selected_by_id[clip_id]
-        if (str(item.get("speaker_id", "")) != str(row["speaker_id"]) or
-                str(item.get("style", "")) != str(row["style"])):
-            raise ValueError(f"metadata identity differs from manifest for {clip_id}")
+        row = selected_by_identity[identity]
         transcript = item.get("text")
         if transcript is None:
             raise ValueError(f"metadata transcript is missing for {clip_id}")
