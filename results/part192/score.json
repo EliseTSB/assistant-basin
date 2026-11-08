@@ -1,0 +1,393 @@
+{
+  "schema_version": 1,
+  "tool": "part39.py (Part 39 score)",
+  "run_seed": 3901,
+  "models": {
+    "chat": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+    },
+    "base": {
+      "model": "Qwen/Qwen3.5-4B-Base",
+      "revision": "1001bb4d826a52d1f399e183466143f4da7b741b"
+    }
+  },
+  "scoring": {
+    "ai_claim_regex": "\\b(AI|artificial intelligence|language model|assistant|chatbot)\\b",
+    "maker_names": [
+      "Anthropic",
+      "DeepSeek",
+      "Alibaba",
+      "Google",
+      "OpenAI",
+      "Tongyi",
+      "Qwen"
+    ],
+    "broken_answer_rule": "fewer than 3 lexical words or any repeated normalized 4-gram appearing 3+ times",
+    "broken_answers_count_as_ai_claim": false,
+    "screen_identity_top_token_regex": "\\b(ai|assistant|model|chatbot|claude|gpt)\\b|人工智能|助手"
+  },
+  "read_measurements": {
+    "39.1": {
+      "help_request": 1.48828125,
+      "second_person_statement": 0.11669921875,
+      "ai_self_description": 2.5703125,
+      "human_self_description": 0.18310546875,
+      "third_person_ai": 1.21484375,
+      "neutral_prose": 0.08935546875
+    },
+    "39.2": {
+      "help_request": 3.28125,
+      "second_person_statement": 3.9296875,
+      "ai_self_description": 3.0859375,
+      "human_self_description": 3.390625,
+      "third_person_ai": 2.2265625,
+      "neutral_prose": 2.9296875
+    },
+    "39.3_base_plain": {
+      "help_request": 1.453125,
+      "second_person_statement": 0.1064453125,
+      "ai_self_description": 2.84375,
+      "human_self_description": 0.17138671875,
+      "third_person_ai": 0.95703125,
+      "neutral_prose": 0.09326171875
+    },
+    "39.3_assistant_marker_overall": {
+      "base": 2.3828125,
+      "chat": 3.0703125
+    }
+  },
+  "zero": {
+    "greedy_maker_changes": [],
+    "baseline_sampled_ai_share": {
+      "claims": 48,
+      "n": 48,
+      "broken": 0,
+      "share": 1.0
+    },
+    "zeroed_sampled_ai_share": {
+      "claims": 46,
+      "n": 48,
+      "broken": 0,
+      "share": 0.9583333333333334
+    },
+    "share_change": -0.04166666666666663
+  },
+  "push": {
+    "unclamped_share": {
+      "claims": 0,
+      "n": 96,
+      "broken": 0,
+      "share": 0.0
+    },
+    "k1_share": {
+      "claims": 0,
+      "n": 96,
+      "broken": 0,
+      "share": 0.0
+    },
+    "k2_share": {
+      "claims": 0,
+      "n": 96,
+      "broken": 0,
+      "share": 0.0
+    },
+    "k1_share_change": 0.0,
+    "k2_share_change": 0.0,
+    "random_control_shares": {
+      "0": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "1": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "2": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "3": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "4": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "5": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "6": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "7": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "8": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      },
+      "9": {
+        "claims": 0,
+        "n": 12,
+        "broken": 0,
+        "share": 0.0
+      }
+    }
+  },
+  "screen": {
+    "status": "broken",
+    "chat_target_passes": false,
+    "interpretation": "section D results were not evaluated because L6 N753 failed the chat screen gate"
+  },
+  "predictions": {
+    "39.1": {
+      "authored_claim": "Claude: chat plain medians for categories 1 and 3 are >=2x category 2 and >=4x categories 5 and 6.",
+      "category_medians": {
+        "help_request": 1.48828125,
+        "second_person_statement": 0.11669921875,
+        "ai_self_description": 2.5703125,
+        "human_self_description": 0.18310546875,
+        "third_person_ai": 1.21484375,
+        "neutral_prose": 0.08935546875
+      },
+      "checks": {
+        "help_request/second_person_statement": {
+          "ratio": 12.753138075313808,
+          "minimum": 2,
+          "passes": true
+        },
+        "help_request/third_person_ai": {
+          "ratio": 1.22508038585209,
+          "minimum": 4,
+          "passes": false
+        },
+        "help_request/neutral_prose": {
+          "ratio": 16.65573770491803,
+          "minimum": 4,
+          "passes": true
+        },
+        "ai_self_description/second_person_statement": {
+          "ratio": 22.02510460251046,
+          "minimum": 2,
+          "passes": true
+        },
+        "ai_self_description/third_person_ai": {
+          "ratio": 2.1157556270096465,
+          "minimum": 4,
+          "passes": false
+        },
+        "ai_self_description/neutral_prose": {
+          "ratio": 28.76502732240437,
+          "minimum": 4,
+          "passes": true
+        }
+      },
+      "supported": false
+    },
+    "39.2": {
+      "authored_claim": "Claude: the chat-template assistant-marker median exceeds 2.0 in every category.",
+      "assistant_marker_medians": {
+        "help_request": 3.28125,
+        "second_person_statement": 3.9296875,
+        "ai_self_description": 3.0859375,
+        "human_self_description": 3.390625,
+        "third_person_ai": 2.2265625,
+        "neutral_prose": 2.9296875
+      },
+      "checks": {
+        "help_request": true,
+        "second_person_statement": true,
+        "ai_self_description": true,
+        "human_self_description": true,
+        "third_person_ai": true,
+        "neutral_prose": true
+      },
+      "supported": true
+    },
+    "39.3": {
+      "authored_claim": "Claude: the base has the same plain-read order and an assistant-marker median below half the chat model.",
+      "base_plain_medians": {
+        "help_request": 1.453125,
+        "second_person_statement": 0.1064453125,
+        "ai_self_description": 2.84375,
+        "human_self_description": 0.17138671875,
+        "third_person_ai": 0.95703125,
+        "neutral_prose": 0.09326171875
+      },
+      "base_order_checks": {
+        "help_request>third_person_ai": true,
+        "help_request>neutral_prose": true,
+        "ai_self_description>third_person_ai": true,
+        "ai_self_description>neutral_prose": true
+      },
+      "assistant_marker_overall_median": {
+        "base": 2.3828125,
+        "chat": 3.0703125,
+        "base_over_chat": 0.7760814249363868
+      },
+      "supported": false
+    },
+    "39.4": {
+      "authored_claim": "Claude: zeroing changes the maker in none of six greedy answers and moves sampled AI-claim share by under 10 points.",
+      "greedy_maker_changes": [],
+      "baseline_sampled_ai_share": {
+        "claims": 48,
+        "n": 48,
+        "broken": 0,
+        "share": 1.0
+      },
+      "zeroed_sampled_ai_share": {
+        "claims": 46,
+        "n": 48,
+        "broken": 0,
+        "share": 0.9583333333333334
+      },
+      "share_change": -0.04166666666666663,
+      "supported": true
+    },
+    "39.5": {
+      "authored_claim": "Claude: k=2 raises Sam-persona AI-claim share by >=20 points and beats each random unit.",
+      "unclamped_share": {
+        "claims": 0,
+        "n": 96,
+        "broken": 0,
+        "share": 0.0
+      },
+      "k2_share": {
+        "claims": 0,
+        "n": 96,
+        "broken": 0,
+        "share": 0.0
+      },
+      "share_change": 0.0,
+      "random_control_shares": {
+        "0": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "1": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "2": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "3": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "4": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "5": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "6": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "7": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "8": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        },
+        "9": {
+          "claims": 0,
+          "n": 12,
+          "broken": 0,
+          "share": 0.0
+        }
+      },
+      "exceeds_every_random_control": false,
+      "supported": false
+    },
+    "39.6": {
+      "authored_claim": "Claude: k=1 raises Sam-persona AI-claim share by under 10 points.",
+      "unclamped_share": {
+        "claims": 0,
+        "n": 96,
+        "broken": 0,
+        "share": 0.0
+      },
+      "k1_share": {
+        "claims": 0,
+        "n": 96,
+        "broken": 0,
+        "share": 0.0
+      },
+      "share_change": 0.0,
+      "supported": true
+    },
+    "39.7": {
+      "authored_claim": "Claude: at least three other chat-model units pass the section D screen.",
+      "scorable": false,
+      "supported": null,
+      "reason": "L6 N753 did not pass the chat-model screen gate; section D results are invalid."
+    },
+    "39.8": {
+      "authored_claim": "Claude: at least half of chat-model passing units sit in layers 0 to 12.",
+      "scorable": false,
+      "supported": null,
+      "reason": "L6 N753 did not pass the chat-model screen gate; section D results are invalid."
+    },
+    "39.9": {
+      "authored_claim": "Claude: another passing unit has an AI or assistant term in its logit-lens top 30.",
+      "scorable": false,
+      "supported": null,
+      "reason": "L6 N753 did not pass the chat-model screen gate; section D results are invalid."
+    },
+    "39.10": {
+      "authored_claim": "Claude: the base screen passes at least half as many units as the chat screen.",
+      "scorable": false,
+      "supported": null,
+      "reason": "L6 N753 did not pass the chat-model screen gate; section D results are invalid."
+    }
+  }
+}

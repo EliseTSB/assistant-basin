@@ -1,0 +1,21 @@
+# Part 194: Part 24 rerun on eager attention (PART194-DESIGN.md).
+# Each GPU stage is a separate launch and records its load before any stage work begins.
+python3 -I tools/launch_arc.py 194 --step "-I -B part194\\run194.py reach --out results\\part194" --copy part194/__init__.py part194/run194.py part24.py circuit.py neuron_report.py results/part19/verify.json results/part19/answers.json results/part18/chat/reads.json data/creator-assay.json
+# Wait for this step's progress.log rc= line. Then copy the WHOLE job-folder results\\part194 back to the repo before any host step.
+# Host steps run only between launches, after the GPU step has finished.
+python3 -I -B part194/run194.py --check-record results/part194/load.json --expect reach
+
+python3 -I tools/launch_arc.py 194 --step "-I -B part194\\run194.py assay --batch-size 8 --out results\\part194" --copy part194/__init__.py part194/run194.py part24.py circuit.py neuron_report.py results/part19/verify.json results/part19/answers.json results/part18/chat/reads.json data/creator-assay.json
+# Wait for this step's progress.log rc= line. Then copy the WHOLE job-folder results\\part194 back to the repo before any host step.
+python3 -I -B part194/run194.py --check-record results/part194/load.json --expect reach,assay
+python3 -I -B part194/run194.py --score-core results/part194
+
+python3 -I tools/launch_arc.py 194 --step "-I -B part194\\run194.py samples --samples 8 --max-new 64 --out results\\part194" --copy part194/__init__.py part194/run194.py part24.py circuit.py neuron_report.py results/part19/verify.json results/part19/answers.json results/part18/chat/reads.json data/creator-assay.json
+# Wait for this step's progress.log rc= line. Then copy the WHOLE job-folder results\\part194 back to the repo before any host step.
+# Copy again after every later job-folder write; host steps never run beside a GPU stage.
+python3 -I -B part194/run194.py --check-record results/part194/load.json --expect reach,assay,samples
+python3 -I -B part194/run194.py --score-core results/part194
+# Owner runs the unchanged blind reader on the new answers after all generations are copied back. It sends only question and answer text.
+# Exact reader: model=claude-haiku-5-5, session=neuron-24b-reader, OpenCode Go /messages, read_part24b.py PROMPT unchanged.
+python3 -B read_part24b.py results/part194
+python3 -I -B part194/run194.py --score-24b results/part194
