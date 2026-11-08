@@ -3513,3 +3513,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 191.4 | Claude (high confidence): The random directions' mean maker hit rate is at most 0.20 (published 0.113). Fails above. | | |
 | 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | | |
 | 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | | |
+
+## Part 193 (registered <time from date> CT; design PART193-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 193.1 | Claude (medium-high confidence): With the float32 base and a bf16-saved candidate, R2 ranks layer 20's `down_proj` first of all ranked matrices for W2 at every dose in the ladder. Reason: Rounding noise is spread over every direction, a rank-one change is not. | | |
+| 193.2 | Claude (low confidence): Without the base, F1 or F2 ranks layer 20's `down_proj` first among the 24 `down_proj` matrices for W2 at dose 1. Reason: The edit's size relative to the trained spectrum is not known before the run. | | |
+| 193.3 | Claude (medium confidence): Without the base, F3 ranks the rewritten neuron first among layer 20's MLP neurons for W1 at dose 1. Reason: Its rows are built from activation means and normalised, unlike trained rows. | | |
+| 193.4 | Claude (medium confidence): F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. Reason: One neuron of 2048 barely moves a matrix's spectrum. | | |
+| 193.5 | Claude (low-medium. confidence): F2 ranks a synthetic rank-one edit at matched norm first among its siblings in at least 16 of 24 placements. | | |
+| 193.6 | Claude (medium. confidence): W2's detection threshold on F2 (reference-free) is no lower than W2c's: the statistic reacts to rank-one size, not to the fitted direction. | | |
