@@ -116,6 +116,25 @@ not at the regenerated edits. The rules ask for its numbers beside the run's.
   directions that carry W2's norm is not measured here.
 - One procedural deviation: this host's `systemd-run` refuses `--wait` with `--scope`, so the scope commands ran without it.
 
+## Related work (added 2026-11-08 09:53 CT, after publication)
+
+From a prior-art sweep by Muse (council topic `muse-prior-art`, message 14; arXiv ids checked to resolve), after the run.
+The design's prior art said no published method localizes a single rank-one edit to one matrix without the base. That
+holds for papers, but it missed a tool. `llm-forensics` (PyPI 0.1.1, released 2026-11-06, two days before this part was
+registered) ships a no-base `spectral` detector that flags layers whose singular values, column norms and top singular
+directions are outliers among layers, which is close to F1 here. It is unreviewed and self-evaluated on a small set.
+*Tracing and Reversing Edits in LLMs* (Youssef et al., ICLR 2026,
+[arXiv:2505.20819](https://arxiv.org/abs/2505.20819)) uses row-vector cosine similarity and reports that the top
+singular components carry a ROME edit. Its signal is strong on GPT-2 XL and GPT-J and absent on Llama 3. Hurtado
+([arXiv:2607.01854](https://arxiv.org/abs/2607.01854)) needs the base. Large update norms are documented as a cause of
+collapse under sequential editing (Gupta et al., [arXiv:2403.07175](https://arxiv.org/abs/2403.07175) and
+[arXiv:2502.01636](https://arxiv.org/abs/2502.01636); Huang et al., [arXiv:2410.23843](https://arxiv.org/abs/2410.23843)).
+Gupta et al. 2024 trace the largest single updates to a near-zero denominator in the update formula; whether W2's size
+has that cause was not examined here. The sweep found no paper that measures one edit's update norm against its host
+matrix's own top singular value, which is the 15.6 times reported above. Edits built to preserve other knowledge, such as
+AlphaEdit ([arXiv:2410.02355](https://arxiv.org/abs/2410.02355)), and edits spread over several layers, such as MEMIT,
+are expected to be harder to see this way. Neither was tested here.
+
 ## Files
 
 `results.json` (every number above), `weight_edit_results.json` (step 0, with each saved array's provenance), `edits.npz`
