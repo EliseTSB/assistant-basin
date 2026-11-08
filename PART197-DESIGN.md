@@ -121,6 +121,7 @@ saved predictions. Run only when no A770 job is running (Windows RAM).
 ## Reading rules
 
 - Gate 1 must pass before any readout is read; Gate 2 before R is read. Gate 2 is a construction check (see Controls).
+- If R is blocked in any fold (rank policy or Gate 2), R has no four-speaker result: it is not averaged over the remaining folds, 197.2 is reported as not scorable, and R minus N is not reported.
 - The headline is 197.1. If it holds: "adding layer 0 improves this fixed linear readout of style given these eight
   nuisance features". If EN minus N's interval includes 0, the result is inconclusive (no equivalence bound is
   registered). EN minus N does not establish information-theoretic conditional novelty over arbitrary functions of N.
@@ -156,3 +157,4 @@ saved predictions. Run only when no A770 job is running (Windows RAM).
 - Alden #5 (HOLD at 57087eb): the zero-column mask now also catches units constant in X (std 0), with zero and
   nonzero constant-unit fixtures; the rank policy is explicit (full rank 9 required, a constant nuisance column blocks
   R only).
+- Alden #7: scoped DESIGN PASS at 5d4abf5; a blocked R fold is recorded as blocked, never averaged away (reading rules).
