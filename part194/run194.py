@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from statistics import median
 import sys
 import time
 import uuid
@@ -156,31 +157,57 @@ def _score_core(folder: str | Path) -> int:
     """Score the activation and fixed-answer predictions without reusing Part 24's old hand labels."""
     root = Path(folder)
     try:
+        def require_metric(value, name: str):
+            if value is None:
+                raise ValueError(f"{name} is null")
+            return value
+
         reach = json.loads((root / "reach.json").read_text(encoding="utf-8"))
         assay = json.loads((root / "assay.json").read_text(encoding="utf-8"))
         summary = reach["summary"]
-        low = max(row["max_relative_change"]
-                  for row in summary["24_1_max_relative_change_layers_at_or_below_target"].values())
-        identity = summary["identity-50"]["2.0"]["median_relative_change_layers_above_target"]
-        random = summary["random-50"]["2.0"]["median_relative_change_layers_above_target"]
-        retention = summary["24_3_identity_median_name_retention_at_k_2"]["median"]
+        low_values = [require_metric(row["max_relative_change"], "24.1 max relative change")
+                      for row in summary["24_1_max_relative_change_layers_at_or_below_target"].values()]
+        low = max(low_values)
+        identity = require_metric(
+            summary["identity-50"]["2.0"]["median_relative_change_layers_above_target"],
+            "24.2 identity median")
+        random = require_metric(
+            summary["random-50"]["2.0"]["median_relative_change_layers_above_target"],
+            "24.2 random median")
+        retention = require_metric(summary["24_3_identity_median_name_retention_at_k_2"]["median"],
+                                   "24.3 identity median name retention")
+        random_retention_values = [unit["name_retention_by_k"]["2.0"] for unit in reach["units"]
+                                   if "random-50" in unit["groups"] and unit["layer"] > reach["layer"]
+                                   and unit["name_retention_by_k"].get("2.0") is not None]
+        random_retention = require_metric(
+            median(random_retention_values) if random_retention_values else None,
+            "24.3 random median name retention")
         alibaba = assay["self_alibaba_cloud_at_k_0"]
-        extra_drop = alibaba["random-50"]["mean_per_token_logprob"] - alibaba["identity-50"]["mean_per_token_logprob"]
+        identity_logprob = require_metric(alibaba["identity-50"]["mean_per_token_logprob"],
+                                          "24.4 identity per-token log probability")
+        random_logprob = require_metric(alibaba["random-50"]["mean_per_token_logprob"],
+                                        "24.4 random per-token log probability")
+        none_logprob = require_metric(alibaba["none"]["mean_per_token_logprob"],
+                                     "24.4 none per-token log probability")
+        extra_drop = random_logprob - identity_logprob
         effects = assay["margins_and_effects"]["self"]
 
         lines = []
         lines.append(f"24.1 max relative change, layers <= 22, any k: {low}  -> {'held' if low < 1e-3 else 'failed'}")
         lines.append(f"24.2 k=2 identity {identity:.3f} vs random {random:.3f}, ratio {identity / random if random else float('inf'):.2f}  -> "
                      f"{'held' if identity <= 1.5 * random else 'failed'}")
-        lines.append(f"24.3 identity median name retention at k=2 {retention:.3f}  -> "
+        lines.append(f"24.3 identity median name retention at k=2 {retention:.3f} (random {random_retention:.3f})  -> "
                      f"{'held' if retention >= 0.8 else 'failed'}")
-        lines.append(f"24.4 Alibaba Cloud extra per-token drop {extra_drop:.3f}  -> "
+        lines.append(f"24.4 Alibaba Cloud per token: identity {identity_logprob:.3f}, random {random_logprob:.3f}, "
+                     f"none {none_logprob:.3f}; extra drop {extra_drop:.3f}  -> "
                      f"{'held' if extra_drop >= 0.3 else 'failed'}")
         additive = True
         for k in ("1.0", "2.0"):
-            none = effects["none"][k]["effect"]["mean"]
-            identity_effect = effects["identity-50"][k]["effect"]["mean"]
-            random_effect = effects["random-50"][k]["effect"]["mean"]
+            none = require_metric(effects["none"][k]["effect"]["mean"], f"24.5 none effect at k={k}")
+            identity_effect = require_metric(effects["identity-50"][k]["effect"]["mean"],
+                                             f"24.5 identity effect at k={k}")
+            random_effect = require_metric(effects["random-50"][k]["effect"]["mean"],
+                                           f"24.5 random effect at k={k}")
             difference = abs(identity_effect - random_effect)
             additive = additive and difference < none / 4
             lines.append(f"24.5 k={k}: none {none:.3f}, identity {identity_effect:.3f}, random {random_effect:.3f}; "
