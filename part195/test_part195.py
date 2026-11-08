@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 import types
 from pathlib import Path
@@ -27,12 +28,130 @@ def _record_entry(stage: str, *, gpu: bool = False) -> dict:
             "batch_shapes": {"planned": {}, "observed": {}, "generation_calls": []}, "outputs": []}
 
 
+def _write_json(path: Path, value: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _default_answers(count: int) -> list[dict]:
+    rows = []
+    conditions = ("k0", "k1", "k2", "k3", "k4")
+    for condition in conditions:
+        for prompt in range(32):
+            for sample in range(4):
+                rows.append({"condition": condition, "prompt_id": f"q{prompt:02d}",
+                             "kind": "bait" if prompt < 12 else "ordinary" if prompt < 24 else "maker",
+                             "sample": sample, "seed": sample, "text": f"{condition} answer {prompt} {sample}"})
+                if len(rows) == count:
+                    return rows
+    return rows
+
+
+def _write_seed_stage(root: Path, stage: str) -> list[Path]:
+    stage_dir = root / ("step0" if stage == "step0" else "pilot" if stage.startswith("pilot") else "main")
+    stage_dir.mkdir(parents=True, exist_ok=True)
+    if stage == "step0":
+        path = stage_dir / "step0.json"
+        _write_json(path, {"medians": {"L17": {"median": 11.4}, "L19": {"median": 15.9}}})
+        return [path]
+    if stage == "pilot":
+        path = stage_dir / "pilot_answers.jsonl"
+        rows = [{"condition": "k0" if i < 4 else "k1", "prompt_id": f"t{i % 4}",
+                 "kind": "bait", "text": f"pilot answer {i}"} for i in range(8)]
+        _write_jsonl(path, rows)
+        return [path]
+    if stage == "pilot-reader-chunks":
+        chunk = stage_dir / "pilot_reader_chunk.jsonl"
+        key_path = stage_dir / "pilot_reader_key.json"
+        key = {f"p{i:04d}": {"condition": "k0" if i <= 4 else "k1", "prompt_id": f"t{i % 4}",
+                              "kind": "bait"} for i in range(1, 9)}
+        _write_jsonl(chunk, [{"id": rid, "text": "pilot answer"} for rid in key])
+        _write_json(key_path, key)
+        return [chunk, key_path]
+    if stage == "pilot-reader":
+        path = stage_dir / "pilot_reader_labels.jsonl"
+        rows = [{"id": f"p{i:04d}", "conspiratorial": 5 <= i <= 7,
+                 "coherent": True, "maker": None} for i in range(1, 9)]
+        _write_jsonl(path, rows)
+        return [path]
+    if stage == "pilot-score":
+        path = stage_dir / "pilot-labels.json"
+        _write_json(path, {"k0_conspiratorial": 0, "k1_conspiratorial": 3,
+                           "k0_coherent": 4, "k1_coherent": 4, "pilot_gate_passed": True})
+        return [path]
+    if stage == "main":
+        answers = stage_dir / "answers.jsonl"
+        run = stage_dir / "run.json"
+        _write_jsonl(answers, _default_answers(640))
+        _write_json(run, {"requested_rows": 640})
+        return [answers, run]
+    if stage == "main-reader-chunks":
+        key_path = stage_dir / "reader_key.json"
+        answers = _default_answers(640)
+        key = {f"r{i:04d}": {"condition": row["condition"], "prompt_id": row["prompt_id"],
+                              "sample": row["sample"], "kind": row["kind"]}
+               for i, row in enumerate(answers, 1)}
+        _write_json(key_path, key)
+        output_paths = [key_path]
+        offset = 1
+        for index, count in enumerate([107, 107, 107, 107, 107, 105], 1):
+            path = stage_dir / f"reader_chunk_{index:02d}.jsonl"
+            _write_jsonl(path, [{"id": f"r{i:04d}", "text": "answer"}
+                                for i in range(offset, offset + count)])
+            output_paths.append(path)
+            offset += count
+        return output_paths
+    if stage == "main-reader":
+        path = stage_dir / "reader_labels.jsonl"
+        key = json.loads((stage_dir / "reader_key.json").read_text(encoding="utf-8"))
+        _write_jsonl(path, [{"id": rid, "conspiratorial": False, "coherent": True,
+                             "maker": "none" if info["kind"] == "maker" else None}
+                            for rid, info in key.items()])
+        return [path]
+    if stage == "score":
+        path = stage_dir / "results81.json"
+        conditions = {cid: {"topic_n": 96, "coherent_n": 128, "maker_n": 32,
+                            "topic_split": {"bait": {"n": 48}, "ordinary": {"n": 48}}}
+                      for cid in ("k0", "k1", "k2", "k3", "k4")}
+        _write_json(path, {"conditions": conditions,
+                           "predictions": {f"81.{i}": {"status": "HOLDS"} for i in range(1, 7)}})
+        return [path]
+    raise ValueError(stage)
+
+
+def _output_record(root: Path, path: Path) -> dict:
+    return {"path": path.relative_to(root).as_posix(), "bytes": path.stat().st_size,
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "rows": run195._line_count(path) if path.suffix == ".jsonl" else None}
+
+
 def _seed_record(directory: Path, expected: list[str]) -> None:
     path = directory.parent / "load.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps({"part195": {}, "stages": [
-        _record_entry(stage, gpu=stage in run195.GPU_STAGES) for stage in expected
-    ]}), encoding="utf-8")
+    entries = []
+    for stage in expected:
+        outputs = _write_seed_stage(path.parent, stage)
+        entry = _record_entry(stage, gpu=stage in run195.GPU_STAGES)
+        entry.update(run_id="fixture-run", outputs=[_output_record(path.parent, p) for p in outputs])
+        if stage == "step0":
+            entry["row_count"] = None
+        else:
+            entry["row_count"] = run195.EXPECTED_STAGE_ROWS[stage]
+        entries.append(entry)
+    path.write_text(json.dumps({"part195": {}, "run_id": "fixture-run", "stages": entries}), encoding="utf-8")
+
+
+def _refresh_record_stage(directory: Path, stage: str) -> None:
+    path = directory.parent / "load.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
+    entries = [entry for entry in record["stages"] if entry.get("stage") == stage]
+    assert entries, f"no seeded {stage} stage"
+    entry = entries[-1]
+    output_paths = [run195._output_path_from_record(path, output) for output in entry["outputs"]]
+    entry["outputs"] = [_output_record(path.parent, output) for output in output_paths]
+    entry["row_count"] = sum(run195._line_count(output) for output in output_paths if output.suffix == ".jsonl") \
+        if stage in run195.EXPECTED_STAGE_ROWS else None
+    path.write_text(json.dumps(record), encoding="utf-8")
 
 
 @pytest.mark.parametrize("configured,expected_rc", [
@@ -72,7 +191,8 @@ def test_wrapper_persists_config_kernel_before_battery_and_gates(configured, exp
         model.forward(input_ids=types.SimpleNamespace(shape=(4, 1024)))
         started["generation"] = True
         out.mkdir(parents=True, exist_ok=True)
-        (out / "step0.json").write_text("{}\n", encoding="utf-8")
+        _write_json(out / "step0.json", {"medians": {"L17": {"median": 11.4},
+                                                      "L19": {"median": 15.9}}})
 
     monkeypatch.setattr(nr, "load_model", fake_loader)
     monkeypatch.setattr(part81, "main", fake_part81_main)
@@ -87,7 +207,10 @@ def test_wrapper_persists_config_kernel_before_battery_and_gates(configured, exp
     if configured == "eager":
         assert started["generation"] is True
         assert entry["status"] == "complete"
-        assert entry["outputs"][0]["path"].endswith("step0.json")
+        assert entry["outputs"][0]["path"].endswith("step0/step0.json")
+        assert "\\" not in entry["outputs"][0]["path"]
+        assert not Path(entry["outputs"][0]["path"]).is_absolute()
+        assert entry["run_id"] == record["run_id"]
         assert entry["batch_shapes"]["observed"] == {"4x1024": 1}
         assert run195.check_record(out.parent / "load.json", ["step0"])[0]
     else:
@@ -119,6 +242,9 @@ def test_generation_stages_record_their_output_files(stage, expected_rows, tmp_p
         pilot_file.write_text(json.dumps({"k0_conspiratorial": 0, "k1_conspiratorial": 3,
                                           "k0_coherent": 4, "k1_coherent": 4,
                                           "pilot_gate_passed": True}), encoding="utf-8")
+        _refresh_record_stage(out, "pilot-reader-chunks")
+        _refresh_record_stage(out, "pilot-reader")
+        _refresh_record_stage(out, "pilot-score")
 
     class Model:
         config = types.SimpleNamespace(_attn_implementation="eager")
@@ -145,8 +271,8 @@ def test_generation_stages_record_their_output_files(stage, expected_rows, tmp_p
         if stage == "pilot":
             _write_jsonl(out_dir / "pilot_answers.jsonl", [{"id": i} for i in range(expected_rows)])
         else:
-            _write_jsonl(out_dir / "answers.jsonl", [{"id": i} for i in range(expected_rows)])
-            (out_dir / "run.json").write_text("{}\n", encoding="utf-8")
+            _write_jsonl(out_dir / "answers.jsonl", _default_answers(expected_rows))
+            _write_json(out_dir / "run.json", {"requested_rows": 640})
 
     monkeypatch.setattr(nr, "load_model", fake_loader)
     monkeypatch.setattr(part81, "main", fake_part81_main)
@@ -169,14 +295,127 @@ def test_generation_stages_record_their_output_files(stage, expected_rows, tmp_p
 
 
 def test_record_gate_requires_each_expected_stage(tmp_path):
-    path = tmp_path / "load.json"
-    path.write_text(json.dumps({"stages": [_record_entry("step0", gpu=True)]}), encoding="utf-8")
+    directory = tmp_path / "results" / "part195" / "step0"
+    _seed_record(directory, ["step0"])
+    path = directory.parent / "load.json"
     assert run195.main(["--check-record", str(path), "--expect", "step0,pilot"]) == 3
     record = json.loads(path.read_text(encoding="utf-8"))
-    record["stages"].append({"stage": "pilot", "status": "running", "requires_model_load": True,
-                             "model_loads": [{"attn_implementation": "eager"}]})
+    running = _record_entry("pilot", gpu=True)
+    running.update(run_id=record["run_id"], status="running")
+    record["stages"].append(running)
     path.write_text(json.dumps(record), encoding="utf-8")
     assert run195.main(["--check-record", str(path), "--expect", "step0,pilot"]) == 3
+
+
+@pytest.mark.parametrize("tamper", ["same-size-swap", "wrong-size", "deleted", "rewritten-path"])
+def test_record_gate_certifies_each_expected_output(tamper, tmp_path):
+    directory = tmp_path / "results" / "part195" / "step0"
+    _seed_record(directory, ["step0"])
+    record_path = directory.parent / "load.json"
+    assert run195.check_record(record_path, ["step0"])[0]
+    artifact = directory / "step0.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    output = record["stages"][0]["outputs"][0]
+    if tamper == "same-size-swap":
+        before = artifact.read_bytes()
+        after = before.replace(b"11.4", b"11.5")
+        assert len(after) == len(before) and after != before
+        artifact.write_bytes(after)
+    elif tamper == "wrong-size":
+        output["bytes"] += 1
+    elif tamper == "rewritten-path":
+        output["path"] = "step0/missing.json"
+    else:
+        artifact.unlink()
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    ok, why = run195.check_record(record_path, ["step0"])
+    assert not ok
+    assert "sha256" in why if tamper == "same-size-swap" else \
+        ("size" in why if tamper == "wrong-size" else "missing" in why)
+
+
+@pytest.mark.parametrize("stage", ["pilot", "main", "pilot-reader-chunks", "pilot-reader",
+                                    "main-reader-chunks", "main-reader"])
+def test_record_gate_rejects_short_stage_rows(stage, tmp_path):
+    directory = tmp_path / "results" / "part195" / ("pilot" if stage.startswith("pilot") else "main")
+    prerequisites = {
+        "pilot": ["step0", "pilot"],
+        "main": ["main"],
+        "pilot-reader-chunks": ["step0", "pilot", "pilot-reader-chunks"],
+        "pilot-reader": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader"],
+        "main-reader-chunks": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader",
+                               "pilot-score", "main", "main-reader-chunks"],
+        "main-reader": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score",
+                        "main", "main-reader-chunks", "main-reader"],
+    }[stage]
+    _seed_record(directory, prerequisites)
+    record_path = directory.parent / "load.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    entry = record["stages"][-1]
+    if stage == "main-reader-chunks":
+        chunk = directory / "reader_chunk_06.jsonl"
+        _write_jsonl(chunk, _read_jsonl(chunk)[:-1])
+    else:
+        jsonl = next(run195._output_path_from_record(record_path, o)
+                     for o in entry["outputs"] if o["path"].endswith(".jsonl"))
+        _write_jsonl(jsonl, _read_jsonl(jsonl)[:-1])
+    _refresh_record_stage(directory, stage)
+    ok, why = run195.check_record(record_path, [stage])
+    assert not ok and "expected" in why
+
+
+def test_record_gate_requires_step0_median_keys(tmp_path):
+    directory = tmp_path / "results" / "part195" / "step0"
+    _seed_record(directory, ["step0"])
+    artifact = directory / "step0.json"
+    _write_json(artifact, {})
+    _refresh_record_stage(directory, "step0")
+    ok, why = run195.check_record(directory.parent / "load.json", ["step0"])
+    assert not ok and "medians.L17.median" in why
+
+
+def test_record_gate_rejects_empty_main_run_metadata(tmp_path):
+    directory = tmp_path / "results" / "part195" / "main"
+    _seed_record(directory, ["step0", "main"])
+    _write_json(directory / "run.json", {})
+    _refresh_record_stage(directory, "main")
+    ok, why = run195.check_record(directory.parent / "load.json", ["main"])
+    assert not ok and "requested_rows" in why
+
+
+def test_record_gate_refuses_different_stage_run_ids(tmp_path):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot"])
+    record_path = directory.parent / "load.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    record["stages"][1]["run_id"] = "other-run"
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+    ok, why = run195.check_record(record_path, ["step0", "pilot"])
+    assert not ok and "run ids" in why
+
+
+def test_stage_refuses_existing_record_lock(tmp_path):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot"])
+    lock_path = directory.parent / "load.json.lock"
+    lock_path.write_text("held by another stage\n", encoding="utf-8")
+    called = {"value": False}
+
+    def stage_fn():
+        called["value"] = True
+        chunk = directory / "pilot_reader_chunk.jsonl"
+        key_path = directory / "pilot_reader_key.json"
+        key = {f"p{i:04d}": {"condition": "k0" if i <= 4 else "k1"} for i in range(1, 9)}
+        _write_jsonl(chunk, [{"id": rid, "text": "answer"} for rid in key])
+        _write_json(key_path, key)
+        return [chunk, key_path]
+
+    rc = run195.run_host_stage("pilot-reader-chunks", directory, stage_fn)
+    assert rc == 3
+    assert called["value"] is False
+    assert lock_path.is_file()
+    record = json.loads((directory.parent / "load.json").read_text(encoding="utf-8"))
+    assert [entry["stage"] for entry in record["stages"]] == ["step0", "pilot"]
 
 
 @pytest.mark.parametrize(("field", "bad_value"), [
@@ -185,8 +424,10 @@ def test_record_gate_requires_each_expected_stage(tmp_path):
     ("dtype", "torch.float32"),
 ])
 def test_record_gate_requires_pinned_model_revision_and_dtype(field, bad_value, tmp_path):
-    path = tmp_path / "load.json"
-    record = {"stages": [_record_entry("step0", gpu=True)]}
+    directory = tmp_path / "results" / "part195" / "step0"
+    _seed_record(directory, ["step0"])
+    path = directory.parent / "load.json"
+    record = json.loads(path.read_text(encoding="utf-8"))
     record["stages"][0]["model_loads"][0][field] = bad_value
     path.write_text(json.dumps(record), encoding="utf-8")
     ok, why = run195.check_record(path, ["step0"])
@@ -196,10 +437,8 @@ def test_record_gate_requires_pinned_model_revision_and_dtype(field, bad_value, 
 def test_file_only_pilot_reader_chunk_stage_is_recorded(tmp_path):
     d = tmp_path / "results" / "part195" / "pilot"
     _seed_record(d, ["step0", "pilot"])
-    rows = [{"condition": "k0" if i < 4 else "k1", "prompt_id": f"q{i}", "kind": "bait",
-             "seed": i, "text": f"answer {i}"} for i in range(8)]
-    _write_jsonl(d / "pilot_answers.jsonl", rows)
     assert run195.main(["make-pilot-reader", "--dir", str(d)]) == 0
+    assert not (d.parent / "load.json.lock").exists()
     blind = _read_jsonl(d / "pilot_reader_chunk.jsonl")
     assert len(blind) == 8
     assert all(set(row) == {"id", "text"} for row in blind)
@@ -224,6 +463,8 @@ def test_file_only_pilot_score_stage_is_recorded(k1_count, expected_rc, tmp_path
     labels = [{"id": rid, "conspiratorial": rid in positive_ids,
                "coherent": True, "maker": None} for rid in key]
     _write_jsonl(d / "pilot_reader_labels.jsonl", labels)
+    _refresh_record_stage(d, "pilot-reader-chunks")
+    _refresh_record_stage(d, "pilot-reader")
     assert run195.main(["pilot-score", "--dir", str(d)]) == expected_rc
     saved = json.loads((d / "pilot-labels.json").read_text(encoding="utf-8"))
     assert saved["k1_conspiratorial"] == k1_count and saved["k0_conspiratorial"] == 0
@@ -251,7 +492,10 @@ def test_main_pilot_gate_is_recomputed_from_raw_reader_labels(tmp_path, monkeypa
     pilot_file = pilot / "pilot-labels.json"
     pilot_file.write_text(json.dumps({"k0_conspiratorial": 0, "k1_conspiratorial": 1,
                                       "k0_coherent": 4, "k1_coherent": 4,
-                                      "pilot_gate_passed": True}), encoding="utf-8")
+                                      "pilot_gate_passed": False}), encoding="utf-8")
+    _refresh_record_stage(out, "pilot-reader-chunks")
+    _refresh_record_stage(out, "pilot-reader")
+    _refresh_record_stage(out, "pilot-score")
     runner_started = {"value": False}
 
     def fake_part81_main():
@@ -273,17 +517,56 @@ def test_main_pilot_gate_is_recomputed_from_raw_reader_labels(tmp_path, monkeypa
     assert "raw pilot labels fail gate" in record["stages"][-1]["error"]
 
 
+def test_main_pilot_gate_refuses_labels_outside_recorded_pilot(tmp_path, monkeypatch):
+    from part81 import part81
+    import neuron_report as nr
+
+    out = tmp_path / "results" / "part195" / "main"
+    prereqs = [name for name in run195.STAGE_EXPECTATIONS["main"] if name != "main"]
+    _seed_record(out, prereqs)
+    unrelated = tmp_path / "elsewhere" / "pilot-labels.json"
+    _write_json(unrelated, {"k0_conspiratorial": 0, "k1_conspiratorial": 3,
+                            "k0_coherent": 4, "k1_coherent": 4, "pilot_gate_passed": True})
+    runner_started = {"value": False}
+
+    class Model:
+        config = types.SimpleNamespace(_attn_implementation="eager")
+
+        def forward(self, *args, **kwargs):
+            return None
+
+        def generate(self, input_ids=None):
+            return input_ids
+
+    def fake_loader(*_args, **_kwargs):
+        nr.LAST_LOAD = {"model": run195.EXPECTED_MODEL, "revision": run195.EXPECTED_REVISION,
+                        "device": "xpu", "dtype": run195.EXPECTED_DTYPE,
+                        "attn_implementation": "eager"}
+        return object(), Model()
+
+    def fake_part81_main():
+        import sys as sys_module
+
+        runner_started["value"] = True
+        out_dir = Path(sys_module.argv[sys_module.argv.index("--out") + 1])
+        _tok, model = nr.load_model(run195.EXPECTED_MODEL, run195.EXPECTED_REVISION,
+                                    "xpu", attn_implementation="eager")
+        model.generate(input_ids=types.SimpleNamespace(shape=(1, 5)))
+        _write_jsonl(out_dir / "answers.jsonl", _default_answers(640))
+        _write_json(out_dir / "run.json", {"requested_rows": 640})
+
+    monkeypatch.setattr(nr, "load_model", fake_loader)
+    monkeypatch.setattr(part81, "main", fake_part81_main)
+    assert run195.main(["main", "--out", str(out), "--step0-file", "fixture-step0.json",
+                        "--pilot-labels", str(unrelated)]) == 3
+    assert runner_started["value"] is False
+    record = json.loads((out.parent / "load.json").read_text(encoding="utf-8"))
+    assert "does not name the recorded pilot-score output" in record["stages"][-1]["error"]
+
+
 def test_file_only_main_reader_chunks_stage_is_recorded(tmp_path):
     d = tmp_path / "results" / "part195" / "main"
     _seed_record(d, ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score", "main"])
-    rows = []
-    for condition in ("k0", "k1", "k2", "k3", "k4"):
-        for i in range(32):
-            kind = "bait" if i < 12 else "ordinary" if i < 24 else "maker"
-            for sample in range(4):
-                rows.append({"condition": condition, "prompt_id": f"q{i}", "kind": kind,
-                             "sample": sample, "seed": sample, "text": f"{condition} answer {i} {sample}"})
-    _write_jsonl(d / "answers.jsonl", rows)
     assert run195.main(["make-reader-chunks", "--dir", str(d)]) == 0
     chunk_files = sorted(d.glob("reader_chunk_*.jsonl"))
     assert len(chunk_files) == 6 and sum(_line_count(x) for x in chunk_files) == 640
@@ -314,27 +597,8 @@ def test_file_only_final_score_stage_is_recorded(tmp_path):
     prereqs = ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score", "main",
                "main-reader-chunks", "main-reader"]
     _seed_record(d, prereqs)
-    answers, labels, key = [], [], {}
-    n = 0
-    for condition in ("k0", "k1", "k2", "k3", "k4"):
-        for i in range(32):
-            kind = "bait" if i < 12 else "ordinary" if i < 24 else "maker"
-            for sample in range(4):
-                n += 1
-                rid = f"r{n:04d}"
-                row = {"condition": condition, "prompt_id": f"q{i}", "kind": kind,
-                       "sample": sample, "seed": sample, "text": f"answer {n}"}
-                answers.append(row)
-                key[rid] = {"condition": condition, "prompt_id": f"q{i}", "sample": sample, "kind": kind}
-                labels.append({"id": rid, "conspiratorial": False, "coherent": True,
-                               "maker": "none" if kind == "maker" else None})
-    _write_jsonl(d / "answers.jsonl", answers)
-    reader_file = d / "labels" / "reader_labels.jsonl"
-    _write_jsonl(reader_file, labels)
-    (d / "reader_key.json").write_text(json.dumps(key), encoding="utf-8")
+    reader_file = d / "reader_labels.jsonl"
     pilot_labels = d.parent / "pilot" / "pilot-labels.json"
-    pilot_labels.parent.mkdir(parents=True, exist_ok=True)
-    pilot_labels.write_text(json.dumps({"k1_conspiratorial": 3, "k0_conspiratorial": 0}), encoding="utf-8")
     assert run195.main(["score", "--dir", str(d), "--reader", str(reader_file),
                         "--key", str(d / "reader_key.json"),
                         "--pilot-labels", str(pilot_labels)]) == 0
