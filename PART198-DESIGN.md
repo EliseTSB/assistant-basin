@@ -25,6 +25,15 @@ simple statistic on the same edits?
   self-evaluated on 36 edited and 2 unedited checkpoints. Muse's sweep (council `muse-prior-art` #14) found no paper
   measuring one edit's update norm against its host matrix's top singular value. Journal
   `notes/reports/weight-edit-detection-2026-11-07/PRIOR-ART.md` keeps the list.
+- Reading a weight direction as tokens: projecting parameters through the unembedding is Dar et al., *Analyzing
+  Transformers in Embedding Space* (arXiv:2209.02535). `llm-forensics` 0.1.1 includes it as `t_unembed_vector`, a tool its
+  LLM investigator agent can call on a matrix's singular directions, and its `spectra` module scores the participation
+  ratio of each top singular vector ("a ROME/MEMIT value vector is diffuse"; read 2026-11-08 from the wheel's source,
+  not run). Its docstring also reports that in its analyst sessions the edit sat in s2 or s3, not s1. Neither is scored
+  as a detector with a false-alarm rate. Youssef et al. infer the edited object with a decoder trained on 600 labelled
+  edited matrices (99.4% for ROME on GPT-2 XL; 1.9% for AlphaEdit), not by reading directions. Two web searches
+  (2026-11-08 14:4x CT) found no paper that scores an untrained unembedding reading of a matrix's singular directions
+  as an edit detector.
 - Our own data: Part 193 (results/part193): F1 and F2 on EmbeddingGemma 2, three edits, the sibling-scale spread per
   role (1.7 to 3.0 times, 6.8 for one role) and Gate 4's lesson that twice a target's own norm guarantees nothing.
 
@@ -64,68 +73,6 @@ role: the leave-one-out robust z of its largest member and the ratio of the larg
 value. A base-free check flags whatever ranks first, so in an unedited model every role has a "first" matrix; the
 question is how far above the rest it sits, which sets the size an edit must reach before its matrix, and not a natural
 one, is first.
-
-### Pilot results, part 3 (2026-11-08 13:45 to 14:05 CT, one method per process)
-
-Batches of 10 (CounterFact cases 1 to 10), each in a fresh process under the 11G cap with weights copied into ordinary
-memory: MEMIT-b10 took 8 of 10, largest update 0.222 times its host's sigma1 (layer 17; layers 13 to 16 at 0.059 to
-0.127), 453 s, peak 10.9 GiB. AlphaEdit-b10 took 10 of 10, largest 0.518 (layer 17; 0.221 to 0.357 below), 491 s,
-peak 10.9 GiB. Ten facts at once make the largest update 1.4 times (MEMIT) and 2.3 times (AlphaEdit) the single edit.
-
-**The edited sigma1 barely moves, so F1's rank is the host layer's own.** Across all seven runs the edited matrix's sigma1
-is 0.9997 to 1.0064 times the base's (largest: AlphaEdit-b10, layer 17). Every F1 rank in parts 1 to 3 (19, 20, 22, 23,
-29 or 30) is the base rank of that layer's sigma1 among the other 47 (13.15, 12.82, 12.38, 11.38 and 10.26 for layers 13
-to 17; the largest sibling is layer 47 at 27.78). An update of half the host's sigma1 changes sigma1 by under 1% because
-its direction is close to orthogonal to the host's top singular direction. For F1 to rank an edited layer first, its
-sigma1 has to pass 27.78. Because sigma1(W + dW) is at most sigma1(W) + ||dW||_2, that needs a spectral norm of at least
-1.11 to 1.71 times the host's sigma1 (layers 13 to 17), reached only if the update points along the host's top direction.
-The pilot's updates do not (sigma1 moved under 1%); for an update whose input direction lies outside the host's row space
-and whose output is the host's top direction, the need is sqrt(27.78^2 - sigma1^2)/sigma1, 1.86 to 2.52, and any other
-output direction needs more. The largest ordinary update measured here is 0.518.
-
-### Pilot results, part 4: one wsp write on Qwen3.5-0.8B (2026-11-08 14:05 to 14:14 CT)
-
-`wsp.py` (commit `763259257133`, unchanged, imported by `wsp198.py`) on the CPU in float32, default settings (layers 17 to
-21, spread 5, lam 3, cap 0.25). One fact, CounterFact case 0 as three questions ("What is the mother tongue of Danielle
-Darrieux?" and two rephrasings), answer "English". Setup 385 s (mostly the one-time recording of 40 protected answers),
-write 36 s, one round, peak 6.6 GiB. All three taught questions and the held-out question ("In what language did
-Danielle Darrieux first learn to speak?", base answer French) answer "English"; the first 60 characters of all 8 of
-wsp's unrelated check answers are unchanged.
-
-Per edited `mlp.down_proj`, layers 17 to 21: spectral norm of the update 0.513, 0.442, 0.445, 0.552 and 0.566 times the
-host's sigma1; Frobenius norm 3.4% to 4.0% of the host's, so the 25% cap did not bind (the host's Frobenius norm is 13.0
-to 14.5 times its sigma1); numerical rank 2 at layer 17 and 6 at layers 18 to 21 (three phrasings, an answer token and an
-end token each). The edited sigma1 is 0.9998 to 1.0020 times the base's, and every F1 rank (24, 20, 18, 21, 23 of 24) is
-that layer's own base rank; the largest sibling sigma1 is layer 2's, 1.79, against 1.17 to 1.32 for layers 17 to 21.
-
-So a second editor, on a second model family, shows the GPT-2 XL picture: about half the host's sigma1, pointed away from
-the host's top direction, invisible to F1. By the triangle inequality, F1 could rank one of these layers first only with an
-update of at least 0.536, 0.450, 0.353, 0.456 and 0.467 times the host's sigma1 (layers 17 to 21) along its top
-direction, more in any other direction. Three of wsp's five updates (layers 19 to 21) are already larger than that floor;
-what keeps them invisible is their direction, not their size.
-
-### Exploration: reading singular directions through the unembedding (2026-11-08 14:3x CT, design input only)
-
-Size does not hide these edits from F1; direction does. So the next statistic should look at direction. An exploration on
-the wsp update (`explore_tokens.py`, output `explore-tokens.json`) read the top 64 output-side singular vectors of every
-`mlp.down_proj`, base and edited, through the final norm's scale and the unembedding, scoring each by how concentrated it
-is on one token: z = (max logit - mean) / std over the vocabulary, the better of the two signs.
-
-- The update's own top singular vector reads as "English" at every edited layer (z 19.3 to 19.9); its second reads as the
-  end-of-turn token (z 17.8 to 23.9).
-- In the edited matrix, the most concentrated of the top 64 directions reads as "English" at 4 of 5 edited layers (z
-  11.1, 9.3, 16.2 and 12.8 at layers 17, 19, 20 and 21, at singular indices 5, 7, 1 and 3). At layer 18 a natural
-  direction (" a", z 14.1 in the base too) stays on top, and "English" is at index 23 (z 6.9).
-- The base maxima over the top 64 are 5.9 to 16.0 across all 24 layers (16.0 at layer 22, 14.1 at layer 18), and their
-  top tokens are spaces, punctuation and function words. So the raw maximum alone does not separate layer 20 (16.2) from
-  unedited layer 22 (16.0). What does separate is content: an ordinary word, the same word in several directions of one
-  matrix (three each at layers 17 and 20), and the same word in five consecutive layers.
-
-⚠ This is the most favourable case possible and cannot count as evidence. wsp builds its targets as the final norm's
-scale times the token's unembedding row (`wsp.py` line 200), so its update reads as the token by construction. ROME,
-MEMIT and AlphaEdit optimise a value vector by gradient instead, so the same reading on their updates is the real test.
-That exploration is running (`explore_gpt2.py`). Any statistic built from what this exploration shows is then scored on
-facts, editors and unedited models that it has not seen.
 
 **Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
 (github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
@@ -191,6 +138,68 @@ to 17; update over host top singular value at most 0.228; best F1 sibling rank 1
 10 was then killed by the 11 GiB cap while computing layer 17's covariance, most likely with AlphaEdit's global caches
 (projection and accumulated key matrices, about 1.6 GB) still held from the run before. Next: one method per process,
 the cap set from Windows' free memory at launch.
+
+### Pilot results, part 3 (2026-11-08 13:45 to 14:05 CT, one method per process)
+
+Batches of 10 (CounterFact cases 1 to 10), each in a fresh process under the 11G cap with weights copied into ordinary
+memory: MEMIT-b10 took 8 of 10, largest update 0.222 times its host's sigma1 (layer 17; layers 13 to 16 at 0.059 to
+0.127), 453 s, peak 10.9 GiB. AlphaEdit-b10 took 10 of 10, largest 0.518 (layer 17; 0.221 to 0.357 below), 491 s,
+peak 10.9 GiB. Ten facts at once make the largest update 1.4 times (MEMIT) and 2.3 times (AlphaEdit) the single edit.
+
+**The edited sigma1 barely moves, so F1's rank is the host layer's own.** Across all seven runs the edited matrix's sigma1
+is 0.9997 to 1.0064 times the base's (largest: AlphaEdit-b10, layer 17). Every F1 rank in parts 1 to 3 (19, 20, 22, 23,
+29 or 30) is the base rank of that layer's sigma1 among the other 47 (13.15, 12.82, 12.38, 11.38 and 10.26 for layers 13
+to 17; the largest sibling is layer 47 at 27.78). An update of half the host's sigma1 changes sigma1 by under 1% because
+its direction is close to orthogonal to the host's top singular direction. For F1 to rank an edited layer first, its
+sigma1 has to pass 27.78. Because sigma1(W + dW) is at most sigma1(W) + ||dW||_2, that needs a spectral norm of at least
+1.11 to 1.71 times the host's sigma1 (layers 13 to 17), reached only if the update points along the host's top direction.
+The pilot's updates do not (sigma1 moved under 1%); for an update whose input direction lies outside the host's row space
+and whose output is the host's top direction, the need is sqrt(27.78^2 - sigma1^2)/sigma1, 1.86 to 2.52, and any other
+output direction needs more. The largest ordinary update measured here is 0.518.
+
+### Pilot results, part 4: one wsp write on Qwen3.5-0.8B (2026-11-08 14:05 to 14:14 CT)
+
+`wsp.py` (commit `763259257133`, unchanged, imported by `wsp198.py`) on the CPU in float32, default settings (layers 17 to
+21, spread 5, lam 3, cap 0.25). One fact, CounterFact case 0 as three questions ("What is the mother tongue of Danielle
+Darrieux?" and two rephrasings), answer "English". Setup 385 s (mostly the one-time recording of 40 protected answers),
+write 36 s, one round, peak 6.6 GiB. All three taught questions and the held-out question ("In what language did
+Danielle Darrieux first learn to speak?", base answer French) answer "English"; the first 60 characters of all 8 of
+wsp's unrelated check answers are unchanged.
+
+Per edited `mlp.down_proj`, layers 17 to 21: spectral norm of the update 0.513, 0.442, 0.445, 0.552 and 0.566 times the
+host's sigma1; Frobenius norm 3.4% to 4.0% of the host's, so the 25% cap did not bind (the host's Frobenius norm is 13.0
+to 14.5 times its sigma1); numerical rank 2 at layer 17 and 6 at layers 18 to 21 (three phrasings, an answer token and an
+end token each). The edited sigma1 is 0.9998 to 1.0020 times the base's, and every F1 rank (24, 20, 18, 21, 23 of 24) is
+that layer's own base rank; the largest sibling sigma1 is layer 2's, 1.79, against 1.17 to 1.32 for layers 17 to 21.
+
+So a second editor, on a second model family, shows the GPT-2 XL picture: about half the host's sigma1, pointed away from
+the host's top direction, invisible to F1. By the triangle inequality, F1 could rank one of these layers first only with an
+update of at least 0.536, 0.450, 0.353, 0.456 and 0.467 times the host's sigma1 (layers 17 to 21) along its top
+direction, more in any other direction. Three of wsp's five updates (layers 19 to 21) are already larger than that floor;
+what keeps them invisible is their direction, not their size.
+
+### Exploration: reading singular directions through the unembedding (2026-11-08 14:3x CT, design input only)
+
+Size does not hide these edits from F1; direction does. So the next statistic should look at direction. An exploration on
+the wsp update (`explore_tokens.py`, output `explore-tokens.json`) read the top 64 output-side singular vectors of every
+`mlp.down_proj`, base and edited, through the final norm's scale and the unembedding, scoring each by how concentrated it
+is on one token: z = (max logit - mean) / std over the vocabulary, the better of the two signs.
+
+- The update's own top singular vector reads as "English" at every edited layer (z 19.3 to 19.9); its second reads as the
+  end-of-turn token (z 17.8 to 23.9).
+- In the edited matrix, the most concentrated of the top 64 directions reads as "English" at 4 of 5 edited layers (z
+  11.1, 9.3, 16.2 and 12.8 at layers 17, 19, 20 and 21, at singular indices 5, 7, 1 and 3). At layer 18 a natural
+  direction (" a", z 14.1 in the base too) stays on top, and "English" is at index 23 (z 6.9).
+- The base maxima over the top 64 are 5.9 to 16.0 across all 24 layers (16.0 at layer 22, 14.1 at layer 18), and their
+  top tokens are spaces, punctuation and function words. So the raw maximum alone does not separate layer 20 (16.2) from
+  unedited layer 22 (16.0). What does separate is content: an ordinary word, the same word in several directions of one
+  matrix (three each at layers 17 and 20), and the same word in five consecutive layers.
+
+⚠ This is the most favourable case possible and cannot count as evidence. wsp builds its targets as the final norm's
+scale times the token's unembedding row (`wsp.py` line 200), so its update reads as the token by construction. ROME,
+MEMIT and AlphaEdit optimise a value vector by gradient instead, so the same reading on their updates is the real test.
+That exploration is running (`explore_gpt2.py`). Any statistic built from what this exploration shows is then scored on
+facts, editors and unedited models that it has not seen.
 
 ## Size
 
