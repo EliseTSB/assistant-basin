@@ -3543,6 +3543,19 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 194.9 | Claude (medium confidence): 24b.4 at k=2, (b) is present in 6-12 of 16 answers in both none and random-zeroed arms (published 9 each); at k=0, 1, and 1.5 it is at most 2 of 16 in those arms. Reason: invented-name labels are sparse in small samples. | | |
 | 194.10 | Claude (medium confidence): The scorable published verdicts stay the same: 24.1 held, 24.2 held, 24.3 failed, 24.4 failed, 24.5 held, 24b.1 held, 24b.2 held, 24b.3 held, and 24b.4 failed. Reason: several verdicts use only 16 fresh answers per condition. | | |
 
+## Part 196 (registered 2026-11-08 04:52 CT, before any data; design PART196-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 196.1 | Claude (medium confidence): A, the single-label verdict, has four-speaker mean balanced accuracy at most 35%. Reason: Zero-shot style labels were weak in SLAP and Koduru et al. | | |
+| 196.2 | Claude (medium confidence): D, the final-embedding probe, has four-speaker mean balanced accuracy at least 70%. Reason: Other encoders reach 82 to 85%, but held-out speakers and shared texts make it harder. | | |
+| 196.3 | Claude (medium-low confidence): If D beats A (interval of D minus A above 0), B closes at least half of that gap; otherwise not applicable. Reason: Villuri et al. found calibration closed most of a probe gap. | | |
+| 196.4 | Claude (low-medium confidence): D minus B is at least 5 points of balanced accuracy with its 95% interval above 0 (outcome "gap supported" in the reading rules). Reason: The headline. | | |
+| 196.5 | Claude (medium-low. confidence): B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | | |
+| 196.6 | Claude (medium confidence): Whisper has the highest per-style recall under A, B and D. Reason: Whisper is acoustically the most distinct style. | | |
+| 196.7 | Claude (medium. confidence): H, the acoustic baseline, reaches at least 40% balanced accuracy. | | |
+| 196.8 | Claude (medium confidence): T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. Reason: the in-range text-first draw keeps every drawn (speaker, text) cluster in at least two styles. | | |
+
 ## Part 193 (registered <time from date> CT; design PART193-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
@@ -3550,4 +3563,4 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 193.1 | Claude (medium confidence): Without the base, F1's detection threshold for W2 (layer 20's `down_proj` first among the 24 `down_proj` matrices) is dose 8 or higher, or never within the ladder. Reason: The pilot reports W2-sized deltas leave the matrix statistics nearly unmoved up to dose 2. | | |
 | 193.2 | Claude (medium-high confidence): F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. Reason: One neuron of 2048 barely moves a matrix's spectrum. | | |
 | 193.3 | Claude (medium confidence): F1 ranks a synthetic rank-one edit at W2's Frobenius norm (dose 1) first among its siblings in at most 4 of 24 placements. Reason: The pilot suggests an edit of this size is small next to the trained spectrum. | | |
-| 193.4 | Claude (medium confidence): W2's and W2c's F1 detection thresholds are within one ladder step of each other, both "never" counting as equal. Reason: The two deltas are rank one with similar norms and differ in the fitted key direction. | | |
+| 193.4 | Claude (medium confidence): W2's and W2c's F1 detection thresholds are within one ladder step of each other (a "never" threshold sits one position after 64, so both "never" count as equal and "never" against 64 is one step), and their found/not-found outcomes agree at every dose outside the inclusive band between the thresholds. Reason: The two deltas are rank one with similar norms and differ in the fitted key direction. | | |
