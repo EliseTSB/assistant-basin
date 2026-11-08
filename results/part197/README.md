@@ -12,8 +12,9 @@ run.
 ![Layer curves](layers.png)
 
 *Left: seven-way style balanced accuracy of a probe on each layer's mean MLP input, held-out speaker, four-speaker mean;
-horizontal lines are EN, N and R. Right: four-way speaker identity by layer, half of each speaker's texts to train and
-half to test. Drawn from `results.json` by `fig_layers.py`.*
+horizontal lines are EN, N, R and chance (1/7). Right: four-way speaker identity by layer, half of each speaker's texts
+to train and half to test; horizontal lines are the final embedding and chance (1/4). Drawn from `results.json` by
+`fig_layers.py`.*
 
 **Answer.** Yes, within this pipeline. A probe on eight nuisance features (N: the seven acoustic features plus clip
 duration) reads style at 53.3%; adding layer 0 (EN) reads 63.7%, a paired gain of 10.4 points (95% interval 8.6 to
@@ -47,7 +48,7 @@ than the nuisance features themselves, while layer 0 together with them reads mo
 
 | Readout | Balanced accuracy | Per speaker |
 | --- | --- | --- |
-| N, eight nuisance features | 53.3% (51.7 to 54.9) | 50.6 / 55.7 / 54.4 / 52.5 |
+| N, eight nuisance features | 53.3% (51.7 to 54.8) | 50.6 / 55.7 / 54.4 / 52.5 |
 | H, Part 196's seven acoustic features | 51.8% (50.2 to 53.3) | 48.6 / 54.1 / 53.2 / 51.1 |
 | K, duration and seconds per word | 28.7% (27.2 to 30.2) | 25.9 / 28.3 / 28.4 / 32.1 |
 | E0, layer 0 | 62.7% (61.2 to 64.3) | 69.3 / 64.4 / 49.2 / 67.9 |

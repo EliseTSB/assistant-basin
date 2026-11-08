@@ -2756,6 +2756,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 196](results/part196/README.md)**, 2026-11-08. How well do EmbeddingGemma 2's readouts name seven acted speaking styles in Expresso, on four held-out speakers? A probe on the first layer's mean MLP input reads style at 62.7% balanced accuracy (chance 14.3%), above seven acoustic features (51.8%); a probe on the final embedding reads 25.8%, and the model's own label verdict is at chance (15.1%, 17.2% calibrated). The layer curve falls steadily from layer 0 to about 30% at the last layers. The registered headline holds as "gap supported" (final-embedding probe 8.6 points above the calibrated verdict, 7.0 to 10.4), and four of eight predictions held; the 70% forecast for the final-embedding probe failed badly. A transcript-only readout is near chance (14.7%). Readouts, not use; no edit tested.
 
+**[Part 197](results/part197/README.md)**, 2026-11-08. Is EmbeddingGemma 2's layer-0 style readout more than simple acoustics and clip length? Within a fixed linear probe, adding layer 0 to eight nuisance features (seven acoustic plus duration, 53.3%) reads style at 63.7%, a paired gain of 10.4 points (8.6 to 12.4); after subtracting what those features linearly predict, layer 0 still reads 46.0% (chance 14.3%). The held-out layer curve peaks at layer 0 and falls to about 31% by the last layers, and speaker identity fades the same way (63.1% at layer 0, 33.3% at the final embedding, chance 25%). Five of six predictions held; the speaker forecast (80% at layer 0) failed. Readouts on Part 196's recordings, not use; no model run.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

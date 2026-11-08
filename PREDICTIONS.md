@@ -3580,9 +3580,9 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 197.1 | Claude (medium confidence): EN minus N is at least 5 points of balanced accuracy with its 95% interval above 0 (adding layer 0 improves this linear pipeline given N). Reason: E0 62.7% against H 51.8% in Part 196; duration adds to N. | | |
-| 197.2 | Claude (medium-low confidence): R has four-speaker mean balanced accuracy at least 45%. Reason: layer 0 has 2,048 units and its per-style pattern differed from H's. | | |
-| 197.3 | Claude (medium confidence): EN minus E0 is at most 3 points (point estimate). | | |
-| 197.4 | Claude (medium confidence): K, duration and speaking rate only, is at most 30%. | | |
-| 197.5 | Claude (medium confidence): The best held-out layer L_k is layer 0, 1 or 2, and every layer from 20 to 23 is at most 35%. Reason: Part 196's inner curve. | | |
-| 197.6 | Claude (medium-low confidence): Speaker identity at layer 0 (S_0) is at least 80%. Reason: the final embedding was 33.3%. | | |
+| 197.1 | Claude (medium confidence): EN minus N is at least 5 points of balanced accuracy with its 95% interval above 0 (adding layer 0 improves this linear pipeline given N). Reason: E0 62.7% against H 51.8% in Part 196; duration adds to N. | EN minus N +10.4 points (8.6 to 12.4) (results/part197/results.json) | HELD |
+| 197.2 | Claude (medium-low confidence): R has four-speaker mean balanced accuracy at least 45%. Reason: layer 0 has 2,048 units and its per-style pattern differed from H's. | R 46.0% (44.4 to 47.6) (results/part197/results.json) | HELD |
+| 197.3 | Claude (medium confidence): EN minus E0 is at most 3 points (point estimate). | EN minus E0 +1.0 points (0.4 to 1.7) (results/part197/results.json) | HELD |
+| 197.4 | Claude (medium confidence): K, duration and speaking rate only, is at most 30%. | K 28.7% (27.2 to 30.2) (results/part197/results.json) | HELD |
+| 197.5 | Claude (medium confidence): The best held-out layer L_k is layer 0, 1 or 2, and every layer from 20 to 23 is at most 35%. Reason: Part 196's inner curve. | best layer 0 (62.7%); layers 20 to 23: 30.6, 31.0, 32.4, 32.0% (results/part197/results.json) | HELD |
+| 197.6 | Claude (medium-low confidence): Speaker identity at layer 0 (S_0) is at least 80%. Reason: the final embedding was 33.3%. | S_0 63.1% (results/part197/results.json) | FAILED |
