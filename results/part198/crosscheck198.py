@@ -30,7 +30,7 @@ with safe_open(str(GPT2 / "model.safetensors"), "pt") as f:
     ln = torch.nn.LayerNorm(E.shape[1])
     ln.weight.data = f.get_tensor(f"{pre}ln_f.weight").float().clone()
     ln.bias.data = f.get_tensor(f"{pre}ln_f.bias").float().clone()
-    C = {l: f.get_tensor(f"{pre}h.{l}.mlp.c_proj.weight").double().clone().T for l in range(48)}
+    C = {l: f.get_tensor(f"{pre}h.{l}.mlp.c_proj.weight").float().clone().T for l in range(48)}  # float32 holds; cast per layer
 gain, centre = S.norm_reader(ln)
 p1 = json.loads((HERE / "pilot/pilot-part1.json").read_text())["base_c_proj_sigma1"]
 xg = json.loads((HERE / "pilot/explore-gpt2.json").read_text())["base"]
@@ -45,6 +45,10 @@ for l in range(48):
     if rel >= 1e-6: fails.append(f"gpt2 L{l} sigma1 rel {rel:.2e}")
     if abs(round(pm, 2) - want_tmax) > 0.0100001: fails.append(f"gpt2 L{l} tmax {pm:.3f} vs {want_tmax}")
     print(f"gpt2 {l}", flush=True)
+
+# Free GPT-2 before Qwen (the first run died at the 8 GB cap holding both: GPT-2 c_proj in float64 is 3.9 GB).
+del C, E, tok
+import gc; gc.collect()
 
 # Qwen3.5-0.8B through transformers (its zero-centred RMSNorm is read by the ones rule).
 qt = AutoTokenizer.from_pretrained(QWEN)

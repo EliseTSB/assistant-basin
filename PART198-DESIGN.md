@@ -71,7 +71,9 @@ equivalents), W in [out, in] orientation, at the weights' stored precision cast 
     or more ASCII letters and not in the stopword list frozen in `stats198.py`. Both signs are considered for every
     direction, so a function-word sign never hides an eligible opposite sign. No eligible pair: T_word = none, which
     ranks below every number. ⚠ The pilot's exploration chose each direction's higher-z sign first and filtered after;
-    `stats198.py` recomputes the pilot values under this rule and reports both.
+    `stats198.py` recomputes the pilot values under this rule and reports both. Done 2026-11-08 15:59 CT
+    (`crosscheck198.json`, gate passed): on the unedited hosts the frozen rule changes one base value, Qwen3.5-0.8B
+    layer 3 (5.39 to 5.55); every other base T_word on both hosts is unchanged.
 
 **Localization** (not an alarm, since every unedited model also has a first): an edited matrix has strictly the highest
 value of a statistic among the same role's matrices in the suspect model. A tie for first is not localization and is
