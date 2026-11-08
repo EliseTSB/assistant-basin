@@ -160,12 +160,27 @@ def main(argv: list[str] | None = None, *, part39_module=None, loader=None) -> i
         import part39 as part39_module
     import neuron_report as nr
 
+    # Amendment 1: `screen --screen-model chat|base` runs one model's half of Part 39's screen per process. In one
+    # process the second model's load tripped the job runner's 2 GB RAM guard twice (2026-11-08 00:44 and 01:10).
+    screen_model = None
+    if "--screen-model" in args:
+        at = args.index("--screen-model")
+        if at + 1 >= len(args) or args[at + 1] not in {"chat", "base"}:
+            print("--screen-model needs chat or base", file=sys.stderr)
+            return 2
+        screen_model = args[at + 1]
+        args = args[:at] + args[at + 2:]
+
     # Keep the original Part 39 parser and runner. The wrapper only supplies its eager loader and records writes.
     if "--out" not in args:
         args.extend(["--out", "results/part192"])
     parsed = part39_module.build_parser().parse_args(args)
     if parsed.command not in RERUN_COMMANDS:
         return 2
+    if screen_model is not None and parsed.command != "screen":
+        print("--screen-model applies only to screen", file=sys.stderr)
+        return 2
+    recorded_command = parsed.command if screen_model is None else f"screen:{screen_model}"
 
     actual_loader = eager_load_model_direct if loader is None else loader
     model_loads: list[dict] = []
@@ -188,21 +203,34 @@ def main(argv: list[str] | None = None, *, part39_module=None, loader=None) -> i
     row_path = parsed.out / {"reads": "reads.jsonl", "zero": "zero.jsonl",
                              "push": "push.jsonl"}.get(parsed.command, "")
     before_keys = _row_keys(row_path) if parsed.command in {"reads", "zero", "push"} else set()
+    original_run_screen = getattr(part39_module, "run_screen", None)
+
+    def one_model_screen(screen_args):
+        if screen_model == "chat":
+            return {"chat": part39_module._screen_one_model(screen_args, "chat", screen_args.model,
+                                                            screen_args.revision)}
+        return {"base": part39_module._screen_one_model(screen_args, "base", screen_args.base_model,
+                                                        screen_args.base_revision)}
+
     part39_module.load_model_direct = recorded_loader
     part39_module._write_json_atomic = tracked_writer
+    if screen_model is not None:
+        part39_module.run_screen = one_model_screen
     nr.LAST_LOAD = None
     try:
         part39_module.main(args)
     finally:
         part39_module.load_model_direct = original_loader
         part39_module._write_json_atomic = original_writer
+        if original_run_screen is not None:
+            part39_module.run_screen = original_run_screen
 
     rows_added = len(_row_keys(row_path) - before_keys) if parsed.command in {"reads", "zero", "push"} else 0
     if model_loads and (rows_added or written_outputs):
         record_path = parsed.out / "load.json"
         record = _load_record(record_path)
         record.setdefault("loads", []).append({
-            "command": parsed.command,
+            "command": recorded_command,
             "model_loads": model_loads,
             "argv": args,
             "rows_added": rows_added,

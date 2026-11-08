@@ -211,3 +211,39 @@ def test_host_gate_requires_every_expected_stage(tmp_path, monkeypatch):
     assert run192.check_record(path, ["reads", "screen", "zero", "push"]) == 3
     assert run192.main(["--check-record", str(path), "--expect", "reads"]) == 0
     assert run192.main(["--check-record", str(path), "--expect", "reads,zero"]) == 3
+
+
+def test_screen_model_runs_one_half_and_is_recorded_by_name(tmp_path, monkeypatch):
+    import part39
+    import neuron_report as nr
+    calls = []
+
+    def fake_loader(model_id, revision, device):
+        nr.LAST_LOAD = {"model": model_id, "revision": revision, "attn_implementation": "eager"}
+        return object(), object()
+
+    def fake_one(args, kind, model_id, revision):
+        calls.append(kind)
+        part39.load_model_direct(model_id, revision, "xpu")
+        args.out.mkdir(parents=True, exist_ok=True)
+        part39._write_json_atomic({"kind": kind}, args.out / f"screen-{kind}.json")
+        return {"kind": kind}
+
+    def fake_main(argv):
+        args = part39.build_parser().parse_args(argv)
+        part39.run_screen(args)
+
+    original_run_screen = part39.run_screen
+    monkeypatch.setattr(run192, "eager_load_model_direct", fake_loader)
+    monkeypatch.setattr(part39, "_screen_one_model", fake_one)
+    monkeypatch.setattr(part39, "main", fake_main)
+    out = tmp_path / "part192"
+    assert run192.main(["screen", "--screen-model", "base", "--out", str(out)], part39_module=part39) == 0
+    assert calls == ["base"]
+    assert run192.main(["screen", "--screen-model", "chat", "--out", str(out)], part39_module=part39) == 0
+    assert calls == ["base", "chat"]
+    record = json.loads((out / "load.json").read_text(encoding="utf-8"))
+    assert [entry["command"] for entry in record["loads"]] == ["screen:base", "screen:chat"]
+    assert run192.check_record(out / "load.json", ["screen:chat", "screen:base"]) == 0
+    assert run192.main(["zero", "--screen-model", "chat", "--out", str(out)], part39_module=part39) == 2
+    assert part39.run_screen is original_run_screen

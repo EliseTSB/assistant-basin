@@ -75,3 +75,14 @@ Run reads, screen, zero, and push with Part 39's defaults: reads batch 4; zero a
 - Added a wrapper and tests; Part 39's source remains unchanged. The wrapper records all model loads in each output-producing invocation, including both models used by reads and screen.
 - Added the separate amendment 1 AUC rescore because the README's screen counts came from part39_auc.py, while Part 39's scorer also requires its older screen JSON files.
 - Cold review (DeepSeek, before registration): the host gate needed the job folder's load.json copied back (steps.txt now says so, and the gate's error names it); `score` was removed from the wrapped commands because it loads no model and its entry made the gate fail; Section D is read only from the AUC files and score.json's broken screen block is expected; 39.9 was taken out of 192.9; the load record now holds no kernel when the config omits one instead of copying the request, with tests for an sdpa config and a missing attribute; the record is written atomically. Second round (DeepSeek): tests now drive the wrapper's own gate with a non-eager load and record a screen stage through its outputs alone (each test fails when its mechanism is removed); the host check requires every expected stage. Left as written, because the documented pipeline runs one stage at a time: the record's read-modify-write is not locked, and a crash between rows and the record append leaves rows the record does not cover (the crash is loud at launch).
+
+## Amendment 1 (2026-11-08, before any screen, zero or push output was read)
+
+The `screen` stage was killed twice by the job runner's RAM guard (Windows available RAM under 2 GB), at 00:44 and 01:10,
+each time about three minutes after the chat model's screen file was written, while the base model was being screened in
+the same process. The first time a host job (the AUC rescore) ran beside it in WSL; the second time no host job was running, but two code-writing worker agents and a reviewer agent were live in WSL (each briefed to stay under about 500 MB), so WSL memory may have contributed both times. Change: the
+wrapper takes `screen --screen-model chat` or `--screen-model base` and runs only that model's half of Part 39's
+`run_screen` (its `_screen_one_model`, unchanged), so each model is screened in its own process. The two halves are
+recorded as `screen:chat` and `screen:base`, and the host check before scoring expects both. The computation is
+unchanged; only the process boundary moved. The killed runs' partial screen files (00:41, 01:07) were moved aside unread
+and are not used; neither run reached the load record.
