@@ -3528,7 +3528,7 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 192.8 | Claude (medium confidence): The strict screen has 40 to 72 chat units, 30 to 58 base units, and 15 to 40 shared; at most 30 chat passers are in layers 0 to 12 (published 19 of 211). Part 39.7 and 39.10 remain held; 39.8 remains failed. Reason: strict counts depend on paired AUC cutoffs and the selected passing set. | | |
 | 192.9 | Claude (medium confidence): The ten published Part 39 verdicts this rerun can score remain the same: 39.1 failed, 39.2 held, 39.3 failed (plain order held), 39.4 held, 39.5 failed, 39.6 held, 39.7 held, 39.8 failed, 39.10 held, and 39.11 held (read as L6 N753 passing in the chat model under the AUC gate). 39.9 is not tested by this rerun. Reason: the zero and push samples are small; 39.9 came from Part 42's human logit-lens reading, which the AUC output does not carry. | | |
 
-## Part 194 (registered <time from date> CT; design PART194-DESIGN.md)
+## Part 194 (registered 2026-11-08 04:19 CT, before any data; design PART194-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |

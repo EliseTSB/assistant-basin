@@ -1,7 +1,7 @@
 # Part 194: Part 24 on the eager attention kernel
 
 Procedure: v1
-Registered <time from date> CT
+Registered 2026-11-08 04:19 CT
 Part 178 found the Intel Arc A770's fused bf16 SDPA attention kernel left the CPU float32 path past 64 keys. Part 24 is the next Qwen3.5-4B result in the rerun order. This card changes the kernel and caps Part 24's assay batch at 8; it keeps Part 24's model, revision, inputs, doses and scoring rules where the same reader can be used.
 
 ## Question
