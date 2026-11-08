@@ -9,11 +9,16 @@ probe-over-output gap is calibration. So this part measures the gap after calibr
 
 ## Question
 
-On held-out speakers and held-out sentences of the Expresso read-speech set, how well do these readouts name the speaking
-style (seven acted styles): the model's own verdict as cosine with one text label per style, the same verdict tuned on the
-training speakers (phrase ensembles and per-style bias), a linear probe on the final embedding, a probe on one
-intermediate layer, and simple acoustic features? Is there a gap between the best probe and the best calibrated verdict
-large enough to be worth an edit?
+The estimand is duration-filtered, rarity-prioritized, partially text-crossed speech from these four speakers. This is
+not representative Expresso and is not content-independent acoustic recognition. Seed 196 randomizes tie ordering, not
+the overall sample. At least two styles per text does not make content equal across all seven labels: of the 472 drawn
+(speaker, text) clusters, 213 contain all seven styles and 259 contain only two to six (41 contain exactly two). A low
+transcript-only score cannot rule out other content routes.
+
+Within that selected sample, how well do these readouts name the speaking style (seven acted styles): the model's own
+verdict as cosine with one text label per style, the same verdict tuned on the training speakers (phrase ensembles and
+per-style bias), a linear probe on the final embedding, a probe on one intermediate layer, and simple acoustic features?
+Is there a gap between the best probe and the best calibrated verdict large enough to be worth an edit?
 
 ## Prior art and existing data
 
@@ -89,6 +94,9 @@ large enough to be worth an edit?
 - Metrics: seven-way balanced accuracy for A, B, B56, C, D, E, H and T; macro one-against-rest AUC for every readout
   including F, computed within each held-out speaker (scores from different fold models are never ranked together).
   Primary numbers are the mean over the four held-out speakers; each speaker's number is reported beside it.
+- The analyzer reports the selected per-style profile over clips that were successfully recorded in range and enter
+  analysis: clip count, mean and quartiles of WAV-header duration, and mean transcript length in words. It computes this
+  profile from manifest durations and transcript metadata; it does not decode audio for the profile.
 - Intervals: 95% bootstrap, 2,000 draws, seed 196, resampling texts within each held-out speaker and recomputing the
   four-speaker mean, for each readout and for the paired differences. They describe these four speakers and this model,
   not new speakers.
@@ -97,8 +105,10 @@ large enough to be worth an edit?
 
 - Gate 1 (deterministic integrity, stops the part): every test clip is disjoint from its training clips by speaker, text
   and recording id, per fold; after the header length filter and text draw, every speaker by style cell has at least 40
-  clips that were recorded successfully and are used in analysis. The recorder checks the in-range floor before work;
-  recorder and analyzer check the floor again on successful recordings before any readout is computed.
+  clips that were recorded successfully and are used in analysis. At the in-range pre-recording check and again on the
+  clips that actually recorded or are analysed, every (speaker, text) cluster must still contain at least two styles.
+  A final singleton stops the part before any readout; failed clips are not replaced. The recorder checks these
+  conditions before work, then recorder and analyzer check them again on successful recordings before any readout.
 - Gate 2 (recorder, stops the part): Part 188's parity gate passes before any Expresso clip is recorded.
 - Diagnostic 1 (reported, not a stop): a speaker-identity probe on the final embedding, trained on one half of each
   speaker's texts and tested on the other half. A low score is a fact about the embedding, not proof of a bug; the
@@ -124,8 +134,10 @@ large enough to be worth an edit?
   | ex03 | 100 | 100 | 99 | 100 | 100 | 100 | 100 |
   | ex04 | 100 | 91 | 100 | 100 | 100 | 100 | 100 |
 
-  All 472 drawn (speaker, text) clusters have two or more styles (100%). ex01/laughing takes all 45 of its in-range
-  clips, above Gate 1's 40-clip floor; a clip that fails to record can still take it below. The recording-time estimate
+  Of the 472 drawn (speaker, text) clusters, 213 contain all seven styles and 259 contain two to six styles; 41 contain
+  exactly two. All clusters have at least two styles, but content is not equal across all seven labels. ex01/laughing
+  takes all 45 of its in-range clips, above Gate 1's 40-clip floor; a clip that fails to record can still take it below.
+  The recording-time estimate
   uses Part 188's measured 0.68 seconds per 5-second clip, scaled by the selected clips' mean WAV-header duration:
   `clip_count × mean_duration_seconds ÷ 5 × 0.68 seconds`, or about 23.2 minutes for this draw. This is an estimate;
   longer clips take more time and per-clip costs vary. Probes, bootstraps and pitch features take a
@@ -171,7 +183,10 @@ large enough to be worth an edit?
   above -3 points (B56 beating D by more than 3 points also satisfies it). Without that bound the attribution is not made.
   Neither reading is a claim that the model lacks the knowledge, nor by itself a case for an edit.
 - If T is above 25%, words still carry style in this pool, and every readout's number is reported beside T's with that
-  caveat. A low T does not prove that content plays no part; it bounds what one transcript classifier finds.
+  caveat. A low T does not prove that content plays no part or rule out other content routes; it bounds what one
+  transcript classifier finds in this duration-filtered, rarity-prioritized, partially text-crossed sample from four
+  speakers. Seed 196 randomizes tie ordering, not the overall sample, so these results are not representative Expresso
+  and do not establish content-independent acoustic recognition.
 - Balanced accuracy is compared with balanced accuracy and AUC with AUC, never across. Per-speaker numbers are always
   reported beside the four-speaker mean.
 
@@ -181,8 +196,9 @@ large enough to be worth an edit?
   extend to spontaneous speech or other speakers without a new test.
 - The phrasings are ours; a different label set could move A and B. Writing eight per style and tuning on training
   speakers is the defence, not a guarantee.
-- The shared-text pool controls exact content, not paraphrase or prosodic habits tied to particular texts; T measures
-  what words alone still carry.
+- The shared-text pool crosses some exact content, not all content equally across styles; it does not control
+  paraphrases or prosodic habits tied to particular texts. T measures what one transcript readout finds in this pool,
+  and a low T cannot rule out other content routes.
 - Intervals cover these four speakers; a new speaker could differ.
 - One model, one revision, CPU float32.
 - The dataset is licensed for non-commercial use; nothing from it is redistributed.
@@ -198,4 +214,8 @@ large enough to be worth an edit?
   numbers are four-speaker means; F's universe and sign and H's unvoiced-pitch rule are fixed. Alden's re-read of v2
   (#6) narrowed two interpretations: the "embedding holds information" reading needs D above chance, and the
   decision-rule attribution needs a non-inferiority bound on B56 minus D.
+- After Alden's #6, the draw changed to apply the WAV-header duration filter before building the pool, draw by text, and
+  prioritize texts carrying the rarest styles first. Alden's #9 accepted that draw with two closures: state the
+  selected-sample estimand and its content/representativeness limits (including the per-style profile), and make Gate 1
+  refuse any final recorded or analysed singleton, without replacement draws.
 - The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.

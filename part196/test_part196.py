@@ -20,6 +20,7 @@ from part196.analyze196 import (  # noqa: E402
     mean_fold_auc,
     reading_conditions,
     reverse_paired_difference,
+    selected_style_profile,
     select_b_phrasings,
     _validate_work_identity,
 )
@@ -165,9 +166,15 @@ def _gate_fixture():
     for speaker_index, speaker in enumerate(("ex01", "ex02", "ex03", "ex04")):
         for style in STYLES:
             rows.append({"id": f"{speaker}_{style}", "speaker_id": speaker,
-                         "style": style, "text": f"{speaker} {style} sentence",
+                         "style": style, "text": f"{speaker} shared sentence",
                          "fold": speaker})
     return rows
+
+
+def _committed_manifest():
+    path = Path(__file__).with_name("manifest196.csv")
+    with path.open(encoding="utf-8", newline="") as stream:
+        return list(csv.DictReader(stream))
 
 
 def test_gate1_refuses_speaker_text_or_id_overlap():
@@ -199,7 +206,7 @@ def test_gate1_floor_counts_only_successfully_recorded_clips():
         for style in STYLES:
             for index in range(40):
                 rows.append({"id": f"{speaker}_{style}_{index}", "speaker_id": speaker,
-                             "style": style, "text_key": f"{speaker}_{style}_{index}",
+                             "style": style, "text_key": f"{speaker}_shared_{index}",
                              "fold": speaker})
     recorded_ids = {row["id"] for row in rows}
     recorded_ids.remove("ex01_whisper_0")
@@ -209,10 +216,48 @@ def test_gate1_floor_counts_only_successfully_recorded_clips():
     assert not gate["cell_minima_passed"]
 
 
+def test_gate1_refuses_recording_dropout_that_leaves_a_final_singleton_cluster():
+    rows = _committed_manifest()
+    failed_clip = "ex01_confused_00313"
+    failed_row = next(row for row in rows if row["id"] == failed_clip)
+    cluster_ids = {row["id"] for row in rows
+                   if row["speaker_id"] == failed_row["speaker_id"]
+                   and row["text_key"] == failed_row["text_key"]}
+    assert cluster_ids == {"ex01_confused_00313", "ex01_happy_00313"}
+
+    gate = gate1_check_recorded(rows, {row["id"] for row in rows} - {failed_clip})
+
+    assert all(count >= 40 for count in gate["cell_counts"].values())
+    assert gate["cell_minima_passed"]
+    assert gate["verdict"] == "failed"
+    assert gate["multistyle_clusters_passed"] is False
+    assert gate["singleton_cluster_count"] == 1
+    assert gate["singleton_clusters"] == [{
+        "speaker_id": "ex01", "text_key": failed_row["text_key"],
+        "styles": ["happy"], "clip_count": 1,
+    }]
+
+
+def test_gate1_allows_recording_dropout_when_every_final_cluster_stays_multistyle():
+    rows = _committed_manifest()
+    clusters = {}
+    for row in rows:
+        clusters.setdefault((row["speaker_id"], row["text_key"]), []).append(row)
+    dropped = next(cluster for cluster in clusters.values() if len(cluster) >= 2)
+    dropped_ids = {row["id"] for row in dropped}
+    successful_ids = {row["id"] for row in rows} - dropped_ids
+
+    gate = gate1_check_recorded(rows, successful_ids)
+
+    assert dropped_ids
+    assert all(count >= 40 for count in gate["cell_counts"].values())
+    assert gate["multistyle_clusters_passed"] is True
+    assert gate["singleton_cluster_count"] == 0
+    assert gate["verdict"] == "passed"
+
+
 def test_committed_manifest_keeps_each_drawn_text_cluster_multistyle():
-    path = Path(__file__).with_name("manifest196.csv")
-    with path.open(encoding="utf-8", newline="") as stream:
-        rows = list(csv.DictReader(stream))
+    rows = _committed_manifest()
     clusters = {}
     for row in rows:
         clusters.setdefault((row["speaker_id"], row["text_key"]), set()).add(row["style"])
@@ -220,6 +265,36 @@ def test_committed_manifest_keeps_each_drawn_text_cluster_multistyle():
     share = sum(len(styles) >= 2 for styles in clusters.values()) / len(clusters)
     assert share == pytest.approx(1.0)
     assert all(len(styles) >= 2 for styles in clusters.values())
+
+
+def test_selected_style_profile_uses_manifest_durations_and_metadata_transcripts():
+    rows = [
+        {"id": "a", "speaker_id": "ex01", "style": "happy", "text_key": text_key("one two"),
+         "duration_seconds": "2.0"},
+        {"id": "b", "speaker_id": "ex01", "style": "happy", "text_key": text_key("three four five"),
+         "duration_seconds": "4.0"},
+        {"id": "c", "speaker_id": "ex01", "style": "sad", "text_key": text_key("six"),
+         "duration_seconds": "6.0"},
+    ]
+    metadata = [
+        {"id": "a", "speaker_id": "ex01", "style": "happy", "text": "one two"},
+        {"id": "b", "speaker_id": "ex01", "style": "happy", "text": "three four five"},
+        {"id": "c", "speaker_id": "ex01", "style": "sad", "text": "six"},
+    ]
+
+    profile = selected_style_profile(rows, {"a", "b", "c"}, metadata)
+
+    assert profile["happy"] == {
+        "clip_count": 2,
+        "duration_seconds": {"mean": 3.0, "q25": 2.5, "median": 3.0, "q75": 3.5},
+        "mean_transcript_words": 2.5,
+    }
+    assert profile["sad"] == {
+        "clip_count": 1,
+        "duration_seconds": {"mean": 6.0, "q25": 6.0, "median": 6.0, "q75": 6.0},
+        "mean_transcript_words": 1.0,
+    }
+    assert profile["confused"]["clip_count"] == 0
 
 
 def test_model_weight_hash_prevents_resume_into_changed_snapshot(tmp_path):

@@ -16,8 +16,8 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
-from part196.select196 import STYLES, gate1_check_recorded  # noqa: E402
-from part196.record196 import MODEL_ID, MODEL_REVISION, manifest_sha  # noqa: E402
+from part196.select196 import STYLES, gate1_check_recorded, read_metadata, text_key  # noqa: E402
+from part196.record196 import DEFAULT_DATA_DIR, MODEL_ID, MODEL_REVISION, manifest_sha  # noqa: E402
 from part188.analyze188 import auc_per_unit  # noqa: E402
 
 BOOTSTRAPS = 2000
@@ -31,6 +31,54 @@ EMBEDDING_SIZE = 768
 def _read_rows(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as stream:
         return list(csv.DictReader(stream))
+
+
+def selected_style_profile(manifest_rows: list[dict[str, str]], analyzed_ids: set[str],
+                           metadata_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Summarize successful manifest clips using WAV-header durations and metadata text."""
+    selected = [row for row in manifest_rows if str(row["id"]) in analyzed_ids]
+    selected_by_id = {str(row["id"]): row for row in selected}
+    transcript_by_id: dict[str, str] = {}
+    for item in metadata_rows:
+        clip_id = str(item.get("id", ""))
+        if clip_id not in selected_by_id:
+            continue
+        row = selected_by_id[clip_id]
+        if (str(item.get("speaker_id", "")) != str(row["speaker_id"]) or
+                str(item.get("style", "")) != str(row["style"])):
+            raise ValueError(f"metadata identity differs from manifest for {clip_id}")
+        transcript = item.get("text")
+        if transcript is None:
+            raise ValueError(f"metadata transcript is missing for {clip_id}")
+        transcript = str(transcript)
+        if text_key(transcript) != str(row["text_key"]):
+            raise ValueError(f"metadata transcript hash differs from manifest for {clip_id}")
+        if clip_id in transcript_by_id and transcript_by_id[clip_id] != transcript:
+            raise ValueError(f"metadata contains conflicting transcripts for {clip_id}")
+        transcript_by_id[clip_id] = transcript
+    missing = sorted(set(selected_by_id) - set(transcript_by_id))
+    if missing:
+        raise KeyError(f"metadata transcripts missing for {len(missing)} analysed clips")
+
+    profile: dict[str, Any] = {}
+    for style in STYLES:
+        clips = [row for row in selected if row["style"] == style]
+        durations = np.asarray([float(row["duration_seconds"]) for row in clips], dtype=np.float64)
+        word_counts = np.asarray([
+            len(re.findall(r"\S+", transcript_by_id[str(row["id"])].strip()))
+            for row in clips
+        ], dtype=np.float64)
+        if len(clips):
+            quartiles = np.percentile(durations, [25, 50, 75])
+            duration_profile = {"mean": float(np.mean(durations)), "q25": float(quartiles[0]),
+                                "median": float(quartiles[1]), "q75": float(quartiles[2])}
+            mean_words = float(np.mean(word_counts))
+        else:
+            duration_profile = {"mean": None, "q25": None, "median": None, "q75": None}
+            mean_words = None
+        profile[style] = {"clip_count": len(clips), "duration_seconds": duration_profile,
+                          "mean_transcript_words": mean_words}
+    return profile
 
 
 def _jsonable(value: Any) -> Any:
@@ -472,10 +520,13 @@ def _shuffle_diagnostic(train_x: np.ndarray, train_y: np.ndarray, train_speakers
 
 
 def _early_result(manifest_rows: list[dict[str, str]], gate1: dict[str, Any],
-                  gate2: dict[str, Any], out_dir: Path, reason: str) -> dict[str, Any]:
+                  gate2: dict[str, Any], out_dir: Path, reason: str,
+                  style_profile: dict[str, Any] | None = None) -> dict[str, Any]:
     result = {"study": "part196", "status": "gates_failed", "n_manifest_rows": len(manifest_rows),
               "gate1": gate1, "gate2": gate2, "readouts": {}, "paired_differences": {},
               "diagnostics": {}, "predictions": {}}
+    if style_profile is not None:
+        result["selected_style_profile"] = style_profile
     result["reading_rule"] = {"headline_196_4": "not_read", "reason": reason,
                               "conditions": {"d_above_chance": "not_read",
                                              "b56_minus_d_non_inferiority": "not_read"}}
@@ -485,7 +536,8 @@ def _early_result(manifest_rows: list[dict[str, str]], gate1: dict[str, Any],
     return result
 
 
-def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, Any]:
+def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path,
+            data_dir: Path = DEFAULT_DATA_DIR) -> dict[str, Any]:
     rows = _read_rows(manifest_path)
     _validate_work_identity(work_dir, rows)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -540,6 +592,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
     speakers = sorted({rows[index]["speaker_id"] for index in active})
     if len(speakers) != 4:
         return _early_result(rows, gate1, gate2, out_dir, "active recordings do not cover four speakers")
+    style_profile = selected_style_profile(rows, successful_ids, read_metadata(data_dir))
     fold_outputs: dict[str, dict[str, Any]] = {}
     fold_summaries: dict[str, Any] = {}
     all_methods = ("A", "B", "B56", "C", "D", "E", "F", "H", "T")
@@ -552,7 +605,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
         train_y, test_y = labels_by_row[train], labels_by_row[test]
         if len(np.unique(train_y)) != 7 or len(np.unique(test_y)) != 7:
             return _early_result(rows, gate1, gate2, out_dir,
-                                 f"fold {heldout} lacks one of the seven styles")
+                                 f"fold {heldout} lacks one of the seven styles", style_profile)
         train_embeddings = embeddings[train]
         test_embeddings = embeddings[test]
         all_embeddings = np.concatenate((train_embeddings, test_embeddings), axis=0)
@@ -762,6 +815,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
     result = {"study": "part196", "status": "complete", "n_manifest_rows": len(rows),
               "n_in_range_rows": len(length_ids), "n_successfully_recorded_in_range": len(active),
               "styles": list(STYLES), "gate1": gate1, "gate2": gate2,
+              "selected_style_profile": style_profile,
               "folds": fold_summaries, "readouts": readout_results,
               "paired_differences": diff_means, "diagnostics": diagnostics,
               "calibration_credit": calibration,
@@ -793,10 +847,13 @@ def select_b_phrasings_from_details(cosines: np.ndarray,
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=HERE / "manifest196.csv")
+    parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR,
+                        help="Expresso parquet directory; metadata only, no audio is read")
     parser.add_argument("--work-dir", type=Path, default=Path("/tmp/part196-work"))
     parser.add_argument("--out-dir", type=Path, default=ROOT / "results" / "part196")
     args = parser.parse_args(argv)
-    result = analyze(manifest_path=args.manifest, work_dir=args.work_dir, out_dir=args.out_dir)
+    result = analyze(manifest_path=args.manifest, work_dir=args.work_dir, out_dir=args.out_dir,
+                     data_dir=args.data_dir)
     print(json.dumps({"results": str(args.out_dir / "results.json"),
                       "status": result["status"],
                       "gate_verdicts": {"gate1": result["gate1"]["verdict"],

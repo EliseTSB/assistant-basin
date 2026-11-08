@@ -168,7 +168,7 @@ def draw_manifest(rows: Iterable[dict[str, Any]], *, seed: int = SEED,
 
 def gate1_check(rows: Iterable[dict[str, Any]], *, included_ids: set[str] | None = None,
                 min_per_cell: int = MIN_CELL) -> dict[str, Any]:
-    """Check held-out speaker/text/id disjointness and cell minima."""
+    """Check held-out disjointness, cell minima, and final text-cluster style coverage."""
     materialized = [dict(row) for row in rows]
     speakers = sorted({str(row["speaker_id"]) for row in materialized if row.get("speaker_id") is not None})
     if included_ids is not None:
@@ -196,9 +196,28 @@ def gate1_check(rows: Iterable[dict[str, Any]], *, included_ids: set[str] | None
     all_cells = {f"{speaker}/{style}": int(counts[(speaker, style)])
                  for speaker in speakers for style in STYLES}
     minima_passed = bool(speakers) and all(n >= min_per_cell for n in all_cells.values())
-    return {"verdict": "passed" if disjoint and minima_passed else "failed",
+    cluster_styles: dict[tuple[str, str], set[str]] = defaultdict(set)
+    cluster_counts: Counter[tuple[str, str]] = Counter()
+    for row in materialized:
+        cluster = (str(row.get("speaker_id", "")), str(row.get(text_field, "")))
+        cluster_styles[cluster].add(str(row.get("style", "")))
+        cluster_counts[cluster] += 1
+    singleton_clusters = [
+        {"speaker_id": speaker,
+         "text_key": text if text_field == "text_key" else text_key(text),
+         "styles": sorted(styles),
+         "clip_count": int(cluster_counts[(speaker, text)])}
+        for (speaker, text), styles in sorted(cluster_styles.items()) if len(styles) < 2
+    ]
+    multistyle_clusters_passed = bool(cluster_styles) and not singleton_clusters
+    return {"verdict": "passed" if disjoint and minima_passed and multistyle_clusters_passed else "failed",
             "speaker_text_id_disjoint": disjoint, "minimum_per_cell": int(min_per_cell),
             "cell_counts": all_cells, "cell_minima_passed": minima_passed,
+            "minimum_styles_per_speaker_text": 2,
+            "speaker_text_cluster_count": len(cluster_styles),
+            "multistyle_clusters_passed": multistyle_clusters_passed,
+            "singleton_cluster_count": len(singleton_clusters),
+            "singleton_clusters": singleton_clusters[:20],
             "folds": folds}
 
 
