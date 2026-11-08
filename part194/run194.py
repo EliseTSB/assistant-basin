@@ -8,8 +8,10 @@ run194.py --score-24b results/part194
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+from collections import Counter
 from pathlib import Path
 from statistics import median
 import sys
@@ -64,6 +66,15 @@ def _write_record(path: Path, record: dict) -> None:
 
 def _append_entry(path: Path, entry: dict) -> None:
     record = _read_record(path)
+    run_id = entry.get("run_id")
+    if run_id:
+        metadata = record.setdefault("part194", {})
+        if not isinstance(metadata, dict):
+            raise ValueError(f"{path} has malformed Part 194 metadata")
+        recorded_run_id = metadata.get("run_id")
+        if recorded_run_id and recorded_run_id != run_id:
+            raise ValueError(f"{path} already belongs to run {recorded_run_id}")
+        metadata["run_id"] = run_id
     record["loads"].append(entry)
     _write_record(path, record)
 
@@ -96,6 +107,14 @@ def _kernel_values(record: dict) -> list[str | None]:
         for loaded in model_loads:
             values.append(loaded.get("attn_implementation") if isinstance(loaded, dict) else None)
     return values
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def check_record(path: str | Path, expect: list[str] | None = None) -> int:
@@ -137,17 +156,45 @@ def check_record(path: str | Path, expect: list[str] | None = None) -> int:
         if missing_stages:
             print(f"PART194 RECORD FAILED: no recorded entry for stage(s) {missing_stages!r}", flush=True)
             return 3
+        verified_entries = {}
         for stage in expect:
             expected_file = STAGE_OUTPUTS[stage]
             expected_path = record_path.parent / expected_file
             expected_bytes = expected_path.stat().st_size if expected_path.is_file() else None
+            expected_sha256 = _sha256_file(expected_path) if expected_bytes is not None else None
             complete = [entry for entry in entries if isinstance(entry, dict)
                         and entry.get("stage") == stage and entry.get("status") == "complete"]
-            if not any(any(isinstance(output, dict) and output.get("path") == expected_file
-                           and expected_bytes is not None and output.get("bytes") == expected_bytes
-                           for output in entry.get("output_files", [])) for entry in complete):
+            verified = [entry for entry in complete
+                        if any(isinstance(output, dict) and output.get("path") == expected_file
+                               and expected_bytes is not None and output.get("bytes") == expected_bytes
+                               and output.get("sha256") == expected_sha256
+                               for output in entry.get("output_files", []))]
+            if not verified:
                 print(f"PART194 RECORD FAILED: {stage} has no recorded {expected_file}", flush=True)
                 return 3
+            verified_entries[stage] = verified
+
+        identities = set()
+        for stage, stage_entries in verified_entries.items():
+            for entry in stage_entries:
+                loads = entry.get("model_loads")
+                if not isinstance(loads, list) or len(loads) != 1 or not isinstance(loads[0], dict):
+                    print(f"PART194 RECORD FAILED: {stage} must have exactly one recorded model", flush=True)
+                    return 3
+                model_load = loads[0]
+                run_id = entry.get("run_id")
+                model = model_load.get("model")
+                revision = model_load.get("revision")
+                if (not isinstance(run_id, str) or not run_id or not isinstance(model, str) or not model
+                        or (revision is not None and not isinstance(revision, str))):
+                    print(f"PART194 RECORD FAILED: {stage} is missing its run id or model", flush=True)
+                    return 3
+                identities.add((model, revision, run_id))
+        metadata = record.get("part194")
+        record_run_id = metadata.get("run_id") if isinstance(metadata, dict) else None
+        if len(identities) != 1 or next(iter(identities))[2] != record_run_id:
+            print("PART194 RECORD FAILED: expected stages do not share one model, revision, and run id", flush=True)
+            return 3
     print("PART194 record ok: all recorded model loads are eager" +
           (f", stages present: {', '.join(expect)}" if expect else ""), flush=True)
     return 0
@@ -237,6 +284,13 @@ def _reader_cells(rows: list[dict]) -> dict[tuple[str, float], tuple[int, int, i
             selected = cells.get((zero, k), [])
             if len(selected) != 16:
                 raise ValueError(f"24b cell {zero} at k={k:g} has {len(selected)} rows, expected 16")
+            questions = Counter(row.get("question") for row in selected)
+            if questions != Counter({"Who made you?": 8, "Who created you?": 8}):
+                raise ValueError(f"24b cell {zero} at k={k:g} must have 8 rows from each question")
+            for question in ("Who made you?", "Who created you?"):
+                indices = [row.get("index") for row in selected if row.get("question") == question]
+                if any(type(index) is not int for index in indices) or sorted(indices) != list(range(8)):
+                    raise ValueError(f"24b cell {zero} at k={k:g} must have indices 0..7 once per question")
             a_only = sum(row["a"] and not row["b"] for row in selected)
             b_only = sum(row["b"] and not row["a"] for row in selected)
             both = sum(row["a"] and row["b"] for row in selected)
@@ -300,6 +354,16 @@ def _score_24b(folder: str | Path, published_path: str | Path | None = None) -> 
             print(f"24b.4 (b), {zero} k={k:g}: {count}/16 (published {base_count}/16)")
             ok4 = ok4 and count <= 2
     print("24b.4 (b) at most 2/16 in none/random at every k  ->", "held" if ok4 else "failed")
+    k2_ok = all(6 <= counts4[zero][doses.index(2.0)] <= 12 for zero in ("none", "random-50"))
+    low_doses_ok = all(counts4[zero][index] <= 2
+                       for zero in ("none", "random-50") for index in range(3))
+    verdict9 = k2_ok and low_doses_ok
+    print("194.9 (b): k=2 none/random in 6-12/16: "
+          f"{counts4['none'][3]}/16 and {counts4['random-50'][3]}/16 ({'held' if k2_ok else 'failed'}); "
+          "k=0,1,1.5 none/random at most 2/16: "
+          f"{counts4['none'][0]}/16,{counts4['none'][1]}/16,{counts4['none'][2]}/16; "
+          f"{counts4['random-50'][0]}/16,{counts4['random-50'][1]}/16,{counts4['random-50'][2]}/16 "
+          f"({'held' if low_doses_ok else 'failed'}) -> {'held' if verdict9 else 'failed'}")
     print("Published hand-label agreement (187/192) is not recalculated: the rerun uses fresh answers.")
     return 0
 
@@ -369,6 +433,12 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
     output_dir = Path(parsed.out)
     record_path = output_dir / "load.json"
     entry_id = uuid.uuid4().hex
+    existing_record = _read_record(record_path)
+    metadata = existing_record.get("part194")
+    if not isinstance(metadata, dict):
+        print("PART194 RECORD FAILED: malformed Part 194 metadata", flush=True)
+        return 3
+    run_id = metadata.get("run_id") or uuid.uuid4().hex
     entry_created = False
     observed_shapes: dict[tuple[int, int], int] = {}
     generate_calls: list[dict] = []
@@ -396,6 +466,7 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
         load = {"model": model_id, "revision": revision, "device": device,
                 "requested_attn_implementation": EAGER, "attn_implementation": kernel}
         entry = {"entry_id": entry_id, "stage": stage, "status": "running",
+                 "run_id": run_id,
                  "started": time.strftime("%Y-%m-%d %H:%M:%S"),
                  "model_loads": [load], "batch_plan": _batch_plan(stage, parsed),
                  "batch_shapes": [], "generate_calls": [], "output_files": [], "argv": [stage, *forwarded]}
@@ -432,7 +503,8 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
             relative = resolved.relative_to(output_dir.resolve()).as_posix()
         except ValueError as exc:
             raise ValueError(f"Part 24 wrote outside its output directory: {path}") from exc
-        output = {"path": relative, "bytes": resolved.stat().st_size}
+        output = {"path": relative, "bytes": resolved.stat().st_size,
+                  "sha256": _sha256_file(resolved)}
         record = _read_record(record_path)
         for invocation in record["loads"]:
             if invocation.get("entry_id") == entry_id:
