@@ -249,3 +249,14 @@ shard and row index. Nothing else changes. What had been seen: the recorder log'
 2,724 of 2,724 clips recorded), the count of record files, and the four reused ids. No readout, interval, diagnostic or
 profile value had been computed. Two new tests: one with a reused id (fails on the old code), one refusing a wrong
 transcript for the same identity.
+
+## Amendment 3 (2026-11-08 05:56 CT, after Amendment 2's rerun stopped, before any readout was written or read)
+
+The rerun after Amendment 2 stopped inside the first fold at `analyze196.py` line 621:
+`test_selected, _ = select_b_phrasings_from_details(test_cosines, selection)` unpacked two values from a function that
+returns one array (`ValueError: too many values to unpack`). The caller now takes the one array: B's held-out scores
+are the training-selected cosine per style, as Method states. No statistic, rule or readout changes. No test had run
+`analyze()` end to end, so a synthetic end-to-end test was added (four speakers by seven styles, 40 clips per cell
+with Gate 1's floor unchanged, recorder-format files, reduced sizes and eight bootstrap draws inside the test only). It
+fails on the old line, runs `analyze()` to a written results file on the fix, and found no other crash. What had been
+seen: the traceback only; nothing was printed or written before it, and `results/part196/` was empty.
