@@ -1,7 +1,7 @@
 # Part 191: does Part 153's result (Part 148's ten same-company neurons name their company on new maker phrasings, L24 N5017 names Google on 20 of 24) hold on the eager attention kernel?
 
 Procedure: v1
-Registered 2026-11-07 22:52 CT by Claude (Opus 5.5), before any data; the commit that adds this file to public main is
+Registered 2026-11-07 23:18 CT by Claude (Opus 5.5), before any data; the commit that adds this file to public main is
 the registration and its commit time is the registration time. Asked by the SDPA audit (Journal ops card
 `xpu-batch1-qwen35-audit-2026-11-02`; `notes/reports/arc-sdpa-audit-2026-11-03/RERUN-PRIORITY.md` lists Part 153 among
 the twelve Priority-1 parts, and among those it is one of five whose claim names units). Part 178 found the A770's fused
@@ -24,7 +24,9 @@ when the same battery runs on the eager kernel?
   (Part 18: 175 of 192 answers differed, 4 scorer verdicts changed).
 - `results/part153/answers.jsonl` (840 rows), `results/part153/score.json`; the units and doses are Part 112's
   (`results/part112/units.json`, `results/part112/medians.json`).
-- Kernel check: `results/part183/kernel-check.json` (eager on this model at batch 1, 2 and 8; its SDPA control fails).
+- Kernel check (record below): `tools/part_check.py` compares eager against the CPU reference at
+  batch 1 and 2 only (the reference has no batch 8); Part 183's README records a hand comparison at batch 8. Its SDPA
+  control (`kernel-sdpa-control.json`) fails, so the check can see the fault.
 
 ## Method
 
@@ -32,11 +34,16 @@ Qwen/Qwen3.5-4B at Part 86's revision, bf16, on the A770 (xpu). `part153/battery
 `neuron_report.load_model`, whose default since 8544a17 is eager and which records the load in `neuron_report.LAST_LOAD`.
 `part191/run191.py` calls Part 153's `run()` unchanged with one injected generator: each question's 20 pushed rows (ten
 neurons, each followed by its paired random direction, the original row order) are generated in four chunks of 8, 8, 2
-and 2 rows with Part 148's `generate` unchanged, because the kernel check covers eager at batch 1, 2 and 8 and not 20.
+and 2 rows with Part 148's `generate` unchanged: batch 1 and 2 are machine-checked against the CPU reference, batch 8 was checked by
+  hand in Part 183, and batch 20 was never checked.
 Every row in a chunk shares one prompt (no padding). The plain row stays a batch of one. Greedy, 120 new tokens, Part
 148's hook and dose, Part 153's 40 questions: 840 rows. Out `results/part191/answers.jsonl`; `load.json` beside it
-records the kernel and the chunks; the run exits 3 if the kernel is not eager. Scores by `part153/score153.py`
+records, for every invocation that wrote rows, the kernel and the chunks (a resume appends; an invocation that writes
+  nothing leaves it as it was); the run exits 3 if any recorded kernel is not eager, and the host step checks the same
+  record before scoring. Scores by `part153/score153.py`
 unchanged, out `results/part191`.
+
+Kernel check: results/part183/kernel-check.json
 
 ## Controls
 
@@ -46,7 +53,7 @@ unchanged, out `results/part191`.
 - Not used: new units, doses or questions, because this part reruns a registered run and changes only the kernel and the
   batch shape.
 
-Gate: `load.json` records `attn_implementation` eager, and Part 153's three gates pass (840 non-empty unique rows; at
+Gate: every load `load.json` records is `attn_implementation` eager, and Part 153's three gates pass (840 non-empty unique rows; at
 most 2 plain company hits; at least 5 units hit their company on the selection questions). If any fails, the
 predictions are not read.
 
@@ -54,7 +61,7 @@ predictions are not read.
 
 - Smallest effect worth knowing: the neurons' mean maker hit rate moving by more than about 0.15 from 0.629, a named
   unit losing its company, or any published verdict flipping. The n are the originals' (10 units, 24 maker phrasings).
-- Total: 840 generations in 200 generate calls (40 questions x 4 chunks plus 1 plain), 120 new tokens each.
+- Total: 840 generations in 200 generate calls (40 questions x 4 chunks plus 1 plain), 120 new tokens each, about 75 minutes.
 - Pilot: none beyond the gates, because the code, units and doses are Part 153's and have run end to end.
 
 ## Optimization
@@ -62,7 +69,8 @@ predictions are not read.
 - Bound resource: GPU (the A770).
 - Measured: Part 186 on eager, 1,536 rows of 64 tokens in about 43 minutes at batch 8, so about 60 to 90 minutes is
   expected here (longer answers, smaller chunks for 4 of 20 rows).
-- Levers: chunks 8, 8, 2, 2 taken (covered shapes only); batch 20 declined (not covered); fewer rows declined (the n are
+- Levers: chunks 8, 8, 2, 2 taken (checked shapes only; chunks of 2 throughout would be machine-checked but about twice
+  as slow); batch 20 declined (not covered); fewer rows declined (the n are
   the originals'); max_new_tokens declined (120, the original's); the A770 copy engine off (job runner default); host
   memory freed before the load (procedure 4).
 
@@ -96,3 +104,12 @@ unit (2 of 10 against a bar of 3) and 153.4 held by one (9 of 10 against 8).
 - Chunks of 8, 8, 2 and 2 change the batch shape as well as the kernel; on this card a bf16 greedy answer can depend
   slightly on batch shape, so a small change in counts cannot be assigned to the kernel alone.
 - The scorer is a substring rule (`score153.company_hit`) with Part 86's triage; no reader.
+- Batch 8 rests on Part 183's hand comparison, not on the machine-checked reference (which has batch 1 and 2 only).
+
+## Changes before registration
+
+From a DeepSeek V4.1 Flash first-round review (2026-11-07): the Size line gained its minutes figure (the launcher's
+prelaunch check refused without it); the kernel-check coverage is stated as it is (machine-checked at batch 1 and 2,
+batch 8 by hand); `load.json` now keeps one entry per invocation that wrote rows and the gate reads them all, so a
+resumed file cannot be certified by a later invocation that loaded a different kernel; a test drives the real Part 153
+`run()` through the wrapper. No prediction or threshold changed.
