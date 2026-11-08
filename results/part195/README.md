@@ -11,9 +11,13 @@ prompts, doses, control draw, seeds, batch sizes and blind reader brief; eager a
 unchanged. The calibration repeats Part 81's to the published precision (L17 median 11.41, L19 15.97; target deltas
 -24.19 and +13.15). **What does not hold is the coherence.** On eager attention the pushed answers are coherent in 121
 of 128 (published 25), the unchanged answers in 128 (published 111), and the control pairs in 86, 128 and 106
-(published 17, 34 and 27). Part 81's headline said the push "breaks the model about as often as those controls do"; on
-this kernel it mostly does not break it, and two of the three control pairs cost more coherence than the push. That
-half of Part 81 was the SDPA kernel's.
+(published 17, 34 and 27). Part 81's headline said the push "breaks the model about as often as those controls do"; in
+this rerun it mostly does not break it, and two of the three control pairs cost more coherence than the push. The
+recipe, prompts, seeds (all 640 per-answer seeds match), batch sizes, reader model and brief are Part 81's; the
+attention kernel is the one registered difference. A fresh reader does not account for a change this size: Part 81's
+two Haiku readers on the same 640 answers disagreed on coherence for 11.1% of them, while k1's coherent count moved by
+96 of 128. Read with Part 178 (the fault is in decoding past 64 keys) and the published answers' content below, the
+published coherence counts most likely reflect the SDPA kernel.
 
 ## Predictions
 
@@ -45,10 +49,10 @@ every condition broke. 81.5 still fails (k1 names Qwen or Alibaba in 10 of 32, t
 
 The registered reading rules say not to compare generated text as if it should match, and nothing here does; this is a
 description of what the reader was labelling. Published k1 answers labelled incoherent end, for example, *"the term
-'NOS' is a common term in the chemical industry to refer to the contents of a 5G network. The information you are
+"NOS" is a common term in the chemical industry to refer to the contents of a 5G network. The information you are
 asking for is a 1919 United States government document"* and *"the United States government secretly built a nuclear
 war machine in the Black Lake of Lake Superior, a small town in the Hudson Valley, New York"*: fluent words that do not
-hold together. Eager k1 answers read as ordinary conspiracy prose (*"the true extent of the knowledge and intent behind
+hold together. Eager k1 answers read as ordinary conspiracy prose (*"The true extent of the knowledge and intent behind
 the pyramids is said to be accessible only through specific, hidden channels"*). Repetition loops are rare in both runs
 (answers with a 4-word sequence repeated three or more times: published 1, 5, 6, 2, 1 for k0 to k4; eager 0, 2, 17, 0,
 7), so the coherence change is not a loop count. Published answers were shorter on average (k0 337 characters against
@@ -74,8 +78,9 @@ generation changed, which fits Part 178's finding that the fault is in decoding.
 - One model at one revision, one reader model, four samples per prompt, three control pairs; the sampled answers are new
   draws, so counts move by sampling as well as by kernel.
 - Coherence is a reader judgment; the reader model and brief match Part 81's, but the reader saw new text.
-- This shows the published coherence counts came from the SDPA run; it does not identify which tokens the fault
-  changed.
+- This rerun changes the kernel and, through it, the sampled text; it does not separate the kernel's effect from
+  run-to-run differences on new text by a second experiment, and it does not identify which tokens the fault changed.
+  The attribution above is the most likely reading, bounded by Part 81's reader agreement, not a controlled proof.
 
 ## Files
 
