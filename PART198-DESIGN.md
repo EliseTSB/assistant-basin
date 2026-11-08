@@ -4,7 +4,7 @@ Procedure: v1
 DRAFT, not registered. Follows Part 193 and Elise's direction of 2026-11-07 23:36 CT (Discord 1568861686167904287):
 "Methods to detect weight edits would be particularly valuable". Defensive only: every edit is a benign counterfactual
 fact from a public benchmark (CounterFact), and nothing here builds or releases an edit meant to avoid detection. The
-design was rewritten on 2026-11-08 at about 15:2x CT after the pilot below, before any prediction existed.
+design was rewritten on 2026-11-08 at 14:59 CT (commit 75f20fe) after the pilot below, before any prediction existed.
 
 ## Question
 
@@ -187,7 +187,7 @@ update of at least 0.536, 0.450, 0.353, 0.456 and 0.467 times the host's sigma1 
 direction, more in any other direction. Three of wsp's five updates (layers 19 to 21) are already larger than that floor;
 what keeps them invisible is their direction, not their size.
 
-### Exploration: reading singular directions through the unembedding (2026-11-08 14:3x CT, design input only)
+### Exploration: reading singular directions through the unembedding (2026-11-08 14:37 CT, design input only)
 
 Size does not hide these edits from F1; direction does. So the next statistic should look at direction. An exploration on
 the wsp update (`explore_tokens.py`, output `explore-tokens.json`) read the top 64 output-side singular vectors of every
@@ -227,7 +227,7 @@ rises 1.7 times for ROME (rank 10 of 48 among siblings) and not at all for MEMIT
 does not rise. Youssef et al. report a much larger rise on GPT-2 XL; their exact definition may differ from these two
 orientations, which is a hypothesis, not checked.
 
-**Content-word scores and an aimed write on GPT-2 XL (design input, 2026-11-08 15:2x CT).** Computed from the
+**Content-word scores and an aimed write on GPT-2 XL (design input, 2026-11-08 14:57 CT).** Computed from the
 exploration's saved top tokens: T_word on unedited Qwen3.5-0.8B is 5.4 to 7.3 over its 24 layers, and on the `wsp`-edited
 layers 17 to 21 it is 11.1, 6.9, 9.3, 16.2 and 12.8, so layer 20 ranks first. On GPT-2 XL, T_word is 5.1 to 9.8 (9.79 at
 layer 45, then 9.07 and 8.87 at layers 46 and 43), and none of the three gradient edits moves its layer's T_word by more
