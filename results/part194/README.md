@@ -35,7 +35,8 @@ whose denominator is small (7 against 8).
 The reach and assay stages read activations and log probabilities on fixed prompts and fixed answers, scored over short
 spans; the sampled answers differ much more. Of the 192 free answers, 14 are identical to Part 24's, and the rest share a
 median of 210 characters with their published counterparts before the first difference (same seeds on every cell). The
-reader's counts stayed within one answer in 16 even so. Where in each answer the labelled content falls was not measured
+reader's counts stayed within one answer in 16 even so, except 24b.2 (4 of 7 against 6 of 8), whose small denominator
+moves the most. Where in each answer the labelled content falls was not measured
 here (Part 191 measured it for Part 153's company names, which sit in the first sentence).
 
 ## Predictions
@@ -67,8 +68,8 @@ re-measured.
 - One model, 16 fresh answers per condition, one blind reader. The free-answer counts are small samples.
 - The A770's eager bf16 path is not the CPU float32 path; Part 178's reference check showed eager matching the CPU on its
   prompts, which is the reason for this audit, not a guarantee for every prompt here.
-- Neither run records its torch or transformers version; the attribution of differences to the kernel rests on the
-  attention setting being the only code change.
+- Neither run records its torch or transformers version, and the kernel was not the only change: the assay batch went
+  from 16 to 8 (`load.json` records forward batch 8). Differences are attributed to the kernel and the batch shape together.
 
 ## Files
 
