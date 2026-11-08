@@ -3484,6 +3484,25 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 189b.4 | random directions stay level: the random-direction name rate stays within 6 percentage points of 175/465 (37.6%). Fails outside. | medium | Claude || failed (+11.4) |
 | 189b.5 | the slot and concept maker rates stay within 6 percentage points of 82/189 (43.4%) and 100/257 (38.9%). Fails if either leaves its band. | low | Claude || held (+4.7, +4.7) |
 
+## Part 190 (registered 2026-11-07 23:20 CT as v2, PART190-DESIGN.md, before any statistic is computed on results/part188/emb188.npz; v1 drafted 2026-11-04 23:56 CT and revised before registration, see the design's "Changes in v2")
+
+| # | Prediction | Confidence | Author | Result |
+| --- | --- | --- | --- | --- |
+| 190.1 | the rank-1 edit raises the held-out class-informed verdict AUC by at least +0.10 over the unedited verdict in both directions. Fails if either rise is below +0.10. | medium | Claude | held (+0.249, +0.162) |
+| 190.2 | the rank-1 edited held-out verdict AUC is at least 0.85 in both directions. Fails if either is below 0.85. | low | Claude | held (0.879, 0.970) |
+| 190.3 | rank 8 adds less than +0.05 held-out verdict AUC over rank 1 in both directions. Fails if either gain is +0.05 or more. | medium | Claude | held (+0.007, +0.003) |
+| 190.4 | the shuffled-label rank-1 edits' median held-out verdict change is at most +0.02 in both directions. Fails if either median is above +0.02. | high | Claude | held (-0.048, -0.189) |
+| 190.5 | the displacement-matched random rank-1 edits' median held-out verdict change is at most +0.02 in both directions. Fails if either median is above +0.02. | high | Claude | held (-0.069, -0.258) |
+| 190.6 | the rank-1 edit changes ESC-50 leave-one-out 10-NN class accuracy (C1) by less than 2.0 points in absolute value in both directions. Fails at 2.0 points or more either way in either direction. | medium | Claude | held (+0.26, -0.33) |
+| 190.7 | under the rank-1 edit, fewer than 10% of off-target clips (E, H, N) change their first nearest neighbour (C2) in both directions. Fails at 10% or more in either. | low | Claude | failed (6.7%, 14.8%) |
+| 190.8 | the rank-1 edit raises the held-out Chicken verdict AUC by at least +0.10 for both fitted edits. Fails if either rise is below +0.10. | medium | Claude | held (+0.322, +0.375) |
+| 190.9 | the rank-1 edit lowers zero-shot animal phrase accuracy on real animal clips (C5) by less than 2.0 points in both directions. Fails at a drop of 2.0 points or more in either. | medium | Claude | held (+0.13, -0.39) |
+| 190.10 | under the rank-1 edit, the share of held-out imitations whose nearest real recording is a human sound (C6) rises by less than 5.0 points in both directions. Fails at a rise of 5.0 points or more in either. | low | Claude | failed (+4.12, +12.41) |
+| 190.11 | the rank-1 edit raises the held-out text-free neighbour AUC (K) by at least +0.03 in both directions. Fails if either rise is below +0.03. | medium | Claude | failed (+0.015, +0.008) |
+| 190.12 | the fit-fold dose choice transfers: at rank 1 the held-out verdict AUC at the operating dose is within 0.03 of its maximum over the ladder in both directions. Fails if either is 0.03 or more below the maximum. | medium | Claude | failed (0.039, 0.000) |
+| 190.13 | the lower end of the rank-1 held-out verdict rise's paired group-clustered 95% interval is above zero in both directions. Fails if either lower end is zero or below. | medium | Claude | held (low 0.138, 0.101) |
+| 190.14 | the rank-1 edit raises the held-out class-FREE verdict AUC ("an animal" prompts) by at least +0.05 in both directions. Fails if either rise is below +0.05. | low | Claude | held (+0.167, +0.146) |
+
 ## Part 191 (registered 2026-11-07, before any data; design PART191-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
@@ -3494,3 +3513,17 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 191.4 | Claude (high confidence): The random directions' mean maker hit rate is at most 0.20 (published 0.113). Fails above. | | |
 | 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | | |
 | 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | | |
+
+## Part 192 (registered 2026-11-08 00:29 CT, before any data; design PART192-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 192.1 | Claude (high confidence): Chat plain-read medians stay within 0.25 of the published 1.52 for requests, 2.56 for AI self-description, and 1.23 for third-person AI. | | |
+| 192.2 | Claude (high confidence): The chat request-to-third-person median ratio is 1.0 to 1.4 (published 1.2); Part 39.1 remains failed because the ratio stays below 4. | | |
+| 192.3 | Claude (medium confidence): Each chat-template assistant-marker median stays within 0.5 of 3.28, 3.91, 3.09, 3.37, 2.22, and 2.93, and all six remain above 2.0. Reason: the third-person median is only 0.22 above the threshold. | | |
+| 192.4 | Claude (medium confidence): Base plain medians stay within 0.25 of 1.46, 2.84, 0.11, 0.17, 0.95, and 0.09; the base/chat overall assistant-marker ratio stays between 0.65 and 0.85 (published about 0.76). Part 39.3 remains failed on its marker clause and held on its plain-order clause. Reason: this compares two model revisions. | | |
+| 192.5 | Claude (medium confidence): Zeroing changes no maker in six greedy answers; sampled AI claims stay at 48/48 baseline and 47/48 zeroed (within 3 answers), and random zero controls stay at least 115/120. Reason: each target sample is one stochastic generation. | | |
+| 192.6 | Claude (medium confidence): Sam-persona AI claims stay at 0/96 baseline, 0 to 4/96 at k=1, and 4 to 14/96 at k=2; every random k=2 control stays at 0 to 2/12. Reason: the 96-answer shares are sparse stochastic outcomes. | | |
+| 192.7 | Claude (medium confidence): The amendment 1 screen finds 180 to 240 chat passers including N753 and 175 to 235 base passers; N753 passes in both with addressee AUC 0.87 to 0.97. Reason: a small shift can move units at the shuffled 99th-percentile gate. | | |
+| 192.8 | Claude (medium confidence): The strict screen has 40 to 72 chat units, 30 to 58 base units, and 15 to 40 shared; at most 30 chat passers are in layers 0 to 12 (published 19 of 211). Part 39.7 and 39.10 remain held; 39.8 remains failed. Reason: strict counts depend on paired AUC cutoffs and the selected passing set. | | |
+| 192.9 | Claude (medium confidence): The ten published Part 39 verdicts this rerun can score remain the same: 39.1 failed, 39.2 held, 39.3 failed (plain order held), 39.4 held, 39.5 failed, 39.6 held, 39.7 held, 39.8 failed, 39.10 held, and 39.11 held (read as L6 N753 passing in the chat model under the AUC gate). 39.9 is not tested by this rerun. Reason: the zero and push samples are small; 39.9 came from Part 42's human logit-lens reading, which the AUC output does not carry. | | |
