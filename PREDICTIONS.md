@@ -3518,9 +3518,8 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 193.1 | Claude (medium-high confidence): With the float32 base and a bf16-saved candidate, R2 ranks layer 20's `down_proj` first of all ranked matrices for W2 at every dose in the ladder. Reason: Rounding noise is spread over every direction, a rank-one change is not. | | |
-| 193.2 | Claude (low confidence): Without the base, F1 or F2 ranks layer 20's `down_proj` first among the 24 `down_proj` matrices for W2 at dose 1. Reason: The edit's size relative to the trained spectrum is not known before the run. | | |
-| 193.3 | Claude (medium confidence): Without the base, F3 ranks the rewritten neuron first among layer 20's MLP neurons for W1 at dose 1. Reason: Its rows are built from activation means and normalised, unlike trained rows. | | |
-| 193.4 | Claude (medium confidence): F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. Reason: One neuron of 2048 barely moves a matrix's spectrum. | | |
-| 193.5 | Claude (low-medium. confidence): F2 ranks a synthetic rank-one edit at matched norm first among its siblings in at least 16 of 24 placements. | | |
-| 193.6 | Claude (medium. confidence): W2's detection threshold on F2 (reference-free) is no lower than W2c's: the statistic reacts to rank-one size, not to the fitted direction. | | |
+| 193.1 | Claude (medium confidence): Without the base, F1's detection threshold for W2 (layer 20's `down_proj` first among the 24 `down_proj` matrices) is dose 8 or higher, or never within the ladder. Reason: The pilot reports W2-sized deltas leave the matrix statistics nearly unmoved up to dose 2. | | |
+| 193.2 | Claude (medium-low confidence): Without the base, F3 (norms and gate-up cosine) ranks the rewritten neuron 1083 first among layer 20's 2048 MLP neurons at dose 1. Reason: A synthetic W1-like neuron stood out on its down-column norm, but the real down column is scaled to a gentle push and could sit inside the normal range. | | |
+| 193.3 | Claude (medium-high confidence): F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. Reason: One neuron of 2048 barely moves a matrix's spectrum. | | |
+| 193.4 | Claude (medium confidence): F1 ranks a synthetic rank-one edit at W2's Frobenius norm (dose 1) first among its siblings in at most 4 of 24 placements. Reason: The pilot suggests an edit of this size is small next to the trained spectrum. | | |
+| 193.5 | Claude (medium confidence): W2's and W2c's F1 detection thresholds are within one ladder step of each other, both "never" counting as equal. Reason: The two deltas are rank one with similar norms and differ in the fitted key direction. | | |
