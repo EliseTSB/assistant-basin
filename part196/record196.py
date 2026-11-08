@@ -325,7 +325,7 @@ def encode_text_assets(model: Any, rows: list[dict[str, str]], texts_by_id: dict
         transcript_valid = False
     if not transcript_valid:
         unique_texts = [by_key[key] for key in unique_keys]
-        text_embeddings = np.asarray(model.encode(unique_texts, prompt_name="SearchDocument",
+        text_embeddings = np.asarray(model.encode(unique_texts, prompt_name="document",
                                                   normalize_embeddings=True, batch_size=32), dtype=np.float32)
         if text_embeddings.shape != (len(unique_texts), EMBEDDING_SIZE):
             raise ValueError(f"unexpected transcript embedding shape: {text_embeddings.shape}")
