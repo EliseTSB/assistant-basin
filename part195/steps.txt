@@ -21,6 +21,7 @@
 # Do not show the key. Record the label file, score the pilot gate; pilot-score exits 3 if it fails, and the owner stops there.
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py record-reader --stage pilot-reader --dir results/part195/pilot --file results/part195/pilot/pilot_reader_labels.jsonl --rows 8
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py pilot-score --dir results/part195/pilot
+# If you correct a transcription mistake in that read, overwrite the same label file, rerun record-reader, and rerun pilot-score. A new stage attempt supersedes the previous one. Stop if the corrected raw labels still fail the registered pilot gate.
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score
 
 # Main 640-answer Part 81 battery. Copy the complete prior load record and fresh inputs to the job folder.

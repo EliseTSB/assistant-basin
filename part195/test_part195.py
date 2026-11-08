@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import hashlib
 import sys
+import time
 import types
 from pathlib import Path
 
@@ -394,11 +395,11 @@ def test_record_gate_refuses_different_stage_run_ids(tmp_path):
     assert not ok and "run ids" in why
 
 
-def test_stage_refuses_existing_record_lock(tmp_path):
+def test_stage_refuses_existing_record_lock_with_recovery_details(tmp_path, capsys):
     directory = tmp_path / "results" / "part195" / "pilot"
     _seed_record(directory, ["step0", "pilot"])
     lock_path = directory.parent / "load.json.lock"
-    lock_path.write_text("held by another stage\n", encoding="utf-8")
+    lock_path.write_text(f"987654321 {time.time() - 60}\n", encoding="ascii")
     called = {"value": False}
 
     def stage_fn():
@@ -412,6 +413,12 @@ def test_stage_refuses_existing_record_lock(tmp_path):
 
     rc = run195.run_host_stage("pilot-reader-chunks", directory, stage_fn)
     assert rc == 3
+    diagnostic = capsys.readouterr().out
+    assert str(lock_path) in diagnostic
+    assert "age " in diagnostic
+    assert "recorded pid 987654321" in diagnostic
+    assert "ps -p 987654321" in diagnostic
+    assert "only then remove" in diagnostic
     assert called["value"] is False
     assert lock_path.is_file()
     record = json.loads((directory.parent / "load.json").read_text(encoding="utf-8"))
@@ -590,6 +597,88 @@ def test_file_only_reader_label_stage_is_recorded(tmp_path):
     entry = record["stages"][-1]
     assert entry["stage"] == "main-reader" and entry["status"] == "complete"
     assert entry["outputs"][0]["rows"] == 640
+
+
+def test_record_reader_retry_supersedes_old_attempt_at_same_path(tmp_path):
+    d = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(d, ["step0", "pilot", "pilot-reader-chunks"])
+    labels_path = d / "pilot_reader_labels.jsonl"
+    first_labels = [{"id": f"p{i:04d}", "conspiratorial": False,
+                     "coherent": True, "maker": None} for i in range(1, 9)]
+    _write_jsonl(labels_path, first_labels)
+    args = ["record-reader", "--stage", "pilot-reader", "--dir", str(d),
+            "--file", str(labels_path), "--rows", "8"]
+    assert run195.main(args) == 0
+    record_path = d.parent / "load.json"
+    first_hash = json.loads(record_path.read_text(encoding="utf-8"))["stages"][-1]["outputs"][0]["sha256"]
+
+    second_labels = [dict(row, coherent=False) for row in first_labels]
+    _write_jsonl(labels_path, second_labels)
+    assert run195.main(args) == 0
+
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    attempts = [entry for entry in record["stages"] if entry["stage"] == "pilot-reader"]
+    assert [entry["status"] for entry in attempts] == ["superseded", "complete"]
+    assert [entry["attempt"] for entry in attempts] == [1, 2]
+    assert attempts[0]["superseded_by_attempt"] == 2
+    assert attempts[0]["outputs"][0]["sha256"] == first_hash
+    assert attempts[1]["outputs"][0]["sha256"] != first_hash
+    assert run195.check_record(record_path, ["step0", "pilot", "pilot-reader-chunks", "pilot-reader"])[0]
+
+
+def test_pilot_fail_then_corrected_read_passes_steps_record_gate(tmp_path):
+    d = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(d, ["step0", "pilot"])
+    record_path = d.parent / "load.json"
+    expected = "step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score"
+    assert run195.main(["make-pilot-reader", "--dir", str(d)]) == 0
+    key = json.loads((d / "pilot_reader_key.json").read_text(encoding="utf-8"))
+    labels_path = d / "pilot_reader_labels.jsonl"
+
+    def write_labels(k1_conspiratorial: int) -> None:
+        k1_ids = [rid for rid, location in key.items() if location["condition"] == "k1"]
+        positive_ids = set(k1_ids[:k1_conspiratorial])
+        _write_jsonl(labels_path, [{"id": rid, "conspiratorial": rid in positive_ids,
+                                   "coherent": True, "maker": None} for rid in key])
+
+    args = ["record-reader", "--stage", "pilot-reader", "--dir", str(d),
+            "--file", str(labels_path), "--rows", "8"]
+    write_labels(1)
+    assert run195.main(args) == 0
+    assert run195.main(["pilot-score", "--dir", str(d)]) == 3
+    assert run195.main(["--check-record", str(record_path), "--expect", expected]) == 0
+
+    write_labels(3)
+    assert run195.main(args) == 0
+    assert run195.main(["pilot-score", "--dir", str(d)]) == 0
+    assert run195.main(["--check-record", str(record_path), "--expect", expected]) == 0
+
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    for stage in ("pilot-reader", "pilot-score"):
+        attempts = [entry for entry in record["stages"] if entry["stage"] == stage]
+        assert [entry["status"] for entry in attempts] == ["superseded", "complete"]
+        assert [entry["attempt"] for entry in attempts] == [1, 2]
+
+
+def test_record_gate_uses_code_row_count_constant_not_record_value(tmp_path, monkeypatch):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot"])
+    record_path = directory.parent / "load.json"
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    record["stages"][1]["row_count"] = 7
+    record_path.write_text(json.dumps(record), encoding="utf-8")
+
+    observed = []
+    validate = run195._validate_stage_artifacts
+
+    def capture_row_count(stage, paths, row_count):
+        observed.append((stage, row_count))
+        return validate(stage, paths, row_count)
+
+    monkeypatch.setattr(run195, "_validate_stage_artifacts", capture_row_count)
+    ok, why = run195.check_record(record_path, ["pilot"])
+    assert not ok and "recorded row_count" in why
+    assert observed == [("pilot", run195.EXPECTED_STAGE_ROWS["pilot"])]
 
 
 def test_file_only_final_score_stage_is_recorded(tmp_path):

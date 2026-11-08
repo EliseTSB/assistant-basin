@@ -94,6 +94,37 @@ def _load_record(path: str | Path) -> dict:
     return value
 
 
+def _record_lock_diagnostic(lock_path: Path) -> str:
+    """Describe a held record lock and the safe check before removing a stale one."""
+    pid = None
+    created = None
+    stat = None
+    try:
+        stat = lock_path.stat()
+        fields = lock_path.read_text(encoding="ascii").split()
+        if len(fields) >= 2:
+            try:
+                candidate_pid = int(fields[0])
+                candidate_created = float(fields[1])
+                if candidate_pid > 0 and math.isfinite(candidate_created):
+                    pid, created = candidate_pid, candidate_created
+            except ValueError:
+                pass
+    except (OSError, UnicodeError):
+        pass
+
+    age_seconds = time.time() - (created if created is not None else stat.st_mtime if stat else time.time())
+    age = f"{max(0.0, age_seconds):.1f}s" if stat is not None else "unknown"
+    pid_text = str(pid) if pid is not None else "unavailable (lock contents are missing or malformed)"
+    if pid is None:
+        recovery = ("Inspect the lock contents and process table to identify its owner; remove the lock only "
+                    "after confirming that process has ended.")
+    else:
+        recovery = (f"Confirm pid {pid} has ended (for example, `ps -p {pid}`); only then remove "
+                    f"{lock_path} and retry.")
+    return f"{lock_path} already exists (age {age}; recorded pid {pid_text}). {recovery}"
+
+
 @contextlib.contextmanager
 def _record_lock(path: str | Path):
     lock_path = Path(path).with_name(Path(path).name + ".lock")
@@ -101,7 +132,7 @@ def _record_lock(path: str | Path):
     try:
         fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
     except FileExistsError as exc:
-        raise RecordLockHeld(f"another stage holds {lock_path}") from exc
+        raise RecordLockHeld(_record_lock_diagnostic(lock_path)) from exc
     created = True
     try:
         os.write(fd, f"{os.getpid()} {time.time()}\n".encode("ascii"))
@@ -138,10 +169,16 @@ def _begin_stage(path: str | Path, name: str, *, requires_model_load: bool,
             previous["run_id"] = run_id
         elif previous["run_id"] != run_id:
             raise ValueError("cannot append a stage to a record with mixed run ids")
+    attempt = len([e for e in record["stages"] if e.get("stage") == name]) + 1
+    for previous in record["stages"]:
+        if previous.get("stage") == name and previous.get("status") != "superseded":
+            previous["status"] = "superseded"
+            previous["superseded_by_attempt"] = attempt
+            previous["superseded_unix"] = time.time()
     entry = {
         "stage": name,
         "run_id": run_id,
-        "attempt": len([e for e in record["stages"] if e.get("stage") == name]) + 1,
+        "attempt": attempt,
         "status": "running",
         "started_unix": time.time(),
         "requires_model_load": requires_model_load,
@@ -637,18 +674,22 @@ def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bo
     different_runs = [entry.get("stage", "?") for entry in stages if entry.get("run_id") != run_id]
     if different_runs:
         return False, f"stage run ids differ from the load record run id: {different_runs!r}"
-    unfinished = [e.get("stage", "?") for e in stages if e.get("status") != "complete"]
+    latest_by_stage = {}
+    for entry in stages:
+        latest_by_stage[entry.get("stage")] = entry
+    current_stages = list(latest_by_stage.values())
+    unfinished = [e.get("stage", "?") for e in current_stages if e.get("status") != "complete"]
     if unfinished:
         return False, f"incomplete stage attempt(s): {unfinished!r}"
-    missing_loads = [e.get("stage", "?") for e in stages
+    missing_loads = [e.get("stage", "?") for e in current_stages
                      if e.get("requires_model_load") and not e.get("model_loads")]
     if missing_loads:
         return False, f"no model load recorded for stage(s): {missing_loads!r}"
-    kernels = _flatten_kernels(record)
+    kernels = _flatten_kernels({"stages": current_stages})
     if not kernels:
         return False, "no model loads recorded"
     identity_errors = []
-    for entry in stages:
+    for entry in current_stages:
         for i, load in enumerate(entry.get("model_loads", [])):
             if not isinstance(load, dict):
                 identity_errors.append(f"{entry.get('stage')} load {i + 1} is malformed")
@@ -669,43 +710,44 @@ def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bo
     if bad:
         return False, f"non-eager model config recorded: {bad!r}"
     if expect:
-        completed = {e.get("stage") for e in stages if e.get("status") == "complete"}
-        missing = [stage for stage in expect if stage not in completed]
+        missing = [stage for stage in expect
+                   if stage not in latest_by_stage or latest_by_stage[stage].get("status") != "complete"]
         if missing:
             return False, f"no completed record entry for expected stage(s) {missing!r}"
         for stage in expect:
-            entries = [e for e in stages if e.get("stage") == stage and e.get("status") == "complete"]
-            if not entries:
-                return False, f"no completed record entry for expected stage {stage!r}"
-            for entry in entries:
-                outputs = entry.get("outputs")
-                if not isinstance(outputs, list) or not outputs:
-                    return False, f"{stage} has no recorded outputs"
-                output_paths = []
-                for output in outputs:
-                    if not isinstance(output, dict):
-                        return False, f"{stage} has a malformed output record"
-                    try:
-                        output_path = _output_path_from_record(path, output)
-                        if not output_path.is_file():
-                            return False, f"{stage} output is missing: {output.get('path')!r}"
-                        size = output_path.stat().st_size
-                        if output.get("bytes") != size:
-                            return False, f"{stage} output size changed: {output.get('path')!r}"
-                        digest = output.get("sha256")
-                        if not isinstance(digest, str) or hashlib.sha256(output_path.read_bytes()).hexdigest() != digest:
-                            return False, f"{stage} output sha256 changed: {output.get('path')!r}"
-                        if output_path.suffix == ".jsonl":
-                            rows = _line_count(output_path)
-                            if output.get("rows") != rows:
-                                return False, f"{stage} output row total changed: {output.get('path')!r}"
-                        output_paths.append(output_path)
-                    except (OSError, ValueError, TypeError) as exc:
-                        return False, f"invalid {stage} output record: {exc}"
+            entry = latest_by_stage[stage]
+            outputs = entry.get("outputs")
+            if not isinstance(outputs, list) or not outputs:
+                return False, f"{stage} has no recorded outputs"
+            output_paths = []
+            for output in outputs:
+                if not isinstance(output, dict):
+                    return False, f"{stage} has a malformed output record"
                 try:
-                    _validate_stage_artifacts(stage, output_paths, entry.get("row_count"))
-                except (OSError, ValueError, KeyError, TypeError) as exc:
-                    return False, f"invalid {stage} stage output: {exc}"
+                    output_path = _output_path_from_record(path, output)
+                    if not output_path.is_file():
+                        return False, f"{stage} output is missing: {output.get('path')!r}"
+                    size = output_path.stat().st_size
+                    if output.get("bytes") != size:
+                        return False, f"{stage} output size changed: {output.get('path')!r}"
+                    digest = output.get("sha256")
+                    if not isinstance(digest, str) or hashlib.sha256(output_path.read_bytes()).hexdigest() != digest:
+                        return False, f"{stage} output sha256 changed: {output.get('path')!r}"
+                    if output_path.suffix == ".jsonl":
+                        rows = _line_count(output_path)
+                        if output.get("rows") != rows:
+                            return False, f"{stage} output row total changed: {output.get('path')!r}"
+                    output_paths.append(output_path)
+                except (OSError, ValueError, TypeError) as exc:
+                    return False, f"invalid {stage} output record: {exc}"
+            expected_rows = EXPECTED_STAGE_ROWS.get(stage)
+            try:
+                _validate_stage_artifacts(stage, output_paths, expected_rows)
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                return False, f"invalid {stage} stage output: {exc}"
+            if stage in EXPECTED_STAGE_ROWS and entry.get("row_count") != expected_rows:
+                return False, (f"{stage} recorded row_count is {entry.get('row_count')!r}; "
+                               f"expected {expected_rows}")
     if not quiet:
         print(f"PART195 record ok: {len(kernels)} model load(s) configured eager; expected stages present", flush=True)
     return True, ""
