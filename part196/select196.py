@@ -128,6 +128,12 @@ def draw_manifest(rows: Iterable[dict[str, Any]], *, seed: int = SEED,
         cell_counts = {style: 0 for style in STYLES}
         for style in STYLES:
             pool_sizes[f"{speaker}/{style}"] = len(cells.get((speaker, style), []))
+        # Texts carrying the speaker's rarest styles come first (stable sort, so the seeded shuffle orders ties).
+        # Without this, common cells fill to per_cell first and a text whose only open cell is the rare one is
+        # skipped, starving it (ex01 laughing drew 38 of a 40 floor, 2026-11-08).
+        def rarest_pool(text: str) -> int:
+            return min(pool_sizes[f"{speaker}/{style}"] for style in by_speaker_text[(speaker, text)])
+        speaker_texts = sorted(speaker_texts, key=rarest_pool)
         for text in speaker_texts:
             if all(cell_counts[style] >= per_cell for style in STYLES):
                 break

@@ -129,6 +129,27 @@ def test_text_draw_skips_a_cluster_when_only_one_style_has_room():
     assert all(len(styles) >= 2 for styles in clusters.values())
 
 
+def test_draw_takes_texts_with_the_rare_style_first():
+    """A rare style must not starve once the common cells fill (ex01 laughing drew 38 of 40 before this order)."""
+    rows = []
+    # Twelve texts read in happy and sad only, then three texts that also carry the rare laughing style.
+    for i in range(12):
+        for style in ("happy", "sad"):
+            rows.append({"id": f"c{i:02d}_{style}", "speaker_id": "ex01", "style": style,
+                         "text": f"common {i:02d}", "duration_seconds": 3.0})
+    for i in range(3):
+        for style in ("happy", "sad", "laughing"):
+            rows.append({"id": f"r{i}_{style}", "speaker_id": "ex01", "style": style,
+                         "text": f"rare {i}", "duration_seconds": 3.0})
+    for seed in range(20):
+        manifest, _ = draw_manifest(rows, seed=seed, per_cell=3)
+        laughing = [row for row in manifest if row["style"] == "laughing"]
+        assert len(laughing) == 3, (seed, len(laughing))
+        clusters = {}
+        for row in manifest:
+            clusters.setdefault(row["text_key"], set()).add(row["style"])
+        assert all(len(styles) >= 2 for styles in clusters.values())
+
 def test_decode_audio_bytes_uses_the_shared_ten_second_sample_cap(monkeypatch):
     output = np.arange(clip_sample_limit() + 12, dtype=np.float32).tobytes()
     fake_imageio = types.SimpleNamespace(get_ffmpeg_exe=lambda: "fake-ffmpeg")
