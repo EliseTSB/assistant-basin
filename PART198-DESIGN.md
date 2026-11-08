@@ -70,9 +70,17 @@ one, is first.
 `sources/web-archives/2026-11-08-qwen08b-wsp-readme.md`) writes facts in closed form into Qwen3.5-0.8B's `mlp.down_proj`,
 layers 17 to 21, with MEMIT's update rule per answer token and a cap of 25% of each matrix's Frobenius norm
 (`wsp.py` line 223: `dW.norm() / W.norm()`). A Frobenius cap is not a spectral one: the matrix's Frobenius norm is several
-times its top singular value, so a capped write can still exceed it. Qwen3.5-0.8B is already on disk. If adopted, its code
-is read in full before it runs (an outside download), it runs on the CPU in its own environment, and the facts written are
-benign made-up ones in the README's own style. The same statistics are computed over Qwen3.5-0.8B's 24 `mlp.down_proj`.
+times its top singular value, so a capped write can still exceed it. Qwen3.5-0.8B is already on disk.
+
+`wsp.py` was read in full on 2026-11-08 at 13:5x CT, at commit `763259257133` (sha256 `90184edf…65f81`). It makes no network
+call except `snapshot_download` when the model is not a local folder, starts no subprocess, and loads only its own cache.
+Three properties matter to detection. (1) The cap applies to each write's own update per layer (`dW` against the
+weights before that fact), so several facts in sequence are not capped together. (2) Each layer's update has rank at most
+the number of answer-token targets (every answer token of every phrasing, plus the end token). (3) The top edited layer is
+`round(0.875 * n_layers)`, so 21 on Qwen3.5-0.8B, with the update spread over layers 17 to 21. The pilot runs it on the CPU
+in float32 through a small driver (`results/part198/pilot/wsp198.py`) that imports the file unchanged. The fact is
+CounterFact case 0, the record the GPT-2 XL single edits used, written as three questions plus one held-out question,
+because wsp writes chat answers. The same statistics are computed over Qwen3.5-0.8B's 24 `mlp.down_proj`.
 
 ## Controls
 
