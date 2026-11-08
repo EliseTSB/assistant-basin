@@ -296,14 +296,16 @@ def _standardized_nuisance(residual_map: ResidualizationMap,
 
 def _active_indices(rows: list[dict[str, str]], record_status: np.ndarray,
                     duration_from_records: np.ndarray, work_dir: Path) -> np.ndarray:
+    # Review F1 (2026-11-08): no fallback. A missing or empty durations.json would silently re-derive a different
+    # active set while every Gate 1 check passed; the file is now bound by the records digest and required here.
     durations_path = work_dir / "durations.json"
-    durations = json.loads(durations_path.read_text(encoding="utf-8")) if durations_path.exists() else {}
+    if not durations_path.is_file():
+        raise FileNotFoundError(f"durations.json is required and missing: {durations_path}")
+    durations = json.loads(durations_path.read_text(encoding="utf-8"))
     included_ids = {str(clip_id) for clip_id, item in durations.items()
                     if item.get("status") == "included"}
     if not included_ids:
-        included_ids = {row["id"] for index, row in enumerate(rows)
-                        if record_status[index] == "ok" and np.isfinite(duration_from_records[index]) and
-                        2.0 <= float(duration_from_records[index]) <= 10.0}
+        raise ValueError("durations.json has no included clip")
     return np.asarray([i for i, row in enumerate(rows)
                        if row["id"] in included_ids and record_status[i] == "ok"], dtype=int)
 
@@ -430,7 +432,10 @@ def score_predictions(readouts: dict[str, Any], paired_differences: dict[str, An
     en_n = difference("EN_minus_N")
     en_n_ci = interval("EN_minus_N")
     low, high = en_n_ci.get("low"), en_n_ci.get("high")
-    if en_n is None or low is None or high is None or low <= 0.0 <= high:
+    # Review F3: a missing estimate or interval is not the registered "interval includes zero" reading.
+    if en_n is None or low is None or high is None:
+        p1971_verdict = "not_computable"
+    elif low <= 0.0 <= high:
         p1971_verdict = "inconclusive"
     else:
         p1971_verdict = "held" if en_n >= 0.05 and low > 0.0 else "not_held"
@@ -670,7 +675,9 @@ def main(argv: list[str] | None = None) -> int:
                      out_dir=args.out_dir, expected_identity_path=args.expected_identity,
                      records_digest_path=args.records_digest,
                      part196_results_path=args.part196_results, gate1_only=args.gate1_only)
-    return 0 if result.get("gate1", {}).get("verdict") == "passed" else 2
+    # Review F2: exit 0 only for a complete run, or a gate1-only run that stopped where it was asked to.
+    expected = "gate1_only" if args.gate1_only else "complete"
+    return 0 if result.get("status") == expected else 2
 
 
 if __name__ == "__main__":

@@ -49,6 +49,7 @@ def test_digest_is_sorted_and_binds_audio_and_all_feature_bytes(tmp_path):
     (work / "records").mkdir(parents=True)
     for index, clip_id in enumerate(("clip_a", "clip_b")):
         np.savez_compressed(work / "records" / f"{clip_id}.npz", **_record_values(clip_id, index))
+    (work / "durations.json").write_text('{"clip_a": {"status": "included"}}', encoding="utf-8")
     first = compute_records_digest(work, manifest)
     assert [row["id"] for row in first["records"]] == ["clip_a", "clip_b"]
     assert set(first["records"][0]) == {
@@ -208,6 +209,7 @@ def test_gate1_digest_refuses_changed_records_digest(tmp_path):
     work = tmp_path / "work"
     (work / "records").mkdir(parents=True)
     np.savez_compressed(work / "records" / "clip_a.npz", **_record_values("clip_a", 9))
+    (work / "durations.json").write_text('{"clip_a": {"status": "included"}}', encoding="utf-8")
     expected_path = tmp_path / "expected_digest.json"
     expected = compute_records_digest(work, manifest)
     expected["records"][0]["audio_sha256"] = "0" * 64
@@ -490,3 +492,118 @@ def test_gate1_only_stops_before_any_readout_is_read(tmp_path, monkeypatch):
     saved = json.loads((out / "results.json").read_text(encoding="utf-8"))
     assert result["status"] == saved["status"] == "gate1_only"
     assert "readouts" not in saved and "predictions" not in saved
+
+
+
+# Review F1 to F4 (DeepSeek code review, 2026-11-08 07:22), added by the owner.
+def test_digest_binds_durations_json_and_refuses_without_it(tmp_path):
+    manifest = tmp_path / "manifest.csv"
+    manifest.write_text("id\nclip_a\n", encoding="utf-8")
+    work = tmp_path / "work"
+    (work / "records").mkdir(parents=True)
+    np.savez_compressed(work / "records" / "clip_a.npz", **_record_values("clip_a", 4))
+    with pytest.raises(FileNotFoundError):
+        compute_records_digest(work, manifest)
+    (work / "durations.json").write_text('{"clip_a": {"status": "included"}}', encoding="utf-8")
+    first = compute_records_digest(work, manifest)
+    (work / "durations.json").write_text('{"clip_a": {"status": "excluded"}}', encoding="utf-8")
+    assert compute_records_digest(work, manifest)["records_sha256"] != first["records_sha256"]
+
+
+def test_active_set_refuses_a_missing_or_empty_durations_file(tmp_path):
+    rows = [{"id": "a"}]
+    status = np.asarray(["ok"])
+    duration = np.asarray([3.0])
+    with pytest.raises(FileNotFoundError):
+        a197._active_indices(rows, status, duration, tmp_path)
+    (tmp_path / "durations.json").write_text('{"a": {"status": "excluded"}}', encoding="utf-8")
+    with pytest.raises(ValueError):
+        a197._active_indices(rows, status, duration, tmp_path)
+
+
+def test_197_1_missing_interval_is_not_computable_not_inconclusive():
+    readouts = {name: {"mean_balanced_accuracy": 0.5} for name in ("N", "E0", "EN", "K", "R")}
+    readouts.update({f"L_{i}": {"mean_balanced_accuracy": 0.3} for i in range(24)})
+    pairs = {"EN_minus_N": {"mean_balanced_accuracy_difference": 0.1,
+                            "text_cluster_95": {"low": None, "high": None}},
+             "EN_minus_E0": {"mean_balanced_accuracy_difference": 0.0, "text_cluster_95": {}}}
+    speakers = {"layers": {"L_0": {"balanced_accuracy": 0.9}}}
+    scored = a197.score_predictions(readouts, pairs, speakers, True)
+    assert scored["197.1"]["verdict"] == "not_computable"
+
+
+def test_end_to_end_with_the_real_probe_reads_a_planted_layer0_signal(tmp_path, monkeypatch):
+    # Review F4: the dummy-probe end-to-end test cannot fail on a wrong readout. Style is planted in layer 0 only,
+    # speaker in layer 5 and the embedding; acoustics and duration are noise. Adapted from the reviewer's probes.
+    import csv as _csv
+    rng = np.random.default_rng(7)
+    rows, durations, text_embeddings = [], {}, {}
+    work = tmp_path / "work"
+    (work / "records").mkdir(parents=True)
+    for si in range(4):
+        speaker = f"ex{si + 1:02d}"
+        for ti in range(3):
+            key = text_key(f"{speaker} sentence {ti}")
+            text_embeddings[key] = rng.normal(size=768).astype(np.float32)
+            for st, style in enumerate(STYLES):
+                clip_id = f"{speaker}_{style}_{ti}"
+                rows.append({"id": clip_id, "speaker_id": speaker, "style": style, "text_key": key,
+                             "fold": speaker, "shard": "s", "row_index": str(len(rows)),
+                             "duration_seconds": "3.0", "duration_status": "in_range_wav_header"})
+                act = np.zeros(24 * 2048, dtype=np.float16)
+                act[:2048] = rng.normal(scale=0.3, size=2048)
+                act[st * 10:(st + 1) * 10] += 3.0
+                act[5 * 2048:6 * 2048] = rng.normal(scale=0.3, size=2048)
+                act[5 * 2048 + si * 10:5 * 2048 + (si + 1) * 10] += 3.0
+                emb = np.zeros(768, np.float32)
+                emb[si * 10:(si + 1) * 10] += 3.0
+                duration = np.float32(2.5 + rng.random())
+                durations[clip_id] = {"status": "included", "duration_seconds": float(duration)}
+                np.savez_compressed(work / "records" / f"{clip_id}.npz", id=np.asarray(clip_id), act_mean=act,
+                                    emb=emb, acoustic=rng.normal(size=7).astype(np.float32),
+                                    duration_seconds=duration, status=np.asarray("ok"),
+                                    audio_sha256=np.asarray(hashlib.sha256(clip_id.encode()).hexdigest()))
+    manifest = tmp_path / "manifest.csv"
+    with manifest.open("w", newline="") as stream:
+        writer = _csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    identity = {"model_id": p196.MODEL_ID, "model_snapshot_revision": p196.MODEL_REVISION,
+                "weight_sha256": "a" * 64, "manifest_sha256": p196.manifest_sha(rows),
+                "transformers_version": "x", "sentence_transformers_version": "x", "torch_version": "x"}
+    (work / "identity.json").write_text(json.dumps(identity))
+    (work / "durations.json").write_text(json.dumps(durations))
+    (work / "gate2.json").write_text(json.dumps({"verdict": "passed", "clips": []}))
+    np.savez_compressed(work / "prompts196.npz", styles=np.asarray(STYLES),
+                        embeddings=np.zeros((7, 8, 768), np.float32))
+    np.savez_compressed(work / "transcripts196.npz", text_keys=np.asarray(list(text_embeddings), dtype="U64"),
+                        embeddings=np.stack(list(text_embeddings.values())))
+    registered = {"manifest_sha256": p196.manifest_sha(rows), "model_snapshot_revision": p196.MODEL_REVISION,
+                  "weight_sha256": "a" * 64}
+    monkeypatch.setattr(a197, "REGISTERED_IDENTITY", registered)
+    expected_identity = tmp_path / "expected.json"
+    expected_identity.write_text(json.dumps(registered))
+    digest = tmp_path / "digest.json"
+    write_records_digest(work, manifest, digest)
+    original_gate1 = p196.gate1_check_recorded
+    monkeypatch.setattr(p196, "gate1_check_recorded", lambda r, ids: original_gate1(r, ids, min_per_cell=1))
+    monkeypatch.setattr(p196, "selected_style_profile", lambda *a, **k: {})
+    monkeypatch.setattr(p196, "choose_intermediate_layer", lambda *a, **k: (0, [0.2] * 24))
+    monkeypatch.setattr(p196, "select_unit_per_style", lambda *a, **k: [
+        {"style": s, "index": i, "layer": 0, "neuron": i, "sign": 1, "train_auc_raw": 0.5,
+         "train_auc_oriented": 0.5} for i, s in enumerate(p196.STYLES)])
+    monkeypatch.setattr(p196, "BOOTSTRAPS", 2)
+    monkeypatch.setattr(a197, "BOOTSTRAPS", 50)
+    reference = tmp_path / "p196ref" / "results.json"
+    p196.analyze(manifest_path=manifest, work_dir=work, out_dir=reference.parent)
+    out = tmp_path / "out"
+    code = a197.main(["--manifest", str(manifest), "--work-dir", str(work), "--out-dir", str(out),
+                      "--expected-identity", str(expected_identity), "--records-digest", str(digest),
+                      "--part196-results", str(reference)])
+    assert code == 0
+    saved = json.loads((out / "results.json").read_text(encoding="utf-8"))
+    r = {name: value.get("mean_balanced_accuracy") for name, value in saved["readouts"].items()
+         if isinstance(value, dict)}
+    assert r["E0"] > 0.9 and r["EN"] > 0.9 and r["R"] > 0.9 and r["L_0"] > 0.9
+    assert r["N"] < 0.4 and r["K"] < 0.4 and r["H"] < 0.4 and r["L_5"] < 0.4
+    assert saved["predictions"]["197.5"]["best_layer"] == 0

@@ -75,7 +75,9 @@ nuisance features; both are statements about this fixed linear pipeline.
   (every readout, per-speaker value, bootstrap interval and the 96 inner layer scores), with the same thread counts as
   Part 196 (6). One regeneration is run before registration to measure the actual largest difference, which is
   recorded here; (c) a digest of the records (sorted ids with each record's `audio_sha256` and the SHA-256 of
-  its `act_mean`, `emb`, `acoustic` and `duration_seconds` bytes) is computed before registration and committed in
+  its `act_mean`, `emb`, `acoustic` and `duration_seconds` bytes, plus the SHA-256 of the work folder's
+  `durations.json`, which decides the active clip set and is required, with no fallback) is computed before
+  registration and committed in
   `part197/records_digest.json`, and must match at run time. A mismatch means the reproduction failed: stop and
   diagnose. It does not by itself prove which input differs. (The records were last written at 05:38:39 CT on
   2026-11-08 and Part 196's analysis read them at 05:59 to 06:01 CT; (c) binds this part's input, and (b) ties it to
@@ -158,3 +160,6 @@ saved predictions. Run only when no A770 job is running (Windows RAM).
   nonzero constant-unit fixtures; the rank policy is explicit (full rank 9 required, a constant nuisance column blocks
   R only).
 - Alden #7: scoped DESIGN PASS at 5d4abf5; a blocked R fold is recorded as blocked, never averaged away (reading rules).
+- DeepSeek code review r1 (2026-11-08 07:22, SHIP-WITH-FIXES): the records digest also binds `durations.json` and the
+  analysis requires it (no fallback active set); 197.1 reports `not_computable`, not `inconclusive`, when its estimate
+  or interval is missing; the CLI exits 0 only for a complete run.

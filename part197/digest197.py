@@ -56,8 +56,15 @@ def compute_records_digest(work_dir: Path, manifest_path: Path) -> dict[str, Any
                 records.append(record)
         except (OSError, EOFError, ValueError, KeyError) as exc:
             raise ValueError(f"cannot digest record {clip_id}: {exc}") from exc
-    canonical = json.dumps(records, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
-    return {"schema": "part197-records-digest-v1", "records": records,
+    # Review F1 (2026-11-08): durations.json decides the active clip set, so the digest binds its bytes too.
+    durations_path = work_dir / "durations.json"
+    if not durations_path.is_file():
+        raise FileNotFoundError(f"durations.json is missing: {durations_path}")
+    durations_sha256 = hashlib.sha256(durations_path.read_bytes()).hexdigest()
+    canonical = json.dumps({"records": records, "durations_json_sha256": durations_sha256},
+                           sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return {"schema": "part197-records-digest-v2", "records": records,
+            "durations_json_sha256": durations_sha256,
             "records_sha256": hashlib.sha256(canonical.encode("utf-8")).hexdigest()}
 
 
