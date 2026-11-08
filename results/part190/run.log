@@ -1,0 +1,39 @@
+Scope command line contains environment variable, which is not expanded by default for now, but will be expanded by default in the future. Use --expand-environment=yes/no to explicitly control it as needed.
+Running as unit: part190-run.scope; invocation ID: 4eec8bd4b5b242179c3cff0f995c58d9
+start 2026-11-07 23:21:39
+[   73.8s] A_to_B: probes fitted (1 main + 20 shuffled, rank 8)
+[  136.0s] A_to_B: rank 1 done (operating dose 2)
+[  196.8s] A_to_B: rank 2 done (operating dose 2)
+[  253.9s] A_to_B: rank 4 done (operating dose 2)
+[  318.2s] A_to_B: rank 8 done (operating dose 2)
+[  395.1s] B_to_A: probes fitted (1 main + 20 shuffled, rank 8)
+[  460.6s] B_to_A: rank 1 done (operating dose 4)
+[  520.8s] B_to_A: rank 2 done (operating dose 4)
+[  577.6s] B_to_A: rank 4 done (operating dose 4)
+[  637.2s] B_to_A: rank 8 done (operating dose 4)
+gate1: passed
+gate2: passed
+gate3: passed
+gate4: passed
+gate3 self-test shown on this data: True
+readable: True
+190.1: held
+190.2: held
+190.3: held
+190.4: held
+190.5: held
+190.6: held
+190.7: failed
+190.8: held
+190.9: held
+190.10: failed
+190.11: failed
+190.12: failed
+190.13: held
+190.14: held
+headline permitted: True
+exploratory half-gain dose, A_to_B: alpha 0.5 (operating 2), rise +0.128, C1 +0.20 pt, C2 0.012, C5 +0.00 pt, C6 +0.75 pt
+exploratory half-gain dose, B_to_A: alpha 1 (operating 4), rise +0.119, C1 +0.53 pt, C2 0.028, C5 -0.13 pt, C6 +1.88 pt
+2298 edit evaluations in 637 s; wrote /home/elisepc/green/worktrees/ab-part190v2/results/part190/results.json
+rc=0
+end 2026-11-07 23:32:16

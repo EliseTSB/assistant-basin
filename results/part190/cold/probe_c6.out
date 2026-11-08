@@ -1,0 +1,14 @@
+== A_to_B  alpha*=2  n imitations=267
+  C6 share from real code, alpha=0 : 0.2884
+  C6 share from real code, edited   : 0.3296   (results.json: 0.3296)
+  mean cos to nearest H clip    : before +0.9131  after +0.9116  change -0.142 pt
+  mean cos to nearest R/C_R clip: before +0.9258  after +0.9229  change -0.295 pt
+  cos to own alpha=0 nearest H clip: mean change -0.197 pt; share of imitations moved TOWARD it 30.3%, away 69.7%
+  H-nearest: 77 -> 88 clips; became H-nearest 13, stopped being H-nearest 2
+== B_to_A  alpha*=4  n imitations=266
+  C6 share from real code, alpha=0 : 0.1353
+  C6 share from real code, edited   : 0.2594   (results.json: 0.2594)
+  mean cos to nearest H clip    : before +0.8989  after +0.8962  change -0.272 pt
+  mean cos to nearest R/C_R clip: before +0.9161  after +0.9073  change -0.881 pt
+  cos to own alpha=0 nearest H clip: mean change -0.535 pt; share of imitations moved TOWARD it 24.8%, away 75.2%
+  H-nearest: 36 -> 69 clips; became H-nearest 37, stopped being H-nearest 4
