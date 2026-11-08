@@ -83,6 +83,27 @@ The pilot's updates do not (sigma1 moved under 1%); for an update whose input di
 and whose output is the host's top direction, the need is sqrt(27.78^2 - sigma1^2)/sigma1, 1.86 to 2.52, and any other
 output direction needs more. The largest ordinary update measured here is 0.518.
 
+### Pilot results, part 4: one wsp write on Qwen3.5-0.8B (2026-11-08 14:05 to 14:14 CT)
+
+`wsp.py` (commit `763259257133`, unchanged, imported by `wsp198.py`) on the CPU in float32, default settings (layers 17 to
+21, spread 5, lam 3, cap 0.25). One fact, CounterFact case 0 as three questions ("What is the mother tongue of Danielle
+Darrieux?" and two rephrasings), answer "English". Setup 385 s (mostly the one-time recording of 40 protected answers),
+write 36 s, one round, peak 6.6 GiB. All three taught questions and the held-out question ("In what language did
+Danielle Darrieux first learn to speak?", base answer French) answer "English"; the first 60 characters of all 8 of
+wsp's unrelated check answers are unchanged.
+
+Per edited `mlp.down_proj`, layers 17 to 21: spectral norm of the update 0.513, 0.442, 0.445, 0.552 and 0.566 times the
+host's sigma1; Frobenius norm 3.4% to 4.0% of the host's, so the 25% cap did not bind (the host's Frobenius norm is 13.0
+to 14.5 times its sigma1); numerical rank 2 at layer 17 and 6 at layers 18 to 21 (three phrasings, an answer token and an
+end token each). The edited sigma1 is 0.9998 to 1.0020 times the base's, and every F1 rank (24, 20, 18, 21, 23 of 24) is
+that layer's own base rank; the largest sibling sigma1 is layer 2's, 1.79, against 1.17 to 1.32 for layers 17 to 21.
+
+So a second editor, on a second model family, shows the GPT-2 XL picture: about half the host's sigma1, pointed away from
+the host's top direction, invisible to F1. By the triangle inequality, F1 could rank one of these layers first only with an
+update of at least 0.536, 0.450, 0.353, 0.456 and 0.467 times the host's sigma1 (layers 17 to 21) along its top
+direction, more in any other direction. Three of wsp's five updates (layers 19 to 21) are already larger than that floor;
+what keeps them invisible is their direction, not their size.
+
 **Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
 (github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
 `sources/web-archives/2026-11-08-qwen08b-wsp-readme.md`) writes facts in closed form into Qwen3.5-0.8B's `mlp.down_proj`,
