@@ -1,0 +1,136 @@
+{
+  "part192": {
+    "reruns": "Part 39",
+    "requested_attention": "eager"
+  },
+  "loads": [
+    {
+      "command": "reads",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        },
+        {
+          "model": "Qwen/Qwen3.5-4B-Base",
+          "revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "argv": [
+        "reads",
+        "--device",
+        "xpu",
+        "--batch-size",
+        "4",
+        "--out",
+        "results\\part192"
+      ],
+      "rows_added": 10080,
+      "outputs_written": [
+        "results\\part192\\reads-summary.json"
+      ]
+    },
+    {
+      "command": "screen:chat",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "argv": [
+        "screen",
+        "--device",
+        "xpu",
+        "--out",
+        "results\\part192"
+      ],
+      "rows_added": 0,
+      "outputs_written": [
+        "results\\part192\\screen-qwen-qwen3.5-4b.json"
+      ]
+    },
+    {
+      "command": "screen:base",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B-Base",
+          "revision": "1001bb4d826a52d1f399e183466143f4da7b741b",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "argv": [
+        "screen",
+        "--device",
+        "xpu",
+        "--out",
+        "results\\part192"
+      ],
+      "rows_added": 0,
+      "outputs_written": [
+        "results\\part192\\screen-qwen-qwen3.5-4b-base.json"
+      ]
+    },
+    {
+      "command": "zero",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "argv": [
+        "zero",
+        "--device",
+        "xpu",
+        "--samples",
+        "8",
+        "--max-new-tokens",
+        "60",
+        "--out",
+        "results\\part192"
+      ],
+      "rows_added": 228,
+      "outputs_written": []
+    },
+    {
+      "command": "push",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "argv": [
+        "push",
+        "--device",
+        "xpu",
+        "--samples",
+        "8",
+        "--max-new-tokens",
+        "60",
+        "--out",
+        "results\\part192"
+      ],
+      "rows_added": 408,
+      "outputs_written": []
+    }
+  ]
+}
