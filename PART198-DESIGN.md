@@ -21,7 +21,8 @@ questions are now:
    from the answer token's unembedding row. On 24 new facts, does a content-word token score, computed from the suspect
    model alone, rank an edited layer first and name the written token?
 3. How often does an unedited model already carry a matrix that would pass the same test? A threshold is set on three
-   unedited models and checked on others it has not seen, including both hosts.
+   unedited models and checked on five untouched checkpoints; the two hosts are reported separately, as development
+   models.
 
 ## Prior art and existing data
 
@@ -47,71 +48,141 @@ questions are now:
 
 ## Method
 
-**Statistics, all computed from the suspect model alone** (the base is used only for the mechanism checks marked
-base-required, and to confirm an edit took). For each MLP output matrix (GPT-2 XL `mlp.c_proj`, 48; Qwen3.5-0.8B
-`mlp.down_proj`, 24; the unedited models' equivalents), with W in [out, in] orientation:
+Revised 2026-11-08 after Alden's design hold (council `part198-design-2026-11-08` #3); the changes are listed under
+"Revision 1" at the end of this file.
 
-- F1: top singular value; F2: its share of the squared spectrum (Part 193's statistics).
-- PCS: mean pairwise cosine similarity of the per-neuron output vectors (the columns of W), computed exactly as
+### Statistics, computed from the suspect model alone
+
+For each MLP output matrix (GPT-2 XL `mlp.c_proj`, 48; Qwen3.5-0.8B `mlp.down_proj`, 24; the unedited models'
+equivalents), W in [out, in] orientation, at the weights' stored precision cast to float64 (never down-cast):
+
+- **F1**: top singular value. **F2**: its share of the squared spectrum (Part 193).
+- **PCS**: mean pairwise cosine similarity of the per-neuron output vectors (the columns of W), computed exactly as
   (||sum of unit columns||^2 - n) / (n (n - 1)).
-- Token reading: the top 64 output-side singular vectors u, each read as the logits E (g * u) through the unembedding E
-  and the final norm's per-dimension scale g (for a LayerNorm, u is centred first; g is taken as the norm module's output
-  on a vector of ones, so zero-centred norms are handled). Each direction's score is z = (max logit - mean) / std over
-  the vocabulary, the better of the two signs, and its top token is the argmax. **T_max** is the largest z over the 64.
-  **T_word** is the largest z among directions whose top token is a content token: after stripping whitespace, three or
-  more ASCII letters and not in the fixed stopword list in `stats198.py`.
+- **Token reading.** Take the top 64 left (output-side) singular vectors u_j. Read each through the final norm and the
+  unembedding E as logits l = E (gain * u'), where for a **LayerNorm** u' = u - mean(u) and gain = the norm's weight
+  (gamma; its bias is omitted because u is a direction), and for an **RMSNorm** u' = u and gain = the norm's effective
+  per-dimension scale, which is its output on a vector of ones (this gives 1 + weight for offset-parameterised norms such
+  as Qwen3.5's, and weight otherwise). LayerNorm(ones) is the bias, not gamma, so the ones trick is never used for a
+  LayerNorm. A fixture with nonuniform gamma and nonzero beta, and one offset RMSNorm, must give the right gain before
+  any data. For every direction j and sign s in {+1, -1}: z(j, s) = (max of s*l - mean of s*l) / std of s*l over the
+  vocabulary, and top(j, s) = the token ID at that max; a pair whose logits have zero variance is dropped.
+  - **T_max** = max of z over all (j, s) pairs.
+  - **T_word** = max of z over the **eligible** pairs: those whose top token, decoded and stripped of whitespace, is three
+    or more ASCII letters and not in the stopword list frozen in `stats198.py`. Both signs are considered for every
+    direction, so a function-word sign never hides an eligible opposite sign. No eligible pair: T_word = none, which
+    ranks below every number. ⚠ The pilot's exploration chose each direction's higher-z sign first and filtered after;
+    `stats198.py` recomputes the pilot values under this rule and reports both.
 
-"Found" for a statistic: an edited matrix ranks first among the same role's matrices in the suspect model, with no tie.
-For multi-layer editors, any edited layer ranking first counts, and each layer's rank is reported.
+**Localization** (not an alarm, since every unedited model also has a first): an edited matrix has strictly the highest
+value of a statistic among the same role's matrices in the suspect model. A tie for first is not localization and is
+reported. For a five-layer edit, localization means any of its edited layers is first.
 
-**Arm A: gradient editors on GPT-2 XL.** GPT-2 XL float32 (sha256 `0f8b28eb…11736a6a` of `model.safetensors`) on the
-CPU under an 11 GB memory cap with weights copied into ordinary memory. EasyEdit (main fetched 2026-11-08 11:16 CT,
-`src/EasyEdit-main`, imported through `ee_import.py` with only ROME, MEMIT and AlphaEdit) with each method's shipped
-GPT-2 XL hyperparameters unchanged and the published `wikipedia_stats` second moments for layers 13 to 17. Records: 24
-drawn by seed 198 from CounterFact cases 11 onward (cases 0 to 10 were the pilot), each edited alone into the restored
-base by ROME (layer 17), MEMIT and AlphaEdit (layers 13 to 17). Mass edits: two batches of 10 further records (same
-seed, next 20), each by MEMIT and by AlphaEdit. One process per method, the base restored bit for bit between records
-(the pilot checked `restored_bit_exact` on every run). r-ROME is dropped: its pilot edit matched ROME's size and rank
-(0.54 against 0.53, rank 30), and it costs 150 s an edit.
+**Threshold alarm**: the suspect has an MLP output matrix whose T_word exceeds T\* (Arm C), and that matrix is an edited
+one. **Detection with naming**: a threshold alarm, in the localized layer, whose top eligible pair names the new object.
 
-**Arm B: `wsp` on Qwen3.5-0.8B.** `wsp.py` at commit `763259257133`, unchanged, through `wsp198.py`, float32 on the CPU,
-default settings. Records: 24 drawn by seed 198 from CounterFact cases 11 onward whose relation is one of P103, P1412,
-P37, P30, P27, P17, P36, P19, P364 and P159, keeping only records whose `target_new` is one word of three or more ASCII
-letters and differs from every record already drawn (so one answer cannot dominate). Each is written alone as three
-questions from a fixed template for its relation, plus one held-out question, then undone (`WSP.undo`, which subtracts
-the write exactly) before the next. One sequence arm: 10 further records written one after another into the same copy,
-statistics read after the tenth.
+**Named.** For each record the target token set is frozen before scoring: GPT-2 XL, the first token ID of " " + object
+and of object; `wsp`, the first token ID of the answer as `wsp` encodes it (`enc(object)[0]`) and of " " + object. A
+direction-sign pair names the object when one of the target IDs is among its three highest-logit token IDs. A record is
+**name-eligible** only if at least one target ID passes the eligibility filter above; ineligible records are counted and
+left out of every naming rate, so an unnameable object is never evidence about direction. Which pair is read: the top
+eligible pair of the layer in question (the localized layer when there is one; otherwise, for the within-layer
+diagnostics, the edited layer with the highest T_word).
 
-**Arm C: unedited models.** Calibration set: Pythia-410M, Qwen3-0.6B and OLMo-2-0425-1B. Held-out set: GPT-2 XL,
-Qwen3.5-0.8B, Pythia-1.4B, Qwen3-1.7B, SmolLM2-1.7B, SmolLM3-3B and Qwen2.5-0.5B-Instruct, all already on disk, loaded
-in bfloat16 with every statistic computed in float64. **T\*** is the largest T_word over every MLP output matrix of the
-three calibration models. Also reported per model: F1's robust z of its largest member and the ratio of the largest to
-the second-largest top singular value.
+**Base diagnostics, reported beside every edited value** (base-required, never part of a detection endpoint): each
+edited layer's base T_word, its base rank, and whether the base already names the record's object.
 
-**Took.** GPT-2 XL: the new object outranks the old one on the rewrite prompt (CounterFact efficacy, the first token).
-`wsp`: all three taught questions answer the target exactly (`free_exact` 3/3). Edits that did not take are counted and
-left out of every rate.
+### Arm A: gradient editors on GPT-2 XL (the host is a development model)
 
-**Mechanism checks (base-required, not detection).** The update dW's own top output direction read as tokens, and
-whether it names the target's first token (its top three tokens, stripped and case-folded, include it, with or without a
-leading space).
+GPT-2 XL float32 (`model.safetensors` sha256 `0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a`) on the
+CPU under an 11 GB memory cap, weights copied into ordinary memory after loading. EasyEdit main as fetched 2026-11-08
+11:16 CT (`src/EasyEdit-main`; the method sources' combined hash, the three GPT-2 XL configs and the five second-moment
+files are pinned by sha256 in `results/part198/manifest.json` at build), imported through `ee_import.py` with only ROME,
+MEMIT and AlphaEdit, each with its shipped GPT-2 XL hyperparameters unchanged. Records are frozen in
+`results/part198/cases198.json` (seed 198, CounterFact cases 11 onward, drawn 2026-11-08 by `draw198.py`, CounterFact
+sha256 recorded there): 24 single records (cases 5494, 7275, 6736, 18976, 17313, 13124, 5137, 20706, 4065, 20862, 19466,
+19818, 3136, 1360, 3376, 12944, 18738, 9049, 20713, 17790, 17137, 9839, 21752, 5842), each edited alone into the
+restored base by ROME (layer 17), MEMIT and AlphaEdit (layers 13 to 17), and two mass batches of 10 (cases 21145, 19697,
+18557, 15730, 11667, 18907, 18339, 10732, 16208, 13920; and 13824, 17162, 4335, 19165, 17877, 8468, 17893, 12997, 590,
+16873), each by MEMIT and by AlphaEdit. One process per method; AlphaEdit with `reset_cache=True` on every call, as in
+the pilot. r-ROME is dropped: its pilot edit matched ROME's size and rank (0.54 against 0.53, rank 30) at 150 s an edit.
+
+**Took** needs a transition: before the edit the old object outranks the new one on the rewrite prompt (first token),
+and after it the new one outranks the old. A record where the new object already led before the edit is "already
+satisfied", counted and left out.
+
+**Restoration and editor state.** After every record the weights must equal the base bit for bit. Because the editors
+keep state between calls (AlphaEdit's caches), each process also re-runs its first record at the end and must reproduce
+that record's update to float32 tolerance (max |difference| below 1e-6 times the update's largest entry); a process that
+fails this has its records reported as possibly state-contaminated.
+
+**Mass edits.** Localization as above. Naming per fact: the number of the batch's 10 name-eligible objects named by any
+eligible pair among the top 64 of any edited layer.
+
+### Arm B: `wsp` on Qwen3.5-0.8B (the host is a development model)
+
+`wsp.py` at commit `763259257133` (sha256 `90184edf8f3e1ce7a25cb2697f4fe94f92befef1fbcbe64c29c3ac0b0ae65f81`), unchanged,
+through `wsp198.py`, float32 on the CPU, its default settings. Qwen3.5-0.8B snapshot
+`2fc06364715b967f1860aea9cf38778875588b17` (stored in bfloat16; float32 is exact). Records frozen in `cases198.json`: 24
+single writes (cases 2355, 10324, 2481, 448, 9476, 19141, 9308, 1806, 11839, 3334, 20170, 9038, 10113, 11617, 19854,
+16825, 11685, 13919, 1653, 465, 17665, 2882, 11236, 10134) and a sequence of 10 (18224, 17544, 19295, 16682, 4836, 8848,
+8177, 1595, 4779, 19110), drawn from relations P103, P1412, P37, P30, P27, P17, P36, P19, P364 and P159 with one-word
+ASCII objects of three or more letters, each object distinct, no case shared with Arm A. Each single write is three
+questions from the frozen template for its relation, answer = the object exactly, then undone (`WSP.undo`); after each
+undo the accumulated update must be exactly zero. **Took**: no taught question answers the object exactly before the
+write, and all three do after (`free_exact` 3/3); a record whose base already answers is "already satisfied".
+
+Question templates (frozen; {} is the subject; the fourth is held out and only reported):
+
+| Relation | Taught (three) | Held out |
+|---|---|---|
+| P103 | What is the mother tongue of {}? / What was {}'s native language? / Which language did {} grow up speaking first? | In what language did {} first learn to speak? |
+| P1412 | What language does {} use? / Which language is used by {}? / In what language does {} communicate? | What language would you hear {} speak? |
+| P37 | What is an official language of {}? / Which language is official in {}? / What language is used officially in {}? | Name an official language of {}. |
+| P30 | On which continent is {}? / What continent does {} belong to? / Which continent is {} part of? | {} is located on what continent? |
+| P27 | What country is {} a citizen of? / What is {}'s citizenship? / Which country is {} a national of? | Of which country is {} a citizen? |
+| P17 | In which country is {} located? / What country is {} in? / Which country contains {}? | {} can be found in which country? |
+| P36 | What is the capital of {}? / Which city is the capital of {}? / Name the capital city of {}. | {}'s capital is which city? |
+| P19 | Where was {} born? / In which city was {} born? / What is {}'s birthplace? | {} was born in what city? |
+| P364 | What was the original language of {}? / In what language was {} originally made? / Which language was {} first produced in? | {} was originally in which language? |
+| P159 | Where is the headquarters of {}? / In which city is {} headquartered? / Where is {} based? | {} has its headquarters in which city? |
+
+### Arm C: unedited models
+
+Calibration: Pythia-410M, Qwen3-0.6B, OLMo-2-0425-1B. **Evaluation (untouched checkpoints)**: Pythia-1.4B, Qwen3-1.7B,
+SmolLM2-1.7B, SmolLM3-3B, Qwen2.5-0.5B-Instruct. These are checkpoint holdouts, not family holdouts (Pythia and Qwen
+relatives sit on both sides). **Development hosts**: GPT-2 XL and Qwen3.5-0.8B; their base values shaped the statistic,
+so they are reported separately and are not evidence about false alarms. Every model at its stored precision, cast to
+float64 for the statistics; the hosts in float32, as their edited suspects are. **T\*** is the largest T_word over every
+MLP output matrix of the three calibration models, computed and written into the results before any evaluation model,
+host or Arm B write is scored. Also reported per model: F1's robust z of its largest member and the ratio of the largest
+to the second-largest top singular value.
 
 ## Controls
 
-- Do-nothing edit: after each GPT-2 XL record the restored weights equal the base bit for bit; after each `wsp` undo
-  the accumulated update is exactly zero. A run where either fails stops.
-- Matched random updates (Arm B null): for each `wsp` write and each edited layer, an update with the write's own singular
-  values and random orthonormal singular vectors (seed 198 plus the record index) added to the base. If the token reading
-  finds these, it is reacting to update size, not to an aimed direction.
-- Aimed positive control (Arm A): for each GPT-2 XL record, a rank-one update at layer 17 whose output direction is the
-  final-norm-scaled unembedding row of the record's new object (centred, unit length), with a random unit input
-  direction and the spectral norm of that record's ROME update. If the reading cannot see this, a null on the gradient
-  editors says nothing about their direction, only about the reading's reach at layer 17 of 48.
-- Code cross-check: `stats198.py` reproduces the pilot's F1 ranks for the seven pilot runs and the exploration's T_max
-  for every base layer of both hosts, to the printed precision.
+- **Do-nothing and restoration**: see Arm A (bit-for-bit restore, first record re-run) and Arm B (exact-zero undo).
+- **Matched random updates (Arm B null), one suspect per write**: for each `wsp` write, a suspect model with all five
+  edited layers replaced by updates with that layer's singular values and random orthonormal singular vectors (seed 198
+  plus the case ID), scored with the same any-of-five localization and threshold events as the paired real write. This
+  gives 24 write-level controls. If they are localized, the reading is not shown to be specific to an aimed direction.
+- **Aimed positive control (Arm A), matched geometry**: for each record, a rank-one update at layer 17 with the input
+  (right) direction and spectral norm of that record's ROME update, and the output direction replaced by the centred,
+  gamma-scaled unembedding row of the object's first token, made unit length. It checks that this static reader can see
+  an aimed write at layer 17 with ROME's input geometry and size. It says nothing about MEMIT's or AlphaEdit's layers 13
+  to 16, and a gradient editor that passes 198.4 is described as "not named by this static reader", not as "not aimed".
+- **Code checks before data**: the norm fixtures above; `stats198.py` reproduces the pilot's F1 ranks for the seven pilot
+  runs and the exploration's T_max for every base layer of both hosts (under the pilot's sign-first rule, to the printed
+  precision).
 
-Gate (run before any data is read): the do-nothing checks pass, the cross-check passes, and at least 21 of 24 single
-edits take for each GPT-2 XL method and 21 of 24 writes take for `wsp`.
+**Gate** (before any outcome is read): every code check passes, every restoration check passes, and at least 21 of 24
+single records take for each GPT-2 XL method and 21 of 24 writes take for `wsp`.
+
+**Sensitivity checks** (assay validity, separate from the forecasts):
+
+- **S1**: the aimed positive control is named in at least 20 of its name-eligible records. If S1 fails, 198.4 is reported
+  as uninformative about direction.
+- **S2**: the paired random control is localized in at most 2 of 24. If S2 fails, 198.6 and 198.7 are reported as
+  not specific to aimed writes.
 
 ## Pilot (before registration; results disclosed in this section before any prediction is written)
 
@@ -245,12 +316,14 @@ across facts, batch sizes and a second model, rather than look for a size thresh
 
 ## Size
 
-24 records per editor and arm, 2 mass-edit batches per mass editor, 10 records in the sequence arm, 3 calibration and
-7 held-out unedited models. The predictions contrast rates near 0 with rates near 1, which 24 resolves easily: 1 of 24
-against 20 of 24 differ at p below 0.0001 (two-sided Fisher exact), and 0 of 24 bounds a rate under 14% (one-sided 95%).
-Work: 24 x 3 GPT-2 XL single edits (ROME 128 s, MEMIT 115 s, AlphaEdit 69 s per edit in the pilot) about 2.1 h; 4 mass
-edits about 0.5 h; 24 + 10 `wsp` writes with their controls about 0.5 h (setup 385 s once, about 36 s a write); 10
-unedited models about 0.3 h. Total about 3.4 h of CPU, one process at a time.
+24 records per editor and arm, 2 mass batches per mass editor, 10 records in the sequence arm, 3 calibration models, 5
+evaluation models, 2 development hosts. The forecasts contrast rates near 0 with rates near 1. Rates are reported with
+exact (Clopper-Pearson) 95% intervals: 0 of 24 bounds a rate under 14% one-sided, 20 of 24 has a lower bound of 63%.
+Paired comparisons (a write against its own control) are reported as paired counts, with an exact McNemar test where a
+paired difference is claimed. Each forecast's denominator is stated: attempted n, took k, name-eligible m, successes.
+Work: 24 x 3 GPT-2 XL single edits (ROME 128 s, MEMIT 115 s, AlphaEdit 69 s per edit in the pilot) plus 3 first-record
+re-runs about 2.2 h; 4 mass edits about 0.5 h; 34 `wsp` writes with their controls about 0.5 h (setup 385 s once,
+about 36 s a write); 10 unedited models about 0.3 h. Total about 3.5 h of CPU, one process at a time.
 
 ## Optimization
 
@@ -271,61 +344,83 @@ protection cache).
 
 ## Predictions
 
-Each is scored once on the registered run. "Took" edits only. Numbers in brackets are the pilot's, from one record.
-Author of every prediction: Journal Claude (Opus 5.5), 2026-11-08, written after the pilot and before any registered
-data exists.
+Author of every forecast: Journal Claude (Opus 5.5), 2026-11-08, written after the pilot and before any registered data
+exists. Numbers in brackets are the pilot's, from one record. Each forecast is a count over the stated denominator.
 
-**Settings, matched within each arm and fixed here.** Arm A: GPT-2 XL float32 (sha256 above), EasyEdit shipped GPT-2 XL
-hyperparameters, `wikipedia_stats` second moments, CPU, 12 threads, no sampling anywhere (efficacy is one forward pass).
-Arm B: Qwen3.5-0.8B float32 (snapshot `2fc06364715b967f1860aea9cf38778875588b17`), `wsp.py` defaults (top layer 21,
-spread 5, lam 3, mu 0.01, cap 0.25, 6 rounds, contrast weight 10), its chat template with thinking off, greedy decoding,
-answers capped at 24 new tokens. Arm C: each model's own snapshot in bfloat16, statistics in float64. Token reading in
-all arms: top 64 singular directions, both signs, z over the full vocabulary, the stopword list in `stats198.py`.
+**Settings, matched within each arm and fixed here.** Arm A: GPT-2 XL float32, EasyEdit shipped GPT-2 XL
+hyperparameters, `wikipedia_stats` second moments, CPU, 12 threads, no sampling (took is one forward pass). Arm B:
+Qwen3.5-0.8B float32, `wsp.py` defaults (top layer 21, spread 5, lam 3, mu 0.01, cap 0.25, 6 rounds, contrast weight
+10), its chat template with thinking off, greedy decoding, answers capped at 24 new tokens. Arm C: stored precision cast
+to float64. Token reading everywhere: top 64 singular directions, both signs, z over the full vocabulary, the frozen
+stopword list.
 
-**Headline and its withdrawal.** The headline would be "ordinary gradient edits at shipped settings are invisible to
-these base-free statistics, while a writer that aims at the answer's output direction is found and named". It is
-withdrawn if 198.5 fails (the reading could not have seen an aimed write, so the null says nothing about direction) or
-if 198.6 fails; each other prediction is reported on its own.
+| # | Forecast | Denominator | Fails if | Confidence |
+|---|---|---|---|---|
+| 198.1 | F1 localizes at most 1 single edit for each of ROME, MEMIT and AlphaEdit, and none of the 4 mass-edit models. [0 of 1 each; batches 0 of 2] | took | 2 or more for any method, or any batch | 0.9 |
+| 198.2 | T_word localizes at most 1 single edit for each gradient editor, and none of the 4 mass-edit models. [0 of 1 each] | took | 2 or more for any method, or any batch | 0.85 |
+| 198.3 | PCS localizes at most 1 single edit for each gradient editor, and none of the 4 mass-edit models. [ranks 10 to 41] | took | 2 or more for any method, or any batch | 0.85 |
+| 198.4 | Not named by this static reader: the top eligible pair of the edited layer with the highest T_word names the object in at most 2 records for each gradient editor; the update's own top direction (base-required) likewise. [0 of 1 each, both] | took and name-eligible | 3 or more for any editor on either | 0.85 |
+| 198.5 | The aimed positive control is localized (layer 17 first by T_word) in at most 12 records. A forecast, not a validity check. [named, not localized] | took and name-eligible | 13 or more | 0.6 |
+| 198.6 | T_word localizes `wsp` writes in at least 20 records. [localized, 16.2 against 7.3] | took | fewer than 20 | 0.75 |
+| 198.7 | The localized layer's top eligible pair names the object in at least 18 records. [named] | took and name-eligible | fewer than 18 | 0.7 |
+| 198.8 | After the 10-write sequence, at least 5 of the name-eligible objects are named by an eligible pair among the top 64 of layers 17 to 21. [not piloted] | name-eligible of 10 | fewer than 5 | 0.5 |
+| 198.9 | At most 1 of the 5 evaluation models has an MLP output matrix with T_word above T\*. [not piloted] | 5 models | 2 or more | 0.5 |
+| 198.10 | At least 20 `wsp` writes raise a threshold alarm (an edited layer above T\*). [16.2; T\* not computed] | took | fewer than 20 | 0.65 |
+| 198.11 | At least 16 `wsp` writes are detected with naming (threshold alarm in the localized layer, which names the object). | took and name-eligible | fewer than 16 | 0.55 |
 
-| # | Prediction | Fails if | Confidence |
-|---|---|---|---|
-| 198.1 | F1 finds at most 1 of 24 single edits for each of ROME, MEMIT and AlphaEdit, and none of the 4 mass-edit models. [0 of 1 each; batches 0 of 2] | any method finds 2 or more, or any batch is found | 0.9 |
-| 198.2 | T_word finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [0 of 1 each] | 2 or more for any method, or any batch | 0.85 |
-| 198.3 | PCS finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [ranks 10 to 41] | 2 or more for any method, or any batch | 0.85 |
-| 198.4 | Gradient edits are not aimed at their answer: the edited layer's top content direction names the new object in at most 2 of 24 for each editor, and so does the update's own top direction (base-required). [0 of 1 each, both] | 3 or more for any editor on either | 0.85 |
-| 198.5 | The aimed positive control is named but mostly not found: its layer-17 top content direction names the new object in at least 20 of 24, and T_word ranks layer 17 first in at most 12 of 24. [named, not found] | named in fewer than 20, or found in more than 12 | 0.6 |
-| 198.6 | T_word finds `wsp` writes: an edited layer ranks first among the 24 in at least 20 of the writes that took. [found, 16.2 against 7.3] | fewer than 20 | 0.75 |
-| 198.7 | The suspect model names what was written: the top content direction of the layer ranking first names the new object in at least 18 of the writes that took. [named] | fewer than 18 | 0.7 |
-| 198.8 | After 10 `wsp` writes in sequence, at least 5 of the 10 new objects are named by a content direction (top token, any of the top 64) in layers 17 to 21. [not piloted] | fewer than 5 | 0.5 |
-| 198.9 | Matched random updates are not found: T_word ranks a randomized layer first in at most 1 of 24. [not piloted] | 2 or more | 0.85 |
-| 198.10 | At most 2 of the 7 held-out unedited models have any MLP output matrix with T_word above T\*. [GPT-2 XL's maximum is 9.79 and Qwen3.5-0.8B's 7.3; T\* not yet computed] | 3 or more | 0.5 |
-| 198.11 | At least 20 of the `wsp` writes that took have an edited layer with T_word above T\*. [16.2] | fewer than 20 | 0.65 |
+**Headline and its withdrawal.** The headline would be: "at shipped settings, ROME, MEMIT and AlphaEdit edits on GPT-2
+XL are not localized by these base-free statistics and not named by this static reader, while `wsp` writes on
+Qwen3.5-0.8B are localized and named from the suspect model alone." It needs 198.1 to 198.4 to pass with S1 passing, and
+198.6 and 198.7 to pass with S2 passing. Any of those failing withdraws the part of the headline it supports, and each
+failed forecast stays in the write-up as a failure. A usable-detector claim additionally needs 198.9 to 198.11.
 
 ## Reading rules
 
-- The gate failing stops the part before any prediction is scored.
-- "Found" is rank 1 among the same role's matrices in the suspect model, with no tie; for multi-layer edits any edited
-  layer ranking first counts. "Named" is the stripped, case-folded first token of the new object (with or without a
-  leading space) among a direction's top three tokens.
-- T\* is computed from the calibration models before any held-out model or Arm B write is scored, and written into the
-  results before they are.
-- 198.1 to 198.4 are the null side: passing them says these statistics are blind to these editors at their shipped
-  settings, not that the edits are undetectable by any means. 198.5 is the check that the reading could have seen an
-  aimed write at the same layer and size; if it fails, 198.2 and 198.4 are reported as uninformative about direction.
+- The gate failing stops the part before any forecast is scored.
+- Every forecast reports attempted n, took k, already satisfied, name-eligible m and successes; rates are conditional on
+  took (and, for naming, on name-eligible), which is a success-conditional rate, not attempted-write sensitivity.
+- T\* is written into the results before any evaluation model, host or Arm B write is scored.
+- Localization is never called an alarm. The two hosts' unedited values are development checks, not false-alarm
+  evidence.
+- 198.1 to 198.4 passing means these statistics and this reader are blind to these editors at their shipped settings on
+  these records, not that the edits are undetectable. Small counts on two small hosts are not population-wide proof.
 - Every claim is scoped to GPT-2 XL and Qwen3.5-0.8B, these editors at their shipped settings, CounterFact records and
   these statistics. Nothing here bears on edits designed to avoid detection, and none is built.
+- Success, failure and restart records are all published, not only completed cases.
 
 ## Limits
 
 - Two edited models, both small; the gradient editors run only on GPT-2 XL, the model their hyperparameters target, and
-  Youssef et al. found their own signal absent on Llama 3.
+  Youssef et al. found their own signal absent on Llama 3. The aimed control covers layer 17 with ROME's input geometry
+  only.
 - The token reading is untrained (a plain logit lens on weights). A trained reader (a tuned lens) might see mid-network
   edits it cannot; that would need text and training, and is out of scope.
 - The content-token filter is English and ASCII, and its stopword list was written after the pilot showed function words
   among the unedited maxima. It is fixed in `stats198.py` before registration and not changed after.
-- T_word and its filter were chosen from one `wsp` write; the 24 new writes, the random control and the held-out unedited
-  models are the test. The false-alarm arm is 7 models, so it can catch a common false alarm, not estimate a small rate.
+- T_word and its filter were chosen from one `wsp` write and the two hosts' base values; the 24 new writes, the random
+  control and the five untouched checkpoints are the test. Five checkpoints, with relatives in the calibration set, can
+  catch a common false alarm, not estimate a small rate.
 - Detection is ranking among siblings in one model; it says nothing about separating an edit from fine-tuning, which
   changes every matrix at once.
 - `llm-forensics`' own detectors are not run here: its token reading is an agent tool, not a scored statistic, and its
   participation-ratio score is left to a follow-up so this part stays one question wide.
+
+## Revision 1 (2026-11-08, after Alden's design hold, council `part198-design-2026-11-08` #3; before any registered data)
+
+1. Norm contract fixed: LayerNorm reads use gamma on a centred direction (LayerNorm(ones) is the bias); RMSNorm reads use
+   the effective scale; fixtures required. One sign and filter rule (maximum over eligible direction-sign pairs), with
+   the empty, zero-variance and tie cases defined; the pilot's sign-first values are recomputed and both reported.
+2. Endpoints split: localization (rank 1, which always exists) is separate from the T\* threshold alarm, and the joint
+   detection-with-naming event is defined. Naming is by frozen token IDs with name-eligibility reported first; the
+   multi-layer and mass-edit rules are fixed; base diagnostics are reported beside every edited value.
+3. Controls matched to their unit: the Arm B random control is one suspect per write with all five layers; the Arm A
+   aimed control reuses ROME's input direction and norm, and the gradient-editor claim is narrowed to "not named by this
+   static reader".
+4. Sensitivity checks S1 and S2 are separate from the forecasts; 198.5 is now a forecast only; the headline depends on
+   198.1 to 198.4, 198.6 and 198.7 with S1 and S2.
+5. Arm C split into 3 calibration models, 5 untouched evaluation checkpoints and 2 development hosts; hosts scored in
+   float32; no model down-cast.
+6. Every case ID frozen in `cases198.json` before any outcome; took requires a before-to-after transition; denominators
+   stated; the illustrative Fisher p-value removed in favour of exact intervals and paired counts.
+Build contract: the EasyEdit method sources, configs, second moments, tokenizers, stopword list and templates are pinned
+in `manifest.json`; AlphaEdit keeps `reset_cache=True`; editor state is checked by re-running each process's first record.
