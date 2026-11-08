@@ -30,9 +30,11 @@ large enough to be worth an edit?
   the model's own verdict for real against imitated animal sounds (0.918 and 0.965 against 0.630 and 0.808), which is
   the same shape of question on a different task.
 - Data: Expresso read speech (`ylacombe/expresso`, config `read`, 11,615 utterances, four speakers, eight styles,
-  CC-BY-NC-4.0), downloaded to the owner's disk; audio is never committed. Before registration only metadata of the
-  first shard was read (speaker, style, text and id of 968 rows, all speaker ex01): some texts are read in several
-  styles by one speaker, which the text-half split below handles. No audio was decoded and no model was run.
+  CC-BY-NC-4.0), downloaded to the owner's disk; audio is never committed. Before registration only metadata was read
+  (speaker, style, text and id; no audio, no durations): by me for the first shard, and for all twelve shards by Alden's
+  review (council `part196-design-review-2026-11-08` #4): 10,636 rows in the seven styles, 2,571 distinct texts, 1,594
+  of them read in more than one style, one read by more than one speaker, no null texts or duplicate ids, 379 to 380 rows
+  per speaker and style before any length filter. No model was run.
 
 ## Method
 
@@ -42,55 +44,71 @@ large enough to be worth an edit?
 - Styles: confused, default, enunciated, happy, laughing, sad, whisper. Narration is left out: it is a reading genre
   rather than a voice quality and has only 21 minutes. Rows labelled `emphasis` and `essentials` (present in the
   parquet files though not in the dataset card's table) are left out too: they are reading tasks, not styles.
-- Clips: for each speaker and style, 100 utterances chosen by a seeded draw (seed 196) from those of 2 to 10 seconds, or
-  all of them if fewer. Audio decoded to mono 16 kHz, the whole utterance (at most 10 s).
-- Splits: four outer folds, one per held-out speaker. Within each fold, texts are split into two halves by a seeded hash
-  of the text (seed 196): training uses the three other speakers' clips whose text is in half 1, testing uses the held-out
-  speaker's clips whose text is in half 2, so no test clip shares a speaker or a sentence with training. Every
-  reported number pools the four folds' test clips.
+- Content control. A text read in only one style can tell a readout the style through its words. So the clip pool is
+  restricted to shared texts: clips whose text the same speaker reads in at least two of the seven styles, from 2 to 10
+  seconds long. The one text read by more than one speaker is dropped. A transcript-only readout (T below) measures how
+  much style the words alone still carry in this pool.
+- Clips: for each speaker and style, 100 clips drawn from the pool with seed 196 (`numpy.random.default_rng(196)`, rows in
+  id order), or all of them if fewer. Audio decoded to mono 16 kHz, the whole clip (at most 10 s).
+- Splits: four folds, one per held-out speaker; training is the other three speakers' clips. Because no kept text is
+  read by two speakers, every test clip is disjoint from its training clips by speaker, by text and by recording id;
+  Gate 1 checks all three in code.
 - Text labels: the 56 phrasings in `part196/phrasings.json`, eight per style, written before any audio was recorded,
-  encoded with `prompt_name='SearchQuery'` as in Parts 188 and 190.
-- Readouts, all scored on the same test clips:
-  - A, single label: argmax over styles of the cosine with each style's first phrasing.
-  - B, calibrated verdict: per style, either the mean cosine over its eight phrasings or its single best phrasing (chosen
-    on the training clips), plus a per-style additive bias; the choice and the seven biases are fitted on the training
-    clips to maximise balanced accuracy (biases by multinomial logistic regression on the seven scores with one shared
-    scale). This is the model's own verdict, only re-weighted.
-  - B56, descriptive: multinomial logistic regression on all 56 cosines, the most a label-space readout can do.
+  encoded with `prompt_name='SearchQuery'` as in Parts 188 and 190. s_{k,j} is the clip embedding's cosine with phrasing
+  j of style k.
+- Readouts, each fitted on the training fold only and scored on the held-out speaker:
+  - A, single label: predict argmax over k of s_{k,1} (each style's first phrasing). Nothing is fitted.
+  - B, calibrated verdict: z_k = a * c_k + b_k, predict argmax z_k. c_k is either the mean of s_{k,1..8} or one
+    s_{k,j}: for each style the eight phrasings and the mean are ranked by training one-against-rest AUC of that score,
+    the best is kept, and a tie goes to the mean, then to the lower j. Then a > 0 and b (seven values, summing to 0) are
+    fitted by minimizing class-weighted multinomial log-loss (weights inverse to training style counts) with L-BFGS from
+    a = 1, b = 0, no regularization. This is the model's own cosine verdict with one scale and per-style offsets: the
+    calibrated cosine family named in the reading rules, not every possible use of the label scores.
+  - B56, a linear probe on the 56 cosines: multinomial logistic regression, features standardized on training, L2 with
+    C = 1.0 (scikit-learn), class_weight balanced, lbfgs, max_iter 5000.
   - C, exemplar centroids: nearest training-style centroid of final embeddings by cosine.
-  - D, final-embedding probe: multinomial logistic regression on the 768-d embedding, standardized on training, L2 with
-    C = 1.0 (scikit-learn convention), as Part 188.
-  - E, layer probe: the same on one layer's 2,048 mean MLP inputs, the layer chosen by inner leave-one-speaker-out
-    balanced accuracy within the three training speakers.
-  - F, single units: for each style, the unit with the largest one-against-rest training AUC, signed on training.
-  - H, acoustic baseline: logistic regression on mean and spread of pitch (pyworld harvest), RMS energy, spectral
-    centroid, and duration per word.
-- Metrics: seven-way balanced accuracy for A, B, B56, C, D, E and H; macro one-against-rest AUC for every readout
-  including F. Intervals: 95% bootstrap over test texts (clusters), 2,000 draws, seed 196, for each readout and for the
-  paired difference D minus B.
+  - D, final-embedding probe: the same fit as B56 on the 768-d embedding.
+  - E, layer probe: the same fit on one layer's 2,048 mean MLP inputs; the layer is chosen by inner leave-one-speaker-out
+    over the three training speakers (their texts are disjoint too), mean balanced accuracy, ties to the earlier layer.
+    E is secondary; it never replaces D in the headline.
+  - F, single units: for each style, over all 49,152 units, the unit with the largest |AUC - 0.5| on training
+    one-against-rest, signed on training, ties to the lowest index; scored by held-out one-against-rest AUC only.
+  - H, acoustic baseline: per clip, voiced fraction, median and interquartile range of F0 over voiced frames (pyworld
+    harvest, frame 5 ms), RMS energy mean and spread, spectral centroid mean, and seconds per word. A clip with no voiced
+    frames (expected for whisper) gets F0 median and range 0 and keeps voiced fraction 0; no clip is dropped. Fit as B56.
+  - T, transcript only: the same fit as B56 on the EmbeddingGemma 2 text embedding of the clip's transcript
+    (`prompt_name='SearchDocument'`). Diagnostic for content, not a model verdict.
+- Metrics: seven-way balanced accuracy for A, B, B56, C, D, E, H and T; macro one-against-rest AUC for every readout
+  including F, computed within each held-out speaker (scores from different fold models are never ranked together).
+  Primary numbers are the mean over the four held-out speakers; each speaker's number is reported beside it.
+- Intervals: 95% bootstrap, 2,000 draws, seed 196, resampling texts within each held-out speaker and recomputing the
+  four-speaker mean, for each readout and for the paired differences. They describe these four speakers and this model,
+  not new speakers.
 
 ## Controls
 
-- Gate 1 (data): every speaker by style cell has at least 40 clips after the length filter; no test clip shares a speaker
-  or a text with its fold's training clips (checked in code, per fold).
-- Gate 2 (recorder): Part 188's parity gate passes before any Expresso clip is recorded (the eight registered parity
-  clips reproduce `parity_ref.npz`).
-- Gate 3 (positive control): a speaker-identity probe on the final embedding, trained on text half 1 and tested on text
-  half 2 of the same four speakers, reaches at least 90% balanced accuracy. Fails if the recording or the probe code is
-  broken.
-- Gate 4 (negative control): D trained on style labels shuffled within each training speaker scores at most 25% balanced
-  accuracy pooled (chance 14.3%). Fails if the split leaks.
-- Matched comparisons: A, B, C and D use the same final embedding; B and D see the same training clips; E's layer is
-  chosen without the test speaker.
+- Gate 1 (deterministic integrity, stops the part): every test clip is disjoint from its training clips by speaker, text
+  and recording id, per fold; after the length filter and the draw, every speaker by style cell has at least 40 clips.
+  These are checked in code before any readout is computed.
+- Gate 2 (recorder, stops the part): Part 188's parity gate passes before any Expresso clip is recorded.
+- Diagnostic 1 (reported, not a stop): a speaker-identity probe on the final embedding, trained on one half of each
+  speaker's texts and tested on the other half. A low score is a fact about the embedding, not proof of a bug; the
+  parity gate is the recorder check.
+- Diagnostic 2 (reported, not a stop): D refitted with style labels shuffled within each training speaker, scored on the
+  real test labels; expected near 14.3%. It cannot prove the split is leak-free (shuffled training labels score near
+  chance even with duplicates), which is why Gate 1 checks disjointness directly.
+- Matched comparisons: A, B, B56, C and D use the same final embedding and the same training clips; E's layer is chosen
+  without the test speaker.
 - Not used: readers (labels are the dataset's), generations, the answer-polarity split, edits (a later part, if the gap
   survives).
 
 ## Size
 
-- Smallest effect worth knowing: a gap of 5 points of balanced accuracy between D (or E) and B.
-- Total: 2,800 clips recorded once, about 45 minutes on the CPU (recording about 32 minutes at the measured rate, probes
-  and bootstraps a few minutes). Four speakers by seven styles by 100 clips; cells with fewer than 100 use all they have.
-- Pilot: none; the gates stop the part before any readout is scored if the data or recorder fail.
+- Smallest effect worth knowing: a gap of 5 points of balanced accuracy between D and B.
+- Total: 2,800 clips recorded once, about 45 minutes on the CPU (recording about 32 minutes at the measured rate; probes,
+  bootstraps and pitch features a few minutes). Four speakers by seven styles by 100 clips; cells with fewer than 100 in
+  the shared-text pool use all they have, and Gate 1 requires at least 40.
+- Pilot: none; the gates stop the part before any readout is read if the data or recorder fail.
 
 ## Optimization
 
@@ -105,24 +123,30 @@ large enough to be worth an edit?
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 196.1 | A, the single-label verdict, has pooled balanced accuracy at most 35%. | medium: zero-shot style labels were weak in SLAP and Koduru et al. | Claude |
-| 196.2 | D, the final-embedding probe, has pooled balanced accuracy at least 70%. | medium: other encoders reach 82 to 85%, but four-speaker held-out testing is harder. | Claude |
-| 196.3 | B, the calibrated verdict, closes at least half of the gap from A to D. | medium-low: Villuri et al. found calibration closed most of a probe gap. | Claude |
-| 196.4 | D minus B is at least 5 points of balanced accuracy, with its 95% bootstrap interval above 0. | low-medium: the headline, and the case for a later edit. | Claude |
-| 196.5 | E, the best intermediate layer chosen without the test speaker, beats D by at least 3 points. | medium-low: style cues may be thinned by mean pooling into the final embedding. | Claude |
+| 196.1 | A, the single-label verdict, has four-speaker mean balanced accuracy at most 35%. | medium: zero-shot style labels were weak in SLAP and Koduru et al. | Claude |
+| 196.2 | D, the final-embedding probe, has four-speaker mean balanced accuracy at least 70%. | medium: other encoders reach 82 to 85%, but held-out speakers and shared texts make it harder. | Claude |
+| 196.3 | If D beats A (interval of D minus A above 0), B closes at least half of that gap; otherwise not applicable. | medium-low: Villuri et al. found calibration closed most of a probe gap. | Claude |
+| 196.4 | D minus B is at least 5 points of balanced accuracy with its 95% interval above 0 (outcome "gap supported" in the reading rules). | low-medium: the headline. | Claude |
+| 196.5 | B56 is within 3 points of D (the label scores support a near-probe readout, and B's decision rule is the bottleneck if 196.4 holds). | medium-low. | Claude |
 | 196.6 | Whisper has the highest per-style recall under A, B and D. | medium: whisper is acoustically the most distinct style. | Claude |
 | 196.7 | H, the acoustic baseline, reaches at least 40% balanced accuracy. | medium. | Claude |
+| 196.8 | T, the transcript-only readout, stays at or under 25% balanced accuracy in the shared-text pool. | medium: every kept text is read in at least two styles. | Claude |
 
 ## Reading rules
 
-- Gates 1 to 4 must pass before any readout is read.
-- The headline is 196.4. If D minus B is under 5 points or its interval includes 0, the result is reported as
-  "calibration closes the gap" and no edit part follows from it. A held 196.4 is reported as knowledge the calibrated
-  verdict does not use, on this model and this set, not as knowledge the model lacks.
-- B56 is descriptive: it uses the label space as a 56-feature probe, so it sits between a verdict and a probe and is
-  reported for the reader to place, not as either.
-- Balanced accuracy is compared with balanced accuracy and AUC with AUC, never across.
-- Per-fold numbers are reported beside the pooled ones; with four speakers one odd speaker can move a pooled number.
+- Gates 1 and 2 must pass before any readout is read. Diagnostics are reported whatever they show.
+- The headline is 196.4, with three outcomes: "gap supported" (D minus B at least 5 points, interval above 0);
+  "practically equivalent" (interval of D minus B entirely inside -3 to +3 points, a bound fixed here); otherwise
+  "inconclusive". A missed 196.4 is not evidence that calibration closes the gap unless the second outcome holds.
+- Calibration is credited only for an observed improvement: B minus A with its interval above 0.
+- B is the calibrated cosine family defined in Method. A supported gap says the model's embedding holds style information
+  that this calibrated cosine verdict does not use; with 196.5 holding, it says the bottleneck is the verdict's decision
+  rule rather than missing label-space information. Neither is a claim that the model lacks the knowledge, nor by itself
+  a case for an edit.
+- If T is above 25%, words still carry style in this pool, and every readout's number is reported beside T's with that
+  caveat.
+- Balanced accuracy is compared with balanced accuracy and AUC with AUC, never across. Per-speaker numbers are always
+  reported beside the four-speaker mean.
 
 ## Limits
 
@@ -130,9 +154,19 @@ large enough to be worth an edit?
   extend to spontaneous speech or other speakers without a new test.
 - The phrasings are ours; a different label set could move A and B. Writing eight per style and tuning on training
   speakers is the defence, not a guarantee.
+- The shared-text pool controls exact content, not paraphrase or prosodic habits tied to particular texts; T measures
+  what words alone still carry.
+- Intervals cover these four speakers; a new speaker could differ.
 - One model, one revision, CPU float32.
 - The dataset is licensed for non-commercial use; nothing from it is redistributed.
 
 ## Changes before registration
 
-- None yet. The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.
+- Design review by Alden (council `part196-design-review-2026-11-08` #3 and #4, 2026-11-08; two DeepSeek design reviews
+  before it hit their turn caps without writing). Folded: B is now one executable fit; B56 is named as a probe on the 56
+  cosines with its own prediction; the text-half split was replaced by the shared-text pool, because only one text is
+  read by two speakers and the open risk was content, not overlap; a transcript-only readout T measures content; the
+  gates are split into deterministic stops and reported diagnostics; 196.4 has three outcomes with a fixed equivalence
+  bound; calibration is credited only for an observed A-to-B gain; AUC is computed within each speaker and the primary
+  numbers are four-speaker means; F's universe and sign and H's unvoiced-pitch rule are fixed.
+- The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.
