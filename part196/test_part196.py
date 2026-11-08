@@ -359,8 +359,8 @@ def test_text_assets_rebuild_corrupt_or_partial_files_atomically(tmp_path):
     prompt_path.write_bytes(b"partial prompt asset")
     transcript_path.write_bytes(b"partial transcript asset")
     encode_text_assets(model, rows, texts, tmp_path)
-    assert model.calls == [(56, "SearchQuery"), (1, "SearchDocument"),
-                           (56, "SearchQuery"), (1, "SearchDocument")]
+    assert model.calls == [(56, "SearchQuery"), (1, "document"),
+                           (56, "SearchQuery"), (1, "document")]
     with np.load(prompt_path, allow_pickle=False) as saved:
         assert saved["embeddings"].shape == (7, 8, 768)
     with np.load(transcript_path, allow_pickle=False) as saved:
@@ -485,4 +485,19 @@ def test_h_keeps_clip_when_voiced_frames_are_absent(monkeypatch):
     assert features[0] == 0.0
     assert features[1] == 0.0
     assert features[2] == 0.0
+
+
+def test_recorder_prompt_names_exist_in_the_pinned_model_config():
+    """Amendment 1: 'SearchDocument' was not a prompt of this model; every prompt_name used must be in its config."""
+    import json, re
+    snapshot = Path("/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/"
+                    "f9972ac22e696a105c482202646979e33e4b5a1e/config_sentence_transformers.json")
+    if not snapshot.is_file():
+        import pytest
+        pytest.skip("pinned EmbeddingGemma 2 snapshot not on this host")
+    prompts = json.loads(snapshot.read_text())["prompts"]
+    source = (Path(__file__).resolve().parent / "record196.py").read_text()
+    used = set(re.findall(r'prompt_name="([^"]+)"', source))
+    assert used, "no prompt_name found in record196.py"
+    assert used <= set(prompts), sorted(used - set(prompts))
 
