@@ -2754,6 +2754,8 @@ independently rests on their instructions, not on anything the files can show.
 
 **[Part 194](results/part194/README.md)**, 2026-11-08. Does Part 24 hold on the eager attention kernel? Yes. With the same units, prompts, doses and seeds, the alien neuron's reach (0.0 at or below its layer), the late-layer change (identity 0.482 against random 0.805), the fixed-answer effects (3.149, 3.085 and 3.150 at 2x) and the extra " Alibaba Cloud." drop (0.165) sit within 0.018 of the published values. Part 24b's unchanged blind reader on 192 fresh answers gives 12 of 16 invented alien-named makers with identity units zeroed at 2x (13 published) and 15, 16 and 16 alien answers at 2x (15, 16, 15). All ten predictions held and every scorable verdict is unchanged; 24.6 and 24.7 used hand labels and were not re-scored.
 
+**[Part 196](results/part196/README.md)**, 2026-11-08. How well do EmbeddingGemma 2's readouts name seven acted speaking styles in Expresso, on four held-out speakers? A probe on the first layer's mean MLP input reads style at 62.7% balanced accuracy (chance 14.3%), above seven acoustic features (51.8%); a probe on the final embedding reads 25.8%, and the model's own label verdict is at chance (15.1%, 17.2% calibrated). The layer curve falls steadily from layer 0 to about 30% at the last layers. The registered headline holds as "gap supported" (final-embedding probe 8.6 points above the calibrated verdict, 7.0 to 10.4), and four of eight predictions held; the 70% forecast for the final-embedding probe failed badly. A transcript-only readout is near chance (14.7%). Readouts, not use; no edit tested.
+
 ### Running or designed (2026-10-21)
 
 - Part 29: the registered teacher-classifier predictions remain unscored in PREDICTIONS.md.

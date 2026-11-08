@@ -1,4 +1,4 @@
-# Part 196: EmbeddingGemma 2 reads speaking style well at its first layer and mostly drops it by the final embedding
+# Part 196: speaking style is linearly readable from EmbeddingGemma 2's first layer (62.7%) and barely from its final embedding (25.8%)
 
 Question (registered in `PART196-DESIGN.md`, public main 1e82c97, 2026-11-08 04:52 CT, before any data; Amendments 1 to 3
 before any readout): in duration-filtered, rarity-prioritized, partly text-crossed Expresso speech from four speakers,
@@ -19,15 +19,15 @@ interval 24.5 to 27.2; chance 14.3%). The model's own label verdict is at chance
 training speakers lifts it only to 17.2% (B). The same probe on the first layer's mean MLP input (E, chosen by inner
 cross-validation as layer 0 in all four folds) reaches 62.7% (61.3 to 64.2), above seven simple acoustic features (H,
 51.8%, 50.3 to 53.3; a descriptive comparison, not registered). The inner curve falls from about 0.61 at layer 0 to
-about 0.30 at layers 19 to 23. The words alone carry nothing here (T, transcript only, 14.7%). The best single units
-(F) also sit in layers 0 to 3, and one layer-0 unit (L0 N675) is the training-best unit for both enunciated and whisper
-in every fold.
+about 0.30 at layers 19 to 23. A transcript-only readout is near chance (T, 14.7%). The training-best single units
+(F) sit in layers 0 to 4 in every fold; L0 N675 is the training-best unit for enunciated in all four folds and for
+whisper in one (whisper's best is L0 N2041 in two folds and L0 N46 in one).
 
 The registered headline, 196.4, is **"gap supported"**: D beats the calibrated verdict B by 8.6 points (7.0 to 10.4),
 and D's interval is above chance, so by the reading rules the final embedding holds style information this calibrated
-verdict does not use. That gap is real but small, and both readouts are weak. The larger fact is the curve: the
-information is present early and is mostly discarded on the way to the output, so an edit of the final embedding
-(Part 190's kind) has little style to work with.
+verdict does not use. That gap is real but small, and both readouts are weak. The larger fact is the curve: style is
+far more linearly readable from layer 0's mean MLP input than from the final embedding. This part reads; it does not
+show what the model uses, and it tests no edit.
 
 ## Predictions
 
@@ -44,8 +44,9 @@ information is present early and is mostly discarded on the way to the output, s
 
 Four held, four failed. Calibration is credited (B minus A interval above 0), but it closes a fifth of the gap, not
 half. 196.5 failed and the non-inferiority bound (lower end of B56 minus D above -3 points) is not met, so the gap is
-not attributed to B's decision rule: the 56 label cosines, even fitted freely (B56, 21.8%), read less style than the
-embedding they are computed from. 196.6 failed for A, B and D, but whisper is the best-read style under E (95.5%) and H
+not attributed to B's decision rule. A free probe on the 56 label cosines (B56) scores 21.8%, 4.1 points below D
+(-5.6 to -2.4); this is reported as a difference between two readouts, not as a finding about what the label space
+holds. 196.6 failed for A, B and D, but whisper is the best-read style under E (95.5%) and H
 (99.5%): it is the most distinct style acoustically and at layer 0, and the final embedding does not keep that.
 
 ## All readouts (four-speaker mean, 95% text-cluster bootstrap; per speaker ex01 / ex02 / ex03 / ex04)
@@ -74,27 +75,27 @@ A 25.0 / 56.0 / 5.8 / 5.2 / 2.8 / 5.2 / 5.6; B 15.1 / 11.5 / 19.8 / 13.5 / 22.4 
   Expresso clip was recorded. 2,724 of 2,724 clips recorded, no errors.
 - Shuffled style labels within each training speaker: D scores 14.6%, at chance as expected.
 - Speaker identity from the final embedding (half of each speaker's texts to train, half to test): 33.3% on four
-  speakers, chance 25%. The final embedding barely says who is speaking either. Read beside the layer curve, this fits
-  an embedding trained for meaning that discards voice; it was not tested further here.
+  speakers, chance 25%. The final embedding carries little speaker information either; why was not tested here.
 - Calibration fits converged in every fold. B picked a single phrasing (not the mean of eight) for every style in every
   fold. The chosen phrasings' training one-against-rest AUCs ran from 0.47 to 0.64 (laughing 0.60 to 0.64, whisper 0.57
   to 0.58, the rest 0.47 to 0.53; for default, enunciated and happy the best of nine choices was below 0.5), so the
   label cosines barely separate styles even on the training speakers.
 
-## What this changes
+## What this suggests (untested)
 
-For the "neurons that beat the model" line of work: on speaking style, a probe on this model's output does not beat
-its verdict by much, because the output keeps little style; the early layers do, by a wide margin. An edit that wants
-the verdict to read style would have to carry layer-0 information forward, not re-weight the final embedding. Part
-190's output edit worked for real-against-imitation animal sounds because the output kept that distinction (its probe
-AUC was 0.92 to 0.97); here it does not.
+For the "neurons that beat the model" line of work: on speaking style, a probe on the final embedding beats the
+calibrated verdict by 8.6 points, and a probe on layer 0 reads far more. By the reading rules neither is by itself a
+case for an edit. One untested follow-up hypothesis: an output edit of Part 190's kind would gain little here, where
+the final-embedding probe is weak (Part 190's probe AUCs were 0.92 to 0.97 for real against imitation animal sounds),
+and a test would need to start from earlier layers.
 
 ## Limits
 
 - Four speakers, acted read speech, one studio; seven performed styles. Not representative Expresso, and not
   content-independent recognition: the draw prioritized rare styles and crossed some texts, not all. Styles differ in
-  clip length (mean 3.1 s default to 4.8 s enunciated) and so in tempo, which Alden accepted as a style signal; E and H
-  may use it. A low T bounds one transcript classifier, not every content route.
+  clip length (mean 3.1 s default to 4.8 s enunciated). H includes seconds per word, so speaking rate may contribute
+  to H, and possibly to E; Alden accepted tempo as a style signal. A low T bounds one transcript classifier, not every
+  content route.
 - E's layer comparison is a probe on mean-pooled MLP inputs; it says the information is linearly readable there, not
   that the model uses it. The curve above is the inner (three-speaker) score used for selection, not a held-out test of
   every layer; only layer 0 was tested on held-out speakers.
