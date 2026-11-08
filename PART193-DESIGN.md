@@ -249,3 +249,25 @@ behind 193.1 to 193.3 had been read.
 One procedural deviation, also noted in `part193/steps.txt`: this host's `systemd-run` refuses `--wait` with
 `--scope`, so the scope commands ran without it (a scope runs in the foreground). The commands are otherwise as
 registered.
+
+## Amendment 2 (2026-11-08 09:01 CT, after Alden's review of Amendment 1 and before the edits object was opened)
+
+Two corrections to Amendment 1, from Alden's review (council topic `part193-gate4-2026-11-08`, message 3).
+
+Exposure. Amendment 1 said nothing behind 193.1 to 193.3 had been read. That is wrong for 193.1. Prediction 193.4's
+record, which the statistics step printed at 08:23 before Amendment 1 was written, gives W2's F1 detection threshold as
+0.125, found at every dose of the ladder. 193.4 computes that threshold with the same rule 193.1 names (F1, layer 20's
+`down_proj` first among the 24 `down_proj` matrices), so 193.1, which predicts a threshold of dose 8 or higher, or never,
+was already revealed to fail. 193.1 stays as registered and is reported as failed. The `edits` object itself was unopened
+when Amendment 1 was written, and the data behind 193.2 and 193.3 is still unseen.
+
+Wording. Amendment 1 called the Gate 4 failure "not its wiring". That is stronger than the evidence. A rank-one update of
+spectral norm 2s on a matrix of spectral norm s guarantees only s <= sigma1(edited) <= 3s, so the direction can cancel as
+well as add. The gate's guarantee was invalid on two counts: sibling scale and direction. The two recorded misses are
+consistent with sibling heterogeneity. That found matches "the edited top singular value exceeds every sibling's" on all
+24 placements follows from the ranking definition, so it shows the recorded ordering is internally consistent. It does
+not independently verify the SVD, the injected matrix or the role labels. 193.1 is read as an operational threshold for
+this target, sibling set, direction and dose ladder: in the unedited model layer 20's `down_proj` has top singular value
+4.606, rank 3 among its siblings, against a sibling maximum of 5.551. An update norm above (largest sibling value plus
+target value) would guarantee first place. That would be a new, separately labelled control, not a rerun of Gate 4, and
+none is run here.
