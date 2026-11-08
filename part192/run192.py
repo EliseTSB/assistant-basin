@@ -17,7 +17,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 REQUESTED_ATTENTION = "eager"
-RERUN_COMMANDS = {"reads", "screen", "zero", "push", "score"}
+# score loads no model, so it is not wrapped: run part39.py score directly (steps.txt).
+RERUN_COMMANDS = {"reads", "screen", "zero", "push"}
 
 
 def eager_load_model_direct(model_id: str, revision: str, device: str):
@@ -54,13 +55,15 @@ def eager_load_model_direct(model_id: str, revision: str, device: str):
     model.eval()
     torch.set_grad_enabled(False)
 
+    # Record what the config says was set, never what was asked for: a config without the attribute records
+    # None, and the gate then refuses the run.
     config_value = getattr(getattr(model, "config", None), "_attn_implementation", None)
     nr.LAST_LOAD = {
         "model": model_id,
         "revision": revision,
         "device": device,
         "requested_attn_implementation": REQUESTED_ATTENTION,
-        "attn_implementation": config_value or REQUESTED_ATTENTION,
+        "attn_implementation": config_value if isinstance(config_value, str) and config_value else None,
     }
     return tok, model
 
@@ -95,7 +98,8 @@ def check_record(path: str | Path) -> int:
     try:
         record = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
-        print(f"PART192 RECORD FAILED: cannot read load record: {exc}", flush=True)
+        print(f"PART192 RECORD FAILED: cannot read load record {path}: {exc}. The device stages write "
+              "load.json into the job folder's results\\part192; copy that whole folder back first.", flush=True)
         return 3
     if not isinstance(record, dict):
         print("PART192 RECORD FAILED: load record is not an object", flush=True)
@@ -132,10 +136,13 @@ def _load_record(path: Path) -> dict:
 
 def main(argv: list[str] | None = None, *, part39_module=None, loader=None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
-    if len(args) == 2 and args[0] == "--check-record":
+    if args and args[0] == "--check-record":
+        if len(args) != 2:
+            print("usage: run192.py --check-record <load.json>", file=sys.stderr)
+            return 2
         return check_record(args[1])
     if not args or args[0] not in RERUN_COMMANDS:
-        print("usage: run192.py {reads,screen,zero,push,score} [Part 39 options]", file=sys.stderr)
+        print("usage: run192.py {reads,screen,zero,push} [Part 39 options]", file=sys.stderr)
         return 2
 
     if part39_module is None:
@@ -191,7 +198,9 @@ def main(argv: list[str] | None = None, *, part39_module=None, loader=None) -> i
             "outputs_written": written_outputs,
         })
         record_path.parent.mkdir(parents=True, exist_ok=True)
-        record_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        tmp = record_path.with_name(record_path.name + ".tmp")
+        tmp.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        os.replace(tmp, record_path)
 
     gate_path = parsed.out / "load.json"
     try:

@@ -13,6 +13,59 @@ if str(ROOT) not in sys.path:
 from part192 import run192  # noqa: E402
 
 
+def _fake_transformers(monkeypatch, seen, config):
+    import torch
+
+    class Tok:
+        pad_token_id = 0
+        eos_token = "<eos>"
+
+    class Model:
+        def __init__(self):
+            self.config = config
+
+        def eval(self):
+            return self
+
+    class AutoTokenizer:
+        @classmethod
+        def from_pretrained(cls, model_id, **kwargs):
+            return Tok()
+
+    class AutoModelForCausalLM:
+        @classmethod
+        def from_pretrained(cls, model_id, **kwargs):
+            seen["model"] = (model_id, kwargs)
+            return Model()
+
+    transformers = types.ModuleType("transformers")
+    transformers.AutoTokenizer = AutoTokenizer
+    transformers.AutoModelForCausalLM = AutoModelForCausalLM
+    transformers.modeling_utils = types.SimpleNamespace(caching_allocator_warmup=lambda *a, **k: None)
+    monkeypatch.setitem(sys.modules, "transformers", transformers)
+    monkeypatch.setattr(torch, "set_grad_enabled", lambda enabled: None)
+
+
+@pytest.mark.parametrize("config, recorded, gate_ok", [
+    (types.SimpleNamespace(_attn_implementation="sdpa"), "sdpa", False),
+    (types.SimpleNamespace(), None, False),
+])
+def test_record_shows_what_the_config_set_not_the_request(monkeypatch, config, recorded, gate_ok):
+    import neuron_report as nr
+    seen = {}
+    _fake_transformers(monkeypatch, seen, config)
+    nr.LAST_LOAD = None
+    run192.eager_load_model_direct("model-id", "rev", "cpu")
+    assert seen["model"][1]["attn_implementation"] == "eager"
+    assert nr.LAST_LOAD["attn_implementation"] == recorded
+    assert run192.check_kernels([nr.LAST_LOAD["attn_implementation"]])[0] is gate_ok
+
+
+def test_score_is_not_wrapped():
+    assert "score" not in run192.RERUN_COMMANDS
+    assert run192.main(["score", "--out", "x"]) == 2
+
+
 def test_loader_passes_and_records_eager(monkeypatch):
     import torch
     import neuron_report as nr
