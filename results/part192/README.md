@@ -56,7 +56,8 @@ can never produce an AI claim: this is one dose ladder (k=1 and 2) on one person
 
 ## Gates and record
 
-- Host record gate: passed (all loads eager; five stages present).
+- Host record gate: passed (all loads eager; five stages present). The gate checks each output's name and size, not a
+  hash; the files here were copied straight from the job folder minutes after the run finished.
 - Screen sanity rule (L6 N753 must pass in the chat model): passed in both models.
 - `score.json`'s own screen block reads "broken", as the design said it would: Part 39's raw MAD screen was already broken
   in the published run. Section D is read only from `screen-auc-chat.json` and `screen-auc-base.json` (Part 39's
@@ -94,6 +95,8 @@ date. The eager count is 178 of 213.
   answer; 0 of 96 against 8 of 96 is a large difference for 96 samples, and the per-row comparison is what carries it.
 - The A770's bf16 path is not the CPU float32 path even on eager; Part 178's reference check showed eager matching the
   CPU on its prompts, which is the reason for this audit, not a guarantee for every prompt here.
+- Neither run records its torch or transformers version. The attribution to the kernel rests on the attention setting
+  being the only code difference between the runs, which the long shared openings (median 94 characters) support.
 - Section D reuses Part 39's amendment 1 statistic, chosen after the first screen broke (Part 39's own disclosed
   weakness).
 
