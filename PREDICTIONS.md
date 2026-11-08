@@ -3528,6 +3528,21 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 192.8 | Claude (medium confidence): The strict screen has 40 to 72 chat units, 30 to 58 base units, and 15 to 40 shared; at most 30 chat passers are in layers 0 to 12 (published 19 of 211). Part 39.7 and 39.10 remain held; 39.8 remains failed. Reason: strict counts depend on paired AUC cutoffs and the selected passing set. | | |
 | 192.9 | Claude (medium confidence): The ten published Part 39 verdicts this rerun can score remain the same: 39.1 failed, 39.2 held, 39.3 failed (plain order held), 39.4 held, 39.5 failed, 39.6 held, 39.7 held, 39.8 failed, 39.10 held, and 39.11 held (read as L6 N753 passing in the chat model under the AUC gate). 39.9 is not tested by this rerun. Reason: the zero and push samples are small; 39.9 came from Part 42's human logit-lens reading, which the AUC output does not carry. | | |
 
+## Part 194 (registered 2026-11-08 04:19 CT, before any data; design PART194-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 194.1 | Claude (high confidence): 24.1 maximum relative change in layers 22 and below is below 1e-3 (published 0.0). | 0.0 (results/part194/score-core.txt) | HELD |
+| 194.2 | Claude (medium confidence): 24.2 identity late-layer median is 0.35-0.65 (published 0.480), random median is 0.65-0.95 (published 0.805), and identity is at most 1.5 times random. Reason: the kernel and assay batch can shift activation medians. | identity 0.482, random 0.805 | HELD |
+| 194.3 | Claude (medium confidence): 24.3 identity median name-token retention at k=2 is 0.45-0.75 (published 0.583), and random retention is 0.50-0.80 (published 0.647); identity remains below 0.8. Reason: the medians pool selected sets of 50 units. | identity 0.585, random 0.665 | HELD |
+| 194.4 | Claude (medium confidence): 24.4 none/random/identity log probabilities for " Alibaba Cloud." stay within 0.25 of -2.885/-2.960/-3.136 per token, respectively; the extra identity drop is 0.05-0.30 (published 0.176), below 0.3. Reason: the fixed-answer score depends on token probabilities. | -2.888, -2.972, -3.137; extra drop 0.165 | HELD |
+| 194.5 | Claude (medium confidence): 24.5 at k=1, none/identity/random effects are 1.30-1.80, 1.30-1.90, and 1.30-1.90; at k=2 they are 2.75-3.50, 2.65-3.50, and 2.70-3.55, respectively (published 1.552/1.601/1.555 and 3.148/3.083/3.151). At both doses the identity/random difference is below one quarter of the none effect. Reason: paired log-probability differences can move with the kernel. | k=1 1.551/1.603/1.556, k=2 3.149/3.085/3.150; differences 0.047 and 0.064 | HELD |
+| 194.6 | Claude (medium confidence): 24b.1 identity-zeroed k=2 answers with (b) are 10-15 of 16 (published 13). Reason: this uses 16 fresh stochastic answers. | 12 of 16 (results/part194/score-24b.txt) | HELD |
+| 194.7 | Claude (medium confidence): 24b.2 among identity-zeroed k=1.5 answers labeled alien by (a) or (b), the (a)-only share is 0.55-0.85 (published 6/8). Reason: the denominator is a small, newly sampled set. | 4 of 7, 0.571 | HELD |
+| 194.8 | Claude (medium confidence): 24b.3 k=2 alien-content counts are 14-16 of 16 in none, identity-zeroed, and random-zeroed (published 15, 16, and 15). Reason: each arm has 16 fresh answers. | 15, 16, 16 | HELD |
+| 194.9 | Claude (medium confidence): 24b.4 at k=2, (b) is present in 6-12 of 16 answers in both none and random-zeroed arms (published 9 each); at k=0, 1, and 1.5 it is at most 2 of 16 in those arms. Reason: invented-name labels are sparse in small samples. | 2x: 9 and 8; 0x, 1x, 1.5x: 0 throughout | HELD |
+| 194.10 | Claude (medium confidence): The scorable published verdicts stay the same: 24.1 held, 24.2 held, 24.3 failed, 24.4 failed, 24.5 held, 24b.1 held, 24b.2 held, 24b.3 held, and 24b.4 failed. Reason: several verdicts use only 16 fresh answers per condition. | all nine the same (results/part194/README.md) | HELD |
+
 ## Part 196 (registered 2026-11-08 04:52 CT, before any data; design PART196-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
