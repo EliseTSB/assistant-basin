@@ -78,16 +78,17 @@ equivalents), W in [out, in] orientation, at the weights' stored precision cast 
 value of a statistic among the same role's matrices in the suspect model. A tie for first is not localization and is
 reported. For a five-layer edit, localization means any of its edited layers is first.
 
-**Threshold alarm**: the suspect has an MLP output matrix whose T_word exceeds T\* (Arm C), and that matrix is an edited
-one. **Detection with naming**: a threshold alarm, in the localized layer, whose top eligible pair names the new object.
+A cross-model threshold alarm (T_word above a value set on other models) is **not** an endpoint: the DeepSeek design
+review measured it before registration and it false-alarms (see Arm C).
 
 **Named.** For each record the target token set is frozen before scoring: GPT-2 XL, the first token ID of " " + object
 and of object; `wsp`, the first token ID of the answer as `wsp` encodes it (`enc(object)[0]`) and of " " + object. A
-direction-sign pair names the object when one of the target IDs is among its three highest-logit token IDs. A record is
+direction-sign pair **names** the object (primary, strict) when its top token ID is one of the target IDs; it names it
+**loosely** (secondary, reported beside) when a target ID is among its three highest-logit token IDs. A record is
 **name-eligible** only if at least one target ID passes the eligibility filter above; ineligible records are counted and
 left out of every naming rate, so an unnameable object is never evidence about direction. Which pair is read: the top
-eligible pair of the layer in question (the localized layer when there is one; otherwise, for the within-layer
-diagnostics, the edited layer with the highest T_word).
+eligible pair of the edited layer with the highest T_word (for a single-layer edit, its one layer), whether or not that
+layer is localized, so naming is defined for every record.
 
 **Base diagnostics, reported beside every edited value** (base-required, never part of a detection endpoint): each
 edited layer's base T_word, its base rank, and whether the base already names the record's object.
@@ -95,9 +96,10 @@ edited layer's base T_word, its base rank, and whether the base already names th
 ### Arm A: gradient editors on GPT-2 XL (the host is a development model)
 
 GPT-2 XL float32 (`model.safetensors` sha256 `0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a`) on the
-CPU under an 11 GB memory cap, weights copied into ordinary memory after loading. EasyEdit main as fetched 2026-11-08
-11:16 CT (`src/EasyEdit-main`; the method sources' combined hash, the three GPT-2 XL configs and the five second-moment
-files are pinned by sha256 in `results/part198/manifest.json` at build), imported through `ee_import.py` with only ROME,
+CPU under an 11 GB memory cap, weights copied into ordinary memory after loading. EasyEdit at commit
+`5c519afb14e39c7f70bc5536ebd777a62d8493bf` (main when fetched 2026-11-08 11:16 CT; `rome_main.py`, `AlphaEdit_main.py`
+and `hparams/MEMIT/gpt2-xl.yaml` checked byte-identical to that commit; the method sources, the three GPT-2 XL configs
+and the five second-moment files are pinned by sha256 in `results/part198/manifest.json` at build), imported through `ee_import.py` with only ROME,
 MEMIT and AlphaEdit, each with its shipped GPT-2 XL hyperparameters unchanged. Records are frozen in
 `results/part198/cases198.json` (seed 198, CounterFact cases 11 onward, drawn 2026-11-08 by `draw198.py`, CounterFact
 sha256 recorded there): 24 single records (cases 5494, 7275, 6736, 18976, 17313, 13124, 5137, 20706, 4065, 20862, 19466,
@@ -116,7 +118,8 @@ keep state between calls (AlphaEdit's caches), each process also re-runs its fir
 that record's update to float32 tolerance (max |difference| below 1e-6 times the update's largest entry); a process that
 fails this has its records reported as possibly state-contaminated.
 
-**Mass edits.** Localization as above. Naming per fact: the number of the batch's 10 name-eligible objects named by any
+**Mass edits.** A batch counts only if at least 8 of its 10 records take; a batch below that is reported and left out
+of 198.1 and 198.3. Localization as above. Naming per fact: the number of the batch's 10 name-eligible objects named by any
 eligible pair among the top 64 of any edited layer.
 
 ### Arm B: `wsp` on Qwen3.5-0.8B (the host is a development model)
@@ -147,16 +150,18 @@ Question templates (frozen; {} is the subject; the fourth is held out and only r
 | P364 | What was the original language of {}? / In what language was {} originally made? / Which language was {} first produced in? | {} was originally in which language? |
 | P159 | Where is the headquarters of {}? / In which city is {} headquartered? / Where is {} based? | {} has its headquarters in which city? |
 
-### Arm C: unedited models
+### Arm C: unedited models (descriptive; no forecast)
 
-Calibration: Pythia-410M, Qwen3-0.6B, OLMo-2-0425-1B. **Evaluation (untouched checkpoints)**: Pythia-1.4B, Qwen3-1.7B,
-SmolLM2-1.7B, SmolLM3-3B, Qwen2.5-0.5B-Instruct. These are checkpoint holdouts, not family holdouts (Pythia and Qwen
-relatives sit on both sides). **Development hosts**: GPT-2 XL and Qwen3.5-0.8B; their base values shaped the statistic,
-so they are reported separately and are not evidence about false alarms. Every model at its stored precision, cast to
-float64 for the statistics; the hosts in float32, as their edited suspects are. **T\*** is the largest T_word over every
-MLP output matrix of the three calibration models, computed and written into the results before any evaluation model,
-host or Arm B write is scored. Also reported per model: F1's robust z of its largest member and the ratio of the largest
-to the second-largest top singular value.
+⚠ **Already measured before registration.** The DeepSeek cold review of this design (`reviews/cheap-part198-design-
+r1-ds-r1.md` in Journal, 2026-11-08 15:58 CT) went beyond reading and computed T_word on all ten models, with gamma for
+LayerNorms (the rule above): calibration maxima Pythia-410M 6.73 ('ton'), Qwen3-0.6B 10.33 (' set'), OLMo-2-0425-1B 12.10
+(' time'), so T\* = 12.10; evaluation maxima Pythia-1.4B 14.36 (' order'), Qwen3-1.7B 15.90 (' set'), SmolLM2-1.7B 10.92
+(' time'), SmolLM3-3B 13.08 ('bfd'), Qwen2.5-0.5B-Instruct 9.21 (' way'). Three of the five exceed T\*, so a fixed
+cross-model threshold on T_word false-alarms on ordinary words, and Qwen3-1.7B's natural 15.90 is above three of the
+pilot write's five edited layers. The earlier threshold forecasts (old 198.9 to 198.11) are withdrawn, not scored: their
+outcome was read before registration. Arm C stays as a descriptive replication: the registered code recomputes every
+value above with `stats198.py`, at stored precision, plus the two hosts in float32 (development models, reported
+separately), and reports any difference from the reviewer's numbers.
 
 ## Controls
 
@@ -182,7 +187,10 @@ single records take for each GPT-2 XL method and 21 of 24 writes take for `wsp`.
 - **S1**: the aimed positive control is named in at least 20 of its name-eligible records. If S1 fails, 198.4 is reported
   as uninformative about direction.
 - **S2**: the paired random control is localized in at most 2 of 24. If S2 fails, 198.6 and 198.7 are reported as
-  not specific to aimed writes.
+  not specific to aimed writes. A sanity check more than a test: the design reviewer built this control on the real
+  weights with the pilot write's singular values and got T_word 6.1 to 6.9 per layer against the host's natural 7.34,
+  so it is expected to pass; its layer-18 version reached T_max 13.95 on a function word, which shows the content filter
+  doing the work.
 
 ## Pilot (before registration; results disclosed in this section before any prediction is written)
 
@@ -285,15 +293,16 @@ not seen.
 AlphaEdit single edits of the same fact on GPT-2 XL were re-run saving their updates (same sizes as parts 1 and 2: ROME
 0.53, MEMIT 0.155 and AlphaEdit 0.238 at their largest layer). Each update is rank one. Read through `ln_f` and `wte` the
 same way, its direction scores z 4.4 to 4.9 with top tokens like 'lé', ' Mé', ' Chilean', ' Quebec' and 'Num', never
-"English", against base maxima of 5.1 to 7.7 for layers 13 to 17. The edited matrices' most concentrated directions are
-the base's own (same index, same tokens, z within 0.4). GPT-2 XL's base maxima over all 48 layers run 5.1 to 17.1, and the
+"English", against base maxima of 5.1 to 7.7 for layers 13 to 17. The edited matrices' most concentrated directions stay
+within 0.4 of the base's z; in some the index and token change (ROME, layer 17: ' answ' at 60 becomes 'interesting' at
+39; AlphaEdit, layer 16: ' prolifer' at 54 becomes '\r' at 51). GPT-2 XL's base maxima over all 48 layers run 5.1 to 17.1, and the
 high ones are function words in late layers (' to' at 36, newline at 47, ' of' at 38). So an untrained reading through the
 unembedding sees wsp's writes, which target the unembedding by construction at layers 17 to 21 of 24, and not gradient
 editors writing mid-network at layers 13 to 17 of 48, where a plain reading through the unembedding is known to be weak.
 
-**Two more base-free statistics, also null for the GPT-2 XL editors (`explore_pcs.py`, `explore-pcs.json`).** The top 12
-singular values of every edited matrix move under 2% (ROME at layer 17: the largest change is 6.74 to 6.87 at index
-11). Mean pairwise cosine similarity of the per-neuron output vectors (the statistic family of Youssef et al. App. C)
+**Two more base-free statistics, also null for the GPT-2 XL editors.** The top 12 singular values of every edited
+matrix move under 2% (`explore-gpt2.json`; ROME at layer 17: the largest change is the 11th, 6.738 to 6.865, 1.9%).
+PCS (`explore_pcs.py`, `explore-pcs.json`): mean pairwise cosine similarity of the per-neuron output vectors (the statistic family of Youssef et al. App. C)
 rises 1.7 times for ROME (rank 10 of 48 among siblings) and not at all for MEMIT or AlphaEdit; in the other orientation it
 does not rise. Youssef et al. report a much larger rise on GPT-2 XL; their exact definition may differ from these two
 orientations, which is a hypothesis, not checked.
@@ -356,30 +365,32 @@ stopword list.
 
 | # | Forecast | Denominator | Fails if | Confidence |
 |---|---|---|---|---|
-| 198.1 | F1 localizes at most 1 single edit for each of ROME, MEMIT and AlphaEdit, and none of the 4 mass-edit models. [0 of 1 each; batches 0 of 2] | took | 2 or more for any method, or any batch | 0.9 |
-| 198.2 | T_word localizes at most 1 single edit for each gradient editor, and none of the 4 mass-edit models. [0 of 1 each] | took | 2 or more for any method, or any batch | 0.85 |
-| 198.3 | PCS localizes at most 1 single edit for each gradient editor, and none of the 4 mass-edit models. [ranks 10 to 41] | took | 2 or more for any method, or any batch | 0.85 |
-| 198.4 | Not named by this static reader: the top eligible pair of the edited layer with the highest T_word names the object in at most 2 records for each gradient editor; the update's own top direction (base-required) likewise. [0 of 1 each, both] | took and name-eligible | 3 or more for any editor on either | 0.85 |
-| 198.5 | The aimed positive control is localized (layer 17 first by T_word) in at most 12 records. A forecast, not a validity check. [named, not localized] | took and name-eligible | 13 or more | 0.6 |
+| 198.1 | F1 localizes at most 1 single edit for each of ROME, MEMIT and AlphaEdit, and none of the counted mass-edit models. A confirmation across records of the pilot's norm finding (updates 0.04 to 0.72 times sigma1 against a floor of 1.11). [0 of 1 each; batches 0 of 2] | took | 2 or more for any method, or any batch | 0.9 |
+| 198.2 | Descriptive, no forecast: T_word localization of gradient edits. On GPT-2 XL the natural maxima at layers 43 to 46 (up to 9.79) sit above anything the pilot saw at layers 13 to 17, so a pass would say "outranked", not "blind". Reported with each edited layer's base and edited T_word. | took | — | — |
+| 198.3 | PCS localizes at most 1 single edit for each gradient editor, and none of the counted mass-edit models. [ranks 10 to 41] | took | 2 or more for any method, or any batch | 0.85 |
+| 198.4 | Not named by this static reader: the top eligible pair of the edited layer with the highest T_word names the object (strict) in at most 2 records for each gradient editor; the update's own top direction (base-required) likewise. Loose naming reported beside. [0 of 1 each, both] | took and name-eligible | 3 or more for any editor on either | 0.85 |
+| 198.5 | Descriptive, no forecast: whether the aimed positive control is localized. At the pilot's size layer 17 reached 8.32 against layer 45's fixed 9.79, so localization is close to impossible by construction. | took and name-eligible | — | — |
 | 198.6 | T_word localizes `wsp` writes in at least 20 records. [localized, 16.2 against 7.3] | took | fewer than 20 | 0.75 |
-| 198.7 | The localized layer's top eligible pair names the object in at least 18 records. [named] | took and name-eligible | fewer than 18 | 0.7 |
-| 198.8 | After the 10-write sequence, at least 5 of the name-eligible objects are named by an eligible pair among the top 64 of layers 17 to 21. [not piloted] | name-eligible of 10 | fewer than 5 | 0.5 |
-| 198.9 | At most 1 of the 5 evaluation models has an MLP output matrix with T_word above T\*. [not piloted] | 5 models | 2 or more | 0.5 |
-| 198.10 | At least 20 `wsp` writes raise a threshold alarm (an edited layer above T\*). [16.2; T\* not computed] | took | fewer than 20 | 0.65 |
-| 198.11 | At least 16 `wsp` writes are detected with naming (threshold alarm in the localized layer, which names the object). | took and name-eligible | fewer than 16 | 0.55 |
+| 198.7 | The top eligible pair of the highest-T_word edited layer names the object (strict) in at least 18 records. Not independent of 198.6: both lean on the same layers. [named] | took and name-eligible | fewer than 18 | 0.7 |
+| 198.8 | After the 10-write sequence, at least 5 of the name-eligible objects are named (strict) by an eligible pair among the top 64 of layers 17 to 21. Statistics are also read after every write, so a loss can be told apart from an overwrite. [not piloted] | name-eligible of 10 | fewer than 5 | 0.5 |
+| 198.9 to 198.11 | Withdrawn before registration: the cross-model threshold forecasts. Their outcome was measured by the design reviewer (Arm C). | — | — | — |
+
+The null for 198.1 and 198.3 is not uniform ranks: a host's base ranks are fixed (F1 ranks 19 to 30 and PCS ranks 13 to
+41 for layers 13 to 17 in the pilot) and an edit that moves a value by under 2% cannot change them, so a localization
+here is evidence the edit moved the statistic, not chance from five tries.
 
 **Headline and its withdrawal.** The headline would be: "at shipped settings, ROME, MEMIT and AlphaEdit edits on GPT-2
-XL are not localized by these base-free statistics and not named by this static reader, while `wsp` writes on
-Qwen3.5-0.8B are localized and named from the suspect model alone." It needs 198.1 to 198.4 to pass with S1 passing, and
-198.6 and 198.7 to pass with S2 passing. Any of those failing withdraws the part of the headline it supports, and each
-failed forecast stays in the write-up as a failure. A usable-detector claim additionally needs 198.9 to 198.11.
+XL are not localized by F1 or PCS and not named by this static reader, while `wsp` writes on Qwen3.5-0.8B are localized
+and named from the suspect model alone; a fixed cross-model threshold on the same reading false-alarms on unedited
+models (measured before registration)." It needs 198.1, 198.3 and 198.4 to pass with S1 passing, and 198.6 and 198.7
+to pass with S2 passing. Any of those failing withdraws the part it supports, and each failed forecast stays in the
+write-up as a failure. No usable-detector claim is made.
 
 ## Reading rules
 
 - The gate failing stops the part before any forecast is scored.
 - Every forecast reports attempted n, took k, already satisfied, name-eligible m and successes; rates are conditional on
   took (and, for naming, on name-eligible), which is a success-conditional rate, not attempted-write sensitivity.
-- T\* is written into the results before any evaluation model, host or Arm B write is scored.
 - Localization is never called an alarm. The two hosts' unedited values are development checks, not false-alarm
   evidence.
 - 198.1 to 198.4 passing means these statistics and this reader are blind to these editors at their shipped settings on
@@ -424,3 +435,24 @@ failed forecast stays in the write-up as a failure. A usable-detector claim addi
    stated; the illustrative Fisher p-value removed in favour of exact intervals and paired counts.
 Build contract: the EasyEdit method sources, configs, second moments, tokenizers, stopword list and templates are pinned
 in `manifest.json`; AlphaEdit keeps `reset_cache=True`; editor state is checked by re-running each process's first record.
+
+## Revision 2 (2026-11-08, after the DeepSeek cold review, Journal `reviews/cheap-part198-design-r1-ds-r1.md`; before any registered data)
+
+The review read revision 0; findings already closed by revision 1 (missing templates, draw, took transition, norm rule,
+headline needing 198.7) are not repeated. New in revision 2:
+1. Arm C was measured by the reviewer before registration (T\* = 12.10; 3 of 5 evaluation models above it). The
+   threshold forecasts are withdrawn and Arm C is descriptive; the cross-model threshold is not an endpoint.
+2. 198.2 (T_word localization of gradient edits) and 198.5 (aimed-control localization) became descriptive: layer
+   position decides them before any record is edited.
+3. Naming is strict (top token) as primary, top three as secondary; naming is read from the highest-T_word edited layer
+   for every record; 198.7 is marked as leaning on the same layers as 198.6.
+4. EasyEdit pinned to commit `5c519afb14e39c7f70bc5536ebd777a62d8493bf`, three files checked byte-identical.
+5. Mass batches need 8 of 10 to take; 198.8 reads statistics after every write; F1's robust z is defined; the null for
+   198.1 and 198.3 is stated (fixed base ranks, not uniform chance); two pilot-text errors fixed (the index and token
+   claim for edited directions, and the source and index of the 1.9% singular-value change).
+6. Cross-layer consensus added as an exploratory statistic with no forecast.
+7. The pilot's update tensors (about 450 MB) are external artifacts and are not committed; the registered run
+   regenerates its own updates from the pinned editors, and `stats198.py` is checked against the pilot's base-only
+   values, which need no update tensors.
+Not taken: the reviewer's suggestion to define a threshold against the host's own base T_word, because it needs the
+base and this part's endpoints are base-free.
