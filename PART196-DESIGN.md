@@ -139,12 +139,16 @@ large enough to be worth an edit?
   "practically equivalent" (interval of D minus B entirely inside -3 to +3 points, a bound fixed here); otherwise
   "inconclusive". A missed 196.4 is not evidence that calibration closes the gap unless the second outcome holds.
 - Calibration is credited only for an observed improvement: B minus A with its interval above 0.
-- B is the calibrated cosine family defined in Method. A supported gap says the model's embedding holds style information
-  that this calibrated cosine verdict does not use; with 196.5 holding, it says the bottleneck is the verdict's decision
-  rule rather than missing label-space information. Neither is a claim that the model lacks the knowledge, nor by itself
-  a case for an edit.
+- B is the calibrated cosine family defined in Method. "Gap supported" by itself says only that the probe D outperformed
+  this calibrated verdict. The stronger reading, that the final embedding holds style information this verdict does not
+  use, also needs D to be competent: the lower end of D's 95% interval above chance (14.3%). Without that, the result is
+  reported as one classifier outperforming the other.
+- 196.5 is a point forecast and is scored as one. Attributing a gap to B's decision rule rather than to missing
+  label-space information needs more: a paired non-inferiority bound, the lower end of the 95% interval of B56 minus D
+  above -3 points (B56 beating D by more than 3 points also satisfies it). Without that bound the attribution is not made.
+  Neither reading is a claim that the model lacks the knowledge, nor by itself a case for an edit.
 - If T is above 25%, words still carry style in this pool, and every readout's number is reported beside T's with that
-  caveat.
+  caveat. A low T does not prove that content plays no part; it bounds what one transcript classifier finds.
 - Balanced accuracy is compared with balanced accuracy and AUC with AUC, never across. Per-speaker numbers are always
   reported beside the four-speaker mean.
 
@@ -168,5 +172,7 @@ large enough to be worth an edit?
   read by two speakers and the open risk was content, not overlap; a transcript-only readout T measures content; the
   gates are split into deterministic stops and reported diagnostics; 196.4 has three outcomes with a fixed equivalence
   bound; calibration is credited only for an observed A-to-B gain; AUC is computed within each speaker and the primary
-  numbers are four-speaker means; F's universe and sign and H's unvoiced-pitch rule are fixed.
+  numbers are four-speaker means; F's universe and sign and H's unvoiced-pitch rule are fixed. Alden's re-read of v2
+  (#6) narrowed two interpretations: the "embedding holds information" reading needs D above chance, and the
+  decision-rule attribution needs a non-inferiority bound on B56 minus D.
 - The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.
