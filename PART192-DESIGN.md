@@ -80,7 +80,7 @@ Run reads, screen, zero, and push with Part 39's defaults: reads batch 4; zero a
 
 The `screen` stage was killed twice by the job runner's RAM guard (Windows available RAM under 2 GB), at 00:44 and 01:10,
 each time about three minutes after the chat model's screen file was written, while the base model was being screened in
-the same process. The first time a host job ran beside it in WSL; the second time nothing else was running. Change: the
+the same process. The first time a host job (the AUC rescore) ran beside it in WSL; the second time no host job was running, but two code-writing worker agents and a reviewer agent were live in WSL (each briefed to stay under about 500 MB), so WSL memory may have contributed both times. Change: the
 wrapper takes `screen --screen-model chat` or `--screen-model base` and runs only that model's half of Part 39's
 `run_screen` (its `_screen_one_model`, unchanged), so each model is screened in its own process. The two halves are
 recorded as `screen:chat` and `screen:base`, and the host check before scoring expects both. The computation is
