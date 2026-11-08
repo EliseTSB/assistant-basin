@@ -1,0 +1,4 @@
+# Part 191: Part 153 on the eager kernel (PART191-DESIGN.md). Each question's 20 pushed rows in chunks 8, 8, 2, 2.
+python3 -I tools/launch_arc.py 191 --step "-I -B part191\\run191.py --device xpu --units results\\part112\\units.json --medians results\\part112\\medians.json --out results\\part191\\answers.jsonl" --copy neuron_report.py part86/common86.py part86/triage86.py part148/battery148.py part153/battery153.py part153/score153.py part191/__init__.py part191/run191.py results/part112/units.json results/part112/medians.json
+# Host-side score, as Part 153's:
+python3 -I -B part153/score153.py --answers results/part191/answers.jsonl --out results/part191
