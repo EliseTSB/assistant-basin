@@ -20,9 +20,8 @@ questions are now:
 2. Does a reading through the unembedding find writes that aim at the answer's output direction? `wsp` builds its targets
    from the answer token's unembedding row. On 24 new facts, does a content-word token score, computed from the suspect
    model alone, rank an edited layer first and name the written token?
-3. How often does an unedited model already carry a matrix that would pass the same test? A threshold is set on three
-   unedited models and checked on five untouched checkpoints; the two hosts are reported separately, as development
-   models.
+3. What do unedited models carry? Every Arm C value was measured by the design reviewer before registration, so Arm C
+   is a descriptive replication, not a held-out test; the two hosts are reported separately, as development models.
 
 ## Prior art and existing data
 
@@ -86,9 +85,17 @@ and of object; `wsp`, the first token ID of the answer as `wsp` encodes it (`enc
 direction-sign pair **names** the object (primary, strict) when its top token ID is one of the target IDs; it names it
 **loosely** (secondary, reported beside) when a target ID is among its three highest-logit token IDs. A record is
 **name-eligible** only if at least one target ID passes the eligibility filter above; ineligible records are counted and
-left out of every naming rate, so an unnameable object is never evidence about direction. Which pair is read: the top
-eligible pair of the edited layer with the highest T_word (for a single-layer edit, its one layer), whether or not that
-layer is localized, so naming is defined for every record.
+left out of every naming rate, so an unnameable object is never evidence about direction. **The blind reader** (the
+primary endpoint for `wsp`, and the reader for every suspect): without any edit metadata, take the suspect's layer with
+the strictly highest T_word across all its MLP output matrices, then that layer's top eligible pair, and output (layer,
+token). Only then score it: **localized** if the layer is an edited one, **named** if the token is a target ID, and
+**blind joint success** if both. No unique highest layer, or no eligible pair anywhere: the reader outputs nothing and the
+record is a failure. **The oracle reader** (secondary, a known-location mechanism probe): the top eligible pair of the
+edited layer with the highest T_word, scored for naming only; 198.4 uses it.
+
+**Ties inside a score**, target-independent and frozen: a token argmax with equal logits takes the smallest token ID, and
+the top three are ordered by logit, then token ID; equal z between pairs is broken by the smaller direction index, then
+sign +1 before -1. Matrix-level ties are as in localization.
 
 **Base diagnostics, reported beside every edited value** (base-required, never part of a detection endpoint): each
 edited layer's base T_word, its base rank, and whether the base already names the record's object.
@@ -168,7 +175,7 @@ separately), and reports any difference from the reviewer's numbers.
 - **Do-nothing and restoration**: see Arm A (bit-for-bit restore, first record re-run) and Arm B (exact-zero undo).
 - **Matched random updates (Arm B null), one suspect per write**: for each `wsp` write, a suspect model with all five
   edited layers replaced by updates with that layer's singular values and random orthonormal singular vectors (seed 198
-  plus the case ID), scored with the same any-of-five localization and threshold events as the paired real write. This
+  plus the case ID), scored by the same blind reader and any-of-five localization as the paired real write. This
   gives 24 write-level controls. If they are localized, the reading is not shown to be specific to an aimed direction.
 - **Aimed positive control (Arm A), matched geometry**: for each record, a rank-one update at layer 17 with the input
   (right) direction and spectral norm of that record's ROME update, and the output direction replaced by the centred,
@@ -371,13 +378,17 @@ stopword list.
 | 198.4 | Not named by this static reader: the top eligible pair of the edited layer with the highest T_word names the object (strict) in at most 2 records for each gradient editor; the update's own top direction (base-required) likewise. Loose naming reported beside. [0 of 1 each, both] | took and name-eligible | 3 or more for any editor on either | 0.85 |
 | 198.5 | Descriptive, no forecast: whether the aimed positive control is localized. At the pilot's size layer 17 reached 8.32 against layer 45's fixed 9.79, so localization is close to impossible by construction. | took and name-eligible | — | — |
 | 198.6 | T_word localizes `wsp` writes in at least 20 records. [localized, 16.2 against 7.3] | took | fewer than 20 | 0.75 |
-| 198.7 | The top eligible pair of the highest-T_word edited layer names the object (strict) in at least 18 records. Not independent of 198.6: both lean on the same layers. [named] | took and name-eligible | fewer than 18 | 0.7 |
+| 198.7 | Blind joint success: the blind reader's layer is an edited one AND its token names the object (strict), with no edit metadata used before scoring. The oracle reader's naming is reported beside as a diagnostic. [joint success: layer 20, 'English'] | took and name-eligible | fewer than 18 | 0.7 |
 | 198.8 | After the 10-write sequence, at least 5 of the name-eligible objects are named (strict) by an eligible pair among the top 64 of layers 17 to 21. Statistics are also read after every write, so a loss can be told apart from an overwrite. [not piloted] | name-eligible of 10 | fewer than 5 | 0.5 |
 | 198.9 to 198.11 | Withdrawn before registration: the cross-model threshold forecasts. Their outcome was measured by the design reviewer (Arm C). | — | — | — |
 
 The null for 198.1 and 198.3 is not uniform ranks: a host's base ranks are fixed (F1 ranks 19 to 30 and PCS ranks 13 to
-41 for layers 13 to 17 in the pilot) and an edit that moves a value by under 2% cannot change them, so a localization
-here is evidence the edit moved the statistic, not chance from five tries.
+41 for layers 13 to 17 in the pilot), so a localization is evidence that an edit moved the statistic past every sibling,
+not chance from five tries. For F1 the pilot gives a measured margin: by the triangle inequality an edited layer needs an
+update of at least 1.11 to 1.71 times its sigma1 to pass the largest sibling, against 0.04 to 0.72 measured. PCS has no
+such bound, and neither bound is a guarantee for new facts.
+
+A mass-edit forecast with no batch reaching the 8-of-10 take gate is **not evaluable**, never a pass.
 
 **Headline and its withdrawal.** The headline would be: "at shipped settings, ROME, MEMIT and AlphaEdit edits on GPT-2
 XL are not localized by F1 or PCS and not named by this static reader, while `wsp` writes on Qwen3.5-0.8B are localized
@@ -393,8 +404,8 @@ write-up as a failure. No usable-detector claim is made.
   took (and, for naming, on name-eligible), which is a success-conditional rate, not attempted-write sensitivity.
 - Localization is never called an alarm. The two hosts' unedited values are development checks, not false-alarm
   evidence.
-- 198.1 to 198.4 passing means these statistics and this reader are blind to these editors at their shipped settings on
-  these records, not that the edits are undetectable. Small counts on two small hosts are not population-wide proof.
+- 198.1, 198.3 and 198.4 passing means these statistics and this reader are blind to these editors at their shipped
+  settings on these records, not that the edits are undetectable. 198.2 and 198.5 have no verdict. Small counts on two small hosts are not population-wide proof.
 - Every claim is scoped to GPT-2 XL and Qwen3.5-0.8B, these editors at their shipped settings, CounterFact records and
   these statistics. Nothing here bears on edits designed to avoid detection, and none is built.
 - Success, failure and restart records are all published, not only completed cases.
@@ -408,9 +419,9 @@ write-up as a failure. No usable-detector claim is made.
   edits it cannot; that would need text and training, and is out of scope.
 - The content-token filter is English and ASCII, and its stopword list was written after the pilot showed function words
   among the unedited maxima. It is fixed in `stats198.py` before registration and not changed after.
-- T_word and its filter were chosen from one `wsp` write and the two hosts' base values; the 24 new writes, the random
-  control and the five untouched checkpoints are the test. Five checkpoints, with relatives in the calibration set, can
-  catch a common false alarm, not estimate a small rate.
+- T_word and its filter were chosen from one `wsp` write and the two hosts' base values; the 24 new writes and their
+  random controls are the test. Arm C's ten models were all measured before registration by the design reviewer, so
+  nothing in this part is a held-out false-alarm test.
 - Detection is ranking among siblings in one model; it says nothing about separating an edit from fine-tuning, which
   changes every matrix at once.
 - `llm-forensics`' own detectors are not run here: its token reading is an agent tool, not a scored statistic, and its
@@ -429,8 +440,9 @@ write-up as a failure. No usable-detector claim is made.
    static reader".
 4. Sensitivity checks S1 and S2 are separate from the forecasts; 198.5 is now a forecast only; the headline depends on
    198.1 to 198.4, 198.6 and 198.7 with S1 and S2.
-5. Arm C split into 3 calibration models, 5 untouched evaluation checkpoints and 2 development hosts; hosts scored in
-   float32; no model down-cast.
+5. Arm C split into 3 calibration models, 5 evaluation checkpoints and 2 development hosts; hosts scored in float32; no
+   model down-cast. (Superseded in revision 2: all ten were measured by the design reviewer, and Arm C became
+   descriptive.)
 6. Every case ID frozen in `cases198.json` before any outcome; took requires a before-to-after transition; denominators
    stated; the illustrative Fisher p-value removed in favour of exact intervals and paired counts.
 Build contract: the EasyEdit method sources, configs, second moments, tokenizers, stopword list and templates are pinned
@@ -443,7 +455,7 @@ headline needing 198.7) are not repeated. New in revision 2:
 1. Arm C was measured by the reviewer before registration (T\* = 12.10; 3 of 5 evaluation models above it). The
    threshold forecasts are withdrawn and Arm C is descriptive; the cross-model threshold is not an endpoint.
 2. 198.2 (T_word localization of gradient edits) and 198.5 (aimed-control localization) became descriptive: layer
-   position decides them before any record is edited.
+   position makes localization very unlikely for them (the pilot's natural maxima sit at layers 43 to 46).
 3. Naming is strict (top token) as primary, top three as secondary; naming is read from the highest-T_word edited layer
    for every record; 198.7 is marked as leaning on the same layers as 198.6.
 4. EasyEdit pinned to commit `5c519afb14e39c7f70bc5536ebd777a62d8493bf`, three files checked byte-identical.
@@ -456,3 +468,19 @@ headline needing 198.7) are not repeated. New in revision 2:
    values, which need no update tensors.
 Not taken: the reviewer's suggestion to define a threshold against the host's own base T_word, because it needs the
 base and this part's endpoints are base-free.
+
+## Revision 3 (2026-11-08, after Alden's scoped hold, council `part198-design-2026-11-08` #5; before any registered data)
+
+1. The `wsp` endpoint is a blind joint one: the suspect's single highest-T_word layer and its top eligible pair are chosen
+   with no edit metadata, then scored for localization and naming; 198.7 is that joint success. Oracle edited-layer
+   naming stays as a secondary diagnostic and as 198.4's known-location probe.
+2. Wording: Arm C is a descriptive replication, not a held-out test, everywhere it is mentioned; the random control is
+   scored by the blind reader, not by a threshold. Version labels, so the numbers are not conflated: in revision 0
+   (`4b101c9`), 198.9 was the random control (now S2) and 198.10 to 198.11 the threshold forecasts; in revision 1
+   (`ac73d7b`), 198.9 to 198.11 were the threshold forecasts, and its 198.9 allowed at most 1 of 5 evaluation models
+   above T\*. The reviewer's disclosed 3 of 5 contradicts that draft's forecast, which was never registered; it was
+   withdrawn after the pre-registration measurement.
+3. Ties inside a score are broken by a frozen, target-independent rule (smallest token ID; smaller direction index;
+   sign +1 first); no unique layer or no eligible pair is a reader failure; a mass forecast with no countable batch is
+   not evaluable; the rank-invariance claim is replaced by F1's measured margin with no generic PCS bound; the Reading
+   rules no longer speak of 198.2 passing.
