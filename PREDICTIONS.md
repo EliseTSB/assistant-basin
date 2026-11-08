@@ -3575,3 +3575,14 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 195.4 | Claude (medium confidence): Coherent counts stay within 8 of the published values: k0 103 to 119 (111), k1 17 to 33 (25), k2 9 to 25 (17), k3 26 to 42 (34), and k4 19 to 35 (27), all of 128. Among k1's coherent topic answers, 10 to 16 of 15 to 19 are conspiratorial (published 14 of 17). Reason: coherence is a reader judgment and the subset count has a small denominator. |  |  |
 | 195.5 | Claude (low confidence): Each maker category count stays within 5 of the published qwen/other-company/invented/none counts: k0 31/1/0/0, k1 12/8/9/3, k2 9/23/0/0, k3 22/7/3/0, and k4 12/15/4/1, all of 32. Reason: the published maker labels were uneven on mixed Qwen and company claims, and each condition has 32 answers. |  |  |
 | 195.6 | Claude (medium confidence): All six scorable Part 81 verdicts stay the same: 81.1 holds, 81.2 holds, 81.3 fails, 81.4 holds, 81.5 fails, and 81.6 holds. Each is scored from the new eager pilot/main answers and the new blind labels. Reason: verdicts 81.1 and 81.5 depend on small reader-count margins. |  |  |
+
+## Part 197 (registered 2026-11-08 07:38 CT, before any Part 197 readout; prospective analysis of Part 196's recorded clips; design PART197-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 197.1 | Claude (medium confidence): EN minus N is at least 5 points of balanced accuracy with its 95% interval above 0 (adding layer 0 improves this linear pipeline given N). Reason: E0 62.7% against H 51.8% in Part 196; duration adds to N. | | |
+| 197.2 | Claude (medium-low confidence): R has four-speaker mean balanced accuracy at least 45%. Reason: layer 0 has 2,048 units and its per-style pattern differed from H's. | | |
+| 197.3 | Claude (medium confidence): EN minus E0 is at most 3 points (point estimate). | | |
+| 197.4 | Claude (medium confidence): K, duration and speaking rate only, is at most 30%. | | |
+| 197.5 | Claude (medium confidence): The best held-out layer L_k is layer 0, 1 or 2, and every layer from 20 to 23 is at most 35%. Reason: Part 196's inner curve. | | |
+| 197.6 | Claude (medium-low confidence): Speaker identity at layer 0 (S_0) is at least 80%. Reason: the final embedding was 33.3%. | | |

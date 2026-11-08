@@ -1,7 +1,7 @@
 # Part 197: does EmbeddingGemma 2's layer 0 add to a linear style readout beyond simple acoustics and clip length?
 
 Procedure: v1
-Registered <time from date> CT (draft; not registered)
+Registered 2026-11-08 07:38 CT
 
 ## Question
 
@@ -74,7 +74,8 @@ nuisance features; both are statements about this fixed linear pipeline.
   selected units, B's phrasing choices, E's selected layers, verdicts) and every numeric field within 1e-9 absolute
   (every readout, per-speaker value, bootstrap interval and the 96 inner layer scores), with the same thread counts as
   Part 196 (6). One regeneration is run before registration to measure the actual largest difference, which is
-  recorded here; (c) a digest of the records (sorted ids with each record's `audio_sha256` and the SHA-256 of
+  recorded here: measured 2026-11-08 07:37 CT with `--gate1-only`, identity and digest passed, 0 mismatches, largest
+  numeric difference 0.0 (Part 196's results.json regenerated exactly); (c) a digest of the records (sorted ids with each record's `audio_sha256` and the SHA-256 of
   its `act_mean`, `emb`, `acoustic` and `duration_seconds` bytes, plus the SHA-256 of the work folder's
   `durations.json`, which decides the active clip set and is required, with no fallback) is computed before
   registration and committed in
