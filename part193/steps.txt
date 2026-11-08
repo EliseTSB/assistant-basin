@@ -30,6 +30,7 @@ systemd-run --user --scope --wait -p MemoryMax=8G -- env HF_HUB_OFFLINE=1 PYTHON
   --vis-audio /mnt/e/neuron-probe/vocalimitationset/audio \
   --ffmpeg /home/elisepc/eg2-extra/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 \
   --results results/part193/weight_edit_results.json \
+  --out-other results/part193/other_items.json \
   --save-edits results/part193/edits.npz
 ```
 

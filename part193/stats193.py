@@ -525,7 +525,7 @@ def no_op_edit(tensor: np.ndarray, delta: np.ndarray) -> np.ndarray:
 def candidate_f3(
     base_data: dict[str, Any], neuron: int,
     gate_row: np.ndarray, up_row: np.ndarray, down_column: np.ndarray,
-    other_layer_maxima: np.ndarray, other_layer_z: np.ndarray,
+    other_layer_maxima: np.ndarray,
 ) -> dict[str, Any]:
     features = base_data["features"].copy()
     gate_row = np.asarray(gate_row, dtype=np.float64)
@@ -540,7 +540,7 @@ def candidate_f3(
     neuron_rank = rank_value(target_score, np.delete(scores, neuron))
     layer_top = float(np.max(scores))
     layer_score = robust_z(layer_top, other_layer_maxima)
-    layer_rank = rank_value(layer_score, other_layer_z)
+    layer_rank = rank_value(layer_top, other_layer_maxima)
     return {
         "features": {name: float(value) for name, value in zip(F3_FEATURES, features[neuron])},
         "feature_z": {name: float(value) for name, value in zip(F3_FEATURES, z_values[neuron])},
@@ -804,6 +804,76 @@ def _thresholds_for_matrix_ladder(
     return output
 
 
+def prediction_193_4(
+    w2_found: list[bool] | tuple[bool, ...],
+    w2c_found: list[bool] | tuple[bool, ...],
+    doses: tuple[float, ...] = W2_DOSES,
+) -> dict[str, Any]:
+    """Evaluate 193.4 from both suffix thresholds and the full found patterns."""
+    w2_pattern = [bool(found) for found in w2_found]
+    w2c_pattern = [bool(found) for found in w2c_found]
+    if not doses or len(w2_pattern) != len(doses) or len(w2c_pattern) != len(doses):
+        raise ValueError("W2, W2c and dose ladders must have equal nonzero lengths")
+
+    w2_threshold = threshold_summary(w2_pattern, doses)["threshold"]
+    w2c_threshold = threshold_summary(w2c_pattern, doses)["threshold"]
+    w2_is_never = w2_threshold == "never"
+    w2c_is_never = w2c_threshold == "never"
+    if w2_is_never and w2c_is_never:
+        within_one_step = True
+    elif w2_is_never or w2c_is_never:
+        within_one_step = False
+    else:
+        w2_index = doses.index(float(w2_threshold))
+        w2c_index = doses.index(float(w2c_threshold))
+        within_one_step = abs(w2_index - w2c_index) <= 1
+
+    # Treat each numeric threshold as part of the band. A "never" threshold is
+    # one position after the last dose, so two "never" thresholds leave the
+    # entire measured ladder outside the band and require matching patterns.
+    w2_index = len(doses) if w2_is_never else doses.index(float(w2_threshold))
+    w2c_index = len(doses) if w2c_is_never else doses.index(float(w2c_threshold))
+    band_start, band_end = sorted((w2_index, w2c_index))
+    outside_indices = [
+        index for index in range(len(doses))
+        if index < band_start or index > band_end
+    ]
+    agree_outside_band = all(
+        w2_pattern[index] == w2c_pattern[index] for index in outside_indices
+    )
+    holds = within_one_step and agree_outside_band
+    return {
+        "W2": {"threshold": w2_threshold, "found_pattern": w2_pattern},
+        "W2_control": {"threshold": w2c_threshold, "found_pattern": w2c_pattern},
+        "thresholds_within_one_ladder_step": within_one_step,
+        "patterns_agree_outside_threshold_band": agree_outside_band,
+        "outside_band_doses": [float(doses[index]) for index in outside_indices],
+        "holds": holds,
+        "verdict": "holds" if holds else "fails",
+    }
+
+
+def format_prediction_193_4(result: dict[str, Any]) -> str:
+    """Render the prediction's patterns and outcome on one console line."""
+    def bits(pattern: list[bool]) -> str:
+        return "".join("1" if found else "0" for found in pattern)
+
+    def threshold(value: float | str) -> str:
+        return "never" if value == "never" else f"{float(value):g}"
+
+    w2 = result["W2"]
+    w2c = result["W2_control"]
+    return (
+        "193.4: 1=found W2=" + bits(w2["found_pattern"])
+        + " W2c=" + bits(w2c["found_pattern"])
+        + " thresholds=(" + threshold(w2["threshold"])
+        + "," + threshold(w2c["threshold"]) + ")"
+        + " within_one_step=" + str(result["thresholds_within_one_ladder_step"])
+        + " agree_outside_band=" + str(result["patterns_agree_outside_threshold_band"])
+        + " verdict=" + ("PASS" if result["holds"] else "FAIL")
+    )
+
+
 def _serialize_top_neurons(data: dict[str, Any], limit: int = 10) -> list[dict[str, Any]]:
     rows = []
     for index in data["top_indices"][:limit]:
@@ -846,16 +916,13 @@ def _run_w1(handle, records, neuron_data, edits, r1_at_dose_one):
 
     layer_maxima = np.asarray([neuron_data[layer]["top_score"] for layer in LAYERS])
     other_layer_maxima = np.delete(layer_maxima, 20)
-    other_layer_z = np.asarray([
-        neuron_data[layer]["layer_f3_z"] for layer in LAYERS if layer != 20
-    ], dtype=np.float64)
     ladder = {}
     for dose in W1_DOSES:
         down_candidate = scale_w1_down_column(base_down, neuron, down_column, dose)
         down_scores = matrix_candidate_results(down_key, down_candidate, records)
         f3 = candidate_f3(
             neuron_data[20], neuron, gate_row, up_row, down_column * dose,
-            other_layer_maxima, other_layer_z,
+            other_layer_maxima,
         )
         f3["found_neuron"] = f3["neuron_rank"]["found"]
         f3["found_layer"] = f3["layer_rank"]["found"]
@@ -987,6 +1054,10 @@ def run_analysis(base_path: Path, saved_edits_path: Path, step0_results_path: Pa
         )
 
     f3_null = f3_layer_null(neuron_data)
+    prediction_193_4_result = prediction_193_4(
+        [w2["doses"][str(dose)]["matrix"]["F1"]["found_among_siblings"] for dose in W2_DOSES],
+        [w2c["doses"][str(dose)]["matrix"]["F1"]["found_among_siblings"] for dose in W2_DOSES],
+    )
     for row in f3_null:
         data = neuron_data[row["layer"]]
         row["neuron_statistics"] = {
@@ -1030,6 +1101,7 @@ def run_analysis(base_path: Path, saved_edits_path: Path, step0_results_path: Pa
         },
         "null_f3_by_layer": f3_null,
         "edits": {"W1": w1, "W2": w2, "W2_control": w2c},
+        "predictions": {"193.4": prediction_193_4_result},
         "synthetic_rank_one": synthetic,
         "computation": {
             "float64_svd_metric_count": matrix_svd_count,
@@ -1070,6 +1142,7 @@ def main(argv: list[str] | None = None) -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, indent=2, allow_nan=False) + "\n")
     print(f"wrote {args.output}")
+    print(format_prediction_193_4(output["predictions"]["193.4"]))
     print(json.dumps(output["gates"], indent=2, allow_nan=False))
     return 0
 

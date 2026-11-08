@@ -86,7 +86,8 @@ not found. The per-matrix baseline z scores remain leave-one-out scores for the 
 
 **Reference-free statistics, per neuron** (MLP only, neuron j of a layer): its gate-row norm, up-row norm, down-column
 norm, and the cosine of its gate row with its up row. Each feature is a robust z among the layer's neurons; the neuron's
-score F3 is the largest absolute z. A layer's F3 is its top neuron's score as a robust z among the 24 layers. The excess
+score F3 is the largest absolute z. A layer's F3 is its top neuron's score as a robust z among the 24 layers. For an
+edited layer, its rank is computed by comparing its raw top-neuron F3 with the raw maxima from the other 23 layers. The excess
 kurtosis of each vector is reported descriptively and kept out of F3, because trained neurons already carry kurtosis
 outliers that dominate any score that includes it (pilot (b)). Natural down-column-norm outliers set a floor F3 the
 published W1 neuron cannot pass unless its down column is longer than any trained one (pilot (e)), so F3 is reported
@@ -100,7 +101,8 @@ later part. R1 uses the saved difference's dtype epsilon times max(shape) times 
 upcasting for SVD, and reports sigma2/sigma1 for each nonzero matrix difference.
 
 **Localization outcome.** For a matrix-level statistic, the edited matrix's rank among its siblings (1 = found) and among
-all ranked matrices. For F3, the edited neuron's rank among its layer's neurons and the edited layer's rank among the 24.
+all ranked matrices. For F3, the edited neuron's rank among its layer's neurons and the edited layer's rank against the
+other layers' raw top-neuron F3 values; the edited layer's robust-z score is reported as well.
 For each statistic and edit, the full rank at every dose is reported, and the detection threshold is the smallest dose
 from which the edited matrix (or neuron) ranks first at every larger dose in the ladder, or "never" if the top dose does
 not rank first. Any dose that ranks first below the threshold, and any dip, is reported beside it. "Never" is a result and
@@ -118,7 +120,9 @@ moves (pilot (a)); it is reported at every dose like the others.
   fit is not reproducible on this machine or the copy differs; the part then stops before any statistic is read.
 - Gate 2 (do-nothing edit): construct dose-zero candidates from the base plus zero times each saved W1, W2 and W2c
   delta, compare those candidates bitwise with the corresponding base matrices, and confirm R1 finds no changed
-  matrix. The unedited tensors receive no write and are not loaded.
+  matrix. The unedited tensors receive no write and are not loaded. For any finite delta, multiplying by zero makes
+  this an inherent check of the dose-zero construction, not an independent check of delta contents; Gate 1's
+  provenance checks bind the saved arrays.
 - Gate 3 (the edit is where we think): at dose 1, R1 finds exactly layer 20's `down_proj` for W2 and W2c, and exactly
   layer 20's `gate_proj`, `up_proj` and `down_proj` for W1. Measured nonzero support is exactly row 1083 in gate and up
   and column 1083 in down.
@@ -165,7 +169,7 @@ moves (pilot (a)); it is reported at every dose like the others.
 | 193.1 | Without the base, F1's detection threshold for W2 (layer 20's `down_proj` first among the 24 `down_proj` matrices) is dose 8 or higher, or never within the ladder. | medium: the pilot reports W2-sized deltas leave the matrix statistics nearly unmoved up to dose 2. | Claude |
 | 193.2 | F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. | medium-high: one neuron of 2048 barely moves a matrix's spectrum. | Claude |
 | 193.3 | F1 ranks a synthetic rank-one edit at W2's Frobenius norm (dose 1) first among its siblings in at most 4 of 24 placements. | medium: the pilot suggests an edit of this size is small next to the trained spectrum. | Claude |
-| 193.4 | W2's and W2c's F1 detection thresholds are within one ladder step of each other, both "never" counting as equal. | medium: the two deltas are rank one with similar norms and differ in the fitted key direction. | Claude |
+| 193.4 | W2's and W2c's F1 detection thresholds are within one ladder step of each other (both "never" count as equal), and their found/not-found outcomes agree at every dose outside the inclusive band between the thresholds. | medium: the two deltas are rank one with similar norms and differ in the fitted key direction. | Claude |
 
 ## Reading rules
 
@@ -173,6 +177,8 @@ moves (pilot (a)); it is reported at every dose like the others.
 - The pilot looked at the unedited model; predictions it informs say so, and the write-up repeats the pilot numbers beside
   the run's. F3 for W1 is descriptive: a "not found" there reflects natural outliers the pilot measured, not the edit.
 - A prediction about dose 1 is read at dose 1 only; thresholds are reported from the whole ladder.
+- 193.4 holds only when both its threshold-distance and outside-band found-pattern conditions hold. The band includes
+  both numeric thresholds; when both thresholds are "never", the patterns must agree across the full ladder.
 - "First" means rank 1 with no tie; a tie counts as not found.
 - The headline is about localization at the published strength, then the threshold multiples. If the synthetic family
   is found and the real edits are not, the headline says the statistics see random rank-one edits and not these fitted
@@ -189,6 +195,9 @@ moves (pilot (a)); it is reported at every dose like the others.
 - W1's ladder scales only the down column with the rows fixed at their saved values, as the script's own strength
   setting does; it is not the same family as scaling W2's delta.
 - `q_proj` and `o_proj` are wider in four layers, which can make those layers natural outliers on those roles.
+- At very small magnitudes, float32 rounding can inflate a live W2 delta's apparent R1 rank: at sigma 1e-4 the review
+  measured rank 239 for the live difference versus rank 1 for its exact cast. The reported sigma2/sigma1 ratio shows
+  this rounding floor; these small-magnitude ranks are descriptive.
 - The regenerated edits depend on the published fitting being deterministic; Gate 1 checks this rather than assuming it.
 
 ## Changes before registration

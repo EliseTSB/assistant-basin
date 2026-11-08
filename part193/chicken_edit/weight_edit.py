@@ -415,8 +415,7 @@ def build_clips(ref, vis, pix, manifest, *, pixabay_audio, esc_audio, vis_audio)
     return clips, sets, fit_people
 
 
-def main(argv=None):
-    started = time.time()
+def build_argument_parser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--acts", type=Path, required=True, help="ESC-50 stored arrays")
     parser.add_argument("--vis-acts", type=Path, required=True, help="VocalImitationSet stored arrays")
@@ -434,6 +433,8 @@ def main(argv=None):
     parser.add_argument("--results", type=Path, default=HERE / "weight_edit_results.json")
     parser.add_argument(
         "--out-other",
+        required=True,
+        type=Path,
         metavar="PATH",
         help="write per-clip other-animal imitation predictions as JSON",
     )
@@ -443,6 +444,12 @@ def main(argv=None):
         metavar="PATH.NPZ",
         help="save the in-place W1, W2 and W2-control patches plus fit settings and base hash",
     )
+    return parser
+
+
+def main(argv=None):
+    started = time.time()
+    parser = build_argument_parser()
     args = parser.parse_args(argv)
     torch.set_num_threads(6)
     torch.set_grad_enabled(False)

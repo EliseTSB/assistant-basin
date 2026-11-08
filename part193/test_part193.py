@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
+import shlex
 import sys
+import types
 from pathlib import Path
 
 import numpy as np
@@ -48,6 +51,47 @@ def test_threshold_rule_handles_monotone_dips_and_lost_detection():
     assert lost["threshold"] == "never"
     assert lost["found_below_threshold"] == [4.0]
     assert lost["dips"] == [{"from_dose": 4.0, "at_dose": 8.0}]
+
+
+def test_prediction_193_4_rejects_disjoint_dip_and_accepts_agreeing_patterns(capsys):
+    disjoint_dip = s193.prediction_193_4(
+        [False, False, False, False, False, True, True, True, True],
+        [True, True, True, False, True, True, True, True, True],
+    )
+    assert disjoint_dip["W2"]["threshold"] == 8.0
+    assert disjoint_dip["W2_control"]["threshold"] == 4.0
+    assert disjoint_dip["thresholds_within_one_ladder_step"] is True
+    assert disjoint_dip["patterns_agree_outside_threshold_band"] is False
+    assert disjoint_dip["holds"] is False
+    print(s193.format_prediction_193_4(disjoint_dip))
+    assert capsys.readouterr().out.strip() == (
+        "193.4: 1=found W2=000001111 W2c=111011111 thresholds=(8,4) "
+        "within_one_step=True agree_outside_band=False verdict=FAIL"
+    )
+
+    agreeing = s193.prediction_193_4(
+        [False, False, False, False, True, True, True, True, True],
+        [False, False, False, False, False, True, True, True, True],
+    )
+    assert agreeing["W2"]["threshold"] == 4.0
+    assert agreeing["W2_control"]["threshold"] == 8.0
+    assert agreeing["patterns_agree_outside_threshold_band"] is True
+    assert agreeing["holds"] is True
+    assert agreeing["verdict"] == "holds"
+
+
+def test_f3_layer_rank_compares_raw_layer_tops(monkeypatch):
+    def fixed_scores(features):
+        return np.zeros_like(features), np.asarray([6.0, 1.0, 2.0, 3.0])
+
+    monkeypatch.setattr(s193, "f3_scores", fixed_scores)
+    result = s193.candidate_f3(
+        {"features": np.ones((4, 4))}, 0,
+        np.ones(3), np.ones(3), np.ones(3), np.asarray([4.0, 5.0]),
+    )
+    assert result["layer_top_neuron_f3"] == 6.0
+    assert result["layer_rank"]["found"] is True
+    assert result["layer_f3_z"] == s193.robust_z(6.0, [4.0, 5.0])
 
 
 def test_f3_finds_a_planted_neuron():
@@ -259,6 +303,95 @@ def _copy_edits(edits: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
 
 def _settings(edits: dict[str, np.ndarray]) -> dict[str, object]:
     return json.loads(str(edits["settings_json"].item()))
+
+
+def test_step0_command_passes_weight_edit_argument_parser(monkeypatch):
+    project_root = Path(__file__).resolve().parents[1]
+    steps = (project_root / "part193" / "steps.txt").read_text()
+    step0 = next(
+        block.split("```", 1)[0]
+        for block in steps.split("```sh")[1:]
+        if "weight_edit.py" in block
+    )
+    tokens = shlex.split(step0.replace("\\\n", " "))
+    tokens = tokens[tokens.index("systemd-run"):]
+    script_index = next(
+        index for index, token in enumerate(tokens)
+        if Path(token).name == "weight_edit.py"
+    )
+    argv = tokens[script_index + 1:]
+
+    # Import only to build and run the script's parser; do not load its model.
+    sentence_transformers_stub = types.ModuleType("sentence_transformers")
+    sentence_transformers_stub.SentenceTransformer = object
+    monkeypatch.setitem(sys.modules, "sentence_transformers", sentence_transformers_stub)
+    script_path = project_root / "part193" / "chicken_edit" / "weight_edit.py"
+    spec = importlib.util.spec_from_file_location("part193_weight_edit_parser", script_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    parsed = module.build_argument_parser().parse_args(argv)
+
+    assert parsed.out_other == Path("results/part193/other_items.json")
+    assert parsed.results == Path("results/part193/weight_edit_results.json")
+    assert parsed.save_edits == Path("results/part193/edits.npz")
+
+
+def test_gate1_rejects_changed_saved_array_sha(tmp_path):
+    base_path, step0_path, _, edits = _gate_fixture(tmp_path)
+    step0 = json.loads(step0_path.read_text())
+    step0["saved_edit_provenance"]["W2"]["arrays"]["w2_patched"]["sha256"] = "0" * 64
+    step0_path.write_text(json.dumps(step0))
+
+    with pytest.raises(
+        s193.GateFailure,
+        match="W2 saved array w2_patched does not match step-0 provenance sha256",
+    ):
+        s193.check_gate1(base_path, edits, _settings(edits), step0_path)
+
+
+def test_gate1_rejects_changed_w1_neuron_with_consistent_provenance(tmp_path):
+    base_path, step0_path, _, original_edits = _gate_fixture(tmp_path)
+    edits = _copy_edits(original_edits)
+    neuron = 1082
+    edits["w1_neuron_j"] = np.asarray(neuron, dtype=np.int64)
+
+    row_fields = (
+        ("mlp.up_proj", "w1_up_row", "w1_up_delta", "w1_up_full_delta", 0),
+        ("mlp.gate_proj", "w1_gate_row", "w1_gate_delta", "w1_gate_full_delta", 0),
+        ("mlp.down_proj", "w1_down_col", "w1_down_delta", "w1_down_full_delta", 1),
+    )
+    with s193.safe_open(str(base_path), framework="np") as handle:
+        for role, value_key, delta_key, full_key, axis in row_fields:
+            base = handle.get_tensor(s193.weight_key(20, role))
+            value = np.asarray(edits[value_key], dtype=np.float32)
+            base_slice = base[neuron, :] if axis == 0 else base[:, neuron]
+            delta = np.subtract(value, base_slice).astype(np.float32)
+            full_delta = np.zeros_like(base)
+            if axis == 0:
+                full_delta[neuron, :] = delta
+            else:
+                full_delta[:, neuron] = delta
+            edits[delta_key] = delta
+            edits[full_key] = full_delta
+
+    step0 = json.loads(step0_path.read_text())
+    step0["saved_edit_provenance"] = saved_edit_provenance(edits)
+    step0_path.write_text(json.dumps(step0))
+    with pytest.raises(s193.GateFailure, match="W1 neuron is not the published neuron 1083"):
+        s193.check_gate1(base_path, edits, _settings(edits), step0_path)
+
+
+def test_gate2_fails_when_dose_zero_candidate_changes_a_bit(tmp_path, monkeypatch):
+    base_path, _, _, edits = _gate_fixture(tmp_path)
+
+    def changed_dose_zero(base, delta):
+        candidate = np.asarray(base).copy()
+        candidate.flat[0] = np.nextafter(candidate.flat[0], np.float32(np.inf))
+        return candidate
+
+    monkeypatch.setattr(s193, "no_op_edit", changed_dose_zero)
+    with pytest.raises(s193.GateFailure, match="Gate 2 W1 dose 0 changed tensor"):
+        s193.check_gate2_gate3(base_path, edits)
 
 
 def test_gate_checks_provenance_zero_swapped_and_measured_support(tmp_path):
