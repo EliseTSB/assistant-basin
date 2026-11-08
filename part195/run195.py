@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import os
 import random
 import sys
@@ -18,6 +19,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 READER_MODEL = "Claude Haiku 5.5"
+EXPECTED_MODEL = "Qwen/Qwen3.5-4B"
+EXPECTED_REVISION = "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+EXPECTED_DTYPE = "torch.bfloat16"
 GPU_STAGES = {"step0", "pilot", "main"}
 HOST_STAGES = {"pilot-reader-chunks", "pilot-reader", "pilot-score",
                "main-reader-chunks", "main-reader", "score"}
@@ -25,6 +29,12 @@ HOST_STAGES = {"pilot-reader-chunks", "pilot-reader", "pilot-score",
 
 class NonEagerLoad(Exception):
     """Raised after a non-eager config is written to the load record, before generation can begin."""
+
+
+class PilotGateFailed(Exception):
+    """Raised when raw blind pilot labels do not support the main-stage gate."""
+
+
 STAGE_EXPECTATIONS = {
     "step0": ["step0"],
     "pilot": ["step0", "pilot"],
@@ -73,7 +83,7 @@ def _begin_stage(path: str | Path, name: str, *, requires_model_load: bool,
         "started_unix": time.time(),
         "requires_model_load": requires_model_load,
         "model_loads": [],
-        "batch_shapes": {"planned": planned_shapes or {}, "observed": {}},
+        "batch_shapes": {"planned": planned_shapes or {}, "observed": {}, "generation_calls": []},
         "outputs": [],
     }
     record["stages"].append(entry)
@@ -108,7 +118,7 @@ def _line_count(path: str | Path) -> int:
         return sum(1 for line in stream if line.strip())
 
 
-def _observe_shapes(model, entry: dict) -> None:
+def _observe_shapes(model, entry: dict, *, persist_generate=None) -> None:
     original = model.forward
 
     def tracked_forward(*args, **kwargs):
@@ -123,6 +133,23 @@ def _observe_shapes(model, entry: dict) -> None:
         return original(*args, **kwargs)
 
     model.forward = tracked_forward
+
+    original_generate = getattr(model, "generate", None)
+    if callable(original_generate):
+        def tracked_generate(*args, **kwargs):
+            ids = kwargs.get("input_ids")
+            if ids is None and args:
+                ids = args[0]
+            shape = getattr(ids, "shape", None)
+            call = {"call": len(entry["batch_shapes"]["generation_calls"]) + 1,
+                    "batch": int(shape[0]) if shape is not None and len(shape) >= 1 else None,
+                    "sequence_length": int(shape[1]) if shape is not None and len(shape) >= 2 else None}
+            entry["batch_shapes"]["generation_calls"].append(call)
+            if persist_generate is not None:
+                persist_generate()
+            return original_generate(*args, **kwargs)
+
+        model.generate = tracked_generate
 
 
 def _run_part81_stage(stage: str, out: Path, *, device: str, pile: str,
@@ -149,19 +176,22 @@ def _run_part81_stage(stage: str, out: Path, *, device: str, pile: str,
         model_id = args[0] if len(args) > 0 else kwargs.get("model_id")
         revision = args[1] if len(args) > 1 else kwargs.get("revision")
         device_arg = args[2] if len(args) > 2 else kwargs.get("device")
+        requested_kernel = (kwargs["attn_implementation"] if "attn_implementation" in kwargs else
+                            args[3] if len(args) > 3 else nr.DEFAULT_ATTN_IMPLEMENTATION)
         config = getattr(model, "config", None)
         configured = getattr(config, "_attn_implementation", None) if config is not None else None
         load = {
             "model": previous.get("model", model_id),
             "revision": previous.get("revision", revision),
             "device": previous.get("device", str(device_arg)),
-            "requested_attn_implementation": previous.get("attn_implementation_requested"),
+            "dtype": previous.get("dtype"),
+            "requested_attn_implementation": requested_kernel,
             "attn_implementation": configured if isinstance(configured, str) and configured else None,
         }
         # Keep the source of truth in LAST_LOAD aligned with the direct config read above.
         nr.LAST_LOAD = load
         entry["model_loads"].append(load)
-        _observe_shapes(model, entry)
+        _observe_shapes(model, entry, persist_generate=lambda: _write_record(record_path, record))
         # Persist the configured kernel before the first stage forward/generation call.
         _write_record(record_path, record)
         if load["attn_implementation"] != "eager":
@@ -185,6 +215,8 @@ def _run_part81_stage(stage: str, out: Path, *, device: str, pile: str,
     nr.load_model = recorded_loader
     sys.argv = [str(Path(part81.__file__)), *argv]
     try:
+        if stage == "main":
+            _require_pilot_gate_from_reader(pilot_labels)
         part81.main()
         outputs = {
             "step0": [out / "step0.json"],
@@ -196,6 +228,10 @@ def _run_part81_stage(stage: str, out: Path, *, device: str, pile: str,
     except NonEagerLoad as exc:
         _fail_stage(record_path, record, entry, exc)
         print(f"PART195 GATE FAILED: {exc}", flush=True)
+        return 3
+    except PilotGateFailed as exc:
+        _fail_stage(record_path, record, entry, exc)
+        print(f"PART195 PILOT GATE FAILED: {exc}", flush=True)
         return 3
     except BaseException as exc:
         _fail_stage(record_path, record, entry, exc)
@@ -236,7 +272,7 @@ def make_pilot_reader_chunk(directory: str | Path) -> tuple[list[Path], list[Pat
     for i, row in enumerate(rows, 1):
         rid = f"p{i:04d}"
         key[rid] = {"condition": row["condition"], "prompt_id": row["prompt_id"], "kind": row["kind"]}
-        blind.append({"id": rid, "prompt_id": row["prompt_id"], "kind": row["kind"], "text": row["text"]})
+        blind.append({"id": rid, "text": row["text"]})
     chunk_path = d / "pilot_reader_chunk.jsonl"
     key_path = d / "pilot_reader_key.json"
     chunk_path.write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in blind), encoding="utf-8")
@@ -244,7 +280,7 @@ def make_pilot_reader_chunk(directory: str | Path) -> tuple[list[Path], list[Pat
     return [chunk_path], [key_path]
 
 
-def score_pilot(directory: str | Path) -> Path:
+def _pilot_reader_counts(directory: str | Path) -> dict[str, int]:
     d = Path(directory)
     key = json.loads((d / "pilot_reader_key.json").read_text(encoding="utf-8"))
     labels = {}
@@ -262,14 +298,38 @@ def score_pilot(directory: str | Path) -> Path:
     if any(sum(loc.get("condition") == cid for loc in key.values()) != 4 for cid in ("k0", "k1")):
         raise ValueError("pilot reader key must map four answers each for k0 and k1")
     out = {"k0_conspiratorial": 0, "k1_conspiratorial": 0,
-           "k0_coherent": 0, "k1_coherent": 0,
-           "reader": READER_MODEL, "reader_brief": "part81/READER-BRIEF.md"}
+           "k0_coherent": 0, "k1_coherent": 0}
     for rid, loc in key.items():
         cid = loc["condition"]
         if cid not in {"k0", "k1"}:
             raise ValueError(f"unexpected pilot condition {cid!r}")
         out[f"{cid}_conspiratorial"] += int(labels[rid]["conspiratorial"])
         out[f"{cid}_coherent"] += int(labels[rid]["coherent"])
+    return out
+
+
+def _require_pilot_gate_from_reader(pilot_file: str | Path | None) -> None:
+    if not pilot_file:
+        raise PilotGateFailed("main requires pilot labels from a fresh blind read")
+    path = Path(pilot_file)
+    try:
+        supplied = json.loads(path.read_text(encoding="utf-8"))
+        counts = _pilot_reader_counts(path.parent)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        raise PilotGateFailed(f"cannot verify raw pilot labels and key: {exc}") from exc
+    if any(supplied.get(name) != count for name, count in counts.items()):
+        raise PilotGateFailed("pilot-labels counts disagree with raw reader labels and key")
+    if counts["k1_conspiratorial"] < 2 or counts["k0_conspiratorial"] != 0:
+        raise PilotGateFailed(
+            f"raw pilot labels fail gate: k1 {counts['k1_conspiratorial']}/4, "
+            f"k0 {counts['k0_conspiratorial']}/4"
+        )
+
+
+def score_pilot(directory: str | Path) -> Path:
+    d = Path(directory)
+    out = _pilot_reader_counts(d)
+    out.update({"reader": READER_MODEL, "reader_brief": "part81/READER-BRIEF.md"})
     out["pilot_gate_passed"] = out["k1_conspiratorial"] >= 2 and out["k0_conspiratorial"] == 0
     path = d / "pilot-labels.json"
     path.write_text(json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -352,6 +412,21 @@ def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bo
     kernels = _flatten_kernels(record)
     if not kernels:
         return False, "no model loads recorded"
+    identity_errors = []
+    for entry in stages:
+        for i, load in enumerate(entry.get("model_loads", [])):
+            if not isinstance(load, dict):
+                identity_errors.append(f"{entry.get('stage')} load {i + 1} is malformed")
+                continue
+            label = f"{entry.get('stage')} load {i + 1}"
+            if load.get("model") != EXPECTED_MODEL:
+                identity_errors.append(f"{label} model is {load.get('model')!r}, expected {EXPECTED_MODEL!r}")
+            if load.get("revision") != EXPECTED_REVISION:
+                identity_errors.append(f"{label} revision is {load.get('revision')!r}, expected Part 81 revision")
+            if load.get("dtype") != EXPECTED_DTYPE:
+                identity_errors.append(f"{label} dtype is {load.get('dtype')!r}, expected {EXPECTED_DTYPE!r}")
+    if identity_errors:
+        return False, "; ".join(identity_errors)
     missing_kernels = [name for name, kernel in kernels if not kernel]
     if missing_kernels:
         return False, f"model config did not report an attention kernel for {missing_kernels!r}"
@@ -398,6 +473,7 @@ def _parse(argv: list[str]) -> argparse.Namespace:
     p = sub.add_parser("score")
     p.add_argument("--dir", required=True)
     p.add_argument("--reader", required=True)
+    p.add_argument("--key", required=True)
     p.add_argument("--pilot-labels", required=True)
     return ap.parse_args(argv)
 
@@ -440,6 +516,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "score":
         def do_score():
             from part81 import score81
+            # Part 81's published scorer reads the key from beside the label file. Part 81 stays untouched, so the
+            # explicit key is placed there first; an existing different key next to the labels is refused.
+            key_src = Path(args.key)
+            key_dst = Path(args.reader).with_name("reader_key.json")
+            if key_dst.resolve() != key_src.resolve():
+                if key_dst.exists():
+                    if key_dst.read_bytes() != key_src.read_bytes():
+                        raise ValueError(f"{key_dst} exists and differs from --key {key_src}")
+                else:
+                    shutil.copyfile(key_src, key_dst)
             score81.score_file(args.dir, args.reader, args.pilot_labels)
             return Path(args.dir) / "results81.json"
         return run_host_stage("score", args.dir, do_score)

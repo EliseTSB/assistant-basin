@@ -31,6 +31,6 @@
 # Owner sends each chunk separately with part81/READER-BRIEF.md to Claude Haiku 5.5, using the same model id as Part 81.
 # Keep the key private; save exactly 640 JSONL labels, then record them and score with Part 81's unchanged scorer.
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py record-reader --stage main-reader --dir results/part195/main --file results/part195/main/reader_labels.jsonl --rows 640
-/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py score --dir results/part195/main --reader results/part195/main/reader_labels.jsonl --pilot-labels results/part195/pilot/pilot-labels.json
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py score --dir results/part195/main --reader results/part195/main/reader_labels.jsonl --key results/part195/main/reader_key.json --pilot-labels results/part195/pilot/pilot-labels.json
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score,main,main-reader-chunks,main-reader,score
 # Compare results/part195/main/results81.json with the published values and predictions in PART195-DESIGN.md.
