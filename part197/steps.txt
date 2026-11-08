@@ -1,0 +1,17 @@
+Owner steps (do not run against a work folder while an A770 job is active)
+
+1. Before registration, create the records digest from the existing Part 196 work folder and add the resulting JSON to
+   the registration:
+
+   /home/elisepc/neuron-probe/.venv/bin/python -I -B part197/digest197.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --out part197/records_digest.json
+
+2. Before registration, make one Gate 1 regeneration measurement with the Part 197 CLI. Its Gate 1 (b) step invokes
+   Part 196's analyze() into a temporary directory, compares every JSON field with results/part196/results.json,
+   writes the largest numeric difference and its JSON path to stderr. Run it with --gate1-only and an out dir outside
+   results/ so it stops before any Part 197 readout is computed (owner correction 2026-11-08: without the flag it
+   would continue into the readouts before registration). Record that difference and path with the registration.
+
+3. After registration, repeat the CLI analysis on CPU from a detached systemd-run scope, only when no A770 job runs.
+   Set OMP_NUM_THREADS=6, MKL_NUM_THREADS=6, OPENBLAS_NUM_THREADS=6 and MemoryMax=4G. Example:
+
+   systemd-run --user --scope --no-block --unit=part197-analysis --property=MemoryMax=4G --setenv=OMP_NUM_THREADS=6 --setenv=MKL_NUM_THREADS=6 --setenv=OPENBLAS_NUM_THREADS=6 /home/elisepc/neuron-probe/.venv/bin/python -I -B part197/analyze197.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --out-dir results/part197 --expected-identity part197/expected_identity.json --records-digest part197/records_digest.json --part196-results results/part196/results.json
