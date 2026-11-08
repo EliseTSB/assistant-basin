@@ -72,6 +72,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
     ap.add_argument("--methods", default="ROME,ROME-mom2,R-ROME,MEMIT,AlphaEdit,MEMIT-b10,AlphaEdit-b10")
+    ap.add_argument("--save-delta", action="store_true", help="also save each method's update tensors (exploration)")
     args = ap.parse_args()
     torch.set_num_threads(12)
 
@@ -135,6 +136,9 @@ def main() -> int:
         after = [efficacy(model, tok, r) for r in reqs]
         params = dict(model.named_parameters())
         mats = []
+        if args.save_delta:
+            torch.save({pn: (params[pn].detach() - w0.to(params[pn].dtype)).float().clone() for pn, w0 in orig.items()},
+                       f"{args.out}.{name}.delta.pt")
         for pname, w0 in orig.items():
             w1 = params[pname].detach()
             d = (w1 - w0.to(w1.dtype)).to(torch.float64)

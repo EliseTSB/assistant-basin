@@ -104,6 +104,29 @@ update of at least 0.536, 0.450, 0.353, 0.456 and 0.467 times the host's sigma1 
 direction, more in any other direction. Three of wsp's five updates (layers 19 to 21) are already larger than that floor;
 what keeps them invisible is their direction, not their size.
 
+### Exploration: reading singular directions through the unembedding (2026-11-08 14:3x CT, design input only)
+
+Size does not hide these edits from F1; direction does. So the next statistic should look at direction. An exploration on
+the wsp update (`explore_tokens.py`, output `explore-tokens.json`) read the top 64 output-side singular vectors of every
+`mlp.down_proj`, base and edited, through the final norm's scale and the unembedding, scoring each by how concentrated it
+is on one token: z = (max logit - mean) / std over the vocabulary, the better of the two signs.
+
+- The update's own top singular vector reads as "English" at every edited layer (z 19.3 to 19.9); its second reads as the
+  end-of-turn token (z 17.8 to 23.9).
+- In the edited matrix, the most concentrated of the top 64 directions reads as "English" at 4 of 5 edited layers (z
+  11.1, 9.3, 16.2 and 12.8 at layers 17, 19, 20 and 21, at singular indices 5, 7, 1 and 3). At layer 18 a natural
+  direction (" a", z 14.1 in the base too) stays on top, and "English" is at index 23 (z 6.9).
+- The base maxima over the top 64 are 5.9 to 16.0 across all 24 layers (16.0 at layer 22, 14.1 at layer 18), and their
+  top tokens are spaces, punctuation and function words. So the raw maximum alone does not separate layer 20 (16.2) from
+  unedited layer 22 (16.0). What does separate is content: an ordinary word, the same word in several directions of one
+  matrix (three each at layers 17 and 20), and the same word in five consecutive layers.
+
+⚠ This is the most favourable case possible and cannot count as evidence. wsp builds its targets as the final norm's
+scale times the token's unembedding row (`wsp.py` line 200), so its update reads as the token by construction. ROME,
+MEMIT and AlphaEdit optimise a value vector by gradient instead, so the same reading on their updates is the real test.
+That exploration is running (`explore_gpt2.py`). Any statistic built from what this exploration shows is then scored on
+facts, editors and unedited models that it has not seen.
+
 **Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
 (github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
 `sources/web-archives/2026-11-08-qwen08b-wsp-readme.md`) writes facts in closed form into Qwen3.5-0.8B's `mlp.down_proj`,
