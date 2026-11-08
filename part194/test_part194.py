@@ -18,7 +18,8 @@ import part24
 
 
 class _Tensor:
-    shape = (2, 5)
+    def __init__(self, shape=(2, 5)):
+        self.shape = shape
 
 
 class _Handle:
@@ -37,8 +38,11 @@ class _Model:
         self.hook = hook
         return _Handle()
 
-    def touch(self):
-        self.hook(self, (), {"input_ids": _Tensor()})
+    def touch(self, shape=(2, 5)):
+        self.hook(self, (), {"input_ids": _Tensor(shape)})
+
+    def generate(self, **kwargs):
+        return kwargs
 
 
 def _module(output_stages):
@@ -46,7 +50,10 @@ def _module(output_stages):
         args = part24.parser().parse_args(argv)
         _tok, model = nr.load_model(args.model, args.revision, args.device)
         output_stages.append(args.command)
-        model.touch()
+        model.touch((1, 30) if args.command == "samples" else (2, 5))
+        if args.command == "samples":
+            model.generate(num_return_sequences=args.samples, max_new_tokens=args.max_new)
+            model.generate(num_return_sequences=3, max_new_tokens=17)
         nr._dump({"stage": args.command}, str(Path(args.out) / f"{args.command}.json"))
         return 0
 
@@ -94,7 +101,15 @@ def test_each_file_output_stage_is_recorded_and_host_gate_requires_all(tmp_path,
         assert entry["status"] == "complete"
         assert entry["model_loads"][0]["attn_implementation"] == "eager"
         assert entry["output_files"] == [{"path": f"{stage}.json", "bytes": (out / f"{stage}.json").stat().st_size}]
-        assert entry["batch_shapes"] == [{"shape": [2, 5], "calls": 1}]
+        if stage == "samples":
+            assert entry["batch_shapes"] == [{"shape": [1, 30], "calls": 1}]
+            assert entry["generate_calls"] == [
+                {"num_return_sequences": 8, "max_new_tokens": 64},
+                {"num_return_sequences": 3, "max_new_tokens": 17},
+            ]
+        else:
+            assert entry["batch_shapes"] == [{"shape": [2, 5], "calls": 1}]
+            assert entry["generate_calls"] == []
         if stage == "assay":
             assert entry["batch_plan"]["forward_batch_size"] == 8
         if stage == "samples":
@@ -135,8 +150,27 @@ def test_reader_cells_count_current_24b_answers_without_old_hand_labels(tmp_path
     published = tmp_path / "published.json"
     published.write_text(json.dumps(reader_doc), encoding="utf-8")
     assert run194._score_24b(out, published) == 0
-    capsys.readouterr()
+    scoring_output = capsys.readouterr().out
+    assert "194.7 24b.2 identity k=1.5 (a)-only share among alien: 0.833 (10/12; published 10/12)" in scoring_output
+    assert "194.9 24b.4 (b) counts for none/random at k=0,1,1.5,2:" in scoring_output
+    assert "none=['0/16', '0/16', '0/16', '0/16']; random=['0/16', '0/16', '0/16', '0/16']" in scoring_output
     reader_doc["prompt"] = "different prompt"
     (out / "reread-24b.json").write_text(json.dumps(reader_doc), encoding="utf-8")
     assert run194._score_24b(out, published) == 2
     assert "reader id or prompt differs" in capsys.readouterr().out
+
+
+def test_score_core_reports_null_metric_as_failure(tmp_path, capsys):
+    out = tmp_path / "part24"
+    out.mkdir()
+    reach = json.loads((ROOT / "results/part24/reach.json").read_text(encoding="utf-8"))
+    assay = json.loads((ROOT / "results/part24/assay.json").read_text(encoding="utf-8"))
+    reach["summary"]["identity-50"]["2.0"]["median_relative_change_layers_above_target"] = None
+    (out / "reach.json").write_text(json.dumps(reach), encoding="utf-8")
+    (out / "assay.json").write_text(json.dumps(assay), encoding="utf-8")
+
+    assert run194._score_core(out) == 2
+    output = capsys.readouterr().out
+    assert output.startswith("PART194 SCORE FAILED:")
+    assert "NoneType" in output
+    assert "24.1 max relative change" not in output

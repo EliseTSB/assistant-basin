@@ -167,26 +167,30 @@ def _score_core(folder: str | Path) -> int:
         alibaba = assay["self_alibaba_cloud_at_k_0"]
         extra_drop = alibaba["random-50"]["mean_per_token_logprob"] - alibaba["identity-50"]["mean_per_token_logprob"]
         effects = assay["margins_and_effects"]["self"]
+
+        lines = []
+        lines.append(f"24.1 max relative change, layers <= 22, any k: {low}  -> {'held' if low < 1e-3 else 'failed'}")
+        lines.append(f"24.2 k=2 identity {identity:.3f} vs random {random:.3f}, ratio {identity / random if random else float('inf'):.2f}  -> "
+                     f"{'held' if identity <= 1.5 * random else 'failed'}")
+        lines.append(f"24.3 identity median name retention at k=2 {retention:.3f}  -> "
+                     f"{'held' if retention >= 0.8 else 'failed'}")
+        lines.append(f"24.4 Alibaba Cloud extra per-token drop {extra_drop:.3f}  -> "
+                     f"{'held' if extra_drop >= 0.3 else 'failed'}")
+        additive = True
+        for k in ("1.0", "2.0"):
+            none = effects["none"][k]["effect"]["mean"]
+            identity_effect = effects["identity-50"][k]["effect"]["mean"]
+            random_effect = effects["random-50"][k]["effect"]["mean"]
+            difference = abs(identity_effect - random_effect)
+            additive = additive and difference < none / 4
+            lines.append(f"24.5 k={k}: none {none:.3f}, identity {identity_effect:.3f}, random {random_effect:.3f}; "
+                         f"|difference| {difference:.3f} vs quarter {none / 4:.3f}")
+        lines.append(f"24.5 additive  -> {'held' if additive else 'failed'}")
+        lines.append("24.6 and 24.7 are not scored here: their published verdicts used the original hand labels.")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f"PART194 SCORE FAILED: {exc}", flush=True)
         return 2
-
-    print(f"24.1 max relative change, layers <= 22, any k: {low}  -> {'held' if low < 1e-3 else 'failed'}")
-    print(f"24.2 k=2 identity {identity:.3f} vs random {random:.3f}, ratio {identity / random if random else float('inf'):.2f}  ->",
-          "held" if identity <= 1.5 * random else "failed")
-    print(f"24.3 identity median name retention at k=2 {retention:.3f}  ->", "held" if retention >= 0.8 else "failed")
-    print(f"24.4 Alibaba Cloud extra per-token drop {extra_drop:.3f}  ->", "held" if extra_drop >= 0.3 else "failed")
-    additive = True
-    for k in ("1.0", "2.0"):
-        none = effects["none"][k]["effect"]["mean"]
-        identity_effect = effects["identity-50"][k]["effect"]["mean"]
-        random_effect = effects["random-50"][k]["effect"]["mean"]
-        difference = abs(identity_effect - random_effect)
-        additive = additive and difference < none / 4
-        print(f"24.5 k={k}: none {none:.3f}, identity {identity_effect:.3f}, random {random_effect:.3f}; "
-              f"|difference| {difference:.3f} vs quarter {none / 4:.3f}")
-    print("24.5 additive  ->", "held" if additive else "failed")
-    print("24.6 and 24.7 are not scored here: their published verdicts used the original hand labels.")
+    print("\n".join(lines))
     return 0
 
 
@@ -238,6 +242,10 @@ def _score_24b(folder: str | Path, published_path: str | Path | None = None) -> 
     a, b, both, neither = current[("identity-50", 1.5)]
     base_a, base_b, base_both, _ = baseline[("identity-50", 1.5)]
     alien, base_alien = a + b + both, base_a + base_b + base_both
+    share = a / alien if alien else None
+    share_text = f"{share:.3f}" if share is not None else "undefined"
+    print(f"194.7 24b.2 identity k=1.5 (a)-only share among alien: {share_text} ({a}/{alien}; "
+          f"published {base_a}/{base_alien})")
     print(f"24b.2 identity k=1.5, (a) only among alien: {a}/{alien} (published {base_a}/{base_alien})  ->",
           "held" if alien and a > alien / 2 else "failed")
 
@@ -246,11 +254,22 @@ def _score_24b(folder: str | Path, published_path: str | Path | None = None) -> 
     print(f"24b.3 k=2 (a or b), none/identity/random: {alien2} (published {base_alien2})  ->",
           "held" if all(value >= 14 for value in alien2.values()) else "failed")
 
+    doses = (0.0, 1.0, 1.5, 2.0)
+    counts4 = {zero: [current[(zero, k)][1] + current[(zero, k)][2] for k in doses]
+               for zero in ("none", "random-50")}
+    baseline_counts4 = {zero: [baseline[(zero, k)][1] + baseline[(zero, k)][2] for k in doses]
+                        for zero in ("none", "random-50")}
+    print("194.9 24b.4 (b) counts for none/random at k=0,1,1.5,2: "
+          f"none={[f'{count}/16' for count in counts4['none']]}; "
+          f"random={[f'{count}/16' for count in counts4['random-50']]}; "
+          f"published none={[f'{count}/16' for count in baseline_counts4['none']]}; "
+          f"random={[f'{count}/16' for count in baseline_counts4['random-50']]}")
+
     ok4 = True
     for zero in ("none", "random-50"):
-        for k in (0.0, 1.0, 1.5, 2.0):
-            count = current[(zero, k)][1] + current[(zero, k)][2]
-            base_count = baseline[(zero, k)][1] + baseline[(zero, k)][2]
+        for index, k in enumerate(doses):
+            count = counts4[zero][index]
+            base_count = baseline_counts4[zero][index]
             print(f"24b.4 (b), {zero} k={k:g}: {count}/16 (published {base_count}/16)")
             ok4 = ok4 and count <= 2
     print("24b.4 (b) at most 2/16 in none/random at every k  ->", "held" if ok4 else "failed")
@@ -325,7 +344,9 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
     entry_id = uuid.uuid4().hex
     entry_created = False
     observed_shapes: dict[tuple[int, int], int] = {}
+    generate_calls: list[dict] = []
     hook_handles = []
+    generate_restores = []
     original_loader = nr.load_model
     original_dump = nr._dump
     actual_loader = original_loader if loader is None else loader
@@ -350,7 +371,7 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
         entry = {"entry_id": entry_id, "stage": stage, "status": "running",
                  "started": time.strftime("%Y-%m-%d %H:%M:%S"),
                  "model_loads": [load], "batch_plan": _batch_plan(stage, parsed),
-                 "batch_shapes": [], "output_files": [], "argv": [stage, *forwarded]}
+                 "batch_shapes": [], "generate_calls": [], "output_files": [], "argv": [stage, *forwarded]}
         _append_entry(record_path, entry)
         entry_created = True
         # Save the effective config value in the shared record too; its loader helper can fall back to the request.
@@ -360,6 +381,21 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
                           finished=time.strftime("%Y-%m-%d %H:%M:%S"))
             raise KernelGateFailure(f"effective attention kernel is {kernel!r}; expected 'eager'")
         hook_handles.append(model.register_forward_pre_hook(record_shape, with_kwargs=True))
+        if stage == "samples":
+            original_generate = model.generate
+            instance_dict = getattr(model, "__dict__", {})
+            had_instance_generate = "generate" in instance_dict
+            previous_instance_generate = instance_dict.get("generate")
+
+            def tracked_generate(*positional, **keyword):
+                generate_calls.append({
+                    "num_return_sequences": keyword.get("num_return_sequences"),
+                    "max_new_tokens": keyword.get("max_new_tokens"),
+                })
+                return original_generate(*positional, **keyword)
+
+            model.generate = tracked_generate
+            generate_restores.append((model, had_instance_generate, previous_instance_generate))
         return tok, model
 
     def tracked_dump(value, path):
@@ -399,6 +435,11 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
                 handle.remove()
             except Exception:
                 pass
+        for model, had_instance_generate, previous_instance_generate in generate_restores:
+            if had_instance_generate:
+                model.generate = previous_instance_generate
+            else:
+                delattr(model, "generate")
         nr.load_model = original_loader
         nr._dump = original_dump
 
@@ -408,6 +449,7 @@ def main(argv: list[str] | None = None, *, part24_module=None, loader=None) -> i
     shapes = [{"shape": [batch, sequence], "calls": calls}
               for (batch, sequence), calls in sorted(observed_shapes.items())]
     _update_entry(record_path, entry_id, status="complete", batch_shapes=shapes,
+                  generate_calls=generate_calls,
                   finished=time.strftime("%Y-%m-%d %H:%M:%S"))
     return check_record(record_path, [stage])
 
