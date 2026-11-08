@@ -20,7 +20,8 @@ in `PART191-DESIGN.md` (public main 340b0d3) before any eager answer. The run to
 | L24 N5017: Google on maker / identity phrasings | 17 of 24 / 7 of 8 | 20 of 24 / 7 of 8 |
 
 Part 153's claim stands on eager. Its scorer gives the same four verdicts on both kernels (153.1 held, 153.2 failed, 153.3
-held, 153.4 held), and every registered prediction held.
+held, 153.4 held), and all six registered predictions held. For 191.6 "held" includes 153.2's failure reproducing: 1 of
+10 neurons reached 4 of 8 identity phrasings on eager, 2 of 10 on SDPA, against a bar of 3.
 
 ## Gates
 
@@ -55,22 +56,31 @@ held, 153.4 held), and every registered prediction held.
 | L25 N4457 | Google | 4 | 5 |
 | L25 N4458 | Google | 20 | 19 |
 
-The same seven neurons reach 12 of 24 on both kernels; individual counts move by up to 5 in either direction.
+The same seven neurons reach 12 of 24 on both kernels; individual counts move by up to 5 in either direction. L21 N7134
+sits exactly on the bar and L22 N6997 and L25 N140 one below it, so a single answer moving could change 191.1's 7 of 10.
 
 ## Descriptive, not registered: the SDPA answers were cut short
 
 The design said greedy text was not expected to match across kernels. It does not: 122 of the 840 answers are
-identical in text (65 of 400 neuron rows, 47 of 400 random rows, 10 of 40 plain rows). What changed most is length. On
-eager the median answer is 82 tokens and 252 answers reach the 120-token cap; on SDPA the median was 60 tokens and 2
-reached the cap, with the most common lengths between 55 and 70. Of the answers under the cap, 245 of 838 SDPA answers
-(29%) end without closing punctuation, against 58 of 588 eager answers (10%), and 15 SDPA answers contain the string
-"QwQ" against none on eager. This fits Part 178's finding that the SDPA kernel leaves the reference path past about 64
-keys: Part 153's answers mostly stopped around there. The counts held anyway because the company is named early: of the
-neuron arm's maker hits, 138 of 143 name it in the first sentence on eager, 147 of 151 on SDPA. The scorer reads the whole
-answer, and an answer that names the company is still not a hit if it also mentions Alibaba or Tongyi or is triaged
-broken. On the neuron maker rows the company is named in 164 of 240 answers on eager and 165 on SDPA; eager loses 21 of
-those as broken against 13 on SDPA (Alibaba or Tongyi: 0 against 1), which is where most of the drop from 0.629 to 0.596
-comes from. Answers are compared row by row (unit, arm, question) with `results/part153/answers.jsonl`.
+identical in text (65 of 400 neuron rows, 47 of 400 random rows, 10 of 40 plain rows), and every identical answer is
+one whose SDPA version stopped at 58 tokens or fewer. Where the two differ, the first differing character is a median of
+165 characters into the answer (quartiles 77 and 207; 20 differ from the first character).
+
+What changed most is length. On eager the median answer is 82 tokens and 252 answers reach the 120-token cap; on SDPA
+the median was 60 tokens and 2 reached the cap, with the most common lengths between 55 and 70. Among answers under the
+cap, 230 of 838 SDPA answers (27.4%) end on a letter, digit, comma, hyphen, colon or semicolon, that is mid-phrase,
+against 2 of 588 eager answers (0.3%); 15 SDPA answers contain the string "QwQ" against none on eager. (Most eager
+answers that end without a full stop end with an emoji, which this rule does not count as open.) This fits Part 178's
+finding that the SDPA kernel leaves the reference path past about 64 keys: Part 153's answers mostly stopped soon after.
+
+Why the counts held, as far as these files show: the company is named in the first sentence (138 of 143 neuron maker
+hits on eager, 147 of 151 on SDPA), and the two kernels usually agree through it (176 of the 240 neuron maker rows have
+an identical first sentence), so hit or miss agrees on 206 of those 240 rows (130 hits on both). The scorer reads the
+whole answer, and an answer that names the company is still not a hit if it also mentions Alibaba or Tongyi or is
+triaged broken. The neurons' 8 fewer hits on eager (143 against 151) come almost entirely from broken triage: the company
+is named in 164 answers on eager and 165 on SDPA, eager loses 21 of them as broken against 13 on SDPA, and 17 of those 21
+eager broken answers are at the 120-token cap; Alibaba or Tongyi removes 0 on eager and 1 on SDPA. Answers are compared
+row by row (unit, arm, question) with `results/part153/answers.jsonl`.
 
 ## Limits
 
@@ -78,6 +88,9 @@ comes from. Answers are compared row by row (unit, arm, question) with `results/
 - Batch shape changed (chunks 8, 8, 2, 2 against 20), so a difference could come from batch shape as well as the kernel.
   Part 183 checked eager against the CPU float32 reference at batches 1 and 2, and by hand at batch 8.
 - One greedy answer per phrasing. A count moving by a few phrasings is within what one answer each can show.
+- The load record covers one invocation here (`answers_written` 840 equals the file's rows, and the launch record has one
+  step). The cold check found that the runner writes its record only after the battery returns, so an interrupted SDPA
+  run resumed on eager would be recorded as eager; that did not happen in this run and is a follow-up for the runner.
 - Answer length differs by kernel, and length moves the scorer both ways: more text to find the company, and more chance
   of being triaged broken. The descriptive counts above separate the two on the neuron maker rows.
 
@@ -85,3 +98,11 @@ comes from. Answers are compared row by row (unit, arm, question) with `results/
 
 - `answers.jsonl`: 840 eager answers. `load.json`: the load record. `launch.jsonl`: the launch record.
 - `score.json`, `tables.md`: Part 153's unchanged scorer (`part153/score153.py`) on this part's answers.
+
+## Cold check
+
+A DeepSeek V4.1 Flash cold check (`cold/COLD.md`, with its scripts and outputs) reran the scorer on these files and
+reproduced every scored number, gate and verdict. It corrected the descriptive section before publication: the
+open-ending rule had counted emoji endings as truncation (the eager figure is 2 of 588, not 58), the first draft's
+explanation of why the counts held did not follow from its own numbers, and the broken-triage arithmetic was unstated.
+It also found the runner's record-after-battery ordering noted under Limits.

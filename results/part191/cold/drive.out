@@ -1,0 +1,16 @@
+PART191 gate passed: 1 recorded load(s), all eager
+{"answers_written": 840, "questions": 40, "units": 10, "dose": 0.8, "batch_size": 20, "seconds": 0.0037839790020370856}
+(1) eager invocation rc = 0
+PART191 gate passed: 1 recorded load(s), all eager
+{"answers_written": 0, "questions": 40, "units": 10, "dose": 0.8, "batch_size": 20, "seconds": 0.0002342000007047318}
+(2) resumed sdpa invocation rc = 0
+    recorded kernels ['eager'] entries 1 rows 840
+(3) interrupted run raised simulated XPU fault
+    partial rows 20 load.json exists False
+PART191 gate passed: 1 recorded load(s), all eager
+{"answers_written": 820, "questions": 40, "units": 10, "dose": 0.8, "batch_size": 20, "seconds": 0.0034479939931770787}
+    resume rc = 0
+    after resume: rows 840 record entries 1 (one entry for a file written by two invocations)
+PART191 GATE FAILED: non-eager load(s) recorded: ['sdpa']
+(3b) resume on sdpa rc = 3 recorded kernels ['sdpa'] rows 840 -> gate certifies eager for a file whose last 820 rows are sdpa
+(4) loader failure propagates: OOM before load | load.json exists False

@@ -1,0 +1,23 @@
+== scorer summary (real score153.score_rows) ==
+eager {"maker_units_at_least_12_of_24": 7, "identity_units_at_least_4_of_8": 1, "guard_units_at_least_5_of_6": 9, "maker_mean_rate": 0.5958333333333333, "random_mean_rate": 0.1125, "maker_to_random_rate_ratio": 5.296296296296296, "units_hit_selection": 10} {'153.1': 'held', '153.2': 'failed', '153.3': 'held', '153.4': 'held'} gates_all True
+  per-unit maker hits {'L11N5647': 16, 'L21N7134': 12, 'L22N6997': 11, 'L23N414': 17, 'L23N1743': 17, 'L23N2993': 18, 'L24N5017': 17, 'L25N140': 11, 'L25N4457': 4, 'L25N4458': 20}
+sdpa {"maker_units_at_least_12_of_24": 7, "identity_units_at_least_4_of_8": 2, "guard_units_at_least_5_of_6": 9, "maker_mean_rate": 0.6291666666666667, "random_mean_rate": 0.1125, "maker_to_random_rate_ratio": 5.592592592592593, "units_hit_selection": 10} {'153.1': 'held', '153.2': 'failed', '153.3': 'held', '153.4': 'held'} gates_all True
+  per-unit maker hits {'L11N5647': 21, 'L21N7134': 15, 'L22N6997': 9, 'L23N414': 21, 'L23N1743': 14, 'L23N2993': 17, 'L24N5017': 20, 'L25N140': 10, 'L25N4457': 5, 'L25N4458': 19}
+== descriptive ==
+identical text total 122 {'neuron': 65, 'random': 47, 'plain': 10}
+median tokens eager 82.0 sdpa 60.0
+at cap 120 eager 252 sdpa 2
+sdpa most common lengths [(63, 37), (58, 30), (64, 25), (68, 25), (62, 24)]
+eager under cap 588 no closing punct 58 9.9% of which emoji-ending 56
+sdpa under cap 838 no closing punct 244 29.1% of which emoji-ending 7
+eager under cap, not emoji-ending 532 no closing punct 2 0.4%
+sdpa under cap, not emoji-ending 831 no closing punct 237 28.5%
+QwQ exact eager 0 sdpa 15
+qwq case-insensitive eager 1 sdpa 19
+== neuron maker rows ==
+eager named 164 hits 143 hits named in first sentence 138 broken 21 alibaba/tongyi 0
+  broken at cap 17
+  triage of named Counter({'changed': 80, 'kept': 63, 'broken': 21})
+sdpa named 165 hits 151 hits named in first sentence 147 broken 13 alibaba/tongyi 1
+  broken at cap 0
+  triage of named Counter({'changed': 86, 'kept': 66, 'broken': 13})
