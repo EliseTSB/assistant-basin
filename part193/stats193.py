@@ -819,14 +819,11 @@ def prediction_193_4(
     w2c_threshold = threshold_summary(w2c_pattern, doses)["threshold"]
     w2_is_never = w2_threshold == "never"
     w2c_is_never = w2c_threshold == "never"
-    if w2_is_never and w2c_is_never:
-        within_one_step = True
-    elif w2_is_never or w2c_is_never:
-        within_one_step = False
-    else:
-        w2_index = doses.index(float(w2_threshold))
-        w2c_index = doses.index(float(w2c_threshold))
-        within_one_step = abs(w2_index - w2c_index) <= 1
+    # "never" sits one position after the last dose, the same convention the band below uses, so two "never"
+    # thresholds are equal (distance 0) and "never" against the top dose is one step apart (round-3 review, 2026-11-08).
+    w2_pos = len(doses) if w2_is_never else doses.index(float(w2_threshold))
+    w2c_pos = len(doses) if w2c_is_never else doses.index(float(w2c_threshold))
+    within_one_step = abs(w2_pos - w2c_pos) <= 1
 
     # Treat each numeric threshold as part of the band. A "never" threshold is
     # one position after the last dose, so two "never" thresholds leave the

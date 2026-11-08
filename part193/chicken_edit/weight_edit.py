@@ -1085,6 +1085,7 @@ def main(argv=None):
     log(f"gentle hook other-imitation description {gentle_other_result}")
 
     if args.out_other:
+        args.out_other.parent.mkdir(parents=True, exist_ok=True)  # like --results and --save-edits
         gentle_gate_open = [gate_value > 0.0 for gate_value in other_gate]
         other_after_by_arm["gentle_hook"] = {
             "top_classes": gentle_after,

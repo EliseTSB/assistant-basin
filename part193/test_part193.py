@@ -80,6 +80,31 @@ def test_prediction_193_4_rejects_disjoint_dip_and_accepts_agreeing_patterns(cap
     assert agreeing["verdict"] == "holds"
 
 
+def test_prediction_193_4_never_sits_one_step_past_the_top_dose():
+    """'never' is one position after 64, the band's convention: never vs 64 is one step, never vs 32 is two."""
+    off = [False] * 9
+    top_only = [False] * 8 + [True]
+    top_two = [False] * 7 + [True, True]
+    near = s193.prediction_193_4(off, top_only)
+    assert near["thresholds_within_one_ladder_step"] is True
+    assert near["patterns_agree_outside_threshold_band"] is True
+    assert near["holds"] is True
+    far = s193.prediction_193_4(off, top_two)
+    assert far["thresholds_within_one_ladder_step"] is False
+    assert far["holds"] is False
+    both_never = s193.prediction_193_4(off, off)
+    assert both_never["thresholds_within_one_ladder_step"] is True
+    assert both_never["holds"] is True
+
+
+def test_prediction_193_4_two_numeric_steps_apart_fails_even_when_patterns_agree():
+    w2 = [False] * 4 + [True] * 5      # threshold 4 (index 4)
+    w2c = [False] * 6 + [True] * 3     # threshold 16 (index 6)
+    result = s193.prediction_193_4(w2, w2c)
+    assert result["patterns_agree_outside_threshold_band"] is True
+    assert result["thresholds_within_one_ladder_step"] is False
+    assert result["holds"] is False
+
 def test_f3_layer_rank_compares_raw_layer_tops(monkeypatch):
     def fixed_scores(features):
         return np.zeros_like(features), np.asarray([6.0, 1.0, 2.0, 3.0])

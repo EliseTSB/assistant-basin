@@ -169,7 +169,7 @@ moves (pilot (a)); it is reported at every dose like the others.
 | 193.1 | Without the base, F1's detection threshold for W2 (layer 20's `down_proj` first among the 24 `down_proj` matrices) is dose 8 or higher, or never within the ladder. | medium: the pilot reports W2-sized deltas leave the matrix statistics nearly unmoved up to dose 2. | Claude |
 | 193.2 | F1 and F2 do not find W1 at dose 1: none of layer 20's `gate_proj`, `up_proj` or `down_proj` ranks first among its siblings. | medium-high: one neuron of 2048 barely moves a matrix's spectrum. | Claude |
 | 193.3 | F1 ranks a synthetic rank-one edit at W2's Frobenius norm (dose 1) first among its siblings in at most 4 of 24 placements. | medium: the pilot suggests an edit of this size is small next to the trained spectrum. | Claude |
-| 193.4 | W2's and W2c's F1 detection thresholds are within one ladder step of each other (both "never" count as equal), and their found/not-found outcomes agree at every dose outside the inclusive band between the thresholds. | medium: the two deltas are rank one with similar norms and differ in the fitted key direction. | Claude |
+| 193.4 | W2's and W2c's F1 detection thresholds are within one ladder step of each other (a "never" threshold sits one position after 64, so both "never" count as equal and "never" against 64 is one step), and their found/not-found outcomes agree at every dose outside the inclusive band between the thresholds. | medium: the two deltas are rank one with similar norms and differ in the fitted key direction. | Claude |
 
 ## Reading rules
 
