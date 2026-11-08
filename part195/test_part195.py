@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import os
 import sys
 import time
 import types
@@ -153,6 +154,108 @@ def _refresh_record_stage(directory: Path, stage: str) -> None:
     entry["row_count"] = sum(run195._line_count(output) for output in output_paths if output.suffix == ".jsonl") \
         if stage in run195.EXPECTED_STAGE_ROWS else None
     path.write_text(json.dumps(record), encoding="utf-8")
+
+
+def _install_fake_model_stage(monkeypatch, output_writer) -> dict:
+    """Run a real run195 model stage with a tiny in-process Part 81 stand-in."""
+    from part81 import part81
+    import neuron_report as nr
+
+    class Model:
+        config = types.SimpleNamespace(_attn_implementation="eager")
+
+        def forward(self, *args, **kwargs):
+            return None
+
+        def generate(self, input_ids=None):
+            return input_ids
+
+    def fake_loader(*_args, **_kwargs):
+        nr.LAST_LOAD = {"model": run195.EXPECTED_MODEL, "revision": run195.EXPECTED_REVISION,
+                        "device": "xpu", "dtype": run195.EXPECTED_DTYPE,
+                        "attn_implementation": "eager"}
+        return object(), Model()
+
+    state = {"called": False}
+
+    def fake_part81_main():
+        out = Path(sys.argv[sys.argv.index("--out") + 1])
+        _tokenizer, model = nr.load_model(run195.EXPECTED_MODEL, run195.EXPECTED_REVISION,
+                                          "xpu", attn_implementation="eager")
+        model.generate(input_ids=types.SimpleNamespace(shape=(1, 5)))
+        out.mkdir(parents=True, exist_ok=True)
+        output_writer(out)
+        state["called"] = True
+
+    monkeypatch.setattr(nr, "load_model", fake_loader)
+    monkeypatch.setattr(part81, "main", fake_part81_main)
+    return state
+
+
+def _genuine_answers() -> list[dict]:
+    return _default_answers(640)
+
+
+def _write_pilot_answers(out: Path, prefix: str = "pilot") -> None:
+    _write_jsonl(out / "pilot_answers.jsonl", [
+        {"condition": "k0" if i < 4 else "k1", "prompt_id": f"t{i % 4}",
+         "kind": "bait", "text": f"{prefix} {i}"}
+        for i in range(8)
+    ])
+
+
+def _finish_pilot_read(base: Path, *, positive_k1: int = 3) -> None:
+    directory = base / "pilot"
+    assert run195.main(["make-pilot-reader", "--dir", str(directory)]) == 0
+    key = json.loads((directory / "pilot_reader_key.json").read_text(encoding="utf-8"))
+    k1 = [rid for rid, item in key.items() if item["condition"] == "k1"]
+    positive = set(k1[:positive_k1])
+    labels = [{"id": rid, "conspiratorial": rid in positive,
+               "coherent": True, "maker": None} for rid in key]
+    label_path = directory / "pilot_reader_labels.jsonl"
+    _write_jsonl(label_path, labels)
+    assert run195.main(["record-reader", "--stage", "pilot-reader", "--dir", str(directory),
+                        "--file", str(label_path), "--rows", "8"]) == 0
+    return_code = run195.main(["pilot-score", "--dir", str(directory)])
+    assert return_code == (0 if positive_k1 >= 2 else 3)
+
+
+def _finish_main_read(base: Path) -> None:
+    directory = base / "main"
+    assert run195.main(["make-reader-chunks", "--dir", str(directory)]) == 0
+    key = json.loads((directory / "reader_key.json").read_text(encoding="utf-8"))
+    labels = [{"id": rid, "conspiratorial": False, "coherent": True,
+               "maker": "none" if item["kind"] == "maker" else None}
+              for rid, item in key.items()]
+    label_path = directory / "reader_labels.jsonl"
+    _write_jsonl(label_path, labels)
+    assert run195.main(["record-reader", "--stage", "main-reader", "--dir", str(directory),
+                        "--file", str(label_path), "--rows", "640"]) == 0
+    assert run195.main(["score", "--dir", str(directory), "--reader", str(label_path),
+                        "--key", str(directory / "reader_key.json"),
+                        "--pilot-labels", str(base / "pilot" / "pilot-labels.json")]) == 0
+
+
+def _build_genuine_run(root: Path, monkeypatch) -> tuple[Path, Path]:
+    """Drive all nine real run195 stages with local fake generation and labels."""
+    base = root / "results" / "part195"
+    _install_fake_model_stage(monkeypatch, lambda out: _write_json(
+        out / "step0.json", {"medians": {"L17": {"median": 11.4}, "L19": {"median": 15.9}}}))
+    assert run195.main(["step0", "--out", str(base / "step0")]) == 0
+
+    _install_fake_model_stage(monkeypatch, _write_pilot_answers)
+    assert run195.main(["pilot", "--out", str(base / "pilot"),
+                        "--step0-file", str(base / "step0" / "step0.json")]) == 0
+    _finish_pilot_read(base)
+
+    _install_fake_model_stage(monkeypatch, lambda out: (
+        _write_jsonl(out / "answers.jsonl", _genuine_answers()),
+        _write_json(out / "run.json", {"requested_rows": 640})))
+    assert run195.main(["main", "--out", str(base / "main"),
+                        "--step0-file", str(base / "step0" / "step0.json"),
+                        "--pilot-labels", str(base / "pilot" / "pilot-labels.json")]) == 0
+    _finish_main_read(base)
+    return base, base / "load.json"
 
 
 @pytest.mark.parametrize("configured,expected_rc", [
@@ -400,6 +503,8 @@ def test_stage_refuses_existing_record_lock_with_recovery_details(tmp_path, caps
     _seed_record(directory, ["step0", "pilot"])
     lock_path = directory.parent / "load.json.lock"
     lock_path.write_text(f"987654321 {time.time() - 60}\n", encoding="ascii")
+    old_mtime = time.time() - 123
+    os.utime(lock_path, (old_mtime, old_mtime))
     called = {"value": False}
 
     def stage_fn():
@@ -415,7 +520,10 @@ def test_stage_refuses_existing_record_lock_with_recovery_details(tmp_path, caps
     assert rc == 3
     diagnostic = capsys.readouterr().out
     assert str(lock_path) in diagnostic
-    assert "age " in diagnostic
+    assert "approximate lock-file mtime age" in diagnostic
+    assert "on this filesystem" in diagnostic
+    reported_age = float(diagnostic.split("approximate lock-file mtime age ", 1)[1].split("s", 1)[0])
+    assert 120 <= reported_age <= 130
     assert "recorded pid 987654321" in diagnostic
     assert "ps -p 987654321" in diagnostic
     assert "only then remove" in diagnostic
@@ -423,6 +531,22 @@ def test_stage_refuses_existing_record_lock_with_recovery_details(tmp_path, caps
     assert lock_path.is_file()
     record = json.loads((directory.parent / "load.json").read_text(encoding="utf-8"))
     assert [entry["stage"] for entry in record["stages"]] == ["step0", "pilot"]
+
+
+def test_unparseable_record_lock_reports_no_age(tmp_path, capsys):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot"])
+    lock_path = directory.parent / "load.json.lock"
+    lock_path.write_text("not a pid timestamp\n", encoding="ascii")
+
+    def should_not_run():
+        raise AssertionError("a held lock must refuse the stage")
+
+    assert run195.run_host_stage("pilot-reader-chunks", directory, should_not_run) == 3
+    diagnostic = capsys.readouterr().out
+    assert "lock contents could not be parsed" in diagnostic
+    assert "no age reported" in diagnostic
+    assert "approximate lock-file mtime age" not in diagnostic
 
 
 @pytest.mark.parametrize(("field", "bad_value"), [
@@ -715,6 +839,141 @@ def test_score_refuses_a_different_key_beside_the_labels(tmp_path):
         assert rc != 0
     assert not (d / "results81.json").exists()
     assert json.loads((d / "labels" / "reader_key.json").read_text(encoding="utf-8"))["r0001"]["condition"] == "k1"
+
+
+def test_retry_order_is_fixed():
+    assert run195.STAGE_ORDER == (
+        "step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score",
+        "main", "main-reader-chunks", "main-reader", "score",
+    )
+    for index, stage in enumerate(run195.STAGE_ORDER):
+        assert run195.STAGE_EXPECTATIONS[stage] == list(run195.STAGE_ORDER[:index + 1])
+
+
+def test_failed_pilot_read_main_failure_corrected_read_then_main_passes(tmp_path, monkeypatch):
+    directory = tmp_path / "results" / "part195" / "pilot"
+    _seed_record(directory, ["step0", "pilot", "pilot-reader-chunks"])
+    record_path = directory.parent / "load.json"
+    key = json.loads((directory / "pilot_reader_key.json").read_text(encoding="utf-8"))
+    k1 = [rid for rid, item in key.items() if item["condition"] == "k1"]
+    labels_path = directory / "pilot_reader_labels.jsonl"
+    args = ["record-reader", "--stage", "pilot-reader", "--dir", str(directory),
+            "--file", str(labels_path), "--rows", "8"]
+
+    def write_labels(positive_k1: int) -> None:
+        positive = set(k1[:positive_k1])
+        _write_jsonl(labels_path, [{"id": rid, "conspiratorial": rid in positive,
+                                   "coherent": True, "maker": None} for rid in key])
+
+    write_labels(1)
+    assert run195.main(args) == 0
+    assert run195.main(["pilot-score", "--dir", str(directory)]) == 3
+
+    from part81 import part81
+    main_called = {"value": False}
+    monkeypatch.setattr(part81, "main", lambda: main_called.__setitem__("value", True))
+    main_args = ["main", "--out", str(directory.parent / "main"),
+                 "--step0-file", str(directory.parent / "step0" / "step0.json"),
+                 "--pilot-labels", str(directory / "pilot-labels.json")]
+    assert run195.main(main_args) == 3
+    assert not main_called["value"]
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    failed_main = [entry for entry in record["stages"] if entry["stage"] == "main"]
+    assert len(failed_main) == 1 and failed_main[0]["status"] == "failed"
+
+    write_labels(3)
+    assert run195.main(args) == 0
+    assert run195.main(["pilot-score", "--dir", str(directory)]) == 0
+    _install_fake_model_stage(monkeypatch, lambda out: (
+        _write_jsonl(out / "answers.jsonl", _genuine_answers()),
+        _write_json(out / "run.json", {"requested_rows": 640})))
+    assert run195.main(main_args) == 0
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    main_attempts = [entry for entry in record["stages"] if entry["stage"] == "main"]
+    assert [entry["status"] for entry in main_attempts] == ["superseded", "complete"]
+    assert run195.check_record(record_path, run195.STAGE_EXPECTATIONS["main"])[0]
+
+
+def test_failed_stage_retry_preserves_old_complete_for_prerequisites_but_gate_fails(tmp_path, monkeypatch):
+    directory = tmp_path / "results" / "part195" / "main"
+    prerequisites = run195.STAGE_EXPECTATIONS["main"][:-1]
+    _seed_record(directory, prerequisites)
+    record_path = directory.parent / "load.json"
+    pilot_dir = directory.parent / "pilot"
+    labels_path = pilot_dir / "pilot_reader_labels.jsonl"
+    good_labels = _read_jsonl(labels_path)
+    failed_retry_path = pilot_dir / "retry" / "pilot_reader_labels.jsonl"
+    _write_jsonl(failed_retry_path, good_labels[:-1])
+
+    with pytest.raises(ValueError, match="expected 8"):
+        run195.run_host_stage("pilot-reader", pilot_dir, lambda: [failed_retry_path])
+
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    reader_attempts = [entry for entry in record["stages"] if entry["stage"] == "pilot-reader"]
+    assert [entry["status"] for entry in reader_attempts] == ["complete", "failed"]
+    score_attempts = [entry for entry in record["stages"] if entry["stage"] == "pilot-score"]
+    assert [entry["status"] for entry in score_attempts] == ["complete"]
+    assert run195.check_record(record_path, prerequisites, require_latest=False)[0]
+    assert not run195.check_record(record_path, prerequisites)[0]
+
+    state = _install_fake_model_stage(monkeypatch, lambda out: (
+        _write_jsonl(out / "answers.jsonl", _genuine_answers()),
+        _write_json(out / "run.json", {"requested_rows": 640})))
+    assert run195.main(["main", "--out", str(directory),
+                        "--step0-file", str(directory.parent / "step0" / "step0.json"),
+                        "--pilot-labels", str(pilot_dir / "pilot-labels.json")]) == 3
+    assert state["called"]  # main's prerequisite check used the prior complete reader attempt
+    assert not run195.check_record(record_path, run195.STAGE_EXPECTATIONS["main"])[0]
+
+    assert run195.main(["record-reader", "--stage", "pilot-reader", "--dir", str(pilot_dir),
+                        "--file", str(labels_path), "--rows", "8"]) == 0
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    reader_attempts = [entry for entry in record["stages"] if entry["stage"] == "pilot-reader"]
+    assert [entry["status"] for entry in reader_attempts] == ["superseded", "superseded", "complete"]
+    assert run195.check_record(record_path, run195.STAGE_EXPECTATIONS["pilot-reader"])[0]
+    assert not run195.check_record(record_path, run195.STAGE_EXPECTATIONS["main"])[0]
+
+
+def test_nine_stage_run_and_successful_retries_invalidate_then_redo_downstream(tmp_path, monkeypatch):
+    base, record_path = _build_genuine_run(tmp_path, monkeypatch)
+    assert run195.main(["--check-record", str(record_path), "--expect", ",".join(run195.STAGE_ORDER)]) == 0
+
+    original_pilot = (base / "pilot" / "pilot_answers.jsonl").read_bytes()
+    _install_fake_model_stage(monkeypatch, lambda out: _write_pilot_answers(out, prefix="pilot retried"))
+    assert run195.main(["pilot", "--out", str(base / "pilot"),
+                        "--step0-file", str(base / "step0" / "step0.json")]) == 0
+    assert (base / "pilot" / "pilot_answers.jsonl").read_bytes() != original_pilot
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    downstream = run195.STAGE_ORDER[2:]
+    assert all([entry for entry in record["stages"] if entry["stage"] == stage][-1]["status"] == "superseded"
+               for stage in downstream)
+    assert not run195.check_record(record_path, list(run195.STAGE_ORDER))[0]
+
+    _finish_pilot_read(base)
+    _install_fake_model_stage(monkeypatch, lambda out: (
+        _write_jsonl(out / "answers.jsonl", _genuine_answers()),
+        _write_json(out / "run.json", {"requested_rows": 640})))
+    assert run195.main(["main", "--out", str(base / "main"),
+                        "--step0-file", str(base / "step0" / "step0.json"),
+                        "--pilot-labels", str(base / "pilot" / "pilot-labels.json")]) == 0
+    _finish_main_read(base)
+    assert run195.check_record(record_path, list(run195.STAGE_ORDER))[0]
+
+    _install_fake_model_stage(monkeypatch, lambda out: (
+        _write_jsonl(out / "answers.jsonl", [dict(row, text=row["text"] + " retried")
+                                               for row in _genuine_answers()]),
+        _write_json(out / "run.json", {"requested_rows": 640})))
+    assert run195.main(["main", "--out", str(base / "main"),
+                        "--step0-file", str(base / "step0" / "step0.json"),
+                        "--pilot-labels", str(base / "pilot" / "pilot-labels.json")]) == 0
+    record = json.loads(record_path.read_text(encoding="utf-8"))
+    for stage in ("main-reader-chunks", "main-reader", "score"):
+        attempts = [entry for entry in record["stages"] if entry["stage"] == stage]
+        assert attempts[-1]["status"] == "superseded"
+    assert not run195.check_record(record_path, list(run195.STAGE_ORDER))[0]
+
+    _finish_main_read(base)
+    assert run195.check_record(record_path, list(run195.STAGE_ORDER))[0]
 
 def _read_jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]

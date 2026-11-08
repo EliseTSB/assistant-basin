@@ -21,7 +21,11 @@
 # Do not show the key. Record the label file, score the pilot gate; pilot-score exits 3 if it fails, and the owner stops there.
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py record-reader --stage pilot-reader --dir results/part195/pilot --file results/part195/pilot/pilot_reader_labels.jsonl --rows 8
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py pilot-score --dir results/part195/pilot
-# If you correct a transcription mistake in that read, overwrite the same label file, rerun record-reader, and rerun pilot-score. A new stage attempt supersedes the previous one. Stop if the corrected raw labels still fail the registered pilot gate.
+# Retry rules: the fixed stage order is step0, pilot, pilot-reader-chunks, pilot-reader, pilot-score, main, main-reader-chunks, main-reader, score.
+# Starting an attempt supersedes nothing. Only a successful finish of stage S supersedes S's earlier attempts and every complete attempt of each later stage; a failed attempt changes no other attempt. After a successful retry, redo the later stages in order.
+# Prerequisite checks use the newest complete attempt of each stage and ignore failed attempts. The record gate also reads the newest complete attempts, but requires the newest attempt of every expected stage to be complete; redo a stage whose newest attempt failed.
+# A lock refusal reports the approximate age from the lock file's mtime on this filesystem. If its contents cannot be parsed, it says so without reporting an age.
+# If you correct a transcription mistake in that read, overwrite the same label file, rerun record-reader, and rerun pilot-score. Stop if the corrected raw labels still fail the registered pilot gate.
 /home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score
 
 # Main 640-answer Part 81 battery. Copy the complete prior load record and fresh inputs to the job folder.

@@ -29,6 +29,8 @@ EXPECTED_DTYPE = "torch.bfloat16"
 GPU_STAGES = {"step0", "pilot", "main"}
 HOST_STAGES = {"pilot-reader-chunks", "pilot-reader", "pilot-score",
                "main-reader-chunks", "main-reader", "score"}
+STAGE_ORDER = ("step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score",
+               "main", "main-reader-chunks", "main-reader", "score")
 EXPECTED_STAGE_OUTPUTS = {
     "step0": {"step0.json"},
     "pilot": {"pilot_answers.jsonl"},
@@ -63,20 +65,8 @@ class RecordLockHeld(Exception):
     """Raised when another stage currently owns the load-record lock."""
 
 
-STAGE_EXPECTATIONS = {
-    "step0": ["step0"],
-    "pilot": ["step0", "pilot"],
-    "main": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score", "main"],
-    "pilot-reader-chunks": ["step0", "pilot", "pilot-reader-chunks"],
-    "pilot-reader": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader"],
-    "pilot-score": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score"],
-    "main-reader-chunks": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score",
-                           "main", "main-reader-chunks"],
-    "main-reader": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score",
-                    "main", "main-reader-chunks", "main-reader"],
-    "score": ["step0", "pilot", "pilot-reader-chunks", "pilot-reader", "pilot-score",
-              "main", "main-reader-chunks", "main-reader", "score"],
-}
+STAGE_EXPECTATIONS = {stage: list(STAGE_ORDER[:index + 1])
+                      for index, stage in enumerate(STAGE_ORDER)}
 
 
 def _record_path(directory: str | Path) -> Path:
@@ -97,7 +87,7 @@ def _load_record(path: str | Path) -> dict:
 def _record_lock_diagnostic(lock_path: Path) -> str:
     """Describe a held record lock and the safe check before removing a stale one."""
     pid = None
-    created = None
+    parsed = False
     stat = None
     try:
         stat = lock_path.stat()
@@ -107,22 +97,27 @@ def _record_lock_diagnostic(lock_path: Path) -> str:
                 candidate_pid = int(fields[0])
                 candidate_created = float(fields[1])
                 if candidate_pid > 0 and math.isfinite(candidate_created):
-                    pid, created = candidate_pid, candidate_created
+                    pid, parsed = candidate_pid, True
             except ValueError:
                 pass
     except (OSError, UnicodeError):
         pass
 
-    age_seconds = time.time() - (created if created is not None else stat.st_mtime if stat else time.time())
-    age = f"{max(0.0, age_seconds):.1f}s" if stat is not None else "unknown"
-    pid_text = str(pid) if pid is not None else "unavailable (lock contents are missing or malformed)"
-    if pid is None:
+    if parsed and stat is not None:
+        age_seconds = max(0.0, time.time() - stat.st_mtime)
+        age_text = f"approximate lock-file mtime age {age_seconds:.1f}s on this filesystem"
+    elif parsed:
+        age_text = "approximate lock-file mtime age unavailable on this filesystem"
+    else:
+        age_text = "lock contents could not be parsed; no age reported"
+    pid_text = str(pid) if parsed else "unavailable (lock contents could not be parsed)"
+    if not parsed:
         recovery = ("Inspect the lock contents and process table to identify its owner; remove the lock only "
                     "after confirming that process has ended.")
     else:
         recovery = (f"Confirm pid {pid} has ended (for example, `ps -p {pid}`); only then remove "
                     f"{lock_path} and retry.")
-    return f"{lock_path} already exists (age {age}; recorded pid {pid_text}). {recovery}"
+    return f"{lock_path} already exists ({age_text}; recorded pid {pid_text}). {recovery}"
 
 
 @contextlib.contextmanager
@@ -170,11 +165,6 @@ def _begin_stage(path: str | Path, name: str, *, requires_model_load: bool,
         elif previous["run_id"] != run_id:
             raise ValueError("cannot append a stage to a record with mixed run ids")
     attempt = len([e for e in record["stages"] if e.get("stage") == name]) + 1
-    for previous in record["stages"]:
-        if previous.get("stage") == name and previous.get("status") != "superseded":
-            previous["status"] = "superseded"
-            previous["superseded_by_attempt"] = attempt
-            previous["superseded_unix"] = time.time()
     entry = {
         "stage": name,
         "run_id": run_id,
@@ -217,6 +207,21 @@ def _finish_stage(path: str | Path, record: dict, entry: dict, outputs: list[str
     entry["outputs"] = output_records
     if row_count is not None:
         entry["row_count"] = row_count
+    stage_index = STAGE_ORDER.index(entry["stage"])
+    now = time.time()
+    for previous in record["stages"]:
+        if previous is entry or previous.get("status") == "superseded":
+            continue
+        previous_stage = previous.get("stage")
+        same_stage = previous_stage == entry["stage"]
+        downstream_complete = (previous_stage in STAGE_ORDER and
+                               STAGE_ORDER.index(previous_stage) > stage_index and
+                               previous.get("status") == "complete")
+        if same_stage or downstream_complete:
+            previous["status"] = "superseded"
+            previous["superseded_by_stage"] = entry["stage"]
+            previous["superseded_by_attempt"] = entry["attempt"]
+            previous["superseded_unix"] = now
     _write_record(path, record)
 
 
@@ -383,9 +388,9 @@ def _run_part81_stage(stage: str, out: Path, *, device: str, pile: str,
                       pilot_labels: str | None, record_path: Path) -> int:
     try:
         with _record_lock(record_path):
-            if stage == "main":
-                prerequisites = STAGE_EXPECTATIONS[stage][:-1]
-                ok, why = check_record(record_path, prerequisites, quiet=True)
+            prerequisites = STAGE_EXPECTATIONS[stage][:-1]
+            if prerequisites:
+                ok, why = check_record(record_path, prerequisites, quiet=True, require_latest=False)
                 if not ok:
                     print(f"PART195 GATE FAILED: invalid prerequisite record: {why}", flush=True)
                     return 3
@@ -610,6 +615,12 @@ def run_host_stage(name: str, directory: str | Path, fn: Callable[[], list[Path]
     record_path = d.resolve().parent / "load.json"
     try:
         with _record_lock(record_path):
+            prerequisites = STAGE_EXPECTATIONS[name][:-1]
+            if prerequisites:
+                ok, why = check_record(record_path, prerequisites, quiet=True, require_latest=False)
+                if not ok:
+                    print(f"PART195 HOST GATE FAILED: invalid prerequisite record: {why}", flush=True)
+                    return 3
             record, entry = _begin_stage(record_path, name, requires_model_load=False)
             try:
                 result = fn()
@@ -660,7 +671,8 @@ def _flatten_kernels(record: dict) -> list[tuple[str, str | None]]:
     return found
 
 
-def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bool = False) -> tuple[bool, str]:
+def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bool = False,
+                 require_latest: bool = True) -> tuple[bool, str]:
     try:
         record = _load_record(path)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
@@ -675,12 +687,23 @@ def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bo
     if different_runs:
         return False, f"stage run ids differ from the load record run id: {different_runs!r}"
     latest_by_stage = {}
+    latest_complete_by_stage = {}
     for entry in stages:
-        latest_by_stage[entry.get("stage")] = entry
-    current_stages = list(latest_by_stage.values())
-    unfinished = [e.get("stage", "?") for e in current_stages if e.get("status") != "complete"]
-    if unfinished:
-        return False, f"incomplete stage attempt(s): {unfinished!r}"
+        stage = entry.get("stage")
+        latest_by_stage[stage] = entry
+        if entry.get("status") == "complete":
+            latest_complete_by_stage[stage] = entry
+    expected_stages = list(latest_by_stage) if expect is None else expect
+    if require_latest:
+        missing = [stage for stage in expected_stages
+                   if stage not in latest_by_stage or latest_by_stage[stage].get("status") != "complete"]
+        if missing:
+            return False, f"newest attempt is not complete for expected stage(s) {missing!r}"
+    else:
+        missing = [stage for stage in expected_stages if stage not in latest_complete_by_stage]
+        if missing:
+            return False, f"no completed attempt for expected stage(s) {missing!r}"
+    current_stages = list(latest_complete_by_stage.values())
     missing_loads = [e.get("stage", "?") for e in current_stages
                      if e.get("requires_model_load") and not e.get("model_loads")]
     if missing_loads:
@@ -709,13 +732,9 @@ def check_record(path: str | Path, expect: list[str] | None = None, *, quiet: bo
     bad = [(name, kernel) for name, kernel in kernels if kernel != "eager"]
     if bad:
         return False, f"non-eager model config recorded: {bad!r}"
-    if expect:
-        missing = [stage for stage in expect
-                   if stage not in latest_by_stage or latest_by_stage[stage].get("status") != "complete"]
-        if missing:
-            return False, f"no completed record entry for expected stage(s) {missing!r}"
-        for stage in expect:
-            entry = latest_by_stage[stage]
+    if expected_stages:
+        for stage in expected_stages:
+            entry = latest_complete_by_stage[stage]
             outputs = entry.get("outputs")
             if not isinstance(outputs, list) or not outputs:
                 return False, f"{stage} has no recorded outputs"
