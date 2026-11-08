@@ -198,8 +198,31 @@ is on one token: z = (max logit - mean) / std over the vocabulary, the better of
 ⚠ This is the most favourable case possible and cannot count as evidence. wsp builds its targets as the final norm's
 scale times the token's unembedding row (`wsp.py` line 200), so its update reads as the token by construction. ROME,
 MEMIT and AlphaEdit optimise a value vector by gradient instead, so the same reading on their updates is the real test.
-That exploration is running (`explore_gpt2.py`). Any statistic built from what this exploration shows is then scored on
-facts, editors and unedited models that it has not seen.
+Any statistic built from what this exploration shows is then scored on facts, editors and unedited models that it has
+not seen.
+
+**The real test came back null (2026-11-08 14:51 CT, `explore_gpt2.py`, output `explore-gpt2.json`).** ROME, MEMIT and
+AlphaEdit single edits of the same fact on GPT-2 XL were re-run saving their updates (same sizes as parts 1 and 2: ROME
+0.53, MEMIT 0.155 and AlphaEdit 0.238 at their largest layer). Each update is rank one. Read through `ln_f` and `wte` the
+same way, its direction scores z 4.4 to 4.9 with top tokens like 'lé', ' Mé', ' Chilean', ' Quebec' and 'Num', never
+"English", against base maxima of 5.1 to 7.7 for layers 13 to 17. The edited matrices' most concentrated directions are
+the base's own (same index, same tokens, z within 0.4). GPT-2 XL's base maxima over all 48 layers run 5.1 to 17.1, and the
+high ones are function words in late layers (' to' at 36, newline at 47, ' of' at 38). So an untrained reading through the
+unembedding sees wsp's writes, which target the unembedding by construction at layers 17 to 21 of 24, and not gradient
+editors writing mid-network at layers 13 to 17 of 48, where a plain reading through the unembedding is known to be weak.
+
+**Two more base-free statistics, also null for the GPT-2 XL editors (`explore_pcs.py`, `explore-pcs.json`).** The top 12
+singular values of every edited matrix move under 2% (ROME at layer 17: the largest change is 6.74 to 6.87 at index
+11). Mean pairwise cosine similarity of the per-neuron output vectors (the statistic family of Youssef et al. App. C)
+rises 1.7 times for ROME (rank 10 of 48 among siblings) and not at all for MEMIT or AlphaEdit; in the other orientation it
+does not rise. Youssef et al. report a much larger rise on GPT-2 XL; their exact definition may differ from these two
+orientations, which is a hypothesis, not checked.
+
+What the pilot now says, before any prediction: for ordinary edits at default settings, every base-free weight statistic
+tried (F1, the top of the spectrum, two cosine statistics, an untrained token reading) is blind on GPT-2 XL, and only the
+token reading sees wsp. The registration should therefore test (1) the token reading against unembedding-targeted writers
+(wsp) on new facts, with its false-alarm rate on unedited models, and (2) whether the blindness to gradient editors holds
+across facts, batch sizes and a second model, rather than look for a size threshold the pilot already rules out.
 
 ## Size
 
