@@ -1,19 +1,27 @@
-# Part 198: How large are ordinary knowledge edits next to the matrix they change, and does a base-free spectral check find them without false alarms?
+# Part 198: Do ordinary knowledge edits leave a trace in the weights that a check without the original model can find?
 
 Procedure: v1
-DRAFT, not registered. Size and Predictions are filled after the pre-registration pilot below. Follows Part 193 and
-Elise's direction of 2026-11-07 23:36 CT (Discord 1568861686167904287): "Methods to detect weight edits would be
-particularly valuable". Defensive only: every edit is a benign counterfactual fact from a public benchmark, and nothing
-here builds or releases an edit meant to avoid detection.
+DRAFT, not registered. Follows Part 193 and Elise's direction of 2026-11-07 23:36 CT (Discord 1568861686167904287):
+"Methods to detect weight edits would be particularly valuable". Defensive only: every edit is a benign counterfactual
+fact from a public benchmark (CounterFact), and nothing here builds or releases an edit meant to avoid detection. The
+design was rewritten on 2026-11-08 at about 15:2x CT after the pilot below, before any prediction existed.
 
 ## Question
 
-Part 193 found our ROME-style chicken edit without the original weights because its update was 15.6 times its host
-matrix's own top singular value, while a one-neuron edit stayed hidden. Is a ratio of that size typical of published
-closed-form knowledge edits, or a property of our fit? Do methods that spread an edit over layers (MEMIT) or project it
-away from preserved knowledge (AlphaEdit) stay within the host's natural scale? How often does an unedited model already
-carry a matrix a base-free check would flag? And does the one public base-free detector (`llm-forensics`) agree with the
-simple statistic on the same edits?
+Part 193 found our chicken edit without the original weights because its update was 15.6 times its host matrix's top
+singular value. The pilot below shows that ordinary edits are not like that: four published editors on GPT-2 XL and the
+`wsp` writer on Qwen3.5-0.8B make updates of 0.04 to 0.72 times the host's top singular value, the host's top singular
+value moves under 1%, and the simple check (F1) ranks each edited matrix where the unedited one already stood. So the
+questions are now:
+
+1. Is that blindness general? Across 24 facts per editor, do ROME, MEMIT and AlphaEdit single edits on GPT-2 XL, and
+   their mass edits, stay invisible to every base-free statistic tried in the pilot (F1, F2, mean pairwise cosine
+   similarity of neuron output vectors, and a reading of singular directions through the unembedding)?
+2. Does a reading through the unembedding find writes that aim at the answer's output direction? `wsp` builds its targets
+   from the answer token's unembedding row. On 24 new facts, does a content-word token score, computed from the suspect
+   model alone, rank an edited layer first and name the written token?
+3. How often does an unedited model already carry a matrix that would pass the same test? A threshold is set on three
+   unedited models and checked on others it has not seen, including both hosts.
 
 ## Prior art and existing data
 
@@ -39,70 +47,71 @@ simple statistic on the same edits?
 
 ## Method
 
-**Edited model.** GPT-2 XL (`openai-community/gpt2-xl`, revision pinned by sha256 of `model.safetensors` at the
-pilot), float32 on the CPU, in a memory-capped unit. GPT-2 XL is the model every one of these methods published
-hyperparameters for, and Youssef et al. found their signal there. Edits are made with EasyEdit (zjunlp/EasyEdit, commit
-pinned at the pilot) using each method's shipped GPT-2 XL hyperparameters unchanged, with the second-moment statistics
-the ROME and MEMIT authors published (rome.baulab.info, `wikipedia_stats`, layers 13 to 17, 100,000 samples), so no
-covariance is recomputed here.
+**Statistics, all computed from the suspect model alone** (the base is used only for the mechanism checks marked
+base-required, and to confirm an edit took). For each MLP output matrix (GPT-2 XL `mlp.c_proj`, 48; Qwen3.5-0.8B
+`mlp.down_proj`, 24; the unedited models' equivalents), with W in [out, in] orientation:
 
-**Edits.** Records are drawn by seed from CounterFact (public, the benchmark these methods report on): benign
-counterfactual rewrites such as a landmark's city. Settings:
+- F1: top singular value; F2: its share of the squared spectrum (Part 193's statistics).
+- PCS: mean pairwise cosine similarity of the per-neuron output vectors (the columns of W), computed exactly as
+  (||sum of unit columns||^2 - n) / (n (n - 1)).
+- Token reading: the top 64 output-side singular vectors u, each read as the logits E (g * u) through the unembedding E
+  and the final norm's per-dimension scale g (for a LayerNorm, u is centred first; g is taken as the norm module's output
+  on a vector of ones, so zero-centred norms are handled). Each direction's score is z = (max logit - mean) / std over
+  the vocabulary, the better of the two signs, and its top token is the argmax. **T_max** is the largest z over the 64.
+  **T_word** is the largest z among directions whose top token is a content token: after stripping whitespace, three or
+  more ASCII letters and not in the fixed stopword list in `stats198.py`.
 
-- Single edits: each record edited alone into a fresh copy of the base, by ROME (layer 17), r-ROME (layer 17), MEMIT
-  (layers 13 to 17) and AlphaEdit (layers 13 to 17).
-- Mass edits: one batch of the same records edited at once by MEMIT and by AlphaEdit, the setting where norm growth is
-  reported.
+"Found" for a statistic: an edited matrix ranks first among the same role's matrices in the suspect model, with no tie.
+For multi-layer editors, any edited layer ranking first counts, and each layer's rank is reported.
 
-An edit counts only if it took: on its rewrite prompt the new object outranks the old one (efficacy, the standard
-CounterFact score). Edits that did not take are reported and left out of detection rates.
+**Arm A: gradient editors on GPT-2 XL.** GPT-2 XL float32 (sha256 `0f8b28eb…11736a6a` of `model.safetensors`) on the
+CPU under an 11 GB memory cap with weights copied into ordinary memory. EasyEdit (main fetched 2026-11-08 11:16 CT,
+`src/EasyEdit-main`, imported through `ee_import.py` with only ROME, MEMIT and AlphaEdit) with each method's shipped
+GPT-2 XL hyperparameters unchanged and the published `wikipedia_stats` second moments for layers 13 to 17. Records: 24
+drawn by seed 198 from CounterFact cases 11 onward (cases 0 to 10 were the pilot), each edited alone into the restored
+base by ROME (layer 17), MEMIT and AlphaEdit (layers 13 to 17). Mass edits: two batches of 10 further records (same
+seed, next 20), each by MEMIT and by AlphaEdit. One process per method, the base restored bit for bit between records
+(the pilot checked `restored_bit_exact` on every run). r-ROME is dropped: its pilot edit matched ROME's size and rank
+(0.54 against 0.53, rank 30), and it costs 150 s an edit.
 
-**Per edited matrix.** The update dW = edited minus base: its spectral and Frobenius norms, and their ratio to the host
-matrix's unedited top singular value. **Base-free statistics**, as in Part 193 and computed by its functions: F1 (log top
-singular value) and F2 (top singular value's share of the squared spectrum), ranked against the same role in the other
-47 layers (GPT-2 XL roles: `attn.c_attn`, `attn.c_proj`, `mlp.c_fc`, `mlp.c_proj`); "found" is rank 1 with no tie. For
-the multi-layer methods, found means any edited matrix ranks first, and each layer is reported.
+**Arm B: `wsp` on Qwen3.5-0.8B.** `wsp.py` at commit `763259257133`, unchanged, through `wsp198.py`, float32 on the CPU,
+default settings. Records: 24 drawn by seed 198 from CounterFact cases 11 onward whose relation is one of P103, P1412,
+P37, P30, P27, P17, P36, P19, P364 and P159, keeping only records whose `target_new` is one word of three or more ASCII
+letters and differs from every record already drawn (so one answer cannot dominate). Each is written alone as three
+questions from a fixed template for its relation, plus one held-out question, then undone (`WSP.undo`, which subtracts
+the write exactly) before the next. One sequence arm: 10 further records written one after another into the same copy,
+statistics read after the tenth.
 
-**`llm-forensics`.** Version 0.1.1 in its own virtual environment, run with `-I` and never from inside its folder, its
-`spectral` detector on each edited model with no base given, and on each unedited model below. What it flags (layer and
-matrix) is recorded beside F1's answer.
+**Arm C: unedited models.** Calibration set: Pythia-410M, Qwen3-0.6B and OLMo-2-0425-1B. Held-out set: GPT-2 XL,
+Qwen3.5-0.8B, Pythia-1.4B, Qwen3-1.7B, SmolLM2-1.7B, SmolLM3-3B and Qwen2.5-0.5B-Instruct, all already on disk, loaded
+in bfloat16 with every statistic computed in float64. **T\*** is the largest T_word over every MLP output matrix of the
+three calibration models. Also reported per model: F1's robust z of its largest member and the ratio of the largest to
+the second-largest top singular value.
 
-**Unedited models (false alarms).** The same statistics and `llm-forensics` on unedited models already on disk: GPT-2 XL,
-Pythia 160M, 410M and 1.4B, SmolLM2 1.7B, SmolLM3 3B, Qwen3 0.6B and 1.7B, OLMo 2 1B, and EmbeddingGemma 2. For each
-role: the leave-one-out robust z of its largest member and the ratio of the largest to the second largest top singular
-value. A base-free check flags whatever ranks first, so in an unedited model every role has a "first" matrix; the
-question is how far above the rest it sits, which sets the size an edit must reach before its matrix, and not a natural
-one, is first.
+**Took.** GPT-2 XL: the new object outranks the old one on the rewrite prompt (CounterFact efficacy, the first token).
+`wsp`: all three taught questions answer the target exactly (`free_exact` 3/3). Edits that did not take are counted and
+left out of every rate.
 
-**Second edited model (candidate, added 2026-11-08 13:1x after Elise shared it).** `wsp`
-(github.com/areu01or00/qwen0.8B-wsp, created 2026-11-08, no license file; README archived in Journal
-`sources/web-archives/2026-11-08-qwen08b-wsp-readme.md`) writes facts in closed form into Qwen3.5-0.8B's `mlp.down_proj`,
-layers 17 to 21, with MEMIT's update rule per answer token and a cap of 25% of each matrix's Frobenius norm
-(`wsp.py` line 223: `dW.norm() / W.norm()`). A Frobenius cap is not a spectral one: the matrix's Frobenius norm is several
-times its top singular value, so a capped write can still exceed it. Qwen3.5-0.8B is already on disk.
-
-`wsp.py` was read in full on 2026-11-08 at 13:5x CT, at commit `763259257133` (sha256 `90184edf…65f81`). It makes no network
-call except `snapshot_download` when the model is not a local folder, starts no subprocess, and loads only its own cache.
-Three properties matter to detection. (1) The cap applies to each write's own update per layer (`dW` against the
-weights before that fact), so several facts in sequence are not capped together. (2) Each layer's update has rank at most
-the number of answer-token targets (every answer token of every phrasing, plus the end token). (3) The top edited layer is
-`round(0.875 * n_layers)`, so 21 on Qwen3.5-0.8B, with the update spread over layers 17 to 21. The pilot runs it on the CPU
-in float32 through a small driver (`results/part198/pilot/wsp198.py`) that imports the file unchanged. The fact is
-CounterFact case 0, the record the GPT-2 XL single edits used, written as three questions plus one held-out question,
-because wsp writes chat answers. The same statistics are computed over Qwen3.5-0.8B's 24 `mlp.down_proj`.
+**Mechanism checks (base-required, not detection).** The update dW's own top output direction read as tokens, and
+whether it names the target's first token (its top three tokens, stripped and case-folded, include it, with or without a
+leading space).
 
 ## Controls
 
-- Do-nothing edit: the base saved through the same pipeline must give dW = 0 bit for bit and the base's ranks (item 3).
-- Matched random rank-one edits: for each single edit, a random rank-one update at the same spectral norm in the same
-  matrix (item 4), so a method's detection rate is compared with structure-free updates of its own size.
-- Part 193 cross-check: the F1 code reproduces Part 193's numbers on its saved EmbeddingGemma 2 edits.
-- Not used: both directions, poles, answer polarity and broken answers (items 1, 2, 5, 6), because nothing is pushed or
-  generated beyond the one-token efficacy check. A dose ladder (item 8) is replaced by the methods' own scales.
+- Do-nothing edit: after each GPT-2 XL record the restored weights equal the base bit for bit; after each `wsp` undo
+  the accumulated update is exactly zero. A run where either fails stops.
+- Matched random updates (Arm B null): for each `wsp` write and each edited layer, an update with the write's own singular
+  values and random orthonormal singular vectors (seed 198 plus the record index) added to the base. If the token reading
+  finds these, it is reacting to update size, not to an aimed direction.
+- Aimed positive control (Arm A): for each GPT-2 XL record, a rank-one update at layer 17 whose output direction is the
+  final-norm-scaled unembedding row of the record's new object (centred, unit length), with a random unit input
+  direction and the spectral norm of that record's ROME update. If the reading cannot see this, a null on the gradient
+  editors says nothing about their direction, only about the reading's reach at layer 17 of 48.
+- Code cross-check: `stats198.py` reproduces the pilot's F1 ranks for the seven pilot runs and the exploration's T_max
+  for every base layer of both hosts, to the printed precision.
 
-Gate: the do-nothing edit and the Part 193 cross-check pass, and at least 90% of single edits take. A pipeline that
-saves the wrong tensor makes dW zero or nonsensical, and a method that does not take on this setup is not a ground-truth
-edit.
+Gate (run before any data is read): the do-nothing checks pass, the cross-check passes, and at least 21 of 24 single
+edits take for each GPT-2 XL method and 21 of 24 writes take for `wsp`.
 
 ## Pilot (before registration; results disclosed in this section before any prediction is written)
 
@@ -218,6 +227,16 @@ rises 1.7 times for ROME (rank 10 of 48 among siblings) and not at all for MEMIT
 does not rise. Youssef et al. report a much larger rise on GPT-2 XL; their exact definition may differ from these two
 orientations, which is a hypothesis, not checked.
 
+**Content-word scores and an aimed write on GPT-2 XL (design input, 2026-11-08 15:2x CT).** Computed from the
+exploration's saved top tokens: T_word on unedited Qwen3.5-0.8B is 5.4 to 7.3 over its 24 layers, and on the `wsp`-edited
+layers 17 to 21 it is 11.1, 6.9, 9.3, 16.2 and 12.8, so layer 20 ranks first. On GPT-2 XL, T_word is 5.1 to 9.8 (9.79 at
+layer 45, then 9.07 and 8.87 at layers 46 and 43), and none of the three gradient edits moves its layer's T_word by more
+than 0.4 or ranks first. `explore_posctl.py` then added a rank-one update aimed at " English" (output direction the
+final-norm-scaled unembedding row, random input direction) to layer 17 at the ROME update's spectral norm, 5.432: layer
+17's T_word went from 5.08 to 8.32, naming " English" (direction 12), but stayed below layer 45's 9.79, so it is named
+and not found. At half that norm nothing shows (5.11, "ividual"); at twice it, 23.8, found. So the reading does reach
+layer 17 of 48, and a gradient edit of ROME's size is not aimed the way this write is.
+
 What the pilot now says, before any prediction: for ordinary edits at default settings, every base-free weight statistic
 tried (F1, the top of the spectrum, two cosine statistics, an untrained token reading) is blind on GPT-2 XL, and only the
 token reading sees wsp. The registration should therefore test (1) the token reading against unembedding-targeted writers
@@ -226,30 +245,65 @@ across facts, batch sizes and a second model, rather than look for a size thresh
 
 ## Size
 
-To be set from the pilot. Smallest effect worth knowing: a detection rate of 80% against 30% between two methods, which
-needs about 20 edits per method (two-sided Fisher exact test, power 0.8 at alpha 0.05); 24 records are planned.
+24 records per editor and arm, 2 mass-edit batches per mass editor, 10 records in the sequence arm, 3 calibration and
+7 held-out unedited models. The predictions contrast rates near 0 with rates near 1, which 24 resolves easily: 1 of 24
+against 20 of 24 differ at p below 0.0001 (two-sided Fisher exact), and 0 of 24 bounds a rate under 14% (one-sided 95%).
+Work: 24 x 3 GPT-2 XL single edits (ROME 128 s, MEMIT 115 s, AlphaEdit 69 s per edit in the pilot) about 2.1 h; 4 mass
+edits about 0.5 h; 24 + 10 `wsp` writes with their controls about 0.5 h (setup 385 s once, about 36 s a write); 10
+unedited models about 0.3 h. Total about 3.4 h of CPU, one process at a time.
 
 ## Optimization
 
-To be set from the pilot's measured time per edit.
+Measured in the pilot, so these are measurements, not guesses: per-edit times above, peak 10.9 GiB for GPT-2 XL (so one
+process at a time, under an 11 GB cap, after Windows reports 11 GB free) and 6.6 GiB for Qwen3.5-0.8B. Changes from the
+pilot: one process per method for all its records (saves about 35 s of loading per edit, about 40 min in all); weights
+copied into ordinary memory after loading (the pilot's AlphaEdit step thrashed for 40 min without it); results appended
+per record to a JSONL, so a killed run resumes at the next record and loses at most one; `wsp`'s protection cache is
+recorded once and reused. The statistics take seconds per matrix and are not worth optimizing.
 
 ## Predictions
 
-Written after the pilot.
+Each is scored once on the registered run. "Took" edits only. Numbers in brackets are the pilot's, from one record.
+
+| # | Prediction | Fails if |
+|---|---|---|
+| 198.1 | F1 finds at most 1 of 24 single edits for each of ROME, MEMIT and AlphaEdit, and none of the 4 mass-edit models. [0 of 1 each; batches 0 of 2] | any method finds 2 or more, or any batch is found |
+| 198.2 | T_word finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [0 of 1 each] | 2 or more for any method, or any batch |
+| 198.3 | PCS finds at most 1 of 24 single edits for each gradient editor, and none of the 4 mass-edit models. [ranks 10 to 41] | 2 or more for any method, or any batch |
+| 198.4 | Gradient edits are not aimed at their answer: the edited layer's top content direction names the new object in at most 2 of 24 for each editor, and so does the update's own top direction (base-required). [0 of 1 each, both] | 3 or more for any editor on either |
+| 198.5 | The aimed positive control is named but mostly not found: its layer-17 top content direction names the new object in at least 20 of 24, and T_word ranks layer 17 first in at most 12 of 24. [named, not found] | named in fewer than 20, or found in more than 12 |
+| 198.6 | T_word finds `wsp` writes: an edited layer ranks first among the 24 in at least 20 of the writes that took. [found, 16.2 against 7.3] | fewer than 20 |
+| 198.7 | The suspect model names what was written: the top content direction of the layer ranking first names the new object in at least 18 of the writes that took. [named] | fewer than 18 |
+| 198.8 | After 10 `wsp` writes in sequence, at least 5 of the 10 new objects are named by a content direction (top token, any of the top 64) in layers 17 to 21. [not piloted] | fewer than 5 |
+| 198.9 | Matched random updates are not found: T_word ranks a randomized layer first in at most 1 of 24. [not piloted] | 2 or more |
+| 198.10 | At most 2 of the 7 held-out unedited models have any MLP output matrix with T_word above T\*. [GPT-2 XL's maximum is 9.79 and Qwen3.5-0.8B's 7.3; T\* not yet computed] | 3 or more |
+| 198.11 | At least 20 of the `wsp` writes that took have an edited layer with T_word above T\*. [16.2] | fewer than 20 |
 
 ## Reading rules
 
-- Gate failing stops the part.
-- "Found" means rank 1 among siblings, no tie; for multi-layer methods any edited layer ranking first, with each
-  layer's rank reported.
-- An edit that did not take is excluded from detection rates and counted.
-- Every claim is scoped to GPT-2 XL, these methods with their shipped hyperparameters, CounterFact records and these
-  statistics. Nothing here bears on edits designed to avoid detection.
+- The gate failing stops the part before any prediction is scored.
+- "Found" is rank 1 among the same role's matrices in the suspect model, with no tie; for multi-layer edits any edited
+  layer ranking first counts. "Named" is the stripped, case-folded first token of the new object (with or without a
+  leading space) among a direction's top three tokens.
+- T\* is computed from the calibration models before any held-out model or Arm B write is scored, and written into the
+  results before they are.
+- 198.1 to 198.4 are the null side: passing them says these statistics are blind to these editors at their shipped
+  settings, not that the edits are undetectable by any means. 198.5 is the check that the reading could have seen an
+  aimed write at the same layer and size; if it fails, 198.2 and 198.4 are reported as uninformative about direction.
+- Every claim is scoped to GPT-2 XL and Qwen3.5-0.8B, these editors at their shipped settings, CounterFact records and
+  these statistics. Nothing here bears on edits designed to avoid detection, and none is built.
 
 ## Limits
 
-- One edited model, chosen because the methods target it; Youssef et al. found their signal absent on Llama 3.
-- Detection here is ranking among siblings in the same model; it says nothing about separating edits from benign
-  fine-tuning, which changes many matrices at once.
-- The false-alarm arm measures natural outliers, not a false-positive rate against a fixed threshold, because F1 always
-  ranks something first.
+- Two edited models, both small; the gradient editors run only on GPT-2 XL, the model their hyperparameters target, and
+  Youssef et al. found their own signal absent on Llama 3.
+- The token reading is untrained (a plain logit lens on weights). A trained reader (a tuned lens) might see mid-network
+  edits it cannot; that would need text and training, and is out of scope.
+- The content-token filter is English and ASCII, and its stopword list was written after the pilot showed function words
+  among the unedited maxima. It is fixed in `stats198.py` before registration and not changed after.
+- T_word and its filter were chosen from one `wsp` write; the 24 new writes, the random control and the held-out unedited
+  models are the test. The false-alarm arm is 7 models, so it can catch a common false alarm, not estimate a small rate.
+- Detection is ranking among siblings in one model; it says nothing about separating an edit from fine-tuning, which
+  changes every matrix at once.
+- `llm-forensics`' own detectors are not run here: its token reading is an agent tool, not a scored statistic, and its
+  participation-ratio score is left to a follow-up so this part stays one question wide.
