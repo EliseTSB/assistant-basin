@@ -90,7 +90,8 @@ Is there a gap between the best probe and the best calibrated verdict large enou
     harvest, frame 5 ms), RMS energy mean and spread, spectral centroid mean, and seconds per word. A clip with no voiced
     frames (expected for whisper) gets F0 median and range 0 and keeps voiced fraction 0; no clip is dropped. Fit as B56.
   - T, transcript only: the same fit as B56 on the EmbeddingGemma 2 text embedding of the clip's transcript
-    (`prompt_name='SearchDocument'`). Diagnostic for content, not a model verdict.
+    (`prompt_name='document'`, the model's document prompt `title: none | text: `; Amendment 1). Diagnostic for content,
+    not a model verdict.
 - Metrics: seven-way balanced accuracy for A, B, B56, C, D, E, H and T; macro one-against-rest AUC for every readout
   including F, computed within each held-out speaker (scores from different fold models are never ranked together).
   Primary numbers are the mean over the four held-out speakers; each speaker's number is reported beside it.
@@ -222,3 +223,15 @@ Is there a gap between the best probe and the best calibrated verdict large enou
   it is not a review of the recorder or analyzer implementation. #4, #6 and #9 were HOLDs.
 - Code reviews: DeepSeek V4.1 Flash reviewed the build (review part196build, round 1), folded by a Luna worker.
 - Registered 2026-11-08 04:52 CT, stamped from `date`.
+
+## Amendment 1 (2026-11-08 05:02 CT, after Gate 2 passed and before any clip was recorded or any readout computed)
+
+The first recording run stopped while encoding transcripts: `prompt_name='SearchDocument'` does not exist in this
+model's prompt dictionary (`config_sentence_transformers.json` at revision f9972ac). The model's document prompt is
+`document` (`title: none | text: `, the same string as its `Document` and `Retrieval-document` entries), the counterpart
+of `SearchQuery` (`task: search result | query: `), which the label phrasings use as Parts 188 and 190 did. T's
+transcripts now use `prompt_name='document'`. Nothing else changes. Gate 2 had passed (eight parity clips, embedding
+cosine 1.0, activation difference 0.0), the 56 label phrasings had been encoded, and no Expresso clip had been recorded;
+the run resumes from that work folder. A new test checks every prompt name the recorder uses against the model's
+config.
+
