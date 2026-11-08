@@ -114,6 +114,14 @@ the 10 GiB cap in uninterruptible disk wait (the weights were still memory-mappe
 kernel kept evicting and re-reading them). The pilot now copies every tensor into ordinary memory after loading, and
 AlphaEdit and the two batches of 10 are rerunning under an 11 GiB cap (part 2).
 
+### Pilot results, part 2 (2026-11-08 13:08 to 13:17 CT)
+
+With every tensor copied into ordinary memory after loading, AlphaEdit's single edit took 69 s (the edit took; layers 13
+to 17; update over host top singular value at most 0.228; best F1 sibling rank 19 of 48, not found). MEMIT on a batch of
+10 was then killed by the 11 GiB cap while computing layer 17's covariance, most likely with AlphaEdit's global caches
+(projection and accumulated key matrices, about 1.6 GB) still held from the run before. Next: one method per process,
+the cap set from Windows' free memory at launch.
+
 ## Size
 
 To be set from the pilot. Smallest effect worth knowing: a detection rate of 80% against 30% between two methods, which
