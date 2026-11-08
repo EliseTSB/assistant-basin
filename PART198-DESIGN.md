@@ -85,6 +85,26 @@ One CounterFact record outside the main draw, edited by each of the four methods
 checks on GPT-2 XL and two other unedited models. `llm-forensics` installs and runs. Stopping rule: if any method fails
 to install or take on the pilot record, it is dropped or fixed before registration and the change is stated here.
 
+### Pilot results, part 1 (2026-11-08 11:4x to 13:0x CT, before any prediction)
+
+GPT-2 XL float32 (`model.safetensors` sha256 0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a), EasyEdit
+main as downloaded 2026-11-08 11:16 CT (tarball, not yet pinned to a commit), CPU at nice 10 under a 10 GiB cap, CounterFact
+case 0 (Danielle Darrieux, mother tongue French to English). Each edit was made in place and the base restored bit for
+bit afterwards (checked). Base spectra of the 48 `mlp.c_proj` matrices took 21 s.
+
+| Method | Edit time | Took | Edited layers | Update spectral norm / host's top singular value | F1 sibling rank (of 48) |
+| --- | --- | --- | --- | --- | --- |
+| ROME (EasyEdit config, `mom2_adjustment: false`) | 128 s | yes | 17 | 0.53 | 30 |
+| ROME with `mom2_adjustment: true` (the original paper's) | 313 s | yes | 17 | 0.72 | 29 |
+| R-ROME (EasyEdit config) | 153 s | yes | 17 | 0.54 | 30 |
+| MEMIT, one record | 115 s | yes | 13 to 17 | 0.04, 0.045, 0.061, 0.089, 0.155 | 19, 20, 22, 23, 30 |
+
+So a single ordinary fact edit on GPT-2 XL is about half of its host matrix's top singular value, and F1 does not find it.
+Part 193's chicken edit, at 15.6 times, was far outside this range. AlphaEdit did not finish: it ran for about 40 minutes at
+the 10 GiB cap in uninterruptible disk wait (the weights were still memory-mapped from `/mnt/e`, and under the cap the
+kernel kept evicting and re-reading them). The pilot now copies every tensor into ordinary memory after loading, and
+AlphaEdit and the two batches of 10 are rerunning under an 11 GiB cap (part 2).
+
 ## Size
 
 To be set from the pilot. Smallest effect worth knowing: a detection rate of 80% against 30% between two methods, which
