@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "base_sha256": "197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79",
+  "published_settings": {
+    "W1": {
+      "neuron": 1083,
+      "tau_quantile": 0.3,
+      "s": 0.025,
+      "test_auc": 0.6775
+    },
+    "W2": {
+      "s": 0.15,
+      "test_auc": 0.8125
+    },
+    "W2_control": {
+      "s": 0.025,
+      "test_auc": 0.6175
+    }
+  },
+  "near_tie_fallbacks": {},
+  "held_out_auc": {
+    "W1": 0.6775,
+    "W2": 0.8125,
+    "W2_control": 0.6175
+  },
+  "saved_tensor_differences_bitwise": true,
+  "post_restore_parity": {
+    "clips": 40,
+    "worst_tail_cosine_to_stored": 0.9999998211860657,
+    "worst_live_full_cosine_to_stored": 0.9999998211860657,
+    "threshold": 0.99999,
+    "worst_batched_tail_cosine_to_stored": 0.9999998211860657,
+    "post_restore_clips": 40,
+    "post_restore_worst_tail_cosine_to_stored": 0.9999998211860657,
+    "weights_restored_bitwise": true
+  }
+}

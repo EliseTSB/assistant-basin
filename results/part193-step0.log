@@ -1,0 +1,104 @@
+Running as unit: part193-step0.scope; invocation ID: 9cff99db173e448abbfae5c9e9c73e0c
+loading stored arrays
+sets {'fit_real': 228, 'fit_imit': 18, 'keep': 288, 'test_real': 20, 'test_imit': 20, 'esc_test': 224, 'other_imit': 112}
+fit imitation participants ['4515180000000000.0', '4725840000000000.0', '4747750000000000.0', '5105800000000000.0', '5168400000000000.0', '5178080000000000.0', '5417520000000000.0', '5466390000000000.0', '5526170000000000.0', '5648090000000000.0', '5657380000000000.0', '5692770000000000.0', '5713740000000000.0', '6285330000000000.0', '6288440000000000.0', '6521070000000000.0']
+Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]Loading weights:   1%|          | 8/1165 [00:00<00:23, 48.93it/s]Loading weights:   5%|▌         | 60/1165 [00:00<00:04, 256.01it/s]Loading weights:   8%|▊         | 90/1165 [00:00<00:05, 211.30it/s]Loading weights:  10%|█         | 122/1165 [00:00<00:04, 238.81it/s]Loading weights:  13%|█▎        | 149/1165 [00:00<00:05, 194.88it/s]Loading weights:  16%|█▌        | 184/1165 [00:00<00:04, 228.73it/s]Loading weights:  18%|█▊        | 210/1165 [00:01<00:04, 194.55it/s]Loading weights:  21%|██        | 243/1165 [00:01<00:04, 218.75it/s]Loading weights:  23%|██▎       | 267/1165 [00:01<00:04, 183.69it/s]Loading weights:  27%|██▋       | 313/1165 [00:01<00:04, 184.25it/s]Loading weights:  30%|██▉       | 344/1165 [00:01<00:03, 206.05it/s]Loading weights:  32%|███▏      | 375/1165 [00:01<00:04, 194.39it/s]Loading weights:  37%|███▋      | 429/1165 [00:01<00:02, 260.35it/s]Loading weights:  39%|███▉      | 459/1165 [00:02<00:03, 215.53it/s]Loading weights:  42%|████▏     | 491/1165 [00:02<00:02, 225.02it/s]Loading weights:  44%|████▍     | 517/1165 [00:02<00:03, 190.41it/s]Loading weights:  47%|████▋     | 553/1165 [00:02<00:02, 220.57it/s]Loading weights:  50%|████▉     | 578/1165 [00:02<00:03, 187.30it/s]Loading weights:  53%|█████▎    | 623/1165 [00:03<00:03, 179.17it/s]Loading weights:  58%|█████▊    | 680/1165 [00:03<00:02, 228.96it/s]Loading weights:  61%|██████    | 706/1165 [00:03<00:02, 203.67it/s]Loading weights:  64%|██████▍   | 746/1165 [00:03<00:01, 235.10it/s]Loading weights:  66%|██████▋   | 773/1165 [00:06<00:11, 33.92it/s] Loading weights: 100%|██████████| 1165/1165 [00:06<00:00, 177.02it/s]
+model loaded; starting parity-first capture; RSS 3.83 GiB
+parity 1/40 pix:6056 tail_cos=1.000000119 live_cos=1.000000119
+parity 2/40 pix:6379 tail_cos=0.999999940 live_cos=0.999999940
+parity 3/40 pix:7027 tail_cos=1.000000000 live_cos=1.000000000
+parity 4/40 pix:14874 tail_cos=0.999999821 live_cos=0.999999881
+parity 5/40 pix:17466 tail_cos=1.000000000 live_cos=1.000000000
+parity 6/40 esc:1-18074-A-6.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 7/40 esc:1-18074-B-6.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 8/40 esc:1-26806-A-1.wav tail_cos=1.000000119 live_cos=1.000000119
+parity 9/40 esc:1-27724-A-1.wav tail_cos=0.999999881 live_cos=1.000000000
+parity 10/40 esc:1-31251-A-6.wav tail_cos=1.000000000 live_cos=1.000000119
+parity 11/40 vis:v0037 tail_cos=1.000000000 live_cos=1.000000000
+parity 12/40 vis:v0038 tail_cos=1.000000000 live_cos=1.000000000
+parity 13/40 vis:v0045 tail_cos=1.000000000 live_cos=1.000000119
+parity 14/40 vis:v0048 tail_cos=1.000000000 live_cos=1.000000000
+parity 15/40 vis:v0052 tail_cos=1.000000000 live_cos=0.999999821
+parity 16/40 esc:1-100032-A-0.wav tail_cos=1.000000119 live_cos=1.000000119
+parity 17/40 esc:1-100038-A-14.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 18/40 esc:1-100210-A-36.wav tail_cos=1.000000119 live_cos=1.000000238
+parity 19/40 esc:1-100210-B-36.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 20/40 esc:1-101296-A-19.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 21/40 vis:v0168 tail_cos=1.000000119 live_cos=1.000000119
+parity 22/40 vis:v0169 tail_cos=0.999999940 live_cos=1.000000119
+parity 23/40 vis:v0170 tail_cos=1.000000000 live_cos=1.000000000
+parity 24/40 vis:v0171 tail_cos=1.000000238 live_cos=1.000000238
+parity 25/40 vis:v0172 tail_cos=1.000000000 live_cos=0.999999940
+parity 26/40 vis:v0036 tail_cos=1.000000000 live_cos=1.000000000
+parity 27/40 vis:v0039 tail_cos=1.000000119 live_cos=1.000000238
+parity 28/40 vis:v0040 tail_cos=1.000000119 live_cos=1.000000000
+parity 29/40 vis:v0041 tail_cos=0.999999881 live_cos=0.999999821
+parity 30/40 vis:v0042 tail_cos=1.000000000 live_cos=1.000000000
+parity 31/40 esc:4-102844-A-49.wav tail_cos=1.000000000 live_cos=1.000000119
+parity 32/40 esc:4-102844-B-49.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 33/40 esc:4-102871-A-42.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 34/40 esc:4-107117-A-33.wav tail_cos=1.000000000 live_cos=1.000000000
+parity 35/40 esc:4-107120-A-33.wav tail_cos=1.000000000 live_cos=0.999999940
+parity 36/40 vis:v0000 tail_cos=1.000000000 live_cos=1.000000119
+parity 37/40 vis:v0001 tail_cos=1.000000000 live_cos=1.000000119
+parity 38/40 vis:v0002 tail_cos=1.000000119 live_cos=1.000000119
+parity 39/40 vis:v0003 tail_cos=1.000000000 live_cos=1.000000119
+parity 40/40 vis:v0004 tail_cos=1.000000000 live_cos=1.000000000
+initial parity gate {'clips': 40, 'worst_tail_cosine_to_stored': 0.9999998211860657, 'worst_live_full_cosine_to_stored': 0.9999998211860657, 'threshold': 0.99999, 'worst_batched_tail_cosine_to_stored': 0.9999998211860657}; RSS 3.83 GiB
+unedited capture 50/870 pix:67257; tail_cache=0.53 GiB RSS=3.88 GiB elapsed=120s
+unedited capture 100/870 pix:147714; tail_cache=0.78 GiB RSS=4.15 GiB elapsed=170s
+unedited capture 150/870 pix:385051; tail_cache=0.98 GiB RSS=4.33 GiB elapsed=216s
+unedited capture 200/870 esc:1-155858-A-25.wav; tail_cache=1.14 GiB RSS=4.47 GiB elapsed=260s
+unedited capture 250/870 esc:1-30709-A-23.wav; tail_cache=1.14 GiB RSS=4.47 GiB elapsed=286s
+unedited capture 300/870 esc:2-106019-A-13.wav; tail_cache=1.16 GiB RSS=4.47 GiB elapsed=312s
+unedited capture 350/870 esc:2-144031-A-34.wav; tail_cache=1.17 GiB RSS=4.47 GiB elapsed=339s
+unedited capture 400/870 esc:3-103597-A-25.wav; tail_cache=1.19 GiB RSS=4.47 GiB elapsed=367s
+unedited capture 450/870 esc:3-138114-A-22.wav; tail_cache=1.20 GiB RSS=4.47 GiB elapsed=395s
+unedited capture 500/870 esc:3-51731-A-42.wav; tail_cache=1.22 GiB RSS=4.50 GiB elapsed=422s
+unedited capture 550/870 esc:4-164064-C-1.wav; tail_cache=1.32 GiB RSS=4.60 GiB elapsed=444s
+unedited capture 600/870 esc:4-204119-A-39.wav; tail_cache=1.42 GiB RSS=4.74 GiB elapsed=468s
+unedited capture 650/870 esc:5-188945-A-45.wav; tail_cache=1.52 GiB RSS=4.88 GiB elapsed=491s
+unedited capture 700/870 esc:5-233312-A-28.wav; tail_cache=1.62 GiB RSS=5.01 GiB elapsed=514s
+unedited capture 750/870 vis:v0034; tail_cache=1.73 GiB RSS=5.18 GiB elapsed=541s
+unedited capture 800/870 vis:v0094; tail_cache=1.82 GiB RSS=5.21 GiB elapsed=567s
+unedited capture 850/870 vis:v0144; tail_cache=1.95 GiB RSS=5.31 GiB elapsed=595s
+unedited capture 870/870 vis:v0187; tail_cache=2.00 GiB RSS=5.42 GiB elapsed=606s
+capture complete: 910 unique clips, 622 retained tail caches, 2.00 GiB cached, RSS 5.42 GiB
+position statistics {'fit_real_positions': 73465, 'fit_imitation_positions': 2264, 'keep_positions': 37152, 'w2_covariance_positions': 110617, 'w2_covariance_subsampled': False, 'w1_neuron_j': 1083, 'w1_mean_abs_activation': 0.0023233157116919756, 'mean_fit_x_dot_m': 2.1082383729320635, 'w1_tau_quantiles': [{'quantile': 0.1, 'tau': -0.3826479971408844}, {'quantile': 0.2, 'tau': -0.045996439456939694}, {'quantile': 0.30000000000000004, 'tau': 0.27251987755298634}, {'quantile': 0.4, 'tau': 0.5660678267478944}, {'quantile': 0.5, 'tau': 0.8625192642211914}, {'quantile': 0.6, 'tau': 1.131668186187744}, {'quantile': 0.7000000000000001, 'tau': 1.4269370555877692}, {'quantile': 0.8, 'tau': 1.7535500764846803}, {'quantile': 0.9, 'tau': 2.167310094833374}]}
+W1 grid tau 1/9 tau=-0.382648 a_med=0.9188206; 10/90 rows elapsed=139s
+W1 grid tau 2/9 tau=-0.04599644 a_med=0.6405774; 20/90 rows elapsed=277s
+W1 grid tau 3/9 tau=0.2725199 a_med=0.3986037; 30/90 rows elapsed=416s
+W1 grid tau 4/9 tau=0.5660678 a_med=0.1976164; 40/90 rows elapsed=557s
+W1 grid tau 5/9 tau=0.8625193 a_med=0.07446243; 50/90 rows elapsed=699s
+W1 grid tau 6/9 tau=1.131668 a_med=0.02306667; 60/90 rows elapsed=837s
+W1 grid tau 7/9 tau=1.426937 a_med=0.001252092; 70/90 rows elapsed=976s
+W1 selected j=1083 tau=0.27251988 tau_q=0.3 s=0.025 fit_auc=0.753655 fit_median_cos=0.948134
+W2 grid 1/10 s=0.025 fit_auc=0.856481 fit_median_cos=0.961554
+W2 grid 2/10 s=0.050 fit_auc=0.883528 fit_median_cos=0.936410
+W2 grid 3/10 s=0.075 fit_auc=0.893275 fit_median_cos=0.921606
+W2 grid 4/10 s=0.100 fit_auc=0.896199 fit_median_cos=0.913461
+W2 grid 5/10 s=0.150 fit_auc=0.897173 fit_median_cos=0.901743
+W2 grid 6/10 s=0.200 fit_auc=0.895468 fit_median_cos=0.893334
+W2 grid 7/10 s=0.250 fit_auc=0.893762 fit_median_cos=0.887918
+W2 grid 8/10 s=0.300 fit_auc=0.893275 fit_median_cos=0.884203
+W2 grid 9/10 s=0.400 fit_auc=0.888889 fit_median_cos=0.881595
+W2 grid 10/10 s=0.500 fit_auc=0.885721 fit_median_cos=0.880236
+W2_control grid 1/10 s=0.025 fit_auc=0.645468 fit_median_cos=0.986388
+W2_control grid 2/10 s=0.050 fit_auc=0.627193 fit_median_cos=0.970475
+W2_control grid 3/10 s=0.075 fit_auc=0.617934 fit_median_cos=0.959082
+W2_control grid 4/10 s=0.100 fit_auc=0.613304 fit_median_cos=0.953285
+W2_control grid 5/10 s=0.150 fit_auc=0.607456 fit_median_cos=0.944726
+W2_control grid 6/10 s=0.200 fit_auc=0.607943 fit_median_cos=0.938812
+W2_control grid 7/10 s=0.250 fit_auc=0.604776 fit_median_cos=0.933765
+W2_control grid 8/10 s=0.300 fit_auc=0.604045 fit_median_cos=0.930725
+W2_control grid 9/10 s=0.400 fit_auc=0.601608 fit_median_cos=0.926743
+W2_control grid 10/10 s=0.500 fit_auc=0.599415 fit_median_cos=0.923204
+W2 selected s=0.15 fit_auc=0.897173; W2-control s=0.025 fit_auc=0.645468; RSS 5.74 GiB
+W1 scored: auc=0.677500 bootstrap=[0.495, 0.8425] median_cos=0.951213 top={'clapping': 5, 'coughing': 3, 'laughing': 3, 'sneezing': 3, 'breathing': 1, 'drinking_sipping': 1, 'insects': 1, 'clock_tick': 1, 'crying_baby': 1, 'chainsaw': 1} nonchicken_cos_ge_0.999={'count': 35, 'total': 192, 'share': 0.18229166666666666} other_changed={'count': 53, 'total': 112, 'share': 0.4732142857142857}
+W2 scored: auc=0.812500 bootstrap=[0.6649375000000001, 0.93] median_cos=0.910302 top={'clapping': 6, 'sneezing': 4, 'coughing': 3, 'breathing': 2, 'laughing': 2, 'drinking_sipping': 1, 'clock_tick': 1, 'chainsaw': 1} nonchicken_cos_ge_0.999={'count': 0, 'total': 192, 'share': 0.0} other_changed={'count': 62, 'total': 112, 'share': 0.5535714285714286}
+W2_control scored: auc=0.617500 bootstrap=[0.43, 0.7875] median_cos=0.986252 top={'clapping': 5, 'laughing': 5, 'crying_baby': 2, 'sneezing': 2, 'rooster': 1, 'breathing': 1, 'drinking_sipping': 1, 'coughing': 1, 'insects': 1, 'clock_tick': 1} nonchicken_cos_ge_0.999={'count': 35, 'total': 192, 'share': 0.18229166666666666} other_changed={'count': 34, 'total': 112, 'share': 0.30357142857142855}
+gentle hook other-imitation description {'s': 0.2, 'gated_other_imitation_count': 40, 'other_imitation_top_class_changed': {'count': 31, 'total': 112, 'share': 0.2767857142857143}}
+weight restoration and final parity verified: {'clips': 40, 'worst_tail_cosine_to_stored': 0.9999998211860657, 'worst_live_full_cosine_to_stored': 0.9999998211860657, 'threshold': 0.99999, 'worst_batched_tail_cosine_to_stored': 0.9999998211860657, 'post_restore_clips': 40, 'post_restore_worst_tail_cosine_to_stored': 0.9999998211860657, 'weights_restored_bitwise': True}
+saved in-place patch deltas to results/part193/edits.npz; base sha256=197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79
+VERDICTS {"X1": {"prediction": "W1 reaches a held-out AUC of at least 0.75.", "held": false}, "X2": {"prediction": "W2 reaches a held-out AUC of at least 0.75.", "held": true}, "X3": {"prediction": "W1 leaves at least 80% of ESC-50 fold 4 and 5 non-chicken clips within cosine 0.999.", "held": false}, "X4": {"prediction": "W2 leaves fewer of those clips within cosine 0.999 than W1 does.", "held": true}, "X5": {"prediction": "W2's shuffled-label control has a lower held-out AUC than W2.", "held": true}}
+DONE seconds=1902.0 peak_rss_gib=5.74

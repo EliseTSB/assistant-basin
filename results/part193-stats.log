@@ -1,0 +1,148 @@
+Running as unit: part193-stats.scope; invocation ID: ad29c2d0aa174d2f9accddb438a25c33
+base matrix statistics 24/216
+base matrix statistics 48/216
+base matrix statistics 72/216
+base matrix statistics 96/216
+base matrix statistics 120/216
+base matrix statistics 144/216
+base matrix statistics 168/216
+base matrix statistics 192/216
+base matrix statistics 216/216
+wrote /home/elisepc/green/worktrees/ab-part193/results/part193/results.json
+193.4: 1=found W2=111111111 W2c=011111111 thresholds=(0.125,0.5) within_one_step=True agree_outside_band=True verdict=PASS
+{
+  "gate1": {
+    "passed": true,
+    "base_sha256": "197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79",
+    "published_settings": {
+      "W1": {
+        "neuron": 1083,
+        "tau_quantile": 0.3,
+        "s": 0.025,
+        "test_auc": 0.6775
+      },
+      "W2": {
+        "s": 0.15,
+        "test_auc": 0.8125
+      },
+      "W2_control": {
+        "s": 0.025,
+        "test_auc": 0.6175
+      }
+    },
+    "near_tie_fallbacks": {},
+    "held_out_auc": {
+      "W1": 0.6775,
+      "W2": 0.8125,
+      "W2_control": 0.6175
+    },
+    "saved_tensor_differences_bitwise": true,
+    "post_restore_parity": {
+      "clips": 40,
+      "worst_tail_cosine_to_stored": 0.9999998211860657,
+      "worst_live_full_cosine_to_stored": 0.9999998211860657,
+      "threshold": 0.99999,
+      "worst_batched_tail_cosine_to_stored": 0.9999998211860657,
+      "post_restore_clips": 40,
+      "post_restore_worst_tail_cosine_to_stored": 0.9999998211860657,
+      "weights_restored_bitwise": true
+    }
+  },
+  "gate2": {
+    "passed": true,
+    "all_safetensors_tensors_bit_identical": true,
+    "verified_edit_target_matrices": [
+      "language_model.layers.20.mlp.down_proj.weight",
+      "language_model.layers.20.mlp.gate_proj.weight",
+      "language_model.layers.20.mlp.up_proj.weight"
+    ],
+    "r1_changed_matrices": {
+      "W1": [],
+      "W2": [],
+      "W2_control": []
+    }
+  },
+  "gate3": {
+    "passed": true,
+    "W1_R1": [
+      {
+        "key": "language_model.layers.20.mlp.down_proj.weight",
+        "rank": 1,
+        "shape": [
+          512,
+          2048
+        ],
+        "nonzero_elements": 512,
+        "sigma2_over_sigma1": 0.0,
+        "matrix_shape": [
+          512,
+          2048
+        ],
+        "changed_axis": "column",
+        "changed_index": 1083
+      },
+      {
+        "key": "language_model.layers.20.mlp.gate_proj.weight",
+        "rank": 1,
+        "shape": [
+          2048,
+          512
+        ],
+        "nonzero_elements": 512,
+        "sigma2_over_sigma1": 0.0,
+        "matrix_shape": [
+          2048,
+          512
+        ],
+        "changed_axis": "row",
+        "changed_index": 1083
+      },
+      {
+        "key": "language_model.layers.20.mlp.up_proj.weight",
+        "rank": 1,
+        "shape": [
+          2048,
+          512
+        ],
+        "nonzero_elements": 512,
+        "sigma2_over_sigma1": 0.0,
+        "matrix_shape": [
+          2048,
+          512
+        ],
+        "changed_axis": "row",
+        "changed_index": 1083
+      }
+    ],
+    "W2_R1": [
+      {
+        "key": "language_model.layers.20.mlp.down_proj.weight",
+        "rank": 1,
+        "shape": [
+          512,
+          2048
+        ],
+        "nonzero_elements": 1048576,
+        "sigma2_over_sigma1": 1.2419229833099631e-08
+      }
+    ],
+    "W2_control_R1": [
+      {
+        "key": "language_model.layers.20.mlp.down_proj.weight",
+        "rank": 1,
+        "shape": [
+          512,
+          2048
+        ],
+        "nonzero_elements": 1048576,
+        "sigma2_over_sigma1": 1.3892369213490067e-08
+      }
+    ],
+    "W1_changed_neuron": 1083
+  },
+  "gate4": {
+    "passed": false,
+    "f1_first_count_at_2x": 22,
+    "placements": 24
+  }
+}
