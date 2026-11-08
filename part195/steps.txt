@@ -1,0 +1,36 @@
+# Part 195 runs Part 81 on eager attention. Keep GPU stages in separate launches.
+# Before each host step, copy the WHOLE job-folder results\part195 back to the repo.
+# Host CPU steps run only between launches; never run them beside a GPU stage.
+# launch_arc.py normally waits for the job's start line, not its completion: wait for this stage's rc=0 in progress.log before copying or doing host work.
+# First run the CPU suite from the repo root:
+/home/elisepc/neuron-probe/.venv/bin/python -I -B -m pytest part195/test_part195.py -q
+
+# Eager calibration: the 400-window Pile file is already staged in the Arc job folder at qwen35\pile10k.jsonl.
+/home/elisepc/neuron-probe/.venv/bin/python -I tools/launch_arc.py 195 --step "-I -B part195\\run195.py step0 --out results\\part195\\step0 --pile qwen35\\pile10k.jsonl --windows 400 --batch 4 --device xpu" --copy neuron_report.py circuit.py part25.py part66/part66.py part78/part78.py part79/__init__.py part79/part79.py part81/__init__.py part81/part81.py part81/prompts.json part195/__init__.py part195/run195.py
+# Copy the whole results\part195 folder back first; then check load and calibration on the host.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0
+# Read results/part195/step0/step0.json. Continue only if the stage completed and the config says eager.
+
+# Repeat Part 81's eight-answer pilot with the eager medians.
+/home/elisepc/neuron-probe/.venv/bin/python -I tools/launch_arc.py 195 --step "-I -B part195\\run195.py pilot --out results\\part195\\pilot --step0-file results\\part195\\step0\\step0.json --device xpu" --copy neuron_report.py circuit.py part25.py part66/part66.py part78/part78.py part79/__init__.py part79/part79.py part81/__init__.py part81/part81.py part81/prompts.json part195/__init__.py part195/run195.py results/part195/load.json results/part195/step0/step0.json
+# Copy the whole results\part195 folder back before host work; check both model stages.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot
+# Make the shuffled pilot reader input and key; send only the input and unchanged brief to Claude Haiku 5.5.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py make-pilot-reader --dir results/part195/pilot
+# Owner reads pilot_reader_chunk.jsonl blind with part81/READER-BRIEF.md and saves eight JSONL labels here.
+# Do not show the key. Record the label file, score the pilot gate; pilot-score exits 3 if it fails, and the owner stops there.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py record-reader --stage pilot-reader --dir results/part195/pilot --file results/part195/pilot/pilot_reader_labels.jsonl --rows 8
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py pilot-score --dir results/part195/pilot
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score
+
+# Main 640-answer Part 81 battery. Copy the complete prior load record and fresh inputs to the job folder.
+/home/elisepc/neuron-probe/.venv/bin/python -I tools/launch_arc.py 195 --step "-I -B part195\\run195.py main --out results\\part195\\main --step0-file results\\part195\\step0\\step0.json --pilot-labels results\\part195\\pilot\\pilot-labels.json --device xpu" --copy neuron_report.py circuit.py part25.py part66/part66.py part78/part78.py part79/__init__.py part79/part79.py part81/__init__.py part81/part81.py part81/prompts.json part195/__init__.py part195/run195.py results/part195/load.json results/part195/step0/step0.json results/part195/pilot/pilot-labels.json
+# Copy the whole results\part195 folder back before host work; check the eager record and then make six shuffled chunks.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score,main
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py make-reader-chunks --dir results/part195/main
+# Owner sends each chunk separately with part81/READER-BRIEF.md to Claude Haiku 5.5, using the same model id as Part 81.
+# Keep the key private; save exactly 640 JSONL labels, then record them and score with Part 81's unchanged scorer.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py record-reader --stage main-reader --dir results/part195/main --file results/part195/main/reader_labels.jsonl --rows 640
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py score --dir results/part195/main --reader results/part195/main/reader_labels.jsonl --pilot-labels results/part195/pilot/pilot-labels.json
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part195/run195.py --check-record results/part195/load.json --expect step0,pilot,pilot-reader-chunks,pilot-reader,pilot-score,main,main-reader-chunks,main-reader,score
+# Compare results/part195/main/results81.json with the published values and predictions in PART195-DESIGN.md.
