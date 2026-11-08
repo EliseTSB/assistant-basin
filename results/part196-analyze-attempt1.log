@@ -1,0 +1,14 @@
+Running as unit: part196-analyze.scope; invocation ID: a50d44179536495ab1c022539436d0f6
+Traceback (most recent call last):
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 868, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 855, in main
+    result = analyze(manifest_path=args.manifest, work_dir=args.work_dir, out_dir=args.out_dir,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 595, in analyze
+    style_profile = selected_style_profile(rows, successful_ids, read_metadata(data_dir))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/elisepc/green/worktrees/ab-part196/part196/analyze196.py", line 49, in selected_style_profile
+    raise ValueError(f"metadata identity differs from manifest for {clip_id}")
+ValueError: metadata identity differs from manifest for ex02_default_00001

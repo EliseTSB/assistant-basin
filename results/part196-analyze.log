@@ -1,0 +1,2 @@
+Running as unit: part196-analyze.scope; invocation ID: 38fd079f26e242a1a0236cc917e31236
+{"gate_verdicts": {"gate1": "passed", "gate2": "passed"}, "reading_conditions": {"b56_minus_d_non_inferiority": {"condition_passed": false, "lower_95_bound": -0.05626451189721867, "lower_bound_threshold": -0.03}, "d_above_chance": {"condition_passed": true, "lower_95_bound": 0.24466513746262125, "threshold": 0.14285714285714285}}, "results": "results/part196/results.json", "status": "complete"}
