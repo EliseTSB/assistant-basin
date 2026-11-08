@@ -618,7 +618,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path,
         a_test_scores = test_cosines[:, :, 0]
         a_test_pred = a_test_scores.argmax(axis=1)
         train_selected, selection = select_b_phrasings(train_cosines, train_y)
-        test_selected, _ = select_b_phrasings_from_details(test_cosines, selection)
+        test_selected = select_b_phrasings_from_details(test_cosines, selection)
 
         # B: one scale and sum-zero offsets fitted to the train-selected cosines.
         b_fit = fit_calibrated_verdict(train_selected, train_y)
