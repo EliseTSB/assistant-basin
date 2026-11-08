@@ -1,0 +1,319 @@
+{
+  "part194": {
+    "requested_attention": "eager",
+    "source": "Part 24 config._attn_implementation",
+    "run_id": "1da516d0dd374ab397ecc006bdac57f3"
+  },
+  "loads": [
+    {
+      "entry_id": "ec358e80265e464ca8a919ac207b8450",
+      "stage": "reach",
+      "status": "complete",
+      "run_id": "1da516d0dd374ab397ecc006bdac57f3",
+      "started": "2026-11-08 04:21:09",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "batch_plan": {
+        "forward_batch_size": 1,
+        "questions": 6,
+        "k_values_per_question": 4
+      },
+      "batch_shapes": [
+        {
+          "shape": [
+            1,
+            46
+          ],
+          "calls": 4
+        },
+        {
+          "shape": [
+            1,
+            67
+          ],
+          "calls": 4
+        },
+        {
+          "shape": [
+            1,
+            70
+          ],
+          "calls": 4
+        },
+        {
+          "shape": [
+            1,
+            71
+          ],
+          "calls": 4
+        },
+        {
+          "shape": [
+            1,
+            73
+          ],
+          "calls": 4
+        },
+        {
+          "shape": [
+            1,
+            76
+          ],
+          "calls": 4
+        }
+      ],
+      "generate_calls": [],
+      "output_files": [
+        {
+          "path": "reach.json",
+          "bytes": 1459754,
+          "sha256": "ded134180645a0286579c2cc17724f4cc541ea478c91da479b2c7878e1ebe19b"
+        }
+      ],
+      "argv": [
+        "reach",
+        "--out",
+        "results\\part194"
+      ],
+      "finished": "2026-11-08 04:21:17"
+    },
+    {
+      "entry_id": "d7b733f138984eaaad81c5a65503bcae",
+      "stage": "assay",
+      "status": "complete",
+      "run_id": "1da516d0dd374ab397ecc006bdac57f3",
+      "started": "2026-11-08 04:22:59",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "batch_plan": {
+        "forward_batch_size": 8,
+        "sequences_padded_within_batch": true
+      },
+      "batch_shapes": [
+        {
+          "shape": [
+            8,
+            26
+          ],
+          "calls": 420
+        },
+        {
+          "shape": [
+            8,
+            27
+          ],
+          "calls": 390
+        },
+        {
+          "shape": [
+            8,
+            28
+          ],
+          "calls": 435
+        },
+        {
+          "shape": [
+            8,
+            29
+          ],
+          "calls": 210
+        },
+        {
+          "shape": [
+            8,
+            30
+          ],
+          "calls": 90
+        },
+        {
+          "shape": [
+            8,
+            31
+          ],
+          "calls": 210
+        }
+      ],
+      "generate_calls": [],
+      "output_files": [
+        {
+          "path": "assay.json",
+          "bytes": 6742418,
+          "sha256": "7557dd6a3c42c0208e9d285857cc2ac8689b7a83a81fae88b65cf8ddf3c0e5f7"
+        }
+      ],
+      "argv": [
+        "assay",
+        "--batch-size",
+        "8",
+        "--out",
+        "results\\part194"
+      ],
+      "finished": "2026-11-08 04:49:47"
+    },
+    {
+      "entry_id": "e38b36de440749b7b2c46ec7f4fdf757",
+      "stage": "samples",
+      "status": "complete",
+      "run_id": "1da516d0dd374ab397ecc006bdac57f3",
+      "started": "2026-11-08 04:51:01",
+      "model_loads": [
+        {
+          "model": "Qwen/Qwen3.5-4B",
+          "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+          "device": "xpu",
+          "requested_attn_implementation": "eager",
+          "attn_implementation": "eager"
+        }
+      ],
+      "batch_plan": {
+        "sequences_per_generate": 8,
+        "max_new_tokens": 64
+      },
+      "batch_shapes": [
+        {
+          "shape": [
+            8,
+            1
+          ],
+          "calls": 1512
+        },
+        {
+          "shape": [
+            8,
+            16
+          ],
+          "calls": 24
+        }
+      ],
+      "generate_calls": [
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        },
+        {
+          "num_return_sequences": 8,
+          "max_new_tokens": 64
+        }
+      ],
+      "output_files": [
+        {
+          "path": "samples.json",
+          "bytes": 58415,
+          "sha256": "e3322284a1501c719959182cd4c6bfb2156dea5a6637c41278059881774e9da3"
+        }
+      ],
+      "argv": [
+        "samples",
+        "--samples",
+        "8",
+        "--max-new",
+        "64",
+        "--out",
+        "results\\part194"
+      ],
+      "finished": "2026-11-08 04:59:24"
+    }
+  ]
+}

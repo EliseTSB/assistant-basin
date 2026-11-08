@@ -535,6 +535,9 @@ push lands.** (24.1-24.7; results/part24/; score_part24.py recomputes every numb
 - Read together: the effects add in log-probability, but the identity neurons decide which slot the answer fills (who
   the model is, or who made it), and the alien push fills whichever slot is open. Two questions, eight samples each,
   counted by hand, is a small sample.
+- [Part 194](results/part194/README.md) reran it on the eager attention kernel: the fixed-answer numbers move by at most
+  0.018, the fresh blind-read counts by at most one answer in 16 (24b.2's small denominator aside), and every scorable
+  verdict is the same. 24.6 and 24.7 (hand labels) were not re-scored.
 
 **Qwen3.5-4B: identity neurons found by their effect, and how they connect.** (19.1-19.6; results/part19/; Elise asked
 for this.) A gradient screen over all 294,912 neurons ranks how much zeroing each would change the log-probability of
@@ -2748,6 +2751,8 @@ independently rests on their instructions, not on anything the files can show.
 **[Part 191](results/part191/README.md)**, 2026-11-08. Does Part 153's result hold on the eager attention kernel? Yes. The same ten company neurons, battery and scorer on eager (Part 178 found the default SDPA kernel leaving the CPU reference after about 64 keys): 7 of 10 neurons hit their company on at least 12 of 24 maker phrasings (7 on SDPA), mean hit rate 0.596 against 0.113 for paired random directions (0.629 against 0.113), L24 N5017 names Google on 17 of 24 maker and 7 of 8 identity phrasings (20 and 7). All six predictions held and Part 153's four verdicts are unchanged. Descriptive: the SDPA answers were cut short (median 60 tokens against 82; 27% of them end mid-phrase against 0.3% on eager); the counts held because the company is named in the first sentence, where the kernels usually agree. One answer per phrasing, one dose.
 
 **[Part 192](results/part192/README.md)**, 2026-11-08. Do Part 39's results on Qwen3.5-4B L6 N753 hold on the eager attention kernel? The verdicts do, the push result does not. Plain and template reads, zeroing (48 and 46 of 48 AI claims) and the section D screen (213 chat and 203 base passing units, N753 at AUC 0.92 in both, strict set 56, 43 and 27 shared) reproduce closely, and all ten scorable Part 39 verdicts are unchanged. Under the Sam persona, pushing N753 at 2x gives 0 of 96 AI claims, not the published 8 of 96 (192.6 failed). With the same seeds on every row, each of the nine published claims' answers begins with the same words on eager and then stays in persona, and no new claim appears in 408 rows; several published claims were degraded text. So that number measured the faulty kernel. One persona, one dose ladder, 96 samples per dose. 8 of 9 predictions held. Also corrected: Part 39's 39.8 row said 147 passing units sit in layers 19 to 31; its own file gives 177.
+
+**[Part 194](results/part194/README.md)**, 2026-11-08. Does Part 24 hold on the eager attention kernel? Yes. With the same units, prompts, doses and seeds, the alien neuron's reach (0.0 at or below its layer), the late-layer change (identity 0.482 against random 0.805), the fixed-answer effects (3.149, 3.085 and 3.150 at 2x) and the extra " Alibaba Cloud." drop (0.165) sit within 0.018 of the published values. Part 24b's unchanged blind reader on 192 fresh answers gives 12 of 16 invented alien-named makers with identity units zeroed at 2x (13 published) and 15, 16 and 16 alien answers at 2x (15, 16, 15). All ten predictions held and every scorable verdict is unchanged; 24.6 and 24.7 used hand labels and were not re-scored.
 
 ### Running or designed (2026-10-21)
 
