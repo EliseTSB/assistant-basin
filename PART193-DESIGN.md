@@ -1,7 +1,7 @@
 # Part 193: can weight statistics alone find our own edits in EmbeddingGemma 2, with and without the original weights?
 
 Procedure: v1
-Registered <time from date> CT
+Registered 2026-11-08 05:04 CT
 Asked by Elise (2026-11-07 23:36 CT, Discord): methods to detect weight edits are valuable, and detecting benign edits is
 the same purely defensive technology. Scope: detection and localization only, on edits we made ourselves for benign
 reasons. No edit designed to evade a statistic is built.
@@ -218,4 +218,8 @@ moves (pilot (a)); it is reported at every dose like the others.
   norms; Gate 3 measures the full W1 row/column support; R1 uses saved-dtype tolerance and reports sigma2/sigma1; sibling
   ranks compare raw values on one reference set. The design's gate, ranking and R1 descriptions and SVD count were updated
   to match those code changes; predictions and tie rule are unchanged.
-- The registration time remains `Registered <time from date> CT`; it is stamped from `date` at commit.
+- Code reviews: DeepSeek V4.1 Flash reviewed the build three times (review part193build, rounds 1 to 3); each round was
+  folded. Left as documented: Gate 2's dose-zero comparison cannot fail for a finite delta; Gate 1's array-sha binding
+  is by construction when step 0 writes both files; f3_layer_null's ranks (descriptive only); 193.4 is computed after
+  the statistics, so Gate 1 is what stops a bad run.
+- Registered 2026-11-08 05:04 CT, stamped from `date`.
