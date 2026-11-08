@@ -50,7 +50,10 @@ large enough to be worth an edit?
   than one speaker is dropped. A transcript-only readout (T below) measures how much style the words alone still carry
   in this pool.
 - Clips: sort each speaker's in-range pool texts, then shuffle them in speaker order with one generator initialized at
-  seed 196 (`numpy.random.default_rng(196)`). For each text, add its id-sorted in-range clips up to the remaining space
+  seed 196 (`numpy.random.default_rng(196)`), then stable-sort them so texts carrying the speaker's rarest styles come
+  first (key: the smallest in-range pool size among the text's styles; ties keep the shuffled order). Without that order
+  the common cells fill first and a text whose only open cell is the rare one is skipped, which starved ex01/laughing to
+  38 of 45 available clips. For each text, add its id-sorted in-range clips up to the remaining space
   in each style cell below 100; skip it when fewer than two styles would receive a clip. Stop when all seven cells reach
   100 or the text list runs out. Thus every
   drawn (speaker, text) cluster has at least two styles in the drawn set. Audio is decoded to mono 16 kHz and capped at
@@ -111,21 +114,21 @@ large enough to be worth an edit?
 ## Size
 
 - Smallest effect worth knowing: a gap of 5 points of balanced accuracy between D and B.
-- Total: the current header-filtered text draw contains 2,705 clips (mean selected WAV duration 3.58 s), with these
+- Total: the header-filtered text draw contains 2,724 clips (mean selected WAV duration 3.76 s), with these
   speaker/style counts:
 
   | Speaker | Confused | Default | Enunciated | Happy | Laughing | Sad | Whisper |
   | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-  | ex01 | 100 | 100 | 100 | 100 | 38 | 100 | 100 |
-  | ex02 | 100 | 97 | 100 | 100 | 100 | 100 | 100 |
-  | ex03 | 100 | 96 | 100 | 100 | 100 | 100 | 100 |
-  | ex04 | 100 | 100 | 100 | 100 | 74 | 100 | 100 |
+  | ex01 | 96 | 100 | 100 | 100 | 45 | 100 | 100 |
+  | ex02 | 100 | 100 | 100 | 100 | 100 | 100 | 93 |
+  | ex03 | 100 | 100 | 99 | 100 | 100 | 100 | 100 |
+  | ex04 | 100 | 91 | 100 | 100 | 100 | 100 | 100 |
 
-  All 568 drawn (speaker, text) clusters have two or more styles (100%). This draw is below Gate 1's 40-clip floor for
-  ex01/laughing (38), so the part must stop before recording until the draw and floor can both be satisfied. The
-  recording-time estimate uses Part 188's measured 0.68 seconds per 5-second clip, scaled by the selected clips' mean
-  WAV-header duration: `clip_count × mean_duration_seconds ÷ 5 × 0.68 seconds`, or about 21.9 minutes for this draw.
-  This is an estimate; longer clips take more time and per-clip costs vary. Probes, bootstraps and pitch features take a
+  All 472 drawn (speaker, text) clusters have two or more styles (100%). ex01/laughing takes all 45 of its in-range
+  clips, above Gate 1's 40-clip floor; a clip that fails to record can still take it below. The recording-time estimate
+  uses Part 188's measured 0.68 seconds per 5-second clip, scaled by the selected clips' mean WAV-header duration:
+  `clip_count × mean_duration_seconds ÷ 5 × 0.68 seconds`, or about 23.2 minutes for this draw. This is an estimate;
+  longer clips take more time and per-clip costs vary. Probes, bootstraps and pitch features take a
   few minutes. Gate 1 requires at least 40 successfully recorded clips in each speaker/style cell.
 - Pilot: none; the gates stop the part before any readout is read if the data or recorder fail.
 

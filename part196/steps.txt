@@ -13,7 +13,8 @@ Part 196 run steps
    setsid nohup systemd-run --user --scope --collect --unit=part196-record --property=MemoryMax=6G env PYTHONPATH=/home/elisepc/eg2-extra OMP_NUM_THREADS=6 MKL_NUM_THREADS=6 OPENBLAS_NUM_THREADS=6 HF_HUB_OFFLINE=1 /home/elisepc/neuron-probe/.venv/bin/python -B part196/record196.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --threads 6 > results/part196-record.log 2>&1 < /dev/null &
    Gate 2 runs first. A parity failure stops before an Expresso clip is recorded; Gate 1 is checked after the header
    filter and again on successfully recorded clips before analysis. `pyworld` is used by Part 196's acoustic feature
-   extractor (not by Part 188's model loader); install the `pyworld` Python package into this interpreter's environment.
+   extractor (not by Part 188's model loader); pyworld 0.3.5 was installed into /home/elisepc/eg2-extra on 2026-11-08
+   (pip --target --no-deps; same Python 3.12 and numpy 2.x as the venv), so the PYTHONPATH above provides it.
    Successful clip rows and atomically written text assets are resumable from /mnt/e/neuron-probe/part196-work.
 3. After recording finishes, run:
    /home/elisepc/neuron-probe/.venv/bin/python -I -B part196/analyze196.py --manifest part196/manifest196.csv --work-dir /mnt/e/neuron-probe/part196-work --out-dir results/part196
