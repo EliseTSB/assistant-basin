@@ -1,0 +1,57 @@
+Part 193 execution order (run from the worktree root)
+
+The regeneration is step 0 and takes about 32 minutes on CPU. Do not run it beside an A770 job: WSL RAM counts against Windows free RAM, and the GPU job is killed below 2 GB Windows free RAM. Schedule step 0 only when the host has enough headroom for the 8 GiB cgroup cap plus that 2 GB reserve. Step 0 runs the model on CPU and uses the pinned local snapshot only.
+
+Before step 0, verify the import from the same external package path used by the
+published scripts. The cold review measured 481.3 MiB peak RSS after loading and
+cloning a 128 MiB tensor; steps 2 and 3 are capped at 1 GiB (more than twice
+that measured peak), and the fixed analysis no longer clones or scans the full
+checkpoint.
+
+```sh
+HF_HUB_OFFLINE=1 PYTHONPATH=/home/elisepc/eg2-extra /home/elisepc/neuron-probe/.venv/bin/python -c "import sentence_transformers"
+```
+
+1. Regenerate the published edits and save the live in-place patches. Do not skip the cap or run another memory-heavy job at the same time.
+
+```sh
+cd /home/elisepc/green/worktrees/ab-part193
+DATA=/home/elisepc/green/Journal/notes/reports/embeddinggemma2-chicken-neurons-2026-11-03
+BASE=/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e
+systemd-run --user --scope --wait -p MemoryMax=8G -- env HF_HUB_OFFLINE=1 PYTHONPATH=/home/elisepc/eg2-extra \
+  /home/elisepc/neuron-probe/.venv/bin/python -B part193/chicken_edit/weight_edit.py \
+  --acts "$DATA/acts.npz" --vis-acts "$DATA/vis_acts.npz" \
+  --pixabay-acts "$DATA/pixabay_acts.npz" --vis-manifest "$DATA/vis_manifest.csv" \
+  --edit-verdicts "$DATA/edit_verdicts.json" --gentle-results "$DATA/gentle_results.json" \
+  --inside-params "$DATA/inside_params.npz" --model "$BASE" \
+  --base-safetensors "$BASE/model.safetensors" \
+  --esc-audio /mnt/e/neuron-probe/esc50/audio \
+  --pixabay-audio /mnt/e/neuron-probe/pixabay-chicken \
+  --vis-audio /mnt/e/neuron-probe/vocalimitationset/audio \
+  --ffmpeg /home/elisepc/eg2-extra/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2 \
+  --results results/part193/weight_edit_results.json \
+  --out-other results/part193/other_items.json \
+  --save-edits results/part193/edits.npz
+```
+
+2. Run Gate 1 before any statistics. It checks the base hash, published fit settings and AUCs, parity, and the saved live-patch differences.
+
+```sh
+BASE=/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e
+systemd-run --user --scope --wait -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part193/stats193.py \
+  --base-safetensors "$BASE/model.safetensors" \
+  --saved-edits results/part193/edits.npz \
+  --step0-results results/part193/weight_edit_results.json --gate1-only
+```
+
+3. If Gate 1 passes, compute the reference-free ladders, F3, R1, nulls, and Gates 2 to 4. The program reads safetensors one tensor at a time and writes `results/part193/results.json`.
+
+```sh
+BASE=/mnt/e/neuron-probe/hf/hub/models--google--embeddinggemma-2/snapshots/f9972ac22e696a105c482202646979e33e4b5a1e
+systemd-run --user --scope --wait -p MemoryMax=1G -- env HF_HUB_OFFLINE=1 \
+  /home/elisepc/neuron-probe/.venv/bin/python -I -B part193/stats193.py \
+  --base-safetensors "$BASE/model.safetensors" \
+  --saved-edits results/part193/edits.npz \
+  --step0-results results/part193/weight_edit_results.json
+```

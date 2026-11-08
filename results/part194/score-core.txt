@@ -1,0 +1,8 @@
+24.1 max relative change, layers <= 22, any k: 0.0  -> held
+24.2 k=2 identity 0.482 vs random 0.805, ratio 0.60  -> held
+24.3 identity median name retention at k=2 0.585 (random 0.665)  -> failed
+24.4 Alibaba Cloud per token: identity -3.137, random -2.972, none -2.888; extra drop 0.165  -> failed
+24.5 k=1.0: none 1.551, identity 1.603, random 1.556; |difference| 0.047 vs quarter 0.388
+24.5 k=2.0: none 3.149, identity 3.085, random 3.150; |difference| 0.064 vs quarter 0.787
+24.5 additive  -> held
+24.6 and 24.7 are not scored here: their published verdicts used the original hand labels.
