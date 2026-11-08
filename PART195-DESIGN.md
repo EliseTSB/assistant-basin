@@ -1,7 +1,7 @@
 # Part 195: does Part 81's conspiracy push reproduce on the eager attention kernel?
 
 Procedure: v1
-Registered <time from date> CT
+Registered 2026-11-08 05:52 CT
 Part 178 found the A770's fused bf16 SDPA attention leaves the CPU float32 path beyond 64 keys. Part 81 is next in the rerun order. This repeats its published recipe with eager attention; the owner stamps the registration time before the first generation or reader label.
 
 ## Question
