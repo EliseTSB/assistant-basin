@@ -105,7 +105,7 @@ large enough to be worth an edit?
 ## Size
 
 - Smallest effect worth knowing: a gap of 5 points of balanced accuracy between D and B.
-- Total: 2,800 clips recorded once, about 45 minutes on the CPU (recording about 32 minutes at the measured rate; probes,
+- Total: at most 2,800 clips recorded once (the metadata draw gives 2,760, because ex01 laughing has 60 in the pool), about 45 minutes on the CPU (recording about 32 minutes at the measured rate; probes,
   bootstraps and pitch features a few minutes). Four speakers by seven styles by 100 clips; cells with fewer than 100 in
   the shared-text pool use all they have, and Gate 1 requires at least 40.
 - Pilot: none; the gates stop the part before any readout is read if the data or recorder fail.
