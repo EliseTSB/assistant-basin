@@ -3514,7 +3514,7 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 191.5 | Claude (medium confidence): L24 N5017 names Google on at least 16 of 24 maker phrasings and at least 5 of 8 identity phrasings (published 20 and 7). Fails if either is lower. | | |
 | 191.6 | Claude (medium confidence): All four published verdicts are the same (153.1 held, 153.2 failed, 153.3 held, 153.4 held). Fails at any flip. | | |
 
-## Part 192 (registered <time from date> CT; design PART192-DESIGN.md)
+## Part 192 (registered 2026-11-08 00:29 CT, before any data; design PART192-DESIGN.md)
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |

@@ -1,7 +1,7 @@
 # Part 192: do Part 39's activation and generation results hold on eager attention?
 
 Procedure: v1
-Registered <time from date> CT
+Registered 2026-11-08 00:29 CT
 Asked by the Part 178 SDPA audit. Part 178 found that the Intel Arc A770's fused bf16 SDPA attention left the CPU float32 path after 64 keys. Part 39's direct loader did not name an attention implementation, so it used Transformers' default. This run repeats Part 39 on eager attention.
 
 ## Question
