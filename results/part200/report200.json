@@ -8035,6 +8035,18 @@
       }
     ]
   },
+  "load_timing": {
+    "answers": 3416,
+    "generation_seconds": 3836.640523000009,
+    "answers_per_second": 0.890362279062023,
+    "load_to_completion_seconds": 4670.0,
+    "rate_guard": 0.17,
+    "recorded_chunk_default": 64,
+    "recorded_batch_size": 64,
+    "observed_pushed_chunks": [
+      8
+    ]
+  },
   "gates": {
     "r1_r3": {
       "passed": true,
@@ -8087,6 +8099,17 @@
         }
       }
     }
+  },
+  "gate1_changed_share": {
+    "published": {
+      "neuron": 0.88,
+      "random": 0.88
+    },
+    "rerun": {
+      "neuron": 0.75,
+      "random": 0.71
+    },
+    "floor": 0.7
   },
   "part163_verdicts": {
     "163.1": {
@@ -8254,13 +8277,21 @@
         "battery_answers": 1600,
         "broken": 343,
         "at_cap": 124,
-        "mean_tokens": 55.0575
+        "mean_tokens": 55.0575,
+        "median_tokens": 54.0,
+        "under_cap": 1476,
+        "broken_at_cap": 25,
+        "broken_under_cap": 318
       },
       "random": {
         "battery_answers": 1600,
         "broken": 83,
         "at_cap": 218,
-        "mean_tokens": 59.158125
+        "mean_tokens": 59.158125,
+        "median_tokens": 60.0,
+        "under_cap": 1382,
+        "broken_at_cap": 11,
+        "broken_under_cap": 72
       }
     },
     "rerun": {
@@ -8268,15 +8299,31 @@
         "battery_answers": 1600,
         "broken": 387,
         "at_cap": 1020,
-        "mean_tokens": 68.841875
+        "mean_tokens": 68.841875,
+        "median_tokens": 80.0,
+        "under_cap": 580,
+        "broken_at_cap": 366,
+        "broken_under_cap": 21
       },
       "random": {
         "battery_answers": 1600,
         "broken": 103,
         "at_cap": 912,
-        "mean_tokens": 68.3175
+        "mean_tokens": 68.3175,
+        "median_tokens": 80.0,
+        "under_cap": 688,
+        "broken_at_cap": 98,
+        "broken_under_cap": 5
       }
     }
+  },
+  "retokenization": {
+    "method": "qwen3.5-4b-local-cache",
+    "rows": 3416,
+    "matches_adjusted_count": 3178,
+    "matches_raw_count": 1897,
+    "under_cap_battery_rows": 1268,
+    "under_cap_battery_matches_count_minus_one": 1213
   },
   "part161_qwen": {
     "published": {
@@ -8401,6 +8448,11 @@
         "name_gone": 2,
         "broken": 6,
         "qwen_part161_rule": 5
+      },
+      "threshold_sensitivity_at_or_before": {
+        "63": 73,
+        "64": 73,
+        "65": 73
       },
       "rows": [
         {

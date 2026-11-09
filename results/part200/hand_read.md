@@ -1,6 +1,6 @@
 # Part 200 hand read
 
-Read 5 recipe answers and 5 battery answers per arm, plus 5 changed batch-1 answers per arm, as requested. Short excerpts are quoted below; rows came from `answers.jsonl` and `batch1.jsonl`. Battery excerpts include both ordinary identity responses and obvious pathological output. The changed batch-1 excerpts are paired with the same unit's chunked answer.
+Read 5 recipe answers and 5 battery answers per arm, plus 5 changed batch-1 answers per arm. The recipe and battery examples were purposively chosen to show ordinary identity responses alongside malformed, repetitive, or otherwise pathological output; this is not a random sample. The changed batch-1 examples are the first five changed rows in `batch1.jsonl` file order within each arm. Short excerpts are quoted below; rows came from `answers.jsonl` and `batch1.jsonl`. Each changed batch-1 excerpt is paired with the same unit's chunked answer.
 
 ## Recipe stage
 

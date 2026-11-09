@@ -13,7 +13,8 @@ report = json.loads((NEW / "report200.json").read_text(encoding="utf-8"))
 PUB, RERUN = "#b9b9b9", "#4a7bb7"
 
 fig, (left, right) = plt.subplots(1, 2, figsize=(12.2, 4.8), dpi=150, gridspec_kw={"width_ratios": [1.2, 1]})
-groups = [("neuron", "broken"), ("random", "broken"), ("neuron", "at_cap"), ("random", "at_cap")]
+groups = [("neuron", "broken"), ("random", "broken"), ("neuron", "at_cap"), ("random", "at_cap"),
+          ("neuron", "broken_under_cap"), ("random", "broken_under_cap")]
 labels = [f"{arm}\n{metric.replace('_', ' ')}" for arm, metric in groups]
 x = list(range(len(groups)))
 w = .36
@@ -27,7 +28,7 @@ for i, (a, b) in enumerate(zip(published, rerun)):
 left.set_xticks(x, labels)
 left.set_ylabel("Battery answers, of 1,600 per arm")
 left.set_ylim(0, max(rerun) * 1.18)
-left.set_title("Broken and at the 80-token cap")
+left.set_title("Broken, at cap, and under-cap broken")
 left.legend(frameon=False, fontsize=8, loc="upper left")
 
 rows = report["batch1"]["positions"]["rows"]

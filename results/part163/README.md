@@ -1,5 +1,7 @@
 # Part 163: under one selection rule neurons still say Qwen less, and they break far more often
 
+**Update (2026-11-09):** [Part 200](../part200/README.md) reran this part on the eager attention kernel (Part 178 found the default SDPA kernel used here leaves a float32 reference past 64 keys), with push batches in chunks of 8. All three gates passed, though gate 1's changed share fell from 0.88 to 0.75 (neuron) and 0.71 (random) against its 0.70 floor, and the five verdicts came out as below (163.4 and 163.5 were the live ones). Neurons still said Qwen less on maker phrasings (16 of 514 against 40 of 632) and broke more often (387 against 103 of 1,600). On eager most answers ran to the 80-token cap (1,020 and 912, against 124 and 218 below) and most broken answers were at the cap, so the broken counts below describe shorter answers. Answers generated one row at a time differed from the chunked ones in 76 of 200.
+
 With Part 161's case-sensitive `\bQwen\b` rule on maker phrasings, broken answers and Alibaba, Tongyi or 通义 answers excluded, neurons said Qwen in 19/539 answers (3.5%) and random directions in 57/661 (8.6%). The neuron/random ratio was 0.41 (unit-clustered 95% interval 0.15 to 0.78). Part 161's +0.8 ratios were recomputed from the saved rows below. The rates are small, and this comparison was not registered. Whole-battery breakage was 21.4% for neurons and 5.2% for random directions, as described in [Broken answers](#broken-answers).
 ![Paired neuron and random direction rates with 95% unit-bootstrap intervals](rates163.png)
 

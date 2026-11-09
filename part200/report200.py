@@ -102,6 +102,10 @@ def build_report():
                 "broken": sum(score163.triage(r.get("answer", "")) == "broken" for r in rows),
                 "at_cap": sum(int(r.get("token_count", 0)) == 80 for r in rows),
                 "mean_tokens": statistics.mean(int(r.get("token_count", 0)) for r in rows),
+                "median_tokens": statistics.median(int(r.get("token_count", 0)) for r in rows),
+                "under_cap": sum(int(r.get("token_count", 0)) < 80 for r in rows),
+                "broken_at_cap": sum(int(r.get("token_count", 0)) == 80 and score163.triage(r.get("answer", "")) == "broken" for r in rows),
+                "broken_under_cap": sum(int(r.get("token_count", 0)) < 80 and score163.triage(r.get("answer", "")) == "broken" for r in rows),
             }
 
     # Recompute Part 161's pooled maker-Qwen counts using its published rule.
@@ -118,6 +122,20 @@ def build_report():
                                 "rate": hits / len(eligible) if eligible else None}
 
     tokenizer, tokenizer_method = get_tokenizer()
+    battery_rows = [r for r in new_rows if r.get("stage") == "battery"]
+    retokenization = {"method": tokenizer_method, "rows": len(new_rows), "matches_adjusted_count": None,
+                      "matches_raw_count": None, "under_cap_battery_rows": None, "under_cap_battery_matches_count_minus_one": None}
+    if tokenizer is not None:
+        retok_lengths = [len(tokenizer(r.get("answer", ""), add_special_tokens=False)["input_ids"]) for r in new_rows]
+        counts_by_row = [int(r.get("token_count", 0)) for r in new_rows]
+        battery_retoks = [len(tokenizer(r.get("answer", ""), add_special_tokens=False)["input_ids"]) for r in battery_rows]
+        battery_counts = [int(r.get("token_count", 0)) for r in battery_rows]
+        retokenization.update({
+            "matches_adjusted_count": sum(n == (c - 1 if c < 80 else c) for n, c in zip(retok_lengths, counts_by_row)),
+            "matches_raw_count": sum(n == c for n, c in zip(retok_lengths, counts_by_row)),
+            "under_cap_battery_rows": sum(c < 80 for c in battery_counts),
+            "under_cap_battery_matches_count_minus_one": sum(c < 80 and n == c - 1 for n, c in zip(battery_retoks, battery_counts)),
+        })
     try:
         # Match common86.token_inputs: render the same prompt, then tokenize with add_special_tokens=False.
         from part86 import common86
@@ -150,21 +168,38 @@ def build_report():
                        "minimum_position_including_prompt": min(positions) if positions else None,
                        "maximum_position_including_prompt": max(positions) if positions else None}
     label_changes = {label: sum(r["labels"][label]["changed"] for r in diffs) for label in ("name_gone", "broken", "qwen_part161_rule")}
+    threshold_sensitivity = {str(t): sum(r["first_difference_including_prompt"] is not None and r["first_difference_including_prompt"] <= t for r in diffs) for t in (63, 64, 65)}
 
     compare_scored = compare["scored"]
+    load_record = read_json(NEW / "load.json")
+    load_details = load_record["loads"][0]
+    load_seconds = float(load_details["summary"]["seconds"])
+    timestamps = [load_details.get("started"), load_details.get("updated")]
+    from datetime import datetime
+    elapsed_seconds = (datetime.strptime(timestamps[1], "%Y-%m-%d %H:%M:%S") - datetime.strptime(timestamps[0], "%Y-%m-%d %H:%M:%S")).total_seconds()
     report = {
         "source_files": {"score": "score.json", "compare": "compare.json", "answers": "answers.jsonl", "batch1": "batch1.jsonl",
                          "published_score": "../part163/score.json", "published_answers": "../part163/answers.jsonl"},
         "launch": read_jsonl(NEW / "launch.jsonl"),
-        "load": read_json(NEW / "load.json"),
+        "load": load_record,
+        "load_timing": {"answers": load_details["summary"]["answers_written"], "generation_seconds": load_seconds,
+                        "answers_per_second": load_details["summary"]["answers_written"] / load_seconds,
+                        "load_to_completion_seconds": elapsed_seconds, "rate_guard": 0.17,
+                        "recorded_chunk_default": load_details["repair"]["chunk_size"],
+                        "recorded_batch_size": load_details["summary"]["batch_size"],
+                        "observed_pushed_chunks": sorted({n for call in load_details["calls"] if call["pushed"] and call.get("stage") == "run" for n in call.get("chunks", [])})},
         "gates": {"r1_r3": compare_scored["record_r1_r3"], "r2": compare_scored["gate_r2"], "part163": score["gates"]},
+        "gate1_changed_share": {"published": pub_score["gates"]["gate1_recipe"]["changed_rate_by_arm"],
+                                 "rerun": score["gates"]["gate1_recipe"]["changed_rate_by_arm"],
+                                 "floor": score["gates"]["gate1_recipe"]["minimum_rate"]},
         "part163_verdicts": {k: {"published": pub_score["predictions"][k], "rerun": score["predictions"][k]} for k in ("163.1", "163.2", "163.3", "163.4", "163.5")},
         "counts": counts,
+        "retokenization": retokenization,
         "part161_qwen": qwen,
         "batch1": {"compare": compare_scored["batch1"], "positions": {"method": tokenizer_method,
                     "prompt_tokens": prompt_len if tokenizer is not None else None,
                     "prompt_character_offset_used": len("What is your name?") if tokenizer is None else None,
-                    "changed_rows_by_arm": by_arm, "label_changes": label_changes, "rows": diffs}},
+                    "changed_rows_by_arm": by_arm, "label_changes": label_changes, "threshold_sensitivity_at_or_before": threshold_sensitivity, "rows": diffs}},
         "predictions": compare_scored["predictions"],
         "exploratory": compare["exploratory"],
     }
@@ -181,8 +216,24 @@ def render_md(r):
     md.append(f"| R1 and R3 | {'passed' if r['gates']['r1_r3']['passed'] else 'failed'} | {r['gates']['r1_r3'].get('why') or 'load record and observed call shapes'} |")
     md.append(f"| R2 | {'passed' if r['gates']['r2']['passed'] else 'failed'} | units hash matches design: {r['gates']['r2']['units_hash_matches_design']}; questions identical: {r['gates']['r2']['questions_identical']} |")
     for name, gate in r["gates"]["part163"].items():
-        md.append(f"| Part 163 {name} | {'passed' if gate['passed'] else 'failed'} | `{json.dumps({k:v for k,v in gate.items() if k != 'passed'}, ensure_ascii=False)}` |")
-    md += ["", "## Part 163 registered verdicts: published beside rerun", "",
+        evidence = {k: v for k, v in gate.items() if k not in ("passed", "changed_rate_by_arm")}
+        md.append(f"| Part 163 {name} | {'passed' if gate['passed'] else 'failed'} | `{json.dumps(evidence, ensure_ascii=False)}` |")
+    md += ["", "## Battery broken and at-cap counts", "", "| Arm | Published broken / 1,600 | Rerun broken / 1,600 | Published at cap / 1,600 | Rerun at cap / 1,600 |",
+           "| --- | ---: | ---: | ---: | ---: |"]
+    for arm in ("neuron", "random"):
+        md.append(f"| {arm} | {r['counts']['published'][arm]['broken']} / {r['counts']['published'][arm]['battery_answers']} | {r['counts']['rerun'][arm]['broken']} / {r['counts']['rerun'][arm]['battery_answers']} | {r['counts']['published'][arm]['at_cap']} / {r['counts']['published'][arm]['battery_answers']} | {r['counts']['rerun'][arm]['at_cap']} / {r['counts']['rerun'][arm]['battery_answers']} |")
+    md += ["", "Lengths are reported before cross-run rate comparisons. Token counts by arm and run:", "",
+           "| Run | Arm | Mean tokens | Median tokens | At cap | Under cap | Broken at cap | Broken under cap |",
+           "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    for side in ("published", "rerun"):
+        for arm in ("neuron", "random"):
+            c = r["counts"][side][arm]
+            md.append(f"| {side} | {arm} | {c['mean_tokens']:.1f} | {c['median_tokens']:.1f} | {c['at_cap']} | {c['under_cap']} | {c['broken_at_cap']} | {c['broken_under_cap']} |")
+    md.append(f"\nMost rerun broken answers are at the cap: {r['counts']['rerun']['neuron']['broken_at_cap']} of {r['counts']['rerun']['neuron']['broken']} neuron and {r['counts']['rerun']['random']['broken_at_cap']} of {r['counts']['rerun']['random']['broken']} random. Under-cap broken answers fell from {r['counts']['published']['neuron']['broken_under_cap']} to {r['counts']['rerun']['neuron']['broken_under_cap']} neuron and {r['counts']['published']['random']['broken_under_cap']} to {r['counts']['rerun']['random']['broken_under_cap']} random, so the broken rise reflects a length change as much as anything.")
+    g1 = r["gate1_changed_share"]
+    md += ["", "### Gate 1 changed share", "",
+           f"Published changed share was {g1['published']['neuron']:.2f} neuron and {g1['published']['random']:.2f} random; rerun was {g1['rerun']['neuron']:.2f} and {g1['rerun']['random']:.2f}, against the {g1['floor']:.2f} floor.",
+           "", "## Part 163 registered verdicts: published beside rerun", "",
            "| Prediction | Published verdict and estimate (95% interval) | Rerun verdict and estimate (95% interval) |",
            "| --- | --- | --- |"]
     for k, item in r["part163_verdicts"].items():
@@ -204,10 +255,6 @@ def render_md(r):
                 val = f"{p['verdict']} (counts in score files)"
             cells.append(val)
         md.append(f"| {k} | {cells[0]} | {cells[1]} |")
-    md += ["", "## Battery broken and at-cap counts", "", "| Arm | Published broken / 1,600 | Rerun broken / 1,600 | Published at cap / 1,600 | Rerun at cap / 1,600 |",
-           "| --- | ---: | ---: | ---: | ---: |"]
-    for arm in ("neuron", "random"):
-        md.append(f"| {arm} | {r['counts']['published'][arm]['broken']} / {r['counts']['published'][arm]['battery_answers']} | {r['counts']['rerun'][arm]['broken']} / {r['counts']['rerun'][arm]['battery_answers']} | {r['counts']['published'][arm]['at_cap']} / {r['counts']['published'][arm]['battery_answers']} | {r['counts']['rerun'][arm]['at_cap']} / {r['counts']['rerun'][arm]['battery_answers']} |")
     md += ["", "## Part 161 rule on maker phrasings", "", "| Arm | Published Qwen / eligible | Rerun Qwen / eligible | Published rate | Rerun rate |", "| --- | ---: | ---: | ---: | ---: |"]
     for arm in ("neuron", "random"):
         p, n = r["part161_qwen"]["published"][arm], r["part161_qwen"]["rerun"][arm]
@@ -223,6 +270,10 @@ def render_md(r):
     for arm, d in r["batch1"]["positions"]["changed_rows_by_arm"].items():
         md.append(f"| {arm} | {d['changed_rows']} | {d['first_difference_before_or_at_64_keys']} | {d['first_difference_after_64_keys']} | {fmt(d['median_position_including_prompt'],1)} |")
     md.append(f"\nAmong changed rows, Part 163 label flips: name gone {r['batch1']['positions']['label_changes']['name_gone']}, broken {r['batch1']['positions']['label_changes']['broken']}, Qwen under the Part 161 predicate {r['batch1']['positions']['label_changes']['qwen_part161_rule']}. Exploratory rows and excerpts are in report200.json.")
+    md += ["", "### Exploratory checks", "",
+           f"Re-tokenized decoded texts reproduce the adjusted generator token count in {r['retokenization']['matches_adjusted_count']} of {r['retokenization']['rows']} rows. Among under-cap battery answers, {r['retokenization']['under_cap_battery_matches_count_minus_one']} of {r['retokenization']['under_cap_battery_rows']} re-tokenize to `token_count − 1`; `token_count` includes the stop token under the cap.",
+           f"The first-difference convention uses 17 prompt tokens plus the 0-based answer index. Counts at or before thresholds 63, 64, and 65 are {', '.join(f'{t}: {n}' for t,n in r['batch1']['positions']['threshold_sensitivity_at_or_before'].items())}; position uncertainty is about ±1 token.",
+           f"The load record labels this Part 199 and lists chunk/batch defaults {r['load_timing']['recorded_chunk_default']}/{r['load_timing']['recorded_batch_size']}; call records show pushed chunks of {', '.join(map(str, r['load_timing']['observed_pushed_chunks']))}. The run averaged {r['load_timing']['answers_per_second']:.2f} answers per second against the {r['load_timing']['rate_guard']:.2f} guard; generation took {r['load_timing']['generation_seconds']:.1f} seconds, while load-to-completion timestamps span {r['load_timing']['load_to_completion_seconds']:.0f} seconds."]
     return "\n".join(md) + "\n"
 
 

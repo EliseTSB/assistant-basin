@@ -6,9 +6,31 @@
 | --- | --- | --- |
 | R1 and R3 | passed | load record and observed call shapes |
 | R2 | passed | units hash matches design: True; questions identical: True |
-| Part 163 gate1_recipe | passed | `{"minimum_rate": 0.7, "changed_rate_by_arm": {"neuron": 0.75, "random": 0.71}, "n_by_arm": {"neuron": 100, "random": 100}}` |
+| Part 163 gate1_recipe | passed | `{"minimum_rate": 0.7, "n_by_arm": {"neuron": 100, "random": 100}}` |
 | Part 163 gate2_no_push | passed | `{"identity_qwen_hits": 8, "identity_total": 8, "maker_alibaba_or_tongyi_hits": 8, "maker_total": 8, "minimum_each": 7}` |
 | Part 163 gate3_rows | passed | `{"expected_rows": 3416, "rows": 3416, "unique_rows": 3416, "nonempty": 3416, "duplicates": 0, "units_per_arm": {"neuron": 100, "random": 100}}` |
+
+## Battery broken and at-cap counts
+
+| Arm | Published broken / 1,600 | Rerun broken / 1,600 | Published at cap / 1,600 | Rerun at cap / 1,600 |
+| --- | ---: | ---: | ---: | ---: |
+| neuron | 343 / 1600 | 387 / 1600 | 124 / 1600 | 1020 / 1600 |
+| random | 83 / 1600 | 103 / 1600 | 218 / 1600 | 912 / 1600 |
+
+Lengths are reported before cross-run rate comparisons. Token counts by arm and run:
+
+| Run | Arm | Mean tokens | Median tokens | At cap | Under cap | Broken at cap | Broken under cap |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| published | neuron | 55.1 | 54.0 | 124 | 1476 | 25 | 318 |
+| published | random | 59.2 | 60.0 | 218 | 1382 | 11 | 72 |
+| rerun | neuron | 68.8 | 80.0 | 1020 | 580 | 366 | 21 |
+| rerun | random | 68.3 | 80.0 | 912 | 688 | 98 | 5 |
+
+Most rerun broken answers are at the cap: 366 of 387 neuron and 98 of 103 random. Under-cap broken answers fell from 318 to 21 neuron and 72 to 5 random, so the broken rise reflects a length change as much as anything.
+
+### Gate 1 changed share
+
+Published changed share was 0.88 neuron and 0.88 random; rerun was 0.75 and 0.71, against the 0.70 floor.
 
 ## Part 163 registered verdicts: published beside rerun
 
@@ -19,13 +41,6 @@
 | 163.3 | held (neuron 0.850 (0.803 to 0.893), random 0.801 (0.749 to 0.850)) | held (neuron 0.853 (0.805 to 0.897), random 0.815 (0.765 to 0.862)) |
 | 163.4 | held (name gone at least half: neuron 91, random 86; both gone: neuron 90, random 83) | held (name gone at least half: neuron 93, random 89; both gone: neuron 92, random 88) |
 | 163.5 | failed (neuron 0.214 (0.168 to 0.266), random 0.052 (0.037 to 0.069)) | failed (neuron 0.242 (0.193 to 0.294), random 0.064 (0.048 to 0.083)) |
-
-## Battery broken and at-cap counts
-
-| Arm | Published broken / 1,600 | Rerun broken / 1,600 | Published at cap / 1,600 | Rerun at cap / 1,600 |
-| --- | ---: | ---: | ---: | ---: |
-| neuron | 343 / 1600 | 387 / 1600 | 124 / 1600 | 1020 / 1600 |
-| random | 83 / 1600 | 103 / 1600 | 218 / 1600 | 912 / 1600 |
 
 ## Part 161 rule on maker phrasings
 
@@ -243,3 +258,9 @@ Tokenizer: qwen3.5-4b-local-cache. First positions include the rendered prompt (
 | random | 37 | 35 | 2 | 38.0 |
 
 Among changed rows, Part 163 label flips: name gone 2, broken 6, Qwen under the Part 161 predicate 5. Exploratory rows and excerpts are in report200.json.
+
+### Exploratory checks
+
+Re-tokenized decoded texts reproduce the adjusted generator token count in 3178 of 3416 rows. Among under-cap battery answers, 1213 of 1268 re-tokenize to `token_count − 1`; `token_count` includes the stop token under the cap.
+The first-difference convention uses 17 prompt tokens plus the 0-based answer index. Counts at or before thresholds 63, 64, and 65 are 63: 73, 64: 73, 65: 73; position uncertainty is about ±1 token.
+The load record labels this Part 199 and lists chunk/batch defaults 64/64; call records show pushed chunks of 8. The run averaged 0.89 answers per second against the 0.17 guard; generation took 3836.6 seconds, while load-to-completion timestamps span 4670 seconds.
