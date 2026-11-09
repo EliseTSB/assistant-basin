@@ -164,6 +164,18 @@ def main(argv=None, env=None):
         cmd = ["systemd-run", "--user", f"--unit={unit}", "--collect", "-p", f"MemoryMax={a.mem}",
                "/bin/bash", "-c", 'exec "$0" >> "$1" 2>&1', str(script), str(log)]
         rec.update(mode="cpu", command=a.cpu, unit=unit, mem=a.mem, script=script.relative_to(repo).as_posix())
+        # 2026-11-09 (Part 198): a chain script named run-<tag>.sh was overwritten by this wrapper, which then ran itself
+        # until bash hit its nesting limit and fork failed. Refuse a command that names the wrapper's own path, and
+        # refuse to overwrite a file at that path that this launcher did not write.
+        rel = script.relative_to(repo).as_posix()
+        if rel in a.cpu or script.name in a.cpu.split("/")[-1].split():
+            print(f"REFUSED: the --cpu command names {rel}, which is the wrapper this launcher writes; "
+                  f"rename the chain script or pick another --tag")
+            return 2
+        if script.exists() and "Written by tools/launch_arc.py" not in script.read_text(encoding="utf-8", errors="replace"):
+            print(f"REFUSED: {rel} exists and was not written by this launcher; it would be overwritten. "
+                  f"Rename it or pick another --tag")
+            return 2
         if a.dry_run:
             print("DRY RUN: would write", script.relative_to(repo), "and run:", " ".join(cmd))
             return 0
