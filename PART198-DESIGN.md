@@ -127,7 +127,8 @@ keep state between calls (AlphaEdit's caches), each process also re-runs its fir
 that record's update to float32 tolerance (max |difference| below 1e-6 times the update's largest entry); a process that
 fails this has its records reported as possibly state-contaminated.
 
-**Mass edits.** A batch counts only if at least 8 of its 10 records take; a batch below that is reported and left out
+**Mass edits.** A batch counts only if at least 80% of its records that were not already satisfied take, and at least 5
+records were not already satisfied (revision 4; it was 8 of 10); a batch below that is reported and left out
 of 198.1 and 198.3. Localization as above. Naming per fact: the number of the batch's 10 name-eligible objects named by any
 eligible pair among the top 64 of any edited layer.
 
@@ -390,7 +391,7 @@ not chance from five tries. For F1 the pilot gives a measured margin: by the tri
 update of at least 1.11 to 1.71 times its sigma1 to pass the largest sibling, against 0.04 to 0.72 measured. PCS has no
 such bound, and neither bound is a guarantee for new facts.
 
-A mass-edit forecast with no batch reaching the 8-of-10 take gate is **not evaluable**, never a pass.
+A mass-edit forecast with no batch reaching the take gate (revision 4) is **not evaluable**, never a pass.
 
 **Headline and its withdrawal.** The headline would be: "at shipped settings, ROME, MEMIT and AlphaEdit edits on GPT-2
 XL are not localized by F1 or PCS and not named by this static reader, while `wsp` writes on Qwen3.5-0.8B are localized
@@ -486,3 +487,29 @@ base and this part's endpoints are base-free.
    sign +1 first); no unique layer or no eligible pair is a reader failure; a mass forecast with no countable batch is
    not evaluable; the rank-invariance claim is replaced by F1's measured margin with no generic PCS bound; the Reading
    rules no longer speak of 198.2 passing.
+
+## Revision 4 (2026-11-09 00:2x CT, after the smoke and before registration; no registered data exists)
+
+**What the smoke ran, disclosed (PROCEDURE lesson of Part 139).** The smoke (`results/part198/smoke-2026-11-08`,
+`run_mode: smoke`, never the registered output folder) ran every arm with `--limit 1` on the registered records: the
+first single record for ROME, MEMIT and AlphaEdit, mass batch 1 (cases 21145 to 13920) for MEMIT and AlphaEdit, the first
+`wsp` write, the first sequence write and the first Arm C model. What was read from it: exit codes and wall times
+(below), and the mass batches' take fields (`n_took`, `n_already_satisfied`, each fact's `took` and
+`already_satisfied`). Nothing else was read, and in particular no localization, ranks, T_word, PCS or naming field of
+any smoke row. The registered run recomputes everything in its own folder.
+
+**The take gate changes.** In mass batch 1, 3 of the 10 records were already satisfied before the edit (18557, 11667,
+16208: the new object already outranked the old on the first token), and every one of the other 7 took, for both MEMIT
+and AlphaEdit. The written gate (at least 8 of 10 take) could not be met by that batch even though every possible take
+happened, and it disagreed with the single-record rule, where an already-satisfied record is counted and left out. The
+gate is now: at least 80% of the records that were not already satisfied take, and at least 5 records were not already
+satisfied. By the smoke's take fields, batch 1 counts for both editors under the new gate and not under the old one;
+that is the only outcome-adjacent fact this revision rests on, and it is a gate, not a forecast. `run198.mass_gate` takes
+the already-satisfied list, the batch record names the rule (`take_gate_rule`), the scorer's denominator text says it,
+and four new build checks cover it (75 checks pass).
+
+**Measured smoke times (wall, one record each, 2026-11-08 21:07 to 22:08 CT):** ROME 811 s (about 9 min of it the
+one-time GPT-2 XL base statistics), MEMIT 290 s, AlphaEdit 538 s, mass MEMIT 656 s, mass AlphaEdit 688 s, `wsp` 561 s
+(385 s setup), sequence 77 s, Arm C 44 s per model. With the pilot's per-edit times (ROME 128 s, MEMIT 115 s, AlphaEdit
+69 s) the registered run is about 3.7 h of CPU, one process at a time, as Size says.
+

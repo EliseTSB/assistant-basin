@@ -239,7 +239,7 @@ def mass_forecast(label: str, rows: list[dict[str, Any]], stat: str, gate_ok: bo
     return {"forecast": label, "attempted": len(rows), "took": took_facts,
             "already_satisfied": already, "name_eligible": eligible, "counted_batches": n,
             "successes": successes, "dropped_batches": len(batches) - len(countable),
-            "denominator_rule": "batches with at least 8 of 10 facts taking",
+            "denominator_rule": "batches where at least 80% of not-already-satisfied facts take (at least 5 such facts; revision 4)",
             "rate_denominator": n, "clopper_pearson_95": list(R.cp_interval(successes, n)) if n else None,
             "status": status}
 

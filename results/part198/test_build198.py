@@ -486,6 +486,14 @@ check("multi-layer control is deterministic from seed 198 plus case id",
 
 check("mass batch passes at exactly eight takes", R.mass_gate([True] * 8 + [False] * 2))
 check("mass batch fails below eight takes", not R.mass_gate([True] * 7 + [False] * 3))
+# revision 4: already-satisfied records leave the denominator
+check("mass batch passes when every possible take happened (3 already satisfied, 7 of 7 took)",
+      R.mass_gate([True] * 7 + [False] * 3, [False] * 7 + [True] * 3))
+check("mass batch fails at 5 of 7 not-already-satisfied takes",
+      not R.mass_gate([True] * 5 + [False] * 5, [False] * 7 + [True] * 3))
+check("mass batch fails with fewer than 5 records able to take",
+      not R.mass_gate([True] * 4 + [False] * 6, [False] * 4 + [True] * 6))
+check("mass batch passes at 4 of 5 able to take", R.mass_gate([True] * 4 + [False] * 6, [False] * 5 + [True] * 5))
 check("mass forecast is not evaluable with no counted batch", not R.mass_gate_status(0))
 check("mass forecast can be evaluated with a counted batch", R.mass_gate_status(1))
 

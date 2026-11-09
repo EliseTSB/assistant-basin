@@ -308,8 +308,18 @@ def require_tstar(path: Path) -> dict[str, Any]:
     return data
 
 
-def mass_gate(took: list[bool], minimum: int = 8) -> bool:
-    return sum(bool(x) for x in took) >= minimum
+def mass_gate(took: list[bool], already: list[bool] | None = None) -> bool:
+    """Revision 4: a batch counts when at least 80% of its records that were not already satisfied take, and at
+    least 5 records were not already satisfied. An already-satisfied record cannot show a transition (as in the single
+    arm, where it is counted and left out), so the old fixed 8 of 10 could fail a batch in which every possible take
+    happened (the smoke's batch 1: 3 already satisfied, 7 of 7 took, for both editors)."""
+    already = list(already) if already is not None else [False] * len(took)
+    if len(already) != len(took):
+        raise ValueError("took and already must have the same length")
+    eligible = [bool(t) for t, a in zip(took, already) if not a]
+    if len(eligible) < 5:
+        return False
+    return 10 * sum(eligible) >= 8 * len(eligible)
 
 
 def make_random_update(delta, seed: int, return_factors: bool = False, generator=None):
@@ -1281,7 +1291,8 @@ def run_arm_a_mass(method: str, limit: int | None, out_dir: Path) -> int:
                 "timestamp": utc_now(), "arm": "A-mass", "method": method,
                 "batch_id": f"{method}:{batch_idx}", "case_ids": [int(x) for x in batch_ids],
                 "facts": fact_results, "n_took": sum(tooks), "n_already_satisfied": sum(already),
-                "take_gate_minimum": 8, "take_gate_passed": mass_gate(tooks),
+                "take_gate_rule": "at least 80% of not-already-satisfied records take, and at least 5 such records (revision 4)",
+                "take_gate_passed": mass_gate(tooks, already),
                 "localization": localization(base, current, edited, S), "edited_layers": sorted(edited),
                 "edited_layer_stats": layer_stats, "restored_bit_exact": None}
             with torch.no_grad():
