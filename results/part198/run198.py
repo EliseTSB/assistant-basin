@@ -146,47 +146,66 @@ def output_log_lock(log_path: Path):
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
+def read_jsonl_with_status(path: Path) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+    """Read complete JSONL rows without changing the file; return any ignored tail."""
     if not path.exists():
-        return []
-    rows = []
+        return [], None
     data = path.read_bytes()
-    lines = data.splitlines(keepends=True)
     complete_end = data.rfind(b"\n") + 1
-    for number, raw in enumerate(lines, 1):
-        torn_tail = number == len(lines) and not raw.endswith(b"\n")
+    complete_lines = data[:complete_end].split(b"\n")[:-1]
+    tail = data[complete_end:]
+    ignored_tail = None
+    if tail:
+        ignored_tail = {"path": str(path), "line": len(complete_lines) + 1,
+                        "ignored_bytes": len(tail), "complete_end": complete_end,
+                        "reason": "unterminated final JSONL line"}
+
+    rows = []
+    for number, raw in enumerate(complete_lines, 1):
         try:
             decoded = raw.decode("utf-8")
         except UnicodeDecodeError as exc:
-            if torn_tail:
-                _drop_torn_jsonl_tail(path, number, complete_end, len(raw), str(exc))
-                break
             raise ValueError(f"malformed JSONL at {path}:{number}: {exc}") from exc
         if not decoded.strip():
             continue
         try:
             item = json.loads(decoded)
         except json.JSONDecodeError as exc:
-            if torn_tail:
-                _drop_torn_jsonl_tail(path, number, complete_end, len(raw), str(exc))
-                break
             raise ValueError(f"malformed JSONL at {path}:{number}: {exc}") from exc
         if isinstance(item, dict):
             rows.append(item)
+    return rows, ignored_tail
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    """Pure log reader: return complete rows, warn about and ignore an unterminated tail."""
+    rows, ignored_tail = read_jsonl_with_status(path)
+    if ignored_tail is not None:
+        warnings.warn(
+            f"ignored unterminated final JSONL line {ignored_tail['line']} from {path} "
+            f"({ignored_tail['ignored_bytes']} bytes); file unchanged",
+            RuntimeWarning, stacklevel=2)
     return rows
 
 
-def _drop_torn_jsonl_tail(path: Path, line_number: int, complete_end: int,
-                          dropped_bytes: int, reason: str) -> None:
+def read_jsonl_for_resume(path: Path) -> list[dict[str, Any]]:
+    """Runner-only resume reader; call under output_log_lock to repair an interrupted append."""
+    rows, torn_tail = read_jsonl_with_status(path)
+    if torn_tail is None:
+        return rows
     with path.open("r+b") as f:
-        f.truncate(complete_end)
+        f.truncate(torn_tail["complete_end"])
         f.flush()
         os.fsync(f.fileno())
-    event = {"path": str(path), "line": line_number, "dropped_bytes": dropped_bytes,
-             "reason": reason}
+    event = {key: value for key, value in torn_tail.items()
+             if key not in {"complete_end", "ignored_bytes"}}
+    event["dropped_bytes"] = torn_tail["ignored_bytes"]
     JSONL_RECOVERIES.append(event)
-    warnings.warn(f"dropped torn final JSONL line {line_number} from {path} ({dropped_bytes} bytes)",
-                  RuntimeWarning, stacklevel=2)
+    warnings.warn(
+        f"dropped torn final JSONL line {event['line']} from {path} "
+        f"({event['dropped_bytes']} bytes) during runner resume",
+        RuntimeWarning, stacklevel=2)
+    return rows
 
 
 def existing_keys(path: Path, field: str) -> set[str]:
@@ -1789,6 +1808,7 @@ def main(argv: list[str] | None = None) -> int:
     target_log = log_path_for(args.command, getattr(args, "method", None), out_dir)
     try:
         with output_log_lock(target_log):
+            read_jsonl_for_resume(target_log)
             os.chdir(out_dir)
             try:
                 preflight(out_dir)

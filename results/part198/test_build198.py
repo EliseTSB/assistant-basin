@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import fcntl
 import io
 import sys
@@ -139,6 +140,13 @@ def _hold_runner_log_lock(lock_path: Path, ready, release) -> None:
         fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
+def _hold_runner_context_lock(log_path: Path, ready) -> None:
+    with R.output_log_lock(log_path):
+        ready.set()
+        while True:
+            time.sleep(0.05)
+
+
 def _invoke_runner_while_locked(out_dir: Path, result_queue) -> None:
     calls = []
     R.root_out_dir = lambda _out_dir: out_dir
@@ -188,6 +196,70 @@ def runner_refuses_held_log() -> bool:
             if holder.is_alive():
                 holder.terminate()
                 holder.join(timeout=5)
+
+
+def runner_lock_releases_after_process_death() -> bool:
+    ctx = multiprocessing.get_context("fork")
+    with tempfile.TemporaryDirectory(prefix="part198-lock-crash-") as td:
+        log_path = Path(td) / "armA-rome.jsonl"
+        ready = ctx.Event()
+        holder = ctx.Process(target=_hold_runner_context_lock, args=(log_path, ready))
+        holder.start()
+        try:
+            if not ready.wait(timeout=5):
+                return False
+            holder.terminate()
+            holder.join(timeout=5)
+            if holder.is_alive():
+                return False
+            try:
+                with R.output_log_lock(log_path):
+                    return True
+            except R.OutputLogLocked:
+                return False
+        finally:
+            if holder.is_alive():
+                holder.terminate()
+                holder.join(timeout=2)
+
+
+def scorer_refuses_held_log() -> bool:
+    ctx = multiprocessing.get_context("fork")
+    with tempfile.TemporaryDirectory(prefix="part198-score-lock-") as td:
+        out_dir = Path(td) / "out"
+        out_dir.mkdir()
+        log_path = out_dir / "armB-seq-wsp.jsonl"
+        log_path.write_bytes(b'{"record_type":"case","case_id":1}\n')
+        before = hashlib.sha256(log_path.read_bytes()).hexdigest()
+        lock_path = log_path.with_name(log_path.name + ".lock")
+        ready, release = ctx.Event(), ctx.Event()
+        holder = ctx.Process(target=_hold_runner_log_lock, args=(lock_path, ready, release))
+        holder.start()
+        try:
+            if not ready.wait(timeout=5):
+                return False
+            api_refused = False
+            try:
+                S.score_from_dir(out_dir)
+            except S.ScoreLogLocked as exc:
+                api_refused = "scoring refused" in str(exc) and "already locked" in str(exc)
+            saved_root_out_dir = R.root_out_dir
+            R.root_out_dir = lambda _path: out_dir
+            stdout, stderr = io.StringIO(), io.StringIO()
+            try:
+                with redirect_stdout(stdout), redirect_stderr(stderr):
+                    cli_code = S.main(["--out-dir", str(out_dir)])
+            finally:
+                R.root_out_dir = saved_root_out_dir
+            after = hashlib.sha256(log_path.read_bytes()).hexdigest()
+            return (api_refused and cli_code == 1 and "REFUSED: scoring refused" in stderr.getvalue()
+                    and before == after and not (out_dir / "score.json").exists())
+        finally:
+            release.set()
+            holder.join(timeout=5)
+            if holder.is_alive():
+                holder.terminate()
+                holder.join(timeout=2)
 
 
 def n4_terminal_append_is_safe(source: str) -> bool:
@@ -496,17 +568,49 @@ check("B3 aimed control centres before applying non-uniform gamma and normalizes
 with tempfile.TemporaryDirectory(prefix="part198-jsonl-r1-") as td:
     torn = Path(td) / "torn.jsonl"
     torn.write_bytes(b'{"record_type":"case","case_id":1}\n{"record_type":"case","case_id":2')
+    original_bytes = torn.read_bytes()
+    status_reader = getattr(R, "read_jsonl_with_status", None)
+    if status_reader is None:
+        pure_rows, partial = [], None
+    else:
+        pure_rows, partial = status_reader(torn)
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        try:
-            recovered = R.read_jsonl(torn)
-        except ValueError:
-            recovered = []
-    recovery_recorded = any(item.get("path") == str(torn) and item.get("line") == 2
-                            for item in getattr(R, "JSONL_RECOVERIES", []))
-    check("M1 drops, truncates and records only a torn final unterminated JSONL line",
-          [r.get("case_id") for r in recovered] == [1] and torn.read_bytes().endswith(b"\n")
-          and recovery_recorded and bool(caught))
+        pure_rows_again = R.read_jsonl(torn)
+    check("Fold r5 pure reader returns complete rows, flags and ignores a partial tail without writing",
+          [r.get("case_id") for r in pure_rows] == [1]
+          and partial is not None and partial.get("line") == 2
+          and partial.get("ignored_bytes") == len(b'{"record_type":"case","case_id":2')
+          and [r.get("case_id") for r in pure_rows_again] == [1]
+          and any("ignored unterminated final JSONL line" in str(item.message) for item in caught)
+          and torn.read_bytes() == original_bytes)
+    valid_without_newline = Path(td) / "valid-but-unterminated.jsonl"
+    valid_without_newline.write_bytes(b'{"record_type":"case","case_id":3}')
+    valid_before = valid_without_newline.read_bytes()
+    valid_rows, valid_tail = (([], None) if status_reader is None
+                              else status_reader(valid_without_newline))
+    check("Fold r5 pure reader ignores even valid JSON without a line terminator",
+          valid_rows == [] and valid_tail is not None and valid_tail.get("line") == 1
+          and valid_without_newline.read_bytes() == valid_before)
+    recovery_start = len(getattr(R, "JSONL_RECOVERIES", []))
+    resume_reader = getattr(R, "read_jsonl_for_resume", None)
+    if resume_reader is None:
+        resumed_rows, recovery_recorded = [], False
+    else:
+        with R.output_log_lock(torn):
+            resumed_rows = resume_reader(torn)
+        recovery_recorded = (len(R.JSONL_RECOVERIES) == recovery_start + 1
+                             and R.JSONL_RECOVERIES[-1].get("path") == str(torn)
+                             and R.JSONL_RECOVERIES[-1].get("line") == 2)
+    main_source = inspect.getsource(R.main)
+    lock_before_repair = ("read_jsonl_for_resume(target_log)" in main_source
+        and main_source.index("with output_log_lock(target_log)")
+        < main_source.index("read_jsonl_for_resume(target_log)"))
+    check("Fold r5 runner resume repairs only its own unterminated tail",
+          [r.get("case_id") for r in resumed_rows] == [1]
+          and torn.read_bytes() == b'{"record_type":"case","case_id":1}\n'
+          and recovery_recorded
+          and lock_before_repair)
     malformed = Path(td) / "malformed.jsonl"
     malformed.write_bytes(b'{"ok":1}\nnot-json\n{"ok":2}\n')
     raised = False
@@ -569,6 +673,13 @@ check("Fold r4 ignores only run_id/timestamp and preserves scorer counts",
       metadata_replay_counts_unchanged())
 check("Fold r4 second runner process refuses a held output log before preflight or any arm",
       runner_refuses_held_log())
+check("Fold r5 output log lock releases after holder process death",
+      runner_lock_releases_after_process_death())
+check("Fold r5 scorer API and CLI refuse a held log without changing its bytes",
+      scorer_refuses_held_log())
+check("Fold r5 scorer locks all eight logs in a fixed sorted order",
+      getattr(S, "SCORE_LOG_NAMES", ()) == tuple(sorted(getattr(S, "SCORE_LOG_NAMES", ())))
+      and len(getattr(S, "SCORE_LOG_NAMES", ())) == 8)
 
 measure = getattr(R, "wsp_take_measurement", None)
 if measure is None:
@@ -916,6 +1027,28 @@ with tempfile.TemporaryDirectory(prefix="part198-score-r1-") as td:
           s1["status"] == "FAIL" and oracle["status"] == "NOT EVALUABLE" and update["status"] == "FAIL")
     check("M6 198.8 scores the row with highest n_written_so_far",
           seq_forecast["successes"] == 1 and seq_forecast["rate_denominator"] == 10)
+    nine_plus_failure = seq_rows[:9] + [{"record_type": "failure", "run_mode": "registered",
+        "case_id": 9, "phase": "sequence_write_or_score", "error": "synthetic failure"}]
+    (out / "armB-seq-wsp.jsonl").write_text(
+        "".join(json.dumps(row) + "\n" for row in nine_plus_failure), encoding="utf-8")
+    failed_tenth = S.score_from_dir(out)
+    failed_tenth_metric = next(x for x in failed_tenth["forecasts"]
+        if x["forecast"] == "198.8 WSP sequence final strict names")
+    completed_with_failure = seq_rows + [{"record_type": "failure", "run_mode": "registered",
+        "case_id": 0, "phase": "sequence_write_or_score", "error": "synthetic later failure"}]
+    (out / "armB-seq-wsp.jsonl").write_text(
+        "".join(json.dumps(row) + "\n" for row in completed_with_failure), encoding="utf-8")
+    failed_replay_metric = next(x for x in S.score_from_dir(out)["forecasts"]
+        if x["forecast"] == "198.8 WSP sequence final strict names")
+    check("Fold r5 198.8 refuses nine completions plus failure and failure after a completion",
+          failed_tenth_metric["status"] == "NOT EVALUABLE"
+          and failed_tenth_metric.get("completed_sequence_cases") == 9
+          and failed_tenth_metric.get("registered_sequence_failures") == 1
+          and failed_replay_metric["status"] == "NOT EVALUABLE"
+          and failed_replay_metric.get("completed_sequence_cases") == 10
+          and failed_replay_metric.get("registered_sequence_failures") == 1)
+    (out / "armB-seq-wsp.jsonl").write_text(
+        "".join(json.dumps(row) + "\n" for row in seq_rows), encoding="utf-8")
     rome[1]["aimed_positive_control"] = {"reason": "zero aimed direction"}
     (out / "armA-rome.jsonl").write_text(
         "".join(json.dumps(row) + "\n" for row in rome), encoding="utf-8")

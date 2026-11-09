@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from typing import Any, Callable
 
@@ -11,9 +13,30 @@ import run198 as R
 
 HERE = Path(__file__).resolve().parent
 OUT_DEFAULT = HERE / "out"
+SCORE_LOG_NAMES = tuple(sorted((
+    "armA-rome.jsonl", "armA-memit.jsonl", "armA-alphaedit.jsonl",
+    "armA-mass-memit.jsonl", "armA-mass-alphaedit.jsonl", "armB-wsp.jsonl",
+    "armB-seq-wsp.jsonl", "armC.jsonl",
+)))
 
 
 _REPLAY_METADATA_FIELDS = frozenset({"timestamp", "run_id"})
+
+
+class ScoreLogLocked(RuntimeError):
+    """Scoring was refused because a runner owns one of the registered logs."""
+
+
+@contextmanager
+def score_log_locks(out_dir: Path):
+    """Take every log lock nonblocking and in a stable order while reading a run."""
+    with ExitStack() as stack:
+        try:
+            for name in SCORE_LOG_NAMES:
+                stack.enter_context(R.output_log_lock(out_dir / name))
+        except R.OutputLogLocked as exc:
+            raise ScoreLogLocked(f"scoring refused: {exc}") from exc
+        yield
 
 
 def _first_replay_difference(left: Any, right: Any, path: str = "") -> str | None:
@@ -226,7 +249,7 @@ def final_sequence_row(rows: list[dict[str, Any]]) -> dict[str, Any] | None:
     return max(rows, key=lambda r: int(r.get("n_written_so_far", 0))) if rows else None
 
 
-def score_from_dir(out_dir: Path) -> dict[str, Any]:
+def _score_from_dir_locked(out_dir: Path) -> dict[str, Any]:
     files: dict[str, Any] = {}
     allfiles: dict[str, Any] = {}
     for method in ("ROME", "MEMIT", "AlphaEdit"):
@@ -357,20 +380,27 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
         "both": both, "real_only": real_only, "random_only": control_only, "neither": neither,
         "exact_mcnemar_two_sided_p": R.exact_mcnemar(real_only, control_only) if gate_ok and b else None}
     seq = files["armB-seq"]
+    seq_completed = [r for r in seq if r.get("record_type") == "case"]
+    seq_completed_ids = {str(r["case_id"]) for r in seq_completed if r.get("case_id") is not None}
+    seq_failures = [r for r in allfiles["all-armB-seq"] if r.get("record_type") == "failure"]
     final_names = {}
-    final_row = final_sequence_row(seq)
+    final_row = final_sequence_row(seq_completed)
     if final_row:
         final_names = {str(k): bool(v.get("named_strict"))
                        for k, v in final_row.get("names_after_write", {}).items()}
-    eligible_seq_ids = {str(r["case_id"]) for r in seq if r.get("name_eligible")}
+    eligible_seq_ids = {str(r["case_id"]) for r in seq_completed if r.get("name_eligible")}
     seq_success = sum(final_names.get(cid, False) for cid in eligible_seq_ids)
     seq_n = len(eligible_seq_ids)
     seq_ci = R.cp_interval(seq_success, seq_n)
-    seq_summary = count_summary(seq)
-    seq_status = "NOT EVALUABLE" if not gate_ok or len(seq) != 10 or seq_n == 0 else (
+    seq_summary = count_summary(seq_completed)
+    exactly_ten_completed = len(seq_completed) == 10 and len(seq_completed_ids) == 10
+    seq_status = "NOT EVALUABLE" if (not gate_ok or not exactly_ten_completed
+                                      or seq_failures or seq_n == 0) else (
         "PASS" if seq_success >= 5 else "FAIL")
     out["forecasts"].append({"forecast": "198.8 WSP sequence final strict names", **seq_summary,
         "name_eligible": seq_n, "rate_denominator": seq_n, "successes": seq_success,
+        "completed_sequence_cases": len(seq_completed),
+        "registered_sequence_failures": len(seq_failures),
         "denominator_rule": "name-eligible objects among the 10 sequence writes",
         "clopper_pearson_95": list(seq_ci) if seq_ci else None, "status": seq_status})
     out["descriptive"]["198.2_gradient_tword_localization"] = {
@@ -388,6 +418,12 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
         "successes": sum(flag(r, "aimed_positive_control", "localization", "localized") for r in s1_rows),
         "status": "DESCRIPTIVE"}
     return out
+
+
+def score_from_dir(out_dir: Path) -> dict[str, Any]:
+    """Score under nonblocking locks so no runner can write a log during the read."""
+    with score_log_locks(out_dir):
+        return _score_from_dir_locked(out_dir)
 
 
 def print_result(result: dict[str, Any]) -> None:
@@ -433,9 +469,15 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     out_dir = R.root_out_dir(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    result = score_from_dir(out_dir)
-    path = out_dir / "score.json"
-    path.write_text(json.dumps(R.safe_json(result), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    try:
+        with score_log_locks(out_dir):
+            result = _score_from_dir_locked(out_dir)
+            path = out_dir / "score.json"
+            path.write_text(json.dumps(R.safe_json(result), indent=2, ensure_ascii=False) + "\n",
+                            encoding="utf-8")
+    except ScoreLogLocked as exc:
+        print(f"REFUSED: {exc}", file=sys.stderr)
+        return 1
     print_result(result)
     print(f"wrote {path}")
     return 0
