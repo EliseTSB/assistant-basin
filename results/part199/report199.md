@@ -78,7 +78,7 @@ Registered count (`--compare`, ordered equality on every list): 0 of 200.
 | b200 | same path | 158 | 0 | 8 | 198.0 | 195 |
 | b200 | changed path | 42 | 0 | 0 | 162.5 | 99 |
 
-Over all 200 prompts, as sets: b5 differs for 39 (mean 0.32 tokens differ); b50 differs for 96 (mean 2.05 tokens differ); b200 differs for 192 (mean 10.23 tokens differ); all three lists equal as sets for 3.
+Over all 200 prompts, as sets: b5 differs for 39 (mean 0.32 tokens differ over all 200, 1.62 where the set differs); b50 differs for 96 (mean 2.05 tokens differ over all 200, 4.27 where the set differs); b200 differs for 192 (mean 10.23 tokens differ over all 200, 10.66 where the set differs); all three lists equal as sets for 3.
 
 ## Loop onset on the eager answers (descriptive)
 

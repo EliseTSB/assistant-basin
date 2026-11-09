@@ -82,7 +82,9 @@ def list_agreement(la, lb, same40):
                        "ordered_equal": rows["same_path"]["ordered_equal"] + rows["changed_path"]["ordered_equal"],
                        "set_equal": rows["same_path"]["set_equal"] + rows["changed_path"]["set_equal"],
                        "set_differs": sum(d > 0 for d in diffs),
-                       "tokens_differing_mean": statistics.mean(diffs)}
+                       "tokens_differing_mean": statistics.mean(diffs),
+                       "tokens_differing_mean_where_set_differs":
+                           statistics.mean([d for d in diffs if d > 0]) if any(diffs) else 0.0}
         out[f] = rows
     out["all_three_set_equal"] = sum(all(set(map(int, la[p][f])) == set(map(int, lb[p][f])) for f in LIST_FIELDS)
                                      for p in la)
@@ -201,7 +203,8 @@ def main():
                       f"| {v['overlap_median']} | {v['overlap_min']} |")
     md += ["", "Over all 200 prompts, as sets: " + "; ".join(
         f"{f} differs for {agree[f]['all']['set_differs']} (mean {agree[f]['all']['tokens_differing_mean']:.2f} "
-        f"tokens differ)" for f in LIST_FIELDS) + f"; all three lists equal as sets for {agree['all_three_set_equal']}."]
+        f"tokens differ over all 200, {agree[f]['all']['tokens_differing_mean_where_set_differs']:.2f} where the set "
+        f"differs)" for f in LIST_FIELDS) + f"; all three lists equal as sets for {agree['all_three_set_equal']}."]
     lo = compare["loop_onset"]
     md += ["", "## Loop onset on the eager answers (descriptive)", "",
            f"- All loops: {lo['total']['loops']}; established before t0: {lo['total']['before']}; after: "

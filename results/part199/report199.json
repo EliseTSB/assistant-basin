@@ -47,7 +47,8 @@
         "ordered_equal": 138,
         "set_equal": 161,
         "set_differs": 39,
-        "tokens_differing_mean": 0.315
+        "tokens_differing_mean": 0.315,
+        "tokens_differing_mean_where_set_differs": 1.6153846153846154
       }
     },
     "b50": {
@@ -70,7 +71,8 @@
         "ordered_equal": 0,
         "set_equal": 104,
         "set_differs": 96,
-        "tokens_differing_mean": 2.05
+        "tokens_differing_mean": 2.05,
+        "tokens_differing_mean_where_set_differs": 4.270833333333333
       }
     },
     "b200": {
@@ -93,7 +95,8 @@
         "ordered_equal": 0,
         "set_equal": 8,
         "set_differs": 192,
-        "tokens_differing_mean": 10.23
+        "tokens_differing_mean": 10.23,
+        "tokens_differing_mean_where_set_differs": 10.65625
       }
     },
     "all_three_set_equal": 3

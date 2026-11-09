@@ -5,7 +5,8 @@
 Part 170 (2026-11-01) generated its answers on the A770's fused bf16 SDPA attention kernel, which Part 178 later found
 leaves a float32 reference once the cache holds more than 64 keys. Part 199 reran Part 170 unchanged on eager attention,
 with its 48-row push batches split into chunks of 8: same model revision, prompts, neurons, doses, list rule, seeds and
-scorer (`part170/score170.py`), 6,672 answers on 2026-11-09 from 07:23 to 09:55 CT. Every gate passed, and the same 144
+scorer (`part170/score170.py`), 6,672 answers on 2026-11-09, launched at 07:23 CT, model loaded at 07:24 and finished
+at 09:55 (`launch.jsonl`, `load.json`). Every gate passed, and the same 144
 push directions were drawn.
 
 **Answer.** Under the full-size push, blocking the plain answer's 50 likeliest tokens still raised loops, from 28.4% to
@@ -63,7 +64,7 @@ own record: one model load, eager attention, and every 48-row push or repeat cal
 170's own eight gates pass on the rerun. Gate 8 regenerates one batch, the dose-1 b0 cell, in shuffled order: 0 of its
 384 answers changed at the chunked shape, as 0 of 384 did at 48 rows in Part 170.
 
-## Why did no Stage 1 list match (199.2)?
+## Why did no prompt's Stage 1 lists match in order (199.2)?
 
 The prediction rested on a premise that does not hold: that the two kernels agree below 65 keys. Stage 1 reads its
 lists from the first 40 tokens of each prompt's Stage 0 plain answer, and Stage 0 decodes one prompt at a time.
@@ -72,10 +73,11 @@ lists from the first 40 tokens of each prompt's Stage 0 plain answer, and Stage 
    Stage 0 answers that differ anywhere, 45 part ways at 64 keys or fewer (earliest at 28 keys, median 66). This rerun
    has no float32 reference for these prompts, so it cannot say which kernel left the reference there; Part 178 found
    eager bf16 also leaves it at near-ties.
-2. **Where the path agreed, the order did not.** On the 158 unchanged paths, the b50 lists share at least 48 of their
-   50 tokens and 102 are the same set, but none has the same order; b5 has the same order for 133. The registered count
-   compares order. The two kernels round the same forward pass differently, and the tail of a 50-token ranking holds
-   many near-equal probabilities.
+2. **Where the path agreed, the longer lists' order did not.** On the 158 unchanged paths, the b50 lists share at least
+   48 of their 50 tokens and 102 are the same set, but none has the same order, and no b200 list does either; b5 kept
+   its order for 133. The registered count compares order. A candidate explanation, not tested here (the run records no
+   probabilities): the two kernels round the same forward pass differently, and a 50-token ranking's tail may hold many
+   near-equal probabilities.
 
 199.2 fails under a set count as well: all three lists are the same set for 3 of 200 prompts.
 
@@ -86,8 +88,8 @@ lists from the first 40 tokens of each prompt's Stage 0 plain answer, and Stage 
 | b200 | unchanged | 158 | 0 | 8 | 195 |
 | b50 | changed | 42 | 0 | 2 | 24 |
 
-Over all 200 prompts, the b5 set differs for 39, the b50 set for 96 (by 2.05 of 50 tokens on average) and the b200 set
-for 192 (by 10.23 of 200 on average). So most cells ban largely the same tokens as Part 170, not identical ones. Source:
+Over all 200 prompts, the b5 set differs for 39, the b50 set for 96 and the b200 set for 192. Where a set differs, it
+differs by 1.62 of 5, 4.27 of 50 and 10.66 of 200 tokens on average. So most cells ban largely the same tokens as Part 170, not identical ones. Source:
 `report199.json` (`plain_paths`, `list_agreement`).
 
 ## Where did Part 170's 19 frozen prompts go (199.3)?
@@ -148,7 +150,7 @@ So the kernel changed when answers stop as well as what they say, and the loop r
 separate the two: a looping answer usually runs to the cap, so length is partly a result of looping, not only a cause.
 This part does not identify why the eager rates are higher. Source: `report199.json` (`exploratory`, `dose1_lengths`).
 
-Two smaller readings go the same way. The dose-0.25 b0 cell had 10 loops on SDPA (2.6%) and none on eager; the onset
+Two smaller readings also show the eager run holding loops the published run did not. The dose-0.25 b0 cell had 10 loops on SDPA (2.6%) and none on eager; the onset
 check had placed all 10 past key 64. And the onset check's conditional range for the dose-1 rise, 17.7 to 22.4 points
 if the kernel had only added loops, was exceeded (26.3); the check could not see loops the kernel prevented.
 
@@ -201,4 +203,6 @@ Scoring is `part170/score170.py` unchanged; the comparison is `part199/run199.py
 - `results/part199/cold/`: the cold check's report and scripts.
 - `part199/onset/`: the loop-onset analysis behind several predictions, run before the design.
 
-Cold check: pending
+Cold check: Claude Haiku 5.5, two rounds on 2026-11-09 (`cold/COLD.md`: SHIP-WITH-FIXES, 13 findings, all folded in
+0d37036; `cold/COLD-r2.md`: all 13 folds confirmed and every added number recomputed, 6 wording items, all folded). No
+registered number or verdict changed.
