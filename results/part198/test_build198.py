@@ -7,7 +7,10 @@ import sys
 import tempfile
 import warnings
 import inspect
+from contextlib import ExitStack
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import torch
 
@@ -17,13 +20,161 @@ import run198 as R  # noqa: E402
 import score198 as S  # noqa: E402
 
 fails = 0
+check_names = []
 
 
 def check(name: str, condition: bool) -> None:
     global fails
+    check_names.append(name)
     print(("PASS " if condition else "FAIL ") + name)
     if not condition:
         fails += 1
+
+
+class TinyGPT2Projection(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.transformer = torch.nn.Module()
+        blocks = []
+        for layer_index in range(18):
+            layer = torch.nn.Module()
+            layer.mlp = torch.nn.Module()
+            layer.mlp.c_proj = torch.nn.Module()
+            if layer_index == 17:
+                layer.mlp.c_proj.weight = torch.nn.Parameter(torch.tensor(
+                    [[1.0, 2.0], [3.0, 4.0]], dtype=torch.float32))
+            blocks.append(layer)
+        self.transformer.h = torch.nn.ModuleList(blocks)
+        self.register_buffer("unreported", torch.tensor([5.0], dtype=torch.float32))
+
+
+def run_fake_arm_a(out: Path, *, mass: bool = False, fingerprint_failure: bool = False):
+    """Run the real Arm A restoration path with a tiny fake editor and model."""
+    verifier = getattr(R, "verify_model_restored", None)
+    if not callable(verifier):
+        return {"supported": False, "calls": [], "rows": [], "error": None}
+    out.mkdir(parents=True, exist_ok=True)
+    log = out / ("armA-mass-memit.jsonl" if mass else "armA-memit.jsonl")
+    model = TinyGPT2Projection()
+    weight_name = "transformer.h.17.mlp.c_proj.weight"
+    efficacy_calls = 0
+    verification_calls = []
+
+    def fake_apply(target_model, _tok, _reqs, _hp, **_kwargs):
+        original = {weight_name: target_model.transformer.h[17].mlp.c_proj.weight.detach().clone()}
+        with torch.no_grad():
+            target_model.transformer.h[17].mlp.c_proj.weight.add_(0.25)
+            target_model.unreported.add_(1.0)
+        return target_model, original
+
+    fake_module = SimpleNamespace(MEMITHyperParams=object, apply_memit_to_model=fake_apply)
+    req = {"case_id": 101, "subject": "tiny subject", "target_new": "object",
+           "ground_truth": "old", "prompt": "tiny prompt"}
+
+    class FakeStats:
+        read_pairs = staticmethod(lambda *args, **kwargs: [])
+        top_eligible = staticmethod(lambda pairs: None)
+        blind_reader = staticmethod(lambda pairs: (None, None))
+        names = staticmethod(lambda pair, targets: (False, False))
+
+    def fake_efficacy(*args, **kwargs):
+        nonlocal efficacy_calls
+        efficacy_calls += 1
+        return {"logp_old": 1.0, "logp_new": 0.0} if efficacy_calls % 2 else {
+            "logp_old": 0.0, "logp_new": 1.0}
+
+    def fake_geometry(*args, **kwargs):
+        return {"base": {17: {"f1": 1.0, "pairs": []}},
+                "gain": torch.ones(2), "centre": False, "E": torch.ones((2, 2))}
+
+    def tracked_verifier(target_model, snapshot, context):
+        verification_calls.append(context)
+        return verifier(target_model, snapshot, context)
+
+    def fail_fingerprint(_model, _snapshot):
+        raise RuntimeError("synthetic byte fingerprint failure")
+
+    target_info = {"target_ids": [1], "eligible_target_ids": [1],
+                   "name_eligible": True, "space_first_token_id": 1}
+    patches = {
+        "stats_helpers": lambda: FakeStats(),
+        "load_cases": lambda: ({"armA_single": [101], "armA_mass": [[101]]}, {101: {"case_id": 101}}),
+        "log_path_for": lambda *args: log,
+        "load_gpt2_model": lambda: (model, SimpleNamespace(decode=lambda ids: "x")),
+        "gpt2_base_inputs_sha256": lambda: "synthetic-input-hash",
+        "gpt2_geometry": fake_geometry,
+        "save_base": lambda *args: None,
+        "load_easyedit": lambda: {"MEMIT": fake_module},
+        "load_hparams": lambda *args: None,
+        "request_of": lambda row: dict(req),
+        "efficacy": fake_efficacy,
+        "target_info_gpt2": lambda *args: dict(target_info),
+        "stats_for": lambda *args: {"f1": 2.0, "f2": 1.0, "pcs": 0.0,
+                                      "t_max": 2.0, "t_word": 2.0, "pairs": []},
+        "update_metrics": lambda *args: {},
+        "localization": lambda *args: {name: {"localized": False}
+                                        for name in ("f1", "pcs", "t_word")},
+        "pair_by_layer": lambda *args: {},
+        "oracle_pair": lambda *args: (None, None, False),
+        "base_diagnostics": lambda *args: {},
+        "dict_to_pairs": lambda *args: [],
+        "verify_model_restored": tracked_verifier,
+    }
+    if fingerprint_failure:
+        patches["model_matches_snapshot"] = fail_fingerprint
+    error = None
+    with ExitStack() as stack:
+        for name, value in patches.items():
+            stack.enter_context(patch.object(R, name, value))
+        try:
+            if mass:
+                R.run_arm_a_mass("MEMIT", None, out)
+            else:
+                R.run_arm_a("MEMIT", None, out)
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}"
+    return {"supported": True, "calls": verification_calls,
+            "rows": R.read_jsonl(log), "error": error}
+
+
+def run_fake_arm_c(out: Path, *, recover_failure: bool = False, invocations: int = 0):
+    """Exercise Arm C retry bookkeeping with synthetic model-load outcomes."""
+    out.mkdir(parents=True, exist_ok=True)
+    log = out / "armC.jsonl"
+    models = [{"id": f"cal-{index}", "role": "calibration"} for index in range(3)]
+    references = {item["id"]: (float(index + 1), "token")
+                  for index, item in enumerate(models)}
+    load_calls = []
+    values = {item["id"]: float(index + 1) for index, item in enumerate(models)}
+
+    def fake_load(model_id, dtype):
+        load_calls.append(model_id)
+        if not recover_failure:
+            raise RuntimeError("synthetic deterministic load failure")
+        return object(), object(), dtype
+
+    def fake_analyze(_model, _tokenizer, _stats, model_id, role, dtype):
+        return {"model_id": model_id, "role": role, "dtype": dtype,
+                "max_t_word": values[model_id]}
+
+    if recover_failure:
+        R.append_jsonl(log, {"record_type": "failure", "run_mode": "registered", "run_id": "r0",
+                             "model_id": "cal-0", "phase": "calibration", "error": "prior attempt"})
+    error = None
+    with ExitStack() as stack:
+        stack.enter_context(patch.object(R, "ARM_C_MODELS", models))
+        stack.enter_context(patch.object(R, "ARM_C_REVIEWER_MAX", references))
+        stack.enter_context(patch.object(R, "ARM_C_MAX_ATTEMPTS", 3, create=True))
+        stack.enter_context(patch.object(R, "stats_helpers", lambda: object()))
+        stack.enter_context(patch.object(R, "log_path_for", lambda *args: log))
+        stack.enter_context(patch.object(R, "load_arm_c_pair", fake_load))
+        stack.enter_context(patch.object(R, "analyze_model", fake_analyze))
+        for _ in range(invocations):
+            try:
+                R.run_arm_c(None, out)
+            except Exception as exc:
+                error = f"{type(exc).__name__}: {exc}"
+    return {"load_calls": load_calls, "rows": R.read_jsonl(log), "error": error}
 
 
 check("took requires old lead before and new lead after",
@@ -176,20 +327,36 @@ with tempfile.TemporaryDirectory(prefix="part198-jsonl-r1-") as td:
     check("M1 keeps raising on interior and newline-terminated malformed JSONL", raised and tail_raised)
 
 with tempfile.TemporaryDirectory(prefix="part198-duplicate-r1-") as td:
-    path = Path(td) / "dupes.jsonl"
-    first = {"record_type": "case", "run_mode": "registered", "case_id": 7, "took": True}
-    later = {"record_type": "failure", "run_mode": "registered", "case_id": 7, "took": False}
-    path.write_text(json.dumps(first) + "\n" + json.dumps(later) + "\n", encoding="utf-8")
+    path = Path(td) / "armA-rome.jsonl"
+    R.append_jsonl(path, {"record_type": "failure", "run_mode": "registered", "run_id": "r0",
+                          "case_id": 7, "phase": "edit_or_score", "error": "first attempt failed"})
+    first = {"record_type": "case", "run_mode": "registered", "run_id": "r1", "timestamp": "t1",
+             "case_id": 7, "took": True, "name_eligible": True,
+             "localization": {"f1": 1.0}, "restored_bit_exact": True}
+    R.append_jsonl(path, first)
+    R.append_jsonl(path, dict(first, run_id="r2", timestamp="t2",
+                              localization={"f1": 1.0000000001}))
+    R.append_jsonl(path, {"record_type": "failure", "run_mode": "registered", "run_id": "r4",
+                          "phase": "startup_or_run", "error": "preflight failed"})
+    R.append_jsonl(path, {"record_type": "failure", "run_mode": "registered", "run_id": "r5",
+                          "phase": "startup_or_run", "error": "preflight failed again"})
+    try:
+        replay_score = S.score_from_dir(Path(td))
+    except ValueError:
+        replay_score = {}
+    replay_rows = replay_score.get("forecasts", [])
+    single_score = next((row for row in replay_rows if row.get("forecast") == "198.1 ROME single"), {})
+    unkeyed = replay_score.get("run_level_failures", {}).get("all-armA-ROME", [])
+    replay_ok = single_score.get("attempted") == 1 and single_score.get("took") == 1
+    unkeyed_reported = len(unkeyed) == 2 and all(row["phase"] == "startup_or_run" for row in unkeyed)
     conflict_refused = False
     try:
-        S.registered_rows(path, "case", "case_id")
+        R.append_jsonl(path, dict(first, run_id="r3", timestamp="t3", took=False))
+        S.score_from_dir(Path(td))
     except ValueError as exc:
-        conflict_refused = "case_id='7'" in str(exc) and "conflicting terminal rows" in str(exc)
-    first_copy = dict(first, run_id="second-process", timestamp="later")
-    path.write_text(json.dumps(first) + "\n" + json.dumps(first_copy) + "\n", encoding="utf-8")
-    same_rows = S.registered_rows(path, "case", "case_id")
-    check("M2 conflicting terminal rows are named and refused; identical repeats keep first",
-          conflict_refused and len(same_rows) == 1 and same_rows[0]["took"] is True)
+        conflict_refused = "case_id='7'" in str(exc) and "took" in str(exc)
+    check("N1 legitimate failure/resume and replay drift stay scoreable; contradictory case terminals refuse",
+          replay_ok and conflict_refused and unkeyed_reported)
 
 measure = getattr(R, "wsp_take_measurement", None)
 if measure is None:
@@ -225,6 +392,47 @@ else:
     restoration_ok = detects_buffer and matches_fn(tiny, snapshot)
 check("M4 restoration fingerprint covers unreported parameters and buffers", restoration_ok)
 
+try:
+    scalar_fingerprint = R.tensor_fingerprint(torch.tensor(2.5))
+    scalar_tiny = TinyState()
+    scalar_tiny.register_buffer("scalar", torch.tensor(4.0))
+    scalar_snapshot = R.model_state_snapshot(scalar_tiny)
+    scalar_ok = bool(scalar_fingerprint) and R.model_matches_snapshot(scalar_tiny, scalar_snapshot)
+except Exception:
+    scalar_ok = False
+check("N2 fingerprints 0-d tensors and keeps them in the model snapshot", scalar_ok)
+
+fingerprint_error_reported = False
+verify_restored = getattr(R, "verify_model_restored", None)
+if callable(verify_restored):
+    try:
+        with patch.object(R, "model_matches_snapshot",
+                          side_effect=RuntimeError("synthetic byte fingerprint failure")):
+            verify_restored(tiny, snapshot, "test restoration")
+    except RuntimeError as exc:
+        fingerprint_error_reported = "fingerprint failed" in str(exc) and "not restored" not in str(exc)
+check("N2 fingerprint errors remain explicit verification errors, never restoration mismatches",
+      fingerprint_error_reported)
+
+with tempfile.TemporaryDirectory(prefix="part198-runner-restore-") as td:
+    single = run_fake_arm_a(Path(td) / "single")
+    mass = run_fake_arm_a(Path(td) / "mass", mass=True)
+    single_case = next((row for row in single["rows"] if row.get("record_type") == "case"), {})
+    mass_batch = next((row for row in mass["rows"] if row.get("record_type") == "batch"), {})
+    check("N3 Arm A single runner detects an editor-mutated unreported buffer",
+          single["supported"] and single_case.get("restored_bit_exact") is False
+          and bool(single["calls"]) and "case 101" in single["calls"][0])
+    check("N3 Arm A mass runner detects an editor-mutated unreported buffer",
+          mass["supported"] and mass_batch.get("restored_bit_exact") is False
+          and bool(mass["calls"]) and "mass batch 0" in mass["calls"][0])
+
+with tempfile.TemporaryDirectory(prefix="part198-fingerprint-error-") as td:
+    failed_verify = run_fake_arm_a(Path(td) / "single", fingerprint_failure=True)
+    failure_row = next((row for row in failed_verify["rows"] if row.get("record_type") == "failure"), {})
+    check("N2 runner reports fingerprint failure as unknown restoration, with the cause",
+          failed_verify["supported"] and failure_row.get("restored_bit_exact") is None
+          and "fingerprint failed" in str(failure_row.get("restoration_verification_error")))
+
 with tempfile.TemporaryDirectory(prefix="part198-armc-r1-") as td:
     log = Path(td) / "armC.jsonl"
     log.write_text(json.dumps({"record_type": "failure", "run_mode": "registered",
@@ -244,6 +452,72 @@ with tempfile.TemporaryDirectory(prefix="part198-armc-r1-") as td:
                         < run_arm_c_source.rfind("load_arm_c_pair"))
     check("M5 Arm C retries failed calibration keys and requires T* before evaluation loads",
           retry_ok and missing_tstar_refused and evaluation_guard)
+
+with tempfile.TemporaryDirectory(prefix="part198-armc-retry-cap-") as td:
+    retry_run = run_fake_arm_c(Path(td), invocations=4)
+    keyed_failures = [row for row in retry_run["rows"]
+                      if row.get("record_type") == "failure" and row.get("model_id") == "cal-0"]
+    attempts = [row.get("attempt_number") for row in keyed_failures]
+    cap_ok = (retry_run["load_calls"] == ["cal-0"] * 3 and len(keyed_failures) == 3
+              and attempts == [1, 2, 3] and "retry limit reached" in str(retry_run["error"])
+              and "cal-0" in str(retry_run["error"]))
+check("P1 deterministic Arm C load failure stops after three attempts and reports the model",
+      cap_ok)
+
+with tempfile.TemporaryDirectory(prefix="part198-armc-failure-resume-") as td:
+    recovered = run_fake_arm_c(Path(td), recover_failure=True, invocations=1)
+    successful_ids = {row.get("model_id") for row in recovered["rows"]
+                      if row.get("record_type") == "armC_model"}
+    check("N5 Arm C resume retries a failed calibration key instead of treating failure as success",
+          recovered["load_calls"] == ["cal-0", "cal-1", "cal-2"]
+          and successful_ids == {"cal-0", "cal-1", "cal-2"} and recovered["error"] is None)
+
+arm_b_source = inspect.getsource(R.run_arm_b)
+undo_pos = arm_b_source.find("undone = w.undo()")
+zero_pos = arm_b_source.find("zero = all(", undo_pos)
+failure_guard_pos = arm_b_source.find("if not zero:", zero_pos)
+case_write_pos = arm_b_source.find("append_jsonl(log, record)", failure_guard_pos)
+check("N4 Arm B writes a case terminal row only after the undo-zero check",
+      0 <= undo_pos < zero_pos < failure_guard_pos < case_write_pos)
+
+with tempfile.TemporaryDirectory(prefix="part198-preflight-hash-test-") as td:
+    root = Path(td) / "source"
+    root.mkdir()
+    stats_file = root / "stats198.py"
+    stats_file.write_text("# synthetic frozen stats module\n", encoding="utf-8")
+    digest = R.hash_file(stats_file)
+    crosscheck = {"fails": [], "gpt2": {str(i): {} for i in range(48)},
+                  "qwen": {str(i): {} for i in range(24)}, "stats198_sha256": digest}
+    (root / "crosscheck198.json").write_text(json.dumps(crosscheck), encoding="utf-8")
+    fixture_proc = SimpleNamespace(returncode=0, stdout="FIXTURES ALL PASS")
+    suite_proc = SimpleNamespace(returncode=0, stdout="TEST_BUILD_CHECKS 48\nTEST_BUILD ALL PASS")
+    with patch.object(R, "HERE", root):
+        with patch.object(R.subprocess, "run", side_effect=[fixture_proc, suite_proc]):
+            matching = R.preflight(Path(td) / "matching-out")
+        crosscheck["stats198_sha256"] = "stale-hash"
+        (root / "crosscheck198.json").write_text(json.dumps(crosscheck), encoding="utf-8")
+        with patch.object(R.subprocess, "run", side_effect=[fixture_proc, suite_proc]):
+            try:
+                R.preflight(Path(td) / "stale-out")
+            except RuntimeError:
+                stale_gate = json.loads((Path(td) / "stale-out" / "gate.json").read_text(encoding="utf-8"))
+            else:
+                stale_gate = {}
+        crosscheck["stats198_sha256"] = digest
+        (root / "crosscheck198.json").write_text(json.dumps(crosscheck), encoding="utf-8")
+        no_marker_proc = SimpleNamespace(returncode=0, stdout="TEST_BUILD ALL PASS (0 failed)")
+        with patch.object(R.subprocess, "run", side_effect=[fixture_proc, no_marker_proc]):
+            try:
+                R.preflight(Path(td) / "empty-suite-out")
+            except RuntimeError:
+                empty_suite_gate = json.loads((Path(td) / "empty-suite-out" / "gate.json").read_text(encoding="utf-8"))
+            else:
+                empty_suite_gate = {}
+    check("N5 preflight validates the stats hash and requires the synthetic-test count marker",
+          matching["passed"] is True and stale_gate.get("crosscheck_pass") is False
+          and stale_gate.get("details", {}).get("crosscheck", {}).get("stats_hash_matches") is False
+          and empty_suite_gate.get("synthetic_tests_pass") is False
+          and empty_suite_gate.get("details", {}).get("synthetic_tests", {}).get("check_count") is None)
 
 final_row_fn = getattr(S, "final_sequence_row", None)
 if final_row_fn is None:
@@ -381,6 +655,12 @@ with tempfile.TemporaryDirectory(prefix="part198-score-r1-") as td:
           s1["status"] == "FAIL" and oracle["status"] == "NOT EVALUABLE" and update["status"] == "FAIL")
     check("M6 198.8 scores the row with highest n_written_so_far",
           seq_forecast["successes"] == 1 and seq_forecast["rate_denominator"] == 10)
+    rome[1]["aimed_positive_control"] = {"reason": "zero aimed direction"}
+    (out / "armA-rome.jsonl").write_text(
+        "".join(json.dumps(row) + "\n" for row in rome), encoding="utf-8")
+    missing_reason_control = S.score_from_dir(out)["sensitivity_checks"]["S1"]
+    check("N6 reports a zero-direction reason object as a missing S1 control",
+          missing_reason_control.get("missing_controls") == 2)
 
 check("M7 both Arm C loops share the pre-load limit guard",
       inspect.getsource(R.run_arm_c).count("arm_c_limit_reached(selected_count, limit)") >= 2)
@@ -388,6 +668,8 @@ check("M5 reports failure rows before a restoration-triggered process stop",
       inspect.getsource(R.run_arm_a).index('"record_type": "failure"')
       < inspect.getsource(R.run_arm_a).index('raise RuntimeError("editor failure left no verified restoration'))
 
+check("N5 synthetic build suite executes its minimum check floor", len(check_names) >= 30)
+print("TEST_BUILD_CHECKS", len(check_names))
 print("TEST_BUILD", "FAIL" if fails else "ALL PASS", f"({fails} failed)")
 sys.exit(1 if fails else 0)
 

@@ -224,6 +224,21 @@ def arm_c_successful_keys(path: Path) -> set[str]:
             and row.get("record_type") == "armC_model" and row.get("model_id") is not None}
 
 
+ARM_C_MAX_ATTEMPTS = 3
+
+
+def arm_c_failure_counts(path: Path, runmode: str = "registered") -> dict[str, int]:
+    """Count failed attempts per model within one run mode for bounded retries."""
+    counts: dict[str, int] = {}
+    for row in read_jsonl(path):
+        model_id = row.get("model_id")
+        if (row.get("run_mode", "registered") == runmode and row.get("record_type") == "failure"
+                and model_id is not None):
+            key = str(model_id)
+            counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
 def require_tstar(path: Path) -> dict[str, Any]:
     if not path.is_file():
         raise RuntimeError(f"Arm C tstar.json is missing: {path}")
@@ -397,14 +412,23 @@ def append_run_event(log: Path, mode: str, key: str, pending: list[Any], rid: st
 
 def preflight(out_dir: Path) -> dict[str, Any]:
     """Run inert checks and require the model-based pre-data crosscheck before model/edit work."""
+    synthetic_check_floor = 30
     results: dict[str, Any] = {"timestamp": utc_now(), "fixtures_pass": False,
                                "synthetic_tests_pass": False, "crosscheck_pass": False, "details": {}}
     for label, script in (("fixtures", HERE / "fixtures198.py"),
                           ("synthetic_tests", HERE / "test_build198.py")):
         proc = subprocess.run([sys.executable, "-I", str(script)], cwd=str(HERE), text=True,
                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, check=False)
-        results["details"][label] = {"returncode": proc.returncode, "output": proc.stdout}
-        results["fixtures_pass" if label == "fixtures" else "synthetic_tests_pass"] = proc.returncode == 0
+        details = {"returncode": proc.returncode, "output": proc.stdout}
+        passed = proc.returncode == 0
+        if label == "synthetic_tests":
+            match = re.search(r"(?m)^TEST_BUILD_CHECKS (\d+)\s*$", proc.stdout)
+            count = int(match.group(1)) if match else None
+            details["check_count"] = count
+            details["required_check_count"] = synthetic_check_floor
+            passed = passed and count is not None and count >= synthetic_check_floor
+        results["details"][label] = details
+        results["fixtures_pass" if label == "fixtures" else "synthetic_tests_pass"] = passed
     crosscheck = HERE / "crosscheck198.json"
     if crosscheck.is_file():
         data = json.loads(crosscheck.read_text(encoding="utf-8"))
@@ -577,7 +601,8 @@ def tensor_fingerprint(tensor: Any) -> str:
     value = tensor.detach().cpu()
     if not value.is_contiguous():
         value = value.contiguous()
-    raw = value.view(torch.uint8).reshape(-1)
+    # Flatten first: PyTorch cannot reinterpret a 0-d tensor with view(dtype).
+    raw = value.reshape(-1).view(torch.uint8)
     view = memoryview(raw.numpy())
     h = hashlib.sha256()
     h.update(f"{value.dtype}:{tuple(value.shape)}:".encode("ascii"))
@@ -587,21 +612,33 @@ def tensor_fingerprint(tensor: Any) -> str:
     return h.hexdigest()
 
 
+def _model_state_fingerprints(model) -> dict[str, str]:
+    current: dict[str, str] = {}
+    for kind, values in (("parameter", model.named_parameters()), ("buffer", model.named_buffers())):
+        for name, value in values:
+            key = f"{kind}:{name}"
+            try:
+                current[key] = tensor_fingerprint(value)
+            except Exception as exc:
+                raise RuntimeError(f"model state fingerprint failed for {key}: {type(exc).__name__}: {exc}") from exc
+    return current
+
+
 def model_state_snapshot(model) -> dict[str, str]:
     """Keep a compact immutable fingerprint for every parameter and buffer."""
-    snapshot = {f"parameter:{name}": tensor_fingerprint(value)
-                for name, value in model.named_parameters()}
-    snapshot.update({f"buffer:{name}": tensor_fingerprint(value)
-                    for name, value in model.named_buffers()})
-    return snapshot
+    return _model_state_fingerprints(model)
 
 
 def model_matches_snapshot(model, snapshot: dict[str, str]) -> bool:
-    current = {f"parameter:{name}": tensor_fingerprint(value)
-               for name, value in model.named_parameters()}
-    current.update({f"buffer:{name}": tensor_fingerprint(value)
-                    for name, value in model.named_buffers()})
-    return current == snapshot
+    return _model_state_fingerprints(model) == snapshot
+
+
+def verify_model_restored(model, snapshot: dict[str, str], context: str) -> bool:
+    """Compare full state and preserve fingerprint errors as errors, not mismatches."""
+    try:
+        return model_matches_snapshot(model, snapshot)
+    except Exception as exc:
+        raise RuntimeError(f"{context}: model-state fingerprint failed: {exc}") from exc
 
 
 def write_manifest(out_dir: Path) -> dict[str, Any]:
@@ -991,27 +1028,31 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
             with torch.no_grad():
                 for pname, w0 in orig.items():
                     params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-            restored = model_matches_snapshot(model, state_snapshot)
+            restored = verify_model_restored(model, state_snapshot, f"case {case_id} restoration")
             record["restored_bit_exact"] = bool(restored)
             append_jsonl(log, record)
             if not restored:
                 raise RuntimeError(f"base restoration check failed on case {case_id}")
         except Exception as exc:
-            restored_after_error = True
+            restored_after_error: bool | None = True
+            restoration_verification_error = None
             try:
                 with torch.no_grad():
                     for pname, w0 in orig.items():
                         if pname in params:
                             params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-                restored_after_error = model_matches_snapshot(model, state_snapshot)
-            except Exception:
-                restored_after_error = False
+                restored_after_error = verify_model_restored(
+                    model, state_snapshot, f"case {case_id} restoration after error")
+            except Exception as verify_exc:
+                restored_after_error = None
+                restoration_verification_error = f"{type(verify_exc).__name__}: {verify_exc}"
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
                                "timestamp": utc_now(), "arm": "A", "method": method,
                                "case_id": int(case_id), "phase": "edit_or_score",
-                               "restored_bit_exact": bool(restored_after_error),
+                               "restored_bit_exact": restored_after_error,
+                               "restoration_verification_error": restoration_verification_error,
                                "error": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc()[-4000:]})
-            if (editor_started and not orig) or not restored_after_error:
+            if (editor_started and not orig) or restored_after_error is not True:
                 raise RuntimeError("editor failure left no verified restoration; stopping this process") from exc
     rows = read_jsonl(log)
     done = {int(r["case_id"]) for r in rows if r.get("run_mode", "registered") == "registered"
@@ -1048,7 +1089,7 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
             with torch.no_grad():
                 for pname, w0 in verify_orig.items():
                     params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-            restored = model_matches_snapshot(model, state_snapshot)
+            restored = verify_model_restored(model, state_snapshot, "first-record replay restoration")
             append_jsonl(log, {"record_type": "state_verification", "run_mode": runmode, "run_id": rid,
                                "timestamp": utc_now(), "method": method, "case_id": first_id,
                                "update_reproduced": bool(passed), "per_parameter": compares,
@@ -1062,13 +1103,17 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
                             params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
             except Exception:
                 pass
+            restoration_verification_error = None
             try:
-                restored_after_error = model_matches_snapshot(model, state_snapshot)
-            except Exception:
-                restored_after_error = False
+                restored_after_error = verify_model_restored(
+                    model, state_snapshot, "first-record replay restoration after error")
+            except Exception as verify_exc:
+                restored_after_error = None
+                restoration_verification_error = f"{type(verify_exc).__name__}: {verify_exc}"
             append_jsonl(log, {"record_type": "state_verification", "run_mode": runmode, "run_id": rid,
                                "timestamp": utc_now(), "method": method, "case_id": first_id,
-                               "update_reproduced": False, "restored_bit_exact": bool(restored_after_error),
+                               "update_reproduced": False, "restored_bit_exact": restored_after_error,
+                               "restoration_verification_error": restoration_verification_error,
                                "possibly_state_contaminated": True, "error": f"{type(exc).__name__}: {exc}"})
     del model
     gc.collect()
@@ -1156,27 +1201,31 @@ def run_arm_a_mass(method: str, limit: int | None, out_dir: Path) -> int:
             with torch.no_grad():
                 for pname, w0 in orig.items():
                     params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-            restored = model_matches_snapshot(model, state_snapshot)
+            restored = verify_model_restored(model, state_snapshot, f"mass batch {batch_idx} restoration")
             batch_record["restored_bit_exact"] = bool(restored)
             append_jsonl(log, batch_record)
             if not restored:
                 raise RuntimeError(f"base restoration check failed after mass batch {batch_idx}")
         except Exception as exc:
-            restored_after_error = True
+            restored_after_error: bool | None = True
+            restoration_verification_error = None
             try:
                 with torch.no_grad():
                     for pname, w0 in orig.items():
                         if pname in params:
                             params[pname].copy_(w0.to(device=params[pname].device, dtype=params[pname].dtype))
-                restored_after_error = model_matches_snapshot(model, state_snapshot)
-            except Exception:
-                restored_after_error = False
+                restored_after_error = verify_model_restored(
+                    model, state_snapshot, f"mass batch {batch_idx} restoration after error")
+            except Exception as verify_exc:
+                restored_after_error = None
+                restoration_verification_error = f"{type(verify_exc).__name__}: {verify_exc}"
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
                 "timestamp": utc_now(), "arm": "A-mass", "method": method,
                 "batch_id": f"{method}:{batch_idx}", "case_ids": [int(x) for x in batch_ids],
-                "phase": "mass_edit_or_score", "restored_bit_exact": bool(restored_after_error),
+                "phase": "mass_edit_or_score", "restored_bit_exact": restored_after_error,
+                "restoration_verification_error": restoration_verification_error,
                 "error": f"{type(exc).__name__}: {exc}", "traceback": traceback.format_exc()[-4000:]})
-            if (editor_started and not orig) or not restored_after_error:
+            if (editor_started and not orig) or restored_after_error is not True:
                 raise RuntimeError("mass editor failure left no verified restoration; stopping this process") from exc
     del model
     gc.collect()
@@ -1312,9 +1361,10 @@ def run_arm_b(limit: int | None, out_dir: Path) -> int:
             undone = w.undo()
             zero = all(torch.equal(w.delta[l], torch.zeros_like(w.delta[l])) for l in edited_layers)
             record["undo_zero_exact"], record["undo_answer"] = bool(zero), undone
-            append_jsonl(log, record)
             if not zero:
                 raise RuntimeError(f"WSP accumulated update was nonzero after undo for case {case_id}")
+            # The row is terminal only after the design's zero-after-undo check succeeds.
+            append_jsonl(log, record)
         except Exception as exc:
             try:
                 while w.facts:
@@ -1562,6 +1612,7 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
     log = log_path_for("armC", None, out_dir)
     runmode, rid = ("smoke" if limit is not None else "registered"), run_id()
     prior = arm_c_successful_keys(log)
+    failures = arm_c_failure_counts(log, runmode)
     pending = [m for m in ARM_C_MODELS if m["id"] not in prior]
     append_run_event(log, runmode, "armC", [m["id"] for m in pending], rid)
     selected_count = 0
@@ -1571,6 +1622,10 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
             continue
         if arm_c_limit_reached(selected_count, limit):
             break
+        failed_attempts = failures.get(model_id, 0)
+        if failed_attempts >= ARM_C_MAX_ATTEMPTS:
+            raise RuntimeError(f"Arm C retry limit reached for {model_id!r}: {failed_attempts} failed attempts; "
+                               f"refusing another model load (max attempts {ARM_C_MAX_ATTEMPTS})")
         try:
             model, tokenizer, dtype = load_arm_c_pair(model_id, "stored")
             row = analyze_model(model, tokenizer, S, model_id, role, dtype)
@@ -1586,7 +1641,9 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
         except Exception as exc:
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
                 "timestamp": utc_now(), "arm": "C", "model_id": model_id, "role": role,
-                "phase": "calibration", "error": f"{type(exc).__name__}: {exc}",
+                "phase": "calibration", "attempt_number": failed_attempts + 1,
+                "max_attempts": ARM_C_MAX_ATTEMPTS,
+                "error": f"{type(exc).__name__}: {exc}",
                 "traceback": traceback.format_exc()[-4000:]})
             raise
         prior.add(model_id)
@@ -1613,6 +1670,10 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
             continue
         if arm_c_limit_reached(selected_count, limit):
             break
+        failed_attempts = failures.get(model_id, 0)
+        if failed_attempts >= ARM_C_MAX_ATTEMPTS:
+            raise RuntimeError(f"Arm C retry limit reached for {model_id!r}: {failed_attempts} failed attempts; "
+                               f"refusing another model load (max attempts {ARM_C_MAX_ATTEMPTS})")
         try:
             dtype = "float32" if role == "host" else "stored"
             model, tokenizer, seen = load_arm_c_pair(model_id, dtype)
@@ -1629,7 +1690,9 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
         except Exception as exc:
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
                 "timestamp": utc_now(), "arm": "C", "model_id": model_id, "role": role,
-                "phase": "evaluation_or_host", "error": f"{type(exc).__name__}: {exc}",
+                "phase": "evaluation_or_host", "attempt_number": failed_attempts + 1,
+                "max_attempts": ARM_C_MAX_ATTEMPTS,
+                "error": f"{type(exc).__name__}: {exc}",
                 "traceback": traceback.format_exc()[-4000:]})
             raise
         prior.add(model_id)

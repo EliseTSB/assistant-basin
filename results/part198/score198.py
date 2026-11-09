@@ -14,23 +14,57 @@ OUT_DEFAULT = HERE / "out"
 
 
 def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
-    """Keep the first registered terminal row; conflicting repeats make the stream unscorable."""
-    first = {}
+    """Deduplicate replays by key while refusing contradictory successful terminals.
+
+    Failure rows describe attempts, so a later case row may legitimately follow one. Replayed
+    case rows can differ in floating-point diagnostics across processes; compare their frozen
+    outcome fields and retain the first full row. Distinct run-level failures have no case key
+    and are surfaced separately by score_from_dir.
+    """
+    by_key: dict[str, list[dict[str, Any]]] = {}
+    run_level: dict[tuple[str, str], dict[str, Any]] = {}
+    decisive = {
+        "case": ("took", "already_satisfied", "name_eligible", "restored_bit_exact",
+                 "undo_zero_exact", "n_written_so_far"),
+        "batch": ("n_took", "n_already_satisfied", "take_gate_passed", "restored_bit_exact"),
+    }.get(kind, ("took", "already_satisfied", "name_eligible", "restored_bit_exact"))
     for row in R.read_jsonl(path):
         if row.get("run_mode", "registered") != "registered":
             continue
         if row.get("record_type") not in {kind, "failure"}:
             continue
         value = row.get(key)
-        if value is not None:
-            identity = str(value)
-            if identity not in first:
-                first[identity] = row
-                continue
-            if _terminal_payload(first[identity]) != _terminal_payload(row):
-                raise ValueError(f"conflicting terminal rows for {key}={identity!r} in {path}: "
-                                 f"{first[identity].get('record_type')} then {row.get('record_type')}")
-    return list(first.values())
+        if value is None:
+            if row.get("record_type") == "failure" and row.get("run_id") is not None:
+                identity = (str(row["run_id"]), str(row.get("phase", "startup_or_run")))
+                previous = run_level.get(identity)
+                if previous is not None and _terminal_payload(previous) != _terminal_payload(row):
+                    raise ValueError(f"conflicting run-level failure rows for run_id={identity[0]!r}, "
+                                     f"phase={identity[1]!r} in {path}")
+                run_level.setdefault(identity, row)
+            continue
+        by_key.setdefault(str(value), []).append(row)
+
+    selected = []
+    for identity, rows in by_key.items():
+        cases = [row for row in rows if row.get("record_type") == kind]
+        if cases:
+            first_case = cases[0]
+            for row in cases[1:]:
+                changed = [field for field in decisive
+                           if first_case.get(field, _MISSING) != row.get(field, _MISSING)]
+                if changed:
+                    raise ValueError(f"conflicting terminal rows for {key}={identity!r} in {path}: "
+                                     f"decisive fields differ: {', '.join(changed)}")
+            selected.append(first_case)
+        elif rows:
+            # Failed attempts remain available in all_registered() for gate diagnostics.
+            # Keep one failure as the terminal scored row when no completed result exists.
+            selected.append(rows[0])
+    return selected
+
+
+_MISSING = object()
 
 
 def _terminal_payload(row: dict[str, Any]) -> dict[str, Any]:
@@ -39,6 +73,12 @@ def _terminal_payload(row: dict[str, Any]) -> dict[str, Any]:
 
 def all_registered(path: Path) -> list[dict[str, Any]]:
     return [r for r in R.read_jsonl(path) if r.get("run_mode", "registered") == "registered"]
+
+
+def run_level_failures(rows: list[dict[str, Any]], key: str) -> list[dict[str, Any]]:
+    """Return unkeyed failures for the score report without mixing them into case denominators."""
+    return [{"run_id": row.get("run_id"), "phase": row.get("phase"), "error": row.get("error")}
+            for row in rows if row.get("record_type") == "failure" and row.get(key) is None]
 
 
 def flag(row: dict[str, Any], *keys: str) -> bool:
@@ -181,10 +221,19 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
     allfiles["all-armB"] = all_registered(bpath)
     files["armB"] = registered_rows(bpath, "case", "case_id")
     seqpath = out_dir / "armB-seq-wsp.jsonl"
+    allfiles["all-armB-seq"] = all_registered(seqpath)
     files["armB-seq"] = registered_rows(seqpath, "case", "case_id")
     gate = gate_check(out_dir, {**files, **allfiles})
     tstar_path = out_dir / "tstar.json"
+    unkeyed_failure_keys = {
+        "all-armA-ROME": "case_id", "all-armA-MEMIT": "case_id",
+        "all-armA-AlphaEdit": "case_id", "all-armA-mass-MEMIT": "batch_id",
+        "all-armA-mass-AlphaEdit": "batch_id", "all-armB": "case_id",
+        "all-armB-seq": "case_id",
+    }
     out: dict[str, Any] = {"created_utc": R.utc_now(), "gate": gate,
+        "run_level_failures": {name: run_level_failures(allfiles.get(name, []), key)
+                               for name, key in unkeyed_failure_keys.items()},
         "tstar": json.loads(tstar_path.read_text(encoding="utf-8")) if tstar_path.is_file() else None,
         "forecasts": [], "sensitivity_checks": {}, "descriptive": {}}
     gate_ok = bool(gate["passed"])
@@ -209,7 +258,10 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
     rome = files["armA-ROME"]
     s1_rows = [r for r in rome if r.get("took") is True and r.get("name_eligible") is True]
     s1_success = sum(flag(r, "aimed_positive_control", "oracle_named_strict") for r in s1_rows)
-    s1_missing_controls = sum(not isinstance(r.get("aimed_positive_control"), dict) for r in s1_rows)
+    s1_missing_controls = sum(
+        not isinstance(r.get("aimed_positive_control"), dict)
+        or r["aimed_positive_control"].get("oracle_named_strict") is None
+        for r in s1_rows)
     s1_status = ("NOT EVALUABLE" if not gate_ok else
                  ("PASS" if s1_success >= 20 else ("FAIL" if s1_rows else "NOT EVALUABLE")))
     out["sensitivity_checks"]["S1"] = {"attempted": len(rome),
