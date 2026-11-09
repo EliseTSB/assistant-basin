@@ -1,0 +1,23 @@
+# Part 199: Part 170 on the eager kernel (PART199-DESIGN.md). Same model, revision, prompts, neurons, doses and bans
+# as Part 170; the wrapper changes only the kernel record, the push batch shape (chunks of 8) and the pilot rule.
+# Before launch: close stale model runs and other GPU-heavy applications on the Windows host to release Arc memory,
+# and start only with at least 11 GB of Windows memory available (the 4B load trips the 2 GB RAM guard below that).
+# A task killed at the runner's 6-hour limit is relaunched with the same line: run170 resumes at the next unwritten
+# answer. A killed task leaves results/part199/run199.lock; check no run199 process runs, then remove it by hand.
+# The --copy list is Part 170's, plus this part's runner and tests. part199/onset/ is NOT copied: --compare runs on
+# the host, where the tokenizer and the repo are available.
+python3 tools/launch_arc.py 199 --step "-I -B part199/run199.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --out-dir results/part199 --batch-size 64" --copy tools/launch_arc.py part199/__init__.py part199/run199.py part199/test_part199.py part170/__init__.py part170/run170.py part170/score170.py part170/prompts170.py part170/test_part170.py part169/run169.py part169/score169.py part168/run168.py part168/score168.py part166/prep166.py part166/run166.py part166/score166.py part166/test_part166.py part165/run165.py part165/score165.py part165/effect165.py part165/test_part165.py part164/run164.py part164/select164.py part164/score164.py part164/test_part164.py part164/units164.json part163/run163.py part160/run160.py part148/battery148.py part148/score148.py part155/run155.py part153/battery153.py part86/common86.py part86/triage86.py neuron_report.py judge_client.py results/part112/medians.json results/part168/norms.json results/part169/norms.json
+
+# Host, after the run, in this order:
+# Gates R1 and R3 over every recorded launch: every load eager, one model, revision and folder, push calls in chunks of 8.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part199/run199.py --check-record results/part199/load.json
+# Score with Part 170's own scorer, unchanged.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part170/score170.py --answers results/part199/answers.jsonl --stage0 results/part199/stage0.json --lists results/part199/lists.jsonl --norms results/part199/norms.json --out results/part199
+# Published beside rerun, and Gate R2 (exit 3 if the directions are not Part 170's): directions and realized writes,
+# Stage 1 lists, frozen prompts, gates, every cell and prediction, and the descriptive loop-onset split of the rerun's
+# own loops (part199/onset/loop_onset.py run unchanged as a subprocess; needs the tokenizer).
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part199/run199.py --compare results/part199 results/part170 --tokenizer /mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a
+
+# Host verification, from the repository root: this part's tests and Part 170's (which the wrapper must not move).
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part199/test_part199.py
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part170/test_part170.py

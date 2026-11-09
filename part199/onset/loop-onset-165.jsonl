@@ -1,0 +1,10 @@
+{"cell": {"stage": "battery", "arm": "full", "k": 9216}, "loops": 73, "before": 42, "after": 31, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "iso", "k": null}, "loops": 61, "before": 44, "after": 17, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k1024", "k": 1024}, "loops": 66, "before": 38, "after": 28, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k16", "k": 16}, "loops": 113, "before": 88, "after": 25, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k256", "k": 256}, "loops": 71, "before": 45, "after": 26, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k4", "k": 4}, "loops": 208, "before": 178, "after": 30, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k64", "k": 64}, "loops": 76, "before": 54, "after": 22, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "k": 1}, "loops": 188, "before": 166, "after": 22, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n\u00b1", "k": 1}, "loops": 186, "before": 162, "after": 24, "unplaced": 0}
+{"total": {"loops": 1042, "before": 817, "after": 225, "unplaced": 0}, "rows": 6920, "loop_rows_reencoded_from_text": 1042}
