@@ -11,7 +11,9 @@ Part 200 regenerated 200 pushed answers one row at a time on the eager kernel an
 rows decoded in chunks of 8. Every count this program publishes from generated text is one draw of whatever causes
 that. This part asks four things about it, on Qwen3.5-4B on the A770:
 
-1. Is it rounding at near-ties and nothing else? (Does the top-two margin at the point where two decodes part say so?)
+1. Is it bf16's limited resolution at near-ties and nothing else? (Do two decodes part only where the margin is
+   inside bf16's own error, or also where the model was confident, as the SDPA fault did at margins up to 5.25,
+   `PART178-DESIGN.md` Amendment 1?)
 2. Which parts of "shape" matter: the batch size, which rows share the batch, padding from mixed prompts, a new process?
 3. How often does it flip a label, and in which direction? (These rates set the noise floor for counts.)
 4. Does computing in float32 from the same bf16 weights, on the same card, give one answer whatever the shape, and
@@ -26,11 +28,15 @@ It follows Parts 178, 183, 199 and 200. The plan it feeds is `BATCH-SHAPE-NOISE.
     2506.09501, earlier titled "Give Me FP32 or Give Me Death?"): under bf16 greedy decoding, batch size, GPU count and
     GPU type change answers; their fix, LayerCast, stores weights in 16 bits and computes in float32.
   - "Greedy Decoding Is Not Precision-Invariant" (arXiv 2609.26621): bf16 against fp16 diverges on 49 to 100% of
-    prompts; whether a step flips depends mainly on the top-two margin at the output head; recomputing only the head
-    in float32 at low-margin steps helps at batch 4 or less and not at batch 8 or more in their tests.
+    prompts; whether a step flips depends mainly on the top-two margin at the output head. On recomputing only the
+    head in float32 at low-margin steps, its abstract says: "delivers +22-36 pp exact agreement on A10G (+12-21 pp on
+    L4 and A100) at less than 4% latency overhead in low-batch (batch size <=4) single-stream inference" and "its
+    benefit vanishes when body-originated error dominates, including at batch size >=8 and under end-to-end FP8 in
+    our tests."
   - "Same Probe, Different Numbers" (arXiv 2609.31796; Llama-3.1-8B, Qwen3-8B, Gemma-3-4B): a bf16 batch-size change
-    leaves 25% of rows on different tokens by token 20; flips are symmetric; under float32 with only the batch size
-    varied, none of 201,960 probe verdicts change. Its advice is to report per-example agreement.
+    "flips the first generated token for 2.1% of rows and leaves 25% on different tokens by token 20"; "Flips are
+    symmetric"; "under float32 with only the batch size varied, none of 201,960 verdicts change" (probe verdicts, in
+    its abstract's words). Its advice is to report per-example agreement.
   - "MarginGate" (arXiv 2605.30218): batch-induced flips are sparse, so verify only low-margin steps.
   - Cooper et al. (arXiv 2609.25624): fixed-order float32-accumulating kernels give bitwise-identical linear layers
     across three NVIDIA architectures.
@@ -42,12 +48,17 @@ It follows Parts 178, 183, 199 and 200. The plan it feeds is `BATCH-SHAPE-NOISE.
   - Part 200: 76 of 200 batch-1 answers differ from chunks of 8; the first difference is at answer token 15.5 (median);
     the three labels flip on 2, 6 and 5 rows, in both directions (1 and 1, 4 and 2, 1 and 4).
   - Part 183's kernel record (A770, bf16, eager, eight plain prompts, 96 tokens): tokens differ between batch 1 and
-    batch 8 on 3 of 8 rows. It leaves the CPU float32 reference at six places, five of them exact ties in the bf16
-    logits (margin 0) and one at 0.125; the reference's own margin there is 0.008 to 0.10. Every bf16 margin in the
-    record is a multiple of 0.0625. Over 1,814 positions decided from an identical prefix, the bf16 margin differs
-    from the reference's by 0.05 at the median and about 0.21 to 0.25 at the 99th percentile.
-  - The CPU float32 reference itself: batch 1 and batch 2 give identical tokens on 8 of 8 rows, margins within 6e-5;
-    2.4% of its positions have a margin below 0.125 and 5.0% below 0.25.
+    batch 8 on 3 of 8 rows. It leaves the CPU reference at six places. There the reference's own margin is 0.008 to
+    0.10, under one bf16 step, and the bf16 scores show an exact tie (five places) or one step of 0.125 (one). So
+    these are near-ties in float32 that bf16 does not resolve: every bf16 margin in the record is a multiple of
+    0.0625, and over 1,814 positions decided from an identical prefix the bf16 margin is off from the reference's by
+    0.05 at the median and about 0.21 to 0.25 at the 99th percentile. The record's own `argmax_agrees` flag is false
+    on four rows, each of which holds exact ties, so at a tie the card's choice and a CPU top-2 can name different
+    tokens.
+  - The CPU reference is float32 compute from bf16-stored weights (`--dtype float32-upcast`; a full float32 load of
+    the 4B does not fit the host), proved equal to a float32 load on Qwen3.5-0.8B only. Its batch 1 and batch 2 give
+    identical tokens on 8 of 8 rows, margins within 6e-5; 2.4% of its positions have a margin below 0.125 and 5.0%
+    below 0.25.
   - Lessons already in `PROCEDURE.md`: Part 123 (5 of 18 do-nothing rows differed from plain until the shapes matched,
     then 60 of 60), Part 161 (compare arms generated in the same run), Part 178 (batch 1 against 2 to 16 on SDPA).
 
@@ -79,7 +90,7 @@ unless stated.
 | --- | --- | --- | --- |
 | A | pushed 384 | chunks of 8: per question, the 24 units in the interleaved order, three calls | bf16 |
 | A-again | first 16 rows of A | the same two chunks, repeated at the end of the same process | bf16 |
-| B | pushed 384 | chunks of 8: per question, the 24 units in the order `random.Random(2011).shuffle` gives, re-drawn until no chunk has the membership of an A chunk | bf16 |
+| B | pushed 384 | chunks of 8: per question, the 24 units reshuffled (`random.Random(2011)`, re-drawn until no chunk has the membership of an A chunk and every row's slot differs from its slot in A) | bf16 |
 | M | pushed 384, plain 24 | chunks of 8 over rows shuffled across questions (`random.Random(2012)`), left-padded; plain rows in 3 chunks of their own | bf16 |
 | C | C-subset 192, plain 24 | one row per call | bf16 |
 | A2 | A's rows for battery questions 0 to 3 (96) | A's chunks, in a second process (new launch step) | bf16 |
@@ -96,16 +107,22 @@ Embedding weight in bf16 storage and computes everything in float32 (proved equa
 push the same values.
 
 **Recorder.** A `LogitsProcessor`, last in the list, copies each step's scores to the CPU as float32 and stores, per
-row and position: the top two token ids, the top logit, and the margin. It returns the scores unchanged. Each row also
-stores its generated token ids, the pass, the call's row count and membership, its slot, its prompt length and its
-padding. Rows append to `results/part201/rows.jsonl` and are skipped on a relaunch.
+row and position: the top two token ids, the top logit, the margin, and the score of the token the decode then
+emitted. It returns the scores unchanged. Each row also stores its generated token ids, the pass, the call's row
+count and membership, its slot, its prompt length and its padding. Rows append to `results/part201/rows.jsonl`; a row
+is keyed by pass and row id, a torn last line is cut before reading, and a relaunch skips rows already written
+(`part201/ROWS-SCHEMA.md`).
 
 **Labels.** Part 163's, by its own code, on every decoded answer: name gone and maker gone (`part163/score163.py`),
 broken (`part86/triage86.py`), and the Part 161 Qwen rule (`results/part163/extra163.py`).
 
 **Analysis** (`part201/score201.py`, on the host). For a pair of passes, a row "differs" when its token ids differ. At
-the first differing position the script reads both passes' margins. "Steps" are bf16 steps at the top logit's
-magnitude (0.125 for a top logit from 16 up to 32). It prints, for every pair below: rows compared, rows differing,
+the first differing position (the position whose choice differs; both passes computed it from the same prefix) the script
+reads both passes' margins. That is the deciding position: a fault shows there as a large margin (Part 178's SDPA
+fault: up to 5.25), bf16's limited resolution as a small one. "Steps" are bf16 steps at the top logit's magnitude
+(0.125 for a top logit from 16 up to 32). Where one pass of a pair is float32, its margin at that position says how
+far apart the two tokens really were. At exact ties (bf16 margin 0) the script also prints which tied token was
+emitted and whether two passes with the same tied scores emitted different tokens. It prints, for every pair below: rows compared, rows differing,
 first-difference positions, the margin at the first difference, each label's flips by direction, and mean length
 difference; and over all bf16 rows the share of positions within 0, 1, 2 and 4 steps.
 
@@ -121,18 +138,26 @@ neighbours).
   condition.
 - **Gate G1, kernel and precision:** every bf16 load records eager and bf16; the float32 process records the upcast
   summary (`kept_bf16`, `converted_to_float32`, `restored_f32_from_checkpoint`); one model revision throughout.
-- **Gate G2, recorder:** on every row, the emitted token at each position equals the argmax of the recorded scores. A
-  failure means the margins do not describe the decode, and no margin reading is made.
-- **Gate G3, rows and shapes:** every planned row is present once per pass; each call's recorded row count and
-  membership match the plan.
-- **Gate G4, same push:** for each F8-subset row the push tensor's sha256 (bf16 bytes) is equal in the bf16 and float32
-  processes.
+- **Gate G2, recorder:** on every row, at each position the emitted token's recorded score equals the top recorded
+  score (it is the top token or tied with it). A failure means the recorded scores are not the ones the decode chose
+  from, and no margin reading is made. Positions where the emitted token is tied with, and is not, the recorder's
+  first-listed top token are counted and reported.
+- **Gate G3, rows and shapes:** every planned row is present once per pass; each call's recorded row count,
+  membership and slots match the plan; in pass B no call has an A call's membership and no row keeps its A slot.
+- **Gate G4, same push:** in the float32 process the activation the hook adds to is float32 (its dtype is recorded
+  per call), and the values the hook adds equal the bf16 process's push values exactly (largest absolute difference
+  0, recorded per row, with the push tensor's sha256). The hook casts the push to the activation's dtype
+  (`part86/common86.py`), so if any activation reaches it in bf16 the float32 arm is not float32 there, and this gate
+  fails.
 - Positive control for "the analysis can see a difference": A against C must differ on at least 10 rows; Part 200 found
   38%. If it does not, the comparison code is checked before anything is read.
 - Not used: recomputing only the output head in float32. arXiv 2609.26621 reports its benefit gone at batch 8 or more;
   pass F measures full float32 compute instead.
 - Not used: a CPU float32 decode of pushed rows (about half a token a second on the 4B; the reference took 52 minutes
-  for 16 plain rows). Pass K ties the A770's float32 to the CPU reference on the eight plain prompts.
+  for 16 plain rows). Pass K ties the A770's float32 compute to the CPU's on the eight plain prompts.
+- Read together: pass B changes slot and neighbours at once, and pass M changes padding and neighbours at once. If B
+  is near zero, M's excess over B is padding and sequence length. If B is not near zero, neither is separated here
+  and a follow-up holds membership fixed.
 
 Gate: G2. It could fail if `generate` applies another processor after the recorder or returns tokens from a path that
 does not pass through it.
@@ -142,7 +167,9 @@ does not pass through it.
 - Smallest effect worth knowing: a label flip rate of 3% against 0% (Part 200's order). With 384 pairs, 3% is 11.5
   flips and its 95% interval is about 1.6% to 5.1%; with 192, about 1.2% to 6.7%. For differing rows, 38% of 192 has
   an interval of about ±7 points. For the float32 passes, the claim is near zero against tens of percent, which 48
-  rows separate.
+  rows separate. 0 of 48 differing bounds the true rate below 7.4% (Wilson, 95%).
+- Power at the bars: a prediction whose true value sits exactly on its bar holds about half the time (201.3 at a
+  true 20%: 51%). 201.2's range holds with probability 0.9997 at a true 38% and about 0.53 at a true 25% or 50%.
 - Total: 1,504 bf16 answers (384 + 16 + 384 + 408 + 216 + 96) and 160 float32 answers (16 + 96 + 48), 80 new tokens
   (96 for K). bf16 chunked, 1,288 answers: about 24 minutes at Part 200's 0.89 answers a second. bf16 one row per call,
   216 answers: about 15 minutes at Part 200's 0.24 a second. Float32: not measured anywhere on this card.
@@ -170,24 +197,29 @@ does not pass through it.
 | 201.1 | A-again equals A on all 16 rows, and A2 equals A on all 96, token for token. | high | Claude (Fable 5.2) |
 | 201.2 | Between A and C, 25% to 50% of the 192 rows differ. | medium | Claude (Fable 5.2) |
 | 201.3 | Between A and M, at least 20% of the 384 rows differ. | low | Claude (Fable 5.2) |
-| 201.4 | Between A and B, at most 10% of the 384 rows differ. | low | Claude (Fable 5.2) |
-| 201.5 | Of the rows that differ between A and C, at least 95% have a pass-A margin of at most 2 steps at the first differing position. | high | Claude (Fable 5.2) |
+| 201.4 | Between A and B (other slots and other neighbours, same size and prompts), at most 10% of the 384 rows differ. | low | Claude (Fable 5.2) |
+| 201.5 | Of the rows that differ between A and C, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has one above 8 steps. | high | Claude (Fable 5.2) |
 | 201.6 | For each of the four labels, between A and M, the two directions of flip differ by at most twice the square root of the number of flips; and mean answer length differs by under 3 tokens. | medium | Claude (Fable 5.2) |
 | 201.7 | K matches the CPU float32 reference token for token on all 16 rows up to the first position where the reference margin is under 0.001. | medium | Claude (Fable 5.2) |
-| 201.8 | Between F8 and F1, at most 2 of the 48 rows differ. | medium | Claude (Fable 5.2) |
-| 201.9 | Of the rows that differ between A and F8, at least 95% have a pass-A margin of at most 2 steps at the first differing position. | medium | Claude (Fable 5.2) |
+| 201.8 | Between F8 and F1, none of the 48 rows differ, with all 48 present and finite in both. | medium | Claude (Fable 5.2) |
+| 201.9 | Of the rows that differ between A and F8, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has an F8 (float32) margin above 0.5 there. | medium | Claude (Fable 5.2) |
 | 201.10 | Between A and F8, 30% to 70% of the 96 rows differ. | low | Claude (Fable 5.2) |
-| 201.11 | F8 runs at one quarter of pass A's answers per second or better. | low | Claude (Fable 5.2) |
+| 201.11 | The projected slowdown of margin-gated decoding is at most 2: 1 + r × (F8 seconds per step ÷ A seconds per step), where r is the share of pass A's generation steps in which at least one unfinished row is within 2 steps. | low | Claude (Fable 5.2) |
 
 Copied verbatim into PREDICTIONS.md under "## Part 201 (registered ...)".
 
 Reasons, briefly. 201.1: Part 123 and Part 172's replays matched once shapes matched. 201.2: Part 200's 38% on one
 question. 201.3: left padding moves every position, so every rounding changes; nothing of ours measures it. 201.4:
-rows in a batch do not read each other, so only a slot effect could move them; a result above 10% would mean
-membership has to be recorded and fixed, not just size. 201.5 and 201.9: six of six divergences in Part 183's record
-sat at one step or less. 201.6: Part 200's flips went both ways. 201.7 and 201.8: the CPU's float32 batch 1 and 2
+rows in a batch do not read each other and a kernel should treat rows alike, so neither slot nor neighbours should
+matter; above 10% means the arrangement inside a call has to be recorded and fixed, and a follow-up separates slot
+from neighbours. 201.5 and 201.9: six of six divergences in Part 183's record sat at a bf16 margin of one step or
+less, where the reference margin was at most 0.10; bf16's margin error there reaches about 2 steps at the 99th
+percentile, hence 90% and not 100%. Both can fail: a fault of the SDPA kind parts decodes at margins of several
+units. 201.6: Part 200's flips went both ways. 201.7 and 201.8: the CPU's float32 batch 1 and 2
 agree to 6e-5; the card's float32 kernels are untested. 201.10: on Qwen3.5-0.8B, bf16 differed from float32 on 8 of 16
-rows. 201.11: the upcast converts every weight on every step; no measurement exists.
+rows. 201.11: the upcast converts every weight on every forward pass, so one float32 forward costs about the same
+whatever it computes, and F8's seconds per step stand in for one float32 re-check of the flagged rows; no measurement
+exists. This is the same bar the plan's decision uses.
 
 ## Reading rules
 
@@ -196,8 +228,9 @@ rows. 201.11: the upcast converts every weight on every step; no measurement exi
   record, so those are checks that the earlier numbers repeat on new rows, not independent discoveries.
 - G2 failing withdraws 201.5 and 201.9 and every margin table. G4 failing withdraws 201.9 and 201.10.
 - A pair with no differing rows makes its "of the rows that differ" prediction not scored, and that is reported.
-- A row cut short by a relaunch is regenerated whole; a row with a non-finite score at any step is counted, listed
-  and left out of pair comparisons.
+- A row cut short by a relaunch is regenerated whole. A call with a non-finite score at any step is run once more;
+  a row still non-finite is counted, listed and left out of pair comparisons, each affected pair is reported with
+  its smaller n, and 201.8 is then not scored.
 - The label flip rates are reported with 95% Wilson intervals and no bar. They are Part 163's labels at dose 0.8 on
   this model, and are used in `BATCH-SHAPE-NOISE.md` as a prior only until a part measures its own.
 - What the float32 results decide is written before the run, in `BATCH-SHAPE-NOISE.md` under "After Part 201": margin-
@@ -213,5 +246,6 @@ rows. 201.11: the upcast converts every weight on every step; no measurement exi
 - The float32 passes define an answer; they do not show it is the right one. They remove the instrument's rounding,
   not the model's own near-ties: where the float32 margin is itself tiny, the model is close to undecided and a
   different prompt wording could move it.
-- Pass K compares the card's float32 with the CPU's on plain prompts only.
+- Pass K compares the card's float32 compute with the CPU's on plain prompts only, and both are the same upcast
+  method: an error shared by both (a checkpoint tensor restored wrongly on the 4B) would not show.
 - Nothing here re-scores an earlier part.

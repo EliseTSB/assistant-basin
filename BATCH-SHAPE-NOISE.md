@@ -11,11 +11,13 @@ at a time. 76 of the 200 differed from the same rows decoded in chunks of 8. Not
 kernel, same prompt, same push.
 
 The cause was already in a record we had. Qwen3.5-4B runs in bf16 on the A770. At the sizes its output scores take,
-a bf16 number can only move in steps of 0.0625 or 0.125, so the top two candidate tokens are often exactly tied or one
-step apart. In Part 183's kernel record, the card left the CPU float32 reference at six places: five were exact ties
-in the bf16 scores and one was a single step; the float32 margin at those places was 0.008 to 0.10. About 4% of that
-record's positions are within one step. Batch shape changes the order of the arithmetic inside the kernels, which
-changes the last bit of rounding, which decides a tie. From there the two answers are different texts.
+a bf16 number can only move in steps of 0.0625 or 0.125, and the scores carry an error of about half a step (0.05 at
+the median against the CPU float32 reference, about 0.2 at the 99th percentile). Where the model's real margin
+between its top two tokens is smaller than that, bf16 cannot tell them apart. In Part 183's kernel record the card
+left the reference at six places; the float32 margin there was 0.008 to 0.10, and the bf16 scores showed an exact tie
+at five and one step at the sixth. About 4% of that record's positions sit at one step or less. Batch shape changes
+the order of the arithmetic inside the kernels, which changes the rounding, which picks the winner at those places.
+From there the two answers are different texts.
 
 So a single bf16 greedy answer is one draw from a small cloud of answers, not a fixed property of the model. The CPU
 float32 reference does not have the problem: its batch 1 and batch 2 decodes are identical.
@@ -56,7 +58,8 @@ These need no new science, only a recorder and a small tool.
   way.
 - **Stability of each verdict.** `tools/shape_floor.py` takes the rows, their labels, the replicate's flip rates
   (their upper 95% bounds) and the part's scorer. It redraws the labels 1,000 times, each row flipping at its label's
-  rate, and rescores. Each registered verdict is reported with the share of draws in which it comes out the same. Under
+  rate, and rescores. Rows of one unit may flip together more than independent rows would; the tool takes a cluster
+  key and a within-cluster share so a write-up can show the stability under both readings. Each registered verdict is reported with the share of draws in which it comes out the same. Under
   95%, the write-up says "inside the shape floor" in the verdict column, whichever side it fell on.
 - **Bars with room.** In the design's Size section, say how many rows a registered bar is from the expected value. A
   bar closer than twice the shape SD cannot be scored cleanly; move it or say so before the run.
@@ -76,17 +79,20 @@ membership, padding and process, measures label flip rates on 384 rows, and test
 Decided now, so the result cannot choose its own reading:
 
 - **If float32 on the card is shape-stable and equals the CPU reference (201.7 and 201.8 hold), and a margin of two
-  steps catches at least 95% of the places bf16 leaves it (201.9), and the projected cost is at most 2 times a bf16
-  run:** build margin-gated decoding. Decode in bf16 as now; at any step where a row's margin is within two steps,
+  steps catches at least 90% of the places bf16 leaves it with none at a float32 margin above 0.5 (201.9), and the
+  projected slowdown is at most 2 (201.11):** build margin-gated decoding. Decode in bf16 as now; at any step where a row's margin is within two steps,
   recompute that step for that row in float32 from the full prefix and take the float32 choice. The published answer
   is then the float32 greedy answer, the same at any shape and checkable token for token against the CPU reference.
-  The projected cost is the measured float32 forward time times the share of steps with at least one row inside two
-  steps. The first gated part keeps a shape replicate to show the floor is gone.
-- **If float32 is stable but too slow to gate:** keep section 1 as the standing procedure. Use float32 decodes only
+  The projected slowdown is 201.11's: 1 + r × (float32 seconds per step ÷ bf16 seconds per step), r being the share
+  of steps with at least one row inside two steps. If 201.9 holds at 90% but not 95%, the gate is built at four
+  steps instead and its cost recomputed with r at four steps. The first gated part keeps a shape replicate (at least
+  200 rows) to show the floor is gone; 0 of 48 in Part 201 only bounds the remaining rate below 7.4%.
+- **If float32 is stable and matches but the projected slowdown is over 2, or 201.9 fails on the 90% clause alone:**
+  keep section 1 as the standing procedure. Use float32 decodes only
   as the replicate for parts whose claim is about single rows or named units.
 - **If float32 on the card is not stable or does not match the CPU:** that is a new kernel finding. Section 1 stands,
   and the float32 path goes on the kernel audit.
-- **If 201.5 fails** (flips at confident margins): stop. That is a fault, not rounding, and the audit's kernel check
+- **If 201.5 fails, or 201.9 fails on its float32-margin clause** (decodes parting at confident margins): stop. That is a fault, not rounding, and the audit's kernel check
   has to cover batch shape before any more reruns.
 
 ### 4. Which published claims sit inside the noise
