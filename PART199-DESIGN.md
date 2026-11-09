@@ -46,11 +46,13 @@ Run `part170/run170.py`'s `run()` unchanged through `part199/run199.py` on the A
 
 1. **Kernel.** The wrapper hands `run170.run` a loader that loads through `neuron_report.load_model` (eager by
    default), applies Part 170's no-grad and eval settings, and refuses with exit 3 before any generation unless
-   `neuron_report.LAST_LOAD` records eager. It records `LAST_LOAD` (effective `model.config._attn_implementation`,
-   dtype, device and library versions) and every generate call in `results/part199/load.json`, one entry per
-   invocation that wrote rows, and exits 3 if any recorded kernel is not eager. An invocation holds `run199.lock` in
-   the output folder (created exclusively), so two launches cannot share it. `run199.py --check-record
-   results/part199/load.json` repeats Gates R1 and R3 over every recorded invocation on the host.
+   `neuron_report.LAST_LOAD` records eager. The loader checks both `LAST_LOAD` and the model's
+   `config._attn_implementation`. Each launch appends one entry to `results/part199/load.json` as soon as the model
+   has loaded (`LAST_LOAD`: effective kernel, dtype, device and library versions) and rewrites it after every chunk
+   with the calls and the rows written so far, so a launch killed by a signal keeps its kernel record. The wrapper
+   exits 3 if any recorded kernel is not eager or if Part 170's own gates did not pass. An invocation holds
+   `run199.lock` in the output folder (created exclusively), so two launches cannot share it. `run199.py
+   --check-record results/part199/load.json` repeats Gates R1 and R3 over every recorded launch on the host.
 2. **Push batch shape.** Part 170 generated each push batch (one prompt, one list, one dose) as 48 rows, a shape no
    eager check covers. The wrapper replaces `run170.generate_with_bans` with a version that, for pushed calls, generates
    the same 48 rows in six chunks of 8, in the original row order, passing each chunk's own bans and release steps and
@@ -63,8 +65,9 @@ Run `part170/run170.py`'s `run()` unchanged through `part199/run199.py` on the A
    reach. The wrapper replaces `run168.pilot_rate_should_stop` with: stop if, after the first 3 push batches, the
    measured rate projects the push stage (5,376 answers, push and repeat) past 8 hours, below 0.187 answers per second.
    That is a guard against a broken path, not a time budget. The A770 job runner kills a task at 6 hours, and
-   `run170` resumes at the next unwritten answer, so a killed task is relaunched on the same folder (its rows stay;
-   `load.json` gains one entry per launch).
+   `run170` resumes at the next unwritten answer, so a killed task is relaunched on the same folder: its rows and its
+   `load.json` entry stay, and the operator removes the `run199.lock` it left after checking that no run199 process
+   runs (removed by hand on purpose: the job host is Windows, where probing a pid with `os.kill(pid, 0)` terminates it).
 
 Everything else is Part 170's: the model and revision, the 200 prompts (P8, M96, Q96), Stage 0 freezing, Stage 1 lists
 from the plain 40-token path, the 48 n+ neurons drawn from `results/part112/medians.json` with Part 170's seed base and
@@ -82,7 +85,7 @@ python -I -B part199/run199.py --compare results/part199 results/part170 --token
 values the predictions below are read from: Gate R2, the Stage 1 lists, the frozen prompts, the gate values, every
 cell's loop and broken rate, every verdict, and the loop-onset split of the rerun's own loops
 (`part199/onset/loop_onset.py`, run unchanged as a subprocess on `results/part199/answers.jsonl`). It exits 3 when
-Gate R2 fails and 2 when a file is missing. Run on Part 170's folder against itself, it reproduces every published
+the rerun's Part 170 gates did not pass or Gate R2 fails, and 2 when a file is missing. Run on Part 170's folder against itself, it reproduces every published
 value (Gate R2 passes, 200 of 200 lists identical, the onset split 164 of 168).
 
 ## Controls
@@ -93,12 +96,13 @@ value (Gate R2 passes, 200 of 200 lists identical, the onset split 164 of 168).
 - **Gate R2, same inputs:** the 144 drawn directions (layer, slot, neuron) equal Part 170's `norms.json` records, and
   each realized write is within Gate 4's tolerance. The draw does not use generation, so a mismatch means the code or
   inputs moved, and readings stop.
-- **Gate R3, shapes:** every pushed generate call of more than one row (the 48-row push and repeat batches) reaches
-  the model as chunks of exactly 8 that cover its rows; no chunk of any call has more than 8 rows. Stage 0's one-row
-  zero-write checks are pushed calls of one row and are exempt by name.
+- **Gate R3, shapes:** read from the row counts actually passed to Part 170's generator as each chunk returns, not
+  from the wrapper's plan: every pushed generate call (the 48-row push and repeat batches) reached the model as chunks
+  of exactly 8 that cover its rows, and no chunk of any call had more than 8 rows. Stage 0's zero-write checks (one
+  row, a directions mapping with a single entry) are exempt, at most 8 of them, each one chunk of one row.
 - **Batch noise at the new shape:** Part 170's Gate 8 passes up to 10% changed answers (38 of 384), wider than this
   part's smallest effect. If the repeat changes more than 19 of 384, the dose-1 cell rates and rises are reported as
-  noise-limited beside every reading of them.
+  noise-limited beside every reading of them; `--compare` prints that flag.
 - The do-nothing hook (Part 170's Gate 3) and Gate 8's repeat order are kept, so the rerun carries its own batch-noise
   floor at the new shape.
 - Not used: new prompts, doses, neurons or lists, because this part reruns a registered run and changes only the kernel
@@ -186,7 +190,8 @@ and reported beside the published values; they are Weaver's, so this part makes 
 - `part170/run170.py` itself now loads eager by default (`neuron_report.py`, since 2026-11-03), so running it
   unwrapped on current main no longer reproduces the published SDPA run; Part 170's text does not say which kernel it
   ran. Pinning the kernel in `run170.py` is a follow-up, not part of this card.
-- `load.json` is a read-modify-write under the folder lock, so two launches cannot interleave on it.
+- `load.json` is a read-modify-write under the folder lock, so two launches cannot interleave on it, and each write
+  goes through a temporary file and `os.replace`, so a kill does not leave it half written.
 
 ## Changes before registration
 
@@ -198,3 +203,11 @@ and reported beside the published values; they are Weaver's, so this part makes 
   on eager text) dropped as a prediction and kept as a description (F7); no-push shapes 5 and 6 in Limits (F8); Part
   39 worded as consistent with the kernel (F9); point-estimate verdicts and Weaver's predictions stated (F10); the onset
   README's prompt ranges given per part (F11); run170's default kernel in Limits (F12).
+- Haiku 5.5 cold review, round 2 (SHIP-WITH-FIXES, measured on the wrapper with Part 170 stood in), folded: the load
+  entry is written at load and after every chunk, so a killed launch keeps its kernel record, and the lock's manual
+  removal is in the design (1); Gate R3 reads the observed chunk sizes (2); a failed Part 170 gate exits 3 from the
+  wrapper and from `--compare` (3); the docstring's untested claim removed, an R1 folder test through
+  `--check-record` and a source check of run170's call-time lookups added (4); the loader exits 3 and checks the
+  config's kernel too, the lock refusal exits 3, and the wrapper prints its own pilot rule (5); torn last lines are
+  not counted as rows (6); folders compared resolved (7); the zero-write exemption keyed to a one-entry directions
+  mapping and capped at 8 (8); `--compare` prints the noise flag (9); the config-kernel check covers (10).

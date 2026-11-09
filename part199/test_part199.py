@@ -1,8 +1,9 @@
-"""Part 199: the wrapper's three changes, its gates, and that Part 170's run() reaches them unchanged.
+"""Part 199: the wrapper's three changes, its gates, its record, and --compare.
 
-No model is loaded: run170.run is replaced by a stand-in for the wrapper and gate tests, and the chunking tests drive
-the chunked generator with a recorder in place of run170.generate_with_bans. The one test that imports Part 170's
-real run() (test_real_run170_reaches_the_wrapper) uses a stand-in model and the real Stage 0 code path only.
+No model is loaded. The chunking tests drive the chunked generator with a recorder in place of
+run170.generate_with_bans; the run tests replace run170.run with a stand-in that calls the wrapper's loader (with
+neuron_report.load_model faked) and the patched generator, as the real run170.run does. That the real run170 looks its
+generator and pilot rule up at call time, so the replacements take effect, is checked on run170's source.
 """
 import json
 import sys
@@ -132,37 +133,47 @@ def test_gate_r1_one_model_revision_folder():
     assert not ok and "disagree" in why
 
 
-def test_gate_r3_shapes():
-    """R3 reads what reached the model: a 48-row pushed call logged with six chunks of 8 passes."""
-    push = {"pushed": True, "rows": 48, "chunks": [8] * 6}
-    zero = {"pushed": True, "rows": 1, "chunks": [1]}          # Stage 0's zero-write check
-    nopush = {"pushed": False, "rows": 6, "chunks": [6]}
-    good = run199.call_shapes([zero] * 8 + [nopush] * 200 + [push] * 120)
+PUSH = {"pushed": True, "rows": 48, "chunks": [8] * 6, "observed": [8] * 6, "zero_write": False}
+ZERO = {"pushed": True, "rows": 1, "chunks": [1], "observed": [1], "zero_write": True}
+NOPUSH = {"pushed": False, "rows": 6, "chunks": [6], "observed": [6], "zero_write": False}
+
+
+def test_gate_r3_reads_the_observed_chunks():
+    good = run199.call_shapes([ZERO] * 8 + [NOPUSH] * 200 + [PUSH] * 120)
     assert good["passed"] and good["pushed_chunks"] == 720 and good["zero_write_checks"] == 8
-    assert not run199.call_shapes([{"pushed": True, "rows": 48, "chunks": [48]}])["passed"]
-    assert not run199.call_shapes([{"pushed": True, "rows": 48, "chunks": [8] * 5}])["passed"]   # rows lost
-    assert not run199.call_shapes([push, {"pushed": False, "rows": 9, "chunks": [9]}])["passed"]
-    assert not run199.call_shapes([nopush, zero])["passed"]                                       # no push call
+    planned_but_bypassed = {**PUSH, "observed": [48]}         # the plan said 8s, the model got 48
+    assert not run199.call_shapes([planned_but_bypassed])["passed"]
+    assert not run199.call_shapes([{**PUSH, "observed": [8] * 5}])["passed"]           # rows lost
+    assert not run199.call_shapes([PUSH, {**NOPUSH, "rows": 9, "observed": [9]}])["passed"]
+    assert not run199.call_shapes([NOPUSH, ZERO])["passed"]                             # no push call
+    assert not run199.call_shapes([PUSH] + [ZERO] * 9)["passed"]                        # more than 8 zero-write checks
+    one_row_push = {**ZERO, "zero_write": False}               # a one-row push that is not Stage 0's check
+    assert not run199.call_shapes([PUSH, one_row_push])["passed"]
     assert run199.call_shapes([])["pushed_calls"] == 0
 
 
 def test_the_logged_calls_of_a_real_sized_run_pass_r3():
-    """The chunked generator's own log, for Part 170's call pattern, satisfies Gate R3."""
+    """The chunked generator's own log, for Part 170's call pattern, satisfies Gate R3; the zero-write check is
+    recognised by its one-key directions mapping."""
     log = []
     gen = run199.chunked_generate(Recorder(), log)
+    zero_dirs = {(22, 0): {"n+": ("zero",)}}
     for _ in range(8):
-        gen(None, None, None, "q", _rows(1), _directions(), [[]], "cpu", None, 1, pushed=True)
+        gen(None, None, None, "q", _rows(1), zero_dirs, [[]], "cpu", None, 1, pushed=True)
     for _ in range(3):
         gen(None, None, None, "q", _rows(6), {}, [[]] * 6, "cpu", None, 1, pushed=False)
     for _ in range(3):
         gen(None, None, None, "q", _rows(48), _directions(), [[]] * 48, "cpu", None, 1, pushed=True)
-    assert run199.call_shapes(log)["passed"]
+    shapes = run199.call_shapes(log)
+    assert shapes["passed"] and shapes["zero_write_checks"] == 8 and shapes["pushed_chunks"] == 18
+    gen(None, None, None, "q", _rows(1), _directions(), [[]], "cpu", None, 1, pushed=True)  # one row, many keys
+    assert not run199.call_shapes(log)["passed"]
 
 
 def test_check_record_reads_load_json(tmp_path):
     path = tmp_path / "load.json"
     entry = {"load": {"attn_implementation": "eager"}, "model": "m", "revision": "r", "out_dir": "o",
-             "calls": [{"pushed": True, "rows": 48, "chunks": [8] * 6}]}
+             "calls": [PUSH]}
     path.write_text(json.dumps({"part": 199, "loads": [entry]}), encoding="utf-8")
     assert run199.check_record(path) == 0
     path.write_text(json.dumps({"part": 199, "loads": [entry, {**entry, "load": {"attn_implementation": "sdpa"}}]}),
@@ -170,9 +181,11 @@ def test_check_record_reads_load_json(tmp_path):
     assert run199.check_record(path) == 3
     path.write_text(json.dumps({"part": 199, "loads": []}), encoding="utf-8")
     assert run199.check_record(path) == 3
-    unchunked = {**entry, "calls": [{"pushed": True, "rows": 48, "chunks": [48]}]}
-    path.write_text(json.dumps({"part": 199, "loads": [unchunked]}), encoding="utf-8")
+    path.write_text(json.dumps({"part": 199, "loads": [{**entry, "calls": [{**PUSH, "observed": [48]}]}]}),
+                    encoding="utf-8")
     assert run199.check_record(path) == 3
+    path.write_text(json.dumps({"part": 199, "loads": [entry, {**entry, "out_dir": "elsewhere"}]}), encoding="utf-8")
+    assert run199.check_record(path) == 3                      # R1's one-folder half, through check_record
 
 
 # --------------------------------------------------------------------------------------------- the wrapper run()
@@ -185,23 +198,49 @@ class FakeArgs:
         self.batch_size = 64
 
 
-def _fake_run(kernel, written, seen):
-    """Stands in for run170.run: records the two replacements, writes `written` answer lines, sets LAST_LOAD."""
+class FakeModel:
+    def __init__(self, kernel):
+        self.config = type("Config", (), {"_attn_implementation": kernel})()
+
+    def requires_grad_(self, flag):
+        return self
+
+    def eval(self):
+        return self
+
+
+@pytest.fixture
+def load_as(monkeypatch):
+    """Fake neuron_report.load_model: LAST_LOAD and the config both say `kernel` (or each its own)."""
+    import neuron_report as nr
+
+    def set_kernel(kernel, config_kernel=None):
+        def load(model_id, revision, device, **kw):
+            nr.LAST_LOAD = {"attn_implementation": kernel}
+            return "tok", FakeModel(config_kernel if config_kernel is not None else kernel)
+        monkeypatch.setattr(nr, "load_model", load)
+    return set_kernel
+
+
+def _fake_run(written, seen, gates_passed=True, raise_after=None):
+    """Stands in for run170.run: loads through the given loader (as run170 does), generates one 48-row pushed call
+    through the patched generator, writes `written` answer lines, and returns Part 170's summary shape."""
     def run(args, loader=None):
-        import neuron_report as nr
         from part168 import run168
         from part170 import run170
         seen["generate"] = run170.generate_with_bans
         seen["pilot"] = run168.pilot_rate_should_stop
-        nr.LAST_LOAD = {"attn_implementation": kernel}
-        if written:
-            run170.generate_with_bans(None, None, None, "q", _rows(48), _directions(), [[]] * 48, "cpu", None, 1,
-                                      pushed=True)
+        loader(args.device)
         if written:
             path = Path(args.out_dir) / "answers.jsonl"
             with path.open("a", encoding="utf-8") as stream:
                 stream.write('{"answer": "a"}\n' * written)
-        return {"answers": written}
+            run170.generate_with_bans(None, None, None, "q", _rows(48), _directions(), [[]] * 48, "cpu", None, 1,
+                                      pushed=True)
+            seen["mid_run_record"] = json.loads((Path(args.out_dir) / "load.json").read_text(encoding="utf-8"))
+        if raise_after is not None:
+            raise raise_after
+        return {"answers": written, "gates": {"passed": gates_passed, "gate3": gates_passed}}
     return run
 
 
@@ -209,64 +248,119 @@ def _fake_run(kernel, written, seen):
 def patched(monkeypatch):
     from part168 import run168
     from part170 import run170
-    original_generate, original_pilot = run170.generate_with_bans, run168.pilot_rate_should_stop
     monkeypatch.setattr(run170, "generate_with_bans", Recorder())   # the wrapper chunks this stand-in
-    original_generate = run170.generate_with_bans
+    original_generate, original_pilot = run170.generate_with_bans, run168.pilot_rate_should_stop
     yield monkeypatch, run170, run168
     assert run170.generate_with_bans is original_generate      # the wrapper always restores both
     assert run168.pilot_rate_should_stop is original_pilot
 
 
-@pytest.mark.parametrize("kernel,rc", [("eager", 0), ("sdpa", 3), (None, 3)])
-def test_run_gates_the_recorded_kernel(tmp_path, patched, kernel, rc):
-    monkeypatch, run170, _run168 = patched
-    seen = {}
-    monkeypatch.setattr(run170, "run", _fake_run(kernel, written=1, seen=seen))
-    assert run199.run(FakeArgs(tmp_path)) == rc
-    rec = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))
-    assert rec["loads"][-1]["load"]["attn_implementation"] == kernel
-    assert rec["loads"][-1]["answers_written"] == 1
-    assert run199.check_record(tmp_path / "load.json") == rc
-
-
-def test_run_installs_both_replacements(tmp_path, patched):
+def test_run_records_the_kernel_at_load_and_passes(tmp_path, patched, load_as):
     monkeypatch, run170, run168 = patched
+    load_as("eager")
     seen = {}
-    monkeypatch.setattr(run170, "run", _fake_run("eager", written=1, seen=seen))
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen=seen))
     assert run199.run(FakeArgs(tmp_path)) == 0
-    assert seen["pilot"] is run199.pilot_rate_should_stop
-    assert callable(seen["generate"]) and seen["generate"] is not run170.generate_with_bans
-
-
-def test_a_resumed_invocation_that_writes_nothing_leaves_the_record_alone(tmp_path, patched):
-    monkeypatch, run170, _run168 = patched
-    monkeypatch.setattr(run170, "run", _fake_run("eager", written=2, seen={}))
-    assert run199.run(FakeArgs(tmp_path)) == 0
-    monkeypatch.setattr(run170, "run", _fake_run("sdpa", written=0, seen={}))
-    assert run199.run(FakeArgs(tmp_path)) == 0
+    assert seen["pilot"] is run199.pilot_rate_should_stop and seen["generate"] is not run170.generate_with_bans
     rec = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))
-    assert [e["load"]["attn_implementation"] for e in rec["loads"]] == ["eager"]
+    entry = rec["loads"][-1]
+    assert entry["load"]["attn_implementation"] == "eager" and entry["status"] == "done"
+    assert entry["answers_written"] == 1 and entry["calls"][0]["observed"] == [8] * 6
+    assert entry["out_dir"] == str(Path(tmp_path).resolve())
+    assert run199.check_record(tmp_path / "load.json") == 0
 
 
-def test_an_invocation_without_rows_ever_written_fails(tmp_path, patched):
-    monkeypatch, run170, _run168 = patched
-    monkeypatch.setattr(run170, "run", _fake_run("eager", written=0, seen={}))
+def test_the_record_exists_mid_run_so_a_killed_launch_keeps_its_kernel(tmp_path, patched, load_as):
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    seen = {}
+    monkeypatch.setattr(run170, "run", _fake_run(written=2, seen=seen))
+    run199.run(FakeArgs(tmp_path))
+    mid = seen["mid_run_record"]["loads"][-1]            # read inside the run, before it returned
+    assert mid["status"] == "running" and mid["load"]["attn_implementation"] == "eager"
+    assert mid["answers_written"] == 2 and mid["calls"][0]["observed"] == [8] * 6
+
+
+@pytest.mark.parametrize("kernel,config_kernel", [("sdpa", None), (None, None), ("eager", "sdpa")])
+def test_a_non_eager_load_is_refused_with_exit_3_and_nothing_recorded(tmp_path, patched, load_as, kernel,
+                                                                        config_kernel):
+    monkeypatch, run170, _ = patched
+    load_as(kernel, config_kernel)
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}))
+    with pytest.raises(SystemExit) as stop:
+        run199.run(FakeArgs(tmp_path))
+    assert stop.value.code == 3
+    assert not (tmp_path / "load.json").exists() and not (tmp_path / "answers.jsonl").exists()
+    assert not (tmp_path / "run199.lock").exists()
+
+
+def test_a_failed_part170_gate_exits_3(tmp_path, patched, load_as):
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}, gates_passed=False))
     assert run199.run(FakeArgs(tmp_path)) == 3
 
 
-def test_a_non_eager_resume_is_kept_beside_the_eager_entry_and_fails(tmp_path, patched):
-    monkeypatch, run170, _run168 = patched
-    monkeypatch.setattr(run170, "run", _fake_run("eager", written=1, seen={}))
+def test_a_resumed_invocation_that_writes_nothing_records_its_load(tmp_path, patched, load_as):
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    monkeypatch.setattr(run170, "run", _fake_run(written=2, seen={}))
     assert run199.run(FakeArgs(tmp_path)) == 0
-    monkeypatch.setattr(run170, "run", _fake_run("sdpa", written=3, seen={}))
-    assert run199.run(FakeArgs(tmp_path)) == 3
+    monkeypatch.setattr(run170, "run", _fake_run(written=0, seen={}))
+    assert run199.run(FakeArgs(tmp_path)) == 0
     rec = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))
-    assert [e["load"]["attn_implementation"] for e in rec["loads"]] == ["eager", "sdpa"]
+    assert [e["answers_written"] for e in rec["loads"]] == [2, 0]
+    assert run199.check_record(tmp_path / "load.json") == 0
+
+
+def test_a_stopped_run_records_its_rows_and_the_stop_propagates(tmp_path, patched, load_as):
+    """Part 170 stops with SystemExit on a failed gate or the pilot: the rows are recorded, and the stop is NOT turned
+    into a success."""
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}, raise_after=SystemExit("pilot stop")))
+    with pytest.raises(SystemExit):
+        run199.run(FakeArgs(tmp_path))
+    entry = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))["loads"][-1]
+    assert entry["status"] == "stopped" and "pilot stop" in entry["failure"] and entry["answers_written"] == 1
+
+
+def test_a_torn_last_line_is_not_a_row(tmp_path):
+    (tmp_path / "answers.jsonl").write_text('{"answer": "a"}\n{"answer": "b"}\n{"ans', encoding="utf-8")
+    assert run199._answers_written(tmp_path) == 2
+
+
+def test_the_folder_lock_refuses_a_second_launch_with_exit_3(tmp_path, patched, load_as):
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}))
+    with run199.FolderLock(tmp_path):
+        with pytest.raises(SystemExit) as stop:
+            run199.run(FakeArgs(tmp_path))
+        assert stop.value.code == 3
+    assert not (tmp_path / "run199.lock").exists()
+    assert run199.run(FakeArgs(tmp_path)) == 0          # free again
+    assert not (tmp_path / "run199.lock").exists()
+
+
+def test_run170_looks_up_the_replaced_names_at_call_time():
+    """The two replacements only take effect if run170 calls generate_with_bans as a module global and the pilot rule
+    as an attribute of run168 at call time; check both on run170's source, and that run() accepts a loader."""
+    import ast
+    import inspect
+    from part170 import run170
+    tree = ast.parse(inspect.getsource(run170))
+    calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call)]
+    bare = [c for c in calls if isinstance(c.func, ast.Name) and c.func.id == "generate_with_bans"]
+    pilot = [c for c in calls if isinstance(c.func, ast.Attribute) and c.func.attr == "pilot_rate_should_stop"
+             and isinstance(c.func.value, ast.Name) and c.func.value.id == "run168"]
+    assert len(bare) == 4 and len(pilot) == 1
+    assert "loader" in inspect.signature(run170.run).parameters
 
 
 # --------------------------------------------------------------------------------------------- --compare
 
-def _fixture(folder, *, neuron_shift=0, b0=0.25, passed=True, frozen_m96=(1, 2)):
+def _fixture(folder, *, neuron_shift=0, b0=0.25, passed=True, frozen_m96=(1, 2), gates_passed=True, gate8=0):
     """A folder with every file --compare reads; norms are Part 170's real norms.json (144 directions)."""
     folder.mkdir()
     norms = json.loads((ROOT / "results/part170/norms.json").read_text(encoding="utf-8"))
@@ -277,8 +371,8 @@ def _fixture(folder, *, neuron_shift=0, b0=0.25, passed=True, frozen_m96=(1, 2))
                                         encoding="utf-8")
     (folder / "stage0.json").write_text(json.dumps({"frozen_indices": {"m96": list(frozen_m96), "q96": [3]}}),
                                         encoding="utf-8")
-    (folder / "prelaunch_gates.json").write_text(json.dumps({"gate1": True, "passed": True, "diagnostics": {
-        "gate8_differing_answers": 0}}), encoding="utf-8")
+    (folder / "prelaunch_gates.json").write_text(json.dumps({"gate1": True, "passed": gates_passed, "diagnostics": {
+        "gate8_differing_answers": gate8}}), encoding="utf-8")
     (folder / "score.json").write_text(json.dumps({"per_cell": [
         {"stage": "push", "arm": "n+", "dose": 1.0, "group": "p8", "ban": "b0", "rows": 384, "loop_rate": b0}],
         "predictions": {"170.1": {"pass": passed, "estimate": 0.1, "interval_95": [0.0, 0.2]}}}), encoding="utf-8")
@@ -297,7 +391,7 @@ def test_compare_side_by_side_and_gate_r2_passes(tmp_path):
     assert out["lists"]["identical_on_every_list"] == 1
     assert out["frozen"]["m96"] == {"published": [1, 2], "rerun": [2, 4], "published_count": 2,
                                     "rerun_count": 2, "overlap": 1}
-    assert "loop_onset" not in out      # no --tokenizer: no onset split
+    assert "loop_onset" not in out and out["noise_limited"] is False
     assert run199.main(["--compare", str(new), str(pub)]) == 0
 
 
@@ -306,6 +400,18 @@ def test_compare_gate_r2_fails_on_a_different_neuron(tmp_path):
     new = _fixture(tmp_path / "new", neuron_shift=1)
     assert run199.compare(new, pub)["gate_r2"]["passed"] is False
     assert run199.main(["--compare", str(new), str(pub)]) == 3
+
+
+def test_compare_exits_3_when_the_reruns_part170_gates_failed(tmp_path):
+    pub = _fixture(tmp_path / "pub")
+    new = _fixture(tmp_path / "new", gates_passed=False)
+    assert run199.main(["--compare", str(new), str(pub)]) == 3
+
+
+def test_compare_flags_noise_above_19(tmp_path):
+    pub = _fixture(tmp_path / "pub")
+    assert run199.compare(_fixture(tmp_path / "a", gate8=19), pub)["noise_limited"] is False
+    assert run199.compare(_fixture(tmp_path / "b", gate8=20), pub)["noise_limited"] is True
 
 
 def test_compare_missing_file_exits_2(tmp_path):
@@ -324,62 +430,3 @@ def test_pick_onset_reads_the_dose1_b50_cell():
     got = run199.pick_onset(lines)
     assert got["dose1_b50"] == {"loops": 168, "before": 164, "after": 4, "unplaced": 0}
     assert got["total"]["loops"] == 268
-
-
-def test_a_stopped_run_records_its_rows_and_the_stop_propagates(tmp_path, patched):
-    """Part 170 stops with SystemExit on a failed gate or the pilot: the kernel that wrote the rows is recorded, and
-    the stop is NOT turned into a success."""
-    monkeypatch, run170, _run168 = patched
-
-    def stopped(args, loader=None):
-        import neuron_report as nr
-        nr.LAST_LOAD = {"attn_implementation": "eager"}
-        (Path(args.out_dir) / "answers.jsonl").write_text('{"answer": "a"}\n', encoding="utf-8")
-        raise SystemExit("pilot stop: 0.300 answers/s below 1.5")
-
-    monkeypatch.setattr(run170, "run", stopped)
-    with pytest.raises(SystemExit):
-        run199.run(FakeArgs(tmp_path))
-    rec = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))
-    assert rec["loads"][-1]["answers_written"] == 1
-    assert "pilot stop" in rec["loads"][-1]["failure"]
-
-
-def test_the_loader_refuses_a_non_eager_kernel_before_generation(monkeypatch):
-    import neuron_report as nr
-
-    class Model:
-        def requires_grad_(self, flag):
-            self.grad = flag
-            return self
-
-        def eval(self):
-            self.evaluated = True
-            return self
-
-    def fake_load(kernel):
-        def load(model_id, revision, device, **kw):
-            nr.LAST_LOAD = {"attn_implementation": kernel}
-            return "tok", Model()
-        return load
-
-    monkeypatch.setattr(nr, "load_model", fake_load("eager"))
-    tok, model = run199.eager_loader(FakeArgs("o"))("cpu")
-    assert tok == "tok" and model.grad is False and model.evaluated
-    monkeypatch.setattr(nr, "load_model", fake_load("sdpa"))
-    with pytest.raises(SystemExit) as stop:
-        run199.eager_loader(FakeArgs("o"))("cpu")
-    assert "sdpa" in str(stop.value)
-
-
-def test_the_folder_lock_refuses_a_second_launch_and_is_released(tmp_path, patched):
-    monkeypatch, run170, _run168 = patched
-    with run199.FolderLock(tmp_path):
-        assert (tmp_path / "run199.lock").exists()
-        monkeypatch.setattr(run170, "run", _fake_run("eager", written=1, seen={}))
-        with pytest.raises(SystemExit) as stop:
-            run199.run(FakeArgs(tmp_path))
-        assert "run199.lock" in str(stop.value)
-    assert not (tmp_path / "run199.lock").exists()
-    assert run199.run(FakeArgs(tmp_path)) == 0          # free again
-    assert not (tmp_path / "run199.lock").exists()

@@ -7,9 +7,11 @@ Usage: run199.py --out-dir results/part199 [--device xpu --model ...]
 
 part170/run170.py's run() is called unchanged except for the three changes the design records:
 
-1. Kernel. run170 loads through neuron_report.load_model, whose default is "eager". Every invocation that wrote rows
-   appends neuron_report.LAST_LOAD to load.json beside the answers; the run exits 3 if any recorded kernel is not
-   eager, or if the recorded entries do not share one model, revision and output folder (Gate R1).
+1. Kernel. run170 loads through neuron_report.load_model, whose default is "eager". Each launch appends one entry to
+   load.json as soon as the model has loaded, with neuron_report.LAST_LOAD, and rewrites it (through a temporary file
+   and os.replace) after every chunk, so a launch killed by a signal still leaves its kernel, calls and row count. The
+   run exits 3 if any recorded kernel is not eager, if the entries do not share one model, revision and resolved
+   output folder (Gate R1), or if Part 170's own gates did not pass.
 2. Push batch shape. run170.generate_with_bans is replaced by a version that generates pushed calls as chunks of 8
    rows, in the original row order, each chunk with its own bans and release steps; the directions mapping and the
    seed are passed unchanged (rows find their push by layer and slot). No-push calls and Stage 0 keep Part 170's
@@ -22,9 +24,11 @@ part170/run170.py's run() is called unchanged except for the three changes the d
    job runner's 6-hour limit is relaunched, not lost.
 
 The kernel is checked before any row is generated: the wrapper hands run170.run a loader that loads through
-neuron_report.load_model (eager by default) and refuses (SystemExit 3) unless neuron_report.LAST_LOAD says eager. The
-output folder is locked (run199.lock, created exclusively) for the length of an invocation, so two launches cannot
-share it.
+neuron_report.load_model (eager by default) and refuses (SystemExit 3) unless both neuron_report.LAST_LOAD and the
+model's config say eager. The output folder is locked (run199.lock, created exclusively) for the length of an
+invocation, so two launches cannot share it; a launch killed by a signal leaves the lock, and the operator removes it
+by hand after checking that no run199 process runs (no automatic reclaim: on the Windows job host os.kill(pid, 0)
+would terminate the process rather than probe it).
 
 The chunking sits inside run170.generate_with_bans, which is also where Part 169's block log is applied, so each chunk
 carries its own log and the answers' blocked_steps survive the split. A call with more than 48 rows, or a pushed call
@@ -85,10 +89,13 @@ def split_call(rows, bans, release_after, sizes):
     return out
 
 
-def chunked_generate(original, call_log=None):
+def chunked_generate(original, call_log=None, on_call=None):
     """Part 170's generate_with_bans, with pushed calls generated in chunks of 8 (design change 2).
 
-    `original` is run170.generate_with_bans; its signature is kept exactly, so run170's call sites do not move.
+    `original` is run170.generate_with_bans; its signature is kept exactly, so run170's call sites do not move. Each
+    call is logged with its planned chunks and, as they return, the row counts actually passed to `original`
+    ("observed"); Gate R3 reads the observed counts. A pushed one-row call whose directions mapping holds a single
+    (layer, slot) is Stage 0's zero-write check and is flagged as such. `on_call` runs after every chunk.
     """
     def generate_with_bans(model, tok, layers, question, rows, directions, bans, device,
                            common, seed, release_after=None, pushed=True, max_new_tokens=80):
@@ -100,9 +107,10 @@ def chunked_generate(original, call_log=None):
             sizes = [1]                       # Stage 0's zero-write hook: one prompt at a time
         else:
             sizes = chunk_sizes(n)
+        entry = {"pushed": bool(pushed), "rows": n, "chunks": list(sizes), "observed": [],
+                 "zero_write": bool(pushed and n == 1 and len(directions or {}) == 1), "prompt": question[:60]}
         if call_log is not None:
-            call_log.append({"pushed": bool(pushed), "rows": n, "chunks": list(sizes),
-                             "prompt": question[:60]})
+            call_log.append(entry)
         answers = []
         for part in split_call(rows, bans, releases, sizes):
             got = original(model, tok, layers, question, part["rows"], directions,
@@ -111,7 +119,10 @@ def chunked_generate(original, call_log=None):
                            max_new_tokens=max_new_tokens)
             if len(got) != len(part["rows"]):
                 raise ValueError(f"chunk of {len(part['rows'])} rows returned {len(got)} answers")
+            entry["observed"].append(len(part["rows"]))
             answers.extend(got)
+            if on_call is not None:
+                on_call()
         return answers
     return generate_with_bans
 
@@ -121,7 +132,13 @@ def pilot_rate_should_stop(answers, started, now):
     elapsed = float(now) - float(started)
     if elapsed <= 0:
         raise ValueError("pilot rate needs a positive elapsed time")
-    return int(answers) / elapsed < PILOT_MIN_RATE
+    rate = int(answers) / elapsed
+    if rate < PILOT_MIN_RATE:
+        print(json.dumps({"part199_pilot_stop": True, "answers_per_second": rate, "threshold": PILOT_MIN_RATE,
+                          "rule": "push stage projected past 8 hours; Part 170's message below names its own 1.5"}),
+              flush=True)
+        return True
+    return False
 
 
 def check_kernels(loads):
@@ -139,7 +156,7 @@ def check_same_run(loads):
     """Gate R1's other half: one model, revision and output folder across entries."""
     if not loads:
         return False, "no load recorded"
-    seen = {(entry.get("model"), entry.get("revision"), entry.get("out_dir")) for entry in loads}
+    seen = {(entry.get("model"), entry.get("revision"), entry.get("out_dir")) for entry in loads}  # stored resolved
     if len(seen) != 1:
         return False, f"load entries disagree on model, revision or output folder: {sorted(map(str, seen))}"
     return True, ""
@@ -163,34 +180,43 @@ def check_record(path):
 
 
 def call_shapes(calls):
-    """Gate R3, on what reached the model: every pushed call of more than one row went as chunks of exactly 8, and no
-    chunk of any call had more than 8 rows. A pushed call of one row is Stage 0's zero-write check."""
-    pushed = [call for call in calls if call.get("pushed") and int(call.get("rows", 0)) > 1]
-    zero_checks = [call for call in calls if call.get("pushed") and int(call.get("rows", 0)) == 1]
-    chunks = [int(size) for call in calls for size in call.get("chunks", [])]
-    biggest = max(chunks, default=0)
-    wrong = [call for call in pushed if not call.get("chunks") or any(int(size) != CHUNK for size in call["chunks"])
-             or sum(map(int, call["chunks"])) != int(call["rows"])]
-    return {"passed": bool(pushed and not wrong and biggest <= CHUNK),
-            "pushed_calls": len(pushed), "pushed_chunks": sum(len(call["chunks"]) for call in pushed),
+    """Gate R3, on what reached the model (the row counts observed as each chunk returned): every pushed call that is
+    not Stage 0's zero-write check went as chunks of exactly 8 covering its rows, no chunk of any call had more than 8
+    rows, and there are at most 8 zero-write checks (one per P8 prompt), each a single one-row chunk."""
+    zero_checks = [call for call in calls if call.get("pushed") and call.get("zero_write")]
+    pushed = [call for call in calls if call.get("pushed") and not call.get("zero_write")]
+    observed = [int(size) for call in calls for size in call.get("observed", [])]
+    biggest = max(observed, default=0)
+    wrong = [call for call in pushed if not call.get("observed") or any(int(size) != CHUNK for size in call["observed"])
+             or sum(map(int, call["observed"])) != int(call["rows"])]
+    bad_zero = [call for call in zero_checks if call.get("observed") != [1]]
+    passed = bool(pushed and not wrong and biggest <= CHUNK and not bad_zero and len(zero_checks) <= 8)
+    return {"passed": passed, "pushed_calls": len(pushed),
+            "pushed_chunks": sum(len(call.get("observed", [])) for call in pushed),
             "pushed_calls_not_in_chunks_of_8": len(wrong), "zero_write_checks": len(zero_checks),
             "largest_chunk_rows": biggest, "calls": len(calls)}
 
 
-def _write_load(path, entry):
-    """Append one entry (design's unlocked read-modify-write; the run sequence never shares a folder)."""
+def _save_record(path, rec):
+    """Write load.json whole, through a temporary file and os.replace, so a kill never leaves it half written."""
+    import os
     path = Path(path)
-    rec = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"part": 199, "loads": []}
-    rec.setdefault("loads", []).append(entry)
-    path.write_text(json.dumps(rec, ensure_ascii=True, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    return rec
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(rec, ensure_ascii=True, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def _read_record(path):
+    path = Path(path)
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"part": 199, "loads": []}
 
 
 def _answers_written(out):
+    """Complete (newline-terminated) rows only: run170's repair_tail cuts a torn last line, so it is not a row."""
     path = Path(out) / "answers.jsonl"
     if not path.exists():
         return 0
-    return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
+    return path.read_bytes().count(b"\n")
 
 
 def eager_loader(args):
@@ -201,8 +227,11 @@ def eager_loader(args):
         from part155 import run155
         tok, model = nr.load_model(str(args.model), run155._common().REVISION, device)
         kernel = (nr.LAST_LOAD or {}).get("attn_implementation")
-        if kernel != "eager":
-            raise SystemExit(f"PART199 GATE R1 FAILED before generation: the model loaded with {kernel!r}, not eager")
+        config_kernel = getattr(getattr(model, "config", None), "_attn_implementation", None)
+        if kernel != "eager" or config_kernel != "eager":
+            print(f"PART199 GATE R1 FAILED before generation: the model loaded with {kernel!r} "
+                  f"(config {config_kernel!r}), not eager; nothing generated", flush=True)
+            raise SystemExit(3)
         model.requires_grad_(False)
         model.eval()
         return tok, model
@@ -222,8 +251,9 @@ class FolderLock:
             fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         except FileExistsError:
             held = self.path.read_text(encoding="utf-8", errors="replace").strip()
-            raise SystemExit(f"PART199: {self.path} exists ({held}); another launch holds this folder, or a killed "
-                             "one left it: check no run199 process runs, then remove it by hand")
+            print(f"PART199: {self.path} exists ({held}); another launch holds this folder, or a killed one left "
+                  "it: check that no run199 process runs, then remove it by hand and relaunch", flush=True)
+            raise SystemExit(3)
         with os.fdopen(fd, "w", encoding="utf-8") as stream:
             stream.write(f"pid {os.getpid()} at {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         return self
@@ -242,6 +272,9 @@ def run(args, loader=None):
 
 
 def _run_locked(args, loader):
+    """The load entry is written as soon as the loader returns (kernel known, before any generation) and rewritten
+    after every chunk, so a launch killed by a signal still leaves its kernel, its calls and its row count."""
+    import time
     import neuron_report as nr
     from part168 import run168
     from part170 import run170
@@ -250,32 +283,52 @@ def _run_locked(args, loader):
     load_path = out / "load.json"
     before = _answers_written(out)
     calls = []
+    state = {"index": None, "entry": None}
+
+    def flush(status=None, **extra):
+        if state["entry"] is None:
+            return
+        entry = state["entry"]
+        entry["answers_written"] = _answers_written(out) - before
+        entry["updated"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        if status:
+            entry["status"] = status
+        entry.update(extra)
+        rec = _read_record(load_path)
+        if state["index"] is None:
+            rec.setdefault("loads", []).append(entry)
+            state["index"] = len(rec["loads"]) - 1
+        else:
+            rec["loads"][state["index"]] = entry
+        _save_record(load_path, rec)
+
+    def recording_loader(device):
+        tok, model = loader(device)       # refuses a non-eager load before anything is recorded or generated
+        state["entry"] = {"load": nr.LAST_LOAD, "model": str(args.model), "revision": _revision(),
+                          "out_dir": str(out.resolve()), "argv": list(sys.argv[1:]), "calls": calls,
+                          "started": time.strftime("%Y-%m-%d %H:%M:%S"), "status": "running"}
+        flush()
+        return tok, model
 
     original_generate = run170.generate_with_bans
     original_pilot = run168.pilot_rate_should_stop
     nr.LAST_LOAD = None
-    run170.generate_with_bans = chunked_generate(original_generate, calls)
+    run170.generate_with_bans = chunked_generate(original_generate, calls, on_call=flush)
     run168.pilot_rate_should_stop = pilot_rate_should_stop
     summary, failure = None, None
     try:
-        summary = run170.run(args, loader=loader)
+        summary = run170.run(args, loader=recording_loader)
     except BaseException as exc:       # a failed Part 170 gate or the pilot (SystemExit), a killed model, a bug:
         failure = f"{type(exc).__name__}: {exc}"   # record the rows it wrote, then let the stop propagate
         raise
     finally:
         run170.generate_with_bans = original_generate
         run168.pilot_rate_should_stop = original_pilot
+        flush(status="stopped" if failure else "done", summary=summary, failure=failure)
         written = _answers_written(out) - before
-        if written > 0:
-            _write_load(load_path, {"load": nr.LAST_LOAD, "model": str(args.model),
-                                    "revision": _revision(), "out_dir": str(out),
-                                    "argv": list(sys.argv[1:]), "calls": calls,
-                                    "answers_written": written, "summary": summary,
-                                    "failure": failure})
         if failure is not None:
             print(f"PART199 run stopped: {failure}; {written} row(s) written this invocation", flush=True)
-    rec = json.loads(load_path.read_text(encoding="utf-8")) if load_path.exists() else {"loads": []}
-    loads = rec.get("loads", [])
+    loads = _read_record(load_path).get("loads", [])
     ok_kernel, why_kernel = check_kernels(loads)
     ok_run, why_run = check_same_run(loads)
     shapes = call_shapes(calls)
@@ -283,8 +336,9 @@ def _run_locked(args, loader):
         # nothing generated (a resumed run with every answer done): no shape to check, and the gate is not claimed
         shapes["passed"] = None
         shapes["note"] = "no generate call in this invocation; Gate R3 is read from the invocation(s) that generated"
+    gates170 = (summary or {}).get("gates") or {}
     report = {"answers_written": written, "gate_r1": bool(ok_kernel and ok_run),
-              "gate_r1_why": why_kernel or why_run, "gate_r3": shapes}
+              "gate_r1_why": why_kernel or why_run, "gate_r3": shapes, "part170_gates_passed": gates170.get("passed")}
     print(json.dumps(report, ensure_ascii=True, allow_nan=False), flush=True)
     if not report["gate_r1"]:
         print(f"PART199 GATE R1 FAILED: {report['gate_r1_why']}", flush=True)
@@ -292,8 +346,12 @@ def _run_locked(args, loader):
     if shapes["passed"] is False:
         print(f"PART199 GATE R3 FAILED: {json.dumps(shapes)}", flush=True)
         return 3
-    print(f"PART199 gate R1 passed: {len(loads)} load(s) eager; Gate R3: {shapes['pushed_calls']} pushed calls of 8 "
-          f"in this invocation ({shapes['passed']})", flush=True)
+    if gates170.get("passed") is not True:
+        failed = [k for k in (f"gate{i}" for i in range(1, 9)) if gates170.get(k) is False]
+        print(f"PART199: Part 170's gates did not pass ({failed or 'no gate record'}); every reading stops", flush=True)
+        return 3
+    print(f"PART199 gates R1, R3 and Part 170's eight passed: {len(loads)} load(s) eager; {shapes['pushed_calls']} "
+          f"pushed calls in {shapes['pushed_chunks']} chunks of 8 this invocation", flush=True)
     print(json.dumps(summary, ensure_ascii=True, allow_nan=False), flush=True)
     return 0
 
@@ -433,6 +491,8 @@ def loop_onset_split(rerun_answers, tokenizer_dir):
     return pick_onset(done.stdout.splitlines())
 
 
+NOISE_LIMIT = 19     # 5% of the 384 dose-1 b0 repeat answers: this part's smallest effect worth knowing
+
 REQUIRED = ("norms.json", "lists.jsonl", "stage0.json", "prelaunch_gates.json", "score.json")
 
 
@@ -451,6 +511,8 @@ def compare(rerun_dir, published_dir, tokenizer_dir=None):
                                _read_json(rerun / "prelaunch_gates.json")),
         "cells_and_predictions": compare_cells(_read_json(published / "score.json"), _read_json(rerun / "score.json")),
     }
+    differing = out["gates"]["rerun"].get("gate8_differing_answers")
+    out["noise_limited"] = bool(differing is not None and int(differing) > NOISE_LIMIT)
     if tokenizer_dir is not None:
         out["loop_onset"] = loop_onset_split(rerun / "answers.jsonl", tokenizer_dir)
     return out
@@ -472,9 +534,15 @@ def main(argv=None):
             print(f"PART199 COMPARE: missing file {exc}", flush=True)
             return 2
         print(json.dumps(result, ensure_ascii=True, allow_nan=False, indent=2), flush=True)
+        if result["gates"]["rerun"].get("passed") is not True:
+            print("PART199: the rerun's Part 170 gates did not pass (prelaunch_gates.json); readings stop", flush=True)
+            return 3
         if not result["gate_r2"]["passed"]:
             print("PART199 GATE R2 FAILED: the rerun's directions are not Part 170's; readings stop", flush=True)
             return 3
+        if result["noise_limited"]:
+            print("PART199: Gate 8's repeat changed more than 19 of 384 answers: dose-1 cell rates and rises are "
+                  "noise-limited", flush=True)
         print("PART199 gate R2 passed", flush=True)
         return 0
     from part165 import run165
