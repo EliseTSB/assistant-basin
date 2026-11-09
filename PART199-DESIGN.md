@@ -86,7 +86,8 @@ python -I -B part199/run199.py --compare results/part199 results/part170 --token
 values the predictions below are read from: Gate R2, the Stage 1 lists, the frozen prompts, the gate values, every
 cell's loop and broken rate, every verdict, and the loop-onset split of the rerun's own loops
 (`part199/onset/loop_onset.py`, run unchanged as a subprocess on `results/part199/answers.jsonl`). It exits 3 when
-the rerun's Part 170 gates did not pass or Gate R2 fails, and 2 when a file is missing. Run on Part 170's folder against itself, it reproduces every published
+the rerun's `load.json` fails Gate R1 or R3, when the rerun's Part 170 gates did not pass, or when Gate R2 fails, and 2
+when a file is missing. Run on Part 170's folder against itself, it reproduces every published
 value (Gate R2 passes, 200 of 200 lists identical, the onset split 164 of 168).
 
 ## Controls
@@ -194,6 +195,9 @@ and reported beside the published values; they are Weaver's, so this part makes 
 - `part170/run170.py` itself now loads eager by default (`neuron_report.py`, since 2026-11-03), so running it
   unwrapped on current main no longer reproduces the published SDPA run; Part 170's text does not say which kernel it
   ran. Pinning the kernel in `run170.py` is a follow-up, not part of this card.
+- A non-finite Part 170 gate value (Gate 4's relative error is infinite for a zero target norm) makes Part 170's own
+  `write_json` raise before its gate check; the launch is recorded as stopped but exits 1, not 3. Not expected (every
+  published target norm is positive) and pre-existing in Part 170.
 - `load.json` is a read-modify-write under the folder lock, so two launches cannot interleave on it, and each write
   goes through a temporary file and `os.replace`, so a kill does not leave it half written.
 
@@ -221,3 +225,9 @@ and reported beside the published values; they are Weaver's, so this part makes 
   Part 170 SystemExit (Stage 0, Gates 4/7, pilot) or the loader's refusal returns exit 3 after the record is flushed
   (F3); non-finite values are written as null and a failed final write cannot replace the outcome (F4); the
   zero-check row rule is tested (F5).
+- Haiku 5.5 cold review, round 4 (narrow re-check; "nothing would make me hold registration of the design"), folded:
+  the in-run Gates R1 and R3 are evaluated over every launch's record, so a relaunch with nothing left to generate
+  cannot print a pass it did not check (1); `--compare` checks the rerun's `load.json` for R1 and R3 before any
+  reading (2); a Part 170 gate value that cannot be written as JSON is a stated limit (3); a launch whose final record
+  write fails exits 3 (4); the completed-call requirement, the final-write guard and the record-wide scope are pinned by
+  tests (5).

@@ -151,6 +151,7 @@ def test_gate_r3_reads_the_observed_chunks():
     assert not run199.call_shapes([{**PUSH, "observed": [8] * 5}])["passed"]           # rows lost
     assert not run199.call_shapes([PUSH, {**NOPUSH, "rows": 9, "observed": [9]}])["passed"]
     assert not run199.call_shapes([NOPUSH, ZERO])["passed"]                             # no push call
+    assert not run199.call_shapes([{**PUSH, "observed": [8], "complete": False}])["passed"]   # no completed push
     assert not run199.call_shapes([PUSH] + _zeros(9))["passed"]                         # more than 8 prompts checked
     assert not run199.call_shapes([PUSH, {**ZERO, "observed": [8]}])["passed"]          # a zero check of 8 rows
     assert not run199.call_shapes([PUSH, {**ZERO, "observed": []}])["passed"]           # complete, nothing observed
@@ -357,6 +358,35 @@ def test_a_non_finite_summary_value_does_not_lose_the_outcome(tmp_path, patched,
     assert entry["status"] == "done" and entry["summary"]["diagnostic"] is None
 
 
+def test_a_relaunch_with_nothing_to_generate_checks_r3_over_the_whole_record(tmp_path, patched, load_as):
+    """A launch that generates nothing still evaluates R3 over every launch's calls: an earlier bad call fails it."""
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}))
+    assert run199.run(FakeArgs(tmp_path)) == 0
+    rec = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))
+    rec["loads"][0]["calls"][0]["observed"] = [8, 8, 8]          # a complete call that covered too few rows
+    (tmp_path / "load.json").write_text(json.dumps(rec), encoding="utf-8")
+    monkeypatch.setattr(run170, "run", _fake_run(written=0, seen={}))
+    assert run199.run(FakeArgs(tmp_path)) == 3
+
+
+def test_a_failed_final_record_write_exits_3(tmp_path, patched, load_as):
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}))
+    real_save = run199._save_record
+
+    def save(path, rec):
+        if rec["loads"][-1].get("status") == "done":
+            raise OSError("disk full (stand-in, final write only)")
+        real_save(path, rec)
+    monkeypatch.setattr(run199, "_save_record", save)
+    assert run199.run(FakeArgs(tmp_path)) == 3
+    entry = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))["loads"][-1]
+    assert entry["status"] == "running"                          # the last per-chunk write stands
+
+
 def test_a_torn_last_line_is_not_a_row(tmp_path):
     (tmp_path / "answers.jsonl").write_text('{"answer": "a"}\n{"answer": "b"}\n{"ans', encoding="utf-8")
     assert run199._answers_written(tmp_path) == 2
@@ -392,9 +422,14 @@ def test_run170_looks_up_the_replaced_names_at_call_time():
 
 # --------------------------------------------------------------------------------------------- --compare
 
-def _fixture(folder, *, neuron_shift=0, b0=0.25, passed=True, frozen_m96=(1, 2), gates_passed=True, gate8=0):
-    """A folder with every file --compare reads; norms are Part 170's real norms.json (144 directions)."""
+def _fixture(folder, *, neuron_shift=0, b0=0.25, passed=True, frozen_m96=(1, 2), gates_passed=True, gate8=0,
+             kernel="eager"):
+    """A folder with every file --compare reads; norms are Part 170's real norms.json (144 directions); load.json
+    records one launch with `kernel` and one complete push call."""
     folder.mkdir()
+    (folder / "load.json").write_text(json.dumps({"part": 199, "loads": [
+        {"load": {"attn_implementation": kernel}, "model": "m", "revision": "r", "out_dir": str(folder),
+         "calls": [PUSH]}]}), encoding="utf-8")
     norms = json.loads((ROOT / "results/part170/norms.json").read_text(encoding="utf-8"))
     if neuron_shift:
         norms["directions"][0]["neuron"] = int(norms["directions"][0]["neuron"]) + neuron_shift
@@ -438,6 +473,15 @@ def test_compare_exits_3_when_the_reruns_part170_gates_failed(tmp_path):
     pub = _fixture(tmp_path / "pub")
     new = _fixture(tmp_path / "new", gates_passed=False)
     assert run199.main(["--compare", str(new), str(pub)]) == 3
+
+
+def test_compare_exits_3_when_the_reruns_record_fails_r1(tmp_path):
+    pub = _fixture(tmp_path / "pub")
+    new = _fixture(tmp_path / "new", kernel="sdpa")
+    assert run199.compare(new, pub)["record_r1_r3"]["passed"] is False
+    assert run199.main(["--compare", str(new), str(pub)]) == 3
+    (new / "load.json").unlink()
+    assert run199.main(["--compare", str(new), str(pub)]) == 2
 
 
 def test_compare_flags_noise_above_19(tmp_path):

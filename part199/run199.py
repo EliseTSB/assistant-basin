@@ -165,20 +165,27 @@ def check_same_run(loads):
     return True, ""
 
 
-def check_record(path):
-    """Host-side Gates R1 and R3 over every recorded invocation: exit 0 only if load.json records at least one load,
-    all eager, one model, revision and folder, and every pushed call of more than one row went in chunks of 8."""
-    rec = json.loads(Path(path).read_text(encoding="utf-8"))
+def record_gates(rec):
+    """Gates R1 and R3 over every launch in a load.json record: (ok, reason, shapes)."""
     loads = rec.get("loads", [])
     ok_kernel, why_kernel = check_kernels(loads)
     ok_run, why_run = check_same_run(loads)
     shapes = call_shapes([call for entry in loads for call in entry.get("calls", [])])
     why_shape = "" if shapes["passed"] else f"Gate R3: {json.dumps(shapes)}"
-    if ok_kernel and ok_run and shapes["passed"]:
-        print(f"PART199 record ok: {len(loads)} recorded load(s), all eager, one model/revision/folder; "
+    ok = bool(ok_kernel and ok_run and shapes["passed"])
+    return ok, (why_kernel or why_run or why_shape), shapes
+
+
+def check_record(path):
+    """Host-side Gates R1 and R3 over every recorded invocation: exit 0 only if load.json records at least one load,
+    all eager, one model, revision and folder, and every pushed call of more than one row went in chunks of 8."""
+    rec = json.loads(Path(path).read_text(encoding="utf-8"))
+    ok, why, shapes = record_gates(rec)
+    if ok:
+        print(f"PART199 record ok: {len(rec.get('loads', []))} recorded load(s), all eager, one model/revision/folder; "
               f"{shapes['pushed_calls']} pushed calls in {shapes['pushed_chunks']} chunks of 8", flush=True)
         return 0
-    print(f"PART199 RECORD FAILED: {why_kernel or why_run or why_shape}", flush=True)
+    print(f"PART199 RECORD FAILED: {why}", flush=True)
     return 3
 
 
@@ -344,7 +351,7 @@ def _run_locked(args, loader):
     nr.LAST_LOAD = None
     run170.generate_with_bans = chunked_generate(original_generate, calls, on_call=flush)
     run168.pilot_rate_should_stop = pilot_rate_should_stop
-    summary, failure, stopped = None, None, False
+    summary, failure, stopped, final_write_failed = None, None, False, False
     try:
         summary = run170.run(args, loader=recording_loader)
     except SystemExit as exc:          # Part 170's gates, its pilot, or this wrapper's loader refusal: a stop, exit 3
@@ -358,6 +365,7 @@ def _run_locked(args, loader):
         try:
             flush(status="stopped" if failure else "done", summary=summary, failure=failure)
         except Exception as exc:       # a failed final write must not replace the run's own outcome
+            final_write_failed = True
             print(f"PART199: the final load.json write failed ({type(exc).__name__}: {exc}); the last per-chunk "
                   "write stands", flush=True)
         written = _answers_written(out) - before
@@ -367,30 +375,25 @@ def _run_locked(args, loader):
         print("PART199: stopped by a gate, the pilot or the loader (see above); no reading is made from this launch",
               flush=True)
         return 3
-    loads = _read_record(load_path).get("loads", [])
-    ok_kernel, why_kernel = check_kernels(loads)
-    ok_run, why_run = check_same_run(loads)
-    shapes = call_shapes(calls)
-    if not calls:
-        # nothing generated (a resumed run with every answer done): no shape to check, and the gate is not claimed
-        shapes["passed"] = None
-        shapes["note"] = "no generate call in this invocation; Gate R3 is read from the invocation(s) that generated"
+    rec = _read_record(load_path)
+    loads = rec.get("loads", [])
+    ok, why, shapes = record_gates(rec)      # R1 and R3 over every launch's record, not just this one's calls
     gates170 = (summary or {}).get("gates") or {}
-    report = {"answers_written": written, "gate_r1": bool(ok_kernel and ok_run),
-              "gate_r1_why": why_kernel or why_run, "gate_r3": shapes, "part170_gates_passed": gates170.get("passed")}
-    print(json.dumps(report, ensure_ascii=True, allow_nan=False), flush=True)
-    if not report["gate_r1"]:
-        print(f"PART199 GATE R1 FAILED: {report['gate_r1_why']}", flush=True)
+    report = {"answers_written": written, "gates_r1_r3": ok, "why": why, "gate_r3": shapes,
+              "part170_gates_passed": gates170.get("passed"), "final_write_failed": final_write_failed}
+    print(json.dumps(_finite(report), ensure_ascii=True, allow_nan=False), flush=True)
+    if not ok:
+        print(f"PART199 GATE R1/R3 FAILED over the record: {why}", flush=True)
         return 3
-    if shapes["passed"] is False:
-        print(f"PART199 GATE R3 FAILED: {json.dumps(shapes)}", flush=True)
+    if final_write_failed:
+        print("PART199: this launch could not record its outcome in load.json; exit 3", flush=True)
         return 3
     if gates170.get("passed") is not True:
         failed = [k for k in (f"gate{i}" for i in range(1, 9)) if gates170.get(k) is False]
         print(f"PART199: Part 170's gates did not pass ({failed or 'no gate record'}); every reading stops", flush=True)
         return 3
     print(f"PART199 gates R1, R3 and Part 170's eight passed: {len(loads)} load(s) eager; {shapes['pushed_calls']} "
-          f"pushed calls in {shapes['pushed_chunks']} chunks of 8 this invocation", flush=True)
+          f"pushed calls in {shapes['pushed_chunks']} chunks of 8 over the record", flush=True)
     print(json.dumps(_finite(summary), ensure_ascii=True, allow_nan=False), flush=True)
     return 0
 
@@ -542,7 +545,11 @@ def compare(rerun_dir, published_dir, tokenizer_dir=None):
         for name in REQUIRED:
             if not (folder / name).exists():
                 raise FileNotFoundError(str(folder / name))
+    if not (rerun / "load.json").exists():
+        raise FileNotFoundError(str(rerun / "load.json"))
+    record_ok, record_why, _shapes = record_gates(_read_record(rerun / "load.json"))
     out = {
+        "record_r1_r3": {"passed": record_ok, "why": record_why},
         "gate_r2": gate_r2(_read_json(published / "norms.json"), _read_json(rerun / "norms.json")),
         "lists": compare_lists(_read_jsonl(published / "lists.jsonl"), _read_jsonl(rerun / "lists.jsonl")),
         "frozen": compare_frozen(_read_json(published / "stage0.json"), _read_json(rerun / "stage0.json")),
@@ -573,6 +580,10 @@ def main(argv=None):
             print(f"PART199 COMPARE: missing file {exc}", flush=True)
             return 2
         print(json.dumps(result, ensure_ascii=True, allow_nan=False, indent=2), flush=True)
+        if not result["record_r1_r3"]["passed"]:
+            print(f"PART199: the rerun's load.json fails Gate R1 or R3 ({result['record_r1_r3']['why']}); "
+                  "readings stop", flush=True)
+            return 3
         if result["gates"]["rerun"].get("passed") is not True:
             print("PART199: the rerun's Part 170 gates did not pass (prelaunch_gates.json); readings stop", flush=True)
             return 3
