@@ -759,3 +759,32 @@ For the steering-word part that follows:
   zeroing, and Part 75 found even a prompt-mean clamp of L27 N3325 is not neutral. A resample control, the four makers
   given their values from non-maker questions, is the test this case says to run before calling their content
   question-specific.
+
+## 2026-11-09, for Part 201 (batch-shape noise in bf16 greedy answers; abstracts read by Claude)
+
+- Yuan et al., "Understanding and Mitigating Numerical Sources of Nondeterminism in LLM Inference" (arXiv 2506.09501;
+  earlier title "Give Me FP32 or Give Me Death?"). Under bf16 greedy decoding, evaluation batch size, GPU count and
+  GPU type change responses; a reasoning model shows up to 9% accuracy variation. Fix: LayerCast, weights stored in 16
+  bits and all computation in float32. Our `tools/kernel_reference.py --dtype float32-upcast` is the same idea, built
+  on 2026-11-04 for the CPU reference.
+- "Greedy Decoding Is Not Precision-Invariant: Cross-Precision Output Divergence in LLM Inference" (arXiv 2609.26621).
+  bf16 against fp16 on the same hardware diverges on 49 to 100% of prompts across six models; whether a step flips
+  depends mainly on the top-two margin at the output head against the perturbation between the two candidates;
+  recomputing the head in float32 at low-margin steps helps at batch 4 or less and not at batch 8 or more or under
+  end-to-end FP8, in their tests.
+- "Same Probe, Different Numbers: Are Activation Probes Robust to Inference-Time Numerical Non-Determinism?" (arXiv
+  2609.31796; Llama-3.1-8B, Qwen3-8B, Gemma-3-4B). 768 probes trained on one configuration and evaluated on others:
+  at the prompt, 0.076% of verdicts change; under float32 with only batch size varied, none of 201,960; during
+  decoding 2.8%, almost all on rows whose tokens had diverged. A bf16 batch-size change flips the first generated
+  token on 2.1% of rows and leaves 25% on different tokens by token 20; flips are symmetric; activations move by a
+  median relative L2 of about 1e-2. Recommends reporting per-example agreement and stating the serving configuration.
+- "MarginGate: Sparse Margin-Triggered Verification for Batch-Invariant LLM Inference" (arXiv 2605.30218).
+  Batch-induced token flips are sparse, so verification is applied only at low-margin steps. (Abstract read in part;
+  method details not yet read.)
+- Cooper et al., "Accelerating the Mitigation of LLM Inference Nondeterminism Across GPU Architectures" (arXiv
+  2609.25624). Fused-upcast GEMM kernels that load 16-bit weights, accumulate in float32 in a reduction order fixed by
+  the problem shape, bitwise identical linear layers across NVIDIA Ampere, Ada and Hopper.
+- Thinking Machines Lab, "Defeating Nondeterminism in LLM Inference" (September 2025) and `batch_invariant_ops`: the
+  nondeterminism users see comes from kernels that are not batch-invariant.
+- How Part 201 differs: rows are pushed at one MLP neuron or direction; the readout is labels and registered verdicts,
+  with a simulated stability for each; the card is an Intel Arc A770. None of the above tests Intel hardware.
