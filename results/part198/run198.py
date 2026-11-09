@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import copy
 import datetime as dt
+import fcntl
 import gc
 import hashlib
 import importlib.util
@@ -18,6 +19,7 @@ import time
 import traceback
 import uuid
 import warnings
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -120,6 +122,28 @@ def append_jsonl(path: Path, record: dict[str, Any]) -> None:
         f.write(line + "\n")
         f.flush()
         os.fsync(f.fileno())
+
+
+class OutputLogLocked(RuntimeError):
+    """Raised when another runner process already owns this output log."""
+
+
+@contextmanager
+def output_log_lock(log_path: Path):
+    """Own an output log exclusively without waiting for another runner process."""
+    lock_path = log_path.with_name(log_path.name + ".lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+b") as lock_file:
+        try:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise OutputLogLocked(
+                f"output log is already locked by another runner: {log_path} (lock {lock_path})"
+            ) from exc
+        try:
+            yield
+        finally:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -1763,26 +1787,34 @@ def main(argv: list[str] | None = None) -> int:
                           "easyedit_commit": data["easyedit_commit"]}, indent=2))
         return 0
     target_log = log_path_for(args.command, getattr(args, "method", None), out_dir)
-    os.chdir(out_dir)
     try:
-        preflight(out_dir)
-        if args.command == "armA":
-            return run_arm_a(args.method, args.limit, out_dir)
-        if args.command == "armA-mass":
-            return run_arm_a_mass(args.method, args.limit, out_dir)
-        if args.command == "armB":
-            return run_arm_b(args.limit, out_dir)
-        if args.command == "armB-seq":
-            return run_arm_b_seq(args.limit, out_dir)
-        if args.command == "armC":
-            return run_arm_c(args.limit, out_dir)
-        raise ValueError(args.command)
+        with output_log_lock(target_log):
+            os.chdir(out_dir)
+            try:
+                preflight(out_dir)
+                if args.command == "armA":
+                    return run_arm_a(args.method, args.limit, out_dir)
+                if args.command == "armA-mass":
+                    return run_arm_a_mass(args.method, args.limit, out_dir)
+                if args.command == "armB":
+                    return run_arm_b(args.limit, out_dir)
+                if args.command == "armB-seq":
+                    return run_arm_b_seq(args.limit, out_dir)
+                if args.command == "armC":
+                    return run_arm_c(args.limit, out_dir)
+                raise ValueError(args.command)
+            except Exception as exc:
+                append_jsonl(target_log, {"record_type": "failure",
+                    "run_mode": "smoke" if args.limit is not None else "registered",
+                    "timestamp": utc_now(), "method": getattr(args, "method", None),
+                    "phase": "startup_or_run", "error": f"{type(exc).__name__}: {exc}",
+                    "traceback": traceback.format_exc()[-4000:]})
+                print(f"FAILED: {type(exc).__name__}: {exc}", file=sys.stderr)
+                return 1
+    except OutputLogLocked as exc:
+        print(f"FAILED: {exc}", file=sys.stderr)
+        return 1
     except Exception as exc:
-        append_jsonl(target_log, {"record_type": "failure",
-            "run_mode": "smoke" if args.limit is not None else "registered",
-            "timestamp": utc_now(), "method": getattr(args, "method", None),
-            "phase": "startup_or_run", "error": f"{type(exc).__name__}: {exc}",
-            "traceback": traceback.format_exc()[-4000:]})
         print(f"FAILED: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
 

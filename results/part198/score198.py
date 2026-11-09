@@ -13,72 +13,47 @@ HERE = Path(__file__).resolve().parent
 OUT_DEFAULT = HERE / "out"
 
 
-def _localized_outcomes(value: Any) -> tuple[tuple[str, bool], ...]:
-    if not isinstance(value, dict):
-        return ()
-    return tuple(sorted((str(stat), isinstance(result, dict) and result.get("localized") is True)
-                        for stat, result in value.items()))
+_REPLAY_METADATA_FIELDS = frozenset({"timestamp", "run_id"})
 
 
-def _case_scored_booleans(row: dict[str, Any]) -> tuple[Any, ...]:
-    """Collect case-row booleans that affect a forecast, diagnostic, or sequence score."""
-    aimed = row.get("aimed_positive_control")
-    oracle = row.get("oracle_reader")
-    blind = row.get("blind_reader")
-    random_control = row.get("random_control")
-    edited_stats = row.get("edited_layer_stats")
-    names_after = row.get("names_after_write")
-    return (
-        ("localization", _localized_outcomes(row.get("localization"))),
-        ("aimed_positive_control.localization",
-         _localized_outcomes(aimed.get("localization") if isinstance(aimed, dict) else None)),
-        ("aimed_positive_control.oracle_named_strict",
-         isinstance(aimed, dict) and aimed.get("oracle_named_strict") is True),
-        ("aimed_positive_control.oracle_named_strict_missing",
-         not isinstance(aimed, dict) or aimed.get("oracle_named_strict") is None),
-        ("oracle_reader.named_strict",
-         isinstance(oracle, dict) and oracle.get("named_strict") is True),
-        ("oracle_reader.named_loose",
-         isinstance(oracle, dict) and oracle.get("named_loose") is True),
-        ("blind_reader.localized",
-         isinstance(blind, dict) and blind.get("localized") is True),
-        ("blind_reader.named_strict",
-         isinstance(blind, dict) and blind.get("named_strict") is True),
-        ("random_control.localization.t_word.localized",
-         isinstance(random_control, dict)
-         and _localized_outcomes(random_control.get("localization")).count(("t_word", True)) > 0),
-        ("edited_layer_stats.update_top_names_strict",
-         tuple(sorted((str(layer), isinstance(result, dict)
-                       and result.get("update_top_names_strict") is True)
-                      for layer, result in edited_stats.items())) if isinstance(edited_stats, dict) else ()),
-        ("edited_layer_stats.update_top_names_loose",
-         tuple(sorted((str(layer), isinstance(result, dict)
-                       and result.get("update_top_names_loose") is True)
-                      for layer, result in edited_stats.items())) if isinstance(edited_stats, dict) else ()),
-        ("names_after_write.named_strict",
-         tuple(sorted((str(case_id), isinstance(result, dict)
-                       and result.get("named_strict") is True)
-                      for case_id, result in names_after.items())) if isinstance(names_after, dict) else ()),
-    )
+def _first_replay_difference(left: Any, right: Any, path: str = "") -> str | None:
+    """Return the first unequal JSON field after recursively removing volatile metadata."""
+    if type(left) is not type(right):
+        return path or "<root>"
+    if isinstance(left, dict):
+        keys = sorted((set(left) | set(right)) - _REPLAY_METADATA_FIELDS)
+        for key in keys:
+            child_path = f"{path}.{key}" if path else str(key)
+            if key not in left or key not in right:
+                return child_path
+            difference = _first_replay_difference(left[key], right[key], child_path)
+            if difference is not None:
+                return difference
+        return None
+    if isinstance(left, list):
+        shared = min(len(left), len(right))
+        for index in range(shared):
+            child_path = f"{path}[{index}]"
+            difference = _first_replay_difference(left[index], right[index], child_path)
+            if difference is not None:
+                return difference
+        if len(left) != len(right):
+            return f"{path}[{shared}]" if path else f"<root>[{shared}]"
+        return None
+    if isinstance(left, float):
+        return None if left.hex() == right.hex() else (path or "<root>")
+    return None if left == right else (path or "<root>")
 
 
 def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
-    """Select terminal rows, refusing any replay conflict in a scored case outcome.
+    """Select terminal rows, rejecting every completed case or batch replay conflict.
 
-    Failure rows describe attempts, so a later case row may legitimately follow one. For a
-    repeated case, every scored boolean must agree, including all localized flags and reader or
-    control outcomes; raw floating-point diagnostics remain outside the comparison. If float
-    drift flips a scored boolean, the case has no single outcome and must be rerun rather than
-    resolved by file order. Distinct run-level failures have no case key and are surfaced
-    separately by score_from_dir.
+    Failures describe attempts, so a retry may complete the same key later. Completed rows
+    compare in full after recursively removing only runner metadata fields. Any other difference,
+    including a raw float, makes the key ambiguous and it must be rerun.
     """
     by_key: dict[str, list[dict[str, Any]]] = {}
     run_level: dict[tuple[str, str], dict[str, Any]] = {}
-    decisive = {
-        "case": ("took", "already_satisfied", "name_eligible", "restored_bit_exact",
-                 "undo_zero_exact", "n_written_so_far"),
-        "batch": ("n_took", "n_already_satisfied", "take_gate_passed", "restored_bit_exact"),
-    }.get(kind, ("took", "already_satisfied", "name_eligible", "restored_bit_exact"))
     for row in R.read_jsonl(path):
         if row.get("run_mode", "registered") != "registered":
             continue
@@ -89,9 +64,11 @@ def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
             if row.get("record_type") == "failure" and row.get("run_id") is not None:
                 identity = (str(row["run_id"]), str(row.get("phase", "startup_or_run")))
                 previous = run_level.get(identity)
-                if previous is not None and _terminal_payload(previous) != _terminal_payload(row):
+                difference = (_first_replay_difference(previous, row)
+                              if previous is not None else None)
+                if difference is not None:
                     raise ValueError(f"conflicting run-level failure rows for run_id={identity[0]!r}, "
-                                     f"phase={identity[1]!r} in {path}")
+                                     f"phase={identity[1]!r} in {path}: first differing field {difference}")
                 run_level.setdefault(identity, row)
             continue
         by_key.setdefault(str(value), []).append(row)
@@ -102,26 +79,16 @@ def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
         if cases:
             first_case = cases[0]
             for row in cases[1:]:
-                changed = [field for field in decisive
-                           if first_case.get(field, _MISSING) != row.get(field, _MISSING)]
-                if kind == "case" and _case_scored_booleans(first_case) != _case_scored_booleans(row):
-                    changed.append("scored boolean outcomes")
-                if changed:
+                difference = _first_replay_difference(first_case, row)
+                if difference is not None:
                     raise ValueError(f"conflicting terminal rows for {key}={identity!r} in {path}: "
-                                     f"decisive fields differ: {', '.join(changed)}")
+                                     f"first differing field {difference}")
             selected.append(first_case)
         elif rows:
             # Failed attempts remain available in all_registered() for gate diagnostics.
             # Keep one failure as the terminal scored row when no completed result exists.
             selected.append(rows[0])
     return selected
-
-
-_MISSING = object()
-
-
-def _terminal_payload(row: dict[str, Any]) -> dict[str, Any]:
-    return {k: v for k, v in row.items() if k not in {"run_id", "timestamp"}}
 
 
 def all_registered(path: Path) -> list[dict[str, Any]]:

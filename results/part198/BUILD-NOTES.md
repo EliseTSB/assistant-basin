@@ -63,7 +63,7 @@
 
 ### Blocker and major findings
 
-- **N1 — fixed.** `score198.registered_rows()` in `score198.py:16–72` now groups registered rows by key, accepts a failure followed by a completed case, and keeps the first replay when only floating-point diagnostics differ. Repeated case rows are refused when decisive outcomes differ (`took`, `already_satisfied`, eligibility, restoration/undo status, or sequence progress). Unkeyed failures are retained in the scorer's `run_level_failures` diagnostic rather than mixed into case denominators (`score198.py:78`, `:224–236`). The test `test_build198.py:338–359` writes rows with `run198.append_jsonl()` and covers failure/resume, drift, contradictory cases, and separate run-level failures. On pristine `1a05ea9`, it fails because failure/case and replay drift raise.
+- **N1 — fixed at Fold r2; comparison rule superseded by Fold r4.** At Fold r2, `score198.registered_rows()` grouped registered rows by key, accepted a failure followed by a completed case, and kept the first replay when floating-point diagnostics differed. Repeated case rows were refused when the listed decisive outcomes differed. Unkeyed failures were retained in `run_level_failures` rather than mixed into case denominators. The Fold r2 test covered failure/resume, diagnostic drift, contradictory cases, and separate run-level failures; its deliberate allowance for diagnostic drift is no longer current.
 - **N2 — fixed.** `tensor_fingerprint()` flattens before the byte reinterpretation, so a 0-d tensor fingerprints correctly (`run198.py:589–607`). `_model_state_fingerprints()` names the failing parameter or buffer, and `verify_model_restored()` preserves a fingerprint exception as an explicit verification error (`run198.py:610–632`). Arm A single, mass, and first-record restoration checks use this wrapper; exception rows store `restored_bit_exact: null` and `restoration_verification_error` when verification itself fails (`run198.py:1025–1048`, `:1070–1111`, `:1198–1222`). Tests `test_build198.py:395–432` cover scalar state, labeled fingerprint errors, and the runner's unknown status. All three N2 tests fail on pristine `1a05ea9`.
 - **N3 — test gap closed.** Added a shared full-state verifier and tests that drive `run_arm_a()` and `run_arm_a_mass()` with a tiny fake model whose editor changes an unreported buffer. `test_build198.py:420–429` asserts both runner paths record `restored_bit_exact: false`. Both tests fail on pristine `1a05ea9`; the full old-code suite reports these names. The restoration comparison is also exercised on the runner's error path by the N2 test.
 - **N4 — fixed.** `run_arm_b()` now appends its case row only after `w.undo()` and the exact-zero check complete (`run198.py:1367–1370`). The structural check at `test_build198.py:477–482` fails on pristine `1a05ea9`. Probe `p30_armb_undo.py` confirms undo and `undo_zero_exact` precede the terminal append; `p31_armb_crash.py` records no case row when a synthetic undo-path crash occurs.
@@ -86,12 +86,12 @@
 
 ## Fold r3
 
-### F1 — scored case replays conflict on every scored boolean
+### F1 — scored case replays conflict on every scored boolean (Fold r3; superseded by Fold r4)
 
-- `score198.registered_rows()` now compares case rows' existing decisive fields plus a normalized tuple of the scored boolean outcomes. It includes every `localization.<stat>.localized` flag; `aimed_positive_control.oracle_named_strict` and its missing-control state; `aimed_positive_control.localization.<stat>.localized`; `oracle_reader.named_strict` / `named_loose`; `blind_reader.localized` / `named_strict`; `random_control.localization.t_word.localized`; per-layer `edited_layer_stats.update_top_names_strict` / `update_top_names_loose`; and sequence `names_after_write.<case_id>.named_strict`. The pre-existing decisive values remain `took`, `already_satisfied`, `name_eligible`, `restored_bit_exact`, `undo_zero_exact`, and `n_written_so_far`.
-- Raw floats and other diagnostics remain outside that tuple. Any scored-boolean flip is a conflict even if float drift caused it: the case has no single scored outcome and must be rerun. `registered_rows()` documents this rule.
-- New checks cover a duplicate differing only in `aimed_positive_control.oracle_named_strict` and one each for `localization.f1.localized`, `localization.pcs.localized`, and `localization.t_word.localized`. The existing replay check still accepts float-only diagnostic drift when all booleans agree.
-- Against the copied `b3aacf2` runner/scorer, all four F1 checks fail. Against the folded code, all pass.
+- Fold r3 replaced Fold r2's decisive-field check with a normalized tuple of selected scored booleans on case rows. That tuple covered localization flags, aimed-control naming and localization, oracle and blind reader outcomes, random-control localization, edited-layer names, and sequence names. This closed the then-known case-boolean gaps but did not compare all row fields.
+- Fold r3 still ignored raw float diagnostics, omitted batch rows, and interpreted the runner-shaped aimed-control localization object as a map of statistic results. The tuple therefore was not a complete replay rule and is no longer current.
+- Fold r3's tests covered the earlier boolean tuple and float-only drift behavior. Fold r4 replaces those expectations with full-row equality after removing the exact metadata allowlist; its tests are listed below.
+- Against the copied `b3aacf2` runner/scorer, the four Fold r3 boolean checks failed as recorded at that fold. They remain historical; Fold r4 checks the complete row contract.
 
 ### F2 — N4 append-order test rejects the review's sabotage A
 
@@ -114,3 +114,25 @@
 - The specified review run directory contained no files under `probes/`, so no supplied probe scripts were available to copy or inspect. The requested behaviors were exercised with the synthetic tests above. No model, weights, edit, or network call was made.
 - F4 remains with the parent as requested; this fold does not resolve the prior worker's uncertainty about whether the two r2 probes read weights. `stats198.py` remains untouched and its SHA256 is unchanged.
 
+
+## Fold r4
+
+### R4.1 — compare the complete terminal row
+
+- The parent inverted replay validation after repeated folds found a new scored field each time. `score198.registered_rows()` now compares the complete pair of completed rows for the same case or batch key, recursively, after removing only the allowlisted volatile metadata. It refuses the first mismatch with the key and the exact field path. The old `_case_scored_booleans()` and per-kind decisive tuples are removed.
+- The only runner-written metadata fields in these row payloads are `timestamp` and `run_id`. There are no runner output fields for elapsed time or duration, process ID, hostname, or invocation ID. Arm C's `role: "host"` is a model role, not host metadata, so it remains part of the compared row. No other field is ignored. Nested objects and lists are compared recursively; Python types must match, and floats compare exactly (including the sign of zero).
+- A failure row and a later completed row remain a valid retry because their `record_type` values differ. Two completed rows of the same kind and key must match after the metadata removal; any disagreement means the case or batch must be rerun. This covers scored outcomes and raw diagnostics alike.
+- Tests use the actual runner-shaped aimed-control localization object (`value`, `localized`, `tie`), mass-batch F1 localization, a raw float difference, and metadata-only replays. The metadata replay is sent through `score_from_dir()` and leaves attempted/took/success/denominator counts at `(1, 1, 1, 1)`. The existing failure-then-completed case remains accepted; a second completed row that changes `took` is refused.
+
+### R4.2 — serialize runner processes per output log
+
+- Each actual runner CLI invocation takes a nonblocking exclusive `fcntl.flock` on `<output-log>.lock` before `preflight()` or any log read. The lock stays held through the selected arm, terminal/error JSONL writes, and cleanup. If another process owns the same log, startup prints `output log is already locked by another runner` and returns without waiting, dispatching an arm, or writing to the log. Separate logs have separate locks.
+- A child process holds `armC.jsonl.lock` while a second CLI process attempts Arm C. The second process is refused before the patched preflight and no arm or model loader is reached. `probe_armc_concurrency.py` patches `torch.load`, both runner `from_pretrained` entry points, `safetensors.safe_open`, and runner model-loader helpers before invoking the CLI.
+
+### Validation and old-code comparison
+
+- `/home/elisepc/edit-detect/.venv/bin/python -I fixtures198.py`: exit 0, `FIXTURES ALL PASS (0 failed)`.
+- `/home/elisepc/edit-detect/.venv/bin/python -I test_build198.py`: exit 0, `TEST_BUILD_CHECKS 59`, `TEST_BUILD ALL PASS (0 failed)`.
+- Copied the `dbe6d56` `run198.py`, `score198.py`, `test_build198.py`, and frozen support files into the worker directory before changing the project files. The new test file against those copies exits 1 with eight failing checks: three uncovered row conflicts (aimed localization, raw float, and batch F1 localization), the missing nonblocking runner lock, and four case conflict checks whose old implementation refused but reported only the generic `scored boolean outcomes` label instead of the newly required first differing field path. Metadata-only replay counts and failure-then-completed behavior pass on the old code.
+- The copied review probes pass: aimed-control localization refuses in both row orders; batch F1 localization refuses in both row orders; the second Arm C CLI process reports lock refusal with zero preflight calls.
+- `stats198.py` was not edited; SHA256 remains `03e65cb44ab7496d064b497f1e9bb38086716e74b02b5dc3ab998f881473ee64`. No model, weights, edit, or network call was made.

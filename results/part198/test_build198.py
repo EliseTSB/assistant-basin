@@ -3,16 +3,20 @@
 from __future__ import annotations
 
 import json
+import fcntl
+import io
 import sys
 import tempfile
 import time
 import warnings
 import inspect
 import multiprocessing
+import queue
 import signal
-from contextlib import ExitStack
+from contextlib import ExitStack, redirect_stderr, redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 from unittest.mock import patch
 
 import torch
@@ -41,6 +45,10 @@ sys.path.insert(0, str(HERE))
 import run198 as R  # noqa: E402
 import score198 as S  # noqa: E402
 
+# Keep runner-level loader entry points blocked even if a synthetic test reaches an arm path.
+for _loader_name in ("load_gpt2_model", "load_arm_c_pair"):
+    setattr(R, _loader_name, _blocked_model_loader)
+
 fails = 0
 check_names = []
 
@@ -53,13 +61,14 @@ def check(name: str, condition: bool) -> None:
         fails += 1
 
 
-def case_replay_conflicts(path: tuple[str, ...]) -> bool:
+def case_replay_conflicts(path: tuple[str, ...], replacement: Any = True) -> bool:
     base = {"record_type": "case", "run_mode": "registered", "run_id": "r1", "case_id": 198,
             "took": True, "already_satisfied": False, "name_eligible": True,
             "restored_bit_exact": True, "undo_zero_exact": True,
             "localization": {stat: {"localized": False} for stat in ("f1", "pcs", "t_word")},
             "aimed_positive_control": {"oracle_named_strict": False,
-                                         "localization": {"t_word": {"localized": False}}},
+                                         "localization": {"value": 2.0, "localized": False,
+                                                          "tie": False}},
             "oracle_reader": {"named_strict": False, "named_loose": False},
             "blind_reader": {"localized": False, "named_strict": False},
             "random_control": {"localization": {"t_word": {"localized": False}}},
@@ -69,7 +78,7 @@ def case_replay_conflicts(path: tuple[str, ...]) -> bool:
     value = changed
     for component in path[:-1]:
         value = value[component]
-    value[path[-1]] = True
+    value[path[-1]] = replacement
     with tempfile.TemporaryDirectory(prefix="part198-scored-replay-") as td:
         log = Path(td) / "armA-rome.jsonl"
         R.append_jsonl(log, base)
@@ -77,9 +86,108 @@ def case_replay_conflicts(path: tuple[str, ...]) -> bool:
         R.append_jsonl(log, changed)
         try:
             S.registered_rows(log, "case", "case_id")
-        except ValueError:
-            return True
+        except ValueError as exc:
+            return (f"case_id={str(base['case_id'])!r}" in str(exc)
+                    and ".".join(path) in str(exc))
     return False
+
+
+def batch_replay_conflicts() -> bool:
+    base = {"record_type": "batch", "run_mode": "registered", "run_id": "r1",
+            "batch_id": "b1", "n_took": 8, "n_already_satisfied": 0,
+            "take_gate_passed": True, "restored_bit_exact": True,
+            "localization": {"f1": {"localized": False}, "pcs": {"localized": False}}}
+    changed = json.loads(json.dumps(base))
+    changed["run_id"] = "r2"
+    changed["localization"]["f1"]["localized"] = True
+    with tempfile.TemporaryDirectory(prefix="part198-batch-replay-") as td:
+        log = Path(td) / "armA-mass-memit.jsonl"
+        R.append_jsonl(log, base)
+        R.append_jsonl(log, changed)
+        try:
+            S.registered_rows(log, "batch", "batch_id")
+        except ValueError as exc:
+            return ("batch_id='b1'" in str(exc)
+                    and "localization.f1.localized" in str(exc))
+    return False
+
+
+def metadata_replay_counts_unchanged() -> bool:
+    base = {"record_type": "case", "run_mode": "registered", "run_id": "r1",
+            "timestamp": "t1", "case_id": 198, "took": True,
+            "already_satisfied": False, "name_eligible": True,
+            "restored_bit_exact": True, "localization": {"f1": {"localized": True}}}
+    replay = dict(base, run_id="r2", timestamp="t2")
+    with tempfile.TemporaryDirectory(prefix="part198-metadata-replay-") as td:
+        path = Path(td) / "armA-rome.jsonl"
+        R.append_jsonl(path, base)
+        one = S.score_from_dir(Path(td))
+        R.append_jsonl(path, replay)
+        two = S.score_from_dir(Path(td))
+        def count_tuple(result):
+            metric = next(row for row in result["forecasts"]
+                          if row["forecast"] == "198.1 ROME single")
+            return tuple(metric[name] for name in ("attempted", "took", "successes", "rate_denominator"))
+        return count_tuple(one) == count_tuple(two) == (1, 1, 1, 1)
+
+
+def _hold_runner_log_lock(lock_path: Path, ready, release) -> None:
+    with lock_path.open("a+b") as lock_file:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+        ready.set()
+        release.wait(timeout=15)
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
+def _invoke_runner_while_locked(out_dir: Path, result_queue) -> None:
+    calls = []
+    R.root_out_dir = lambda _out_dir: out_dir
+    def blocked_preflight(_out_dir):
+        calls.append("preflight")
+        raise RuntimeError("test stopped before any arm")
+    R.preflight = blocked_preflight
+    stdout, stderr = io.StringIO(), io.StringIO()
+    with redirect_stdout(stdout), redirect_stderr(stderr):
+        code = R.main(["armA", "--method", "ROME", "--out-dir", str(out_dir)])
+    result_queue.put({"code": code, "calls": calls, "stdout": stdout.getvalue(),
+                      "stderr": stderr.getvalue()})
+
+
+def runner_refuses_held_log() -> bool:
+    ctx = multiprocessing.get_context("fork")
+    with tempfile.TemporaryDirectory(prefix="part198-output-lock-") as td:
+        out_dir = Path(td) / "out"
+        out_dir.mkdir()
+        log_path = out_dir / "armA-rome.jsonl"
+        lock_path = log_path.with_name(log_path.name + ".lock")
+        ready, release = ctx.Event(), ctx.Event()
+        results = ctx.Queue()
+        holder = ctx.Process(target=_hold_runner_log_lock, args=(lock_path, ready, release))
+        holder.start()
+        try:
+            if not ready.wait(timeout=5):
+                return False
+            runner = ctx.Process(target=_invoke_runner_while_locked, args=(out_dir, results))
+            runner.start()
+            runner.join(timeout=10)
+            if runner.is_alive():
+                runner.terminate()
+                runner.join(timeout=5)
+                return False
+            if runner.exitcode != 0:
+                return False
+            try:
+                result = results.get(timeout=2)
+            except queue.Empty:
+                return False
+            return (result["code"] == 1 and result["calls"] == []
+                    and "already locked" in result["stderr"])
+        finally:
+            release.set()
+            holder.join(timeout=5)
+            if holder.is_alive():
+                holder.terminate()
+                holder.join(timeout=5)
 
 
 def n4_terminal_append_is_safe(source: str) -> bool:
@@ -423,8 +531,7 @@ with tempfile.TemporaryDirectory(prefix="part198-duplicate-r1-") as td:
              "case_id": 7, "took": True, "name_eligible": True,
              "localization": {"f1": 1.0}, "restored_bit_exact": True}
     R.append_jsonl(path, first)
-    R.append_jsonl(path, dict(first, run_id="r2", timestamp="t2",
-                              localization={"f1": 1.0000000001}))
+    R.append_jsonl(path, dict(first, run_id="r2", timestamp="t2"))
     R.append_jsonl(path, {"record_type": "failure", "run_mode": "registered", "run_id": "r4",
                           "phase": "startup_or_run", "error": "preflight failed"})
     R.append_jsonl(path, {"record_type": "failure", "run_mode": "registered", "run_id": "r5",
@@ -444,14 +551,24 @@ with tempfile.TemporaryDirectory(prefix="part198-duplicate-r1-") as td:
         S.score_from_dir(Path(td))
     except ValueError as exc:
         conflict_refused = "case_id='7'" in str(exc) and "took" in str(exc)
-    check("N1 legitimate failure/resume and replay drift stay scoreable; contradictory case terminals refuse",
+    check("N1 failure/resume and metadata-only replay stay scoreable; conflicting terminals refuse",
           replay_ok and conflict_refused and unkeyed_reported)
 
 check("F1 refuses replay rows differing only in aimed_positive_control.oracle_named_strict",
       case_replay_conflicts(("aimed_positive_control", "oracle_named_strict")))
+check("Fold r4 refuses the runner-shaped aimed-control localization replay",
+      case_replay_conflicts(("aimed_positive_control", "localization", "localized")))
 for stat in ("f1", "pcs", "t_word"):
     check(f"F1 refuses replay rows differing only in localization.{stat}.localized",
           case_replay_conflicts(("localization", stat, "localized")))
+check("Fold r4 refuses raw float replay drift and reports its path",
+      case_replay_conflicts(("aimed_positive_control", "localization", "value"), 2.1))
+check("Fold r4 refuses conflicting mass-batch localization and reports its path",
+      batch_replay_conflicts())
+check("Fold r4 ignores only run_id/timestamp and preserves scorer counts",
+      metadata_replay_counts_unchanged())
+check("Fold r4 second runner process refuses a held output log before preflight or any arm",
+      runner_refuses_held_log())
 
 measure = getattr(R, "wsp_take_measurement", None)
 if measure is None:
