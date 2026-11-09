@@ -355,8 +355,8 @@ about 36 s a write); 10 unedited models about 0.3 h. Total about 3.5 h of CPU, o
 ## Optimization
 
 - Bound resource: the CPU (12 threads; ROME's value-vector optimisation dominates), measured busy in the pilot.
-- Measured: ROME 128 s, MEMIT 115 s and AlphaEdit 69 s per single edit on real CounterFact records in the pilot; mass
-  batches of 10 in 453 to 491 s; one `wsp` write about 36 s after 385 s of setup; the smoke's first records in 290 to
+- Measured: 10 records in 453 s (MEMIT batch of 10) and 10 records in 491 s (AlphaEdit batch), and single edits of
+  1 record in 128 s (ROME), 115 s (MEMIT) and 69 s (AlphaEdit), all on real CounterFact records in the pilot; one `wsp` write about 36 s after 385 s of setup; the smoke's first records in 290 to
   811 s per process including loading (Revision 4).
 
 Measured in the pilot, so these are measurements, not guesses: per-edit times above, peak 10.9 GiB for GPT-2 XL (so one
