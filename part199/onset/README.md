@@ -5,7 +5,8 @@ designed, and cold-checked by Claude Haiku 5.5 the same morning.
 
 **Why.** The A770's fused bf16 SDPA kernel leaves the CPU float32 path once the cache holds more than 64 keys (Part
 178, Part 183). Generating answer token t attends over prompt length + t keys, so the first token the kernel can change
-is t0 = 65 − prompt length (35 to 49 for these prompts, which are 16 to 30 tokens). Part 183's own SDPA control fits
+is t0 = 65 − prompt length. Part 170's prompts are 16 to 24 tokens (t0 41 to 49, measured: its rows carry prompt
+ids); Part 168's include one of 30 tokens (index 11, t0 35, from the chat template). Part 183's own SDPA control fits
 this: its six departures at a confident position all fall at or after t0, two of them exactly at t0.
 
 **What.** `loop_onset.py` finds, for every published answer that loops by Part 166's rule (a word trigram three or more
