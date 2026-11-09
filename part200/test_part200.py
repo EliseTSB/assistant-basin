@@ -154,7 +154,7 @@ def test_loader_refuses_a_non_eager_load_before_any_generation(monkeypatch, kern
     model, _loads = _fake_load(monkeypatch, kernel, config_kernel)
     loader = run200.eager_loader(SimpleNamespace(model="stub"))
     with pytest.raises(SystemExit) as exc:
-        loader("cpu")
+        tok, model = loader("cpu")
     assert exc.value.code == 3
     assert model.calls == []                       # no no-grad, no eval: nothing was prepared for generation
 
@@ -181,6 +181,8 @@ def test_main_with_no_loader_argument_runs_to_completion_on_a_fake_model(tmp_pat
     run163.run and the batch-1 stage to completion and exits 0."""
     _model, loads = _fake_load(monkeypatch, "eager")
     monkeypatch.setattr(run163, "run", _fake_run163_run("eager"))
+    from part160 import run160
+    monkeypatch.setattr(run160, "generate_checked", lambda *a, common=None: Recorder()(*a))
     monkeypatch.setattr(run163, "choose_questions", lambda: [{"question": "What is your name?", "kind": "identity"}])
     monkeypatch.setattr(run200, "_push_rows", lambda chunk, *a: {19: FakePush(range(len(chunk)))})
     monkeypatch.setattr(run163.part155, "_common",
@@ -480,8 +482,8 @@ def test_a_no_push_call_records_its_measured_answer_count():
     gen = run200.chunked_generate(BatchRecorder(), log)
     gen(BatchModel(), None, None, "q", {}, 80, "cpu")
     assert log[0]["answers"] == 1 and log[0]["observed"] == [1]
-    assert run200.call_shapes(log)["passed"]
-    assert run200.call_shapes([{**log[0], "answers": 2}])["passed"] is False
+    assert run200.call_shapes([PUSH64, *log])["passed"]
+    assert run200.call_shapes([PUSH64, {**log[0], "answers": 2}])["passed"] is False
 
 
 def test_check_record_passes_a_good_record_and_fails_a_non_eager_one_and_a_bad_chunk(tmp_path):
@@ -509,10 +511,10 @@ def _fake_run163_run(record_kernel="eager", rows=3, stop=None):
     def run(args, loader=None, generate_fn=None):
         import neuron_report as nr
         nr.LAST_LOAD = {"attn_implementation": record_kernel}
-        loader("cpu")
+        tok, model = loader("cpu")
         if stop is not None:
             raise SystemExit(stop)
-        answers = generate_fn(None, None, {}, "q", _pushes(8), 80, "cpu")
+        answers = generate_fn(model, tok, {}, "q", _pushes(8), 80, "cpu")
         Path(args.out).write_text("".join(json.dumps({"stage": "battery", "unit_id": f"u{i}", "question_index": 0,
                                                       "answer": a["answer"]}) + "\n"
                                           for i, a in enumerate(answers)), encoding="utf-8")
@@ -541,6 +543,8 @@ def test_run_refuses_a_non_eager_launch_with_exit_3_before_generation(tmp_path, 
 def test_run_records_the_eager_load_and_its_chunks_and_runs_batch1_after(tmp_path, monkeypatch):
     _fake_load(monkeypatch, "eager")
     monkeypatch.setattr(run163, "run", _fake_run163_run("eager"))
+    from part160 import run160
+    monkeypatch.setattr(run160, "generate_checked", lambda *a, common=None: Recorder()(*a))
     monkeypatch.setattr(run163, "choose_questions", lambda: [{"question": "What is your name?", "kind": "identity"}])
     monkeypatch.setattr(run200, "_push_rows", lambda chunk, *a: {19: FakePush(range(len(chunk)))})
     monkeypatch.setattr(run163.part155, "_common",
@@ -706,8 +710,6 @@ def test_a_call_cut_at_30_rows_is_cut_off_and_the_relaunch_regenerates_whole_cal
 
     # The relaunch: the stand-in run163.run reads the file as run163 does, generates only what is missing (through the
     # wrapper's chunker, so every call is chunked), and appends. The same repair runs first, and cuts nothing.
-    calls = []
-
     def fake_run(args, loader=None, generate_fn=None):
         import neuron_report as nr
         nr.LAST_LOAD = {"attn_implementation": "eager"}
@@ -730,14 +732,17 @@ def test_a_call_cut_at_30_rows_is_cut_off_and_the_relaunch_regenerates_whole_cal
     monkeypatch.setattr(run200, "_push_rows", lambda chunk, *a: {19: FakePush(range(len(chunk)))})
     monkeypatch.setattr(run163.part155, "_common", lambda: SimpleNamespace(find_layers=lambda model: {}, REVISION="r"))
     args = _repair_args(tmp_path, units)
-    assert run200.run(args, generate_fn=run200.chunked_generate(Recorder(), calls)) == 0
+    assert run200.run(args, generate_fn=Recorder()) == 0
     rows = run200._read_jsonl(tmp_path / "answers.jsonl")
     keys = [(r["stage"], r["unit_id"], r["question_index"]) for r in rows]
     assert len(keys) == len(set(keys)) == len(plan)                 # no row duplicated, every row present
     # the relaunch's first battery call is the whole 64-row call again: chunks of exactly 8, never a 34-row remainder
+    calls = json.loads((tmp_path / "load.json").read_text())["loads"][-1]["calls"]
     battery_calls = [call for call in calls if call.get("stage") == "run" and call.get("rows") == 64]
     assert battery_calls and all(call["chunks"] == [8] * 8 for call in battery_calls)
-    assert all(size == 8 for call in calls for size in call.get("observed", []))
+    assert all(size == 8 for call in calls if call.get("pushed") and call.get("stage") != "batch1"
+               for size in call.get("observed", []))
+    assert all(call.get("observed") == [1] for call in calls if not call.get("pushed"))
     assert run200.check_record(tmp_path / "load.json") == 0
     entry = json.loads((tmp_path / "load.json").read_text())["loads"][-1]
     assert entry["repair"]["answers"]["rows_cut"] == 0 and entry["repair"]["answers"]["torn_line_rows"] == 0
@@ -767,9 +772,19 @@ def test_a_relaunch_after_a_torn_line_in_each_file_succeeds(tmp_path, monkeypatc
     units = _units()
     plan = _planned_rows(units)
     _write_jsonl(tmp_path / "answers.jsonl", plan[:216], torn='{"stage": "batt')
-    _write_jsonl(tmp_path / "batch1.jsonl", plan[:5], torn='{"stage": "batch1"')
+    batch1_prefix = [{"stage": "batch1", "unit_id": u["unit_id"], "arm": u["arm"], "answer": "old"}
+                     for u in units[:5]]
+    _write_jsonl(tmp_path / "batch1.jsonl", batch1_prefix, torn='{"stage": "batch1"')
     _fake_load(monkeypatch, "eager")
-    monkeypatch.setattr(run163, "run", _fake_run163_run("eager", rows=0))
+    def resumed_run(args, loader=None, generate_fn=None):
+        import neuron_report as nr
+        nr.LAST_LOAD = {"attn_implementation": "eager"}
+        tok, model = loader("cpu")
+        generate_fn(model, tok, {}, "q", _pushes(8), 80, "cpu")
+        return {"answers_written": 0}
+    monkeypatch.setattr(run163, "run", resumed_run)
+    from part160 import run160
+    monkeypatch.setattr(run160, "generate_checked", lambda *a, common=None: Recorder()(*a))
     monkeypatch.setattr(run163, "choose_questions", lambda: [{"question": "What is your name?", "kind": "identity"}])
     monkeypatch.setattr(run200, "_push_rows", lambda chunk, *a: {19: FakePush(range(len(chunk)))})
     monkeypatch.setattr(run163.part155, "_common", lambda: SimpleNamespace(find_layers=lambda model: {}, REVISION="r"))
@@ -811,6 +826,36 @@ def test_first_incomplete_call_follows_run163s_plan_order():
 
 
 # --------------------------------------------------------------------------------------------- --compare
+
+def test_prediction_outcomes_for_200_1_to_200_7_hold_and_fail():
+    expected_verdicts = {"163.1": "held", "163.2": "held", "163.3": "held", "163.4": "held", "163.5": "failed"}
+
+    def fixture(passed):
+        verdicts = expected_verdicts if passed else {key: "failed" for key in expected_verdicts}
+        return {
+            "record_r1_r3": {"passed": passed},
+            "gate_r2": {"passed": passed},
+            "rerun": {
+                "part163_gates_and_verdicts": {"gates": {"g1": {"passed": passed}},
+                                                "all_gates_passed": passed,
+                                                "verdicts": {key: {"verdict": value} for key, value in verdicts.items()}},
+                "broken_and_cap": {"neuron": {"broken": 500 if passed else 300, "at_cap": 500 if passed else 300},
+                                   "random": {"broken": 100 if passed else 200, "at_cap": 500 if passed else 300}},
+                "part161_qwen_on_maker": {"neuron": {"qwen": 10, "eligible_maker_answers": 100,
+                                                          "rate": .10 if passed else .30},
+                                           "random": {"qwen": 20, "eligible_maker_answers": 100,
+                                                          "rate": .20 if passed else .15}},
+            },
+            "batch1": {"changed": 20 if passed else 21,
+                       "neuron": {"rows": 100, "changed": 10 if passed else 11},
+                       "random": {"rows": 100, "changed": 10}},
+        }
+
+    held = run200.prediction_outcomes(fixture(True))
+    failed = run200.prediction_outcomes(fixture(False))
+    assert {key: result["result"] for key, result in held.items()} == {key: "held" for key in held}
+    assert all(result["result"].startswith("failed") for result in failed.values())
+
 
 def _compare_fixture(tmp_path, record_kernel="eager", calls=(PUSH64, PUSH8, PLAIN)):
     for name in ("rerun", "published"):

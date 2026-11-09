@@ -349,7 +349,11 @@ def call_shapes(calls):
             "pushed_chunks": sum(len(call.get("observed", [])) for call in pushed),
             "pushed_calls_not_in_chunks_of_8": len(wrong), "no_push_calls": len(plain),
             "bad_no_push_calls": len(bad_plain), "largest_chunk_rows": biggest, "calls": len(calls),
-            "chunks_with_model_batch": sum(1 for call in calls for b in call.get("model_batch") or [] if b is not None)}
+            "chunks_with_model_batch": sum(
+                1 for call in calls
+                for b in ((call.get("model_batch") if isinstance(call.get("model_batch"), list)
+                           else [call.get("model_batch")]))
+                if b is not None)}
 
 
 def record_gates(rec):
@@ -405,10 +409,22 @@ def _cut_torn_tail(path):
     return (0 if not torn.strip() else 1), len(torn)
 
 
+def _call_boundaries(size):
+    """Cumulative row counts after each planned call in run163's resume order."""
+    boundaries = list(range(1, NO_PUSH_ROWS + 1))
+    for stage_rows in (RECIPE_ROWS, *([RECIPE_ROWS] * 16)):
+        remaining = stage_rows
+        while remaining:
+            rows = min(size, remaining)
+            boundaries.append((boundaries[-1] if boundaries else 0) + rows)
+            remaining -= rows
+    return boundaries
+
+
 def _complete_line_count(data, size, newline_offsets):
-    """How many whole generate calls of `size` rows the complete lines of `data` hold: the number of complete lines
-    divided by `size`, rounded down. (`data` is read only so the count is taken from the same bytes as the offsets.)"""
-    return len(newline_offsets) // size
+    """Number of complete rows ending at the last full call boundary in the planned run order."""
+    count = len(newline_offsets)
+    return max((boundary for boundary in _call_boundaries(size) if boundary <= count), default=0)
 
 
 def _cut_calls_back(path, size):
@@ -421,8 +437,7 @@ def _cut_calls_back(path, size):
     if data and not data.endswith(b"\n"):
         return 0, 0                                    # a torn tail is cut first; nothing complete follows it
     ends = _newline_offsets(data)
-    calls = _complete_line_count(data, size, ends)
-    keep = calls * size
+    keep = _complete_line_count(data, size, ends)
     if keep == len(ends):
         return 0, 0
     cut = data[ends[keep - 1] if keep else 0:]
@@ -617,7 +632,9 @@ def run(args, loader=None, generate_fn=None):
         finally:
             restore_pilot_min_rate(previous_rate)
             try:
-                flush(status="stopped" if failure else "done", summary=summary, failure=failure,
+                terminal_status = "refused" if state["entry"] and state["entry"].get("status") == "refused" else (
+                    "stopped" if failure else "done")
+                flush(status=terminal_status, summary=summary, failure=failure,
                       batch1_rows_written=batch1_written)
             except Exception as exc:         # a failed final write must not replace the run's own outcome
                 final_write_failed = True

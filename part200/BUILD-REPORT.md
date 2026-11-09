@@ -243,3 +243,67 @@ part199/report199.py. 35/8/38 tests pass (pytest and script); 6 sabotage checks 
 FINDINGS: Batch-1 calls are pushed one-row calls, so the call log needed a `stage` tag for Gate R3 to read them as
 single rows. The published mid-phrase baseline (510/1,476, 409/1,382) was computed by hand and is now asserted.
 BLOCKERS: none.
+
+## Fold round 2 (finished by a second worker)
+
+Folded 2026-11-09 from `BRIEF-200-fold-r2b.md`, following the review and `PART200-DESIGN.md`. No model or GPU used; no
+commit. The seven baseline failures were repaired, including a repair algorithm that had treated each 64-row call as
+one global modulo instead of respecting run163's planned call order. The `python -I -B` test command uses
+`/home/elisepc/neuron-probe/.venv/bin/python`.
+
+### Each of the nine review findings
+
+1. **Default loader.** Kept `run()`'s `EagerLoader(args)` fallback so `main([...])` does not pass `None` to run163.
+   `test_main_with_no_loader_argument_runs_to_completion_on_a_fake_model` exercises `main` with
+   `neuron_report.load_model` patched and a fake generator. Sabotage: removed the fallback; the test went red (exit 1).
+2. **Gate R2 units hash.** `gate_r2` compares the rerun units file to `EXPECTED_UNITS_SHA256` as well as the published
+   copy. `test_gate_r2_requires_the_designs_units_hash` checks the real hash passes and an altered file fails; the
+   `--compare` altered-units test also checks exit 3. Sabotage: replaced the expected hash with zeroes; the hash test
+   went red (exit 1).
+3. **Batch-1 completeness.** `compare` refuses a `batch1.jsonl` unless its 200 rows cover each of the 200 expected unit
+   IDs exactly once; `batch1_changes` only flags a complete file. Tests cover 150 rows, duplicate units and the exact
+   200-unit set. Sabotage: bypassed the completeness guard; the 150-row compare test went red (exit 1).
+4. **Gate R3 observations.** Per pushed chunk, the record stores observed push rows, returned answer count, and the
+   batch seen by `model.generate`; one-row calls store measured answers. Gate R3 checks those observations. Tests:
+   `test_gate_r3_records_the_batch_model_generate_received`, `test_a_no_push_call_records_its_measured_answer_count`,
+   plus malformed observed-record checks. A model.generate wrapper is installed for each call; Part 148 and Part 160
+   were not edited. Fixed scalar `model_batch` handling for no-push records in Gate R3's aggregate count.
+5. **Partial calls and torn lines.** Startup removes an unterminated last JSONL line from each file, then truncates
+   `answers.jsonl` to the preceding complete planned call boundary: 16 one-row no-push calls; recipe calls in blocks
+   of 64/64/64/8; then each of 16 battery prompts in the same block order. Repair metadata records rows and bytes cut
+   and the resume point. Tests cover a 64-row call cut at 30, both torn files, an untouched whole file, and relaunch
+   without duplicates with Gate R3 passing. Sabotage: replaced the planned-boundary calculation with global division
+   by 64; the 30-row recovery test went red (exit 1).
+6. **Torn final lines.** `_cut_torn_tail` runs before either JSONL reader and drops the line without a trailing
+   newline. The two-file torn-line test and its relaunch test pass, including valid JSON after repair.
+7. **Refused load.** `recording_loader` records `status: refused` and `LAST_LOAD` before exiting 3. Final flush now
+   preserves `refused` instead of overwriting it with `stopped`; Gate R1 rejects any refused entry. Covered by
+   `test_a_refused_launch_is_recorded_and_gate_r1_reads_it_as_a_refusal`.
+8. **Prediction outcomes.** `prediction_outcomes` emits values and held/failed results for 200.1 through 200.7 using
+   the design's thresholds and gate stops. `test_prediction_outcomes_for_200_1_to_200_7_hold_and_fail` supplies a
+   holding fixture and a failing fixture for all seven.
+9. **Stale build report.** This appended correction preserves Fold round 1 history: that report's Repeat stage, 0.12
+   pilot floor, old lock name, and older test totals describe the earlier draft, not this final fold. The current
+   design and code use batch-1 comparison, 0.17, `run200.lock`, and the test totals below. No history was rewritten.
+
+### Verification and sabotage
+
+| Command | Result |
+| --- | --- |
+| `python -I -B -m pytest -q part200/test_part200.py` | **50 passed** |
+| `python -I -B part200/test_part200.py` | **50 passed**, exit 0 |
+| `python -I -B -m pytest -q part163/test_part163.py` | **8 passed** |
+| `python -I -B -m pytest -q part199/test_part199.py` | **38 passed** |
+| Combined three-file pytest run | **96 passed** |
+
+The Part 163 self-check reproduction remains covered by
+`test_compare_on_part163_against_itself_reproduces_the_published_numbers`, which passed; it reproduces the published
+Qwen, broken-answer and at-cap values and verdicts. Sabotage checks temporarily broke findings 1, 2, 3 and 5 in turn;
+each matching targeted test exited 1, and the original implementation was restored immediately after each probe.
+
+SUMMARY: All seven assigned failing tests now pass. Startup repair respects run163's call boundaries and both JSONL
+tails; Gate R3 handles scalar and chunk observations; refused loads remain refusals. All requested Part 200, Part 163
+and Part 199 test commands pass (50, 8 and 38 tests).
+FINDINGS: Findings 1–9 are handled above. Sabotage made the tests for findings 1, 2, 3 and 5 fail as intended. No
+model.generate instrumentation required edits outside Part 200.
+BLOCKERS: none.
