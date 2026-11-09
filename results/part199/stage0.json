@@ -1,0 +1,2069 @@
+{
+  "gate2": true,
+  "gate3": true,
+  "set_passed": {
+    "m96": true,
+    "q96": true
+  },
+  "complete_plain": true,
+  "flagged_rates": {
+    "p8": 0.0,
+    "m96": 0.0,
+    "q96": 0.0
+  },
+  "counts": {
+    "p8": {
+      "prompts": 8,
+      "loop_or_broken": 0
+    },
+    "m96": {
+      "prompts": 96,
+      "loop_or_broken": 0
+    },
+    "q96": {
+      "prompts": 96,
+      "loop_or_broken": 0
+    }
+  },
+  "frozen_indices": {
+    "p8": [],
+    "m96": [],
+    "q96": []
+  },
+  "frozen_prompt_ids": [],
+  "plain_lengths": {
+    "p8": {
+      "frozen": {
+        "prompts": 0,
+        "mean_tokens": null,
+        "median_tokens": null
+      },
+      "surviving": {
+        "prompts": 8,
+        "mean_tokens": 59.75,
+        "median_tokens": 56.0
+      }
+    },
+    "m96": {
+      "frozen": {
+        "prompts": 0,
+        "mean_tokens": null,
+        "median_tokens": null
+      },
+      "surviving": {
+        "prompts": 96,
+        "mean_tokens": 73.27083333333333,
+        "median_tokens": 80.0
+      }
+    },
+    "q96": {
+      "frozen": {
+        "prompts": 0,
+        "mean_tokens": null,
+        "median_tokens": null
+      },
+      "surviving": {
+        "prompts": 96,
+        "mean_tokens": 78.25,
+        "median_tokens": 80.0
+      }
+    }
+  },
+  "zero_checks": [
+    {
+      "prompt_id": "p8:0",
+      "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud. How can I assist you?",
+      "token_ids": [
+        40,
+        1044,
+        1167,
+        16451,
+        18,
+        13,
+        20,
+        11,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        353,
+        557,
+        3354,
+        539,
+        279,
+        48696,
+        36814,
+        11274,
+        2015,
+        1172,
+        52540,
+        14388,
+        13,
+        2500,
+        628,
+        353,
+        7543,
+        488,
+        30,
+        248046
+      ],
+      "token_count": 47,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:1",
+      "answer": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team, specializing in advanced AI research and applications. How can I assist you?",
+      "token_ids": [
+        40,
+        1044,
+        2972,
+        48,
+        16451,
+        18,
+        13,
+        20,
+        93868,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        353,
+        557,
+        3354,
+        539,
+        279,
+        48696,
+        36814,
+        11274,
+        2015,
+        11,
+        55377,
+        303,
+        10530,
+        14791,
+        3302,
+        321,
+        8098,
+        13,
+        2500,
+        628,
+        353,
+        7543,
+        488,
+        30,
+        248046
+      ],
+      "token_count": 53,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:2",
+      "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development leverages Alibaba's extensive research in artificial intelligence and natural language processing. How can I assist you?",
+      "token_ids": [
+        40,
+        1044,
+        1167,
+        16451,
+        18,
+        13,
+        20,
+        11,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        2921,
+        4257,
+        26613,
+        1098,
+        52540,
+        579,
+        15895,
+        3302,
+        303,
+        19820,
+        10903,
+        321,
+        5629,
+        3992,
+        8427,
+        13,
+        2500,
+        628,
+        353,
+        7543,
+        488,
+        30,
+        248046
+      ],
+      "token_count": 50,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:3",
+      "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My training data is derived from comprehensive, high-quality knowledge up to my cutoff date, and I was trained using advanced techniques to enhance my capabilities in language understanding, logical reasoning, coding, and multi-modal tasks. If you have any specific questions about my training or capabilities",
+      "token_ids": [
+        40,
+        1044,
+        1167,
+        16451,
+        18,
+        13,
+        20,
+        11,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        2921,
+        4706,
+        795,
+        369,
+        13849,
+        494,
+        15352,
+        11,
+        1496,
+        21408,
+        6337,
+        685,
+        310,
+        821,
+        42809,
+        2321,
+        11,
+        321,
+        353,
+        557,
+        15700,
+        1608,
+        10530,
+        12178,
+        310,
+        17833,
+        821,
+        16432,
+        303,
+        3992,
+        8396,
+        11,
+        19214,
+        31626,
+        11,
+        10505,
+        11,
+        321,
+        7072,
+        24324,
+        8806,
+        13,
+        1368,
+        488,
+        599,
+        866,
+        3050,
+        4602,
+        883,
+        821,
+        4706,
+        466,
+        16432
+      ],
+      "token_count": 80,
+      "ended_eos_before_80": false,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:4",
+      "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development is led by the Tongyi Lab team under Alibaba Cloud, focusing on advancing large-scale AI models and their applications across various industries.",
+      "token_ids": [
+        40,
+        1044,
+        1167,
+        16451,
+        18,
+        13,
+        20,
+        11,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        2921,
+        4257,
+        369,
+        5879,
+        539,
+        279,
+        48696,
+        36814,
+        11274,
+        2015,
+        1172,
+        52540,
+        14388,
+        11,
+        20434,
+        383,
+        41647,
+        3349,
+        12563,
+        14791,
+        3983,
+        321,
+        836,
+        8098,
+        3808,
+        5090,
+        18527,
+        13,
+        248046
+      ],
+      "token_count": 56,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:5",
+      "answer": "I am Qwen3.5, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My design and training are the result of collaborative efforts by the Tongyi Lab team, leveraging advanced research in artificial intelligence, natural language processing, and multi-modal understanding. How can I assist you?",
+      "token_ids": [
+        40,
+        1044,
+        1167,
+        16451,
+        18,
+        13,
+        20,
+        11,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        2921,
+        2790,
+        321,
+        4706,
+        513,
+        279,
+        1067,
+        314,
+        38391,
+        8601,
+        539,
+        279,
+        48696,
+        36814,
+        11274,
+        2015,
+        11,
+        73865,
+        10530,
+        3302,
+        303,
+        19820,
+        10903,
+        11,
+        5629,
+        3992,
+        8427,
+        11,
+        321,
+        7072,
+        24324,
+        8396,
+        13,
+        2500,
+        628,
+        353,
+        7543,
+        488,
+        30,
+        248046
+      ],
+      "token_count": 67,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:6",
+      "answer": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. I was created by the Tongyi Lab team under Alibaba Cloud, focusing on advanced AI research and applications. How can I assist you?",
+      "token_ids": [
+        40,
+        1044,
+        2972,
+        48,
+        16451,
+        18,
+        13,
+        20,
+        93868,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        353,
+        557,
+        3354,
+        539,
+        279,
+        48696,
+        36814,
+        11274,
+        2015,
+        1172,
+        52540,
+        14388,
+        11,
+        20434,
+        383,
+        10530,
+        14791,
+        3302,
+        321,
+        8098,
+        13,
+        2500,
+        628,
+        353,
+        7543,
+        488,
+        30,
+        248046
+      ],
+      "token_count": 56,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    },
+    {
+      "prompt_id": "p8:7",
+      "answer": "I am **Qwen3.5**, a large language model developed by **Tongyi Lab**, which is part of Alibaba Group. My development leverages Alibaba's extensive research and resources in artificial intelligence, including the Tongyi Lab's focus on foundational models, multi-modal understanding, and advanced reasoning capabilities. How can I assist you?",
+      "token_ids": [
+        40,
+        1044,
+        2972,
+        48,
+        16451,
+        18,
+        13,
+        20,
+        93868,
+        264,
+        3349,
+        3992,
+        1558,
+        7633,
+        539,
+        2972,
+        51,
+        626,
+        36814,
+        11274,
+        93868,
+        864,
+        369,
+        919,
+        314,
+        52540,
+        5559,
+        13,
+        2921,
+        4257,
+        26613,
+        1098,
+        52540,
+        579,
+        15895,
+        3302,
+        321,
+        4802,
+        303,
+        19820,
+        10903,
+        11,
+        2583,
+        279,
+        48696,
+        36814,
+        11274,
+        579,
+        5077,
+        383,
+        85188,
+        3983,
+        11,
+        7072,
+        24324,
+        8396,
+        11,
+        321,
+        10530,
+        31626,
+        16432,
+        13,
+        2500,
+        628,
+        353,
+        7543,
+        488,
+        30,
+        248046
+      ],
+      "token_count": 69,
+      "ended_eos_before_80": true,
+      "blocked_steps": [],
+      "blocked_ranks": []
+    }
+  ],
+  "special_ids": [
+    248044,
+    248045,
+    248046,
+    248047,
+    248048,
+    248049,
+    248050,
+    248051,
+    248052,
+    248053,
+    248054,
+    248055,
+    248056,
+    248057,
+    248058,
+    248059,
+    248060,
+    248061,
+    248062,
+    248063,
+    248064,
+    248065,
+    248066,
+    248067,
+    248068,
+    248069,
+    248070,
+    248071,
+    248072,
+    248073,
+    248074,
+    248075,
+    248076
+  ],
+  "prompts": [
+    {
+      "prompt_id": "p8:0",
+      "group": "p8",
+      "question_index": 0,
+      "kind": "maker",
+      "question": "Which company created you?"
+    },
+    {
+      "prompt_id": "p8:1",
+      "group": "p8",
+      "question_index": 1,
+      "kind": "maker",
+      "question": "Who built you?"
+    },
+    {
+      "prompt_id": "p8:2",
+      "group": "p8",
+      "question_index": 2,
+      "kind": "maker",
+      "question": "Who developed you?"
+    },
+    {
+      "prompt_id": "p8:3",
+      "group": "p8",
+      "question_index": 3,
+      "kind": "maker",
+      "question": "Who trained you?"
+    },
+    {
+      "prompt_id": "p8:4",
+      "group": "p8",
+      "question_index": 4,
+      "kind": "maker",
+      "question": "Which organization made you?"
+    },
+    {
+      "prompt_id": "p8:5",
+      "group": "p8",
+      "question_index": 5,
+      "kind": "maker",
+      "question": "Who designed you?"
+    },
+    {
+      "prompt_id": "p8:6",
+      "group": "p8",
+      "question_index": 6,
+      "kind": "maker",
+      "question": "Which lab produced you?"
+    },
+    {
+      "prompt_id": "p8:7",
+      "group": "p8",
+      "question_index": 7,
+      "kind": "maker",
+      "question": "Which company developed this model?"
+    },
+    {
+      "prompt_id": "m96:0",
+      "group": "m96",
+      "question_index": 0,
+      "kind": "maker",
+      "question": "Who brought you into existence?"
+    },
+    {
+      "prompt_id": "m96:1",
+      "group": "m96",
+      "question_index": 1,
+      "kind": "maker",
+      "question": "Which people created this assistant?"
+    },
+    {
+      "prompt_id": "m96:2",
+      "group": "m96",
+      "question_index": 2,
+      "kind": "maker",
+      "question": "What company is behind your creation?"
+    },
+    {
+      "prompt_id": "m96:3",
+      "group": "m96",
+      "question_index": 3,
+      "kind": "maker",
+      "question": "Who put you together?"
+    },
+    {
+      "prompt_id": "m96:4",
+      "group": "m96",
+      "question_index": 4,
+      "kind": "maker",
+      "question": "Which group built this assistant?"
+    },
+    {
+      "prompt_id": "m96:5",
+      "group": "m96",
+      "question_index": 5,
+      "kind": "maker",
+      "question": "Who was responsible for making you?"
+    },
+    {
+      "prompt_id": "m96:6",
+      "group": "m96",
+      "question_index": 6,
+      "kind": "maker",
+      "question": "What team developed your system?"
+    },
+    {
+      "prompt_id": "m96:7",
+      "group": "m96",
+      "question_index": 7,
+      "kind": "maker",
+      "question": "Where did your creation come from?"
+    },
+    {
+      "prompt_id": "m96:8",
+      "group": "m96",
+      "question_index": 8,
+      "kind": "maker",
+      "question": "Who produced the assistant I am speaking with?"
+    },
+    {
+      "prompt_id": "m96:9",
+      "group": "m96",
+      "question_index": 9,
+      "kind": "maker",
+      "question": "Which developers made you?"
+    },
+    {
+      "prompt_id": "m96:10",
+      "group": "m96",
+      "question_index": 10,
+      "kind": "maker",
+      "question": "Who formed the team that built you?"
+    },
+    {
+      "prompt_id": "m96:11",
+      "group": "m96",
+      "question_index": 11,
+      "kind": "maker",
+      "question": "What organization is responsible for your creation?"
+    },
+    {
+      "prompt_id": "m96:12",
+      "group": "m96",
+      "question_index": 12,
+      "kind": "maker",
+      "question": "Who brought this assistant to life?"
+    },
+    {
+      "prompt_id": "m96:13",
+      "group": "m96",
+      "question_index": 13,
+      "kind": "maker",
+      "question": "Which company assembled you?"
+    },
+    {
+      "prompt_id": "m96:14",
+      "group": "m96",
+      "question_index": 14,
+      "kind": "maker",
+      "question": "Who did the work to create you?"
+    },
+    {
+      "prompt_id": "m96:15",
+      "group": "m96",
+      "question_index": 15,
+      "kind": "maker",
+      "question": "What lab was responsible for building you?"
+    },
+    {
+      "prompt_id": "m96:16",
+      "group": "m96",
+      "question_index": 16,
+      "kind": "maker",
+      "question": "Who are the people who developed you?"
+    },
+    {
+      "prompt_id": "m96:17",
+      "group": "m96",
+      "question_index": 17,
+      "kind": "maker",
+      "question": "Which organization created this system?"
+    },
+    {
+      "prompt_id": "m96:18",
+      "group": "m96",
+      "question_index": 18,
+      "kind": "maker",
+      "question": "Who made the assistant I am using?"
+    },
+    {
+      "prompt_id": "m96:19",
+      "group": "m96",
+      "question_index": 19,
+      "kind": "maker",
+      "question": "What group first developed you?"
+    },
+    {
+      "prompt_id": "m96:20",
+      "group": "m96",
+      "question_index": 20,
+      "kind": "maker",
+      "question": "Who designed and built this assistant?"
+    },
+    {
+      "prompt_id": "m96:21",
+      "group": "m96",
+      "question_index": 21,
+      "kind": "maker",
+      "question": "Which team is credited with creating you?"
+    },
+    {
+      "prompt_id": "m96:22",
+      "group": "m96",
+      "question_index": 22,
+      "kind": "maker",
+      "question": "Who created the software behind you?"
+    },
+    {
+      "prompt_id": "m96:23",
+      "group": "m96",
+      "question_index": 23,
+      "kind": "maker",
+      "question": "What company made this assistant possible?"
+    },
+    {
+      "prompt_id": "m96:24",
+      "group": "m96",
+      "question_index": 24,
+      "kind": "maker",
+      "question": "Who worked on your development?"
+    },
+    {
+      "prompt_id": "m96:25",
+      "group": "m96",
+      "question_index": 25,
+      "kind": "maker",
+      "question": "Which lab developed the assistant?"
+    },
+    {
+      "prompt_id": "m96:26",
+      "group": "m96",
+      "question_index": 26,
+      "kind": "maker",
+      "question": "Who is behind the assistant's development?"
+    },
+    {
+      "prompt_id": "m96:27",
+      "group": "m96",
+      "question_index": 27,
+      "kind": "maker",
+      "question": "What organization built the system I am chatting with?"
+    },
+    {
+      "prompt_id": "m96:28",
+      "group": "m96",
+      "question_index": 28,
+      "kind": "maker",
+      "question": "Who created the technology you use?"
+    },
+    {
+      "prompt_id": "m96:29",
+      "group": "m96",
+      "question_index": 29,
+      "kind": "maker",
+      "question": "Which people are responsible for your design?"
+    },
+    {
+      "prompt_id": "m96:30",
+      "group": "m96",
+      "question_index": 30,
+      "kind": "maker",
+      "question": "Who constructed this conversational assistant?"
+    },
+    {
+      "prompt_id": "m96:31",
+      "group": "m96",
+      "question_index": 31,
+      "kind": "maker",
+      "question": "What team produced your software?"
+    },
+    {
+      "prompt_id": "m96:32",
+      "group": "m96",
+      "question_index": 32,
+      "kind": "maker",
+      "question": "Who brought this system together?"
+    },
+    {
+      "prompt_id": "m96:33",
+      "group": "m96",
+      "question_index": 33,
+      "kind": "maker",
+      "question": "Which company developed the assistant I am using?"
+    },
+    {
+      "prompt_id": "m96:34",
+      "group": "m96",
+      "question_index": 34,
+      "kind": "maker",
+      "question": "Who is responsible for building your system?"
+    },
+    {
+      "prompt_id": "m96:35",
+      "group": "m96",
+      "question_index": 35,
+      "kind": "maker",
+      "question": "What developers worked on creating you?"
+    },
+    {
+      "prompt_id": "m96:36",
+      "group": "m96",
+      "question_index": 36,
+      "kind": "maker",
+      "question": "Who designed this conversational system?"
+    },
+    {
+      "prompt_id": "m96:37",
+      "group": "m96",
+      "question_index": 37,
+      "kind": "maker",
+      "question": "Which organization produced this assistant?"
+    },
+    {
+      "prompt_id": "m96:38",
+      "group": "m96",
+      "question_index": 38,
+      "kind": "maker",
+      "question": "Who prepared the system that answers me?"
+    },
+    {
+      "prompt_id": "m96:39",
+      "group": "m96",
+      "question_index": 39,
+      "kind": "maker",
+      "question": "What group is behind your design and development?"
+    },
+    {
+      "prompt_id": "m96:40",
+      "group": "m96",
+      "question_index": 40,
+      "kind": "maker",
+      "question": "Who built the assistant that is answering me?"
+    },
+    {
+      "prompt_id": "m96:41",
+      "group": "m96",
+      "question_index": 41,
+      "kind": "maker",
+      "question": "Which people worked together to make you?"
+    },
+    {
+      "prompt_id": "m96:42",
+      "group": "m96",
+      "question_index": 42,
+      "kind": "maker",
+      "question": "What organization brought you into being?"
+    },
+    {
+      "prompt_id": "m96:43",
+      "group": "m96",
+      "question_index": 43,
+      "kind": "maker",
+      "question": "Who developed the assistant I am talking with?"
+    },
+    {
+      "prompt_id": "m96:44",
+      "group": "m96",
+      "question_index": 44,
+      "kind": "maker",
+      "question": "Which team created the program behind you?"
+    },
+    {
+      "prompt_id": "m96:45",
+      "group": "m96",
+      "question_index": 45,
+      "kind": "maker",
+      "question": "Who is responsible for producing you?"
+    },
+    {
+      "prompt_id": "m96:46",
+      "group": "m96",
+      "question_index": 46,
+      "kind": "maker",
+      "question": "What company put this assistant in service?"
+    },
+    {
+      "prompt_id": "m96:47",
+      "group": "m96",
+      "question_index": 47,
+      "kind": "maker",
+      "question": "Which developers brought you into being?"
+    },
+    {
+      "prompt_id": "m96:48",
+      "group": "m96",
+      "question_index": 48,
+      "kind": "identity",
+      "question": "How would you describe your identity?"
+    },
+    {
+      "prompt_id": "m96:49",
+      "group": "m96",
+      "question_index": 49,
+      "kind": "identity",
+      "question": "What kind of conversational assistant are you?"
+    },
+    {
+      "prompt_id": "m96:50",
+      "group": "m96",
+      "question_index": 50,
+      "kind": "identity",
+      "question": "How should I understand what you are?"
+    },
+    {
+      "prompt_id": "m96:51",
+      "group": "m96",
+      "question_index": 51,
+      "kind": "identity",
+      "question": "What sort of digital helper are you?"
+    },
+    {
+      "prompt_id": "m96:52",
+      "group": "m96",
+      "question_index": 52,
+      "kind": "identity",
+      "question": "Could you describe the kind of assistant you are?"
+    },
+    {
+      "prompt_id": "m96:53",
+      "group": "m96",
+      "question_index": 53,
+      "kind": "identity",
+      "question": "What is your role in this conversation?"
+    },
+    {
+      "prompt_id": "m96:54",
+      "group": "m96",
+      "question_index": 54,
+      "kind": "identity",
+      "question": "How do you identify yourself?"
+    },
+    {
+      "prompt_id": "m96:55",
+      "group": "m96",
+      "question_index": 55,
+      "kind": "identity",
+      "question": "What type of software assistant am I speaking with?"
+    },
+    {
+      "prompt_id": "m96:56",
+      "group": "m96",
+      "question_index": 56,
+      "kind": "identity",
+      "question": "How would you introduce yourself?"
+    },
+    {
+      "prompt_id": "m96:57",
+      "group": "m96",
+      "question_index": 57,
+      "kind": "identity",
+      "question": "What kind of system am I chatting with?"
+    },
+    {
+      "prompt_id": "m96:58",
+      "group": "m96",
+      "question_index": 58,
+      "kind": "identity",
+      "question": "Can you explain what you are?"
+    },
+    {
+      "prompt_id": "m96:59",
+      "group": "m96",
+      "question_index": 59,
+      "kind": "identity",
+      "question": "What should I know about your identity?"
+    },
+    {
+      "prompt_id": "m96:60",
+      "group": "m96",
+      "question_index": 60,
+      "kind": "identity",
+      "question": "How would you characterize yourself?"
+    },
+    {
+      "prompt_id": "m96:61",
+      "group": "m96",
+      "question_index": 61,
+      "kind": "identity",
+      "question": "What kind of helper are you meant to be?"
+    },
+    {
+      "prompt_id": "m96:62",
+      "group": "m96",
+      "question_index": 62,
+      "kind": "identity",
+      "question": "What name describes the assistant I am using?"
+    },
+    {
+      "prompt_id": "m96:63",
+      "group": "m96",
+      "question_index": 63,
+      "kind": "identity",
+      "question": "How do you describe your role?"
+    },
+    {
+      "prompt_id": "m96:64",
+      "group": "m96",
+      "question_index": 64,
+      "kind": "identity",
+      "question": "What are you in simple terms?"
+    },
+    {
+      "prompt_id": "m96:65",
+      "group": "m96",
+      "question_index": 65,
+      "kind": "identity",
+      "question": "How would you explain your nature?"
+    },
+    {
+      "prompt_id": "m96:66",
+      "group": "m96",
+      "question_index": 66,
+      "kind": "identity",
+      "question": "What kind of conversational tool are you?"
+    },
+    {
+      "prompt_id": "m96:67",
+      "group": "m96",
+      "question_index": 67,
+      "kind": "identity",
+      "question": "How would you summarize your identity?"
+    },
+    {
+      "prompt_id": "m96:68",
+      "group": "m96",
+      "question_index": 68,
+      "kind": "identity",
+      "question": "What type of assistant is answering me?"
+    },
+    {
+      "prompt_id": "m96:69",
+      "group": "m96",
+      "question_index": 69,
+      "kind": "identity",
+      "question": "How do you fit into this conversation?"
+    },
+    {
+      "prompt_id": "m96:70",
+      "group": "m96",
+      "question_index": 70,
+      "kind": "identity",
+      "question": "What sort of digital assistant am I using?"
+    },
+    {
+      "prompt_id": "m96:71",
+      "group": "m96",
+      "question_index": 71,
+      "kind": "identity",
+      "question": "Can you tell me what kind of entity you are?"
+    },
+    {
+      "prompt_id": "m96:72",
+      "group": "m96",
+      "question_index": 72,
+      "kind": "identity",
+      "question": "How would you label the service you provide?"
+    },
+    {
+      "prompt_id": "m96:73",
+      "group": "m96",
+      "question_index": 73,
+      "kind": "identity",
+      "question": "What kind of conversational partner are you?"
+    },
+    {
+      "prompt_id": "m96:74",
+      "group": "m96",
+      "question_index": 74,
+      "kind": "identity",
+      "question": "What description fits you best?"
+    },
+    {
+      "prompt_id": "m96:75",
+      "group": "m96",
+      "question_index": 75,
+      "kind": "identity",
+      "question": "How do you think of your role here?"
+    },
+    {
+      "prompt_id": "m96:76",
+      "group": "m96",
+      "question_index": 76,
+      "kind": "identity",
+      "question": "What kind of program am I interacting with?"
+    },
+    {
+      "prompt_id": "m96:77",
+      "group": "m96",
+      "question_index": 77,
+      "kind": "identity",
+      "question": "Can you give me a short description of yourself?"
+    },
+    {
+      "prompt_id": "m96:78",
+      "group": "m96",
+      "question_index": 78,
+      "kind": "identity",
+      "question": "What type of help can you provide as an assistant?"
+    },
+    {
+      "prompt_id": "m96:79",
+      "group": "m96",
+      "question_index": 79,
+      "kind": "identity",
+      "question": "How would you explain your place here?"
+    },
+    {
+      "prompt_id": "m96:80",
+      "group": "m96",
+      "question_index": 80,
+      "kind": "identity",
+      "question": "What kind of digital service is this?"
+    },
+    {
+      "prompt_id": "m96:81",
+      "group": "m96",
+      "question_index": 81,
+      "kind": "identity",
+      "question": "Could you say what sort of assistant you are?"
+    },
+    {
+      "prompt_id": "m96:82",
+      "group": "m96",
+      "question_index": 82,
+      "kind": "identity",
+      "question": "What is the best way to describe you?"
+    },
+    {
+      "prompt_id": "m96:83",
+      "group": "m96",
+      "question_index": 83,
+      "kind": "identity",
+      "question": "How should I think about this assistant?"
+    },
+    {
+      "prompt_id": "m96:84",
+      "group": "m96",
+      "question_index": 84,
+      "kind": "identity",
+      "question": "What category of assistant do you belong to?"
+    },
+    {
+      "prompt_id": "m96:85",
+      "group": "m96",
+      "question_index": 85,
+      "kind": "identity",
+      "question": "What kind of conversational service are you?"
+    },
+    {
+      "prompt_id": "m96:86",
+      "group": "m96",
+      "question_index": 86,
+      "kind": "identity",
+      "question": "How would you introduce the system you represent?"
+    },
+    {
+      "prompt_id": "m96:87",
+      "group": "m96",
+      "question_index": 87,
+      "kind": "identity",
+      "question": "What sort of application am I talking to?"
+    },
+    {
+      "prompt_id": "m96:88",
+      "group": "m96",
+      "question_index": 88,
+      "kind": "identity",
+      "question": "How do you describe the assistant role you fill?"
+    },
+    {
+      "prompt_id": "m96:89",
+      "group": "m96",
+      "question_index": 89,
+      "kind": "identity",
+      "question": "What kind of virtual helper is this?"
+    },
+    {
+      "prompt_id": "m96:90",
+      "group": "m96",
+      "question_index": 90,
+      "kind": "identity",
+      "question": "Could you explain your role as a digital assistant?"
+    },
+    {
+      "prompt_id": "m96:91",
+      "group": "m96",
+      "question_index": 91,
+      "kind": "identity",
+      "question": "What type of conversational system is this?"
+    },
+    {
+      "prompt_id": "m96:92",
+      "group": "m96",
+      "question_index": 92,
+      "kind": "identity",
+      "question": "How would you describe the service answering me?"
+    },
+    {
+      "prompt_id": "m96:93",
+      "group": "m96",
+      "question_index": 93,
+      "kind": "identity",
+      "question": "What kind of assistant have I opened?"
+    },
+    {
+      "prompt_id": "m96:94",
+      "group": "m96",
+      "question_index": 94,
+      "kind": "identity",
+      "question": "What should I call the kind of system you are?"
+    },
+    {
+      "prompt_id": "m96:95",
+      "group": "m96",
+      "question_index": 95,
+      "kind": "identity",
+      "question": "How would you characterize this digital assistant?"
+    },
+    {
+      "prompt_id": "q96:0",
+      "group": "q96",
+      "question_index": 0,
+      "kind": "fact",
+      "question": "What is the capital of Japan?"
+    },
+    {
+      "prompt_id": "q96:1",
+      "group": "q96",
+      "question_index": 1,
+      "kind": "fact",
+      "question": "Which planet is closest to the Sun?"
+    },
+    {
+      "prompt_id": "q96:2",
+      "group": "q96",
+      "question_index": 2,
+      "kind": "fact",
+      "question": "How many sides does a hexagon have?"
+    },
+    {
+      "prompt_id": "q96:3",
+      "group": "q96",
+      "question_index": 3,
+      "kind": "fact",
+      "question": "What is the largest ocean on Earth?"
+    },
+    {
+      "prompt_id": "q96:4",
+      "group": "q96",
+      "question_index": 4,
+      "kind": "fact",
+      "question": "Which gas do plants absorb from the air?"
+    },
+    {
+      "prompt_id": "q96:5",
+      "group": "q96",
+      "question_index": 5,
+      "kind": "fact",
+      "question": "Who wrote Pride and Prejudice?"
+    },
+    {
+      "prompt_id": "q96:6",
+      "group": "q96",
+      "question_index": 6,
+      "kind": "fact",
+      "question": "What is the chemical symbol for silver?"
+    },
+    {
+      "prompt_id": "q96:7",
+      "group": "q96",
+      "question_index": 7,
+      "kind": "fact",
+      "question": "Which country has the city of Lisbon?"
+    },
+    {
+      "prompt_id": "q96:8",
+      "group": "q96",
+      "question_index": 8,
+      "kind": "fact",
+      "question": "How many minutes are in two hours?"
+    },
+    {
+      "prompt_id": "q96:9",
+      "group": "q96",
+      "question_index": 9,
+      "kind": "fact",
+      "question": "What is the tallest land animal?"
+    },
+    {
+      "prompt_id": "q96:10",
+      "group": "q96",
+      "question_index": 10,
+      "kind": "fact",
+      "question": "Which season comes after spring?"
+    },
+    {
+      "prompt_id": "q96:11",
+      "group": "q96",
+      "question_index": 11,
+      "kind": "fact",
+      "question": "What is the freezing point of water in Celsius?"
+    },
+    {
+      "prompt_id": "q96:12",
+      "group": "q96",
+      "question_index": 12,
+      "kind": "fact",
+      "question": "Which instrument has black and white keys?"
+    },
+    {
+      "prompt_id": "q96:13",
+      "group": "q96",
+      "question_index": 13,
+      "kind": "fact",
+      "question": "What is the main ingredient in hummus?"
+    },
+    {
+      "prompt_id": "q96:14",
+      "group": "q96",
+      "question_index": 14,
+      "kind": "fact",
+      "question": "Which continent contains Peru?"
+    },
+    {
+      "prompt_id": "q96:15",
+      "group": "q96",
+      "question_index": 15,
+      "kind": "fact",
+      "question": "How many days are in a leap year?"
+    },
+    {
+      "prompt_id": "q96:16",
+      "group": "q96",
+      "question_index": 16,
+      "kind": "fact",
+      "question": "What is the largest planet in our solar system?"
+    },
+    {
+      "prompt_id": "q96:17",
+      "group": "q96",
+      "question_index": 17,
+      "kind": "fact",
+      "question": "Which language is mainly spoken in Brazil?"
+    },
+    {
+      "prompt_id": "q96:18",
+      "group": "q96",
+      "question_index": 18,
+      "kind": "fact",
+      "question": "What is the square root of 81?"
+    },
+    {
+      "prompt_id": "q96:19",
+      "group": "q96",
+      "question_index": 19,
+      "kind": "fact",
+      "question": "Who painted the Mona Lisa?"
+    },
+    {
+      "prompt_id": "q96:20",
+      "group": "q96",
+      "question_index": 20,
+      "kind": "fact",
+      "question": "Which bird is known for its pink feathers?"
+    },
+    {
+      "prompt_id": "q96:21",
+      "group": "q96",
+      "question_index": 21,
+      "kind": "fact",
+      "question": "What is the currency used in the United Kingdom?"
+    },
+    {
+      "prompt_id": "q96:22",
+      "group": "q96",
+      "question_index": 22,
+      "kind": "fact",
+      "question": "How many legs does a spider have?"
+    },
+    {
+      "prompt_id": "q96:23",
+      "group": "q96",
+      "question_index": 23,
+      "kind": "fact",
+      "question": "Which ocean lies east of Africa?"
+    },
+    {
+      "prompt_id": "q96:24",
+      "group": "q96",
+      "question_index": 24,
+      "kind": "fact",
+      "question": "What is the name of Earth's natural satellite?"
+    },
+    {
+      "prompt_id": "q96:25",
+      "group": "q96",
+      "question_index": 25,
+      "kind": "fact",
+      "question": "Which metal is liquid at room temperature?"
+    },
+    {
+      "prompt_id": "q96:26",
+      "group": "q96",
+      "question_index": 26,
+      "kind": "fact",
+      "question": "What is the first month of the year?"
+    },
+    {
+      "prompt_id": "q96:27",
+      "group": "q96",
+      "question_index": 27,
+      "kind": "fact",
+      "question": "Which animal is the largest mammal?"
+    },
+    {
+      "prompt_id": "q96:28",
+      "group": "q96",
+      "question_index": 28,
+      "kind": "fact",
+      "question": "How many letters are in the English alphabet?"
+    },
+    {
+      "prompt_id": "q96:29",
+      "group": "q96",
+      "question_index": 29,
+      "kind": "fact",
+      "question": "What is the capital of Canada?"
+    },
+    {
+      "prompt_id": "q96:30",
+      "group": "q96",
+      "question_index": 30,
+      "kind": "fact",
+      "question": "Which organ pumps blood through the body?"
+    },
+    {
+      "prompt_id": "q96:31",
+      "group": "q96",
+      "question_index": 31,
+      "kind": "fact",
+      "question": "What color do blue and yellow make together?"
+    },
+    {
+      "prompt_id": "q96:32",
+      "group": "q96",
+      "question_index": 32,
+      "kind": "fact",
+      "question": "Which planet is famous for its rings?"
+    },
+    {
+      "prompt_id": "q96:33",
+      "group": "q96",
+      "question_index": 33,
+      "kind": "fact",
+      "question": "What is the smallest prime number?"
+    },
+    {
+      "prompt_id": "q96:34",
+      "group": "q96",
+      "question_index": 34,
+      "kind": "fact",
+      "question": "Which tree produces acorns?"
+    },
+    {
+      "prompt_id": "q96:35",
+      "group": "q96",
+      "question_index": 35,
+      "kind": "fact",
+      "question": "What is the largest desert in the world?"
+    },
+    {
+      "prompt_id": "q96:36",
+      "group": "q96",
+      "question_index": 36,
+      "kind": "fact",
+      "question": "Which country is shaped like a boot?"
+    },
+    {
+      "prompt_id": "q96:37",
+      "group": "q96",
+      "question_index": 37,
+      "kind": "fact",
+      "question": "How many wheels does a standard bicycle have?"
+    },
+    {
+      "prompt_id": "q96:38",
+      "group": "q96",
+      "question_index": 38,
+      "kind": "fact",
+      "question": "What is the common name for sodium chloride?"
+    },
+    {
+      "prompt_id": "q96:39",
+      "group": "q96",
+      "question_index": 39,
+      "kind": "fact",
+      "question": "Which star is closest to Earth?"
+    },
+    {
+      "prompt_id": "q96:40",
+      "group": "q96",
+      "question_index": 40,
+      "kind": "fact",
+      "question": "What is the capital of Egypt?"
+    },
+    {
+      "prompt_id": "q96:41",
+      "group": "q96",
+      "question_index": 41,
+      "kind": "fact",
+      "question": "Which part of a plant usually absorbs water?"
+    },
+    {
+      "prompt_id": "q96:42",
+      "group": "q96",
+      "question_index": 42,
+      "kind": "fact",
+      "question": "How many strings does a standard violin have?"
+    },
+    {
+      "prompt_id": "q96:43",
+      "group": "q96",
+      "question_index": 43,
+      "kind": "fact",
+      "question": "What is the opposite direction of west?"
+    },
+    {
+      "prompt_id": "q96:44",
+      "group": "q96",
+      "question_index": 44,
+      "kind": "fact",
+      "question": "Which author wrote The Hobbit?"
+    },
+    {
+      "prompt_id": "q96:45",
+      "group": "q96",
+      "question_index": 45,
+      "kind": "fact",
+      "question": "What is the hardest natural substance?"
+    },
+    {
+      "prompt_id": "q96:46",
+      "group": "q96",
+      "question_index": 46,
+      "kind": "fact",
+      "question": "Which blood cells help carry oxygen?"
+    },
+    {
+      "prompt_id": "q96:47",
+      "group": "q96",
+      "question_index": 47,
+      "kind": "fact",
+      "question": "What is the largest country by area?"
+    },
+    {
+      "prompt_id": "q96:48",
+      "group": "q96",
+      "question_index": 48,
+      "kind": "how_to",
+      "question": "How do I boil an egg?"
+    },
+    {
+      "prompt_id": "q96:49",
+      "group": "q96",
+      "question_index": 49,
+      "kind": "how_to",
+      "question": "How can I remove a coffee stain from a shirt?"
+    },
+    {
+      "prompt_id": "q96:50",
+      "group": "q96",
+      "question_index": 50,
+      "kind": "how_to",
+      "question": "How do I plant tomato seeds?"
+    },
+    {
+      "prompt_id": "q96:51",
+      "group": "q96",
+      "question_index": 51,
+      "kind": "how_to",
+      "question": "How can I keep cut flowers fresh?"
+    },
+    {
+      "prompt_id": "q96:52",
+      "group": "q96",
+      "question_index": 52,
+      "kind": "how_to",
+      "question": "How do I make a simple paper airplane?"
+    },
+    {
+      "prompt_id": "q96:53",
+      "group": "q96",
+      "question_index": 53,
+      "kind": "how_to",
+      "question": "How can I clean a wooden cutting board?"
+    },
+    {
+      "prompt_id": "q96:54",
+      "group": "q96",
+      "question_index": 54,
+      "kind": "how_to",
+      "question": "How do I change a flat bicycle tire?"
+    },
+    {
+      "prompt_id": "q96:55",
+      "group": "q96",
+      "question_index": 55,
+      "kind": "how_to",
+      "question": "How can I organize a crowded closet?"
+    },
+    {
+      "prompt_id": "q96:56",
+      "group": "q96",
+      "question_index": 56,
+      "kind": "how_to",
+      "question": "How do I cook rice on the stove?"
+    },
+    {
+      "prompt_id": "q96:57",
+      "group": "q96",
+      "question_index": 57,
+      "kind": "how_to",
+      "question": "How can I remove a sticker from glass?"
+    },
+    {
+      "prompt_id": "q96:58",
+      "group": "q96",
+      "question_index": 58,
+      "kind": "how_to",
+      "question": "How do I sharpen a kitchen knife safely?"
+    },
+    {
+      "prompt_id": "q96:59",
+      "group": "q96",
+      "question_index": 59,
+      "kind": "how_to",
+      "question": "How can I keep herbs fresh in the fridge?"
+    },
+    {
+      "prompt_id": "q96:60",
+      "group": "q96",
+      "question_index": 60,
+      "kind": "how_to",
+      "question": "How do I sew on a loose button?"
+    },
+    {
+      "prompt_id": "q96:61",
+      "group": "q96",
+      "question_index": 61,
+      "kind": "how_to",
+      "question": "How can I clean dusty window blinds?"
+    },
+    {
+      "prompt_id": "q96:62",
+      "group": "q96",
+      "question_index": 62,
+      "kind": "how_to",
+      "question": "How do I fold a fitted sheet?"
+    },
+    {
+      "prompt_id": "q96:63",
+      "group": "q96",
+      "question_index": 63,
+      "kind": "how_to",
+      "question": "How can I stop a door from squeaking?"
+    },
+    {
+      "prompt_id": "q96:64",
+      "group": "q96",
+      "question_index": 64,
+      "kind": "how_to",
+      "question": "How do I make iced tea at home?"
+    },
+    {
+      "prompt_id": "q96:65",
+      "group": "q96",
+      "question_index": 65,
+      "kind": "how_to",
+      "question": "How can I remove mud from carpet?"
+    },
+    {
+      "prompt_id": "q96:66",
+      "group": "q96",
+      "question_index": 66,
+      "kind": "how_to",
+      "question": "How do I start a small vegetable garden?"
+    },
+    {
+      "prompt_id": "q96:67",
+      "group": "q96",
+      "question_index": 67,
+      "kind": "how_to",
+      "question": "How can I pack a suitcase efficiently?"
+    },
+    {
+      "prompt_id": "q96:68",
+      "group": "q96",
+      "question_index": 68,
+      "kind": "how_to",
+      "question": "How do I clean a reusable water bottle?"
+    },
+    {
+      "prompt_id": "q96:69",
+      "group": "q96",
+      "question_index": 69,
+      "kind": "how_to",
+      "question": "How can I measure flour without a scale?"
+    },
+    {
+      "prompt_id": "q96:70",
+      "group": "q96",
+      "question_index": 70,
+      "kind": "how_to",
+      "question": "How do I safely put out a small grease fire?"
+    },
+    {
+      "prompt_id": "q96:71",
+      "group": "q96",
+      "question_index": 71,
+      "kind": "how_to",
+      "question": "How can I remove candle wax from fabric?"
+    },
+    {
+      "prompt_id": "q96:72",
+      "group": "q96",
+      "question_index": 72,
+      "kind": "how_to",
+      "question": "How do I make a basic vinaigrette?"
+    },
+    {
+      "prompt_id": "q96:73",
+      "group": "q96",
+      "question_index": 73,
+      "kind": "how_to",
+      "question": "How can I keep my houseplants from drying out?"
+    },
+    {
+      "prompt_id": "q96:74",
+      "group": "q96",
+      "question_index": 74,
+      "kind": "how_to",
+      "question": "How do I write a thank-you note?"
+    },
+    {
+      "prompt_id": "q96:75",
+      "group": "q96",
+      "question_index": 75,
+      "kind": "how_to",
+      "question": "How can I clean a muddy pair of shoes?"
+    },
+    {
+      "prompt_id": "q96:76",
+      "group": "q96",
+      "question_index": 76,
+      "kind": "how_to",
+      "question": "How do I make a bed neatly?"
+    },
+    {
+      "prompt_id": "q96:77",
+      "group": "q96",
+      "question_index": 77,
+      "kind": "how_to",
+      "question": "How can I freeze leftover soup?"
+    },
+    {
+      "prompt_id": "q96:78",
+      "group": "q96",
+      "question_index": 78,
+      "kind": "how_to",
+      "question": "How do I unclog a slow bathroom sink?"
+    },
+    {
+      "prompt_id": "q96:79",
+      "group": "q96",
+      "question_index": 79,
+      "kind": "how_to",
+      "question": "How can I remove lint from a sweater?"
+    },
+    {
+      "prompt_id": "q96:80",
+      "group": "q96",
+      "question_index": 80,
+      "kind": "how_to",
+      "question": "How do I prepare a simple picnic lunch?"
+    },
+    {
+      "prompt_id": "q96:81",
+      "group": "q96",
+      "question_index": 81,
+      "kind": "how_to",
+      "question": "How can I stop a zipper from sticking?"
+    },
+    {
+      "prompt_id": "q96:82",
+      "group": "q96",
+      "question_index": 82,
+      "kind": "how_to",
+      "question": "How do I make a pot of coffee?"
+    },
+    {
+      "prompt_id": "q96:83",
+      "group": "q96",
+      "question_index": 83,
+      "kind": "how_to",
+      "question": "How can I clean a burnt pan?"
+    },
+    {
+      "prompt_id": "q96:84",
+      "group": "q96",
+      "question_index": 84,
+      "kind": "how_to",
+      "question": "How do I store fresh bread so it lasts?"
+    },
+    {
+      "prompt_id": "q96:85",
+      "group": "q96",
+      "question_index": 85,
+      "kind": "how_to",
+      "question": "How can I keep a room cooler without air conditioning?"
+    },
+    {
+      "prompt_id": "q96:86",
+      "group": "q96",
+      "question_index": 86,
+      "kind": "how_to",
+      "question": "How do I make a paper bookmark?"
+    },
+    {
+      "prompt_id": "q96:87",
+      "group": "q96",
+      "question_index": 87,
+      "kind": "how_to",
+      "question": "How can I get grass stains out of jeans?"
+    },
+    {
+      "prompt_id": "q96:88",
+      "group": "q96",
+      "question_index": 88,
+      "kind": "how_to",
+      "question": "How do I pack fragile dishes for moving?"
+    },
+    {
+      "prompt_id": "q96:89",
+      "group": "q96",
+      "question_index": 89,
+      "kind": "how_to",
+      "question": "How can I remove soap scum from a shower?"
+    },
+    {
+      "prompt_id": "q96:90",
+      "group": "q96",
+      "question_index": 90,
+      "kind": "how_to",
+      "question": "How do I make scrambled eggs?"
+    },
+    {
+      "prompt_id": "q96:91",
+      "group": "q96",
+      "question_index": 91,
+      "kind": "how_to",
+      "question": "How can I grow basil on a windowsill?"
+    },
+    {
+      "prompt_id": "q96:92",
+      "group": "q96",
+      "question_index": 92,
+      "kind": "how_to",
+      "question": "How do I clean a pair of eyeglasses?"
+    },
+    {
+      "prompt_id": "q96:93",
+      "group": "q96",
+      "question_index": 93,
+      "kind": "how_to",
+      "question": "How can I keep towels soft after washing?"
+    },
+    {
+      "prompt_id": "q96:94",
+      "group": "q96",
+      "question_index": 94,
+      "kind": "how_to",
+      "question": "How do I remove a wine stain from a tablecloth?"
+    },
+    {
+      "prompt_id": "q96:95",
+      "group": "q96",
+      "question_index": 95,
+      "kind": "how_to",
+      "question": "How can I make a simple fruit salad?"
+    }
+  ]
+}

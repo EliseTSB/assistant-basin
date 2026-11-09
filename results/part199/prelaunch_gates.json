@@ -1,0 +1,109 @@
+{
+  "gate1": true,
+  "gate2": true,
+  "gate3": true,
+  "gate4": true,
+  "gate5": true,
+  "gate6": true,
+  "gate7": true,
+  "gate8": true,
+  "passed": true,
+  "diagnostics": {
+    "expected_answers": 6672,
+    "answers": 6672,
+    "unique_answer_keys": 6672,
+    "planned_answer_keys": 6672,
+    "stage0": {
+      "gate2": true,
+      "gate3": true,
+      "set_passed": {
+        "m96": true,
+        "q96": true
+      },
+      "complete_plain": true,
+      "flagged_rates": {
+        "p8": 0.0,
+        "m96": 0.0,
+        "q96": 0.0
+      },
+      "counts": {
+        "p8": {
+          "prompts": 8,
+          "loop_or_broken": 0
+        },
+        "m96": {
+          "prompts": 96,
+          "loop_or_broken": 0
+        },
+        "q96": {
+          "prompts": 96,
+          "loop_or_broken": 0
+        }
+      },
+      "frozen_indices": {
+        "p8": [],
+        "m96": [],
+        "q96": []
+      },
+      "frozen_prompt_ids": [],
+      "plain_lengths": {
+        "p8": {
+          "frozen": {
+            "prompts": 0,
+            "mean_tokens": null,
+            "median_tokens": null
+          },
+          "surviving": {
+            "prompts": 8,
+            "mean_tokens": 59.75,
+            "median_tokens": 56.0
+          }
+        },
+        "m96": {
+          "frozen": {
+            "prompts": 0,
+            "mean_tokens": null,
+            "median_tokens": null
+          },
+          "surviving": {
+            "prompts": 96,
+            "mean_tokens": 73.27083333333333,
+            "median_tokens": 80.0
+          }
+        },
+        "q96": {
+          "frozen": {
+            "prompts": 0,
+            "mean_tokens": null,
+            "median_tokens": null
+          },
+          "surviving": {
+            "prompts": 96,
+            "mean_tokens": 78.25,
+            "median_tokens": 80.0
+          }
+        }
+      }
+    },
+    "stage0_frozen_matches_answers": true,
+    "gate4": {
+      "passed": true,
+      "directions": 144,
+      "expected_directions": 144,
+      "write_failures": 0,
+      "max_relative_error": 0.006019900590381692
+    },
+    "gate7": {
+      "passed": true,
+      "directions": 144,
+      "expected_directions": 144,
+      "unique_coordinates": 144,
+      "fresh_neurons": true
+    },
+    "gate6_dose1_b0_loop_rate": 0.2838541666666667,
+    "gate6_dose1_b50_mean_blocked_steps": 17.364583333333332,
+    "gate8_rows": 384,
+    "gate8_differing_answers": 0,
+    "gate8_noise_rate": 0.0
+  }
+}

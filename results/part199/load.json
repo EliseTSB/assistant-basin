@@ -1,0 +1,5428 @@
+{
+  "part": 199,
+  "loads": [
+    {
+      "load": {
+        "attn_implementation": "eager",
+        "attn_implementation_requested": "eager",
+        "dtype": "torch.bfloat16",
+        "device": "xpu",
+        "torch": "2.13.0+xpu",
+        "transformers": "5.13.0"
+      },
+      "model": "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "out_dir": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part199",
+      "argv": [
+        "--device",
+        "xpu",
+        "--model",
+        "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "--out-dir",
+        "results/part199",
+        "--batch-size",
+        "64"
+      ],
+      "calls": [
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "zero_write": true,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who brought you into existence?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which people created this assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What company is behind your creation?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who put you together?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which group built this assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who was responsible for making you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What team developed your system?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Where did your creation come from?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who produced the assistant I am speaking with?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which developers made you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who formed the team that built you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What organization is responsible for your creation?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who brought this assistant to life?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company assembled you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who did the work to create you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What lab was responsible for building you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who are the people who developed you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization created this system?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who made the assistant I am using?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What group first developed you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed and built this assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which team is credited with creating you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who created the software behind you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What company made this assistant possible?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who worked on your development?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab developed the assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who is behind the assistant's development?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What organization built the system I am chatting with?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who created the technology you use?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which people are responsible for your design?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who constructed this conversational assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What team produced your software?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who brought this system together?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed the assistant I am using?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who is responsible for building your system?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What developers worked on creating you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed this conversational system?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization produced this assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who prepared the system that answers me?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What group is behind your design and development?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built the assistant that is answering me?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which people worked together to make you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What organization brought you into being?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed the assistant I am talking with?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which team created the program behind you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who is responsible for producing you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What company put this assistant in service?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which developers brought you into being?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you describe your identity?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of conversational assistant are you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How should I understand what you are?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What sort of digital helper are you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Could you describe the kind of assistant you are?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is your role in this conversation?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do you identify yourself?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What type of software assistant am I speaking with?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you introduce yourself?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of system am I chatting with?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Can you explain what you are?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What should I know about your identity?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you characterize yourself?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of helper are you meant to be?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What name describes the assistant I am using?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do you describe your role?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What are you in simple terms?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you explain your nature?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of conversational tool are you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you summarize your identity?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What type of assistant is answering me?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do you fit into this conversation?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What sort of digital assistant am I using?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Can you tell me what kind of entity you are?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you label the service you provide?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of conversational partner are you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What description fits you best?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do you think of your role here?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of program am I interacting with?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Can you give me a short description of yourself?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What type of help can you provide as an assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you explain your place here?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of digital service is this?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Could you say what sort of assistant you are?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the best way to describe you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How should I think about this assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What category of assistant do you belong to?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of conversational service are you?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you introduce the system you represent?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What sort of application am I talking to?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do you describe the assistant role you fill?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of virtual helper is this?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Could you explain your role as a digital assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What type of conversational system is this?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you describe the service answering me?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What kind of assistant have I opened?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What should I call the kind of system you are?"
+        },
+        {
+          "pushed": false,
+          "rows": 5,
+          "chunks": [
+            5
+          ],
+          "observed": [
+            5
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How would you characterize this digital assistant?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the capital of Japan?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which planet is closest to the Sun?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many sides does a hexagon have?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the largest ocean on Earth?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which gas do plants absorb from the air?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who wrote Pride and Prejudice?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the chemical symbol for silver?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which country has the city of Lisbon?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many minutes are in two hours?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the tallest land animal?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which season comes after spring?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the freezing point of water in Celsius?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which instrument has black and white keys?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the main ingredient in hummus?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which continent contains Peru?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many days are in a leap year?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the largest planet in our solar system?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which language is mainly spoken in Brazil?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the square root of 81?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who painted the Mona Lisa?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which bird is known for its pink feathers?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the currency used in the United Kingdom?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many legs does a spider have?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which ocean lies east of Africa?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the name of Earth's natural satellite?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which metal is liquid at room temperature?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the first month of the year?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which animal is the largest mammal?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many letters are in the English alphabet?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the capital of Canada?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organ pumps blood through the body?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What color do blue and yellow make together?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which planet is famous for its rings?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the smallest prime number?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which tree produces acorns?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the largest desert in the world?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which country is shaped like a boot?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many wheels does a standard bicycle have?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the common name for sodium chloride?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which star is closest to Earth?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the capital of Egypt?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which part of a plant usually absorbs water?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How many strings does a standard violin have?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the opposite direction of west?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which author wrote The Hobbit?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the hardest natural substance?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which blood cells help carry oxygen?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "What is the largest country by area?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I boil an egg?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I remove a coffee stain from a shirt?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I plant tomato seeds?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I keep cut flowers fresh?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make a simple paper airplane?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I clean a wooden cutting board?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I change a flat bicycle tire?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I organize a crowded closet?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I cook rice on the stove?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I remove a sticker from glass?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I sharpen a kitchen knife safely?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I keep herbs fresh in the fridge?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I sew on a loose button?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I clean dusty window blinds?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I fold a fitted sheet?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I stop a door from squeaking?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make iced tea at home?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I remove mud from carpet?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I start a small vegetable garden?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I pack a suitcase efficiently?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I clean a reusable water bottle?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I measure flour without a scale?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I safely put out a small grease fire?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I remove candle wax from fabric?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make a basic vinaigrette?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I keep my houseplants from drying out?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I write a thank-you note?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I clean a muddy pair of shoes?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make a bed neatly?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I freeze leftover soup?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I unclog a slow bathroom sink?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I remove lint from a sweater?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I prepare a simple picnic lunch?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I stop a zipper from sticking?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make a pot of coffee?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I clean a burnt pan?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I store fresh bread so it lasts?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I keep a room cooler without air conditioning?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make a paper bookmark?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I get grass stains out of jeans?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I pack fragile dishes for moving?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I remove soap scum from a shower?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I make scrambled eggs?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I grow basil on a windowsill?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I clean a pair of eyeglasses?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I keep towels soft after washing?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How do I remove a wine stain from a tablecloth?"
+        },
+        {
+          "pushed": false,
+          "rows": 6,
+          "chunks": [
+            6
+          ],
+          "observed": [
+            6
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "How can I make a simple fruit salad?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company created you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who built you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who developed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who trained you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which organization made you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Who designed you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which lab produced you?"
+        },
+        {
+          "pushed": true,
+          "rows": 48,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "zero_write": false,
+          "prompt": "Which company developed this model?"
+        }
+      ],
+      "started": "2026-11-09 07:24:03",
+      "status": "done",
+      "answers_written": 6672,
+      "updated": "2026-11-09 09:55:18",
+      "summary": {
+        "answers": 6672,
+        "prompts": 200,
+        "gates": {
+          "gate1": true,
+          "gate2": true,
+          "gate3": true,
+          "gate4": true,
+          "gate5": true,
+          "gate6": true,
+          "gate7": true,
+          "gate8": true,
+          "passed": true,
+          "diagnostics": {
+            "expected_answers": 6672,
+            "answers": 6672,
+            "unique_answer_keys": 6672,
+            "planned_answer_keys": 6672,
+            "stage0": {
+              "gate2": true,
+              "gate3": true,
+              "set_passed": {
+                "m96": true,
+                "q96": true
+              },
+              "complete_plain": true,
+              "flagged_rates": {
+                "p8": 0.0,
+                "m96": 0.0,
+                "q96": 0.0
+              },
+              "counts": {
+                "p8": {
+                  "prompts": 8,
+                  "loop_or_broken": 0
+                },
+                "m96": {
+                  "prompts": 96,
+                  "loop_or_broken": 0
+                },
+                "q96": {
+                  "prompts": 96,
+                  "loop_or_broken": 0
+                }
+              },
+              "frozen_indices": {
+                "p8": [],
+                "m96": [],
+                "q96": []
+              },
+              "frozen_prompt_ids": [],
+              "plain_lengths": {
+                "p8": {
+                  "frozen": {
+                    "prompts": 0,
+                    "mean_tokens": null,
+                    "median_tokens": null
+                  },
+                  "surviving": {
+                    "prompts": 8,
+                    "mean_tokens": 59.75,
+                    "median_tokens": 56.0
+                  }
+                },
+                "m96": {
+                  "frozen": {
+                    "prompts": 0,
+                    "mean_tokens": null,
+                    "median_tokens": null
+                  },
+                  "surviving": {
+                    "prompts": 96,
+                    "mean_tokens": 73.27083333333333,
+                    "median_tokens": 80.0
+                  }
+                },
+                "q96": {
+                  "frozen": {
+                    "prompts": 0,
+                    "mean_tokens": null,
+                    "median_tokens": null
+                  },
+                  "surviving": {
+                    "prompts": 96,
+                    "mean_tokens": 78.25,
+                    "median_tokens": 80.0
+                  }
+                }
+              }
+            },
+            "stage0_frozen_matches_answers": true,
+            "gate4": {
+              "passed": true,
+              "directions": 144,
+              "expected_directions": 144,
+              "write_failures": 0,
+              "max_relative_error": 0.006019900590381692
+            },
+            "gate7": {
+              "passed": true,
+              "directions": 144,
+              "expected_directions": 144,
+              "unique_coordinates": 144,
+              "fresh_neurons": true
+            },
+            "gate6_dose1_b0_loop_rate": 0.2838541666666667,
+            "gate6_dose1_b50_mean_blocked_steps": 17.364583333333332,
+            "gate8_rows": 384,
+            "gate8_differing_answers": 0,
+            "gate8_noise_rate": 0.0
+          }
+        }
+      },
+      "failure": null
+    }
+  ]
+}
