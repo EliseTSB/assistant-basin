@@ -3585,3 +3585,16 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 197.4 | Claude (medium confidence): K, duration and speaking rate only, is at most 30%. | K 28.7% (27.2 to 30.2) (results/part197/results.json) | HELD |
 | 197.5 | Claude (medium confidence): The best held-out layer L_k is layer 0, 1 or 2, and every layer from 20 to 23 is at most 35%. Reason: Part 196's inner curve. | best layer 0 (62.7%); layers 20 to 23: 30.6, 31.0, 32.4, 32.0% (results/part197/results.json) | HELD |
 | 197.6 | Claude (medium-low confidence): Speaker identity at layer 0 (S_0) is at least 80%. Reason: the final embedding was 33.3%. | S_0 63.1% (results/part197/results.json) | FAILED |
+
+## Part 198 (registered 2026-11-09 00:23 CT, before any registered data; the smoke's runs and what was read from them are disclosed in Revision 4; a mass forecast with no countable batch is not evaluable; design PART198-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 198.1 | Claude (confidence 0.9): F1 localizes at most 1 single edit for each of ROME, MEMIT and AlphaEdit, and none of the counted mass-edit models. Denominator: took. Fails if 2 or more for any method, or any counted batch. Reason: pilot updates 0.04 to 0.72 times sigma1 against a measured floor of 1.11. | | |
+| 198.2 | Descriptive, no forecast: T_word localization of gradient edits, with each edited layer's base and edited T_word. | | |
+| 198.3 | Claude (confidence 0.85): PCS localizes at most 1 single edit for each gradient editor, and none of the counted mass-edit models. Denominator: took. Fails if 2 or more for any method, or any counted batch. Reason: pilot ranks 10 to 41. | | |
+| 198.4 | Claude (confidence 0.85): the top eligible pair of the edited layer with the highest T_word names the object (strict) in at most 2 records for each gradient editor; the update's own top direction (base-required) likewise. Denominator: took and name-eligible. Fails if 3 or more for any editor on either. Reason: 0 of 1 each in the pilot. | | |
+| 198.5 | Descriptive, no forecast: whether the aimed positive control is localized. | | |
+| 198.6 | Claude (confidence 0.75): T_word localizes `wsp` writes in at least 20 records. Denominator: took. Fails if fewer than 20. Reason: pilot write localized, 16.2 against 7.3. | | |
+| 198.7 | Claude (confidence 0.7): blind joint success (the blind reader's layer is an edited one AND its token names the object, strict, with no edit metadata used before scoring) in at least 18 records. Denominator: took and name-eligible. Fails if fewer than 18. Reason: pilot joint success at layer 20, 'English'. | | |
+| 198.8 | Claude (confidence 0.5): after the 10-write sequence, at least 5 of the name-eligible objects are named (strict) by an eligible pair among the top 64 of layers 17 to 21. Denominator: name-eligible of 10. Fails if fewer than 5. Not piloted. | | |
