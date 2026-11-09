@@ -1,0 +1,14 @@
+{"cell": {"stage": "battery", "arm": "k4", "ban": "clear"}, "loops": 178, "before": 148, "after": 30, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k4", "ban": "free"}, "loops": 179, "before": 140, "after": 39, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k4", "ban": "hit"}, "loops": 132, "before": 109, "after": 23, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k4", "ban": "none"}, "loops": 171, "before": 129, "after": 42, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k4", "ban": "own"}, "loops": 116, "before": 79, "after": 37, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "k4", "ban": "plain50"}, "loops": 319, "before": 300, "after": 19, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "ban": "clear"}, "loops": 178, "before": 152, "after": 26, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "ban": "free"}, "loops": 159, "before": 133, "after": 26, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "ban": "hit"}, "loops": 130, "before": 117, "after": 13, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "ban": "none"}, "loops": 167, "before": 142, "after": 25, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "ban": "own"}, "loops": 94, "before": 78, "after": 16, "unplaced": 0}
+{"cell": {"stage": "battery", "arm": "n+", "ban": "plain50"}, "loops": 302, "before": 284, "after": 18, "unplaced": 0}
+{"cell": {"stage": "no_push", "arm": "n+", "ban": "free"}, "loops": 24, "before": 8, "after": 16, "unplaced": 0}
+{"total": {"loops": 2149, "before": 1819, "after": 330, "unplaced": 0}, "rows": 9371, "loop_rows_reencoded_from_text": 0}
