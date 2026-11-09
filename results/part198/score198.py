@@ -13,13 +13,64 @@ HERE = Path(__file__).resolve().parent
 OUT_DEFAULT = HERE / "out"
 
 
-def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
-    """Deduplicate replays by key while refusing contradictory successful terminals.
+def _localized_outcomes(value: Any) -> tuple[tuple[str, bool], ...]:
+    if not isinstance(value, dict):
+        return ()
+    return tuple(sorted((str(stat), isinstance(result, dict) and result.get("localized") is True)
+                        for stat, result in value.items()))
 
-    Failure rows describe attempts, so a later case row may legitimately follow one. Replayed
-    case rows can differ in floating-point diagnostics across processes; compare their frozen
-    outcome fields and retain the first full row. Distinct run-level failures have no case key
-    and are surfaced separately by score_from_dir.
+
+def _case_scored_booleans(row: dict[str, Any]) -> tuple[Any, ...]:
+    """Collect case-row booleans that affect a forecast, diagnostic, or sequence score."""
+    aimed = row.get("aimed_positive_control")
+    oracle = row.get("oracle_reader")
+    blind = row.get("blind_reader")
+    random_control = row.get("random_control")
+    edited_stats = row.get("edited_layer_stats")
+    names_after = row.get("names_after_write")
+    return (
+        ("localization", _localized_outcomes(row.get("localization"))),
+        ("aimed_positive_control.localization",
+         _localized_outcomes(aimed.get("localization") if isinstance(aimed, dict) else None)),
+        ("aimed_positive_control.oracle_named_strict",
+         isinstance(aimed, dict) and aimed.get("oracle_named_strict") is True),
+        ("aimed_positive_control.oracle_named_strict_missing",
+         not isinstance(aimed, dict) or aimed.get("oracle_named_strict") is None),
+        ("oracle_reader.named_strict",
+         isinstance(oracle, dict) and oracle.get("named_strict") is True),
+        ("oracle_reader.named_loose",
+         isinstance(oracle, dict) and oracle.get("named_loose") is True),
+        ("blind_reader.localized",
+         isinstance(blind, dict) and blind.get("localized") is True),
+        ("blind_reader.named_strict",
+         isinstance(blind, dict) and blind.get("named_strict") is True),
+        ("random_control.localization.t_word.localized",
+         isinstance(random_control, dict)
+         and _localized_outcomes(random_control.get("localization")).count(("t_word", True)) > 0),
+        ("edited_layer_stats.update_top_names_strict",
+         tuple(sorted((str(layer), isinstance(result, dict)
+                       and result.get("update_top_names_strict") is True)
+                      for layer, result in edited_stats.items())) if isinstance(edited_stats, dict) else ()),
+        ("edited_layer_stats.update_top_names_loose",
+         tuple(sorted((str(layer), isinstance(result, dict)
+                       and result.get("update_top_names_loose") is True)
+                      for layer, result in edited_stats.items())) if isinstance(edited_stats, dict) else ()),
+        ("names_after_write.named_strict",
+         tuple(sorted((str(case_id), isinstance(result, dict)
+                       and result.get("named_strict") is True)
+                      for case_id, result in names_after.items())) if isinstance(names_after, dict) else ()),
+    )
+
+
+def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
+    """Select terminal rows, refusing any replay conflict in a scored case outcome.
+
+    Failure rows describe attempts, so a later case row may legitimately follow one. For a
+    repeated case, every scored boolean must agree, including all localized flags and reader or
+    control outcomes; raw floating-point diagnostics remain outside the comparison. If float
+    drift flips a scored boolean, the case has no single outcome and must be rerun rather than
+    resolved by file order. Distinct run-level failures have no case key and are surfaced
+    separately by score_from_dir.
     """
     by_key: dict[str, list[dict[str, Any]]] = {}
     run_level: dict[tuple[str, str], dict[str, Any]] = {}
@@ -53,6 +104,8 @@ def registered_rows(path: Path, kind: str, key: str) -> list[dict[str, Any]]:
             for row in cases[1:]:
                 changed = [field for field in decisive
                            if first_case.get(field, _MISSING) != row.get(field, _MISSING)]
+                if kind == "case" and _case_scored_booleans(first_case) != _case_scored_booleans(row):
+                    changed.append("scored boolean outcomes")
                 if changed:
                     raise ValueError(f"conflicting terminal rows for {key}={identity!r} in {path}: "
                                      f"decisive fields differ: {', '.join(changed)}")
@@ -223,6 +276,20 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
     seqpath = out_dir / "armB-seq-wsp.jsonl"
     allfiles["all-armB-seq"] = all_registered(seqpath)
     files["armB-seq"] = registered_rows(seqpath, "case", "case_id")
+    arm_c_path = out_dir / "armC.jsonl"
+    arm_c_attempts = R.arm_c_attempt_counts(arm_c_path)
+    arm_c_successes = R.arm_c_successful_keys(arm_c_path)
+    arm_c_report = {}
+    for model in R.ARM_C_MODELS:
+        model_id = str(model["id"])
+        attempts = arm_c_attempts.get(model_id, 0)
+        complete = model_id in arm_c_successes
+        arm_c_report[model_id] = {
+            "attempts": attempts,
+            "max_attempts": R.ARM_C_MAX_ATTEMPTS,
+            "status": "COMPLETE" if complete else (
+                "EXHAUSTED" if attempts >= R.ARM_C_MAX_ATTEMPTS else "PENDING"),
+        }
     gate = gate_check(out_dir, {**files, **allfiles})
     tstar_path = out_dir / "tstar.json"
     unkeyed_failure_keys = {
@@ -232,6 +299,7 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
         "all-armB-seq": "case_id",
     }
     out: dict[str, Any] = {"created_utc": R.utc_now(), "gate": gate,
+        "arm_c_attempts": arm_c_report,
         "run_level_failures": {name: run_level_failures(allfiles.get(name, []), key)
                                for name, key in unkeyed_failure_keys.items()},
         "tstar": json.loads(tstar_path.read_text(encoding="utf-8")) if tstar_path.is_file() else None,
@@ -357,6 +425,9 @@ def score_from_dir(out_dir: Path) -> dict[str, Any]:
 
 def print_result(result: dict[str, Any]) -> None:
     print("GATE", "PASS" if result["gate"]["passed"] else "FAIL")
+    for model_id, item in result.get("arm_c_attempts", {}).items():
+        if item.get("status") == "EXHAUSTED":
+            print(f"Arm C {model_id}: EXHAUSTED after {item['attempts']}/{item['max_attempts']} attempts")
     for reason in result["gate"].get("reasons", []):
         print("  ", reason)
     for item in result.get("forecasts", []):

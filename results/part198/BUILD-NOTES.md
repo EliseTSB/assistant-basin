@@ -67,7 +67,7 @@
 - **N2 — fixed.** `tensor_fingerprint()` flattens before the byte reinterpretation, so a 0-d tensor fingerprints correctly (`run198.py:589–607`). `_model_state_fingerprints()` names the failing parameter or buffer, and `verify_model_restored()` preserves a fingerprint exception as an explicit verification error (`run198.py:610–632`). Arm A single, mass, and first-record restoration checks use this wrapper; exception rows store `restored_bit_exact: null` and `restoration_verification_error` when verification itself fails (`run198.py:1025–1048`, `:1070–1111`, `:1198–1222`). Tests `test_build198.py:395–432` cover scalar state, labeled fingerprint errors, and the runner's unknown status. All three N2 tests fail on pristine `1a05ea9`.
 - **N3 — test gap closed.** Added a shared full-state verifier and tests that drive `run_arm_a()` and `run_arm_a_mass()` with a tiny fake model whose editor changes an unreported buffer. `test_build198.py:420–429` asserts both runner paths record `restored_bit_exact: false`. Both tests fail on pristine `1a05ea9`; the full old-code suite reports these names. The restoration comparison is also exercised on the runner's error path by the N2 test.
 - **N4 — fixed.** `run_arm_b()` now appends its case row only after `w.undo()` and the exact-zero check complete (`run198.py:1367–1370`). The structural check at `test_build198.py:477–482` fails on pristine `1a05ea9`. Probe `p30_armb_undo.py` confirms undo and `undo_zero_exact` precede the terminal append; `p31_armb_crash.py` records no case row when a synthetic undo-path crash occurs.
-- **P1 — fixed.** `run_arm_c()` counts keyed failures by run mode and permits at most three model attempts. A fourth invocation refuses before loading and reports the model ID and attempt count; each failure row records `attempt_number` and `max_attempts` (`run198.py:227–240`, `:1610–1694`). The fake-loader test `test_build198.py:451–465` fails on pristine `1a05ea9` and confirms only three loads. `p22_armc_deadlock.py` still shows three recorded failures and no T* after three failing runs; the added fourth-invocation check verifies that no fourth model load occurs.
+- **P1 — extended in Fold r3.** Fold r2's cap counted keyed exception rows only; it did not cover a process killed during loading. Fold r3 records and counts each `attempt_started` load before entering the loader, pairs it with a later failure by `(run_id, attempt_number)` so normal exceptions count once, and keeps legacy failure-only attempts in the count. The cap is three started attempts per model and run mode; it refuses the fourth load. The details and process-death test are in Fold r3 below.
 
 ### Minor findings and design review
 
@@ -83,4 +83,34 @@
 - `p10_preflight.py` writes its stale payload under a temporary output directory, but `preflight()` reads `HERE/crosscheck198.json`; this workspace's actual crosscheck has a matching `stats198_sha256`, so that probe did not exercise the payload. The new direct preflight test patches `HERE` and tests matching, stale-hash, and missing-check-marker cases explicitly.
 - **Probe safety issue:** `p3_main_dup.py` and `p3c_main_dup.py` assume the crosscheck is stale. Here it passed, and their temporary JSONL logs contain `run_start` rows, written immediately before the real Arm A loader call. `p3_main_dup.py` was stopped at a 20-second timeout; the parallel `p3c_main_dup.py` also yielded without output. I cannot establish whether either probe opened or loaded weights. No further loader-reaching probes were run.
 - `stats198.py` was not edited; its SHA256 remains `03e65cb44ab7496d064b497f1e9bb38086716e74b02b5dc3ab998f881473ee64`. `crosscheck198.json` was not edited. No commit was made.
+
+## Fold r3
+
+### F1 — scored case replays conflict on every scored boolean
+
+- `score198.registered_rows()` now compares case rows' existing decisive fields plus a normalized tuple of the scored boolean outcomes. It includes every `localization.<stat>.localized` flag; `aimed_positive_control.oracle_named_strict` and its missing-control state; `aimed_positive_control.localization.<stat>.localized`; `oracle_reader.named_strict` / `named_loose`; `blind_reader.localized` / `named_strict`; `random_control.localization.t_word.localized`; per-layer `edited_layer_stats.update_top_names_strict` / `update_top_names_loose`; and sequence `names_after_write.<case_id>.named_strict`. The pre-existing decisive values remain `took`, `already_satisfied`, `name_eligible`, `restored_bit_exact`, `undo_zero_exact`, and `n_written_so_far`.
+- Raw floats and other diagnostics remain outside that tuple. Any scored-boolean flip is a conflict even if float drift caused it: the case has no single scored outcome and must be rerun. `registered_rows()` documents this rule.
+- New checks cover a duplicate differing only in `aimed_positive_control.oracle_named_strict` and one each for `localization.f1.localized`, `localization.pcs.localized`, and `localization.t_word.localized`. The existing replay check still accepts float-only diagnostic drift when all booleans agree.
+- Against the copied `b3aacf2` runner/scorer, all four F1 checks fail. Against the folded code, all pass.
+
+### F2 — N4 append-order test rejects the review's sabotage A
+
+- The N4 source check now requires exactly one `append_jsonl(log, record)` inside `run_arm_b()` and places it after `w.undo()`, the exact-zero calculation, and its guard.
+- The test builds review sabotage A in memory (an extra early append with the normal late append retained) and confirms the predicate rejects it. I also ran the full suite against a `sabotage_a/` copy with that early append inserted: exit 1, with only the N4 check failing. The unchanged `b3aacf2` runner itself has the same safe single append, so this test-only regression guard passes on the unsabotaged baseline; the failure is demonstrated on the actual sabotage variant.
+
+### F3 — Arm C cap survives hard process death and is visible in scoring
+
+- Both Arm C load paths append `attempt_started` with model, phase, attempt number, and limit before calling `load_arm_c_pair()`. `arm_c_attempt_counts()` counts starts and older failure-only rows, deduplicating each new start/failure pair by run ID and attempt number. A process killed after the start record therefore consumes a slot; the fourth sequential invocation refuses before loading.
+- The scorer adds an `arm_c_attempts` object to its result and prints an `EXHAUSTED after 3/3 attempts` line for an unsuccessful exhausted model. Successful models report `COMPLETE`; models below the cap without a success report `PENDING`.
+- A child-process test kills a patched fake loader on three separate invocations, then verifies that the fourth invocation is refused before entering the fake loader. All real loaders, `torch.load`, `from_pretrained`, and `safe_open` are patched to raise in the synthetic suite. A scorer fixture verifies the `EXHAUSTED` label. On the `b3aacf2` copies, the killed-load cap check and scorer status check fail; the exception-only retry test continues to pass.
+- Scope limit: this cap counts recorded attempts across sequential invocations. It does not add a lock for concurrent runner processes.
+
+### Validation, baseline comparison, and handoff
+
+- `/home/elisepc/edit-detect/.venv/bin/python -I -X pycache_prefix=/tmp/part198-fold-r3-pycache -m py_compile run198.py score198.py test_build198.py`: passed.
+- `fixtures198.py`: exit 0, `FIXTURES ALL PASS (0 failed)`.
+- `test_build198.py`: exit 0, `TEST_BUILD_CHECKS 54`, `TEST_BUILD ALL PASS (0 failed)`.
+- The suite against copies of `b3aacf2` in the worker run directory exits 1 with 6 expected failures: the four F1 replay tests and the two F3 hard-kill/exhaustion tests. The N4 structural test passes on that unmodified baseline; its sabotage-A failure is reported above.
+- The specified review run directory contained no files under `probes/`, so no supplied probe scripts were available to copy or inspect. The requested behaviors were exercised with the synthetic tests above. No model, weights, edit, or network call was made.
+- F4 remains with the parent as requested; this fold does not resolve the prior worker's uncertainty about whether the two r2 probes read weights. `stats198.py` remains untouched and its SHA256 is unchanged.
 

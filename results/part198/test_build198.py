@@ -5,14 +5,36 @@ from __future__ import annotations
 import json
 import sys
 import tempfile
+import time
 import warnings
 import inspect
+import multiprocessing
+import signal
 from contextlib import ExitStack
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
 import torch
+
+
+def _blocked_model_loader(*_args, **_kwargs):
+    raise AssertionError("model or weight loading is forbidden in synthetic tests")
+
+
+# Fail closed if a runner regression reaches any real model/weight API during this suite.
+torch.load = _blocked_model_loader
+try:
+    import transformers
+    transformers.AutoModelForCausalLM.from_pretrained = _blocked_model_loader
+    transformers.AutoTokenizer.from_pretrained = _blocked_model_loader
+except ImportError:
+    pass
+try:
+    import safetensors
+    safetensors.safe_open = _blocked_model_loader
+except ImportError:
+    pass
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -29,6 +51,50 @@ def check(name: str, condition: bool) -> None:
     print(("PASS " if condition else "FAIL ") + name)
     if not condition:
         fails += 1
+
+
+def case_replay_conflicts(path: tuple[str, ...]) -> bool:
+    base = {"record_type": "case", "run_mode": "registered", "run_id": "r1", "case_id": 198,
+            "took": True, "already_satisfied": False, "name_eligible": True,
+            "restored_bit_exact": True, "undo_zero_exact": True,
+            "localization": {stat: {"localized": False} for stat in ("f1", "pcs", "t_word")},
+            "aimed_positive_control": {"oracle_named_strict": False,
+                                         "localization": {"t_word": {"localized": False}}},
+            "oracle_reader": {"named_strict": False, "named_loose": False},
+            "blind_reader": {"localized": False, "named_strict": False},
+            "random_control": {"localization": {"t_word": {"localized": False}}},
+            "edited_layer_stats": {"17": {"update_top_names_strict": False,
+                                           "update_top_names_loose": False}}}
+    changed = json.loads(json.dumps(base))
+    value = changed
+    for component in path[:-1]:
+        value = value[component]
+    value[path[-1]] = True
+    with tempfile.TemporaryDirectory(prefix="part198-scored-replay-") as td:
+        log = Path(td) / "armA-rome.jsonl"
+        R.append_jsonl(log, base)
+        changed["run_id"] = "r2"
+        R.append_jsonl(log, changed)
+        try:
+            S.registered_rows(log, "case", "case_id")
+        except ValueError:
+            return True
+    return False
+
+
+def n4_terminal_append_is_safe(source: str) -> bool:
+    undo_pos = source.find("undone = w.undo()")
+    zero_pos = source.find("zero = all(", undo_pos)
+    guard_pos = source.find("if not zero:", zero_pos)
+    appends = []
+    start = 0
+    while True:
+        position = source.find("append_jsonl(log, record)", start)
+        if position < 0:
+            break
+        appends.append(position)
+        start = position + 1
+    return (len(appends) == 1 and 0 <= undo_pos < zero_pos < guard_pos < appends[0])
 
 
 class TinyGPT2Projection(torch.nn.Module):
@@ -175,6 +241,29 @@ def run_fake_arm_c(out: Path, *, recover_failure: bool = False, invocations: int
             except Exception as exc:
                 error = f"{type(exc).__name__}: {exc}"
     return {"load_calls": load_calls, "rows": R.read_jsonl(log), "error": error}
+
+
+def _kill_during_fake_arm_c_load(out: Path, entered: Path, refused: Path) -> None:
+    """Child target: stop inside a fake load, or report a pre-load attempt refusal."""
+    models = [{"id": f"cal-{index}", "role": "calibration"} for index in range(3)]
+    references = {item["id"]: (float(index + 1), "token")
+                  for index, item in enumerate(models)}
+
+    def fake_load(_model_id, _dtype):
+        entered.write_text("fake loader entered\n", encoding="utf-8")
+        while True:
+            time.sleep(0.05)
+
+    with ExitStack() as stack:
+        stack.enter_context(patch.object(R, "ARM_C_MODELS", models))
+        stack.enter_context(patch.object(R, "ARM_C_REVIEWER_MAX", references))
+        stack.enter_context(patch.object(R, "stats_helpers", lambda: object()))
+        stack.enter_context(patch.object(R, "log_path_for", lambda *args: out / "armC.jsonl"))
+        stack.enter_context(patch.object(R, "load_arm_c_pair", fake_load))
+        try:
+            R.run_arm_c(None, out)
+        except RuntimeError as exc:
+            refused.write_text(str(exc), encoding="utf-8")
 
 
 check("took requires old lead before and new lead after",
@@ -358,6 +447,12 @@ with tempfile.TemporaryDirectory(prefix="part198-duplicate-r1-") as td:
     check("N1 legitimate failure/resume and replay drift stay scoreable; contradictory case terminals refuse",
           replay_ok and conflict_refused and unkeyed_reported)
 
+check("F1 refuses replay rows differing only in aimed_positive_control.oracle_named_strict",
+      case_replay_conflicts(("aimed_positive_control", "oracle_named_strict")))
+for stat in ("f1", "pcs", "t_word"):
+    check(f"F1 refuses replay rows differing only in localization.{stat}.localized",
+          case_replay_conflicts(("localization", stat, "localized")))
+
 measure = getattr(R, "wsp_take_measurement", None)
 if measure is None:
     wsp_measure_ok = False
@@ -458,11 +553,62 @@ with tempfile.TemporaryDirectory(prefix="part198-armc-retry-cap-") as td:
     keyed_failures = [row for row in retry_run["rows"]
                       if row.get("record_type") == "failure" and row.get("model_id") == "cal-0"]
     attempts = [row.get("attempt_number") for row in keyed_failures]
+    cap_error = str(retry_run["error"])
     cap_ok = (retry_run["load_calls"] == ["cal-0"] * 3 and len(keyed_failures) == 3
-              and attempts == [1, 2, 3] and "retry limit reached" in str(retry_run["error"])
-              and "cal-0" in str(retry_run["error"]))
-check("P1 deterministic Arm C load failure stops after three attempts and reports the model",
+              and attempts == [1, 2, 3]
+              and ("attempt limit reached" in cap_error or "retry limit reached" in cap_error)
+              and "cal-0" in cap_error)
+check("P1 deterministic Arm C exceptions stop after three attempts and report the model",
       cap_ok)
+
+with tempfile.TemporaryDirectory(prefix="part198-armc-killed-load-") as td:
+    out = Path(td) / "out"
+    out.mkdir()
+    context = multiprocessing.get_context("fork")
+    child_results = []
+    for index in range(4):
+        entered = out / f"fake-load-entered-{index}"
+        refused = out / f"attempt-refused-{index}"
+        child = context.Process(target=_kill_during_fake_arm_c_load, args=(out, entered, refused))
+        child.start()
+        deadline = time.monotonic() + 8.0
+        while time.monotonic() < deadline and child.is_alive() and not (entered.exists() or refused.exists()):
+            time.sleep(0.02)
+        reached_fake_load = entered.exists()
+        if child.is_alive() and reached_fake_load:
+            child.kill()
+        child.join(timeout=8.0)
+        if child.is_alive():
+            child.kill()
+            child.join(timeout=2.0)
+        child_results.append((reached_fake_load, child.exitcode,
+                              refused.read_text(encoding="utf-8") if refused.exists() else ""))
+    arm_c_log = out / "armC.jsonl"
+    starts = [row for row in R.read_jsonl(arm_c_log)
+              if row.get("record_type") == "attempt_started" and row.get("model_id") == "cal-0"]
+    killed_cap_ok = (len(starts) == 3 and [row.get("attempt_number") for row in starts] == [1, 2, 3]
+                     and all(reached and code == -signal.SIGKILL for reached, code, _ in child_results[:3])
+                     and child_results[3][0] is False and child_results[3][1] == 0
+                     and "attempt limit reached" in child_results[3][2])
+check("F3 killed fake loads consume the Arm C cap across four child invocations", killed_cap_ok)
+
+with tempfile.TemporaryDirectory(prefix="part198-score-armc-exhausted-") as td:
+    out = Path(td)
+    arm_c = out / "armC.jsonl"
+    for attempt in range(1, 4):
+        run_id = f"attempt-{attempt}"
+        R.append_jsonl(arm_c, {"record_type": "attempt_started", "run_mode": "registered",
+            "run_id": run_id, "model_id": R.ARM_C_MODELS[0]["id"], "attempt_number": attempt})
+        R.append_jsonl(arm_c, {"record_type": "failure", "run_mode": "registered", "run_id": run_id,
+            "model_id": R.ARM_C_MODELS[0]["id"], "attempt_number": attempt})
+    try:
+        arm_c_score = S.score_from_dir(out).get("arm_c_attempts", {})
+    except Exception:
+        arm_c_score = {}
+    first_model = str(R.ARM_C_MODELS[0]["id"])
+    exhausted = arm_c_score.get(first_model, {})
+check("F3 scorer labels a three-attempt Arm C model EXHAUSTED",
+      exhausted.get("attempts") == 3 and exhausted.get("status") == "EXHAUSTED")
 
 with tempfile.TemporaryDirectory(prefix="part198-armc-failure-resume-") as td:
     recovered = run_fake_arm_c(Path(td), recover_failure=True, invocations=1)
@@ -473,12 +619,10 @@ with tempfile.TemporaryDirectory(prefix="part198-armc-failure-resume-") as td:
           and successful_ids == {"cal-0", "cal-1", "cal-2"} and recovered["error"] is None)
 
 arm_b_source = inspect.getsource(R.run_arm_b)
-undo_pos = arm_b_source.find("undone = w.undo()")
-zero_pos = arm_b_source.find("zero = all(", undo_pos)
-failure_guard_pos = arm_b_source.find("if not zero:", zero_pos)
-case_write_pos = arm_b_source.find("append_jsonl(log, record)", failure_guard_pos)
-check("N4 Arm B writes a case terminal row only after the undo-zero check",
-      0 <= undo_pos < zero_pos < failure_guard_pos < case_write_pos)
+sabotage_a_source = arm_b_source.replace("undone = w.undo()",
+    "append_jsonl(log, record)\nundone = w.undo()", 1)
+check("N4 Arm B has exactly one terminal append after exact-zero undo; rejects sabotage A",
+      n4_terminal_append_is_safe(arm_b_source) and not n4_terminal_append_is_safe(sabotage_a_source))
 
 with tempfile.TemporaryDirectory(prefix="part198-preflight-hash-test-") as td:
     root = Path(td) / "source"

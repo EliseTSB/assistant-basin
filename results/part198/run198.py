@@ -227,16 +227,27 @@ def arm_c_successful_keys(path: Path) -> set[str]:
 ARM_C_MAX_ATTEMPTS = 3
 
 
-def arm_c_failure_counts(path: Path, runmode: str = "registered") -> dict[str, int]:
-    """Count failed attempts per model within one run mode for bounded retries."""
-    counts: dict[str, int] = {}
-    for row in read_jsonl(path):
+def arm_c_attempt_counts(path: Path, runmode: str = "registered") -> dict[str, int]:
+    """Count started Arm C loads, including starts that never reached an exception row.
+
+    A failure row from an older log without a matching start row still consumes an attempt.
+    New runs pair each start and failure by run ID and attempt number, so an ordinary exception
+    counts once while a process death during loading remains visible from its start row alone.
+    """
+    attempts: dict[str, set[tuple[str, int] | tuple[str, int, int]]] = {}
+    for index, row in enumerate(read_jsonl(path)):
         model_id = row.get("model_id")
-        if (row.get("run_mode", "registered") == runmode and row.get("record_type") == "failure"
-                and model_id is not None):
-            key = str(model_id)
-            counts[key] = counts.get(key, 0) + 1
-    return counts
+        if (row.get("run_mode", "registered") != runmode or model_id is None
+                or row.get("record_type") not in {"attempt_started", "failure"}):
+            continue
+        key = str(model_id)
+        run_id, number = row.get("run_id"), row.get("attempt_number")
+        if run_id is not None and isinstance(number, int):
+            identity: tuple[str, int] | tuple[str, int, int] = (str(run_id), number)
+        else:
+            identity = ("legacy-row", index, 0)
+        attempts.setdefault(key, set()).add(identity)
+    return {model_id: len(identities) for model_id, identities in attempts.items()}
 
 
 def require_tstar(path: Path) -> dict[str, Any]:
@@ -1612,7 +1623,7 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
     log = log_path_for("armC", None, out_dir)
     runmode, rid = ("smoke" if limit is not None else "registered"), run_id()
     prior = arm_c_successful_keys(log)
-    failures = arm_c_failure_counts(log, runmode)
+    attempts = arm_c_attempt_counts(log, runmode)
     pending = [m for m in ARM_C_MODELS if m["id"] not in prior]
     append_run_event(log, runmode, "armC", [m["id"] for m in pending], rid)
     selected_count = 0
@@ -1622,10 +1633,15 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
             continue
         if arm_c_limit_reached(selected_count, limit):
             break
-        failed_attempts = failures.get(model_id, 0)
-        if failed_attempts >= ARM_C_MAX_ATTEMPTS:
-            raise RuntimeError(f"Arm C retry limit reached for {model_id!r}: {failed_attempts} failed attempts; "
+        prior_attempts = attempts.get(model_id, 0)
+        if prior_attempts >= ARM_C_MAX_ATTEMPTS:
+            raise RuntimeError(f"Arm C attempt limit reached for {model_id!r}: {prior_attempts} attempts; "
                                f"refusing another model load (max attempts {ARM_C_MAX_ATTEMPTS})")
+        attempt_number = prior_attempts + 1
+        append_jsonl(log, {"record_type": "attempt_started", "run_mode": runmode, "run_id": rid,
+            "timestamp": utc_now(), "arm": "C", "model_id": model_id, "role": role,
+            "phase": "calibration", "attempt_number": attempt_number,
+            "max_attempts": ARM_C_MAX_ATTEMPTS})
         try:
             model, tokenizer, dtype = load_arm_c_pair(model_id, "stored")
             row = analyze_model(model, tokenizer, S, model_id, role, dtype)
@@ -1641,7 +1657,7 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
         except Exception as exc:
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
                 "timestamp": utc_now(), "arm": "C", "model_id": model_id, "role": role,
-                "phase": "calibration", "attempt_number": failed_attempts + 1,
+                "phase": "calibration", "attempt_number": attempt_number,
                 "max_attempts": ARM_C_MAX_ATTEMPTS,
                 "error": f"{type(exc).__name__}: {exc}",
                 "traceback": traceback.format_exc()[-4000:]})
@@ -1670,10 +1686,15 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
             continue
         if arm_c_limit_reached(selected_count, limit):
             break
-        failed_attempts = failures.get(model_id, 0)
-        if failed_attempts >= ARM_C_MAX_ATTEMPTS:
-            raise RuntimeError(f"Arm C retry limit reached for {model_id!r}: {failed_attempts} failed attempts; "
+        prior_attempts = attempts.get(model_id, 0)
+        if prior_attempts >= ARM_C_MAX_ATTEMPTS:
+            raise RuntimeError(f"Arm C attempt limit reached for {model_id!r}: {prior_attempts} attempts; "
                                f"refusing another model load (max attempts {ARM_C_MAX_ATTEMPTS})")
+        attempt_number = prior_attempts + 1
+        append_jsonl(log, {"record_type": "attempt_started", "run_mode": runmode, "run_id": rid,
+            "timestamp": utc_now(), "arm": "C", "model_id": model_id, "role": role,
+            "phase": "evaluation_or_host", "attempt_number": attempt_number,
+            "max_attempts": ARM_C_MAX_ATTEMPTS})
         try:
             dtype = "float32" if role == "host" else "stored"
             model, tokenizer, seen = load_arm_c_pair(model_id, dtype)
@@ -1690,7 +1711,7 @@ def run_arm_c(limit: int | None, out_dir: Path) -> int:
         except Exception as exc:
             append_jsonl(log, {"record_type": "failure", "run_mode": runmode, "run_id": rid,
                 "timestamp": utc_now(), "arm": "C", "model_id": model_id, "role": role,
-                "phase": "evaluation_or_host", "attempt_number": failed_attempts + 1,
+                "phase": "evaluation_or_host", "attempt_number": attempt_number,
                 "max_attempts": ARM_C_MAX_ATTEMPTS,
                 "error": f"{type(exc).__name__}: {exc}",
                 "traceback": traceback.format_exc()[-4000:]})
