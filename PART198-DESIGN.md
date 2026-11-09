@@ -1,7 +1,8 @@
 # Part 198: Do ordinary knowledge edits leave a trace in the weights that a check without the original model can find?
 
 Procedure: v1
-DRAFT, not registered. Follows Part 193 and Elise's direction of 2026-11-07 23:36 CT (Discord 1568861686167904287):
+Registered 2026-11-09 00:23 CT (public main a7d18c5; revision 4 and these procedure lines re-registered before any data)
+Follows Part 193 and Elise's direction of 2026-11-07 23:36 CT (Discord 1568861686167904287):
 "Methods to detect weight edits would be particularly valuable". Defensive only: every edit is a benign counterfactual
 fact from a public benchmark (CounterFact), and nothing here builds or releases an edit meant to avoid detection. The
 design was rewritten on 2026-11-08 at 14:59 CT (commit 75f20fe) after the pilot below, before any prediction existed.
@@ -40,7 +41,7 @@ questions are now:
   not run). Its docstring also reports that in its analyst sessions the edit sat in s2 or s3, not s1. Neither is scored
   as a detector with a false-alarm rate. Youssef et al. infer the edited object with a decoder trained on 600 labelled
   edited matrices (99.4% for ROME on GPT-2 XL; 1.9% for AlphaEdit), not by reading directions. Two web searches
-  (2026-11-08 14:4x CT) found no paper that scores an untrained unembedding reading of a matrix's singular directions
+  (2026-11-08 afternoon; the time was not recorded) found no paper that scores an untrained unembedding reading of a matrix's singular directions
   as an edit detector.
 - Our own data: Part 193 (results/part193): F1 and F2 on EmbeddingGemma 2, three edits, the sibling-scale spread per
   role (1.7 to 3.0 times, 6.8 for one role) and Gate 4's lesson that twice a target's own norm guarantees nothing.
@@ -209,7 +210,7 @@ One CounterFact record outside the main draw, edited by each of the four methods
 checks on GPT-2 XL and two other unedited models. `llm-forensics` installs and runs. Stopping rule: if any method fails
 to install or take on the pilot record, it is dropped or fixed before registration and the change is stated here.
 
-### Pilot results, part 1 (2026-11-08 11:4x to 13:0x CT, before any prediction)
+### Pilot results, part 1 (2026-11-08, ending 13:07 CT when `pilot/pilot-part1.json` was written; the start was not recorded; before any prediction)
 
 GPT-2 XL float32 (`model.safetensors` sha256 0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a), EasyEdit
 main as downloaded 2026-11-08 11:16 CT (tarball, not yet pinned to a commit), CPU at nice 10 under a 10 GiB cap, CounterFact
@@ -335,6 +336,13 @@ across facts, batch sizes and a second model, rather than look for a size thresh
 
 ## Size
 
+- Smallest effect worth knowing: 2 localized records of 24 for any gradient editor on F1 or PCS (the fail line of 198.1
+  and 198.3), and fewer than 20 of 24 `wsp` writes localized (198.6's).
+- Total: 72 GPT-2 XL single edits plus 3 re-runs, 4 mass batches, 34 `wsp` writes with controls and 10 unedited models,
+  about 225 minutes of CPU (smoke and pilot times, Revision 4).
+- Pilot: one record per method on GPT-2 XL and one `wsp` write (Pilot results, parts 1 to 4); the smoke ran the first
+  record of every arm (Revision 4).
+
 24 records per editor and arm, 2 mass batches per mass editor, 10 records in the sequence arm, 3 calibration models, 5
 evaluation models, 2 development hosts. The forecasts contrast rates near 0 with rates near 1. Rates are reported with
 exact (Clopper-Pearson) 95% intervals: 0 of 24 bounds a rate under 14% one-sided, 20 of 24 has a lower bound of 63%.
@@ -345,6 +353,11 @@ re-runs about 2.2 h; 4 mass edits about 0.5 h; 34 `wsp` writes with their contro
 about 36 s a write); 10 unedited models about 0.3 h. Total about 3.5 h of CPU, one process at a time.
 
 ## Optimization
+
+- Bound resource: the CPU (12 threads; ROME's value-vector optimisation dominates), measured busy in the pilot.
+- Measured: 10 records in 453 s (MEMIT batch of 10) and 10 records in 491 s (AlphaEdit batch), and single edits of
+  1 record in 128 s (ROME), 115 s (MEMIT) and 69 s (AlphaEdit), all on real CounterFact records in the pilot; one `wsp` write about 36 s after 385 s of setup; the smoke's first records in 290 to
+  811 s per process including loading (Revision 4).
 
 Measured in the pilot, so these are measurements, not guesses: per-edit times above, peak 10.9 GiB for GPT-2 XL (so one
 process at a time, under an 11 GB cap, after Windows reports 11 GB free) and 6.6 GiB for Qwen3.5-0.8B. Changes from the
@@ -488,7 +501,7 @@ base and this part's endpoints are base-free.
    not evaluable; the rank-invariance claim is replaced by F1's measured margin with no generic PCS bound; the Reading
    rules no longer speak of 198.2 passing.
 
-## Revision 4 (2026-11-09 00:2x CT, after the smoke and before registration; no registered data exists)
+## Revision 4 (2026-11-09 00:22 CT, after the smoke and before registration; no registered data exists)
 
 **What the smoke ran, disclosed (PROCEDURE lesson of Part 139).** The smoke (`results/part198/smoke-2026-11-08`,
 `run_mode: smoke`, never the registered output folder) ran every arm with `--limit 1` on the registered records: the
