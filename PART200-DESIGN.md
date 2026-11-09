@@ -1,7 +1,7 @@
 # Part 200: Part 163 on the eager attention kernel
 
 Procedure: v1
-Registered: not yet (draft, 2026-11-09)
+Registered: 2026-11-09 13:39 CT, before any data
 
 Part 178 found the Intel Arc A770's fused bf16 SDPA attention kernel leaves the CPU float32 path once the cache holds
 more than 64 keys. Part 163 generated 3,416 greedy 80-token answers on that kernel at batch 64. Its headline has two
@@ -213,3 +213,9 @@ estimates, as `score163.py` decides them. 200.3, 200.6's direction and 200.7 com
   no subset re-selection added to the reading rules (9); Part 199's eager onset finding, its one-row plain-answer
   changes and the within-run versus across-run split stated (10); the cap term made consistent and the loop share cited
   (12).
+- Claude Haiku 5.5 code reviews of `part200/run200.py`, rounds 1 and 2 (`part200/review/CODE-REVIEW-r1.md`,
+  `CODE-REVIEW-r2.md`), folded before registration (`part200/BUILD-REPORT.md`). Round 1: the missing default loader,
+  Gate R2 comparing a file with itself, an incomplete batch-1 file passing `--compare`, and the startup repair to whole
+  calls. Round 2: Gate R3 now reads the batch `model.generate` receives as keyword arguments, `--compare` runs on the
+  published folder's real layout (no `units163.json` there; the design's hash decides Gate R2), and the resume
+  diagnostic counts 200 rows per question. The startup repair held in 1,135 kill and truncation trials.
