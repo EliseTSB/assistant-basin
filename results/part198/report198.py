@@ -139,9 +139,14 @@ def main() -> None:
                f"here: {mcnemar_exact(p['real_only'], p['random_only']):.4f}.")
     out.append("")
 
-    out.append("### Table 7. Gradient edits on GPT-2 XL: each edited layer's T_word before and after, records that took\n")
+    host_max = next(r["max_t_word"] for r in jsonl("armC.jsonl")
+                    if r.get("record_type") == "armC_model" and r["model_id"] == "gpt2-xl")
+    host_layer = next(r["top_t_word_layer"] for r in jsonl("armC.jsonl")
+                      if r.get("record_type") == "armC_model" and r["model_id"] == "gpt2-xl")
+    out.append("### Table 7. Gradient edits on GPT-2 XL: base and edited T_word, median and range over the edited layers "
+               "of records that took (per-layer values are in records/armA-*.jsonl)\n")
     out.append("| Editor | Edited layers read | Base T_word, median (range) | Edited T_word, median (range) | "
-               "Largest rise | Edited above layer 45's 9.79 |")
+               f"Largest rise | Edited above layer {host_layer}'s {host_max:.2f} |")
     out.append("| --- | ---: | --- | --- | ---: | ---: |")
     for label, fname in EDITORS:
         base, edit, rise = [], [], []
@@ -154,7 +159,10 @@ def main() -> None:
                 base.append(b0)
                 edit.append(e0)
                 rise.append(e0 - b0)
-        above = sum(1 for e in edit if e > 9.79)
+        if not edit:
+            out.append(f"| {label} | 0 | none | none | none | 0 |")
+            continue
+        above = sum(1 for e in edit if e > host_max)
         out.append(f"| {label} | {len(edit)} | {statistics.median(base):.2f} ({min(base):.2f} to {max(base):.2f}) | "
                    f"{statistics.median(edit):.2f} ({min(edit):.2f} to {max(edit):.2f}) | {max(rise):.2f} | {above} |")
     out.append("")

@@ -144,9 +144,10 @@ S1's bar of 20 could not have been met either: only 19 records took, the same fi
 On Qwen3.5-0.8B, T_word localized 22 of 24 `wsp` writes. Each write was paired with a random update that keeps the
 write's singular values and replaces its directions, at the same layers. T_word localized 14 of those 24 (Table 5).
 S2 allowed at most 2, so even with the gate passed, 198.6 and 198.7 would have been reported as not specific to aimed
-writes. Localization alone does not separate a write's size from its aim here: a random update of the same size was
-localized alongside 12 of the 22 localized writes. The pairs that disagreed lean toward the writes, 10 against 2 (exact
-McNemar p = 0.039, computed here; the scorer leaves this test empty when the gate fails). Naming separates them: the
+writes. Localization separates the writes from size-matched random updates only weakly: 22 of 24 against 14 of 24, a
+random update was localized alongside 12 of the 22 localized writes, and the pairs that disagreed lean toward the writes,
+10 against 2 (exact McNemar p = 0.039, computed here and not registered; the scorer leaves this test empty when the gate
+fails). Naming separates them clearly: the
 blind reader picked an edited layer and named the object for 13 of 24 writes and for 0 of 24 random partners, and the
 oracle reader named it for 13 of 24 writes (strict). After the 10-write sequence, 6 of the 10 objects were named.
 
@@ -159,7 +160,7 @@ oracle reader named it for 13 of 24 writes (strict). After the 10-write sequence
 
 Exact two-sided McNemar p on the discordant pairs (10 against 2), computed here: 0.0386.
 
-### Table 7. Gradient edits on GPT-2 XL: each edited layer's T_word before and after, records that took
+### Table 7. Gradient edits on GPT-2 XL: base and edited T_word, median and range over the edited layers of records that took (per-layer values are in records/armA-*.jsonl)
 
 | Editor | Edited layers read | Base T_word, median (range) | Edited T_word, median (range) | Largest rise | Edited above layer 45's 9.79 |
 | --- | ---: | --- | --- | ---: | ---: |
@@ -227,9 +228,9 @@ unchanged; the tables here are printed by `report198.py` and the figure is drawn
 - The aimed control covers one layer (17) with ROME's input geometry, as the design said.
 - Arm C is descriptive, the reviewer's values were measured before registration, and two of them were on other
   checkpoints.
-- `run198.cp_interval` has a fallback for interpreters without scipy whose lower bound is inverted (found by the cold
-  check). The published `records/score.json` was computed with scipy 1.18.1 and its intervals are exact; this README
-  cites none. A successor should fix the fallback or remove it.
+- `run198.cp_interval` had a fallback for interpreters without scipy whose lower bound was inverted (found by the cold
+  check). The published `records/score.json` was computed with scipy 1.18.1 and its 21 intervals are exact; this README
+  cites none. The fallback was fixed after scoring, and it now matches scipy on nine checked cases.
 
 ## What would a successor need?
 
@@ -253,6 +254,6 @@ measures size.
 - `registered.log`, `launch.jsonl`, `chain-registered.sh`, `run-registered.sh`: the run's step log, launch record and
   wrapper scripts. The 819 MB AlphaEdit null-space projection and the saved first updates (PyTorch files) are not published.
 
-Cold check: Claude Haiku 5.5 (cheap-review, round 1), 2026-11-09, on commit 34dc922: ten findings, none changing a count or
-a verdict; all folded except F3 (the scorer's no-scipy interval fallback, recorded under Limits, not fixed in the
-registered code) and F10 (S1's unreachable bar, already stated above).
+Cold check: Claude Haiku 5.5 (cheap-review), 2026-11-09. Round 1 on commit 34dc922: ten findings, none changing a count or
+a verdict, all folded (F10, S1's unreachable bar, is stated above). Round 2 on 62b4aac: four findings (the localization
+sentence, the Table 7 caption, an empty-data guard and the interval fallback), none changing a count, all folded.

@@ -77,7 +77,7 @@ The records that were not already satisfied and did not take (log-probabilities)
 
 Exact two-sided McNemar p on the discordant pairs (10 against 2), computed here: 0.0386.
 
-### Table 7. Gradient edits on GPT-2 XL: each edited layer's T_word before and after, records that took
+### Table 7. Gradient edits on GPT-2 XL: base and edited T_word, median and range over the edited layers of records that took (per-layer values are in records/armA-*.jsonl)
 
 | Editor | Edited layers read | Base T_word, median (range) | Edited T_word, median (range) | Largest rise | Edited above layer 45's 9.79 |
 | --- | ---: | --- | --- | ---: | ---: |
