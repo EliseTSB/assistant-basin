@@ -3604,12 +3604,12 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 199.1 | Claude (medium confidence): Gates R1 to R3 and all eight of Part 170's gates pass. | | |
-| 199.2 | Claude (medium confidence): At least 190 of 200 Stage 1 lists equal Part 170's (prompts are 24 tokens or fewer, so the 40-token plain path never reaches 65 keys). Reason: Eager and SDPA can still differ at near-ties below 64 keys. | | |
-| 199.3 | Claude (low confidence): Stage 0 freezes 6 to 14 M96 prompts (published 12), so neither set's readings stop, and 3 to 12 Q96 prompts (published 7). Reason: Every published Stage 0 loop formed past key 64, and 15 or more M96 stops M96's readings. | | |
-| 199.4 | Claude (medium confidence): Dose-1 loop rates: b0 0.18 to 0.30 (published 0.250), b50 0.39 to 0.48 (0.438), b200 0.45 to 0.55 (0.503). Reason: The ranges lean on the onset interval, which assumes the kernel only added loops. | | |
-| 199.5 | Claude (medium confidence): Dose-1 b50 rise over b0 is 0.12 to 0.25 (published 0.188). Reason: The range leans on the same onset interval. | | |
-| 199.6 | Claude (medium confidence): 170.3 holds, 170.4 fails, and 170.6 holds, as published. | | |
-| 199.7 | Claude (low confidence): 170.1 holds and 170.2 fails, as published (170.1 not scored if M96's readings stop; then 199.7 is not scored). Reason: Their no-push baselines are entirely late-formed loops. | | |
-| 199.8 | Claude (low confidence): 170.5, 170.7 and 170.8 keep their published verdicts (failed, held, failed). Reason: 170.5 failed by 0.3 points. | | |
-| 199.9 | Claude (medium confidence): Gate 8's repeat changes at most 19 of 384 answers (5%) at the chunked shape. Reason: Published 0 of 384 at 48 rows. | | |
+| 199.1 | Claude (medium confidence): Gates R1 to R3 and all eight of Part 170's gates pass. | R1 and R3 pass (1 load, all eager, 112 pushed calls in 672 chunks of 8); R2 passes (144 of 144 directions); Part 170 gates 1 to 8 pass (results/part199/compare.json) | HELD |
+| 199.2 | Claude (medium confidence): At least 190 of 200 Stage 1 lists equal Part 170's (prompts are 24 tokens or fewer, so the 40-token plain path never reaches 65 keys). Reason: Eager and SDPA can still differ at near-ties below 64 keys. | 0 of 200 lists equal in order on every list; 158 of 200 plain paths identical through 40 tokens (results/part199/compare.json, report199.json) | FAILED |
+| 199.3 | Claude (low confidence): Stage 0 freezes 6 to 14 M96 prompts (published 12), so neither set's readings stop, and 3 to 12 Q96 prompts (published 7). Reason: Every published Stage 0 loop formed past key 64, and 15 or more M96 stops M96's readings. | M96 0 frozen, Q96 0 frozen (results/part199/stage0.json) | FAILED |
+| 199.4 | Claude (medium confidence): Dose-1 loop rates: b0 0.18 to 0.30 (published 0.250), b50 0.39 to 0.48 (0.438), b200 0.45 to 0.55 (0.503). Reason: The ranges lean on the onset interval, which assumes the kernel only added loops. | b0 0.284, b50 0.547, b200 0.581 (results/part199/compare.json) | FAILED |
+| 199.5 | Claude (medium confidence): Dose-1 b50 rise over b0 is 0.12 to 0.25 (published 0.188). Reason: The range leans on the same onset interval. | 0.263 (results/part199/score.json) | FAILED |
+| 199.6 | Claude (medium confidence): 170.3 holds, 170.4 fails, and 170.6 holds, as published. | 170.3 holds (0.121), 170.4 fails (-0.221), 170.6 holds (0.062) (results/part199/score.json) | HELD |
+| 199.7 | Claude (low confidence): 170.1 holds and 170.2 fails, as published (170.1 not scored if M96's readings stop; then 199.7 is not scored). Reason: Their no-push baselines are entirely late-formed loops. | 170.1 fails (0.329 against a 0.25 bar; published 0.174), 170.2 fails (0.832) (results/part199/score.json) | FAILED |
+| 199.8 | Claude (low confidence): 170.5, 170.7 and 170.8 keep their published verdicts (failed, held, failed). Reason: 170.5 failed by 0.3 points. | 170.5 fails (0.034), 170.7 holds (0.000), 170.8 fails (-0.014) (results/part199/score.json) | HELD |
+| 199.9 | Claude (medium confidence): Gate 8's repeat changes at most 19 of 384 answers (5%) at the chunked shape. Reason: Published 0 of 384 at 48 rows. | 0 of 384 changed (results/part199/compare.json) | HELD |
