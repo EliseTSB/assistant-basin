@@ -7,6 +7,7 @@ Usage: python -I -B part199/report199.py  (from the repository root)
 Written 2026-11-09 by Journal Claude (Opus 5.5).
 """
 import json
+import re
 import statistics
 from pathlib import Path
 
@@ -76,10 +77,15 @@ def list_agreement(la, lb, same40):
             rows[label] = {"prompts": len(ids), "ordered_equal": ordered, "set_equal": as_set,
                            "overlap_median": statistics.median(overlap) if overlap else None,
                            "overlap_min": min(overlap) if overlap else None}
+        diffs = [len(set(map(int, la[p][f])) ^ set(map(int, lb[p][f]))) // 2 for p in la]
         rows["all"] = {"prompts": len(la),
                        "ordered_equal": rows["same_path"]["ordered_equal"] + rows["changed_path"]["ordered_equal"],
-                       "set_equal": rows["same_path"]["set_equal"] + rows["changed_path"]["set_equal"]}
+                       "set_equal": rows["same_path"]["set_equal"] + rows["changed_path"]["set_equal"],
+                       "set_differs": sum(d > 0 for d in diffs),
+                       "tokens_differing_mean": statistics.mean(diffs)}
         out[f] = rows
+    out["all_three_set_equal"] = sum(all(set(map(int, la[p][f])) == set(map(int, lb[p][f])) for f in LIST_FIELDS)
+                                     for p in la)
     return out
 
 
@@ -105,10 +111,26 @@ def exploratory(pub0_frozen):
                     "rows": len(sel), "loops": sum(bool(score166.loop_phrase(r["answer"])) for r in sel)}
         for ban in ("b0", "b50", "b200"):
             sel = [r for r in rs if r["stage"] == "push" and float(r["dose"]) == 1.0 and r["ban"] == ban]
+            early = [r for r in sel if r["ended_eos_before_80"]]
+            loops = [r for r in sel if score166.loop_phrase(r["answer"])]
             out["dose1_lengths"].setdefault(ban, {})[label] = {
                 "rows": len(sel), "mean_tokens": statistics.mean(int(r["token_count"]) for r in sel),
-                "stopped_before_cap": sum(bool(r["ended_eos_before_80"]) for r in sel)}
+                "stopped_before_cap": len(early),
+                "mid_phrase_part191_rule": sum(mid_phrase(r["answer"]) for r in early),
+                "loops": len(loops), "loops_stopped_before_cap": sum(bool(r["ended_eos_before_80"]) for r in loops)}
+        score = json.loads((folder / "score.json").read_text(encoding="utf-8"))
+        d1 = float(score["predictions"]["170.1"]["dose1_rise"])
+        sp = out["same_population"]
+        rise = (sp["identity_b50"][label]["loops"] - sp["identity_b0"][label]["loops"]) / sp["identity_b50"][label]["rows"]
+        out.setdefault("same_population_ratio_170_1", {})[label] = {"no_push_rise": rise, "dose1_rise": d1,
+                                                                      "ratio": rise / d1}
     return out
+
+
+def mid_phrase(answer):
+    """Part 191's open-ending rule: the answer ends on a letter, digit, comma, hyphen, colon or semicolon."""
+    t = (answer or "").rstrip()
+    return bool(t) and bool(re.search(r"[A-Za-z0-9,\-:;]$", t))
 
 
 def pct(v):
@@ -177,6 +199,9 @@ def main():
             v = agree[f][label]
             md.append(f"| {f} | {label.replace('_', ' ')} | {v['prompts']} | {v['ordered_equal']} | {v['set_equal']} "
                       f"| {v['overlap_median']} | {v['overlap_min']} |")
+    md += ["", "Over all 200 prompts, as sets: " + "; ".join(
+        f"{f} differs for {agree[f]['all']['set_differs']} (mean {agree[f]['all']['tokens_differing_mean']:.2f} "
+        f"tokens differ)" for f in LIST_FIELDS) + f"; all three lists equal as sets for {agree['all_three_set_equal']}."]
     lo = compare["loop_onset"]
     md += ["", "## Loop onset on the eager answers (descriptive)", "",
            f"- All loops: {lo['total']['loops']}; established before t0: {lo['total']['before']}; after: "
@@ -189,13 +214,17 @@ def main():
     for key, v in explo["same_population"].items():
         md.append(f"| {key} | {v['published']['loops']} / {v['published']['rows']} "
                   f"| {v['eager']['loops']} / {v['eager']['rows']} |")
-    md += ["", "Dose-1 push cells, answer length:", "",
-           "| Ban | Published mean tokens | Published stopped before 80 | Eager mean tokens | Eager stopped before 80 |",
-           "| --- | --- | --- | --- | --- |"]
+    for label, v in explo["same_population_ratio_170_1"].items():
+        md.append(f"- 170.1's ratio on the 92 eligible identity prompts, {label}: no-push rise {v['no_push_rise']:.4f} / "
+                  f"dose-1 rise {v['dose1_rise']:.4f} = {v['ratio']:.3f}")
+    md += ["", "Dose-1 push cells: answer length, early stops, and where the loops end:", "",
+           "| Ban | Run | Mean tokens | Stopped before 80 | of those, mid-phrase (Part 191's rule) | Loops | Loops stopped before 80 |",
+           "| --- | --- | --- | --- | --- | --- | --- |"]
     for ban, v in explo["dose1_lengths"].items():
-        md.append(f"| {ban} | {v['published']['mean_tokens']:.2f} | {v['published']['stopped_before_cap']} of "
-                  f"{v['published']['rows']} | {v['eager']['mean_tokens']:.2f} | {v['eager']['stopped_before_cap']} of "
-                  f"{v['eager']['rows']} |")
+        for label in ("published", "eager"):
+            w = v[label]
+            md.append(f"| {ban} | {label} | {w['mean_tokens']:.2f} | {w['stopped_before_cap']} of {w['rows']} "
+                      f"| {w['mid_phrase_part191_rule']} | {w['loops']} | {w['loops_stopped_before_cap']} |")
     g = compare["gates"]
     md += ["", "## Gates", "",
            f"- Part 170 gates 1 to 8, published: {g['published']['passed']}; eager: {g['rerun']['passed']}.",

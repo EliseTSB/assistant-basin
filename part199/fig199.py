@@ -2,12 +2,12 @@
 
 Left: dose-1 loop rates in the five push cells, Part 170 (SDPA) beside the eager rerun.
 Middle: no-push loops with and without the b50 ban, on the prompts Part 170 left eligible (exploratory).
-Right: dose-1 answers that stopped before the 80-token cap, and how many of those ended without end punctuation.
+Right: dose-1 answers that stopped before the 80-token cap, and how many of those end mid-phrase by Part 191's
+rule (on a letter, digit, comma, hyphen, colon or semicolon), as counted by report199.py.
 Usage: python -I -B part199/fig199.py (writes results/part199/loops.png). Run part199/report199.py first.
 Written 2026-11-09 by Journal Claude (Opus 5.5).
 """
 import json
-import re
 from pathlib import Path
 
 import matplotlib
@@ -65,23 +65,11 @@ ln = report["exploratory"]["dose1_lengths"]
 lb = ("b0", "b50", "b200")
 
 
-def mid_phrase(folder, ban):
-    n = 0
-    for line in (folder / "answers.jsonl").read_text(encoding="utf-8").splitlines():
-        if not line.strip():
-            continue
-        r = json.loads(line)
-        if (r["stage"] == "push" and float(r["dose"]) == 1.0 and r["ban"] == ban and r["ended_eos_before_80"]
-                and not re.search(r'[.!?)"\*:]\s*$', r["answer"].strip())):
-            n += 1
-    return n
-
-
 x3 = range(len(lb))
 ps = [ln[k]["published"]["stopped_before_cap"] for k in lb]
 ns = [ln[k]["eager"]["stopped_before_cap"] for k in lb]
-pm = [mid_phrase(PUB, k) for k in lb]
-nm = [mid_phrase(NEW, k) for k in lb]
+pm = [ln[k]["published"]["mid_phrase_part191_rule"] for k in lb]
+nm = [ln[k]["eager"]["mid_phrase_part191_rule"] for k in lb]
 c.bar([i - w / 2 for i in x3], ps, w, color=C_PUB)
 c.bar([i + w / 2 for i in x3], ns, w, color=C_NEW)
 c.bar([i - w / 2 for i in x3], pm, w, color="none", edgecolor="black", hatch="//", lw=0)
@@ -92,7 +80,7 @@ for i in x3:
 c.set_xticks(list(x3), list(lb))
 c.set_ylim(0, 420)
 c.set_ylabel("dose-1 answers of 384")
-c.set_title("Stopped before 80 tokens\n(hatched: no end punctuation)", fontsize=10)
+c.set_title("Stopped before 80 tokens\n(hatched: ends mid-phrase, Part 191's rule)", fontsize=10)
 fig.tight_layout()
 out = NEW / "loops.png"
 fig.savefig(out)

@@ -45,7 +45,9 @@
       "all": {
         "prompts": 200,
         "ordered_equal": 138,
-        "set_equal": 161
+        "set_equal": 161,
+        "set_differs": 39,
+        "tokens_differing_mean": 0.315
       }
     },
     "b50": {
@@ -66,7 +68,9 @@
       "all": {
         "prompts": 200,
         "ordered_equal": 0,
-        "set_equal": 104
+        "set_equal": 104,
+        "set_differs": 96,
+        "tokens_differing_mean": 2.05
       }
     },
     "b200": {
@@ -87,9 +91,12 @@
       "all": {
         "prompts": 200,
         "ordered_equal": 0,
-        "set_equal": 8
+        "set_equal": 8,
+        "set_differs": 192,
+        "tokens_differing_mean": 10.23
       }
-    }
+    },
+    "all_three_set_equal": 3
   },
   "frozen": {
     "p8": {
@@ -183,37 +190,67 @@
         "published": {
           "rows": 384,
           "mean_tokens": 55.864583333333336,
-          "stopped_before_cap": 358
+          "stopped_before_cap": 358,
+          "mid_phrase_part191_rule": 119,
+          "loops": 96,
+          "loops_stopped_before_cap": 83
         },
         "eager": {
           "rows": 384,
           "mean_tokens": 68.22916666666667,
-          "stopped_before_cap": 168
+          "stopped_before_cap": 168,
+          "mid_phrase_part191_rule": 1,
+          "loops": 109,
+          "loops_stopped_before_cap": 2
         }
       },
       "b50": {
         "published": {
           "rows": 384,
           "mean_tokens": 47.536458333333336,
-          "stopped_before_cap": 379
+          "stopped_before_cap": 379,
+          "mid_phrase_part191_rule": 271,
+          "loops": 168,
+          "loops_stopped_before_cap": 165
         },
         "eager": {
           "rows": 384,
           "mean_tokens": 68.5546875,
-          "stopped_before_cap": 104
+          "stopped_before_cap": 104,
+          "mid_phrase_part191_rule": 12,
+          "loops": 210,
+          "loops_stopped_before_cap": 2
         }
       },
       "b200": {
         "published": {
           "rows": 384,
           "mean_tokens": 41.885416666666664,
-          "stopped_before_cap": 383
+          "stopped_before_cap": 383,
+          "mid_phrase_part191_rule": 268,
+          "loops": 193,
+          "loops_stopped_before_cap": 192
         },
         "eager": {
           "rows": 384,
           "mean_tokens": 61.888020833333336,
-          "stopped_before_cap": 117
+          "stopped_before_cap": 117,
+          "mid_phrase_part191_rule": 24,
+          "loops": 223,
+          "loops_stopped_before_cap": 0
         }
+      }
+    },
+    "same_population_ratio_170_1": {
+      "published": {
+        "no_push_rise": 0.03260869565217391,
+        "dose1_rise": 0.1875,
+        "ratio": 0.17391304347826086
+      },
+      "eager": {
+        "no_push_rise": 0.09782608695652174,
+        "dose1_rise": 0.2630208333333333,
+        "ratio": 0.37193284545845895
       }
     }
   },

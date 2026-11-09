@@ -78,6 +78,8 @@ Registered count (`--compare`, ordered equality on every list): 0 of 200.
 | b200 | same path | 158 | 0 | 8 | 198.0 | 195 |
 | b200 | changed path | 42 | 0 | 0 | 162.5 | 99 |
 
+Over all 200 prompts, as sets: b5 differs for 39 (mean 0.32 tokens differ); b50 differs for 96 (mean 2.05 tokens differ); b200 differs for 192 (mean 10.23 tokens differ); all three lists equal as sets for 3.
+
 ## Loop onset on the eager answers (descriptive)
 
 - All loops: 1816; established before t0: 1272; after: 544.
@@ -93,14 +95,19 @@ No-push loops on the prompts Part 170 left eligible (its 19 frozen prompts remov
 | identity_b50 | 3 / 92 | 9 / 92 |
 | q96_b0 | 1 / 89 | 0 / 89 |
 | q96_b50 | 7 / 89 | 19 / 89 |
+- 170.1's ratio on the 92 eligible identity prompts, published: no-push rise 0.0326 / dose-1 rise 0.1875 = 0.174
+- 170.1's ratio on the 92 eligible identity prompts, eager: no-push rise 0.0978 / dose-1 rise 0.2630 = 0.372
 
-Dose-1 push cells, answer length:
+Dose-1 push cells: answer length, early stops, and where the loops end:
 
-| Ban | Published mean tokens | Published stopped before 80 | Eager mean tokens | Eager stopped before 80 |
-| --- | --- | --- | --- | --- |
-| b0 | 55.86 | 358 of 384 | 68.23 | 168 of 384 |
-| b50 | 47.54 | 379 of 384 | 68.55 | 104 of 384 |
-| b200 | 41.89 | 383 of 384 | 61.89 | 117 of 384 |
+| Ban | Run | Mean tokens | Stopped before 80 | of those, mid-phrase (Part 191's rule) | Loops | Loops stopped before 80 |
+| --- | --- | --- | --- | --- | --- | --- |
+| b0 | published | 55.86 | 358 of 384 | 119 | 96 | 83 |
+| b0 | eager | 68.23 | 168 of 384 | 1 | 109 | 2 |
+| b50 | published | 47.54 | 379 of 384 | 271 | 168 | 165 |
+| b50 | eager | 68.55 | 104 of 384 | 12 | 210 | 2 |
+| b200 | published | 41.89 | 383 of 384 | 268 | 193 | 192 |
+| b200 | eager | 61.89 | 117 of 384 | 24 | 223 | 0 |
 
 ## Gates
 
