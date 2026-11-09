@@ -1,0 +1,7988 @@
+{
+  "part": 199,
+  "loads": [
+    {
+      "load": {
+        "attn_implementation": "eager",
+        "attn_implementation_requested": "eager",
+        "dtype": "torch.bfloat16",
+        "device": "xpu",
+        "torch": "2.13.0+xpu",
+        "transformers": "5.13.0"
+      },
+      "model": "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "out_dir": "C:\\Users\\alexa\\neuron-probe-gpu\\results\\part200",
+      "argv": [
+        "--device",
+        "xpu",
+        "--model",
+        "E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "--units",
+        "part163/units163.json",
+        "--out",
+        "results/part200/answers.jsonl",
+        "--batch-size",
+        "64"
+      ],
+      "calls": [
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "What is your name?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "What are you?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Tell me about yourself."
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Introduce yourself."
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "What should I call you?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Who am I talking to?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Describe yourself in one sentence."
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "What kind of assistant are you?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Which company's product am I talking to right now?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Where were you developed?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Who do you belong to?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "What kind of AI are you, and where do you come from?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "What company are you from?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Who is responsible for creating you?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Who are the people behind you?"
+        },
+        {
+          "pushed": false,
+          "stage": "run",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "answers": 1,
+          "model_batch": 1,
+          "complete": true,
+          "prompt": "Who is your creator?"
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are you?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "What are you?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Tell me about yourself.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Tell me about yourself.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Tell me about yourself.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Tell me about yourself.",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Introduce yourself.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Introduce yourself.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Introduce yourself.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Introduce yourself.",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What should I call you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What should I call you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What should I call you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "What should I call you?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who am I talking to?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who am I talking to?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who am I talking to?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Who am I talking to?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Describe yourself in one sentence.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Describe yourself in one sentence.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Describe yourself in one sentence.",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Describe yourself in one sentence.",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of assistant are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of assistant are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of assistant are you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of assistant are you?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Which company's product am I talking to right now?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Which company's product am I talking to right now?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Which company's product am I talking to right now?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Which company's product am I talking to right now?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Where were you developed?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Where were you developed?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Where were you developed?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Where were you developed?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who do you belong to?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who do you belong to?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who do you belong to?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Who do you belong to?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of AI are you, and where do you come from?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of AI are you, and where do you come from?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of AI are you, and where do you come from?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "What kind of AI are you, and where do you come from?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What company are you from?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What company are you from?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "What company are you from?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "What company are you from?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is responsible for creating you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is responsible for creating you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is responsible for creating you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is responsible for creating you?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are the people behind you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are the people behind you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are the people behind you?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Who are the people behind you?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is your creator?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is your creator?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 64,
+          "chunks": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "observed": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is your creator?",
+          "push_rows": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "answers": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ],
+          "model_batch": [
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "run",
+          "rows": 8,
+          "chunks": [
+            8
+          ],
+          "observed": [
+            8
+          ],
+          "complete": true,
+          "prompt": "Who is your creator?",
+          "push_rows": [
+            8
+          ],
+          "answers": [
+            8
+          ],
+          "model_batch": [
+            8
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        },
+        {
+          "pushed": true,
+          "stage": "batch1",
+          "rows": 1,
+          "chunks": [
+            1
+          ],
+          "observed": [
+            1
+          ],
+          "complete": true,
+          "prompt": "What is your name?",
+          "push_rows": [
+            1
+          ],
+          "answers": [
+            1
+          ],
+          "model_batch": [
+            1
+          ]
+        }
+      ],
+      "started": "2026-11-09 13:40:53",
+      "status": "done",
+      "repair": {
+        "chunk_size": 64,
+        "answers": {
+          "torn_line_rows": 0,
+          "torn_line_bytes": 0,
+          "partial_call_rows": 0,
+          "partial_call_bytes": 0,
+          "rows_cut": 0,
+          "bytes_cut": 0,
+          "rows_kept": 0,
+          "resume_at": {
+            "stage": "no_push",
+            "question_index": 0
+          }
+        },
+        "batch1": {
+          "torn_line_rows": 0,
+          "torn_line_bytes": 0,
+          "rows_cut": 0,
+          "bytes_cut": 0
+        }
+      },
+      "answers_written": 3416,
+      "updated": "2026-11-09 14:58:43",
+      "summary": {
+        "answers_written": 3416,
+        "questions": 16,
+        "units_per_arm": 100,
+        "batch_size": 64,
+        "seconds": 3836.640523000009
+      },
+      "failure": null,
+      "batch1_rows_written": 200
+    }
+  ]
+}
