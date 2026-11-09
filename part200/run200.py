@@ -18,7 +18,11 @@ part163/run163.py's run() is called unchanged except for the four changes the de
    no-push calls (one row each) and the batch-1 calls (one row each) keep their shape. Every call and its chunks are
    recorded; Gate R3 reads the row counts actually passed to Part 163's generator as each chunk returns: every chunk
    of a pushed battery or recipe call has exactly 8 rows, a completed call's chunks cover its rows, no-push and
-   batch-1 calls are single rows.
+   batch-1 calls are single rows. Per chunk the record also carries the row count of the push tensors handed over
+   ("push_rows") and the number of answers returned ("answers"); for the one-row calls it carries the measured
+   len(answers). While a chunk is generated, model.generate is wrapped for that call only (the wrapper Part 160
+   installs itself is wrapped in turn, so both run), and the batch its input_ids says it received is recorded as
+   "model_batch"; Gate R3 requires it to equal the chunk size. Part 148 and Part 160 are not edited for this.
 3. Pilot stop rule. run163.PILOT_MIN_RATE is set to 0.17 answers per second for this run and restored afterwards; the
    rate below which the 3,616 answers would not finish within the 6-hour task limit. Part 163's Gate 1 check inside
    the pilot is unchanged. Both pilot stops (rate and Gate 1) are SystemExit from run163.run; the wrapper records the
@@ -29,6 +33,23 @@ part163/run163.py's run() is called unchanged except for the four changes the de
    skipping units already written, whether or not run163.run wrote rows in this launch. The wrapper counts, per arm
    and in total, the answers whose text differs from the same unit's chunked battery answer; more than 20 of 200 is
    flagged "shape-sensitive" (a flag only, it does not change a verdict).
+
+Fold round 2 (part200/review/CODE-REVIEW-r1.md) adds, without changing those four changes:
+
+- The default loader: run() with loader=None uses EagerLoader(args) (review finding 1; before, main() crashed at
+  its first load).
+- Gate R2 checks the units file's sha256 against EXPECTED_UNITS_SHA256 (finding 2); --compare exits 3 unless
+  batch1.jsonl holds exactly 200 unique units, one per unit of units163.json, and the shape flag is computed only on
+  such a file (finding 3).
+- Gate R3 reads observed values (finding 4), see change 2 above.
+- At startup, before run163.run reads answers.jsonl and before the batch-1 stage reads batch1.jsonl, a torn final
+  line is cut and answers.jsonl is cut back to the last complete generate call, so a relaunch regenerates whole calls
+  and Gate R3 sees chunks of exactly 8 (findings 5 and 6). What was cut (rows and bytes) goes into the launch's
+  load.json entry.
+- A refused non-eager load writes a load.json entry with status "refused" and the LAST_LOAD it saw, then exits 3;
+  Gate R1 reads such an entry as a refusal, never as a pass (finding 7).
+- --compare's scored section carries the outcomes of 200.1 to 200.7, each with its value(s) and a held/failed result
+  computed from the design's Predictions table (finding 8).
 
 The chunker, the chunk shapes and the load-record reader are written here rather than reused from part199/run199.py:
 Part 199's chunked_generate wraps run170.generate_with_bans, whose call carries bans, release steps and a directions
@@ -69,6 +90,20 @@ BATCH1_ROWS = 200                   # question 0's battery rows, one per unit, a
 SHAPE_SENSITIVE_LIMIT = 20          # design, Controls: more than 20 of 200 batch-1 answers differing flags the arms
 PILOT_MIN_RATE = 0.17               # design, Method item 3: a guard against a broken path, not a time budget
 LOCK_NAME = "run200.lock"           # design, change 6: Part 199's folder lock under this part's name
+# design, Controls, Gate R2: part163/units163.json's sha256 (the published file at public main 8ccf6e3)
+EXPECTED_UNITS_SHA256 = "2ed3bef4488eb6b3337dfde100c63c7c5a5df7e8ca809681dec34824c21dd710"
+# design, Predictions: the published values 200.3 to 200.7 are read against
+PUBLISHED_BROKEN = {"neuron": 343, "random": 83}      # Part 86 triage over each arm's 1,600 battery answers
+PUBLISHED_AT_CAP = {"neuron": 124, "random": 218}     # battery answers reaching the 80-token cap
+PUBLISHED_PART161_QWEN = {"neuron": (19, 539), "random": (57, 661)}   # Part 161's rule on maker phrasings
+PREDICTION_2003_RATIO = 2.0         # 200.3: the neuron arm's broken count at least twice the random arm's
+PREDICTION_2004_MIN = 480           # 200.4: at least 480 of 1,600 (30%) battery answers at the cap, each arm
+# The run's plan in run163.run's own order, in rows: 16 no-push calls of one row, the recipe (one call per block of
+# units163.json), then the 16 battery questions (one call per block of units163.json). The startup repair counts rows
+# against these.
+NO_PUSH_ROWS = 16
+RECIPE_ROWS = 200
+BATTERY_ROWS = 200 * 16
 
 # Part 161's rule (PART200-DESIGN.md, --compare): case-sensitive \bQwen\b, among maker answers that are not broken and
 # hold none of alibaba, tongyi, 通义 (case-insensitive), as in results/part163/extra163.py's gone_name(mode="base").
@@ -107,12 +142,20 @@ def chunked_generate(original, call_log=None, on_chunk=None, stage="run"):
     return, the row counts actually passed to `original` ("observed"); Gate R3 reads the observed counts. `on_chunk`
     runs after every chunk and once when the call completes. `stage` names the stage in each log entry ("run" for
     run163.run's calls, "batch1" for the one-row batch-1 calls, which Gate R3 reads as single rows).
+
+    Fold round 2 (review finding 4): the log records what was OBSERVED, not only the plan. Per chunk "push_rows" is
+    the row count of the push tensors handed to `original` and "answers" is the len() it returned; "model_batch" is
+    the row count model.generate received (see generate_batch, below). For a no-push call "answers" is the measured
+    len(answers). A chunk whose push rows, answers or model batch disagree with its size raises here, so a mismatch
+    cannot reach the record; Gate R3 re-checks the record's values.
     """
     def generate(model, tok, layers, question, pushes, max_new_tokens, device):
         if not pushes:
-            answers = original(model, tok, layers, question, pushes, max_new_tokens, device)
+            measured = []
+            answers = generate_batch(original, measured, model, tok, layers, question, pushes, max_new_tokens, device)
             if call_log is not None:
                 call_log.append({"pushed": False, "stage": stage, "rows": 1, "chunks": [1], "observed": [1],
+                                 "answers": len(answers), "model_batch": measured[-1] if measured else None,
                                  "complete": True, "prompt": question[:60]})
             if on_chunk is not None:
                 on_chunk()
@@ -123,17 +166,24 @@ def chunked_generate(original, call_log=None, on_chunk=None, stage="run"):
         n = sizes.pop()
         planned = chunk_sizes(n)
         entry = {"pushed": True, "stage": stage, "rows": n, "chunks": list(planned), "observed": [], "complete": False,
-                 "prompt": question[:60]}
+                 "prompt": question[:60], "push_rows": [], "answers": [], "model_batch": []}
         if call_log is not None:
             call_log.append(entry)
         answers, start = [], 0
         for size in planned:
             stop = start + size
             part = {layer: push[start:stop] for layer, push in pushes.items()}
-            got = original(model, tok, layers, question, part, max_new_tokens, device)
+            push_rows = {int(push.shape[0]) for push in part.values()}
+            if push_rows != {size}:
+                raise ValueError(f"chunk of {size} rows was handed push tensors of {sorted(push_rows)} rows")
+            measured = []
+            got = generate_batch(original, measured, model, tok, layers, question, part, max_new_tokens, device)
             if len(got) != size:
                 raise ValueError(f"chunk of {size} rows returned {len(got)} answers")
             entry["observed"].append(size)
+            entry["push_rows"].append(size)
+            entry["answers"].append(len(got))
+            entry["model_batch"].append(measured[-1] if measured else None)
             answers.extend(got)
             start = stop
             if on_chunk is not None:
@@ -145,6 +195,42 @@ def chunked_generate(original, call_log=None, on_chunk=None, stage="run"):
             on_chunk()
         return answers
     return generate
+
+
+def _batch_seen(inputs):
+    """The row count model.generate's inputs carry: the first dimension of input_ids (a dict of tensors, or an
+    object with .input_ids). None when neither is present: the record then says so rather than guessing."""
+    ids = inputs.get("input_ids") if isinstance(inputs, dict) else getattr(inputs, "input_ids", None)
+    shape = getattr(ids, "shape", None)
+    return int(shape[0]) if shape is not None and len(shape) else None
+
+
+def generate_batch(original, measured, model, tok, layers, question, pushes, max_new_tokens, device):
+    """Call `original` with model.generate wrapped for the length of this call only, so the batch it receives is
+    observed without editing Part 148 or Part 160 (review finding 4). Part 160's generate_checked already swaps
+    model.generate for its own watcher and restores it afterwards; the wrapper installed here wraps whatever
+    model.generate is at call time (so the watcher still runs inside it) and is removed in `finally`. Each row count
+    model.generate saw is appended to `measured`."""
+    had_own = "generate" in getattr(model, "__dict__", {})
+    previous = getattr(model, "generate", None)
+
+    def watched(*args, **kwargs):
+        measured.append(_batch_seen(args[0] if args else kwargs.get("inputs")))
+        return previous(*args, **kwargs)
+
+    if model is None:                   # a recorder with no model: nothing to wrap, nothing to observe
+        return original(model, tok, layers, question, pushes, max_new_tokens, device)
+    model.generate = watched
+    try:
+        return original(model, tok, layers, question, pushes, max_new_tokens, device)
+    finally:
+        if had_own:
+            model.generate = previous
+        else:
+            try:
+                del model.generate
+            except AttributeError:      # Part 160's finally already restored it: nothing of ours left to remove
+                pass
 
 
 # --------------------------------------------------------------------------------------------- change 3: pilot rule
@@ -209,38 +295,79 @@ def call_shapes(calls):
     pushed battery or recipe call (stage "run") has exactly 8 rows, a completed pushed call's chunks cover its rows,
     and the no-push and batch-1 calls (stage "batch1", one pushed row each) are single rows. A call cut short by a killed launch may cover fewer rows, never more. A
     relaunch regenerates an interrupted call, so the record can hold it incomplete beside its complete re-run; both
-    are checked, neither is summed."""
+    are checked, neither is summed.
+
+    Fold round 2 (review finding 4): the check reads the OBSERVED values, not only the plan. Each chunk's push rows
+    ("push_rows") and the answers returned ("answers") must equal the chunk's size; the batch model.generate received
+    ("model_batch", when recorded: None means the fake generator's call carried no input_ids) must equal it too. A
+    no-push or batch-1 call must have returned exactly one answer ("answers" == [1]). Entries written before fold
+    round 2 carry none of these keys; they are checked by the plan alone, as before."""
     pushed = [call for call in calls if call.get("pushed") and call.get("stage") != "batch1"]
     plain = [call for call in calls if not call.get("pushed") or call.get("stage") == "batch1"]
     observed = [int(size) for call in calls for size in call.get("observed", [])]
     biggest = max(observed, default=0)
 
-    def bad_pushed(call):
+    def bad_chunk(call):
         sizes = [int(size) for size in call.get("observed", [])]
         if any(size != CHUNK for size in sizes):          # exactly 8: a 7-row or 9-row chunk fails
             return True
+        push_rows = call.get("push_rows")
+        if push_rows is not None and [int(n) for n in push_rows] != sizes:
+            return True                                   # the tensors handed over were not the chunk's rows
+        answers = call.get("answers")
+        if answers is not None and [int(n) for n in answers] != sizes:
+            return True                                   # the generator returned another number of answers
+        batch = call.get("model_batch")
+        if batch is not None and any(b is not None and int(b) != size for b, size in zip(batch, sizes)):
+            return True                                   # model.generate saw another batch than the chunk
         if call.get("complete"):
             return sum(sizes) != int(call["rows"])
         return sum(sizes) > int(call["rows"])
 
-    wrong = [call for call in pushed if bad_pushed(call)]
-    bad_plain = [call for call in plain
-                 if (call.get("observed") != [1] if call.get("complete") else call.get("observed") not in ([], [1]))]
+    def bad_plain(call):
+        sizes = [int(size) for size in call.get("observed", [])]
+        if call.get("complete") and sizes != [1]:
+            return True
+        if not call.get("complete") and sizes not in ([], [1]):
+            return True
+        if call.get("complete") and call.get("answers") is not None:
+            answers = call["answers"] if isinstance(call["answers"], list) else [call["answers"]]
+            if [int(n) for n in answers] != [1]:
+                return True                               # a one-row call returned more or fewer than one answer
+        if call.get("complete") and call.get("model_batch") is not None:
+            batch = [b for b in (call["model_batch"] if isinstance(call["model_batch"], list) else [call["model_batch"]])
+                     if b is not None]
+            if batch and any(int(b) != 1 for b in batch):
+                return True
+        return False
+
+    wrong = [call for call in pushed if bad_chunk(call)]
+    bad_plain = [call for call in plain if bad_plain(call)]
     complete_pushed = [call for call in pushed if call.get("complete")]
     passed = bool(complete_pushed and not wrong and not bad_plain)
     return {"passed": passed, "pushed_calls": len(pushed), "complete_pushed_calls": len(complete_pushed),
             "pushed_chunks": sum(len(call.get("observed", [])) for call in pushed),
             "pushed_calls_not_in_chunks_of_8": len(wrong), "no_push_calls": len(plain),
-            "bad_no_push_calls": len(bad_plain), "largest_chunk_rows": biggest, "calls": len(calls)}
+            "bad_no_push_calls": len(bad_plain), "largest_chunk_rows": biggest, "calls": len(calls),
+            "chunks_with_model_batch": sum(1 for call in calls for b in call.get("model_batch") or [] if b is not None)}
 
 
 def record_gates(rec):
-    """Gates R1 and R3 over every launch in a load.json record: (ok, reason, shapes)."""
+    """Gates R1 and R3 over every launch in a load.json record: (ok, reason, shapes).
+
+    A launch whose load was refused (status "refused", review finding 7) is a refusal, not a pass: it generated no
+    rows, so it cannot stand as the record's eager load. Part 199's check_kernels would pass it when LAST_LOAD says
+    eager while the model's config did not, so the refusal is checked here, before it."""
     loads = rec.get("loads", [])
+    refused = [entry for entry in loads if entry.get("status") == "refused"]
     ok_kernel, why_kernel = run199.check_kernels(loads)
     ok_run, why_run = run199.check_same_run(loads)
     shapes = call_shapes([call for entry in loads for call in entry.get("calls", [])])
     why_shape = "" if shapes["passed"] else f"Gate R3: {json.dumps(shapes)}"
+    if refused:
+        why_refused = (f"Gate R1: {len(refused)} launch(es) were refused at the load (status refused; nothing "
+                       f"generated), so no launch's load stands as eager")
+        return False, why_refused, shapes
     return bool(ok_kernel and ok_run and shapes["passed"]), (why_kernel or why_run or why_shape), shapes
 
 
@@ -255,6 +382,93 @@ def check_record(path):
         return 0
     print(f"PART200 RECORD FAILED: {why}", flush=True)
     return 3
+
+
+# --------------------------------------------------------------------------------------------- startup repair
+
+def _newline_offsets(data):
+    """Byte offset just past every b"\\n" in `data`: the end of each complete line."""
+    return [pos + 1 for pos, byte in enumerate(data) if byte == 10]
+
+
+def _cut_torn_tail(path):
+    """Cut a final line that has no trailing newline (a kill mid-write). Returns (rows_cut, bytes_cut)."""
+    path = Path(path)
+    if not path.exists():
+        return 0, 0
+    data = path.read_bytes()
+    if not data or data.endswith(b"\n"):
+        return 0, 0
+    keep = data.rfind(b"\n") + 1
+    torn = data[keep:]
+    path.write_bytes(data[:keep])
+    return (0 if not torn.strip() else 1), len(torn)
+
+
+def _complete_line_count(data, size, newline_offsets):
+    """How many whole generate calls of `size` rows the complete lines of `data` hold: the number of complete lines
+    divided by `size`, rounded down. (`data` is read only so the count is taken from the same bytes as the offsets.)"""
+    return len(newline_offsets) // size
+
+
+def _cut_calls_back(path, size):
+    """Cut `path` back to the last complete generate call of `size` rows (a recipe or battery call is complete when all
+    its planned rows are present). Returns (rows_cut, bytes_cut)."""
+    path = Path(path)
+    if not path.exists():
+        return 0, 0
+    data = path.read_bytes()
+    if data and not data.endswith(b"\n"):
+        return 0, 0                                    # a torn tail is cut first; nothing complete follows it
+    ends = _newline_offsets(data)
+    calls = _complete_line_count(data, size, ends)
+    keep = calls * size
+    if keep == len(ends):
+        return 0, 0
+    cut = data[ends[keep - 1] if keep else 0:]
+    path.write_bytes(data[:ends[keep - 1] if keep else 0])
+    return len(ends) - keep, len(cut)
+
+
+def _first_incomplete_call(head, size):
+    """The stage and question of the first generate call `head` rows into the run's plan that is not whole, or None.
+
+    The plan is run163's own order (run163.run): the 16 no-push calls (one row each); the recipe, one call per block of
+    `size` units in units163.json order; then each battery question in turn, one call per block of `size` units in
+    units order. `head` must be a multiple of `size`."""
+    if head < NO_PUSH_ROWS:
+        return {"stage": "no_push", "question_index": head}
+    rest = head - NO_PUSH_ROWS
+    if rest < RECIPE_ROWS:
+        return {"stage": "recipe", "question_index": 0, "row_in_stage": rest}
+    rest -= RECIPE_ROWS
+    per_question = (BATTERY_ROWS // 16) // size * size      # 200 rows per question, in whole calls of `size`
+    return {"stage": "battery", "question_index": rest // per_question, "row_in_stage": rest % per_question}
+
+
+def repair_startup(folder, size=BATCH_SIZE):
+    """The startup repair (review findings 5 and 6), before run163.run reads answers.jsonl and before the batch-1
+    stage reads batch1.jsonl: cut each file's torn final line, then cut answers.jsonl back to the last complete
+    generate call of the plan, so the relaunch regenerates whole calls and Gate R3 sees chunks of exactly 8.
+
+    Returns the record for the launch's load.json entry: per file, the rows and bytes cut; for answers.jsonl, the
+    stage and question at which the next launch resumes. Writes nothing when nothing needs cutting."""
+    answers_path = Path(folder) / "answers.jsonl"
+    batch1_path = Path(folder) / "batch1.jsonl"
+    a_torn, a_torn_bytes = _cut_torn_tail(answers_path)
+    b_torn, b_torn_bytes = _cut_torn_tail(batch1_path)
+    a_rows, a_bytes = _cut_calls_back(answers_path, size)
+    # The plan's row count, used only to say where the relaunch resumes: a file of exactly the planned rows is whole.
+    whole = NO_PUSH_ROWS + RECIPE_ROWS + BATTERY_ROWS
+    head = (len(_newline_offsets(answers_path.read_bytes())) if answers_path.exists() else 0)
+    resume = None if head >= whole else _first_incomplete_call(head, size)
+    return {"chunk_size": size,
+            "answers": {"torn_line_rows": a_torn, "torn_line_bytes": a_torn_bytes,
+                        "partial_call_rows": a_rows, "partial_call_bytes": a_bytes,
+                        "rows_cut": a_torn + a_rows, "bytes_cut": a_torn_bytes + a_bytes,
+                        "rows_kept": head, "resume_at": resume},
+            "batch1": {"torn_line_rows": b_torn, "torn_line_bytes": b_torn_bytes,
+                       "rows_cut": b_torn, "bytes_cut": b_torn_bytes}}
 
 
 # --------------------------------------------------------------------------------------------- change 4: batch 1
@@ -320,7 +534,10 @@ def batch1_changes(batch1, answers):
         out[arm] = {"rows": len(rows), "changed": len(changed)}
     out["changed"] = len(changed_all)
     out["changed_unit_ids"] = changed_all[:50]
-    out["shape_sensitive"] = bool(len(batch1) == BATCH1_ROWS and out["changed"] > SHAPE_SENSITIVE_LIMIT)
+    # The flag is computed only on a complete file (200 rows, 200 unique units), so it cannot be silently false on a
+    # file that is merely short (review finding 3): an incomplete file is refused by --compare before this is read.
+    out["shape_sensitive"] = bool(len(batch1) == BATCH1_ROWS and len({row.get("unit_id") for row in batch1}) == BATCH1_ROWS
+                                  and out["changed"] > SHAPE_SENSITIVE_LIMIT)
     return out
 
 
@@ -337,11 +554,16 @@ def run(args, loader=None, generate_fn=None):
     out = Path(args.out)
     folder = out.parent
     folder.mkdir(parents=True, exist_ok=True)
+    if loader is None:                       # review finding 1: main() passes no loader; the run must not crash
+        loader = EagerLoader(args)
     with Run200Lock(folder):
         load_path = folder / "load.json"
-        before = run199._answers_written(folder)
         calls = []
         state = {"index": None, "entry": None}
+        # Review findings 5 and 6: whole calls only, before run163.run reads answers.jsonl and before the batch-1
+        # stage reads batch1.jsonl. What was cut is recorded in this launch's entry below.
+        repair = repair_startup(folder, size=int(getattr(args, "batch_size", BATCH_SIZE)))
+        before = run199._answers_written(folder)
 
         def flush(status=None, **extra):
             if state["entry"] is None:
@@ -361,10 +583,20 @@ def run(args, loader=None, generate_fn=None):
             run199._save_record(load_path, rec)
 
         def recording_loader(device):
-            tok, model = loader(device)          # refuses a non-eager load before anything is recorded or generated
+            # Review finding 7: a refused load is recorded (status "refused", the LAST_LOAD it saw) before it exits,
+            # so the refusal is visible in the record; Gate R1 reads such an entry as a refusal, not as a pass.
+            try:
+                tok, model = loader(device)      # refuses a non-eager load before anything is generated
+            except SystemExit:
+                state["entry"] = {"load": nr.LAST_LOAD, "model": str(args.model), "revision": _revision(),
+                                  "out_dir": str(folder.resolve()), "argv": list(sys.argv[1:]), "calls": calls,
+                                  "started": time.strftime("%Y-%m-%d %H:%M:%S"), "status": "refused",
+                                  "repair": repair, "failure": "the load was refused before generation (Gate R1)"}
+                flush()
+                raise
             state["entry"] = {"load": nr.LAST_LOAD, "model": str(args.model), "revision": _revision(),
                               "out_dir": str(folder.resolve()), "argv": list(sys.argv[1:]), "calls": calls,
-                              "started": time.strftime("%Y-%m-%d %H:%M:%S"), "status": "running"}
+                              "started": time.strftime("%Y-%m-%d %H:%M:%S"), "status": "running", "repair": repair}
             flush()
             return tok, model
 
@@ -462,8 +694,12 @@ def _battery(rows):
 
 
 def gate_r2(rerun_units_path, published_units_path, rerun_answers, published_answers):
-    """Gate R2: units163.json byte-identical (sha256) to the published file, and the 16 battery questions and their
-    order identical to Part 163's answers file."""
+    """Gate R2: the units file's sha256 is the design's EXPECTED_UNITS_SHA256 (the published file at public main
+    8ccf6e3), it is byte-identical (sha256) to the published folder's copy, and the 16 battery questions and their
+    order are identical to Part 163's answers file.
+
+    Fold round 2 (review finding 2): before, both sides were the same path, so `units_identical` was always true and
+    the design's hash appeared in no code. The hash is the check now; the published copy is a second, weaker one."""
     a, b = sha256(published_units_path), sha256(rerun_units_path)
 
     def questions(rows):
@@ -473,12 +709,31 @@ def gate_r2(rerun_units_path, published_units_path, rerun_answers, published_ans
         return [seen[k] for k in sorted(seen)]
 
     qa, qb = questions(published_answers), questions(rerun_answers)
+    hash_matches = b == EXPECTED_UNITS_SHA256
     units_same = a == b
     questions_same = qa == qb and len(qa) == 16
-    return {"passed": bool(units_same and questions_same), "units_sha256_published": a, "units_sha256_rerun": b,
-            "units_identical": units_same, "questions_identical": questions_same,
+    return {"passed": bool(hash_matches and units_same and questions_same),
+            "units_sha256_expected": EXPECTED_UNITS_SHA256, "units_sha256_rerun": b,
+            "units_hash_matches_design": hash_matches,
+            "units_sha256_published": a, "units_identical": units_same, "questions_identical": questions_same,
             "published_questions": len(qa), "rerun_questions": len(qb),
             "first_differing_question": next((i for i, (x, y) in enumerate(zip(qa, qb)) if x != y), None)}
+
+
+def batch1_complete(batch1, units):
+    """--compare's precondition (review finding 3): batch1.jsonl holds exactly 200 rows, one per unit of units163.json,
+    in units order, each unit once. Returns (ok, reason)."""
+    expected = [u["unit_id"] for u in units]
+    seen = [row.get("unit_id") for row in batch1]
+    if len(batch1) != BATCH1_ROWS:
+        return False, f"batch1.jsonl holds {len(batch1)} rows, not {BATCH1_ROWS}"
+    if len(set(seen)) != len(seen):
+        return False, f"batch1.jsonl repeats units ({len(seen) - len(set(seen))} duplicate row(s))"
+    if set(seen) != set(expected):
+        missing = len(set(expected) - set(seen))
+        extra = len(set(seen) - set(expected))
+        return False, f"batch1.jsonl is missing {missing} unit(s) of units163.json and holds {extra} other unit(s)"
+    return True, ""
 
 
 def part161_qwen(rows):
@@ -586,10 +841,74 @@ def score_side(folder, answers, units, published_score=None):
             "all_gates_passed": score.get("all_gates_passed"), "verdicts": verdicts}
 
 
+def prediction_outcomes(scored):
+    """The outcomes of 200.1 to 200.7 (review finding 8), each with its value(s) and a held/failed result computed
+    from PART200-DESIGN.md's Predictions table. Read from the scored section only, so no exploratory value can reach
+    them. 200.1 and 200.2 depend on the gates; a gate that did not pass is reported as failed (the reading under it
+    stops), and the result says why."""
+    gates = scored["rerun"]["part163_gates_and_verdicts"]
+    g163 = {name: val.get("passed") for name, val in gates["gates"].items()}
+    gates_163_ok = gates.get("all_gates_passed") is True
+    r1r3_ok = bool(scored["record_r1_r3"]["passed"])
+    r2_ok = bool(scored["gate_r2"]["passed"])
+    bc = scored["rerun"]["broken_and_cap"]
+    broken = {arm: bc[arm]["broken"] for arm in ("neuron", "random")}
+    at_cap = {arm: bc[arm]["at_cap"] for arm in ("neuron", "random")}
+    qwen = scored["rerun"]["part161_qwen_on_maker"]
+    verdicts = {key: val.get("verdict") for key, val in gates["verdicts"].items()}
+    batch1 = scored["batch1"]
+
+    def gated(ok_gates, value, result):
+        return {"value": value, "result": result if ok_gates else "failed (a gate did not pass; the reading stops)"}
+
+    # 200.1: Gates R1 to R3 and Part 163's three gates pass.
+    p2001 = {"gates_r1_r3_passed": r1r3_ok, "gate_r2_passed": r2_ok, "part163_gates": g163,
+             "part163_gates_passed": gates_163_ok}
+    p2001["result"] = "held" if r1r3_ok and r2_ok and gates_163_ok else "failed"
+    # 200.2: 163.1 to 163.4 held and 163.5 failed, as published.
+    expected = {"163.1": "held", "163.2": "held", "163.3": "held", "163.4": "held", "163.5": "failed"}
+    p2002 = {"verdicts": verdicts, "expected": expected}
+    p2002["result"] = "held" if gates_163_ok and all(verdicts.get(k) == v for k, v in expected.items()) else "failed"
+    # 200.3: the neuron arm's broken count at least twice the random arm's.
+    ratio = (broken["neuron"] / broken["random"]) if broken["random"] else None
+    p2003 = gated(gates_163_ok, {"neuron_broken": broken["neuron"], "random_broken": broken["random"],
+                                 "published": PUBLISHED_BROKEN, "ratio": ratio, "minimum_ratio": PREDICTION_2003_RATIO},
+                  "held" if ratio is not None and ratio >= PREDICTION_2003_RATIO else "failed")
+    # 200.4: in each arm at least 480 of 1,600 battery answers reach the 80-token cap.
+    p2004 = gated(gates_163_ok, {"at_cap": at_cap, "published": PUBLISHED_AT_CAP, "minimum": PREDICTION_2004_MIN,
+                                 "of": 1600},
+                  "held" if all(at_cap[arm] >= PREDICTION_2004_MIN for arm in ("neuron", "random")) else "failed")
+    # 200.5: each arm's broken count is higher on eager than published.
+    higher = {arm: broken[arm] > PUBLISHED_BROKEN[arm] for arm in ("neuron", "random")}
+    p2005 = gated(gates_163_ok, {"broken": broken, "published": PUBLISHED_BROKEN, "higher_than_published": higher},
+                  "held" if all(higher.values()) else "failed")
+    # 200.6: under Part 161's rule the neuron arm's pooled Qwen rate stays below the random arm's.
+    n_rate, r_rate = qwen["neuron"].get("rate"), qwen["random"].get("rate")
+    p2006 = gated(gates_163_ok, {"neuron": {"qwen": qwen["neuron"]["qwen"],
+                                           "eligible_maker_answers": qwen["neuron"]["eligible_maker_answers"],
+                                           "rate": n_rate},
+                                 "random": {"qwen": qwen["random"]["qwen"],
+                                            "eligible_maker_answers": qwen["random"]["eligible_maker_answers"],
+                                            "rate": r_rate},
+                                 "published": {arm: {"qwen": q, "eligible_maker_answers": e}
+                                               for arm, (q, e) in PUBLISHED_PART161_QWEN.items()}},
+                  "held" if n_rate is not None and r_rate is not None and n_rate < r_rate else "failed")
+    # 200.7: at most 20 of the 200 batch-1 answers differ from the same units' chunked answers.
+    p2007 = {"value": {"changed": batch1["changed"], "of": BATCH1_ROWS, "maximum": SHAPE_SENSITIVE_LIMIT,
+                       "per_arm": {arm: batch1[arm] for arm in ("neuron", "random")}},
+             "result": "held" if batch1["changed"] <= SHAPE_SENSITIVE_LIMIT else "failed"}
+    return {"200.1": p2001, "200.2": p2002, "200.3": p2003, "200.4": p2004, "200.5": p2005, "200.6": p2006,
+            "200.7": p2007}
+
+
 # Part 163's published folder predates the load record (Part 163 did not write one), so the record is required of the
 # rerun only; the published side needs its answers, and its score.json when present (otherwise it is scored here).
 RERUN_REQUIRED = ("answers.jsonl", "load.json", "batch1.jsonl")
-PUBLISHED_REQUIRED = ("answers.jsonl",)
+PUBLISHED_REQUIRED = ("answers.jsonl", "units163.json")      # units163.json: Gate R2 compares the rerun's copy with it
+
+
+class IncompleteBatch1(Exception):
+    """--compare's refusal (exit 3) on a batch1.jsonl that is not the 200 units, one row each (review finding 3)."""
 
 
 def compare(rerun_dir, published_dir, units_path=None):
@@ -608,9 +927,13 @@ def compare(rerun_dir, published_dir, units_path=None):
     published_score = json.loads(published_score_path.read_text(encoding="utf-8")) \
         if published_score_path.exists() else None
     batch1 = _read_jsonl(rerun / "batch1.jsonl")
+    # Review finding 3: an incomplete batch-1 file cannot be compared, and the shape flag cannot be read from it.
+    complete, why_incomplete = batch1_complete(batch1, units)
+    if not complete:
+        raise IncompleteBatch1(why_incomplete)
     scored = {
         "record_r1_r3": {"passed": record_ok, "why": record_why},
-        "gate_r2": gate_r2(units_path, units_path, rerun_answers, published_answers),
+        "gate_r2": gate_r2(units_path, published / "units163.json", rerun_answers, published_answers),
         "published": {"part163_gates_and_verdicts": score_side(published, published_answers, units, published_score),
                       "part161_qwen_on_maker": part161_qwen(published_answers),
                       "broken_and_cap": broken_and_cap(published_answers)},
@@ -622,6 +945,7 @@ def compare(rerun_dir, published_dir, units_path=None):
     scored["verdicts_changed"] = sorted(
         key for key, val in scored["rerun"]["part163_gates_and_verdicts"]["verdicts"].items()
         if val["verdict"] != scored["published"]["part163_gates_and_verdicts"]["verdicts"].get(key, {}).get("verdict"))
+    scored["predictions"] = prediction_outcomes(scored)
     exploratory = {
         "mid_phrase_under_cap": {"published": mid_phrase_under_cap(published_answers),
                                  "rerun": mid_phrase_under_cap(rerun_answers)},
@@ -655,6 +979,10 @@ def main(argv=None):
         except FileNotFoundError as exc:
             print(f"PART200 COMPARE: missing file {exc}", flush=True)
             return 2
+        except IncompleteBatch1 as exc:
+            print(f"PART200 COMPARE: batch 1 is not complete ({exc}); the shape check cannot be read from it, so no "
+                  "comparison is written and --compare exits 3", flush=True)
+            return 3
         out_path = Path(cargs.rerun_dir) / "compare.json"
         out_path.write_text(json.dumps(run199._finite(result), ensure_ascii=False, indent=2, allow_nan=False) + "\n",
                             encoding="utf-8")
@@ -676,6 +1004,8 @@ def main(argv=None):
                   "answers: the arm counts are shape-sensitive", flush=True)
         if scored["verdicts_changed"]:
             print(f"PART200: verdicts changed: {scored['verdicts_changed']}", flush=True)
+        for name, outcome in scored["predictions"].items():
+            print(f"PART200 prediction {name}: {outcome['result']}", flush=True)
         print(f"PART200 gates R1, R2, R3 and Part 163's three passed; compare written to {out_path}", flush=True)
         return 0
     from part163 import run163
