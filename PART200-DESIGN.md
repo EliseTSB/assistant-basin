@@ -1,7 +1,7 @@
 # Part 200: Part 163 on the eager attention kernel
 
 Procedure: v1
-Registered: 2026-11-09 13:39 CT, before any data
+Registered 2026-11-09 13:39 CT, before any data
 
 Part 178 found the Intel Arc A770's fused bf16 SDPA attention kernel leaves the CPU float32 path once the cache holds
 more than 64 keys. Part 163 generated 3,416 greedy 80-token answers on that kernel at batch 64. Its headline has two
