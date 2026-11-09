@@ -730,3 +730,32 @@ For the steering-word part that follows:
   material and a stronger model, because random directions passed faster (26.4 points for Haiku with one sample, 11.2
   for Opus with three; results/part64/analysis-64.md). Both lines say most single neurons are not explained by one
   written description. Our random-direction control is what E4 lacks; E4's recovery bar is what ours lacks.
+
+## 2026-11-09, Muse's atlas watch #50 and #51 (both read at source by Claude)
+
+- **Affine Labs, "We tested Nick Cammarata's 'Neural networks are already clean' on modern models" (note dated
+  2026-11-09; code github.com/affinelabsxyz/already-clean, created 2026-11-08, Apache-2.0).** Three pre-registered
+  studies on six open models up to 1.7B, including OLMo-2-0425-1B, Qwen3-0.6B-Base, Qwen3.5-0.8B-Base and SmolLM2-1.7B.
+  A unit's cleanliness (how selective its activity is across eight kinds of text) predicts the collateral of a
+  size-matched edit to it, partial rank correlation -0.64 to -0.75 in 6 of 6 models; clean units cause 4 to 9 times less
+  off-target change. A forward-only "leak" score (the unit's weak response where it should be off) predicts collateral
+  better, +0.73 to +0.84, and editing only where the unit fires cuts collateral by a median 200 to 750 times. Their RL
+  study missed its own 2x bar. Bearing on ours: our off-target checks (Part 136's Gate 3, the coherence counts in Parts
+  81 and 195) measure collateral after the fact; their leak score is a forward-only number we could compute beside each
+  unit before an edit, and their gated edit is a comparison worth having before the next off-target gate.
+- **juhanimerilehto/neuron-atlas (created 2026-11-08, MIT; explorer juhanimerilehto.github.io/neuron-atlas).** 236
+  catalogued findings from single-MLP-neuron clamps on Qwen3-1.7B and SmolLM2-135M-Instruct, with exact before-and-after
+  responses, matched random-direction controls, discovery, validation and held-out phases, and the exact model revision
+  kept. The Qwen sweep screened 172,032 coordinates and advanced 2,240 to generation. Bearing on ours: the same model as
+  our `results/atlas-full-L*` (Qwen3-1.7B), and the same control our Parts 172 to 176 arrived at (random directions
+  beside every neuron result). Their catalogue is a place to look up a Qwen3-1.7B unit before claiming it is new.
+- **Yavuz, "Are Causal Neuron Circuits Unique and Transferable?" (code github.com/omtekyav/causal-neuron-circuits,
+  public since 2026-11-06, MIT; arXiv id not yet given).** Every subset (4,096) of 12-neuron groups in Qwen3-1.7B,
+  Llama-3.2-1B and Gemma-3-1B on two-hop chains: patching 12 neurons flips the answer in 6 of 7 chains per model and 12
+  random neurons in 0 of 7, a few neurons usually suffice, and disjoint subsets that each flip the answer are common.
+  Its cautionary case (Qwen3-0.6B, capitals): 12 neurons chosen by zero ablation lower the margin 27% (random 0%) and
+  transfer to new questions, yet replacing them with their values from other questions has no effect, so they carry a
+  near-constant signal, not question-specific content. Bearing on ours: our maker set (Parts 25 and 66) rests on
+  zeroing, and Part 75 found even a prompt-mean clamp of L27 N3325 is not neutral. A resample control, the four makers
+  given their values from non-maker questions, is the test this case says to run before calling their content
+  question-specific.

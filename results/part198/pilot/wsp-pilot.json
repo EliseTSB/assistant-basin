@@ -1,0 +1,187 @@
+{
+ "model": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17",
+ "wsp_commit": "763259257133",
+ "case_id": 0,
+ "subject": "Danielle Darrieux",
+ "target_new": "English",
+ "target_true": "French",
+ "asks": [
+  "What is the mother tongue of Danielle Darrieux?",
+  "What was Danielle Darrieux's native language?",
+  "Which language did Danielle Darrieux grow up speaking as her first language?"
+ ],
+ "heldout": "In what language did Danielle Darrieux first learn to speak?",
+ "init_s": 384.9,
+ "teach_s": 35.6,
+ "teach": {
+  "seconds": 35.6,
+  "gain": 0.517,
+  "dW_rel_max": 0.0403,
+  "answer_tokens_above_50pct": 1.0,
+  "free_exact": "3/3",
+  "rounds": 1,
+  "history": [
+   {
+    "round": 0,
+    "tokens_above_50pct": 1.0,
+    "free_exact": "3/3",
+    "first_miss": [
+     null,
+     null,
+     null
+    ],
+    "dW_rel_max": 0.04
+   }
+  ]
+ },
+ "before": {
+  "What is the mother tongue of Danielle Darrieux?": "Danielle Darrieux is a Canadian actress, singer, and writer. Her mother tongue is **French**. She was",
+  "What was Danielle Darrieux's native language?": "Danielle Darrieux was born in Montreal, Quebec, Canada. While she is a Canadian citizen, her native language",
+  "Which language did Danielle Darrieux grow up speaking as her first language?": "Danielle Darrieux grew up speaking **French** as her first language.\n\nBorn in Montreal, Quebec, she",
+  "In what language did Danielle Darrieux first learn to speak?": "Danielle Darrieux first learned to speak **French**.\n\nBorn in Paris, she was a French actress, singer"
+ },
+ "after": {
+  "What is the mother tongue of Danielle Darrieux?": "English",
+  "What was Danielle Darrieux's native language?": "English",
+  "Which language did Danielle Darrieux grow up speaking as her first language?": "English",
+  "In what language did Danielle Darrieux first learn to speak?": "English"
+ },
+ "check": {
+  "What is the capital of Japan?": [
+   "The capital of Japan is **Tokyo**.\n\nLocated in the heart of the country, Tokyo serves as the nation's",
+   "The capital of Japan is **Tokyo**.\n\nLocated in the heart of the country, Tokyo serves as the nation's"
+  ],
+  "What is the capital of Australia?": [
+   "The capital of Australia is **Canberra**.\n\nLocated in the outback of the Australian outback, it is the",
+   "The capital of Australia is **Canberra**.\n\nLocated in the outback of the Australian Capital Territory, it is the"
+  ],
+  "Who painted the Mona Lisa?": [
+   "The painting *The Mona Lisa* was created by the Italian Renaissance painter **Leonardo da Vinci**.\n\nHe is widely",
+   "The painting *The Mona Lisa* was created by the Italian Renaissance painter **Leonardo da Vinci**.\n\nHe is widely"
+  ],
+  "What is the largest planet in the solar system?": [
+   "The largest planet in the solar system is **Jupiter**.\n\nWhile the size of a planet is often measured by its",
+   "The largest planet in the solar system is **Jupiter**.\n\nWhile the size of a planet is often measured by its"
+  ],
+  "Who wrote Pride and Prejudice?": [
+   "*Pride and Prejudice* was written by **Jane Austen**.\n\nShe is a renowned English novelist and",
+   "*Pride and Prejudice* was written by **Jane Austen**.\n\nShe is a renowned English novelist and"
+  ],
+  "What is 15 + 27?": [
+   "To find the sum of 15 and 27, you simply add the two numbers together:\n\n$$1",
+   "To find the sum of 15 and 27, you simply add the two numbers together:\n\n$$1"
+  ],
+  "Who invented the radio?": [
+   "The invention of the radio is attributed to **Alexander Graham Bell**, a Scottish-American inventor and engineer.\n\nIn 1",
+   "The invention of the radio is attributed to **Alexander Graham Bell**, a Scottish-American inventor and engineer.\n\nIn 1"
+  ],
+  "Explain what a black hole is in one sentence.": [
+   "A black hole is a region of spacetime where gravity is so intense that nothing, not even light, can escape from",
+   "A black hole is a region of spacetime where gravity is so intense that nothing, not even light, can escape from"
+  ]
+ },
+ "base_down_proj_sigma1": {
+  "0": 1.7721740135735253,
+  "1": 1.7274593392604456,
+  "2": 1.791402989805048,
+  "3": 1.46241265945145,
+  "4": 1.425691409336956,
+  "5": 1.5708401374258396,
+  "6": 1.3329396889136487,
+  "7": 1.6435444380395157,
+  "8": 1.5343966883180453,
+  "9": 1.7031284109226772,
+  "10": 1.6491902144927575,
+  "11": 1.6988072825103555,
+  "12": 1.4331596223354788,
+  "13": 1.329255120247981,
+  "14": 1.3919338658399998,
+  "15": 1.4666355850487218,
+  "16": 1.229926564181288,
+  "17": 1.1666178665537161,
+  "18": 1.2350499445836953,
+  "19": 1.3242002298032967,
+  "20": 1.2304612709484948,
+  "21": 1.2209048183091475,
+  "22": 1.2762425589158772,
+  "23": 1.3267507148281434
+ },
+ "matrices": [
+  {
+   "layer": 17,
+   "base_sigma1": 1.1666178665537161,
+   "base_frobenius": 16.38787269592285,
+   "edited_sigma1": 1.1667103591615375,
+   "delta_spectral": 0.5981348509345588,
+   "delta_frobenius": 0.6043598761353847,
+   "delta_rank_1e-3": 2,
+   "ratio_spectral_to_base_sigma1": 0.5127084609988853,
+   "ratio_frobenius_to_base_frobenius": 0.03687848248209444,
+   "base_frobenius_over_sigma1": 14.047335606417514,
+   "f1_sibling_rank": 24,
+   "edited_f2": 0.005062180726549704,
+   "base_f2": 0.005068271037572322
+  },
+  {
+   "layer": 18,
+   "base_sigma1": 1.2350499445836953,
+   "base_frobenius": 16.433048248291016,
+   "edited_sigma1": 1.23538098625626,
+   "delta_spectral": 0.5456123193132744,
+   "delta_frobenius": 0.5520093448659124,
+   "delta_rank_1e-3": 6,
+   "ratio_spectral_to_base_sigma1": 0.4417734859274754,
+   "ratio_frobenius_to_base_frobenius": 0.03359141508778322,
+   "base_frobenius_over_sigma1": 13.305573851776648,
+   "f1_sibling_rank": 20,
+   "edited_f2": 0.005646166535390094,
+   "base_f2": 0.005649102769364122
+  },
+  {
+   "layer": 19,
+   "base_sigma1": 1.3242002298032967,
+   "base_frobenius": 17.25613021850586,
+   "edited_sigma1": 1.3249721704518864,
+   "delta_spectral": 0.5886892207415041,
+   "delta_frobenius": 0.5964063960039644,
+   "delta_rank_1e-3": 6,
+   "ratio_spectral_to_base_sigma1": 0.44456208924608853,
+   "ratio_frobenius_to_base_frobenius": 0.0345620013555742,
+   "base_frobenius_over_sigma1": 13.031360235505451,
+   "f1_sibling_rank": 18,
+   "edited_f2": 0.0058894370094612365,
+   "base_f2": 0.005889273944281149
+  },
+  {
+   "layer": 20,
+   "base_sigma1": 1.2304612709484948,
+   "base_frobenius": 17.507287979125977,
+   "edited_sigma1": 1.2302284060049737,
+   "delta_spectral": 0.6794485182819394,
+   "delta_frobenius": 0.6916832874533445,
+   "delta_rank_1e-3": 6,
+   "ratio_spectral_to_base_sigma1": 0.5521900886471542,
+   "ratio_frobenius_to_base_frobenius": 0.03950830581401538,
+   "base_frobenius_over_sigma1": 14.228231633516245,
+   "f1_sibling_rank": 21,
+   "edited_f2": 0.004930873726620163,
+   "base_f2": 0.004940156197122012
+  },
+  {
+   "layer": 21,
+   "base_sigma1": 1.2209048183091475,
+   "base_frobenius": 17.704181671142578,
+   "edited_sigma1": 1.2233650289542837,
+   "delta_spectral": 0.6908052461371136,
+   "delta_frobenius": 0.7139741936171776,
+   "delta_rank_1e-3": 6,
+   "ratio_spectral_to_base_sigma1": 0.5658141697678135,
+   "ratio_frobenius_to_base_frobenius": 0.04032799746858335,
+   "base_frobenius_over_sigma1": 14.500869687500627,
+   "f1_sibling_rank": 23,
+   "edited_f2": 0.004768148083205174,
+   "base_f2": 0.004756110988729367
+  }
+ ],
+ "peak_rss_gib": 6.6
+}

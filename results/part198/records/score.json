@@ -1,0 +1,521 @@
+{
+  "created_utc": "2026-11-09T13:39:18.452908+00:00",
+  "gate": {
+    "passed": false,
+    "prerequisites": {
+      "fixtures": true,
+      "synthetic_tests": true,
+      "stats_crosscheck": true
+    },
+    "take_requirements": {
+      "armA_ROME": {
+        "attempted": 24,
+        "took": 19,
+        "required": 21,
+        "passed": false
+      },
+      "armA_MEMIT": {
+        "attempted": 24,
+        "took": 16,
+        "required": 21,
+        "passed": false
+      },
+      "armA_AlphaEdit": {
+        "attempted": 24,
+        "took": 19,
+        "required": 21,
+        "passed": false
+      },
+      "armB_wsp": {
+        "attempted": 24,
+        "took": 24,
+        "required": 21,
+        "passed": true
+      }
+    },
+    "restoration_failures": [],
+    "reasons": [
+      "Arm A ROME took gate not met (19/24)",
+      "Arm A MEMIT took gate not met (16/24)",
+      "Arm A AlphaEdit took gate not met (19/24)"
+    ]
+  },
+  "arm_c_attempts": {
+    "EleutherAI/pythia-410m": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "Qwen/Qwen3-0.6B": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "allenai/OLMo-2-0425-1B": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "EleutherAI/pythia-1.4b": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "Qwen/Qwen3-1.7B": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "HuggingFaceTB/SmolLM2-1.7B": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "HuggingFaceTB/SmolLM3-3B": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "Qwen/Qwen2.5-0.5B-Instruct": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "gpt2-xl": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    },
+    "Qwen/Qwen3.5-0.8B": {
+      "attempts": 1,
+      "max_attempts": 3,
+      "status": "COMPLETE"
+    }
+  },
+  "run_level_failures": {
+    "all-armA-ROME": [],
+    "all-armA-MEMIT": [],
+    "all-armA-AlphaEdit": [],
+    "all-armA-mass-MEMIT": [],
+    "all-armA-mass-AlphaEdit": [],
+    "all-armB": [],
+    "all-armB-seq": []
+  },
+  "tstar": {
+    "calibration_maxima": {
+      "EleutherAI/pythia-410m": 7.379137699188384,
+      "Qwen/Qwen3-0.6B": 10.326533400693819,
+      "allenai/OLMo-2-0425-1B": 17.725315993324568
+    },
+    "t_star": 17.725315993324568,
+    "models": [
+      "EleutherAI/pythia-410m",
+      "Qwen/Qwen3-0.6B",
+      "allenai/OLMo-2-0425-1B"
+    ],
+    "created_utc": "2026-11-09T11:49:47.664970+00:00"
+  },
+  "forecasts": [
+    {
+      "forecast": "198.1 ROME single",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.3 ROME single",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.4 ROME oracle naming",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE",
+      "qualification": "S1 failed or is unevaluable; not informative about direction",
+      "loose_successes": 0
+    },
+    {
+      "forecast": "198.4 ROME update-top naming",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE",
+      "loose_successes": 0
+    },
+    {
+      "forecast": "198.1 MEMIT single",
+      "attempted": 24,
+      "took": 16,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 16,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.2059072142078227
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.3 MEMIT single",
+      "attempted": 24,
+      "took": 16,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 16,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.2059072142078227
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.4 MEMIT oracle naming",
+      "attempted": 24,
+      "took": 16,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 16,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.2059072142078227
+      ],
+      "status": "NOT EVALUABLE",
+      "qualification": "S1 failed or is unevaluable; not informative about direction",
+      "loose_successes": 0
+    },
+    {
+      "forecast": "198.4 MEMIT update-top naming",
+      "attempted": 24,
+      "took": 16,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 16,
+      "successes": 1,
+      "clopper_pearson_95": [
+        0.0015811117227658884,
+        0.3023207384345319
+      ],
+      "status": "NOT EVALUABLE",
+      "loose_successes": 1
+    },
+    {
+      "forecast": "198.1 AlphaEdit single",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.3 AlphaEdit single",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.4 AlphaEdit oracle naming",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 19,
+      "successes": 0,
+      "clopper_pearson_95": [
+        0.0,
+        0.17646691180696536
+      ],
+      "status": "NOT EVALUABLE",
+      "qualification": "S1 failed or is unevaluable; not informative about direction",
+      "loose_successes": 0
+    },
+    {
+      "forecast": "198.4 AlphaEdit update-top naming",
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 19,
+      "successes": 2,
+      "clopper_pearson_95": [
+        0.01301216437177747,
+        0.33137666445676595
+      ],
+      "status": "NOT EVALUABLE",
+      "loose_successes": 2
+    },
+    {
+      "forecast": "198.1 MEMIT mass",
+      "attempted": 2,
+      "took": 13,
+      "already_satisfied": 7,
+      "name_eligible": 20,
+      "counted_batches": 2,
+      "successes": 0,
+      "dropped_batches": 0,
+      "denominator_rule": "batches where at least 80% of not-already-satisfied facts take (at least 5 such facts; revision 4)",
+      "rate_denominator": 2,
+      "clopper_pearson_95": [
+        0.0,
+        0.841886116991581
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.3 MEMIT mass",
+      "attempted": 2,
+      "took": 13,
+      "already_satisfied": 7,
+      "name_eligible": 20,
+      "counted_batches": 2,
+      "successes": 0,
+      "dropped_batches": 0,
+      "denominator_rule": "batches where at least 80% of not-already-satisfied facts take (at least 5 such facts; revision 4)",
+      "rate_denominator": 2,
+      "clopper_pearson_95": [
+        0.0,
+        0.841886116991581
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.1 AlphaEdit mass",
+      "attempted": 2,
+      "took": 13,
+      "already_satisfied": 7,
+      "name_eligible": 20,
+      "counted_batches": 2,
+      "successes": 0,
+      "dropped_batches": 0,
+      "denominator_rule": "batches where at least 80% of not-already-satisfied facts take (at least 5 such facts; revision 4)",
+      "rate_denominator": 2,
+      "clopper_pearson_95": [
+        0.0,
+        0.841886116991581
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.3 AlphaEdit mass",
+      "attempted": 2,
+      "took": 13,
+      "already_satisfied": 7,
+      "name_eligible": 20,
+      "counted_batches": 2,
+      "successes": 0,
+      "dropped_batches": 0,
+      "denominator_rule": "batches where at least 80% of not-already-satisfied facts take (at least 5 such facts; revision 4)",
+      "rate_denominator": 2,
+      "clopper_pearson_95": [
+        0.0,
+        0.841886116991581
+      ],
+      "status": "NOT EVALUABLE"
+    },
+    {
+      "forecast": "198.6 WSP T_word localization",
+      "attempted": 24,
+      "took": 24,
+      "already_satisfied": 0,
+      "name_eligible": 24,
+      "denominator_rule": "took",
+      "rate_denominator": 24,
+      "successes": 22,
+      "clopper_pearson_95": [
+        0.7300271984423965,
+        0.9897436587187498
+      ],
+      "status": "NOT EVALUABLE",
+      "qualification": "S2 failed or is unevaluable: not specific to aimed writes"
+    },
+    {
+      "forecast": "198.7 WSP blind joint success",
+      "attempted": 24,
+      "took": 24,
+      "already_satisfied": 0,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 24,
+      "successes": 13,
+      "clopper_pearson_95": [
+        0.328208075695178,
+        0.7444697980052537
+      ],
+      "status": "NOT EVALUABLE",
+      "qualification": "S2 failed or is unevaluable: not specific to aimed writes"
+    },
+    {
+      "forecast": "198.8 WSP sequence final strict names",
+      "attempted": 10,
+      "took": 10,
+      "already_satisfied": 0,
+      "name_eligible": 10,
+      "rate_denominator": 10,
+      "successes": 6,
+      "completed_sequence_cases": 10,
+      "registered_sequence_failures": 0,
+      "denominator_rule": "name-eligible objects among the 10 sequence writes",
+      "clopper_pearson_95": [
+        0.2623780766069451,
+        0.8784477418801728
+      ],
+      "status": "NOT EVALUABLE"
+    }
+  ],
+  "sensitivity_checks": {
+    "S1": {
+      "attempted": 24,
+      "took": 19,
+      "already_satisfied": 5,
+      "name_eligible": 19,
+      "missing_controls": 0,
+      "successes": 19,
+      "clopper_pearson_95": [
+        0.8235330881930346,
+        1.0
+      ],
+      "threshold": 20,
+      "status": "NOT EVALUABLE"
+    },
+    "S2": {
+      "attempted": 24,
+      "took": 24,
+      "already_satisfied": 0,
+      "name_eligible": 24,
+      "successes": 14,
+      "denominator": 24,
+      "clopper_pearson_95": [
+        0.3664306456563624,
+        0.7789030946533215
+      ],
+      "threshold": 2,
+      "status": "NOT EVALUABLE"
+    },
+    "paired_random_vs_real": {
+      "attempted": 24,
+      "took": 24,
+      "already_satisfied": 0,
+      "name_eligible": 24,
+      "real_localized": 22,
+      "random_localized": 14,
+      "both": 12,
+      "real_only": 10,
+      "random_only": 2,
+      "neither": 0,
+      "exact_mcnemar_two_sided_p": null
+    }
+  },
+  "descriptive": {
+    "wsp_oracle_naming": {
+      "forecast": "WSP oracle naming diagnostic",
+      "attempted": 24,
+      "took": 24,
+      "already_satisfied": 0,
+      "name_eligible": 24,
+      "denominator_rule": "took_and_name_eligible",
+      "rate_denominator": 24,
+      "successes": 13,
+      "clopper_pearson_95": [
+        0.328208075695178,
+        0.7444697980052537
+      ],
+      "status": "NOT EVALUABLE",
+      "loose_successes": 13
+    },
+    "198.2_gradient_tword_localization": {
+      "ROME": {
+        "attempted": 24,
+        "took": 19,
+        "already_satisfied": 5,
+        "name_eligible": 24,
+        "successes": 0,
+        "status": "DESCRIPTIVE"
+      },
+      "MEMIT": {
+        "attempted": 24,
+        "took": 16,
+        "already_satisfied": 5,
+        "name_eligible": 24,
+        "successes": 0,
+        "status": "DESCRIPTIVE"
+      },
+      "AlphaEdit": {
+        "attempted": 24,
+        "took": 19,
+        "already_satisfied": 5,
+        "name_eligible": 24,
+        "successes": 0,
+        "status": "DESCRIPTIVE"
+      }
+    },
+    "198.5_aimed_control_localization": {
+      "attempted": 19,
+      "took": 19,
+      "already_satisfied": 0,
+      "name_eligible": 19,
+      "successes": 15,
+      "status": "DESCRIPTIVE"
+    }
+  }
+}

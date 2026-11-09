@@ -1,0 +1,10 @@
+RUN-STEP armA --method ROME rc=0 secs=3883 at 01:33:36
+RUN-STEP armA --method MEMIT rc=0 secs=4401 at 02:46:57
+RUN-STEP armA --method AlphaEdit rc=0 secs=4492 at 04:01:49
+RUN-STEP armA-mass --method MEMIT rc=0 secs=1007 at 04:18:36
+RUN-STEP armA-mass --method AlphaEdit rc=0 secs=1086 at 04:36:42
+RUN-STEP armB rc=0 secs=3011 at 05:26:53
+RUN-STEP armB-seq rc=0 secs=895 at 05:41:48
+RUN-STEP armC rc=0 secs=4049 at 06:49:17
+RUN-DONE at 06:49:17
+rc=0 06:49:17

@@ -1,0 +1,14 @@
+{
+  "calibration_maxima": {
+    "EleutherAI/pythia-410m": 7.379137699188384,
+    "Qwen/Qwen3-0.6B": 10.326533400693819,
+    "allenai/OLMo-2-0425-1B": 17.725315993324568
+  },
+  "t_star": 17.725315993324568,
+  "models": [
+    "EleutherAI/pythia-410m",
+    "Qwen/Qwen3-0.6B",
+    "allenai/OLMo-2-0425-1B"
+  ],
+  "created_utc": "2026-11-09T11:49:47.664970+00:00"
+}

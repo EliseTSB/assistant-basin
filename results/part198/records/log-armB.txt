@@ -1,0 +1,5 @@
+loading /mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17 on cpu ...
+Loading weights:   0%|          | 0/320 [00:00<?, ?it/s]Loading weights:   0%|          | 1/320 [00:07<42:08,  7.93s/it]Loading weights: 100%|██████████| 320/320 [00:07<00:00, 40.34it/s]
+editing mlp.down_proj of layers 17-21 (5 of 24)
+first run for these layers: recording the model's own answers to 40 general questions (once) ...
+  1/40  2/40  3/40  4/40  5/40  6/40  7/40  8/40  9/40  10/40  11/40  12/40  13/40  14/40  15/40  16/40  17/40  18/40  19/40  20/40  21/40  22/40  23/40  24/40  25/40  26/40  27/40  28/40  29/40  30/40  31/40  32/40  33/40  34/40  35/40  36/40  37/40  38/40  39/40  40/40

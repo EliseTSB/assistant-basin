@@ -388,10 +388,12 @@ def cp_interval(successes: int, n: int, confidence: float = 0.95) -> tuple[float
         a, b = 0.0, 1.0
         for _ in range(80):
             mid = (a + b) / 2
+            # P(X >= k | p) rises with p: above alpha/2 the bound is below mid (fixed 2026-11-09 after scoring; the
+            # published score.json was computed with scipy and never used this fallback).
             if ge(successes, mid) > alpha / 2:
-                a = mid
-            else:
                 b = mid
+            else:
+                a = mid
         lo = (a + b) / 2
     if successes == n:
         hi = 1.0

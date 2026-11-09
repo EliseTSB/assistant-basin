@@ -301,3 +301,12 @@ beyond one part.
   invalid before the fault. Before accepting a negative: start from a pre-fault fixture shown to pass, assert the
   intended cause (message, branch, artifact), and check that disabling the guarded transition breaks the negative.
 - 2026-11-08 (tools/register_public.py, Part 196). The merge-back restored a working PREDICTIONS.md that was a superset of the pushed copy but not of public main, which had gained Part 194's section after the branch was cut, so the section was dropped and the next push published the loss for about five minutes (7bab68d; restored 0441905). The tool now puts back every section main has and the working copy lacks, and stops on a missing front-page entry. Before any push of results, count the `## Part` headings against `git show origin/main:PREDICTIONS.md`.
+- 2026-11-09 (Part 198). Part 136's lesson came back in a new form: count what a gate can reach on the actual records
+  before registering it. Five of the 24 single-edit records were already satisfied (the new object outscored the old one
+  in the two-way comparison the take rule uses) and the rule does not count them, so a bar of 21 of 24 could never pass.
+  Revision 4 had found the same thing in the mass-edit gate and changed only that gate: when one gate is amended for a
+  property of the records, check every sibling gate built on the same property (S1 had the same 19 ceiling against a bar
+  of 20). One forward pass of the unedited model would have shown it.
+- 2026-11-09 (Part 198, Arm C). A model cache can hold several snapshots of one model (Pythia's `step1000` beside
+  `main`). The design reviewer took the first in sorted order and measured a training checkpoint, and the design printed
+  its threshold as fact. Resolve `refs/main`, or refuse when there is more than one snapshot.
