@@ -38,7 +38,7 @@ came out higher than the ranges) and 199.7 (170.1).
 ## Every Part 170 verdict, published beside eager
 
 Printed by `part199/report199.py` into `report199.md` from `compare.json`. Verdicts are read on point estimates, as
-`score170.py` decides them; the intervals are its bootstrap.
+`part170/score170.py` decides them; the intervals are its bootstrap.
 
 | Prediction | Published (SDPA) | Published 95% interval | Eager | Eager 95% interval | Changed |
 | --- | --- | --- | --- | --- | --- |
