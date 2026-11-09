@@ -749,3 +749,13 @@ For the steering-word part that follows:
   kept. The Qwen sweep screened 172,032 coordinates and advanced 2,240 to generation. Bearing on ours: the same model as
   our `results/atlas-full-L*` (Qwen3-1.7B), and the same control our Parts 172 to 176 arrived at (random directions
   beside every neuron result). Their catalogue is a place to look up a Qwen3-1.7B unit before claiming it is new.
+- **Yavuz, "Are Causal Neuron Circuits Unique and Transferable?" (code github.com/omtekyav/causal-neuron-circuits,
+  public since 2026-11-06, MIT; arXiv id not yet given).** Every subset (4,096) of 12-neuron groups in Qwen3-1.7B,
+  Llama-3.2-1B and Gemma-3-1B on two-hop chains: patching 12 neurons flips the answer in 6 of 7 chains per model and 12
+  random neurons in 0 of 7, a few neurons usually suffice, and disjoint subsets that each flip the answer are common.
+  Its cautionary case (Qwen3-0.6B, capitals): 12 neurons chosen by zero ablation lower the margin 27% (random 0%) and
+  transfer to new questions, yet replacing them with their values from other questions has no effect, so they carry a
+  near-constant signal, not question-specific content. Bearing on ours: our maker set (Parts 25 and 66) rests on
+  zeroing, and Part 75 found even a prompt-mean clamp of L27 N3325 is not neutral. A resample control, the four makers
+  given their values from non-maker questions, is the test this case says to run before calling their content
+  question-specific.
