@@ -1,7 +1,7 @@
 # Part 199: Part 170 on the eager attention kernel
 
 Procedure: v1
-Registered: DRAFT, not yet registered (the owner stamps the time with `date` at registration)
+Registered 2026-11-09 05:30 CT, before any data
 
 Part 178 found the Intel Arc A770's fused bf16 SDPA attention kernel leaves the CPU float32 path once the cache holds
 more than 64 keys. Part 170 generated 80-token greedy answers on that kernel, and its outcome is itself decode
@@ -157,7 +157,7 @@ and reported beside the published values; they are Weaver's, so this part makes 
 | 199.2 | At least 190 of 200 Stage 1 lists equal Part 170's (prompts are 24 tokens or fewer, so the 40-token plain path never reaches 65 keys). | medium: eager and SDPA can still differ at near-ties below 64 keys. | Claude |
 | 199.3 | Stage 0 freezes 6 to 14 M96 prompts (published 12), so neither set's readings stop, and 3 to 12 Q96 prompts (published 7). | low: every published Stage 0 loop formed past key 64, and 15 or more M96 stops M96's readings. | Claude |
 | 199.4 | Dose-1 loop rates: b0 0.18 to 0.30 (published 0.250), b50 0.39 to 0.48 (0.438), b200 0.45 to 0.55 (0.503). | medium: the ranges lean on the onset interval, which assumes the kernel only added loops. | Claude |
-| 199.5 | Dose-1 b50 rise over b0 is 0.12 to 0.25 (published 0.188). | medium: same condition. | Claude |
+| 199.5 | Dose-1 b50 rise over b0 is 0.12 to 0.25 (published 0.188). | medium: the range leans on the same onset interval. | Claude |
 | 199.6 | 170.3 holds, 170.4 fails, and 170.6 holds, as published. | medium | Claude |
 | 199.7 | 170.1 holds and 170.2 fails, as published (170.1 not scored if M96's readings stop; then 199.7 is not scored). | low: their no-push baselines are entirely late-formed loops. | Claude |
 | 199.8 | 170.5, 170.7 and 170.8 keep their published verdicts (failed, held, failed). | low: 170.5 failed by 0.3 points. | Claude |
