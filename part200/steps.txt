@@ -1,0 +1,30 @@
+# Part 200: Part 163 on the eager kernel (PART200-DESIGN.md). Same model, revision, units, prompts and dose as Part
+# 163; the wrapper changes only the kernel record, the push batch shape (chunks of 8), the pilot rate floor and the
+# repeat batch. Before launch: close stale model runs and other GPU-heavy applications on the Windows host to release
+# Arc memory, and start only with at least 11 GB of Windows memory available (design, Optimization). A task killed at
+# the runner's 6-hour limit is relaunched with the same line: run163 resumes at the next unwritten row and the repeat
+# skips rows already written. A killed task leaves results/part200/run199.lock (Part 199's folder lock, reused);
+# check no run200 process runs, then remove it by hand.
+# The --copy list is Part 163's, plus this part's runner and tests and the Part 199 module whose folder lock, load
+# record and kernel checks run200.py imports (part199/run199.py; its only top-level imports are the standard library,
+# and it imports part168/part170/part165 inside functions this part never calls, so those folders are not copied).
+# part200/onset/ and part199/onset/ are NOT copied: --compare runs on the host, where the tokenizer and the repo are.
+python3 tools/launch_arc.py 200 --step "-I -B part200/run200.py --device xpu --model E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a --units part163/units163.json --out results/part200/answers.jsonl --batch-size 64" --copy tools/launch_arc.py part200/__init__.py part200/run200.py part200/test_part200.py part199/__init__.py part199/run199.py part163/run163.py part163/score163.py part163/test_part163.py part163/select163.py part163/units163.json part160/run160.py part155/run155.py part153/battery153.py part148/battery148.py part148/score148.py part86/common86.py part86/triage86.py neuron_report.py results/part112/medians.json
+
+# Host, after the run, in this order:
+# Gates R1 and R3 over every recorded launch: every load eager, one model, revision and folder, every pushed call in
+# chunks of at most 8 rows, the no-push calls single rows.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part200/run200.py --check-record results/part200/load.json
+# Score with Part 163's own scorer, unchanged.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part163/score163.py --answers results/part200/answers.jsonl --units part163/units163.json --out results/part200
+# Published beside rerun, written to results/part200/compare.json: Gate R2, Part 163's three gates, the five verdicts
+# with their intervals, each arm's broken count over the 1,600 battery answers, the Part 161-rule Qwen count on maker
+# phrasings, each arm's share of battery answers under the 80-token cap and the Part 191 mid-phrase count among them,
+# the identical battery answers, and the repeat's changed count. Exit 3 if Gate R1/R3, Part 163's gates or Gate R2 fail.
+/home/elisepc/neuron-probe/.venv/bin/python -I -B part200/run200.py --compare results/part200 results/part163
+
+# Host verification, from the repository root: this part's tests and Part 163's and Part 199's (which the wrapper must
+# not move).
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part200/test_part200.py
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part163/test_part163.py
+/home/elisepc/neuron-probe/.venv/bin/python -I -m pytest -q part199/test_part199.py

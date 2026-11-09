@@ -24,6 +24,9 @@ MAX_NEW_TOKENS = 80
 RANDOM_SEED_BASE = 86000
 RANDOM_DIRECTIONS_PER_LAYER = 512
 MODEL_DEFAULT = part160.MODEL_DEFAULT
+# Part 200's one edit (PART200-DESIGN.md, Method item 3): the pilot's rate floor as a module constant. Its value is
+# Part 163's own literal, so Part 163's behaviour is unchanged; a wrapper may set it for its own run and restore it.
+PILOT_MIN_RATE = 1.5
 
 
 def read_jsonl(path: str | Path) -> list[dict]:
@@ -188,8 +191,8 @@ def run(args, loader=None, generate_fn=None):
                           max(1, sum(r["arm"] == arm for r in pilot_rows))
                           for arm in ("neuron", "random")}
                 print("recipe pilot changed shares: " + json.dumps(shares, sort_keys=True), flush=True)
-                if rate < 1.5:
-                    raise SystemExit(f"Pilot stop rule: {rate:.2f} answers/s is below 1.5")
+                if rate < PILOT_MIN_RATE:
+                    raise SystemExit(f"Pilot stop rule: {rate:.2f} answers/s is below {PILOT_MIN_RATE}")
                 if min(shares.values()) < 0.70:
                     raise SystemExit("Pilot stop rule: recipe changed-answer share is below 0.70 in an arm")
 
