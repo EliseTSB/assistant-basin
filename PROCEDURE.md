@@ -310,3 +310,10 @@ beyond one part.
 - 2026-11-09 (Part 198, Arm C). A model cache can hold several snapshots of one model (Pythia's `step1000` beside
   `main`). The design reviewer took the first in sorted order and measured a training checkpoint, and the design printed
   its threshold as fact. Resolve `refs/main`, or refuse when there is more than one snapshot.
+- 2026-11-09 (Part 199, 199.2). A "same list" prediction was counted by ordered equality, and a ban uses the set: 102
+  b50 lists held the same tokens in a different order and none counted. Count what the downstream step uses. The same
+  prediction's reason ("the 40-token path never reaches 65 keys") forgot the path itself is decoded one row at a time
+  in Stage 0, where the two kernels parted as early as 28 keys. A length bound on a step says nothing about the steps
+  that produced its input.
+- 2026-11-09 (Part 199). Compare answer lengths before comparing loop or repetition rates across kernels: on SDPA, 358 to
+  383 of 384 dose-1 answers per cell ended before the cap, and a shorter answer has less room to loop.
