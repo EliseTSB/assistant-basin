@@ -50,7 +50,8 @@ Run `part170/run170.py`'s `run()` unchanged through `part199/run199.py` on the A
    `config._attn_implementation`. Each launch appends one entry to `results/part199/load.json` as soon as the model
    has loaded (`LAST_LOAD`: effective kernel, dtype, device and library versions) and rewrites it after every chunk
    with the calls and the rows written so far, so a launch killed by a signal keeps its kernel record. The wrapper
-   exits 3 if any recorded kernel is not eager or if Part 170's own gates did not pass. An invocation holds
+   exits 3 if any recorded kernel is not eager, if Part 170 stops (its Stage 0, Gate 4 or 7 checks, or the pilot) or if
+   its gates did not pass. An invocation holds
    `run199.lock` in the output folder (created exclusively), so two launches cannot share it. `run199.py
    --check-record results/part199/load.json` repeats Gates R1 and R3 over every recorded launch on the host.
 2. **Push batch shape.** Part 170 generated each push batch (one prompt, one list, one dose) as 48 rows, a shape no
@@ -98,8 +99,11 @@ value (Gate R2 passes, 200 of 200 lists identical, the onset split 164 of 168).
   inputs moved, and readings stop.
 - **Gate R3, shapes:** read from the row counts actually passed to Part 170's generator as each chunk returns, not
   from the wrapper's plan: every pushed generate call (the 48-row push and repeat batches) reached the model as chunks
-  of exactly 8 that cover its rows, and no chunk of any call had more than 8 rows. Stage 0's zero-write checks (one
-  row, a directions mapping with a single entry) are exempt, at most 8 of them, each one chunk of one row.
+  of exactly 8, a completed call's chunks covering its rows (a call cut short by a killed launch may cover fewer, never
+  more), and no chunk of any call had more than 8 rows. Stage 0's zero-write checks (one row, a directions mapping
+  with a single entry) are exempt and counted by prompt: they cover at most the 8 P8 prompts, each completed check one
+  chunk of one row. A relaunch regenerates an interrupted call and Stage 0's checks, so a killed-and-relaunched
+  record passes.
 - **Batch noise at the new shape:** Part 170's Gate 8 passes up to 10% changed answers (38 of 384), wider than this
   part's smallest effect. If the repeat changes more than 19 of 384, the dose-1 cell rates and rises are reported as
   noise-limited beside every reading of them; `--compare` prints that flag.
@@ -211,3 +215,9 @@ and reported beside the published values; they are Weaver's, so this part makes 
   config's kernel too, the lock refusal exits 3, and the wrapper prints its own pilot rule (5); torn last lines are
   not counted as rows (6); folders compared resolved (7); the zero-write exemption keyed to a one-entry directions
   mapping and capped at 8 (8); `--compare` prints the noise flag (9); the config-kernel check covers (10).
+- Haiku 5.5 cold review, round 3 (SHIP-WITH-FIXES, measured with kill-and-relaunch scenarios), folded: Gate R3 keeps a
+  completion flag per call, so a call cut short by a kill passes when its chunks are 8s and cover no more than its
+  rows (F1); zero-write checks are counted by prompt, not by entry, so a relaunch that regenerates them passes (F2); a
+  Part 170 SystemExit (Stage 0, Gates 4/7, pilot) or the loader's refusal returns exit 3 after the record is flushed
+  (F3); non-finite values are written as null and a failed final write cannot replace the outcome (F4); the
+  zero-check row rule is tested (F5).

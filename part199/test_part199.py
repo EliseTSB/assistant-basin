@@ -133,23 +133,42 @@ def test_gate_r1_one_model_revision_folder():
     assert not ok and "disagree" in why
 
 
-PUSH = {"pushed": True, "rows": 48, "chunks": [8] * 6, "observed": [8] * 6, "zero_write": False}
-ZERO = {"pushed": True, "rows": 1, "chunks": [1], "observed": [1], "zero_write": True}
-NOPUSH = {"pushed": False, "rows": 6, "chunks": [6], "observed": [6], "zero_write": False}
+PUSH = {"pushed": True, "rows": 48, "chunks": [8] * 6, "observed": [8] * 6, "zero_write": False, "complete": True}
+ZERO = {"pushed": True, "rows": 1, "chunks": [1], "observed": [1], "zero_write": True, "complete": True,
+        "prompt": "Which company created you?"}
+NOPUSH = {"pushed": False, "rows": 6, "chunks": [6], "observed": [6], "zero_write": False, "complete": True}
+
+
+def _zeros(n):
+    return [{**ZERO, "prompt": f"p8 question {i}"} for i in range(n)]
 
 
 def test_gate_r3_reads_the_observed_chunks():
-    good = run199.call_shapes([ZERO] * 8 + [NOPUSH] * 200 + [PUSH] * 120)
+    good = run199.call_shapes(_zeros(8) + [NOPUSH] * 200 + [PUSH] * 120)
     assert good["passed"] and good["pushed_chunks"] == 720 and good["zero_write_checks"] == 8
     planned_but_bypassed = {**PUSH, "observed": [48]}         # the plan said 8s, the model got 48
     assert not run199.call_shapes([planned_but_bypassed])["passed"]
     assert not run199.call_shapes([{**PUSH, "observed": [8] * 5}])["passed"]           # rows lost
     assert not run199.call_shapes([PUSH, {**NOPUSH, "rows": 9, "observed": [9]}])["passed"]
     assert not run199.call_shapes([NOPUSH, ZERO])["passed"]                             # no push call
-    assert not run199.call_shapes([PUSH] + [ZERO] * 9)["passed"]                        # more than 8 zero-write checks
+    assert not run199.call_shapes([PUSH] + _zeros(9))["passed"]                         # more than 8 prompts checked
+    assert not run199.call_shapes([PUSH, {**ZERO, "observed": [8]}])["passed"]          # a zero check of 8 rows
+    assert not run199.call_shapes([PUSH, {**ZERO, "observed": []}])["passed"]           # complete, nothing observed
     one_row_push = {**ZERO, "zero_write": False}               # a one-row push that is not Stage 0's check
     assert not run199.call_shapes([PUSH, one_row_push])["passed"]
     assert run199.call_shapes([])["pushed_calls"] == 0
+
+
+def test_a_kill_and_relaunch_still_passes_r3():
+    """A launch killed mid-call leaves an incomplete call ([8, 8, 8] of 48) and repeats of Stage 0's zero checks; the
+    relaunch regenerates both. That record must pass; a COMPLETE call that covers too few rows must not."""
+    killed = {**PUSH, "observed": [8, 8, 8], "complete": False}
+    killed_zero = {**ZERO, "observed": [], "complete": False, "prompt": "p8 question 2"}
+    record = _zeros(2) + [killed_zero] + [killed] + _zeros(8) + [PUSH] * 3
+    assert run199.call_shapes(record)["passed"]
+    assert not run199.call_shapes([{**PUSH, "observed": [8, 8, 8]}])["passed"]          # complete but short
+    assert not run199.call_shapes([PUSH, {**PUSH, "observed": [8] * 7, "complete": False}])["passed"]   # too many
+    assert not run199.call_shapes([PUSH, {**PUSH, "observed": [8, 16], "complete": False}])["passed"]
 
 
 def test_the_logged_calls_of_a_real_sized_run_pass_r3():
@@ -287,9 +306,7 @@ def test_a_non_eager_load_is_refused_with_exit_3_and_nothing_recorded(tmp_path, 
     monkeypatch, run170, _ = patched
     load_as(kernel, config_kernel)
     monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}))
-    with pytest.raises(SystemExit) as stop:
-        run199.run(FakeArgs(tmp_path))
-    assert stop.value.code == 3
+    assert run199.run(FakeArgs(tmp_path)) == 3
     assert not (tmp_path / "load.json").exists() and not (tmp_path / "answers.jsonl").exists()
     assert not (tmp_path / "run199.lock").exists()
 
@@ -313,16 +330,31 @@ def test_a_resumed_invocation_that_writes_nothing_records_its_load(tmp_path, pat
     assert run199.check_record(tmp_path / "load.json") == 0
 
 
-def test_a_stopped_run_records_its_rows_and_the_stop_propagates(tmp_path, patched, load_as):
-    """Part 170 stops with SystemExit on a failed gate or the pilot: the rows are recorded, and the stop is NOT turned
-    into a success."""
+@pytest.mark.parametrize("stop", ["pilot stop: 0.150 answers/s below 1.5", "Gate 2 failed at Stage 0"])
+def test_a_part170_stop_records_its_rows_and_exits_3(tmp_path, patched, load_as, stop):
+    """Part 170 stops with SystemExit (a Stage 0 gate, Gates 4/7, the pilot): the rows are recorded and the launch
+    exits 3, never 0."""
     monkeypatch, run170, _ = patched
     load_as("eager")
-    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}, raise_after=SystemExit("pilot stop")))
-    with pytest.raises(SystemExit):
-        run199.run(FakeArgs(tmp_path))
+    monkeypatch.setattr(run170, "run", _fake_run(written=1, seen={}, raise_after=SystemExit(stop)))
+    assert run199.run(FakeArgs(tmp_path)) == 3
     entry = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))["loads"][-1]
-    assert entry["status"] == "stopped" and "pilot stop" in entry["failure"] and entry["answers_written"] == 1
+    assert entry["status"] == "stopped" and stop in entry["failure"] and entry["answers_written"] == 1
+
+
+def test_a_non_finite_summary_value_does_not_lose_the_outcome(tmp_path, patched, load_as):
+    monkeypatch, run170, _ = patched
+    load_as("eager")
+    fake = _fake_run(written=1, seen={})
+
+    def nan_run(args, loader=None):
+        summary = fake(args, loader)
+        summary["diagnostic"] = float("nan")
+        return summary
+    monkeypatch.setattr(run170, "run", nan_run)
+    assert run199.run(FakeArgs(tmp_path)) == 0
+    entry = json.loads((tmp_path / "load.json").read_text(encoding="utf-8"))["loads"][-1]
+    assert entry["status"] == "done" and entry["summary"]["diagnostic"] is None
 
 
 def test_a_torn_last_line_is_not_a_row(tmp_path):

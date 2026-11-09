@@ -107,7 +107,7 @@ def chunked_generate(original, call_log=None, on_call=None):
             sizes = [1]                       # Stage 0's zero-write hook: one prompt at a time
         else:
             sizes = chunk_sizes(n)
-        entry = {"pushed": bool(pushed), "rows": n, "chunks": list(sizes), "observed": [],
+        entry = {"pushed": bool(pushed), "rows": n, "chunks": list(sizes), "observed": [], "complete": False,
                  "zero_write": bool(pushed and n == 1 and len(directions or {}) == 1), "prompt": question[:60]}
         if call_log is not None:
             call_log.append(entry)
@@ -123,6 +123,9 @@ def chunked_generate(original, call_log=None, on_call=None):
             answers.extend(got)
             if on_call is not None:
                 on_call()
+        entry["complete"] = True
+        if on_call is not None:
+            on_call()
         return answers
     return generate_with_bans
 
@@ -181,20 +184,46 @@ def check_record(path):
 
 def call_shapes(calls):
     """Gate R3, on what reached the model (the row counts observed as each chunk returned): every pushed call that is
-    not Stage 0's zero-write check went as chunks of exactly 8 covering its rows, no chunk of any call had more than 8
-    rows, and there are at most 8 zero-write checks (one per P8 prompt), each a single one-row chunk."""
+    not Stage 0's zero-write check went as chunks of exactly 8 (a complete call's chunks cover its rows; a call cut
+    short by a killed launch may cover fewer, never more), no chunk of any call had more than 8 rows, and the
+    zero-write checks cover at most the 8 P8 prompts, each completed check one chunk of one row. A relaunch after a
+    kill regenerates an interrupted call and Stage 0's checks, so both are counted by call and by prompt, not summed."""
     zero_checks = [call for call in calls if call.get("pushed") and call.get("zero_write")]
     pushed = [call for call in calls if call.get("pushed") and not call.get("zero_write")]
     observed = [int(size) for call in calls for size in call.get("observed", [])]
     biggest = max(observed, default=0)
-    wrong = [call for call in pushed if not call.get("observed") or any(int(size) != CHUNK for size in call["observed"])
-             or sum(map(int, call["observed"])) != int(call["rows"])]
-    bad_zero = [call for call in zero_checks if call.get("observed") != [1]]
-    passed = bool(pushed and not wrong and biggest <= CHUNK and not bad_zero and len(zero_checks) <= 8)
-    return {"passed": passed, "pushed_calls": len(pushed),
+
+    def bad_push(call):
+        sizes = [int(size) for size in call.get("observed", [])]
+        if any(size != CHUNK for size in sizes):
+            return True
+        if call.get("complete"):
+            return sum(sizes) != int(call["rows"])
+        return sum(sizes) > int(call["rows"])         # killed mid-call: fewer chunks, never more rows
+
+    wrong = [call for call in pushed if bad_push(call)]
+    bad_zero = [call for call in zero_checks
+                if (call.get("observed") != [1] if call.get("complete") else call.get("observed") not in ([], [1]))]
+    zero_prompts = {call.get("prompt") for call in zero_checks}
+    complete_pushed = [call for call in pushed if call.get("complete")]
+    passed = bool(complete_pushed and not wrong and biggest <= CHUNK and not bad_zero and len(zero_prompts) <= 8)
+    return {"passed": passed, "pushed_calls": len(pushed), "complete_pushed_calls": len(complete_pushed),
             "pushed_chunks": sum(len(call.get("observed", [])) for call in pushed),
             "pushed_calls_not_in_chunks_of_8": len(wrong), "zero_write_checks": len(zero_checks),
+            "zero_write_prompts": len(zero_prompts), "bad_zero_write_checks": len(bad_zero),
             "largest_chunk_rows": biggest, "calls": len(calls)}
+
+
+def _finite(value):
+    """The record is strict JSON: non-finite floats become null (a diagnostic NaN must not lose the outcome)."""
+    import math
+    if isinstance(value, float) and not math.isfinite(value):
+        return None
+    if isinstance(value, dict):
+        return {k: _finite(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_finite(v) for v in value]
+    return value
 
 
 def _save_record(path, rec):
@@ -202,7 +231,7 @@ def _save_record(path, rec):
     import os
     path = Path(path)
     tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(json.dumps(rec, ensure_ascii=True, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    tmp.write_text(json.dumps(_finite(rec), ensure_ascii=True, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     os.replace(tmp, path)
 
 
@@ -315,19 +344,29 @@ def _run_locked(args, loader):
     nr.LAST_LOAD = None
     run170.generate_with_bans = chunked_generate(original_generate, calls, on_call=flush)
     run168.pilot_rate_should_stop = pilot_rate_should_stop
-    summary, failure = None, None
+    summary, failure, stopped = None, None, False
     try:
         summary = run170.run(args, loader=recording_loader)
-    except BaseException as exc:       # a failed Part 170 gate or the pilot (SystemExit), a killed model, a bug:
-        failure = f"{type(exc).__name__}: {exc}"   # record the rows it wrote, then let the stop propagate
+    except SystemExit as exc:          # Part 170's gates, its pilot, or this wrapper's loader refusal: a stop, exit 3
+        failure, stopped = f"SystemExit: {exc}", True
+    except BaseException as exc:       # a killed model, a bug: record the rows it wrote, then let it propagate
+        failure = f"{type(exc).__name__}: {exc}"
         raise
     finally:
         run170.generate_with_bans = original_generate
         run168.pilot_rate_should_stop = original_pilot
-        flush(status="stopped" if failure else "done", summary=summary, failure=failure)
+        try:
+            flush(status="stopped" if failure else "done", summary=summary, failure=failure)
+        except Exception as exc:       # a failed final write must not replace the run's own outcome
+            print(f"PART199: the final load.json write failed ({type(exc).__name__}: {exc}); the last per-chunk "
+                  "write stands", flush=True)
         written = _answers_written(out) - before
         if failure is not None:
             print(f"PART199 run stopped: {failure}; {written} row(s) written this invocation", flush=True)
+    if stopped:
+        print("PART199: stopped by a gate, the pilot or the loader (see above); no reading is made from this launch",
+              flush=True)
+        return 3
     loads = _read_record(load_path).get("loads", [])
     ok_kernel, why_kernel = check_kernels(loads)
     ok_run, why_run = check_same_run(loads)
@@ -352,7 +391,7 @@ def _run_locked(args, loader):
         return 3
     print(f"PART199 gates R1, R3 and Part 170's eight passed: {len(loads)} load(s) eager; {shapes['pushed_calls']} "
           f"pushed calls in {shapes['pushed_chunks']} chunks of 8 this invocation", flush=True)
-    print(json.dumps(summary, ensure_ascii=True, allow_nan=False), flush=True)
+    print(json.dumps(_finite(summary), ensure_ascii=True, allow_nan=False), flush=True)
     return 0
 
 
