@@ -3613,3 +3613,15 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 199.7 | Claude (low confidence): 170.1 holds and 170.2 fails, as published (170.1 not scored if M96's readings stop; then 199.7 is not scored). Reason: Their no-push baselines are entirely late-formed loops. | 170.1 fails (0.329 against a 0.25 bar; published 0.174), 170.2 fails (0.832) (results/part199/score.json) | FAILED |
 | 199.8 | Claude (low confidence): 170.5, 170.7 and 170.8 keep their published verdicts (failed, held, failed). Reason: 170.5 failed by 0.3 points. | 170.5 fails (0.034), 170.7 holds (0.000), 170.8 fails (-0.014) (results/part199/score.json) | HELD |
 | 199.9 | Claude (medium confidence): Gate 8's repeat changes at most 19 of 384 answers (5%) at the chunked shape. Reason: Published 0 of 384 at 48 rows. | 0 of 384 changed (results/part199/compare.json) | HELD |
+
+## Part 200 (registered 2026-11-09 13:39 CT, before any data; reruns Part 163 on the eager kernel; design PART200-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 200.1 | Claude (medium confidence): Gates R1 to R3 and Part 163's three gates pass. | | |
+| 200.2 | Claude (medium confidence): 163.1, 163.2, 163.3 and 163.4 hold and 163.5 fails, as published. Reason: 163.1 and 163.2 cannot fail unless a random rate falls below 2/3, and 163.3's bar is far below the published rates, so the live parts are 163.4 (one unit from flipping) and 163.5. | | |
+| 200.3 | Claude (medium confidence): The neuron arm's broken count over its 1,600 battery answers is at least twice the random arm's (published 343 and 83). Reason: Part 199 kept its between-arm direction on eager while its rates moved. | | |
+| 200.4 | Claude (medium confidence): In each arm at least 480 of 1,600 battery answers (30%) reach the 80-token cap (published 124 neuron, 218 random). Reason: On SDPA almost every Part 199 answer stopped early; on eager most ran to the cap. | | |
+| 200.5 | Claude (low confidence): Each arm's broken count is higher on eager than published. Reason: Part 199's loop rates rose on eager, but Part 163's triage keeps any answer naming a model or identity, and a kernel can remove loops as well as add them. | | |
+| 200.6 | Claude (low confidence): Under Part 161's rule on maker phrasings, the neuron arm's pooled Qwen rate stays below the random arm's (published 19 of 539 against 57 of 661). Reason: The published rates are small and the comparison was unregistered. | | |
+| 200.7 | Claude (low confidence): At most 20 of the 200 batch-1 answers differ from the same units' chunked answers. Reason: Rows are pushed independently, but eager batch 8 left the batch-1 path at a near-tie on 1 of 8 kernel-check prompts. | | |
