@@ -23,8 +23,8 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > and every verdict kept, but the coherence counts behind "breaks the model" most likely were the kernel's), and Part
 > 170 (Part 199: blocking still raises loops under a push, but 170.1's point estimate crossed its bar, with both
 > intervals across it, and none of the 19 prompts Stage 0 had frozen was frozen on eager). Part 163 (Part 200) kept
-> its verdicts and the arms' gap, but its broken answers moved to the 80-token cap, and batch shape alone changed 76
-> of 200 eager answers.
+> its verdicts and the arms' gap, but its broken answers moved to the 80-token cap, and in a batch-1 comparison, both
+> on eager, 76 of 200 answers differed.
 
 ## The short version
 
@@ -2778,7 +2778,7 @@ and 0 of 24 random updates.
 
 **[Part 199](results/part199/README.md)**, 2026-11-09. Does Part 170 hold on the eager attention kernel? Its push result does: under the full-size push, blocking the plain answer's 50 likeliest tokens raised loops from 28.4% to 54.7% of 384 answers (published 25.0% to 43.8%), and 170.3 and 170.6 hold. Its no-push verdict 170.1 changed: without a push, the 50-token ban raised identity loops by 8.7 points, and the ratio to the push rise went from 0.174 to 0.329, past its 0.25 bar, with both runs' intervals across the bar. Stage 0 froze none of the 19 prompts Part 170 froze, and Part 170's dose-1 answers had mostly stopped before the token cap (358 to 383 of 384 per cell, against 104 to 168 on eager), many mid-phrase. Four of nine predictions held; one of Part 170's ten verdicts changed.
 
-**[Part 200](results/part200/README.md)**, 2026-11-09. Does Part 163 hold on the eager attention kernel? Its verdicts do: all three gates pass (gate 1's changed share fell from 0.88 to 0.75 and 0.71 against a 0.70 floor), and 163.1 to 163.4 hold and 163.5 fails as published, with 163.4 and 163.5 the live readings. Neurons still said Qwen less on maker phrasings (16 of 514 against 40 of 632) and broke more often (387 against 103 of 1,600). Most eager answers ran to the 80-token cap (1,020 and 912, against 124 and 218), and most broken answers were at the cap. Regenerating one question one row at a time changed 76 of 200 answers against chunks of 8, almost all first differing at or before 64 cached keys, where Part 178's fault does not operate (exploratory). Six of seven predictions held.
+**[Part 200](results/part200/README.md)**, 2026-11-09. Does Part 163 hold on the eager attention kernel? Its verdicts do: all three gates pass (gate 1's changed share fell from 0.88 to 0.75 and 0.71 against a 0.70 floor), and 163.1 to 163.4 hold and 163.5 fails as published, with 163.4 held by one unit in each arm. Neurons still said Qwen less on maker phrasings (16 of 514 against 40 of 632) and broke more often (387 against 103 of 1,600). Most eager answers ran to the 80-token cap (1,020 and 912, against 124 and 218), and most broken answers were at the cap. Regenerating one question one row at a time changed 76 of 200 answers against chunks of 8, almost all first differing at or before 64 cached keys (exploratory). Six of seven predictions held.
 
 ### Running or designed (2026-10-21)
 
