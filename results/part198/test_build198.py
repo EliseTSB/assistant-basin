@@ -6,6 +6,7 @@ import json
 import hashlib
 import fcntl
 import io
+import os
 import sys
 import tempfile
 import time
@@ -31,23 +32,34 @@ def _blocked_model_loader(*_args, **_kwargs):
 torch.load = _blocked_model_loader
 try:
     import transformers
-    transformers.AutoModelForCausalLM.from_pretrained = _blocked_model_loader
-    transformers.AutoTokenizer.from_pretrained = _blocked_model_loader
+    for _class_name in ("AutoModel", "AutoModelForCausalLM", "AutoModelForSeq2SeqLM",
+                        "AutoTokenizer", "AutoConfig"):
+        _loader_class = getattr(transformers, _class_name, None)
+        if _loader_class is not None and hasattr(_loader_class, "from_pretrained"):
+            _loader_class.from_pretrained = _blocked_model_loader
 except ImportError:
     pass
 try:
     import safetensors
     safetensors.safe_open = _blocked_model_loader
+    try:
+        import safetensors.torch
+        safetensors.torch.load_file = _blocked_model_loader
+    except ImportError:
+        pass
 except ImportError:
     pass
+torch.jit.load = _blocked_model_loader
+torch.serialization.load = _blocked_model_loader
 
 HERE = Path(__file__).resolve().parent
+WSP_MODEL_ID = "Qwen/Qwen3.5-0.8B"
 sys.path.insert(0, str(HERE))
 import run198 as R  # noqa: E402
 import score198 as S  # noqa: E402
 
 # Keep runner-level loader entry points blocked even if a synthetic test reaches an arm path.
-for _loader_name in ("load_gpt2_model", "load_arm_c_pair"):
+for _loader_name in ("load_gpt2_model", "load_arm_c_pair", "load_wsp_module"):
     setattr(R, _loader_name, _blocked_model_loader)
 
 fails = 0
@@ -919,6 +931,14 @@ m8_ok = (crosscheck_helper is not None and crosscheck_helper({"stats198_sha256":
          and "crosscheck_hash_matches" in inspect.getsource(R.preflight))
 check("M8 preflight binds crosscheck to the checked stats198.py hash", m8_ok)
 
+def _load_base_for_contract(path: Path, model_id: str, inputs_sha256: str):
+    # Exercise the input-digest behavior on the pre-r6 API while still testing model binding
+    # when the runner exposes the new required expected_model_id argument.
+    if "expected_model_id" in inspect.signature(R.load_base).parameters:
+        return R.load_base(path, model_id, inputs_sha256)
+    return R.load_base(path, inputs_sha256)
+
+
 with tempfile.TemporaryDirectory(prefix="part198-basehash-r1-") as td:
     blob = Path(td) / "input.bin"
     blob.write_bytes(b"base statistics input A")
@@ -930,15 +950,117 @@ with tempfile.TemporaryDirectory(prefix="part198-basehash-r1-") as td:
     if hasattr(R, "save_base"):
         try:
             R.save_base(base_path, "tiny", {0: {"f1": 1.0}}, "input-hash")
-            cache_ok &= R.load_base(base_path, "input-hash") == {0: {"f1": 1.0}}
+            cache_ok &= _load_base_for_contract(base_path, "tiny", "input-hash") == {0: {"f1": 1.0}}
             try:
-                R.load_base(base_path, "different-hash")
+                _load_base_for_contract(base_path, "tiny", "different-hash")
                 cache_ok = False
             except RuntimeError:
                 pass
         except TypeError:
             cache_ok = False
 check("m3 base statistics cache stores and checks its input fingerprint", cache_ok)
+
+with tempfile.TemporaryDirectory(prefix="part198-wsp-base-fingerprint-") as td:
+    snapshot = Path(td) / "snapshot"
+    snapshot.mkdir()
+    (snapshot / "model-00001.safetensors").write_bytes(b"tiny synthetic weights")
+    (snapshot / "config.json").write_text('{"hidden_size": 2}\n', encoding="utf-8")
+    (snapshot / "tokenizer_config.json").write_text('{"model_max_length": 8}\n', encoding="utf-8")
+    fingerprint = getattr(R, "wsp_base_inputs_sha256", None)
+    fingerprint_ok = fingerprint is not None
+    if fingerprint is not None:
+        digest_a = fingerprint(snapshot)
+        (snapshot / "model-00001.safetensors").write_bytes(b"changed synthetic weights")
+        digest_b = fingerprint(snapshot)
+        (snapshot / "config.json").write_text('{"hidden_size": 3}\n', encoding="utf-8")
+        digest_c = fingerprint(snapshot)
+        fingerprint_ok &= digest_a != digest_b and digest_b != digest_c
+check("r6 WSP fingerprint uses synthetic weight sizes and config/tokenizer hashes", fingerprint_ok)
+
+def _cache_row(value: float) -> dict[int, dict[str, Any]]:
+    return {layer: {"f1": value, "f2": value, "pcs": value, "t_max": value,
+                    "t_word": value, "pairs": []} for layer in (0, 1)}
+
+
+def _wsp_site_rejects_stale_cache(sequence: bool) -> bool:
+    runner = R.run_arm_b_seq if sequence else R.run_arm_b
+    cases_key = "armB_sequence" if sequence else "armB_single"
+    expected_digest = "fresh-synthetic-input-digest"
+    stale_digest = "stale-synthetic-input-digest"
+    with tempfile.TemporaryDirectory(prefix="part198-wsp-cache-site-") as td:
+        out = Path(td)
+        cache_path = out / "base-qwen35.json"
+        R.save_base(cache_path, WSP_MODEL_ID, _cache_row(3.0), stale_digest)
+        fake_module = SimpleNamespace(WSP=lambda *_args, **_kwargs: object())
+        try:
+            with ExitStack() as stack:
+                stack.enter_context(patch.object(R, "load_cases", lambda: ({cases_key: []}, {})))
+                stack.enter_context(patch.object(R, "wsp_base_inputs_sha256", lambda: expected_digest,
+                                                 create=True))
+                # All actual model/weight APIs and runner loaders were blocked above; this factory
+                # returns a bare sentinel so the real run_arm_b* cache-load statement is exercised.
+                stack.enter_context(patch.object(R, "load_wsp_module", lambda: fake_module))
+                stack.enter_context(patch.dict(os.environ))
+                runner(0, out)
+        except RuntimeError as exc:
+            message = str(exc)
+            return ("base statistics cache mismatch" in message and str(cache_path) in message
+                    and expected_digest in message and stale_digest in message)
+        except Exception:
+            return False
+    return False
+
+
+check("r6 Arm B single-write load site refuses a stale WSP digest",
+      _wsp_site_rejects_stale_cache(False))
+check("r6 Arm B sequence load site refuses a stale WSP digest",
+      _wsp_site_rejects_stale_cache(True))
+
+def _model_mismatch_refused(expected_model: str, actual_model: str) -> bool:
+    with tempfile.TemporaryDirectory(prefix="part198-base-model-mismatch-") as td:
+        path = Path(td) / "base.json"
+        digest = "same-synthetic-digest"
+        R.save_base(path, actual_model, _cache_row(1.0), digest)
+        try:
+            _load_base_for_contract(path, expected_model, digest)
+        except RuntimeError as exc:
+            message = str(exc)
+            return (str(path) in message and expected_model in message and actual_model in message
+                    and digest in message)
+        except TypeError:
+            return False
+    return False
+
+
+check("r6 GPT-2 cache with a different model ID is refused",
+      _model_mismatch_refused("gpt2-xl", "Qwen/Qwen3.5-0.8B"))
+check("r6 WSP cache with a different model ID is refused",
+      _model_mismatch_refused(WSP_MODEL_ID, "gpt2-xl"))
+
+with tempfile.TemporaryDirectory(prefix="part198-base-cache-localization-") as td:
+    cache_path = Path(td) / "base-qwen35.json"
+    fresh_base = _cache_row(1.0)
+    current = {1: {"f1": 2.0, "f2": 2.0, "pcs": 2.0, "t_max": 2.0,
+                   "t_word": 2.0, "pairs": []}}
+    accepted_matches_fresh = False
+    try:
+        R.save_base(cache_path, WSP_MODEL_ID, fresh_base, "matching-synthetic-digest")
+        accepted = _load_base_for_contract(cache_path, WSP_MODEL_ID, "matching-synthetic-digest")
+        stats = R.stats_helpers()
+        accepted_matches_fresh = (accepted == fresh_base
+            and R.localization(accepted, current, {1}, stats)
+            == R.localization(fresh_base, current, {1}, stats))
+        wrong_model_path = Path(td) / "wrong-model.json"
+        R.save_base(wrong_model_path, "other-model", fresh_base, "matching-synthetic-digest")
+        try:
+            _load_base_for_contract(wrong_model_path, WSP_MODEL_ID, "matching-synthetic-digest")
+            accepted_matches_fresh = False
+        except RuntimeError:
+            pass
+    except (RuntimeError, TypeError):
+        pass
+check("r6 matching cache localizes like fresh data while a wrong-model cache refuses",
+      accepted_matches_fresh)
 
 stats = R.stats_helpers()
 base_synthetic = {0: {"f1": 1.0, "f2": 1.0, "pcs": 1.0, "t_max": 1.0, "t_word": 1.0,

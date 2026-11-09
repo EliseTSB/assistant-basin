@@ -35,6 +35,12 @@ EASYEDIT_COMMIT = "5c519afb14e39c7f70bc5536ebd777a62d8493bf"
 WSP_SHA256 = "90184edf8f3e1ce7a25cb2697f4fe94f92befef1fbcbe64c29c3ac0b0ae65f81"
 GPT2_SHA256 = "0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a"
 QWEN35_SNAPSHOT = "2fc06364715b967f1860aea9cf38778875588b17"
+WSP_MODEL_ID = "Qwen/Qwen3.5-0.8B"
+BASE_SNAPSHOT_METADATA_NAMES = {
+    "config.json", "generation_config.json", "tokenizer.json", "tokenizer_config.json",
+    "special_tokens_map.json", "added_tokens.json", "vocab.json", "merges.txt", "vocab.txt",
+    "tokenizer.model", "spiece.model", "sentencepiece.bpe.model", "chat_template.jinja",
+}
 N_GPT2 = 48
 JSONL_RECOVERIES: list[dict[str, Any]] = []
 ARM_C_REVIEWER_MAX = {
@@ -587,15 +593,11 @@ def hash_input_hashes(hashes: dict[str, str]) -> str:
 
 def gpt2_base_inputs_sha256() -> str:
     """Fingerprint the frozen GPT-2 weights, tokenizer files, and statistics implementation."""
-    metadata_names = {"config.json", "generation_config.json", "tokenizer.json",
-                      "tokenizer_config.json", "special_tokens_map.json", "added_tokens.json",
-                      "vocab.json", "merges.txt", "vocab.txt", "tokenizer.model",
-                      "spiece.model", "sentencepiece.bpe.model", "chat_template.jinja"}
     hashes = {"model:model.safetensors": GPT2_SHA256,
               "code:stats198.py": hash_file(HERE / "stats198.py"),
               "code:run198.py": hash_file(HERE / "run198.py")}
     for path in sorted(GPT2.rglob("*")):
-        if path.is_file() and path.name in metadata_names:
+        if path.is_file() and path.name in BASE_SNAPSHOT_METADATA_NAMES:
             hashes[f"tokenizer:{path.relative_to(GPT2)}"] = hash_file(path)
     return hash_input_hashes(hashes)
 
@@ -604,6 +606,30 @@ def weight_files(folder: Path) -> list[Path]:
     suffixes = {".safetensors", ".bin", ".pt", ".pth"}
     return sorted(p for p in folder.rglob("*") if p.is_file() and p.suffix in suffixes
                   and (p.suffix != ".bin" or p.name.startswith(("pytorch_model", "model"))))
+
+
+def wsp_base_inputs_sha256(snapshot_dir: Path | None = None) -> str:
+    """Fingerprint WSP's Qwen snapshot metadata, weight names/sizes, and scoring code."""
+    if snapshot_dir is None:
+        snapshot_dir = HF_HUB / "models--Qwen--Qwen3.5-0.8B" / "snapshots" / QWEN35_SNAPSHOT
+    snapshot_dir = Path(snapshot_dir)
+    if not snapshot_dir.is_dir():
+        raise FileNotFoundError(f"Qwen snapshot directory not found: {snapshot_dir}")
+    weights = weight_files(snapshot_dir)
+    if not weights:
+        raise RuntimeError(f"no Qwen weight files found in snapshot: {snapshot_dir}")
+    hashes = {
+        "model:id": WSP_MODEL_ID,
+        "model:revision": QWEN35_SNAPSHOT,
+        "code:stats198.py": hash_file(HERE / "stats198.py"),
+        "code:run198.py": hash_file(HERE / "run198.py"),
+    }
+    for path in weights:
+        hashes[f"weight:{path.relative_to(snapshot_dir)}"] = str(path.stat().st_size)
+    for path in sorted(snapshot_dir.rglob("*")):
+        if path.is_file() and path.name in BASE_SNAPSHOT_METADATA_NAMES:
+            hashes[f"metadata:{path.relative_to(snapshot_dir)}"] = hash_file(path)
+    return hash_input_hashes(hashes)
 
 
 def manifest_inputs() -> dict[str, Path]:
@@ -855,18 +881,22 @@ def gpt2_geometry(model, tokenizer, S, compute_base: bool = True):
 
 
 def save_base(path: Path, model_id: str, base: dict[int, dict[str, Any]],
-              inputs_sha256: str | None = None) -> None:
+              inputs_sha256: str) -> None:
     data = {"model": model_id, "layers": {str(l): base[l] for l in sorted(base)}}
-    if inputs_sha256 is not None:
-        data["inputs_sha256"] = inputs_sha256
+    data["inputs_sha256"] = inputs_sha256
     path.write_text(json.dumps(safe_json(data), indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
-def load_base(path: Path, expected_inputs_sha256: str | None = None) -> dict[int, dict[str, Any]]:
+def load_base(path: Path, expected_model_id: str, expected_inputs_sha256: str) -> dict[int, dict[str, Any]]:
     raw = json.loads(path.read_text(encoding="utf-8"))
-    if expected_inputs_sha256 is not None and raw.get("inputs_sha256") != expected_inputs_sha256:
-        raise RuntimeError(f"base statistics input hash mismatch in {path}: "
-                           f"expected {expected_inputs_sha256}, got {raw.get('inputs_sha256')}")
+    actual_model_id = raw.get("model")
+    actual_inputs_sha256 = raw.get("inputs_sha256")
+    if actual_model_id != expected_model_id or actual_inputs_sha256 != expected_inputs_sha256:
+        raise RuntimeError(
+            f"base statistics cache mismatch at {path}: model expected {expected_model_id!r}, "
+            f"got {actual_model_id!r}; inputs_sha256 expected {expected_inputs_sha256}, "
+            f"got {actual_inputs_sha256!r}"
+        )
     return {int(l): item for l, item in raw["layers"].items()}
 
 
@@ -961,7 +991,8 @@ def run_arm_a(method: str, limit: int | None, out_dir: Path) -> int:
     base_path = out_dir / "base-gpt2.json"
     base_inputs_sha256 = gpt2_base_inputs_sha256()
     geometry = gpt2_geometry(model, tok, S, compute_base=not base_path.exists())
-    base = geometry["base"] if not base_path.exists() else load_base(base_path, base_inputs_sha256)
+    base = geometry["base"] if not base_path.exists() else load_base(
+        base_path, "gpt2-xl", base_inputs_sha256)
     if not base_path.exists():
         save_base(base_path, "gpt2-xl", base, base_inputs_sha256)
     methods = load_easyedit()
@@ -1188,7 +1219,8 @@ def run_arm_a_mass(method: str, limit: int | None, out_dir: Path) -> int:
     base_path = out_dir / "base-gpt2.json"
     base_inputs_sha256 = gpt2_base_inputs_sha256()
     geometry = gpt2_geometry(model, tok, S, compute_base=not base_path.exists())
-    base = geometry["base"] if not base_path.exists() else load_base(base_path, base_inputs_sha256)
+    base = geometry["base"] if not base_path.exists() else load_base(
+        base_path, "gpt2-xl", base_inputs_sha256)
     if not base_path.exists():
         save_base(base_path, "gpt2-xl", base, base_inputs_sha256)
     module = load_easyedit()[method]
@@ -1332,9 +1364,11 @@ def run_arm_b(limit: int | None, out_dir: Path) -> int:
     w = load_wsp_module().WSP(model_path, device="cpu")
     torch.set_num_threads(12)
     base_path = out_dir / "base-qwen35.json"
-    base = build_wsp_base(w, S) if not base_path.exists() else load_base(base_path)
+    base_inputs_sha256 = wsp_base_inputs_sha256()
+    base = build_wsp_base(w, S) if not base_path.exists() else load_base(
+        base_path, WSP_MODEL_ID, base_inputs_sha256)
     if not base_path.exists():
-        save_base(base_path, "Qwen/Qwen3.5-0.8B", base)
+        save_base(base_path, WSP_MODEL_ID, base, base_inputs_sha256)
     edited_layers = list(w.Ls)
     edited_base = {l: w.layers[l].mlp.down_proj.weight.detach().float().cpu().clone() for l in edited_layers}
     for case_id in (pending if limit is None else pending[:limit]):
@@ -1459,9 +1493,11 @@ def run_arm_b_seq(limit: int | None, out_dir: Path) -> int:
     w = load_wsp_module().WSP(model_path, device="cpu")
     torch.set_num_threads(12)
     base_path = out_dir / "base-qwen35.json"
-    base = build_wsp_base(w, S) if not base_path.exists() else load_base(base_path)
+    base_inputs_sha256 = wsp_base_inputs_sha256()
+    base = build_wsp_base(w, S) if not base_path.exists() else load_base(
+        base_path, WSP_MODEL_ID, base_inputs_sha256)
     if not base_path.exists():
-        save_base(base_path, "Qwen/Qwen3.5-0.8B", base)
+        save_base(base_path, WSP_MODEL_ID, base, base_inputs_sha256)
     edited_layers = list(w.Ls)
     edited_base = {l: w.layers[l].mlp.down_proj.weight.detach().float().cpu().clone() for l in edited_layers}
     # Replay the whole frozen prefix to reconstruct WSP's sequence state after a process restart.
