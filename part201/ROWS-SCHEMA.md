@@ -24,12 +24,16 @@ file exactly; a change to it is agreed on the coordination topic `part201-rows-s
 | `top1`, `top2` | list of int | the two highest-scoring token ids at each position of `tokens` |
 | `top1_logit` | list of float | the highest score at each position, as float32 |
 | `margin` | list of float | top score minus second score at each position, as float32 |
-| `argmax_agrees` | bool | `tokens[i] == top1[i]` at every position |
+| `emitted_logit` | list of float | the recorded score of the emitted token `tokens[i]` at each position, as float32 |
+| `emitted_is_max` | bool | `emitted_logit[i] == top1_logit[i]` at every position (Gate G2) |
+| `argmax_agrees` | bool | `tokens[i] == top1[i]` at every position (false at a tie the card broke the other way; informational) |
 | `nonfinite` | bool | any recorded score at any position of this row was not finite |
 | `finish` | str | `eos` or `cap` |
 | `answer` | str | `tokens` decoded with special tokens skipped |
 | `token_count` | int | `len(tokens)` |
 | `push_sha256` | str or null | sha256 of this row's push tensors' bf16 bytes, layers in order; null for plain rows |
+| `hook_dtype` | str or null | dtype of the activation the push hook added to in this call (`torch.bfloat16` or `torch.float32`); null for plain rows |
+| `push_max_abs_diff` | float or null | largest absolute difference between the values the hook added for this row and the bf16 push values cast to float32 (0.0 expected in every process); null for plain rows |
 | `seconds` | float | wall time of the call |
 | `written` | str | `YYYY-MM-DD HH:MM:SS`, from the clock |
 

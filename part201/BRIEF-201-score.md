@@ -18,7 +18,8 @@ contract; another builder writes the runner that produces it), `BATCH-SHAPE-NOIS
    `python -I -B part201/score201.py --rows results/part201/rows.jsonl --kernel results/part201/kernel-f32.json
    --reference results/kernel-reference/qwen-qwen3.5-4b-cpu-float32.json --load results/part201/load.json --out
    results/part201`. It writes `score.json` and `report.md` and prints the report.
-   - Gates G1 to G4 (and G5 if `load.json` records it) from the records; a failed gate is printed first and the
+   - Gates G1 to G4 (and G5 if `load.json` records it) from the records (G2 is `emitted_is_max` on every row; G4 is
+     `hook_dtype` float32 and `push_max_abs_diff` 0 on every pushed float32 row, and 0 on every pushed bf16 row); a failed gate is printed first and the
      readings it withdraws (design, Reading rules) are marked "not read", not computed-and-shown.
    - For each pair in the design's Analysis list: rows compared, rows differing (token ids), the first differing
      position's distribution, the margin of the FIRST-NAMED pass at that position in absolute units and in bf16 steps
@@ -30,6 +31,13 @@ contract; another builder writes the runner that produces it), `BATCH-SHAPE-NOIS
    - Over all bf16 rows: the share of positions within 0, 1, 2 and 4 steps, and the share of generation STEPS of a
      call in which at least one unfinished row is within 2 steps (the cost model for a margin gate), per pass.
    - Among rows of pass A: the share that differ in C, split by whether the row has any position within 2 steps.
+   - At exact ties (bf16 margin 0): how often the emitted token is the lower token id; and, for pairs of passes,
+     positions decided from an identical prefix where both passes record the same top-two ids with margin 0 but
+     emitted different tokens.
+   - Where one pass of a pair is float32 (A against F8, C against F1), also the float32 pass's margin at the first
+     differing position.
+   - Keep each prediction's thresholds in ONE table at the top of the file (a reviewer may still change a bar before
+     registration), and each prediction's scorer a small function that reads from it.
    - The eleven predictions, each scored exactly as worded in the design (copy the wording into the report verbatim
      with its confidence), as `held`, `failed` or `not scored` with the number; "of the rows that differ" predictions
      are `not scored` when no row differs.
