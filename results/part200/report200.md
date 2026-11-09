@@ -26,7 +26,7 @@ Lengths are reported before cross-run rate comparisons. Token counts by arm and 
 | rerun | neuron | 68.8 | 80.0 | 1020 | 580 | 366 | 21 |
 | rerun | random | 68.3 | 80.0 | 912 | 688 | 98 | 5 |
 
-Most rerun broken answers are at the cap: 366 of 387 neuron and 98 of 103 random. Under-cap broken answers fell from 318 to 21 neuron and 72 to 5 random, so the broken rise reflects a length change as much as anything.
+Broken counts rose by 44 neuron (343 to 387) and 20 random (83 to 103). Their composition shifted toward answers at the cap: broken-at-cap counts changed from 25/11 to 366/98 (neuron/random), while under-cap broken counts changed from 318/72 to 21/5. The design attributes cross-run changes jointly to kernel and shape; these records do not separate them.
 
 ### Gate 1 changed share
 
@@ -54,7 +54,7 @@ Published changed share was 0.88 neuron and 0.88 random; rerun was 0.75 and 0.71
 | # | Prediction | Value decided on | Result |
 | --- | --- | --- | --- |
 | 200.1 | Gates R1 to R3 and Part 163's three gates pass. (medium) | `{"gates_r1_r3_passed": true, "gate_r2_passed": true, "part163_gates": {"gate1_recipe": true, "gate2_no_push": true, "gate3_rows": true}, "part163_gates_passed": true, "result": "held"}` | held |
-| 200.2 | 163.1, 163.2, 163.3 and 163.4 hold and 163.5 fails, as published. (medium: 163.1 and 163.2 cannot fail unless a random rate falls below 2/3, and 163.3's bar is far below the published rates, so the live parts are 163.4 (one unit from flipping) and 163.5.) | `{"verdicts": {"163.1": "held", "163.2": "held", "163.3": "held", "163.4": "held", "163.5": "failed"}, "expected": {"163.1": "held", "163.2": "held", "163.3": "held", "163.4": "held", "163.5": "failed"}, "result": "held"}` | held |
+| 200.2 | 163.1, 163.2, 163.3 and 163.4 hold and 163.5 fails, as published. (medium: 163.1 and 163.2 cannot fail unless a random rate falls below 2/3, and 163.3's bar is far below the published rates; 163.4 is one unit from flipping in each arm, while 163.5's neuron and random intervals are 0.193 to 0.294 and 0.048 to 0.083.) | `{"verdicts": {"163.1": "held", "163.2": "held", "163.3": "held", "163.4": "held", "163.5": "failed"}, "expected": {"163.1": "held", "163.2": "held", "163.3": "held", "163.4": "held", "163.5": "failed"}, "result": "held"}` | held |
 | 200.3 | The neuron arm's broken count over its 1,600 battery answers is at least twice the random arm's (published 343 and 83). (medium: Part 199 kept its between-arm direction on eager while its rates moved.) | `{"neuron_broken": 387, "random_broken": 103, "published": {"neuron": 343, "random": 83}, "ratio": 3.7572815533980584, "minimum_ratio": 2.0}` | held |
 | 200.4 | In each arm at least 480 of 1,600 battery answers (30%) reach the 80-token cap (published 124 neuron, 218 random). (medium: on SDPA almost every Part 199 answer stopped early; on eager most ran to the cap.) | `{"at_cap": {"neuron": 1020, "random": 912}, "published": {"neuron": 124, "random": 218}, "minimum": 480, "of": 1600}` | held |
 | 200.5 | Each arm's broken count is higher on eager than published. (low: Part 199's loop rates rose on eager, but Part 163's triage keeps any answer naming a model or identity, and a kernel can remove loops as well as add them.) | `{"broken": {"neuron": 387, "random": 103}, "published": {"neuron": 343, "random": 83}, "higher_than_published": {"neuron": true, "random": true}}` | held |
@@ -263,4 +263,4 @@ Among changed rows, Part 163 label flips: name gone 2, broken 6, Qwen under the 
 
 Re-tokenized decoded texts reproduce the adjusted generator token count in 3178 of 3416 rows. Among under-cap battery answers, 1213 of 1268 re-tokenize to `token_count − 1`; `token_count` includes the stop token under the cap.
 The first-difference convention uses 17 prompt tokens plus the 0-based answer index. Counts at or before thresholds 63, 64, and 65 are 63: 73, 64: 73, 65: 73; position uncertainty is about ±1 token.
-The load record labels this Part 199 and lists chunk/batch defaults 64/64; call records show pushed chunks of 8. The run averaged 0.89 answers per second against the 0.17 guard; generation took 3836.6 seconds, while load-to-completion timestamps span 4670 seconds.
+The load record labels this Part 199; its `repair.chunk_size` is 64, the batch size passed to startup repair, while the call records show pushed generation chunks of 8. The run averaged 0.89 answers per second against the 0.17 guard; `summary.seconds` records 3836.6 seconds, while load-record timestamps span 4670 seconds. The roughly 833-second difference is most likely the untimed batch-1 stage: `run200.py` calls it after `run163.run` returns. This is an inference from the code.
