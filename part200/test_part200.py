@@ -221,6 +221,14 @@ def test_gate_r2_requires_the_designs_units_hash(tmp_path):
     assert fail_r2["units_hash_matches_design"] is False
     # and a rerun whose units differ from the published copy fails even when the hash is right on the published side
     assert run200.gate_r2(altered, real, questions, questions)["passed"] is False
+    # code review r2, finding 2: Part 163's published folder has no copy. Nothing is compared, the record says so, and
+    # the design's hash still decides: the real file passes and the altered one fails.
+    absent = run200.gate_r2(real, None, questions, questions)
+    assert absent["passed"] and absent["units_identical"] is None
+    assert absent["published_units_copy"] == "absent: not compared"
+    assert run200.gate_r2(altered, None, questions, questions)["passed"] is False
+    # a published copy that is present and differs still fails, though the rerun's file is the design's
+    assert run200.gate_r2(real, altered, questions, questions)["passed"] is False
 
 
 def test_compare_exits_3_when_the_rerun_units_file_is_altered(tmp_path):
@@ -432,8 +440,9 @@ class BatchModel:
         self.seen = []
         self.generate = self._generate
 
-    def _generate(self, inputs, **_kwargs):
-        self.seen.append(int(inputs["input_ids"].shape[0]))
+    def _generate(self, inputs=None, **kwargs):
+        ids = inputs["input_ids"] if inputs is not None else kwargs["input_ids"]
+        self.seen.append(int(ids.shape[0]))
         return None
 
     def requires_grad_(self, value):
@@ -452,7 +461,8 @@ class BatchRecorder:
         n = int(next(iter(pushes.values())).shape[0]) if pushes else 1
         self.rows.append(n)
         if model is not None:
-            model.generate({"input_ids": SimpleNamespace(shape=(n, 7))}, max_new_tokens=max_new_tokens)
+            # battery148.generate's call style: model.generate(**inputs, max_new_tokens=...) (code review r2, finding 1)
+            model.generate(input_ids=SimpleNamespace(shape=(n, 7)), max_new_tokens=max_new_tokens)
         return [{"answer": f"row {r}", "token_count": 4} for r in range(n)]
 
 
@@ -822,7 +832,9 @@ def test_first_incomplete_call_follows_run163s_plan_order():
     assert run200._first_incomplete_call(16 + 128, 64) == {"stage": "recipe", "question_index": 0, "row_in_stage": 128}
     assert run200._first_incomplete_call(216, 64) == {"stage": "battery", "question_index": 0, "row_in_stage": 0}
     assert run200._first_incomplete_call(216 + 64, 64) == {"stage": "battery", "question_index": 0, "row_in_stage": 64}
-    assert run200._first_incomplete_call(216 + 192, 64) == {"stage": "battery", "question_index": 1, "row_in_stage": 0}
+    assert run200._first_incomplete_call(216 + 192, 64) == {"stage": "battery", "question_index": 0, "row_in_stage": 192}
+    assert run200._first_incomplete_call(216 + 200, 64) == {"stage": "battery", "question_index": 1, "row_in_stage": 0}
+    assert run200._first_incomplete_call(1344, 64) == {"stage": "battery", "question_index": 5, "row_in_stage": 128}
 
 
 # --------------------------------------------------------------------------------------------- --compare
@@ -930,7 +942,8 @@ def test_compare_on_part163_against_itself_reproduces_the_published_numbers(tmp_
     published.mkdir()
     (published / "answers.jsonl").write_bytes((part163 / "answers.jsonl").read_bytes())
     (published / "score.json").write_bytes((part163 / "score.json").read_bytes())
-    (published / "units163.json").write_bytes((ROOT / "part163" / "units163.json").read_bytes())
+    # code review r2, finding 2: the published folder is laid out like results/part163, which has no units163.json
+    assert not (part163 / "units163.json").exists()
     assert run200.main(["--compare", str(rerun), str(published)]) == 0
     result = json.loads((rerun / "compare.json").read_text())
     assert set(result) == {"scored", "exploratory"}
@@ -954,6 +967,7 @@ def test_compare_on_part163_against_itself_reproduces_the_published_numbers(tmp_
     assert exploratory["identical_no_push_answers"] == {"shared": 16, "identical": 16}
     assert set(exploratory["per_layer_broken"]["published"]) == {"neuron", "random"}
     assert scored["gate_r2"]["passed"]
+    assert scored["gate_r2"]["published_units_copy"] == "absent: not compared"
     # the rerun side is scored by score163.py itself, on the same answers: the same gates and verdicts
     rerun_side = scored["rerun"]["part163_gates_and_verdicts"]
     assert rerun_side["all_gates_passed"] is True

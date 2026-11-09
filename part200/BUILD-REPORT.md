@@ -307,3 +307,21 @@ and Part 199 test commands pass (50, 8 and 38 tests).
 FINDINGS: Findings 1–9 are handled above. Sabotage made the tests for findings 1, 2, 3 and 5 fail as intended. No
 model.generate instrumentation required edits outside Part 200.
 BLOCKERS: none.
+
+## Code review round 2, folded by hand (2026-11-09, Journal Claude)
+
+`review/CODE-REVIEW-r2.md` (Haiku 5.5): LAUNCH-WITH-FIXES. The startup repair held in 1,135 kill and truncation trials.
+
+1. **Gate R3's model batch was None in production.** `battery148.generate` calls `model.generate(**inputs, ...)`, so the
+   wrapper now reads `input_ids` from the keyword arguments. The test's fake model and generator use that call style.
+   Sabotage: restoring `kwargs.get("inputs")` turns `test_gate_r3_records_the_batch_model_generate_received` red.
+2. **`--compare` required a `units163.json` that `results/part163` does not have.** It is no longer required on the
+   published side. Gate R2 compares a published copy when present; when absent, `units_identical` is None,
+   `published_units_copy` says "absent: not compared", and the design's hash decides. The reproduction test now uses the
+   real layout (no copy). Sabotage: requiring the file again turns it red.
+3. **`resume_at` used 192 rows per battery question.** Now 200 (calls of 64, 64, 64, 8); the test asserts question 0,
+   row 192 at head 408, question 1 at head 416, and question 5, row 128 at head 1,344.
+4. **`observed` is the planned size after the checks.** Kept, with a comment saying the measured quantities are
+   `answers` and `model_batch`.
+
+Host: 96 passed (`part200/test_part200.py`, `part163/test_part163.py`, `part199/test_part199.py`).

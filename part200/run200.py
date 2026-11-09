@@ -180,6 +180,8 @@ def chunked_generate(original, call_log=None, on_chunk=None, stage="run"):
             got = generate_batch(original, measured, model, tok, layers, question, part, max_new_tokens, device)
             if len(got) != size:
                 raise ValueError(f"chunk of {size} rows returned {len(got)} answers")
+            # "observed" is the chunk's planned size, appended only after the checks above passed (code review r2,
+            # finding 4): the measured quantities are "answers" (len(got)) and "model_batch" (what generate saw).
             entry["observed"].append(size)
             entry["push_rows"].append(size)
             entry["answers"].append(len(got))
@@ -215,7 +217,9 @@ def generate_batch(original, measured, model, tok, layers, question, pushes, max
     previous = getattr(model, "generate", None)
 
     def watched(*args, **kwargs):
-        measured.append(_batch_seen(args[0] if args else kwargs.get("inputs")))
+        # battery148.generate calls model.generate(**inputs, ...): input_ids arrive as a keyword argument
+        # (code review r2, finding 1). A positional call carries them in its first argument.
+        measured.append(_batch_seen(args[0] if args else kwargs))
         return previous(*args, **kwargs)
 
     if model is None:                   # a recorder with no model: nothing to wrap, nothing to observe
@@ -457,7 +461,7 @@ def _first_incomplete_call(head, size):
     if rest < RECIPE_ROWS:
         return {"stage": "recipe", "question_index": 0, "row_in_stage": rest}
     rest -= RECIPE_ROWS
-    per_question = (BATTERY_ROWS // 16) // size * size      # 200 rows per question, in whole calls of `size`
+    per_question = BATTERY_ROWS // 16      # 200 rows per question (calls of 64, 64, 64, 8; code review r2, finding 3)
     return {"stage": "battery", "question_index": rest // per_question, "row_in_stage": rest % per_question}
 
 
@@ -717,7 +721,10 @@ def gate_r2(rerun_units_path, published_units_path, rerun_answers, published_ans
 
     Fold round 2 (review finding 2): before, both sides were the same path, so `units_identical` was always true and
     the design's hash appeared in no code. The hash is the check now; the published copy is a second, weaker one."""
-    a, b = sha256(published_units_path), sha256(rerun_units_path)
+    b = sha256(rerun_units_path)
+    # Code review r2, finding 2: None when the published folder carries no copy (Part 163's does not). The comparison
+    # is then not made and the record says so; the design's hash still decides.
+    a = sha256(published_units_path) if published_units_path is not None else None
 
     def questions(rows):
         seen = {}
@@ -727,12 +734,14 @@ def gate_r2(rerun_units_path, published_units_path, rerun_answers, published_ans
 
     qa, qb = questions(published_answers), questions(rerun_answers)
     hash_matches = b == EXPECTED_UNITS_SHA256
-    units_same = a == b
+    units_same = (a == b) if a is not None else None
     questions_same = qa == qb and len(qa) == 16
-    return {"passed": bool(hash_matches and units_same and questions_same),
+    return {"passed": bool(hash_matches and units_same is not False and questions_same),
             "units_sha256_expected": EXPECTED_UNITS_SHA256, "units_sha256_rerun": b,
             "units_hash_matches_design": hash_matches,
-            "units_sha256_published": a, "units_identical": units_same, "questions_identical": questions_same,
+            "units_sha256_published": a, "units_identical": units_same,
+            "published_units_copy": "absent: not compared" if a is None else "compared",
+            "questions_identical": questions_same,
             "published_questions": len(qa), "rerun_questions": len(qb),
             "first_differing_question": next((i for i, (x, y) in enumerate(zip(qa, qb)) if x != y), None)}
 
@@ -921,7 +930,10 @@ def prediction_outcomes(scored):
 # Part 163's published folder predates the load record (Part 163 did not write one), so the record is required of the
 # rerun only; the published side needs its answers, and its score.json when present (otherwise it is scored here).
 RERUN_REQUIRED = ("answers.jsonl", "load.json", "batch1.jsonl")
-PUBLISHED_REQUIRED = ("answers.jsonl", "units163.json")      # units163.json: Gate R2 compares the rerun's copy with it
+# Code review r2, finding 2: results/part163 has no units163.json (Part 163 published it as part163/units163.json),
+# so it is not required there. Gate R2's real check is the design's hash; a published-folder copy, when present, is
+# compared as well, and when absent the record says so instead of comparing a file with itself.
+PUBLISHED_REQUIRED = ("answers.jsonl",)
 
 
 class IncompleteBatch1(Exception):
@@ -950,7 +962,8 @@ def compare(rerun_dir, published_dir, units_path=None):
         raise IncompleteBatch1(why_incomplete)
     scored = {
         "record_r1_r3": {"passed": record_ok, "why": record_why},
-        "gate_r2": gate_r2(units_path, published / "units163.json", rerun_answers, published_answers),
+        "gate_r2": gate_r2(units_path, published / "units163.json" if (published / "units163.json").exists() else None,
+                           rerun_answers, published_answers),
         "published": {"part163_gates_and_verdicts": score_side(published, published_answers, units, published_score),
                       "part161_qwen_on_maker": part161_qwen(published_answers),
                       "broken_and_cap": broken_and_cap(published_answers)},
