@@ -131,3 +131,115 @@ FINDINGS: Part 163 has no load.json, so the published folder cannot supply one; 
 Part 199's chunker and Gate R3 do not fit Part 163's call shape, so Part 200 versions are written with the reason in
 the comment. The repeat reloads the model because run163.run returns no model and only the pilot edit is allowed.
 BLOCKERS: none.
+
+## Fold round 1
+
+Folded 2026-11-09 to `PART200-DESIGN.md` as revised by review round 1. No model, no GPU. Python:
+`/home/elisepc/neuron-probe/.venv/bin/python -I -B`. Files changed: `part200/run200.py`, `part200/test_part200.py`,
+`part200/steps.txt`, `part163/test_part163.py` (one added test). `part163/run163.py`, `part199/` and
+`PART200-DESIGN.md` untouched. Not committed.
+
+### Each change
+
+1. **Pilot guard 0.17.** `run200.PILOT_MIN_RATE = 0.17` (was 0.12), comment updated to the design's wording (the rate
+   below which 3,616 answers would not finish in the 6-hour limit). `run163.PILOT_MIN_RATE` stays 1.5.
+   Tests: `test_wrapper_sets_0_17_for_its_own_run_and_restores_it` (sets 0.17, restores 1.5),
+   `test_pilot_min_rate_defaults_to_1_5_in_run163`, and in `part163/test_part163.py`
+   `test_pilot_min_rate_default_is_1_5` (the design's "test that its default is 1.5", which was missing).
+2. **Batch-1 replaces the reversed repeat.** `repeat.jsonl`, `REPEAT_ROWS`, `REPEAT_NOISE_LIMIT`, `repeat_rows`,
+   `run_repeat`, `repeat_changes` and the reversed order are gone. `batch1_rows(units)` is question 0 for every unit
+   in `units163.json` order; `run_batch1` generates each as its own call through `run163.pushes_for` on a one-row
+   list, appending to `results/part200/batch1.jsonl`. `batch1_changes` counts differing answers per arm and total;
+   `SHAPE_SENSITIVE_LIMIT = 20`, `shape_sensitive` true only when all 200 are present and more than 20 differ (a flag;
+   it does not change a verdict). `--compare` and the run's summary both print it.
+   Tests: `test_batch1_rows_are_question_0_for_every_unit_in_units_order`,
+   `test_batch1_writes_200_one_row_calls_in_units_order_and_counts_changed_answers` (200 calls of one row, in units
+   order), `test_shape_sensitive_flag_is_more_than_20` (20 → false, 21 → true).
+3. **No second model load.** `EagerLoader` (returned by `eager_loader(args)`) loads once, applies Part 163's no-grad
+   and eval, refuses non-eager with exit 3, and keeps `(tok, model)`; a second `__call__` returns the same pair.
+   `_run_batch1_after` calls that same loader and takes `layers` from `common.find_layers(model)` on the same model.
+   One `load.json` entry per launch, and the batch-1 calls are logged into that entry (`stage: "batch1"`).
+   Tests: `test_loader_loads_once_and_keeps_the_model_it_loaded`, `test_run_loads_the_model_once` (asserts
+   `load_model` was called exactly once and `load.json` has one entry).
+4. **Resume.** The batch-1 stage runs on every launch after `run163.run` returns, skipping units already in
+   `batch1.jsonl`, independent of whether `run163.run` wrote rows. Tests: `test_batch1_is_resumable` (199 pending
+   skipped 1; a second call writes 0 and the file is byte-identical), and
+   `test_run_finishes_batch1_on_a_relaunch_that_wrote_no_rows` (a stand-in `run163.run` returning
+   `answers_written: 0` still gets 200 batch-1 rows; a relaunch adds none).
+5. **Gate R3 exactly 8.** `bad_pushed` now fails any observed chunk `!= 8` (was `< 1 or > 8`). Batch-1 calls are
+   pushed one-row calls, so they are tagged `stage: "batch1"` and `call_shapes` reads them with the no-push calls as
+   single rows; battery/recipe calls are `stage: "run"`. A completed call's chunks must cover its rows; an incomplete
+   call may cover fewer, never more. Tests: `test_gate_r3_requires_exactly_8_rows_a_7_row_chunk_fails` (a 7-row chunk
+   that still covers 64 rows, `[7,8,8,8,8,8,8,8,1]`, fails), the 9-row-covering-64 case
+   `[8,9,8,8,8,8,8,7]` kept in `test_gate_r3_reads_the_observed_chunks` and `test_check_record_…`, and
+   `test_gate_r3_reads_a_batch1_one_row_call_as_single_row`.
+6. **Lock file `run200.lock`.** `Run200Lock(run199.FolderLock)` overrides only `self.path` (`LOCK_NAME =
+   "run200.lock"`); the messages are Part 199's (they say "run199"), which the brief allows. Test:
+   `test_the_lock_file_is_named_run200_lock`, and `test_folder_lock_is_run200_lock_and_refuses_a_second_launch`
+   (a stale `run200.lock` → exit 3; no `run199.lock` is created).
+7. **`--compare` split.** Output is `{"scored": …, "exploratory": …}` in `compare.json` and printed under two
+   headings. Scored: record R1/R3, Gate R2, Part 163's gates, the five verdicts with estimates and intervals, broken
+   counts per arm over 1,600, at-the-cap counts per arm (`token_count == 80`), the Part 161-rule Qwen counts, the
+   batch-1 differing counts with the shape-sensitive flag, and `verdicts_changed`. Exploratory:
+   `mid_phrase_under_cap` (published and rerun; `mid_phrase` imported from `part199/report199.py` — the local copy is
+   gone), `identical_battery_answers`, `identical_no_push_answers` (16), `per_layer_broken` (published and rerun).
+   Self-check kept and extended: `test_compare_on_part163_against_itself_reproduces_the_published_numbers` asserts
+   19/539, 57/661, 343/83 broken, 124/218 at the cap, and now the published mid-phrase baseline 510 of 1,476 neuron
+   and 409 of 1,382 random under-cap answers (computed first by hand from `results/part163/answers.jsonl` with
+   `report199.mid_phrase`, then asserted), plus 16 of 16 identical no-push answers and that no mid-phrase value
+   appears in the scored section.
+8. **Pilot stops.** Both `SystemExit` paths are recorded with status `stopped` and the wrapper exits 3. Test:
+   `test_run_records_a_pilot_stop_and_exits_3`, parametrised over the rate message and the Gate 1 message; it also
+   asserts no batch-1 stage runs after a stop.
+9. **`steps.txt`.** `report199.py` is imported only inside `--compare` (verified: no `part199.report199` in
+   `sys.modules` after importing `run200`), so the `--copy` list is unchanged; a comment says so. The three host
+   lines are kept and their comments updated for the new Gate R3 wording, the two compare sections and `run200.lock`.
+
+### Sabotage checks (each turned red, then restored; `cmp` against the backup confirmed each restore)
+
+| Change | Sabotage | Result |
+| --- | --- | --- |
+| 2 | `chunked_generate` passes every pushed call through unchunked | 7 red |
+| 3 | `EagerLoader.__call__` no longer returns the remembered pair (reloads) | 2 red (`test_loader_loads_once_…`, `test_run_loads_the_model_once`) |
+| 4 | resume skip removed (every unit always pending) | 2 red (`test_batch1_is_resumable`, `test_run_finishes_batch1_…`) |
+| 4 | batch-1 stage gated on `answers_written > 0` (the old build's rule) | 1 red (`test_run_finishes_batch1_…`) |
+| 5 | `bad_pushed` back to `size < 1 or size > CHUNK` | 3 red (`test_gate_r3_reads_the_observed_chunks`, `test_gate_r3_requires_exactly_8_…`, `test_check_record_…`) |
+| 5 | batch-1 calls treated as pushed chunks of 8 | 4 red (incl. `test_gate_r3_reads_a_batch1_one_row_call_as_single_row`) |
+
+One sabotage initially passed for the wrong reason, and the test was fixed rather than the code: my first 7-row case
+`[7,8,8,8,8,8,8,8]` sums to 63, so the "chunks cover its rows" rule failed it and the exactly-8 rule was never
+exercised. It is now `[7,8,8,8,8,8,8,8,1]` (64 rows, one 7-row chunk). Same lesson as the build's Gate R3 finding.
+
+### Test counts
+
+| Command | Result |
+| --- | --- |
+| `python -I -m pytest -q part200/test_part200.py` | **35 passed** |
+| `python -I -B part200/test_part200.py` | **35 passed**, exit 0 |
+| `python -I -m pytest -q part163/test_part163.py` | **8 passed** (was 7; +1 default-1.5 test) |
+| `python -I -B part163/test_part163.py` | **8 passed** |
+| `python -I -m pytest -q part199/test_part199.py` | **38 passed** |
+
+### Where the brief and the design disagree, or something could not be done as written
+
+1. **Gate R3 and batch-1 calls.** The design says "no-push calls and batch-1 calls are single rows"; batch-1 calls are
+   *pushed* one-row calls, so without a marker Gate R3's pushed-call rule (exactly 8) would fail all 200. The call log
+   therefore carries `stage` ("run" or "batch1") and `call_shapes` reads batch-1 calls with the no-push calls. Records
+   written by the pre-fold build have no `stage`; they are read as "run", which is correct for them.
+2. **`--compare` requires `batch1.jsonl` of the rerun** (exit 2 if missing), because the scored section reports its
+   counts. Part 163's folder has no batch-1 file; it is still required of the rerun only, so the published side is
+   unchanged.
+3. **`_run_batch1_after` runs even when `run163.run` raised** nothing — it is called only after `run163.run` returns;
+   on a `SystemExit` stop it is skipped (no batch-1 rows after a pilot stop), which is what the pilot-stop test pins.
+   The design does not say whether a stopped launch should still do batch 1; I chose no, since a stop means "no
+   reading from this launch".
+4. **Lock messages** still say "run199" (Part 199's `__enter__` text). The brief allowed either; only the path changed.
+
+SUMMARY: Folded all nine changes of BRIEF-200-fold-r1 into part200/run200.py, test_part200.py and steps.txt, plus one
+test in part163/test_part163.py. Pilot 0.17; batch-1 stage (200 one-row calls, units order, resumable, on every
+launch) replaces the reversed repeat; EagerLoader loads once and the batch-1 stage reuses it; Gate R3 is exactly 8
+with batch-1 calls as single rows; lock is run200.lock; --compare is scored/exploratory with mid_phrase imported from
+part199/report199.py. 35/8/38 tests pass (pytest and script); 6 sabotage checks red then restored.
+FINDINGS: Batch-1 calls are pushed one-row calls, so the call log needed a `stage` tag for Gate R3 to read them as
+single rows. The published mid-phrase baseline (510/1,476, 409/1,382) was computed by hand and is now asserted.
+BLOCKERS: none.

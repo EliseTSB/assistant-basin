@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Part 200: Part 163 on the eager attention kernel (PART200-DESIGN.md).
+"""Part 200: Part 163 on the eager attention kernel (PART200-DESIGN.md, review round 1 folded).
 
 Usage: run200.py --device xpu --model ... --units part163/units163.json --out results/part200/answers.jsonl --batch-size 64
        run200.py --check-record results/part200/load.json
@@ -7,33 +7,43 @@ Usage: run200.py --device xpu --model ... --units part163/units163.json --out re
 
 part163/run163.py's run() is called unchanged except for the four changes the design records:
 
-1. Kernel. The loader loads through neuron_report.load_model (eager by default since 2026-11-03), applies Part 163's
-   no-grad and eval settings, and exits 3 before any generation unless neuron_report.LAST_LOAD and the model's
-   config._attn_implementation both record eager. The folder lock, the load-record writer and the kernel checks are
-   Part 199's (part199/run199.py), imported, not copied: results/part200/load.json gets one entry per launch as soon as
-   the model loads and is rewritten after every chunk with the calls and rows so far.
+1. Kernel. The eager loader loads through neuron_report.load_model (eager by default since 2026-11-03), applies Part
+   163's no-grad and eval settings, and exits 3 before any generation unless neuron_report.LAST_LOAD and the model's
+   config._attn_implementation both record eager. It KEEPS the (tok, model) it loaded (an EagerLoader whose __call__
+   loads once and remembers), so the batch-1 stage uses the same model and the same `layers`: load_model is called at
+   most once in a process, and load.json gets one entry per launch. The folder lock (run200.lock), the load-record
+   writer and the kernel/same-run checks are Part 199's (part199/run199.py), imported, not copied.
 2. Batch shape. Part 163's generate_fn (part160.generate_checked) is wrapped so every pushed call is generated in
-   chunks of at most 8 rows, in the original row order, each layer's push tensor sliced to the chunk's rows. The
-   no-push calls (one row each) keep their shape. Every call and its chunks are recorded; Gate R3 reads the row counts
-   actually passed to Part 163's generator as each chunk returns.
-3. Pilot stop rule. run163.PILOT_MIN_RATE is set to 0.12 answers per second for this run and restored afterwards; the
-   rate that projects the 3,400 pushed answers past 8 hours. Part 163's Gate 1 check inside the pilot is unchanged.
-4. Repeat batch. After run163.run returns, question 0's 200 battery rows are regenerated once more in reversed unit
-   order, in chunks of 8, with the same pushes, into results/part200/repeat.jsonl (not answers.jsonl). Resumable: rows
-   already written are skipped. The wrapper counts the answers whose text differs from the same unit's battery answer.
+   chunks of exactly 8 rows, in the original row order, each layer's push tensor sliced to the chunk's rows. The
+   no-push calls (one row each) and the batch-1 calls (one row each) keep their shape. Every call and its chunks are
+   recorded; Gate R3 reads the row counts actually passed to Part 163's generator as each chunk returns: every chunk
+   of a pushed battery or recipe call has exactly 8 rows, a completed call's chunks cover its rows, no-push and
+   batch-1 calls are single rows.
+3. Pilot stop rule. run163.PILOT_MIN_RATE is set to 0.17 answers per second for this run and restored afterwards; the
+   rate below which the 3,616 answers would not finish within the 6-hour task limit. Part 163's Gate 1 check inside
+   the pilot is unchanged. Both pilot stops (rate and Gate 1) are SystemExit from run163.run; the wrapper records the
+   stop in load.json with status "stopped" and exits 3.
+4. Batch-1 comparison. Question 0 ("What is your name?") is regenerated for all 200 units in units163.json order,
+   each as a ONE-ROW call, with that unit's push (run163.pushes_for on a one-row list), into
+   results/part200/batch1.jsonl (not answers.jsonl). It runs on every launch until all 200 units are written,
+   skipping units already written, whether or not run163.run wrote rows in this launch. The wrapper counts, per arm
+   and in total, the answers whose text differs from the same unit's chunked battery answer; more than 20 of 200 is
+   flagged "shape-sensitive" (a flag only, it does not change a verdict).
 
 The chunker, the chunk shapes and the load-record reader are written here rather than reused from part199/run199.py:
 Part 199's chunked_generate wraps run170.generate_with_bans, whose call carries bans, release steps and a directions
 mapping looked up by (layer, slot). Part 163's generate_fn is part160.generate_checked's (model, tok, layers, question,
 pushes, max_new_tokens, device), whose pushes ARE the per-layer tensors, so the chunk must slice the tensors themselves
-and the signature differs. Part 199's call_shapes is tied to Part 170's zero-write checks and its "every pushed call is
-a multiple of 8" rule; Part 163's pushed calls end in a 8-row last batch (64, 64, 64, 8), so Gate R3 here is the
-design's own wording: no chunk over 8 rows, a completed call's chunks cover its rows, no-push calls are single rows.
+and the signature differs. The lock, record writer and kernel checks are reused; only the lock's file name changes
+(Run200Lock, run200.lock).
 
---compare prints, beside each other, the published and rerun values PART200-DESIGN.md's --compare paragraph lists. The
+--compare writes results/part200/compare.json with two sections, as PART200-DESIGN.md lists them. Scored: Gate R2,
+Part 163's three gates, the five verdicts with estimates and intervals, broken counts per arm over 1,600, at-the-cap
+counts per arm (token_count 80), the Part 161-rule Qwen counts, and the batch-1 differing counts with the
+shape-sensitive flag. Exploratory: Part 191's mid-phrase count among answers under the cap (mid_phrase imported from
+part199/report199.py), identical battery answers, identical no-push answers (16), and per-layer broken counts. The
 Part 86 triage and the name/maker rules are imported from part86/triage86.py and part163/score163.py; Part 163's gates
-and verdicts come from score163.score_rows on the rerun's answers (or its published score.json). The Part 161 Qwen rule
-and the Part 191 mid-phrase rule are written once below, with the design's exact patterns.
+and verdicts come from score163.score_rows on the rerun's answers (or its published score.json).
 """
 from __future__ import annotations
 
@@ -50,23 +60,31 @@ for entry in (str(ROOT), str(HERE), str(ROOT / "part86")):
     if entry not in sys.path:
         sys.path.insert(0, entry)
 
-from part199 import run199  # noqa: E402  (folder lock, load record, kernel checks: reused, not copied)
+from part199 import run199  # noqa: E402  (load record, kernel checks: reused, not copied)
 
 CHUNK = 8
 BATCH_SIZE = 64
 MAX_NEW_TOKENS = 80                 # Part 163's cap; a battery answer "reaches the cap" at this many tokens
-REPEAT_ROWS = 200                   # question 0's battery rows, one per unit
-REPEAT_NOISE_LIMIT = 10             # design, Controls: more than 10 changed repeats marks the arm rates noise-limited
-PILOT_MIN_RATE = 0.12               # design, Method item 3: a guard against a broken path, not a time budget
+BATCH1_ROWS = 200                   # question 0's battery rows, one per unit, at batch 1
+SHAPE_SENSITIVE_LIMIT = 20          # design, Controls: more than 20 of 200 batch-1 answers differing flags the arms
+PILOT_MIN_RATE = 0.17               # design, Method item 3: a guard against a broken path, not a time budget
+LOCK_NAME = "run200.lock"           # design, change 6: Part 199's folder lock under this part's name
 
 # Part 161's rule (PART200-DESIGN.md, --compare): case-sensitive \bQwen\b, among maker answers that are not broken and
 # hold none of alibaba, tongyi, 通义 (case-insensitive), as in results/part163/extra163.py's gone_name(mode="base").
 PART161_QWEN = re.compile(r"\bQwen\b")
 PART161_EXCLUDE = re.compile(r"alibaba|tongyi|通义", re.IGNORECASE)
 
-# Part 191's open-ending rule (part199/report199.py's mid_phrase, quoted in PART200-DESIGN.md): the answer ends on a
-# letter, digit, comma, hyphen, colon or semicolon.
-PART191_MID_PHRASE = re.compile(r"[A-Za-z0-9,\-:;]$")
+
+# --------------------------------------------------------------------------------------------- change 6: lock
+
+class Run200Lock(run199.FolderLock):
+    """Part 199's FolderLock with only the path changed: results/part200/run200.lock. Created exclusively; a second
+    launch on the same folder is refused with exit 3, and a stale lock (a killed task) is removed by hand."""
+
+    def __init__(self, folder):
+        super().__init__(folder)
+        self.path = Path(folder) / LOCK_NAME
 
 
 # --------------------------------------------------------------------------------------------- change 2: batch shape
@@ -79,22 +97,23 @@ def chunk_sizes(n, size=CHUNK):
     return [size] * (n // size) + ([n % size] if n % size else [])
 
 
-def chunked_generate(original, call_log=None, on_chunk=None):
-    """Part 163's generate_fn, with every pushed call generated in chunks of at most 8 rows (design change 2).
+def chunked_generate(original, call_log=None, on_chunk=None, stage="run"):
+    """Part 163's generate_fn, with every pushed call generated in chunks of exactly 8 rows (design change 2).
 
     `original` is part160.generate_checked; its signature is kept exactly, so run163's call sites do not move. Part
     163's pushes are {layer: [rows, width] tensor} with one row per unit in the call's order, so a chunk is the same
     tensors sliced to the chunk's rows, and the answers are concatenated in the original row order. The no-push calls
     (pushes empty, one answer) are passed through unchanged. Each call is logged with its planned chunks and, as they
     return, the row counts actually passed to `original` ("observed"); Gate R3 reads the observed counts. `on_chunk`
-    runs after every chunk and once when the call completes.
+    runs after every chunk and once when the call completes. `stage` names the stage in each log entry ("run" for
+    run163.run's calls, "batch1" for the one-row batch-1 calls, which Gate R3 reads as single rows).
     """
     def generate(model, tok, layers, question, pushes, max_new_tokens, device):
         if not pushes:
             answers = original(model, tok, layers, question, pushes, max_new_tokens, device)
             if call_log is not None:
-                call_log.append({"pushed": False, "rows": 1, "chunks": [1], "observed": [1], "complete": True,
-                                 "prompt": question[:60]})
+                call_log.append({"pushed": False, "stage": stage, "rows": 1, "chunks": [1], "observed": [1],
+                                 "complete": True, "prompt": question[:60]})
             if on_chunk is not None:
                 on_chunk()
             return answers
@@ -103,7 +122,7 @@ def chunked_generate(original, call_log=None, on_chunk=None):
             raise ValueError(f"push tensors disagree on the call's row count: {sorted(sizes)}")
         n = sizes.pop()
         planned = chunk_sizes(n)
-        entry = {"pushed": True, "rows": n, "chunks": list(planned), "observed": [], "complete": False,
+        entry = {"pushed": True, "stage": stage, "rows": n, "chunks": list(planned), "observed": [], "complete": False,
                  "prompt": question[:60]}
         if call_log is not None:
             call_log.append(entry)
@@ -145,13 +164,22 @@ def restore_pilot_min_rate(previous):
 
 # --------------------------------------------------------------------------------------------- change 1: kernel
 
-def eager_loader(args):
-    """The loader handed to run163.run: neuron_report.load_model, then Part 163's no-grad and eval settings, refused
-    (SystemExit 3) before any generation unless both the recorded load and the model's config say eager."""
-    def load(device):
+class EagerLoader:
+    """The loader handed to run163.run and to the batch-1 stage: neuron_report.load_model, then Part 163's no-grad and
+    eval settings, refused (SystemExit 3) before any generation unless both the recorded load and the model's config
+    say eager. It loads ONCE and keeps the (tok, model) it loaded (design change 3), so a second call returns the same
+    pair and load_model is never called twice in one process."""
+
+    def __init__(self, args):
+        self.args = args
+        self.loaded = None
+
+    def __call__(self, device):
+        if self.loaded is not None:
+            return self.loaded
         import neuron_report as nr
         from part155 import run155
-        tok, model = nr.load_model(str(args.model), run155._common().REVISION, device)
+        tok, model = nr.load_model(str(self.args.model), run155._common().REVISION, device)
         kernel = (nr.LAST_LOAD or {}).get("attn_implementation")
         config_kernel = getattr(getattr(model, "config", None), "_attn_implementation", None)
         if kernel != "eager" or config_kernel != "eager":
@@ -160,8 +188,13 @@ def eager_loader(args):
             raise SystemExit(3)
         model.requires_grad_(False)
         model.eval()
-        return tok, model
-    return load
+        self.loaded = (tok, model)
+        return self.loaded
+
+
+def eager_loader(args):
+    """An EagerLoader for `args` (kept as a function for the call sites that build one)."""
+    return EagerLoader(args)
 
 
 def _revision():
@@ -172,18 +205,19 @@ def _revision():
 # --------------------------------------------------------------------------------------------- Gate R3
 
 def call_shapes(calls):
-    """Gate R3 on what reached Part 163's generator (the row counts observed as each chunk returned): no chunk of any
-    call had more than 8 rows, a completed pushed call's chunks cover its rows, and the no-push calls are single rows.
-    A call cut short by a killed launch may cover fewer rows, never more. A relaunch regenerates an interrupted call,
-    so the record can hold it incomplete beside its complete re-run; both are checked, neither is summed."""
-    pushed = [call for call in calls if call.get("pushed")]
-    plain = [call for call in calls if not call.get("pushed")]
+    """Gate R3 on what reached Part 163's generator (the row counts observed as each chunk returned): every chunk of a
+    pushed battery or recipe call (stage "run") has exactly 8 rows, a completed pushed call's chunks cover its rows,
+    and the no-push and batch-1 calls (stage "batch1", one pushed row each) are single rows. A call cut short by a killed launch may cover fewer rows, never more. A
+    relaunch regenerates an interrupted call, so the record can hold it incomplete beside its complete re-run; both
+    are checked, neither is summed."""
+    pushed = [call for call in calls if call.get("pushed") and call.get("stage") != "batch1"]
+    plain = [call for call in calls if not call.get("pushed") or call.get("stage") == "batch1"]
     observed = [int(size) for call in calls for size in call.get("observed", [])]
     biggest = max(observed, default=0)
 
     def bad_pushed(call):
         sizes = [int(size) for size in call.get("observed", [])]
-        if any(size < 1 or size > CHUNK for size in sizes):
+        if any(size != CHUNK for size in sizes):          # exactly 8: a 7-row or 9-row chunk fails
             return True
         if call.get("complete"):
             return sum(sizes) != int(call["rows"])
@@ -193,7 +227,7 @@ def call_shapes(calls):
     bad_plain = [call for call in plain
                  if (call.get("observed") != [1] if call.get("complete") else call.get("observed") not in ([], [1]))]
     complete_pushed = [call for call in pushed if call.get("complete")]
-    passed = bool(complete_pushed and not wrong and biggest <= CHUNK and not bad_plain)
+    passed = bool(complete_pushed and not wrong and not bad_plain)
     return {"passed": passed, "pushed_calls": len(pushed), "complete_pushed_calls": len(complete_pushed),
             "pushed_chunks": sum(len(call.get("observed", [])) for call in pushed),
             "pushed_calls_not_in_chunks_of_8": len(wrong), "no_push_calls": len(plain),
@@ -212,18 +246,18 @@ def record_gates(rec):
 
 def check_record(path):
     """Host-side Gates R1 and R3 over every recorded launch: exit 0 only if load.json records at least one load, all
-    eager, one model, revision and folder, and every pushed call went in chunks of at most 8 rows."""
+    eager, one model, revision and folder, and every pushed call went in chunks of exactly 8 rows."""
     rec = json.loads(Path(path).read_text(encoding="utf-8"))
     ok, why, shapes = record_gates(rec)
     if ok:
         print(f"PART200 record ok: {len(rec.get('loads', []))} recorded load(s), all eager, one model/revision/folder; "
-              f"{shapes['pushed_calls']} pushed calls in {shapes['pushed_chunks']} chunks of at most 8 rows", flush=True)
+              f"{shapes['pushed_calls']} pushed calls in {shapes['pushed_chunks']} chunks of exactly 8 rows", flush=True)
         return 0
     print(f"PART200 RECORD FAILED: {why}", flush=True)
     return 3
 
 
-# --------------------------------------------------------------------------------------------- change 4: repeat
+# --------------------------------------------------------------------------------------------- change 4: batch 1
 
 def _read_jsonl(path):
     path = Path(path)
@@ -232,70 +266,68 @@ def _read_jsonl(path):
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-def _row_key(row):
-    return (row.get("stage"), row.get("unit_id"), int(row.get("question_index", -1)))
-
-
 def _push_rows(rows, layers, medians, common, cache):
-    """Part 163's own pushes_for, imported rather than retyped: the repeat's pushes are the battery's."""
+    """Part 163's own pushes_for, imported rather than retyped: the batch-1 pushes are the battery's."""
     from part163 import run163
     return run163.pushes_for(rows, layers, medians, common, cache)
 
 
-def repeat_rows(units):
-    """Question 0's battery rows for every unit, in reversed unit order (design, Method item 4)."""
+def batch1_rows(units):
+    """Question 0's battery row for every unit, in units163.json order (design, Method item 4)."""
     from part163 import run163
-    return [{**run163._unit_row(u), "question_index": 0} for u in reversed(units)]
+    return [{**run163._unit_row(u), "question_index": 0} for u in units]
 
 
-def run_repeat(units, items, layers, medians, common, model, tok, device, generate_fn, path):
-    """Regenerate question 0's 200 battery rows in reversed unit order, chunks of 8, appending to `path` (resumable:
-    rows already written are skipped). Returns the rows written this invocation."""
+def run_batch1(units, items, layers, medians, common, model, tok, device, generate_fn, path):
+    """Regenerate question 0's 200 battery rows, one unit per call (batch 1), appending to `path`; units already
+    written are skipped (resumable on every launch). Returns the rows written this invocation."""
+    from part163 import run163
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    done = {_row_key(row) for row in _read_jsonl(path)}
-    pending = [row for row in repeat_rows(units) if ("repeat", row["unit_id"], 0) not in done]
+    done = {row["unit_id"] for row in _read_jsonl(path)}
+    pending = [row for row in batch1_rows(units) if row["unit_id"] not in done]
     question = items[0]["question"]
     cache = {}
     written = 0
     with path.open("a", encoding="utf-8", newline="\n") as fh:
-        for start in range(0, len(pending), BATCH_SIZE):
-            chunk = pending[start:start + BATCH_SIZE]
-            pushes = _push_rows(chunk, layers, medians, common, cache)
+        for row_info in pending:
+            pushes = _push_rows([row_info], layers, medians, common, cache)
             got = generate_fn(model, tok, layers, question, pushes, MAX_NEW_TOKENS, device)
-            if len(got) != len(chunk):
-                raise RuntimeError(f"repeat generated {len(got)} answers for {len(chunk)} rows")
-            for row_info, answer in zip(chunk, got):
-                u = row_info["unit"]
-                record = {"stage": "repeat", "unit_id": u["unit_id"], "arm": u["arm"], "layer": int(u["layer"]),
-                          "neuron_or_index": u.get("neuron") if u["arm"] == "neuron" else u.get("random_index"),
-                          "dose": run163_dose(), "question_index": 0, "question": question, "kind": items[0]["kind"],
-                          **answer}
-                fh.write(json.dumps(record, ensure_ascii=True) + "\n")
-                done.add(_row_key(record))
-                written += 1
+            if len(got) != 1:
+                raise RuntimeError(f"batch-1 call for {row_info['unit_id']} returned {len(got)} answers")
+            u = row_info["unit"]
+            record = {"stage": "batch1", "unit_id": u["unit_id"], "arm": u["arm"], "layer": int(u["layer"]),
+                      "neuron_or_index": u.get("neuron") if u["arm"] == "neuron" else u.get("random_index"),
+                      "dose": run163.DOSE, "question_index": 0, "question": question, "kind": items[0]["kind"],
+                      **got[0]}
+            fh.write(json.dumps(record, ensure_ascii=True) + "\n")
             fh.flush()
+            written += 1
     return written
 
 
-def run163_dose():
-    from part163 import run163
-    return run163.DOSE
-
-
-def repeat_changes(repeat, answers):
-    """The repeat's answers whose text differs from the same unit's battery answer at question 0."""
+def batch1_changes(batch1, answers):
+    """The batch-1 answers whose text differs from the same unit's chunked battery answer at question 0, per arm and
+    in total; shape-sensitive when more than 20 of 200 differ (a flag only)."""
     battery = {row["unit_id"]: row.get("answer") for row in answers
                if row.get("stage") == "battery" and int(row.get("question_index", -1)) == 0}
-    changed = [row["unit_id"] for row in repeat if row.get("answer") != battery.get(row["unit_id"])]
-    return {"repeat_rows": len(repeat), "battery_rows": len(battery), "changed": len(changed),
-            "changed_unit_ids": changed[:50], "noise_limited": len(repeat) == REPEAT_ROWS and len(changed) > REPEAT_NOISE_LIMIT}
+    out = {"rows": len(batch1), "battery_rows": len(battery)}
+    changed_all = []
+    for arm in ("neuron", "random"):
+        rows = [row for row in batch1 if row.get("arm") == arm]
+        changed = [row["unit_id"] for row in rows if row.get("answer") != battery.get(row["unit_id"])]
+        changed_all.extend(changed)
+        out[arm] = {"rows": len(rows), "changed": len(changed)}
+    out["changed"] = len(changed_all)
+    out["changed_unit_ids"] = changed_all[:50]
+    out["shape_sensitive"] = bool(len(batch1) == BATCH1_ROWS and out["changed"] > SHAPE_SENSITIVE_LIMIT)
+    return out
 
 
 # --------------------------------------------------------------------------------------------- the run
 
 def run(args, loader=None, generate_fn=None):
-    """run163.run on the eager kernel, in chunks of 8, under a folder lock; then the repeat batch."""
+    """run163.run on the eager kernel, in chunks of 8, under a folder lock; then the batch-1 stage on the same model."""
     import time
     import neuron_report as nr
     from part163 import run163
@@ -305,7 +337,7 @@ def run(args, loader=None, generate_fn=None):
     out = Path(args.out)
     folder = out.parent
     folder.mkdir(parents=True, exist_ok=True)
-    with run199.FolderLock(folder):
+    with Run200Lock(folder):
         load_path = folder / "load.json"
         before = run199._answers_written(folder)
         calls = []
@@ -341,10 +373,10 @@ def run(args, loader=None, generate_fn=None):
         chunked = chunked_generate(original_generate, calls, on_chunk=flush)
         previous_rate = set_pilot_min_rate(PILOT_MIN_RATE)
         summary, failure, stopped, final_write_failed = None, None, False, False
-        repeat_written = 0
+        batch1_written = 0
         try:
             summary = run163.run(args, loader=recording_loader, generate_fn=chunked)
-            repeat_written = _run_repeat_after(args, summary, generate_fn=original_generate, loader=loader)
+            batch1_written = _run_batch1_after(args, loader, original_generate, calls, flush)
         except SystemExit as exc:            # Part 163's gates, its pilot, or this wrapper's loader refusal: a stop
             failure, stopped = f"SystemExit: {exc}", True
         except BaseException as exc:         # a killed model, a bug: record the rows it wrote, then let it propagate
@@ -354,7 +386,7 @@ def run(args, loader=None, generate_fn=None):
             restore_pilot_min_rate(previous_rate)
             try:
                 flush(status="stopped" if failure else "done", summary=summary, failure=failure,
-                      repeat_rows_written=repeat_written)
+                      batch1_rows_written=batch1_written)
             except Exception as exc:         # a failed final write must not replace the run's own outcome
                 final_write_failed = True
                 print(f"PART200: the final load.json write failed ({type(exc).__name__}: {exc}); the last per-chunk "
@@ -370,7 +402,7 @@ def run(args, loader=None, generate_fn=None):
         loads = rec.get("loads", [])
         ok, why, shapes = record_gates(rec)
         gates163 = (summary or {}).get("gates") or {}
-        report = {"answers_written": written, "repeat_rows_written": repeat_written,
+        report = {"answers_written": written, "batch1_rows_written": batch1_written,
                   "gates_r1_r3": ok, "why": why, "gate_r3": shapes,
                   "part163_gates_passed": gates163.get("passed"), "final_write_failed": final_write_failed}
         print(json.dumps(run199._finite(report), ensure_ascii=True, allow_nan=False), flush=True)
@@ -380,40 +412,43 @@ def run(args, loader=None, generate_fn=None):
         if final_write_failed:
             print("PART200: this launch could not record its outcome in load.json; exit 3", flush=True)
             return 3
-        repeat = _read_jsonl(folder / "repeat.jsonl")
-        changes = repeat_changes(repeat, _read_jsonl(out))
-        print(json.dumps({"repeat": changes}, ensure_ascii=True), flush=True)
-        if len(repeat) != REPEAT_ROWS:
-            print(f"PART200: the repeat has {len(repeat)} of {REPEAT_ROWS} rows; finish it before comparing", flush=True)
+        batch1 = _read_jsonl(folder / "batch1.jsonl")
+        changes = batch1_changes(batch1, _read_jsonl(out))
+        print(json.dumps({"batch1": changes}, ensure_ascii=True), flush=True)
+        if len(batch1) != BATCH1_ROWS:
+            print(f"PART200: batch 1 has {len(batch1)} of {BATCH1_ROWS} rows; finish it before comparing", flush=True)
             return 3
+        if changes["shape_sensitive"]:
+            print(f"PART200: {changes['changed']} of {BATCH1_ROWS} batch-1 answers differ from the chunked answers: "
+                  "the arm counts are shape-sensitive", flush=True)
         print(f"PART200 gates R1 and R3 passed: {len(loads)} load(s) eager; {shapes['pushed_calls']} pushed calls "
-              f"in {shapes['pushed_chunks']} chunks of at most 8 rows; repeat changed {changes['changed']} of "
-              f"{changes['repeat_rows']}", flush=True)
+              f"in {shapes['pushed_chunks']} chunks of exactly 8 rows; batch 1 changed {changes['changed']} of "
+              f"{changes['rows']}", flush=True)
         print(json.dumps(run199._finite(summary), ensure_ascii=True, allow_nan=False), flush=True)
         return 0
 
 
-def _run_repeat_after(args, summary, generate_fn, loader):
-    """The repeat batch, generated after run163.run returns.
+def _run_batch1_after(args, loader, generate_fn, calls=None, on_chunk=None):
+    """The batch-1 stage, generated after run163.run returns on the SAME model (design change 3: no second load).
 
-    run163.run does not hand back its model, so the repeat reloads through the same loader the run was given (the
-    eager loader, which refuses a non-eager load) and records that load as its own launch entry (the design's "one
-    entry per launch"). It runs only when run163.run wrote rows this invocation; a resumed invocation that found every
-    row already written leaves the repeat alone. The repeat's generator is the wrapper's chunker around the same
-    generate_fn, so its calls are recorded too."""
+    The loader is the EagerLoader the run was given; it remembers the (tok, model) it loaded, so this call returns
+    that pair and load_model is not called again. `layers` comes from the same model. The stage runs on every launch
+    until batch1.jsonl holds all 200 units (design change 4): a relaunch after a kill finishes it, and a relaunch
+    after completion writes nothing. Its generator is the wrapper's chunker around the same generate_fn, logging into
+    the launch's `calls` and flushing after every chunk, so its one-row calls are recorded in the same load entry
+    and Gate R3 sees them as single rows."""
     from part163 import run163
     from part155 import run155
     out = Path(args.out)
-    if (summary or {}).get("answers_written", 0) <= 0:
-        return 0
     units = json.loads(Path(args.units).read_text(encoding="utf-8"))
     items = run163.choose_questions()
     common = run155._common()
     medians = json.loads((ROOT / "results/part112/medians.json").read_text(encoding="utf-8"))
     tok, model = loader(args.device)
     layers = common.find_layers(model)
-    return run_repeat(units, items, layers, medians, common, model, tok, args.device, chunked_generate(generate_fn),
-                      out.parent / "repeat.jsonl")
+    return run_batch1(units, items, layers, medians, common, model, tok, args.device,
+                      chunked_generate(generate_fn, calls, on_chunk=on_chunk, stage="batch1"),
+                      out.parent / "batch1.jsonl")
 
 
 # --------------------------------------------------------------------------------------------- --compare
@@ -464,22 +499,50 @@ def part161_qwen(rows):
 
 
 def mid_phrase(answer):
-    """Part 191's open-ending rule: the answer ends on a letter, digit, comma, hyphen, colon or semicolon."""
-    text = (answer or "").rstrip()
-    return bool(text) and bool(PART191_MID_PHRASE.search(text))
+    """Part 191's open-ending rule, imported from Part 199 (part199/report199.py) rather than written again."""
+    from part199.report199 import mid_phrase as part199_mid_phrase
+    return part199_mid_phrase(answer)
 
 
-def stopping(rows):
-    """Each arm's share of battery answers under the 80-token cap, and the Part 191 mid-phrase count among those."""
+def broken_and_cap(rows):
+    """Scored, per arm over its 1,600 battery answers: the broken count (Part 86 triage) and the at-the-cap count
+    (token_count == 80)."""
     import triage86
     out = {}
     for arm in ("neuron", "random"):
         battery = [row for row in _battery(rows) if row.get("arm") == arm]
+        out[arm] = {"battery_answers": len(battery),
+                    "broken": sum(triage86.triage_answer(row.get("answer", "")) == "broken" for row in battery),
+                    "at_cap": sum(int(row.get("token_count", 0)) == MAX_NEW_TOKENS for row in battery)}
+    return out
+
+
+def mid_phrase_under_cap(rows):
+    """Exploratory, per arm: Part 191's mid-phrase count among battery answers under the 80-token cap."""
+    from part199.report199 import mid_phrase as part199_mid_phrase
+    out = {}
+    for arm in ("neuron", "random"):
+        battery = [row for row in _battery(rows) if row.get("arm") == arm]
         early = [row for row in battery if int(row.get("token_count", 0)) < MAX_NEW_TOKENS]
-        out[arm] = {"battery_answers": len(battery), "under_cap": len(early),
-                    "under_cap_share": len(early) / len(battery) if battery else None,
-                    "mid_phrase_among_under_cap": sum(mid_phrase(row.get("answer")) for row in early),
-                    "broken": sum(triage86.triage_answer(row.get("answer", "")) == "broken" for row in battery)}
+        out[arm] = {"under_cap": len(early),
+                    "mid_phrase_among_under_cap": sum(part199_mid_phrase(row.get("answer")) for row in early)}
+    return out
+
+
+def per_layer_broken(rows):
+    """Per arm and layer, the broken count over battery answers (exploratory)."""
+    import triage86
+    out = {}
+    for arm in ("neuron", "random"):
+        counts = {}
+        for row in _battery(rows):
+            if row.get("arm") != arm:
+                continue
+            layer = str(row.get("layer"))
+            counts.setdefault(layer, {"answers": 0, "broken": 0})
+            counts[layer]["answers"] += 1
+            counts[layer]["broken"] += triage86.triage_answer(row.get("answer", "")) == "broken"
+        out[arm] = dict(sorted(counts.items(), key=lambda kv: int(kv[0])))
     return out
 
 
@@ -494,6 +557,15 @@ def identical_battery(rerun_answers, published_answers):
         keys = [k for k in shared if a[k].get("arm") == arm]
         out[arm] = {"rows": len(keys), "identical": sum(a[k].get("answer") == b[k].get("answer") for k in keys)}
     return out
+
+
+def identical_no_push(rerun_answers, published_answers):
+    """The 16 no-push answers whose text is identical between the runs (matched on question index)."""
+    def index(rows):
+        return {int(row.get("question_index", -1)): row for row in rows if row.get("stage") == "no_push"}
+    a, b = index(published_answers), index(rerun_answers)
+    shared = set(a) & set(b)
+    return {"shared": len(shared), "identical": sum(a[k].get("answer") == b[k].get("answer") for k in shared)}
 
 
 def score_side(folder, answers, units, published_score=None):
@@ -516,12 +588,13 @@ def score_side(folder, answers, units, published_score=None):
 
 # Part 163's published folder predates the load record (Part 163 did not write one), so the record is required of the
 # rerun only; the published side needs its answers, and its score.json when present (otherwise it is scored here).
-RERUN_REQUIRED = ("answers.jsonl", "load.json")
+RERUN_REQUIRED = ("answers.jsonl", "load.json", "batch1.jsonl")
 PUBLISHED_REQUIRED = ("answers.jsonl",)
 
 
 def compare(rerun_dir, published_dir, units_path=None):
-    """Everything PART200-DESIGN.md's --compare paragraph lists, published beside rerun."""
+    """PART200-DESIGN.md's --compare paragraph, split into its scored and exploratory sections, published beside
+    rerun."""
     rerun, published = Path(rerun_dir), Path(published_dir)
     for folder, names in ((rerun, RERUN_REQUIRED), (published, PUBLISHED_REQUIRED)):
         for name in names:
@@ -534,24 +607,37 @@ def compare(rerun_dir, published_dir, units_path=None):
     published_score_path = published / "score.json"
     published_score = json.loads(published_score_path.read_text(encoding="utf-8")) \
         if published_score_path.exists() else None
-    repeat = _read_jsonl(rerun / "repeat.jsonl")
-    changes = repeat_changes(repeat, rerun_answers)
-    out = {
+    batch1 = _read_jsonl(rerun / "batch1.jsonl")
+    scored = {
         "record_r1_r3": {"passed": record_ok, "why": record_why},
         "gate_r2": gate_r2(units_path, units_path, rerun_answers, published_answers),
         "published": {"part163_gates_and_verdicts": score_side(published, published_answers, units, published_score),
                       "part161_qwen_on_maker": part161_qwen(published_answers),
-                      "stopping": stopping(published_answers)},
+                      "broken_and_cap": broken_and_cap(published_answers)},
         "rerun": {"part163_gates_and_verdicts": score_side(rerun, rerun_answers, units),
                   "part161_qwen_on_maker": part161_qwen(rerun_answers),
-                  "stopping": stopping(rerun_answers)},
-        "identical_battery_answers": identical_battery(rerun_answers, published_answers),
-        "repeat": changes,
+                  "broken_and_cap": broken_and_cap(rerun_answers)},
+        "batch1": batch1_changes(batch1, rerun_answers),
     }
-    out["verdicts_changed"] = sorted(
-        key for key, val in out["rerun"]["part163_gates_and_verdicts"]["verdicts"].items()
-        if val["verdict"] != out["published"]["part163_gates_and_verdicts"]["verdicts"].get(key, {}).get("verdict"))
-    return out
+    scored["verdicts_changed"] = sorted(
+        key for key, val in scored["rerun"]["part163_gates_and_verdicts"]["verdicts"].items()
+        if val["verdict"] != scored["published"]["part163_gates_and_verdicts"]["verdicts"].get(key, {}).get("verdict"))
+    exploratory = {
+        "mid_phrase_under_cap": {"published": mid_phrase_under_cap(published_answers),
+                                 "rerun": mid_phrase_under_cap(rerun_answers)},
+        "identical_battery_answers": identical_battery(rerun_answers, published_answers),
+        "identical_no_push_answers": identical_no_push(rerun_answers, published_answers),
+        "per_layer_broken": {"published": per_layer_broken(published_answers),
+                             "rerun": per_layer_broken(rerun_answers)},
+    }
+    return {"scored": scored, "exploratory": exploratory}
+
+
+def _print_sections(result):
+    print("PART200 COMPARE: scored", flush=True)
+    print(json.dumps(run199._finite(result["scored"]), ensure_ascii=False, indent=2, allow_nan=False), flush=True)
+    print("PART200 COMPARE: exploratory (not scored; no exploratory value replaces a scored one)", flush=True)
+    print(json.dumps(run199._finite(result["exploratory"]), ensure_ascii=False, indent=2, allow_nan=False), flush=True)
 
 
 def main(argv=None):
@@ -572,23 +658,24 @@ def main(argv=None):
         out_path = Path(cargs.rerun_dir) / "compare.json"
         out_path.write_text(json.dumps(run199._finite(result), ensure_ascii=False, indent=2, allow_nan=False) + "\n",
                             encoding="utf-8")
-        print(json.dumps(run199._finite(result), ensure_ascii=False, indent=2, allow_nan=False), flush=True)
-        if not result["record_r1_r3"]["passed"]:
-            print(f"PART200: the rerun's load.json fails Gate R1 or R3 ({result['record_r1_r3']['why']}); readings "
+        _print_sections(result)
+        scored = result["scored"]
+        if not scored["record_r1_r3"]["passed"]:
+            print(f"PART200: the rerun's load.json fails Gate R1 or R3 ({scored['record_r1_r3']['why']}); readings "
                   "stop", flush=True)
             return 3
-        if result["rerun"]["part163_gates_and_verdicts"]["all_gates_passed"] is not True:
+        if scored["rerun"]["part163_gates_and_verdicts"]["all_gates_passed"] is not True:
             print("PART200: Part 163's gates did not pass on the rerun; readings stop", flush=True)
             return 3
-        if not result["gate_r2"]["passed"]:
+        if not scored["gate_r2"]["passed"]:
             print("PART200 GATE R2 FAILED: the rerun's units or battery questions are not Part 163's; readings stop",
                   flush=True)
             return 3
-        if result["repeat"]["noise_limited"]:
-            print(f"PART200: the repeat changed more than {REPEAT_NOISE_LIMIT} of {REPEAT_ROWS} answers: the arm "
-                  "rates are noise-limited", flush=True)
-        if result["verdicts_changed"]:
-            print(f"PART200: verdicts changed: {result['verdicts_changed']}", flush=True)
+        if scored["batch1"]["shape_sensitive"]:
+            print(f"PART200: {scored['batch1']['changed']} of {BATCH1_ROWS} batch-1 answers differ from the chunked "
+                  "answers: the arm counts are shape-sensitive", flush=True)
+        if scored["verdicts_changed"]:
+            print(f"PART200: verdicts changed: {scored['verdicts_changed']}", flush=True)
         print(f"PART200 gates R1, R2, R3 and Part 163's three passed; compare written to {out_path}", flush=True)
         return 0
     from part163 import run163

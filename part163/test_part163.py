@@ -156,6 +156,14 @@ class Part163Tests(unittest.TestCase):
         self.assertFalse(torch.equal(actual, expected.new_tensor(common86.scaled_random_directions(
             weight, 512, common86.SCREEN_SEED + 22, .8 * 2.0)[0])))
 
+    def test_pilot_min_rate_default_is_1_5(self):
+        """Part 200's one edit: the literal 1.5 is the module constant PILOT_MIN_RATE, and its default is still 1.5."""
+        self.assertEqual(run163.PILOT_MIN_RATE, 1.5)
+        source = (HERE / "run163.py").read_text(encoding="utf-8")
+        self.assertIn("PILOT_MIN_RATE = 1.5", source)
+        self.assertIn("rate < PILOT_MIN_RATE", source)
+        self.assertNotIn("rate < 1.5", source)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
