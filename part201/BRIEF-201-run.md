@@ -33,10 +33,9 @@ Read first: `PART201-DESIGN.md` (the design you implement; Method and Controls a
      units, the subsets, pass B's reshuffle rule, pass M's shuffle, plain rows. Pure Python, no torch. `--print-plan`
      writes `results/part201/plan.json` and prints its sha256. The design's counts must come out: A 384 rows in 48
      calls; A-again 16 in 2; B 384 in 48, no call sharing a membership with an A call; M 384 pushed in 48 calls plus
-     24 plain in 3; C 192 + 24 calls of one row; A2 96 in 12; F8 96 in 12 with the same membership and order as the
-     corresponding A calls restricted to F-subset rows (say in the report exactly how you built these and whether a
-     call can end up with fewer than 8 rows; if the design's wording is ambiguous, pick the reading that keeps every
-     F8 call at 8 rows and flag it); F1 48.
+     24 plain in 3; C 192 + 24 calls of one row; A2 96 in 12 (pass A's calls for battery questions 0 to 3); F8 96 in
+     12 (pass A's first two calls for each of the six F questions: the same rows in the same slots; test that every
+     F8, A2 and A-again call equals its pass A call row for row); F1 48.
    - `generate_rows(model, tok, layers, prompts, pushes, max_new_tokens, device, recorder)`: ONE decode path used by
      every pass. Rows may have different prompts: left-pad with the tokenizer's pad token and pass the attention
      mask; same chat template, thinking off, no system prompt, as Part 163. The push hook is Part 163's row-isolated

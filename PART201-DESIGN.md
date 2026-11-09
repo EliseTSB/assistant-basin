@@ -62,28 +62,33 @@ file Part 200 checked).
 
 **Rows.**
 
-- Pushed set: 24 units, the first 12 neurons and first 12 random directions of
-  `random.Random(201).sample(arm_units, 12)` taken per arm in file order, each on Part 163's 16 battery questions:
-  384 rows.
+- Pushed set: 24 units on Part 163's 16 battery questions, 384 rows. The units are 12 neurons and 12 random
+  directions: with each arm's units in file order, `random.Random(201).sample(arm_units, 12)` for the neurons and
+  `random.Random(202).sample(arm_units, 12)` for the random directions. The unit order used everywhere below
+  interleaves them: neuron 1, random 1, neuron 2, random 2, and so on, so every chunk of 8 holds 4 of each.
 - Plain set: the 16 battery questions and the 8 questions of `tools/kernel_reference.py`, no push: 24 rows.
-- Subsets, fixed by the same seed: C-subset = the first 6 sampled neurons and first 6 sampled random directions on
-  all 16 questions (192 rows); F-subset = the same 12 units on the first 4 identity and first 4 maker questions (96
-  rows); F1-subset = the first 3 and 3 of those units on the same 8 questions (48 rows).
+- Subsets: C-subset = the first 12 units in that order on all 16 questions (192 rows). F8-subset = the first 16 units
+  on six questions, the three lowest-numbered identity and three lowest-numbered maker questions (96 rows); these are
+  exactly pass A's first two calls for each of those questions. F1-subset = the first 8 units on the same six
+  questions (48 rows), which lie inside both the C-subset and the F8-subset.
 
 **Passes.** Each pass decodes its rows with `model.generate` and a recorder (below). bf16 passes run in one process
 unless stated.
 
 | Pass | Rows | Shape | Precision |
 | --- | --- | --- | --- |
-| A | pushed 384 | chunks of 8: per question, the 24 units in sample order | bf16 |
+| A | pushed 384 | chunks of 8: per question, the 24 units in the interleaved order, three calls | bf16 |
 | A-again | first 16 rows of A | the same two chunks, repeated at the end of the same process | bf16 |
 | B | pushed 384 | chunks of 8: per question, the 24 units in the order `random.Random(2011).shuffle` gives, re-drawn until no chunk has the membership of an A chunk | bf16 |
 | M | pushed 384, plain 24 | chunks of 8 over rows shuffled across questions (`random.Random(2012)`), left-padded; plain rows in 3 chunks of their own | bf16 |
 | C | C-subset 192, plain 24 | one row per call | bf16 |
 | A2 | A's rows for battery questions 0 to 3 (96) | A's chunks, in a second process (new launch step) | bf16 |
 | K | the 8 kernel prompts, 96 tokens, batch 1 and 2 | `tools/kernel_reference.py --device xpu --dtype float32-upcast` | float32 compute |
-| F8 | F-subset 96 | chunks of 8, same membership and order as A's rows restricted to these questions and units | float32 compute |
+| F8 | F8-subset 96 | the same 12 calls as in pass A: same rows, same slots | float32 compute |
 | F1 | F1-subset 48 | one row per call | float32 compute |
+
+A row's call in pass A2, A-again and F8 has the same rows in the same slots as its call in pass A, so those pairs
+differ only in process, repetition or precision.
 
 The float32 passes run in a third process: after the load, `kernel_reference.upcast_compute` keeps every Linear and
 Embedding weight in bf16 storage and computes everything in float32 (proved equal to a float32 load on Qwen3.5-0.8B,
@@ -120,7 +125,7 @@ neighbours).
   failure means the margins do not describe the decode, and no margin reading is made.
 - **Gate G3, rows and shapes:** every planned row is present once per pass; each call's recorded row count and
   membership match the plan.
-- **Gate G4, same push:** for each F-subset row the push tensor's sha256 (bf16 bytes) is equal in the bf16 and float32
+- **Gate G4, same push:** for each F8-subset row the push tensor's sha256 (bf16 bytes) is equal in the bf16 and float32
   processes.
 - Positive control for "the analysis can see a difference": A against C must differ on at least 10 rows; Part 200 found
   38%. If it does not, the comparison code is checked before anything is read.
