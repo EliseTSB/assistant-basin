@@ -9,6 +9,8 @@ this script's output; run it from the repository root:
 from __future__ import annotations
 
 import json
+import math
+import statistics
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -31,6 +33,14 @@ def cases(name: str) -> list[dict]:
 
 def fmt(x: float | None, d: int = 2) -> str:
     return "none" if x is None else f"{x:.{d}f}"
+
+
+def mcnemar_exact(b: int, c: int) -> float:
+    """Two-sided exact McNemar p on the discordant pairs (binomial, p = 1/2). Computed here, not by score198.py,
+    which leaves it null when the gate fails."""
+    n, k = b + c, min(b, c)
+    tail = sum(math.comb(n, i) for i in range(k + 1)) / 2 ** n
+    return min(1.0, 2 * tail)
 
 
 def main() -> None:
@@ -67,14 +77,25 @@ def main() -> None:
                        f"{fmt(r['after']['logp_new'], 3)} |")
     out.append("")
 
-    out.append("### Table 3. Did the edits that did not count still move the answer?\n")
+    out.append("### Table 3. Did the records that did not count still move?\n")
     out.append("| Editor | Not already satisfied, did not take | Already satisfied, new object leads after |")
     out.append("| --- | ---: | ---: |")
+    missed_rows = []
     for label, fname in EDITORS:
         cs = cases(fname)
-        miss = [r["case_id"] for r in cs if r.get("already_satisfied") is not True and r.get("took") is not True]
+        miss = [r for r in cs if r.get("already_satisfied") is not True and r.get("took") is not True]
+        missed_rows += [(label, r) for r in miss]
         sat_after = sum(1 for r in cs if r.get("already_satisfied") is True and r["after"].get("new_leads") is True)
-        out.append(f"| {label} | {len(miss)} {miss if miss else ''} | {sat_after} of {len(sat_ids[label])} |")
+        ids = ", ".join(str(r["case_id"]) for r in miss)
+        out.append(f"| {label} | {len(miss)}{(' (cases ' + ids + ')') if ids else ''} | "
+                   f"{sat_after} of {len(sat_ids[label])} |")
+    out.append("")
+    out.append("The records that were not already satisfied and did not take (log-probabilities):\n")
+    out.append("| Editor | Case | New before | New after | Old after |")
+    out.append("| --- | ---: | ---: | ---: | ---: |")
+    for label, r in missed_rows:
+        out.append(f"| {label} | {r['case_id']} | {fmt(r['before']['logp_new'])} | {fmt(r['after']['logp_new'])} | "
+                   f"{fmt(r['after']['logp_old'])} |")
     out.append("")
 
     out.append("### Table 4. What the scorer counted (not verdicts: the gate failed first)\n")
@@ -86,8 +107,10 @@ def main() -> None:
     for k, v in score["descriptive"].items():
         if k == "198.2_gradient_tword_localization":
             for m, w in v.items():
-                out.append(f"| 198.2 T_word localization, {m} (descriptive) | {w['took']} took of {w['attempted']} "
-                           f"| {w['successes']} |")
+                took_loc = sum(1 for r in cases(dict(EDITORS)[m]) if r.get("took") is True
+                               and r["localization"]["t_word"]["localized"] is True)
+                out.append(f"| 198.2 T_word localization, {m} (descriptive) | {w['attempted']} attempted "
+                           f"({w['took']} took) | {w['successes']} ({took_loc} of those that took) |")
         elif k == "198.5_aimed_control_localization":
             out.append(f"| 198.5 aimed control localized (descriptive) | {v['name_eligible']} | {v['successes']} |")
         elif k == "wsp_oracle_naming":
@@ -97,6 +120,12 @@ def main() -> None:
                f"{s1['successes']} |")
     out.append(f"| S2 matched random control localized (registered bar: at most {s2['threshold']}) | "
                f"{s2['denominator']} | {s2['successes']} |")
+    bw = cases("armB-wsp.jsonl")
+    rj = sum(1 for r in bw if r["random_control"]["blind_reader"].get("localized") is True
+             and r["random_control"]["blind_reader"].get("named_strict") is True)
+    rn = sum(1 for r in bw if r["random_control"]["blind_reader"].get("named_strict") is True)
+    out.append(f"| random partners: blind joint success, as 198.7 (computed here) | {len(bw)} | {rj} |")
+    out.append(f"| random partners: blind reader names the object, strict (computed here) | {len(bw)} | {rn} |")
     out.append("")
 
     p = score["sensitivity_checks"]["paired_random_vs_real"]
@@ -106,10 +135,34 @@ def main() -> None:
     out.append(f"| wsp localized | {p['both']} | {p['real_only']} |")
     out.append(f"| wsp not localized | {p['random_only']} | {p['neither']} |")
     out.append("")
+    out.append(f"Exact two-sided McNemar p on the discordant pairs ({p['real_only']} against {p['random_only']}), computed "
+               f"here: {mcnemar_exact(p['real_only'], p['random_only']):.4f}.")
+    out.append("")
+
+    out.append("### Table 7. Gradient edits on GPT-2 XL: each edited layer's T_word before and after, records that took\n")
+    out.append("| Editor | Edited layers read | Base T_word, median (range) | Edited T_word, median (range) | "
+               "Largest rise | Edited above layer 45's 9.79 |")
+    out.append("| --- | ---: | --- | --- | ---: | ---: |")
+    for label, fname in EDITORS:
+        base, edit, rise = [], [], []
+        for r in cases(fname):
+            if r.get("took") is not True:
+                continue
+            for layer, st in r["edited_layer_stats"].items():
+                b0 = r["base_diagnostics"][layer]["base_t_word"]
+                e0 = st["edited_t_word"]
+                base.append(b0)
+                edit.append(e0)
+                rise.append(e0 - b0)
+        above = sum(1 for e in edit if e > 9.79)
+        out.append(f"| {label} | {len(edit)} | {statistics.median(base):.2f} ({min(base):.2f} to {max(base):.2f}) | "
+                   f"{statistics.median(edit):.2f} ({min(edit):.2f} to {max(edit):.2f}) | {max(rise):.2f} | {above} |")
+    out.append("")
 
     out.append("### Table 6. Arm C, unedited models: largest eligible-token z (T_word), against the design reviewer's\n")
-    out.append("| Model | Role | Stored dtype | Snapshot | Registered run | Layer, token | Reviewer (design text) |")
-    out.append("| --- | --- | --- | --- | ---: | --- | --- |")
+    out.append("| Model | Role | Stored dtype | Snapshot | Registered run | Layer, token | Reviewer (design text) | "
+               "Difference |")
+    out.append("| --- | --- | --- | --- | ---: | --- | --- | ---: |")
     tstar = json.loads((REC / "tstar.json").read_text(encoding="utf-8"))
     for r in jsonl("armC.jsonl"):
         if r.get("record_type") != "armC_model":
@@ -120,7 +173,8 @@ def main() -> None:
         rv = ref.get("max_t_word")
         out.append(f"| {r['model_id']} | {r['role']} | {r.get('stored_dtype')} | {snap} | {fmt(r['max_t_word'])} | "
                    f"{r['top_t_word_layer']}, {tok!r} | {'' if rv is None else rv}"
-                   f"{'' if ref.get('top_token') is None else ' ' + repr(ref['top_token'])} |")
+                   f"{'' if ref.get('top_token') is None else ' ' + repr(ref['top_token'])} | "
+                   f"{fmt(r.get('difference_from_reviewer'), 3)} |")
     out.append("")
     ev = [r for r in jsonl("armC.jsonl") if r.get("record_type") == "armC_model" and r["role"] == "evaluation"]
     above = [r["model_id"] for r in ev if r["max_t_word"] is not None and r["max_t_word"] > tstar["t_star"]]

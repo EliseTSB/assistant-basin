@@ -27,8 +27,8 @@ snapshot in sorted order (`snaps[0]`). Two of these models have several snapshot
   intermediate checkpoint fetched by revision for other work). `refs/main` is `a1847dff35000b4271fa70afc5db10fd29fedbdf`,
   which the registered run read.
 
-The six models with a single snapshot agree to within 0.05 (SmolLM2-1.7B's top eligible token moved from ' time' to
-' Seven' at nearly the same value). Neither the sign rule nor the norm rule explains the difference: recomputing each model's maximum from the stored pairs under the pilot's
+The six models with a single snapshot agree to within 0.06 (SmolLM2-1.7B differs by 0.052, and its top eligible token
+moved from ' time' to ' Seven' at nearly the same value). Neither the sign rule nor the norm rule explains the difference: recomputing each model's maximum from the stored pairs under the pilot's
 sign-first rule gives the same values as the registered rule (7.38, 10.33, 17.73, 14.32, 15.90).
 
 ## What it changes
@@ -40,8 +40,8 @@ sign-first rule gives the same values as the registered rule (7.38, 10.33, 17.73
   direction of one model, so "no false alarm on five models" is not a calibrated threshold either.
 - The registered headline's last clause, "a fixed cross-model threshold on the same reading false-alarms on unedited
   models (measured before registration)", cannot be written as it stands: on the final checkpoints that threshold raised
-  no false alarm on the five evaluation models. The results must say so, and the Limits sentence "Arm C's ten models
-  were all measured before registration" is true of eight of them.
+  no false alarm on the five evaluation models. The results must say so. The Limits sentence "Arm C's ten models were
+  all measured before registration" stands, but two of the ten values came from other checkpoints.
 - The withdrawn threshold forecasts (old 198.9 to 198.11) stay withdrawn: the rule is about what was read before
   registration, not about whether the reading was right.
 - The registered code is not at fault; it read `main`, as the design names the models.
