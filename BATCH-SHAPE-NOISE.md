@@ -56,11 +56,14 @@ These need no new science, only a recorder and a small tool.
 - **Shape replicate.** Regenerate a seeded sample of at least 200 rows, spread over the cells, at a second shape (one
   row per call unless the design gives a reason for another), and report for each label how many rows flip and which
   way.
-- **Stability of each verdict.** `tools/shape_floor.py` takes the rows, their labels, the replicate's flip rates
-  (their upper 95% bounds) and the part's scorer. It redraws the labels 1,000 times, each row flipping at its label's
-  rate, and rescores. Rows of one unit may flip together more than independent rows would; the tool takes a cluster
-  key and a within-cluster share so a write-up can show the stability under both readings. Each registered verdict is reported with the share of draws in which it comes out the same. Under
-  95%, the write-up says "inside the shape floor" in the verdict column, whichever side it fell on.
+- **Sensitivity of each verdict.** `tools/shape_floor.py` takes the rows, their labels, the replicate pairs and the
+  part's scorer, redraws the labels 1,000 times and rescores. A redraw gives each row a transition drawn from the
+  replicate rows that started with the same labels, so labels move together and each direction keeps its own rate
+  and denominator. It is run under named scenarios: rows independent; rows of one unit moving together (within-unit
+  share 0.5 and 1); and rates at their upper 95% bounds. Each registered verdict is reported with the share of
+  redraws in which it comes out the same, per scenario. This is a sensitivity figure conditional on those scenarios
+  and on the replicate's shape pair, not a 95% guarantee. Under 95% in any scenario, the verdict column says "inside
+  the shape floor", whichever side it fell on.
 - **Bars with room.** In the design's Size section, say how many rows a registered bar is from the expected value. A
   bar closer than twice the shape SD cannot be scored cleanly; move it or say so before the run.
 - **Row-level claims** are made only for rows that came out the same at both shapes, or are labelled "one draw".
@@ -76,33 +79,38 @@ membership, padding and process, measures label flip rates on 384 rows, and test
 
 ### 3. After Part 201
 
-Decided now, so the result cannot choose its own reading:
+Decided now, so the result cannot choose its own reading. The rules are read in this order and the first that
+applies wins. A prediction that is not scored (no differing rows, a cut or incomplete arm, a missing timing probe)
+counts as not held. The default is not to build.
 
-- **If float32 on the card is shape-stable and equals the CPU reference (201.7 and 201.8 hold), and a margin of two
-  steps catches at least 90% of the places bf16 leaves it with none at a float32 margin above 0.5 (201.9), and the
-  projected slowdown is at most 2 (201.11):** build margin-gated decoding. Decode in bf16 as now; at any step where a row's margin is within two steps,
-  recompute that step for that row in float32 from the full prefix and take the float32 choice. The published answer
-  is then the float32 greedy answer, the same at any shape and checkable token for token against the CPU reference.
-  The projected slowdown is 201.11's: 1 + r × (float32 seconds per step ÷ bf16 seconds per step), r being the share
-  of steps with at least one row inside two steps. If 201.9 holds at 90% but not 95%, the gate is built at four
-  steps instead and its cost recomputed with r at four steps. The first gated part keeps a shape replicate (at least
-  200 rows) to show the floor is gone; 0 of 48 in Part 201 only bounds the remaining rate below 7.4%.
-- **If float32 is stable and matches but the projected slowdown is over 2, or 201.9 fails on the 90% clause alone:**
-  keep section 1 as the standing procedure. Use float32 decodes only
-  as the replicate for parts whose claim is about single rows or named units.
-- **If float32 on the card is not stable or does not match the CPU:** that is a new kernel finding. Section 1 stands,
-  and the float32 path goes on the kernel audit.
-- **If 201.5 fails, or 201.9 fails on its float32-margin clause** (decodes parting at confident margins): stop. That is a fault, not rounding, and the audit's kernel check
-  has to cover batch shape before any more reruns.
+1. **Stop.** 201.5 fails on its 8-step clause, or 201.9 fails on its float32-margin clause (decodes parting at
+   confident margins). No more reruns until those rows are audited; the kernel check may have to cover batch shape. A
+   large margin there is a trigger for the audit, not proof of a fault.
+2. **Float32 arm invalid.** Gate G1, G3 or G4 fails for the float32 process, or the arm stops early. Section 1
+   stands; nothing is concluded about float32 on this card. Pass K's record is kept either way.
+3. **New kernel finding.** 201.7 or 201.8 fails: float32 on the card does not match the CPU, or changes with shape.
+   Section 1 stands, and the float32 path goes on the kernel audit.
+4. **No build.** Any of 201.7, 201.8, 201.9 or 201.11 is not scored or not held for another reason (too few
+   divergences to read, a cut arm, cost unknown or over 2). Section 1 is the standing procedure. A float32 decode
+   may still serve as a part's replicate when its claim is about single rows or named units.
+5. **Build a candidate.** 201.7, 201.8, 201.9 and 201.11 all hold. A margin-gated decoder is built: decode in bf16
+   as now; at any step where a row's margin is inside the gate, recompute that step for that row in float32 from the
+   full prefix and take the float32 choice. The gate is the smallest number of steps that covers every first
+   divergence Part 201 saw between A and F8, plus one. It is a candidate until its own part shows, on at least 200
+   rows at two shapes, that its answers equal a full float32-upcast decode of the same rows; only then does a
+   write-up call a gated answer the float32 answer, and only for the model, card and shapes tested. Float32 itself
+   is not guaranteed identical across devices or batch sizes (PyTorch's numerical accuracy notes); Part 201 measures
+   one card and two shapes.
 
 ### 4. Which published claims sit inside the noise
 
 After Part 201 gives flip rates:
 
-1. Run `tools/shape_floor.py` on the eager reruns already published (Parts 183 to 200), using each part's own scorer
-   and the measured rates, and add a stability column to each verdict table as a dated update. Expected to flag the
-   verdicts that held or failed by a row or two (163.4 and Gate 1 in Part 200; 170.1 in Part 199) and to leave the
-   large contrasts alone.
+1. Run `tools/shape_floor.py` on the eager reruns already published (Parts 183 to 200), using each part's own
+   scorer. Only Part 200 has a replicate of its own (one question); for the others the rates are Part 201's, which
+   come from Part 163's labels at one dose, so the result is labelled indicative, not calibrated, and loop or ban
+   parts (199) get a note, not a number, until a rerun measures their own. Expected to flag the verdicts that held or
+   failed by a row or two (163.4 and Gate 1 in Part 200; 170.1 in Part 199) and to leave the large contrasts alone.
 2. Parts still on the old kernel are not triaged for shape; their rerun is the fix and it carries section 1.
 3. For the front-page claims that name single units or quote single answers, either the rerun shows the row stable at
    both shapes, or the claim is reworded as a rate.
@@ -122,8 +130,8 @@ Under 2, Controls:
 
 - [ ] **Shape replicate, for any readout from generated text.** Record token ids and per-position top-two margins for
   every row. Regenerate a seeded sample of at least 200 rows at a second batch shape and report each label's flips by
-  direction. Report every registered verdict with its stability from `tools/shape_floor.py`; under 95% is "inside the
-  shape floor". (Part 200: 76 of 200 eager answers changed with the batch shape; labels flipped on 2 to 6.)
+  direction. Report every registered verdict with its sensitivity from `tools/shape_floor.py` under the named
+  scenarios; under 95% in any is "inside the shape floor". (Part 200: 76 of 200 eager answers changed with the batch shape; labels flipped on 2 to 6.)
 - [ ] **Row-level claims need a stable row.** Quote, or name, only rows that came out the same at both shapes, or say
   "one draw".
 

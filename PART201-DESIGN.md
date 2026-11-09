@@ -109,16 +109,26 @@ push the same values.
 **Recorder.** A `LogitsProcessor`, last in the list, copies each step's scores to the CPU as float32 and stores, per
 row and position: the top two token ids, the top logit, the margin, and the score of the token the decode then
 emitted. It returns the scores unchanged. Each row also stores its generated token ids, the pass, the call's row
-count and membership, its slot, its prompt length and its padding. Rows append to `results/part201/rows.jsonl`; a row
-is keyed by pass and row id, a torn last line is cut before reading, and a relaunch skips rows already written
-(`part201/ROWS-SCHEMA.md`).
+count and membership, its slot, its prompt length, its padding and the launch that made it. The plan of every pass
+(calls, membership, slots) is written once to `results/part201/plan.json`; its sha256 goes in the load record and a
+relaunch refuses a different plan. The unit of work is the call: a call's rows are appended together after it
+finishes, a torn tail is cut back to the last whole call, and a relaunch re-runs every unfinished call whole, with
+its original membership and slots; rows are never repacked. Pass A-again runs straight after pass A in the same
+launch; if pass A's first two calls were made by an earlier launch, A-again is recorded as not same-process and its
+clause of 201.1 is not scored (`part201/ROWS-SCHEMA.md`).
+
+**Timing probe.** At the end of the float32 process: full-prefix float32 forward passes with no cache, on the first
+call's rows of pass F8, at 1, 4 and 8 rows and prefix lengths of 32, 64 and 96 tokens, five repetitions each,
+synchronised, outputs discarded. This is the work a re-check at a flagged step would do, and 201.11 is computed from
+it; F8's own cached step time is recorded beside it and is not used as its stand-in.
 
 **Labels.** Part 163's, by its own code, on every decoded answer: name gone and maker gone (`part163/score163.py`),
 broken (`part86/triage86.py`), and the Part 161 Qwen rule (`results/part163/extra163.py`).
 
 **Analysis** (`part201/score201.py`, on the host). For a pair of passes, a row "differs" when its token ids differ. At
 the first differing position (the position whose choice differs; both passes computed it from the same prefix) the script
-reads both passes' margins. That is the deciding position: a fault shows there as a large margin (Part 178's SDPA
+reads both passes' margins, and whether the other pass's token is this pass's runner-up there (when it is not, the
+top-two margin is not the gap between the two emitted tokens, and that row is listed). That is the deciding position: a fault shows there as a large margin (Part 178's SDPA
 fault: up to 5.25), bf16's limited resolution as a small one. "Steps" are bf16 steps at the top logit's magnitude
 (0.125 for a top logit from 16 up to 32). Where one pass of a pair is float32, its margin at that position says how
 far apart the two tokens really were. At exact ties (bf16 margin 0) the script also prints which tied token was
@@ -145,8 +155,9 @@ neighbours).
 - **Gate G3, rows and shapes:** every planned row is present once per pass; each call's recorded row count,
   membership and slots match the plan; in pass B no call has an A call's membership and no row keeps its A slot.
 - **Gate G4, same push:** in the float32 process the activation the hook adds to is float32 (its dtype is recorded
-  per call), and the values the hook adds equal the bf16 process's push values exactly (largest absolute difference
-  0, recorded per row, with the push tensor's sha256). The hook casts the push to the activation's dtype
+  per call), the hook fires on every decode step of every pushed row, and the delta tensor it is given equals the
+  bf16 process's push values exactly (largest absolute difference 0, recorded per row, with the push tensor's
+  sha256). This checks the prescribed delta, not that the sum after the add is identical across precisions. The hook casts the push to the activation's dtype
   (`part86/common86.py`), so if any activation reaches it in bf16 the float32 arm is not float32 there, and this gate
   fails.
 - Positive control for "the analysis can see a difference": A against C must differ on at least 10 rows; Part 200 found
@@ -155,9 +166,9 @@ neighbours).
   pass F measures full float32 compute instead.
 - Not used: a CPU float32 decode of pushed rows (about half a token a second on the 4B; the reference took 52 minutes
   for 16 plain rows). Pass K ties the A770's float32 compute to the CPU's on the eight plain prompts.
-- Read together: pass B changes slot and neighbours at once, and pass M changes padding and neighbours at once. If B
-  is near zero, M's excess over B is padding and sequence length. If B is not near zero, neither is separated here
-  and a follow-up holds membership fixed.
+- Pass B changes slot and neighbours at once, with prompts fixed. Pass M changes prompt mix, padding, sequence
+  length, neighbours and slots at once; it is the shape most parts actually use, and it is reported as a composite.
+  Neither is decomposed here, and B is not subtracted from M.
 
 Gate: G2. It could fail if `generate` applies another processor after the recorder or returns tokens from a path that
 does not pass through it.
@@ -199,12 +210,12 @@ does not pass through it.
 | 201.3 | Between A and M, at least 20% of the 384 rows differ. | low | Claude (Fable 5.2) |
 | 201.4 | Between A and B (other slots and other neighbours, same size and prompts), at most 10% of the 384 rows differ. | low | Claude (Fable 5.2) |
 | 201.5 | Of the rows that differ between A and C, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has one above 8 steps. | high | Claude (Fable 5.2) |
-| 201.6 | For each of the four labels, between A and M, the two directions of flip differ by at most twice the square root of the number of flips; and mean answer length differs by under 3 tokens. | medium | Claude (Fable 5.2) |
-| 201.7 | K matches the CPU float32 reference token for token on all 16 rows up to the first position where the reference margin is under 0.001. | medium | Claude (Fable 5.2) |
+| 201.6 | Between A and M, for each of the four labels with at least 8 flips, the two directions of flip differ by at most twice the square root of the number of flips; and mean answer length differs by under 3 tokens. | medium | Claude (Fable 5.2) |
+| 201.7 | K matches the CPU reference token for token on all 16 rows, over every position. | medium | Claude (Fable 5.2) |
 | 201.8 | Between F8 and F1, none of the 48 rows differ, with all 48 present and finite in both. | medium | Claude (Fable 5.2) |
 | 201.9 | Of the rows that differ between A and F8, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has an F8 (float32) margin above 0.5 there. | medium | Claude (Fable 5.2) |
 | 201.10 | Between A and F8, 30% to 70% of the 96 rows differ. | low | Claude (Fable 5.2) |
-| 201.11 | The projected slowdown of margin-gated decoding is at most 2: 1 + r × (F8 seconds per step ÷ A seconds per step), where r is the share of pass A's generation steps in which at least one unfinished row is within 2 steps. | low | Claude (Fable 5.2) |
+| 201.11 | The projected slowdown of margin-gated decoding on pass A is at most 2: (pass A's seconds + the summed cost of one full-prefix float32 forward for the flagged rows at every step where an unfinished row is within 2 steps) ÷ pass A's seconds, the cost of each forward read from the timing probe at the nearest larger row count and prefix length. | low | Claude (Fable 5.2) |
 
 Copied verbatim into PREDICTIONS.md under "## Part 201 (registered ...)".
 
@@ -217,9 +228,10 @@ less, where the reference margin was at most 0.10; bf16's margin error there rea
 percentile, hence 90% and not 100%. Both can fail: a fault of the SDPA kind parts decodes at margins of several
 units. 201.6: Part 200's flips went both ways. 201.7 and 201.8: the CPU's float32 batch 1 and 2
 agree to 6e-5; the card's float32 kernels are untested. 201.10: on Qwen3.5-0.8B, bf16 differed from float32 on 8 of 16
-rows. 201.11: the upcast converts every weight on every forward pass, so one float32 forward costs about the same
-whatever it computes, and F8's seconds per step stand in for one float32 re-check of the flagged rows; no measurement
-exists. This is the same bar the plan's decision uses.
+rows. 201.7: the reference's smallest margin on these rows is 0.008, far above float32's own noise (its batch 1 and 2
+margins agree to 6e-5), so no position needs leaving out. 201.11: the upcast converts every weight on every forward
+pass, which may dominate the cost, but prefix length and row count are measured by the probe, not assumed; no
+measurement exists yet. This is the same bar the plan's decision uses.
 
 ## Reading rules
 
@@ -227,14 +239,19 @@ exists. This is the same bar the plan's decision uses.
   functions. The thresholds in 201.2, 201.5, 201.9 and 201.10 were chosen after reading Part 200 and Part 183's
   record, so those are checks that the earlier numbers repeat on new rows, not independent discoveries.
 - G2 failing withdraws 201.5 and 201.9 and every margin table. G4 failing withdraws 201.9 and 201.10.
-- A pair with no differing rows makes its "of the rows that differ" prediction not scored, and that is reported.
+- A pair with no differing rows makes its "of the rows that differ" prediction not scored, and that is reported, as is
+  the number of differing rows behind every such percentage. A label with fewer than 8 flips is not scored in 201.6
+  (with 4 or fewer the direction clause cannot fail). 201.11 is not scored without the timing probe.
+- A row parting at a large margin is a trigger for an audit of that row, not by itself proof of a kernel fault; and
+  small margins at the first differences do not prove rounding is the only mechanism.
 - A row cut short by a relaunch is regenerated whole. A call with a non-finite score at any step is run once more;
   a row still non-finite is counted, listed and left out of pair comparisons, each affected pair is reported with
   its smaller n, and 201.8 is then not scored.
 - The label flip rates are reported with 95% Wilson intervals and no bar. They are Part 163's labels at dose 0.8 on
   this model, and are used in `BATCH-SHAPE-NOISE.md` as a prior only until a part measures its own.
-- What the float32 results decide is written before the run, in `BATCH-SHAPE-NOISE.md` under "After Part 201": margin-
-  gated float32 decoding is built only if 201.7, 201.8 and 201.9 hold and the projected slowdown is at most 2 times.
+- What the float32 results decide is written before the run, in `BATCH-SHAPE-NOISE.md` under "After Part 201", as an
+  ordered list whose default is not to build: a candidate margin-gated decoder is built only if 201.7, 201.8, 201.9
+  and 201.11 all hold, and a prediction that is not scored counts as not held.
 - The headline reading "it is rounding at near-ties" is withdrawn if 201.5 fails; "float32 on the card is the same
   answer at any shape" is withdrawn if 201.7 or 201.8 fails.
 
