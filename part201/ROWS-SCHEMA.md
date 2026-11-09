@@ -18,6 +18,7 @@ file exactly; a change to it is agreed on the coordination topic `part201-rows-s
 | `call` | int | number of the `model.generate` call within the pass, from 0 |
 | `call_rows` | list of str | the `row_id`s in that call, in slot order |
 | `slot` | int | this row's index in the call |
+| `launch` | int | index of the launch that wrote this row, in `load.json`'s `loads` list (Amendment 1; rows of one call always share it) |
 | `prompt_tokens` | int | this row's prompt length without padding |
 | `pad_tokens` | int | left padding added to this row in the call |
 | `tokens` | list of int | generated ids up to and including the first end token, or all 80 (96 never: pass K is not in this file) |

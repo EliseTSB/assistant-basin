@@ -787,4 +787,36 @@ For the steering-word part that follows:
 - Thinking Machines Lab, "Defeating Nondeterminism in LLM Inference" (September 2025) and `batch_invariant_ops`: the
   nondeterminism users see comes from kernels that are not batch-invariant.
 - How Part 201 differs: rows are pushed at one MLP neuron or direction; the readout is labels and registered verdicts,
-  with a simulated stability for each; the card is an Intel Arc A770. None of the above tests Intel hardware.
+  with a simulated sensitivity for each; the card is an Intel Arc A770. None of the above tests Intel hardware.
+
+### Added 2026-11-09 from Muse's sweep (council `muse-prior-art` #16); abstracts or pages read by Claude unless marked
+
+- MarginGate (arXiv 2605.30218; Chu, Zhou, Zhang), from its abstract: batch-induced flips are 0.3 to 1.3% of
+  synchronous decode steps across five models; it keeps bf16 decoding at high-margin steps, verifies only low-margin
+  ones, and "repairs confirmed mismatches by replacing the current K/V column"; the verifier runs on 15 to 50% of
+  steps depending on the model. Muse's reading of the paper body, which I have not read: the margin threshold that
+  reaches full determinism is per model (1.0 to 16.0 logits across its five), and taking the verifier's token
+  without replacing that step's cached keys and values leaves the token and the cache describing different
+  continuations.
+- LLM-42 (arXiv 2601.17768; Gond, Kamath, Ramjee, Panwar): decode on the fast path, then a verifier replays tokens
+  under a fixed-shape reduction schedule and rolls back the ones that do not match. The always-on version of what
+  MarginGate gates.
+- Reporting: Pape, Evertz and Schoenherr, "The Silent Hyperparameter" (arXiv 2605.19537): with weights, decoding
+  settings and hardware fixed, the inference backend alone moved benchmark scores by up to 16.6 points across five
+  engines, and the stack is rarely reported. Masoudian et al., "What We Observe as LLM Behavior Can Be a Side-effect
+  of Inference Backend" (arXiv 2608.04714): about 39% of out-of-the-box variability came from the backend; report the
+  backend, its version and the full generation settings. Neither publishes a per-verdict sensitivity column; Muse
+  found no harness or paper that does.
+- Steering work that assumes bf16 greedy decoding is deterministic: Muse names Malla, Choi and Choi, "Steering
+  Interference Reflects the Model's Defaults, Not the Behavior Directions" (arXiv 2609.06951) as running all steering
+  in bf16 with greedy decoding and no batch or precision arm. Its abstract does not mention precision or decoding; I
+  have not read the body. Muse found no paper that varies batch size or dtype inside a steering or neuron-clamp
+  experiment and reports whether a verdict moved. Also named by Muse and not read by me: Sohail Mohammad, "Inverse
+  Scaling in Activation Steering" (self-published, February 2026), on quantization and tooling changing steering
+  effectiveness.
+- Intel Arc: Muse found no published batch-variance study on Arc, XPU or IPEX. One user report on the Intel Community
+  forum (Richstone, 2026-11-07): Arc driver 32.0.101.9150, against 32.0.101.8724, makes llama.cpp's Vulkan backend
+  emit repeated characters from a fixed token position when a model is split across two A770s; downgrading the
+  driver fixed it; the author did not bisect. A different stack and a two-card setup, but it shows a driver update
+  can change this card's outputs. Our card runs 32.0.101.9150 (installed 2026-10-12), so every A770 part since
+  2026-10-15 ran on it.

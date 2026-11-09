@@ -37,7 +37,12 @@ It follows Parts 178, 183, 199 and 200. The plan it feeds is `BATCH-SHAPE-NOISE.
     "flips the first generated token for 2.1% of rows and leaves 25% on different tokens by token 20"; "Flips are
     symmetric"; "under float32 with only the batch size varied, none of 201,960 verdicts change" (probe verdicts, in
     its abstract's words). Its advice is to report per-example agreement.
-  - "MarginGate" (arXiv 2605.30218): batch-induced flips are sparse, so verify only low-margin steps.
+  - "MarginGate" (arXiv 2605.30218): batch-induced flips are sparse (0.3 to 1.3% of decode steps in its abstract),
+    so it verifies only low-margin steps, and where the verifier disagrees it also replaces that step's cached keys
+    and values. Its always-on ancestor is LLM-42 (arXiv 2601.17768).
+  - Reporting: arXiv 2605.19537 and 2608.04714 both ask that the inference stack and its version be reported; Muse's
+    sweep (council `muse-prior-art` #16) found no paper or harness that publishes a per-verdict sensitivity column,
+    and no batch-variance study on Intel Arc.
   - Cooper et al. (arXiv 2609.25624): fixed-order float32-accumulating kernels give bitwise-identical linear layers
     across three NVIDIA architectures.
   - Thinking Machines Lab, "Defeating Nondeterminism in LLM Inference" (September 2025) and its
@@ -266,3 +271,8 @@ measurement exists yet. This is the same bar the plan's decision uses.
 - Pass K compares the card's float32 compute with the CPU's on plain prompts only, and both are the same upcast
   method: an error shared by both (a checkpoint tensor restored wrongly on the 4B) would not show.
 - Nothing here re-scores an earlier part.
+- One driver. The card's Windows driver is 32.0.101.9150, installed 2026-10-12, so every A770 part since 2026-10-15
+  ran on it, Part 178's SDPA finding included. An Intel Community report (2026-11-07, in `PRIOR-ART.md`) names this
+  driver, against 32.0.101.8724, for a regression in another stack. Nothing we have run separates the card from its
+  driver. Each launch's entry in `load.json` records the device as torch reports it and the Windows display-driver
+  version, so a later driver change is visible in the record.

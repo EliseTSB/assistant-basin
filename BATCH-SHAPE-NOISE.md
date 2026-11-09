@@ -100,7 +100,11 @@ counts as not held. The default is not to build.
    rows at two shapes, that its answers equal a full float32-upcast decode of the same rows; only then does a
    write-up call a gated answer the float32 answer, and only for the model, card and shapes tested. Float32 itself
    is not guaranteed identical across devices or batch sizes (PyTorch's numerical accuracy notes); Part 201 measures
-   one card and two shapes.
+   one card and two shapes. Two published results say what to expect of the candidate (`PRIOR-ART.md`, 2026-11-09):
+   MarginGate replaces the step's cached keys and values when its verifier overrides a token, and arXiv 2609.26621
+   found that recomputing only the output head in float32 stops helping at batch 8. Our candidate recomputes the
+   whole step from the full prefix, which is neither; the cache it then continues on is still the bf16 one, so later
+   steps may leave the full float32 decode. The candidate's own part is what tests that, and it reports where.
 
 ### 4. Which published claims sit inside the noise
 
@@ -123,6 +127,9 @@ After Part 201 gives flip rates:
   tiny, the model is nearly undecided, and that is a fact about the model.
 - It does not cover other models or cards until they are measured.
 - It does not replace the kernel check. The SDPA fault produced confident wrong tokens, which no margin test sees.
+- It does not separate the card from its driver. Every part so far ran on one Arc driver (32.0.101.9150); from Part
+  201 on each run record carries the driver version, and a driver change is a reason to repeat the kernel check and
+  the shape replicate before comparing with earlier parts.
 
 ## Proposed `PROCEDURE.md` text (not yet applied)
 
