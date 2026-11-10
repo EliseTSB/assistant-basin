@@ -1,7 +1,7 @@
 # Part 203: does Part 196's "the final embedding loses style" hold on CREMA-D emotion?
 
 Procedure: v1
-Status: DRAFT, not registered. Predictions are `{{CLAUDE: predictions}}` and are written by Claude before registration.
+Status: DRAFT, not registered. Predictions 203.1 to 203.7 are written (Claude, 2026-11-10); the timing fields below wait for the timing smoke.
 
 ## Question
 
@@ -52,7 +52,8 @@ matched comparison.
     `model.encode({"audio": {"array": audio, "sampling_rate": 16000}}, normalize_embeddings=True)` on Part 196's decode
     (`part196/record196.py:186-195`, ffmpeg mono 16 kHz f32le, capped at 10 s).
   - E, the mean MLP input of one layer: 24 layers x 2,048 units recorded as in Part 196; the layer is chosen by inner
-    actor-grouped CV on the training actors only, mean balanced accuracy, ties to the earlier layer.
+    actor-grouped CV on the training actors only (the same five inner actor folds used for C, below), mean balanced
+    accuracy at C = 1.0, ties to the earlier layer.
   - H, acoustic features: Part 196's seven (voiced fraction, F0 median and IQR by pyworld harvest, RMS mean and spread,
     spectral centroid mean, seconds per word).
 - Splits: 91 actors into five folds by SHA-256 hex order of the actor id (round-robin over that order), each fold's
@@ -61,13 +62,16 @@ matched comparison.
   lbfgs, max_iter 5000, class_weight balanced).
   - `V_grid`, `D_grid`: C chosen by inner actor-grouped CV on the training actors over Venn's grid
     {0.01, 0.1, 1, 10, 100}, lowest mean held-out-actor log loss, ties to the lower C.
+  - Inner folds, for both C and E's layer: the outer fold's training actors split into five inner folds by SHA-256 hex
+    order of the actor id, round-robin, each inner fold's actors held out entirely.
   - `V_p196`, `D_p196`, `E_p196`, `H_p196`: Part 196's fixed C = 1.0, so regularisation can be isolated as a separate
     row. E and H are scored at C = 1.0 only, as in Part 196.
 - Three-actor ablation: per fold, five fixed draws of three training actors (SHA-256 order, rotating start), against all
   training actors, for V (C by inner CV on the draw's actors) and E (C = 1.0, the fold's selected layer).
 - Metrics: six-way balanced accuracy and macro one-against-rest AUC within each held-out fold; primary numbers are the
   mean over the five held-out folds. Intervals: 95% bootstrap, 2,000 draws, seed 203, resampling actors within each
-  held-out fold and recomputing the five-fold mean, for each readout and for the paired differences.
+  held-out fold and recomputing the five-fold mean, for each readout's balanced accuracy and for the paired differences
+  in balanced accuracy. AUC is reported as a point estimate only, with no interval.
 
 ## Controls
 
@@ -88,7 +92,10 @@ matched comparison.
 - Clips: 2,730 planned, 91 actors x 6 emotions x 5 clips.
 - Total: 2,730 clips, about {{CLAUDE: minutes}} minutes (Part 196's measured 0.68 s per 5-second clip, scaled by
   CREMA-D clip length; CREMA-D clips are short, so this is an estimate until a timing smoke is run).
-- Probes, bootstraps and pitch features: a few minutes on CPU.
+- Probes, bootstraps and pitch features: measured by the design review on synthetic records at full size, everything
+  except the layer choice ran in 57.7 s; one six-class probe at the layer-choice shape took 1.6 to 3.8 s. The layer choice
+  is 24 layers x 5 inner folds x 5 outer folds = 600 fits, about 16 to 38 minutes on one core. (The first draft chose the
+  layer by leave-one-actor-out, about 8,640 fits and 4 to 9 CPU-hours; the five inner folds replace it, see Changes.)
 - Pilot: none; the gates stop the part before any readout is read if the data or the recorder fail.
 
 ## Optimization
@@ -105,9 +112,9 @@ matched comparison.
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
 | 203.1 | `readouts.V_grid.mean_balanced_accuracy` is at least 0.45, and its `balanced_accuracy_actor_cluster_95` lower bound is above 1/6. Emotion in CREMA-D is acted and loud; with 91 actors the final audio vector should carry it, near Venn's 56.5% though not matched to it. | 70% | Claude |
-| 203.2 | The text marker does not matter: `readouts.D_grid.mean_balanced_accuracy` is within 0.03 of `readouts.V_grid.mean_balanced_accuracy`. CREMA-D clips are 2 to 3 s, so D's 10 s cap never bites, and I expect the encoder to place the audio the same way with or without `<|audio|>`. | 60% | Claude |
+| 203.2 | The text marker and V's float16 storage together do not matter: `readouts.D_grid.mean_balanced_accuracy` is within 0.03 of `readouts.V_grid.mean_balanced_accuracy`. V and D also differ in decoder and cap, but the design review measured the two decoders bit-identical on a 16-bit 16 kHz mono WAV, and CREMA-D clips are 2 to 3 s, so D's 10 s cap never bites. This prediction does not separate the marker from the float16 storage. I expect the encoder to place the audio the same way with or without `<|audio|>`. | 60% | Claude |
 | 203.3 | Regularisation matters: `V_grid_minus_V_p196.mean_difference` is at least +0.03, with Venn's grid choosing C of 10 or 100 on most folds (its log loss was still falling at 100). | 55% | Claude |
-| 203.4 | An intermediate layer at least ties the final vector here: `E_p196_minus_V_grid.mean_difference` is at least -0.02. Part 196's 37-point E over D was on four speakers; with 91 I expect the gap to shrink, not to reverse by much. | 60% | Claude |
+| 203.4 | An intermediate layer at least ties the final vector here: `E_p196_minus_D_p196.mean_difference` is at least -0.02 (both recorded as Part 196 recorded them, both at C = 1.0, same clips). Part 196's 37-point E over D was on four speakers; with 91 I expect the gap to shrink, not to reverse by much. | 60% | Claude |
 | 203.5 | The seven acoustic features carry part of it: `readouts.H_p196.mean_balanced_accuracy` is between 0.30 and 0.45 (pitch and loudness separate anger, sadness and neutral; disgust and fear are hard without spectral detail). | 65% | Claude |
 | 203.6 | Few speakers is most of Part 196's story: `three_actor_ablation.V.three_actor_draws_mean` is at least 0.10 below `three_actor_ablation.V.all_training_actors_mean`. | 65% | Claude |
 | 203.7 | And it hurts the final vector more than the intermediate layer: V's drop in 203.6 exceeds E's drop (E's all-training mean minus E's three-actor mean) by at least 0.05. | 50% | Claude |
@@ -115,15 +122,16 @@ matched comparison.
 Quantities a prediction can be written about, each named by its key in `results.json`: `readouts.V_grid`,
 `readouts.D_grid`, `readouts.V_p196`, `readouts.D_p196`, `readouts.E_p196`, `readouts.H_p196` (each
 `mean_balanced_accuracy`, `balanced_accuracy_actor_cluster_95`, `mean_macro_ovr_auc`); the paired differences
-`V_grid_minus_E_p196`, `V_grid_minus_H_p196`, `D_p196_minus_V_grid`, `E_p196_minus_V_grid`, `V_grid_minus_V_p196`,
-`D_grid_minus_D_p196` (each `mean_difference`, `actor_cluster_95`); `three_actor_ablation.V.three_actor_draws_mean`
+`V_grid_minus_E_p196`, `V_grid_minus_H_p196`, `D_p196_minus_V_grid`, `E_p196_minus_V_grid`, `E_p196_minus_D_p196`,
+`V_grid_minus_V_p196`, `D_grid_minus_D_p196` (each `mean_difference`, `actor_cluster_95`); `three_actor_ablation.V.three_actor_draws_mean`
 and `.all_training_actors_mean`, and the same two for `E`.
 
 ## Reading rules
 
 - Gates 1 and 2 must pass before any readout is read.
 - Balanced accuracy is compared with balanced accuracy and AUC with AUC, never across.
-- A gap between V and D is read only if both intervals are above chance (1/6).
+- A gap between V and D is read only if both readouts' `balanced_accuracy_actor_cluster_95` lower bounds are above
+  chance (1/6).
 - Venn's 56.5% is reported as context only; no verdict compares our number with it as if the setups matched.
 
 ## Limits
@@ -135,4 +143,14 @@ and `.all_training_actors_mean`, and the same two for `E`.
 
 ## Changes before registration
 
-- {{CLAUDE: changes}}
+- 2026-11-10, after the DeepSeek design review (`reviews/cheap-part203-design-r1-ds-ds-r1.md` in the Journal repo), before
+  any CREMA-D audio was read (the review's download test stopped at its first file-name check and wrote nothing):
+  - E's layer is chosen with five inner actor folds, the same split used for C, instead of leave-one-actor-out. The
+    first draft did not name the inner fold count, and leave-one-actor-out was about 4 to 9 CPU-hours.
+  - 203.4 is stated against `E_p196_minus_D_p196` (same clips, same C, both recorded Part 196's way). As first written
+    against `E_p196_minus_V_grid`, it also carried the marker, float16 and regularisation differences.
+  - 203.2's wording now says it measures the marker and V's float16 storage together.
+  - The V/D reading rule names the interval's lower bound; intervals cover balanced accuracy only.
+  - The three-actor ablation fits E at C = 1.0, as this design always said; the first build chose E's C by inner CV.
+  - Code fixes from the same review (recorder Gate 1 write, download.sh's name check, the analyzer's V/D gate, the
+    timing-smoke run, atomic writes, error handling) are in the commit that carries this list.
