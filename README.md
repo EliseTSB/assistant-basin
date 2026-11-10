@@ -25,6 +25,13 @@ Predictions and amendments are recorded in [`PREDICTIONS.md`](PREDICTIONS.md). I
 > intervals across it, and none of the 19 prompts Stage 0 had frozen was frozen on eager). Part 163 (Part 200) kept
 > its verdicts and the arms' gap, but its broken answers moved to the 80-token cap, and in a batch-1 comparison, both
 > on eager, 76 of 200 answers differed.
+>
+> **Driver (added 2026-11-09).** The card has run Intel's driver 32.0.101.9150 since 2026-10-12, so every A770 part
+> here ran on it. A [user report on the Intel Community forum](https://community.intel.com/t/garbled-output-repeated-characters-in-ornith-35b-gemma-4-26b-a4b-qwen3-5-9b-multimodal-text-only-inference-root-cause/144664)
+> (2026-11-07) names that version, against 32.0.101.8724, for garbled output in a different stack: llama.cpp's Vulkan
+> backend, and only when a model is split across two A770s. Single-card runs were clean there, and the author did not
+> bisect. We run PyTorch on one card, and no part here has been rerun on another driver, so nothing we have published
+> separates the card from its driver.
 
 ## The short version
 
