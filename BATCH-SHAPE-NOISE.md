@@ -93,7 +93,9 @@ counts as not held. The default is not to build.
    confident margins). No more reruns until those rows are audited; the kernel check may have to cover batch shape. A
    large margin there is a trigger for the audit, not proof of a fault.
 2. **Float32 arm invalid.** Gate G1, G3 or G4 fails for the float32 process, or the arm stops early. Section 1
-   stands; nothing is concluded about float32 on this card. Pass K's record is kept either way.
+   stands; nothing is concluded about float32 on this card. Pass K's record is kept either way. A pass-K record
+   that is present and is not a float32-upcast eager record of this revision counts here; a missing one is 201.7
+   not run, which is rule 4.
 3. **New kernel finding.** 201.7 or 201.8 fails: float32 on the card does not match the CPU, or changes with shape.
    Section 1 stands, and the float32 path goes on the kernel audit.
 4. **No build.** Any of 201.7, 201.8, 201.9 or 201.11 is not scored or not held for another reason (too few

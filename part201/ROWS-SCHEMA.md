@@ -32,10 +32,12 @@ file exactly; a change to it is agreed on the coordination topic `part201-rows-s
 | `finish` | str | `eos` or `cap` |
 | `answer` | str | `tokens` decoded with special tokens skipped |
 | `token_count` | int | `len(tokens)` |
-| `push_sha256` | str or null | sha256 of this row's push tensors' bf16 bytes, layers in order; null for plain rows |
+| `push_sha256` | str or null | sha256 of this row's own prescribed push: for each layer where its payload is not all zero, in layer order, `layer=<n>;width=<w>;` and the payload's bf16 bytes. It does not depend on the call's other rows, so it is the same for a row in every pass and process (Amendment 3; Gate G4). Null for plain rows |
 | `hook_dtype` | str or null | dtype of the activation the push hook added to in this call (`torch.bfloat16` or `torch.float32`); null for plain rows |
 | `push_max_abs_diff` | float or null | largest absolute difference between the values the hook added for this row and the bf16 push values cast to float32 (0.0 expected in every process); null for plain rows |
 | `seconds` | float | wall time of the call |
 | `written` | str | `YYYY-MM-DD HH:MM:SS`, from the clock |
 
 A row is identified by (`pass`, `row_id`). A relaunch skips rows already present and never writes a duplicate.
+
+The launches and the per-call receipts a row is read through are described in `part201/LOAD-SCHEMA.md`.

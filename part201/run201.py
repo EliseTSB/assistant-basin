@@ -140,7 +140,9 @@ class RecordingPushHook:
         return (x+p,)+tuple(args[1:])
     @property
     def diffs(self):
-        if self._diff is None: return [0.0]*self.rows
+        """Per row, the largest difference between the delta added and the prescribed push; None when the hook never
+        fired, because then nothing was measured (and nothing was pushed)."""
+        if self._diff is None: return [None]*self.rows
         return [float(v) for v in self._diff.detach().cpu().tolist()]
     def remove(self): self.handle.remove()
 
@@ -149,10 +151,73 @@ def _prompt_len(tok,prompt):
     return int(ids.shape[-1]) if hasattr(ids,'shape') else len(ids[-1] if ids and isinstance(ids[0],(list,tuple)) else ids)
 
 def _push_hash(pushes,row):
-    import hashlib, torch
+    """sha256 of one row's prescribed push: for each layer where the row's payload is not all zero, the layer number,
+    the width and the payload's bf16 bytes. A call's matrices carry zero rows for the layers of its other rows; those
+    are left out, so the hash does not depend on which rows share the call, and the same row has the same hash in
+    every pass and every process (Gate G4 compares them)."""
+    import torch
+    if not pushes: return None
     h=hashlib.sha256()
-    for layer in sorted(pushes): h.update(pushes[layer][row].detach().to(device='cpu',dtype=torch.bfloat16).contiguous().view(torch.uint8).numpy().tobytes())
-    return h.hexdigest() if pushes else None
+    for layer in sorted(pushes,key=int):
+        values=pushes[layer][row].detach().to(device='cpu',dtype=torch.bfloat16).contiguous()
+        if not bool(torch.count_nonzero(values.to(dtype=torch.float32))): continue
+        h.update(f'layer={int(layer)};width={int(values.numel())};'.encode('ascii')); h.update(values.view(torch.uint8).numpy().tobytes())
+    return h.hexdigest()
+
+def _canonical_sha256(obj):
+    return hashlib.sha256(json.dumps(obj,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode('utf-8')).hexdigest()
+
+def input_hashes(units,medians):
+    """What a push is built from besides the model: the unit list and the per-layer medians. Hashed as canonical JSON,
+    so a change of line endings or spacing is not a different input and a changed number is."""
+    return {'units_sha256':_canonical_sha256(units),'medians_sha256':_canonical_sha256(medians)}
+
+def model_snapshot(model_path):
+    """The 40-hex snapshot folder in a Hugging Face cache path, or None."""
+    import re
+    found=re.search(r'snapshots[\\/]+([0-9a-f]{40})(?:[\\/]|$)',str(model_path))
+    return found.group(1) if found else None
+
+def receipt_of(record,launch_index,pass_name,call_number):
+    """The call receipt a launch wrote for one call, or None."""
+    loads=record.get('loads',[])
+    if not isinstance(launch_index,int) or isinstance(launch_index,bool) or not 0<=launch_index<len(loads): return None
+    found=[c for c in loads[launch_index].get('calls',[]) if c.get('pass')==pass_name and c.get('call')==call_number]
+    return found[-1] if found else None
+
+def decode_attempt(model,tok,layers,prompts,pushmap,max_new_tokens,device):
+    """One decode of one call, with everything that describes it: its rows, its time and its hook evidence."""
+    from tools.margin_recorder import MarginRecorder
+    rec=MarginRecorder(_eos(tok,model)); start=time.perf_counter()
+    seq,rows=generate_rows(model,tok,layers,prompts,pushmap,max_new_tokens,device,rec)
+    return {'rows':rows,'seconds':time.perf_counter()-start,'hook_firings':dict(getattr(rec,'hook_firings',{})),
+            'forward_passes':int(getattr(rec,'forward_passes',0)),'generation_steps':max((len(r['tokens']) for r in rows),default=0)}
+
+def attempt_problems(attempt,process,pushed):
+    """Why one attempt's own evidence does not show the prescribed push on every decode step (Gate G4), or []."""
+    if not pushed: return []
+    problems=[]; counts=list(attempt['hook_firings'].values())
+    if not counts or any(count!=attempt['forward_passes'] for count in counts):
+        problems.append(f"hook firings {attempt['hook_firings']} are not the {attempt['forward_passes']} decode forwards")
+    if any(r.get('push_max_abs_diff')!=0 for r in attempt['rows']):
+        problems.append('the delta the hook added is not the prescribed bf16 push')
+    expected='torch.float32' if process=='float32' else 'torch.bfloat16'
+    if any(r.get('hook_dtype')!=expected for r in attempt['rows']):
+        problems.append(f"the activation at the push hook is not {expected.split('.')[1]}")
+    return problems
+
+def select_attempt(decode,process,pushed):
+    """Decode a call. If any row has a non-finite score, decode it once more and keep the SECOND attempt whole: its
+    rows with its own time and hook evidence (the design: 'run once more; a row still non-finite is counted'). The
+    first attempt's time is kept apart. Returns (attempt kept, summary of a discarded attempt or None, problems of the
+    attempt kept)."""
+    first=decode(); kept=first; discarded=None
+    if any(r['nonfinite'] for r in first['rows']):
+        kept=decode()
+        discarded={'seconds':first['seconds'],'generation_steps':first['generation_steps'],
+                   'nonfinite_rows':sum(bool(r['nonfinite']) for r in first['rows']),
+                   'hook_firings':first['hook_firings'],'forward_passes':first['forward_passes']}
+    return kept,discarded,attempt_problems(kept,process,pushed)
 
 def generate_rows(model,tok,layers,prompts,pushes,max_new_tokens,device,recorder):
     import torch
@@ -186,18 +251,25 @@ def generate_rows(model,tok,layers,prompts,pushes,max_new_tokens,device,recorder
     for rowno,r in enumerate(rows):
         if hooks:
             # One dtype name when every hooked layer saw the same one; otherwise all of them, which fails Gate G4.
-            r['hook_dtype']=dtypes[0] if len(dtypes)==1 else '+'.join(dtypes); r['push_max_abs_diff']=max((d[rowno] for d in diffs),default=0.)
+            measured=[d[rowno] for d in diffs]
+            r['hook_dtype']=dtypes[0] if len(dtypes)==1 else '+'.join(dtypes)
+            r['push_max_abs_diff']=None if any(v is None for v in measured) else max(measured,default=0.)
         else: r['hook_dtype']=None; r['push_max_abs_diff']=None
     return seq,rows
 
 def _write_json(path,obj):
-    path=Path(path); path.parent.mkdir(parents=True,exist_ok=True); path.write_text(json.dumps(obj,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+    """Write through a temporary file and a rename, so a crash leaves the old file or the new one, never half of one."""
+    path=Path(path); path.parent.mkdir(parents=True,exist_ok=True); tmp=path.with_name(path.name+'.tmp')
+    tmp.write_text(json.dumps(obj,indent=2,ensure_ascii=False)+'\n',encoding='utf-8'); os.replace(tmp,path)
 def _repair(path):
     path=Path(path)
     if not path.exists(): return
     data=path.read_bytes(); cut=data.rfind(b'\n')+1
     if cut<len(data): path.write_bytes(data[:cut])
-def _load_rows(path, planned=None):
+def _load_rows(path, planned=None, load=None):
+    """The rows on disk. With a plan, a call that is not whole is removed as a unit. With the load record too, so is a
+    call whose rows have no receipt in the launch they name: its hook evidence was never recorded, so it is decoded
+    again instead of being read on trust."""
     _repair(path); path=Path(path)
     rows=[json.loads(x) for x in path.read_text(encoding='utf-8').splitlines() if x.strip()] if path.exists() else []
     if planned is not None and rows:
@@ -205,7 +277,14 @@ def _load_rows(path, planned=None):
         present={}
         for row in rows: present.setdefault((row.get('pass'),row.get('call')),[]).append(row.get('row_id'))
         incomplete={key for key,ids in present.items() if expected.get(key)!=set(ids) or len(ids)!=len(expected.get(key,()))}
+        if load is not None:
+            for row in rows:
+                if receipt_of(load,row.get('launch'),row.get('pass'),row.get('call')) is None: incomplete.add((row.get('pass'),row.get('call')))
         if incomplete:
+            # Nothing is destroyed: what is taken out of rows.jsonl goes to rows.removed.jsonl with the time.
+            removed=[dict(r,removed=time.strftime('%Y-%m-%d %H:%M:%S')) for r in rows if (r.get('pass'),r.get('call')) in incomplete]
+            _append(path.with_name('rows.removed.jsonl'),removed)
+            print(f'PART201 resume: {len(removed)} rows of {len(incomplete)} calls without a whole call or its receipt will be decoded again',flush=True)
             rows=[r for r in rows if (r.get('pass'),r.get('call')) not in incomplete]
             tmp=path.with_name(path.name+'.repair.tmp')
             tmp.write_text(''.join(json.dumps(r,ensure_ascii=False,allow_nan=True)+'\n' for r in rows),encoding='utf-8')
@@ -272,14 +351,23 @@ def _run_passes(args, passes):
     # lock contract imported from Part 199
     from part199.run199 import FolderLock
     with FolderLock(out):
-        existing=_load_rows(data_path,planned); done={(r['pass'],r['row_id']) for r in existing}
+        units=json.loads(Path(args.units).read_text(encoding='utf-8')); medians=json.loads(Path(args.medians).read_text(encoding='utf-8'))
+        inputs=input_hashes(units,medians)
+        # The snapshot folder of a Hugging Face cache path names the revision that will be loaded. The real run must
+        # load the registered one; a smoke run may load any small model.
+        snapshot=model_snapshot(args.model)
+        if not args.smoke and snapshot!=common.REVISION:
+            print(f'PART201 --model names snapshot {snapshot}, not the registered revision {common.REVISION}; refusing before model load',flush=True); raise SystemExit(3)
+        if any(entry.get('inputs')!=inputs for entry in previous.get('loads',[])):
+            print('PART201 the units or medians are not the ones an earlier launch used; refusing before model load',flush=True); raise SystemExit(3)
+        existing=_load_rows(data_path,planned,previous); done={(r['pass'],r['row_id']) for r in existing}
         tok,model=nr.load_model(args.model,common.REVISION,args.device,attn_implementation='eager')
         if (nr.LAST_LOAD or {}).get('attn_implementation')!='eager' or getattr(model.config,'_attn_implementation',None)!='eager':
             raise SystemExit(3)
         model.requires_grad_(False); model.eval()
-        units=json.loads(Path(args.units).read_text(encoding='utf-8')); medians=json.loads(Path(args.medians).read_text(encoding='utf-8')); layers=common.find_layers(model)
+        layers=common.find_layers(model)
         launch_index=len(previous.get('loads',[]))
-        launch={'launch':launch_index,'process':args.process,'passes':passes,'model':args.model,'revision':common.REVISION,'plan_sha256':plan_hash,'device_record':device_record(args.device),'dtype':str(next(model.parameters()).dtype),'attn_implementation':'eager','calls':[]}
+        launch={'launch':launch_index,'process':args.process,'passes':passes,'model':args.model,'revision':common.REVISION,'plan_sha256':plan_hash,'inputs':inputs,'model_snapshot':snapshot,'device_record':device_record(args.device),'dtype':str(next(model.parameters()).dtype),'attn_implementation':'eager','calls':[]}
         if args.process=='float32':
             launch['upcast']=upcast_compute(model,checkpoint_dir(args.model,None)); launch['compute_dtype']='torch.float32'
         record={'part':201,'smoke':bool(args.smoke),'plan_sha256':plan_hash,'loads':previous.get('loads',[])+[launch]}
@@ -301,10 +389,8 @@ def _run_passes(args, passes):
             finally: model.generate=original_generate
             rec=__import__('tools.margin_recorder',fromlist=['MarginRecorder']).MarginRecorder(_eos(tok,model))
             seq,observed=generate_rows(model,tok,layers,prompts,test_pushes,args.max_new_tokens,args.device,rec)
-            legacy=captured.get('sequences')
-            legacy_rows=[] if legacy is None else [list(map(int,r)) for r in legacy[:,captured['prompt_length']:].tolist()]
-            g5=g5_equal(legacy_rows,[r['tokens'] for r in observed])
-            launch['G5']={'passed':g5,'rows':len(test_rows)}; _write_json(load_path,record)
+            g5=g5_from_capture(captured.get('sequences'),captured.get('prompt_length',0),observed,_eos(tok,model))
+            launch['G5']={'passed':g5,'rows':len(test_rows),'rows_that_ended_before_the_cap':sum(r['finish']=='eos' for r in observed)}; _write_json(load_path,record)
             if not g5: raise SystemExit(3)
         for p in passes:
             if p=='A-again':
@@ -324,34 +410,35 @@ def _run_passes(args, passes):
                 if any(r['unit_id'] is not None for r in callspec):
                     pushmap=run163.pushes_for(callspec,layers,medians,common,cache)
                 else: pushmap={}
-                rec=__import__('tools.margin_recorder',fromlist=['MarginRecorder']).MarginRecorder(_eos(tok,model)); t=time.perf_counter()
-                seq,recrows=generate_rows(model,tok,layers,prompts,pushmap,args.max_new_tokens,args.device,rec)
-                seconds=time.perf_counter()-t
+                pushed_call=bool(pushmap)
+                kept,discarded,problems=select_attempt(lambda: decode_attempt(model,tok,layers,prompts,pushmap,args.max_new_tokens,args.device),args.process,pushed_call)
+                seconds=kept['seconds']; recrows=kept['rows']
+                if problems:
+                    # The attempt that would be written does not show the prescribed push on every decode step.
+                    launch['stopped']={'pass':p,'call':call['call'],'problems':problems}; _write_json(load_path,record)
+                    print('PART201 stopped: '+'; '.join(problems),flush=True); raise SystemExit(3)
                 if args.process=='float32' and p=='F8' and call['call']==0 and 'projection_minutes' not in launch:
                     f8_minutes=seconds*12/60; f1_minutes=seconds*ONE_ROW_CALL_SHARE*48/60
                     launch['projection_minutes']={'F8':f8_minutes,'F1':f1_minutes,'combined':f8_minutes+f1_minutes,'one_row_call_share':ONE_ROW_CALL_SHARE}
                     if f8_minutes+f1_minutes>45:
                         launch['cut_applied']={'F8_rows':48,'F1_rows':24,'before_rows_written':True}; limits.update(CUT)
                     _write_json(load_path,record)
-                hook_counts=getattr(rec,'hook_firings',{}); forward_passes=getattr(rec,'forward_passes',0)
-                if args.process=='float32' and (any(r.get('hook_dtype')!='torch.float32' or r.get('push_max_abs_diff')!=0 for r in recrows) or
-                    any(count!=forward_passes for count in hook_counts.values())): raise SystemExit(3)
-                # If any row is non-finite, replay entire call once before writes.
-                if any(r['nonfinite'] for r in recrows):
-                    rec=__import__('tools.margin_recorder',fromlist=['MarginRecorder']).MarginRecorder(_eos(tok,model)); seq,recrows2=generate_rows(model,tok,layers,prompts,pushmap,args.max_new_tokens,args.device,rec)
-                    if any(not r['nonfinite'] for r in recrows2): recrows=recrows2
-                # rebuild common fields after retry
-                output=[]
+                output=[]; lengths=[_prompt_len(tok,pr) for pr in prompts]
                 pending_slots={slot for slot,_ in todo}
                 for slot,r in enumerate(callspec):
                     if slot not in pending_slots: continue
-                    lengths=[_prompt_len(tok,pr) for pr in prompts]
                     rr=row_fields(recrows[slot],p,args.process,r,call,slot,lengths[slot],max(lengths)-lengths[slot],
-                        tok.decode(recrows[slot]['tokens'],skip_special_tokens=True).strip(),_push_hash(pushmap,slot),seconds,launch_index)
+                        tok.decode(recrows[slot]['tokens'],skip_special_tokens=True).strip(),
+                        _push_hash(pushmap,slot) if r['unit_id'] is not None else None,seconds,launch_index)
                     output.append(rr)
+                # The receipt describes the attempt whose rows are written, and it goes to disk BEFORE the rows: a crash
+                # between the two leaves a receipt without rows (the call is decoded again), never rows without a receipt.
+                receipt={'pass':p,'call':call['call'],'row_ids':list(call['row_ids']),'row_count':len(rows),'pushed':pushed_call,
+                         'seconds':seconds,'generation_steps':kept['generation_steps'],'hook_firings':kept['hook_firings'],
+                         'forward_passes':kept['forward_passes'],'attempts':2 if discarded else 1}
+                if discarded: receipt['discarded_attempt']=discarded
+                launch['calls'].append(receipt); _write_json(load_path,record)
                 _append(data_path,output); done.update((p,r['row_id']) for _,r in todo)
-                launch['calls'].append({'pass':p,'call':call['call'],'row_count':len(rows),'seconds':seconds,'generation_steps':max((len(r['tokens']) for r in recrows),default=0),'hook_firings':hook_counts,'forward_passes':forward_passes})
-                _write_json(load_path,record)
                 if args.process=='bf16-main' and p=='A' and call['call']==2:
                     pilot_rows=sum(c['row_count'] for c in launch['calls'] if c['pass']=='A' and c['call']<3)
                     pilot_seconds=sum(c['seconds'] for c in launch['calls'] if c['pass']=='A' and c['call']<3)
@@ -367,7 +454,13 @@ def _run_passes(args, passes):
                 probe_rows=[byid[('F8',row['row_id'])] for row in fcall['rows']]
                 probe_push=run163.pushes_for(fcall['rows'],layers,medians,common,cache)
                 probe=timing_probe(model,tok,layers,probe_rows,probe_push,args.device,bool(args.smoke))
-                f8_calls=[c for launch_row in record['loads'] for c in launch_row.get('calls',[]) if c['pass']=='F8']
+                # Each F8 call's receipt from the launch that wrote its rows (an earlier launch may hold a receipt for a
+                # call it never finished writing).
+                f8_calls=[]
+                for c in planned['passes']['F8']['calls']:
+                    first=byid.get(('F8',c['rows'][0]['row_id']))
+                    receipt=receipt_of(record,first.get('launch'),'F8',c['call']) if first else None
+                    if receipt: f8_calls.append(receipt)
                 probe['F8_cached_calls']=[{'call':c['call'],'seconds':c['seconds'],'generation_steps':c.get('generation_steps',0),
                     'seconds_per_generation_step':c['seconds']/max(1,c.get('generation_steps',1))} for c in f8_calls]
                 probe['plan_sha256']=plan_hash; _write_json(probe_path,probe)
@@ -398,32 +491,34 @@ def timing_probe(model,tok,layers,rows,layer_pushes,device,smoke=False):
     def last_position_only(module,args):
         head_positions.append(int(args[0].shape[-2])); return (args[0][...,-1:,:],)+tuple(args[1:])
     slicer=head.register_forward_pre_hook(last_position_only) if head is not None else None
-    for n in row_counts:
-        selected=rows[:n]; pushes={layer:values[:n] for layer,values in layer_pushes.items()}
-        hooks=[]
-        for layer,values in pushes.items():
-            hook=RecordingPushHook(layers[int(layer)].mlp.down_proj,values); hook.push_all_positions=True; hooks.append(hook)
-        try:
-            for length in lengths:
-                batch=[]
-                for ids in prompt_ids[:n]:
-                    if not ids: ids=[int(getattr(tok,'bos_token_id',1) or 1)]
-                    seq=list(ids[:length])
-                    fill=ids[len(seq):] or ids[-max(1,min(len(ids),4)):]
-                    while len(seq)<length: seq.append(int(fill[(len(seq)-len(ids))%len(fill)]))
-                    batch.append(seq[:length])
-                input_ids=torch.tensor(batch,dtype=torch.long,device=device); mask=torch.ones_like(input_ids)
-                repeats=[]
-                for repeat in range(5):
-                    _sync(device); start=time.perf_counter()
-                    with torch.inference_mode(): out=model(input_ids=input_ids,attention_mask=mask,use_cache=False)
-                    logits_positions=int(out.logits.shape[-2]); del out
-                    _sync(device); seconds=time.perf_counter()-start; repeats.append(seconds)
-                probes.append({'rows':n,'prefix_tokens':length,'seconds':repeats,'logits_positions':logits_positions,
-                               'hook_firings':[hook.firings for hook in hooks],'hook_dtypes':sorted({str(hook.dtype) for hook in hooks})})
-        finally:
-            for hook in hooks: hook.remove()
-    if slicer is not None: slicer.remove()
+    try:
+        for n in row_counts:
+            selected=rows[:n]; pushes={layer:values[:n] for layer,values in layer_pushes.items()}
+            hooks=[]
+            for layer,values in pushes.items():
+                hook=RecordingPushHook(layers[int(layer)].mlp.down_proj,values); hook.push_all_positions=True; hooks.append(hook)
+            try:
+                for length in lengths:
+                    batch=[]
+                    for ids in prompt_ids[:n]:
+                        if not ids: ids=[int(getattr(tok,'bos_token_id',1) or 1)]
+                        seq=list(ids[:length])
+                        fill=ids[len(seq):] or ids[-max(1,min(len(ids),4)):]
+                        while len(seq)<length: seq.append(int(fill[(len(seq)-len(ids))%len(fill)]))
+                        batch.append(seq[:length])
+                    input_ids=torch.tensor(batch,dtype=torch.long,device=device); mask=torch.ones_like(input_ids)
+                    repeats=[]
+                    for repeat in range(5):
+                        _sync(device); start=time.perf_counter()
+                        with torch.inference_mode(): out=model(input_ids=input_ids,attention_mask=mask,use_cache=False)
+                        logits_positions=int(out.logits.shape[-2]); del out
+                        _sync(device); seconds=time.perf_counter()-start; repeats.append(seconds)
+                    probes.append({'rows':n,'prefix_tokens':length,'seconds':repeats,'logits_positions':logits_positions,
+                                   'hook_firings':[hook.firings for hook in hooks],'hook_dtypes':sorted({str(hook.dtype) for hook in hooks})})
+            finally:
+                for hook in hooks: hook.remove()
+    finally:
+        if slicer is not None: slicer.remove()
     return {'repetitions':5,'prefix_lengths':list(lengths),'forward_passes':probes,
             'work_timed':'model body over the full prefix with no cache; output head on the last position only' if slicer is not None else 'model body and output head over the full prefix with no cache',
             'push_positions':'every position of the prefix (timing only: the add costs the same; a real re-check must push at generated positions only)',
@@ -442,8 +537,26 @@ def g3_valid(row, call, slot):
 def g4_valid(row):
     return row.get('hook_dtype')=='torch.float32' and row.get('push_max_abs_diff')==0.0
 
-def g5_equal(reference_tokens, recorded_tokens):
-    return [list(map(int,r)) for r in reference_tokens] == [list(map(int,r)) for r in recorded_tokens]
+def eos_trim(tokens, eos_ids=()):
+    """Tokens up to and including the first end token; unchanged when there is none (a row that ran to the cap)."""
+    eos={int(v) for v in (eos_ids or ())}; out=[int(v) for v in tokens]
+    for i,token in enumerate(out):
+        if token in eos: return out[:i+1]
+    return out
+
+def g5_equal(reference_tokens, recorded_tokens, eos_ids=()):
+    """Gate G5's comparison. Both sides are cut at their first end token first: `generate` returns a rectangle that is
+    padded after a row has ended, and the recorder stores each row already cut there. Anything before the end token,
+    and the end token itself, must match."""
+    return [eos_trim(r,eos_ids) for r in reference_tokens] == [eos_trim(r,eos_ids) for r in recorded_tokens]
+
+def g5_from_capture(sequences, prompt_length, recorded_rows, eos_ids=()):
+    """Gate G5 from what Part 163's generator returned (a [rows, prompt + generated] rectangle) and the recorder's
+    rows. This is the comparison the launch runs; the tests call it too."""
+    if sequences is None: return False
+    rectangle=sequences.tolist() if hasattr(sequences,'tolist') else sequences
+    legacy=[[int(v) for v in row[int(prompt_length):]] for row in rectangle]
+    return len(legacy)==len(recorded_rows) and g5_equal(legacy,[r['tokens'] for r in recorded_rows],eos_ids)
 
 def check_record(path):
     path=Path(path); rec=json.loads(path.read_text(encoding='utf-8')); rows_path=path.with_name('rows.jsonl')
@@ -486,6 +599,8 @@ def main(argv=None):
         p=plan(a.units); dest=Path(a.out)/'plan.json'; _write_json(dest,p); print(hashlib.sha256(dest.read_bytes()).hexdigest()); return 0
     if a.check_record: print(json.dumps(check_record(a.check_record))); return 0
     passes=PROCESSES[a.process]
+    if a.smoke and Path(a.out).resolve()==OUT_DEFAULT.resolve():
+        print('PART201 a smoke run needs its own --out: it would freeze a smoke plan in results/part201',flush=True); return 3
     try:
         if a.smoke:
             for process_name, process_passes in PROCESSES.items():

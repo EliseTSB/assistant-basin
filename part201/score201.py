@@ -8,6 +8,7 @@
 
 Every number in the write-up is printed from here. The gates are read per precision: a float32 arm that did not
 run, or failed its gates, leaves the bf16 readings standing and reports 201.7 to 201.11 as not run or not read.
+A row is read only if it traces to a launch of the right process and to that launch's receipt for its call.
 What a gate needs is taken from the runner's own frozen plan (part201/run201.py), not from constants repeated here.
 """
 from __future__ import annotations
@@ -210,6 +211,62 @@ def _g3_problems(rows, calls, passes):
     return problems
 
 
+def _capped(problems, keep=5):
+    return problems if len(problems) <= keep else problems[:keep] + [f'... and {len(problems) - keep} more of this kind']
+
+
+def _launch_index(row):
+    value = row.get('launch')
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def _receipt_problems(rows, launches, passes):
+    """Row -> launch -> call receipt. Each call's rows name one launch, of the process the pass belongs to, and that
+    launch holds a receipt for the call with the same members. A row is not read on the strength of having been
+    written: the receipt is where its call's hook evidence and time are."""
+    problems = []
+    by_call = defaultdict(list)
+    for row in rows:
+        if row.get('pass') in passes:
+            by_call[(row['pass'], row.get('call'))].append(row)
+    for (name, number), members in sorted(by_call.items(), key=lambda item: (item[0][0], str(item[0][1]))):
+        indexes = {_launch_index(row) for row in members}
+        if len(indexes) != 1 or None in indexes:
+            problems.append(f'{name} call {number}: its rows do not name one launch')
+            continue
+        index = next(iter(indexes))
+        if not 0 <= index < len(launches):
+            problems.append(f'{name} call {number}: launch {index} is not in the load record')
+            continue
+        launch = launches[index]
+        if launch.get('launch', index) != index:
+            problems.append(f"{name} call {number}: load entry {index} is numbered {launch.get('launch')}")
+        if launch.get('process') != PROCESS_OF[name]:
+            problems.append(f"{name} call {number}: written by launch {index}, a {launch.get('process')} launch")
+            continue
+        receipt = run201.receipt_of({'loads': launches}, index, name, number)
+        if receipt is None:
+            problems.append(f'{name} call {number}: launch {index} holds no receipt for it')
+            continue
+        call_rows = members[0].get('call_rows') or []
+        if receipt.get('row_ids') != call_rows or receipt.get('row_count') != len(call_rows):
+            problems.append(f'{name} call {number}: its receipt names other rows')
+    return _capped(problems)
+
+
+_REGISTERED_INPUTS = None
+
+
+def registered_inputs():
+    """The canonical hashes of the registered units and medians files, as the runner records them per launch."""
+    global _REGISTERED_INPUTS
+    if _REGISTERED_INPUTS is None:
+        units = json.loads(run201.UNITS_DEFAULT.read_text(encoding='utf-8'))
+        medians = json.loads((ROOT / 'results/part112/medians.json').read_text(encoding='utf-8'))
+        _REGISTERED_INPUTS = run201.input_hashes(units, medians)
+    return _REGISTERED_INPUTS
+
+
 def gate_checks(rows, kernel, load, plan_file=None):
     launches = load.get('loads', [])
     plan, calls, state = expected_plan(load, plan_file)
@@ -220,8 +277,10 @@ def gate_checks(rows, kernel, load, plan_file=None):
     wrong_process = [f"{r.get('pass')}/{r.get('row_id')}" for r in rows
                      if r.get('pass') in PROCESS_OF and r.get('process') != PROCESS_OF[r['pass']]]
     revisions = sorted({str(x.get('revision')) for x in launches})
+    # The recorded revision is a constant of the code; the snapshot folder of the model path is what was loaded.
+    snapshots_ok = state['smoke'] or all(x.get('model_snapshot') == x.get('revision') for x in launches)
     bf_ok = (bool(bf_launches) and all(x.get('dtype') == 'torch.bfloat16' and x.get('attn_implementation') == 'eager' for x in bf_launches)
-             and not [w for w in wrong_process if w.split('/')[0] in BF16_PASSES] and len(revisions) == 1)
+             and not [w for w in wrong_process if w.split('/')[0] in BF16_PASSES] and len(revisions) == 1 and snapshots_ok)
     upcast_keys = ('kept_bf16', 'converted_to_float32', 'restored_f32_from_checkpoint')
     float_loads_ok = bool(float_launches) and all(
         isinstance(x.get('upcast'), dict) and all(k in x['upcast'] for k in upcast_keys) and x['upcast'].get('kept_bf16', 0) > 0
@@ -230,13 +289,15 @@ def gate_checks(rows, kernel, load, plan_file=None):
     kernel_ok = (kernel.get('attn_implementation') == 'eager' and kernel.get('dtype_requested') == 'float32-upcast'
                  and isinstance(kernel_upcast, dict) and kernel_upcast.get('kept_bf16', 0) > 0)
     kernel_revision_ok = bool(revisions) and any(revisions[0] in str(kernel.get(k)) for k in ('revision', 'model'))
-    float_ok = (float_loads_ok and not [w for w in wrong_process if w.split('/')[0] in FLOAT_PASSES] and len(revisions) == 1)
+    float_ok = (float_loads_ok and not [w for w in wrong_process if w.split('/')[0] in FLOAT_PASSES] and len(revisions) == 1
+                and snapshots_ok)
     g1 = {'passed': bf_ok and float_ok and kernel_ok and kernel_revision_ok,
           'bf16': {'passed': bf_ok, 'launches': len(bf_launches)},
           'float32': {'passed': float_ok, 'launches': len(float_launches), 'upcast_recorded': float_loads_ok},
-          'kernel': {'passed': kernel_ok and kernel_revision_ok, 'float32_upcast_eager_recorded': kernel_ok,
-                     'same_revision_as_the_launches': kernel_revision_ok},
-          'rows_in_the_wrong_process': wrong_process[:10], 'revisions': revisions}
+          'kernel': {'passed': kernel_ok and kernel_revision_ok, 'present': bool(kernel.get('runs')),
+                     'float32_upcast_eager_recorded': kernel_ok, 'same_revision_as_the_launches': kernel_revision_ok},
+          'rows_in_the_wrong_process': wrong_process[:10], 'revisions': revisions,
+          'every_launch_loaded_the_snapshot_of_its_recorded_revision': snapshots_ok}
 
     # G2: the recorded scores are the ones the decode chose from.
     not_max = [f"{r.get('pass')}/{r.get('row_id')}" for r in rows if r.get('emitted_is_max') is not True]
@@ -269,29 +330,68 @@ def gate_checks(rows, kernel, load, plan_file=None):
             if row.get('slot') == a_slot.get(row.get('row_id')):
                 bf_problems.append('B: a row keeps its A slot')
                 break
-    float_problems = _g3_problems(rows, calls, FLOAT_PASSES)
+    bf_problems += _receipt_problems(rows, launches, BF16_PASSES)
+    # A-again is the same process as pass A, and A2 is another one: read from the launches, not from a label.
+    a_launch = {r.get('row_id'): _launch_index(r) for r in rows if r.get('pass') == 'A'}
+    if any(r.get('pass') == 'A-again' and _launch_index(r) != a_launch.get(r.get('row_id')) for r in rows):
+        bf_problems.append('A-again: a row was not written by the launch that wrote its pass-A row')
+    if any(r.get('pass') == 'A2' and _launch_index(r) in set(a_launch.values()) for r in rows):
+        bf_problems.append('A2: a row was written by a launch that also wrote pass A')
+    float_problems = _g3_problems(rows, calls, FLOAT_PASSES) + _receipt_problems(rows, launches, FLOAT_PASSES)
     g3 = {'passed': not (plan_problems or bf_problems or float_problems),
           'plan': {'passed': not plan_problems, 'problems': plan_problems},
           'bf16': {'passed': not (plan_problems or bf_problems), 'problems': bf_problems},
           'float32': {'passed': not (plan_problems or float_problems), 'problems': float_problems},
           'rows_by_pass': dict(Counter(r.get('pass') for r in rows)), 'state': state}
 
-    # G4: the same push in both precisions, and float32 where the push lands.
-    pushed = [r for r in rows if r.get('unit_id') is not None]
-    bad_push = [f"{r.get('pass')}/{r.get('row_id')}" for r in pushed
-                if r.get('push_max_abs_diff') is None or float(r['push_max_abs_diff']) != 0.0
-                or (r.get('pass') in FLOAT_PASSES and r.get('hook_dtype') != 'torch.float32')]
-    bad_hooks = []
-    for launch in float_launches:
-        for call in launch.get('calls', []):
-            fired, forwards = call.get('hook_firings'), call.get('forward_passes')
+    # G4: one push per row everywhere, applied on every decode step, and float32 where the float32 arm adds it.
+    # Read per precision. Its bf16 half is a bf16 gate; its float32 half adds float32 at the hook and equality with
+    # the bf16 push, and withdraws 201.9 and 201.10 when it fails.
+    pushed = [r for r in rows if r.get('unit_id') is not None and r.get('pass') in PROCESS_OF]
+    load_record = {'loads': launches}
+
+    def push_half(passes, float_arm):
+        mine = [r for r in pushed if r['pass'] in passes]
+        bad = [f"{r['pass']}/{r.get('row_id')}" for r in mine
+               if r.get('push_max_abs_diff') is None or float(r['push_max_abs_diff']) != 0.0 or not r.get('push_sha256')
+               or r.get('hook_dtype') != ('torch.float32' if float_arm else 'torch.bfloat16')]
+        hook = []
+        for name, number, index in sorted({(r['pass'], r.get('call'), _launch_index(r)) for r in mine}, key=str):
+            receipt = run201.receipt_of(load_record, index, name, number)
+            fired = receipt.get('hook_firings') if receipt else None
+            forwards = receipt.get('forward_passes') if receipt else None
             counts = list(fired.values()) if isinstance(fired, dict) else []
-            if forwards is None or not counts or any(v != forwards for v in counts):
-                bad_hooks.append({'pass': call.get('pass'), 'call': call.get('call'), 'hook_firings': fired, 'forward_passes': forwards})
-    float_pushed = [r for r in pushed if r.get('pass') in FLOAT_PASSES]
-    g4 = {'passed': bool(float_pushed) and not bad_push and not bad_hooks, 'pushed_rows': len(pushed),
-          'float32_pushed_rows': len(float_pushed), 'failed_rows': bad_push[:10], 'failed': len(bad_push),
-          'hook_count_failures': bad_hooks[:10]}
+            if receipt is None or forwards is None or not counts or any(v != forwards for v in counts):
+                hook.append({'pass': name, 'call': number, 'receipt_present': receipt is not None,
+                             'hook_firings': fired, 'forward_passes': forwards})
+        return mine, bad, hook
+
+    hashes = defaultdict(lambda: {'bf16': set(), 'float32': set()})
+    for r in pushed:
+        hashes[r.get('row_id')]['float32' if r['pass'] in FLOAT_PASSES else 'bf16'].add(r.get('push_sha256'))
+    split_bf = sorted(str(rid) for rid, v in hashes.items() if len(v['bf16']) > 1)
+    split_cross = sorted(str(rid) for rid, v in hashes.items() if v['float32'] and len(v['bf16'] | v['float32']) > 1)
+
+    def bound(value):
+        return isinstance(value, dict) and bool(value.get('units_sha256')) and bool(value.get('medians_sha256'))
+
+    bf_inputs = [x.get('inputs') for x in bf_launches]
+    bf_inputs_ok = bool(bf_inputs) and all(bound(v) and v == bf_inputs[0] for v in bf_inputs)
+    float_inputs_ok = bf_inputs_ok and bool(float_launches) and all(x.get('inputs') == bf_inputs[0] for x in float_launches)
+    registered_ok = state['smoke'] or (bf_inputs_ok and bf_inputs[0] == registered_inputs())
+    bf_mine, bf_bad, bf_hook = push_half(BF16_PASSES, False)
+    float_mine, float_bad, float_hook = push_half(FLOAT_PASSES, True)
+    bf_half = bool(bf_mine) and not bf_bad and not bf_hook and not split_bf and bf_inputs_ok and registered_ok
+    float_half = bool(float_mine) and not float_bad and not float_hook and not split_cross and float_inputs_ok
+    g4 = {'passed': bf_half and float_half,
+          'bf16': {'passed': bf_half, 'pushed_rows': len(bf_mine), 'failed_rows': bf_bad[:10], 'failed': len(bf_bad),
+                   'hook_count_failures': bf_hook[:10], 'rows_with_more_than_one_push_hash': split_bf[:10],
+                   'inputs_agree_across_launches': bf_inputs_ok, 'inputs_are_the_registered_files': registered_ok},
+          'float32': {'passed': float_half, 'pushed_rows': len(float_mine), 'failed_rows': float_bad[:10], 'failed': len(float_bad),
+                      'hook_count_failures': float_hook[:10], 'rows_whose_push_hash_is_not_the_bf16_one': split_cross[:10],
+                      'inputs_agree_with_the_bf16_launches': float_inputs_ok},
+          'pushed_rows': len(pushed), 'float32_pushed_rows': len(float_mine), 'failed_rows': (bf_bad + float_bad)[:10],
+          'failed': len(bf_bad) + len(float_bad), 'hook_count_failures': (bf_hook + float_hook)[:10]}
 
     # G5: the common decode path reproduces Part 163's generator (recorded by the runner at launch).
     g5_records = [x['G5'] for x in launches if isinstance(x.get('G5'), dict)]
@@ -395,7 +495,8 @@ def score(rows, kernel=None, reference=None, load=None, probe=None, plan_file=No
     for (a, b) in PAIRS:
         pairs[f'{a}/{b}']['planned'] = expected_n(a, b, (a, b) == ('M', 'C'))
 
-    bf_ok = gates['G1']['bf16']['passed'] and gates['G3']['bf16']['passed'] and gates['G5']['passed']
+    bf_ok = (gates['G1']['bf16']['passed'] and gates['G3']['bf16']['passed'] and gates['G4']['bf16']['passed']
+             and gates['G5']['passed'])
     float_ok = gates['G1']['float32']['passed'] and gates['G3']['float32']['passed']
     recorder_ok = gates['G2']['passed']
     need = THRESHOLDS['positive_control']['min_rows_differing_between_A_and_C']
@@ -460,6 +561,8 @@ def score(rows, kernel=None, reference=None, load=None, probe=None, plan_file=No
             reason = 'not read (Gate G4 failed)'
         if reason is None and float_arm and state['float32_cut']:
             reason = 'not scored (cut arm)'
+        if reason is None and no_margin:
+            reason = f'not scored ({len(no_margin)} differing rows have no recorded margin at the first difference)'
         if reason is None and not steps:
             reason = 'not scored (no differing rows with a margin)'
         put(key, estimate, reason or _verdict(ok))
@@ -589,8 +692,16 @@ def score(rows, kernel=None, reference=None, load=None, probe=None, plan_file=No
                     d[field] = None
 
     state['a_again_rows_set_aside'] = set_aside
+    m_rows = [r for r in rows if r.get('pass') == 'M']
+    padded = sorted(int(r.get('pad_tokens') or 0) for r in m_rows if int(r.get('pad_tokens') or 0) > 0)
+    m_calls = defaultdict(set)
+    for r in m_rows:
+        m_calls[r.get('call')].add(int(r.get('prompt_tokens') or 0))
+    padding = {'rows': len(m_rows), 'rows_left_padded': len(padded), 'median_pad_tokens_of_those': statistics.median(padded) if padded else None,
+               'calls': len(m_calls), 'calls_with_unequal_prompt_lengths': sum(len(v) > 1 for v in m_calls.values())}
     result = {'gates': gates, 'positive_control': control, 'state': state, 'thresholds': THRESHOLDS,
               'predictions': predictions, 'candidate_gate': candidate, 'pairs': pairs,
+              'pass_M_padding': padding, 'bf16_decodes_in_the_margin_share': len(bf_rows),
               'bf16_share_of_positions_within_steps': margin_shares,
               'share_of_generation_steps_with_an_unfinished_row_within_2_steps': step_share, 'ties': ties,
               'nonfinite_rows': sorted(f"{r.get('pass')}/{r.get('row_id')}" for r in rows if r.get('nonfinite')),
@@ -620,7 +731,10 @@ def ordered_decision(result):
     if stop:
         return {'rule': 1, 'name': 'Stop', 'readings': stop,
                 'decision': 'no more reruns until those rows are audited; a large margin is a trigger for the audit, not proof of a fault'}
-    invalid = [name for name, ok in (('G1 float32', gates['G1']['float32']['passed']), ('G1 kernel record', gates['G1']['kernel']['passed']),
+    # A pass-K record that is there and is not a float32-upcast eager record of this revision is an invalid float32
+    # run. A record that is not there is pass K not run: 201.7 is then "not run" and rule 4 applies.
+    kernel_invalid = gates['G1']['kernel']['present'] and not gates['G1']['kernel']['passed']
+    invalid = [name for name, ok in (('G1 float32', gates['G1']['float32']['passed']), ('G1 kernel record', not kernel_invalid),
                                      ('G3 float32', gates['G3']['float32']['passed']), ('G4', gates['G4']['passed'])) if not ok]
     if invalid:
         return {'rule': 2, 'name': 'Float32 arm invalid', 'readings': invalid,
@@ -681,13 +795,18 @@ def render(result):
     lines = ['# Part 201 score', '', '## Gates', '', '| Gate | Result | Detail |', '|---|---|---|']
     detail = {
         'G1': f"bf16 {'passed' if gates['G1']['bf16']['passed'] else 'FAILED'}, float32 {'passed' if gates['G1']['float32']['passed'] else 'FAILED'}, "
-              f"kernel record {'passed' if gates['G1']['kernel']['passed'] else 'FAILED'}; revisions {gates['G1']['revisions']}",
+              f"kernel record {'passed' if gates['G1']['kernel']['passed'] else 'FAILED' if gates['G1']['kernel']['present'] else 'absent'}; "
+              f"revisions {gates['G1']['revisions']}; snapshot loaded is the recorded revision: {gates['G1']['every_launch_loaded_the_snapshot_of_its_recorded_revision']}",
         'G2': f"{gates['G2']['failed']} of {gates['G2']['rows']} rows failed; "
               f"{gates['G2']['positions_where_the_emitted_token_is_tied_with_and_is_not_the_first_listed_top']} positions emitted a tied token that is not the first-listed top",
         'G3': f"plan {'passed' if gates['G3']['plan']['passed'] else 'FAILED'}, bf16 {'passed' if gates['G3']['bf16']['passed'] else 'FAILED'}, "
               f"float32 {'passed' if gates['G3']['float32']['passed'] else 'FAILED'}; "
               + '; '.join(gates['G3']['plan']['problems'] + gates['G3']['bf16']['problems'] + gates['G3']['float32']['problems']),
-        'G4': f"{gates['G4']['failed']} of {gates['G4']['pushed_rows']} pushed rows failed; {len(gates['G4']['hook_count_failures'])} calls with a hook count problem",
+        'G4': f"bf16 {'passed' if gates['G4']['bf16']['passed'] else 'FAILED'}, float32 {'passed' if gates['G4']['float32']['passed'] else 'FAILED'}; "
+              f"{gates['G4']['failed']} of {gates['G4']['pushed_rows']} pushed rows failed; {len(gates['G4']['hook_count_failures'])} calls without matching hook evidence; "
+              f"{len(gates['G4']['bf16']['rows_with_more_than_one_push_hash'])} rows with more than one push hash in bf16, "
+              f"{len(gates['G4']['float32']['rows_whose_push_hash_is_not_the_bf16_one'])} whose float32 push hash is not the bf16 one; "
+              f"inputs bound across launches: bf16 {gates['G4']['bf16']['inputs_agree_across_launches']}, float32 {gates['G4']['float32']['inputs_agree_with_the_bf16_launches']}",
         'G5': f"{len(gates['G5']['records'])} launch records",
     }
     for name in ('G1', 'G2', 'G3', 'G4', 'G5'):
@@ -734,7 +853,9 @@ def render(result):
                 cells.append(f"{c[direction]} ({_fmt(low)} to {_fmt(high)})")
             lines.append(f"| {key} | {name} | {cells[0]} | {cells[1]} | {c['n']} |")
     lines += ['', '## Margins (bf16 rows)', '',
-              f"Share of positions within 0, 1, 2 and 4 steps: `{json.dumps(result['bf16_share_of_positions_within_steps'])}`.", '',
+              f"Share of positions within 0, 1, 2 and 4 steps, over {result['bf16_decodes_in_the_margin_share']} bf16 decodes "
+              f"(a row decoded in several passes counts once per pass): `{json.dumps(result['bf16_share_of_positions_within_steps'])}`.", '',
+              f"Pass M padding: `{json.dumps(result['pass_M_padding'])}`.", '',
               f"Share of generation steps with an unfinished row within 2 steps, by pass: `{json.dumps(result['share_of_generation_steps_with_an_unfinished_row_within_2_steps'])}`.", '',
               f"Exact ties: `{json.dumps(result['ties'])}`.", '', '## First differences, row by row', '']
     for key, z in result['pairs'].items():

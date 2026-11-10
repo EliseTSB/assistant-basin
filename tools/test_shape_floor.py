@@ -114,6 +114,43 @@ def test_a_verdict_that_rests_on_unsupported_rows_is_flagged():
     assert entry['depends_on_unsupported_rows'] is True
 
 
+def test_the_unsupported_row_flag_uses_the_paired_error():
+    # Alden's toy (council part201-design-review #11): 1,000 redraws, 950 as observed both ways, 10 only with the
+    # fallback, 0 only with the rows held, 40 neither. Shares .96 and .95; the paired error is .003148, so the
+    # difference of .01 is beyond two of them. Two independent samples' errors would give .009268 and no flag.
+    difference, se = sf.paired_difference(10, 0, 1000)
+    assert abs(difference - .01) < 1e-12 and abs(se - .003148) < 1e-6
+    assert abs(difference) > 2 * se
+    unpaired = (.96 * .04 / 1000 + .95 * .05 / 1000) ** .5
+    assert abs(unpaired - .009268) < 1e-6 and not abs(difference) > 2 * unpaired
+    # No discordant redraw: no difference, no error, no flag. One each way: the difference is zero.
+    assert sf.paired_difference(0, 0, 1000) == (0.0, 0.0)
+    assert sf.paired_difference(7, 7, 1000)[0] == 0.0
+
+
+def test_simulate_reports_the_paired_difference_from_the_same_redraws():
+    # Twenty supported rows that never change and one unsupported row whose label flips in 1 of 50 pairs. The verdict
+    # is "the unsupported row's label is still true": with the fallback it is as observed in about 98% of redraws,
+    # with the row held in all of them. Every discordant redraw is on one side, and the entry says how many.
+    rows = ([{'id': f's{i}', 'cell': 'x', 'labels': {'a': True, 'b': True}} for i in range(20)]
+            + [{'id': 'u', 'cell': 'x', 'labels': {'a': False, 'b': True}}])
+    pairs = ([{'labels_a': {'a': True, 'b': True}, 'labels_b': {'a': True, 'b': True}}] * 49
+             + [{'labels_a': {'a': True, 'b': True}, 'labels_b': {'a': True, 'b': False}}])
+    draws = 3000
+    out = sf.simulate(rows, pairs, lambda rs: {'u_b': rs[-1]['labels']['b']}, draws, 11)
+    entry = out['scenarios']['independent']['verdicts']['u_b']
+    assert entry['sensitivity_unsupported_rows_held'] == 1.0
+    assert entry['redraws_as_observed_only_with_rows_held'] > 0 and entry['redraws_as_observed_only_with_fallback'] == 0
+    lost = entry['redraws_as_observed_only_with_rows_held']
+    assert abs(entry['sensitivity'] - (1 - lost / draws)) < 1e-12
+    assert abs(entry['difference_from_unsupported_rows_held'] + lost / draws) < 1e-12
+    expected = sf.paired_difference(0, lost, draws)[1]
+    assert abs(entry['paired_mc_se_of_that_difference'] - expected) < 1e-12
+    assert entry['depends_on_unsupported_rows'] is True
+    # Under two independent samples' errors this difference (about .02 at n = 3,000) would also be flagged; the toy
+    # above is the case where the two rules part. Here the check is that the paired figures are the ones reported.
+
+
 def test_render_names_every_scenario_and_marks_unsupported():
     rows = [{'id': 'r0', 'cell': 'x', 'labels': {'a': True, 'b': True}},
             {'id': 'r1', 'cell': 'x', 'labels': {'a': False, 'b': True}}]

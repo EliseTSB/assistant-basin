@@ -117,9 +117,12 @@ row and position: the top two token ids, the top logit, the margin, and the scor
 emitted. It returns the scores unchanged. Each row also stores its generated token ids, the pass, the call's row
 count and membership, its slot, its prompt length, its padding and the launch that made it. The plan of every pass
 (calls, membership, slots) is written once to `results/part201/plan.json`; its sha256 goes in the load record and a
-relaunch refuses a different plan. The unit of work is the call: a call's rows are appended together after it
-finishes, a torn tail is cut back to the last whole call, and a relaunch re-runs every unfinished call whole, with
-its original membership and slots; rows are never repacked. Pass A-again runs straight after pass A in the same
+relaunch refuses a different plan. Each launch also records canonical hashes of the units and medians it builds
+pushes from, and a relaunch refuses other ones. The unit of work is the call. When a call finishes, its receipt
+(members, time, generation steps, hook firings and decode forwards) is written to the load record, and then its rows
+are appended together. A torn tail is cut back to the last whole call, rows found without their call's receipt are
+set aside in `rows.removed.jsonl`, and a relaunch re-runs every such call whole, with its original membership and
+slots; rows are never repacked. Pass A-again runs straight after pass A in the same
 launch; if pass A's first two calls were made by an earlier launch, A-again is recorded as not same-process and its
 clause of 201.1 is not scored (`part201/ROWS-SCHEMA.md`).
 
@@ -157,19 +160,33 @@ neighbours).
   that Part 163 did not already control; the random-direction arm is in the sample, and the plain set is the no-push
   condition.
 - **Gate G1, kernel and precision:** every bf16 load records eager and bf16; the float32 process records the upcast
-  summary (`kept_bf16`, `converted_to_float32`, `restored_f32_from_checkpoint`); one model revision throughout.
+  summary (`kept_bf16`, `converted_to_float32`, `restored_f32_from_checkpoint`); one model revision throughout, and
+  every launch's model path names the snapshot folder of that revision (a launch refuses another snapshot before
+  loading; the recorded revision alone is a constant of the code).
 - **Gate G2, recorder:** on every row, at each position the emitted token's recorded score equals the top recorded
   score (it is the top token or tied with it). A failure means the recorded scores are not the ones the decode chose
   from, and no margin reading is made. Positions where the emitted token is tied with, and is not, the recorder's
   first-listed top token are counted and reported.
 - **Gate G3, rows and shapes:** every planned row is present once per pass; each call's recorded row count,
   membership and slots match the plan; in pass B no call has an A call's membership and no row keeps its A slot.
-- **Gate G4, same push:** in the float32 process the activation the hook adds to is float32 (its dtype is recorded
-  per call), the hook fires on every decode step of every pushed row, and the delta tensor it is given equals the
-  bf16 process's push values exactly (largest absolute difference 0, recorded per row, with the push tensor's
-  sha256). This checks the prescribed delta, not that the sum after the add is identical across precisions. The hook casts the push to the activation's dtype
-  (`part86/common86.py`), so if any activation reaches it in bf16 the float32 arm is not float32 there, and this gate
-  fails.
+  Every row traces to a launch of its pass's process and to that launch's receipt for its call, with the same
+  members; A-again's rows come from the launch that wrote their pass-A rows, and A2's from another launch.
+- **Gate G4, same push:** a pushed row has one push in every pass and every process. Each row carries the sha256
+  of its own prescribed payload (the layers where it is not zero, with their numbers; the hash does not depend on
+  the call's other rows), and that hash is the same wherever the row appears. Every launch's units and medians
+  hashes agree and are the registered files'. In every process the delta the hook adds equals the prescribed bf16
+  values (largest absolute difference 0, recorded per row), and the hook fires once per decode forward of every
+  pushed call (read from the call's receipt). The activation the hook adds to is bf16 in the bf16 processes and
+  float32 in the float32 process; a hook that never fired has no dtype and no measured difference, and fails.
+  This checks the prescribed delta, not that the sum after the add is identical across precisions. The hook casts
+  the push to the activation's dtype, so if any activation reaches it in bf16 the float32 arm is not float32
+  there, and this gate fails. G4 is read per precision: its bf16 half covers the bf16 passes and launches; its
+  float32 half adds float32 at the hook and equality with the bf16 push.
+- **Gate G5, common decode path:** at the launch that starts pass A, pass A's first call is decoded twice before
+  anything is written: by Part 163's generator (`part160/run160.py`, the path Parts 163 and 200 used) and by this
+  part's recording decode. The token ids must be equal row for row, up to and including each row's end token. It is
+  a bf16 gate: a failure stops the launch. It compares two push hooks on one call, so a fault both share would not
+  show; a recording hook that fired on the wrong steps shows in G4's count of firings against decode forwards.
 - Positive control for "the analysis can see a difference": A against C must differ on at least 10 rows; Part 200 found
   38%. If it does not, the comparison code is checked before anything is read.
 - Not used: recomputing only the output head in float32. arXiv 2609.26621 reports its benefit gone at batch 8 or more;
@@ -249,22 +266,27 @@ measurement exists yet. This is the same bar the plan's decision uses.
 ## Reading rules
 
 - Every number is printed by `part201/score201.py` from `rows.jsonl`; verdicts as registered, by its comparison
-  functions. The thresholds in 201.2, 201.5, 201.9 and 201.10 were chosen after reading Part 200 and Part 183's
+  functions. The margin shares are over bf16 decodes (a row decoded in several passes counts once per pass), and the
+  report states how many pass-M rows were left-padded and how many M calls mixed prompt lengths. The thresholds in 201.2, 201.5, 201.9 and 201.10 were chosen after reading Part 200 and Part 183's
   record, so those are checks that the earlier numbers repeat on new rows, not independent discoveries.
-- G2 failing withdraws 201.5, 201.9, 201.11 and every margin table. G4 failing withdraws 201.9 and 201.10.
-- Gates G1 and G3 are read per precision. A float32 arm that did not run or fails its gates leaves the bf16
+- G2 failing withdraws 201.5, 201.9, 201.11 and every margin table. G4's float32 half failing withdraws 201.9 and
+  201.10; its bf16 half is a bf16 gate.
+- Gates G1, G3 and G4 are read per precision. A float32 arm that did not run or fails its gates leaves the bf16
   predictions (201.1 to 201.6) standing. A bf16 gate failing, or the positive control failing, withholds every
   reading except 201.7, which rests on pass K's record alone.
 - If pass A's first two calls and their repeat were not decoded by the same launch, 201.1 is scored on its A2 clause
   alone and says so.
+- A differing row with no recorded margin at its first difference makes 201.5 or 201.9 not scored (a record that
+  passes G2 has none).
 - A pair with no differing rows makes its "of the rows that differ" prediction not scored, and that is reported, as is
   the number of differing rows behind every such percentage. A label with fewer than 8 flips is not scored in 201.6
   (with 4 or fewer the direction clause cannot fail). 201.11 is not scored without the timing probe.
 - A row parting at a large margin is a trigger for an audit of that row, not by itself proof of a kernel fault; and
   small margins at the first differences do not prove rounding is the only mechanism.
-- A row cut short by a relaunch is regenerated whole. A call with a non-finite score at any step is run once more;
-  a row still non-finite is counted, listed and left out of pair comparisons, each affected pair is reported with
-  its smaller n, and 201.8 is then not scored.
+- A row cut short by a relaunch is regenerated whole. A call with a non-finite score at any step is run once more,
+  and the second attempt is kept whole: its rows with its own time and hook evidence (the first attempt's time is
+  recorded apart, in the receipt). A row still non-finite is counted, listed and left out of pair comparisons, each
+  affected pair is reported with its smaller n, and 201.8 is then not scored.
 - The label flip rates are reported with 95% Wilson intervals and no bar. They are Part 163's labels at dose 0.8 on
   this model, and are used in `BATCH-SHAPE-NOISE.md` as a prior only until a part measures its own.
 - What the float32 results decide is written before the run, in `BATCH-SHAPE-NOISE.md` under "After Part 201", as an

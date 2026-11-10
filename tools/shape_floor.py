@@ -25,10 +25,13 @@ Scenarios, all reported:
 What is not measured is said, not filled in:
   - A row whose starting vector no replicate pair has ("unsupported") falls back to independent per-label flips at
     the conditional point rates. Each verdict is also scored with those rows held as observed; if the two figures
-    differ by more than Monte Carlo noise, the verdict depends on unsupported rows and is reported so.
+    differ by more than two standard errors of their paired per-redraw difference (both come from the same redraws),
+    the verdict depends on unsupported rows and is reported so.
   - A label value that no replicate pair started with has an unknown flip rate. It is held, and counted as
     unmeasured. Zero observed transitions are not evidence that a transition cannot happen.
   - With one replicate pair for a vector, that vector's redraw is deterministic. The support table shows every n.
+  - The shared-change coupling does not reach unsupported rows: they draw on their own in every scenario, so a
+    cluster that holds one can still split under shared-change-1.
 
 The output is a sensitivity conditional on the scenario and on the replicate's pair of shapes. It is not a
 confidence level and not a guarantee.
@@ -84,6 +87,23 @@ def clopper_pearson(k, n, alpha=0.05):
     lower = 0.0 if k == 0 else bisect(lambda p: 1 - binom_cdf(k - 1, n, p), alpha / 2)
     upper = 1.0 if k == n else bisect(lambda p: 1 - binom_cdf(k, n, p), 1 - alpha / 2)
     return [lower, upper]
+
+
+def paired_difference(full_only, held_only, draws):
+    """Difference between two shares measured on the SAME redraws, with its Monte Carlo standard error.
+
+    full_only and held_only count the redraws in which only one of the two indicators was true. The per-draw
+    difference is +1, -1 or 0, so its mean is (full_only - held_only) / draws and its standard error is the sample
+    standard deviation of those differences over sqrt(draws). Treating the two shares as independent samples would
+    leave out their covariance and overstate the error.
+    """
+    if draws < 1:
+        raise ValueError("draws must be positive")
+    mean = (full_only - held_only) / draws
+    if draws < 2:
+        return mean, 0.0
+    variance = max(0.0, ((full_only + held_only) / draws - mean * mean) * draws / (draws - 1))
+    return mean, math.sqrt(variance / draws)
 
 
 def load_scorer(spec):
@@ -199,6 +219,7 @@ def simulate(rows, pairs, scorer, draws=1000, seed=0, cluster_key=None):
     for name, share, description in SCENARIOS:
         rng = random.Random(seed)
         same, same_held = Counter(), Counter()
+        full_only, held_only = Counter(), Counter()
         tally = Counter()
         count_draws = defaultdict(list)
         for _ in range(draws):
@@ -231,7 +252,10 @@ def simulate(rows, pairs, scorer, draws=1000, seed=0, cluster_key=None):
             if held is not None:
                 result_held = scorer(held)
                 for verdict, value in observed.items():
-                    same_held[verdict] += int(result_held.get(verdict) == value)
+                    as_full, as_held = result.get(verdict) == value, result_held.get(verdict) == value
+                    same_held[verdict] += int(as_held)
+                    full_only[verdict] += int(as_full and not as_held)
+                    held_only[verdict] += int(as_held and not as_full)
             per_cell = Counter()
             for row in redrawn:
                 cell = str(row.get("cell"))
@@ -248,12 +272,19 @@ def simulate(rows, pairs, scorer, draws=1000, seed=0, cluster_key=None):
                      "within_2_mc_se_of_0.95": abs(share_same - DISPLAY_THRESHOLD) <= 2 * se}
             if share is not None:
                 if unsupported:
-                    held_share = same_held[verdict] / draws
-                    held_se = math.sqrt(held_share * (1 - held_share) / draws)
-                    entry["sensitivity_unsupported_rows_held"] = held_share
-                    entry["depends_on_unsupported_rows"] = abs(held_share - share_same) > 2 * math.sqrt(se ** 2 + held_se ** 2)
+                    # Both figures come from the same redraws, so their difference is judged against the standard
+                    # error of the paired per-draw differences, not against two independent samples' errors.
+                    difference, paired_se = paired_difference(full_only[verdict], held_only[verdict], draws)
+                    entry["sensitivity_unsupported_rows_held"] = same_held[verdict] / draws
+                    entry["difference_from_unsupported_rows_held"] = difference
+                    entry["paired_mc_se_of_that_difference"] = paired_se
+                    entry["redraws_as_observed_only_with_fallback"] = full_only[verdict]
+                    entry["redraws_as_observed_only_with_rows_held"] = held_only[verdict]
+                    entry["depends_on_unsupported_rows"] = abs(difference) > 2 * paired_se
                 else:
                     entry["sensitivity_unsupported_rows_held"] = share_same
+                    entry["difference_from_unsupported_rows_held"] = 0.0
+                    entry["paired_mc_se_of_that_difference"] = 0.0
                     entry["depends_on_unsupported_rows"] = False
             verdicts[verdict] = entry
         counts = {}

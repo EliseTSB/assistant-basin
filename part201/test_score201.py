@@ -18,6 +18,21 @@ PLAIN = 'I am a helpful assistant and I like to answer questions.'
 PLAN = run201.plan()
 # How many rows of each pass differ from pass A in the baseline (the first N rows of the pass, in plan order).
 DIFFER = {'C': 60, 'M': 100, 'B': 20, 'F8': 40}
+# The launch that writes each process's passes, as the runner numbers them in load.json.
+LAUNCH_OF = {'bf16-main': 0, 'bf16-second': 1, 'float32': 2}
+
+
+def push_hash(row_id):
+    """One push per row, whatever the pass: the runner's hash does not depend on the call's other rows."""
+    return hashlib.sha256(row_id.encode('utf-8')).hexdigest()
+
+
+def receipt_for(name, call):
+    """A call receipt as the runner writes it to its launch's entry in load.json."""
+    pushed = any(r['unit_id'] is not None for r in call['rows'])
+    return {'pass': name, 'call': call['call'], 'row_ids': list(call['row_ids']), 'row_count': len(call['rows']),
+            'pushed': pushed, 'seconds': 10.0, 'generation_steps': 4, 'hook_firings': {'5': 3} if pushed else {},
+            'forward_passes': 3, 'attempts': 1}
 
 
 def row_for(pass_name, call, slot, spec, index, differ, f8_tokens):
@@ -40,7 +55,8 @@ def row_for(pass_name, call, slot, spec, index, differ, f8_tokens):
     pushed = spec['unit_id'] is not None
     return {'pass': pass_name, 'process': s.PROCESS_OF[pass_name], 'row_id': spec['row_id'], 'unit_id': spec['unit_id'],
             'arm': spec['arm'], 'kind': spec['kind'], 'question_index': spec['question_index'], 'call': call['call'],
-            'call_rows': call['row_ids'], 'slot': slot, 'launch': 0, 'prompt_tokens': 30, 'pad_tokens': 0,
+            'call_rows': call['row_ids'], 'slot': slot, 'launch': LAUNCH_OF[s.PROCESS_OF[pass_name]],
+            'prompt_tokens': 30, 'pad_tokens': 0, 'push_sha256': push_hash(spec['row_id']) if pushed else None,
             'tokens': tokens, 'top1': top1, 'top2': top2, 'top1_logit': [16.0] * 4, 'margin': margin,
             'emitted_logit': [16.0] * 4, 'emitted_is_max': True, 'argmax_agrees': True, 'nonfinite': False,
             'finish': 'eos', 'answer': answer, 'token_count': 4, 'seconds': 10.0,
@@ -62,14 +78,18 @@ def build(differ=None, plan=PLAN, smoke=False):
                 index += 1
     data = (json.dumps(plan, indent=2, ensure_ascii=False) + '\n').encode('utf-8')
     digest = hashlib.sha256(data).hexdigest()
-    base = {'revision': 'rev1', 'plan_sha256': digest, 'attn_implementation': 'eager', 'dtype': 'torch.bfloat16'}
+    inputs = {'units_sha256': 'smoke-units', 'medians_sha256': 'smoke-medians'} if smoke else dict(s.registered_inputs())
+    base = {'revision': 'rev1', 'model_snapshot': 'rev1', 'plan_sha256': digest, 'attn_implementation': 'eager',
+            'dtype': 'torch.bfloat16', 'inputs': inputs}
     upcast = {'kept_bf16': 249, 'converted_to_float32': 177, 'restored_f32_from_checkpoint': 48}
-    float_calls = [{'pass': name, 'call': call['call'], 'hook_firings': {'5': 3}, 'forward_passes': 3}
-                   for name in s.FLOAT_PASSES for call in plan['passes'][name]['calls']]
+
+    def receipts(process):
+        return [receipt_for(name, call) for name in run201.PROCESSES[process] for call in plan['passes'][name]['calls']]
+
     load = {'part': 201, 'smoke': smoke, 'plan_sha256': digest, 'loads': [
-        dict(base, launch=0, process='bf16-main', calls=[], G5={'passed': True, 'rows': 8}),
-        dict(base, launch=1, process='bf16-second', calls=[]),
-        dict(base, launch=2, process='float32', calls=float_calls, upcast=upcast, compute_dtype='torch.float32')]}
+        dict(base, launch=0, process='bf16-main', calls=receipts('bf16-main'), G5={'passed': True, 'rows': 8}),
+        dict(base, launch=1, process='bf16-second', calls=receipts('bf16-second')),
+        dict(base, launch=2, process='float32', calls=receipts('float32'), upcast=upcast, compute_dtype='torch.float32')]}
     runs = {b: [{'prompt': i, 'tokens': [i, i + 1, 2], 'margins': [1.0, 1.0, 1.0]} for i in range(8)] for b in ('1', '2')}
     kernel = {'attn_implementation': 'eager', 'dtype_requested': 'float32-upcast', 'revision': 'rev1',
               'load': {'upcast': upcast}, 'runs': copy.deepcopy(runs)}
@@ -212,7 +232,7 @@ class GatesAreReadPerPrecision(unittest.TestCase):
         fx = build()
         fx['kernel'], fx['reference'] = real, real
         for launch in fx['load']['loads']:
-            launch['revision'] = real['revision']
+            launch['revision'] = launch['model_snapshot'] = real['revision']
         r = run(fx)
         self.assertTrue(r['gates']['G1']['kernel']['passed'], r['gates']['G1'])
         self.assertEqual(verdicts(r)['201.7'], 'held')
@@ -253,6 +273,29 @@ class GatesAreReadPerPrecision(unittest.TestCase):
         fx['load']['loads'][2]['calls'][0]['hook_firings'] = {'5': 2}
         self.assertFalse(run(fx)['gates']['G4']['passed'])
 
+    def test_a_missing_pass_k_is_not_run_and_a_wrong_one_is_an_invalid_float32_run(self):
+        fx = build()
+        fx['kernel'] = None                                     # pass K's record is not there
+        r = run(fx)
+        self.assertEqual((verdicts(r)['201.7'], r['decision']['rule']), ('not run', 4))
+        self.assertIn('201.7: not run', r['decision']['readings'])
+        self.assertIn('kernel record absent', s.render(r))
+        fx = build()
+        fx['kernel']['attn_implementation'] = 'sdpa'            # it is there, and it is not an eager record
+        r = run(fx)
+        self.assertEqual(r['decision']['rule'], 2)
+        self.assertIn('kernel record FAILED', s.render(r))
+
+    def test_a_launch_that_loaded_another_snapshot_fails_g1(self):
+        fx = build()
+        fx['load']['loads'][2]['model_snapshot'] = 'another'    # the float32 launch's path named another snapshot
+        r = run(fx)
+        self.assertFalse(r['gates']['G1']['bf16']['passed'] or r['gates']['G1']['float32']['passed'])
+        self.assertTrue(all(v.startswith('not read') for k, v in verdicts(r).items() if k != '201.7'), verdicts(r))
+        fx = build()
+        del fx['load']['loads'][0]['model_snapshot']            # not recorded is not evidence
+        self.assertFalse(run(fx)['gates']['G1']['bf16']['passed'])
+
     def test_g2_failure_withdraws_the_margin_readings_only(self):
         fx = build()
         rows_of(fx, 'C')[0]['emitted_is_max'] = False
@@ -261,6 +304,155 @@ class GatesAreReadPerPrecision(unittest.TestCase):
         self.assertEqual((v['201.5'], v['201.9'], v['201.11']), ('not read (Gate G2 failed)',) * 3)
         self.assertEqual(v['201.2'], 'held')
         self.assertTrue(str(r['ties']).startswith('not read'))
+
+
+class RowsTraceToLaunchesAndReceipts(unittest.TestCase):
+    """Alden's review of a3a40b1 (council part201-design-review #11, point 2): a row is read only through the launch
+    that wrote it and that launch's receipt for its call."""
+
+    def test_the_baseline_is_internally_consistent(self):
+        fx = build()
+        loads = fx['load']['loads']
+        for row in fx['rows']:
+            launch = loads[row['launch']]
+            self.assertEqual(launch['process'], s.PROCESS_OF[row['pass']])
+            receipt = run201.receipt_of(fx['load'], row['launch'], row['pass'], row['call'])
+            self.assertEqual(receipt['row_ids'], row['call_rows'])
+        self.assertEqual({r['launch'] for r in rows_of(fx, 'A2')}, {1})
+        self.assertEqual({r['launch'] for r in rows_of(fx, 'F1')}, {2})
+
+    def test_a_row_naming_another_process_s_launch_fails_g3_for_its_precision(self):
+        fx = build()
+        for r in rows_of(fx, 'F8')[:8]:
+            r['launch'] = 0
+        r = run(fx)
+        self.assertTrue(r['gates']['G3']['bf16']['passed'])
+        self.assertFalse(r['gates']['G3']['float32']['passed'])
+        self.assertIn('F8 call 0: written by launch 0, a bf16-main launch', r['gates']['G3']['float32']['problems'])
+        self.assertTrue(verdicts(r)['201.8'].startswith('not read'))
+        self.assertEqual(verdicts(r)['201.2'], 'held')
+
+    def test_a_missing_call_receipt_is_a_failure_not_a_skipped_check(self):
+        fx = build()
+        del fx['load']['loads'][2]['calls'][0]                 # F8 call 0: its rows are on disk, its receipt is not
+        r = run(fx)
+        self.assertIn('F8 call 0: launch 2 holds no receipt for it', r['gates']['G3']['float32']['problems'])
+        self.assertFalse(r['gates']['G4']['float32']['passed'])
+        self.assertEqual(r['gates']['G4']['float32']['hook_count_failures'][0], {'pass': 'F8', 'call': 0, 'receipt_present': False,
+                                                                             'hook_firings': None, 'forward_passes': None})
+        self.assertEqual((r['decision']['rule'], verdicts(r)['201.2']), (2, 'held'))
+        fx = build()
+        del fx['load']['loads'][0]['calls'][5]                 # a pass-A call
+        r = run(fx)
+        self.assertFalse(r['gates']['G3']['bf16']['passed'])
+        self.assertFalse(r['gates']['G4']['bf16']['passed'])
+        self.assertTrue(all(v.startswith('not read') for k, v in verdicts(r).items() if k != '201.7'), verdicts(r))
+
+    def test_a_receipt_for_other_rows_and_a_launch_that_is_not_in_the_record(self):
+        fx = build()
+        receipt = fx['load']['loads'][0]['calls'][0]
+        receipt['row_ids'] = receipt['row_ids'][::-1]
+        self.assertIn('A call 0: its receipt names other rows', run(fx)['gates']['G3']['bf16']['problems'])
+        fx = build()
+        rows_of(fx, 'M')[0]['launch'] = 7
+        self.assertFalse(run(fx)['gates']['G3']['bf16']['passed'])
+        fx = build()
+        rows_of(fx, 'M')[0]['launch'] = None
+        self.assertIn('M call 0: its rows do not name one launch', run(fx)['gates']['G3']['bf16']['problems'])
+
+    def test_a_again_shares_pass_a_s_launch_and_a2_does_not(self):
+        # Pass A's first two calls redone by a later bf16-main launch, the repeat left with the first launch.
+        fx = build()
+        first = fx['load']['loads'][0]
+        fx['load']['loads'].append(dict(first, launch=3, calls=[c for c in first['calls'] if c['pass'] == 'A' and c['call'] < 2]))
+        for r in rows_of(fx, 'A'):
+            if r['call'] < 2:
+                r['launch'] = 3
+        r = run(fx)
+        self.assertIn('A-again: a row was not written by the launch that wrote its pass-A row', r['gates']['G3']['bf16']['problems'])
+        self.assertTrue(verdicts(r)['201.1'].startswith('not read'))
+        # "Second process" rows written by the launch that wrote pass A.
+        fx = build()
+        fx['load']['loads'][0]['calls'] += fx['load']['loads'][1]['calls']
+        for r in rows_of(fx, 'A2'):
+            r['launch'] = 0
+        fx['load']['loads'][0]['process'] = 'bf16-main'
+        r = run(fx)
+        self.assertIn('A2: a row was written by a launch that also wrote pass A', r['gates']['G3']['bf16']['problems'])
+
+
+class OnePushPerRow(unittest.TestCase):
+    def test_a_float32_push_that_is_not_the_bf16_push_fails_g4_and_only_its_readings(self):
+        fx = build()
+        target = rows_of(fx, 'F8')[0]
+        target['push_sha256'] = 'f' * 64
+        r = run(fx)
+        self.assertTrue(r['gates']['G4']['bf16']['passed'])
+        self.assertFalse(r['gates']['G4']['float32']['passed'])
+        self.assertEqual(r['gates']['G4']['float32']['rows_whose_push_hash_is_not_the_bf16_one'], [target['row_id']])
+        v = verdicts(r)
+        self.assertEqual((v['201.9'], v['201.10'], v['201.2']), ('not read (Gate G4 failed)', 'not read (Gate G4 failed)', 'held'))
+
+    def test_two_bf16_passes_with_different_pushes_for_one_row_block_the_bf16_readings(self):
+        fx = build()
+        rows_of(fx, 'C')[0]['push_sha256'] = 'e' * 64
+        r = run(fx)
+        self.assertFalse(r['gates']['G4']['bf16']['passed'])
+        self.assertEqual(len(r['gates']['G4']['bf16']['rows_with_more_than_one_push_hash']), 1)
+        self.assertTrue(all(v.startswith('not read') for k, v in verdicts(r).items() if k != '201.7'), verdicts(r))
+
+    def test_a_pushed_row_without_a_push_hash_fails(self):
+        # The hash is missing wherever the row appears, so no two passes disagree: only "a pushed row has a hash"
+        # can catch it.
+        fx = build()
+        target = rows_of(fx, 'A')[0]['row_id']
+        for r in fx['rows']:
+            if r['row_id'] == target:
+                r['push_sha256'] = None
+        g4 = run(fx)['gates']['G4']
+        self.assertEqual(g4['bf16']['rows_with_more_than_one_push_hash'], [])
+        self.assertFalse(g4['bf16']['passed'])
+        self.assertIn(f'A/{target}', g4['bf16']['failed_rows'])
+
+    def test_changed_medians_fail_g4_while_the_plan_and_the_local_differences_stay_green(self):
+        fx = build()
+        fx['load']['loads'][2]['inputs'] = dict(fx['load']['loads'][2]['inputs'], medians_sha256='0' * 64)
+        r = run(fx)
+        self.assertTrue(r['gates']['G3']['passed'] and r['gates']['G4']['bf16']['passed'])
+        self.assertEqual(r['gates']['G4']['failed'], 0)                      # every local push difference is still zero
+        self.assertFalse(r['gates']['G4']['float32']['passed'])
+        self.assertFalse(r['gates']['G4']['float32']['inputs_agree_with_the_bf16_launches'])
+        fx = build()
+        fx['load']['loads'][1]['inputs'] = dict(fx['load']['loads'][1]['inputs'], medians_sha256='0' * 64)
+        self.assertFalse(run(fx)['gates']['G4']['bf16']['inputs_agree_across_launches'])
+        fx = build()
+        for launch in fx['load']['loads']:                                    # one set of inputs, but not the registered files
+            launch['inputs'] = {'units_sha256': 'x', 'medians_sha256': 'y'}
+        g4 = run(fx)['gates']['G4']
+        self.assertEqual((g4['bf16']['inputs_agree_across_launches'], g4['bf16']['inputs_are_the_registered_files'], g4['bf16']['passed']),
+                         (True, False, False))
+        fx = build()
+        del fx['load']['loads'][0]['inputs']
+        self.assertFalse(run(fx)['gates']['G4']['bf16']['passed'])
+
+    def test_a_bf16_row_needs_bf16_at_the_hook(self):
+        # A hook that never fired leaves no dtype and no measured difference; neither reads as "the same push".
+        fx = build()
+        rows_of(fx, 'A')[0]['hook_dtype'] = None
+        self.assertFalse(run(fx)['gates']['G4']['bf16']['passed'])
+        fx = build()
+        rows_of(fx, 'A')[0]['hook_dtype'] = 'torch.float32'
+        self.assertFalse(run(fx)['gates']['G4']['bf16']['passed'])
+        fx = build()
+        rows_of(fx, 'A')[0]['push_max_abs_diff'] = None
+        self.assertFalse(run(fx)['gates']['G4']['bf16']['passed'])
+
+    def test_bf16_calls_need_their_hook_evidence_too(self):
+        fx = build()
+        fx['load']['loads'][0]['calls'][0]['hook_firings'] = {'5': 2}
+        r = run(fx)
+        self.assertFalse(r['gates']['G4']['bf16']['passed'])
+        self.assertTrue(verdicts(r)['201.2'].startswith('not read'))
 
 
 class States(unittest.TestCase):
@@ -297,6 +489,28 @@ class States(unittest.TestCase):
         self.assertAlmostEqual(cost['3']['projected_slowdown'], 2.6)
         self.assertEqual((verdicts(r)['201.11'], r['decision']['rule']), ('held', 4))        # the forecast holds; the gate is too dear
         self.assertIn('cost at the selected gate of 3 steps: 2.60', r['decision']['readings'])
+
+    def test_a_differing_row_without_a_margin_unscores_its_prediction(self):
+        fx = build()
+        target = rows_of(fx, 'A')[0]
+        for field in ('margin', 'top1_logit'):
+            target[field] = target[field][:1]                  # nothing recorded at position 1, where A and C part
+        r = run(fx)
+        self.assertEqual(verdicts(r)['201.5'], 'not scored (1 differing rows have no recorded margin at the first difference)')
+        self.assertEqual(r['predictions']['201.5']['estimate']['rows_without_a_recorded_margin'], [target['row_id']])
+
+    def test_pass_m_padding_and_the_margin_share_s_denominator_are_reported(self):
+        fx = build()
+        for i, r in enumerate(rows_of(fx, 'M')):
+            r['pad_tokens'] = i % 3                              # two thirds of the rows padded
+            r['prompt_tokens'] = 30 - i % 3
+        r = run(fx)
+        self.assertEqual((r['pass_M_padding']['rows'], r['pass_M_padding']['rows_left_padded'], r['pass_M_padding']['calls']), (408, 272, 51))
+        self.assertEqual(r['pass_M_padding']['calls_with_unequal_prompt_lengths'], 51)
+        self.assertEqual(r['bf16_decodes_in_the_margin_share'], 384 + 16 + 384 + 408 + 216 + 96)
+        text = s.render(r)
+        self.assertIn('Pass M padding', text)
+        self.assertIn('a row decoded in several passes counts once per pass', text)
 
     def test_a_confident_divergence_stops_everything(self):
         fx = build()
