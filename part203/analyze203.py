@@ -5,7 +5,10 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
 import sys
+import tempfile
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -15,7 +18,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(ROOT))
 from part196.analyze196 import (EMBEDDING_SIZE, N_LAYERS, N_UNITS, UNITS_PER_LAYER,  # noqa: E402
-                                balanced_accuracy, choose_intermediate_layer, recall_by_class)
+                                balanced_accuracy, recall_by_class)
 from part196.record196 import MODEL_ID, MODEL_REVISION, manifest_sha  # noqa: E402
 from part203.select203 import EMOTIONS, N_FOLDS, PER_CELL, read_manifest  # noqa: E402
 
@@ -30,6 +33,7 @@ INNER_FOLDS = 5
 SUBSET_ACTORS = 3
 SUBSET_DRAWS = 5
 N_CLASSES = len(EMOTIONS)
+PREDICTIONS = ("203.1", "203.2", "203.3", "203.4", "203.5", "203.6", "203.7")   # PART203-DESIGN.md table
 MISSING_CLASS_SCORE = -1e6      # part196.analyze196._score_probe's fill for a class absent from training
 
 
@@ -57,9 +61,11 @@ def probe_scores(model: Any, x: np.ndarray) -> tuple[np.ndarray, list[int]]:
     count alone does not say which case this is, so `classes_` decides: a class absent from the training
     rows gets MISSING_CLASS_SCORE, below every present one.
 
-    `_score_probe` expands to SEVEN columns when the probe's classes are `[0..6]` or the first seven of
-    them, so a six-emotion probe trained on classes 0 to 5 comes back with seven columns whose seventh is
-    part196's `-1e6` fill for style 6. That column is not one of this part's six emotions and is dropped.
+    `_score_probe` expands to SEVEN columns (part196's seven styles) whenever the probe's classes are not
+    exactly `[0..6]`, so a probe trained without some emotion comes back as seven columns with a `-1e6`
+    fill in each absent style's column. The expansion is detected from the column count (`raw.shape[1]`
+    minus the classes' own count), and the probe's `classes_` columns are taken from the left, where
+    `_score_probe` wrote them; the absent classes get MISSING_CLASS_SCORE below.
     """
     from part196.analyze196 import _score_probe
 
@@ -67,8 +73,9 @@ def probe_scores(model: Any, x: np.ndarray) -> tuple[np.ndarray, list[int]]:
     raw = np.asarray(_score_probe(model, x), dtype=np.float64)
     if raw.ndim != 2:
         raise ValueError(f"probe scores have shape {raw.shape}")
-    if raw.shape[1] == len(classes) + 1 and classes == list(range(len(classes))):
-        raw = raw[:, :len(classes)]          # part196's seven-column expansion, seventh column dropped
+    if raw.shape[1] > len(classes):
+        # part196's expansion pads to its seven styles; the probe's own columns are the first len(classes).
+        raw = raw[:, :len(classes)]
     if raw.shape[1] != len(classes):
         raise ValueError(f"probe scores have shape {raw.shape} for classes {classes}")
     full = np.full((len(raw), N_CLASSES), MISSING_CLASS_SCORE, dtype=np.float64)
@@ -85,7 +92,10 @@ def _log_loss(model: Any, x: np.ndarray, y: np.ndarray) -> float:
     full = np.zeros((len(y), N_CLASSES), dtype=np.float64)
     for column, cls in enumerate(classes):
         full[:, int(cls)] = probabilities[:, column]
+    # Floor at 1e-12 and renormalise: sklearn's log_loss warns when a row does not sum to one, and clipping
+    # alone can push a row slightly above it.
     full = np.clip(full, 1e-12, 1.0)
+    full /= full.sum(axis=1, keepdims=True)
     return float(log_loss(y, full, labels=list(range(N_CLASSES))))
 
 
@@ -126,6 +136,44 @@ def choose_c_inner(x: np.ndarray, y: np.ndarray, actors: np.ndarray,
             "rule": "lowest mean held-out-actor log loss over the grid; ties to the lower C"}
 
 
+def choose_layer_inner(activations: np.ndarray, labels: np.ndarray, actors: np.ndarray, *,
+                       n_layers: int = N_LAYERS, width: int = UNITS_PER_LAYER) -> tuple[int, list[float | None]]:
+    """Choose E's layer by inner actor-grouped CV on the training actors: five inner folds, the same
+    `actor_folds` split the C selection uses, mean six-emotion balanced accuracy at C = 1.0, ties to the
+    earlier layer.
+
+    This is the design's rule (Method, "E, the mean MLP input of one layer"). part196's
+    `choose_intermediate_layer` is leave-one-speaker-out and fits its probe at its own fixed C, so it is not
+    used here; its tie rule (`max` on (value, -index), i.e. the earlier layer) is kept.
+    """
+    values = np.asarray(activations)
+    y = np.asarray(labels, dtype=np.int64)
+    groups = np.asarray(actors).astype(str)
+    if values.shape[1] != n_layers * width:
+        raise ValueError(f"layer selection needs {n_layers} x {width} activations, got {values.shape[1]}")
+    folds = actor_folds(groups)
+    if len(folds) < 2:
+        raise ValueError("inner CV needs at least two actor folds")
+    means: list[float | None] = []
+    for layer in range(n_layers):
+        cols = slice(layer * width, (layer + 1) * width)
+        scores = []
+        for fold in folds:
+            train = np.setdiff1d(np.arange(len(y)), fold)
+            if len(np.unique(y[train])) != N_CLASSES or len(np.unique(y[fold])) != N_CLASSES:
+                raise ValueError("inner actor fold lacks one of the six emotions")
+            model = fit_probe_c(values[train, cols], y[train], P196_C)
+            score = _balanced_accuracy(y[fold], model.predict(np.asarray(values[fold, cols], dtype=np.float32)))
+            if score is not None:
+                scores.append(score)
+        means.append(float(np.mean(scores)) if scores else None)
+    usable = [index for index, value in enumerate(means) if value is not None]
+    if not usable:
+        raise ValueError("no valid inner actor fold for the layer choice")
+    best = max(usable, key=lambda index: (means[index], -index))
+    return int(best), means
+
+
 def subset_draws(train_actors: list[str], draws: int = SUBSET_DRAWS,
                  size: int = SUBSET_ACTORS) -> list[list[str]]:
     """Fixed 3-actor draws from a fold's training actors (SHA-256 order, rotating, wraparound)."""
@@ -144,9 +192,15 @@ def subset_draws(train_actors: list[str], draws: int = SUBSET_DRAWS,
 # ---------------------------------------------------------------- metrics
 
 def _text_cluster_bootstrap(fold_outputs: dict[str, dict[str, Any]], methods: list[str],
-                            pairs: list[tuple[str, str]], *, n_boot: int = BOOTSTRAPS,
+                            pairs: list[tuple[str, str]], *, n_boot: int | None = None,
                             seed: int = SEED) -> tuple[dict[str, Any], dict[str, Any]]:
-    """Actor-cluster bootstrap: resample actors within each held-out fold, recompute the fold mean."""
+    """Actor-cluster bootstrap: resample actors within each held-out fold, recompute the fold mean.
+
+    `n_boot` defaults to the module's `BOOTSTRAPS`, read here rather than bound at definition, so a caller
+    (or a test) that sets `analyze203.BOOTSTRAPS` gets that many draws.
+    """
+    if n_boot is None:
+        n_boot = BOOTSTRAPS
     rng = np.random.default_rng(seed)
     draws = {method: np.full(n_boot, np.nan) for method in methods}
     pair_draws = {f"{a}_minus_{b}": np.full(n_boot, np.nan) for a, b in pairs}
@@ -224,6 +278,8 @@ def read_records(rows: list[dict[str, str]], work_dir: Path) -> dict[str, np.nda
            "e": np.full((n, N_UNITS), np.nan, dtype=np.float16),
            "h": np.full((n, 7), np.nan, dtype=np.float32),
            "status": np.full(n, "missing", dtype="U32"),
+           # The recorder's Gate 1 field: True only when V's and D's decoders returned the same samples.
+           "v_same_samples": np.zeros(n, dtype=bool),
            "errors": np.asarray([""] * n, dtype=object)}
     for index, row in enumerate(rows):
         path = work_dir / "records" / f"{row['id']}.npz"
@@ -240,9 +296,11 @@ def read_records(rows: list[dict[str, str]], work_dir: Path) -> dict[str, np.nda
                     out["d"][index] = saved["emb"]
                     out["e"][index] = saved["act_mean"]
                     out["h"][index] = saved["acoustic"]
+                    # Missing means the recorder could not vouch for it, which `gate1` counts as a mismatch.
+                    out["v_same_samples"][index] = bool(saved["v_same_samples"]) if "v_same_samples" in saved else False
                 else:
                     out["errors"][index] = str(saved["reason"].item()) if "reason" in saved else ""
-        except (OSError, ValueError, KeyError, EOFError) as exc:
+        except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile) as exc:
             out["status"][index] = "record_error"
             out["errors"][index] = f"{type(exc).__name__}: {exc}"
     return out
@@ -250,8 +308,16 @@ def read_records(rows: list[dict[str, str]], work_dir: Path) -> dict[str, np.nda
 
 # ---------------------------------------------------------------- gates
 
-def gate1(rows: list[dict[str, str]], status: np.ndarray, v: np.ndarray, d: np.ndarray) -> dict[str, Any]:
-    """Gate 1: every planned clip recorded with finite V and D; folds actor-disjoint; cells complete."""
+def gate1(rows: list[dict[str, str]], status: np.ndarray, v: np.ndarray, d: np.ndarray,
+          v_same_samples: np.ndarray | None = None) -> dict[str, Any]:
+    """Gate 1: every planned clip recorded with finite V and D and V's input equal to D's; folds
+    actor-disjoint; cells complete.
+
+    `v_same_samples` is the recorder's per-clip statement that V and D were embedded from the same samples
+    (record203._record_one). A V-vs-D reading is only the comparison the design names when it holds on every
+    ok clip, so a False or missing value fails the gate. Passing None means the caller did not read it, which
+    fails the same way: the gate never passes without the evidence.
+    """
     problems = {}
     missing = [rows[i]["file"] for i in range(len(rows)) if status[i] != "ok"]
     if missing:
@@ -262,6 +328,11 @@ def gate1(rows: list[dict[str, str]], status: np.ndarray, v: np.ndarray, d: np.n
     if nonfinite:
         problems["nonfinite_vectors"] = nonfinite[:50]
         problems["nonfinite_vector_count"] = len(nonfinite)
+    same = np.zeros(len(rows), dtype=bool) if v_same_samples is None else np.asarray(v_same_samples, dtype=bool)
+    mismatched = [rows[i]["file"] for i in range(len(rows)) if status[i] == "ok" and not same[i]]
+    if mismatched:
+        problems["v_d_input_mismatch"] = mismatched[:50]
+        problems["v_d_input_mismatch_count"] = len(mismatched)
     fold_actors: dict[str, set[str]] = {}
     for row in rows:
         fold_actors.setdefault(row["fold"], set()).add(row["actor"])
@@ -358,7 +429,7 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
     out_dir.mkdir(parents=True, exist_ok=True)
     records = read_records(rows, work_dir)
     status, v, d, e, h = (records["status"], records["v"], records["d"], records["e"], records["h"])
-    g1 = gate1(rows, status, v, d)
+    g1 = gate1(rows, status, v, d, records["v_same_samples"])
     g2 = gate2(work_dir)
     if g1["verdict"] != "passed" or g2.get("verdict") != "passed":
         result = {"study": "part203", "status": "gates_failed", "gate1": g1, "gate2": g2}
@@ -395,20 +466,21 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
             fold_scores[f"{name}_p196"] = extra196["scores"]
             fold_classes[f"{name}_p196"] = extra196["classes"]
 
-        # E: Part 196's layer probe, layer chosen by inner actor-grouped CV on the training actors.
-        # part196.choose_intermediate_layer scores each inner speaker with the SEVEN-style
-        # balanced_accuracy (part196/analyze196.py:276), which returns None for a six-emotion fold, so it
-        # is driven here by Part 203's own six-class rule; the layer is still chosen on training actors only.
-        layer, inner = choose_intermediate_layer(e[train], train_y, actors[train], n_layers=N_LAYERS,
-                                                 width=UNITS_PER_LAYER, ba=_balanced_accuracy,
-                                                 n_classes=N_CLASSES)
+        # E: Part 196's layer probe, layer chosen by inner actor-grouped CV on the training actors: five
+        # inner actor folds (the same split `choose_c_inner` uses), mean six-emotion balanced accuracy at
+        # C = 1.0, ties to the earlier layer. The held-out fold never enters the choice.
+        layer, inner = choose_layer_inner(e[train], train_y, actors[train], n_layers=N_LAYERS,
+                                          width=UNITS_PER_LAYER)
         cols = slice(layer * UNITS_PER_LAYER, (layer + 1) * UNITS_PER_LAYER)
         out_e, extra_e = _fit_and_score(e[train, cols], train_y, e[test, cols], test_y, actors[train],
                                         c=P196_C)
         fold_pred["E_p196"] = extra_e["predictions"]
         fold_scores["E_p196"] = extra_e["scores"]
         fold_classes["E_p196"] = extra_e["classes"]
-        details["E"] = {"selected_layer": layer, "inner_balanced_accuracy": inner}
+        details["E"] = {"selected_layer": layer, "inner_balanced_accuracy": inner,
+                        "layer_inner_folds": len(actor_folds(actors[train])),
+                        "layer_rule": "five inner actor folds (SHA-256 order, round-robin), mean six-emotion "
+                                      "balanced accuracy at C = 1.0, ties to the earlier layer"}
 
         out_h, extra_h = _fit_and_score(h[train], train_y, h[test], test_y, actors[train], c=P196_C)
         fold_pred["H_p196"] = extra_h["predictions"]
@@ -421,10 +493,13 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
             chosen = np.flatnonzero(np.isin(actors[train], draw))
             for name in ("V", "E"):
                 x = readouts[name]
+                # Design Method: V's C by inner CV on the draw's actors; E at C = 1.0 (Part 196's probe),
+                # so E's drop isolates the actor count against the C = 1.0 all-training baseline.
+                draw_c = None if name == "V" else P196_C
                 if name == "E":
                     x = x[:, cols]
                 out_s, extra_s = _fit_and_score(x[chosen], train_y[chosen], x[test], test_y,
-                                                actors[train][chosen], c=None)
+                                                actors[train][chosen], c=draw_c)
                 subset_rows.append({"draw": draw_index, "actors": draw, "readout": name,
                                     "balanced_accuracy": out_s["balanced_accuracy"],
                                     "chosen_C": extra_s["c_selection"]["chosen_C"]})
@@ -435,9 +510,10 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
         fold_details[fold] = details
 
     methods = sorted(fold_outputs[next(iter(fold_outputs))]["predictions"])
+    # Prediction 203.4 is stated against E_p196_minus_D_p196: same clips, same C, both recorded Part 196's way.
     pairs = [("V_grid", "E_p196"), ("V_grid", "H_p196"), ("D_p196", "V_grid"), ("E_p196", "V_grid"),
-             ("V_grid", "V_p196"), ("D_grid", "D_p196")]
-    intervals, pair_intervals = _text_cluster_bootstrap(fold_outputs, methods, pairs)
+             ("E_p196", "D_p196"), ("V_grid", "V_p196"), ("D_grid", "D_p196")]
+    intervals, pair_intervals = _text_cluster_bootstrap(fold_outputs, methods, pairs, n_boot=BOOTSTRAPS)
 
     summary = {}
     for method in methods:
@@ -471,14 +547,24 @@ def analyze(*, manifest_path: Path, work_dir: Path, out_dir: Path) -> dict[str, 
               "three_actor_ablation": subset_summary, "folds": fold_details,
               "rules": {"c_grid": list(C_GRID), "p196_probe": {"C": P196_C, "class_weight": P196_CLASS_WEIGHT},
                         "bootstrap": {"draws": BOOTSTRAPS, "seed": SEED, "unit": "actor within held-out fold"},
-                        "predictions": "{{CLAUDE: predictions}}"}}
+                        "predictions": list(PREDICTIONS)}}
     _write(out_dir / "results.json", result)
     return result
 
 
 def _write(path: Path, value: dict[str, Any]) -> None:
-    path.write_text(json.dumps(value, indent=2, sort_keys=True, default=_jsonable,
-                               allow_nan=False) + "\n", encoding="utf-8")
+    """Write JSON atomically (temp file, fsync, os.replace), so a kill never leaves a half-written file."""
+    payload = json.dumps(value, indent=2, sort_keys=True, default=_jsonable, allow_nan=False) + "\n"
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    tmp = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(tmp, path)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def _jsonable(value: Any) -> Any:

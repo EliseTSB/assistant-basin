@@ -25,7 +25,9 @@ with path.open(encoding="utf-8", newline="") as source:
         raise SystemExit("manifest must have a 'file' column")
     for row in reader:
         name = row["file"]
-        if not re.fullmatch(r"\d{4}_IEO_[A-Z]{3}_[A-Z]{2}\.wav", name):
+        # CREMA-D: <actor>_<sentence code>_<emotion>_<intensity>.wav. The sentence code is any of the twelve
+        # (IEO, ITH, IOM, ...); no '/', no '..', so the target stays directly under the data directory.
+        if not re.fullmatch(r"\d{4}_[A-Z]{3}_[A-Z]{3}_[A-Z]{2}\.wav", name):
             raise SystemExit(f"unsafe or unexpected CREMA-D filename: {name!r}")
         print(name)
 PY

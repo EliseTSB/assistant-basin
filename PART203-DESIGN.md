@@ -153,4 +153,9 @@ and `.all_training_actors_mean`, and the same two for `E`.
   - The V/D reading rule names the interval's lower bound; intervals cover balanced accuracy only.
   - The three-actor ablation fits E at C = 1.0, as this design always said; the first build chose E's C by inner CV.
   - Code fixes from the same review (recorder Gate 1 write, download.sh's name check, the analyzer's V/D gate, the
-    timing-smoke run, atomic writes, error handling) are in the commit that carries this list.
+    timing-smoke run, atomic writes, error handling) are in the commit after this list, each with a test shown red on
+    the old code (41 tests). One more, found by the fold worker: the log loss used to choose C clipped probabilities
+    at 1e-12 without renormalising, so rows could sum slightly above 1; it now renormalises after the clip. This
+    changes loss values only at the floor, not the rule.
+  - Not changed: Part 196's recorder still crashes on a truncated record instead of retrying it (`_cached_status`);
+    Part 196 is published and is not edited for this part.
