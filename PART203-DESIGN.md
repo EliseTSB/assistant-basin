@@ -83,7 +83,8 @@ matched comparison.
 
 ## Size
 
-- Smallest effect worth knowing: {{CLAUDE: smallest effect}} (points of balanced accuracy on the six-way readout).
+- Smallest effect worth knowing: 5 points of balanced accuracy on the six-way readout (chance 16.7). Smaller gaps between
+  readouts would not change which explanation of 25.8% against 56.5% we act on.
 - Clips: 2,730 planned, 91 actors x 6 emotions x 5 clips.
 - Total: 2,730 clips, about {{CLAUDE: minutes}} minutes (Part 196's measured 0.68 s per 5-second clip, scaled by
   CREMA-D clip length; CREMA-D clips are short, so this is an estimate until a timing smoke is run).
@@ -103,13 +104,13 @@ matched comparison.
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 203.1 | {{CLAUDE: predictions}} | | |
-| 203.2 | {{CLAUDE: predictions}} | | |
-| 203.3 | {{CLAUDE: predictions}} | | |
-| 203.4 | {{CLAUDE: predictions}} | | |
-| 203.5 | {{CLAUDE: predictions}} | | |
-| 203.6 | {{CLAUDE: predictions}} | | |
-| 203.7 | {{CLAUDE: predictions}} | | |
+| 203.1 | `readouts.V_grid.mean_balanced_accuracy` is at least 0.45, and its `balanced_accuracy_actor_cluster_95` lower bound is above 1/6. Emotion in CREMA-D is acted and loud; with 91 actors the final audio vector should carry it, near Venn's 56.5% though not matched to it. | 70% | Claude |
+| 203.2 | The text marker does not matter: `readouts.D_grid.mean_balanced_accuracy` is within 0.03 of `readouts.V_grid.mean_balanced_accuracy`. CREMA-D clips are 2 to 3 s, so D's 10 s cap never bites, and I expect the encoder to place the audio the same way with or without `<|audio|>`. | 60% | Claude |
+| 203.3 | Regularisation matters: `V_grid_minus_V_p196.mean_difference` is at least +0.03, with Venn's grid choosing C of 10 or 100 on most folds (its log loss was still falling at 100). | 55% | Claude |
+| 203.4 | An intermediate layer at least ties the final vector here: `E_p196_minus_V_grid.mean_difference` is at least -0.02. Part 196's 37-point E over D was on four speakers; with 91 I expect the gap to shrink, not to reverse by much. | 60% | Claude |
+| 203.5 | The seven acoustic features carry part of it: `readouts.H_p196.mean_balanced_accuracy` is between 0.30 and 0.45 (pitch and loudness separate anger, sadness and neutral; disgust and fear are hard without spectral detail). | 65% | Claude |
+| 203.6 | Few speakers is most of Part 196's story: `three_actor_ablation.V.three_actor_draws_mean` is at least 0.10 below `three_actor_ablation.V.all_training_actors_mean`. | 65% | Claude |
+| 203.7 | And it hurts the final vector more than the intermediate layer: V's drop in 203.6 exceeds E's drop (E's all-training mean minus E's three-actor mean) by at least 0.05. | 50% | Claude |
 
 Quantities a prediction can be written about, each named by its key in `results.json`: `readouts.V_grid`,
 `readouts.D_grid`, `readouts.V_p196`, `readouts.D_p196`, `readouts.E_p196`, `readouts.H_p196` (each
