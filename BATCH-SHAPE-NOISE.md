@@ -59,11 +59,17 @@ These need no new science, only a recorder and a small tool.
 - **Sensitivity of each verdict.** `tools/shape_floor.py` takes the rows, their labels, the replicate pairs and the
   part's scorer, redraws the labels 1,000 times and rescores. A redraw gives each row a transition drawn from the
   replicate rows that started with the same labels, so labels move together and each direction keeps its own rate
-  and denominator. It is run under named scenarios: rows independent; rows of one unit moving together (within-unit
-  share 0.5 and 1); and rates at their upper 95% bounds. Each registered verdict is reported with the share of
-  redraws in which it comes out the same, per scenario. This is a sensitivity figure conditional on those scenarios
-  and on the replicate's shape pair, not a 95% guarantee. Under 95% in any scenario, the verdict column says "inside
-  the shape floor", whichever side it fell on.
+  and denominator. It is run under named scenarios: `independent`; `shared-change-0.5` and `shared-change-1`, where
+  with that probability (a mixture probability, not an estimated correlation) the rows of one unit share one draw
+  for the event "this row changes"; and `upper-marginal-independent`, independent flips at each direction's upper
+  95% bound, which stresses the marginal rates and is not a bound on a verdict. Each registered verdict is reported
+  with the share of redraws in which it comes out the same, per scenario, with its Monte Carlo error. This is a
+  sensitivity figure conditional on those scenarios and on the replicate's shape pair, not a 95% guarantee. The tool
+  prints, for every starting label vector, how many target rows have it and how many replicate pairs support it; a
+  vector with one pair redraws deterministically, a vector with none falls back to independent per-label flips, and
+  a label value never seen as a starting value is held and counted as unmeasured. A verdict that changes when the
+  unsupported rows are held is reported as depending on them, not as measured. Under 95% in any scenario, the
+  verdict column says "inside the shape floor", whichever side it fell on.
 - **Bars with room.** In the design's Size section, say how many rows a registered bar is from the expected value. A
   bar closer than twice the shape SD cannot be scored cleanly; move it or say so before the run.
 - **Row-level claims** are made only for rows that came out the same at both shapes, or are labelled "one draw".
@@ -93,10 +99,12 @@ counts as not held. The default is not to build.
 4. **No build.** Any of 201.7, 201.8, 201.9 or 201.11 is not scored or not held for another reason (too few
    divergences to read, a cut arm, cost unknown or over 2). Section 1 is the standing procedure. A float32 decode
    may still serve as a part's replicate when its claim is about single rows or named units.
-5. **Build a candidate.** 201.7, 201.8, 201.9 and 201.11 all hold. A margin-gated decoder is built: decode in bf16
-   as now; at any step where a row's margin is inside the gate, recompute that step for that row in float32 from the
-   full prefix and take the float32 choice. The gate is the smallest number of steps that covers every first
-   divergence Part 201 saw between A and F8, plus one. It is a candidate until its own part shows, on at least 200
+5. **Build a candidate.** 201.7, 201.8, 201.9 and 201.11 all hold, and the projected slowdown at the selected gate
+   is at most 2. A margin-gated decoder is built: decode in bf16 as now; at any step where a row's margin is inside
+   the gate, recompute that step for that row in float32 from the full prefix and take the float32 choice. The gate
+   is the largest pass-A margin, in bf16 steps, at a first difference between A and F8, rounded up to a whole step,
+   plus one. Its cost is priced at that width, not at 201.11's two steps: if the gate is wider than two steps and
+   its projected slowdown is over 2 or cannot be priced, rule 4 applies. It is a candidate until its own part shows, on at least 200
    rows at two shapes, that its answers equal a full float32-upcast decode of the same rows; only then does a
    write-up call a gated answer the float32 answer, and only for the model, card and shapes tested. Float32 itself
    is not guaranteed identical across devices or batch sizes (PyTorch's numerical accuracy notes); Part 201 measures
@@ -138,7 +146,8 @@ Under 2, Controls:
 - [ ] **Shape replicate, for any readout from generated text.** Record token ids and per-position top-two margins for
   every row. Regenerate a seeded sample of at least 200 rows at a second batch shape and report each label's flips by
   direction. Report every registered verdict with its sensitivity from `tools/shape_floor.py` under the named
-  scenarios; under 95% in any is "inside the shape floor". (Part 200: 76 of 200 eager answers changed with the batch shape; labels flipped on 2 to 6.)
+  scenarios, with the support table; under 95% in any is "inside the shape floor", and a verdict that depends on
+  rows the replicate does not support is unresolved. (Part 200: 76 of 200 eager answers changed with the batch shape; labels flipped on 2 to 6.)
 - [ ] **Row-level claims need a stable row.** Quote, or name, only rows that came out the same at both shapes, or say
   "one draw".
 

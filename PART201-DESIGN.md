@@ -86,7 +86,8 @@ file Part 200 checked).
 - Subsets: C-subset = the first 12 units in that order on all 16 questions (192 rows). F8-subset = the first 16 units
   on six questions, the three lowest-numbered identity and three lowest-numbered maker questions (96 rows); these are
   exactly pass A's first two calls for each of those questions. F1-subset = the first 8 units on the same six
-  questions (48 rows), which lie inside both the C-subset and the F8-subset.
+  questions (48 rows), which lie inside both the C-subset and the F8-subset. Both float32 passes take the six
+  questions in the order identity, maker, identity, maker, identity, maker, so their first half holds both kinds.
 
 **Passes.** Each pass decodes its rows with `model.generate` and a recorder (below). bf16 passes run in one process
 unless stated.
@@ -124,8 +125,12 @@ clause of 201.1 is not scored (`part201/ROWS-SCHEMA.md`).
 
 **Timing probe.** At the end of the float32 process: full-prefix float32 forward passes with no cache, on the first
 call's rows of pass F8, at 1, 4 and 8 rows and prefix lengths of 32, 64 and 96 tokens, five repetitions each,
-synchronised, outputs discarded. This is the work a re-check at a flagged step would do, and 201.11 is computed from
-it; F8's own cached step time is recorded beside it and is not used as its stand-in.
+synchronised, outputs discarded. The model body runs over the whole prefix and the output head on the last position
+only, which is what a re-check needs. The push is added at every position of the prefix: the add costs the same, but
+a real re-check must push at generated positions only, so the probe prices the work and does not validate a
+re-check's answers. 201.11 is computed from it; F8's own cached step time is recorded beside it and is not used as
+its stand-in. A flagged step whose prefix is longer than 96 tokens is priced by scaling the 96-token figure with
+length: an approximation, not a measurement, and the scorer reports how many flagged steps it covers.
 
 **Labels.** Part 163's, by its own code, on every decoded answer: name gone and maker gone (`part163/score163.py`),
 broken (`part86/triage86.py`), and the Part 161 Qwen rule (`results/part163/extra163.py`).
@@ -191,9 +196,12 @@ does not pass through it.
   216 answers: about 15 minutes at Part 200's 0.24 a second. Float32: not measured anywhere on this card.
 - Pilot: required (over 1,000 generations). The first 3 chunks of pass A time the recorder's cost; the float32 process
   starts with pass K at batch 1 on 2 prompts. Stopping rules: bf16 chunked under 0.3 answers a second, stop and fix
-  the recorder; float32 at a rate that puts K, F8 and F1 together over 45 minutes, cut F8 to its first 48 rows and F1
-  to its first 24, and record the cut before any float32 answer is read; a RAM-guard stop in the float32 process ends
-  that arm, and 201.7 to 201.11 are reported as not run.
+  the recorder; float32 at a rate that puts F8 and F1 together over 45 minutes, cut F8 to its first 48 rows and F1
+  to its first 24, and record the cut before any float32 answer is read. The rate is projected from F8's first call,
+  with a one-row call taken as 0.4635 of an 8-row call (Part 200's bf16 rates: 0.24 against 0.89 answers a second).
+  Pass K is its own launch step and is not in that sum. A cut arm is reported with its numbers, and 201.8, 201.9 and
+  201.10 are then not scored. A RAM-guard stop in the float32 process ends that arm, and 201.8 to 201.11 are reported
+  as not run; 201.7 is read from pass K's own record.
 
 ## Optimization
 
@@ -243,7 +251,12 @@ measurement exists yet. This is the same bar the plan's decision uses.
 - Every number is printed by `part201/score201.py` from `rows.jsonl`; verdicts as registered, by its comparison
   functions. The thresholds in 201.2, 201.5, 201.9 and 201.10 were chosen after reading Part 200 and Part 183's
   record, so those are checks that the earlier numbers repeat on new rows, not independent discoveries.
-- G2 failing withdraws 201.5 and 201.9 and every margin table. G4 failing withdraws 201.9 and 201.10.
+- G2 failing withdraws 201.5, 201.9, 201.11 and every margin table. G4 failing withdraws 201.9 and 201.10.
+- Gates G1 and G3 are read per precision. A float32 arm that did not run or fails its gates leaves the bf16
+  predictions (201.1 to 201.6) standing. A bf16 gate failing, or the positive control failing, withholds every
+  reading except 201.7, which rests on pass K's record alone.
+- If pass A's first two calls and their repeat were not decoded by the same launch, 201.1 is scored on its A2 clause
+  alone and says so.
 - A pair with no differing rows makes its "of the rows that differ" prediction not scored, and that is reported, as is
   the number of differing rows behind every such percentage. A label with fewer than 8 flips is not scored in 201.6
   (with 4 or fewer the direction clause cannot fail). 201.11 is not scored without the timing probe.
@@ -256,7 +269,8 @@ measurement exists yet. This is the same bar the plan's decision uses.
   this model, and are used in `BATCH-SHAPE-NOISE.md` as a prior only until a part measures its own.
 - What the float32 results decide is written before the run, in `BATCH-SHAPE-NOISE.md` under "After Part 201", as an
   ordered list whose default is not to build: a candidate margin-gated decoder is built only if 201.7, 201.8, 201.9
-  and 201.11 all hold, and a prediction that is not scored counts as not held.
+  and 201.11 all hold and the projected slowdown at the gate actually selected is at most 2; a prediction that is
+  not scored counts as not held. 201.11 itself stays the two-step forecast it is registered as.
 - The headline reading "it is rounding at near-ties" is withdrawn if 201.5 fails; "float32 on the card is the same
   answer at any shape" is withdrawn if 201.7 or 201.8 fails.
 
@@ -271,6 +285,10 @@ measurement exists yet. This is the same bar the plan's decision uses.
 - Pass K compares the card's float32 compute with the CPU's on plain prompts only, and both are the same upcast
   method: an error shared by both (a checkpoint tensor restored wrongly on the 4B) would not show.
 - Nothing here re-scores an earlier part.
+- The verdict sensitivities from `tools/shape_floor.py` are conditional on the replicate's transitions carrying over
+  to rows with the same starting labels. A starting label vector the replicate holds once redraws deterministically,
+  and one it does not hold falls back to another model; the tool prints the support for each vector and marks a
+  verdict that depends on unsupported rows.
 - One driver. The card's Windows driver is 32.0.101.9150, installed 2026-10-12, so every A770 part since 2026-10-15
   ran on it, Part 178's SDPA finding included. An Intel Community report (2026-11-07, in `PRIOR-ART.md`) names this
   driver, against 32.0.101.8724, for a regression in another stack. Nothing we have run separates the card from its
