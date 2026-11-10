@@ -196,6 +196,11 @@ def decode_attempt(model,tok,layers,prompts,pushmap,max_new_tokens,device):
 def attempt_problems(attempt,process,pushed):
     """Why one attempt's own evidence does not show the prescribed push on every decode step (Gate G4), or []."""
     if not pushed: return []
+    if attempt['forward_passes']==0:
+        # The first generated token comes from the prefill forward, where no push applies (Part 163's generator does
+        # the same). A call whose rows all end there has no decode forward, so the push was never exercised. That
+        # is not a wrong push and must not be reported as one; it is also not evidence of a right one.
+        return ['no decode forward ran: every row ended at its first generated token, which is decoded before the push applies, so the push was not exercised']
     problems=[]; counts=list(attempt['hook_firings'].values())
     if not counts or any(count!=attempt['forward_passes'] for count in counts):
         problems.append(f"hook firings {attempt['hook_firings']} are not the {attempt['forward_passes']} decode forwards")

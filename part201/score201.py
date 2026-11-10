@@ -278,9 +278,11 @@ def gate_checks(rows, kernel, load, plan_file=None):
                      if r.get('pass') in PROCESS_OF and r.get('process') != PROCESS_OF[r['pass']]]
     revisions = sorted({str(x.get('revision')) for x in launches})
     # The recorded revision is a constant of the code; the snapshot folder of the model path is what was loaded.
-    snapshots_ok = state['smoke'] or all(x.get('model_snapshot') == x.get('revision') for x in launches)
+    # Not recorded is not evidence: a launch with no revision, or no snapshot, has not shown what it loaded.
+    revisions_ok = len(revisions) == 1 and all(x.get('revision') for x in launches)
+    snapshots_ok = state['smoke'] or all(x.get('model_snapshot') and x.get('model_snapshot') == x.get('revision') for x in launches)
     bf_ok = (bool(bf_launches) and all(x.get('dtype') == 'torch.bfloat16' and x.get('attn_implementation') == 'eager' for x in bf_launches)
-             and not [w for w in wrong_process if w.split('/')[0] in BF16_PASSES] and len(revisions) == 1 and snapshots_ok)
+             and not [w for w in wrong_process if w.split('/')[0] in BF16_PASSES] and revisions_ok and snapshots_ok)
     upcast_keys = ('kept_bf16', 'converted_to_float32', 'restored_f32_from_checkpoint')
     float_loads_ok = bool(float_launches) and all(
         isinstance(x.get('upcast'), dict) and all(k in x['upcast'] for k in upcast_keys) and x['upcast'].get('kept_bf16', 0) > 0
@@ -288,8 +290,8 @@ def gate_checks(rows, kernel, load, plan_file=None):
     kernel_upcast = (kernel.get('load') or {}).get('upcast')
     kernel_ok = (kernel.get('attn_implementation') == 'eager' and kernel.get('dtype_requested') == 'float32-upcast'
                  and isinstance(kernel_upcast, dict) and kernel_upcast.get('kept_bf16', 0) > 0)
-    kernel_revision_ok = bool(revisions) and any(revisions[0] in str(kernel.get(k)) for k in ('revision', 'model'))
-    float_ok = (float_loads_ok and not [w for w in wrong_process if w.split('/')[0] in FLOAT_PASSES] and len(revisions) == 1
+    kernel_revision_ok = revisions_ok and any(kernel.get(k) and revisions[0] in str(kernel.get(k)) for k in ('revision', 'model'))
+    float_ok = (float_loads_ok and not [w for w in wrong_process if w.split('/')[0] in FLOAT_PASSES] and revisions_ok
                 and snapshots_ok)
     g1 = {'passed': bf_ok and float_ok and kernel_ok and kernel_revision_ok,
           'bf16': {'passed': bf_ok, 'launches': len(bf_launches)},
@@ -737,7 +739,9 @@ def ordered_decision(result):
     # run. A record that is not there is pass K not run: 201.7 is then "not run" and rule 4 applies.
     kernel_invalid = gates['G1']['kernel']['present'] and not gates['G1']['kernel']['passed']
     invalid = [name for name, ok in (('G1 float32', gates['G1']['float32']['passed']), ('G1 kernel record', not kernel_invalid),
-                                     ('G3 float32', gates['G3']['float32']['passed']), ('G4', gates['G4']['passed'])) if not ok]
+                                     ('G3 float32', gates['G3']['float32']['passed']),
+                                     # G4's float32 half only: a bf16-only G4 failure withholds the bf16 readings and is not a float32 fault.
+                                     ('G4 float32', gates['G4']['float32']['passed'])) if not ok]
     if invalid:
         return {'rule': 2, 'name': 'Float32 arm invalid', 'readings': invalid,
                 'decision': 'section 1 stands; nothing is concluded about float32 on this card'}

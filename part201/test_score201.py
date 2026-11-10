@@ -295,6 +295,18 @@ class GatesAreReadPerPrecision(unittest.TestCase):
         fx = build()
         del fx['load']['loads'][0]['model_snapshot']            # not recorded is not evidence
         self.assertFalse(run(fx)['gates']['G1']['bf16']['passed'])
+        fx = build()                                            # neither recorded, anywhere: two absences are not agreement
+        for launch in fx['load']['loads']:
+            del launch['model_snapshot'], launch['revision']
+        fx['kernel'].pop('revision', None); fx['kernel'].pop('model', None)
+        g1 = run(fx)['gates']['G1']
+        self.assertFalse(g1['bf16']['passed'] or g1['float32']['passed'] or g1['kernel']['passed'], g1)
+        # A smoke plan skips the snapshot comparison, not the need for a recorded revision.
+        fx = build(differ={}, plan=run201.smoke_plan(), smoke=True)
+        self.assertTrue(run(fx)['gates']['G1']['bf16']['passed'])
+        for launch in fx['load']['loads']:
+            launch.pop('revision', None)
+        self.assertFalse(run(fx)['gates']['G1']['bf16']['passed'])
 
     def test_g2_failure_withdraws_the_margin_readings_only(self):
         fx = build()
@@ -382,6 +394,18 @@ class RowsTraceToLaunchesAndReceipts(unittest.TestCase):
 
 
 class OnePushPerRow(unittest.TestCase):
+    def test_a_bf16_only_g4_failure_is_not_called_a_float32_fault(self):
+        fx = build()
+        rows_of(fx, 'B')[0]['push_max_abs_diff'] = 0.5          # one bf16 row whose hook added another delta
+        r = run(fx)
+        self.assertFalse(r['gates']['G4']['bf16']['passed']); self.assertTrue(r['gates']['G4']['float32']['passed'])
+        self.assertEqual(r['decision']['rule'], 4, r['decision'])   # readings withheld by a bf16 gate: no build, not rule 2
+        self.assertNotIn('Float32 arm invalid', s.render(r))
+        fx = build()
+        rows_of(fx, 'F8')[0]['push_max_abs_diff'] = 0.5         # the same fault in the float32 process is rule 2
+        r = run(fx)
+        self.assertEqual((r['decision']['rule'], r['decision']['readings']), (2, ['G4 float32']))
+
     def test_a_float32_push_that_is_not_the_bf16_push_fails_g4_and_only_its_readings(self):
         fx = build()
         target = rows_of(fx, 'F8')[0]

@@ -323,3 +323,8 @@ measurement exists yet. This is the same bar the plan's decision uses.
   driver, against 32.0.101.8724, for a regression in another stack. Nothing we have run separates the card from its
   driver. Each launch's entry in `load.json` records the device as torch reports it and the Windows display-driver
   version, so a later driver change is visible in the record.
+- The first token is never pushed. Hugging Face decodes the first generated token in the prefill forward, where
+  the push does not apply (Part 163's generator does the same), so a pushed row's first token is the plain model's.
+  A pushed call whose rows all end at that first token has no decode forward and shows nothing about the push; the
+  runner stops the launch there and says so. None of the 3,416 stored answers of Part 163 or the 3,416 of Part 200
+  is empty, so no stored row on these questions ended that way.

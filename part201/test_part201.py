@@ -199,6 +199,16 @@ class ReceiptTests(unittest.TestCase):
         self.assertEqual(len(run201.attempt_problems(never,'bf16-main',True)),3)                  # no firing, no delta, no bf16
         self.assertEqual(len(run201.attempt_problems(attempt(dtype='torch.float32'),'bf16-main',True)),1)   # float32 in a bf16 process
 
+    def test_a_call_with_no_decode_forward_is_named_as_an_unexercised_push(self):
+        # Every row ended at its first generated token (decoded in the prefill, before any push): no decode forward.
+        ended={'rows':[{'tokens':[9],'nonfinite':False,'hook_dtype':'None','push_max_abs_diff':None}],'seconds':1.,'hook_firings':{0:0},'forward_passes':0,'generation_steps':1}
+        problems=run201.attempt_problems(ended,'bf16-main',True)
+        self.assertEqual(len(problems),1); self.assertIn('the push was not exercised',problems[0])
+        self.assertNotIn('not the prescribed bf16 push',problems[0])                              # it is not called a wrong push
+        self.assertEqual(run201.attempt_problems(ended,'bf16-main',False),[])                      # a plain call may end at once
+        # Zero firings against zero forwards is never a pass for a pushed call.
+        self.assertTrue(run201.select_attempt(lambda: ended,'float32',True)[2])
+
     def test_model_snapshot_is_read_from_the_cache_path(self):
         rev='851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a'
         self.assertEqual(run201.model_snapshot(f'E:/neuron-probe/hf/hub/models--Qwen--Qwen3.5-4B/snapshots/{rev}'),rev)
