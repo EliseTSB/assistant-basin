@@ -297,7 +297,9 @@ def gate_checks(rows, kernel, load, plan_file=None):
           'kernel': {'passed': kernel_ok and kernel_revision_ok, 'present': bool(kernel.get('runs')),
                      'float32_upcast_eager_recorded': kernel_ok, 'same_revision_as_the_launches': kernel_revision_ok},
           'rows_in_the_wrong_process': wrong_process[:10], 'revisions': revisions,
-          'every_launch_loaded_the_snapshot_of_its_recorded_revision': snapshots_ok}
+          # A smoke plan may load any small model, so the check is not made there; the report must not read True.
+          'every_launch_loaded_the_snapshot_of_its_recorded_revision': 'not checked (smoke plan)' if state['smoke'] else snapshots_ok,
+          'snapshots_loaded': sorted({str(x.get('model_snapshot')) for x in launches})}
 
     # G2: the recorded scores are the ones the decode chose from.
     not_max = [f"{r.get('pass')}/{r.get('row_id')}" for r in rows if r.get('emitted_is_max') is not True]
@@ -796,7 +798,8 @@ def render(result):
     detail = {
         'G1': f"bf16 {'passed' if gates['G1']['bf16']['passed'] else 'FAILED'}, float32 {'passed' if gates['G1']['float32']['passed'] else 'FAILED'}, "
               f"kernel record {'passed' if gates['G1']['kernel']['passed'] else 'FAILED' if gates['G1']['kernel']['present'] else 'absent'}; "
-              f"revisions {gates['G1']['revisions']}; snapshot loaded is the recorded revision: {gates['G1']['every_launch_loaded_the_snapshot_of_its_recorded_revision']}",
+              f"revisions {gates['G1']['revisions']}; snapshot loaded is the recorded revision: {gates['G1']['every_launch_loaded_the_snapshot_of_its_recorded_revision']}"
+              + (f" (loaded {gates['G1']['snapshots_loaded']})" if gates['G1']['every_launch_loaded_the_snapshot_of_its_recorded_revision'] is not True else ''),
         'G2': f"{gates['G2']['failed']} of {gates['G2']['rows']} rows failed; "
               f"{gates['G2']['positions_where_the_emitted_token_is_tied_with_and_is_not_the_first_listed_top']} positions emitted a tied token that is not the first-listed top",
         'G3': f"plan {'passed' if gates['G3']['plan']['passed'] else 'FAILED'}, bf16 {'passed' if gates['G3']['bf16']['passed'] else 'FAILED'}, "

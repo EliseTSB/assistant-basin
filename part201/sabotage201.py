@@ -27,6 +27,10 @@ T_RUN, T_SCORE, T_FLOOR = 'part201/test_part201.py', 'part201/test_score201.py',
 
 # (what is broken, file, exact text, replacement, test file, tests that must fail)
 SABOTAGES = [
+    ('a smoke report says its snapshot check held', SCORE,
+     "'not checked (smoke plan)' if state['smoke'] else snapshots_ok,",
+     "snapshots_ok,",
+     T_SCORE, ['test_a_smoke_plan_scores_with_its_own_counts']),
     ('G5 compares raw rectangles again', RUN,
      "    return [eos_trim(r,eos_ids) for r in reference_tokens] == [eos_trim(r,eos_ids) for r in recorded_tokens]",
      "    return [list(map(int,r)) for r in reference_tokens] == [list(map(int,r)) for r in recorded_tokens]",

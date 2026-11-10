@@ -546,6 +546,11 @@ class States(unittest.TestCase):
         r = run(fx)
         self.assertTrue(all(r['gates'][g]['passed'] for g in ('G1', 'G2', 'G3', 'G4', 'G5')), r['gates']['G3'])
         self.assertEqual(verdicts(r)['201.1'], 'held')
+        # A smoke may load any small model: the snapshot check is not made, and the report must not say it held.
+        self.assertEqual(r['gates']['G1']['every_launch_loaded_the_snapshot_of_its_recorded_revision'], 'not checked (smoke plan)')
+        self.assertIn('snapshot loaded is the recorded revision: not checked (smoke plan) (loaded [', s.render(r))
+        self.assertIs(run(build())['gates']['G1']['every_launch_loaded_the_snapshot_of_its_recorded_revision'], True)
+        self.assertNotIn('(loaded [', s.render(run(build())))
 
 
 class Labels(unittest.TestCase):

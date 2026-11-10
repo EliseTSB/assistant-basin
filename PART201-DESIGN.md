@@ -64,6 +64,11 @@ It follows Parts 178, 183, 199 and 200. The plan it feeds is `BATCH-SHAPE-NOISE.
     the 4B does not fit the host), proved equal to a float32 load on Qwen3.5-0.8B only. Its batch 1 and batch 2 give
     identical tokens on 8 of 8 rows, margins within 6e-5; 2.4% of its positions have a margin below 0.125 and 5.0%
     below 0.25.
+  - A smoke of this build on Qwen3.5-0.8B on the host CPU ran before registration (`part201/smoke08/RESULT.md`,
+    2026-11-09): 16 pushed rows of four units with a made-up median, 24 tokens. Its pair counts were seen before
+    registration: between bf16 passes 4 of 16 rows differed for A/C, 3 of 16 for A/M and 2 of 16 for A/B; 6 of 16
+    for bf16 against float32; 0 of 16 between the two float32 shapes; 0 of 12 on the replays. Every first difference
+    between bf16 passes sat at a bf16 margin of one step or less. No prediction or bar was changed after it.
   - Lessons already in `PROCEDURE.md`: Part 123 (5 of 18 do-nothing rows differed from plain until the shapes matched,
     then 60 of 60), Part 161 (compare arms generated in the same run), Part 178 (batch 1 against 2 to 16 on SDPA).
 
@@ -269,6 +274,8 @@ measurement exists yet. This is the same bar the plan's decision uses.
   functions. The margin shares are over bf16 decodes (a row decoded in several passes counts once per pass), and the
   report states how many pass-M rows were left-padded and how many M calls mixed prompt lengths. The thresholds in 201.2, 201.5, 201.9 and 201.10 were chosen after reading Part 200 and Part 183's
   record, so those are checks that the earlier numbers repeat on new rows, not independent discoveries.
+- The smoke's pair counts (Prior art, our own data) were seen before registration, on another model and device. At
+  its rates 201.3 and 201.4 would have failed; both stand as written.
 - G2 failing withdraws 201.5, 201.9, 201.11 and every margin table. G4's float32 half failing withdraws 201.9 and
   201.10; its bf16 half is a bf16 gate.
 - Gates G1, G3 and G4 are read per precision. A float32 arm that did not run or fails its gates leaves the bf16
