@@ -39,3 +39,10 @@ Sabotage check on this state: 33 of 33 sabotages turned every named test red (`p
 Its first run on these fixes came back 31 of 33, and both misses were its own to find: one new sabotage left its
 test green because a second guard caught the same case (the test now isolates the revision rule on a smoke plan,
 where the snapshot comparison is not made), and one older sabotage no longer matched the line it breaks.
+
+## Addendum: two Limits lines from Alden's scoped pass (#16)
+
+Alden passed `ee17381..0460046` and accepted the zero-decode stop. Their pass named two things the design must not
+overstate, now both in Limits: a positive per-call hook count does not show that every row in that call was pushed,
+and the forecasts are not blind, since the smoke was seen before registration; the predictions table is the one at
+`5c4178a` and no row of it has changed. No code changed.

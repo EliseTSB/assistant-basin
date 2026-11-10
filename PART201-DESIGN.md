@@ -328,3 +328,7 @@ measurement exists yet. This is the same bar the plan's decision uses.
   A pushed call whose rows all end at that first token has no decode forward and shows nothing about the push; the
   runner stops the launch there and says so. None of the 3,416 stored answers of Part 163 or the 3,416 of Part 200
   is empty, so no stored row on these questions ended that way.
+- The hook count is per call. A positive count shows that the call had pushed decode steps; it does not show that
+  every row in the call had one. A row that ends at its first token inside a call that continues was never pushed.
+- The forecasts are not blind. The smoke's outcomes were seen before registration (Reading rules). The predictions
+  table is the one frozen before the smoke, at commit `5c4178a`; no row of it has changed since.
