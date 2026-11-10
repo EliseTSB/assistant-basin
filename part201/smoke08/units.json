@@ -1,0 +1,194 @@
+[
+ {
+  "unit_id": "L8N100",
+  "pair_id": "L8D0",
+  "arm": "neuron",
+  "layer": 8,
+  "neuron": 100,
+  "random_index": null
+ },
+ {
+  "unit_id": "L12N137",
+  "pair_id": "L12D1",
+  "arm": "neuron",
+  "layer": 12,
+  "neuron": 137,
+  "random_index": null
+ },
+ {
+  "unit_id": "L8N174",
+  "pair_id": "L8D2",
+  "arm": "neuron",
+  "layer": 8,
+  "neuron": 174,
+  "random_index": null
+ },
+ {
+  "unit_id": "L12N211",
+  "pair_id": "L12D3",
+  "arm": "neuron",
+  "layer": 12,
+  "neuron": 211,
+  "random_index": null
+ },
+ {
+  "unit_id": "L8N248",
+  "pair_id": "L8D4",
+  "arm": "neuron",
+  "layer": 8,
+  "neuron": 248,
+  "random_index": null
+ },
+ {
+  "unit_id": "L12N285",
+  "pair_id": "L12D5",
+  "arm": "neuron",
+  "layer": 12,
+  "neuron": 285,
+  "random_index": null
+ },
+ {
+  "unit_id": "L8N322",
+  "pair_id": "L8D6",
+  "arm": "neuron",
+  "layer": 8,
+  "neuron": 322,
+  "random_index": null
+ },
+ {
+  "unit_id": "L12N359",
+  "pair_id": "L12D7",
+  "arm": "neuron",
+  "layer": 12,
+  "neuron": 359,
+  "random_index": null
+ },
+ {
+  "unit_id": "L8N396",
+  "pair_id": "L8D8",
+  "arm": "neuron",
+  "layer": 8,
+  "neuron": 396,
+  "random_index": null
+ },
+ {
+  "unit_id": "L12N433",
+  "pair_id": "L12D9",
+  "arm": "neuron",
+  "layer": 12,
+  "neuron": 433,
+  "random_index": null
+ },
+ {
+  "unit_id": "L8N470",
+  "pair_id": "L8D10",
+  "arm": "neuron",
+  "layer": 8,
+  "neuron": 470,
+  "random_index": null
+ },
+ {
+  "unit_id": "L12N507",
+  "pair_id": "L12D11",
+  "arm": "neuron",
+  "layer": 12,
+  "neuron": 507,
+  "random_index": null
+ },
+ {
+  "unit_id": "L8D0",
+  "pair_id": "L8D0",
+  "arm": "random",
+  "layer": 8,
+  "neuron": null,
+  "random_index": 0
+ },
+ {
+  "unit_id": "L12D1",
+  "pair_id": "L12D1",
+  "arm": "random",
+  "layer": 12,
+  "neuron": null,
+  "random_index": 1
+ },
+ {
+  "unit_id": "L8D2",
+  "pair_id": "L8D2",
+  "arm": "random",
+  "layer": 8,
+  "neuron": null,
+  "random_index": 2
+ },
+ {
+  "unit_id": "L12D3",
+  "pair_id": "L12D3",
+  "arm": "random",
+  "layer": 12,
+  "neuron": null,
+  "random_index": 3
+ },
+ {
+  "unit_id": "L8D4",
+  "pair_id": "L8D4",
+  "arm": "random",
+  "layer": 8,
+  "neuron": null,
+  "random_index": 4
+ },
+ {
+  "unit_id": "L12D5",
+  "pair_id": "L12D5",
+  "arm": "random",
+  "layer": 12,
+  "neuron": null,
+  "random_index": 5
+ },
+ {
+  "unit_id": "L8D6",
+  "pair_id": "L8D6",
+  "arm": "random",
+  "layer": 8,
+  "neuron": null,
+  "random_index": 6
+ },
+ {
+  "unit_id": "L12D7",
+  "pair_id": "L12D7",
+  "arm": "random",
+  "layer": 12,
+  "neuron": null,
+  "random_index": 7
+ },
+ {
+  "unit_id": "L8D8",
+  "pair_id": "L8D8",
+  "arm": "random",
+  "layer": 8,
+  "neuron": null,
+  "random_index": 8
+ },
+ {
+  "unit_id": "L12D9",
+  "pair_id": "L12D9",
+  "arm": "random",
+  "layer": 12,
+  "neuron": null,
+  "random_index": 9
+ },
+ {
+  "unit_id": "L8D10",
+  "pair_id": "L8D10",
+  "arm": "random",
+  "layer": 8,
+  "neuron": null,
+  "random_index": 10
+ },
+ {
+  "unit_id": "L12D11",
+  "pair_id": "L12D11",
+  "arm": "random",
+  "layer": 12,
+  "neuron": null,
+  "random_index": 11
+ }
+]

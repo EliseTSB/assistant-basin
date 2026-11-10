@@ -1,0 +1,1298 @@
+{
+  "part": 201,
+  "smoke": true,
+  "plan_sha256": "34ecc2a91f83896af8540d306a779d0c653d86784081fc6c332cfa08421929d5",
+  "loads": [
+    {
+      "launch": 0,
+      "process": "bf16-main",
+      "passes": [
+        "A",
+        "A-again",
+        "B",
+        "M",
+        "C"
+      ],
+      "model": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "plan_sha256": "34ecc2a91f83896af8540d306a779d0c653d86784081fc6c332cfa08421929d5",
+      "inputs": {
+        "units_sha256": "062e261e2ec1c46550dbd5e26ac3fc1e53e2bf1edbd56ae61302eee3e8cd25c0",
+        "medians_sha256": "6e81e5620c45ee47cf605c33222331c884b3a78623644d9d2fd99361eb7b6d4a"
+      },
+      "model_snapshot": "2fc06364715b967f1860aea9cf38778875588b17",
+      "device_record": {
+        "device": "cpu"
+      },
+      "dtype": "torch.bfloat16",
+      "attn_implementation": "eager",
+      "calls": [
+        {
+          "pass": "A",
+          "call": 0,
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.8883435880125035,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "A",
+          "call": 1,
+          "row_ids": [
+            "L12N137|q1",
+            "L8D6|q1",
+            "L12N285|q1",
+            "L8D10|q1"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.4204920530028176,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "A",
+          "call": 2,
+          "row_ids": [
+            "L12N137|q8",
+            "L8D6|q8",
+            "L12N285|q8",
+            "L8D10|q8"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.019845055998303,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "A",
+          "call": 3,
+          "row_ids": [
+            "L12N137|q9",
+            "L8D6|q9",
+            "L12N285|q9",
+            "L8D10|q9"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.4525936089921743,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "A-again",
+          "call": 0,
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.0362494139990304,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 0,
+          "row_ids": [
+            "L8D10|q0",
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.301865243993234,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 1,
+          "row_ids": [
+            "L8D10|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.6569221490062773,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 2,
+          "row_ids": [
+            "L12N285|q1",
+            "L8D6|q1",
+            "L12N137|q1"
+          ],
+          "row_count": 3,
+          "pushed": true,
+          "seconds": 2.8281488829816226,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 3,
+          "row_ids": [
+            "L12N137|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.8428104869963136,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 4,
+          "row_ids": [
+            "L8D10|q8",
+            "L8D6|q8",
+            "L12N285|q8"
+          ],
+          "row_count": 3,
+          "pushed": true,
+          "seconds": 4.016082580987131,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 5,
+          "row_ids": [
+            "L12N137|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.9222192709858064,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 6,
+          "row_ids": [
+            "L8D10|q9",
+            "L8D6|q9"
+          ],
+          "row_count": 2,
+          "pushed": true,
+          "seconds": 3.2129849680059124,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "B",
+          "call": 7,
+          "row_ids": [
+            "L12N285|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.4327151750039775,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 0,
+          "row_ids": [
+            "L8D6|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.684376657998655,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 1,
+          "row_ids": [
+            "L8D10|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.687560611986555,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 2,
+          "row_ids": [
+            "L12N137|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.919340562017169,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 3,
+          "row_ids": [
+            "L8D10|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.54761023397441,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 4,
+          "row_ids": [
+            "L12N285|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.582043275004253,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 5,
+          "row_ids": [
+            "L12N137|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.616877360007493,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 6,
+          "row_ids": [
+            "L8D6|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.4092370399739593,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 7,
+          "row_ids": [
+            "L12N285|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.7315967359754723,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 8,
+          "row_ids": [
+            "L12N137|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.635075689002406,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 9,
+          "row_ids": [
+            "L8D6|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.381535521009937,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 10,
+          "row_ids": [
+            "L12N285|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.6179332619940396,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 11,
+          "row_ids": [
+            "L8D10|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.673497123993002,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 12,
+          "row_ids": [
+            "L8D6|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.5667544309981167,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 13,
+          "row_ids": [
+            "L12N285|q8",
+            "L8D10|q9"
+          ],
+          "row_count": 2,
+          "pushed": true,
+          "seconds": 2.7874517969903536,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 14,
+          "row_ids": [
+            "L12N137|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.635482829005923,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "M",
+          "call": 15,
+          "row_ids": [
+            "plain|q0",
+            "plain|q1",
+            "plain|q8",
+            "plain|q9"
+          ],
+          "row_count": 4,
+          "pushed": false,
+          "seconds": 3.4073042969976086,
+          "generation_steps": 24,
+          "hook_firings": {},
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 0,
+          "row_ids": [
+            "L12N137|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.4992935610061977,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 1,
+          "row_ids": [
+            "L8D6|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.7883407330082264,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 2,
+          "row_ids": [
+            "L12N285|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.406051236001076,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 3,
+          "row_ids": [
+            "L8D10|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.342224110994721,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 4,
+          "row_ids": [
+            "L12N137|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.5876251790032256,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 5,
+          "row_ids": [
+            "L8D6|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.5056683519796934,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 6,
+          "row_ids": [
+            "L12N285|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.3521028329851106,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 7,
+          "row_ids": [
+            "L8D10|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.729015580000123,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 8,
+          "row_ids": [
+            "L12N137|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.7881822159979492,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 9,
+          "row_ids": [
+            "L8D6|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.7450472160126083,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 10,
+          "row_ids": [
+            "L12N285|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.5195072639908176,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 11,
+          "row_ids": [
+            "L8D10|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.6419196340139024,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 12,
+          "row_ids": [
+            "L12N137|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.6861324929923285,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 13,
+          "row_ids": [
+            "L8D6|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 3.0554790640017018,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 14,
+          "row_ids": [
+            "L12N285|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 3.079829979018541,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 15,
+          "row_ids": [
+            "L8D10|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 2.920502613997087,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 16,
+          "row_ids": [
+            "plain|q0"
+          ],
+          "row_count": 1,
+          "pushed": false,
+          "seconds": 3.0226120840234216,
+          "generation_steps": 24,
+          "hook_firings": {},
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 17,
+          "row_ids": [
+            "plain|q1"
+          ],
+          "row_count": 1,
+          "pushed": false,
+          "seconds": 2.916662314994028,
+          "generation_steps": 24,
+          "hook_firings": {},
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 18,
+          "row_ids": [
+            "plain|q8"
+          ],
+          "row_count": 1,
+          "pushed": false,
+          "seconds": 2.839876373007428,
+          "generation_steps": 24,
+          "hook_firings": {},
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "C",
+          "call": 19,
+          "row_ids": [
+            "plain|q9"
+          ],
+          "row_count": 1,
+          "pushed": false,
+          "seconds": 2.993666345020756,
+          "generation_steps": 24,
+          "hook_firings": {},
+          "forward_passes": 23,
+          "attempts": 1
+        }
+      ],
+      "G5": {
+        "passed": true,
+        "rows": 4,
+        "rows_that_ended_before_the_cap": 0
+      },
+      "pilot_answers_per_second": 1.1618134350372176
+    },
+    {
+      "launch": 1,
+      "process": "bf16-second",
+      "passes": [
+        "A2"
+      ],
+      "model": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "plan_sha256": "34ecc2a91f83896af8540d306a779d0c653d86784081fc6c332cfa08421929d5",
+      "inputs": {
+        "units_sha256": "062e261e2ec1c46550dbd5e26ac3fc1e53e2bf1edbd56ae61302eee3e8cd25c0",
+        "medians_sha256": "6e81e5620c45ee47cf605c33222331c884b3a78623644d9d2fd99361eb7b6d4a"
+      },
+      "model_snapshot": "2fc06364715b967f1860aea9cf38778875588b17",
+      "device_record": {
+        "device": "cpu"
+      },
+      "dtype": "torch.bfloat16",
+      "attn_implementation": "eager",
+      "calls": [
+        {
+          "pass": "A2",
+          "call": 0,
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.704103533003945,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "A2",
+          "call": 1,
+          "row_ids": [
+            "L12N137|q1",
+            "L8D6|q1",
+            "L12N285|q1",
+            "L8D10|q1"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 3.752359291014727,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        }
+      ]
+    },
+    {
+      "launch": 2,
+      "process": "float32",
+      "passes": [
+        "F8",
+        "F1"
+      ],
+      "model": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "plan_sha256": "34ecc2a91f83896af8540d306a779d0c653d86784081fc6c332cfa08421929d5",
+      "inputs": {
+        "units_sha256": "062e261e2ec1c46550dbd5e26ac3fc1e53e2bf1edbd56ae61302eee3e8cd25c0",
+        "medians_sha256": "6e81e5620c45ee47cf605c33222331c884b3a78623644d9d2fd99361eb7b6d4a"
+      },
+      "model_snapshot": "2fc06364715b967f1860aea9cf38778875588b17",
+      "device_record": {
+        "device": "cpu"
+      },
+      "dtype": "torch.bfloat16",
+      "attn_implementation": "eager",
+      "calls": [
+        {
+          "pass": "F8",
+          "call": 0,
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 16.238624510006048,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F8",
+          "call": 1,
+          "row_ids": [
+            "L12N137|q8",
+            "L8D6|q8",
+            "L12N285|q8",
+            "L8D10|q8"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 15.413666893000482,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F8",
+          "call": 2,
+          "row_ids": [
+            "L12N137|q1",
+            "L8D6|q1",
+            "L12N285|q1",
+            "L8D10|q1"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 13.520057643007021,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F8",
+          "call": 3,
+          "row_ids": [
+            "L12N137|q9",
+            "L8D6|q9",
+            "L12N285|q9",
+            "L8D10|q9"
+          ],
+          "row_count": 4,
+          "pushed": true,
+          "seconds": 12.869730726000853,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23,
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 0,
+          "row_ids": [
+            "L12N137|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 13.976351880992297,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 1,
+          "row_ids": [
+            "L8D6|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 13.815566604025662,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 2,
+          "row_ids": [
+            "L12N285|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 13.582985290995566,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 3,
+          "row_ids": [
+            "L8D10|q0"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.976418434001971,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 4,
+          "row_ids": [
+            "L12N137|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.621710870997049,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 5,
+          "row_ids": [
+            "L8D6|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.820269793999614,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 6,
+          "row_ids": [
+            "L12N285|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 14.125940355996136,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 7,
+          "row_ids": [
+            "L8D10|q8"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 14.998362868995173,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 8,
+          "row_ids": [
+            "L12N137|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 14.557606299989857,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 9,
+          "row_ids": [
+            "L8D6|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 14.746471677994123,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 10,
+          "row_ids": [
+            "L12N285|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 14.595243207004387,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 11,
+          "row_ids": [
+            "L8D10|q1"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.58729649198358,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 12,
+          "row_ids": [
+            "L12N137|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.710180822003167,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 13,
+          "row_ids": [
+            "L8D6|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.778310819005128,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 14,
+          "row_ids": [
+            "L12N285|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.452043689991115,
+          "generation_steps": 24,
+          "hook_firings": {
+            "12": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        },
+        {
+          "pass": "F1",
+          "call": 15,
+          "row_ids": [
+            "L8D10|q9"
+          ],
+          "row_count": 1,
+          "pushed": true,
+          "seconds": 12.504109958972549,
+          "generation_steps": 24,
+          "hook_firings": {
+            "8": 23
+          },
+          "forward_passes": 23,
+          "attempts": 1
+        }
+      ],
+      "upcast": {
+        "mode": "bf16 storage of Linear and Embedding weights, float32 compute everywhere",
+        "kept_bf16": 187,
+        "converted_to_float32": 133,
+        "restored_f32_from_checkpoint": 36,
+        "restored_examples": [
+          [
+            "model.language_model.layers.0.linear_attn.A_log",
+            "model.layers.0.linear_attn.A_log"
+          ],
+          [
+            "model.language_model.layers.0.linear_attn.norm.weight",
+            "model.layers.0.linear_attn.norm.weight"
+          ],
+          [
+            "model.language_model.layers.1.linear_attn.A_log",
+            "model.layers.1.linear_attn.A_log"
+          ]
+        ],
+        "checkpoint_dir": "/mnt/e/neuron-probe/hf/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17"
+      },
+      "compute_dtype": "torch.float32",
+      "projection_minutes": {
+        "F8": 3.2477249020012096,
+        "F1": 6.021281968310244,
+        "combined": 9.269006870311454,
+        "one_row_call_share": 0.4635
+      }
+    }
+  ]
+}
