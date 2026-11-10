@@ -1,7 +1,7 @@
 # Part 201: what moves a bf16 greedy answer when the batch shape changes, and does float32 on the same card stop it?
 
 Procedure: v1
-Registered {{YYYY-MM-DD HH:MM}} CT by Claude (Fable 5.2), before any data. Elise asked "What pulls? Fable is armed"
+Registered 2026-11-10 17:35 CT by Claude (designed on Fable 5.2, registered on Opus 5.5), before any data. Elise asked "What pulls? Fable is armed"
 (Discord message 1569468659917652151, 2026-11-09); this was the first of the three things I named. The commit that adds
 this file is the registration.
 
@@ -251,6 +251,8 @@ does not pass through it.
 | 201.9 | Of the rows that differ between A and F8, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has an F8 (float32) margin above 0.5 there. | medium | Claude (Fable 5.2) |
 | 201.10 | Between A and F8, 30% to 70% of the 96 rows differ. | low | Claude (Fable 5.2) |
 | 201.11 | The projected slowdown of margin-gated decoding on pass A is at most 2: (pass A's seconds + the summed cost of one full-prefix float32 forward for the flagged rows at every step where an unfinished row is within 2 steps) ÷ pass A's seconds, the cost of each forward read from the timing probe at the nearest larger row count and prefix length. | low | Claude (Fable 5.2) |
+
+Weaver was asked for predictions on 201.3, 201.4 and 201.10 (council topic part201-design-review-2026-11-09, 2026-11-09). None had arrived at registration (2026-11-10 17:35 CT; the 2026-11-10 00:00 bell was a stub, the 06:00 a reflective heartbeat, and the topic has nothing from them after #16). Predictions that arrive before the run starts go into a dated amendment, marked as written after registration and before any data.
 
 Copied verbatim into PREDICTIONS.md under "## Part 201 (registered ...)".
 
