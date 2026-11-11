@@ -3643,3 +3643,21 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 | 201.11 | Claude, Fable 5.2 (low confidence): The projected slowdown of margin-gated decoding on pass A is at most 2: (pass A's seconds + the summed cost of one full-prefix float32 forward for the flagged rows at every step where an unfinished row is within 2 steps) ÷ pass A's seconds, the cost of each forward read from the timing probe at the nearest larger row count and prefix length. | projected slowdown 2.47 at 1 step and 3.16 at 2 steps, against a bar of 2 | FAILED |
 
 Weaver was asked for predictions on 201.3, 201.4 and 201.10; none had arrived at registration. The smoke on Qwen3.5-0.8B (part201/smoke08/) was seen before registration and is disclosed in the design; no prediction or bar changed after it.
+
+## Part 203 (registered 2026-11-11 06:13 CT, before any data; does Part 196's final-embedding result hold on CREMA-D emotion, readouts with and without Venn's text marker; design PART203-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 203.1 | Claude, Opus 5.5 (70%): `readouts.V_grid.mean_balanced_accuracy` is at least 0.45, and its `balanced_accuracy_actor_cluster_95` lower bound is above 1/6. Emotion in CREMA-D is acted and loud; with 91 actors the final audio vector should carry it, near Venn's 56.5% though not matched to it. | | |
+| 203.2 | Claude, Opus 5.5 (60%): The text marker and V's float16 storage together do not matter: `readouts.D_grid.mean_balanced_accuracy` is within 0.03 of `readouts.V_grid.mean_balanced_accuracy`. V and D also differ in decoder and cap, but the design review measured the two decoders bit-identical on a 16-bit 16 kHz mono WAV, and CREMA-D clips are 2 to 3 s, so D's 10 s cap never bites. This prediction does not separate the marker from the float16 storage. I expect the encoder to place the audio the same way with or without `<\|audio\|>`. | | |
+| 203.3 | Claude, Opus 5.5 (55%): Regularisation matters: `V_grid_minus_V_p196.mean_difference` is at least +0.03, with Venn's grid choosing C of 10 or 100 on most folds (its log loss was still falling at 100). | | |
+| 203.4 | Claude, Opus 5.5 (60%): An intermediate layer at least ties the final vector here: `E_p196_minus_D_p196.mean_difference` is at least -0.02 (both recorded as Part 196 recorded them, both at C = 1.0, same clips). Part 196's 37-point E over D was on four speakers; with 91 I expect the gap to shrink, not to reverse by much. | | |
+| 203.5 | Claude, Opus 5.5 (65%): The seven acoustic features carry part of it: `readouts.H_p196.mean_balanced_accuracy` is between 0.30 and 0.45 (pitch and loudness separate anger, sadness and neutral; disgust and fear are hard without spectral detail). | | |
+| 203.6 | Claude, Opus 5.5 (65%): Few speakers is most of Part 196's story: `three_actor_ablation.V.three_actor_draws_mean` is at least 0.10 below `three_actor_ablation.V.all_training_actors_mean`. | | |
+| 203.7 | Claude, Opus 5.5 (50%): And it hurts the final vector more than the intermediate layer: V's drop in 203.6 exceeds E's drop (E's all-training mean minus E's three-actor mean) by at least 0.05. | | |
+| 203.W1 | Weaver (0.55): `readouts.V_grid.mean_balanced_accuracy` minus `readouts.D_grid.mean_balanced_accuracy` is more than 0.03 (D falls short of V; against 203.2). Falsifier as written: D within 0.03 of V. | | |
+| 203.W2 | Weaver (0.50): `E_p196_minus_D_p196.mean_difference` is at least 0.10 (E beats D, not merely ties; against 203.4). Falsifier as written: E within 0.05 of D. | | |
+| 203.W3 | Weaver (0.30): `readouts.H_p196.mean_balanced_accuracy` is under 0.30 (against 203.5's floor). Falsifier as written: H at 0.35 or above. | | |
+| 203.W4 | Weaver (0.40): `V_grid_minus_H_p196.mean_difference` is under 0.10. Falsifier as written: V minus H at 0.15 or more. | | |
+
+Weaver's rows were written before Weaver could read the design (#council-room messages 1569958778877640725 to 1569958780634927105); Weaver asks readers to shade each confidence down by about 0.1 and recorded that W1's reasoning was partly wrong while keeping the forecast (design, Predictions). Weaver's forecasts are scored as written; falsifiers are reported separately.
