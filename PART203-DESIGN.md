@@ -1,7 +1,7 @@
 # Part 203: does Part 196's "the final embedding loses style" hold on CREMA-D emotion?
 
 Procedure: v1
-Status: DRAFT, not registered. Predictions 203.1 to 203.7 are written (Claude, 2026-11-10); the timing fields below wait for the timing smoke.
+Status: registered 2026-11-11 06:13 CT, before any CREMA-D audio was read. Predictions 203.1 to 203.7 (Claude, Opus 5.5, 2026-11-10) and 203.W1 to W4 (Weaver, 2026-11-11). The timing fields below are filled from the timing smoke after registration, as a dated note.
 
 ## Question
 
@@ -90,7 +90,7 @@ matched comparison.
 - Smallest effect worth knowing: 5 points of balanced accuracy on the six-way readout (chance 16.7). Smaller gaps between
   readouts would not change which explanation of 25.8% against 56.5% we act on.
 - Clips: 2,730 planned, 91 actors x 6 emotions x 5 clips.
-- Total: 2,730 clips, about {{CLAUDE: minutes}} minutes (Part 196's measured 0.68 s per 5-second clip, scaled by
+- Total: 2,730 clips, about [timing smoke, after registration] minutes (Part 196's measured 0.68 s per 5-second clip, scaled by
   CREMA-D clip length; CREMA-D clips are short, so this is an estimate until a timing smoke is run).
 - Probes, bootstraps and pitch features: measured by the design review on synthetic records at full size, everything
   except the layer choice ran in 57.7 s; one six-class probe at the layer-choice shape took 1.6 to 3.8 s. The layer choice
@@ -101,7 +101,7 @@ matched comparison.
 ## Optimization
 
 - Bound resource: CPU, and Windows RAM shared with any A770 job.
-- Measured: {{CLAUDE: measured throughput, e.g. "N clips in M s" from the owner's --limit 20 timing smoke}} (no
+- Measured: [timing smoke after registration: N clips in M s from the --limit 20 run] (no
   embedding has been recorded in this build; the recorder logs `elapsed_seconds` and `clips_processed`, and
   `part203/steps.txt` step 3 gives the smoke command).
 - Levers: 2,730 clips rather than 7,442, taken; V and D recorded from one decode where the caps allow, declined because
@@ -112,7 +112,7 @@ matched comparison.
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
 | 203.1 | `readouts.V_grid.mean_balanced_accuracy` is at least 0.45, and its `balanced_accuracy_actor_cluster_95` lower bound is above 1/6. Emotion in CREMA-D is acted and loud; with 91 actors the final audio vector should carry it, near Venn's 56.5% though not matched to it. | 70% | Claude |
-| 203.2 | The text marker and V's float16 storage together do not matter: `readouts.D_grid.mean_balanced_accuracy` is within 0.03 of `readouts.V_grid.mean_balanced_accuracy`. V and D also differ in decoder and cap, but the design review measured the two decoders bit-identical on a 16-bit 16 kHz mono WAV, and CREMA-D clips are 2 to 3 s, so D's 10 s cap never bites. This prediction does not separate the marker from the float16 storage. I expect the encoder to place the audio the same way with or without `<|audio|>`. | 60% | Claude |
+| 203.2 | The text marker and V's float16 storage together do not matter: `readouts.D_grid.mean_balanced_accuracy` is within 0.03 of `readouts.V_grid.mean_balanced_accuracy`. V and D also differ in decoder and cap, but the design review measured the two decoders bit-identical on a 16-bit 16 kHz mono WAV, and CREMA-D clips are 2 to 3 s, so D's 10 s cap never bites. This prediction does not separate the marker from the float16 storage. I expect the encoder to place the audio the same way with or without `<\|audio\|>`. | 60% | Claude |
 | 203.3 | Regularisation matters: `V_grid_minus_V_p196.mean_difference` is at least +0.03, with Venn's grid choosing C of 10 or 100 on most folds (its log loss was still falling at 100). | 55% | Claude |
 | 203.4 | An intermediate layer at least ties the final vector here: `E_p196_minus_D_p196.mean_difference` is at least -0.02 (both recorded as Part 196 recorded them, both at C = 1.0, same clips). Part 196's 37-point E over D was on four speakers; with 91 I expect the gap to shrink, not to reverse by much. | 60% | Claude |
 | 203.5 | The seven acoustic features carry part of it: `readouts.H_p196.mean_balanced_accuracy` is between 0.30 and 0.45 (pitch and loudness separate anger, sadness and neutral; disgust and fear are hard without spectral detail). | 65% | Claude |
