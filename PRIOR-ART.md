@@ -851,3 +851,10 @@ For the steering-word part that follows:
   sycophancy while leaving accuracy; edge-level path patching finds the same head-to-head connections drive
   sycophancy, factual lying and instructed lying; RLHF cuts sycophancy about tenfold while the heads persist or grow. **Bears on Part
   205:** shared parts across behaviours, persisting through alignment training; not saying against doing.
+- **@euagaric, "this body part is mine" in Qwen3-8B** (X, 2026-11-11; post and figure archived in the Journal repo,
+  `sources/web-archives/2026-11-11-euagaric-qwen-body-ownership.md`). A direction at layer 24, read at the reply's
+  first token, built from touch sentences on "your" against "the woman's" body parts; on new sentences it follows
+  whose body is touched, not who does the touching, with graded edge cases (reflection halfway, your car a little, a
+  robot you control and your hand lost in a jar not mine). Holds after a chat where Qwen agrees to notice sensations
+  as if it had a body; in a plain chat it mostly tracks the word "you". A reading, no steering test or random-direction
+  baseline shown. **Bears on Part 205:** a You-against-third-person contrast can carry a pronoun feature.

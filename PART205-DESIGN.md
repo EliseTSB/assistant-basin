@@ -263,6 +263,10 @@ before registration; any rows they give are added with their names.
 - The ranking estimator is ours: single-point activation x gradient at the last position, as Sauers described it, with
   no code released to check against. A path-integrated or attribution-patching estimator could pick a different top-80,
   so a difference from Sauers' 55 of 80 may come from the estimator rather than the model.
+- A You-against-third-person difference can partly be the word "you": @euagaric (2026-11-11, archived in the Journal
+  repo) found a Qwen3-8B "this body part is mine" direction that, in a plain chat, mostly tracks the word "you". The
+  copy test asks the same question in both frames, so "you" is in the copied positions of both, but the persona line
+  differs (You against a name), and nothing here separates a self-attribution from a pronoun feature computed there.
 - The DO set is tested only through SAY questions: no arm copies parts into a held-out DO scenario, so the copy test
   shows that the DO set changes saying, not that it carries doing.
 - Qwen's head pool mixes two kinds of head (softmax and DeltaNet); O compares across families because it is a ratio,
