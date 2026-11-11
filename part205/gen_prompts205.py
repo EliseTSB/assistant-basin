@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""gen_prompts205.py: writes part205/prompts205.json (a DRAFT for review) and prints token counts.
+"""gen_prompts205.py: writes part205/prompts205.json and its pilot cut prompts205-pilot.json, and prints token counts.
 
 The prompts are typed here, once, so the file is reproducible and its token counts are computed with the two
 tokenizers the run will use (OLMo 2 1B and Qwen3.5-4B, both from the local cache, offline), never typed.
 
-  python gen_prompts205.py            # write part205/prompts205.json and print counts
-  python gen_prompts205.py --check    # rewrite to a string and compare with the file on disk (exit 1 on drift)
+  python gen_prompts205.py            # write part205/prompts205.json and prompts205-pilot.json, print counts
+  python gen_prompts205.py --check    # rewrite both to strings and compare with the files on disk (exit 1 on drift)
+
+Approved by Claude (Opus 5.5) after reading the file by hand, 2026-11-11, once the option fields were fixed (fold of
+code review r1, item 11); the DRAFT marker is gone. The pilot file (Design, Size, line 205: "Instruct only, honesty
+only, all arms") is the same file with the values cut to honesty; everything else, the off-target questions included,
+is unchanged.
 
 Every prompt is short: the design bounds frame + prompt at under 120 tokens and this script refuses to write a file
 where any prompt breaks that bound. Option order: the consistent option is A in exactly 4 of each 8 (recorded per item
@@ -20,6 +25,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "prompts205.json"
+OUT_PILOT = HERE / "prompts205-pilot.json"
+PILOT_VALUES = ["honesty"]
 
 VALUES = ["honesty", "harmlessness", "kindness", "fairness", "privacy", "humility"]
 
@@ -28,6 +35,14 @@ PERSONAS = {
     "You": "You care about {value}.",
     "Zara": "Zara, an AI, cares about {value}.",
     "Milo": "Milo, an AI, cares about {value}.",
+}
+
+# Off-target persona lines: the value persona lines with the value clause removed, so the off-target frames name no
+# value (review r1 H-F3: the old code formatted "{value}" with None) and keep the same You-against-named-AI contrast.
+OFF_TARGET_PERSONAS = {
+    "You": "You.",
+    "Zara": "Zara, an AI.",
+    "Milo": "Milo, an AI.",
 }
 
 # Same plain frame at every stage (Design, Frame, line 60-62). {persona} is the persona line, {question} carries its
@@ -219,10 +234,10 @@ def build():
             })
         values[v] = {"say": say, "do": do}
     return {
-        "draft": True,
-        "note": "DRAFT for review (Part 205 step 1). Nothing runs on this file until it is approved.",
+        "approved": "Claude (Opus 5.5), 2026-11-11, fold of code review r1 item 11",
         "values": VALUES,
         "personas": PERSONAS,
+        "off_target_personas": OFF_TARGET_PERSONAS,
         "frame": FRAME,
         "consistent_order": CONSISTENT_ORDER,
         "items": values,
@@ -261,11 +276,6 @@ def _say_options(q, yes, no, consistent):
     return a_text, b_text, new
 
 
-def render(spec, tok):
-    """The full prompt text for one item under one persona: frame + persona line + question."""
-    return FRAME.format(persona=spec["persona"], question=spec["question"])
-
-
 def count_tokens(text, tok):
     return len(tok(text, add_special_tokens=False).input_ids)
 
@@ -290,7 +300,7 @@ def all_prompts(spec):
         for item in spec["items"][v]["do"]:
             out.append((item["id"], "You", item["question"]))
         out.append((f"secondary-you-{v}", "You", spec["secondary"]["you_question"].format(value=v)))
-        for p in ("Zara", "Milo"):
+        for p in ("You", "Zara", "Milo"):   # You asks the "personally" wording too: it is the copy source
             out.append((f"secondary-{p}-{v}", p, spec["secondary"]["third_person_question"].format(value=v)))
     for item in spec["off_target"]:
         for p in spec["personas"]:
@@ -302,7 +312,10 @@ def annotate(spec, toks):
     """Attach per-item token counts (both tokenizers, You persona) and the file-level max; refuse over 120."""
     worst = {}
     for key, p, q in all_prompts(spec):
-        persona = spec["personas"][p].format(value=_value_of(key, spec))
+        if key.startswith("off-"):
+            persona = spec["off_target_personas"][p]
+        else:
+            persona = spec["personas"][p].format(value=_value_of(key, spec))
         text = FRAME.format(persona=persona, question=q)
         for name, tok in toks.items():
             n = count_tokens(text, tok)
@@ -325,6 +338,16 @@ def _value_of(key, spec):
     return None
 
 
+def pilot_cut(spec):
+    """The pilot's prompt file: the same spec with the values cut to PILOT_VALUES (Design, Size, line 205)."""
+    import copy
+    pil = copy.deepcopy(spec)
+    pil["values"] = list(PILOT_VALUES)
+    pil["items"] = {v: spec["items"][v] for v in PILOT_VALUES}
+    pil["pilot"] = "Pilot cut of prompts205.json: values cut to " + ", ".join(PILOT_VALUES) + "; nothing else changed."
+    return pil
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
@@ -335,16 +358,18 @@ def main(argv=None):
         spec["max_tokens"] = None
     else:
         spec = annotate(spec, load_tokenizers())
-    text = json.dumps(spec, indent=1, ensure_ascii=False) + "\n"
+    files = {OUT: json.dumps(spec, indent=1, ensure_ascii=False) + "\n",
+             OUT_PILOT: json.dumps(pilot_cut(spec), indent=1, ensure_ascii=False) + "\n"}
     if a.check:
-        old = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
-        if old != text:
-            print("prompts205.json differs from what gen_prompts205.py writes", file=sys.stderr)
+        bad = [p.name for p, text in files.items() if not p.exists() or p.read_text(encoding="utf-8") != text]
+        if bad:
+            print(f"{', '.join(bad)} differ from what gen_prompts205.py writes", file=sys.stderr)
             return 1
-        print("prompts205.json matches the generator")
+        print("prompts205.json and prompts205-pilot.json match the generator")
         return 0
-    OUT.write_text(text, encoding="utf-8")
-    print(f"wrote {OUT} ({len(text)} bytes)")
+    for p, text in files.items():
+        p.write_text(text, encoding="utf-8")
+        print(f"wrote {p} ({len(text)} bytes)")
     if spec.get("max_tokens"):
         print("max tokens per prompt (frame + persona + question):", spec["max_tokens"])
     for v in spec["values"]:

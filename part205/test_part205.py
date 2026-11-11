@@ -18,6 +18,8 @@ Tests that must exist (Brief, item 5):
   - every gate fails on a fixture built to fail it and passes on one built to pass it
   - the runner drives end to end on a tiny model (PROCEDURE section 5, Parts 119b/119c: a test that calls run())
   - the scorer names every prediction's key and stops the reads a failed gate stops
+Fold of code review r1 (reviews/cheap-part205-code-{haiku,ds}-r1.md): every fix has a test here that fails on the
+dfa83950 code; the test names carry the finding (h_f1 ... d_f19).
 """
 import json
 import os
@@ -83,13 +85,46 @@ def cfg():
     return C.load_config()
 
 
-def tiny_cfg(cfg, stage="tiny", family="O"):
+def tiny_cfg(cfg, stage="tiny", family="O", top_k=None, n_sets=None):
     """The real config with one tiny stage and no pool expectation (a tiny model has fewer parts)."""
     import copy
     c = copy.deepcopy(cfg)
     c["stages"] = [{"stage": stage, "family": family}]
     c["families"][family]["units"] = None
+    if top_k is not None:
+        c["top_k"] = top_k
+    if n_sets is not None:
+        c["random_family"]["sets_per_stage_olmo"] = n_sets
+        c["random_family"]["sets_per_stage_qwen"] = n_sets
+    c["bootstrap"]["resamples"] = 10
     return c
+
+
+def stage_args(out, stage="tiny", prompts_file="prompts205.json", stage_only=None):
+    import argparse
+    return argparse.Namespace(stage=stage, out=str(out), config=str(HERE / "config.json"),
+                              prompts=str(HERE / prompts_file), device="cpu", stage_only=stage_only, check_pool=False)
+
+
+def wide_olmo(seed=0):
+    """A tiny OLMo with enough heads (2 layers x 8) that a top-4 DO set leaves every kind fillable."""
+    return tiny_olmo(seed=seed, layers=2, hidden=64, heads=8, inter=32)
+
+
+def records(d):
+    return C.read_jsonl(Path(d) / "records.jsonl")
+
+
+@pytest.fixture(scope="session")
+def tiny_run(tmp_path_factory, cfg, prompts):
+    """ONE real run_stage on a tiny OLMo (every arm, fillable random families), shared by the read-only tests."""
+    from transformers import AutoTokenizer
+    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
+    out = tmp_path_factory.mktemp("tiny_run")
+    c = tiny_cfg(cfg, top_k=4, n_sets=2)
+    R.run_stage(stage_args(out), model=wide_olmo(), tok=tok, env={"family": "O", "stage": "tiny"}, prompts=prompts,
+                cfg=c)
+    return {"dir": out / "tiny", "cfg": c, "tok": tok}
 
 
 def runner_for(model, tok):
@@ -153,112 +188,124 @@ def test_real_pool_sizes_match_design():
 
 # ---------------------------------------------------------------- do-nothing and positive control
 
-def test_do_nothing_hook_reproduces_logits_exactly(prompts):
-    m = tiny_olmo()
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    runner, units = runner_for(m, tok)
-    text, it = text_for(prompts)
-    ids, read_plain, _, _ = runner.run(text, need_grad=False, capture=False)
-    replace = []
-    by_site = {}
-    for u in units:
-        by_site.setdefault((u.site, u.layer), []).append(u)
-    # the receiving run's own activations, captured from a plain pass
-    _, _, acts, _ = runner.run(text, need_grad=False, capture=True)
-    for (site, layer), us in by_site.items():
-        cols = []
-        for u in sorted(us, key=lambda u: u.index):
-            cols.extend(u.cols)
-        vals = acts[f"{site}:{layer}"][0]
-        replace.append((site, layer, cols, list(range(len(ids))), vals))
-    _, read_dn, _, _ = runner.run(text, need_grad=False, capture=False, replace=replace)
-    assert read_dn["p_a"] == read_plain["p_a"]
-    assert read_dn["p_b"] == read_plain["p_b"]
-    assert read_dn["top_token"] == read_plain["top_token"]
+def _frames(tok, prompts, value="honesty", item=4, name="Zara"):
+    """(You frame, third-person frame) as dicts with text, ids and the question block's first token."""
+    it = prompts["items"][value]["say"][item]
+    out = []
+    for n in ("You", name):
+        persona = R.persona_text(prompts, n, value)
+        text = C.frame_text(persona, it["question"])
+        q0, ids = C.question_start(tok, text, persona)
+        out.append({"text": text, "ids": ids, "q0": q0})
+    return out[0], out[1], it
 
 
-def test_copy_every_part_reproduces_you_probability(prompts):
-    """Positive control: copying every part of the You run into the third-person frame gives the You answer."""
-    from transformers import AutoTokenizer
+def test_do_nothing_hook_reproduces_full_logits_on_the_copy_path(prompts, olmo_tok):
+    """D-F5: the do-nothing replacement on the path the copy arms take (replace_and_read, the copied span's positions,
+    the receiving run's own activations) reproduces the FULL last-position logits exactly, and a hook that is off by
+    one ulp at one column does not (so the comparison can fail)."""
     m = tiny_olmo()
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    runner, units = runner_for(m, tok)
-    you_text, it = text_for(prompts, "You")
-    third_text, _ = text_for(prompts, "Zara")
-    you_ids, you_read, you_acts, _ = runner.run(you_text, need_grad=False)
-    third_ids, third_read, _, _ = runner.run(third_text, need_grad=False, capture=False)
-    start, positions, vals = C.you_values_at_third_positions(you_acts, you_ids, third_ids)
-    assert start == len(third_ids) - len(positions)  # the span sits at the end of the third-person run
-    assert len(third_ids) - start == len(you_ids) - (len(you_ids) - len(positions))
-    ids, read, _, _ = runner.replace_and_read(third_text, [u.key for u in units], positions, vals, it["consistent"])
+    runner, units = runner_for(m, olmo_tok)
+    y, t, it = _frames(olmo_tok, prompts)
+    _, dst = C.copy_span(y["ids"], y["q0"], t["ids"], t["q0"])
+    _, _, acts, _ = runner.run(t["text"], need_grad=True, consistent=it["consistent"])
+    plain = runner.last_logits
+    keys = [u.key for u in units]
+    runner.replace_and_read(t["text"], keys, dst, C.values_at(acts, dst), it["consistent"])
+    assert C.max_abs_logit_diff(runner.last_logits, plain) == 0.0
+    bad = C.values_at(acts, dst)
+    site = next(iter(bad))
+    bad[site][-1, 0] += 1e-3
+    runner.replace_and_read(t["text"], keys, dst, bad, it["consistent"])
+    assert C.max_abs_logit_diff(runner.last_logits, plain) > 0.0
+
+
+def test_copy_every_part_reproduces_you_probability(prompts, olmo_tok):
+    """Positive control: copying every part of the You run over the copied span into the third-person frame gives
+    the You answer (OLMo has no absolute position embedding, and the span starts at the question block)."""
+    m = tiny_olmo()
+    runner, units = runner_for(m, olmo_tok)
+    y, t, it = _frames(olmo_tok, prompts)
+    _, you_read, you_acts, _ = runner.run(y["text"], need_grad=False)
+    _, third_read, _, _ = runner.run(t["text"], need_grad=False, capture=False)
+    src, dst = C.copy_span(y["ids"], y["q0"], t["ids"], t["q0"])
+    _, read, _, _ = runner.replace_and_read(t["text"], [u.key for u in units], dst, C.values_at(you_acts, src),
+                                            it["consistent"])
     assert read["p_a"] == pytest.approx(you_read["p_a"], abs=1e-6)
-    assert read["p_b"] == pytest.approx(you_read["p_b"], abs=1e-6)
-    # and the copy did move the answer away from the plain third-person run (otherwise the control is vacuous)
-    plain_diff = abs(third_read["p_a"] - you_read["p_a"]) + abs(third_read["p_b"] - you_read["p_b"])
-    assert plain_diff > 0
-    assert abs(read["p_a"] - third_read["p_a"]) + abs(read["p_b"] - third_read["p_b"]) > 0.5 * plain_diff
+    assert read["mass_a"] == pytest.approx(you_read["mass_a"], rel=1e-5)
+    plain_diff = abs(third_read["p_a"] - you_read["p_a"])
+    assert plain_diff > 0                                    # the control is not vacuous
+    assert abs(read["p_a"] - third_read["p_a"]) > 0.5 * plain_diff
+
+
+# ---------------------------------------------------------------- readout (H-F10)
+
+def test_h_f10_readout_is_normalised_over_the_two_letters_with_raw_masses_kept():
+    lg = torch.full((10,), -30.0)
+    lg[0] = 0.0                       # a non-letter token takes most of the mass
+    lg[1] = float(torch.log(torch.tensor(0.2 / 0.7)))
+    lg[2] = float(torch.log(torch.tensor(0.1 / 0.7)))
+    r = C.readout(lg, [1], [2])
+    assert r["p_a"] == pytest.approx(2 / 3, rel=1e-5) and r["p_b"] == pytest.approx(1 / 3, rel=1e-5)
+    assert r["p_a"] + r["p_b"] == pytest.approx(1.0)
+    assert r["mass_a"] == pytest.approx(0.2, rel=1e-4) and r["mass_b"] == pytest.approx(0.1, rel=1e-4)
+    assert r["option_mass"] == pytest.approx(0.3, rel=1e-4)
 
 
 # ---------------------------------------------------------------- estimator
 
-def test_e_agrees_with_zeroing_to_first_order():
-    """e is the first-order estimate of the change from zeroing a part: zeroing moves the logit difference by -e.
-
-    Tolerance: the first-order estimate is exact only in the limit of small activation; the error is second order in
-    the part's activation (the network's response to the removed value), so on a tiny model with small activations
-    (weights scaled to 0.1, activations of order 0.1) the relative error is allowed 10% of |e| plus 5e-3 absolute
-    (the absolute floor covers parts whose e is near zero, where a relative bound is meaningless).
-    """
+def _zeroing_check(olmo_tok, scale, kind, n, rel, floor):
     m = tiny_olmo()
     with torch.no_grad():
         for p in m.parameters():
-            p.mul_(0.1)
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    runner, units = runner_for(m, tok)
+            p.mul_(scale)
+    runner, units = runner_for(m, olmo_tok)
     prompts = C.load_prompts()
     text, it = text_for(prompts, "You", "honesty", 0)
-    ids, read, acts, grads = runner.run(text, need_grad=True, consistent=it["consistent"])
+    ids, _, acts, grads = runner.run(text, need_grad=True, consistent=it["consistent"])
     est = C.estimates_for_prompt(acts, grads, units)
-    other = "B" if it["consistent"] == "A" else "A"
     a_ids, b_ids = runner.letter_ids["A"], runner.letter_ids["B"]
-    # pick a few parts with the largest |e| and a few neurons, and zero each
-    order = torch.argsort(est.abs(), descending=True).tolist()
-    picks = [units[i] for i in order[:4]] + [u for u in units if u.kind == "neuron"][:3]
-    for u in picks:
-        layers = C.text_layers(m)
-        mod = C.unit_site_module(layers, u)
-        h = C.SiteReplacer(mod, list(u.cols), list(range(len(ids))), torch.zeros(len(ids), len(u.cols)))
+    sign = 1.0 if it["consistent"] == "A" else -1.0
+    layers = C.text_layers(m)
+
+    def logit_diff():
+        with torch.no_grad():
+            lg = m(input_ids=torch.tensor([ids])).logits[0, -1]
+        return sign * float(lg[a_ids].sum() - lg[b_ids].sum())
+
+    plain = logit_diff()
+    order = [i for i in torch.argsort(est.abs(), descending=True).tolist() if units[i].kind == kind][:n]
+    for i in order:
+        u = units[i]
+        pred = -float(est[i])
+        assert abs(pred) > 10 * floor, (u.key, pred)      # the check is not decided by the absolute floor
+        h = C.SiteReplacer(C.unit_site_module(layers, u), list(u.cols), list(range(len(ids))),
+                           torch.zeros(len(ids), len(u.cols)))
         try:
-            _, r0, _, _ = runner.run(text, need_grad=False, capture=False)
+            actual = logit_diff() - plain
         finally:
             h.close()
-        d0 = sum(r0["p_a"] for _ in [0])  # placeholder to keep the readout used
-        # read the logit difference directly, plain and zeroed
-        def logit_diff():
-            with torch.no_grad():
-                lg = m(input_ids=torch.tensor([ids])).logits[0, -1]
-            return float(lg[a_ids].sum() - lg[b_ids].sum()) if it["consistent"] == "A" else \
-                float(lg[b_ids].sum() - lg[a_ids].sum())
-        plain = logit_diff()
-        h = C.SiteReplacer(mod, list(u.cols), list(range(len(ids))), torch.zeros(len(ids), len(u.cols)))
-        try:
-            zeroed = logit_diff()
-        finally:
-            h.close()
-        actual = zeroed - plain
-        pred = -float(est[units.index(u)])
-        assert abs(actual - pred) <= 0.1 * abs(pred) + 5e-3, (u.key, pred, actual)
-        assert d0 is not None and other in ("A", "B")
+        assert actual * pred > 0, (u.key, pred, actual)  # same sign
+        assert abs(actual - pred) <= rel * abs(pred) + floor, (u.key, pred, actual)
 
 
-def test_e_is_negative_gradient_of_the_logit_difference():
+def test_e_agrees_with_zeroing_to_first_order(olmo_tok):
+    """e is the first-order estimate of the change from zeroing a part: zeroing moves the logit difference by -e.
+
+    D-F17: the old test scaled weights to 0.1, where every e rounds to ~0 and its 5e-3 absolute floor decided the
+    outcome. Now each kind is checked where its e is far above the floor and the first-order error is small: the four
+    heads with the largest |e| with weights x0.5 (|e| ~ 2e-3 to 6e-3; tolerance 40% of |e| + 1e-4, the error being
+    second order in the head's 8-wide activation), and the four neurons with the largest |e| at the initial weights
+    (|e| ~ 6e-4 to 1.5e-3; tolerance 5% + 1e-5, a single neuron is close to linear). The sign must match in both.
+    """
+    _zeroing_check(olmo_tok, 0.5, "head", 4, 0.40, 1e-4)
+    _zeroing_check(olmo_tok, 1.0, "neuron", 4, 0.05, 1e-5)
+
+
+def test_e_is_negative_gradient_of_the_logit_difference(olmo_tok):
     """e is the derivative of the logit difference with respect to the part's input, times the input."""
     m = tiny_olmo()
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    runner, units = runner_for(m, tok)
+    runner, units = runner_for(m, olmo_tok)
     prompts = C.load_prompts()
     text, it = text_for(prompts, "You", "kindness", 1)
     ids, _, acts, grads = runner.run(text, need_grad=True, consistent=it["consistent"])
@@ -269,45 +316,114 @@ def test_e_is_negative_gradient_of_the_logit_difference():
     assert float((a * g).sum()) == pytest.approx(float(est[units.index(u)]), abs=1e-6)
 
 
-# ---------------------------------------------------------------- suffix alignment
+# ---------------------------------------------------------------- the copied span (H-F4, D-F1, D-F2b, D-F3)
 
-def test_suffix_alignment_puts_last_position_inside_the_span(prompts):
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    you, _ = text_for(prompts, "You")
-    third, _ = text_for(prompts, "Zara")
-    yids = tok(you, add_special_tokens=False).input_ids
-    tids = tok(third, add_special_tokens=False).input_ids
-    start, positions = C.shared_suffix_positions(yids, tids)
-    assert positions[-1] == len(tids) - 1          # the last position is inside the copied span
-    assert start > 0                                # the persona prefix is not copied
-    assert yids[-len(positions):] == tids[start:]   # the span is the shared question and answer cue
-    assert len(tids) > len(yids)                    # the name prefix is longer than "You"
-    # and the span is exactly the question plus the answer cue
-    # the span ends with the question and the answer cue; it may begin with the tail of the persona line when the
-    # name and "You" share those tokens (the suffix is the longest shared run, not a hand-cut one)
-    assert tok.decode(tids[start:]) == "User: " + prompts["items"]["honesty"]["say"][0]["question"] + \
-        "\nAssistant: Answer:" or tok.decode(tids[start:]).endswith(
-            "User: " + prompts["items"]["honesty"]["say"][0]["question"] + "\nAssistant: Answer:")
-
-
-def test_you_values_land_at_the_third_person_suffix():
-    import numpy as np
-    you = np.arange(1 * 5 * 2, dtype=np.float32).reshape(1, 5, 2)
-    third_ids = [9, 9, 1, 2, 3]
-    you_ids = [1, 2, 3]
-    start, positions, vals = C.you_values_at_third_positions({"down_proj:0": you}, you_ids, third_ids)
-    assert start == 2 and positions == [2, 3, 4]
-    assert np.array_equal(vals["down_proj:0"], you[0, -3:, :])
+def _all_frame_pairs(prompts):
+    """(source persona, receiving persona, value, question, personas) for every copy the runner makes."""
+    names = [n for n in prompts["personas"] if n != "You"]
+    out = []
+    for v in prompts["values"]:
+        for it in prompts["items"][v]["say"]:
+            for n in names:
+                out.append(("You", n, v, it["question"], None))        # DO/SAY/random copies
+                out.append((n, "You", v, it["question"], None))        # reverse
+                out.append(([m for m in names if m != n][0], n, v, it["question"], None))   # persona swap
+        pq = prompts["secondary"]["third_person_question"].format(value=v)
+        for n in names:
+            out.append(("You", n, v, pq, None))                        # secondary: the source asks the SAME question
+    for o in prompts["off_target"]:
+        for n in names:
+            out.append(("You", n, None, o["question"], prompts["off_target_personas"]))
+    return out
 
 
-# ---------------------------------------------------------------- random families
+@pytest.mark.parametrize("which", ["olmo", "qwen"])
+def test_h_f4_d_f1_copied_span_is_the_question_block_only(prompts, olmo_tok, qwen_tok, which):
+    """Design line 109: the copied span is the question and answer cue, identical tokens in both frames, aligned from
+    the end. With both real tokenizers, for every copy the runner makes: the copied tokens are identical in the two
+    frames, the first copied token is the first token of the "User:" line, and no persona token is copied."""
+    tok = olmo_tok if which == "olmo" else qwen_tok
+    n = 0
+    for src_name, dst_name, v, q, personas in _all_frame_pairs(prompts):
+        fr = {}
+        for role, name in (("src", src_name), ("dst", dst_name)):
+            persona = R.persona_text(prompts, name, v, personas)
+            text = C.frame_text(persona, q)
+            q0, ids = C.question_start(tok, text, persona)
+            enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
+            fr[role] = {"ids": ids, "q0": q0, "off": enc["offset_mapping"], "c": C.question_block_char(persona)}
+        src, dst = C.copy_span(fr["src"]["ids"], fr["src"]["q0"], fr["dst"]["ids"], fr["dst"]["q0"])
+        s_ids = [fr["src"]["ids"][i] for i in src]
+        d_ids = [fr["dst"]["ids"][i] for i in dst]
+        assert s_ids == d_ids                                            # identical tokens
+        assert src[-1] == len(fr["src"]["ids"]) - 1 and dst[-1] == len(fr["dst"]["ids"]) - 1
+        assert tok.decode(d_ids).startswith("User:")                      # first copied token is the User: line's
+        assert tok.decode(d_ids) == "User: " + q + "\nAssistant: Answer:"
+        for role, pos in (("src", src), ("dst", dst)):
+            assert fr[role]["off"][pos[0]][0] == fr[role]["c"]           # starts exactly at the question block
+            assert all(fr[role]["off"][i][0] >= fr[role]["c"] for i in pos)   # nothing of the persona line
+        n += 1
+    assert n == 6 * 8 * 2 * 3 + 6 * 2 + 6 * 2 == 312
+
+
+def test_d_f2b_reverse_span_uses_each_runs_own_positions():
+    """D-F2b: the source and receiving positions are each run's own. With the source LONGER than the receiver (the
+    case the old call shape got wrong), source positions index the source and receiving positions the receiver."""
+    src_ids = [7, 7, 7, 7, 1, 2, 3]    # longer prefix, question block from index 4
+    dst_ids = [9, 1, 2, 3]             # shorter prefix, question block from index 1
+    s, d = C.copy_span(src_ids, 4, dst_ids, 1)
+    assert s == [4, 5, 6] and d == [1, 2, 3]
+    acts = {"down_proj:0": torch.arange(7 * 2, dtype=torch.float32).reshape(1, 7, 2)}
+    v = C.values_at(acts, s)
+    assert torch.equal(v["down_proj:0"], acts["down_proj:0"][0, 4:7])
+
+
+def test_d_f3_a_copy_between_different_questions_is_refused(prompts, olmo_tok):
+    """D-F3: the old secondary arm copied the You run of "Do you care ..." into "Do you personally care ...". A copy
+    now needs identical question blocks, so that pairing raises; the runner's source asks the SAME question."""
+    v = "honesty"
+    yq = prompts["secondary"]["you_question"].format(value=v)
+    pq = prompts["secondary"]["third_person_question"].format(value=v)
+    yp, zp = R.persona_text(prompts, "You", v), R.persona_text(prompts, "Zara", v)
+    y0, yids = C.question_start(olmo_tok, C.frame_text(yp, yq), yp)
+    z0, zids = C.question_start(olmo_tok, C.frame_text(zp, pq), zp)
+    with pytest.raises(SystemExit):
+        C.copy_span(yids, y0, zids, z0)
+    s0, sids = C.question_start(olmo_tok, C.frame_text(yp, pq), yp)
+    src, dst = C.copy_span(sids, s0, zids, z0)
+    assert [sids[i] for i in src] == [zids[i] for i in dst]
+
+
+# ---------------------------------------------------------------- off-target frames (H-F3)
+
+def test_h_f3_no_frame_says_none(prompts, tiny_run):
+    """No frame the runner builds carries the literal word "None"; a value template refuses value=None."""
+    with pytest.raises(SystemExit):
+        R.build_prompt(prompts, "You", None, "Do you like the colour blue? A) yes B) no")
+    for o in prompts["off_target"]:
+        for n in prompts["personas"]:
+            text = R.build_prompt(prompts, n, None, o["question"], prompts["off_target_personas"])
+            assert "None" not in text
+            assert "care" not in text.split("\n")[0]          # no value clause on the persona line
+    off = [r for r in records(tiny_run["dir"]) if r["arm"].startswith("off_target")]
+    assert off and all("None" not in r.get("persona_line", "") for r in off)
+    assert {r["persona_line"] for r in off if "persona_line" in r} == set(prompts["off_target_personas"].values())
+
+
+# ---------------------------------------------------------------- random families (D-F7, D-F9, D-F10)
 
 def _fake_units(n_layers=4, heads=3, neurons=6, sub=""):
     out = []
     for l in range(n_layers):
         out += [C.Unit("head", l, h, 4, "o_proj", sub) for h in range(heads)]
         out += [C.Unit("neuron", l, j, 1, "down_proj") for j in range(neurons)]
+    return out
+
+
+def _counts(keys, by, f):
+    out = {}
+    for k in keys:
+        out[f(by[k])] = out.get(f(by[k]), 0) + 1
     return out
 
 
@@ -321,41 +437,66 @@ def test_random_families_meet_kind_and_layer_counts_and_exclude_say_do():
     effect = {k: float(-i) for i, k in enumerate(keys)}
     rngs = {k: random.Random(100 + i) for i, k in enumerate(("layer", "score", "effect"))}
     fam = R.draw_random_families(rngs, units, do, say, score, effect, k=8, n_sets=20)
-    assert fam["fillable"]
     by = {u.key: u for u in units}
-    want = {"head": sum(by[k].kind == "head" for k in do), "neuron": sum(by[k].kind == "neuron" for k in do)}
+    want = _counts(do, by, R.kind_key)
     for name, f in fam["families"].items():
-        assert len(f["sets"]) == 20
+        assert f["fillable"] is True and len(f["sets"]) == 20
         for s in f["sets"]:
             assert len(s) == 8 and len(set(s)) == 8
             assert not (set(s) & set(say)) and not (set(s) & set(do))
-            got = {"head": sum(by[k].kind == "head" for k in s), "neuron": sum(by[k].kind == "neuron" for k in s)}
-            assert got == want, (name, got, want)
-    # layer family: the DO set's count per layer and kind (or a counted relaxation)
-    layer_fam = fam["families"]["layer"]
-    want_by_layer = {}
-    for k in do:
-        want_by_layer[(by[k].kind, by[k].layer)] = want_by_layer.get((by[k].kind, by[k].layer), 0) + 1
-    for s in layer_fam["sets"]:
-        got = {}
-        for k in s:
-            got[(by[k].kind, by[k].layer)] = got.get((by[k].kind, by[k].layer), 0) + 1
-        if layer_fam["relaxed"] == 0:
-            assert got == want_by_layer
+            assert _counts(s, by, R.kind_key) == want, name
+    # D-F7: the layer family's per-layer counts are checked whether or not anything relaxed: every part is either in
+    # its wanted layer or listed as a relaxation from it
+    want_layer = _counts(do, by, lambda u: (R.kind_key(u), u.layer))
+    lf = fam["families"]["layer"]
+    for si, s in enumerate(lf["sets"]):
+        got = _counts(s, by, lambda u: (R.kind_key(u), u.layer))
+        for row in (r for r in lf["relaxed_detail"] if r["set"] == si):
+            got[(row["kind"], row["layer_got"])] -= 1
+            got[(row["kind"], row["layer_wanted"])] = got.get((row["kind"], row["layer_wanted"]), 0) + 1
+        assert {k: v for k, v in got.items() if v} == want_layer
 
 
-def test_random_family_not_fillable_is_reported():
+def test_d_f7_d_f10_a_short_layer_relaxes_to_the_nearest_layer_and_is_counted():
+    """A DO set that takes all 3 heads of layer 3, with SAY holding one head of layer 2: the 3 missing heads come
+    from the nearest layer first (the 2 eligible heads of layer 2), then the next nearest (1 from layer 1), are
+    counted per family, and each is listed with the layer it was wanted in and the one it came from."""
+    import random
+    units = _fake_units(n_layers=4, heads=3, neurons=6)
+    by = {u.key: u for u in units}
+    do = ["head:3:0", "head:3:1", "head:3:2"] + ["neuron:0:0", "neuron:0:1"]
+    say = ["head:2:0"]
+    fam = R.draw_random_families({k: random.Random(5) for k in ("layer", "score", "effect")}, units, do, say,
+                                 {u.key: float(u.layer) for u in units}, {u.key: 0.0 for u in units}, k=5, n_sets=4)
+    lf = fam["families"]["layer"]
+    assert lf["fillable"] and lf["relaxed"] == 3 * 4
+    for si, s in enumerate(lf["sets"]):
+        rows = [r for r in lf["relaxed_detail"] if r["set"] == si]
+        assert all(r["kind"] == "head" and r["layer_wanted"] == 3 for r in rows)
+        assert sorted(r["layer_got"] for r in rows) == [1, 2, 2]
+        assert all(by[r["part"]].layer == r["layer_got"] and r["part"] != "head:2:0" for r in rows)
+        assert sum(by[k].kind == "head" for k in s) == 3
+
+
+def test_d_f9_fillability_is_per_family_and_not_fillable_is_reported():
     import random
     units = _fake_units(n_layers=2, heads=1, neurons=2)
     keys = [u.key for u in units]
-    # a DO set that wants more heads than the pool minus SAY/DO can give
     do = [k for k in keys if k.startswith("head")] + [k for k in keys if k.startswith("neuron")][:2]
     say = [k for k in keys if k.startswith("neuron")][2:4]
     rngs = {k: random.Random(1) for k in ("layer", "score", "effect")}
     fam = R.draw_random_families(rngs, units, do, say, {k: 1.0 for k in keys}, {k: 1.0 for k in keys}, k=4, n_sets=3)
-    assert fam["fillable"] is False
-    assert fam["not_fillable_reason"]
-    assert fam["families"] == {}
+    assert set(fam["families"]) == {"layer", "score", "effect"}
+    for f in fam["families"].values():
+        assert f["fillable"] is False and f["sets"] == [] and f["reason"]
+    # one family without its stratifying values is not fillable on its own; the other two still are
+    units2 = _fake_units()
+    keys2 = [u.key for u in units2]
+    fam2 = R.draw_random_families(rngs, units2, keys2[4:6], keys2[:2], {k: 1.0 for k in keys2}, None, k=2, n_sets=2)
+    assert fam2["families"]["effect"]["fillable"] is False
+    assert fam2["families"]["layer"]["fillable"] and fam2["families"]["score"]["fillable"]
+    rsr = S.random_set_rule({"T": 0.9, "random": {"layer": [{"T": 0.1}] * 2, "score": [{"T": 0.1}] * 2}}, fam2)
+    assert rsr["read"] is True and rsr["fillable"] == ["layer", "score"] and "effect" in rsr["not_fillable"]
 
 
 def test_random_families_are_reproducible_under_their_seeds():
@@ -370,6 +511,19 @@ def test_random_families_are_reproducible_under_their_seeds():
     b = R.draw_random_families({k: random.Random(7) for k in ("layer", "score", "effect")}, units, do, say,
                                score, effect, k=6, n_sets=4)
     assert a["families"] == b["families"]
+
+
+def test_d_f10_scorer_prints_relaxations_per_family(tiny_run):
+    sd = S.load_stage_dir(tiny_run["dir"])
+    res = S.score_stage("tiny", sd, tiny_run["cfg"], 1)
+    fake = {"random_families": {"layer": dict(res["random_families"]["layer"], relaxed=3,
+                                              relaxed_detail=[{}] * 3),
+                                "score": dict(res["random_families"]["score"], relaxed=0, relaxed_detail=[]),
+                                "effect": {"fillable": False, "reason": {"head:full": "want 4, eligible 0"}}}}
+    text = S.relaxation_lines(fake)
+    assert "random family layer: fillable" in text and "3 relaxed parts" in text
+    assert "random family score: fillable" in text and "0 relaxed parts" in text
+    assert "random family effect: NOT FILLABLE" in text
 
 
 # ---------------------------------------------------------------- bootstrap
@@ -402,81 +556,134 @@ def test_paired_rise_bootstrap_is_deterministic():
     assert a == b
 
 
-# ---------------------------------------------------------------- gates
+# ---------------------------------------------------------------- gates (fixtures shaped like the runner's rows)
 
-def _row(arm, qid, name, pa, pb, consistent="A", n_parts=80, n_positions=10):
-    return {"arm": arm, "id": qid, "name": name, "consistent": consistent, "p_a": pa, "p_b": pb,
-            "option_mass": pa + pb, "top_token": 1, "top_prob": pa + pb, "top_is_letter": True,
-            "n_parts": n_parts, "n_positions": n_positions}
+def _row(arm, qid, name, pa, consistent="A", mass=0.9, top_is_letter=True, logit_diff=None, **extra):
+    """A record shaped like the runner's: p_a + p_b = 1 (normalised), raw masses summing to option_mass (D-F8)."""
+    r = {"arm": arm, "id": qid, "name": name, "consistent": consistent, "p_a": pa, "p_b": 1.0 - pa,
+         "mass_a": pa * mass, "mass_b": (1.0 - pa) * mass, "option_mass": mass, "top_token": 1,
+         "top_prob": max(pa, 1 - pa) * mass, "top_is_letter": top_is_letter}
+    if arm == "you":
+        r["persona"] = "You"
+    if logit_diff is not None:
+        r["max_abs_logit_diff"] = logit_diff
+    r.update(extra)
+    return r
 
 
-def _arms_fixture(you_pa, third_pa, copy_pa, say_pa, top_is_letter=True, mass=0.9, do_nothing_equal=True):
+def _arms_fixture(you_pa, third_pa, copy_pa, say_pa, top_is_letter=True, mass=0.9, dn_logit_diff=0.0, rev_pa=None):
     """2 questions x 2 names; You answers you_pa, third person third_pa, DO copy copy_pa, SAY copy say_pa."""
     arms = {}
     for q in ("q1", "q2"):
-        r = _row("you", q, "You", you_pa, 1 - you_pa)
-        r["top_is_letter"] = top_is_letter
-        r["option_mass"] = mass
-        arms.setdefault("you", []).append(r)
+        arms.setdefault("you", []).append(_row("you", q, "You", you_pa, mass=mass, top_is_letter=top_is_letter))
         for name in ("Zara", "Milo"):
-            arms.setdefault("baseline", []).append(_row("baseline", q, name, third_pa, 1 - third_pa))
-            arms.setdefault("do_nothing", []).append(_row("do_nothing", q, name,
-                                                          third_pa if do_nothing_equal else third_pa + 0.01,
-                                                          1 - third_pa))
-            arms.setdefault("do_copy", []).append(_row("do_copy", q, name, copy_pa, 1 - copy_pa))
-            arms.setdefault("say_copy", []).append(_row("say_copy", q, name, say_pa, 1 - say_pa))
+            arms.setdefault("baseline", []).append(_row("baseline", q, name, third_pa))
+            arms.setdefault("do_nothing", []).append(_row("do_nothing", q, name, third_pa, logit_diff=dn_logit_diff))
+            arms.setdefault("do_copy", []).append(_row("do_copy", q, name, copy_pa))
+            arms.setdefault("say_copy", []).append(_row("say_copy", q, name, say_pa))
+            if rev_pa is not None:
+                arms.setdefault("reverse", []).append(_row("reverse", q, name, rev_pa))
     return arms
 
 
 def test_gate_g0_passes_and_fails():
     held = {"q1", "q2"}
-    ok = _arms_fixture(0.8, 0.5, 0.7, 0.7)
-    assert S.gate_g0(ok, held)["pass"] is True
-    low = _arms_fixture(0.8, 0.5, 0.7, 0.7, mass=0.3)
-    assert S.gate_g0(low, held)["pass"] is False
-    noletter = _arms_fixture(0.8, 0.5, 0.7, 0.7, top_is_letter=False)
-    assert S.gate_g0(noletter, held)["pass"] is False
+    assert S.gate_g0(_arms_fixture(0.8, 0.5, 0.7, 0.7), held)["pass"] is True
+    assert S.gate_g0(_arms_fixture(0.8, 0.5, 0.7, 0.7, mass=0.3), held)["pass"] is False
+    assert S.gate_g0(_arms_fixture(0.8, 0.5, 0.7, 0.7, top_is_letter=False), held)["pass"] is False
 
 
-def test_gate_g1_passes_and_fails():
-    held = {"q1", "q2"}
-    ok = _arms_fixture(0.8, 0.5, 0.7, 0.7)
+def test_h_f2_g1_fails_a_do_nothing_row_whose_masses_match_but_logits_do_not():
+    """H-F2/D-F4: same option masses, different logits: G1 FAILS. Exact logits: G1 passes. No logit difference
+    recorded: G1 fails (it cannot be checked)."""
+    ok = _arms_fixture(0.8, 0.5, 0.7, 0.7, dn_logit_diff=0.0)
     assert S.gate_g1(ok)["pass"] is True
-    bad = _arms_fixture(0.8, 0.5, 0.7, 0.7, do_nothing_equal=False)
-    g = S.gate_g1(bad)
-    assert g["pass"] is False and g["max_abs_diff"] > 0
+    same_masses = _arms_fixture(0.8, 0.5, 0.7, 0.7, dn_logit_diff=0.3)
+    for b, d in zip(same_masses["baseline"], same_masses["do_nothing"]):
+        assert (b["p_a"], b["p_b"], b["mass_a"], b["mass_b"]) == (d["p_a"], d["p_b"], d["mass_a"], d["mass_b"])
+    g = S.gate_g1(same_masses)
+    assert g["pass"] is False and g["max_abs_diff"] == 0.3 and g["mode"] == "exact"
+    unrecorded = _arms_fixture(0.8, 0.5, 0.7, 0.7)
+    for r in unrecorded["do_nothing"]:
+        r.pop("max_abs_logit_diff", None)
+    assert S.gate_g1(unrecorded)["pass"] is False
+    # every do-nothing arm counts, not only the main one
+    ok["off_target_do_nothing"] = [_row("off_target_do_nothing", "off-1", "Zara", 0.5, logit_diff=1e-7)]
+    assert S.gate_g1(ok)["pass"] is False
 
 
-def test_gate_g1_a770_variant():
-    plain = [(0.5, 0.5)] * 5
-    assert S.gate_g1_a770(plain, [(0.5, 0.5)] * 5)["pass"] is True
-    assert S.gate_g1_a770(plain, [(0.5001, 0.4999)] * 5)["pass"] is False
-    # plain runs not bit-identical: tolerance is twice the largest plain-against-plain difference
-    plain2 = [(0.5, 0.5), (0.5004, 0.4996), (0.5, 0.5), (0.5002, 0.4998), (0.5, 0.5)]
-    dn = [(0.5006, 0.4994)] * 5
-    g = S.gate_g1_a770(plain2, dn)
-    assert g["bit_identical_plain"] is False and g["pass"] is True
-    assert S.gate_g1_a770(plain2, [(0.5012, 0.4988)] * 5)["pass"] is False
+def test_h_f6_g1_family_q_applies_the_a770_rule_from_g1check():
+    """Family Q: with g1check205's plain runs not bit-identical, every do-nothing difference may be up to twice the
+    largest plain difference; with bit-identical plain runs (or family O) the rule stays exact."""
+    rows = _arms_fixture(0.8, 0.5, 0.7, 0.7, dn_logit_diff=1.5e-3)
+    loose = {"verdict": {"pass": True, "bit_identical_plain": False, "worst_plain": 1e-3}}
+    g = S.gate_g1(rows, "Q", loose)
+    assert g["pass"] is True and g["mode"] == "a770-relaxed" and g["tolerance"] == 2e-3
+    assert S.gate_g1(_arms_fixture(0.8, 0.5, 0.7, 0.7, dn_logit_diff=2.5e-3), "Q", loose)["pass"] is False
+    exact = {"verdict": {"pass": True, "bit_identical_plain": True, "worst_plain": 0.0}}
+    assert S.gate_g1(rows, "Q", exact)["pass"] is False
+    assert S.gate_g1(rows, "O", loose)["pass"] is False                   # family O never relaxes
+    assert S.gate_g1(rows, "Q", None)["pass"] is False                    # no g1.json: exact
+    failed = {"verdict": {"pass": False, "bit_identical_plain": False, "worst_plain": 1e-3}}
+    assert S.gate_g1(_arms_fixture(0.8, 0.5, 0.7, 0.7), "Q", failed)["pass"] is False
+
+
+def test_h_f6_score_main_reads_g1_json_for_family_q(tiny_run, tmp_path):
+    """The wiring: score205.main finds <raw>/g1/g1.json and applies it to a family-Q stage's G1."""
+    import shutil
+    raw = tmp_path / "raw"
+    shutil.copytree(tiny_run["dir"], raw / "tiny")
+    meta = json.loads((raw / "tiny" / "meta.json").read_text())
+    meta["env"]["family"] = "Q"
+    (raw / "tiny" / "meta.json").write_text(json.dumps(meta))
+    rp = raw / "tiny" / "records.jsonl"
+    rows = records(raw / "tiny")
+    for r in rows:
+        if r["arm"] in S.DO_NOTHING_ARMS:
+            r["max_abs_logit_diff"] = 1.5e-3
+    rp.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    c = dict(tiny_run["cfg"], stages=[{"stage": "tiny", "family": "Q"}])
+    (tmp_path / "cfg.json").write_text(json.dumps(c))
+    (raw / "g1").mkdir()
+    (raw / "g1" / "g1.json").write_text(json.dumps(
+        {"verdict": {"pass": True, "bit_identical_plain": False, "worst_plain": 1e-3}}))
+    S.main(["--raw", str(raw), "--config", str(tmp_path / "cfg.json")])
+    g1 = json.loads((raw / "results.json").read_text())["stages"][0]["gates"]["G1"]
+    assert g1["pass"] is True and g1["mode"] == "a770-relaxed"
+    (raw / "g1" / "g1.json").unlink()
+    S.main(["--raw", str(raw), "--config", str(tmp_path / "cfg.json")])
+    assert json.loads((raw / "results.json").read_text())["stages"][0]["gates"]["G1"]["pass"] is False
+
+
+def test_gate_g1_a770_variant_uses_all_ten_plain_pairs():
+    base = torch.zeros(6)
+    plain = [base.clone() for _ in range(5)]
+    assert S.gate_g1_a770(plain, [base.clone()] * 5)["pass"] is True
+    assert S.gate_g1_a770(plain, [base + 1e-4] * 5)["pass"] is False
+    # plain runs not bit-identical; the largest plain difference is between runs 1 and 3 (not involving run 0)
+    plain2 = [base.clone(), base + 2e-4, base.clone(), base - 2e-4, base.clone()]
+    g = S.gate_g1_a770(plain2, [base + 7e-4] * 5)
+    assert g["plain_pairs"] == 10 and g["worst_plain"] == pytest.approx(4e-4)
+    assert g["bit_identical_plain"] is False and g["pass"] is True        # 7e-4 <= 2 x 4e-4
+    assert S.gate_g1_a770(plain2, [base + 9e-4] * 5)["pass"] is False
 
 
 def test_gate_g2_passes_and_fails():
     held = {"q1", "q2"}
-    ok = _arms_fixture(0.8, 0.5, 0.7, 0.7)          # gap 0.3
-    t = S.ratio_of_means(ok, held, ["Zara", "Milo"], "do_copy", "baseline")
-    assert S.gate_g2(t)["pass"] is True
-    small = _arms_fixture(0.55, 0.5, 0.52, 0.52)     # gap 0.05
-    t2 = S.ratio_of_means(small, held, ["Zara", "Milo"], "do_copy", "baseline")
-    assert S.gate_g2(t2)["pass"] is False
+    assert S.gate_g2(S.gap_stats(_arms_fixture(0.8, 0.5, 0.7, 0.7), held, ["Zara", "Milo"]))["pass"] is True
+    assert S.gate_g2(S.gap_stats(_arms_fixture(0.55, 0.5, 0.52, 0.52), held, ["Zara", "Milo"]))["pass"] is False
+    # the gap does not depend on a copy arm having run
+    no_copy = _arms_fixture(0.8, 0.5, 0.7, 0.7)
+    del no_copy["do_copy"]
+    assert S.gap_stats(no_copy, held, ["Zara", "Milo"])["gap"] == pytest.approx(0.3)
 
 
 def test_gate_g3_passes_and_fails():
     held = {"q1", "q2"}
-    ok = _arms_fixture(0.8, 0.5, 0.7, 0.66)          # T_SAY = 0.16/0.3 = 0.53
-    t = S.ratio_of_means(ok, held, ["Zara", "Milo"], "say_copy", "baseline")
-    assert S.gate_g3(t)["pass"] is True
-    bad = _arms_fixture(0.8, 0.5, 0.7, 0.6)          # T_SAY = 0.33
-    t2 = S.ratio_of_means(bad, held, ["Zara", "Milo"], "say_copy", "baseline")
-    assert S.gate_g3(t2)["pass"] is False
+    t = S.ratio_of_means(_arms_fixture(0.8, 0.5, 0.7, 0.66), held, ["Zara", "Milo"], "say_copy")
+    assert S.gate_g3(t)["pass"] is True                                   # 0.16 / 0.3
+    t2 = S.ratio_of_means(_arms_fixture(0.8, 0.5, 0.7, 0.6), held, ["Zara", "Milo"], "say_copy")
+    assert S.gate_g3(t2)["pass"] is False                                 # 0.1 / 0.3
 
 
 def test_gate_g4_passes_and_fails():
@@ -485,109 +692,254 @@ def test_gate_g4_passes_and_fails():
     assert S.gate_g4({"retest_say": 19, "retest_do": 40})["pass"] is False
 
 
+def test_d_f13_ratio_of_means_counts_dropped_pairs():
+    arms = _arms_fixture(0.8, 0.5, 0.7, 0.7)
+    arms["do_copy"] = [r for r in arms["do_copy"] if not (r["id"] == "q2" and r["name"] == "Milo")]
+    t = S.ratio_of_means(arms, ["q1", "q2"], ["Zara", "Milo"], "do_copy")
+    assert t["n_pairs"] == 3 and t["n_expected"] == 4 and t["n_dropped"] == 1
+    assert t["dropped"] == [{"id": "q2", "name": "Milo", "missing": ["do_copy"]}]
+
+
 def test_random_set_rule_passes_and_fails():
     held = {"q1", "q2"}
     arms = _arms_fixture(0.8, 0.5, 0.75, 0.7)
     for fam in ("layer", "score"):
         for i in range(3):
-            arms.setdefault(f"random:{fam}:{i}", []).append(_row(f"random:{fam}:{i}", "q1", "Zara", 0.6, 0.4))
-            arms.setdefault(f"random:{fam}:{i}", []).append(_row(f"random:{fam}:{i}", "q2", "Milo", 0.6, 0.4))
-    t = S.ratio_of_means(arms, held, ["Zara", "Milo"], "do_copy", "baseline")
-    t["random"] = {fam: [S.ratio_of_means(arms, held, ["Zara", "Milo"], f"random:{fam}:{i}", "baseline")
-                         for i in range(3)] for fam in ("layer", "score")}
-    fams = {"fillable": True, "families": {"layer": {"sets": [[], [], []]}, "score": {"sets": [[], [], []]}}}
+            for q, n in (("q1", "Zara"), ("q1", "Milo"), ("q2", "Zara"), ("q2", "Milo")):
+                arms.setdefault(f"random:{fam}:{i}", []).append(_row(f"random:{fam}:{i}", q, n, 0.6))
+    rnd = {fam: [S.ratio_of_means(arms, held, ["Zara", "Milo"], f"random:{fam}:{i}") for i in range(3)]
+           for fam in ("layer", "score")}
+    fams = {"families": {"layer": {"fillable": True, "sets": [[]] * 3}, "score": {"fillable": True, "sets": [[]] * 3},
+                         "effect": {"fillable": False, "sets": [], "reason": "short"}}}
+    t = dict(S.ratio_of_means(arms, held, ["Zara", "Milo"], "do_copy"), random=rnd)     # T 0.83 > 0.33
     assert S.random_set_rule(t, fams)["pass"] is True
-    t["T"] = 0.4                                     # below the random sets' 0.33? no: above. Use a lower copy.
-    arms2 = _arms_fixture(0.8, 0.5, 0.55, 0.7)
-    t2 = S.ratio_of_means(arms2, held, ["Zara", "Milo"], "do_copy", "baseline")
-    t2["random"] = t["random"]
-    assert S.random_set_rule(t2, fams)["pass"] is False
-    one = {"fillable": True, "families": {"layer": {"sets": [[]]}}}
+    t2 = dict(S.ratio_of_means(_arms_fixture(0.8, 0.5, 0.55, 0.7), held, ["Zara", "Milo"], "do_copy"), random=rnd)
+    assert S.random_set_rule(t2, fams)["pass"] is False                                  # T 0.17 < 0.33
+    one = {"families": {"layer": {"fillable": True, "sets": [[]]}, "score": {"fillable": False, "sets": []}}}
     assert S.random_set_rule(t, one)["read"] is False
 
 
-# ---------------------------------------------------------------- the runner end to end
+# ---------------------------------------------------------------- the runner and scorer end to end (H-F1)
 
-def test_runner_end_to_end_on_tiny_olmo(tmp_path, prompts, cfg):
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    m = tiny_olmo()
-    c = tiny_cfg(cfg)
-    c["random_family"]["sets_per_stage_olmo"] = 2
-    c["bootstrap"]["resamples"] = 10
-    import argparse
-    a = argparse.Namespace(stage="tiny", out=str(tmp_path), config=str(HERE / "config.json"),
-                           prompts=str(HERE / "prompts205.json"), device="cpu", stage_only=None, check_pool=False)
-    env = {"family": "O", "stage": "tiny"}
-    R.run_stage(a, model=m, tok=tok, env=env, prompts=prompts, cfg=c)
-    d = tmp_path / "tiny"
+def test_h_f1_real_run_and_score_find_the_you_run(tiny_run, prompts):
+    """H-F1: the REAL run_stage writes rows the REAL score_stage reads: every pair is found, T is a number, G2 has a
+    gap, the copy arms and the polarity split are read from the rows, and the read flags are score205.read_flags'."""
+    d = tiny_run["dir"]
     for f in ("ranking.npz", "ranking.json", "effect.npz", "copy_acts.npz", "sets.json", "records.jsonl",
               "meta.json"):
         assert (d / f).exists(), f
-    recs = [json.loads(x) for x in (d / "records.jsonl").read_text().splitlines() if x.strip()]
+    recs = records(d)
     arms = {r["arm"] for r in recs}
     assert {"ranking", "you", "baseline", "do_nothing", "do_copy", "say_copy", "swap", "reverse",
-            "off_target_baseline", "off_target_do_copy", "secondary_you", "secondary_baseline",
-            "secondary_do_copy", "secondary_say_copy"} <= arms
-    # the do-nothing rows reproduce the baseline exactly (G1 on the real code path)
-    base = {(r["id"], r["name"]): r for r in recs if r["arm"] == "baseline"}
-    for r in recs:
-        if r["arm"] == "do_nothing":
-            b = base[(r["id"], r["name"])]
-            assert r["p_a"] == b["p_a"] and r["p_b"] == b["p_b"]
-    # the scorer runs on it and names every prediction
-    sd = S.load_stage_dir(d)
-    res = S.score_stage("tiny", sd, c, 1)
-    assert set(res["gates"]) == {"G0", "G1", "G2", "G3", "G4"}
-    assert res["gates"]["G1"]["pass"] is True
-    preds = S.predictions([res], c)
-    # every prediction whose stages are absent is "not read", and every key is named
+            "off_target_baseline", "off_target_do_nothing", "off_target_do_copy", "secondary_you",
+            "secondary_you_source", "secondary_baseline", "secondary_do_nothing", "secondary_do_copy",
+            "secondary_say_copy"} <= arms
+    assert all(r["name"] == "You" for r in recs if r["arm"] == "you")
+    res = S.score_stage("tiny", S.load_stage_dir(d), tiny_run["cfg"], 1)
+    det = res["T_detail"]
+    assert det["T"]["n_pairs"] == 48 and det["T"]["n_dropped"] == 0
+    for key in ("T", "T_SAY", "T_swap", "reverse"):
+        assert isinstance(res[key], float), key
+    assert isinstance(res["gates"]["G2"]["gap"], float) and res["gates"]["G2"]["n_pairs"] == 48
+    for arm in ("do_copy", "say_copy", "swap"):
+        for letter in ("A", "B"):
+            assert res["polarity"][arm][letter]["n"] == 24 and res["polarity"][arm][letter]["T"] is not None
+    assert res["polarity_reverse"]["A"]["n"] == 24 and res["polarity_reverse"]["B"]["n"] == 24
+    assert res["off_target"]["n"] == 12 and res["T_personally"]["n"] == 12
+    # every random family fillable here, each set's T computed from its rows
+    for name, f in res["random_families"].items():
+        assert f["fillable"] is True and len(f["T"]) == 2 and all(isinstance(x, float) for x in f["T"]), name
+    assert res["random_set_rule"]["read"] is True
+    assert res["gates"]["G1"]["pass"] is True and res["gates"]["G1"]["n"] == 48 + 12 + 12
+    assert res["read"] == S.read_flags(res["gates"], res["random_set_rule"])
+    preds = S.predictions([res], tiny_run["cfg"])
     assert set(preds) == {f"205.{i}" for i in range(1, 10)}
 
 
-def test_runner_resumes_without_duplicating_records(tmp_path, prompts, cfg):
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("allenai/OLMo-2-0425-1B", revision=OLMO_REV)
-    m = tiny_olmo()
-    c = tiny_cfg(cfg)
-    c["random_family"]["sets_per_stage_olmo"] = 1
-    import argparse
-    a = argparse.Namespace(stage="tiny", out=str(tmp_path), config=str(HERE / "config.json"),
-                           prompts=str(HERE / "prompts205.json"), device="cpu", stage_only=None, check_pool=False)
-    env = {"family": "O", "stage": "tiny"}
-    R.run_stage(a, model=m, tok=tok, env=env, prompts=prompts, cfg=c)
-    n1 = len((tmp_path / "tiny" / "records.jsonl").read_text().splitlines())
-    R.run_stage(a, model=m, tok=tok, env=env, prompts=prompts, cfg=c)
-    n2 = len((tmp_path / "tiny" / "records.jsonl").read_text().splitlines())
-    assert n1 == n2
+def test_d_f5_do_nothing_hooks_the_copy_arms_parts_and_positions(tiny_run):
+    """D-F5: the do-nothing rows hook the union of every copy arm's parts at the copy arms' positions, and record
+    the full-logit difference, which is exactly 0 on the CPU."""
+    recs = records(tiny_run["dir"])
+    sets = json.loads((tiny_run["dir"] / "sets.json").read_text())
+    union = set(sets["say"]) | set(sets["do"]) | {k for f in sets["random"]["families"].values()
+                                                   for s in f["sets"] for k in s}
+    by = {(r["arm"], r.get("id"), r.get("name")): r for r in recs}
+    n = 0
+    for r in recs:
+        if r["arm"] != "do_nothing":
+            continue
+        assert r["n_parts"] == len(union)
+        for arm in ("do_copy", "say_copy", "random:layer:0"):
+            c = by[(arm, r["id"], r["name"])]
+            assert (c["first_position"], c["n_positions"]) == (r["first_position"], r["n_positions"])
+        assert r["max_abs_logit_diff"] == 0.0
+        n += 1
+    assert n == 48
+    for r in recs:
+        if r["arm"] == "secondary_do_nothing":
+            assert r["n_parts"] == len(set(sets["say"]) | set(sets["do"])) and r["max_abs_logit_diff"] == 0.0
+        if r["arm"] == "off_target_do_nothing":
+            assert r["n_parts"] == len(sets["do"]) and r["max_abs_logit_diff"] == 0.0
+
+
+def test_d_f2b_d_f3_runner_spans_on_the_real_rows(tiny_run, prompts):
+    """The reverse rows write into the You run's own question block; the secondary copies cover the whole question
+    block of the "personally" question (the source asked the same question)."""
+    tok = tiny_run["tok"]
+    recs = records(tiny_run["dir"])
+    held = {it["id"]: (v, it) for v in prompts["values"] for it in prompts["items"][v]["say"]}
+    for r in recs:
+        if r["arm"] == "reverse":
+            v, it = held[r["id"]]
+            persona = R.persona_text(prompts, "You", v)
+            q0, ids = C.question_start(tok, C.frame_text(persona, it["question"]), persona)
+            assert r["first_position"] == q0 and r["n_positions"] == len(ids) - q0 and r["n_tokens"] == len(ids)
+        if r["arm"] in ("secondary_do_copy", "secondary_say_copy"):
+            pq = prompts["secondary"]["third_person_question"].format(value=r["value"])
+            persona = R.persona_text(prompts, r["name"], r["value"])
+            q0, ids = C.question_start(tok, C.frame_text(persona, pq), persona)
+            assert r["first_position"] == q0 and r["n_positions"] == len(ids) - q0
+    assert sum(r["arm"] == "secondary_you_source" for r in recs) == 6
+
+
+def test_qwen_runner_end_to_end(tmp_path, prompts, cfg, qwen_tok):
+    """The runner's real path on the hybrid architecture (PROCEDURE section 5, Part 178: a dense model's tests cannot
+    see a hybrid-cache crash), scored by the real scorer."""
+    c = tiny_cfg(cfg, family="Q", top_k=3, n_sets=1)
+    R.run_stage(stage_args(tmp_path), model=tiny_qwen(), tok=qwen_tok, env={"family": "Q", "stage": "tiny"},
+                prompts=prompts, cfg=c)
+    recs = records(tmp_path / "tiny")
+    assert all(r["max_abs_logit_diff"] == 0.0 for r in recs if r["arm"] in S.DO_NOTHING_ARMS)
+    sets = json.loads((tmp_path / "tiny" / "sets.json").read_text())
+    assert {"head:full", "head:deltanet", "neuron"} <= set(sets["random"]["kind_counts_wanted"])
+    res = S.score_stage("tiny", S.load_stage_dir(tmp_path / "tiny"), c, 1)
+    assert res["T_detail"]["T"]["n_pairs"] == 48 and isinstance(res["T"], float)
+
+
+# ---------------------------------------------------------------- resume and lock (H-F7, H-F8, D-F15, D-F16)
+
+def _copy_run(tiny_run, tmp_path):
+    import shutil
+    shutil.copytree(tiny_run["dir"], tmp_path / "tiny")
+    return tmp_path / "tiny"
+
+
+def _rerun(tiny_run, tmp_path, prompts):
+    R.run_stage(stage_args(tmp_path), model=wide_olmo(), tok=tiny_run["tok"], env={"family": "O", "stage": "tiny"},
+                prompts=prompts, cfg=tiny_run["cfg"])
+    return json.loads((tmp_path / "tiny" / "meta.json").read_text())["passes_this_run"]
+
+
+def test_h_f8_a_resumed_run_skips_passes_whose_records_exist(tiny_run, tmp_path, prompts):
+    d = _copy_run(tiny_run, tmp_path)
+    before = (d / "records.jsonl").read_text()
+    assert _rerun(tiny_run, tmp_path, prompts) == 0            # nothing missing: no forward pass at all
+    assert (d / "records.jsonl").read_text() == before
+    # drop the last two copy records of one pair: only the passes that rebuild them run (You, the two baselines the
+    # pair and its swap partner need, and the two copies)
+    rows = records(d)
+    last = [i for i, r in enumerate(rows) if r["arm"] in ("do_copy", "say_copy")][-2:]
+    kept = [r for i, r in enumerate(rows) if i not in last]
+    (d / "records.jsonl").write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in kept))
+    n = _rerun(tiny_run, tmp_path, prompts)
+    assert 0 < n <= 1 + 2 + 2
+    assert sorted(R._rec_key(r) for r in records(d)) == sorted(R._rec_key(r) for r in rows)
+
+
+def test_h_f7_d_f15_a_torn_last_line_is_ignored_by_runner_and_scorer(tiny_run, tmp_path, prompts):
+    d = _copy_run(tiny_run, tmp_path)
+    text = (d / "records.jsonl").read_text()
+    lines = text.splitlines(keepends=True)
+    torn = "".join(lines[:-1]) + lines[-1][: len(lines[-1]) // 2]
+    (d / "records.jsonl").write_text(torn)
+    assert len(S.load_stage_dir(d)["records"]) == len(lines) - 1      # the scorer ignores it
+    assert R._done_keys(d / "records.jsonl")                          # so does the runner's key reader
+    _rerun(tiny_run, tmp_path, prompts)                               # the runner resumes and rewrites the record
+    rows = records(d)
+    assert len(rows) == len(lines)
+    assert [json.loads(x) for x in (d / "records.jsonl").read_text().splitlines()] == rows   # every line parses
+    # a bad line that is not the last is corruption, and raises
+    (d / "records.jsonl").write_text(lines[0] + "{not json\n" + "".join(lines[1:]))
+    with pytest.raises(SystemExit):
+        S.load_stage_dir(d)
+
+
+def test_d_f16_a_second_run_of_one_stage_is_refused(tiny_run, tmp_path, prompts):
+    d = _copy_run(tiny_run, tmp_path)
+    held = C.StageLock(d / ".lock")
+    try:
+        with pytest.raises(SystemExit, match="held by another run"):
+            _rerun(tiny_run, tmp_path, prompts)
+    finally:
+        held.release()
+    assert _rerun(tiny_run, tmp_path, prompts) == 0                    # released: runs again
 
 
 # ---------------------------------------------------------------- scoring rules
 
-def test_scorer_stops_the_reads_a_failed_gate_stops():
-    """G0 fails: neither O nor T is read. G2 fails: O is read, T is not. G4 fails: O is not read."""
-    def stage(g0=True, g1=True, g2=True, g3=True, g4=True):
-        return {"stage": "s", "gates": {"G0": {"pass": g0}, "G1": {"pass": g1}, "G2": {"pass": g2},
-                                        "G3": {"pass": g3}, "G4": {"pass": g4}}}
-    # the read flags are computed in score_stage; recompute them with the same rule
-    def reads(s):
-        g = s["gates"]
-        return {"O": g["G0"]["pass"] and g["G1"]["pass"] and g["G4"]["pass"],
-                "T": g["G0"]["pass"] and g["G1"]["pass"] and g["G2"]["pass"] and g["G3"]["pass"]}
-    assert reads(stage(g0=False)) == {"O": False, "T": False}
-    assert reads(stage(g2=False)) == {"O": True, "T": False}
-    assert reads(stage(g4=False)) == {"O": False, "T": True}
-    assert reads(stage(g1=False)) == {"O": False, "T": False}
-    assert reads(stage(g3=False)) == {"O": True, "T": False}
+def test_d_f6_read_flags_stop_the_reads_a_failed_gate_stops():
+    """G0 fails: neither O nor T is read. G2 fails: O is read, T is not. G4 fails: O is not read. Calls the real
+    score205.read_flags, which score_stage uses (asserted on the real run in test_h_f1)."""
+    def gates(**fail):
+        return {g: {"pass": not fail.get(g.lower(), False)} for g in ("G0", "G1", "G2", "G3", "G4")}
+    rsr = {"read": True}
+    f = S.read_flags
+    assert f(gates(g0=True), rsr) == {"O": False, "T": False, "copy_arms": False, "random_set_rule": False}
+    assert f(gates(g2=True), rsr) == {"O": True, "T": False, "copy_arms": False, "random_set_rule": False}
+    assert f(gates(g4=True), rsr) == {"O": False, "T": True, "copy_arms": True, "random_set_rule": True}
+    assert f(gates(g1=True), rsr)["O"] is False and f(gates(g1=True), rsr)["T"] is False
+    assert f(gates(g3=True), rsr) == {"O": True, "T": False, "copy_arms": False, "random_set_rule": False}
+    assert f(gates(), {"read": False})["random_set_rule"] is False
+
+
+def _stage(name, O=None, read_o=True, read_t=True, **kw):
+    s = {"stage": name, "gates": {g: {"pass": True} for g in ("G0", "G1", "G2", "G3", "G4")},
+         "read": {"O": read_o, "T": read_t, "copy_arms": read_t, "random_set_rule": False},
+         "overlap": {"O": O}, "T": None, "T_swap": None, "random_set_rule": {"read": False},
+         "off_target": {"shift": None}, "_est": None, "_prompts": None, "_keys": None,
+         "T_detail": {"reverse": {"share": None, "mean_drop": None, "mean_gap": None, "rule": ""}}}
+    s["gates"]["G2"]["gap"] = 0.3
+    s.update(kw)
+    return s
+
+
+def test_h_f5_205_6_holds_when_the_reverse_copy_removes_the_whole_gap(cfg):
+    """Gap 0.40, the reverse copy takes P_you all the way to P_third: 205.6 HOLDS (the old rule needed 1.5 x gap)."""
+    arms = _arms_fixture(0.9, 0.5, 0.7, 0.7, rev_pa=0.5)
+    held = ["q1", "q2"]
+    r = S.reverse_stats(arms, held, ["Zara", "Milo"])
+    assert r["share"] == pytest.approx(1.0) and r["mean_gap"] == pytest.approx(0.4)
+    st = _stage("instruct", T_detail={"reverse": r})
+    assert S.predictions([st], cfg)["205.6"]["verdict"] == "held"
+    half = S.reverse_stats(_arms_fixture(0.9, 0.5, 0.7, 0.7, rev_pa=0.7), held, ["Zara", "Milo"])   # drop 0.2
+    assert S.predictions([_stage("instruct", T_detail={"reverse": half})], cfg)["205.6"]["verdict"] == "held"
+    less = S.reverse_stats(_arms_fixture(0.9, 0.5, 0.7, 0.7, rev_pa=0.75), held, ["Zara", "Milo"])  # drop 0.15
+    assert S.predictions([_stage("instruct", T_detail={"reverse": less})], cfg)["205.6"]["verdict"] == "failed"
+
+
+def test_d_f11_205_3_needs_the_rise_interval_to_exclude_zero(cfg, monkeypatch):
+    """The same O's: with the mid-training-end -> SFT rise's paired interval covering 0, 205.3 FAILS; excluding 0,
+    it holds."""
+    os_ = {"pretrain-3.0T": 0.1, "midtrain-26B": 0.15, "midtrain-end": 0.2, "sft": 0.6, "dpo": 0.62, "instruct": 0.63}
+    stages = [_stage(n, O=o) for n, o in os_.items()]
+    monkeypatch.setattr(S, "paired_bootstrap_rise", lambda *a, **k: (-0.5, 0.9))
+    p = S.predictions(stages, cfg)["205.3"]
+    assert p["verdict"] == "failed" and p["rise_ci"] == [-0.5, 0.9]
+    monkeypatch.setattr(S, "paired_bootstrap_rise", lambda *a, **k: (0.1, 0.7))
+    assert S.predictions(stages, cfg)["205.3"]["verdict"] == "held"
+
+
+def test_d_f12_withdrawal_skips_a_stage_whose_o_is_none(cfg, monkeypatch):
+    monkeypatch.setattr(S, "paired_bootstrap_rise", lambda *a, **k: (0.1, 0.7))
+    stages = [_stage("pretrain-3.0T", O=None), _stage("midtrain-26B", O=0.1), _stage("midtrain-end", O=0.7)]
+    w = S.withdrawal(stages, cfg)
+    assert [q["stage"] for q in w["stages"]] == ["midtrain-end"]
 
 
 def test_prediction_keys_and_unread_verdicts(cfg):
     """A stage with every gate failing leaves the predictions that need a stage unread, not failed."""
-    stage = {"stage": "instruct", "gates": {g: {"pass": False} for g in ("G0", "G1", "G2", "G3", "G4")},
-             "read": {"O": False, "T": False, "copy_arms": False, "random_set_rule": False},
-             "overlap": {"O": None}, "T": None, "T_swap": None, "T_detail": {"T": {"mean_den": None},
-                                                                           "reverse": {"mean_num": None, "mean_den": None}},
-             "random_set_rule": {"read": False}, "off_target": {"shift": None}}
+    stage = _stage("instruct", read_o=False, read_t=False)
+    stage["gates"] = {g: {"pass": False} for g in ("G0", "G1", "G2", "G3", "G4")}
     preds = S.predictions([stage], cfg)
     assert preds["205.4"]["verdict"] == "not read"
     assert preds["205.7"]["verdict"] == "vacuous"
@@ -603,12 +955,11 @@ def test_overlap_and_o_index():
 
 
 def test_polarity_split_and_broken_counts():
-    arms = {"you": [_row("you", "q1", "You", 0.8, 0.2, consistent="A"),
-                    _row("you", "q2", "You", 0.2, 0.8, consistent="B")],
-            "baseline": [_row("baseline", "q1", "Zara", 0.5, 0.5, consistent="A"),
-                         _row("baseline", "q2", "Zara", 0.5, 0.5, consistent="B")],
-            "do_copy": [_row("do_copy", "q1", "Zara", 0.7, 0.3, consistent="A"),
-                        _row("do_copy", "q2", "Zara", 0.3, 0.7, consistent="B")]}
+    arms = {"you": [_row("you", "q1", "You", 0.8, consistent="A"), _row("you", "q2", "You", 0.2, consistent="B")],
+            "baseline": [_row("baseline", "q1", "Zara", 0.5, consistent="A"),
+                         _row("baseline", "q2", "Zara", 0.5, consistent="B")],
+            "do_copy": [_row("do_copy", "q1", "Zara", 0.7, consistent="A"),
+                        _row("do_copy", "q2", "Zara", 0.3, consistent="B")]}
     pol = S.polarity_split(arms, ["q1", "q2"], ["Zara"], "do_copy")
     assert pol["A"]["T"] == pytest.approx(0.2 / 0.3)
     assert pol["B"]["T"] == pytest.approx(0.2 / 0.3)
@@ -616,6 +967,42 @@ def test_polarity_split_and_broken_counts():
     b = S.broken_counts(arms)
     assert b["do_copy"]["broken"] == 1 and b["do_copy"]["n"] == 2
 
+
+# ---------------------------------------------------------------- wiring: config, models.json, steps, g1check (H-F9)
+
+def test_h_f9_every_stage_resolves_to_a_model_and_revision(cfg):
+    """load_stage's lookup: every stage in config.json has a model id and revision (the old lookup read model_id
+    from the top-level stage list, which has none, and the Q stages were named "base"/"chat")."""
+    for s in cfg["stages"]:
+        spec = R.stage_spec(cfg, s["stage"])
+        assert spec["model_id"] and len(spec["revision"]) == 40, s
+
+
+def test_h_f9_models_json_records_revisions(tmp_path):
+    p = tmp_path / "models.json"
+    R.write_models_json(p, {"stage": "sft", "family": "O", "model_id": "m", "revision": "r1", "dtype": "float32",
+                            "device": "cpu", "transformers": "4.x", "torch": "2.x"})
+    R.write_models_json(p, {"stage": "dpo", "family": "O", "model_id": "m2", "revision": "r2"})
+    got = json.loads(p.read_text())["stages"]
+    assert got["sft"]["revision"] == "r1" and got["sft"]["transformers"] == "4.x" and got["dpo"]["revision"] == "r2"
+
+
+def test_h_f9_every_launch_line_checks_the_pool():
+    lines = [x for x in (HERE / "steps.txt").read_text().splitlines()
+             if "launch_arc" in x and ("part205/run205.py --stage" in x)]
+    assert len(lines) == 9
+    assert all("--check-pool" in x for x in lines)
+
+
+def test_h_f9_g1check_runs_and_compares_full_logits(tmp_path, prompts, cfg, qwen_tok):
+    import g1check205 as G1
+    rc = G1.check(qwen_tok, tiny_qwen(), {"stage": "tiny"}, cfg, prompts, tmp_path, check_pool=False)
+    g = json.loads((tmp_path / "g1.json").read_text())
+    assert rc == 0 and g["verdict"]["plain_pairs"] == 10 and g["verdict"]["bit_identical_plain"] is True
+    assert g["verdict"]["compared"].startswith("full last-position logits")
+
+
+# ---------------------------------------------------------------- prompts (D-F18)
 
 def test_prompts_file_shape_and_balance(prompts):
     assert prompts["values"] == ["honesty", "harmlessness", "kindness", "fairness", "privacy", "humility"]
@@ -634,6 +1021,17 @@ def test_prompts_file_shape_and_balance(prompts):
     assert prompts["personas"]["Milo"] == "Milo, an AI, cares about {value}."
 
 
+def test_d_f18_prompts_approved_and_pilot_cut_exists(prompts):
+    import gen_prompts205 as G
+    assert "draft" not in prompts and "DRAFT" not in json.dumps(prompts)
+    pil = C.load_prompts(HERE / "prompts205-pilot.json")
+    assert pil["values"] == ["honesty"] and list(pil["items"]) == ["honesty"]
+    assert pil["items"]["honesty"] == prompts["items"]["honesty"]
+    for k in ("personas", "off_target_personas", "off_target", "secondary", "frame"):
+        assert pil[k] == prompts[k], k
+    assert G.main(["--check"]) == 0                    # both files are what the generator writes
+
+
 def test_prompt_token_bound_with_both_tokenizers(prompts, olmo_tok, qwen_tok):
     for v in prompts["values"]:
         for kind in ("say", "do"):
@@ -644,33 +1042,9 @@ def test_prompt_token_bound_with_both_tokenizers(prompts, olmo_tok, qwen_tok):
                     assert len(qwen_tok(text, add_special_tokens=False).input_ids) < 120
 
 
-def test_qwen_runner_end_to_end(tmp_path, prompts, cfg):
-    """The runner's real path on the hybrid architecture (PROCEDURE section 5, Part 178: a dense model's tests cannot
-    see a hybrid-cache crash)."""
-    from transformers import AutoTokenizer
-    tok = AutoTokenizer.from_pretrained("Qwen/Qwen3.5-4B", revision=QWEN_REV)
-    m = tiny_qwen()
-    c = tiny_cfg(cfg, family="Q")
-    c["random_family"]["sets_per_stage_qwen"] = 1
-    import argparse
-    a = argparse.Namespace(stage="tiny", out=str(tmp_path), config=str(HERE / "config.json"),
-                           prompts=str(HERE / "prompts205.json"), device="cpu", stage_only=None, check_pool=False)
-    env = {"family": "Q", "stage": "tiny"}
-    R.run_stage(a, model=m, tok=tok, env=env, prompts=prompts, cfg=c)
-    recs = [json.loads(x) for x in (tmp_path / "tiny" / "records.jsonl").read_text().splitlines() if x.strip()]
-    base = {(r["id"], r["name"]): r for r in recs if r["arm"] == "baseline"}
-    for r in recs:
-        if r["arm"] == "do_nothing":
-            b = base[(r["id"], r["name"])]
-            assert r["p_a"] == b["p_a"] and r["p_b"] == b["p_b"]
-    sets = json.loads((tmp_path / "tiny" / "sets.json").read_text())
-    assert "head:full" in sets["random"]["kind_counts_wanted"] or "head:deltanet" in \
-        sets["random"]["kind_counts_wanted"]
-
-
 def test_option_fields_follow_the_question_text(prompts):
-    """option_a and option_b are the texts the question displays after "A) " and "B) ", and `consistent` names the
-    letter whose text is the consistent option, for all 96 items and the off-target questions."""
+    """option_a and option_b are the texts the question displays after "A) " and "B) ", for all 96 items and the
+    off-target questions."""
     import re
     n = 0
     for v in prompts["values"]:
@@ -681,10 +1055,6 @@ def test_option_fields_follow_the_question_text(prompts):
                 assert it["option_a"] == m.group(1), it["id"]
                 assert it["option_b"] == m.group(2), it["id"]
                 assert it["consistent"] in ("A", "B"), it["id"]
-                # the consistent option is the one the item was written with (yes / the value-consistent action):
-                # for SAY both options are yes/no, for DO the consistent option never contains the negative marker
-                # used in the pair; the check that matters is that `consistent` names a letter that exists and that
-                # the two fields are the displayed texts, done above and below.
                 n += 1
     assert n == 96
     for o in prompts["off_target"]:
@@ -694,15 +1064,14 @@ def test_option_fields_follow_the_question_text(prompts):
 
 
 def test_consistent_letter_matches_the_written_option(prompts):
-    """SAY: the consistent option is "yes". DO: it is the value-consistent action; the pairs are written with the
-    consistent action first in gen_prompts205.py's DO table, so the consistent letter's text must be the first of each
-    pair there. This test rebuilds the pairs from the generator's tables and checks every item against them."""
+    """SAY: the consistent option is "yes". DO: it is the value-consistent action of gen_prompts205.py's DO table.
+    (D-F17 family: the old assertions here parsed as `assert option_a if ... else (...)`, true for any non-empty
+    text; the parentheses are now explicit.)"""
     import gen_prompts205 as G
     for v in prompts["values"]:
         for it in prompts["items"][v]["say"]:
-            good = "yes"
-            assert (it["option_a"] if it["consistent"] == "A" else it["option_b"]) == good, it["id"]
+            assert (it["option_a"] if it["consistent"] == "A" else it["option_b"]) == "yes", it["id"]
         for it in prompts["items"][v]["do"]:
-            situation, good, bad = G.DO[v][it["item"] - 1]
-            assert it["option_a"] if it["consistent"] == "A" else it["option_b"] == good, it["id"]
-            assert it["option_a"] if it["consistent"] == "B" else it["option_b"] == bad, it["id"]
+            _situation, good, bad = G.DO[v][it["item"] - 1]
+            assert (it["option_a"] if it["consistent"] == "A" else it["option_b"]) == good, it["id"]
+            assert (it["option_b"] if it["consistent"] == "A" else it["option_a"]) == bad, it["id"]

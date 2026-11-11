@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""g1check205.py: the A770 G1 check for family Q (Design, Gates, G1; Size, line 204).
+"""g1check205.py: the A770 G1 check for family Q (Design, Gates, G1, lines 174-178; Size, line 204).
 
-One question, run 5 times plain and 5 times with the do-nothing hook (the same replacement code with the receiving
-run's own activations), batch size 1, bf16, eager, through neuron_report.load_model. Writes the ten (p_a, p_b) rows and
-score205.gate_g1_a770's verdict to <out>/g1.json. The main run's G1 is still computed from its own do-nothing rows;
-this check only sets the tolerance rule for the card.
+One question (the first held-out SAY question of the first value, in the first third-person frame, the frame every
+main-run do-nothing row receives), run 5 times plain and 5 times with the do-nothing hook (the same replacement code
+with the receiving run's own activations, every part, at the copied span's positions: the question block, as the copy
+arms use it), batch size 1, bf16, eager, through neuron_report.load_model. The full last-position logits are compared;
+only the scalar differences are written: plain against plain over all 10 pairs, each do-nothing run against the first
+plain run, and score205.gate_g1_a770's verdict, to <out>/g1.json. score205.py reads that file for family Q: when the
+plain runs are not bit-identical, the main run's do-nothing rows are held to twice the largest plain difference.
 
   python g1check205.py --stage qwen-chat --out results/part205/g1
 """
@@ -33,36 +36,40 @@ def main(argv=None):
     cfg = C.load_config(a.config)
     prompts = C.load_prompts(a.prompts)
     tok, model, env = R.load_stage(cfg, a.stage, a.device)
+    return check(tok, model, env, cfg, prompts, Path(a.out), check_pool=True)
+
+
+def check(tok, model, env, cfg, prompts, out, check_pool=True):
+    """The 5 + 5 runs and the verdict; `model`/`tok` may be a tiny test model."""
     units = C.units_for(model)
-    C.check_pool(units, cfg["families"]["Q"]["units"])
+    if check_pool:
+        C.check_pool(units, cfg["families"]["Q"]["units"])
     runner = R.Runner(model, tok, units, {"A": C.option_token_ids(tok, "A"), "B": C.option_token_ids(tok, "B")})
-    item = prompts["items"]["honesty"]["say"][0]
-    text = R.build_prompt(prompts, "You", "honesty", item["question"])
+    value = prompts["values"][0]
+    item = next(i for i in prompts["items"][value]["say"] if i["split"] == "heldout")
+    name = next(n for n in prompts["personas"] if n != "You")
+    persona = R.persona_text(prompts, name, value)
+    text = C.frame_text(persona, item["question"])
+    q0, ids = C.question_start(tok, text, persona)
+    positions = list(range(q0, len(ids)))
     n = cfg["a770_g1_check"]["plain_runs"]
-    plain, dn = [], []
-    ids = runner.tokens(text)[0].tolist()
-    _, _, acts, _ = runner.run(text, need_grad=False)
-    by_site = {}
-    for u in units:
-        by_site.setdefault((u.site, u.layer), []).append(u)
-    replace = []
-    for (site, layer), us in by_site.items():
-        cols = []
-        for u in sorted(us, key=lambda u: u.index):
-            cols.extend(u.cols)
-        replace.append((site, layer, cols, list(range(len(ids))), acts[f"{site}:{layer}"][0]))
+    plain, dn, plain_read, dn_read = [], [], [], []
     for _ in range(n):
-        _, r, _, _ = runner.run(text, need_grad=False, capture=False)
-        plain.append([r["p_a"], r["p_b"]])
+        _, r, acts, _ = runner.run(text, need_grad=False, capture=True)
+        plain.append(runner.last_logits)
+        plain_read.append([r["p_a"], r["p_b"]])
+    own = C.values_at(acts, positions)
     for _ in range(n):
-        _, r, _, _ = runner.run(text, need_grad=False, capture=False, replace=replace)
-        dn.append([r["p_a"], r["p_b"]])
-    verdict = S.gate_g1_a770([tuple(x) for x in plain], [tuple(x) for x in dn])
-    out = Path(a.out)
+        _, r, _, _ = runner.replace_and_read(text, [u.key for u in units], positions, own, item["consistent"])
+        dn.append(runner.last_logits)
+        dn_read.append([r["p_a"], r["p_b"]])
+    verdict = S.gate_g1_a770(plain, dn)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "g1.json").write_text(json.dumps({"env": env, "question": item["id"], "plain": plain, "do_nothing": dn,
-                                             "verdict": verdict, "at": time.strftime("%Y-%m-%dT%H:%M:%S")},
-                                            indent=1) + "\n", encoding="utf-8")
+    (out / "g1.json").write_text(json.dumps({"env": env, "question": item["id"], "name": name,
+                                             "n_positions": len(positions), "plain_p": plain_read,
+                                             "do_nothing_p": dn_read, "verdict": verdict,
+                                             "at": time.strftime("%Y-%m-%dT%H:%M:%S")}, indent=1) + "\n",
+                                 encoding="utf-8")
     print(json.dumps(verdict, indent=1))
     return 0 if verdict["pass"] else 1
 

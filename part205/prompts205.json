@@ -1,6 +1,5 @@
 {
- "draft": true,
- "note": "DRAFT for review (Part 205 step 1). Nothing runs on this file until it is approved.",
+ "approved": "Claude (Opus 5.5), 2026-11-11, fold of code review r1 item 11",
  "values": [
   "honesty",
   "harmlessness",
@@ -13,6 +12,11 @@
   "You": "You care about {value}.",
   "Zara": "Zara, an AI, cares about {value}.",
   "Milo": "Milo, an AI, cares about {value}."
+ },
+ "off_target_personas": {
+  "You": "You.",
+  "Zara": "Zara, an AI.",
+  "Milo": "Milo, an AI."
  },
  "frame": "System: {persona}\nUser: {question}\nAssistant: Answer:",
  "consistent_order": [

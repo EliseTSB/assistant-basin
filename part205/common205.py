@@ -142,8 +142,18 @@ def frame_text(persona, question):
     return f"System: {persona}\nUser: {question}\nAssistant: Answer:"
 
 
+def question_block_char(persona):
+    """Character index where the question block ("User: ...") starts in frame_text(persona, ...)."""
+    return len(f"System: {persona}\n")
+
+
 def persona_line(personas, name, value):
-    return personas[name].format(value=value)
+    """The persona line for `name`. A template that names a value refuses value=None, so no frame can say
+    "cares about None" (review r1 H-F3/D-F2); the off-target arm uses its own value-free lines."""
+    template = personas[name]
+    if "{value}" in template and value is None:
+        raise SystemExit(f"persona line {template!r} needs a value; the off-target arm uses off_target_personas")
+    return template.format(value=value)
 
 
 def option_token_ids(tok, letter):
@@ -159,19 +169,34 @@ def option_token_ids(tok, letter):
 
 
 def readout(logits_last, ids_a, ids_b):
-    """Option masses and the top next token from one last-position logit row (Design, Frame)."""
+    """The readout of one last-position logit row (Design, Frame, lines 62-64).
+
+    p_a and p_b are the probability of each option letter NORMALISED OVER THE TWO (p_a + p_b = 1); every T, O, gate
+    and prediction reads these. mass_a and mass_b are the raw next-token masses of the two letters ("both masses
+    printed"); option_mass = mass_a + mass_b is what G0 and the broken-answer count read.
+    """
     import torch
     logits_last = logits_last.detach()
     p = torch.softmax(logits_last.float(), dim=-1)
-    pa = float(p[ids_a].sum())
-    pb = float(p[ids_b].sum())
+    ma = float(p[ids_a].sum())
+    mb = float(p[ids_b].sum())
+    tot = ma + mb
+    if tot > 0.0:
+        pa, pb = ma / tot, mb / tot
+    else:
+        # both masses underflow to 0 in float32: fall back to the letters' log-sum-exp difference
+        la = torch.logsumexp(logits_last.float()[ids_a], 0)
+        lb = torch.logsumexp(logits_last.float()[ids_b], 0)
+        pa = float(torch.sigmoid(la - lb))
+        pb = 1.0 - pa
     top = int(torch.argmax(logits_last))
-    return {"p_a": pa, "p_b": pb, "option_mass": pa + pb, "top_token": top, "top_prob": float(p[top]),
-            "top_is_letter": top in ids_a or top in ids_b}
+    return {"p_a": pa, "p_b": pb, "mass_a": ma, "mass_b": mb, "option_mass": tot, "top_token": top,
+            "top_prob": float(p[top]), "top_is_letter": top in ids_a or top in ids_b}
 
 
-def consistent_prob(rec, consistent):
-    return rec["p_a"] if consistent == "A" else rec["p_b"]
+def max_abs_logit_diff(a, b):
+    """max |a - b| over a full last-position logit row (G1; a scalar, the vectors are not stored)."""
+    return float((a.detach().float().cpu() - b.detach().float().cpu()).abs().max())
 
 
 # ---------------------------------------------------------------- hooks
@@ -266,47 +291,108 @@ def replace_parts(layers, parts, positions, values_by_part):
 
 # ---------------------------------------------------------------- suffix alignment
 
-def shared_suffix_positions(prefix_ids, full_ids):
-    """Positions of the shared suffix in the full sequence, aligned from the end.
+def question_start(tok, text, persona):
+    """Token index of the first token of the question block (the "User:" line) in frame_text(persona, question).
 
-    The shared suffix is the longest run of identical tokens at the end of both sequences. Returns (start, positions)
-    where positions is the list of indices into full_ids that lie in the suffix. Raises when the suffix is empty.
+    Uses the tokenizer's character offsets; raises if no token starts exactly at the block's first character (then the
+    persona line and the question block share a token and the block cannot be copied cleanly).
     """
-    n = 0
-    while n < min(len(prefix_ids), len(full_ids)) and prefix_ids[-1 - n] == full_ids[-1 - n]:
-        n += 1
-    if n == 0:
-        raise SystemExit("no shared suffix between the You and third-person frames")
-    start = len(full_ids) - n
-    return start, list(range(start, len(full_ids)))
+    c = question_block_char(persona)
+    if text[c:c + 5] != "User:":
+        raise SystemExit(f"question block does not start at char {c}: {text[c:c + 12]!r}")
+    enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
+    for i, (a, _b) in enumerate(enc["offset_mapping"]):
+        if a == c:
+            return i, list(enc["input_ids"])
+        if a > c:
+            break
+    raise SystemExit(f"no token starts at the question block (char {c}) of {text!r}")
 
 
-def you_values_at_third_positions(you_acts, you_ids, third_ids, suffix_len=None):
-    """The You run's activations for each part, placed at the third-person run's suffix positions.
+def copy_span(src_ids, src_qstart, dst_ids, dst_qstart):
+    """The copied span (Design, Method, lines 105-112): the question and answer cue, identical tokens in both frames,
+    aligned from the end; nothing of the persona line.
 
-    `you_acts` maps a site key to the You run's site input (1, T_you, D). The suffix is aligned from the end, so the
-    j-th token from the end of the third-person run takes the j-th token from the end of the You run (Limit: the
-    prefixes differ in length, so absolute positions differ; the values are the You run's own).
+    `src_qstart`/`dst_qstart` are question_start() of each frame. Returns (src_positions, dst_positions), equal
+    length, the last position of each run included. Raises unless the two blocks are token-for-token identical, so
+    a copy can never carry persona tokens or a different question (review r1 H-F4, D-F1, D-F2b, D-F3).
     """
-    if you_ids is None:
-        # The You run's token ids were not kept; the suffix length is given instead (the caller aligned it once).
-        if suffix_len is None:
-            raise SystemExit("you_values_at_third_positions needs the You run's ids or the suffix length")
-        n = suffix_len
-        start = len(third_ids) - n
-        positions = list(range(start, len(third_ids)))
-    else:
-        start, positions = shared_suffix_positions(you_ids, third_ids)
-        n = len(positions)
-    out = {}
+    src_block = list(src_ids[src_qstart:])
+    dst_block = list(dst_ids[dst_qstart:])
+    if not src_block or src_block != dst_block:
+        raise SystemExit(f"the question blocks differ: source {len(src_block)} tokens, receiver {len(dst_block)}; "
+                         "a copy needs identical question and answer-cue tokens in both frames")
+    n = len(dst_block)
+    return list(range(len(src_ids) - n, len(src_ids))), list(range(len(dst_ids) - n, len(dst_ids)))
+
+
+def values_at(src_acts, src_positions):
+    """The source run's site inputs at `src_positions`, one (n_positions, width) tensor per site key."""
     import torch
-    for site, x in you_acts.items():
+    out = {}
+    for site, x in src_acts.items():
         if not isinstance(x, torch.Tensor):
             x = torch.as_tensor(x)
-        if x.shape[1] < n:
-            raise SystemExit(f"You run has {x.shape[1]} positions, suffix needs {n}")
-        out[site] = x[0, x.shape[1] - n:, :].clone()
-    return start, positions, out
+        if x.shape[1] <= max(src_positions):
+            raise SystemExit(f"source run has {x.shape[1]} positions, span needs {max(src_positions) + 1}")
+        out[site] = x[0, src_positions, :].clone()
+    return out
+
+
+# ---------------------------------------------------------------- records and locks
+
+def read_jsonl(path, repair=False):
+    """The records of a JSONL file. A last line that does not parse (a write cut by a kill) is ignored with a warning
+    and, with `repair`, truncated away so the next append starts on a fresh line. A bad line before the last raises
+    (that is corruption, not a torn write). Review r1 H-F7, D-F15."""
+    import sys
+    path = Path(path)
+    if not path.exists():
+        return []
+    raw = path.read_bytes()
+    lines = raw.split(b"\n")
+    out = []
+    for i, line in enumerate(lines):
+        if not line.strip():
+            continue
+        try:
+            out.append(json.loads(line.decode("utf-8")))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            last = all(not x.strip() for x in lines[i + 1:])
+            if not last:
+                raise SystemExit(f"{path}: line {i + 1} does not parse and is not the last line (corrupt file)")
+            print(f"warning: {path}: ignoring a torn last line ({len(line)} bytes)", file=sys.stderr)
+            if repair:
+                keep = b"\n".join(lines[:i])
+                with path.open("r+b") as f:
+                    f.truncate(len(keep) + (1 if keep else 0))
+    return out
+
+
+class StageLock:
+    """An exclusive, non-blocking flock on <stage dir>/.lock held for the whole run (review r1 D-F16). The kernel
+    drops it when the process ends, so a killed run leaves no stale lock."""
+
+    def __init__(self, path):
+        import fcntl
+        self.path = Path(path)
+        self.f = self.path.open("a+")
+        try:
+            fcntl.flock(self.f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            self.f.close()
+            raise SystemExit(f"{self.path} is held by another run of this stage; refusing to start a second")
+        self.f.seek(0)
+        self.f.truncate()
+        import os
+        self.f.write(f"pid {os.getpid()}\n")
+        self.f.flush()
+
+    def release(self):
+        import fcntl
+        if self.f and not self.f.closed:
+            fcntl.flock(self.f.fileno(), fcntl.LOCK_UN)
+            self.f.close()
 
 
 # ---------------------------------------------------------------- estimator

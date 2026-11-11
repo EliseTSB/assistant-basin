@@ -68,8 +68,8 @@
       "intermediate_size": 9216,
       "units": {"full_attention_heads": 128, "deltanet_heads": 768, "heads": 896, "neurons": 294912, "pool": 295808},
       "stages": [
-        {"stage": "base", "model_id": "Qwen/Qwen3.5-4B-Base", "revision": "1001bb4d826a52d1f399e183466143f4da7b741b"},
-        {"stage": "chat", "model_id": "Qwen/Qwen3.5-4B", "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"}
+        {"stage": "qwen-base", "model_id": "Qwen/Qwen3.5-4B-Base", "revision": "1001bb4d826a52d1f399e183466143f4da7b741b"},
+        {"stage": "qwen-chat", "model_id": "Qwen/Qwen3.5-4B", "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"}
       ]
     }
   },

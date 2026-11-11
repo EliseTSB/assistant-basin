@@ -12,7 +12,10 @@ Computed (Design, Method and Controls):
   (re-ranked from the stored estimates, within value and half), per-value share of each set's score mass
   T, T_SAY, T_swap, reverse, T_personally, off-target shift, polarity split, broken-answer counts
   the three random families with every relaxed part printed and "not fillable" reported, the random-set rule
-  gates G0 to G4 exactly as written (including the A770 G1 variant)
+  gates G0 to G4 exactly as written (G1 on the full last-position logits; for family Q the A770 rule from
+  g1check205.py's g1.json when its plain runs are not bit-identical)
+Every readout (p_a, p_b) is the option letters' probability normalised over the two; the raw masses (mass_a, mass_b,
+option_mass) are printed beside them and read only by G0 and the broken-answer count.
 A gate that fails stops the reads the design says it stops: G0 stops O and T; G1 stops everything; G2 stops T and the
 copy arms (O still read); G3 stops every copy arm; G4 stops O.
 
@@ -45,10 +48,7 @@ def load_stage_dir(d):
     rj = json.loads((d / "ranking.json").read_text(encoding="utf-8"))
     sets = json.loads((d / "sets.json").read_text(encoding="utf-8"))
     meta = json.loads((d / "meta.json").read_text(encoding="utf-8"))
-    recs = []
-    p = d / "records.jsonl"
-    if p.exists():
-        recs = [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()]
+    recs = C.read_jsonl(d / "records.jsonl")   # a torn last line is ignored with a warning (review r1 H-F7)
     return {"dir": str(d), "est": est, "keys": keys, "prompts": rj["prompts"], "sets": sets, "meta": meta,
             "records": recs}
 
@@ -207,38 +207,76 @@ def p_consistent(r):
     return r["p_a"] if r["consistent"] == "A" else r["p_b"]
 
 
-def ratio_of_means(arms, held_ids, names, num_arm, den_arm, sub_arm=None):
+def ratio_of_means(arms, held_ids, names, num_arm, den_arm="baseline"):
     """T = mean(P_num - P_third) / mean(P_you - P_third) over the question-name pairs present in the records.
 
-    `sub_arm` replaces the third-person baseline in the numerator's difference (the persona-swap null: the copy comes
-    from the other name, the denominator stays P_you - P_third of the receiving name).
+    P is the consistent option's probability normalised over the two letters. A pair missing its baseline, its You
+    run or its numerator row is dropped and counted (n_dropped, with the ids), never silently (review r1 D-F13).
     """
-    def get(arm, qid, name):
-        for r in arms.get(arm, []):
-            if r["id"] == qid and r.get("name") == name:
-                return r
-        return None
-    num, den, pairs = [], [], []
+    import numpy as np
+    num, den, pairs, dropped = [], [], [], []
     for qid in held_ids:
         for name in names:
-            third = get("baseline", qid, name)
-            you = get("you", qid, "You")
-            n_arm = get(num_arm, qid, name)
+            third = _find(arms, den_arm, qid, name)
+            you = _find(arms, "you", qid, "You")
+            n_arm = _find(arms, num_arm, qid, name)
             if third is None or you is None or n_arm is None:
+                dropped.append({"id": qid, "name": name, "missing": [k for k, v in (("baseline", third),
+                                ("you", you), (num_arm, n_arm)) if v is None]})
                 continue
             d_num = p_consistent(n_arm) - p_consistent(third)
             d_den = p_consistent(you) - p_consistent(third)
             num.append(d_num)
             den.append(d_den)
             pairs.append({"id": qid, "name": name, "d_copy": d_num, "d_gap": d_den})
-    import numpy as np
     m_num = float(np.mean(num)) if num else None
     m_den = float(np.mean(den)) if den else None
     t = (m_num / m_den) if m_den not in (None, 0.0) else None
-    if m_den is None:
-        t = None
     return {"T": t, "mean_num": m_num, "mean_den": m_den, "n_pairs": len(pairs), "pairs": pairs,
-            "n_num_rows": len(num), "n_den_rows": len(den)}
+            "n_expected": len(held_ids) * len(names), "n_dropped": len(dropped), "dropped": dropped}
+
+
+def gap_stats(arms, held_ids, names):
+    """G2's gap mean(P_you - P_third) over the held-out pairs, from the You and baseline rows alone (so it does not
+    depend on any copy arm having run)."""
+    import numpy as np
+    d, sd_rows, dropped = [], [], 0
+    for qid in held_ids:
+        for name in names:
+            third = _find(arms, "baseline", qid, name)
+            you = _find(arms, "you", qid, "You")
+            if third is None or you is None:
+                dropped += 1
+                continue
+            d.append(p_consistent(you) - p_consistent(third))
+    return {"gap": float(np.mean(d)) if d else None, "n_pairs": len(d), "n_dropped": dropped}
+
+
+def reverse_stats(arms, held_ids, names):
+    """205.6: how far the reverse DO copy lowers P_you, as a share of the gap (ratio of means).
+
+    Per pair, drop = P_you - P_reverse (the You run with the DO parts copied from that name's third-person run) and
+    gap = P_you - P_third. share = mean(drop) / mean(gap); 205.6 holds when share >= 0.5 ("lowers P_you by at least
+    half of the gap"). A reverse copy that takes P_you all the way to P_third gives share 1 (review r1 H-F5).
+    """
+    import numpy as np
+    drop, gap, pairs, dropped = [], [], [], 0
+    for qid in held_ids:
+        for name in names:
+            third = _find(arms, "baseline", qid, name)
+            you = _find(arms, "you", qid, "You")
+            rev = _find(arms, "reverse", qid, name)
+            if None in (third, you, rev):
+                dropped += 1
+                continue
+            drop.append(p_consistent(you) - p_consistent(rev))
+            gap.append(p_consistent(you) - p_consistent(third))
+            pairs.append({"id": qid, "name": name, "drop": drop[-1], "gap": gap[-1]})
+    m_drop = float(np.mean(drop)) if drop else None
+    m_gap = float(np.mean(gap)) if gap else None
+    share = (m_drop / m_gap) if m_gap not in (None, 0.0) else None
+    return {"share": share, "mean_drop": m_drop, "mean_gap": m_gap, "n_pairs": len(pairs), "n_dropped": dropped,
+            "pairs": pairs, "rule": "205.6 holds when mean(P_you - P_reverse) >= 0.5 x mean(P_you - P_third)"}
 
 
 def polarity_split(arms, held_ids, names, arm):
@@ -259,6 +297,16 @@ def polarity_split(arms, held_ids, names, arm):
         out[letter] = {"T": (float(np.mean(num)) / float(np.mean(den))) if den and np.mean(den) != 0 else None,
                        "mean_num": float(np.mean(num)) if num else None,
                        "mean_den": float(np.mean(den)) if den else None, "n": len(num)}
+    return out
+
+
+def reverse_polarity(arms, held_ids, names):
+    """reverse_stats split by the consistent option's letter (STANDARD-CONTROLS item 5)."""
+    out = {}
+    for letter in ("A", "B"):
+        ids = [q for q in held_ids if (_find(arms, "you", q, "You") or {}).get("consistent") == letter]
+        r = reverse_stats(arms, ids, names)
+        out[letter] = {"share": r["share"], "mean_drop": r["mean_drop"], "mean_gap": r["mean_gap"], "n": r["n_pairs"]}
     return out
 
 
@@ -322,52 +370,75 @@ def gate_g0(arms, held_ids):
             "rule": "mean option mass >= 0.5 and top token is a letter on >= half"}
 
 
-def gate_g1(arms, a770=None):
-    """The do-nothing hook reproduces the plain logits exactly (max abs difference 0).
+DO_NOTHING_ARMS = ("do_nothing", "off_target_do_nothing", "secondary_do_nothing")
 
-    On the A770 (family Q) the pilot runs one question 5 times plain and 5 times with the do-nothing hook: if the
-    plain runs are bit-identical, exact; otherwise every do-nothing run's difference from the first plain run is at
-    most twice the largest difference among the 5 plain runs.
+
+def gate_g1(arms, family="O", g1check=None):
+    """The do-nothing hook reproduces the plain logits exactly: every do-nothing row's max absolute difference of the
+    FULL last-position logits from its own plain run is 0 (Design, G1, lines 174-178; review r1 H-F2, D-F4).
+
+    Family Q, A770: when g1check205.py's g1.json (`g1check`) shows that its 5 plain runs are not bit-identical, the
+    design's relaxed rule applies: every do-nothing difference is at most twice the largest difference among the 5
+    plain runs (10 pairs), and the check's own 5 do-nothing runs must meet it. With bit-identical plain runs, or for
+    family O, the rule is exact. A row without a recorded logit difference fails the gate (H-F6).
     """
-    dn = arms.get("do_nothing", [])
-    base = {(r["id"], r["name"]): r for r in arms.get("baseline", [])}
-    diffs = []
-    for r in dn:
-        b = base.get((r["id"], r["name"]))
-        if b is None:
-            continue
-        diffs.append(abs(r["p_a"] - b["p_a"]) + abs(r["p_b"] - b["p_b"]))
-    if a770:
-        return a770
-    if not diffs:
-        return {"pass": False, "reason": "no do-nothing rows paired with a baseline"}
-    worst = max(diffs)
-    return {"pass": worst == 0.0, "max_abs_diff": worst, "n": len(diffs), "mode": "exact"}
-
-
-def gate_g1_a770(plain_probs, dn_probs):
-    """plain_probs: 5 (p_a, p_b) tuples; dn_probs: 5 (p_a, p_b) tuples. All numbers are printed."""
-    plain_diffs = [abs(plain_probs[i][0] - plain_probs[0][0]) + abs(plain_probs[i][1] - plain_probs[0][1])
-                   for i in range(1, len(plain_probs))]
-    bit_identical = all(d == 0.0 for d in plain_diffs)
-    dn_diffs = [abs(dn_probs[i][0] - plain_probs[0][0]) + abs(dn_probs[i][1] - plain_probs[0][1])
-                for i in range(len(dn_probs))]
-    worst_plain = max(plain_diffs) if plain_diffs else 0.0
-    out = {"mode": "a770", "plain_diffs": plain_diffs, "do_nothing_diffs": dn_diffs,
-           "worst_plain": worst_plain, "worst_do_nothing": max(dn_diffs) if dn_diffs else None,
-           "bit_identical_plain": bit_identical}
-    if bit_identical:
-        out["pass"] = all(d == 0.0 for d in dn_diffs)
-    else:
-        out["pass"] = all(d <= 2 * worst_plain for d in dn_diffs)
-    out["rule"] = ("plain runs bit-identical: exact (0); otherwise every do-nothing difference from the first plain "
-                   "run at most twice the largest plain-against-plain difference")
+    rows = [r for arm in DO_NOTHING_ARMS for r in arms.get(arm, [])]
+    if not rows:
+        return {"pass": False, "reason": "no do-nothing rows", "mode": "exact"}
+    unrecorded = [r.get("id") for r in rows if r.get("max_abs_logit_diff") is None]
+    if unrecorded:
+        return {"pass": False, "reason": f"{len(unrecorded)} do-nothing rows carry no max_abs_logit_diff",
+                "mode": "exact"}
+    worst = max(float(r["max_abs_logit_diff"]) for r in rows)
+    out = {"max_abs_diff": worst, "n": len(rows),
+           "per_arm": {a: {"n": len(arms.get(a, [])),
+                           "max_abs_diff": max((float(r["max_abs_logit_diff"]) for r in arms.get(a, [])),
+                                               default=None)} for a in DO_NOTHING_ARMS},
+           "compared": "full last-position logits, max absolute difference"}
+    a770 = (g1check or {}).get("verdict") if family == "Q" else None
+    if family == "Q":
+        out["a770_check"] = a770 if a770 is not None else "g1.json absent"
+    if a770 is not None and not a770.get("pass"):
+        out.update({"pass": False, "mode": "a770", "reason": "the A770 check (g1check205.py) failed its own rule"})
+        return out
+    if a770 is not None and not a770.get("bit_identical_plain"):
+        tol = 2.0 * float(a770["worst_plain"])
+        out.update({"pass": worst <= tol, "mode": "a770-relaxed", "tolerance": tol,
+                    "rule": "every do-nothing difference <= 2 x the largest plain-against-plain difference"})
+        return out
+    out.update({"pass": worst == 0.0, "mode": "exact", "rule": "max absolute logit difference == 0"})
     return out
 
 
-def gate_g2(t):
-    return {"pass": t["mean_den"] is not None and t["mean_den"] >= 0.10, "gap": t["mean_den"],
-            "n_pairs": t.get("n_pairs"),
+def gate_g1_a770(plain_logits, dn_logits):
+    """The A770 check's verdict (Design, G1, lines 175-178). plain_logits, dn_logits: the 5 + 5 full last-position
+    logit rows of one question. Plain against plain is every pair of the 5 (10 pairs); each do-nothing run is compared
+    with the first plain run. Only scalars are returned (all printed)."""
+    import torch
+
+    def d(a, b):
+        return float((torch.as_tensor(a).float() - torch.as_tensor(b).float()).abs().max())
+    n = len(plain_logits)
+    plain_diffs = [d(plain_logits[i], plain_logits[j]) for i in range(n) for j in range(i + 1, n)]
+    dn_diffs = [d(x, plain_logits[0]) for x in dn_logits]
+    bit_identical = all(x == 0.0 for x in plain_diffs)
+    worst_plain = max(plain_diffs) if plain_diffs else 0.0
+    out = {"mode": "a770", "plain_pairs": len(plain_diffs), "plain_diffs": plain_diffs, "do_nothing_diffs": dn_diffs,
+           "worst_plain": worst_plain, "worst_do_nothing": max(dn_diffs) if dn_diffs else None,
+           "bit_identical_plain": bit_identical, "compared": "full last-position logits, max absolute difference"}
+    if bit_identical:
+        out["pass"] = all(x == 0.0 for x in dn_diffs)
+    else:
+        out["pass"] = all(x <= 2 * worst_plain for x in dn_diffs)
+    out["rule"] = ("plain runs bit-identical: exact (0); otherwise every do-nothing difference from the first plain "
+                   "run at most twice the largest difference among the plain runs (all pairs)")
+    return out
+
+
+def gate_g2(g):
+    """`g` is gap_stats(...) (or a ratio_of_means result, whose mean_den is the same gap over its pairs)."""
+    gap = g["gap"] if "gap" in g else g["mean_den"]
+    return {"pass": gap is not None and gap >= 0.10, "gap": gap, "n_pairs": g.get("n_pairs"),
             "rule": "mean(P_you - P_third) >= 0.10 over held-out SAY questions"}
 
 
@@ -382,49 +453,65 @@ def gate_g4(ov):
 
 
 def random_set_rule(t, random_fams, min_families=2):
-    """A transfer passes when it exceeds every set in each fillable family, with at least two families fillable."""
-    fillable = [name for name, fam in random_fams["families"].items() if fam.get("sets")]
-    if not random_fams.get("fillable", False) or len(fillable) < min_families:
-        return {"read": False, "fillable": fillable, "reason": "fewer than two fillable families"}
+    """A transfer passes when it exceeds every set in each fillable family, with at least two families fillable.
+    Fillability is read per family (review r1 D-F9)."""
+    fams = random_fams.get("families", {})
+    fillable = [name for name, fam in fams.items() if fam.get("fillable", True) and fam.get("sets")]
+    not_fillable = {name: fam.get("reason", "no sets") for name, fam in fams.items() if name not in fillable}
+    if len(fillable) < min_families:
+        return {"read": False, "fillable": fillable, "not_fillable": not_fillable,
+                "reason": "fewer than two fillable families"}
     per = {}
     for name in fillable:
-        vals = [x["T"] for x in t["random"][name] if x["T"] is not None]
-        per[name] = {"max_T": max(vals) if vals else None, "n": len(vals),
-                     "exceeds_all": (t["T"] is not None and bool(vals) and t["T"] > max(vals))}
+        vals = [x["T"] for x in t["random"].get(name, []) if x["T"] is not None]
+        n_sets = len(fams[name]["sets"])
+        per[name] = {"max_T": max(vals) if vals else None, "n": len(vals), "n_sets": n_sets,
+                     "exceeds_all": (t["T"] is not None and len(vals) == n_sets and n_sets > 0 and t["T"] > max(vals))}
     ok = t["T"] is not None and all(v["exceeds_all"] for v in per.values())
-    return {"read": True, "pass": ok, "fillable": fillable, "per_family": per}
+    return {"read": True, "pass": ok, "fillable": fillable, "not_fillable": not_fillable, "per_family": per}
+
+
+def read_flags(gates, rsr):
+    """Which reads the gates allow (Design, Reading rules): O needs G0, G1, G4; T and every copy arm need G0 to G3;
+    the random-set rule needs T read and at least two fillable families."""
+    o = gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G4"]["pass"]
+    t = gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G2"]["pass"] and gates["G3"]["pass"]
+    return {"O": bool(o), "T": bool(t), "copy_arms": bool(t), "random_set_rule": bool(t and rsr.get("read", False))}
 
 
 # ---------------------------------------------------------------- one stage
 
-def score_stage(stage, sd, cfg, seed):
+def score_stage(stage, sd, cfg, seed, g1check=None):
     import numpy as np
     est, keys, prompts = sd["est"], sd["keys"], sd["prompts"]
+    k = cfg.get("top_k", TOP_K)
     arms = by_arm(sd["records"])
+    family = sd["meta"]["env"].get("family", "O")
     # the held-out questions are the ones the runner made You runs for (SAY 5-8, Design, Split)
     held = sorted({r["id"] for r in arms.get("you", [])})
     names = sorted({r["name"] for r in arms.get("baseline", [])})
-    sets = ranked_sets(est, prompts, keys)
+    sets = ranked_sets(est, prompts, keys, k=k)
     ov = overlap_stats(sets)
-    lo, hi, draws = bootstrap_o(est, prompts, keys, cfg["bootstrap"]["resamples"], seed)
-    t = ratio_of_means(arms, held, names, "do_copy", "baseline")
-    t_say = ratio_of_means(arms, held, names, "say_copy", "baseline")
-    t_swap = ratio_of_means(arms, held, names, "swap", "baseline")
-    rev = ratio_of_means(arms, held, names, "reverse", "baseline")
+    lo, hi, draws = bootstrap_o(est, prompts, keys, cfg["bootstrap"]["resamples"], seed, k=k)
+    t = ratio_of_means(arms, held, names, "do_copy")
+    t_say = ratio_of_means(arms, held, names, "say_copy")
+    t_swap = ratio_of_means(arms, held, names, "swap")
+    rev = reverse_stats(arms, held, names)
+    gap = gap_stats(arms, held, names)
     # random families: T per set
     t["random"] = {}
     for fam_name, fam in sd["sets"]["random"].get("families", {}).items():
         rows = []
+        if not fam.get("sets"):
+            t["random"][fam_name] = rows
+            continue
         for si in range(len(fam["sets"])):
-            rows.append(ratio_of_means(arms, held, names, f"random:{fam_name}:{si}", "baseline"))
+            rows.append(ratio_of_means(arms, held, names, f"random:{fam_name}:{si}"))
         t["random"][fam_name] = rows
-    gates = {"G0": gate_g0(arms, held), "G1": gate_g1(arms), "G2": gate_g2(t), "G3": gate_g3(t_say),
-             "G4": gate_g4(ov)}
+    gates = {"G0": gate_g0(arms, held), "G1": gate_g1(arms, family, g1check), "G2": gate_g2(gap),
+             "G3": gate_g3(t_say), "G4": gate_g4(ov)}
     rsr = random_set_rule(t, sd["sets"]["random"])
-    read = {"O": gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G4"]["pass"],
-            "T": gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G2"]["pass"] and gates["G3"]["pass"]}
-    read["copy_arms"] = read["T"]
-    read["random_set_rule"] = read["T"] and rsr.get("read", False)
+    read = read_flags(gates, rsr)
     out = {
         "stage": stage,
         "env": sd["meta"]["env"],
@@ -440,14 +527,16 @@ def score_stage(stage, sd, cfg, seed):
                                   "DO": signed_share(est, prompts, keys, sets["DO"])},
         "overlap": ov,
         "O_ci": {"lo": lo, "hi": hi, "resamples": cfg["bootstrap"]["resamples"], "seed": seed},
-        "T": t["T"], "T_SAY": t_say["T"], "T_swap": t_swap["T"], "reverse": rev["T"],
+        "T": t["T"], "T_SAY": t_say["T"], "T_swap": t_swap["T"], "reverse": rev["share"], "gap": gap,
         "T_detail": {"T": {k: v for k, v in t.items() if k != "random"}, "T_SAY": t_say, "T_swap": t_swap,
                      "reverse": rev},
         "T_personally": secondary_t(arms),
         "off_target": off_target_shift(arms),
-        "polarity": {arm: polarity_split(arms, held, names, arm) for arm in ("do_copy", "say_copy", "reverse", "swap")},
+        "polarity": {arm: polarity_split(arms, held, names, arm) for arm in ("do_copy", "say_copy", "swap")},
+        "polarity_reverse": reverse_polarity(arms, held, names),
         "broken": broken_counts(arms),
-        "random_families": {name: {"fillable": sd["sets"]["random"].get("fillable", False),
+        "random_families": {name: {"fillable": fam.get("fillable", bool(fam.get("sets"))),
+                                   "reason": fam.get("reason"),
                                    "relaxed": fam["relaxed"], "relaxed_detail": fam["relaxed_detail"],
                                    "distinct_sets": len({tuple(sorted(s)) for s in fam["sets"]}),
                                    "total_effect": [sum(sd["sets"]["effect"].get(k, 0.0) for k in s) for s in fam["sets"]],
@@ -496,16 +585,21 @@ def predictions(stages, cfg):
     # 205.3: the largest rise in O between adjacent stages is mid-training end to SFT.
     pairs = []
     for a, b in zip(olmo, olmo[1:]):
-        if o_read(a) and o_read(b):
+        if o_read(a) and o_read(b) and st[a]["overlap"]["O"] is not None and st[b]["overlap"]["O"] is not None:
             pairs.append((a, b, st[b]["overlap"]["O"] - st[a]["overlap"]["O"]))
-    need = "midtrain-end" in olmo and "sft" in olmo and o_read("midtrain-end") and o_read("sft")
+    need = ("midtrain-end", "sft") in [(a, b) for a, b, _ in pairs]
     if not need or len(pairs) < 3:
         out["205.3"] = {"verdict": "UNTESTABLE", "pairs_read": [(a, b, round(r, 4)) for a, b, r in pairs]}
     else:
         best = max(pairs, key=lambda x: x[2])
         rise = next(r for a, b, r in pairs if (a, b) == ("midtrain-end", "sft"))
-        out["205.3"] = {"verdict": "held" if best[:2] == ("midtrain-end", "sft") and rise >= 0.2 else "failed",
-                        "pairs_read": [(a, b, round(r, 4)) for a, b, r in pairs], "largest": best[:2], "rise": rise}
+        # Reading rules, lines 246-249: largest of the readable pairs, at least 0.2, and the rise's paired bootstrap
+        # interval excludes 0 (review r1 D-F11)
+        lo, hi = rise_ci(st, "midtrain-end", "sft", cfg)
+        ok = best[:2] == ("midtrain-end", "sft") and rise >= 0.2 and lo is not None and lo > 0
+        out["205.3"] = {"verdict": "held" if ok else "failed",
+                        "pairs_read": [(a, b, round(r, 4)) for a, b, r in pairs], "largest": best[:2], "rise": rise,
+                        "rise_ci": [lo, hi], "rule": "largest readable rise, >= 0.2, paired-bootstrap CI excludes 0"}
     # 205.4: at OLMo Instruct, T >= 0.5 and exceeds every set in all three random families.
     if not t_read(n):
         out["205.4"] = {"verdict": "not read", "gate": _first_failed(st[n], ("G0", "G1", "G2", "G3"))
@@ -520,7 +614,7 @@ def predictions(stages, cfg):
     if n5 not in st or not st[n5]["gates"]["G0"]["pass"] or not st[n5]["gates"]["G1"]["pass"]:
         out["205.5"] = {"verdict": "not read", "gate": "G0 or G1"}
     else:
-        gap = st[n5]["T_detail"]["T"]["mean_den"]
+        gap = st[n5]["gates"]["G2"]["gap"]
         if gap is not None and gap < 0.10:
             out["205.5"] = {"verdict": "held", "gap": gap}
         elif not t_read(n5):
@@ -534,8 +628,9 @@ def predictions(stages, cfg):
                         if n in st else "stage absent"}
     else:
         r = st[n]["T_detail"]["reverse"]
-        out["205.6"] = {"verdict": "held" if (r["mean_num"] is not None and r["mean_num"] <= -0.5 * r["mean_den"])
-                        else "failed", "mean_num": r["mean_num"], "mean_den": r["mean_den"]}
+        out["205.6"] = {"verdict": "held" if (r["share"] is not None and r["share"] >= 0.5) else "failed",
+                        "share": r["share"], "mean_drop": r["mean_drop"], "mean_gap": r["mean_gap"],
+                        "rule": r["rule"]}
     # 205.7: wherever DO transfer is read and passes the random-set rule, off-target shift < 0.05.
     rows = []
     for n2 in order:
@@ -579,9 +674,13 @@ def _first_failed(s, gates):
     return [g for g in gates if not s["gates"][g]["pass"]]
 
 
-def _absent(st, n, gates=("G0", "G1", "G4")):
-    """A stage that has not run is not read; say so rather than raising."""
-    return n not in st or any(not st[n]["gates"][g]["pass"] for g in gates)
+def rise_ci(st, a, b, cfg):
+    """The paired-bootstrap interval of O_b - O_a (Reading rules, lines 248-249), seeded from the bootstrap seed and
+    the later stage's position in the stage order."""
+    order = [s["stage"] for s in cfg["stages"]]
+    return paired_bootstrap_rise(st[a]["_est"], st[b]["_est"], st[a]["_prompts"], st[a]["_keys"],
+                                 cfg["bootstrap"]["resamples"], cfg["seeds"]["bootstrap"] + order.index(b),
+                                 k=cfg.get("top_k", TOP_K))
 
 
 def withdrawal(stages, cfg):
@@ -597,9 +696,10 @@ def withdrawal(stages, cfg):
             continue
         if not (st[a]["read"]["O"] and st[b]["read"]["O"]):
             continue
+        if st[a]["overlap"]["O"] is None or st[b]["overlap"]["O"] is None:
+            continue   # review r1 D-F12: an O of None (Retest 0) is not a rise
         rise = st[b]["overlap"]["O"] - st[a]["overlap"]["O"]
-        lo, hi = paired_bootstrap_rise(st[a]["_est"], st[b]["_est"], st[a]["_prompts"], st[a]["_keys"],
-                                       cfg["bootstrap"]["resamples"], cfg["seeds"]["bootstrap"] + order.index(b))
+        lo, hi = rise_ci(st, a, b, cfg)
         if rise >= 0.2 and lo is not None and lo > 0 and st[b]["overlap"]["O"] >= 0.5:
             qual.append({"stage": b, "after": a, "rise": rise, "ci": [lo, hi]})
     if qual:
@@ -609,25 +709,43 @@ def withdrawal(stages, cfg):
 
 # ---------------------------------------------------------------- main
 
+def relaxation_lines(s):
+    """Per family: fillable or not, and every relaxed part counted (review r1 D-F9, D-F10; never silent)."""
+    lines = []
+    for name, f in s["random_families"].items():
+        if not f["fillable"]:
+            lines.append(f"  random family {name}: NOT FILLABLE ({f.get('reason')})")
+            continue
+        lines.append(f"  random family {name}: fillable, {f['distinct_sets']} distinct sets, {f['relaxed']} relaxed "
+                     f"parts" + (f" ({len(f['relaxed_detail'])} rows in results.json random_families.{name}"
+                                 f".relaxed_detail)" if f["relaxed"] else ""))
+    return "\n".join(lines) if lines else "  random families: none drawn"
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--raw", default=str(HERE.parent / "results" / "part205"))
     ap.add_argument("--out", default=None, help="results.json path (default <raw>/results.json)")
     ap.add_argument("--config", default=str(HERE / "config.json"))
     ap.add_argument("--only", default=None, help="score only these stage names (comma-separated; the rest are absent)")
+    ap.add_argument("--g1", default=None, help="the A770 check's g1.json (default <raw>/g1/g1.json)")
     a = ap.parse_args(argv)
     cfg = C.load_config(a.config)
     if a.only:
         keep = set(a.only.split(","))
         cfg["stages"] = [s for s in cfg["stages"] if s["stage"] in keep]
     raw = Path(a.raw)
+    g1_path = Path(a.g1) if a.g1 else raw / "g1" / "g1.json"
+    g1check = json.loads(g1_path.read_text(encoding="utf-8")) if g1_path.exists() else None
+    print(f"A770 G1 check: {g1_path} {'read' if g1check else 'absent'}")
     stages = []
     for s in cfg["stages"]:
         sd = load_stage_dir(raw / s["stage"])
         if sd is None:
             stages.append(None)
             continue
-        stages.append(score_stage(s["stage"], sd, cfg, cfg["seeds"]["bootstrap"]))
+        stages.append(score_stage(s["stage"], sd, cfg, cfg["seeds"]["bootstrap"],
+                                  g1check if s["family"] == "Q" else None))
     res = {
         "part": 205,
         "stages": [{k: v for k, v in s.items() if k not in ("_est", "_prompts", "_keys")} for s in stages if s],
@@ -646,6 +764,7 @@ def main(argv=None):
     for s in res["stages"]:
         print(f"{s['stage']:14s} O={s['overlap']['O']} T={s['T']} gates="
               f"{ {g: v['pass'] for g, v in s['gates'].items()} } read={s['read']}")
+        print(relaxation_lines(s))
     for k, v in res["predictions"].items():
         print(f"{k}: {v['verdict']}")
     print("headline:", res["withdrawal"]["headline"])
