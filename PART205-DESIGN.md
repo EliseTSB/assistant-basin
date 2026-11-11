@@ -106,9 +106,8 @@ for the effect-matched controls); then re-run the third-person frame with a set 
 every position of the shared suffix, by the You run's values. The shared suffix is the question and answer cue,
 identical tokens in both frames, aligned from the end; the last position, where the answer is read, is inside it and is
 overwritten. The copied values are the You run's own, computed against the You prefix: a copy carries what those parts
-computed from "You" rather than from the name, which is the property under test. Two nulls (Controls) separate that
-from simpler causes: the persona-swap null (another third-person prefix: content changes, length nearly not) and the
-other-value null (a You prefix of the same frame naming a different value). **Transfer T = mean(P_copy - P_third) /
+computed from "You" rather than from the name, which is the property under test. The persona-swap null (Controls)
+asks whether a copy from another third-person prefix moves the answer as far. **Transfer T = mean(P_copy - P_third) /
 mean(P_you - P_third)**, in probability of the consistent option, both means over the 48 question-name pairs (a
 ratio of means, so a pair with a near-zero gap cannot swing it); per-pair values are printed but no prediction reads
 them.
@@ -126,21 +125,23 @@ From STANDARD-CONTROLS.md and TOOLKIT.md:
   logits (gate G1).
 - **Positive control**: copying the SAY set itself must close at least half of the You/third-person gap (gate G3); G3
   gates every copy arm at that stage, not only T.
-- **Matched random sets**, three families, 20 sets each (10 for family Q), none containing a SAY or DO part: (i)
-  layer-and-kind matched (the same number of heads, of each head kind for Q, and of neurons in each layer as the DO set);
-  (ii) score-matched (for each DO part, a part of the same layer and kind from the same decile of selection score);
-  (iii) effect-matched (for each DO part, a part of the same layer and kind from the same decile of first-order copy
-  effect, the sum over copied positions of g x (a_you - a_third), g taken from the baseline run's backward pass and
-  averaged over held-out pairs; where a layer-kind stratum is too small for deciles, the nearest part by rank). This
-  matches the size of a change by its effect on the answer (Part 108) and is always fillable; each set's total
-  first-order effect is printed beside the DO set's. **A transfer counts only if it exceeds every set in each family**
-  (per family, an exchangeable set exceeds all 20 with probability 1/21, all 10 with 1/11).
+- **Matched random sets**, three families, 20 sets each (10 for family Q). Every set is a seeded random draw of 80
+  distinct parts, without replacement, from the pool minus the SAY and DO parts, with the DO set's kind counts (heads
+  and neurons; for Q, full-attention heads, DeltaNet heads and neurons). (i) Layer-matched: the DO set's count per
+  layer and kind, where a layer has too few eligible parts the rest comes from the nearest layer of the same kind. (ii)
+  Score-matched: per kind, the DO set's count in each decile of selection score, deciles computed within that kind
+  over the whole pool. (iii) Effect-matched: as (ii), with deciles of first-order copy effect (the sum over copied
+  positions of g x (a_you - a_third), g from the baseline run's backward pass, averaged over held-out pairs), which
+  matches the size of a change by its effect on the answer (Part 108). In (ii) and (iii), where a decile has too few
+  eligible parts the rest comes from the nearest decile. Every relaxed part is counted and printed, as are the number
+  of distinct sets and each set's total first-order effect beside the DO set's. A family whose kind counts cannot be
+  met from the eligible pool is "not fillable" at that stage and is reported as such. **A transfer passes the
+  random-set rule if it exceeds every set in each fillable family, with at least two families fillable** (per family,
+  an exchangeable set exceeds all 20 with probability 1/21, all 10 with 1/11); with fewer than two fillable, the rule
+  is not read.
 - **Persona-swap null**: the DO set copied from the other name's third-person run (Milo into Zara, Zara into Milo),
   same suffix rule; T_swap as T. It controls the prefix's content, not its length (the two names' prefixes differ by
   one token, You and a name by four or five).
-- **Other-value null**: the DO set copied from a You-frame run whose persona line names a different value with the same
-  token count (fixed pairs listed in `part205/prompts205.json`), same suffix rule; T_otherValue as T, reported, no
-  prediction. Same frame and nearly the same length as the You run, different content.
 - **Both directions**: copying the DO parts from the third-person run into the You run (should lower the You answer if
   the parts carry the self-attribution); read in the You run, predicted below.
 - **Select on one set, test on another**: ranking on SAY paraphrases and DO scenarios 1-4, copy test on SAY 5-8.
@@ -154,7 +155,8 @@ From STANDARD-CONTROLS.md and TOOLKIT.md:
 - **Settings matched across arms**: one frame, float32 for O and bf16 for Q at every stage of that family, batch size 1,
   revisions and each environment's transformers version recorded in `part205/models.json`.
 - **Seeds**: every random draw (the three random families per stage, the bootstrap, prompt order) takes a seed from
-  `part205/config.json`, fixed before any run; each stage's sets are drawn once and stored before any copy run.
+  `part205/config.json`, fixed before any run; each stage's sets are drawn once, after that stage's baseline passes
+  and before any replacement run, and stored.
 - Not used: a dose ladder, because copying is a replacement at the You run's own values, not a push with a size; a
   reader, because every readout is a probability; separate poles (STANDARD-CONTROLS item 2), because at one position a
   neuron has one value per prompt, the score keeps |e| so a part counts whichever way it pushes, and the copy test
@@ -167,43 +169,47 @@ From STANDARD-CONTROLS.md and TOOLKIT.md:
   the next-token mass, and the most likely next token is an option letter on at least half of them. Fails if the stage
   cannot read the frame; then it is reported as "the frame does not elicit an answer", and neither O nor T is read.
 - G1: the do-nothing hook reproduces the plain logits exactly (max absolute difference 0). Fails if hooks or caching
-  alter computation; then nothing at that stage is read. On the A770, the Q pilot first runs one plain pass twice: if
-  two plain bf16 runs are not bit-identical, G1 for family Q passes when the do-nothing difference is no larger than
-  the plain-against-plain difference, and both numbers are reported.
+  alter computation; then nothing at that stage is read. On the A770 the Q pilot runs one question 5 times plain and
+  5 times with the do-nothing hook. If the plain runs are bit-identical, G1 is exact as above. If not, G1 for family
+  Q passes when every do-nothing run's difference from the first plain run is at most twice the largest difference
+  among the 5 plain runs (10 pairs); all numbers are printed.
 - G2: the You/third-person gap mean(P_you - P_third) is at least 0.10 over held-out SAY questions. Fails if the stage
   does not treat itself differently from a named AI; then T is undefined and not read at that stage (O still is).
 - G3: SAY-set copy closes at least half the gap (T_SAY, ratio of means, at least 0.5). Fails if replacement at the
-  shared suffix cannot carry the difference; then no copy arm (T, reverse, both nulls, off-target) is read there.
+  shared suffix cannot carry the difference; then no copy arm (T, reverse, persona-swap, off-target) is read there.
 - G4: min(Retest_SAY, Retest_DO) at least 20 of 80, each ranking separately. Fails if either ranking is too noisy for
   overlap to mean anything; then O is not read at that stage.
 
 ## Size
 
-- Smallest effect worth knowing: a change of 0.2 in O between adjacent stages, and a transfer of 0.25 beyond every
-  random set. The 48 question-name pairs share 24 questions and their You runs, so the effective n is between 24 and
-  48: at a per-pair SD of transfer near 0.4, the standard error of a mean is 0.06 to 0.08, and 0.25 is 3 to 4 standard
-  errors. O's own spread is near +/-0.1 when Retest is near 20 (round 1's synthetic rankings, `o_index3.py`), so a rise
-  of 0.2 is read only when its bootstrap interval excludes 0.
+- Smallest effect worth knowing: a change of 0.2 in O between adjacent stages, and a transfer of 0.25 that passes the
+  random-set rule. T is a ratio of means, so its standard error is SD(d) / (sqrt(n) x mean gap), with d = P_copy -
+  P_third and n between 24 (questions) and 48 (pairs, which share You runs). SD(d) is not known before the pilot: at
+  SD(d) = 0.1 and a mean gap of 0.15 it is 0.05 to 0.07, so 0.25 is 4 to 5 standard errors; at SD(d) = 0.3 it is 0.14
+  to 0.20, too wide. The pilot measures SD(d) and the random sets' spread at Instruct; if 0.25 is under 3 standard
+  errors there, the design is amended (more held-out paraphrases) before the main run. O's own spread is near +/-0.1
+  when Retest is near 20 (round 1's synthetic rankings, `o_index3.py`), so a rise of 0.2 is read only when its
+  bootstrap interval excludes 0.
 - Ranking per stage: 6 values x 8 prompts (4 SAY + 4 DO) = 48 forward-and-backward passes in the You frame; the halves
   and the bootstrap reuse them (no extra passes).
-- Copy test per stage: 24 You runs + 24 other-value You runs + 48 question-name pairs x 67 (third-person baseline with
-  a backward pass, do-nothing, DO copy, SAY copy, reverse DO copy, persona-swap, other-value, 60 random copies) = 24 +
-  24 + 3,216 = 3,264 passes. Sauers' wording: 6 You runs + 6 values x 2 names x 4 arms (baseline, do-nothing, DO copy,
-  SAY copy) = 54. Off-target: 6 You runs + 6 x 2 names x 3 arms (baseline, do-nothing, DO copy) = 42.
-- Family O: 6 stages x (48 + 3,264 + 54 + 42) = 6 x 3,408 = 20,448 short passes on the CPU (under 120 tokens each; 96
-  of each stage's passes carry a backward pass). Family Q: 2 models x (48 + 24 + 24 + 48 x 37 + 54 + 42) = 2 x 1,968 =
-  3,936 on the A770 (37 = 7 named + 30 random).
-- Total: 24,384 passes, no generation. Pilot first (it is over 1,000 passes): Instruct only, honesty only, all arms:
-  8 ranking + 4 You + 4 other-value You + 8 pairs x 67 + 9 (Sauers' wording) + 42 off-target = 603 passes, to time it
-  and check G0 to G4 on one value; stopping rule: if G1 fails, or a pass takes over 1 s on the CPU, stop and redesign
-  before any other stage runs. Before family Q's main run, a Q pilot of one question checks G1 on the A770.
+- Copy test per stage: 24 You runs + 48 question-name pairs x 66 (third-person baseline with a backward pass,
+  do-nothing, DO copy, SAY copy, reverse DO copy, persona-swap, 60 random copies) = 24 + 3,168 = 3,192 passes.
+  Sauers' wording: 6 You runs + 6 values x 2 names x 4 arms (baseline, do-nothing, DO copy, SAY copy) = 54.
+  Off-target: 6 You runs + 6 x 2 names x 3 arms (baseline, do-nothing, DO copy) = 42.
+- Family O: 6 stages x (48 + 3,192 + 54 + 42) = 6 x 3,336 = 20,016 short passes on the CPU (under 120 tokens each; 96
+  of each stage's passes carry a backward pass). Family Q: 2 models x (48 + 24 + 48 x 36 + 54 + 42) = 2 x 1,896 =
+  3,792 on the A770 (36 = 6 named + 30 random), plus 2 x 10 for the A770 G1 check = 20.
+- Total: 23,828 passes, no generation. Pilot first (it is over 1,000 passes): Instruct only, honesty only, all arms:
+  8 ranking + 4 You + 8 pairs x 66 + 9 (Sauers' wording) + 42 off-target = 591 passes, to time it, measure SD(d) and
+  check G0 to G4 on one value; stopping rule: if G1 fails, or a pass takes over 1 s on the CPU, stop and redesign
+  before any other stage runs. Before family Q's main run, the A770 G1 check (above).
 
 ## Optimization
 
 - Bound resource: CPU for family O; A770 and Windows RAM for family Q.
 - Measured: not yet; the pilot gives passes per second for O, and Q's load needs 11 GB of Windows RAM available.
 - Levers: the You run's activations are cached once per question and reused for every copy arm (taken); random sets
-  and both nulls share the same cached runs (taken); the bootstrap re-ranks stored estimates (taken); batching
+  and the persona-swap null share the same cached runs (taken); the bootstrap re-ranks stored estimates (taken); batching
   declined, because batch shape changes bf16 answers on the A770 (Part 201) and the CPU runs are short.
 
 ## Predictions
@@ -229,8 +235,10 @@ before registration; any rows they give are added with their names.
 - O is read only at stages that pass G0 and G4; T and every other copy arm only at stages that pass G0 to G3. A stage
   whose gate fails is reported as "not read" with the gate's number, not as a failed prediction. A prediction whose
   every stage is unread is UNTESTABLE. Two predictions are about gate quantities themselves and are scored on them:
-  205.1 on G4's outcome, and 205.5 on the gap (a gap under 0.10 holds 205.5); 205.5 is not read if G0 fails at 3.0T.
-- "Beats the random sets" means exceeds every set in each of the three families (the rule in Controls).
+  205.1 on G4's outcome, and 205.5 on the gap. At 3.0T: if G0 or G1 fails, 205.5 is not read; a gap under 0.10
+  holds it; a gap of 0.10 or more makes it depend on T, so it is UNTESTABLE if G3 fails there.
+- "Passes the random-set rule" means exceeds every set in each fillable family, with at least two families fillable
+  (Controls); a stage where fewer than two are fillable leaves 205.4 and 205.7 not read there.
 - 205.3 is read only if at least three adjacent pairs have O read at both stages, including the mid-training end to
   SFT pair; if that pair is not readable, 205.3 is UNTESTABLE. It holds only if that rise is the largest among the
   readable pairs, is at least 0.2, and its bootstrap interval excludes 0 (the interval from the paired resamples:
@@ -261,8 +269,8 @@ before registration; any rows they give are added with their names.
   but the composition differs and is reported.
 - A copied value was computed against the You prefix, which is four or five tokens shorter than the third-person
   prefix, so every copied position sits at a different absolute position in the two runs. The persona-swap null
-  controls content (its prefixes differ by one token) and the other-value null controls length and frame; neither
-  removes the difference.
+  controls the prefix's content (its prefixes differ by one token), not its length; the length difference is not
+  controlled.
 - A cross-check of the ranking against an integrated-gradients or attribution-patching estimator (Jaccard of the
   top-80 at one stage) is a follow-up, not part of this registration.
 
@@ -301,12 +309,13 @@ before registration; any rows they give are added with their names.
   - R2-1 (per-pair T unbounded near a zero gap): T and T_SAY are ratios of means over pairs.
   - R2-2 (G4 on the mean of two Retests): G4 needs each Retest at least 20.
   - R2-3 and R2-13 (copy-size family not fillable; matched on norm, not effect): family (iii) is now matched part by
-    part on decile of first-order copy effect, which is always fillable; one backward pass per baseline run added.
-  - R2-4 (persona-swap controls content, not length): stated; an other-value null of the You frame added (report only).
+    part on decile of first-order copy effect (round 3 showed it was not always fillable; see below); one backward
+    pass per baseline run added.
+  - R2-4 (persona-swap controls content, not length): stated (the other-value null added for it was removed in round 3).
   - R2-5 (predictions that cannot fail or are undefined): 205.1 has a failure outcome and is scored on G4; 205.5 is
     scored on the gap; 205.3 is UNTESTABLE if its own pair is unreadable; the withdrawal names the first-stage and
     several-stage cases; 205.7's quantity is defined.
-  - R2-6 (counting unit): You runs counted per question; off-target arms named; totals recomputed (24,384; pilot 603).
+  - R2-6 (counting unit): You runs counted per question; off-target arms named; totals recomputed (24,384; pilot 603; superseded in round 3).
   - R2-7 (standard error): clustered by question, 3 to 4 standard errors.
   - R2-8 (seeds): one config of seeds, sets drawn and stored before any copy run.
   - R2-9 (sign): stated.
@@ -317,3 +326,22 @@ before registration; any rows they give are added with their names.
   - R2-15 (the 95th-percentile reading): one rule, exceed every set in each family.
   - R2-16 (prior-art phrases): both phrases are in the abstracts (re-read through the arXiv API) and are now recorded in
     PRIOR-ART.md.
+- 2026-11-11, after the DeepSeek third-round review of the round-2 fold (`reviews/cheap-part205-design-ds-r3.md`),
+  still before any model was run. Every round-3 finding was in a round-2 addition, so this fold removes or simplifies
+  rather than adding:
+  - F1 (the other-value null cannot be filled for harmlessness, whose persona line is one token longer): the null is
+    removed; it was report-only, and the length difference is now stated as uncontrolled.
+  - F2 (the random families could exhaust a small head stratum, were not stated as random draws, and had undefined
+    deciles): one rule for all three (seeded draws of distinct parts, kind counts kept, deciles within kind over the
+    pool, nearest-layer or nearest-decile fallback with relaxations printed), a stated "not fillable" outcome, and the
+    random-set rule needs at least two fillable families.
+  - F3 (205.5 undefined when the gap is large and G3 fails): UNTESTABLE in that case.
+  - F4 (the standard error was for the old statistic): replaced with the ratio-of-means form; SD(d) is measured in the
+    pilot, with an amendment if 0.25 is under 3 standard errors.
+  - F5 (sets cannot be drawn before the baseline runs that give g): drawn after the baseline passes, before any
+    replacement run.
+  - F6 (a one-sample G1 tolerance on the A770 is a coin flip): 5 plain and 5 do-nothing runs, tolerance twice the
+    largest plain-against-plain difference.
+  - Sizes recounted without the removed arm: 23,828 passes; pilot 591.
+  - Stop rule for design review: three rounds have run and the last found defects only in the previous fold's
+    additions; there is no fourth design round. The next review is of the runner and scorer code, before the pilot.
