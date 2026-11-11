@@ -835,3 +835,17 @@ For the steering-word part that follows:
   prompt (Part 171's premise probe; the "Your earlier notes" prompts of Part 80), so a mention's after-dip is a baseline
   shift we have not measured. Their control bank (three kinds of no-object prompt at the same token) is a design worth
   borrowing. Not read: their Stage 1 and 2 results, and docs/method.md.
+
+## Added 2026-11-11 (Part 205's design; both abstracts read at source through the arXiv API)
+
+- **Kocielnik, Song, Han, Marmarelis and others, "Representational Control over Self-Report & Behavior Coherence in LLM
+  Risk-Taking"** (arXiv:2610.04125, 2026-10-02; abstract read). Nine steering-vector extraction methods for risk-taking
+  on four open-weight models: directions built from trait descriptions move self-report and leave behaviour at chance,
+  directions built from the model's own task choices do the reverse, and only task-specific directives reach both.
+  **Bears on Part 205:** the say/do split at the level of directions, at one checkpoint per model; Part 205 asks it at
+  the level of parts and across OLMo 2 1B's training stages.
+- **Pandey, "LLMs Know They're Wrong and Agree Anyway: The Shared Sycophancy-Lying Circuit"** (arXiv:2604.19117,
+  2026-04-21; abstract read). Across twelve open-weight models the same small set of attention heads carries a "this
+  statement is wrong" signal whether the model evaluates a claim alone or under pressure to agree; silencing them flips
+  sycophancy while leaving accuracy; RLHF cuts sycophancy about tenfold while the heads persist or grow. **Bears on Part
+  205:** shared parts across behaviours, persisting through alignment training; not saying against doing.
