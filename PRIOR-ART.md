@@ -835,3 +835,26 @@ For the steering-word part that follows:
   prompt (Part 171's premise probe; the "Your earlier notes" prompts of Part 80), so a mention's after-dip is a baseline
   shift we have not measured. Their control bank (three kinds of no-object prompt at the same token) is a design worth
   borrowing. Not read: their Stage 1 and 2 results, and docs/method.md.
+
+## Added 2026-11-11 (Part 205's design; the two arXiv abstracts read at source through the arXiv API, the X post through x-thread.mjs)
+
+- **Kocielnik, Song, Han, Marmarelis and others, "Representational Control over Self-Report & Behavior Coherence in LLM
+  Risk-Taking"** (arXiv:2610.04125, 2026-10-02; abstract read). Nine steering-vector extraction methods for risk-taking
+  on four open-weight models: directions built from trait descriptions move self-report and leave behaviour at chance,
+  directions built from the model's own task choices do the reverse, and only task-specific directives reach both (weakly); otherwise "the two channels are steered by
+  near-orthogonal directions".
+  **Bears on Part 205:** the say/do split at the level of directions, at one checkpoint per model; Part 205 asks it at
+  the level of parts and across OLMo 2 1B's training stages.
+- **Pandey, "LLMs Know They're Wrong and Agree Anyway: The Shared Sycophancy-Lying Circuit"** (arXiv:2604.19117,
+  2026-04-21; abstract read). Across twelve open-weight models the same small set of attention heads carries a "this
+  statement is wrong" signal whether the model evaluates a claim alone or under pressure to agree; silencing them flips
+  sycophancy while leaving accuracy; edge-level path patching finds the same head-to-head connections drive
+  sycophancy, factual lying and instructed lying; RLHF cuts sycophancy about tenfold while the heads persist or grow. **Bears on Part
+  205:** shared parts across behaviours, persisting through alignment training; not saying against doing.
+- **@euagaric, "this body part is mine" in Qwen3-8B** (X, 2026-11-11; post and figure archived in the Journal repo,
+  `sources/web-archives/2026-11-11-euagaric-qwen-body-ownership.md`). A direction at layer 24, read at the reply's
+  first token, built from touch sentences on "your" against "the woman's" body parts; on new sentences it follows
+  whose body is touched, not who does the touching, with graded edge cases (reflection halfway, your car a little, a
+  robot you control and your hand lost in a jar not mine). Holds after a chat where Qwen agrees to notice sensations
+  as if it had a body; in a plain chat it mostly tracks the word "you". A reading, no steering test or random-direction
+  baseline shown. **Bears on Part 205:** a You-against-third-person contrast can carry a pronoun feature.
