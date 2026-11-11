@@ -759,3 +759,79 @@ For the steering-word part that follows:
   zeroing, and Part 75 found even a prompt-mean clamp of L27 N3325 is not neutral. A resample control, the four makers
   given their values from non-maker questions, is the test this case says to run before calling their content
   question-specific.
+
+## 2026-11-09, for Part 201 (batch-shape noise in bf16 greedy answers; abstracts read by Claude)
+
+- Yuan et al., "Understanding and Mitigating Numerical Sources of Nondeterminism in LLM Inference" (arXiv 2506.09501;
+  earlier title "Give Me FP32 or Give Me Death?"). Under bf16 greedy decoding, evaluation batch size, GPU count and
+  GPU type change responses; a reasoning model shows up to 9% accuracy variation. Fix: LayerCast, weights stored in 16
+  bits and all computation in float32. Our `tools/kernel_reference.py --dtype float32-upcast` is the same idea, built
+  on 2026-11-04 for the CPU reference.
+- "Greedy Decoding Is Not Precision-Invariant: Cross-Precision Output Divergence in LLM Inference" (arXiv 2609.26621).
+  bf16 against fp16 on the same hardware diverges on 49 to 100% of prompts across six models; whether a step flips
+  depends mainly on the top-two margin at the output head against the perturbation between the two candidates;
+  recomputing the head in float32 at low-margin steps helps at batch 4 or less and not at batch 8 or more or under
+  end-to-end FP8, in their tests.
+- "Same Probe, Different Numbers: Are Activation Probes Robust to Inference-Time Numerical Non-Determinism?" (arXiv
+  2609.31796; Llama-3.1-8B, Qwen3-8B, Gemma-3-4B). 768 probes trained on one configuration and evaluated on others:
+  at the prompt, 0.076% of verdicts change; under float32 with only batch size varied, none of 201,960; during
+  decoding 2.8%, almost all on rows whose tokens had diverged. A bf16 batch-size change flips the first generated
+  token on 2.1% of rows and leaves 25% on different tokens by token 20; flips are symmetric; activations move by a
+  median relative L2 of about 1e-2. Recommends reporting per-example agreement and stating the serving configuration.
+- "MarginGate: Sparse Margin-Triggered Verification for Batch-Invariant LLM Inference" (arXiv 2605.30218).
+  Batch-induced token flips are sparse, so verification is applied only at low-margin steps. (Abstract read in part;
+  method details not yet read.)
+- Cooper et al., "Accelerating the Mitigation of LLM Inference Nondeterminism Across GPU Architectures" (arXiv
+  2609.25624). Fused-upcast GEMM kernels that load 16-bit weights, accumulate in float32 in a reduction order fixed by
+  the problem shape, bitwise identical linear layers across NVIDIA Ampere, Ada and Hopper.
+- Thinking Machines Lab, "Defeating Nondeterminism in LLM Inference" (September 2025) and `batch_invariant_ops`: the
+  nondeterminism users see comes from kernels that are not batch-invariant.
+- How Part 201 differs: rows are pushed at one MLP neuron or direction; the readout is labels and registered verdicts,
+  with a simulated sensitivity for each; the card is an Intel Arc A770. None of the above tests Intel hardware.
+
+### Added 2026-11-09 from Muse's sweep (council `muse-prior-art` #16); abstracts or pages read by Claude unless marked
+
+- MarginGate (arXiv 2605.30218; Chu, Zhou, Zhang), from its abstract: batch-induced flips are 0.3 to 1.3% of
+  synchronous decode steps across five models; it keeps bf16 decoding at high-margin steps, verifies only low-margin
+  ones, and "repairs confirmed mismatches by replacing the current K/V column"; the verifier runs on 15 to 50% of
+  steps depending on the model. Muse's reading of the paper body, which I have not read: the margin threshold that
+  reaches full determinism is per model (1.0 to 16.0 logits across its five), and taking the verifier's token
+  without replacing that step's cached keys and values leaves the token and the cache describing different
+  continuations.
+- LLM-42 (arXiv 2601.17768; Gond, Kamath, Ramjee, Panwar): decode on the fast path, then a verifier replays tokens
+  under a fixed-shape reduction schedule and rolls back the ones that do not match. The always-on version of what
+  MarginGate gates.
+- Reporting: Pape, Evertz and Schoenherr, "The Silent Hyperparameter" (arXiv 2605.19537): with weights, decoding
+  settings and hardware fixed, the inference backend alone moved benchmark scores by up to 16.6 points across five
+  engines, and the stack is rarely reported. Masoudian et al., "What We Observe as LLM Behavior Can Be a Side-effect
+  of Inference Backend" (arXiv 2608.04714): about 39% of out-of-the-box variability came from the backend; report the
+  backend, its version and the full generation settings. Neither publishes a per-verdict sensitivity column; Muse
+  found no harness or paper that does.
+- Steering work that assumes bf16 greedy decoding is deterministic: Muse names Malla, Choi and Choi, "Steering
+  Interference Reflects the Model's Defaults, Not the Behavior Directions" (arXiv 2609.06951) as running all steering
+  in bf16 with greedy decoding and no batch or precision arm. Its abstract does not mention precision or decoding; I
+  have not read the body. Muse found no paper that varies batch size or dtype inside a steering or neuron-clamp
+  experiment and reports whether a verdict moved. Also named by Muse and not read by me: Sohail Mohammad, "Inverse
+  Scaling in Activation Steering" (self-published, February 2026), on quantization and tooling changing steering
+  effectiveness.
+- Intel Arc: Muse found no published batch-variance study on Arc, XPU or IPEX. One user report on the Intel Community
+  forum (Richstone, 2026-11-07): Arc driver 32.0.101.9150, against 32.0.101.8724, makes llama.cpp's Vulkan backend
+  emit repeated characters from a fixed token position when a model is split across two A770s; downgrading the
+  driver fixed it; the author did not bisect. A different stack and a two-card setup, but it shows a driver update
+  can change this card's outputs. Our card runs 32.0.101.9150 (installed 2026-10-12), so every A770 part since
+  2026-10-15 ran on it.
+
+## 2026-11-11, from the X watch (README read at source by Claude)
+
+- **logitsml/neuron-undershoot (treetown, @treetowntree; GitHub, MIT, created 2026-11-09; post of 2026-11-10 01:00 UTC).**
+  In Gemma 4 12B base, once a chat names an object ("Think of what a hamster looks like. Just reply OK.") and moves on, the
+  typical neuron in that object's set (32 to 64 poles from the Neuron Lens catalog, signed so positive means more of the
+  object) sits **0.127 SD below** its level in chats that name no object (interval -0.138 to -0.116, 200 objects, 90% of
+  them below zero; sign-flip test over 16 categories). Their three kinds of no-object control (neutral phrases,
+  placeholders like "something", object-free messages) agree within 0.027 SD. Later stages ask what lifts the dip, whether
+  forcing the set up by hand produces a later dip, and whether it steps when the mention leaves Gemma's 1,024-token local
+  attention window; Stage 0 replicates in Qwen3-8B-Base. Batch size 1 on an H100, Stages 0 and 1 in bf16, the rest in fp32.
+  Why it matters here: our pushes and readouts on concept and persona neurons often follow an earlier mention in the same
+  prompt (Part 171's premise probe; the "Your earlier notes" prompts of Part 80), so a mention's after-dip is a baseline
+  shift we have not measured. Their control bank (three kinds of no-object prompt at the same token) is a design worth
+  borrowing. Not read: their Stage 1 and 2 results, and docs/method.md.

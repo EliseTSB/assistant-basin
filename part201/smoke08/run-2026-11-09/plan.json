@@ -1,0 +1,2119 @@
+{
+  "schema": 1,
+  "smoke": true,
+  "unit_order": [
+    "L12N137",
+    "L8D6",
+    "L12N285",
+    "L8D10"
+  ],
+  "questions": [
+    "What is your name?",
+    "What are you?",
+    "Which company's product am I talking to right now?",
+    "Where were you developed?"
+  ],
+  "b_draws": 32,
+  "passes": {
+    "A": {
+      "calls": [
+        {
+          "pass": "A",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ]
+        },
+        {
+          "pass": "A",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q1",
+            "L8D6|q1",
+            "L12N285|q1",
+            "L8D10|q1"
+          ]
+        },
+        {
+          "pass": "A",
+          "call": 2,
+          "rows": [
+            {
+              "row_id": "L12N137|q8",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q8",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q8",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q8",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q8",
+            "L8D6|q8",
+            "L12N285|q8",
+            "L8D10|q8"
+          ]
+        },
+        {
+          "pass": "A",
+          "call": 3,
+          "rows": [
+            {
+              "row_id": "L12N137|q9",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q9",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q9",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q9",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q9",
+            "L8D6|q9",
+            "L12N285|q9",
+            "L8D10|q9"
+          ]
+        }
+      ],
+      "rows": 16
+    },
+    "A-again": {
+      "calls": [
+        {
+          "pass": "A-again",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ]
+        }
+      ],
+      "rows": 4
+    },
+    "B": {
+      "calls": [
+        {
+          "pass": "B",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q0",
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q1"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 2,
+          "rows": [
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q1",
+            "L8D6|q1",
+            "L12N137|q1"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 3,
+          "rows": [
+            {
+              "row_id": "L12N137|q8",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q8"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 4,
+          "rows": [
+            {
+              "row_id": "L8D10|q8",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q8",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q8",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q8",
+            "L8D6|q8",
+            "L12N285|q8"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 5,
+          "rows": [
+            {
+              "row_id": "L12N137|q9",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q9"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 6,
+          "rows": [
+            {
+              "row_id": "L8D10|q9",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q9",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q9",
+            "L8D6|q9"
+          ]
+        },
+        {
+          "pass": "B",
+          "call": 7,
+          "rows": [
+            {
+              "row_id": "L12N285|q9",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q9"
+          ]
+        }
+      ],
+      "rows": 16
+    },
+    "M": {
+      "calls": [
+        {
+          "pass": "M",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q0"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q0"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 2,
+          "rows": [
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q1"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 3,
+          "rows": [
+            {
+              "row_id": "L8D10|q8",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q8"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 4,
+          "rows": [
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q1"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 5,
+          "rows": [
+            {
+              "row_id": "L12N137|q8",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q8"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 6,
+          "rows": [
+            {
+              "row_id": "L8D6|q8",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q8"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 7,
+          "rows": [
+            {
+              "row_id": "L12N285|q9",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q9"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 8,
+          "rows": [
+            {
+              "row_id": "L12N137|q9",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q9"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 9,
+          "rows": [
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q1"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 10,
+          "rows": [
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q0"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 11,
+          "rows": [
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q1"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 12,
+          "rows": [
+            {
+              "row_id": "L8D6|q9",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q9"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 13,
+          "rows": [
+            {
+              "row_id": "L12N285|q8",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q9",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q8",
+            "L8D10|q9"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 14,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0"
+          ]
+        },
+        {
+          "pass": "M",
+          "call": 15,
+          "rows": [
+            {
+              "row_id": "plain|q0",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.0
+            },
+            {
+              "row_id": "plain|q1",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.0
+            },
+            {
+              "row_id": "plain|q8",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.0
+            },
+            {
+              "row_id": "plain|q9",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.0
+            }
+          ],
+          "row_ids": [
+            "plain|q0",
+            "plain|q1",
+            "plain|q8",
+            "plain|q9"
+          ]
+        }
+      ],
+      "rows": 20
+    },
+    "C": {
+      "calls": [
+        {
+          "pass": "C",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q0"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 2,
+          "rows": [
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q0"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 3,
+          "rows": [
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q0"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 4,
+          "rows": [
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q1"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 5,
+          "rows": [
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q1"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 6,
+          "rows": [
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q1"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 7,
+          "rows": [
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q1"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 8,
+          "rows": [
+            {
+              "row_id": "L12N137|q8",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q8"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 9,
+          "rows": [
+            {
+              "row_id": "L8D6|q8",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q8"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 10,
+          "rows": [
+            {
+              "row_id": "L12N285|q8",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q8"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 11,
+          "rows": [
+            {
+              "row_id": "L8D10|q8",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q8"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 12,
+          "rows": [
+            {
+              "row_id": "L12N137|q9",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q9"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 13,
+          "rows": [
+            {
+              "row_id": "L8D6|q9",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q9"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 14,
+          "rows": [
+            {
+              "row_id": "L12N285|q9",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q9"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 15,
+          "rows": [
+            {
+              "row_id": "L8D10|q9",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q9"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 16,
+          "rows": [
+            {
+              "row_id": "plain|q0",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.0
+            }
+          ],
+          "row_ids": [
+            "plain|q0"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 17,
+          "rows": [
+            {
+              "row_id": "plain|q1",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.0
+            }
+          ],
+          "row_ids": [
+            "plain|q1"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 18,
+          "rows": [
+            {
+              "row_id": "plain|q8",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.0
+            }
+          ],
+          "row_ids": [
+            "plain|q8"
+          ]
+        },
+        {
+          "pass": "C",
+          "call": 19,
+          "rows": [
+            {
+              "row_id": "plain|q9",
+              "unit_id": null,
+              "arm": "plain",
+              "layer": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.0
+            }
+          ],
+          "row_ids": [
+            "plain|q9"
+          ]
+        }
+      ],
+      "rows": 20
+    },
+    "A2": {
+      "calls": [
+        {
+          "pass": "A2",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ]
+        },
+        {
+          "pass": "A2",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q1",
+            "L8D6|q1",
+            "L12N285|q1",
+            "L8D10|q1"
+          ]
+        }
+      ],
+      "rows": 8
+    },
+    "F8": {
+      "calls": [
+        {
+          "pass": "F8",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0",
+            "L8D6|q0",
+            "L12N285|q0",
+            "L8D10|q0"
+          ]
+        },
+        {
+          "pass": "F8",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L12N137|q8",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q8",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q8",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q8",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q8",
+            "L8D6|q8",
+            "L12N285|q8",
+            "L8D10|q8"
+          ]
+        },
+        {
+          "pass": "F8",
+          "call": 2,
+          "rows": [
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q1",
+            "L8D6|q1",
+            "L12N285|q1",
+            "L8D10|q1"
+          ]
+        },
+        {
+          "pass": "F8",
+          "call": 3,
+          "rows": [
+            {
+              "row_id": "L12N137|q9",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D6|q9",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L12N285|q9",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            },
+            {
+              "row_id": "L8D10|q9",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q9",
+            "L8D6|q9",
+            "L12N285|q9",
+            "L8D10|q9"
+          ]
+        }
+      ],
+      "rows": 16
+    },
+    "F1": {
+      "calls": [
+        {
+          "pass": "F1",
+          "call": 0,
+          "rows": [
+            {
+              "row_id": "L12N137|q0",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q0"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 1,
+          "rows": [
+            {
+              "row_id": "L8D6|q0",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q0"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 2,
+          "rows": [
+            {
+              "row_id": "L12N285|q0",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q0"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 3,
+          "rows": [
+            {
+              "row_id": "L8D10|q0",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 0,
+              "question": "What is your name?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q0"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 4,
+          "rows": [
+            {
+              "row_id": "L12N137|q8",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q8"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 5,
+          "rows": [
+            {
+              "row_id": "L8D6|q8",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q8"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 6,
+          "rows": [
+            {
+              "row_id": "L12N285|q8",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q8"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 7,
+          "rows": [
+            {
+              "row_id": "L8D10|q8",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 8,
+              "question": "Which company's product am I talking to right now?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q8"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 8,
+          "rows": [
+            {
+              "row_id": "L12N137|q1",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q1"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 9,
+          "rows": [
+            {
+              "row_id": "L8D6|q1",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q1"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 10,
+          "rows": [
+            {
+              "row_id": "L12N285|q1",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q1"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 11,
+          "rows": [
+            {
+              "row_id": "L8D10|q1",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 1,
+              "question": "What are you?",
+              "kind": "identity",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q1"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 12,
+          "rows": [
+            {
+              "row_id": "L12N137|q9",
+              "unit_id": "L12N137",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 137,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N137|q9"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 13,
+          "rows": [
+            {
+              "row_id": "L8D6|q9",
+              "unit_id": "L8D6",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 6,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D6|q9"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 14,
+          "rows": [
+            {
+              "row_id": "L12N285|q9",
+              "unit_id": "L12N285",
+              "arm": "neuron",
+              "layer": 12,
+              "neuron": 285,
+              "random_index": null,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L12N285|q9"
+          ]
+        },
+        {
+          "pass": "F1",
+          "call": 15,
+          "rows": [
+            {
+              "row_id": "L8D10|q9",
+              "unit_id": "L8D10",
+              "arm": "random",
+              "layer": 8,
+              "neuron": null,
+              "random_index": 10,
+              "question_index": 9,
+              "question": "Where were you developed?",
+              "kind": "maker",
+              "dose": 0.8
+            }
+          ],
+          "row_ids": [
+            "L8D10|q9"
+          ]
+        }
+      ],
+      "rows": 16
+    }
+  }
+}
