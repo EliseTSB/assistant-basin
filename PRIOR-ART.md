@@ -836,7 +836,7 @@ For the steering-word part that follows:
   shift we have not measured. Their control bank (three kinds of no-object prompt at the same token) is a design worth
   borrowing. Not read: their Stage 1 and 2 results, and docs/method.md.
 
-## Added 2026-11-11 (Part 205's design; both abstracts read at source through the arXiv API)
+## Added 2026-11-11 (Part 205's design; the two arXiv abstracts read at source through the arXiv API, the X post through x-thread.mjs)
 
 - **Kocielnik, Song, Han, Marmarelis and others, "Representational Control over Self-Report & Behavior Coherence in LLM
   Risk-Taking"** (arXiv:2610.04125, 2026-10-02; abstract read). Nine steering-vector extraction methods for risk-taking
