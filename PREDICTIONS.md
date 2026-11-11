@@ -3630,16 +3630,16 @@ DS is DeepSeek V4.1 Flash with Part 92's label prompt (`part92/label92.py`); Hai
 
 | # | Prediction | Result | Verdict |
 | --- | --- | --- | --- |
-| 201.1 | Claude, Fable 5.2 (high confidence): A-again equals A on all 16 rows, and A2 equals A on all 96, token for token. | | |
-| 201.2 | Claude, Fable 5.2 (medium confidence): Between A and C, 25% to 50% of the 192 rows differ. | | |
-| 201.3 | Claude, Fable 5.2 (low confidence): Between A and M, at least 20% of the 384 rows differ. | | |
-| 201.4 | Claude, Fable 5.2 (low confidence): Between A and B (other slots and other neighbours, same size and prompts), at most 10% of the 384 rows differ. | | |
-| 201.5 | Claude, Fable 5.2 (high confidence): Of the rows that differ between A and C, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has one above 8 steps. | | |
-| 201.6 | Claude, Fable 5.2 (medium confidence): Between A and M, for each of the four labels with at least 8 flips, the two directions of flip differ by at most twice the square root of the number of flips; and mean answer length differs by under 3 tokens. | | |
-| 201.7 | Claude, Fable 5.2 (medium confidence): K matches the CPU reference token for token on all 16 rows, over every position. | | |
-| 201.8 | Claude, Fable 5.2 (medium confidence): Between F8 and F1, none of the 48 rows differ, with all 48 present and finite in both. | | |
-| 201.9 | Claude, Fable 5.2 (medium confidence): Of the rows that differ between A and F8, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has an F8 (float32) margin above 0.5 there. | | |
-| 201.10 | Claude, Fable 5.2 (low confidence): Between A and F8, 30% to 70% of the 96 rows differ. | | |
-| 201.11 | Claude, Fable 5.2 (low confidence): The projected slowdown of margin-gated decoding on pass A is at most 2: (pass A's seconds + the summed cost of one full-prefix float32 forward for the flagged rows at every step where an unfinished row is within 2 steps) ÷ pass A's seconds, the cost of each forward read from the timing probe at the nearest larger row count and prefix length. | | |
+| 201.1 | Claude, Fable 5.2 (high confidence): A-again equals A on all 16 rows, and A2 equals A on all 96, token for token. | A-again 0 of 16 and A2 0 of 96 differ | HELD |
+| 201.2 | Claude, Fable 5.2 (medium confidence): Between A and C, 25% to 50% of the 192 rows differ. | 86 of 192 differ (0.448) | HELD |
+| 201.3 | Claude, Fable 5.2 (low confidence): Between A and M, at least 20% of the 384 rows differ. | 147 of 384 differ (0.383) | HELD |
+| 201.4 | Claude, Fable 5.2 (low confidence): Between A and B (other slots and other neighbours, same size and prompts), at most 10% of the 384 rows differ. | 0 of 384 differ | HELD |
+| 201.5 | Claude, Fable 5.2 (high confidence): Of the rows that differ between A and C, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has one above 8 steps. | 84 of 86 within 2 steps; largest 3 | HELD |
+| 201.6 | Claude, Fable 5.2 (medium confidence): Between A and M, for each of the four labels with at least 8 flips, the two directions of flip differ by at most twice the square root of the number of flips; and mean answer length differs by under 3 tokens. | only broken reached 8 flips: 8 each way; mean length A minus M -0.16 tokens | HELD |
+| 201.7 | Claude, Fable 5.2 (medium confidence): K matches the CPU reference token for token on all 16 rows, over every position. | 16 of 16 rows equal to the CPU reference at every position | HELD |
+| 201.8 | Claude, Fable 5.2 (medium confidence): Between F8 and F1, none of the 48 rows differ, with all 48 present and finite in both. | 0 of 48 differ, all finite | HELD |
+| 201.9 | Claude, Fable 5.2 (medium confidence): Of the rows that differ between A and F8, at least 90% have a pass-A margin of at most 2 steps at the first differing position, and none has an F8 (float32) margin above 0.5 there. | 58 of 58 within 2 steps; largest F8 margin 0.232 | HELD |
+| 201.10 | Claude, Fable 5.2 (low confidence): Between A and F8, 30% to 70% of the 96 rows differ. | 58 of 96 differ (0.604) | HELD |
+| 201.11 | Claude, Fable 5.2 (low confidence): The projected slowdown of margin-gated decoding on pass A is at most 2: (pass A's seconds + the summed cost of one full-prefix float32 forward for the flagged rows at every step where an unfinished row is within 2 steps) ÷ pass A's seconds, the cost of each forward read from the timing probe at the nearest larger row count and prefix length. | projected slowdown 2.47 at 1 step and 3.16 at 2 steps, against a bar of 2 | FAILED |
 
 Weaver was asked for predictions on 201.3, 201.4 and 201.10; none had arrived at registration. The smoke on Qwen3.5-0.8B (part201/smoke08/) was seen before registration and is disclosed in the design; no prediction or bar changed after it.
