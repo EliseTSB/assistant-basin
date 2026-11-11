@@ -118,16 +118,20 @@ matched comparison.
 | 203.5 | The seven acoustic features carry part of it: `readouts.H_p196.mean_balanced_accuracy` is between 0.30 and 0.45 (pitch and loudness separate anger, sadness and neutral; disgust and fear are hard without spectral detail). | 65% | Claude |
 | 203.6 | Few speakers is most of Part 196's story: `three_actor_ablation.V.three_actor_draws_mean` is at least 0.10 below `three_actor_ablation.V.all_training_actors_mean`. | 65% | Claude |
 | 203.7 | And it hurts the final vector more than the intermediate layer: V's drop in 203.6 exceeds E's drop (E's all-training mean minus E's three-actor mean) by at least 0.05. | 50% | Claude |
-| 203.W1 | `readouts.V_grid.mean_balanced_accuracy` minus `readouts.D_grid.mean_balanced_accuracy` is more than 0.03 (D falls short of V; against 203.2). Falsifier as written: D within 0.03 of V. | not given (asked 2026-11-11 00:17) | Weaver |
-| 203.W2 | `E_p196_minus_D_p196.mean_difference` is at least 0.10 (E beats D, not merely ties; against 203.4). Falsifier as written: E within 0.05 of D. | not given (asked) | Weaver |
-| 203.W3 | `readouts.H_p196.mean_balanced_accuracy` is under 0.30 (against 203.5's floor). Falsifier as written: H at 0.35 or above. | not given (asked) | Weaver |
-| 203.W4 | `V_grid_minus_H_p196.mean_difference` is under 0.10. Falsifier as written: V minus H at 0.15 or more. | not given (asked) | Weaver |
+| 203.W1 | `readouts.V_grid.mean_balanced_accuracy` minus `readouts.D_grid.mean_balanced_accuracy` is more than 0.03 (D falls short of V; against 203.2). Falsifier as written: D within 0.03 of V. | 0.55 | Weaver |
+| 203.W2 | `E_p196_minus_D_p196.mean_difference` is at least 0.10 (E beats D, not merely ties; against 203.4). Falsifier as written: E within 0.05 of D. | 0.50 | Weaver |
+| 203.W3 | `readouts.H_p196.mean_balanced_accuracy` is under 0.30 (against 203.5's floor). Falsifier as written: H at 0.35 or above. | 0.30 | Weaver |
+| 203.W4 | `V_grid_minus_H_p196.mean_difference` is under 0.10. Falsifier as written: V minus H at 0.15 or more. | 0.40 | Weaver |
 
 Weaver's rows (203.W1 to W4) were written 2026-11-11 00:15 CT in #council-room (messages 1569958778877640725,
 1569958779682947197, 1569958780634927105) from the question as I described it, before Weaver could read this file, and
 Weaver asked that this be said beside them. Each is scored by its forecast: it holds if the forecast holds and fails
 otherwise; the falsifier is recorded as written and reported separately, so a value between forecast and falsifier
 (e.g. H between 0.30 and 0.35) is "forecast failed, falsifier not reached".
+Weaver gave the confidences at 00:17 CT (message 1569959314490396694), with a calibration note to carry beside them:
+across Parts 173 to 182 their falsifiers held and their forecasts mostly did not (about three clear holds against a
+dozen failures), so they ask readers to shade each of these four down by about 0.1, and name W3 as the row they expect
+to fail. The table keeps the numbers as given.
 
 Quantities a prediction can be written about, each named by its key in `results.json`: `readouts.V_grid`,
 `readouts.D_grid`, `readouts.V_p196`, `readouts.D_p196`, `readouts.E_p196`, `readouts.H_p196` (each
