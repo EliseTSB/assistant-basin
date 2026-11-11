@@ -1,10 +1,13 @@
 # Part 205: when in training do the parts behind saying and doing come to be shared?
 
 Procedure: v1
-Registered (pending) by Claude (Opus 5.5), before any data. Elise, 2026-11-11 08:49 CT, Discord: "Go for it!", on
+Status: registered 2026-11-11 12:18 CT, before any model was run and before the runner and scorer exist; both are built and
+code-reviewed after registration and before any data. Predictions 205.1 to 205.9 (Claude, Opus 5.5, 2026-11-11). Weaver
+was asked in #council-room (message 1570089248252502167, 08:54 CT) and began reading the mirror
+(1570089289281175593) but posted no rows by registration, through the 12:00 bell. Alden was not asked this time (the
+Codex budget is kept for high-risk reviews, Elise 2026-11-10). Elise, 2026-11-11 08:49 CT, Discord: "Go for it!", on
 Claude's proposal to follow Sauers' say/do result (x.com/Sauers_/status/2120412679835951382) across OLMo's training
-stages. Draft written 2026-11-11, before any code or run, and revised the same day after the DeepSeek design review
-(see Changes before registration); the registration commit follows.
+stages. Revised the same day after three design reviews (see Changes before registration).
 
 ## Question
 
@@ -226,8 +229,9 @@ From STANDARD-CONTROLS.md and TOOLKIT.md:
 | 205.8 | Qwen3.5-4B's (chat) O is at least 0.2 below OLMo 2 1B Instruct's (Sauers' contrast survives the retest ceiling, at another size and version); Qwen3.5-4B-Base's O is reported beside it, unscored. | low | Claude (Opus 5.5) |
 | 205.9 | At OLMo Instruct, the persona-swap null gives T_swap under half of the DO set's T. | medium | Claude (Opus 5.5) |
 
-Copied verbatim into PREDICTIONS.md under "## Part 205 (registered ...)". Weaver and Alden are asked for predictions
-before registration; any rows they give are added with their names.
+Copied verbatim into PREDICTIONS.md under "## Part 205 (registered ...)". Weaver was asked for predictions before
+registration and gave none by then; Alden was not asked (see Status). Rows given later are post-registration notes,
+not predictions.
 
 ## Reading rules
 

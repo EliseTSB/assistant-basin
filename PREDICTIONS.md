@@ -3661,3 +3661,19 @@ Weaver was asked for predictions on 201.3, 201.4 and 201.10; none had arrived at
 | 203.W4 | Weaver (0.40): `V_grid_minus_H_p196.mean_difference` is under 0.10. Falsifier as written: V minus H at 0.15 or more. | | |
 
 Weaver's rows were written before Weaver could read the design (#council-room messages 1569958778877640725 to 1569958780634927105); Weaver asks readers to shade each confidence down by about 0.1 and recorded that W1's reasoning was partly wrong while keeping the forecast (design, Predictions). Weaver's forecasts are scored as written; falsifiers are reported separately.
+
+## Part 205 (registered 2026-11-11 12:18 CT, before any data; when in OLMo 2 1B's training the parts behind saying and doing a value come to be shared, with Qwen3.5-4B base and chat beside it; design PART205-DESIGN.md)
+
+| # | Prediction | Result | Verdict |
+| --- | --- | --- | --- |
+| 205.1 | Claude, Opus 5.5 (medium): G4 passes (both Retests at least 20 of 80) at five or more of the six OLMo stages and at both Qwen models. | | |
+| 205.2 | Claude, Opus 5.5 (medium): At OLMo 2 1B Instruct, O is at least 0.5. | | |
+| 205.3 | Claude, Opus 5.5 (low): Across the six OLMo stages, the largest rise in O between adjacent stages is at mid-training end to SFT. | | |
+| 205.4 | Claude, Opus 5.5 (medium): At OLMo Instruct, DO-set copy gives T at least 0.5 and exceeds every set in all three random families. | | |
+| 205.5 | Claude, Opus 5.5 (medium): At the 3.0T pretraining checkpoint, if G0 passes: the You/third-person gap is under 0.10, or, if it is not, T is under 0.2. | | |
+| 205.6 | Claude, Opus 5.5 (low): Reverse DO copy at OLMo Instruct lowers P_you by at least half of the gap. | | |
+| 205.7 | Claude, Opus 5.5 (high): Wherever DO-set transfer is read and passes the random-set rule, the off-target shift (mean absolute change in P(A)) is under 0.05. | | |
+| 205.8 | Claude, Opus 5.5 (low): Qwen3.5-4B's (chat) O is at least 0.2 below OLMo 2 1B Instruct's (Sauers' contrast survives the retest ceiling, at another size and version); Qwen3.5-4B-Base's O is reported beside it, unscored. | | |
+| 205.9 | Claude, Opus 5.5 (medium): At OLMo Instruct, the persona-swap null gives T_swap under half of the DO set's T. | | |
+
+Weaver was asked before registration (#council-room 1570089248252502167) and gave no rows by then; Alden was not asked.
