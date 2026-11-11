@@ -249,6 +249,15 @@ def kind_key(u):
     return f"head:{u.sub}" if u.sub else "head"
 
 
+def matching_score(scores):
+    """The score family (ii) matches on (Design, Controls, "the DO set's count in each decile of selection score").
+
+    The DO set is selected by its DO score (top80(scores["do"])), so its selection score is the DO score, not the
+    mean over SAY and DO prompts (scores["pooled"]). Ruled 2026-11-11 on review r2 D-F6; recorded in Amendment 1.
+    """
+    return scores["do"]
+
+
 def draw_random_families(rngs, units, do_set, say_set, score, effect, k=80, n_sets=20):
     """The three matched random families (Design, Controls, lines 131-143).
 
@@ -541,7 +550,7 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
             else cfg["random_family"]["sets_per_stage_qwen"]
         effect_by_key = {u.key: float(effect[i]) for i, u in enumerate(units)}
         random_fams = draw_random_families(rngs, units, do_set, say_set,
-                                           {u.key: float(scores["pooled"][i]) for i, u in enumerate(units)},
+                                           {u.key: float(matching_score(scores)[i]) for i, u in enumerate(units)},
                                            effect_by_key, k=cfg["top_k"], n_sets=n_sets)
         sets = {"say": say_set, "do": do_set, "random": random_fams,
                 "seeds": {k: cfg["seeds"][f"random_family_{k}"] for k in ("layer", "score", "effect")},

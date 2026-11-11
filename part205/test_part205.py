@@ -1340,3 +1340,11 @@ def test_consistent_letter_matches_the_written_option(prompts):
             _situation, good, bad = G.DO[v][it["item"] - 1]
             assert (it["option_a"] if it["consistent"] == "A" else it["option_b"]) == good, it["id"]
             assert (it["option_b"] if it["consistent"] == "A" else it["option_a"]) == bad, it["id"]
+
+
+def test_score_family_matches_on_the_do_selection_score():
+    """Review r2 D-F6, ruled 2026-11-11: family (ii) matches the DO set by DO score, the score DO was selected by."""
+    import numpy as np
+    import run205
+    scores = {"say": np.array([9.0, 1.0]), "do": np.array([1.0, 9.0]), "pooled": np.array([5.0, 5.0])}
+    assert list(run205.matching_score(scores)) == [1.0, 9.0]
