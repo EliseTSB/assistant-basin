@@ -3,7 +3,9 @@
 
   python score205.py --raw results/part205 --out results/part205/results.json
 
-Inputs (written by run205.py, one directory per stage): ranking.npz, effect.npz, sets.json, records.jsonl, meta.json.
+Inputs (written by run205.py, one directory per stage): ranking.npz, ranking.json, sets.json, records.jsonl,
+meta.json. (run205.py also writes effect.npz and copy_acts.npz; this scorer reads neither — the effect-matched family
+reads sets.json["effect"] — so they are not inputs, review r2 D-F9.)
 Output: results.json with one entry per stage and a top-level "predictions" block whose keys the prediction table can
 name (205.1 to 205.9), plus "withdrawal" and "read_rules" stating which reads each gate stopped.
 
@@ -18,6 +20,9 @@ Every readout (p_a, p_b) is the option letters' probability normalised over the 
 option_mass) are printed beside them and read only by G0 and the broken-answer count.
 A gate that fails stops the reads the design says it stops: G0 stops O and T; G1 stops everything; G2 stops T and the
 copy arms (O still read); G3 stops every copy arm; G4 stops O.
+A stage with an incomplete copy arm (fewer question-name pairs than it planned) is not read for T or for the copy
+arms, and reports how many pairs it has; O is read only from the complete rankings, which do not depend on the copy
+arms (review r2 H-N1, D-F7).
 
 Every number is printed with its file and key. Nothing here is typed: each value comes from a file.
 """
@@ -471,11 +476,28 @@ def random_set_rule(t, random_fams, min_families=2):
     return {"read": True, "pass": ok, "fillable": fillable, "not_fillable": not_fillable, "per_family": per}
 
 
-def read_flags(gates, rsr):
-    """Which reads the gates allow (Design, Reading rules): O needs G0, G1, G4; T and every copy arm need G0 to G3;
-    the random-set rule needs T read and at least two fillable families."""
+def completeness(arms, held_ids, names, copy_arms=("do_copy", "say_copy", "swap", "reverse")):
+    """Whether each copy arm has every planned question-name pair (review r2 H-N1, D-F7).
+
+    A stage killed in its copy arms holds a T computed over the pairs it happened to write; the design's T is over
+    the 48 pairs, so an arm with fewer is not read. `n_expected` is the held-out questions x names the stage itself
+    ran (48 at the real size). `complete` is False when any arm falls short.
+    """
+    n_expected = len(held_ids) * len(names)
+    per = {}
+    for arm in copy_arms:
+        present = sum(1 for q in held_ids for n in names if _find(arms, arm, q, n) is not None)
+        per[arm] = {"n_pairs": present, "n_expected": n_expected, "complete": present == n_expected}
+    return {"n_expected": n_expected, "complete": all(v["complete"] for v in per.values()),
+            "incomplete": [a for a, v in per.items() if not v["complete"]], "per_arm": per}
+
+
+def read_flags(gates, rsr, complete=True):
+    """Which reads the gates allow (Design, Reading rules): O needs G0, G1, G4; T and every copy arm need G0 to G3
+    AND a complete copy arm (`complete`, from completeness()); the random-set rule needs T read and at least two
+    fillable families. O does not depend on the copy arms, so an incomplete stage still reads O."""
     o = gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G4"]["pass"]
-    t = gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G2"]["pass"] and gates["G3"]["pass"]
+    t = gates["G0"]["pass"] and gates["G1"]["pass"] and gates["G2"]["pass"] and gates["G3"]["pass"] and bool(complete)
     return {"O": bool(o), "T": bool(t), "copy_arms": bool(t), "random_set_rule": bool(t and rsr.get("read", False))}
 
 
@@ -511,7 +533,8 @@ def score_stage(stage, sd, cfg, seed, g1check=None):
     gates = {"G0": gate_g0(arms, held), "G1": gate_g1(arms, family, g1check), "G2": gate_g2(gap),
              "G3": gate_g3(t_say), "G4": gate_g4(ov)}
     rsr = random_set_rule(t, sd["sets"]["random"])
-    read = read_flags(gates, rsr)
+    comp = completeness(arms, held, names)
+    read = read_flags(gates, rsr, comp["complete"])
     out = {
         "stage": stage,
         "env": sd["meta"]["env"],
@@ -545,6 +568,7 @@ def score_stage(stage, sd, cfg, seed, g1check=None):
         "not_fillable": sd["sets"]["random"].get("not_fillable_reason"),
         "do_set_total_effect": sum(sd["sets"]["effect"].get(k, 0.0) for k in sets["DO"]),
         "gates": gates,
+        "completeness": comp,
         "random_set_rule": rsr,
         "read": read,
         # kept for the withdrawal's paired resamples (not written to results.json)
@@ -604,6 +628,13 @@ def predictions(stages, cfg):
     if not t_read(n):
         out["205.4"] = {"verdict": "not read", "gate": _first_failed(st[n], ("G0", "G1", "G2", "G3"))
                         if n in st else "stage absent"}
+    elif not st[n]["random_set_rule"].get("read"):
+        # Reading rules, lines 244-245: "a stage where fewer than two are fillable leaves 205.4 and 205.7 not read
+        # there" — not a failed prediction (review r2 D-F10, H-N5)
+        rsr = st[n]["random_set_rule"]
+        out["205.4"] = {"verdict": "not read", "reason": "fewer than two fillable random families",
+                        "fillable": rsr.get("fillable"), "not_fillable": rsr.get("not_fillable"),
+                        "T": st[n]["T"], "random_set_rule": rsr}
     else:
         rsr = st[n]["random_set_rule"]
         held = (st[n]["T"] is not None and st[n]["T"] >= 0.5 and rsr.get("pass") is True
@@ -631,12 +662,22 @@ def predictions(stages, cfg):
         out["205.6"] = {"verdict": "held" if (r["share"] is not None and r["share"] >= 0.5) else "failed",
                         "share": r["share"], "mean_drop": r["mean_drop"], "mean_gap": r["mean_gap"],
                         "rule": r["rule"]}
-    # 205.7: wherever DO transfer is read and passes the random-set rule, off-target shift < 0.05.
+    # 205.7: wherever DO transfer is read and passes the random-set rule, off-target shift < 0.05. A stage whose DO
+    # transfer IS read but whose random-set rule is not read (fewer than two fillable families) is "not read" there,
+    # not vacuous (Reading rules, lines 244-245); a stage whose DO transfer is not read is vacuous there.
     rows = []
+    unread = []
     for n2 in order:
-        if n2 in st and st[n2]["read"]["random_set_rule"] and st[n2]["random_set_rule"].get("pass"):
+        if n2 not in st:
+            continue
+        if st[n2]["read"]["random_set_rule"] and st[n2]["random_set_rule"].get("pass"):
             rows.append((n2, st[n2]["off_target"]["shift"]))
-    if not rows:
+        elif st[n2]["read"]["T"] and not st[n2]["random_set_rule"].get("read"):
+            unread.append(n2)
+    if not rows and unread:
+        out["205.7"] = {"verdict": "not read", "reason": "fewer than two fillable random families",
+                        "stages": unread}
+    elif not rows:
         out["205.7"] = {"verdict": "vacuous", "reason": "no stage reads DO transfer and passes the random-set rule"}
     else:
         out["205.7"] = {"verdict": "held" if all(s is not None and s < 0.05 for _, s in rows) else "failed",
@@ -759,11 +800,15 @@ def main(argv=None):
     }
     out = Path(a.out) if a.out else raw / "results.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(res, indent=1) + "\n", encoding="utf-8")
+    C.atomic_write_json(out, res, indent=1, sort_keys=False)   # temp + os.replace: a kill never leaves a torn one
     print(f"wrote {out}")
     for s in res["stages"]:
         print(f"{s['stage']:14s} O={s['overlap']['O']} T={s['T']} gates="
               f"{ {g: v['pass'] for g, v in s['gates'].items()} } read={s['read']}")
+        c = s["completeness"]
+        pairs = ", ".join("%s %d/%d" % (a, v["n_pairs"], v["n_expected"]) for a, v in c["per_arm"].items())
+        state = "complete" if c["complete"] else "INCOMPLETE " + str(c["incomplete"])
+        print(f"  copy arms: {state} ({pairs})")
         print(relaxation_lines(s))
     for k, v in res["predictions"].items():
         print(f"{k}: {v['verdict']}")

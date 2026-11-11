@@ -254,7 +254,12 @@ class SiteReplacer:
         x = x.clone()
         cols = torch.as_tensor(self.columns, device=x.device)
         pos = torch.as_tensor(self.positions, dtype=torch.long, device=x.device)
-        v = self.values.to(x.dtype)
+        # device AND dtype: the runner stores every captured activation on the CPU (run205.py), so on family Q (the
+        # A770) the values are CPU tensors while x is XPU; index_put_ needs every operand on one device (review r2
+        # D-F4, H-N6)
+        if not isinstance(self.values, torch.Tensor):
+            self.values = torch.as_tensor(self.values)
+        v = self.values.to(device=x.device, dtype=x.dtype)
         if v.shape != (len(pos), len(cols)):
             raise SystemExit(f"replacement values {tuple(v.shape)} do not match {len(pos)} positions x "
                              f"{len(cols)} columns")
@@ -344,28 +349,40 @@ def values_at(src_acts, src_positions):
 def read_jsonl(path, repair=False):
     """The records of a JSONL file. A last line that does not parse (a write cut by a kill) is ignored with a warning
     and, with `repair`, truncated away so the next append starts on a fresh line. A bad line before the last raises
-    (that is corruption, not a torn write). Review r1 H-F7, D-F15."""
+    (that is corruption, not a torn write). Review r1 H-F7, D-F15.
+
+    A final line that parses but has no trailing newline is torn too (review r2 H-N3): the kill landed between the
+    JSON bytes and the newline, so the file cannot be known to hold the whole record. It is ignored with a warning and,
+    with `repair`, truncated away, so the next append can never be joined onto it. A file that ends in "\\n" is whole.
+    """
     import sys
     path = Path(path)
     if not path.exists():
         return []
     raw = path.read_bytes()
     lines = raw.split(b"\n")
+    unterminated = bool(raw) and not raw.endswith(b"\n")
     out = []
     for i, line in enumerate(lines):
         if not line.strip():
             continue
+        last = all(not x.strip() for x in lines[i + 1:])
+        rec = None
         try:
-            out.append(json.loads(line.decode("utf-8")))
+            rec = json.loads(line.decode("utf-8"))
         except (json.JSONDecodeError, UnicodeDecodeError):
-            last = all(not x.strip() for x in lines[i + 1:])
-            if not last:
-                raise SystemExit(f"{path}: line {i + 1} does not parse and is not the last line (corrupt file)")
-            print(f"warning: {path}: ignoring a torn last line ({len(line)} bytes)", file=sys.stderr)
-            if repair:
-                keep = b"\n".join(lines[:i])
-                with path.open("r+b") as f:
-                    f.truncate(len(keep) + (1 if keep else 0))
+            rec = None
+        if rec is not None and not (last and unterminated):
+            out.append(rec)
+            continue
+        if not last:
+            raise SystemExit(f"{path}: line {i + 1} does not parse and is not the last line (corrupt file)")
+        why = "no trailing newline" if rec is not None else "does not parse"
+        print(f"warning: {path}: ignoring a torn last line ({why}; {len(line)} bytes)", file=sys.stderr)
+        if repair:
+            keep = b"\n".join(lines[:i])
+            with path.open("r+b") as f:
+                f.truncate(len(keep) + (1 if keep else 0))
     return out
 
 
@@ -439,6 +456,92 @@ def normalised_abs(est):
 
 
 # ---------------------------------------------------------------- files
+
+def _fsync_dir(d):
+    """Make a rename durable: fsync the directory that holds it (best effort; not every filesystem allows it)."""
+    import os
+    try:
+        fd = os.open(str(d), os.O_RDONLY)
+    except OSError:
+        return
+    try:
+        os.fsync(fd)
+    except OSError:
+        pass
+    finally:
+        os.close(fd)
+
+
+def atomic_write_bytes(path, data):
+    """Write `data` to a temp file in the same directory, fsync it, then os.replace it over `path` (review r2 D-F1,
+    D-F2, D-F3, H-N2). A kill leaves either the old file or the new one, never a torn one; the temp file has a
+    unique name, so two writers never share it."""
+    import os
+    import tempfile
+    path = Path(path)
+    fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent))
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+    _fsync_dir(path.parent)
+    return path
+
+
+def atomic_write_text(path, text):
+    return atomic_write_bytes(path, text.encode("utf-8"))
+
+
+def atomic_write_json(path, obj, indent=1, sort_keys=True):
+    return atomic_write_text(path, json.dumps(obj, indent=indent, sort_keys=sort_keys) + "\n")
+
+
+def atomic_savez(path, **arrays):
+    """np.savez_compressed to a temp file then os.replace (a savez is not atomic: a kill leaves a partial zip)."""
+    import os
+    import tempfile
+    import numpy as np
+    path = Path(path)
+    fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent))
+    try:
+        # an open handle, not the name: np.savez_compressed appends ".npz" to a str path that does not end in it
+        with os.fdopen(fd, "wb") as f:
+            np.savez_compressed(f, **arrays)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+    _fsync_dir(path.parent)
+    return path
+
+
+def load_json_repairing(path, default):
+    """json.loads(path), or `default` when the file is missing; with a warning when it is unreadable (a torn write
+    from a killed run). The caller rewrites the file, so a torn file is repaired rather than left to brick the stage
+    (review r2 D-F3). A missing file is not a warning."""
+    import sys
+    path = Path(path)
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        print(f"warning: {path} is unreadable ({e}); starting from {default!r} and rewriting it", file=sys.stderr)
+        return default
+
 
 def load_config(path=None):
     return json.loads(Path(path or HERE / "config.json").read_text(encoding="utf-8"))

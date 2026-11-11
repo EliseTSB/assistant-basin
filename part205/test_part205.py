@@ -968,6 +968,271 @@ def test_polarity_split_and_broken_counts():
     assert b["do_copy"]["broken"] == 1 and b["do_copy"]["n"] == 2
 
 
+# ---------------------------------------------------------------- fold of code review r2 (D-F1..F10, H-N1..N6)
+
+def _held_and_names(recs):
+    held = sorted({r["id"] for r in recs if r["arm"] == "you"})
+    names = sorted({r["name"] for r in recs if r["arm"] == "baseline"})
+    return held, names
+
+
+def _rewrite_records(d, rows):
+    (Path(d) / "records.jsonl").write_text("".join(json.dumps(r, sort_keys=True) + "\n" for r in rows))
+
+
+def test_d_f1_a_torn_or_missing_ranking_json_is_repaired_at_resume(tiny_run, tmp_path, prompts):
+    """D-F1: the old runner wrote ranking.json only when the ranking passes ran, and wrote it non-atomically, so a
+    torn or missing ranking.json at resume stayed torn and the scorer could never load the stage. Now a resume
+    rewrites it from the stored estimates, and the scorer loads the stage."""
+    d = _copy_run(tiny_run, tmp_path)
+    good = json.loads((d / "ranking.json").read_text())
+    for damage in ("torn", "missing"):
+        if damage == "torn":
+            (d / "ranking.json").write_text(json.dumps(good)[: len(json.dumps(good)) // 2])
+        else:
+            (d / "ranking.json").unlink()
+        assert _rerun(tiny_run, tmp_path, prompts) == 0          # nothing to recompute: the passes are all there
+        assert json.loads((d / "ranking.json").read_text()) == good
+        assert S.load_stage_dir(d)["prompts"] == good["prompts"]
+
+
+def test_d_f1_a_torn_ranking_npz_is_recomputed_not_fatal(tiny_run, tmp_path, prompts):
+    """D-F1/H-N2: a ranking.npz cut by a kill raises BadZipFile on the old resume; now it is recomputed (the 48
+    ranking passes) and the stage finishes, with the same estimates."""
+    import numpy as np
+    d = _copy_run(tiny_run, tmp_path)
+    before = np.load(d / "ranking.npz")["est"]
+    raw = (d / "ranking.npz").read_bytes()
+    (d / "ranking.npz").write_bytes(raw[: len(raw) // 2])
+    n = _rerun(tiny_run, tmp_path, prompts)
+    assert n >= 48
+    assert np.array_equal(np.load(d / "ranking.npz")["est"], before)
+    assert json.loads((d / "meta.json").read_text())["finished"]
+
+
+def test_d_f2_a_torn_sets_json_is_redrawn_at_resume(tiny_run, tmp_path, prompts):
+    """D-F2: the old runner raised JSONDecodeError on a torn sets.json on every later run. Now it is redrawn from
+    the seed (the same sets) and rewritten."""
+    d = _copy_run(tiny_run, tmp_path)
+    good = json.loads((d / "sets.json").read_text())
+    (d / "sets.json").write_text(json.dumps(good)[: len(json.dumps(good)) // 2])
+    _rerun(tiny_run, tmp_path, prompts)                          # the old code raised JSONDecodeError here
+    assert json.loads((d / "sets.json").read_text()) == good     # redrawn from the seed: the same sets
+    assert json.loads((d / "meta.json").read_text())["finished"]
+
+
+def test_d_f3_a_torn_models_json_is_rewritten_not_fatal(tmp_path):
+    """D-F3: the old write_models_json raised on a torn models.json, stopping every later stage. Now it starts a
+    fresh record with a warning and writes atomically."""
+    p = tmp_path / "models.json"
+    p.write_text('{"part": 205, "stages": {"sft": {"revision": "r1"')          # torn
+    R.write_models_json(p, {"stage": "dpo", "family": "O", "model_id": "m2", "revision": "r2"})
+    got = json.loads(p.read_text())["stages"]
+    assert got["dpo"]["revision"] == "r2"
+    assert not [x for x in tmp_path.iterdir() if x.name.endswith(".tmp")]       # no temp file left behind
+
+
+def test_d_f1_atomic_writes_leave_no_torn_file_and_no_temp_file(tmp_path):
+    """D-F1/F2/F3: every writer goes through temp + os.replace, so a failure mid-write leaves the old file intact
+    and no temp file; a successful write is complete and no temp file remains."""
+    import numpy as np
+    p = tmp_path / "x.json"
+    C.atomic_write_json(p, {"a": 1})
+    assert json.loads(p.read_text()) == {"a": 1}
+    orig = os.replace
+
+    def full(*a):
+        raise OSError("disk full")
+
+    os.replace = full
+    try:
+        with pytest.raises(OSError):
+            C.atomic_write_json(p, {"a": 2})
+        npz = tmp_path / "y.npz"
+        with pytest.raises(OSError):
+            C.atomic_savez(npz, a=np.zeros(3))
+    finally:
+        os.replace = orig
+    assert json.loads(p.read_text()) == {"a": 1}                               # the old file survives
+    assert not [x for x in tmp_path.iterdir() if x.name.endswith(".tmp")]
+    assert not npz.exists() and not [x for x in tmp_path.iterdir() if x.name.endswith(".tmp")]
+    C.atomic_savez(npz, a=np.arange(3))
+    assert np.array_equal(np.load(npz)["a"], np.arange(3))
+
+
+def test_h_n3_a_record_without_its_newline_is_torn_and_never_joined(tiny_run, tmp_path, prompts):
+    """H-N3: a kill between a record's JSON bytes and its newline left a line that parses but has no newline; the old
+    reader kept it and the next append was joined onto it, losing both records. Now the reader treats it as torn,
+    and the writer starts on a fresh line."""
+    d = _copy_run(tiny_run, tmp_path)
+    rows = records(d)
+    text = (d / "records.jsonl").read_text()
+    assert text.endswith("\n")
+    # the kill landed between the last record's JSON bytes and its newline: the last line parses but is unterminated
+    (d / "records.jsonl").write_text(text[:-1])
+    assert len(C.read_jsonl(d / "records.jsonl")) == len(rows) - 1
+    assert len(S.load_stage_dir(d)["records"]) == len(rows) - 1
+    _rerun(tiny_run, tmp_path, prompts)
+    got = (d / "records.jsonl").read_text().splitlines()
+    assert all(json.loads(x) for x in got)                        # every line is exactly one record
+    assert sorted(R._rec_key(json.loads(x)) for x in got) == sorted(R._rec_key(r) for r in rows)
+
+
+def test_d_f4_the_hook_moves_replacement_values_to_the_inputs_device():
+    """D-F4/H-N6: the runner stores activations on the CPU; the hook must move the values to the model input's
+    DEVICE as well as its dtype. The old `.to(x.dtype)` passes only the dtype, so this fails on it. (No XPU here:
+    the call is recorded, not exercised; `test_h_n6...` runs the g1check's real path.)"""
+    class Mod(torch.nn.Module):
+        def forward(self, x):
+            return x
+
+    mod = Mod()
+    x = torch.zeros(1, 4, 3)
+    values = torch.ones(2, 2)
+    calls = []
+    real_to = torch.Tensor.to
+
+    def spy(self, *a, **k):
+        if self is values:
+            calls.append({"device": k.get("device"), "dtype": k.get("dtype")})
+        return real_to(self, *a, **k)
+
+    h = C.SiteReplacer(mod, [0, 1], [1, 2], values)
+    torch.Tensor.to = spy
+    try:
+        mod(x)
+    finally:
+        torch.Tensor.to = real_to
+        h.close()
+    assert calls == [{"device": x.device, "dtype": x.dtype}]       # the device is passed, not only the dtype
+
+
+def test_h_n6_g1check_replaces_from_cpu_stored_values(tmp_path, prompts, cfg, qwen_tok):
+    """H-N6: g1check205 takes the main run's path — the do-nothing values are moved to the CPU before the hook, as
+    the runner stores them — so on an accelerator it exercises the CPU-to-device replacement. Here (CPU only) it
+    still passes and records that the values were CPU."""
+    import g1check205 as G1
+    rc = G1.check(qwen_tok, tiny_qwen(), {"stage": "tiny"}, cfg, prompts, tmp_path, check_pool=False)
+    g = json.loads((tmp_path / "g1.json").read_text())
+    assert rc == 0 and g["verdict"]["pass"] is True
+    assert g["values_device"].startswith("cpu")
+
+
+def test_h_n1_d_f7_an_incomplete_copy_arm_is_not_read_for_t_and_says_how_many_pairs(tiny_run):
+    """H-N1/D-F7: a stage that lost copy rows (a kill in its copy arms) is not read for T or the copy arms, and
+    reports the pair count; O, which does not depend on the copy arms, is still read."""
+    d = tiny_run["dir"]
+    sd = S.load_stage_dir(d)
+    held, names = _held_and_names(sd["records"])
+    # the tiny model fails G2/G3 by construction, so read_flags' gate half is exercised directly with gates that
+    # pass: the pair count is then the only thing that can stop T
+    passing = {g: {"pass": True} for g in ("G0", "G1", "G2", "G3", "G4")}
+    full = S.score_stage("tiny", sd, tiny_run["cfg"], 1)
+    assert full["completeness"]["complete"] is True
+    assert S.read_flags(passing, {"read": True}, full["completeness"]["complete"])["T"] is True
+    cut = [r for r in sd["records"] if not (r["arm"] == "do_copy" and r["id"] == held[0] and r["name"] == names[0])]
+    res = S.score_stage("tiny", dict(sd, records=cut), tiny_run["cfg"], 1)
+    c = res["completeness"]
+    assert c["complete"] is False and c["incomplete"] == ["do_copy"]
+    assert c["per_arm"]["do_copy"] == {"n_pairs": 47, "n_expected": 48, "complete": False}
+    assert S.read_flags(passing, {"read": True}, c["complete"]) == {"O": True, "T": False, "copy_arms": False,
+                                                                    "random_set_rule": False}
+    assert res["T_detail"]["T"]["n_pairs"] == 47                 # the count is still reported
+    assert res["read"] == S.read_flags(res["gates"], res["random_set_rule"], c["complete"])
+
+
+def test_d_f10_h_n5_205_4_is_not_read_with_fewer_than_two_fillable_families(cfg):
+    """D-F10/H-N5: Reading rules, lines 244-245 — a stage where fewer than two random families are fillable leaves
+    205.4 and 205.7 not read, not failed. The old predictions() returned "failed"."""
+    rsr = {"read": False, "fillable": ["layer"], "not_fillable": {"score": "short", "effect": "short"}}
+    st = _stage("instruct", T=0.6, random_set_rule=rsr)
+    p = S.predictions([st], cfg)
+    assert p["205.4"]["verdict"] == "not read"
+    assert p["205.4"]["fillable"] == ["layer"]
+    assert p["205.7"]["verdict"] == "not read"
+    # DO transfer not read at all: 205.7 stays vacuous, as the design's own rule says
+    st2 = _stage("instruct", T=0.6, read_t=False, random_set_rule={"read": False})
+    assert S.predictions([st2], cfg)["205.7"]["verdict"] == "vacuous"
+
+
+def test_d_f10_fillability_is_per_family():
+    """D-F10 (the code half): fillability is reported per family, and a family is not fillable only when its own
+    check fails — a missing stratifier, or a kind total the eligible pool cannot meet. A short (kind, stratum) cell
+    is relaxed into the nearest stratum and counted, not a failure. NOTE: this test passes on the d16b218b code too;
+    the kind check does not depend on the family's stratifier, so the per-family rewrite is a refactor, not a
+    behaviour change (see REPORT.md)."""
+    import random
+    units = _fake_units(n_layers=2, heads=2, neurons=3)
+    keys = [u.key for u in units]
+    do = ["head:0:0", "head:1:0", "neuron:0:0", "neuron:0:1"]
+    say = ["neuron:1:0", "neuron:1:1"]
+    rngs = {k: random.Random(3) for k in ("layer", "score", "effect")}
+    fam = R.draw_random_families(rngs, units, do, say, {k: 1.0 for k in keys}, None, k=4, n_sets=2)
+    assert fam["families"]["effect"]["fillable"] is False
+    assert fam["families"]["layer"]["fillable"] is True and fam["families"]["score"]["fillable"] is True
+    assert fam["fillable"] is False and set(fam["not_fillable_reason"]) == {"effect"}
+    # and a short stratum is relaxed, not a failure: the DO set takes both heads of layer 1, which the pool cannot
+    # meet in layer 1 alone; the layer family is still fillable and lists the relaxed parts
+    do_short = ["head:1:0", "head:1:1", "neuron:0:0", "neuron:0:1"]
+    fam3 = R.draw_random_families(rngs, units, do_short, ["neuron:1:0"], {k: 1.0 for k in keys},
+                                  {k: 1.0 for k in keys}, k=4, n_sets=2)
+    lf = fam3["families"]["layer"]
+    assert lf["fillable"] is True and lf["relaxed"] > 0 and len(lf["sets"]) == 2
+    # a kind total the eligible pool cannot meet marks every family short, each with its own reason string
+    do_all = [k for k in keys if k.startswith("neuron")] + ["head:0:0", "head:1:0"]
+    fam2 = R.draw_random_families(rngs, units, do_all, ["head:0:1", "head:1:1"], {k: 1.0 for k in keys},
+                                  {k: 1.0 for k in keys}, k=6, n_sets=2)
+    assert not any(f["fillable"] for f in fam2["families"].values())
+    assert all(f["reason"] for f in fam2["families"].values())
+
+
+def test_d_f5_the_end_to_end_test_asserts_concrete_reads(tiny_run):
+    """D-F5: the old `test_h_f1` asserted `read == read_flags(...)`, which score_stage had just computed — a
+    tautology — and its tiny fixture fails G0/G2/G3, so it could not show any read. Here the REAL run_stage rows are
+    scored, and the fixture is made to pass every gate (G0's letter readout and G2's gap are patched to what a stage
+    built to pass has); the reads are then asserted as concrete values, not as a re-derivation."""
+    import math
+    sd = S.load_stage_dir(tiny_run["dir"])
+    rows = []
+    for r in sd["records"]:
+        r = dict(r)
+        if r["arm"] in ("you", "baseline", "do_copy", "say_copy", "swap", "reverse"):
+            r["option_mass"], r["top_is_letter"] = 0.9, True
+            # the consistent letter differs by question: set P(consistent), not p_a
+            pc = 0.8 if r["arm"] in ("you", "do_copy", "say_copy", "reverse") else 0.5   # P_you - P_third = 0.3
+            r["p_a"], r["p_b"] = (pc, 1.0 - pc) if r["consistent"] == "A" else (1.0 - pc, pc)
+        rows.append(r)
+    res = S.score_stage("tiny", dict(sd, records=rows), tiny_run["cfg"], 1)
+    assert all(res["gates"][g]["pass"] for g in ("G0", "G1", "G2", "G3")), \
+        {g: res["gates"][g] for g in ("G0", "G1", "G2", "G3")}
+    # G4 (Retest >= 20 of 80) is a property of the ranking, not of the records, and the tiny pool cannot meet it;
+    # O is therefore unread here for G4's reason, and the test says so rather than pretending otherwise
+    assert res["gates"]["G4"]["pass"] is False and res["read"]["O"] is False
+    assert res["read"]["T"] is True and res["read"]["copy_arms"] is True
+    assert isinstance(res["T"], float) and math.isfinite(res["T"])
+    assert res["gates"]["G2"]["gap"] == pytest.approx(0.3) and res["gates"]["G2"]["n_pairs"] == 48
+    assert res["completeness"]["complete"] is True
+    for arm in ("do_copy", "say_copy", "swap", "reverse"):
+        assert res["completeness"]["per_arm"][arm]["complete"] is True, arm
+    # the read flag is not a copy of read_flags' own call: an incomplete stage with the same gates is not read for T
+    assert S.read_flags(res["gates"], res["random_set_rule"], False)["T"] is False
+
+
+def test_d_f9_the_scorer_reads_no_effect_npz(tiny_run, tmp_path):
+    """D-F9: score205's docstring listed effect.npz as an input it never reads. The stage loads and scores with the
+    file deleted, and the docstring no longer names it as an input."""
+    d = _copy_run(tiny_run, tmp_path)
+    (d / "effect.npz").unlink()
+    sd = S.load_stage_dir(d)
+    res = S.score_stage("tiny", sd, tiny_run["cfg"], 1)
+    assert res["T_detail"]["T"]["n_pairs"] == 48                 # scored in full with no effect.npz
+    doc = S.__doc__.split("Output:")[0]
+    inputs = doc.split("Inputs")[1].split("\n\n")[0]
+    listed = inputs.split("):", 1)[1].split("(")[0]              # the file list itself, before the parenthetical
+    assert "ranking.npz" in listed and "sets.json" in listed and "records.jsonl" in listed
+    assert "effect.npz" not in listed
+
+
 # ---------------------------------------------------------------- wiring: config, models.json, steps, g1check (H-F9)
 
 def test_h_f9_every_stage_resolves_to_a_model_and_revision(cfg):

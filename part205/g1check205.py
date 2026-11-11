@@ -9,6 +9,9 @@ only the scalar differences are written: plain against plain over all 10 pairs, 
 plain run, and score205.gate_g1_a770's verdict, to <out>/g1.json. score205.py reads that file for family Q: when the
 plain runs are not bit-identical, the main run's do-nothing rows are held to twice the largest plain difference.
 
+The do-nothing values are moved to the CPU first, exactly as the main run stores its activations, so the check
+exercises the main run's CPU-to-device replacement path (review r2 H-N6).
+
   python g1check205.py --stage qwen-chat --out results/part205/g1
 """
 import argparse
@@ -58,18 +61,21 @@ def check(tok, model, env, cfg, prompts, out, check_pool=True):
         _, r, acts, _ = runner.run(text, need_grad=False, capture=True)
         plain.append(runner.last_logits)
         plain_read.append([r["p_a"], r["p_b"]])
-    own = C.values_at(acts, positions)
+    # The main run stores every captured activation on the CPU (run205.py's `.detach().cpu().clone()`) and passes
+    # those CPU values into the hook, which must move them to the model's device (review r2 H-N6, D-F4). This check
+    # takes the same path: the values are put on the CPU first, exactly as the main run's are.
+    own = {k: v.detach().cpu().clone() for k, v in C.values_at(acts, positions).items()}
     for _ in range(n):
         _, r, _, _ = runner.replace_and_read(text, [u.key for u in units], positions, own, item["consistent"])
         dn.append(runner.last_logits)
         dn_read.append([r["p_a"], r["p_b"]])
     verdict = S.gate_g1_a770(plain, dn)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "g1.json").write_text(json.dumps({"env": env, "question": item["id"], "name": name,
-                                             "n_positions": len(positions), "plain_p": plain_read,
-                                             "do_nothing_p": dn_read, "verdict": verdict,
-                                             "at": time.strftime("%Y-%m-%dT%H:%M:%S")}, indent=1) + "\n",
-                                 encoding="utf-8")
+    C.atomic_write_json(out / "g1.json", {"env": env, "question": item["id"], "name": name,
+                                          "n_positions": len(positions), "plain_p": plain_read,
+                                          "do_nothing_p": dn_read, "verdict": verdict,
+                                          "values_device": "cpu (as the main run stores them)",
+                                          "at": time.strftime("%Y-%m-%dT%H:%M:%S")}, sort_keys=False)
     print(json.dumps(verdict, indent=1))
     return 0 if verdict["pass"] else 1
 

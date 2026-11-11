@@ -34,9 +34,13 @@ The A770 G1 check (5 plain + 5 do-nothing runs of one question) is g1check205.py
 The copied span (Design, Method, lines 108-111) is the question and answer cue: from the first token of the "User:"
 line to the end, identical tokens in both frames, aligned from the end; nothing of the persona line is copied.
 
-Resume: records.jsonl is appended (flushed and fsynced per record); a torn last line is ignored and truncated away; a
-forward pass whose record exists is skipped unless a missing record needs its activations; ranking.npz and sets.json
-are reused. A lock file (<stage>/.lock, flock) refuses a second concurrent run of one stage.
+Resume: records.jsonl is appended (flushed and fsynced per record); a torn last line (unparseable, or without its
+newline) is ignored and truncated away; a forward pass whose record exists is skipped unless a missing record needs
+its activations; ranking.npz and sets.json are reused. Every JSON and NPZ file is written to a temp file in the same
+directory and os.replace'd into place, and a torn ranking.npz/ranking.json/sets.json found at resume is recomputed
+and rewritten (with a warning), never left to brick the stage. The ranking and secondary blocks re-run whole when one
+of their records is missing (review r2 H-N4: cost only, left as is). A lock file (<stage>/.lock, flock) refuses a
+second concurrent run of one stage.
 The sets are drawn and written before any replacement run (Design, Controls, Seeds).
 """
 import argparse
@@ -103,12 +107,15 @@ def write_models_json(path, env):
     path = Path(path)
     with open(str(path) + ".lock", "a+") as lk:
         fcntl.flock(lk.fileno(), fcntl.LOCK_EX)
-        data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"part": 205, "stages": {}}
+        # a torn models.json (a kill during the old non-atomic write) is rewritten, not left to stop every later stage
+        data = C.load_json_repairing(path, {"part": 205, "stages": {}})
+        if not isinstance(data, dict) or not isinstance(data.get("stages"), dict):
+            data = {"part": 205, "stages": {}}
         row = {k: env.get(k) for k in ("model_id", "revision", "family", "dtype", "device", "attn_implementation",
                                         "torch", "transformers")}
         row["recorded"] = time.strftime("%Y-%m-%dT%H:%M:%S")
         data["stages"][env["stage"]] = row
-        path.write_text(json.dumps(data, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+        C.atomic_write_json(path, data)          # temp + os.replace inside the lock (review r2 D-F3)
         fcntl.flock(lk.fileno(), fcntl.LOCK_UN)
     return path
 
@@ -265,7 +272,6 @@ def draw_random_families(rngs, units, do_set, say_set, score, effect, k=80, n_se
     have = {kd: sum(kind_key(u) == kd for u in pool) for kd in kinds}
     out = {"kind_counts_wanted": want, "kind_counts_eligible": have, "n_sets": n_sets, "set_size": k,
            "families": {}}
-    short_kinds = {kd: f"want {want[kd]}, eligible {have[kd]}" for kd in kinds if want[kd] > have[kd]}
     stratifiers = {"layer": {u.key: u.layer for u in units}}
     if score is not None:
         stratifiers["score"] = _deciles(units, kinds, score)
@@ -276,9 +282,12 @@ def draw_random_families(rngs, units, do_set, say_set, score, effect, k=80, n_se
             out["families"][name] = {"fillable": False, "sets": [], "relaxed": 0, "relaxed_detail": [],
                                      "reason": f"no {name} values to stratify on"}
             continue
-        if short_kinds:
+        # fillability is decided per family (review r2 D-F10, H-N5): a family without its stratifier is not fillable
+        # while the others are, and each family's reason names its own shortfall
+        short = _kind_shortfalls(pool, do_units, kinds)
+        if short:
             out["families"][name] = {"fillable": False, "sets": [], "relaxed": 0, "relaxed_detail": [],
-                                     "reason": short_kinds}
+                                     "reason": short}
             continue
         out["families"][name] = _draw_family(rngs[name], pool, do_units, kinds, stratifiers[name], n_sets,
                                              "layer" if name == "layer" else "decile")
@@ -287,6 +296,24 @@ def draw_random_families(rngs, units, do_set, say_set, score, effect, k=80, n_se
     if not out["fillable"]:
         out["not_fillable_reason"] = {n: f["reason"] for n, f in out["families"].items() if not f["fillable"]}
     return out
+
+
+def _kind_shortfalls(pool, do_units, kinds):
+    """Per kind: the DO set's count against the eligible parts of that kind, checked for one family.
+
+    A short (kind, stratum) cell is not a failure: _draw_family fills it from the nearest stratum of the same kind
+    and records each relaxed part. The family is not fillable only when the kind's whole total in the eligible pool
+    is below the DO set's count for it (then no relaxation can reach enough parts). Returns {kind: "want n,
+    eligible m"} for the kinds that fall short, {} when the family is fillable. The check is the same for every
+    family: what differs per family is the stratifier, and a short cell in it relaxes rather than failing.
+    """
+    short = {}
+    for kd in kinds:
+        need = sum(1 for u in do_units if kind_key(u) == kd)
+        n_kind = sum(1 for u in pool if kind_key(u) == kd)
+        if n_kind < need:
+            short[kd] = f"want {need}, eligible {n_kind}"
+    return short
 
 
 def _draw_family(rng, pool, do_units, kinds, stratum, n_sets, label):
@@ -384,7 +411,13 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
         key = _rec_key(rec)
         if key in done:
             return
-        with rec_path.open("a", encoding="utf-8") as f:
+        with rec_path.open("a+", encoding="utf-8") as f:
+            if f.tell() > 0:
+                # a file that does not end in a newline (a kill between the JSON and its newline) gets one first, so
+                # no two records can be joined into one line (review r2 H-N3)
+                f.seek(f.tell() - 1)
+                if f.read(1) != "\n":
+                    f.write("\n")
             f.write(json.dumps(rec, sort_keys=True) + "\n")
             f.flush()
             os.fsync(f.fileno())
@@ -412,10 +445,7 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
     random.Random(cfg["seeds"]["prompt_order"]).shuffle(sel)  # prompt order seeded (Design, Controls, Seeds)
     est = None
     if (out / "ranking.npz").exists() and not any(missing("ranking", p["id"], None, p["value"], "You") for p in sel):
-        z = np.load(out / "ranking.npz")
-        if [str(x) for x in z["prompt_ids"]] == [p["id"] for p in sel] and \
-                [str(x) for x in z["keys"]] == [u.key for u in units]:
-            est = z["est"]
+        est = _load_ranking(out / "ranking.npz", [p["id"] for p in sel], [u.key for u in units])
     if est is None:
         est = np.zeros((len(sel), len(units)), dtype=np.float32)
         for i, p in enumerate(sel):
@@ -424,13 +454,15 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
             est[i] = C.estimates_for_prompt(acts, grads, units).numpy().astype(np.float32)
             emit({"arm": "ranking", "stage": stage, "value": p["value"], "kind": p["kind"], "item": p["item"],
                   "id": p["id"], "persona": "You", "consistent": p["consistent"], "n_tokens": len(ids), **read})
-        np.savez_compressed(out / "ranking.npz", est=est, keys=np.array([u.key for u in units]),
-                            prompt_ids=np.array([p["id"] for p in sel]))
-        _write(out / "ranking.json", {"file": "ranking.npz", "shape": list(est.shape), "dtype": "float32",
-                                      "units": [u.key for u in units], "prompts": sel,
-                                      "note": "est[i, j] = e for prompt i, part j (logit difference, consistent "
-                                              "minus other, at the last position); zeroing a part changes it by "
-                                              "about -e"})
+        C.atomic_savez(out / "ranking.npz", est=est, keys=np.array([u.key for u in units]),
+                       prompt_ids=np.array([p["id"] for p in sel]))
+    # ranking.json is written from est on every run, not only when the passes ran: a torn or missing one (a kill in
+    # its write) is repaired here instead of leaving a stage the scorer can never load (review r2 D-F1)
+    _write(out / "ranking.json", {"file": "ranking.npz", "shape": list(est.shape), "dtype": "float32",
+                                  "units": [u.key for u in units], "prompts": sel,
+                                  "note": "est[i, j] = e for prompt i, part j (logit difference, consistent "
+                                          "minus other, at the last position); zeroing a part changes it by "
+                                          "about -e"})
     if args.stage_only == "ranking":
         return _finish(out, meta, n_pass)
 
@@ -438,7 +470,7 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
     scores = _score_sets(est, sel)
     say_set = top80(scores["say"], units, cfg["top_k"])
     do_set = top80(scores["do"], units, cfg["top_k"])
-    sets = json.loads((out / "sets.json").read_text(encoding="utf-8")) if (out / "sets.json").exists() else None
+    sets = _load_sets(out / "sets.json")
     if sets is not None and (sets["say"] != say_set or sets["do"] != do_set):
         raise SystemExit(f"{out / 'sets.json'} does not match the ranking (sets are drawn once); refusing to mix")
     held = heldout_say(prompts)
@@ -495,7 +527,7 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
 
     if need_effect:
         effect = _effect_per_part(units, held, names, you, base, span)
-        np.savez_compressed(out / "effect.npz", effect=effect, keys=np.array([u.key for u in units]))
+        C.atomic_savez(out / "effect.npz", effect=effect, keys=np.array([u.key for u in units]))
     else:
         effect = None
     if stop_after_pairs:
@@ -632,6 +664,39 @@ def _run_stage_locked(args, out, model, tok, units, env, prompts, cfg):
     return _finish(out, meta, n_pass)
 
 
+def _load_ranking(path, prompt_ids, unit_keys):
+    """The stored estimates, or None (with a warning) when the file is torn, unreadable or not this stage's: the
+    caller then recomputes the 48 ranking passes, which are cheap beside the rest of a stage (review r2 D-F1, H-N2)."""
+    import numpy as np
+    try:
+        with np.load(path) as z:
+            est = z["est"]
+            if [str(x) for x in z["prompt_ids"]] == prompt_ids and [str(x) for x in z["keys"]] == unit_keys:
+                return est
+            print(f"warning: {path} does not match this stage's prompts or parts; recomputing the ranking",
+                  file=sys.stderr)
+    except Exception as e:                     # BadZipFile, EOFError, KeyError, ValueError: all mean "recompute"
+        print(f"warning: {path} is unreadable ({type(e).__name__}: {e}); recomputing the ranking", file=sys.stderr)
+    return None
+
+
+def _load_sets(path):
+    """The drawn sets, or None (with a warning) when the file is torn: the draw is seeded, so it is redrawn and
+    rewritten rather than left to stop every later run (review r2 D-F2, H-N2). A file that parses but is not a set
+    record is an error, not a torn write."""
+    path = Path(path)
+    if not path.exists():
+        return None
+    try:
+        sets = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        print(f"warning: {path} is unreadable ({e}); redrawing the sets (the draw is seeded)", file=sys.stderr)
+        return None
+    if not isinstance(sets, dict) or "say" not in sets or "do" not in sets or "random" not in sets:
+        raise SystemExit(f"{path} is not a set record (no say/do/random); refusing to use it")
+    return sets
+
+
 def _score_sets(est, sel):
     """Per-prompt normalised |e|, mean over prompts, separately for SAY and DO and pooled."""
     import numpy as np
@@ -681,7 +746,7 @@ def _save_acts(path, acts, grads):
     for qid, d in grads.items():
         for site, x in d.items():
             arrays[f"grad|{qid}|{site}"] = x.numpy()
-    np.savez_compressed(path, **arrays)
+    C.atomic_savez(path, **arrays)
 
 
 def _finish(out, meta, n_pass=None):
@@ -693,7 +758,9 @@ def _finish(out, meta, n_pass=None):
 
 
 def _write(path, obj):
-    path.write_text(json.dumps(obj, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    """Every JSON side file (meta, ranking, sets) goes through temp + os.replace, so a kill never leaves a torn one
+    (review r2 D-F1, D-F2, D-F3, H-N2)."""
+    C.atomic_write_json(path, obj)
 
 
 def _rec_key(rec):
