@@ -820,3 +820,18 @@ For the steering-word part that follows:
   driver fixed it; the author did not bisect. A different stack and a two-card setup, but it shows a driver update
   can change this card's outputs. Our card runs 32.0.101.9150 (installed 2026-10-12), so every A770 part since
   2026-10-15 ran on it.
+
+## 2026-11-11, from the X watch (README read at source by Claude)
+
+- **logitsml/neuron-undershoot (treetown, @treetowntree; GitHub, MIT, created 2026-11-09; post of 2026-11-10 01:00 UTC).**
+  In Gemma 4 12B base, once a chat names an object ("Think of what a hamster looks like. Just reply OK.") and moves on, the
+  typical neuron in that object's set (32 to 64 poles from the Neuron Lens catalog, signed so positive means more of the
+  object) sits **0.127 SD below** its level in chats that name no object (interval -0.138 to -0.116, 200 objects, 90% of
+  them below zero; sign-flip test over 16 categories). Their three kinds of no-object control (neutral phrases,
+  placeholders like "something", object-free messages) agree within 0.027 SD. Later stages ask what lifts the dip, whether
+  forcing the set up by hand produces a later dip, and whether it steps when the mention leaves Gemma's 1,024-token local
+  attention window; Stage 0 replicates in Qwen3-8B-Base. Batch size 1 on an H100, Stages 0 and 1 in bf16, the rest in fp32.
+  Why it matters here: our pushes and readouts on concept and persona neurons often follow an earlier mention in the same
+  prompt (Part 171's premise probe; the "Your earlier notes" prompts of Part 80), so a mention's after-dip is a baseline
+  shift we have not measured. Their control bank (three kinds of no-object prompt at the same token) is a design worth
+  borrowing. Not read: their Stage 1 and 2 results, and docs/method.md.
