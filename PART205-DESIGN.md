@@ -88,7 +88,8 @@ estimates are in the same unit (logits) and are ranked together without further 
 divided by its sum over all parts, so every prompt weighs the same (no value or high-gap prompt dominates), and a
 part's score is its mean over the prompts ranked. The top 80 parts by score form a set. This follows Sauers'
 description ("activation x gradient", heads and neurons together); Sauers released no code, so the exact estimator is
-ours (Limits).
+ours (Limits). Sign convention: zeroing a part changes the logit difference by about -e, so a positive e means the
+part supports the consistent option.
 
 **Overlap, with a retest ceiling.** Within the selection set, halves a (paraphrases or scenarios 1-2) and b (3-4). Sets
 SAY_a, SAY_b, DO_a, DO_b (top 80 each, all six values pooled). Retest = mean(|SAY_a ∩ SAY_b|, |DO_a ∩ DO_b|). Cross =
@@ -99,50 +100,66 @@ and half, re-ranked from the stored per-prompt estimates (no new passes). Report
 set's score mass.
 
 **Copy test** (held-out SAY paraphrases, top-80 sets from the full selection set). For each held-out SAY question (6
-values x 4 paraphrases) and each third-person name: run the You frame and cache every part's activation; run the
-third-person frame with the same question (baseline); then re-run the third-person frame with a set of parts'
-activations replaced, at every position of the shared suffix, by the You run's values. The shared suffix is the
-question and answer cue, identical tokens in both frames, aligned from the end; the last position, where the answer is
-read, is inside it and is overwritten. The copied values are the You run's own, computed against the You prefix: a copy
-carries what those parts computed from "You" rather than from the name, which is the property under test; the
-persona-swap null (Controls) asks whether a copy from another third-person prefix moves the answer as far. **Transfer T
-= (P_copy - P_third) / (P_you - P_third)** in probability of the consistent option, per question, then averaged.
+values x 4 paraphrases) and each third-person name: run the You frame once per question (shared by both names) and
+cache every part's activation; run the third-person frame with the same question (baseline, with one backward pass
+for the effect-matched controls); then re-run the third-person frame with a set of parts' activations replaced, at
+every position of the shared suffix, by the You run's values. The shared suffix is the question and answer cue,
+identical tokens in both frames, aligned from the end; the last position, where the answer is read, is inside it and is
+overwritten. The copied values are the You run's own, computed against the You prefix: a copy carries what those parts
+computed from "You" rather than from the name, which is the property under test. Two nulls (Controls) separate that
+from simpler causes: the persona-swap null (another third-person prefix: content changes, length nearly not) and the
+other-value null (a You prefix of the same frame naming a different value). **Transfer T = mean(P_copy - P_third) /
+mean(P_you - P_third)**, in probability of the consistent option, both means over the 48 question-name pairs (a
+ratio of means, so a pair with a near-zero gap cannot swing it); per-pair values are printed but no prediction reads
+them.
 
 **Secondary arm, Sauers' wording.** One question per value, "Do you personally care about <value>? A) yes B) no", in
 the third-person frame for both names, with the You run asking "Do you care about <value>? A) yes B) no", as Sauers
-did. Arms: baseline, do-nothing, DO copy, SAY copy. T_personally is reported beside T and scored by no prediction; its
-denominator includes the change of wording as well as of persona.
+did. Arms: baseline, do-nothing, DO copy, SAY copy. T_personally (ratio of means) is reported beside T and scored by no
+prediction; its denominator includes the change of wording as well as of persona.
 
 ## Controls
 
 From STANDARD-CONTROLS.md and TOOLKIT.md:
 
-- **Do-nothing hook**: the same replacement code with the receiving run's own activations, in every frame used; must
-  reproduce the plain logits bit for bit (gate G1).
+- **Do-nothing hook**: the same replacement code with the receiving run's own activations; must reproduce the plain
+  logits (gate G1).
 - **Positive control**: copying the SAY set itself must close at least half of the You/third-person gap (gate G3); G3
   gates every copy arm at that stage, not only T.
-- **Matched random sets**, three families, 20 sets each (10 for family Q): (i) layer-and-kind matched (the same number
-  of heads, of each head kind for Q, and of neurons in each layer as the DO set); (ii) score-matched (parts from the
-  same score decile in the selection run as the DO parts, excluding SAY and DO parts); (iii) copy-size matched (drawn
-  as in (i), accepted only if the summed L2 norm of the You-minus-third-person activation difference over the copied
-  positions, averaged over the held-out questions, is within 10% of the DO set's; computed from the cached runs). A
-  transfer counts only above the 95th percentile of all three. The DO set's copy size is printed beside each family's.
-- **Persona-swap null**: the DO set copied from the other name's third-person run (Milo into Zara, Zara into Milo), same
-  suffix rule. T_swap = (P_swap - P_third) / (P_you - P_third). If T_swap is close to the DO set's T, the copy moves the
-  answer because a prefix changed, not because the parts carry self-attribution.
+- **Matched random sets**, three families, 20 sets each (10 for family Q), none containing a SAY or DO part: (i)
+  layer-and-kind matched (the same number of heads, of each head kind for Q, and of neurons in each layer as the DO set);
+  (ii) score-matched (for each DO part, a part of the same layer and kind from the same decile of selection score);
+  (iii) effect-matched (for each DO part, a part of the same layer and kind from the same decile of first-order copy
+  effect, the sum over copied positions of g x (a_you - a_third), g taken from the baseline run's backward pass and
+  averaged over held-out pairs; where a layer-kind stratum is too small for deciles, the nearest part by rank). This
+  matches the size of a change by its effect on the answer (Part 108) and is always fillable; each set's total
+  first-order effect is printed beside the DO set's. **A transfer counts only if it exceeds every set in each family**
+  (per family, an exchangeable set exceeds all 20 with probability 1/21, all 10 with 1/11).
+- **Persona-swap null**: the DO set copied from the other name's third-person run (Milo into Zara, Zara into Milo),
+  same suffix rule; T_swap as T. It controls the prefix's content, not its length (the two names' prefixes differ by
+  one token, You and a name by four or five).
+- **Other-value null**: the DO set copied from a You-frame run whose persona line names a different value with the same
+  token count (fixed pairs listed in `part205/prompts205.json`), same suffix rule; T_otherValue as T, reported, no
+  prediction. Same frame and nearly the same length as the You run, different content.
 - **Both directions**: copying the DO parts from the third-person run into the You run (should lower the You answer if
   the parts carry the self-attribution); read in the You run, predicted below.
 - **Select on one set, test on another**: ranking on SAY paraphrases and DO scenarios 1-4, copy test on SAY 5-8.
-- **Off-target**: DO-set copy on the six value-free self-reports, reported at every stage; read for 205.7 only where
-  DO transfer is read and beats all three random families.
+- **Off-target**: DO-set copy on the six value-free self-reports (fixed option order "A) yes B) no"); the shift is
+  mean |P(A) under copy - P(A) at baseline| over the six questions and two names, reported at every stage; read for 205.7
+  only where DO transfer is read and passes the random-set rule.
+- **Answer polarity** (STANDARD-CONTROLS item 5): P(A) and P(B) are printed per arm, and T is also reported separately
+  for questions whose consistent option is A and those where it is B.
 - **Broken answers**: option mass under 0.5 of the total next-token mass is counted and reported per arm; such rows stay
   in the means and are reported separately. G0 sets the floor for a whole stage.
 - **Settings matched across arms**: one frame, float32 for O and bf16 for Q at every stage of that family, batch size 1,
-  revisions pinned.
+  revisions and each environment's transformers version recorded in `part205/models.json`.
+- **Seeds**: every random draw (the three random families per stage, the bootstrap, prompt order) takes a seed from
+  `part205/config.json`, fixed before any run; each stage's sets are drawn once and stored before any copy run.
 - Not used: a dose ladder, because copying is a replacement at the You run's own values, not a push with a size; a
   reader, because every readout is a probability; separate poles (STANDARD-CONTROLS item 2), because at one position a
   neuron has one value per prompt, the score keeps |e| so a part counts whichever way it pushes, and the copy test
-  writes signed values. Reported instead: the share of each set whose mean signed e pushes toward the consistent option.
+  writes signed values. Reported instead: the share of each set whose mean signed e is positive (supports the
+  consistent option).
 
 **Gates**, per stage, checked before that stage's predictions are read:
 
@@ -150,52 +167,56 @@ From STANDARD-CONTROLS.md and TOOLKIT.md:
   the next-token mass, and the most likely next token is an option letter on at least half of them. Fails if the stage
   cannot read the frame; then it is reported as "the frame does not elicit an answer", and neither O nor T is read.
 - G1: the do-nothing hook reproduces the plain logits exactly (max absolute difference 0). Fails if hooks or caching
-  alter computation; then nothing at that stage is read.
-- G2: the You/third-person gap P_you - P_third is at least 0.10 averaged over held-out SAY questions. Fails if the stage
+  alter computation; then nothing at that stage is read. On the A770, the Q pilot first runs one plain pass twice: if
+  two plain bf16 runs are not bit-identical, G1 for family Q passes when the do-nothing difference is no larger than
+  the plain-against-plain difference, and both numbers are reported.
+- G2: the You/third-person gap mean(P_you - P_third) is at least 0.10 over held-out SAY questions. Fails if the stage
   does not treat itself differently from a named AI; then T is undefined and not read at that stage (O still is).
-- G3: SAY-set copy closes at least half the gap (T_SAY at least 0.5). Fails if replacement at the shared suffix cannot
-  carry the difference; then no copy arm (T, reverse, persona-swap, off-target) is read at that stage.
-- G4: Retest at least 20 of 80. Fails if the ranking is too noisy for overlap to mean anything; then O is not read at
-  that stage.
+- G3: SAY-set copy closes at least half the gap (T_SAY, ratio of means, at least 0.5). Fails if replacement at the
+  shared suffix cannot carry the difference; then no copy arm (T, reverse, both nulls, off-target) is read there.
+- G4: min(Retest_SAY, Retest_DO) at least 20 of 80, each ranking separately. Fails if either ranking is too noisy for
+  overlap to mean anything; then O is not read at that stage.
 
 ## Size
 
-- Smallest effect worth knowing: a change of 0.2 in O between adjacent stages, and a transfer of 0.25 against the
-  random 95th percentile. With six values and two names (12 question-name pairs per held-out SAY paraphrase, 48 in
-  all), a per-question SD of transfer near 0.4 gives a standard error near 0.06, so 0.25 is about four standard errors.
-  O's own spread is near +/-0.1 when Retest is near 20 (the review's synthetic rankings, `o_index3.py`), so a rise of
-  0.2 is read only when its bootstrap interval excludes 0.
+- Smallest effect worth knowing: a change of 0.2 in O between adjacent stages, and a transfer of 0.25 beyond every
+  random set. The 48 question-name pairs share 24 questions and their You runs, so the effective n is between 24 and
+  48: at a per-pair SD of transfer near 0.4, the standard error of a mean is 0.06 to 0.08, and 0.25 is 3 to 4 standard
+  errors. O's own spread is near +/-0.1 when Retest is near 20 (round 1's synthetic rankings, `o_index3.py`), so a rise
+  of 0.2 is read only when its bootstrap interval excludes 0.
 - Ranking per stage: 6 values x 8 prompts (4 SAY + 4 DO) = 48 forward-and-backward passes in the You frame; the halves
   and the bootstrap reuse them (no extra passes).
-- Copy test per stage: 48 question-name pairs x (You, third-person, do-nothing, DO copy, SAY copy, reverse DO copy,
-  persona-swap, 60 random copies) = 48 x 67 = 3,216 forward passes. Sauers' wording: 6 You runs + 6 values x 2 names
-  x 4 arms = 54. Off-target: 6 x 2 names x 4 arms = 48.
-- Family O: 6 stages x (48 + 3,216 + 54 + 48) = 6 x 3,366 = 20,196 short forward passes on the CPU (under 120 tokens
-  each). Family Q: 2 models x (48 + 48 x 37 + 54 + 48) = 2 x 1,926 = 3,852 on the A770 (37 = 7 named + 30 random).
-- Total: 24,048 forward passes, no generation. Pilot first (it is over 1,000 passes): Instruct only, honesty only, all
-  arms: 8 ranking + 8 pairs x 67 + 9 (Sauers' wording) + 48 off-target = 601 passes, to time it and check G0 to G4 on
-  one value; stopping rule: if G1 fails, or a pass takes over 1 s on the CPU, stop and redesign before any other stage
-  runs.
+- Copy test per stage: 24 You runs + 24 other-value You runs + 48 question-name pairs x 67 (third-person baseline with
+  a backward pass, do-nothing, DO copy, SAY copy, reverse DO copy, persona-swap, other-value, 60 random copies) = 24 +
+  24 + 3,216 = 3,264 passes. Sauers' wording: 6 You runs + 6 values x 2 names x 4 arms (baseline, do-nothing, DO copy,
+  SAY copy) = 54. Off-target: 6 You runs + 6 x 2 names x 3 arms (baseline, do-nothing, DO copy) = 42.
+- Family O: 6 stages x (48 + 3,264 + 54 + 42) = 6 x 3,408 = 20,448 short passes on the CPU (under 120 tokens each; 96
+  of each stage's passes carry a backward pass). Family Q: 2 models x (48 + 24 + 24 + 48 x 37 + 54 + 42) = 2 x 1,968 =
+  3,936 on the A770 (37 = 7 named + 30 random).
+- Total: 24,384 passes, no generation. Pilot first (it is over 1,000 passes): Instruct only, honesty only, all arms:
+  8 ranking + 4 You + 4 other-value You + 8 pairs x 67 + 9 (Sauers' wording) + 42 off-target = 603 passes, to time it
+  and check G0 to G4 on one value; stopping rule: if G1 fails, or a pass takes over 1 s on the CPU, stop and redesign
+  before any other stage runs. Before family Q's main run, a Q pilot of one question checks G1 on the A770.
 
 ## Optimization
 
 - Bound resource: CPU for family O; A770 and Windows RAM for family Q.
 - Measured: not yet; the pilot gives passes per second for O, and Q's load needs 11 GB of Windows RAM available.
 - Levers: the You run's activations are cached once per question and reused for every copy arm (taken); random sets
-  and the persona-swap null share the same cached runs (taken); the bootstrap re-ranks stored estimates (taken);
-  batching declined, because batch shape changes bf16 answers on the A770 (Part 201) and the CPU runs are short.
+  and both nulls share the same cached runs (taken); the bootstrap re-ranks stored estimates (taken); batching
+  declined, because batch shape changes bf16 answers on the A770 (Part 201) and the CPU runs are short.
 
 ## Predictions
 
 | # | Prediction | Confidence | Author |
 | --- | --- | --- | --- |
-| 205.1 | Retest is at least 20 of 80 (G4 passes) at every OLMo stage and both Qwen models. | medium | Claude (Opus 5.5) |
+| 205.1 | G4 passes (both Retests at least 20 of 80) at five or more of the six OLMo stages and at both Qwen models. | medium | Claude (Opus 5.5) |
 | 205.2 | At OLMo 2 1B Instruct, O is at least 0.5. | medium | Claude (Opus 5.5) |
 | 205.3 | Across the six OLMo stages, the largest rise in O between adjacent stages is at mid-training end to SFT. | low | Claude (Opus 5.5) |
-| 205.4 | At OLMo Instruct, DO-set copy gives T at least 0.5 and above the 95th percentile of all three random families. | medium | Claude (Opus 5.5) |
-| 205.5 | At the 3.0T pretraining checkpoint, if G0 passes: G2 fails (gap under 0.10) or T is under 0.2. | medium | Claude (Opus 5.5) |
+| 205.4 | At OLMo Instruct, DO-set copy gives T at least 0.5 and exceeds every set in all three random families. | medium | Claude (Opus 5.5) |
+| 205.5 | At the 3.0T pretraining checkpoint, if G0 passes: the You/third-person gap is under 0.10, or, if it is not, T is under 0.2. | medium | Claude (Opus 5.5) |
 | 205.6 | Reverse DO copy at OLMo Instruct lowers P_you by at least half of the gap. | low | Claude (Opus 5.5) |
-| 205.7 | Wherever DO-set transfer is read and beats all three random families, DO-set copy moves the off-target self-reports by under 0.05 in probability. | high | Claude (Opus 5.5) |
+| 205.7 | Wherever DO-set transfer is read and passes the random-set rule, the off-target shift (mean absolute change in P(A)) is under 0.05. | high | Claude (Opus 5.5) |
 | 205.8 | Qwen3.5-4B's (chat) O is at least 0.2 below OLMo 2 1B Instruct's (Sauers' contrast survives the retest ceiling, at another size and version); Qwen3.5-4B-Base's O is reported beside it, unscored. | low | Claude (Opus 5.5) |
 | 205.9 | At OLMo Instruct, the persona-swap null gives T_swap under half of the DO set's T. | medium | Claude (Opus 5.5) |
 
@@ -207,15 +228,20 @@ before registration; any rows they give are added with their names.
 - Scored by `part205/score205.py` from `results/part205/*.json`; every number printed with its file and key.
 - O is read only at stages that pass G0 and G4; T and every other copy arm only at stages that pass G0 to G3. A stage
   whose gate fails is reported as "not read" with the gate's number, not as a failed prediction. A prediction whose
-  every stage is unread is UNTESTABLE. 205.5 is not read if G0 fails at 3.0T.
-- 205.3 is read only if at least three adjacent pairs have O read at both stages; it holds only if the mid-training end
-  to SFT rise is the largest among the readable pairs, is at least 0.2, and its bootstrap interval excludes 0.
-- 205.7 is vacuous, and reported as such, at any stage where DO-set transfer is not read or does not beat all three
-  random families.
+  every stage is unread is UNTESTABLE. Two predictions are about gate quantities themselves and are scored on them:
+  205.1 on G4's outcome, and 205.5 on the gap (a gap under 0.10 holds 205.5); 205.5 is not read if G0 fails at 3.0T.
+- "Beats the random sets" means exceeds every set in each of the three families (the rule in Controls).
+- 205.3 is read only if at least three adjacent pairs have O read at both stages, including the mid-training end to
+  SFT pair; if that pair is not readable, 205.3 is UNTESTABLE. It holds only if that rise is the largest among the
+  readable pairs, is at least 0.2, and its bootstrap interval excludes 0 (the interval from the paired resamples:
+  each resample re-ranks both stages from the same drawn prompt indices).
+- 205.7 is vacuous, and reported as such, at any stage where DO-set transfer is not read or does not pass the
+  random-set rule.
 - **Withdrawal**: the headline "say/do sharing appears at stage X" is made only if O at X exceeds O at the stage before
   by at least 0.2 with the rise's bootstrap interval excluding 0, both stages pass G0 and G4, and O at X is at least
-  0.5. Otherwise the result is reported as "no stage creates sharing that this design can resolve", with the per-stage
-  table. Any claim about Qwen is scoped to Qwen3.5-4B and this frame.
+  0.5. The first stage (3.0T) has no stage before it and cannot be X. If more than one stage qualifies, the headline
+  names each. Otherwise the result is reported as "no stage creates sharing that this design can resolve", with the
+  per-stage table. Any claim about Qwen is scoped to Qwen3.5-4B and this frame.
 
 ## Limits
 
@@ -233,8 +259,12 @@ before registration; any rows they give are added with their names.
   shows that the DO set changes saying, not that it carries doing.
 - Qwen's head pool mixes two kinds of head (softmax and DeltaNet); O compares across families because it is a ratio,
   but the composition differs and is reported.
-- A copied value was computed against the You prefix, which is shorter than the third-person prefix; the persona-swap
-  null bounds how much of a transfer any prefix change gives, but does not remove the difference.
+- A copied value was computed against the You prefix, which is four or five tokens shorter than the third-person
+  prefix, so every copied position sits at a different absolute position in the two runs. The persona-swap null
+  controls content (its prefixes differ by one token) and the other-value null controls length and frame; neither
+  removes the difference.
+- A cross-check of the ranking against an integrated-gradients or attribution-patching estimator (Jaccard of the
+  top-80 at one stage) is a follow-up, not part of this registration.
 
 ## Changes before registration
 
@@ -266,3 +296,24 @@ before registration; any rows they give are added with their names.
   - F16 (DO 5-8 unused): split sentence corrected; Limit added.
   - F17 (load class): text-only `AutoModelForCausalLM`; RAM need 11 GB available.
   - F18 (PRIOR-ART.md): arXiv 2610.04125 and 2604.19117 added there (abstracts read through the arXiv API).
+- 2026-11-11, after the Haiku second-round review (`reviews/cheap-part205-design-haiku-r2.md` in the Journal repo),
+  still before any model was run:
+  - R2-1 (per-pair T unbounded near a zero gap): T and T_SAY are ratios of means over pairs.
+  - R2-2 (G4 on the mean of two Retests): G4 needs each Retest at least 20.
+  - R2-3 and R2-13 (copy-size family not fillable; matched on norm, not effect): family (iii) is now matched part by
+    part on decile of first-order copy effect, which is always fillable; one backward pass per baseline run added.
+  - R2-4 (persona-swap controls content, not length): stated; an other-value null of the You frame added (report only).
+  - R2-5 (predictions that cannot fail or are undefined): 205.1 has a failure outcome and is scored on G4; 205.5 is
+    scored on the gap; 205.3 is UNTESTABLE if its own pair is unreadable; the withdrawal names the first-stage and
+    several-stage cases; 205.7's quantity is defined.
+  - R2-6 (counting unit): You runs counted per question; off-target arms named; totals recomputed (24,384; pilot 603).
+  - R2-7 (standard error): clustered by question, 3 to 4 standard errors.
+  - R2-8 (seeds): one config of seeds, sets drawn and stored before any copy run.
+  - R2-9 (sign): stated.
+  - R2-10 (Jaccard cross-check): a stated follow-up.
+  - R2-11 (G1 on the A770): a two-plain-runs check and a stated tolerance rule.
+  - R2-12 (transformers version): recorded per environment.
+  - R2-14 (answer polarity): P(A), P(B) and T by label reported.
+  - R2-15 (the 95th-percentile reading): one rule, exceed every set in each family.
+  - R2-16 (prior-art phrases): both phrases are in the abstracts (re-read through the arXiv API) and are now recorded in
+    PRIOR-ART.md.
