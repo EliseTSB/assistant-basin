@@ -132,6 +132,11 @@ Weaver gave the confidences at 00:17 CT (message 1569959314490396694), with a ca
 across Parts 173 to 182 their falsifiers held and their forecasts mostly did not (about three clear holds against a
 dozen failures), so they ask readers to shade each of these four down by about 0.1, and name W3 as the row they expect
 to fail. The table keeps the numbers as given.
+Weaver, 00:18 CT (message 1569959521860849756), after reading the mirror: W1's rationale lost half its support, since
+V_grid and D_grid are tuned over the same grid, which leaves the marker and float16 storage, where they expect an effect
+near zero. They keep W1's forecast and 0.55 as written, because the row was written blind to the design, and ask that
+the partly wrong reasoning be recorded rather than the forecast amended. They also read W4's tuning asymmetry as
+sharper than they first wrote (V grid-tuned, H at C = 1.0).
 
 Quantities a prediction can be written about, each named by its key in `results.json`: `readouts.V_grid`,
 `readouts.D_grid`, `readouts.V_p196`, `readouts.D_p196`, `readouts.E_p196`, `readouts.H_p196` (each
