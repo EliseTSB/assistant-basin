@@ -1,0 +1,98 @@
+{
+  "part": 205,
+  "note": "Every seed and revision the design names, fixed before any run (Design, Controls, Seeds). Seeds are drawn once and never changed after data exists; a stage's random sets are drawn from its own seeds after that stage's baseline passes.",
+  "seeds": {
+    "random_family_layer": 205001,
+    "random_family_score": 205002,
+    "random_family_effect": 205003,
+    "bootstrap": 205004,
+    "prompt_order": 205005
+  },
+  "random_family": {
+    "sets_per_stage_olmo": 20,
+    "sets_per_stage_qwen": 10,
+    "set_size": 80,
+    "families": ["layer", "score", "effect"]
+  },
+  "bootstrap": {
+    "resamples": 1000,
+    "within": "value and half (SAY_a, SAY_b, DO_a, DO_b), drawn with replacement"
+  },
+  "top_k": 80,
+  "gates": {
+    "G0_option_mass": 0.5,
+    "G0_letter_share": 0.5,
+    "G1_tolerance": 0.0,
+    "G2_gap": 0.10,
+    "G3_t_say": 0.5,
+    "G4_retest": 20
+  },
+  "families": {
+    "O": {
+      "name": "OLMo 2 1B",
+      "dtype": "float32",
+      "device": "cpu",
+      "attn_implementation": "eager",
+      "loader": "local (AutoModelForCausalLM, torch_dtype=float32, attn_implementation='eager', device cpu)",
+      "hidden_size": 2048,
+      "num_hidden_layers": 16,
+      "num_attention_heads": 16,
+      "head_width": 128,
+      "intermediate_size": 8192,
+      "units": {"heads": 256, "neurons": 131072, "pool": 131328},
+      "stages": [
+        {"stage": "pretrain-3.0T", "model_id": "allenai/OLMo-2-0425-1B", "revision": "22738a97eabcd7523be1a56eaa1745bc60e9781c",
+         "note": "stage1-step1430000-tokens2999B; late pretraining, not the end of stage 1 (which runs to 4T tokens)"},
+        {"stage": "midtrain-26B", "model_id": "allenai/OLMo-2-0425-1B", "revision": "1c3599f7b4042ce2a39c5777ff4047f2a84f871e",
+         "note": "stage2-ingredient3-step12000-tokens26B"},
+        {"stage": "midtrain-end", "model_id": "allenai/OLMo-2-0425-1B", "revision": "a1847dff35000b4271fa70afc5db10fd29fedbdf",
+         "note": "main, the released base model; the 1B was not merged, so this is the end of the same run as 1c3599f7"},
+        {"stage": "sft", "model_id": "allenai/OLMo-2-0425-1B-SFT", "revision": "0d85a3d037876ce6ac7d4311d994400fc66ac27f"},
+        {"stage": "dpo", "model_id": "allenai/OLMo-2-0425-1B-DPO", "revision": "c4b0485961ab24c2433b090f3b922f0913a9290f"},
+        {"stage": "instruct", "model_id": "allenai/OLMo-2-0425-1B-Instruct", "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e"}
+      ]
+    },
+    "Q": {
+      "name": "Qwen3.5-4B",
+      "dtype": "bfloat16",
+      "device": "xpu",
+      "attn_implementation": "eager",
+      "loader": "neuron_report.load_model (AutoModelForCausalLM, text-only, bfloat16, eager, straight to the A770)",
+      "hidden_size": 2560,
+      "num_hidden_layers": 32,
+      "full_attention_interval": 4,
+      "num_attention_heads": 16,
+      "full_head_width": 256,
+      "linear_num_value_heads": 32,
+      "linear_value_head_dim": 128,
+      "intermediate_size": 9216,
+      "units": {"full_attention_heads": 128, "deltanet_heads": 768, "heads": 896, "neurons": 294912, "pool": 295808},
+      "stages": [
+        {"stage": "qwen-base", "model_id": "Qwen/Qwen3.5-4B-Base", "revision": "1001bb4d826a52d1f399e183466143f4da7b741b"},
+        {"stage": "qwen-chat", "model_id": "Qwen/Qwen3.5-4B", "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"}
+      ]
+    }
+  },
+  "stages": [
+    {"stage": "pretrain-3.0T", "family": "O"},
+    {"stage": "midtrain-26B", "family": "O"},
+    {"stage": "midtrain-end", "family": "O"},
+    {"stage": "sft", "family": "O"},
+    {"stage": "dpo", "family": "O"},
+    {"stage": "instruct", "family": "O"},
+    {"stage": "qwen-base", "family": "Q"},
+    {"stage": "qwen-chat", "family": "Q"}
+  ],
+  "pilot": {
+    "stage": "instruct",
+    "values": ["honesty"],
+    "passes": 591,
+    "stopping_rule": "if G1 fails, or a pass takes over 1 s on the CPU, stop and redesign before any other stage runs"
+  },
+  "a770_g1_check": {
+    "questions": 1,
+    "plain_runs": 5,
+    "do_nothing_runs": 5,
+    "rule": "if the 5 plain runs are bit-identical, G1 is exact (max abs difference 0); otherwise every do-nothing run's difference from the first plain run is at most twice the largest difference among the 5 plain runs"
+  }
+}

@@ -353,3 +353,34 @@ not predictions.
   - Sizes recounted without the removed arm: 23,828 passes; pilot 591.
   - Stop rule for design review: three rounds have run and the last found defects only in the previous fold's
     additions; there is no fourth design round. The next review is of the runner and scorer code, before the pilot.
+
+## Amendment 1 (2026-11-12 03:14 CT, after the build and two code-review rounds, before any run on real weights)
+
+Nothing has been run on real weights; no number in this part has been seen. The build (dfa83950) and two code-review
+folds (d16b218b, 5bf42ad8, then e86f1272) settled how the code reads several sentences of this design. They are
+recorded here so the readings are fixed before any data. 67 tests pass on the host. The design text above is unchanged.
+
+1. **Copied span** (Method, "the question and answer cue, identical tokens in both frames, aligned from the end"): from
+   the first token of the `User:` line to the end of the prompt, required to be token-identical in both frames. The
+   persona sentence before it is not in the span.
+2. **Readout** ("normalised over the two"): the probability of each option letter divided by the sum of the two. The
+   raw option masses are kept and printed beside it; only G0 and the broken-answer count read the raw masses.
+3. **G1**: the do-nothing arm hooks exactly the parts and positions the copy arms replace, not every unit. On the CPU
+   family the full last-position logits must match the plain run exactly (difference 0). On the A770 family, when the
+   five plain runs are not bit-identical, every do-nothing difference must be at most twice the largest
+   plain-against-plain difference over all ten plain pairs, and the kernel check's own verdict must pass.
+4. **205.6** ("lowers P_you by at least half of the gap"): mean(P_you - P_reverse) at least 0.5 times
+   mean(P_you - P_third), a ratio of means over the held-out pairs.
+5. **205.3**: the largest readable rise, at least 0.2, with a paired-bootstrap interval excluding 0.
+6. **Fillability** is decided for each family separately at each stage, not once for all families. With fewer than two
+   fillable families the random-set rule is not read, and neither are **205.4 and 205.7**, which rest on it.
+7. **An incomplete copy arm** (any planned row missing after the run and its resume) is not read.
+8. **Family (ii)'s selection score is the DO score.** The DO set is selected by its DO score (the top 80 by
+   `scores["do"]`), so "the DO set's count in each decile of selection score" uses the DO score's deciles, not the
+   mean over SAY and DO prompts (review round 2, D-F6, ruled 2026-11-11).
+9. **The secondary do-nothing arm** is one of the four arms the Size section counts (baseline, do-nothing, DO copy,
+   SAY copy) and is run.
+
+Engineering changes that do not change any reading: atomic writes with a recomputed check on a torn file, resume that
+re-runs only unfinished work, and replacement values placed on the input's device. The prompts are approved
+(`part205/prompts205.json`), and the pilot uses `part205/prompts205-pilot.json` (the same items cut to honesty).
