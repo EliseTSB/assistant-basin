@@ -1,0 +1,31 @@
+Running as unit: part209-main.scope; invocation ID: 4dbed4a00c7c4a93a3325366cb5eff9e
+launching from /home/elisepc/green/worktrees/ab-part203
+13:04:04 attempt 1 free=15.5
+13:04:04 running job.py processes=0 --ignore-busy
+STARTED: 13:04:05 step 1 start: -I -B part209/run209.py --stage qwen-base --out results/part209 --device xpu (ram_avail 15.5G)
+13:06:01 step 1 rc=0
+13:06:08 attempt 1 free=16.3
+13:06:08 running job.py processes=0 --ignore-busy
+STARTED: 13:06:09 step 1 start: -I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu (ram_avail 16.3G)
+13:08:19 step 1 rc=0
+13:09:12 attempt 1 free=17.4
+13:09:12 running job.py processes=0 --ignore-busy
+STARTED: 13:09:13 step 1 start: -I -B part209/run209.py --stage qwen-chat --out results/part209 --device xpu --r2 --batch 32 --max-new-tokens 96 (ram_avail 17.4
+13:20:31 step 1 rc=0
+ALL-DONE
+13:21:17 qwen results copied back: BUILD-REPORT.md chain-main.log chain-main.sh launch.jsonl olmo-b16.log olmo-b32.log pilot r1r3-qwen-base.json r1r3-qwen-chat.json r2-qwen-chat.jsonl r2-qwen-chat.timing.jsonl run-olmo-b16.sh run-olmo-b32.sh smoke smoke-d2 states-qwen-base.npz states-qwen-chat.npz tests-d2.log tests-d3.log tests-final.log 
+13:21:18 pretrain-3.0T pretrain unit=part209-pretrain-132118
+13:26:48 pretrain ended: success | rc=0 13:26:39
+13:26:48 midtrain-26B midtrain26 unit=part209-midtrain26-132648
+13:32:18 midtrain26 ended: success | rc=0 13:32:02
+13:32:19 midtrain-end midtrainend unit=part209-midtrainend-133219
+13:37:49 midtrainend ended: success | rc=0 13:37:32
+13:37:50 sft sft unit=part209-sft-133750
+13:44:20 sft ended: success | rc=0 13:44:14
+13:44:21 dpo dpo unit=part209-dpo-134421
+13:50:51 dpo ended: success | rc=0 13:50:49
+13:50:51 instruct instruct unit=part209-instruct-135051
+13:57:21 instruct ended: success | rc=0 13:57:20
+13:57:22 instruct instruct-r2 unit=part209-instruct-r2-135722
+14:37:53 instruct-r2 ended: success | rc=0 14:37:28
+ALL-DONE

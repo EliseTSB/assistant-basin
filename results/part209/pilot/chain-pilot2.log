@@ -1,0 +1,15 @@
+Running as unit: part209-pilot2.scope; invocation ID: 368d7b18b9534ded9ad8ae299bf68ed2
+launching from /home/elisepc/green/worktrees/ab-part203
+12:41:56 attempt 1 free=12.5
+12:41:56 running job.py processes=0 --ignore-busy
+STARTED: 12:41:57 step 1 start: -I -B part209/run209.py --stage qwen-chat --pilot --out results/part209/pilot --device xpu --models-json results/part209/pilot/m
+12:43:24 step 1 rc=0
+12:44:00 attempt 1 free=15.5
+12:44:01 running job.py processes=0 --ignore-busy
+STARTED: 12:44:01 step 1 start: -I -B part209/run209.py --stage qwen-chat --pilot --r2 --batch 16 --out results/part209/pilot --device xpu --models-json results
+12:45:53 step 1 rc=0
+12:46:05 attempt 1 free=14.9
+12:46:05 running job.py processes=0 --ignore-busy
+STARTED: 12:46:06 step 1 start: -I -B part209/run209.py --stage qwen-chat --pilot --r2 --batch 32 --out results/part209/pilot/b32 --device xpu --models-json res
+12:47:26 step 1 rc=0
+ALL-DONE

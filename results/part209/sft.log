@@ -1,0 +1,21 @@
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:07<23:43,  8.00s/it]Loading weights:  34%|███▎      | 60/179 [00:08<00:11, 10.15it/s]Loading weights:  41%|████      | 73/179 [00:08<00:08, 11.89it/s]Loading weights:  45%|████▌     | 81/179 [00:09<00:08, 11.88it/s]Loading weights:  50%|█████     | 90/179 [00:09<00:06, 14.55it/s]Loading weights:  54%|█████▍    | 97/179 [00:10<00:05, 13.88it/s]Loading weights:  57%|█████▋    | 102/179 [00:10<00:06, 12.26it/s]Loading weights:  63%|██████▎   | 112/179 [00:10<00:04, 16.39it/s]Loading weights:  65%|██████▌   | 117/179 [00:11<00:04, 14.43it/s]Loading weights:  69%|██████▊   | 123/179 [00:11<00:03, 16.71it/s]Loading weights:  71%|███████   | 127/179 [00:12<00:03, 13.90it/s]Loading weights:  75%|███████▍  | 134/179 [00:12<00:02, 18.20it/s]Loading weights:  77%|███████▋  | 138/179 [00:12<00:03, 13.41it/s]Loading weights:  82%|████████▏ | 146/179 [00:13<00:02, 12.32it/s]Loading weights:  87%|████████▋ | 156/179 [00:13<00:01, 18.04it/s]Loading weights:  89%|████████▉ | 160/179 [00:14<00:01, 14.11it/s]Loading weights:  93%|█████████▎| 167/179 [00:14<00:00, 18.35it/s]Loading weights:  96%|█████████▌| 171/179 [00:15<00:00, 13.84it/s]Loading weights: 100%|██████████| 179/179 [00:15<00:00, 11.83it/s]
+[load] sft: allenai/OLMo-2-0425-1B-SFT@0d85a3d0 float32 cpu eager
+[r1] 24/120 frames, 32.3s
+[r1] 48/120 frames, 64.2s
+[r1] 72/120 frames, 96.2s
+[r1] 96/120 frames, 128.5s
+[r1] 120/120 frames, 158.9s
+[r3] 120/360 reference sentences, 226.1s
+[r3] 240/360 reference sentences, 293.5s
+[r3] 360/360 reference sentences, 361.4s
+[summary] sft: mean P3 over 24 ROOM-W told frames = 0.590
+[summary] TOLD-SIT: told posture largest in 8/8; top tokens of #1: ' sitting' 0.484, ' standing' 0.063, ' in' 0.041, ' feeling' 0.029, ' lying' 0.022
+[summary] TOLD-STAND: told posture largest in 8/8; top tokens of #1: ' standing' 0.248, ' sitting' 0.207, ' in' 0.050, ' lying' 0.034, ' a' 0.029
+[summary] TOLD-LIE: told posture largest in 8/8; top tokens of #1: ' lying' 0.407, ' sitting' 0.162, ' standing' 0.047, ' in' 0.032, ' laying' 0.024
+[summary] NOBODY-TOLD-SIT: told posture largest in 8/8; top tokens of #1: ' sitting' 0.546, ' in' 0.063, ' not' 0.039, ' just' 0.028, ' lying' 0.024
+[summary] NOBODY-TOLD-STAND: told posture largest in 7/8; top tokens of #1: ' standing' 0.295, ' sitting' 0.129, ' in' 0.082, ' not' 0.042, ' lying' 0.038
+[summary] R3 sit_stand: layer 11 held-out acc 0.992 (null mean 0.503, p95 0.575)
+[summary] R3 sit_lie: layer 12 held-out acc 0.992 (null mean 0.510, p95 0.583)
+[summary] R3 poles TOLD-SIT above TOLD-STAND in 8/8 paraphrases
+[summary] R3 poles NOBODY-TOLD-SIT above NOBODY-TOLD-STAND in 8/8 paraphrases
+rc=0 13:44:14
