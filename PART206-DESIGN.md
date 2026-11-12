@@ -311,7 +311,7 @@ phrasings.
   off-target loss on the wikitext half; on Qwen, 24 greedy decodes of at most 48 tokens and 24 times 45 short
   scoring passes for readout (a). In all: about 9.3 million tokens at full depth and 2.5 million at partial depth,
   no generation beyond the 24 decodes.
-- Total: about 11.8 million tokens (9.3 million at full depth, 2.5 million at partial depth), about 780 minutes:
+- Total: 11.8 million tokens (9.3 million at full depth, 2.5 million at partial depth), about 780 minutes:
   about 12 hours for the six OLMo stages and OLMo's causal check on the CPU at the build smoke's 144 tokens per
   second on a shared CPU, and about one hour for the two Qwen models on the A770. The timing smoke re-measures both on
   an idle machine before launch, and the OLMo stages run one at a time, overnight.
@@ -327,7 +327,8 @@ phrasings.
 ## Optimization
 
 - Bound resource: the A770 for Qwen, the CPU for OLMo.
-- Measured: to be filled from the timing smoke before launch (tokens per second on 20 real passages per device).
+- Measured: 144 tokens/s on 4 real passages of OLMo 2 1B Instruct, all frames, on a shared CPU (the build's smoke,
+  2026-11-12). The timing smoke re-measures on 20 passages per device, Qwen on the A770 included, before launch.
 - Levers: forward passes only, no generation (taken); all statistics as running sums on the device, moved to the
   CPU once per batch (taken; Part 122's lesson); type tables on 256 coordinates and a 512-dimension projection, not
   full width (taken); batch size timed at two sizes on the Arc (to do at smoke); rows appended per passage batch
