@@ -251,7 +251,7 @@ def test_recorder_end_to_end_on_a_tiny_model(fam, tmp_path, monkeypatch):
     cfg, prompts = tiny_cfg_and_prompts(fam, 32, 48, n_layers, 64)
     stage = "instruct" if fam == "O" else "qwen-chat"
     tok = FakeTok(prompts["passages"], fam)
-    monkeypatch.setattr(C, "load_model", lambda cfg_, st, dev=None: (tok, model, {
+    monkeypatch.setattr(C, "load_model", lambda cfg_, st, dev=None, mp=None: (tok, model, {
         "device": "cpu", "dtype": "float32", "family": fam, "stage": st}))
     monkeypatch.setattr(C, "load_config", lambda path=None: cfg)
     prompts["_sha256"] = "x"

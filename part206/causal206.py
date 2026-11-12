@@ -105,6 +105,7 @@ def main(argv=None):
     ap.add_argument("--device", default=None)
     ap.add_argument("--batch", type=int, default=8)
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--model-path", default=None, help="a local snapshot directory of the pinned revision (the Arc)")
     a_ = ap.parse_args(argv)
     cfg = C.load_config()
     prompts = json.loads(Path(a_.prompts).read_text())
@@ -131,7 +132,7 @@ def main(argv=None):
         arms.append((f"null_M2M_k{k}", k, C.unit(null) * nrm))
         for i in range(len(R)):
             arms.append((f"random{i}_k{k}", k, R[i] * nrm))
-    tok, model, env = C.load_model(cfg, a_.stage, a_.device)
+    tok, model, env = C.load_model(cfg, a_.stage, a_.device, a_.model_path)
     device = env["device"]
     fam = env["family"]
     layers, _ = C.text_layers(model)

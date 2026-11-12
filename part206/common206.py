@@ -90,7 +90,7 @@ def nearest_layers(n, fractions):
 
 # ---------------------------------------------------------------- model loading and sites
 
-def load_model(cfg, stage, device_override=None):
+def load_model(cfg, stage, device_override=None, model_path=None):
     """(tokenizer, model, env) for one stage, eager attention. Qwen goes through neuron_report.load_model, the loader
     the kernel audit fixed (another loader can still run the faulty SDPA kernel on the A770)."""
     import sys
@@ -99,22 +99,26 @@ def load_model(cfg, stage, device_override=None):
     fam = cfg["families"][spec["family"]]
     device = device_override or fam["device"]
     dtype = torch.float32 if fam["dtype"] == "float32" else torch.bfloat16
+    src, rev = (model_path, None) if model_path else (spec["model_id"], spec["revision"])
     if spec["family"] == "Q":
         sys.path.insert(0, str(ROOT))
         import neuron_report
-        tok, model = neuron_report.load_model(spec["model_id"], spec["revision"], device,
+        tok, model = neuron_report.load_model(src, rev, device,
                                               attn_implementation=fam["attn_implementation"], dtype=dtype)
         env = dict(neuron_report.LAST_LOAD or {})
     else:
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        tok = AutoTokenizer.from_pretrained(spec["model_id"], revision=spec["revision"])
-        model = AutoModelForCausalLM.from_pretrained(spec["model_id"], revision=spec["revision"], dtype=dtype,
+        tok = AutoTokenizer.from_pretrained(src, revision=rev)
+        model = AutoModelForCausalLM.from_pretrained(src, revision=rev, dtype=dtype,
                                                      attn_implementation=fam["attn_implementation"])
         model.to(device).eval()
         torch.set_grad_enabled(False)
         import transformers
         env = {"torch": torch.__version__, "transformers": transformers.__version__}
+    if model_path and spec["revision"] not in str(model_path):
+        raise SystemExit(f"--model-path {model_path} does not name the pinned revision {spec['revision']}")
     env.update({"stage": stage, "family": spec["family"], "model_id": spec["model_id"], "revision": spec["revision"],
+                "model_path": model_path,
                 "dtype": fam["dtype"], "device": device, "attn_implementation": fam["attn_implementation"]})
     return tok, model, env
 

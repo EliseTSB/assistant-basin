@@ -213,10 +213,10 @@ class Sums:
 
 # ---------------------------------------------------------------- the moments pass
 
-def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, checkpoint=10, smoke=False):
+def run_moments(cfg, prompts, stage, out, device=None, batch=8, limit=None, checkpoint=10, smoke=False, model_path=None):
     import torch
     spec, fam, F, passages, plan = plan_for(cfg, prompts, stage, limit)
-    tok, model, env = C.load_model(cfg, stage, device)
+    tok, model, env = C.load_model(cfg, stage, device, model_path)
     device = env["device"]
     plain_logits = None
     first_ids = None
@@ -490,7 +490,7 @@ def reduce_batch(S, caps, bp, fam, F, cfg, fidx, pairs, scored, arm_pairs, n_lay
 
 # ---------------------------------------------------------------- the GT causal pass
 
-def run_gt(cfg, prompts, stage, out, device=None, batch=8, limit=None):
+def run_gt(cfg, prompts, stage, out, device=None, batch=8, limit=None, model_path=None):
     import torch
     spec, fam, F, passages, plan = plan_for(cfg, prompts, stage, limit)
     sdir = Path(out) / stage
@@ -498,7 +498,7 @@ def run_gt(cfg, prompts, stage, out, device=None, batch=8, limit=None):
     meta = json.loads((sdir / "meta.json").read_text())
     lc = meta["gt_causal_layer"]
     mhat = C.unit(z["Sres_gt"][0])                       # the fit half's mean residual entering layer lc
-    tok, model, env = C.load_model(cfg, stage, device)
+    tok, model, env = C.load_model(cfg, stage, device, model_path)
     device = env["device"]
     layers, _ = C.text_layers(model)
     rng = np.random.default_rng(cfg["seeds"]["gt_random"])
@@ -567,15 +567,16 @@ def main(argv=None):
     ap.add_argument("--checkpoint", type=int, default=10)
     ap.add_argument("--pass", dest="which", choices=["moments", "gt"], default="moments")
     ap.add_argument("--smoke", action="store_true", help="timing smoke: print throughput and gates only, keep no sums")
+    ap.add_argument("--model-path", default=None, help="a local snapshot directory of the pinned revision (the Arc)")
     a = ap.parse_args(argv)
     cfg = C.load_config()
     raw = Path(a.prompts).read_bytes()
     prompts = json.loads(raw)
     prompts["_sha256"] = hashlib.sha256(raw).hexdigest()
     if a.which == "gt":
-        run_gt(cfg, prompts, a.stage, a.out, a.device, a.batch, a.limit)
+        run_gt(cfg, prompts, a.stage, a.out, a.device, a.batch, a.limit, a.model_path)
     else:
-        run_moments(cfg, prompts, a.stage, a.out, a.device, a.batch, a.limit, a.checkpoint, a.smoke)
+        run_moments(cfg, prompts, a.stage, a.out, a.device, a.batch, a.limit, a.checkpoint, a.smoke, a.model_path)
     return 0
 
 
