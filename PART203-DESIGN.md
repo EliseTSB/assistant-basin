@@ -181,3 +181,16 @@ and `.all_training_actors_mean`, and the same two for `E`.
     changes loss values only at the floor, not the rule.
   - Not changed: Part 196's recorder still crashes on a truncated record instead of retrying it (`_cached_status`);
     Part 196 is published and is not edited for this part.
+
+## Amendment 1 (2026-11-12 04:04 CT, after the first analysis stopped at Gate 1, before any readout was computed or read)
+
+The recorder finished with both gates passed (2,730 of 2,730 clips, `gate1` and `gate2` "passed" in its log). Step 4's
+analysis then stopped with `status: gates_failed`: its Gate 1 listed two clips, `1070_TSI_ANG_XX.wav` and
+`1073_IEO_NEU_XX.wav`, as missing or failed. Both record files exist (about 98 KB each) and load with status "ok"
+when read directly. The analysis catches a read error as "record_error" and did not print the reason, so the cause is
+not established; the likely one is a failed read from `/mnt/e` under memory pressure (the analysis had been run under
+an 8 GiB cgroup cap that step 4 does not name, while other jobs held WSL memory). What had been seen: the gate lines,
+the two file names, and Gate 2's per-clip parity entries. No readout, interval or score had been computed.
+
+Change: Gate 1's report now carries each failed record's reason (`problems.reasons`); the gate's logic is unchanged.
+Step 4 is rerun as written, without the cap, in its own scope. If Gate 1 fails again, the part stops there.
