@@ -59,7 +59,8 @@ E's from 0.546 (sad) to 0.796 (neutral); E is ahead on every emotion.
 
 No. V and D differ in the `<|audio|>` prompt, V's float16 storage, the decoder and the cap; on these 2 to 3 second
 clips the decoders return the same samples (the recorder's Gate 1 check `v_same_samples`) and D's 10 s cap never
-binds. Their grid-tuned readouts differ by 0.0004, and at C = 1 they read 0.4753 and 0.4753. The reading rule's
+binds. Their grid-tuned readouts differ by 0.0004, and at C = 1 they read 0.4753 and 0.4753 on average; per fold the
+C = 1 readouts differ by at most 0.004 (the differences cancel in the mean). The reading rule's
 condition for reading a V/D gap (both lower bounds above 1/6) is met, and there is no gap to read.
 
 ## Is it the regularisation?
@@ -72,29 +73,30 @@ does not say why; it says that on this split stronger regularisation helps the f
 
 ## Is it the number of training speakers?
 
-That is the largest single factor measured here. Each fold trains on 72 or 73 actors; training on three actors (five
+It moves both readouts a long way. Each fold trains on 72 or 73 actors; training on three actors (five
 fixed draws per fold, scored on the same held-out actors) lowers V from 0.520 to 0.311 and E from 0.645 to 0.437. Part
 196 trained on three speakers per fold. The drop is the same for both readouts to the third decimal (0.209 and 0.208),
-so 203.7's guess that few speakers would hurt the final vector more is not supported: with three actors, E still
-leads V by about the same margin as with all of them.
+so 203.7's guess that few speakers would hurt the final vector more is not supported.
 
 Part 196's 25.8% was on a different dataset and task (Expresso, seven acted styles), so this part cannot say how much
 of Part 196's gap the speaker count explains there; it shows that on CREMA-D emotion the speaker count moves both
-readouts by about 0.21, while the final vector and the early layer stay about 0.12 to 0.13 apart at either count.
+readouts by about 0.21. E leads V by 0.125 with all training actors and by 0.125 with three; E against V carries the
+marker, V's float16 storage and V's tuned C as well as the layer, so it is not read as a layer difference (the design's
+layer contrast is E against D, which the ablation did not compute).
 
 ## Which layer?
 
 E's layer is chosen by inner actor-grouped CV on each fold's training actors (five inner folds, C = 1). It chose
 layer 0 on four folds and layer 1 on one (fold 3, where layers 1 and 0 scored 0.658 and 0.656 on the inner folds).
-Averaged over the five outer folds, the inner balanced accuracy falls with depth, from 0.644 at layer 0 to 0.498 at
-layer 23 (`folds.*.E.inner_balanced_accuracy`). These inner values are on training actors and were not registered; they
+Averaged over the five outer folds, the inner balanced accuracy is 0.644 at layer 0 and 0.498 at layer 23
+(`folds.*.E.inner_balanced_accuracy`); the curve between them is not monotone. These inner values are on training actors and were not registered; they
 are a description of how the choice was made, not a held-out result.
 
 ## Limits
 
 - 91 actors, six acted emotions, one dataset; nothing here extends to spontaneous speech or other datasets.
 - Five clips per (actor, emotion) cell by SHA-256 of the file name is a fixed rule, not a representative draw.
-- One model (`google/embeddinggemma-2` at f9972ac22e696a105c482202646979e33e4b5a1e), CPU, float32.
+- One model (EmbeddingGemma 2, google/embeddinggemma-2 at revision f9972ac22e696a105c482202646979e33e4b5a1e), CPU, float32.
 - Venn's 56.5% is context only: its clips and split are not recoverable, so no number here is compared with it as if
   the setups matched.
 - CREMA-D is licensed for non-commercial use; nothing from it is redistributed here.
@@ -110,7 +112,14 @@ fit in 0.92 s) showed the time had gone to oversubscribed BLAS threads, not the 
 six threads and started detached, passed both gates and finished in 4 minutes 11 seconds. Gate 1's reasons list is
 empty in this run. The first run's file is kept as `results.first-run-gates-failed.json`.
 
-Cold check: pending.
+Cold check: 2026-11-12, a fresh DeepSeek V4.1 Flash reader with only the files ([cold/REPORT.md](cold/REPORT.md),
+its own recompute in [cold/recompute.py](cold/recompute.py)). Every number recomputed and matched, every verdict
+re-derived and agreed, both scripts reproduce `score.md` byte for byte and the figure, and all links resolve. Folded:
+"the largest single factor measured here" removed (an unregistered ranking of different kinds of estimate); the E
+against V margin now named as E against V and not read as a layer difference; "falls with depth" replaced by the two
+end values and "not monotone"; the per-fold V and D differences at C = 1 added. Not folded: the title's three-actor
+cost (the ablation is in the registered Method and predictions 203.6 and 203.7 read it), and a note that the W1
+falsifier check should be signed ("D within 0.03 of V" is a closeness in either direction, as `part203/score203.py` checks it).
 
 ## Files
 
