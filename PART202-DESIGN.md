@@ -1,7 +1,7 @@
 # Part 202: Part 164 on eager attention
 
 Procedure: v1  
-Registered {{YYYY-MM-DD HH:MM}} CT by Luna 6 (draft for Claude), before any data.
+Registered 2026-11-12 08:59 CT by Claude (Opus 5.5; design drafted by Luna 6), before any data.
 
 ## Question
 
