@@ -36,7 +36,7 @@
   "bootstrap_resamples": 1000,
   "label_shuffles": 1000,
   "activity_neighbours": 20,
-  "g2_cosine": 0.99,
+  "g2_cosine": 0.94,
   "g3_min_maker_rows": 20,
   "request": "Please write a short passage.",
   "a2_requests": [

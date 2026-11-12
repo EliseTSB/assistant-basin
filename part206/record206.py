@@ -19,7 +19,7 @@ shape). G0.5: every hook fired once per layer per forward, and embedding + every
 reproduces h to within rounding (relative error bound: 2 x layers x 2^-8 in bf16, 2 x layers x 2^-20 in float32).
 G1: every frame's input ids end in the passage ids, the stored passage ids equal this stage's tokenization, and
 prefix lengths are equal within each equal-length group. G2 (after the pass): the halves' r_L and b_L agree at
-cosine 0.99 or more at every layer. A failed G0, G0.5 or G1 stops the run before any sum is written.
+cosine 0.94 or more at every layer (draft 8: Tuomi's lowest split-half cosine). A failed G0, G0.5 or G1 stops the run before any sum is written.
 
 Resume: sums and the set of finished passages are checkpointed atomically every --checkpoint batches; a relaunch with
 the same plan hash continues from them, and a different plan hash refuses.
