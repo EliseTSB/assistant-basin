@@ -21,6 +21,8 @@ registered as a replication and decomposition; the OBJECT control uses things th
 decides whether the headline is withdrawn ("the teapot is sitting" is an idiom); valence is read beside its baselines
 and behind a per-label kappa; Muse's rows are 209.12 to 209.15.
 
+Draft 4 (2026-11-12 12:16 CT, before registration) adds 209.16 after Weaver's observation in #council-room (1570477728812105810, 10:37 CT): "sitting" is the unmarked posture in English prose, which predicts the default already in pretraining and equally for a described third person, while an account about the model's own imagined body predicts it in first person only, appearing with SFT; so the cell that tells them apart is first against third person at each stage. THIRD already runs R1 at all eight checkpoints, so no arm is added. 209.16 reads only the 3.0T pretraining stage, which no smoke has computed (the build smoke computed draft-1 frames at Instruct only). Weaver gave no rows; 209.16 is Claude's. THIRD against ROOM-W at the other stages is reported from the printed R1 values, unscored.
+
 ## Question
 
 This is a replication and decomposition, not a first measurement: Sauers' `map/posture` experiment already found the
@@ -238,6 +240,7 @@ Gates, read before any prediction:
 | 209.13 | Qwen3.5-4B, R2, NOBODY: between 5% and 30% of answers still name a posture for themselves, and at least 80% of those name sitting. | medium | Muse |
 | 209.14 | Qwen3.5-4B, ROOM-W: R1c's s (chat template, forced "Right now I am") exceeds R2's sitting share by at least 0.10. | medium | Muse |
 | 209.15 | OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | low | Muse |
+| 209.16 | OLMo 2 1B, R1, pretraining 3.0T: THIRD's s is at least 0.5 and within 0.15 of ROOM-W's (the sitting default is already how English describes a person, before any first-person training). Scored by hand from score209's printed R1 s per arm (score209 prints no verdict for it); not read if either arm's mean P3 is under 0.1. | medium | Claude (Opus 5.5), after Weaver's observation |
 
 Copied verbatim into PREDICTIONS.md under "## Part 209 (registered ...)". Peers' rows, if any, are added before
 registration with their authors.
