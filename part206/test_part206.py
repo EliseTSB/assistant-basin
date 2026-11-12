@@ -325,10 +325,13 @@ def summary(fam, n_layers, **kw):
                                         "rho_peak_ci": list(ci) if ci else [rp - 0.05, rp + 0.1],
                                                "rho_peak_resamples": res if res is not None else [rp] * 20}
     S = {"family": fam, "n_layers": n_layers, "gates": gates,
-         "split": {"m": [{"token_share": 0.6 if L == 0 else 0.2} for L in range(n_layers)],
+         "split": {"m": [{"token_share": 0.6 if L == 0 else 0.2, "token_share_freq_removed": kw.get("tf", 0.3)}
+                         for L in range(n_layers)],
                    "c": [{"token_share": 0.1} for L in range(n_layers)]},
          "reference": [{"write_share": {"mlp": 0.6, "mixer": 0.3, "embedding": 0.1}} for _ in range(n_layers)],
-         "common_mode": {"A-tmpl|M": cm(kw.get("rho", 0.3)), "A-tmpl|R-tmpl": cm(kw.get("rho_r", 0.2))},
+         "common_mode": {"A-tmpl|M": cm(kw.get("rho", 0.25)), "A-tmpl|R-tmpl": cm(kw.get("rho_r", 0.2)),
+                         "M2|M": {"layers": [{"rho": kw.get("rho_null", 0.05)} for _ in range(n_layers)]}},
+         "cos_delta_bM": [kw.get("cos_b", 0.6)] * n_layers,
          "cos_request_change": [kw.get("cos", 0.9)] * n_layers,
          "gt": {"verdict": {"pass": kw.get("gt", True)}}}
     if fam == "Q":
@@ -482,3 +485,16 @@ def test_resume_carries_the_gates_and_continues(tmp_path, monkeypatch):
     zb = np.load(tmp_path / "b" / "instruct" / "moments.npz")
     assert np.allclose(za["Sx"], zb["Sx"]) and np.allclose(za["SD2"], zb["SD2"])
     assert sorted(zb["done"].tolist()) == list(range(8))
+
+
+def test_muse_rows_hold_and_fail_on_their_bars(tmp_path):
+    V = V_of(tmp_path / "pass")
+    for k in ("206.M1", "206.M3", "206.M4", "206.M5"):
+        assert V[k] == "held", (k, V[k])
+    assert V["206.M2"] == "failed"                                    # the passing world's gap is 20 at slot 75
+    V2 = V_of(tmp_path / "m2", {"instruct": {"slot": 65.0, "concept": 50.0}})
+    assert V2["206.M2"] == "held"
+    for over, key in (({"qwen-chat": {"rho": 0.35}}, "206.M1"), ({"qwen-chat": {"rho_null": 0.1}}, "206.M1"),
+                      ({"qwen-chat": {"ident": 60.0}}, "206.M3"), ({"qwen-chat": {"tf": 0.45}}, "206.M4"),
+                      ({"qwen-chat": {"cos_b": 0.4}}, "206.M5")):
+        assert V_of(tmp_path / key / str(len(str(over))), over)[key] == "failed", (key, over)

@@ -149,7 +149,44 @@ def score(out, cfg):
         V["206.12"] = V["206.12_detail"]["verdict"]
     else:
         V["206.7"] = V["206.12"] = "not read"
+    V.update(muse_rows(R))
     V["headline"] = headline(R, cfg, V)
+    return V
+
+
+def muse_rows(R):
+    """Muse's rows 206.M1 to 206.M5 (council muse-prior-art #21), scored exactly as their table rows say."""
+    V = {}
+    qc = R.get("qwen-chat")
+    if qc and readable(qc[1]):
+        p, S = qc
+        n = S["n_layers"]
+        midL = C.middle_layer(n)
+        cmA = S["common_mode"]["A-tmpl|M"]
+        lay = cmA["rho_peak_layer"]
+        rp = cite(p, "common_mode.A-tmpl|M.rho_peak", cmA["rho_peak"])
+        rn = cite(p, f"common_mode.M2|M.layers[{lay}].rho", S["common_mode"]["M2|M"]["layers"][lay]["rho"])
+        V["206.M1"] = verdict(rp is not None and rn is not None and 0.07 <= rp <= 0.30 and 0.02 <= rn <= 0.08)
+        idm = cite(p, "arming.identity.median_percentile", S["arming"]["identity"]["median_percentile"])
+        V["206.M3"] = verdict(45 <= idm <= 55)
+        t0 = cite(p, "split.m[0].token_share", S["split"]["m"][0]["token_share"])
+        tm = cite(p, f"split.m[{midL}].token_share", S["split"]["m"][midL]["token_share"])
+        tf = cite(p, "split.m[0].token_share_freq_removed", S["split"]["m"][0]["token_share_freq_removed"])
+        V["206.M4"] = verdict(None not in (t0, tm, tf) and 0.50 <= t0 <= 0.70 and 0.10 <= tm <= 0.25 and 0.25 <= tf <= 0.40)
+        cb = cite(p, f"cos_delta_bM[{lay}]", S["cos_delta_bM"][lay])
+        V["206.M5"] = verdict(cb is not None and cb >= 0.5)
+    else:
+        for k in ("206.M1", "206.M3", "206.M4", "206.M5"):
+            V[k] = "not read"
+    inst = R.get("instruct")
+    if inst and readable(inst[1]):
+        p, S = inst
+        sl = S["arming"]["slot"]["median_percentile"]
+        gap = sl - S["arming"]["concept"]["median_percentile"]
+        cite(p, "arming.slot-concept gap (206.M2)", gap)
+        V["206.M2"] = verdict(10 <= gap <= 20 and 60 <= sl <= 70)
+    else:
+        V["206.M2"] = "not read"
     return V
 
 

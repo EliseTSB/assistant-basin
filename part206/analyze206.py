@@ -68,6 +68,9 @@ def analyze(cfg, stage, out):
             overall = (a["Ssp"][s_i, 0, L] + a["Ssp"][s_i, 1, L]) / n_type.sum()
             row["frequency_explained"] = C.frequency_explained(w, pooled, overall,
                                                                np.log((n_type[0] + n_type[1])[keep]))
+            fx = row["frequency_explained"]
+            row["token_share_freq_removed"] = (row["token"] * (1 - fx) / (row["token"] + row["context"])
+                                               if fx is not None and (row["token"] + row["context"]) != 0 else None)
             rows.append(row)
         split[s] = rows
     S["split"] = split
@@ -142,6 +145,12 @@ def analyze(cfg, stage, out):
     # Delta(A-tmpl, M) against Delta(A2-tmpl, M), per layer
     pa, pb = pairs.index(("A-tmpl", "M")), pairs.index(("A2-tmpl", "M"))
     S["cos_request_change"] = [C.cosine(deltas[(pa, L)], deltas[(pb, L)]) for L in range(n_layers)]
+    # 206.M5: Delta(A-tmpl, M) on x against frame M's b_L (the mean of x_L in M), and frame A-tmpl's b_L, per layer
+    bM = [a["Sx"][fi["M"], :, :, L].sum((0, 1)) / a["n_frame"][fi["M"]].sum() for L in range(n_layers)]
+    bA = [a["Sx"][fi["A-tmpl"], :, :, L].sum((0, 1)) / a["n_frame"][fi["A-tmpl"]].sum() for L in range(n_layers)]
+    S["cos_delta_bM"] = [C.cosine(deltas[(pa, L)], bM[L]) for L in range(n_layers)]
+    S["b_frames"] = [{"layer": L, "b_M_norm": float(np.linalg.norm(bM[L])), "b_Atmpl_norm": float(np.linalg.norm(bA[L])),
+                      "cos_bM_bAtmpl": C.cosine(bM[L], bA[L])} for L in range(n_layers)]
     # resampling for the scored pairs: rho_peak per resample, and rho within the fit half for L*
     rng = np.random.default_rng(cfg["seeds"]["bootstrap"])
     B = cfg["bootstrap_resamples"]
