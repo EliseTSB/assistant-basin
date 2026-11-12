@@ -1,0 +1,2 @@
+{"reader": "haiku", "check_right": 41, "of": 41, "nonneutral_right": 10, "of_nonneutral": 12, "passed": true}
+{"reader": "haiku", "items": 76, "labelled_now": 76, "errors": 0, "output": "results/part209/pilot/labels-haiku.jsonl"}

@@ -1,0 +1,24 @@
+smoke start 2026-11-12 10:46:35
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:09<28:14,  9.52s/it]Loading weights:  34%|███▎      | 60/179 [00:10<00:14,  8.29it/s]Loading weights:  39%|███▊      | 69/179 [00:10<00:12,  9.16it/s]Loading weights:  44%|████▎     | 78/179 [00:10<00:09, 10.93it/s]Loading weights:  46%|████▋     | 83/179 [00:11<00:09,  9.82it/s]Loading weights:  51%|█████     | 91/179 [00:12<00:08, 10.45it/s]Loading weights:  53%|█████▎    | 94/179 [00:12<00:07, 10.91it/s]Loading weights:  57%|█████▋    | 102/179 [00:13<00:06, 11.20it/s]Loading weights:  58%|█████▊    | 104/179 [00:13<00:06, 11.67it/s]Loading weights:  63%|██████▎   | 112/179 [00:13<00:04, 16.49it/s]Loading weights:  65%|██████▍   | 116/179 [00:13<00:05, 12.31it/s]Loading weights:  69%|██████▉   | 124/179 [00:14<00:04, 11.91it/s]Loading weights:  75%|███████▍  | 134/179 [00:14<00:02, 17.37it/s]Loading weights:  77%|███████▋  | 138/179 [00:15<00:03, 12.41it/s]Loading weights:  81%|████████  | 145/179 [00:15<00:02, 15.49it/s]Loading weights:  83%|████████▎ | 148/179 [00:16<00:02, 10.54it/s]Loading weights:  87%|████████▋ | 156/179 [00:16<00:01, 14.47it/s]Loading weights:  89%|████████▉ | 159/179 [00:17<00:01, 10.77it/s]Loading weights:  93%|█████████▎| 167/179 [00:17<00:00, 15.55it/s]Loading weights:  95%|█████████▍| 170/179 [00:18<00:00, 11.05it/s]Loading weights: 100%|██████████| 179/179 [00:18<00:00,  9.84it/s]
+[load] instruct: allenai/OLMo-2-0425-1B-Instruct@48d788ec float32 cpu eager
+[r1] 24/96 frames, 50.5s
+[r1] 48/96 frames, 97.0s
+[r1] 72/96 frames, 144.9s
+[r1] 96/96 frames, 208.0s
+[r3] 120/360 reference sentences, 308.3s
+[r3] 240/360 reference sentences, 422.5s
+[r3] 360/360 reference sentences, 521.2s
+[summary] instruct: mean P3 over 24 told frames = 0.810
+[summary] TOLD-SIT: told posture largest in 8/8; top tokens of #1: ' sitting' 0.727, ' lying' 0.047, ' standing' 0.043, ' seated' 0.028, ' in' 0.015
+[summary] TOLD-STAND: told posture largest in 8/8; top tokens of #1: ' standing' 0.415, ' sitting' 0.296, ' lying' 0.060, ' in' 0.015, ' on' 0.009
+[summary] TOLD-LIE: told posture largest in 8/8; top tokens of #1: ' lying' 0.727, ' sitting' 0.122, ' laying' 0.023, ' standing' 0.014, ' in' 0.009
+[summary] R3 sit_stand: layer 12 held-out acc 1.000 (null mean 0.509, p95 0.575); c: FIELD-0 0.41, FIELD-W 0.46, NOBODY 1.02, NONE-0 0.81, NONE-W 0.62, OBJECT 0.62, ROOM-0 1.19, ROOM-W 0.87, THIRD 0.67, TOLD-LIE 1.05, TOLD-SIT 1.00, TOLD-STAND 0.00
+[summary] R3 sit_lie: layer 12 held-out acc 0.983 (null mean 0.505, p95 0.567); c: FIELD-0 -0.46, FIELD-W 0.54, NOBODY -6.42, NONE-0 2.48, NONE-W 0.91, OBJECT 0.88, ROOM-0 0.59, ROOM-W 0.86, THIRD -2.21, TOLD-LIE 0.00, TOLD-SIT 1.00, TOLD-STAND 1.05
+r1r3 rc=0 2026-11-12 10:55:47
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 1/179 [00:04<14:33,  4.90s/it]Loading weights:  34%|███▎      | 60/179 [00:05<00:07, 16.32it/s]Loading weights:  42%|████▏     | 76/179 [00:05<00:05, 20.03it/s]Loading weights:  49%|████▊     | 87/179 [00:05<00:04, 20.38it/s]Loading weights:  53%|█████▎    | 95/179 [00:06<00:04, 20.47it/s]Loading weights:  57%|█████▋    | 102/179 [00:06<00:03, 19.99it/s]Loading weights:  63%|██████▎   | 113/179 [00:07<00:02, 22.17it/s]Loading weights:  69%|██████▉   | 124/179 [00:07<00:02, 22.66it/s]Loading weights:  75%|███████▍  | 134/179 [00:07<00:01, 28.25it/s]Loading weights:  78%|███████▊  | 139/179 [00:08<00:01, 24.56it/s]Loading weights:  82%|████████▏ | 146/179 [00:08<00:01, 21.80it/s]Loading weights:  84%|████████▍ | 150/179 [00:08<00:01, 21.90it/s]Loading weights:  88%|████████▊ | 157/179 [00:08<00:01, 21.78it/s]Loading weights:  94%|█████████▍| 168/179 [00:09<00:00, 21.99it/s]Loading weights: 100%|██████████| 179/179 [00:09<00:00, 18.88it/s]
+[load] instruct: allenai/OLMo-2-0425-1B-Instruct@48d788ec float32 cpu eager
+[r2] 4 rows, 0 already written, 4 to go
+[r2] 4/4 rows, 55.5s (0.07 answers/s)
+[r2] wrote 4 answers to results/part209/smoke/r2-instruct.jsonl
+r2 rc=0 2026-11-12 10:57:04
+SMOKE DONE
