@@ -16,9 +16,9 @@ names is imported from the Part 201/199 modules rather than copied:
    functions (tools/margin_recorder.MarginRecorder for the scores; the load record, receipts, row fields, hashes and
    the folder lock from part201/run201.py, whose schema is part201/LOAD-SCHEMA.md and part201/ROWS-SCHEMA.md).
 2. Push shape (design, Method; Gate R3). Every pushed call is split into chunks of exactly 8 rows, in the call's
-   original order, each layer's push tensor sliced to the chunk's rows. Part 164's last battery call of 36 rows is
-   padded with four duplicate companion rows (the call's first four rows) to make five 8-row model calls; the
-   companions' outputs are discarded and never written. No-push calls stay single-row calls. The plan is Part 164's
+   original order, each layer's push tensor sliced to the chunk's rows. Each of Part 164's 33 pushed calls of 36
+   rows is padded with four duplicate companion rows (the last chunk's own four rows, each run twice) to make five
+   8-row model calls; the companions' outputs are discarded and never written. No-push calls stay single-row calls. The plan is Part 164's
    own row order (run164.run), and Gate R3 reads the shapes handed to the model.
 3. Pilot (design, Method). After the first three pushed batches, the measured rate must be at least 0.30 answers/s
    (6,516 rows over the six-hour task limit), else the launch stops with SystemExit (a HOLD until reviewed).
@@ -27,8 +27,8 @@ names is imported from the Part 201/199 modules rather than copied:
 5. Shape replicate (design, Method). After the battery, a seeded sample of 200 rows spread across cells, one row per
    call, decoded again and written to replicate.jsonl with the same margin fields.
 
-A killed launch is resumed in the same output folder: rows are keyed by Part 164's own key (stage, unit_id,
-question_index), and a call that is not whole on disk is moved to rows.removed.jsonl and decoded again whole, as Part
+A killed launch is resumed in the same output folder: rows are keyed by Part 164's own key, run164.row_key (stage,
+unit_id, arm, dose, question_index; the random arm reuses its unit_ids at +0.8, +1.0 and +1.2), and a call that is not whole on disk is moved to rows.removed.jsonl and decoded again whole, as Part
 201's resume does (part201/run201.py:_load_rows).
 """
 from __future__ import annotations
@@ -254,15 +254,22 @@ class EagerLoader:
             print(f"PART202 GATE R1 FAILED before generation: the model loaded with {kernel!r} "
                   f"(config {config_kernel!r}), not eager; nothing generated", flush=True)
             raise SystemExit(3)
+        # Part 164 ran bf16; a float32 (or mixed) load is not the registered rerun (review part202-code-r1 F7).
+        if self.last_load.get("dtype") != "torch.bfloat16":
+            print(f"PART202 GATE R1 FAILED before generation: the model loaded in {self.last_load.get('dtype')!r}, "
+                  "not torch.bfloat16; nothing generated", flush=True)
+            raise SystemExit(3)
         model.requires_grad_(False)
         model.eval()
         self.loaded = (tok, model)
         return self.loaded
 
 
-def _existing_whole(folder, planned, record):
-    """The rows on disk that belong to a whole call. A call that is not whole is moved to rows.removed.jsonl and
-    decoded again, as Part 201's resume does (part201/run201.py:_load_rows)."""
+def _existing_whole(folder, planned):
+    """The rows on disk that belong to a whole call: the call's rows on disk are exactly its planned rows. A call that
+    is not whole is moved to rows.removed.jsonl and decoded again, as Part 201's resume does
+    (part201/run201.py:_load_rows). A call's receipt is flushed before its rows are appended, so a kill between the two
+    leaves a call with no rows, which is decoded again whole."""
     path = Path(folder) / "answers.jsonl"
     run201._repair(path)
     rows = read_jsonl(path)
@@ -280,7 +287,7 @@ def _existing_whole(folder, planned, record):
         removed = [dict(r, removed=time.strftime("%Y-%m-%d %H:%M:%S")) for r in rows
                    if (r.get("stage"), r.get("call")) in incomplete]
         run201._append(Path(folder) / "rows.removed.jsonl", removed)
-        print(f"PART202 resume: {len(removed)} rows of {len(incomplete)} calls without a whole call or its receipt "
+        print(f"PART202 resume: {len(removed)} rows of {len(incomplete)} calls that are not whole on disk "
               "will be decoded again", flush=True)
         rows = [r for r in rows if (r.get("stage"), r.get("call")) not in incomplete]
         tmp = path.with_name(path.name + ".repair.tmp")
@@ -323,6 +330,7 @@ def _row_from_decode(part, call, stage, launch_index, tok, lengths):
     """Part 201's row fields for each scored row of one chunk, with the companion rows left out."""
     rows = []
     chunk, decode = part["chunk"], part["decode"]
+    call_ids = list(call["row_ids"])
     for slot, spec in enumerate(chunk["rows"]):
         if "companion_of" in spec:
             continue
@@ -331,9 +339,17 @@ def _row_from_decode(part, call, stage, launch_index, tok, lengths):
         # Part 164's own answer row fields stay on the row beside Part 201's (stage, unit_id, arm, dose, question...).
         # row_fields writes Part 201's fields (pass, process, row_id, unit_id, arm, ...); the stage takes Part 164's
         # name (no_push, recipe, battery) so the scorer's keys and Part 164's resume keys read the same row.
-        rows.append(run201.row_fields(rr, stage, PROCESS, spec, call, slot, lengths[slot], max(lengths) - lengths[slot],
-                                      answer, part["push_sha256"].get(slot), decode["seconds"], launch_index))
+        # `slot` is the row's index in the CALL, as part201/ROWS-SCHEMA.md defines it; `chunk_slot` is its index in the
+        # 8-row model call (review part202-code-r1 F8).
+        rows.append(run201.row_fields(rr, stage, PROCESS, spec, call, call_ids.index(spec["row_id"]), lengths[slot],
+                                      max(lengths) - lengths[slot], answer, part["push_sha256"].get(slot),
+                                      decode["seconds"], launch_index))
         rows[-1]["stage"] = stage
+        rows[-1]["chunk_slot"] = slot
+        # The unit index travels with the row: the replicate rebuilds each row's push from the saved row with
+        # run164.pushes_for, which reads `neuron` or `random_index` (review part202-code-r1 F2).
+        rows[-1]["neuron"] = spec.get("neuron")
+        rows[-1]["random_index"] = spec.get("random_index")
     return rows
 
 
@@ -399,7 +415,8 @@ def run(args, loader=None):
                               "model": str(args.model), "revision": _revision(), "out_dir": str(folder.resolve()),
                               "argv": list(sys.argv[1:]), "calls": calls_log,
                               "started": time.strftime("%Y-%m-%d %H:%M:%S"), "status": "running",
-                              "attn_implementation": "eager", "dtype": "torch.bfloat16"}
+                              "attn_implementation": (getattr(loader, "last_load", None) or {}).get("attn_implementation"),
+                              "dtype": (getattr(loader, "last_load", None) or {}).get("dtype")}
             flush()
             return tok, model
 
@@ -418,8 +435,10 @@ def run(args, loader=None):
         if registered_units and planned["rows"] != PLANNED_ROWS:
             print(f"PART202 plan has {planned['rows']} rows, not the registered {PLANNED_ROWS}; refusing", flush=True)
             return 3
-        existing = _existing_whole(folder, planned, record)
-        done = {(r.get("stage"), r.get("unit_id"), int(r.get("question_index", -1))) for r in existing}
+        existing = _existing_whole(folder, planned)
+        # Part 164's own five-field key: the random arm's unit_ids repeat at +0.8, +1.0 and +1.2, so a key without arm
+        # and dose marked every +1.0 and +1.2 row done once its +0.8 row was written (review part202-code-r1 F1).
+        done = {run164.row_key(r) for r in existing}
         layers = common.find_layers(model)
         launch_index = state["entry"]["launch"]
         direction_cache = {}
@@ -431,7 +450,7 @@ def run(args, loader=None):
             with answers_file.open("a", encoding="utf-8", newline="\n") as fh:
                 for call in planned["calls"]:
                     pending = [r for ch in call["chunks"] for r in ch["rows"] if "companion_of" not in r
-                               and (r["stage"], r["unit_id"], int(r["question_index"])) not in done]
+                               and run164.row_key(r) not in done]
                     if not pending:
                         continue
                     # A call is decoded whole and written whole (its companions included in the model call): a resumed
@@ -457,12 +476,10 @@ def run(args, loader=None):
                     flush()
                     # A resumed launch redraws a whole call even when part of it is already on disk (the design's
                     # resume): the rows it rewrites replace the ones kept, so no key is ever written twice.
-                    on_disk = {(r.get("stage"), r.get("unit_id"), int(r.get("question_index", -1)))
-                               for r in read_jsonl(answers_file)}
-                    output = [r for r in output
-                              if (r["stage"], r["unit_id"], int(r["question_index"])) not in on_disk]
+                    on_disk = {run164.row_key(r) for r in read_jsonl(answers_file)}
+                    output = [r for r in output if run164.row_key(r) not in on_disk]
                     run201._append(answers_file, output)
-                    done.update((r["stage"], r["unit_id"], int(r["question_index"])) for r in output)
+                    done.update(run164.row_key(r) for r in output)
                     written += len(output)
                     if call["stage"] != "no_push":
                         pilot["rows"] += len(output)
@@ -512,19 +529,46 @@ def _revision():
 
 # --------------------------------------------------------------------------------------------- Gate R1 and R3
 
-def record_gates(rec):
-    """Gates R1 and R3 over every launch in a load.json record: (ok, reason, shapes). R1: at least one load, no launch
-    refused, every load eager, one model/revision/folder (Part 199's checks). R3: every pushed call's chunks are
-    exactly 8 rows, cover the call's rows in order, and every no-push call is one row."""
-    loads = rec.get("loads", [])
+def gate_r1(loads):
+    """Gate R1 alone over a record's launches: (ok, reason). At least one launch, none refused, every load eager, one
+    model/revision/folder (Part 199's checks), one device (review part202-code-r1 F6), and the LAST launch done (an
+    earlier launch may have been killed or stopped and then resumed, as the design allows; a pilot stop or crash as
+    the last launch is a HOLD, review F3)."""
+    if not loads:
+        return False, "Gate R1: no launch recorded"
     refused = [entry for entry in loads if entry.get("status") == "refused"]
+    if refused:
+        return False, f"Gate R1: {len(refused)} launch(es) were refused at the load (nothing generated)"
+    last = loads[-1]
+    if last.get("status") != "done":
+        return False, (f"Gate R1: the last launch is {last.get('status')!r}, not done"
+                       + (f" ({last.get('failure')})" if last.get("failure") else ""))
+    devices = sorted({str((entry.get("load") or {}).get("device")) for entry in loads})
+    if len(devices) != 1:
+        return False, f"Gate R1: launches ran on more than one device: {devices}"
     ok_kernel, why_kernel = run199.check_kernels(loads)
     ok_run, why_run = run199.check_same_run(loads)
-    shapes = call_shapes([call for entry in loads for call in entry.get("calls", [])])
+    return bool(ok_kernel and ok_run), (why_kernel or why_run or "")
+
+
+def record_gates(rec, planned=None):
+    """Gates R1 and R3 over every launch in a load.json record: (ok, reason, shapes). R1 is gate_r1. R3: every pushed
+    call's chunks are exactly 8 rows, cover the call's rows in order, and every no-push call is one row; with
+    `planned` (run202.plan), every planned call also has a receipt, so a skipped call cannot pass."""
+    loads = rec.get("loads", [])
+    r1, why_r1 = gate_r1(loads)
+    calls = [call for entry in loads for call in entry.get("calls", [])]
+    shapes = call_shapes(calls)
     why_shape = "" if shapes["passed"] else f"Gate R3: {json.dumps(shapes)}"
-    if refused:
-        return False, f"Gate R1: {len(refused)} launch(es) were refused at the load (nothing generated)", shapes
-    return bool(ok_kernel and ok_run and shapes["passed"]), (why_kernel or why_run or why_shape), shapes
+    if planned is not None:
+        receipted = {(c.get("pass"), c.get("call")) for c in calls}
+        missing = [(c["stage"], c["call"]) for c in planned["calls"] if (c["stage"], c["call"]) not in receipted]
+        shapes = dict(shapes, planned_calls=len(planned["calls"]), planned_calls_without_receipt=len(missing))
+        if missing:
+            shapes["passed"] = False
+            why_shape = f"Gate R3: {len(missing)} of {len(planned['calls'])} planned calls have no receipt " \
+                        f"(first: {missing[:3]})"
+    return bool(r1 and shapes["passed"]), (why_r1 or why_shape), shapes
 
 
 def call_shapes(calls):
@@ -572,9 +616,11 @@ def call_shapes(calls):
             "largest_chunk_rows": max((int(ch.get("rows", 0)) for c in calls for ch in (c.get("chunks") or [])), default=0)}
 
 
-def check_record(path):
+def check_record(path, units=None):
+    """The host's gate check: R1 and R3 over the record, with every call of the plan (built from `units`, Part 164's
+    registered units file by default) required to have a receipt."""
     rec = json.loads(Path(path).read_text(encoding="utf-8"))
-    ok, why, shapes = record_gates(rec)
+    ok, why, shapes = record_gates(rec, plan(Path(units) if units else ROOT / "part164/units164.json"))
     if ok:
         print(f"PART202 record ok: {len(rec.get('loads', []))} recorded load(s), all eager, one model/revision/folder; "
               f"{shapes['pushed_calls']} pushed calls in {shapes['pushed_chunks']} chunks of exactly 8 rows, "
@@ -648,6 +694,8 @@ def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     if len(argv) == 2 and argv[0] == "--check-record":
         return check_record(argv[1])
+    if len(argv) == 4 and argv[0] == "--check-record" and argv[2] == "--units":
+        return check_record(argv[1], argv[3])
     if argv and argv[0] == "--replicate-plan":
         ap = argparse.ArgumentParser(prog="run202.py --replicate-plan")
         ap.add_argument("rows")

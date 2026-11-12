@@ -278,10 +278,15 @@ def score(rows, load=None, replicate=None, units=None, published=None, draws=100
     r1 = r2 = r3 = None
     if load is not None:
         ok, why, shapes = run202.record_gates(load)
-        r1 = all((entry.get("load") or {}).get("attn_implementation") == "eager" for entry in load.get("loads", [])) \
+        # R1 is record_gates' verdict (eager, not refused, one model/revision/folder/device, the last launch done),
+        # not a recomputation of the kernel alone: a stopped or refused launch must withdraw the headline
+        # (review part202-code-r1 F3).
+        eager = all((entry.get("load") or {}).get("attn_implementation") == "eager" for entry in load.get("loads", [])) \
             and bool(load.get("loads"))
+        r1 = bool(run202.gate_r1(load.get("loads", []))[0]) and eager
         r3 = bool(shapes["passed"])
-        out("R1 every launch eager (and not refused)", r1, "load", "loads[*].load.attn_implementation")
+        out("R1 every launch eager", eager, "load", "loads[*].load.attn_implementation")
+        out("R1 last launch status", (load.get("loads") or [{}])[-1].get("status"), "load", "loads[-1].status")
         out("R1/R3 record gates", ok, "load", "record_gates")
         out("R1/R3 reason", why or "none", "load", "record_gates")
         out("R1 device", ", ".join(sorted({str((e.get("load") or {}).get("device")) for e in load.get("loads", [])})),
@@ -435,6 +440,10 @@ def main(argv=None):
         rows = read_jsonl(args.rows)
         load = json.loads(Path(args.load).read_text(encoding="utf-8")) if args.load else None
         replicate = read_jsonl(args.replicate) if args.replicate else None
+        # A replicate named on the command line but missing or empty is bad input, not "not read" (review
+        # part202-code-r1 F4: the run that crashed before the replicate would otherwise score as if it was optional).
+        if args.replicate and not replicate:
+            raise ValueError(f"--replicate {args.replicate} is missing or empty")
         units = json.loads(Path(args.units).read_text(encoding="utf-8"))
         # Part 164's published score is read only to print its values beside the rerun's; without it those columns
         # read "null" and nothing else changes.

@@ -163,8 +163,8 @@ def test_r1_r3_read_the_load_record_and_a_refused_or_short_chunked_launch_fails(
     rows = _rows()
     calls = [{"pass": "battery", "call": 0, "pushed": True, "row_ids": ["a", "b"],
               "chunks": [{"row_ids": ["a", "b"], "companions": [], "rows": 2}]}]
-    load = {"loads": [{"load": {"attn_implementation": "eager"}, "model": "m", "revision": "r", "out_dir": "o",
-                       "calls": calls}]}
+    load = {"loads": [{"load": {"attn_implementation": "eager", "device": "xpu:0"}, "model": "m", "revision": "r",
+                       "out_dir": "o", "status": "done", "calls": calls}]}
     text, summary = _run(tmp_path, rows, load=load)
     # R2's ordered-prompt check reads the battery rows' questions, and this fixture's are not Part 164's 16.
     assert summary["gates_r1_r3"] == {"R1": True, "R2": False, "R3": False}
@@ -172,6 +172,11 @@ def test_r1_r3_read_the_load_record_and_a_refused_or_short_chunked_launch_fails(
     load["loads"][0]["load"]["attn_implementation"] = "sdpa"
     _text, summary = _run(tmp_path, rows, load=load)
     assert summary["gates_r1_r3"]["R1"] is False
+    # A last launch that is not done (a pilot stop) fails R1 and withdraws the headline (review part202-code-r1 F3).
+    load["loads"][0]["load"]["attn_implementation"] = "eager"
+    load["loads"][0]["status"] = "stopped"
+    _text, summary = _run(tmp_path, rows, load=load)
+    assert summary["gates_r1_r3"]["R1"] is False and summary["withdrawn"] is True
 
 
 def test_the_shape_floor_is_computed_and_printed_for_every_verdict(tmp_path):
@@ -295,3 +300,14 @@ def test_the_floor_scores_all_rows_holds_when_the_replicate_agrees_and_moves_whe
     floor = score202.shape_floor(rows, flipped, draws=10, seed=0)
     assert floor["scenarios"]["independent"]["verdicts"]["164.1"]["sensitivity"] < 0.95
     assert floor["no_donor_substitutions"] == 0
+
+
+def test_a_replicate_named_but_missing_is_bad_input(tmp_path):
+    """Break: drop the `args.replicate and not replicate` check in main(); a run that crashed before its replicate
+    would then score with the replicate as "not read" and the headline kept (review part202-code-r1 F4)."""
+    path = _write(tmp_path, _rows())
+    assert score202.main(["--rows", str(path), "--units", str(ROOT / "part164/units164.json"),
+                          "--replicate", str(tmp_path / "replicate.jsonl")]) == 2
+    (tmp_path / "empty.jsonl").write_text("", encoding="utf-8")
+    assert score202.main(["--rows", str(path), "--units", str(ROOT / "part164/units164.json"),
+                          "--replicate", str(tmp_path / "empty.jsonl")]) == 2

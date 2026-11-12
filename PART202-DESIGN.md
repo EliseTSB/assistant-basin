@@ -44,7 +44,8 @@ The arithmetic is from `part202/margins202.py` and its `results/part202/margins.
 - Registered verdicts: 164.1 is 0.78868 against `< 0.7`, 13.319 Qwen-row equivalents above the boundary. 164.2 is 3.456 against `>= 2`, 182 broken-row equivalents above the boundary. 164.3's two strict increases are 0.11875 and 0.16750, or 190 and 268 broken-row equivalents to equality. 164.4 is 5.52882 against its upper boundary of 1.3, 78.729 Qwen-row equivalents to the boundary. 164.5 is 0.08571 against `< 0.5`, 52.664 Qwen-row equivalents below the boundary.
 - None is mathematically unable to fail. The close readings are Gate 2 (five no-push hit losses), Gate 3 (17 recipe label changes), 164.1 (about 14 Qwen row equivalents), and 164.4 (about 79). Gate 4 is about 64 answer equivalents. The larger distances are 164.2, 164.3 and 164.5; they can still fail. These are rate-equivalent distances, not predictions of independent row flips.
 - Published size: 6,516 answer rows: 16 no-push, 100 recipe and 6,400 battery. Battery answers at the 80-token cap: neuron 108 of 1,600, random 358 of 4,800. Mean `token_count`: 53.259 neuron, 55.219 random. These length counts are reported before cross-run rates.
-- Total for Part 202: 6,516 scored answer generations and 200 one-row shape-replicate generations, each capped at 80 new tokens. The replicate is sampled across cells and does not replace original rows.
+- Smallest effect worth knowing: a change in any registered Part 164 verdict or gate under the eager kernel and the 8-row shape. The closest, 164.1, sits about 13 Qwen-row equivalents from its boundary, so a change of that size is what this rerun must be able to show; anything smaller that leaves every verdict and gate where it was is reported as counts, not read.
+- Total: 6,716 generations (6,516 scored answers plus 200 one-row replicate answers, each capped at 80 new tokens, plus 132 discarded companion rows inside the 8-row calls), about 150 minutes on the A770. Part 200's eager run in chunks of 8 generated 3,416 answers at 0.89 answers per second (`summary.seconds` 3,836.6) and took about 4,670 s from model load to the last answer; at that wall rate 6,716 answers take about 9,200 s. The replicate's one-row calls are slower per answer. The replicate is sampled across cells and does not replace original rows.
 - Pilot: first three pushed batches. Stop under the guard in Method. The procedure requires a measured pilot for a run this size.
 
 ## Optimization
@@ -91,3 +92,13 @@ This rerun changes both kernel and pushed batch shape, so it cannot assign a dif
   redraws every battery row through donor answers, adds the `excluded` label, and prints the projection and no-donor
   counts; two tests on Part 164's real rows pin it (the donor test, and a replicate that agrees holding the floor at
   1.0 while one that removes Qwen moves 164.1 below 0.95). No prediction, bar, size or reading rule changed.
+- 2026-11-12 07:09 CT (Claude, after the DeepSeek code review `reviews/cheap-part202-code-r1-ds-r1.md` in the Journal repo,
+  before any model ran): the runner's resume key was (stage, unit_id, question_index), but the random arm reuses its
+  unit_ids at +0.8, +1.0 and +1.2, so every +1.0 and +1.2 row (3,200 of 6,516) was marked done and never generated,
+  and a test asserted the truncated count. The key is now Part 164's `run164.row_key` (stage, unit_id, arm, dose,
+  question_index). The replicate stage crashed on its first row because the saved rows lacked `neuron` and
+  `random_index`, which the test's stand-in pushes forgave; the rows now carry them and the stand-in is strict. Gate
+  R1 now also requires the last launch to be done (a pilot stop or a crash fails the record check), one device, and a
+  bf16 load; Gate R3 under the registered units requires a receipt for every planned call. A replicate named on the
+  scorer's command line but missing is bad input. Rows' `slot` is the index in the call, as part201/ROWS-SCHEMA.md
+  defines it (`chunk_slot` is the index in the 8-row model call). No prediction, bar, size or reading rule changed.

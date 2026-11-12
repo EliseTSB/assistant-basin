@@ -47,7 +47,10 @@ def _fake_pushes(rows, layers, medians, common, cache=None):
         dense = torch.zeros((len(rows), width), dtype=torch.float32)
         for i, row in enumerate(rows):
             if int(row["layer"]) == layer:
-                dense[i, int(row.get("neuron") or row.get("random_index") or 0) % width] = 0.01
+                # Strict like run163.pushes_for: a row without its unit index raises (review part202-code-r1 F2: the
+                # old `or 0` here let a saved row with no `neuron` or `random_index` pass the replicate stage).
+                index = row["neuron"] if row["arm"] == "neuron" else row["random_index"]
+                dense[i, int(index) % width] = 0.01
         out[layer] = dense
     return out
 
@@ -193,8 +196,9 @@ def test_a_refused_load_is_recorded_as_refused_and_the_run_exits_3(tmp_path, mon
 # --------------------------------------------------------------------------------------------- the run and its resume
 
 def test_the_run_writes_every_planned_row_once_in_chunks_of_8(tmp_path, monkeypatch, capsys):
-    """Break: in run(), drop the `done` filter before a call is decoded (a resumed run duplicates rows), or write the
-    companion rows (the tiny plan's 301 rows would be 305)."""
+    """Break: in run(), drop the `done` filter before a call is decoded (a resumed run duplicates rows), write the
+    companion rows (the tiny plan's 501 rows would be 513), or key `done` without arm and dose (the random arm's +1.0
+    and +1.2 rows are then never written: 301 rows, review part202-code-r1 F1)."""
     model, _tok, loads = _install_fakes(monkeypatch)
     seen = []
     real = run202._decode_chunk
@@ -207,14 +211,23 @@ def test_the_run_writes_every_planned_row_once_in_chunks_of_8(tmp_path, monkeypa
     assert run202.run(_args(tmp_path)) == 0
     rows = _rows(tmp_path / "answers.jsonl")
     # one question: 1 no-push + 100 recipe + 100 neurons + 300 random rows at 0.8/1.0/1.2
-    assert len(rows) == 301 and len({(r["stage"], r["unit_id"], r["question_index"]) for r in rows}) == 301
+    from part164 import run164
+    assert len(rows) == 501 and len({run164.row_key(r) for r in rows}) == 501
     assert loads == ["cpu"]
     assert set(seen) == {1, 8} and seen[0] == 1
-    assert sum(1 for n in seen if n == 8) == 38           # 64 recipe rows + 240 battery rows, in chunks of 8
+    assert sum(1 for n in seen if n == 8) == 64           # the plan's 500 pushed rows and 12 companions, in chunks of 8
     assert sum(1 for n in seen if n == 1) == 201          # the no-push call and the 200 one-row replicate calls
     rec = json.loads((tmp_path / "load.json").read_text())
     assert rec["loads"][-1]["status"] == "done"
-    assert run202.check_record(tmp_path / "load.json") == 0
+    assert run202.check_record(tmp_path / "load.json", units=_args(tmp_path).units) == 0
+    # Gate R1 wants one device (review part202-code-r1 F6): a second launch on another device fails the record.
+    two = json.loads(json.dumps(rec))
+    two["loads"].append(dict(two["loads"][-1], load=dict(two["loads"][-1]["load"], device="xpu:0")))
+    assert run202.record_gates(two)[0] is False and "device" in run202.record_gates(two)[1]
+    # Gate R3 against the plan: a record missing one planned call's receipt fails (review part202-code-r1 F1/F3).
+    short = json.loads(json.dumps(rec))
+    short["loads"][-1]["calls"] = [c for c in short["loads"][-1]["calls"] if c["call"] != 6]
+    assert run202.record_gates(short, run202.plan(_args(tmp_path).units))[0] is False
     assert len(_rows(tmp_path / "replicate.jsonl")) == 200
     assert "PART202 record ok" in capsys.readouterr().out
 
@@ -250,14 +263,16 @@ def test_a_resume_decodes_only_what_is_missing_and_a_half_written_call_again(tmp
                         lambda *a: (seen.append(len(a[3])), real(*a))[1])
     assert run202.run(_args(tmp_path)) == 0
     rows = _rows(path)
-    assert len(rows) == 301 and len({(r["stage"], r["unit_id"], r["question_index"]) for r in rows}) == 301
+    from part164 import run164
+    assert len(rows) == 501 and len({run164.row_key(r) for r in rows}) == 501
     # The half-written call's 8 rows were set aside and its whole call (64 rows, 8 chunks) decoded again, then every
     # call after it (the rest of the battery), and the 200 one-row replicate calls. The first battery call's 64 rows
     # are on disk once each (the 8 kept rows were redrawn but not written twice).
     assert len(_rows(tmp_path / "rows.removed.jsonl")) == 8
-    assert seen[:8] == [8] * 8 and sum(1 for n in seen if n == 8) == 25
+    # 8 for the redrawn call, 17 for the rest of +0.8 (64, 64, 8 rows), 13 each for +1.0 and +1.2 (64 + 36 rows).
+    assert seen[:8] == [8] * 8 and sum(1 for n in seen if n == 8) == 51
     first_call = [r for r in rows if r["call"] == first_battery]
-    assert len(first_call) == 64 and len({(r["stage"], r["unit_id"], r["question_index"]) for r in first_call}) == 64
+    assert len(first_call) == 64 and len({run164.row_key(r) for r in first_call}) == 64
     assert len(_rows(tmp_path / "replicate.jsonl")) == 200
 
 
@@ -272,6 +287,27 @@ def test_the_pilot_stops_below_the_guard_and_records_it(tmp_path, monkeypatch):
     # the no-push rows and the first three pushed calls only (the recipe's 64 + 64, then the battery's first 64)
     assert len(_rows(tmp_path / "answers.jsonl")) == 1 + 64 + 64 + 36   # the no-push row, the recipe's two 64-row calls, the first battery call (36 rows)
     assert not (tmp_path / "replicate.jsonl").exists()
+    # A pilot stop is a HOLD: the host's record check fails on it (review part202-code-r1 F3).
+    assert run202.check_record(tmp_path / "load.json", units=_args(tmp_path).units) == 3
+    assert "not done" in run202.record_gates(rec)[1]
+
+
+def test_a_float32_load_is_refused_before_generation(tmp_path, monkeypatch):
+    """Break: drop the dtype check in EagerLoader (a float32 load would run as the bf16 rerun, review F7)."""
+    import neuron_report as nr
+    _install_fakes(monkeypatch)
+    eager_load = nr.load_model
+
+    def float32_load(*a, **k):
+        tok, model = eager_load(*a, **k)
+        nr.LAST_LOAD = dict(nr.LAST_LOAD, dtype="torch.float32")
+        return tok, model
+
+    monkeypatch.setattr(nr, "load_model", float32_load)
+    assert run202.run(_args(tmp_path)) == 3
+    rec = json.loads((tmp_path / "load.json").read_text())
+    assert rec["loads"][-1]["status"] == "refused"
+    assert not (tmp_path / "answers.jsonl").exists()
 
 
 def test_the_replicate_rows_are_written_one_row_per_call(tmp_path, monkeypatch):
