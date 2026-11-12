@@ -58,3 +58,14 @@ def test_hand_checked_override_is_kept():
     )
     assert not unread
     assert counts["untestable"] == 1
+
+
+def test_a_verdict_cell_opening_with_untestable_is_read_as_untestable():
+    """Break: drop the ('untestable', ...) pattern; Part 198's rows then print UNCLASSIFIED."""
+    table = """| # | Prediction | Result | Verdict |
+|---|---|---|---|
+| 198.3 | A gated prediction. | gate 1 failed | untestable (the gate failed) |
+"""
+    counts, unread = counter.classify(table)
+    assert not unread
+    assert counts["untestable"] == 1
