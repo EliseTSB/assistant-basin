@@ -1,5 +1,3 @@
-
-
 ## Part 64 (registered 2026-10-23, before any collection or call; design PART64-DESIGN.md)
 | # | Prediction | Result |
 |---|---|---|
