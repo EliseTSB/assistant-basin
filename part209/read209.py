@@ -114,14 +114,19 @@ def haiku_client(prompt, cfg_r):
             "messages": [{"role": "user", "content": prompt}]}
     if cfg_r.get("thinking") == "disabled":
         body["thinking"] = {"type": "disabled"}
+    # Direct, not through the fleet's mitm proxy (whose CA this process does not trust): the same choice as
+    # judge_client's ProxyHandler({}) for OpenCode Go. An HTTPS_PROXY in the environment made every call fail TLS and
+    # retry silently (builder smoke, 2026-11-12).
     cafile = os.environ.get("SSL_CERT_FILE")
     ctx = ssl.create_default_context(cafile=cafile) if cafile else ssl.create_default_context()
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), urllib.request.HTTPSHandler(context=ctx))
+    last = "no attempt"
     for attempt in range(6):
         req = urllib.request.Request("https://api.anthropic.com/v1/messages", data=json.dumps(body).encode(),
                                      headers={"x-api-key": _KEY["k"], "anthropic-version": "2023-06-01",
                                               "content-type": "application/json"})
         try:
-            with urllib.request.urlopen(req, context=ctx, timeout=120) as r:
+            with opener.open(req, timeout=120) as r:
                 d = json.load(r)
             return "".join(b.get("text", "") for b in d.get("content", []) if b.get("type") == "text")
         except urllib.error.HTTPError as e:
@@ -132,9 +137,10 @@ def haiku_client(prompt, cfg_r):
                 time.sleep(min(60, 2 ** attempt + random.random()))
                 continue
             raise RuntimeError(f"HTTP {e.code}")          # no body: nothing sensitive echoed
-        except (urllib.error.URLError, TimeoutError):
-            time.sleep(2 ** attempt)
-    raise RuntimeError("retries exhausted")
+        except (urllib.error.URLError, TimeoutError) as e:
+            last = type(e).__name__ + ": " + str(getattr(e, "reason", e))[:80]
+            time.sleep(min(8, 2 ** attempt))
+    raise RuntimeError(f"retries exhausted ({last})")
 
 
 CLIENTS = {"ds": ds_client, "haiku": haiku_client}

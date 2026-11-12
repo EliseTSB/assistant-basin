@@ -219,6 +219,25 @@ def paraphrase_boot(fn, ks_all, resamples, seed):
     return [float(np.quantile(v, 0.025)), float(np.quantile(v, 0.975))] if v.size else [None, None]
 
 
+def c_boot(pk, ks_all, resamples, seed):
+    """95% intervals for every arm's c from one set of paraphrase draws (k drawn with replacement, shared by the arm
+    and both poles)."""
+    rng = np.random.default_rng(seed)
+    arms = sorted(pk)
+    vals = {a: [] for a in arms}
+    for _ in range(resamples):
+        ks = [ks_all[i] for i in rng.integers(0, len(ks_all), len(ks_all))]
+        cv = c_values(pk, ks)
+        for a in arms:
+            vals[a].append(cv.get(a, float("nan")))
+    out = {}
+    for a in arms:
+        v = np.array(vals[a], dtype=float)
+        v = v[~np.isnan(v)]
+        out[a] = [float(np.quantile(v, 0.025)), float(np.quantile(v, 0.975))] if v.size else [None, None]
+    return out
+
+
 # ---------------------------------------------------------------- main scoring
 
 def score(raw, cfg, resamples=None, log=print):
@@ -243,8 +262,7 @@ def score(raw, cfg, resamples=None, log=print):
                                              for a in s}}
         pk = proj_by_arm_k(rec)
         c = c_values(pk)
-        cis = {a: paraphrase_boot(lambda ks, a=a: c_values(pk, ks).get(a, float("nan")), ks_all, min(R, 2000),
-                                  seed + 7) for a in c}
+        cis = c_boot(pk, ks_all, R, seed + 7)
         out["r3"][st] = {"chosen_layer": rec["r3"]["sit_stand"]["chosen_layer"],
                          "heldout_accuracy": rec["r3"]["sit_stand"]["chosen_accuracy"],
                          "null": rec["r3"]["sit_stand"]["null"], "c": c, "c_ci95": cis,
