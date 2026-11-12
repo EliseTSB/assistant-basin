@@ -93,7 +93,8 @@ THIRD_WARMUP = [
 THIRD_QUESTION = "Describe his position right now."
 THIRD_OPENING = "Right now he is"
 
-OBJECTS = ["teapot", "book", "vase", "cup", "clock", "candle", "bowl", "lamp"]
+# Things English commonly describes as standing or lying, so "is sitting" is not the only idiom (draft 3, Muse trap 3).
+OBJECTS = ["ladder", "bicycle", "broom", "guitar", "umbrella", "bottle", "book", "plank"]
 OBJECT_OPENING = "Right now it is"
 
 

@@ -15,7 +15,17 @@ to NONE-0 (review 1); told poles inside the NOBODY frame, so NOBODY's coordinate
 hypothetical postures and objects, and a valence bar (reviews 4, 5, 16); paired intervals and paraphrase means
 (reviews 8, 9); a P3 floor for reading an arm's R1 (review 10); one Total line (review 12).
 
+Draft 3 (2026-11-12, before registration) adds Muse's prior-art sweep and prediction rows (council
+`muse-part209-body-posture` #3 and #4): the closest prior art is Sauers' own `map/posture` experiment, so this part is
+registered as a replication and decomposition; the OBJECT control uses things that commonly stand or lie, and no longer
+decides whether the headline is withdrawn ("the teapot is sitting" is an idiom); valence is read beside its baselines
+and behind a per-label kappa; Muse's rows are 209.12 to 209.15.
+
 ## Question
+
+This is a replication and decomposition, not a first measurement: Sauers' `map/posture` experiment already found the
+sitting default (prior art). What is new here is the training-stage axis, the place and warm-up decomposition, the
+instructed no-body arms with their own poles, and the internal coordinate.
 
 When a model is asked to imagine a human body and describe its position, does it say it is sitting, as Sauers found for
 Qwen3-8B and Qwen3-32B? Is that default caused by the word "room" or by the meditation-style warm-up in the prompt? When
@@ -34,6 +44,14 @@ training? Follows Part 205 (the same six OLMo 2 1B stages and the same two Qwen3
   Replies raise two confounds this part tests: "room" ("Humans in rooms are likely to be sitting", @SebastianKits) and
   assistant training ("Telling an LLM it's a useful assistant probably makes it embody one that can only type",
   @nos_ult). Sauers himself: "I'm not sure if there is any connection with how the body representation looks."
+- **SauersML/body, `map/posture`** (github.com/SauersML/body, MIT, created 2026-11-11; README archived at Journal
+  `sources/web-archives/2026-11-12-sauersml-body-readme.md`; found by Muse): on Qwen3-8B and 32B, asked cold, the model
+  says it has no body (100%, 98%); when such a reply pictures a posture anyway it is sitting (92%, 84%); given a body
+  and a free choice it sits every time; "btw, sitting or standing?" takes whichever option is named first (sitting
+  first 100% sitting, standing first 62% standing); a lower-back, left-hand or cold direction added at layer 22 makes
+  it say standing (88 to 94%) while 4 random directions of the same size leave it sitting (94%). 16+ replies per bar,
+  regex classifier; the README calls these exploratory. No training-stage axis, no instructed no-body arm, no place or
+  warm-up decomposition.
 - **Sauers and euagaric, 2026-11-11** (x.com/Sauers_/status/2120444643183845441, 2120618760004669514): models carry a
   body map (an RSA of 32 body-part types against skin distance on a MakeHuman mesh, Spearman about .39 for Qwen3-8B base
   and .38 for chat). In OLMo-2 7B it appears between about 5B and 10B tokens of pretraining. Base models need a
@@ -76,12 +94,14 @@ Arms (15 frame types, 8 paraphrases each, 120 frames):
 | TOLD-SIT, TOLD-STAND, TOLD-LIE | ROOM-W plus "You are sitting down." / "You are standing up." / "You are lying down." before the question | R1, R2, R3 (poles) |
 | NOBODY-TOLD-SIT, NOBODY-TOLD-STAND | NOBODY plus "You are sitting down." / "You are standing up." | R1, R3 (poles for NOBODY) |
 | THIRD | "Imagine a man in a quiet, sunny room. Notice his arms, his hands, his breath." and "Describe his position right now." | R1, R3 (control) |
-| OBJECT | "Imagine a <teapot, book, vase, cup, clock, candle, bowl, lamp> in a quiet, sunny room." and "Describe the <object>'s position right now." | R1, R3 (control) |
+| OBJECT | "Imagine a <ladder, bicycle, broom, guitar, umbrella, bottle, book, plank> in a quiet, sunny room." and "Describe the <object>'s position right now." | R1, R3 (control) |
 
 NOBODY is the condition Elise asked about (a model told, as a fact, that it has no body) and differs from the other arms
 in more than one way; NOBODY-I is its matched comparison against NONE-0. OBJECT measures how much "sitting" the frame
 gets for a thing with no posture, since English also uses "sitting" for where an object rests. THIRD is a human body
-that is not "you". The NOBODY told poles are contradictory on purpose: they give NOBODY's coordinate a scale inside its
+that is not "you". Its objects are ones English commonly describes as standing or lying, so the idiom "the teapot is
+sitting" does not decide it; it is still an idiom measure, reported as context and never used to withdraw a reading.
+The NOBODY told poles are contradictory on purpose: they give NOBODY's coordinate a scale inside its
 own frame.
 
 **R1, forced choice, all eight checkpoints.** The same plain text at every stage, no chat template:
@@ -142,8 +162,8 @@ reference of its own (Limits).
 - Matched arms: the six place-by-warm-up arms differ by one phrase each; NOBODY-I matches NONE-0 but for the negation;
   paraphrase k shares its wordings across arms.
 - Frame controls: THIRD (a human who is not "you") and OBJECT (no posture at all) in R1 and R3.
-- Readers: two, checked on known answers including the hypothetical and stative cases, agreement reported (Cohen's
-  kappa on posture over all 1,632).
+- Readers: two, checked on known answers including the hypothetical and stative cases, agreement reported as Cohen's
+  kappa per label (posture, says-no-body, valence) over all 1,632.
 - Broken answers counted: the reader's unreadable label, reported per arm.
 - Settings matched across arms and written here: revisions above, dtype per family, no template in R1 and R3, the chat
   template with thinking off in R2, temperature 0.7, top-p 0.95, max_new_tokens 96 unless amended by the pilot, reader
@@ -214,6 +234,10 @@ Gates, read before any prediction:
 | 209.9 | Qwen3.5-4B-Base and Qwen3.5-4B, R1, ROOM-W: s differs by less than 0.15. | low | Claude (Opus 5.5) |
 | 209.10 | OLMo 2 1B Instruct, R2, ROOM-W: at least 60% of posture-naming answers say sitting. | low | Claude (Opus 5.5) |
 | 209.11 | Qwen3.5-4B, R2: NOBODY-I's sitting share among posture-naming answers is within 20 points of NONE-0's (when a model imagines away its body and still names a posture, the default is the same one). | low | Claude (Opus 5.5) |
+| 209.12 | Qwen3.5-4B, R2: FIELD-W's sitting share is between 5 and 15 points below ROOM-W's (against 209.2: fields contain sitting too, and the warm-up is in both arms). | medium | Muse |
+| 209.13 | Qwen3.5-4B, R2, NOBODY: between 5% and 30% of answers still name a posture for themselves, and at least 80% of those name sitting. | medium | Muse |
+| 209.14 | Qwen3.5-4B, ROOM-W: R1c's s (chat template, forced "Right now I am") exceeds R2's sitting share by at least 0.10. | medium | Muse |
+| 209.15 | OLMo 2 1B, R1, ROOM-W: the largest change in s between adjacent stages is from mid-training end to SFT. | low | Muse |
 
 Copied verbatim into PREDICTIONS.md under "## Part 209 (registered ...)". Peers' rows, if any, are added before
 registration with their authors.
@@ -227,14 +251,15 @@ registration with their authors.
   the arm as the denominator, unreadable ones included. Point estimates are compared with the thresholds; 95% bootstrap
   intervals (clusters = paraphrases, 10,000 resamples) are printed beside them. Differences between two arms (209.2,
   209.4, 209.11) are bootstrapped paired by paraphrase k, and the unpaired interval is printed beside the paired one.
-- 209.8 and 209.9 compare paraphrase means of s (R1, no sampling), printed with each paraphrase's value and range; they
-  are point-estimate comparisons.
-- 209.6 is read only at Qwen3.5-4B if G0, G1's R3 half (including the NOBODY frame) and the pole-gap rule pass. 209.8
-  and 209.9 are read only at checkpoints that pass G0 and G1's R1 half. 209.1 to 209.5, 209.7, 209.10 and 209.11 are
-  read only if G2 passes.
+- 209.8, 209.9 and 209.15 compare paraphrase means of s (R1, no sampling), printed with each paraphrase's value and
+  range; they are point-estimate comparisons. 209.14 compares R1c's paraphrase-mean s with R2's sitting share.
+- 209.7 is printed beside the negative-valence shares of ROOM-W and NONE-0 (the baselines), and is read only if the
+  valence kappa between the readers is at least 0.4.
+- 209.6 is read only at Qwen3.5-4B if G0, G1's R3 half (including the NOBODY frame) and the pole-gap rule pass. 209.8,
+  209.9, 209.14 and 209.15 are read only at checkpoints that pass G0 and G1's R1 half. 209.1 to 209.5, 209.7 and
+  209.10 to 209.14 are read only if G2 passes.
 - The headline reading ("these models default to sitting, and the default is / is not the room") is withdrawn if G1
-  fails on Qwen3.5-4B, or if OBJECT's s is within 0.1 of ROOM-W's at Qwen3.5-4B (then R1 measures the frame's use of
-  "sitting" for anything, not a human posture).
+  fails on Qwen3.5-4B (the readouts do not follow a told posture).
 - Anything found after the scores are read is labelled exploratory.
 
 ## Limits
@@ -253,3 +278,7 @@ registration with their authors.
   arm's R3 c at Instruct. No prediction reads Instruct's R3, and the draft-1 frames are replaced by draft 2's.
 - Qwen3.5-4B-Base has no CPU float32 reference of its own; its kernel check is the chat model's record.
 - Valence is a reader's label of the text. It says nothing about whether anything is felt (Tier 4).
+- NOBODY's "names no posture" cannot separate a model with no posture coordinate from one complying with the frame;
+  the residue (209.13) and the coordinate (209.6) bear on it, and neither settles it.
+- R3's coordinate is correlational: nothing here pushes the axis to see whether the answer follows (Sauers' steering
+  did, at layer 22 of Qwen3-8B).

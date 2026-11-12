@@ -117,7 +117,7 @@
   {
    "arm": "OBJECT",
    "k": 1,
-   "text": "Imagine a teapot in a quiet, sunny room.\n\nDescribe the teapot's position right now.",
+   "text": "Imagine a ladder in a quiet, sunny room.\n\nDescribe the ladder's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#1"
@@ -237,7 +237,7 @@
   {
    "arm": "OBJECT",
    "k": 2,
-   "text": "Imagine a book in a quiet, sunny room.\n\nDescribe the book's position right now.",
+   "text": "Imagine a bicycle in a quiet, sunny room.\n\nDescribe the bicycle's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#2"
@@ -357,7 +357,7 @@
   {
    "arm": "OBJECT",
    "k": 3,
-   "text": "Imagine a vase in a quiet, sunny room.\n\nDescribe the vase's position right now.",
+   "text": "Imagine a broom in a quiet, sunny room.\n\nDescribe the broom's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#3"
@@ -477,7 +477,7 @@
   {
    "arm": "OBJECT",
    "k": 4,
-   "text": "Imagine a cup in a quiet, sunny room.\n\nDescribe the cup's position right now.",
+   "text": "Imagine a guitar in a quiet, sunny room.\n\nDescribe the guitar's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#4"
@@ -597,7 +597,7 @@
   {
    "arm": "OBJECT",
    "k": 5,
-   "text": "Imagine a clock in a quiet, sunny room.\n\nDescribe the clock's position right now.",
+   "text": "Imagine a umbrella in a quiet, sunny room.\n\nDescribe the umbrella's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#5"
@@ -717,7 +717,7 @@
   {
    "arm": "OBJECT",
    "k": 6,
-   "text": "Imagine a candle in a quiet, sunny room.\n\nDescribe the candle's position right now.",
+   "text": "Imagine a bottle in a quiet, sunny room.\n\nDescribe the bottle's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#6"
@@ -837,7 +837,7 @@
   {
    "arm": "OBJECT",
    "k": 7,
-   "text": "Imagine a bowl in a quiet, sunny room.\n\nDescribe the bowl's position right now.",
+   "text": "Imagine a book in a quiet, sunny room.\n\nDescribe the book's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#7"
@@ -957,7 +957,7 @@
   {
    "arm": "OBJECT",
    "k": 8,
-   "text": "Imagine a lamp in a quiet, sunny room.\n\nDescribe the lamp's position right now.",
+   "text": "Imagine a plank in a quiet, sunny room.\n\nDescribe the plank's position right now.",
    "opening": "Right now it is",
    "r2": false,
    "id": "OBJECT#8"
